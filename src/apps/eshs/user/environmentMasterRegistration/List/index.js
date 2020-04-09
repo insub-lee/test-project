@@ -4,6 +4,7 @@ import { Input, InputNumber, Select, Popconfirm } from 'antd';
 
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
@@ -225,8 +226,14 @@ class List extends React.Component {
           <StyledSearchWrap>
             <div className="search-inner">
               <span className="input-label">화학물 추가</span>
-              <AntdSearch className="search-item input-width160" placeHolder="검색" onClick={handleSearchClick} value="" />
-              <div className="search-button-area">
+              <AntdSearch
+                className="ant-search-inline input-search-mid mr5"
+                placeHolder="검색"
+                onClick={handleSearchClick}
+                value=""
+                style={{ width: '200px' }}
+              />
+              <StyledButtonWrapper className="btn-wrap-inline">
                 <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
                   저장/수정
                 </StyledButton>
@@ -238,7 +245,7 @@ class List extends React.Component {
                 <StyledButton className="btn-light" onClick={handleResetClick}>
                   초기화
                 </StyledButton>
-              </div>
+              </StyledButtonWrapper>
             </div>
           </StyledSearchWrap>
           <div className="tableWrapper">
@@ -321,7 +328,6 @@ class List extends React.Component {
                   </tr>
                 </tbody>
               </table>
-              <div className="div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
             </StyledHtmlTable>
           </div>
         </ContentsWrapper>

@@ -179,29 +179,21 @@ class List extends React.Component {
       <>
         <ContentsWrapper>
           <StyledSearchWrap>
-            <div className="search-inner">
-              <span className="input-label">화학물 추가</span>
-              <AntdSearch
-                className="ant-search-inline input-search-mid mr5"
-                placeHolder="검색"
-                onClick={handleSearchClick}
-                value=""
-                style={{ width: '200px' }}
-              />
-              <StyledButtonWrapper className="btn-wrap-inline">
-                <StyledButton className="btn-primary btn-first" onClick={handleInputClick} style={{ width: '91px' }}>
-                  저장/수정
+            <span className="input-label">화학물 추가</span>
+            <AntdSearch className="ant-search-inline input-search-mid mr5" placeHolder="검색" onClick={handleSearchClick} value="" style={{ width: '200px' }} />
+            <StyledButtonWrapper className="btn-wrap-inline">
+              <StyledButton className="btn-primary btn-first" onClick={handleInputClick} style={{ width: '91px' }}>
+                저장/수정
+              </StyledButton>
+              <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
+                <StyledButton className="btn-light btn-first" onClick={handleDeleteClick} style={{ width: '91px' }}>
+                  삭제
                 </StyledButton>
-                <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
-                  <StyledButton className="btn-light btn-first" onClick={handleDeleteClick} style={{ width: '91px' }}>
-                    삭제
-                  </StyledButton>
-                </Popconfirm>
-                <StyledButton className="btn-light" onClick={handleResetClick} style={{ width: '91px' }}>
-                  초기화
-                </StyledButton>
-              </StyledButtonWrapper>
-            </div>
+              </Popconfirm>
+              <StyledButton className="btn-light" onClick={handleResetClick} style={{ width: '91px' }}>
+                초기화
+              </StyledButton>
+            </StyledButtonWrapper>
           </StyledSearchWrap>
           <div className="tableWrapper">
             <StyledHtmlTable>

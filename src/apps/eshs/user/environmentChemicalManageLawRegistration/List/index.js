@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
@@ -222,24 +223,24 @@ class List extends React.Component {
         <ContentsWrapper>
           <StyledSearchWrap>
             <span className="input-label">화학물 추가</span>
-            <AntdSearch className="search-item input-width160" placeholder="검색" onClick={handleSearchClick} value="" />
-          </StyledSearchWrap>
-          <div className="selSaveWrapper">
-            <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
-              신규등록
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={handleModifyClick}>
-              수정
-            </StyledButton>
-            <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
-              <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
-                삭제
+            <AntdSearch className="ant-search-inline input-search-mid mr5" placeholder="검색" onClick={handleSearchClick} value="" style={{ width: '200px' }} />
+            <StyledButtonWrapper className="btn-wrap-inline">
+              <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
+                신규등록
               </StyledButton>
-            </Popconfirm>
-            <StyledButton className="btn-light" onClick={handleResetClick}>
-              초기화
-            </StyledButton>
-          </div>
+              <StyledButton className="btn-primary btn-first" onClick={handleModifyClick}>
+                수정
+              </StyledButton>
+              <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
+                <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
+                  삭제
+                </StyledButton>
+              </Popconfirm>
+              <StyledButton className="btn-light" onClick={handleResetClick}>
+                초기화
+              </StyledButton>
+            </StyledButtonWrapper>
+          </StyledSearchWrap>
           <div className="tableWrapper">
             <StyledHtmlTable>
               <table>
