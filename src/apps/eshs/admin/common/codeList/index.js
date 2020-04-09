@@ -135,7 +135,7 @@ class List extends Component {
             ? listData.reduce((prev, curr) => (Number(prev.CODE) > Number(curr.CODE) ? Number(prev.CODE) : Number(curr.CODE)))
             : Number(listData[0].CODE);
       }
-      this.setState({ code: `00${String(max + 1)}` }, () => this.onChangeData('I'));
+      this.setState({ code: `${String(max + 1).padStart(3, '0')}` }, () => this.onChangeData('I'));
     } else if (codeType === 'nameFormat') {
       this.setState({ code: name }, () => this.onChangeData('I'));
     } else {
