@@ -8,10 +8,12 @@ import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import { Popconfirm, Input, InputNumber, Select } from 'antd';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 import SearchComp from '../SearchComp';
 
+const AntdSearch = StyledSearchInput(Input.Search);
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 class List extends React.Component {
@@ -220,7 +222,7 @@ class List extends React.Component {
         <ContentsWrapper>
           <StyledSearchWrap>
             <span className="input-label">화학물 추가</span>
-            <Input.Search className="search-item input-width160" placeholder="검색" onClick={handleSearchClick} value="" />
+            <AntdSearch className="search-item input-width160" placeholder="검색" onClick={handleSearchClick} value="" />
           </StyledSearchWrap>
           <div className="selSaveWrapper">
             <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>

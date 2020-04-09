@@ -1,7 +1,13 @@
 import styled from 'styled-components';
 
 const StyledSearchWrap = styled.div`
-  padding: 5px;
+  padding: 20px 20px 0 20px;
+
+  .search-inner {
+    .input-label {
+      padding: 0 10px;
+    }
+  }
 
   .search-group-layer {
     margin: 10px 0;

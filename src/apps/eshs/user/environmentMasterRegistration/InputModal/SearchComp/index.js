@@ -10,29 +10,18 @@ const AntdInput = StyledInput(Input);
 class SearchComp extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      keyword: '',
-    };
+    this.state = {};
     this.getSearchData = debounce(this.getSearchData, 300);
   }
 
-  handleSearchChange = e => {
-    this.setState(
-      {
-        keyword: e.target.value,
-      },
-      this.getSearchData,
-    );
-  };
-
   getSearchData = () => {
     const { sagaKey: id, getCallDataHandler, apiUrl } = this.props;
-    const { keyword } = this.state;
+    const { KEYWORD } = this.props;
     const apiArr = [
       {
         key: 'materialList',
         type: 'GET',
-        url: `${apiUrl}?keyword=${keyword}`,
+        url: `${apiUrl}?KEYWORD=${KEYWORD}`,
       },
     ];
     getCallDataHandler(id, apiArr, this.setDataSource);
@@ -44,13 +33,12 @@ class SearchComp extends React.Component {
   };
 
   render() {
-    const { handleSearchChange } = this;
-    const { keyword } = this.state;
+    const { KEYWORD, handleSearchChange } = this.props;
     return (
       <>
         <StyledSearchWrap>
           <span className="input-label">화학물질 검색</span>
-          <AntdInput.Search className="search-item input-width160" placeholder="검색" onChange={handleSearchChange} value={keyword} />
+          <AntdInput.Search className="search-item input-width160" placeholder="검색" onChange={e => handleSearchChange(e, 'INPUT')} value={KEYWORD} />
         </StyledSearchWrap>
       </>
     );
@@ -63,6 +51,8 @@ SearchComp.propTypes = {
   apiUrl: PropTypes.string,
   result: PropTypes.object,
   changeFormData: PropTypes.func,
+  handleSearchChange: PropTypes.func,
+  KEYWORD: PropTypes.string,
 };
 
 SearchComp.defaultProps = {
@@ -71,6 +61,7 @@ SearchComp.defaultProps = {
   apiUrl: '',
   result: {},
   changeFormData: () => {},
+  KEYWORD: '',
 };
 
 export default SearchComp;

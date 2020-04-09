@@ -9,6 +9,7 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
+import ExcelDownloader from './Excel';
 
 const AntdSelect = StyledSelect(Select);
 const AntdLineTable = StyledLineTable(Table);
@@ -99,7 +100,7 @@ class List extends Component {
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
-          <AntdSelect onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.selectedYear}>
+          <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.selectedYear}>
             {arrayYear &&
               arrayYear.map(val => (
                 <Option value={val} key="selectedYear">
@@ -107,8 +108,8 @@ class List extends Component {
                 </Option>
               ))}
           </AntdSelect>
-          년
-          <AntdSelect onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.site || 0}>
+          <span className="textLabel">년</span>
+          <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.site || 0}>
             {siteList &&
               siteList.map(itme => (
                 <Option value={itme.NODE_ID} key="site">
@@ -120,9 +121,7 @@ class List extends Component {
             <StyledButton className="btn-primary btn-first" onClick={() => this.searchData()}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => this.excel()}>
-              엑셀받기
-            </StyledButton>
+            <ExcelDownloader dataList={specItems} excelNm="지정폐기물 년간 현황" />
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
