@@ -66,8 +66,11 @@ class List extends Component {
                 <Popconfirm title="사용상태를 변경하시겠습니까?" onConfirm={handleDeleteClick}>
                   <StyledButton className="btn-primary btn-first btn-sm btn-light">상태변경</StyledButton>
                 </Popconfirm>
-                <StyledButton className="btn-primary btn-sm btn-light" onClick={handleResetClick}>
+                <StyledButton className="btn-primary btn-first btn-sm btn-light" onClick={handleResetClick}>
                   Reset
+                </StyledButton>
+                <StyledButton className="btn-primary btn-sm btn-light" onClick={() => console.debug('@@@@EXCEL DOWNLOAD@@@@')}>
+                  엑셀받기
                 </StyledButton>
               </StyledButtonWrapper>
             </div>
@@ -80,10 +83,38 @@ class List extends Component {
 
   componentDidMount() {
     this.getListData();
+    this.getCategoryList();
   }
 
-  getCategoryData = () => {
-    const { sagaKey: id, getCallDataHandler } = this.state;
+  getCategoryList = () => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'codeCategory',
+        type: 'POST',
+        url: `/api/admin/v1/common/categoryMapList`,
+        params: { PARAM: { NODE_ID: 1949 } },
+      },
+    ];
+
+    getCallDataHandler(id, apiArr, this.createTreeData);
+  };
+
+  createTreeData = () => {
+    const { result } = this.props;
+    const tempList = (result.codeCategory && result.codeCategory.categoryMapList) || [];
+    const newList = [];
+    const childrenList = [];
+    tempList.map(item =>
+      newList.push({
+        title: item.NAME_KOR,
+        value: item.CODE,
+        key: item.CODE,
+        depth: item.FULLPATH.match(/|/g).length,
+        node_id: item.NODE_ID,
+      }),
+    );
+    console.debug(tempList, newList);
   };
 
   commonDataHandler = (key, type, param) => {
@@ -106,7 +137,7 @@ class List extends Component {
       {
         key: 'chemicalMaterialList',
         type: 'GET',
-        url: `/api/eshs/v1/common/eshschemicalmaterialcode?category=${selectedCategory}`,
+        url: `/api/eshs/v1/common/eshschemicalmaterialcode?CATEGORY=${selectedCategory}`,
       },
     ];
     getCallDataHandler(id, apiArr, this.changeDataSource);
@@ -153,7 +184,6 @@ class List extends Component {
   handleDeleteClick = () => {
     const { selectedIndex, dataSource } = this.state;
     const params = { CODE: dataSource[selectedIndex].CODE, IS_DELETE: dataSource[selectedIndex].IS_DELETE === '사용' ? 'Y' : 'N' };
-    // this.commonDataHandler('deleteData', 'delete', { CODE: dataSource[selectedIndex].CODE, IS_DELETE: 'Y' });
     this.commonDataHandler('deleteData', 'delete', params);
     this.setState({
       inputCode: '',
@@ -197,9 +227,8 @@ class List extends Component {
         <AntdTreeSelect
           treeData={selectTree}
           value={this.state.selectedCategory}
-          treeDefaultExpandAll
           onChange={this.handleSelectChange}
-          dropdownStyle={{ maxWidth: 350 }}
+          dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
           className="select-mid"
           dropdownClassName="inner-ant-select-dropdown"
         />
