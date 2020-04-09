@@ -27,7 +27,7 @@ class RequesterView extends Component {
     isPstnShow: false,
     userInfo: {
       statusCd: 'C',  //재직
-      empType: 'E',   //본사협력사
+      empType: 'D',   //EDDS외부업체
       deptId: 0,
       deptName: '',
       pstnId: 0,
