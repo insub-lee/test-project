@@ -52,18 +52,14 @@ class ExcelDownloadComp extends Component {
   };
 
   render() {
-    const { visible, CONFIG, workInfo, isBuilder, viewPageData } = this.props;
+    const { visible, CONFIG, workInfo, isBuilder, viewPageData, btnSize } = this.props;
 
-    
     let dataSet = [];
     if (isBuilder) {
       dataSet = this.makeExcelDataSet(CONFIG.property.columns, CONFIG.property.fields) || [];
     } else {
       dataSet = this.makeExcelDataSet(this.props.columns, this.props.fields) || [];
     }
-    
-    console.debug('데이터셋', dataSet);
-    console.debug('리스트', this.props.listData);
 
     // BuilderBase 에서 사용시 (개발중)
     if (isBuilder) {
@@ -92,7 +88,7 @@ class ExcelDownloadComp extends Component {
         filename={this.props.fileName}
         element={
           <span className={this.props.className}>
-            <StyledButton className="btn-primary btn-sm" style={{ marginBottom: '5px' }}>
+            <StyledButton className={`btn-primary ${btnSize}`}>
               <FileExcelOutlined />
               &nbsp;{this.props.btnText}
             </StyledButton>
@@ -121,6 +117,7 @@ ExcelDownloadComp.propTypes = {
   columns: PropTypes.array,
   fields: PropTypes.array,
   listData: PropTypes.array, // builder 와 동일한 Props명 사용
+  btnSize: PropTypes.string, // 엑셀버튼 크기조정
 };
 
 ExcelDownloadComp.defaultProps = {

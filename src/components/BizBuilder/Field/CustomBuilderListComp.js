@@ -5,7 +5,6 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import { fromJS } from 'immutable';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -31,7 +30,7 @@ class CustomBuilderListComp extends React.Component {
     } = this.props;
     if (viewType === 'INPUT' || viewType === 'MODIFY') this.extraBuilderRender('LIST');
     if (viewType === 'VIEW' || viewType === 'MODIFY') {
-      if ((isFormData === 'Y' && colData !== '') || colData !== undefined || colData !== null) {
+      if (dataKey && isFormData === 'Y' && colData) {
         const apiArray = [
           {
             key: 'CustomDetailData',

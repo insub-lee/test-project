@@ -8,6 +8,7 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 
 import DocView from './DocView';
+import Redistribute from './Redistribute';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledModalWrapper(Modal);
@@ -15,24 +16,35 @@ const AntdModal = StyledModalWrapper(Modal);
 class DistributeDocList extends Component {
   state = {
     isShow: false,
+    isRedistShow: false,
     selectedRow: {},
-  }
+  };
   
   componentDidMount() {
     const { id, apiAry, getCallDataHandler } = this.props;
     getCallDataHandler(id, apiAry, () => {});
-  }
+  };
 
   onClickRow = row => {
     this.setState({
       selectedRow: row,
       isShow: true,
     });
-  }
+  };
 
   onCancelPopup = () => {
-    this.setState({ isShow: false });
-  }
+    this.setState({
+      isShow: false,
+      isRedistShow: false,
+    });
+  };
+
+  onClickMail = row => {
+    this.setState({
+      selectedRow: row,
+      isRedistShow: true,
+    });
+  };
 
   columns = [
     {
@@ -88,7 +100,7 @@ class DistributeDocList extends Component {
       key: 'RE_DIST',
       width: '10%',
       align: 'center',
-      render: (text, record) => <Icon type="mail" style={{ cursor: 'pointer' }} onClick={this.onClickMail} />,
+      render: (text, record) => <Icon type="mail" style={{ cursor: 'pointer' }} onClick={() => this.onClickMail(record)} />,
     },
   ]
 
@@ -117,9 +129,19 @@ class DistributeDocList extends Component {
           title="배포문서 다운로드"
           onCancel={this.onCancelPopup}
           destroyOnClose
-          footer={[<Button onClick={this.onCancelPopup}>닫기</Button>]}
+          footer={[<StyledButton className="btn-light" onClick={this.onCancelPopup}>닫기</StyledButton>]}
         >
           <DocView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
+        </AntdModal>
+        <AntdModal
+          width={500}
+          visible={this.state.isRedistShow}
+          title="재배포 요청"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <Redistribute selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
       </>
     );

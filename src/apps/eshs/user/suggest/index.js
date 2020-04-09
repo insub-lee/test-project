@@ -4,7 +4,6 @@ import { Modal } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import OnlyView from 'apps/eshs/user/law/lawAppraise/OnlyView';
 import View from './View';
-import List from './List';
 import Input from './Input';
 import Modify from './Modify';
 
@@ -33,7 +32,6 @@ class Suggest extends Component {
   };
 
   onReplyModalChange = selectedData => {
-    console.log(selectedData, '%%%%%%%%%%%%% ');
     this.setState({ isReplyModal: true, parentTaskSeq: selectedData.TASK_SEQ, replyTitle: `RE: ${selectedData.TITLE}`, replyType: selectedData.TYPE });
   };
 

@@ -276,7 +276,7 @@ class ItemTable extends Component {
                 <th>
                   법적기준
                   <br />
-                  (Shot Down))
+                  (Shot Down)
                 </th>
                 <th>W1</th>
                 <th>법규</th>

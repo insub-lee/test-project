@@ -9,6 +9,7 @@ import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
+import ExcelDownloader from './Excel';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
@@ -41,6 +42,13 @@ class List extends Component {
         url: `/api/eshs/v1/common/eshsDanger/${dangerMainYN}`,
         type: 'GET',
       },
+      !dangerMainYN
+        ? {
+            key: 'subExcelList',
+            url: `/api/eshs/v1/common/eshsDanger/${dangerMainYN}?EXCEL_LIST_YN=${true}`,
+            type: 'GET',
+          }
+        : '',
     ];
     getCallDataHandler(id, apiAry, this.initData);
     this.setColumns();
@@ -345,24 +353,26 @@ class List extends Component {
   };
 
   render() {
-    const { dangerMainYN } = this.props;
+    const {
+      dangerMainYN,
+      result: { subExcelList },
+    } = this.props;
     const { dangerSelect, selectedMajor, dangerList, columns } = this.state;
+    const excelList = subExcelList && subExcelList.list;
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
           {dangerMainYN ? (
             ''
           ) : (
-            <AntdSelect onChange={value => this.changeValue('selectedMajor', value)} value={selectedMajor}>
+            <AntdSelect className="select-mid mr5" onChange={value => this.changeValue('selectedMajor', value)} value={selectedMajor}>
               {dangerSelect && dangerSelect.map(itme => <Option value={itme.MAJOR_CD}>{itme.CD_NM}</Option>)}
             </AntdSelect>
           )}
           <StyledButton className="btn-primary btn-first" onClick={this.searchData}>
             검색
           </StyledButton>
-          <StyledButton className="btn-primary" onClick={() => message.info('개발중입니다.')}>
-            엑셀받기
-          </StyledButton>
+          <ExcelDownloader dataList={dangerMainYN ? dangerList : excelList} excelNm={`위험성 코드(${dangerMainYN ? 'Main' : 'Sub'})관리`} />
         </div>
         <AntdLineTable
           className="tableWrapper"
