@@ -248,7 +248,7 @@ export function* deleteNode(payload) {
     }
   } else if (node.NODE_TYPE === 'A' || node.NODE_TYPE === 'P') {
     const { SITE_ID, APP_ID, PRNT_ID, CATG_ID } = node;
-    const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/deleteApp', {
+    const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/deleteAppCatgMapping', {
       SITE_ID: Number(SITE_ID),
       APP_ID: Number(APP_ID),
       CATG_ID: Number(PRNT_ID),
