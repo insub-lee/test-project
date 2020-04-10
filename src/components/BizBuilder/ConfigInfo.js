@@ -29,6 +29,7 @@ import DatePickerCompConfig from 'components/BizBuilder/Field/DatePickerCompConf
 import TitleCompConfig from 'components/BizBuilder/Field/TitleCompConfig';
 import CustomBuilderListConfig from 'components/BizBuilder/Field/CustomBuilderListConfig';
 import ExcelDownloadCompConfig from 'components/BizBuilder/Field/ExcelDownloadCompConfig';
+import RootKeyRadioConfig from 'components/BizBuilder/Field/RootKeyRadioConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -60,4 +61,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/TitleCompConfig': { renderer: property => <TitleCompConfig {...property} /> },
   'components/BizBuilder/Field/CustomBuilderListConfig': { renderer: property => <CustomBuilderListConfig {...property} /> },
   'components/BizBuilder/Field/ExcelDownloadCompConfig': { renderer: property => <ExcelDownloadCompConfig {...property} /> },
+  'components/BizBuilder/Field/RootKeyRadioConfig': { renderer: property => <RootKeyRadioConfig {...property} /> },
 };
