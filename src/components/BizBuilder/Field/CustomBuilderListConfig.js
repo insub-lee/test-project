@@ -30,17 +30,14 @@ class ComponentConfig extends Component {
     const { result } = this.props;
     const workList = (result && result.workList && result.workList.list) || [];
     const listMeta = (result && result.listMeta && result.listMeta.list) || [];
-    console.debug('workList  ', workList);
-    console.debug('listMeta  ', listMeta);
     this.setState({ workList, listMeta });
-    console.debug('result', result);
   };
 
   handleChangeViewCompData = (key, value) => {
     const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
     configInfo.property[key] = value;
     if (key === 'listWorkSeq') {
-      configInfo.property.listWorkSeq = '';
+      configInfo.property.listMetaSeq = '';
       const { listMeta } = this.state;
       this.setState({ selectWork: value, selectListMeta: listMeta.filter(l => String(l.WORK_SEQ) === String(value)) });
     }
