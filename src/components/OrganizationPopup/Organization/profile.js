@@ -46,7 +46,7 @@ class Profile extends PureComponent {
   render() {
     const { selectedUser } = this.state;
 
-    const { officetel, loadProfile } = this.props;
+    const { loadProfile } = this.props;
 
     // 팝업용 조직도에서 query string으로 DEPT_ID를 넘겨줬는데,
     // 해당 부서의 구성원이 없는 경우
@@ -148,7 +148,7 @@ class Profile extends PureComponent {
             <tbody>
               <tr>
                 <td style={foottable}>{intlObj.get(messages.dutyAndPosition)}</td>
-                <td style={note}>{lang.get('JOB_NAME', loadProfile)}</td>
+                <td style={note}>{loadProfile.JOB_NAME_KOR.trim() ? lang.get('JOB_NAME', loadProfile) : lang.get('DUTY_NAME', loadProfile)}</td>
               </tr>
               <tr className="majorJob">
                 <td style={foottable}>{intlObj.get(messages.responsibility)}</td>
@@ -163,7 +163,7 @@ class Profile extends PureComponent {
               <tr />
               <tr>
                 <td style={foottable}>{intlObj.get(messages.inHousePhone)}</td>
-                {officetel ? <td style={note}>{officetel}</td> : <td style={note} />}
+                {loadProfile.OFFICE_TEL_NO ? <td style={note}>{loadProfile.OFFICE_TEL_NO}</td> : <td style={note} />}
               </tr>
               {selectedUser.length ? (
                 <tr>
@@ -187,11 +187,6 @@ class Profile extends PureComponent {
 Profile.propTypes = {
   loadProfile: PropTypes.object.isRequired,
   selectedProfileTree: PropTypes.func.isRequired,
-  officetel: PropTypes.string,
-};
-
-Profile.defaultProps = {
-  officetel: undefined,
 };
 
 export default Profile;

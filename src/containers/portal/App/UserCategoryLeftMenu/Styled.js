@@ -11,7 +11,7 @@ const Styled = styled.div`
   opacity: 1;
   background-color: #152434;
   border-left: 1px solid #35414e;
-  z-index: 9998;
+  z-index: 1998;
   transition: left 0.3s ease-out 0s;
 
   &.active {
@@ -71,6 +71,10 @@ const Styled = styled.div`
 
   .btn-page-move {
     background: transparent;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 40px;
   }
 `;
 
