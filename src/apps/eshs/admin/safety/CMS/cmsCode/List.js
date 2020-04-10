@@ -18,7 +18,13 @@ const AntdLineTable = StyledLineTable(Table);
 
 const getCategoryMapListAsTree = (flatData, rootkey) =>
   getTreeFromFlatData({
-    flatData: flatData.map(item => ({ title: item.NAME_KOR, value: item.NODE_ID, key: item.NODE_ID, parentValue: item.PARENT_NODE_ID, selectable: true })),
+    flatData: flatData.map(item => ({
+      title: item.NAME_KOR,
+      value: item.NODE_ID,
+      key: item.NODE_ID,
+      parentValue: item.PARENT_NODE_ID,
+      selectable: item.CHILDREN_CNT !== 0,
+    })),
     getKey: node => node.key,
     getParentKey: node => node.parentValue,
     rootKey: rootkey || 0,
