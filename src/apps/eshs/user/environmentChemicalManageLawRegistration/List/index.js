@@ -296,8 +296,8 @@ class List extends React.Component {
                     <th rowSpan={3}>제한내용</th>
                     <td rowSpan={3}>
                       <Input.TextArea
-                        name="RESTRICT_CONTENT"
-                        value={requestValue.RESTRICT_CONTENT}
+                        name="RESTRICT_DETAIL"
+                        value={requestValue.RESTRICT_DETAIL}
                         onChange={handleInputChange}
                         autoSize={{ minRows: 4, maxRows: 4 }}
                       />
@@ -348,7 +348,7 @@ class List extends React.Component {
                       <AntdInputNumber
                         value={requestValue.RESTRICT_NO}
                         onChange={value => handleInputNumberChange(value, 'RESTRICT_NO')}
-                        className="ant-input-number input-number-sm"
+                        className="input-number-sm"
                       />
                     </td>
                     <th>금지물질 NO.</th>
@@ -356,7 +356,7 @@ class List extends React.Component {
                       <AntdInputNumber
                         value={requestValue.PROHIBITION_NO}
                         onChange={value => handleInputNumberChange(value, 'PROHIBITION_NO')}
-                        className="ant-input-number input-number-sm"
+                        className="input-number-sm"
                       />
                     </td>
                   </tr>

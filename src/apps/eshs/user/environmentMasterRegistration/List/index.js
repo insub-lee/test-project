@@ -10,6 +10,7 @@ import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import Modal from '../InputModal';
@@ -18,6 +19,7 @@ import SearchComp from '../InputModal/SearchComp';
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
+const AntdInputNumber = StyledInputNumber(InputNumber);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -88,7 +90,7 @@ class List extends React.Component {
       this.setState({
         isModified: false,
       });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialMaster`, { requestValue }, this.getMaterialList);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialMaster`, requestValue, this.getMaterialList);
     }
     this.setState({
       isModified: false,
@@ -308,7 +310,7 @@ class List extends React.Component {
                     </td>
                     <th>수입구분</th>
                     <td>
-                      <AntdSelect className="select-sm" defaultValue="N" onChange={handleInputChange} value={requestValue.IS_IMPORT}>
+                      <AntdSelect className="select-sm" defaultValue="N" onChange={handleInputChange} value={requestValue.IS_IMPORT} style={{ width: '100%' }}>
                         <Select.Option value="N">내수</Select.Option>
                         <Select.Option value="Y">수입</Select.Option>
                       </AntdSelect>
@@ -319,10 +321,11 @@ class List extends React.Component {
                     </td>
                     <th>함량(%) 정량</th>
                     <td>
-                      <InputNumber
+                      <AntdInputNumber
                         value={requestValue.CONTENT_DOSE}
                         onChange={value => handleInputNumberChange(value, 'CONTENT_DOSE')}
-                        className="col-input-number"
+                        className="input-number-sm"
+                        style={{ width: '100%' }}
                       />
                     </td>
                   </tr>

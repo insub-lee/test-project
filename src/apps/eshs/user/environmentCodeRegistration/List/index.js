@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Input, Popconfirm, TreeSelect } from 'antd';
+import { getTreeFromFlatData } from 'react-sortable-tree';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledTreeSelect from 'commonStyled/Form/StyledTreeSelect';
-
-import selectTree from './industrialSafetyLawList';
 
 const AntdTable = StyledLineTable(Table);
 const AntdInput = StyledInput(Input);
@@ -18,8 +17,9 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectTree: [],
       selectedIndex: -1,
-      selectedCategory: 'HC',
+      selectedCategory: 1950,
       inputCode: '',
       dataSource: [
         {
@@ -40,8 +40,8 @@ class List extends Component {
     },
     {
       title: '코드',
-      dataIndex: 'CODE',
-      key: 'CODE',
+      dataIndex: 'CODE_ID',
+      key: 'CODE_ID',
       align: 'center',
       width: 200,
     },
@@ -55,7 +55,7 @@ class List extends Component {
         if (index === 0) {
           return (
             <div>
-              <AntdInput className="ant-input-inline mr5" value={inputCode} onChange={handleInputChange} style={{ width: 200 }} />
+              <AntdInput className="ant-input-inline mr5 ant-input-sm" value={inputCode} onChange={handleInputChange} style={{ width: 200 }} />
               <StyledButtonWrapper className="btn-wrap-inline">
                 <StyledButton className="btn-primary btn-first btn-sm" onClick={handleAddClick}>
                   추가
@@ -97,25 +97,31 @@ class List extends Component {
       },
     ];
 
-    getCallDataHandler(id, apiArr, this.createTreeData);
+    getCallDataHandler(id, apiArr, this.setCategory);
   };
 
-  createTreeData = () => {
+  setCategory = () => {
     const { result } = this.props;
-    const tempList = (result.codeCategory && result.codeCategory.categoryMapList) || [];
-    const newList = [];
-    const childrenList = [];
-    tempList.map(item =>
-      newList.push({
-        title: item.NAME_KOR,
-        value: item.CODE,
-        key: item.CODE,
-        depth: item.FULLPATH.match(/|/g).length,
-        node_id: item.NODE_ID,
-      }),
-    );
-    console.debug(tempList, newList);
+    const category = this.getCategoryMapListAsTree(result.codeCategory.categoryMapList, 1949);
+    this.setState({
+      selectTree: category,
+    });
   };
+
+  getCategoryMapListAsTree = (flatData, rootkey = 0) =>
+    getTreeFromFlatData({
+      flatData: flatData.map(item => ({
+        title: item.NAME_KOR,
+        value: item.NODE_ID,
+        key: item.NODE_ID,
+        parentValue: item.PARENT_NODE_ID,
+        selectable: true,
+        code: item.CODE,
+      })),
+      getKey: node => node.key,
+      getParentKey: node => node.parentValue,
+      rootKey: rootkey,
+    });
 
   commonDataHandler = (key, type, param) => {
     const { sagaKey: id, getCallDataHandler } = this.props;
@@ -161,8 +167,7 @@ class List extends Component {
     const { inputCode, selectedCategory } = this.state;
     const data = {
       NAME_KOR: inputCode,
-      CATEGORY: selectedCategory.toUpperCase(),
-      CODE_VALUE: selectedCategory.substring(0, 2),
+      CATEGORY: selectedCategory,
     };
     this.setState({
       inputCode: '',
@@ -219,7 +224,7 @@ class List extends Component {
   };
 
   render() {
-    const { dataSource } = this.state;
+    const { dataSource, selectTree } = this.state;
     const { columns } = this;
     const dataLength = dataSource.length - 1;
     return (
