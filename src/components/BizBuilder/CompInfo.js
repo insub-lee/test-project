@@ -98,6 +98,8 @@ import CoverViewComp from 'components/BizBuilder/Field/CoverViewComp';
 import SelectReadComp from 'components/BizBuilder/Field/SelectReadComp';
 import CustomBuilderListComp from 'components/BizBuilder/Field/CustomBuilderListComp';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import RootKeyRadioComp from 'components/BizBuilder/Field/RootKeyRadioComp';
+import RootKeyCheckBoxComp from 'components/BizBuilder/Field/RootKeyCheckBoxComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
@@ -198,4 +200,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/CompNmLabel': { renderer: property => <CompNmLabel {...property} /> },
   'components/BizBuilder/Field/CustomBuilderListComp': { renderer: property => <CustomBuilderListComp {...property} /> },
   'components/BizBuilder/Field/ExcelDownloadComp': { renderer: property => <ExcelDownloadComp {...property} /> },
+  'components/BizBuilder/Field/RootKeyRadioComp': { renderer: property => <RootKeyRadioComp {...property} /> },
+  'components/BizBuilder/Field/RootKeyCheckBoxComp': { renderer: property => <RootKeyCheckBoxComp {...property} /> },
 };
