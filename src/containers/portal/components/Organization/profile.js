@@ -42,7 +42,7 @@ class Profile extends PureComponent {
   render() {
     const { selectedUser } = this.state;
 
-    const { officetel, loadProfile, userSetting } = this.props;
+    const { loadProfile, userSetting } = this.props;
 
     const foottable = {
       width: 105,
@@ -136,7 +136,7 @@ class Profile extends PureComponent {
             <tbody>
               <tr>
                 <td style={foottable}>{intlObj.get(messages.dutyAndPosition)}</td>
-                <td style={note}>{lang.get('JOB_NAME', loadProfile)}</td>
+                <td style={note}>{loadProfile.JOB_NAME_KOR.trim() ? lang.get('JOB_NAME', loadProfile) : lang.get('DUTY_NAME', loadProfile)}</td>
               </tr>
               <tr className="majorJob">
                 <td style={foottable}>{intlObj.get(messages.responsibility)}</td>
@@ -151,7 +151,7 @@ class Profile extends PureComponent {
               <tr />
               <tr>
                 <td style={foottable}>{intlObj.get(messages.inHousePhone)}</td>
-                {officetel ? <td style={note}>{officetel}</td> : <td style={note} />}
+                {loadProfile.OFFICE_TEL_NO ? <td style={note}>{loadProfile.OFFICE_TEL_NO}</td> : <td style={note} />}
               </tr>
               {selectedUser.length ? (
                 <tr>
@@ -184,13 +184,10 @@ class Profile extends PureComponent {
 Profile.propTypes = {
   loadProfile: PropTypes.object.isRequired,
   selectedProfileTree: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/no-unused-prop-types
-  officetel: PropTypes.string,
   userSetting: PropTypes.bool,
 };
 
 Profile.defaultProps = {
-  officetel: undefined,
   userSetting: false,
 };
 
