@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
-import { Table, Input, message, TreeSelect, Select } from 'antd';
+import { Table, Input, message, TreeSelect } from 'antd';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 
@@ -10,15 +10,11 @@ import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledTreeSelect from 'commonStyled/Form/StyledTreeSelect';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
 import ExcelDownloader from './Excel';
 
 const AntdInput = StyledInput(Input);
-const AntdSelect = StyledSelect(Select);
 const AntdTreeSelect = StyledTreeSelect(TreeSelect);
 const AntdLineTable = StyledLineTable(Table);
-
-const { Option } = Select;
 
 const getCategoryMapListAsTree = (flatData, rootkey) =>
   getTreeFromFlatData({
@@ -39,7 +35,6 @@ class List extends Component {
       pullpath: '',
       nodeOrdinal: '',
       nodeId: '',
-      useType: '',
     };
   }
 
@@ -53,9 +48,6 @@ class List extends Component {
 
   onChangeValue = (name, value) => {
     this.setState({ [name]: value });
-    if (name === 'useType') {
-      this.selectCode();
-    }
   };
 
   initDataApi = () => {
@@ -65,7 +57,7 @@ class List extends Component {
         key: 'treeSelectData',
         type: 'POST',
         url: '/api/admin/v1/common/categoryMapList',
-        params: { PARAM: { NODE_ID: 1831 } },
+        params: { PARAM: { NODE_ID: 1878 } },
       },
     ];
     getCallDataHandler(id, apiAry, this.initData);
@@ -75,14 +67,15 @@ class List extends Component {
     const {
       result: { treeSelectData },
     } = this.props;
-    const nData =
-      (treeSelectData &&
-        treeSelectData.categoryMapList &&
-        getCategoryMapListAsTree(
-          treeSelectData.categoryMapList.filter(f => f.USE_YN === 'Y' && f.LVL !== 7),
-          1831,
-        )) ||
-      [];
+    const nData = (treeSelectData && treeSelectData.categoryMapList && getCategoryMapListAsTree(treeSelectData.categoryMapList, 1878)) || [];
+    // const nData =
+    //   (treeSelectData &&
+    //     treeSelectData.categoryMapList &&
+    //     getCategoryMapListAsTree(
+    //       treeSelectData.categoryMapList.filter(f => f.LVL !== 4),
+    //       1878,
+    //     )) ||
+    //   [];
     this.setState({ nData });
   };
 
@@ -97,16 +90,17 @@ class List extends Component {
       },
     ];
     this.setState({ changeSelectValue: value }, () => getCallDataHandler(id, apiAry, this.selectCode));
+    this.onReset();
   };
 
   selectCode = () => {
     const {
       result: { selectData, treeSelectData },
     } = this.props;
-    const { changeSelectValue, useType } = this.state;
+    const { changeSelectValue } = this.state;
     if (changeSelectValue) {
-      const listData = selectData && selectData.categoryMapList.filter(f => f.PARENT_NODE_ID === changeSelectValue && (useType ? f.USE_YN === useType : true));
-      const pullpath = treeSelectData && treeSelectData.categoryMapList.find(x => x.NODE_ID === (changeSelectValue || 1831));
+      const listData = selectData && selectData.categoryMapList.filter(f => f.PARENT_NODE_ID === changeSelectValue);
+      const pullpath = treeSelectData && treeSelectData.categoryMapList.find(x => x.NODE_ID === (changeSelectValue || 1878));
       this.setState({ listData, pullpath: pullpath && pullpath.FULLPATH, nodeOrdinal: pullpath && pullpath.NODE_ORDINAL, lvl: pullpath.LVL });
     } else {
       message.warning('코드 구분을 선택해주세요.');
@@ -118,17 +112,15 @@ class List extends Component {
     this.initDataApi();
   };
 
-  overlabCode = () => {
-    const { listData, code } = this.state;
-    if (code) {
-      const overlab = listData && listData.find(item => item.CODE === this.state.code);
-      if (overlab) {
-        message.warning('기존에 동일한 코드가 존재합니다.');
-      } else {
-        this.onChangeData('I');
-      }
+  createCode = () => {
+    const {
+      result: { treeSelectData },
+    } = this.props;
+    const listData = treeSelectData && treeSelectData.categoryMapList;
+    if (listData && listData[0]) {
+      this.setState({ code: `AA${String(listData.length).padStart(3, '0')}` }, () => this.onChangeData('I'));
     } else {
-      message.warning('코드를 입력해주세요.');
+      message.warning('페이지에 오류가 있습니다.');
     }
   };
 
@@ -153,11 +145,9 @@ class List extends Component {
       if (value === 'U' && this.state.code) {
         submitHandlerBySaga(id, 'PUT', '/api/admin/v1/common/categoryMap', submitData, this.callBackApi);
       } else if (this.state.code && (value === 'D' || value === 'R')) {
-        submitHandlerBySaga(id, 'PUT', '/api/admin/v1/common/categoryMap', submitData, this.callBackApi);
+        submitHandlerBySaga(id, 'PUT', '/api/admin/v1/common/categoryChildren', submitData, this.callBackApi);
       } else if (value === 'I') {
         submitHandlerBySaga(id, 'POST', '/api/admin/v1/common/categoryMap', submitData, this.callBackApi);
-      } else if (!this.state.code) {
-        message.warning('코드가 올바르지 않습니다.');
       }
     } else if (!this.state.changeSelectValue) {
       message.warning('분류를 선택해주세요.');
@@ -189,20 +179,22 @@ class List extends Component {
   };
 
   render() {
-    const { nData, useType, listData, code, name, useYN, desciption, lvl } = this.state;
+    const { code, name, useYN, desciption, lvl, nData, listData } = this.state;
+    const {
+      result: { treeSelectData },
+    } = this.props;
+    const totalData = treeSelectData && treeSelectData.categoryMapList;
+
     let changeTitle;
     switch (lvl) {
+      case 2:
+        changeTitle = '분류1';
+        break;
       case 3:
-        changeTitle = '부서';
+        changeTitle = '분류2';
         break;
       case 4:
-        changeTitle = '공정(장소)';
-        break;
-      case 5:
-        changeTitle = '세부공정';
-        break;
-      case 6:
-        changeTitle = '장비(설비)';
+        changeTitle = '분류3';
         break;
       default:
         changeTitle = '분류';
@@ -233,10 +225,10 @@ class List extends Component {
         ],
       },
       {
-        title: `${changeTitle}코드`,
+        title: `분류코드`,
         children: [
           {
-            title: <AntdInput style={{ width: 100 }} className="ant-input-sm" value={code} onChange={e => this.onChangeValue('code', e.target.value)} />,
+            title: <span>{code}</span>,
             className: 'th-form',
             dataIndex: 'CODE',
             align: 'center',
@@ -245,7 +237,7 @@ class List extends Component {
         ],
       },
       {
-        title: `${changeTitle}명`,
+        title: `${changeTitle}`,
         align: 'left',
         children: [
           {
@@ -265,7 +257,7 @@ class List extends Component {
         ],
       },
       {
-        title: '비고',
+        title: '점검수량',
         align: 'left',
         children: [
           {
@@ -278,7 +270,7 @@ class List extends Component {
                   onChange={e => this.onChangeValue('desciption', e.target.value)}
                 />
                 <StyledButtonWrapper className="btn-wrap-inline">
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={this.overlabCode}>
+                  <StyledButton className="btn-primary btn-sm btn-first" onClick={this.createCode}>
                     추가
                   </StyledButton>
                   <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('U')}>
@@ -312,22 +304,16 @@ class List extends Component {
             placeholder="Please select"
             onChange={value => this.onChangeSelect(value)}
           />
-          <AntdSelect className="select-mid mr5" onChange={value => this.onChangeValue('useType', value)} value={useType}>
-            <Option value="">전체</Option>
-            <Option value="Y">사용</Option>
-            <Option value="N">미사용</Option>
-          </AntdSelect>
           <StyledButtonWrapper className="btn-wrap-inline">
             <StyledButton className="btn-primary btn-first" onClick={this.selectCode}>
               검색
             </StyledButton>
-            {listData.length > 0 && <ExcelDownloader dataList={listData} excelNm="작업단계관리" />}
+            <ExcelDownloader dataList={totalData} excelNm="CMS 코드관리" />
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
           className="tableWrapper"
           rowKey={listData.NODE_ID}
-          key={listData.NODE_ID}
           columns={columns}
           dataSource={listData || []}
           bordered

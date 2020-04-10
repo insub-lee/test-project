@@ -35,7 +35,6 @@ class List extends Component {
 
   componentDidMount() {
     this.selectDataApi();
-    this.setColumns();
   }
 
   changeSelectValue = value => {
@@ -43,7 +42,7 @@ class List extends Component {
   };
 
   onChangeValue = (name, value) => {
-    this.setState({ [name]: value }, this.setColumns);
+    this.setState({ [name]: value });
   };
 
   callBackApi = () => {
@@ -135,7 +134,7 @@ class List extends Component {
             ? listData.reduce((prev, curr) => (Number(prev.CODE) > Number(curr.CODE) ? Number(prev.CODE) : Number(curr.CODE)))
             : Number(listData[0].CODE);
       }
-      this.setState({ code: `00${String(max + 1)}` }, () => this.onChangeData('I'));
+      this.setState({ code: `${String(max + 1).padStart(3, '0')}` }, () => this.onChangeData('I'));
     } else if (codeType === 'nameFormat') {
       this.setState({ code: name }, () => this.onChangeData('I'));
     } else {
@@ -180,23 +179,30 @@ class List extends Component {
   };
 
   onReset = () => {
-    this.setState(
-      {
-        name: '',
-        code: '',
-        useYN: '',
-      },
-      this.setColumns,
-    );
+    this.setState({
+      name: '',
+      code: '',
+      useYN: '',
+    });
   };
 
-  setColumns = () => {
-    const { codeType, code, name, useYN } = this.state;
+  selectedRecord = record => {
+    this.setState({
+      changeSelectValue: record.PARENT_NODE_ID,
+      name: record.NAME_KOR,
+      code: record.CODE,
+      nodeId: record.NODE_ID,
+      useYN: record.USE_YN,
+    });
+  };
+
+  render() {
+    const { selectBoxData, listData, excelData, excelNm, codeType, code, name, useYN } = this.state;
     const columns = [
       {
-        width: 150,
         title: '상태',
         align: 'center',
+        width: 150,
         children: [
           {
             title: (
@@ -212,6 +218,8 @@ class List extends Component {
             ),
             dataIndex: 'USE_YN',
             className: 'th-form',
+            align: 'center',
+            width: 150,
             render: item => <span>{item === 'Y' ? '사용중' : '삭제'}</span>,
           },
         ],
@@ -272,24 +280,6 @@ class List extends Component {
         ],
       },
     ];
-    this.setState({ columns });
-  };
-
-  selectedRecord = record => {
-    this.setState(
-      {
-        changeSelectValue: record.PARENT_NODE_ID,
-        name: record.NAME_KOR,
-        code: record.CODE,
-        nodeId: record.NODE_ID,
-        useYN: record.USE_YN,
-      },
-      this.setColumns,
-    );
-  };
-
-  render() {
-    const { selectBoxData, listData, columns, excelData, excelNm } = this.state;
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
