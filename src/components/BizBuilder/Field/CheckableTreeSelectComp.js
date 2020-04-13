@@ -66,7 +66,8 @@ class CheckableTreeSelectComp extends Component {
 
   render() {
     const { scopeTreeData, selectedValue } = this.state;
-    return <TreeSelect SHOW_PARENT value={selectedValue} onChange={this.onChangeTree} treeData={scopeTreeData} treeCheckable />;
+    console.debug('checkable Tree', this.props);
+    return <TreeSelect SHOW_PARENT value={selectedValue} onChange={this.onChangeTree} treeData={scopeTreeData} disabled />;
   }
 }
 
