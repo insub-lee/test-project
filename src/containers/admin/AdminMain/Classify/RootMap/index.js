@@ -25,13 +25,16 @@ const AntdTable = StyledAntdTable(Table);
 class RootMap extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      searchText: '',
+    };
   }
 
   componentDidMount() {
     const { GUBUN } = this.props.match.params;
     const payload = {
       GUBUN,
+      searchText: this.state.searchText,
     };
     this.props.getRootMapList(payload);
     this.props.setRootMapGubun(GUBUN);
@@ -40,8 +43,6 @@ class RootMap extends Component {
   onSelectChange = selectedRowKeys => {
     this.props.setSelectedRowKeys(selectedRowKeys);
   };
-
-  const;
 
   handleDeleteRootMap = () => {
     const { rootMapList, selectedRowKeys } = this.props;
@@ -70,6 +71,15 @@ class RootMap extends Component {
     this.props.setVisibleModal(true);
   };
 
+  onSearch = () => {
+    const { GUBUN } = this.props.match.params;
+    const payload = {
+      GUBUN,
+      searchText: this.state.searchText,
+    }
+    this.props.getRootMapList(payload);
+  }
+
   render() {
     const { rootMapList, visibleModal, setVisibleModal, selectedRowKeys, addRootMap, updateRootMap, selectedRootMap, setSelectedRootMap } = this.props;
     const { GUBUN } = this.props.match.params;
@@ -87,7 +97,7 @@ class RootMap extends Component {
         align: 'center',
       },
       {
-        title: 'MAPID',
+        title: 'MAP_ID',
         dataIndex: 'MAP_ID',
         key: 'MAP_ID',
         width: '5%',
@@ -113,13 +123,11 @@ class RootMap extends Component {
       },
       {
         title: '설정',
-        dataIndex: 'MAP_ID',
-        key: 'MAP_ID',
         width: '7%',
         align: 'center',
-        render: text => (
+        render: (text, record) => (
           <span>
-            <Link to={`/admin/adminmain/classify/${GUBUN}/${text}`}>
+            <Link to={`/admin/adminmain/classify/${GUBUN}/${record.MAP_ID}`}>
               <StyledButton className="btn-secondary btn-sm btn-pills">설정</StyledButton>
             </Link>
           </span>
@@ -131,22 +139,28 @@ class RootMap extends Component {
       <StyledRootMap>
         <h3 className="pageTitle">분류체계 관리</h3>
         <div className="searchBox">
+          <StyledButton className="btn-light" style={{ marginRight: 5 }} onClick={this.handleDeleteRootMap}>
+            삭제
+          </StyledButton>
+          <StyledButton className="btn-primary" onClick={() => this.props.setVisibleModal(true)}>
+            추가
+          </StyledButton>
           <div className="searchWrapper">
-            <Input type="text" name="searchText" placeholder="분류명" />
-            <button type="button" title="검색" className="searchBtn" />
+            <Input value={this.state.searchText} placeholder="분류명" onChange={e => this.setState({ searchText: e.target.value })} onPressEnter={this.onSearch} />
+            <button type="button" title="검색" className="searchBtn" onClick={this.onSearch} />
           </div>
         </div>
         <div>
           <AntdTable rowSelection={rowSelection} columns={columns} dataSource={rootMapList.map(item => ({ ...item, key: item.MAP_ID }))} bordered />
         </div>
-        <div className="buttonWrapper">
+        {/* <div className="buttonWrapper">
           <StyledButton className="btn-light" onClick={this.handleDeleteRootMap}>
             삭제
           </StyledButton>
           <StyledButton className="btn-primary" onClick={() => this.props.setVisibleModal(true)}>
             추가
           </StyledButton>
-        </div>
+        </div> */}
         <RegModal
           rootMap={selectedRootMap}
           visible={visibleModal}
