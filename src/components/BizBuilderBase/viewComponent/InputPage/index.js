@@ -137,16 +137,7 @@ class InputPage extends Component {
   // }
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const {
-      onCloseModalHandler,
-      changeViewPage,
-      isBuilderModal,
-      reloadId,
-      isSaveModalClose,
-      changeBuilderModalStateByParent,
-      workInfo,
-      redirectUrl,
-    } = this.props;
+    const { onCloseModalHandler, changeViewPage, isBuilderModal, reloadId, isSaveModalClose, changeBuilderModalStateByParent, workInfo } = this.props;
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler();
     }
