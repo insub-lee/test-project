@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
-import { InputNumber, Input, Select } from 'antd';
+import { Input, Select } from 'antd';
 import { debounce } from 'lodash';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
@@ -27,10 +27,12 @@ class ComponentConfig extends Component {
   }
 
   configStart = sagaKey => {
-    const { result } = this.props;
+    const { result, configInfo } = this.props;
+    const listWorkSeq = (configInfo && configInfo.property && configInfo.property.listWorkSeq) || 0;
+
     const workList = (result && result.workList && result.workList.list) || [];
     const listMeta = (result && result.listMeta && result.listMeta.list) || [];
-    this.setState({ workList, listMeta });
+    this.setState({ workList, listMeta, selectListMeta: listWorkSeq > 0 ? listMeta.filter(l => String(l.WORK_SEQ) === String(listWorkSeq)) : [] });
   };
 
   handleChangeViewCompData = (key, value) => {
@@ -54,7 +56,6 @@ class ComponentConfig extends Component {
           <Input
             style={{ width: '100%' }}
             defaultValue={(configInfo && configInfo.property && configInfo.property.listSagaKey) || ''}
-            min={0}
             onChange={e => this.handleChangeViewCompData('listSagaKey', e.target.value)}
           />
         </div>
@@ -78,7 +79,6 @@ class ComponentConfig extends Component {
           <InputNumber
             style={{ width: '100%' }}
             defaultValue={(configInfo && configInfo.property && configInfo.property.listWorkSeq) || ''}
-            min={0}
             onChange={value => this.handleChangeViewCompData('listWorkSeq', value)}
           />
         </div> */}
@@ -87,7 +87,6 @@ class ComponentConfig extends Component {
           <InputNumber
             style={{ width: '100%' }}
             defaultValue={(configInfo && configInfo.property && configInfo.property.listMetaSeq) || ''}
-            min={0}
             onChange={value => this.handleChangeViewCompData('listMetaSeq', value)}
           />
         </div> */}
@@ -111,7 +110,6 @@ class ComponentConfig extends Component {
           <Input
             style={{ width: '100%' }}
             defaultValue={(configInfo && configInfo.property && configInfo.property.dataKey) || ''}
-            min={0}
             onChange={e => this.handleChangeViewCompData('dataKey', e.target.value)}
           />
         </div>
@@ -127,7 +125,10 @@ class ComponentConfig extends Component {
           </Select>
         </div>
         <div className="popoverItem popoverItemInput">
-          <span className="spanLabel">선택한 ROW FormData값 설정</span>
+          <span className="spanLabel">
+            Selected Row 전체 <br />
+            formData 값 설정
+          </span>
           <Select
             defaultValue={(configInfo && configInfo.property && configInfo.property.isFormData) || 'N'}
             style={{ width: '100%' }}
@@ -138,22 +139,28 @@ class ComponentConfig extends Component {
           </Select>
         </div>
         <div className="popoverItem popoverItemInput">
-          <span className="spanLabel">Modal Width</span>
-          <Input
-            style={{ width: '100%' }}
-            defaultValue={(configInfo && configInfo.property && configInfo.property.modalWidth) || ''}
-            min={0}
-            onChange={e => this.handleChangeViewCompData('modalWidth', e.target.value)}
-          />
-        </div>
-        <div className="popoverItem popoverItemInput">
-          <span className="spanLabel">Modal Height</span>
-          <Input
-            style={{ width: '100%' }}
-            defaultValue={(configInfo && configInfo.property && configInfo.property.modalHeight) || ''}
-            min={0}
-            onChange={e => this.handleChangeViewCompData('modalHeight', e.target.value)}
-          />
+          <span className="spanLabel">Modal</span>
+          <div className="popoverInnerCom popoverInnerInput">
+            <span> Title </span>
+            <Input
+              style={{ width: '25%' }}
+              defaultValue={(configInfo && configInfo.property && configInfo.property.modalTitle) || ''}
+              onChange={e => this.handleChangeViewCompData('modalTitle', e.target.value)}
+            />
+
+            <span> Width </span>
+            <Input
+              style={{ width: '25%' }}
+              defaultValue={(configInfo && configInfo.property && configInfo.property.modalWidth) || ''}
+              onChange={e => this.handleChangeViewCompData('modalWidth', e.target.value)}
+            />
+            <span> Height </span>
+            <Input
+              style={{ width: '25%' }}
+              defaultValue={(configInfo && configInfo.property && configInfo.property.modalHeight) || ''}
+              onChange={e => this.handleChangeViewCompData('modalHeight', e.target.value)}
+            />
+          </div>
         </div>
       </>
     );
