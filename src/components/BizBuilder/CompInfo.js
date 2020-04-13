@@ -102,6 +102,7 @@ import TimeInputComp from 'components/BizBuilder/Field/TimeInputComp';
 import CheckboxSingleComp from 'components/BizBuilder/Field/CheckboxSingleComp';
 import RootKeyRadioComp from 'components/BizBuilder/Field/RootKeyRadioComp';
 import RootKeyCheckBoxComp from 'components/BizBuilder/Field/RootKeyCheckBoxComp';
+import ProfileInputComp from 'components/BizBuilder/Field/ProfileInputComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
@@ -206,4 +207,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/CheckboxSingleComp': { renderer: property => <CheckboxSingleComp {...property} /> },
   'components/BizBuilder/Field/RootKeyRadioComp': { renderer: property => <RootKeyRadioComp {...property} /> },
   'components/BizBuilder/Field/RootKeyCheckBoxComp': { renderer: property => <RootKeyCheckBoxComp {...property} /> },
+  'components/BizBuilder/Field/ProfileInputComp': { renderer: property => <ProfileInputComp {...property} /> },
 };
