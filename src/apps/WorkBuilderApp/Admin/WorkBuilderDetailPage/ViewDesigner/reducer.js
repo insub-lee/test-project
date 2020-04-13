@@ -710,7 +710,7 @@ const reducer = (state = initialState, action) => {
       const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
 
       const targetCols = state.getIn([...condition, rowIndex, 'cols']);
-      if (targetCols.map(col => (col ? col.get('span') : 0)).reduce((acc, cul) => acc + cul) !== targetCols.size) {
+      if (targetCols.map(col => (col ? col.get('span') || 1 : 0)).reduce((acc, cul) => acc + cul) !== targetCols.size) {
         window.alert('병합된 셀이 있어 불가능 합니다.');
         return state;
       }
@@ -758,7 +758,7 @@ const reducer = (state = initialState, action) => {
 
       const tempSize = state
         .getIn([...condition, 0, 'cols'])
-        .map(col => col.get('span'))
+        .map(col => (col ? col.get('span') || 1 : 0))
         .reduce((acc, curt) => acc + curt);
 
       if (retRows.size === rowIndex + 1) {
@@ -918,7 +918,7 @@ const reducer = (state = initialState, action) => {
       }
 
       /* Check Using Component */
-      if (state.getIn([...condition, groupIndex, 'rows', rowIndex, 'cols']).some(col => col.get('comp'))) {
+      if (state.getIn([...condition, groupIndex, 'rows', rowIndex, 'cols']).some(col => col && col.get('comp'))) {
         window.alert('Component를 사용하는 경우 삭제 불가능합니다.');
         return state;
       }
@@ -1115,8 +1115,8 @@ const reducer = (state = initialState, action) => {
       const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'];
 
       const currentCol = state.getIn([...condition, rowIndex, 'cols', colIndex]);
-      const colSize = currentCol.get('span');
-      const rowSize = currentCol.get('rowSpan');
+      const colSize = (currentCol && currentCol.get('span')) || 1;
+      const rowSize = (currentCol && currentCol.get('rowSpan')) || 1;
 
       let i = 0;
       let nextRows = state.getIn(condition);

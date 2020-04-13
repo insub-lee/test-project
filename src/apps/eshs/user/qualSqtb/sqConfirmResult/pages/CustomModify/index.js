@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, message } from 'antd';
 
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import * as selectors from 'containers/common/Auth/selectors';
+
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
@@ -22,11 +26,14 @@ class ModifyPage extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const {
+      formData,
       formData: { interLockReload = '', materialReload = '' },
       sagaKey,
       changeFormData,
+      setFormData,
     } = nextProps;
     const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
+
     if (prevState.qualTaskSeq !== qualTaskSeq) {
       if (typeof interLockReload === 'function') {
         interLockReload(qualTaskSeq);
@@ -158,7 +165,6 @@ class ModifyPage extends Component {
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
-
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
@@ -210,4 +216,4 @@ ModifyPage.defaultProps = {
   deleteTask: () => {},
 };
 
-export default ModifyPage;
+export default connect(() => createStructuredSelector({ profile: selectors.makeSelectProfile() }))(ModifyPage);

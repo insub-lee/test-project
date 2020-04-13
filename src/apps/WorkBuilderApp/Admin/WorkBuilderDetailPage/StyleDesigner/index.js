@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Tabs, Button, Input, Spin, Icon } from 'antd';
+import { Button, Input, Spin, Icon } from 'antd';
 import PropTypes from 'prop-types';
-import { debounce } from 'lodash';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -18,13 +17,8 @@ import * as actions from './actions';
 import * as selectors from './selectors';
 import reducer from './reducer';
 import saga from './saga';
-import CompToolbar from './CompToolbar';
 
-import StructureDesign from './StructureDesign';
 import StyleDesign from './StyleDesign';
-import CompFieldList from './CompFieldList';
-
-// const { TabPane } = Tabs;
 
 class StyleDesigner extends Component {
   constructor(props) {
@@ -33,21 +27,12 @@ class StyleDesigner extends Component {
       tabBodyHeight: 0,
       isButtonLoding: false,
     };
-    // this.handleChangeViewDesignerName = debounce(this.handleChangeViewDesignerName, 300);
   }
 
   componentDidMount = () => {
-    const { workSeq, viewType, viewID, getMetaData, getComponentPoolList, getSysMetaList } = this.props;
+    const { workSeq, viewType, viewID, getMetaData } = this.props;
     getMetaData(workSeq, viewType, viewID);
-    // getComponentPoolList();
-    // getSysMetaList();
-    // this.setHeightSize(this.getSize());
-    // window.addEventListener('resize', this.handleSize);
   };
-
-  componentWillUnmount() {
-    // window.removeEventListener('resize', this.handleSize);
-  }
 
   getSize = () => {
     const parentNode = document.querySelector('.view-content-wrapper');
@@ -68,19 +53,13 @@ class StyleDesigner extends Component {
   };
 
   handleChangeViewDesigner = (viewType, key) => {
-    const { workSeq, getMetaData, compList, getComponentPoolList, getSysMetaList } = this.props;
+    const { workSeq, getMetaData, compList } = this.props;
     const viewCnt = compList.filter(fNode => fNode.COMP_TYPE === 'VIEW').length;
     if (viewCnt > 0) {
       getMetaData(workSeq, viewType, key);
-      // getComponentPoolList();
-      // getSysMetaList();
     } else {
       message.warning(<MessageContent>기본 INPUT 페이지부터 생성해주세요.</MessageContent>);
     }
-  };
-
-  handleChangeViewDesignerName = value => {
-    this.props.changeViewDesignerName(value);
   };
 
   handleSaveMetaData = () => this.setState({ isButtonLoding: true }, () => this.props.addMetaData(this.handleChangeIsButtonLoading));
@@ -88,31 +67,8 @@ class StyleDesigner extends Component {
   handleChangeIsButtonLoading = () => this.setState({ isButtonLoding: false });
 
   render = () => {
-    const { tabBodyHeight, isButtonLoding } = this.state;
-    const {
-      activeTabKey,
-      isShowEditor,
-      viewData,
-      selectedKeys,
-      canMerge,
-      canDivide,
-      selectedStyleCells,
-      structureDesignAction,
-      styleDesignAction,
-      toolbarAction,
-      onChangeTab,
-      compList,
-      compListAction,
-      changeViewDesignerName,
-      topMenus,
-      compPoolList,
-      compGroupList,
-      compTreeData,
-      sysMetaList,
-      styleMode,
-      isLoadingContent,
-      workName,
-    } = this.props;
+    const { isButtonLoding } = this.state;
+    const { viewData, styleDesignAction, topMenus, styleMode, isLoadingContent, workName } = this.props;
     return (
       <div style={{ height: '100%' }}>
         <StyledViewDesigner>
@@ -121,14 +77,7 @@ class StyleDesigner extends Component {
               <div className="view-inner">
                 <div className={`view-content-wrapper ${styleMode ? 'single-wrapper' : ''}`}>
                   <Spin indicator={<Icon type="loading" />} spinning={isLoadingContent}>
-                    <StyleDesign
-                      isShowEditor={isShowEditor}
-                      groups={viewData.CONFIG.property.layer.groups}
-                      selectedKeys={selectedStyleCells}
-                      bodyStyle={viewData.CONFIG.property.bodyStyle}
-                      action={styleDesignAction}
-                      tabBodyHeight={tabBodyHeight}
-                    />
+                    <StyleDesign groups={viewData.CONFIG.property.layer.groups} action={styleDesignAction} />
                   </Spin>
                 </div>
               </div>
@@ -151,13 +100,7 @@ class StyleDesigner extends Component {
           </div>
           <div className="button--group--right">
             {workName}
-            <Input
-              placeholder="페이지명(KO)"
-              value={viewData.NAME_KOR}
-              className="viewNameInput"
-              onChange={e => this.handleChangeViewDesignerName(e.target.value)}
-              disabled={styleMode}
-            />
+            <Input placeholder="페이지명(KO)" value={viewData.NAME_KOR} className="viewNameInput" disabled />
             <Button onClick={this.handleSaveMetaData} loading={isButtonLoding}>
               Save
             </Button>
@@ -173,16 +116,11 @@ StyleDesigner.propTypes = {
   viewType: PropTypes.string,
   viewID: PropTypes.number,
   styleMode: PropTypes.bool,
-  compPoolList: PropTypes.arrayOf(PropTypes.object),
   isLoadingContent: PropTypes.bool,
-  compTreeData: PropTypes.arrayOf(PropTypes.object),
-  canMerge: PropTypes.shape({
-    row: PropTypes.bool,
-    col: PropTypes.bool,
-  }),
-  canDivide: PropTypes.shape({
-    row: PropTypes.bool,
-    col: PropTypes.bool,
+  styleDesignAction: PropTypes.shape({
+    onChangeWidths: PropTypes.func,
+    onChangeHeights: PropTypes.func,
+    updateCellStyle: PropTypes.func,
   }),
 };
 
@@ -191,32 +129,19 @@ StyleDesigner.defaultProps = {
   viewType: 'INPUT',
   viewID: -1,
   styleMode: false,
-  compPoolList: [],
   isLoadingContent: true,
-  compTreeData: [],
-  canMerge: {
-    row: false,
-    col: false,
-  },
-  canDivide: {
-    row: false,
-    col: false,
+  styleDesignAction: {
+    onChangeWidths: () => {},
+    onChangeHeights: () => {},
+    updateCellStyle: () => {},
   },
 };
 
 const mapStateToProps = createStructuredSelector({
-  isShowEditor: selectors.makeSelectIsShowEditor(),
-  // groups: selectors.makeSelectGroups(),
-  selectedKeys: selectors.makeSelectSelectedKeys(),
-  selectedStyleCells: selectors.makeSelectSelectedStyleCells(),
-  canMerge: selectors.makeSelectCanMerge(),
-  // bodyStyle: selectors.makeSelectBodyStyle(),
   activeTabKey: selectors.makeSelectActiveTabKey(),
   compList: selectors.makeSelectCompData(),
   topMenus: selectors.makeSelectTopMenus(),
   viewData: selectors.makeSelectViewData(),
-  compPoolList: selectors.makeSelectCompPoolList(),
-  compGroupList: selectors.makeSelectCompGroupList(),
   sysMetaList: selectors.makeSelectSysMetaList(),
   isLoadingContent: selectors.makeSelectIsLoadingContent(),
   compTreeData: selectors.makeSelectCompTreeData(),
@@ -224,69 +149,13 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onChangeTab: activeKey => dispatch(actions.changeActiveTab(activeKey)),
-  addMetaData: callbackFunc => dispatch(actions.addMetaDataBySaga(callbackFunc)),
-  changeViewDesignerName: value => dispatch(actions.changeViewDesignerNameByReducer(value)),
   getMetaData: (workSeq, viewType, viewID) => dispatch(actions.getMetaDataBySaga(workSeq, viewType, viewID)),
-  getComponentPoolList: () => dispatch(actions.getComponentPoolListBySaga()),
-  // getSysMetaList: () => dispatch(actions.getSysMetaListBySaga()),
-  structureDesignAction: {
-    openJsonCodeEditor: () => dispatch(actions.openJsonCodeEditor()),
-    closeJsonCodeEditor: () => dispatch(actions.closeJsonCodeEditor()),
-    updateJsonCode: jsObject => dispatch(actions.updateJsonCode(jsObject)),
-    addRow: (groupIndex, rowIndex) => dispatch(actions.addRow(groupIndex, rowIndex)),
-    // mergeCell: () => dispatch(actions.mergeCell()),
-    // divideCell: () => dispatch(actions.divideCell()),
-    addCell: () => dispatch(actions.addCell()),
-    selectCell: ({ metaKey, ctrlKey }, groupIndex, rowIndex, colIndex) => dispatch(actions.selectCell(groupIndex, rowIndex, colIndex, metaKey || ctrlKey)),
-    addGroup: () => dispatch(actions.addGroup()),
-    changeGroupTitle: (groupIndex, title) => dispatch(actions.changeGroupTitle(groupIndex, title)),
-    changeUseGroupTitle: (groupIndex, useTitle) => dispatch(actions.changeUseGroupTitle(groupIndex, useTitle)),
-    changeCompData: (groupIndex, rowIndex, colIndex, key, value) => dispatch(actions.changeCompDataByReducer(groupIndex, rowIndex, colIndex, key, value)),
-    removeColComp: (groupIndex, rowIndex, colIndex) => dispatch(actions.removeColCompByReducer(groupIndex, rowIndex, colIndex)),
-    removeGroup: groupIndex => dispatch(actions.removeGroup(groupIndex)),
-    changeViewCompData: (groupIndex, rowIndex, colIndex, key, value) =>
-      dispatch(actions.changeViewCompDataByReducer(groupIndex, rowIndex, colIndex, key, value)),
-    removeHiddenComp: compIndex => dispatch(actions.removeHiddenCompByReducer(compIndex)),
-    changeColConfig: (groupIndex, rowIndex, colIndex, key, value) => dispatch(actions.changeColConfigByReducer(groupIndex, rowIndex, colIndex, key, value)),
-    changeGroupData: (groupIndex, key, value) => dispatch(actions.changeGroupDataByReducer(groupIndex, key, value)),
-    increaseRow: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.increaseRow(groupIndex, rowIndex, colIndex)),
-    decreaseRow: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.decreaseRow(groupIndex, rowIndex, colIndex)),
-    increaseCol: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.increaseCol(groupIndex, rowIndex, colIndex)),
-    decreaseCol: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.decreaseCol(groupIndex, rowIndex, colIndex)),
-    addRowToUp: (e, { groupIndex, rowIndex }) => dispatch(actions.addRowToUp(groupIndex, rowIndex)),
-    addRowToDown: (e, { groupIndex, rowIndex }) => dispatch(actions.addRowToDown(groupIndex, rowIndex)),
-    removeRow: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.removeRow(groupIndex, rowIndex, colIndex)),
-    addColToLeft: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.addColToLeft(groupIndex, rowIndex, colIndex)),
-    addColToRight: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.addColToRight(groupIndex, rowIndex, colIndex)),
-    removeCol: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.removeCol(groupIndex, rowIndex, colIndex)),
-    mergeRow: () => dispatch(actions.mergeRow()),
-    mergeCol: () => dispatch(actions.mergeCol()),
-    divideRow: () => dispatch(actions.divideRow()),
-    divideCol: () => dispatch(actions.divideCol()),
-    onChangeTableSize: (groupIndex, tableSize) => dispatch(actions.onChangeTableSize(groupIndex, tableSize)),
-    changeCompFieldData: (compKey, key, value) => dispatch(actions.changeCompFieldDataByReducer(compKey, key, value)),
-    changeHiddenCompData: (compIdx, key, value) => dispatch(actions.changeHiddenCompDatByReducer(compIdx, key, value)),
-  },
+  addMetaData: callbackFunc => dispatch(actions.addMetaDataBySaga(callbackFunc)),
   styleDesignAction: {
-    openJsonCodeEditor: () => dispatch(actions.openJsonCodeEditor()),
-    closeJsonCodeEditor: () => dispatch(actions.closeJsonCodeEditor()),
-    updateJsonCode: jsObject => dispatch(actions.updateJsonCode(jsObject)),
-    updateStyleWidth: (groupIndex, rowIndex, colIndex, width, diff) => dispatch(actions.updateStyleWidth(groupIndex, rowIndex, colIndex, width, diff)),
-    updateStyleHeight: (groupIndex, rowIndex, colIndex, height) => dispatch(actions.updateStyleHeight(groupIndex, rowIndex, colIndex, height)),
-    updateStyleSize: (groupIndex, rowIndex, colIndex, isLast, direction, style) =>
-      dispatch(actions.updateStyleSize(groupIndex, rowIndex, colIndex, isLast, direction, style)),
-    updateStyleRowHeight: (groupIndex, rowIndex, colIndex) => dispatch(actions.updateStyleRowHeight(groupIndex, rowIndex, colIndex)),
-    updateBodyStyle: (width, height) => dispatch(actions.updateBodyStyle(width, height)),
-    selectCell: (groupIndex, rowIndex, colIndex) => dispatch(actions.selectStyleCell(groupIndex, rowIndex, colIndex)),
-  },
-  toolbarAction: {
-    setSelectToolbarItem: comp => dispatch(actions.setSelectToolbarItemByReducer(comp)),
-  },
-  compListAction: {
-    removeCompItem: (layerIdx, compKey) => dispatch(actions.removeCompItemByReducer(layerIdx, compKey)),
-    setViewDataCompItem: compItem => dispatch(actions.setViewDataCompItemByReducer(compItem)),
-    setSysCompItem: compItem => dispatch(actions.setSysCompItemByReducer(compItem)),
+    onChangeWidths: (groupIndex, widths) => dispatch(actions.onChangeWidths(groupIndex, widths)),
+    onChangeHeights: (groupIndex, heights) => dispatch(actions.onChangeHeights(groupIndex, heights)),
+    updateCellStyle: (groupIndex, rowIndex, colIndex, key, value) =>
+      dispatch(actions.updateCellStyle(groupIndex, Number(rowIndex), Number(colIndex), key, value)),
   },
 });
 
