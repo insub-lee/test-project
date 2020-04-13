@@ -72,7 +72,7 @@ class Input extends Component {
     const { extraApiData, changeFormData, sagaKey: id } = nextProps;
     if (extraApiData.getUserInfo) {
       if (prevState.userInfo !== extraApiData.getUserInfo) {
-        changeFormData(id, 'gender', extraApiData.getUserInfo.userInfo.gender);
+        changeFormData(id, 'gender', extraApiData.getUserInfo.userInfo.GENDER);
         return { userInfo: extraApiData.getUserInfo.userInfo };
       }
     }
@@ -134,7 +134,7 @@ class Input extends Component {
   makeFormData = () => {
     const { changeFormData, sagaKey: id } = this.props;
     const { userInfo, selectedDate } = this.state;
-    switch (userInfo.gender) {
+    switch (userInfo.GENDER) {
       case 'm':
         changeFormData(id, 'BED_NO', '05');
         break;
