@@ -58,6 +58,7 @@
   overflow: hidden;
   width: 140px;
   white-space: nowrap;
+  text-align: left;
 } /* IE에서 custom scrollbar 가로 스크롤 시, 오른쪽 텍스트 잘림 방지 */
 .sortableTreeWrapper .rstcustom__rowTitle button.active {
   color: #7535d8;
