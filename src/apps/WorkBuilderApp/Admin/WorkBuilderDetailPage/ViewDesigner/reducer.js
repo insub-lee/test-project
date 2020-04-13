@@ -918,7 +918,7 @@ const reducer = (state = initialState, action) => {
       }
 
       /* Check Using Component */
-      if (state.getIn([...condition, groupIndex, 'rows', rowIndex, 'cols']).some(col => col.get('comp'))) {
+      if (state.getIn([...condition, groupIndex, 'rows', rowIndex, 'cols']).some(col => col && col.get('comp'))) {
         window.alert('Component를 사용하는 경우 삭제 불가능합니다.');
         return state;
       }

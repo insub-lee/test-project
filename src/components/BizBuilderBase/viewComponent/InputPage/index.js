@@ -137,9 +137,18 @@ class InputPage extends Component {
   // }
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModalHandler, changeViewPage, isBuilderModal, reloadId, isSaveModalClose, changeBuilderModalStateByParent, workInfo } = this.props;
+    const {
+      onCloseModalHandler,
+      changeViewPage,
+      isBuilderModal,
+      reloadId,
+      isSaveModalClose,
+      changeBuilderModalStateByParent,
+      workInfo,
+      redirectUrl,
+    } = this.props;
     if (typeof onCloseModalHandler === 'function') {
-      onCloseModalHandler();
+      onCloseModalHandler(id, redirectUrl);
     }
     if (typeof changeViewPage === 'function') {
       const changeViewOptIdx = workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === CHANGE_VIEW_OPT_SEQ);
