@@ -7,6 +7,7 @@ const makeDataSource = ({ categoryMapList, PARAM }) => {
   return categoryMapList
     .filter(x => rootData && rootData.LVL + 1 === x.LVL && x.USE_YN === 'Y')
     .map(item => ({
+      key: item.NODE_ID,
       value: item.NODE_ID,
       NAME_KOR: item.NAME_KOR,
       NAME_ENG: item.NAME_ENG,
@@ -30,8 +31,6 @@ class RootKeyRadioComp extends Component {
         property: { mapId, rootKey },
       },
     } = this.props;
-    console.debug('rootKey', rootKey);
-    console.debug('getExtraApiData', getExtraApiData);
     if (rootKey) {
       const apiArray = [{ key: `radio_${rootKey}`, type: 'POST', url: `/api/admin/v1/common/categoryMapList`, params: { PARAM: { NODE_ID: rootKey } } }];
       getExtraApiData(id, apiArray);
