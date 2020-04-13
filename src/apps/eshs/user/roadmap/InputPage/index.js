@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { InputNumber, Row, Col } from 'antd';
 import { isJSON } from 'utils/helpers';
-import Sketch from 'components/BizBuilder/Sketch';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 // import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import Moment from 'moment';
 import { debounce } from 'lodash';
@@ -72,7 +71,7 @@ class InputPage extends Component {
         });
         break;
       default:
-        return null;
+        break;
     }
   }
 
@@ -125,41 +124,44 @@ class InputPage extends Component {
         );
       }
       return (
-        <StyledViewDesigner>
-          <Sketch {...bodyStyle}>
-            <Row>
-              <Col span={3}>항목</Col>
-              <Col span={18}>{this.state.category}</Col>
-            </Row>
-            <hr />
-            <Row>
-              <Col span={3}>작성자</Col>
-              <Col span={18}>{formData.REG_USER_NAME}</Col>
-            </Row>
-            <hr />
-            <Row>
-              <Col span={3}>연/월</Col>
-              <Col span={18}>{`${Moment(formData.CHK_DATE).format('YYYY')}/${Moment(formData.CHK_DATE).format('MM')}`}</Col>
-            </Row>
-            <hr />
-            <Row>
-              <Col span={3}>청주</Col>
-              <Col span={8}>
-                <InputNumber name="C1" min={0} width onChange={value => this.setState({ C1: value })} />
-              </Col>
-              <Col span={3}>구미</Col>
-              <Col span={8}>
-                <InputNumber name="H3" min={0} onChange={value => this.setState({ H3: value })} />
-              </Col>
-            </Row>
-            <hr />
-            <div className="alignRight">
-              <StyledButton className="btn-primary" onClick={() => this.handleOnAddClick(id)}>
-                저장
-              </StyledButton>
+        <ContentsWrapper>
+          <StyledHtmlTable>
+            <div className="tableWrapper">
+              <table>
+                <colgroup>
+                  <col width="20%" />
+                  <col width="30%" />
+                  <col width="20%" />
+                  <col width="30%" />
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th colSpan={1}>항목</th>
+                    <td colSpan={3}>{this.state.category}</td>
+                  </tr>
+                  <tr>
+                    <th colSpan={1}>작성자</th>
+                    <td colSpan={3}>{formData.REG_USER_NAME}</td>
+                  </tr>
+                  <tr>
+                    <th colSpan={1}>연월</th>
+                    <td colSpan={3}>{`${Moment(formData.CHK_DATE).format('YYYY')}/${Moment(formData.CHK_DATE).format('MM')}`}</td>
+                  </tr>
+                  <tr>
+                    <th>청주</th>
+                    <td>
+                      <InputNumber name="C1" min={0} width onChange={value => this.setState({ C1: value })} />
+                    </td>
+                    <th>구미</th>
+                    <td>
+                      <InputNumber name="H3" min={0} onChange={value => this.setState({ H3: value })} />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          </Sketch>
-        </StyledViewDesigner>
+          </StyledHtmlTable>
+        </ContentsWrapper>
       );
     }
     return '';

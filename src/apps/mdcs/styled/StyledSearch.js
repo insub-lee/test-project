@@ -141,7 +141,7 @@ const StyledSearch = styled.div`
             width: 20%;
             float: left;
             padding: 10px 15px;
-            height: 100%;
+            height: calc(100vh - 146px);
             border-right: 1px solid #ebf0f6;
           }
           &.formWrapper {

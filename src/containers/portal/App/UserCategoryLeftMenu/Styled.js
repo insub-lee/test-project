@@ -11,7 +11,7 @@ const Styled = styled.div`
   opacity: 1;
   background-color: #152434;
   border-left: 1px solid #35414e;
-  z-index: 2;
+  z-index: 1998;
   transition: left 0.3s ease-out 0s;
 
   &.active {
@@ -64,10 +64,17 @@ const Styled = styled.div`
     cursor: pointer;
     width: 20px;
     color: white;
-    background-color: rgba(87, 71, 120, 1);
+    background-color: rgb(21, 36, 52);
     background-repeat: no-repeat;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
+    border-radius: 0;
+  }
+
+  .btn-page-move {
+    background: transparent;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 40px;
   }
 `;
 

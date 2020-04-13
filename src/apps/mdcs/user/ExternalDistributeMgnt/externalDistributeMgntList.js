@@ -4,6 +4,7 @@ import { Table, Icon, Button, Modal } from 'antd';
 
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
+import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 
 import DistributeCompany from './DistributeCompany';
 
@@ -134,18 +135,15 @@ class ExternalDistributeMgntList extends Component {
     }
 
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white', height: '100%' }}>
-        <div style={{ marginBottom: '10px', clear: 'both', overflow: 'hidden', width: '100%' }}>
-          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000', paddingBottom: '10px', float: 'left' }}>
-            <Icon type="form" /> 외부배포 관리
-          </p>
-          {/* <p style={{ float: 'right', marginTop: '5px' }}>
-            <Button icon="export" onClick={this.onClickExternalDist}>
-              외부배포
-            </Button>
-          </p> */}
-        </div>
-        <AntdTable dataSource={list.map(item => ({ ...item, key: `${item.DOCNUMBER}_${item.RECV_DEPT_ID}` }))} columns={this.columns} />
+      <>
+        <ContentsWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 외부배포 관리
+            </p>
+          </div>
+          <AntdTable dataSource={list.map(item => ({ ...item, key: `${item.DOCNUMBER}_${item.RECV_DEPT_ID}` }))} columns={this.columns} />
+        </ContentsWrapper>
         <AntdModal
           width={700}
           visible={this.state.isShow}
@@ -156,8 +154,8 @@ class ExternalDistributeMgntList extends Component {
         >
           <DistributeCompany selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
-      </div>
-    )
+      </>
+    );
   }
 }
 

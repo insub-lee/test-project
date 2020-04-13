@@ -5,11 +5,11 @@ const StyledTextarea = Component => styled(Component)`
     display: block;
     width: 100%;
     height: auto;
-    padding: 0.5rem 0.875rem;
+    padding: 10px;
     font-size: 0.8125rem;
     font-weight: 400;
     line-height: 1.47;
-    color: #495057;
+    color: #666;
     background-color: #fff;
     background-clip: padding-box;
     border: 1px solid #e5e5e5;
@@ -17,9 +17,8 @@ const StyledTextarea = Component => styled(Component)`
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
     &:hover,
     &:focus {
-      color: #495057;
       background-color: #fff;
-      border-color: #886ab5;
+      border-color: #4491e0;
       outline: 0;
       box-shadow: 0 0 0 0.2rem transparent;
     }

@@ -4,21 +4,23 @@ import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 import { Data } from 'react-data-grid-addons';
 import { Modal } from 'antd';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import InputPage from './pages/InputPage';
 import ModifyPage from './pages/ModifyPage';
 import SearchListPage from './pages/SearchListPage';
+const AntdModal = StyledContentsModal(Modal);
 
 class SqtbEquipMgt extends Component {
   state = {
     isLoading: true,
+    searchListVisible: false,
+    modalSelectedRow: {},
+    searchList: [],
   };
 
   loadingComplete = () => {
     this.setState({
       isLoading: false,
-      searchListVisible: false,
-      modalSelectedRow: {},
-      searchList: [],
     });
   };
 
@@ -69,6 +71,7 @@ class SqtbEquipMgt extends Component {
   };
 
   render() {
+    const { saveTaskAfterCallbackFunc } = this.props;
     const { searchListVisible, modalSelectedRow, searchList } = this.state;
     return (
       <>
@@ -83,17 +86,22 @@ class SqtbEquipMgt extends Component {
           modalSelectedRow={modalSelectedRow}
           searchListId="SqtbSearchList"
           setModalRowSelected={obj => this.setRowSelected(obj)}
+          saveTaskAfterCallbackFunc={saveTaskAfterCallbackFunc}
         />
-        <Modal title="장비 검색" visible={searchListVisible} width={1000} height={600} onCancel={this.handleModalVisible} footer={[null]}>
+        <AntdModal title="장비 검색" visible={searchListVisible} width={1000} height={600} onCancel={this.handleModalVisible} footer={[null]}>
           {searchList}
-        </Modal>
+        </AntdModal>
       </>
     );
   }
 }
 
-SqtbEquipMgt.propTypes = {};
+SqtbEquipMgt.propTypes = {
+  saveTaskAfterCallbackFunc: PropTypes.any,
+};
 
-SqtbEquipMgt.defaultProps = {};
+SqtbEquipMgt.defaultProps = {
+  saveTaskAfterCallbackFunc: undefined,
+};
 
 export default SqtbEquipMgt;

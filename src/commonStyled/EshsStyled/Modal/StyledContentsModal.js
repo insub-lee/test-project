@@ -33,5 +33,10 @@ const StyledContentsModal = Component => styled(Component)`
       text-align: center;
     }
   }
+  &.modal-table-pad {
+    .ant-modal-body {
+      padding: 20px;
+    }
+  }
 `;
 export default StyledContentsModal;

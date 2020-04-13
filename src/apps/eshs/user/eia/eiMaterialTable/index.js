@@ -1,7 +1,14 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { Input, Select, Button, Table } from 'antd';
-import MaterialTableStyled from '../styled/MaterialTableStyled';
+
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+
+const AntdInput = StyledInput(Input);
 
 class MaterialTable extends Component {
   constructor(props) {
@@ -23,10 +30,6 @@ class MaterialTable extends Component {
     }
   };
 
-  // handleReload = () => {
-  //   console.debug('저장완료.');
-  // };
-
   handleInputOnChange = e => {
     const { id, changeFormData, formData } = this.props;
     const materialData = (formData && formData.materialData) || {};
@@ -38,91 +41,127 @@ class MaterialTable extends Component {
     const materialData = (formData && formData.materialData) || {};
     const searchFlag = (formData && formData.searchFlag) || false;
     return (
-      <MaterialTableStyled>
-        <div className="MaterialTable">
+      <ContentsWrapper>
+        <StyledHtmlTable className="tableWrapper">
+          {!searchFlag && (
+            <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+              <StyledButton className="btn-primary" onClick={() => this.handleSaveOnClick()}>
+                저장
+              </StyledButton>
+            </StyledButtonWrapper>
+          )}
           <table>
-            <thead>
-              <tr align="right">
-                <td colSpan={8}>{!searchFlag && <Button onClick={() => this.handleSaveOnClick()}>저장</Button>}</td>
-              </tr>
-            </thead>
+            <colgroup>
+              <col width="10%" />
+              <col width="15%" />
+              <col width="10%" />
+              <col width="15%" />
+              <col width="10%" />
+              <col width="15%" />
+              <col width="10%" />
+              <col width="15%" />
+            </colgroup>
             <tbody>
               <tr>
-                <td>
+                <th>
                   <span>사업부명</span>
-                </td>
+                </th>
                 <td>
-                  <Input name="DIVISION_NM" value={materialData.DIVISION_NM || ''} readOnly />
+                  <AntdInput className="ant-input-inline" style={{ width: '100%' }} name="DIVISION_NM" value={materialData.DIVISION_NM || ''} readOnly />
                 </td>
-                <td colSpan={2}>
+                <th colSpan={2}>
                   <span>공장/FAB/건물명</span>
-                </td>
+                </th>
                 <td colSpan={2}>
-                  <Input name="FROM_BUILDING_NM" value={materialData.FROM_BUILDING_NM || ''} onChange={this.handleInputOnChange} />
+                  <AntdInput
+                    className="ant-input-inline"
+                    style={{ width: '100%' }}
+                    name="FROM_BUILDING_NM"
+                    value={materialData.FROM_BUILDING_NM || ''}
+                    onChange={this.handleInputOnChange}
+                  />
                 </td>
-                <td>
+                <th>
                   <span>조사대상영역</span>
-                </td>
+                </th>
                 <td>
-                  <Input name="TO_BUILDING_NM" value={materialData.TO_BUILDING_NM || ''} onChange={this.handleInputOnChange} />
+                  <AntdInput
+                    className="ant-input-inline"
+                    style={{ width: '100%' }}
+                    name="TO_BUILDING_NM"
+                    value={materialData.TO_BUILDING_NM || ''}
+                    onChange={this.handleInputOnChange}
+                  />
                 </td>
               </tr>
               <tr>
-                <td>
+                <th>
                   <span>부서명</span>
-                </td>
+                </th>
                 <td>
-                  <Input name="FROM_DEPT_NM" value={materialData.FROM_DEPT_NM || ''} readOnly />
+                  <AntdInput className="ant-input-inline" style={{ width: '100%' }} name="FROM_DEPT_NM" value={materialData.FROM_DEPT_NM || ''} readOnly />
                 </td>
-                <td>
+                <th>
                   <span>부서장</span>
-                </td>
+                </th>
                 <td>
-                  <Input name="FROM_DEPT_MANAGER_NO" value={materialData.FROM_DEPT_MANAGER_NO || ''} readOnly />
+                  <AntdInput
+                    className="ant-input-inline"
+                    style={{ width: '100%' }}
+                    name="FROM_DEPT_MANAGER_NO"
+                    value={materialData.FROM_DEPT_MANAGER_NO || ''}
+                    readOnly
+                  />
                 </td>
-                <td>
+                <th>
                   <span>작성자</span>
-                </td>
+                </th>
                 <td>
-                  <Input name="FROM_EMP_NM" value={materialData.FROM_EMP_NM || ''} readOnly />
+                  <AntdInput className="ant-input-inline" style={{ width: '100%' }} name="FROM_EMP_NM" value={materialData.FROM_EMP_NM || ''} readOnly />
                 </td>
-                <td>
+                <th>
                   <span>작성일</span>
-                </td>
-                <td>
+                </th>
+                <td align="center">
                   <span>{materialData.FROM_CREATE_DT || '-'}</span>
                 </td>
               </tr>
               <tr>
-                <td>
+                <th>
                   <span>주관부서</span>
-                </td>
+                </th>
                 <td>
-                  <Input name="TO_DEPT_NM" value={materialData.TO_DEPT_NM || ''} readOnly />
+                  <AntdInput className="ant-input-inline" style={{ width: '100%' }} name="TO_DEPT_NM" value={materialData.TO_DEPT_NM || ''} readOnly />
                 </td>
-                <td>
+                <th>
                   <span>부서장</span>
-                </td>
+                </th>
                 <td>
-                  <Input name="TO_DEPT_MANAGER_NM" value={materialData.TO_DEPT_MANAGER_NM || ''} readOnly />
+                  <AntdInput
+                    className="ant-input-inline"
+                    style={{ width: '100%' }}
+                    name="TO_DEPT_MANAGER_NM"
+                    value={materialData.TO_DEPT_MANAGER_NM || ''}
+                    readOnly
+                  />
                 </td>
-                <td>
+                <th>
                   <span>검토자</span>
-                </td>
+                </th>
                 <td>
-                  <Input name="TO_EMP_NM" value={materialData.TO_EMP_NM || ''} readOnly />
+                  <AntdInput className="ant-input-inline" style={{ width: '100%' }} name="TO_EMP_NM" value={materialData.TO_EMP_NM || ''} readOnly />
                 </td>
-                <td>
+                <th>
                   <span>검토일</span>
-                </td>
-                <td>
+                </th>
+                <td align="center">
                   <span>{materialData.TO_CREATE_DT || '-'}</span>
                 </td>
               </tr>
             </tbody>
           </table>
-        </div>
-      </MaterialTableStyled>
+        </StyledHtmlTable>
+      </ContentsWrapper>
     );
   }
 }

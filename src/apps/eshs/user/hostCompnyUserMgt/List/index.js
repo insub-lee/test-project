@@ -1,6 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { Table, Column, AutoSizer } from 'react-virtualized';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
 import SearchBar from './SearchBar';
 
@@ -12,6 +13,11 @@ class List extends Component {
     };
   }
 
+  componentDidMount = () => {
+    const { id, getCallDataHandler, apiAry } = this.props;
+    getCallDataHandler(id, apiAry, this.handleAppStart);
+  };
+
   handleAppStart = () => {
     const { result, id, changeFormData } = this.props;
     const userList = (result && result.selectAllUserList && result.selectAllUserList.list) || [];
@@ -20,11 +26,6 @@ class List extends Component {
     this.setState({
       userList,
     });
-  };
-
-  componentDidMount = () => {
-    const { id, getCallDataHandler, apiAry } = this.props;
-    getCallDataHandler(id, apiAry, this.handleAppStart);
   };
 
   setList = () => {
@@ -66,28 +67,11 @@ class List extends Component {
   render() {
     const list = this.setList();
     return (
-      <div className="hostCmpnyUserMgt">
-        <SearchBar {...this.props} handleAppStart={this.handleAppStart} />
+      <ContentsWrapper>
+        <div className="selSaveWrapper alignLeft">
+          <SearchBar {...this.props} handleAppStart={this.handleAppStart} />
+        </div>
         <StyledVirtualizedTable>
-          {/* <AutoSizer disableHeight>
-            <Table
-              width={1500}
-              height={900}
-              headerHeight={30}
-              rowHeight={23}
-              rowCount={list.length}
-              rowGetter={({ index }) => list[index]}
-              noRowsRenderer={this.noRowsRenderer}
-              onRowClick={this.onRowClick}
-              >
-              <Column label="소속" dataKey="belong" width={350} className="ReactVirtualized__Table__rowColumn_belong" />
-              <Column label="이름" dataKey="emp_nm" width={200} />
-              <Column label="직위" dataKey="emp_position" width={200} />
-              <Column label="직책" dataKey="duty" width={200} />
-              <Column label="근무지" dataKey="site" width={200} />
-              <Column label="전화번호" dataKey="tel" width={350} />
-              </Table>
-            </AutoSizer> */}
           <AutoSizer disableHeight>
             {({ width }) => (
               <Table
@@ -107,7 +91,7 @@ class List extends Component {
             )}
           </AutoSizer>
         </StyledVirtualizedTable>
-      </div>
+      </ContentsWrapper>
     );
   }
 }

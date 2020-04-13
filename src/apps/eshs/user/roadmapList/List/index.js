@@ -6,9 +6,9 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-community';
-import Sketch from 'components/BizBuilder/Sketch';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import './styled.css';
 
 import moment from 'moment';
@@ -50,7 +50,8 @@ class List extends Component {
       cellClassRules: { 'cell-span': "value=== 'WF 생산량 (장)'" },
     },
     { headerName: '구분', field: 'site', filter: true, sorter: true, pinned: 'left', width: 63 },
-    { headerName: '합계', field: 'total', pinned: 'right', valueFormatter: this.numberFormatter },
+    // { headerName: '합계', field: 'total', pinned: 'right', valueFormatter: this.numberFormatter },
+    { headerName: '합계', field: 'total', pinned: 'right' },
     { headerName: '비교 Factor', pinned: 'right' },
     { headerName: '단위', field: 'unit', pinned: 'right' },
   ];
@@ -78,6 +79,7 @@ class List extends Component {
     if (startDate === endDate) {
       return null;
     }
+
     while (startDate <= endDate) {
       monthArr.push(moment(startDate).format('YMM'));
       startDate = moment(startDate).add(1, 'months');
@@ -108,7 +110,6 @@ class List extends Component {
       },
     ];
     getExtraApiData(id, apiArr);
-    return this.props.extraApiData;
   };
 
   changeColumnDefs = param => {
@@ -118,7 +119,7 @@ class List extends Component {
       tempCol.push({
         headerName: `${moment(item.substring(0, 4)).format('Y')}년 ${moment(item.substring(4)).format('MMMM')}`,
         field: item,
-        valueFormatter: this.numberFormatter,
+        // valueFormatter: this.numberFormatter,
       });
       const newColumnInfo = [...columnDefs.slice(0, 2), ...tempCol, ...columnDefs.slice(-3)];
       return this.setState({
@@ -151,7 +152,7 @@ class List extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { extraApiData } = nextProps;
-    if (extraApiData.filteredData) {
+    if (extraApiData.filteredData && extraApiData.filteredData.roadmapList) {
       if (prevState.filteredList !== extraApiData.filteredData.roadmapList) {
         return { filteredList: extraApiData.filteredData.roadmapList };
       }
@@ -159,52 +160,50 @@ class List extends Component {
     return null;
   }
 
-  numberFormatter = params => params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  // numberFormatter = params => params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   render() {
     const { isDisabled, defaultColDef, filteredList, gridOptions, columnDefs, startMonth, endMonth, endPlaceholder } = this.state;
     return (
-      <StyledViewDesigner>
-        <Sketch>
-          <div style={{ margin: '5px' }}>
-            <div className="alignRight">
-              <span style={{ marginRight: '10px' }}>기간 별 검색</span>
-              <MonthPicker
-                placeholder="기준일을 선택하세요."
-                value={startMonth}
-                onChange={e => this.setState({ startMonth: e, isDisabled: false, endPlaceholder: '종료일을 선택하세요.' })}
-                style={{ marginRight: '5px' }}
-                format="Y년 MMM"
-              />
-              {'  ~  '}
-              <MonthPicker
-                disabled={isDisabled}
-                value={endMonth}
-                disabledDate={this.disabledMonth}
-                onChange={this.handleDateChange}
-                placeholder={endPlaceholder}
-                style={{ marginRight: '10px', marginLeft: '5px' }}
-                format="Y년 MMM"
-              />
-              <StyledButton className="btn-primary" onClick={this.handleFilterReset}>
-                초기화
-              </StyledButton>
-            </div>
+      <ContentsWrapper>
+        <div style={{ margin: '5px' }}>
+          <div className="selSaveWrapper alignLeft">
+            <span style={{ marginRight: '10px' }}>기간 별 검색</span>
+            <MonthPicker
+              placeholder="기준일을 선택하세요."
+              value={startMonth}
+              onChange={e => this.setState({ startMonth: e, isDisabled: false, endPlaceholder: '종료일을 선택하세요.' })}
+              style={{ marginRight: '5px' }}
+              format="Y년 MMM"
+            />
+            {'  ~  '}
+            <MonthPicker
+              disabled={isDisabled}
+              value={endMonth}
+              disabledDate={this.disabledMonth}
+              onChange={this.handleDateChange}
+              placeholder={endPlaceholder}
+              style={{ marginRight: '10px', marginLeft: '5px' }}
+              format="Y년 MMM"
+            />
+            <StyledButton className="btn-primary" onClick={this.handleFilterReset}>
+              초기화
+            </StyledButton>
           </div>
-          <div style={{ width: '100%', height: '100%' }}>
-            <div className="ag-theme-balham" style={{ height: '560px' }}>
-              <AgGridReact
-                defaultColDef={defaultColDef}
-                rowData={filteredList}
-                gridOptions={gridOptions}
-                columnDefs={columnDefs}
-                suppressRowTransform
-                onGridReady={this.handleGridReady}
-              />
-            </div>
+        </div>
+        <div style={{ width: '100%', height: '100%' }}>
+          <div className="ag-theme-balham tableWrapper" style={{ height: '560px' }}>
+            <AgGridReact
+              defaultColDef={defaultColDef}
+              rowData={filteredList}
+              gridOptions={gridOptions}
+              columnDefs={columnDefs}
+              suppressRowTransform
+              onGridReady={this.handleGridReady}
+            />
           </div>
-        </Sketch>
-      </StyledViewDesigner>
+        </div>
+      </ContentsWrapper>
     );
   }
 }

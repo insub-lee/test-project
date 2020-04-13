@@ -5,11 +5,11 @@ import { Row, Col, message } from 'antd';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { createStructuredSelector } from 'reselect';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import * as selectors from '../../../../../../containers/common/Auth/selectors';
 import DeptSearchBar from '../../eiDeptSearchBar';
 import ItemTable from '../ItemTable';
 import MaterialTable from '../../eiMaterialTable';
-import MainPageStyled from '../../styled/MainPageStyled';
 
 class MainPage extends Component {
   constructor(props) {
@@ -147,27 +147,17 @@ class MainPage extends Component {
   render() {
     const { formData } = this.props;
     return (
-      <MainPageStyled>
-        <StyledViewDesigner>
-          <Sketch>
-            <Row>
-              <Col span={10}>
-                <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} saveBeforeProcess={this.saveBeforeProcess} />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <MaterialTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <ItemTable {...this.props} onFileUploaded={this.onFileUploaded} saveBeforeProcess={this.saveBeforeProcess} />
-              </Col>
-            </Row>
-          </Sketch>
-        </StyledViewDesigner>
-      </MainPageStyled>
+      <ContentsWrapper>
+        <div>
+          <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} saveBeforeProcess={this.saveBeforeProcess} />
+        </div>
+        <div>
+          <MaterialTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+        </div>
+        <div>
+          <ItemTable {...this.props} onFileUploaded={this.onFileUploaded} saveBeforeProcess={this.saveBeforeProcess} />
+        </div>
+      </ContentsWrapper>
     );
   }
 }

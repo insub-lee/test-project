@@ -9,7 +9,7 @@ import StyledInput from 'components/FormStuff/Input';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledDatePicker from 'components/FormStuff/DatePicker';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
-import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 
 const AntdModal = StyledModalWrapper(Modal);

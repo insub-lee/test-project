@@ -8,7 +8,7 @@ import StyledRadio from 'components/FormStuff/Radio';
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 import StyledDatePicker from 'components/FormStuff/DatePicker';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
-import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import SearchList from './SearchList';

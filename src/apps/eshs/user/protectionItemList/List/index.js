@@ -5,18 +5,24 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { Select, Input, InputNumber, Modal } from 'antd';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+
 import request from 'utils/request';
 import { debounce } from 'lodash';
 
-import Sketch from 'components/BizBuilder/Sketch';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 import ImageUploader from 'components/FormStuff/Upload/ImageUploader';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import CustomTooltip from './customTooltip';
 
 const { Option } = Select;
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
+const AntdModal = StyledContentsModal(Modal);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -39,74 +45,74 @@ class List extends React.Component {
   columnDefsOrigin = [
     {
       headerName: '품목',
-      field: 'kind',
+      field: 'KIND',
       width: 170,
       tooltipField: 'kind',
     },
     {
       headerName: '모델',
-      field: 'model',
+      field: 'MODEL',
       width: 200,
       tooltipField: 'model',
     },
     {
       headerName: 'Size',
-      field: 'size1',
+      field: 'SIZE1',
       width: 130,
       tooltipField: 'size1',
     },
     {
       headerName: '검정#',
-      field: 'app_no',
+      field: 'APP_NO',
       tooltipField: 'app_no',
     },
     {
       headerName: 'Vendor',
-      field: 'vendor_nm',
+      field: 'VENDOR_NM',
       width: 130,
       tooltipField: 'vendor_nm',
     },
     {
       headerName: 'Maker',
-      field: 'maker_nm',
+      field: 'MAKER_NM',
       tooltipField: 'maker_nm',
     },
     {
       headerName: '단가',
-      field: 'unitprice',
+      field: 'UNITPRICE',
       valueFormatter: params => (params.value ? params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0),
       tooltipField: 'unitprice',
     },
     {
       headerName: '유효기간',
-      field: 'validity_term',
+      field: 'VALIDITY_TERM',
       tooltipField: 'validity_term',
     },
     {
       headerName: '적정재고',
-      field: 'properstock',
+      field: 'PROPERSTOCK',
       tooltipField: 'properstock',
     },
     {
       headerName: '비고',
-      field: 'comments',
+      field: 'COMMENTS',
       width: 930,
       tooltipField: 'comments',
     },
   ];
 
   requestValueOrigin = {
-    site: '313',
-    kind: '',
-    model: '',
-    size1: '',
-    app_no: '',
-    vendor_cd: '',
-    maker_cd: '',
-    unit: '',
-    validity_term: '',
-    properstock: 0,
-    comments: '',
+    SITE: '313',
+    KIND: '',
+    MODEL: '',
+    SIZE1: '',
+    APP_NO: '',
+    VENDOR_CD: '',
+    MAKER_CD: '',
+    UNIT: '',
+    VALIDITY_TERM: '',
+    PROPERSTOCK: 0,
+    COMMENTS: '',
   };
 
   gridOptions = {
@@ -131,24 +137,24 @@ class List extends React.Component {
     {
       title: '지역',
       content: (
-        <Select
-          name="site"
+        <AntdSelect
+          name="SITE"
           defaultValue="313"
           width="300px"
-          onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { site: e }) }))}
+          onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { SITE: e }) }))}
         >
           <Option value="313">청주</Option>
           <Option value="314">구미</Option>
-        </Select>
+        </AntdSelect>
       ),
     },
     {
       title: '품목',
       content: (
-        <Input
-          name="kind"
-          defaultValue={this.state.requestValue.kind}
-          value={this.state.requestValue.kind}
+        <AntdInput
+          name="KIND"
+          defaultValue={this.state.requestValue.KIND}
+          value={this.state.requestValue.KIND}
           style={{ width: '500px' }}
           placeholder="품목명을 입력하세요."
           onChange={e => this.handleChange(e)}
@@ -158,10 +164,10 @@ class List extends React.Component {
     {
       title: '모델',
       content: (
-        <Input
-          name="model"
-          defaultValue={this.state.requestValue.model}
-          value={this.state.requestValue.model}
+        <AntdInput
+          name="MODEL"
+          defaultValue={this.state.requestValue.MODEL}
+          value={this.state.requestValue.MODEL}
           style={{ width: '500px' }}
           placeholder="모델명을 입력하세요."
           onChange={e => this.handleChange(e)}
@@ -171,10 +177,10 @@ class List extends React.Component {
     {
       title: 'Size',
       content: (
-        <Input
-          name="size1"
-          defaultValue={this.state.requestValue.size1}
-          value={this.state.requestValue.size1}
+        <AntdInput
+          name="SIZE1"
+          defaultValue={this.state.requestValue.SIZE1}
+          value={this.state.requestValue.SIZE1}
           style={{ width: '500px' }}
           placeholder="사이즈를 입력하세요."
           onChange={e => this.handleChange(e)}
@@ -184,10 +190,10 @@ class List extends React.Component {
     {
       title: '검정번호',
       content: (
-        <Input
-          name="app_no"
-          defaultValue={this.state.requestValue.app_no}
-          value={this.state.requestValue.app_no}
+        <AntdInput
+          name="APP_NO"
+          defaultValue={this.state.requestValue.APP_NO}
+          value={this.state.requestValue.APP_NO}
           style={{ width: '500px' }}
           placeholder="검정번호를 입력하세요."
           onChange={e => this.handleChange(e)}
@@ -202,7 +208,7 @@ class List extends React.Component {
             sagaKey={this.props.sagaKey}
             getExtraApiData={this.props.getCallDataHandler}
             extraApiData={this.props.result}
-            colData={this.state.requestValue.vendor_cd ? this.state.requestValue.vendor_cd : ''}
+            colData={this.state.requestValue.VENDOR_CD ? this.state.requestValue.VENDOR_CD : ''}
             readOnly={false}
             visible
             CONFIG={{ property: { isRequired: false } }}
@@ -215,7 +221,7 @@ class List extends React.Component {
             sagaKey={this.props.sagaKey}
             getExtraApiData={this.props.getCallDataHandler}
             extraApiData={this.props.result}
-            colData={this.state.requestValue.vendor_cd}
+            colData={this.state.requestValue.VENDOR_CD}
             visible
             CONFIG={{ property: { isRequired: false } }}
             changeFormData={this.props.changeFormData}
@@ -232,7 +238,7 @@ class List extends React.Component {
             sagaKey={this.props.sagaKey}
             getExtraApiData={this.props.getCallDataHandler}
             extraApiData={this.props.result}
-            colData={this.state.requestValue && this.state.requestValue.maker_cd ? this.state.requestValue.maker_cd : ''}
+            colData={this.state.requestValue && this.state.requestValue.MAKER_CD ? this.state.requestValue.MAKER_CD : ''}
             readOnly={false}
             visible
             CONFIG={{ property: { isRequired: false } }}
@@ -245,7 +251,7 @@ class List extends React.Component {
             sagaKey={this.props.sagaKey}
             getExtraApiData={this.props.getCallDataHandler}
             extraApiData={this.props.result}
-            colData={this.state.requestValue.maker_cd}
+            colData={this.state.requestValue.MAKER_CD}
             visible
             CONFIG={{ property: { isRequired: false } }}
             changeFormData={this.props.changeFormData}
@@ -257,10 +263,10 @@ class List extends React.Component {
     {
       title: '단위',
       content: (
-        <Input
-          name="unit"
-          defaultValue={this.state.requestValue.unit}
-          value={this.state.requestValue.unit}
+        <AntdInput
+          name="UNIT"
+          defaultValue={this.state.requestValue.UNIT}
+          value={this.state.requestValue.UNIT}
           style={{ width: '500px' }}
           placeholder="단위를 입력하세요."
           onChange={e => this.handleChange(e)}
@@ -270,10 +276,10 @@ class List extends React.Component {
     {
       title: '유효기간',
       content: (
-        <Input
-          name="validity_term"
-          defaultValue={this.state.requestValue.validity_term}
-          value={this.state.requestValue.validity_term}
+        <AntdInput
+          name="VALIDITY_TERM"
+          defaultValue={this.state.requestValue.VALIDITY_TERM}
+          value={this.state.requestValue.VALIDITY_TERM}
           style={{ width: '500px' }}
           placeholder="유효기간을 입력하세요."
           onChange={e => this.handleChange(e)}
@@ -284,9 +290,9 @@ class List extends React.Component {
       title: '적정재고',
       content: (
         <InputNumber
-          name="properstock"
-          defaultValue={this.state.requestValue.properstock}
-          value={this.state.requestValue.properstock}
+          name="PROPERSTOCK"
+          defaultValue={this.state.requestValue.PROPERSTOCK}
+          value={this.state.requestValue.PROPERSTOCK}
           style={{ width: '500px' }}
           placeholder="적정재고를 입력하세요."
           onChange={value => this.handleNumberChange(value)}
@@ -297,9 +303,9 @@ class List extends React.Component {
       title: '비고',
       content: (
         <Input.TextArea
-          name="comments"
-          defaultValue={this.state.requestValue.comments}
-          value={this.state.requestValue.comments}
+          name="COMMENTS"
+          defaultValue={this.state.requestValue.COMMENTS}
+          value={this.state.requestValue.COMMENTS}
           style={{ width: '500px' }}
           placeholder="비고를 입력하세요."
           onChange={e => this.handleChange(e)}
@@ -331,7 +337,7 @@ class List extends React.Component {
 
   getProtectionItemList = async () => {
     const data = await request({
-      url: `/api/eshs/v1/common/geteshsprotectionitems?site=${313}`,
+      url: `/api/eshs/v1/common/geteshsprotectionitems?SITE=${313}`,
       method: 'GET',
     });
     return data;
@@ -355,20 +361,20 @@ class List extends React.Component {
 
   getNewRowData = async (site, keyword) => {
     const data = await request({
-      url: `/api/eshs/v1/common/geteshsprotectionitems?site=${site}&keyword=${keyword}`,
+      url: `/api/eshs/v1/common/geteshsprotectionitems?SITE=${site}&KEYWORD=${keyword}`,
       method: 'GET',
     });
     this.changeGridData(data);
   };
 
   handleEshsCmpnyCompChange = (data, fieldName) => {
-    const valueObj = { [`${fieldName.toLowerCase()}_cd`]: data.WRK_CMPNY_CD, [`${fieldName.toLowerCase()}_nm`]: data.WRK_CMPNY_NM }; // 키값 바꾸기
-    this.setState({ [fieldName.toLowerCase()]: data.WRK_CMPNY_NM, [`${fieldName.toLowerCase()}name`]: data.WRK_CMPNY_CD });
+    const valueObj = { [`${fieldName.toUpperCase()}_CD`]: data.WRK_CMPNY_CD, [`${fieldName.toUpperCase()}_NM`]: data.WRK_CMPNY_NM }; // 키값 바꾸기
+    this.setState({ [fieldName.toUpperCase()]: data.WRK_CMPNY_NM, [`${fieldName.toUpperCase()}NAME`]: data.WRK_CMPNY_CD });
     this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
   };
 
   handleChange = e => {
-    const valueObj = { [e.target.name]: e.target.value };
+    const valueObj = { [e.target.name.toUpperCase()]: e.target.value };
     this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
   };
 
@@ -376,7 +382,7 @@ class List extends React.Component {
     if (typeof value !== 'number') {
       return;
     }
-    const valueObj = { properstock: value };
+    const valueObj = { PROPERSTOCK: value };
     this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
   };
 
@@ -388,19 +394,19 @@ class List extends React.Component {
       result.realFile.DETAIL.map(item => fileSeqArr.push(item.seq));
     }
     if (fileSeqArr.length) {
-      this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { file_seq: fileSeqArr }) }));
+      this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { FILE_SEQ: fileSeqArr }) }));
     }
     submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () => {
       this.gridApi.updateRowData({ add: [requestValue], addIndex: 0 });
       this.getNewRowData('', '');
-      this.setState({ visible: false, requestValue: { site: '313' }, responseList: [], fileList: [] });
+      this.setState({ visible: false, requestValue: { SITE: '313' }, responseList: [], fileList: [] });
     });
   };
 
   handleCancel = () => {
     this.setState({
       visible: false,
-      requestValue: { site: '313' },
+      requestValue: { SITE: '313' },
       fileList: [],
     });
   };
@@ -414,24 +420,24 @@ class List extends React.Component {
       result.realFile.DETAIL.map(item => fileSeqArr.push(item.seq));
       this.setState(prevState => ({
         // file_seq = 새로 올라온 파일, attachedFile = 기존 파일 (삭제해야 함)
-        requestValue: Object.assign(prevState.requestValue, { file_seq: fileSeqArr }, { attachedFile: result.attachs.fileList }),
+        requestValue: Object.assign(prevState.requestValue, { FILE_SEQ: fileSeqArr }, { ATTACHEDFILE: result.attachs.fileList }),
       }));
       return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () => {
         this.gridApi.redrawRows();
-        this.setState({ requestValue: { site: '313' }, visible: false });
+        this.setState({ requestValue: { SITE: '313' }, visible: false });
       });
     }
     return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () => {
       this.gridApi.redrawRows();
-      this.setState({ requestValue: { site: '313' }, visible: false });
+      this.setState({ requestValue: { SITE: '313' }, visible: false });
     });
   };
 
   handleDeleteClick = () => {
     const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/geteshsprotectionitems`, { hitem_cd: requestValue.hitem_cd }, this.gridApi.redrawRows());
-    this.setState(prevState => ({ rowData: prevState.rowData.filter(item => item.hitem_cd !== prevState.requestValue.hitem_cd), visible: false }));
+    submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/geteshsprotectionitems`, { HITEM_CD: requestValue.hitem_cd }, this.gridApi.redrawRows());
+    this.setState(prevState => ({ rowData: prevState.rowData.filter(item => item.HITEM_CD !== prevState.requestValue.HITEM_CD), visible: false }));
   };
 
   handleUploadFileChange = ({ fileList }) => {
@@ -464,7 +470,7 @@ class List extends React.Component {
       {
         key: 'attachs',
         type: 'GET',
-        url: `/api/eshs/v1/common/geteshsprotectionitemsattach?hitem_cd=${rowData.hitem_cd}`,
+        url: `/api/eshs/v1/common/geteshsprotectionitemsattach?HITEM_CD=${rowData.HITEM_CD}`,
       },
     ];
     getCallDataHandler(id, apiArr);
@@ -492,59 +498,56 @@ class List extends React.Component {
   ];
 
   render() {
-    const { visible, columnDefs, rowData, viewType, frameworkComponents } = this.state;
+    const { visible, columnDefs, rowData, viewType, frameworkComponents, tooltipShowDelay } = this.state;
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent, inputFooter, viewFooter } = this;
     return (
-      <StyledViewDesigner>
-        <Sketch>
-          <div>
-            <Select defaultValue="청주" onChange={handleSelectChange}>
+      <>
+        <ContentsWrapper>
+          <div className="selSaveWrapper alignLeft">
+            <AntdSelect defaultValue="청주" onChange={handleSelectChange} className="ant-select-mid">
               <Option value="313">청주</Option>
               <Option value="314">구미</Option>
-            </Select>
-            <Input
-              onChange={handleInputChange}
-              style={{ width: '300px', marginRight: '10px', marginLeft: '10px', marginBottom: '10px' }}
-              placeholder="품목을 입력하세요."
-            />
+            </AntdSelect>
+            <AntdInput className="ant-input-inline mr5" onChange={handleInputChange} style={{ width: '300px' }} placeholder="품목을 입력하세요." />
             <StyledButton className="btn-primary" onClick={() => this.setState({ visible: true, viewType: 'INPUT' })}>
               등록
             </StyledButton>
           </div>
-          {/* <CustomTooltipStyled> */}
           <div style={{ width: '100%', height: '100%' }}>
-            <div id="myGrid" className="ag-theme-balham" style={{ height: '540px' }}>
+            <div className="ag-theme-balham tableWrapper" style={{ height: '540px' }}>
               <AgGridReact
                 columnDefs={columnDefs}
                 rowData={rowData}
                 onGridReady={initGridData}
                 gridOptions={gridOptions}
                 defaultColDef={gridOptions.defaultColDef}
-                tooltipShowDelay={this.state.tooltipShowDelay}
+                tooltipShowDelay={tooltipShowDelay}
                 suppressRowTransform
                 onRowClicked={e => this.handleRowClick(e.data)}
                 frameworkComponents={frameworkComponents}
               />
             </div>
           </div>
-          <Modal
-            visible={visible}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            width="600px"
-            closable
-            destroyOnClose
-            footer={viewType === 'INPUT' ? inputFooter() : viewFooter()}
-          >
-            {modalContent().map(item => (
-              <div>
-                <div>{item.title}</div>
-                <div>{item.content}</div>
-              </div>
-            ))}
-          </Modal>
-        </Sketch>
-      </StyledViewDesigner>
+        </ContentsWrapper>
+        <AntdModal
+          className="modal-table-pad"
+          visible={visible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          width="600px"
+          closable
+          destroyOnClose
+          title={viewType.toUpperCase() === 'INPUT' ? '등록' : '수정'}
+          footer={viewType.toUpperCase() === 'INPUT' ? inputFooter() : viewFooter()}
+        >
+          {modalContent().map(item => (
+            <div>
+              <div>{item.title}</div>
+              <div>{item.content}</div>
+            </div>
+          ))}
+        </AntdModal>
+      </>
     );
   }
 }

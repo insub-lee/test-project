@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Table, Select, message } from 'antd';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
 import Moment from 'moment';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import Sketch from 'components/BizBuilder/Sketch';
-import Group from 'components/BizBuilder/Sketch/Group';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 
-const AntdTable = StyledAntdTable(Table);
+import { Table, Select, message } from 'antd';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import ExcelDownloader from './Excel';
+
+const AntdSelect = StyledSelect(Select);
+const AntdLineTable = StyledLineTable(Table);
 const { Option } = Select;
 
 Moment.locale('ko');
@@ -57,7 +60,7 @@ class List extends Component {
     const startYear = Number(Moment().format('YYYY')) - 20;
     const endYear = startYear + 21;
     const arrayYear = [];
-    for (let index = startYear; index < endYear; index++) {
+    for (let index = startYear; index < endYear; index += 1) {
       arrayYear.push(index);
     }
     this.setState({ arrayYear });
@@ -95,49 +98,40 @@ class List extends Component {
     const { columns } = this.props;
     const { siteList, specItems, arrayYear } = this.state;
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <StyledViewDesigner>
-          <Sketch>
-            <Group>
-              <Row>
-                <Col span={12}>
-                  <Select style={{ width: '100px' }} onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.selectedYear}>
-                    {arrayYear &&
-                      arrayYear.map(val => (
-                        <Option value={val} key="selectedYear">
-                          {val}
-                        </Option>
-                      ))}
-                  </Select>
-                  년
-                  <Select style={{ width: '100px' }} onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.site || 0}>
-                    {siteList &&
-                      siteList.map(itme => (
-                        <Option value={itme.NODE_ID} key="site">
-                          {itme.NAME_KOR}
-                        </Option>
-                      ))}
-                  </Select>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.searchData()}>
-                    검색
-                  </StyledButton>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.excel()}>
-                    엑셀받기
-                  </StyledButton>
-                </Col>
-              </Row>
-              <AntdTable
-                rowKey={specItems && specItems.WAREHOUSE_CD}
-                columns={columns}
-                dataSource={specItems || []}
-                bordered
-                scroll={{ y: 600 }}
-                footer={() => <div style={{ textAlign: 'center' }}>{`${specItems && specItems.length} 건`}</div>}
-              />
-            </Group>
-          </Sketch>
-        </StyledViewDesigner>
-      </div>
+      <ContentsWrapper>
+        <div className="selSaveWrapper alignLeft">
+          <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.selectedYear}>
+            {arrayYear &&
+              arrayYear.map(val => (
+                <Option value={val} key="selectedYear">
+                  {val}
+                </Option>
+              ))}
+          </AntdSelect>
+          <span className="textLabel">년</span>
+          <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.site || 0}>
+            {siteList &&
+              siteList.map(itme => (
+                <Option value={itme.NODE_ID} key="site">
+                  {itme.NAME_KOR}
+                </Option>
+              ))}
+          </AntdSelect>
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary btn-first" onClick={() => this.searchData()}>
+              검색
+            </StyledButton>
+            <ExcelDownloader dataList={specItems} excelNm="지정폐기물 년간 현황" />
+          </StyledButtonWrapper>
+        </div>
+        <AntdLineTable
+          className="tableWrapper"
+          rowKey={specItems && specItems.WAREHOUSE_CD}
+          columns={columns}
+          dataSource={specItems || []}
+          footer={() => <span>{`${specItems && specItems.length} 건`}</span>}
+        />
+      </ContentsWrapper>
     );
   }
 }

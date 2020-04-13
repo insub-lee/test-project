@@ -246,24 +246,27 @@ class BizGroupTree extends Component {
             PRNT_ID = nextParentNode.BIZGRP_ID;
           }
 
-          const resortTreeData = (data, lvl, pathArr) => {
+          // eslint-disable-next-line no-shadow
+          const resortTreeData = (data, pathArr) => {
             for (let i = 0; i < data.length; i += 1) {
+              // eslint-disable-next-line no-shadow
               const node = data[i];
               const path = [...pathArr, node.key];
 
               node.SORT_SQ = i + 1;
-              node.LVL = lvl;
+              node.LVL = path.length - 1;
               node.path = path;
+
               if (node.BIZGRP_ID === BIZGRP_ID) {
                 node.PRNT_ID = PRNT_ID;
               }
               if (node.children) {
-                resortTreeData(node.children, lvl + 1, path);
+                resortTreeData(node.children, path);
               }
             }
           };
 
-          resortTreeData(treeData, treeData[0].LVL, [ROOT_ID]);
+          resortTreeData(treeData, [ROOT_ID]);
 
           saveData(null, treeData);
           moveNode(treeFunc.generateList(fromJS(treeData)));

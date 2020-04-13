@@ -6,10 +6,11 @@ import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
@@ -127,7 +128,7 @@ class ListPage extends Component {
   };
 
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, workInfo } = this.props;
+    const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
     const { isMultiDelete, isOnRowClick } = this.state;
     const columns = this.setColumns(group.rows[0].cols);
     let rowSelection = false;
@@ -138,9 +139,13 @@ class ListPage extends Component {
         onChange: this.onSelectChange,
       };
     }
+    if (typeof customOnRowClick === 'function') {
+      onRow = record => ({ onClick: () => customOnRowClick(record) });
+    }
     if (isOnRowClick) {
       onRow = this.onRowClick;
     }
+
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -195,7 +200,7 @@ class ListPage extends Component {
               }
               return (
                 (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
-                  <div key={group.key}>
+                  <StyledSearchWrapper key={group.key}>
                     {group.useTitle && <GroupTitle title={group.title} />}
                     <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
                       <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
@@ -236,13 +241,13 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <Button type="primary" className="btn-primary" onClick={() => getListData(id, workSeq)}>
+                          <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
                             Search
-                          </Button>
+                          </StyledButton>
                         </div>
                       )}
                     </Group>
-                  </div>
+                  </StyledSearchWrapper>
                 )
               );
             })}
@@ -288,6 +293,7 @@ ListPage.propTypes = {
   isBuilderModal: PropTypes.bool,
   changeBuilderModalState: PropTypes.func,
   changeViewPage: PropTypes.func,
+  customOnRowClick: PropTypes.any,
 };
 
 ListPage.defaultProps = {
@@ -296,6 +302,7 @@ ListPage.defaultProps = {
       PRC_ID: -1,
     },
   },
+  customOnRowClick: undefined,
 };
 
 export default ListPage;

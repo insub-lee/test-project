@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import IconCollection from 'components/IconCollection';
 import styles from './node-content-renderer.module.scss';
 
 function isDescendant(older, younger) {
@@ -145,6 +146,10 @@ class CustomThemeNodeContentRenderer extends Component {
                   : nodeSubtitle}
               </span>
             )}
+
+            <button type="button" className="btn-page-move">
+              <IconCollection className="icon-page-move" />
+            </button>
           </div>
 
           <div className={`${styles.rowToolbar} rstcustom__rowToolbar`}>

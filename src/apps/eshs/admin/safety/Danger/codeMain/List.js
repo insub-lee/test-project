@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Row, Table, Select, Input, message } from 'antd';
-
+import { Table, Select, Input, message } from 'antd';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
-import Moment from 'moment';
 
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import Sketch from 'components/BizBuilder/Sketch';
-import Group from 'components/BizBuilder/Sketch/Group';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import ExcelDownloader from './Excel';
 
-const AntdTable = StyledAntdTable(Table);
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
+const AntdLineTable = StyledLineTable(Table);
 
 const { Option } = Select;
-
-Moment.locale('ko');
 
 class List extends Component {
   constructor(props) {
@@ -42,6 +42,13 @@ class List extends Component {
         url: `/api/eshs/v1/common/eshsDanger/${dangerMainYN}`,
         type: 'GET',
       },
+      !dangerMainYN
+        ? {
+            key: 'subExcelList',
+            url: `/api/eshs/v1/common/eshsDanger/${dangerMainYN}?EXCEL_LIST_YN=${true}`,
+            type: 'GET',
+          }
+        : '',
     ];
     getCallDataHandler(id, apiAry, this.initData);
   }
@@ -88,10 +95,6 @@ class List extends Component {
     }
   };
 
-  warning = value => {
-    message.warning(value);
-  };
-
   insertOverlab = () => {
     const { dangerMainYN } = this.props;
     const { dangerList, majorCd, minorCd, selectedMajor } = this.state;
@@ -102,7 +105,7 @@ class List extends Component {
       overlab = dangerList.find(item => item.MAJOR_CD === selectedMajor && item.MINOR_CD === minorCd);
     }
     if (overlab) {
-      this.warning('중복된 값이 존재합니다.');
+      message.warning('중복된 값이 존재합니다.');
     } else {
       this.onChangeData('I');
     }
@@ -158,14 +161,14 @@ class List extends Component {
         );
       }
     } else if (cdNm) {
-      this.warning('코드를 올바르게 입력하시오.');
+      message.warning('코드를 올바르게 입력하시오.');
     } else {
-      this.warning('코드명을 올바르게 입력하시오.');
+      message.warning('코드명을 올바르게 입력하시오.');
     }
     this.onReset();
   };
 
-  onReset() {
+  onReset = () => {
     this.setState({
       majorCd: '',
       minorCd: '',
@@ -177,150 +180,6 @@ class List extends Component {
       ref02: '',
       readType: false,
     });
-  }
-
-  renderTable = () => {
-    const { dangerMainYN } = this.props;
-    const { majorCd, minorCd, cdNm, useYN, sysYN, remark, ref01, ref02, dangerList, readType } = this.state;
-    const columns = [
-      {
-        title: (
-          <>
-            <span style={{ align: 'center' }}>SYS</span>
-            <br />
-            {sysYN}
-          </>
-        ),
-        dataIndex: 'SYS_YN',
-        align: 'center',
-        width: 100,
-      },
-      {
-        title: (
-          <>
-            <span style={{ align: 'center' }}>상태</span>
-            <br />
-            {useYN ? (
-              <>
-                {useYN === 'Y' ? (
-                  '사용'
-                ) : (
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('R')}>
-                    삭제 취소
-                  </StyledButton>
-                )}
-              </>
-            ) : (
-              ''
-            )}
-          </>
-        ),
-        dataIndex: 'USE_YN',
-        align: 'center',
-        width: 100,
-        render: item => <span>{item === 'Y' ? '사용' : '삭제'}</span>,
-      },
-      {
-        title: (
-          <>
-            <span style={{ align: 'center' }}>코드</span>
-            <br />
-            <Input
-              value={dangerMainYN ? majorCd : minorCd}
-              onChange={e => this.changeValue(dangerMainYN ? 'majorCd' : 'minorCd', e.target.value)}
-              readOnly={readType}
-            />
-          </>
-        ),
-        dataIndex: dangerMainYN ? 'MAJOR_CD' : 'MINOR_CD',
-        align: 'center',
-        width: 100,
-      },
-      {
-        title: (
-          <>
-            <span style={{ align: 'center' }}>코드명</span>
-            <br />
-            <Input value={cdNm} onChange={e => this.changeValue('cdNm', e.target.value)} />
-          </>
-        ),
-        dataIndex: 'CD_NM',
-        align: 'left',
-        width: 250,
-      },
-      {
-        title: (
-          <>
-            <span style={{ align: 'center' }}>참고1</span>
-            <br />
-            <Input value={ref01} onChange={e => this.changeValue('ref01', e.target.value)} />
-          </>
-        ),
-        dataIndex: 'REF01',
-        align: 'center',
-        width: 250,
-      },
-      {
-        title: (
-          <>
-            <span style={{ align: 'center' }}>참고2</span>
-            <br />
-            <Input value={ref02} onChange={e => this.changeValue('ref02', e.target.value)} />
-          </>
-        ),
-        dataIndex: 'REF02',
-        align: 'center',
-        width: 250,
-      },
-      {
-        title: (
-          <>
-            <span style={{ align: 'center' }}>비고</span>
-            <br />
-            <Input value={remark} style={{ width: '300px' }} onChange={e => this.changeValue('remark', e.target.value)} />
-            <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
-              추가
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
-              수정
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
-              삭제
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
-              Reset
-            </StyledButton>
-            {dangerMainYN ? (
-              <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('S')}>
-                SYS
-              </StyledButton>
-            ) : (
-              ''
-            )}
-          </>
-        ),
-        dataIndex: 'REMARK',
-        align: 'left',
-      },
-    ];
-
-    return (
-      <AntdTable
-        style={{ cursor: 'pointer' }}
-        rowKey={`${dangerList && dangerList.MAJOR_CD}_${dangerList && dangerList.MINOR_CD}`}
-        columns={columns}
-        dataSource={dangerList || []}
-        bordered
-        onRow={record => ({
-          onClick: () => {
-            this.selectedRecord(record);
-          },
-        })}
-        pagination={{ pageSize: 50 }}
-        scroll={{ y: 600 }}
-        footer={() => <div style={{ textAlign: 'center' }}>{`${(dangerList && dangerList.length) || 0} 건`}</div>}
-      />
-    );
   };
 
   selectedRecord = record => {
@@ -338,33 +197,186 @@ class List extends Component {
   };
 
   render() {
-    const { dangerMainYN } = this.props;
-    const { dangerSelect, selectedMajor } = this.state;
-    return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <StyledViewDesigner>
-          <Sketch>
-            <Group>
-              <Row>
-                {dangerMainYN ? (
-                  ''
+    const {
+      dangerMainYN,
+      result: { subExcelList },
+    } = this.props;
+    const { dangerSelect, selectedMajor, dangerList, majorCd, minorCd, cdNm, useYN, sysYN, remark, ref01, ref02, readType } = this.state;
+    const excelList = subExcelList && subExcelList.list;
+    const columns = [
+      {
+        title: 'SYS',
+        align: 'center',
+        children: [
+          {
+            title: <span>{sysYN}</span>,
+            className: 'th-form',
+            dataIndex: 'SYS_YN',
+            align: 'center',
+          },
+        ],
+      },
+      {
+        title: '상태',
+        align: 'center',
+        children: [
+          {
+            title: (
+              <>
+                {useYN ? (
+                  <>
+                    {useYN === 'Y' ? (
+                      '사용'
+                    ) : (
+                      <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('R')}>
+                        삭제 취소
+                      </StyledButton>
+                    )}
+                  </>
                 ) : (
-                  <Select style={{ width: '200px' }} onChange={value => this.changeValue('selectedMajor', value)} value={selectedMajor}>
-                    {dangerSelect && dangerSelect.map(itme => <Option value={itme.MAJOR_CD}>{itme.CD_NM}</Option>)}
-                  </Select>
+                  ''
                 )}
-                <StyledButton className="btn-primary btn-first" onClick={this.searchData}>
-                  검색
-                </StyledButton>
-                <StyledButton className="btn-primary btn-first" onClick={() => message.info('개발중입니다.')}>
-                  엑셀받기
-                </StyledButton>
-              </Row>
-              {this.renderTable()}
-            </Group>
-          </Sketch>
-        </StyledViewDesigner>
-      </div>
+              </>
+            ),
+            dataIndex: 'USE_YN',
+            className: 'th-form',
+            align: 'center',
+            render: item => <span>{item === 'Y' ? '사용' : '삭제'}</span>,
+          },
+        ],
+      },
+      {
+        title: '코드',
+        align: 'center',
+        children: [
+          {
+            title: (
+              <AntdInput
+                className="ant-input-sm"
+                value={dangerMainYN ? majorCd : minorCd}
+                onChange={e => this.changeValue(dangerMainYN ? 'majorCd' : 'minorCd', e.target.value)}
+                readOnly={readType}
+              />
+            ),
+            align: 'center',
+            className: 'th-form',
+            dataIndex: dangerMainYN ? 'MAJOR_CD' : 'MINOR_CD',
+          },
+        ],
+      },
+      {
+        title: '코드명',
+        align: 'left',
+        children: [
+          {
+            title: <AntdInput className="ant-input-sm" value={cdNm} onChange={e => this.changeValue('cdNm', e.target.value)} />,
+            className: 'th-form',
+            align: 'left',
+            dataIndex: 'CD_NM',
+          },
+        ],
+      },
+      {
+        title: '참고1',
+        align: 'center',
+        children: [
+          {
+            title: <AntdInput className="ant-input-sm" value={ref01} onChange={e => this.changeValue('ref01', e.target.value)} />,
+            className: 'th-form',
+            align: 'center',
+            dataIndex: 'REF01',
+          },
+        ],
+      },
+      {
+        title: '참고2',
+        align: 'center',
+        children: [
+          {
+            title: <AntdInput className="ant-input-sm" value={ref02} onChange={e => this.changeValue('ref02', e.target.value)} />,
+            className: 'th-form',
+            align: 'center',
+            dataIndex: 'REF02',
+          },
+        ],
+      },
+      {
+        title: '비고',
+        align: 'left',
+        children: [
+          {
+            title: (
+              <>
+                <AntdInput
+                  className="ant-input-inline ant-input-sm mr5"
+                  value={remark}
+                  style={{ width: '150px' }}
+                  onChange={e => this.changeValue('remark', e.target.value)}
+                />
+                <StyledButtonWrapper className="btn-wrap-inline">
+                  <StyledButton className="btn-primary btn-first btn-sm" onClick={this.insertOverlab}>
+                    추가
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('U')}>
+                    수정
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('D')}>
+                    삭제
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onReset}>
+                    Reset
+                  </StyledButton>
+                  {dangerMainYN ? (
+                    <StyledButton className="btn-primary btn-sm" onClick={() => this.onChangeData('S')}>
+                      SYS
+                    </StyledButton>
+                  ) : (
+                    ''
+                  )}
+                </StyledButtonWrapper>
+              </>
+            ),
+            className: 'th-form',
+            dataIndex: 'REMARK',
+            align: 'left',
+          },
+        ],
+      },
+    ];
+    return (
+      <ContentsWrapper>
+        <div className="selSaveWrapper alignLeft">
+          {dangerMainYN ? (
+            ''
+          ) : (
+            <AntdSelect
+              style={{ width: '200px' }}
+              className="select-mid mr5"
+              onChange={value => this.changeValue('selectedMajor', value)}
+              value={selectedMajor}
+            >
+              {dangerSelect && dangerSelect.map(itme => <Option value={itme.MAJOR_CD}>{itme.CD_NM}</Option>)}
+            </AntdSelect>
+          )}
+          <StyledButton className="btn-primary btn-first" onClick={this.searchData}>
+            검색
+          </StyledButton>
+          <ExcelDownloader dataList={dangerMainYN ? dangerList : excelList} excelNm={`위험성 코드(${dangerMainYN ? 'Main' : 'Sub'})관리`} />
+        </div>
+        <AntdLineTable
+          className="tableWrapper"
+          rowKey={`${dangerList && dangerList.MAJOR_CD}_${dangerList && dangerList.MINOR_CD}`}
+          columns={columns}
+          dataSource={dangerList || []}
+          bordered
+          onRow={record => ({
+            onClick: () => {
+              this.selectedRecord(record);
+            },
+          })}
+          footer={() => <span>{`${(dangerList && dangerList.length) || 0} 건`}</span>}
+        />
+      </ContentsWrapper>
     );
   }
 }

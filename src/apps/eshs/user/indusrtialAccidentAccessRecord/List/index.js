@@ -4,12 +4,22 @@ import { Modal, Select, Input, DatePicker, message } from 'antd';
 import { Table, Column, AutoSizer } from 'react-virtualized';
 import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import moment from 'moment';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledPicker from 'commonStyled/Form/StyledPicker';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import NothGateCmpnyModal from '../NothGateCmpnyModal';
-import ListSearchStyled from './ListSearchStyled';
 
 const { Option } = Select;
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
+const AntdModal = StyledContentsModal(Modal);
+const AntdPicker = StyledPicker(DatePicker.RangePicker);
+
 const { RangePicker } = DatePicker;
 const format = 'YYYY-MM-DD HH:mm:ss';
 moment.locale('ko');
@@ -157,168 +167,139 @@ class List extends Component {
     const modalType = (formData && formData.modal && formData.modal.type) || '';
 
     return (
-      <div>
-        <ListSearchStyled>
-          <div className="search-group-layer">
+      <ContentsWrapper>
+        <div>
+          <StyledHtmlTable>
             <table>
+              <colgroup>
+                <col width="15%" />
+                <col width="35%" />
+                <col width="15%" />
+                <col width="35%" />
+              </colgroup>
               <tbody>
                 <tr>
-                  <td>지역</td>
+                  <th>지역</th>
                   <td colSpan={3}>
-                    <Select defaultValue="" className="search-item input-width120" onChange={this.handleSiteOnChange} style={{ width: '10%' }}>
+                    <AntdSelect defaultValue="" onChange={this.handleSiteOnChange} style={{ width: '10%' }}>
                       <Option value="">지역 전체</Option>
                       <Option value="청주">청주</Option>
                       <Option value="구미">구미</Option>
-                    </Select>
+                    </AntdSelect>
                   </td>
                 </tr>
                 <tr>
-                  <td>업체명</td>
+                  <th>업체명</th>
                   <td>
-                    <Input
+                    <AntdInput
                       placeholder="업체명"
+                      className="ant-input-inline"
+                      style={{ width: '80%' }}
                       value={search.WRK_CMPNY_NM || ''}
                       name="WRK_CMPNY_NM"
-                      className="search-item input-width200"
                       onChange={this.handleInputOnChange}
                     />
                   </td>
-                  <td>사업자등록번호</td>
+                  <th>사업자등록번호</th>
                   <td>
-                    <Input
+                    <AntdInput
                       placeholder="사업자 등록번호"
+                      className="ant-input-inline"
+                      style={{ width: '80%' }}
                       value={search.BIZ_REG_NO || ''}
                       name="BIZ_REG_NO"
-                      className="search-item input-width200"
                       onChange={this.handleInputOnChange}
                     />
                   </td>
                 </tr>
                 <tr>
-                  <td>방문자 성명</td>
+                  <th>방문자 성명</th>
                   <td>
-                    <Input
+                    <AntdInput
                       placeholder="방문자 성명"
                       value={search.VISITOR_NAME || ''}
                       name="VISITOR_NAME"
-                      className="search-item input-width160"
+                      className="ant-input-inline"
+                      style={{ width: '80%' }}
                       onChange={this.handleInputOnChange}
                     />
                   </td>
-                  <td>출입구분</td>
+                  <th>출입구분</th>
                   <td>
-                    <Select defaultValue="" className="search-item input-width120" onChange={this.handleTypeOnChange} style={{ width: '20%' }}>
+                    <AntdSelect defaultValue="" onChange={this.handleTypeOnChange} style={{ width: '80%' }}>
                       <Option value="">전체</Option>
                       <Option value="일일">일일</Option>
                       <Option value="북/후문">북/후문</Option>
                       <Option value="상시">상시</Option>
-                    </Select>
+                    </AntdSelect>
                   </td>
                 </tr>
                 <tr>
-                  <td>출입기간</td>
+                  <th>출입기간</th>
                   <td>
-                    <RangePicker onChange={this.handleDateOnChange} className="margin-term" style={{ width: '100%' }} />
+                    <AntdPicker onChange={this.handleDateOnChange} style={{ width: '100%' }} />
                   </td>
-                  <td>업체등록여부</td>
+                  <th>업체등록여부</th>
                   <td>
-                    <Select defaultValue="" className="search-item input-width200" onChange={this.handleRegOnChange} style={{ width: '20%' }}>
+                    <AntdSelect defaultValue="" onChange={this.handleRegOnChange} style={{ width: '80%' }}>
                       <Option value="">선택</Option>
                       <Option value="등록">등록</Option>
                       <Option value="미등록">미등록</Option>
-                    </Select>
+                    </AntdSelect>
                   </td>
                 </tr>
               </tbody>
             </table>
+          </StyledHtmlTable>
+          <div className="selSaveWrapper">
+            <StyledButtonWrapper className="btn-wrap-inline">
+              {search.VISITOR_TYPE === '북/후문' ? (
+                <StyledButton className="btn-primary btn-first" onClick={this.handleModalOpen}>
+                  등록
+                </StyledButton>
+              ) : (
+                ''
+              )}
+              <StyledButton className="btn-primary btn-first" onClick={this.handleOnSearch}>
+                검색
+              </StyledButton>
+              <StyledButton className="btn-primary" onClick={this.handleDwExcel}>
+                액셀받기
+              </StyledButton>
+            </StyledButtonWrapper>
           </div>
-        </ListSearchStyled>
-        {/* <StyledSearchWrap>
-          <div className="search-group-layer">
-            <Select defaultValue="" className="search-item input-width120" onChange={this.handleSiteOnChange}>
-              <Option value="">지역 전체</Option>
-              <Option value="청주">청주</Option>
-              <Option value="구미">구미</Option>
-            </Select>
-            <Select defaultValue="" className="search-item input-width120" onChange={this.handleTypeOnChange}>
-              <Option value="">전체</Option>
-              <Option value="일일">일일</Option>
-              <Option value="북/후문">북/후문</Option>
-              <Option value="상시">상시</Option>
-            </Select>
-            <Input
-              placeholder="업체명"
-              value={search.WRK_CMPNY_NM || ''}
-              name="WRK_CMPNY_NM"
-              className="search-item input-width200"
-              onChange={this.handleInputOnChange}
-            />
-            <Input
-              placeholder="사업자 등록번호"
-              value={search.BIZ_REG_NO || ''}
-              name="BIZ_REG_NO"
-              className="search-item input-width200"
-              onChange={this.handleInputOnChange}
-            />
-            <Input
-              placeholder="방문자 성명"
-              value={search.VISITOR_NAME || ''}
-              name="VISITOR_NAME"
-              className="search-item input-width160"
-              onChange={this.handleInputOnChange}
-            />
-            <Select defaultValue="" className="search-item input-width200" onChange={this.handleRegOnChange}>
-              <Option value="">선택</Option>
-              <Option value="등록">등록</Option>
-              <Option value="미등록">미등록</Option>
-            </Select>
-            <RangePicker onChange={this.handleDateOnChange} className="margin-term" />
-          </div>
-        </StyledSearchWrap> */}
-        {search.VISITOR_TYPE === '북/후문' ? (
-          <StyledButton classNmae="btn-gray btn-first" onClick={this.handleModalOpen}>
-            등록
-          </StyledButton>
-        ) : (
-          ''
-        )}
-        <StyledButton classNmae="btn-gray" onClick={this.handleOnSearch}>
-          검색
-        </StyledButton>
-        <StyledButton classNmae="btn-gray" onClick={this.handleDwExcel}>
-          액셀받기
-        </StyledButton>
-        <StyledVirtualizedTable>
-          <AutoSizer disableHeight>
-            {({ width }) => (
-              <Table
-                width={width}
-                height={500}
-                headerHeight={40}
-                rowHeight={53}
-                rowCount={recordList.length}
-                rowGetter={({ index }) => recordList[index]}
-                noRowsRenderer={this.noRowsRenderer}
-                onRowClick={this.onRowClick}
-              >
-                {this.getColumns().map(({ label, dataKey, ratio }) => (
-                  <Column key={dataKey} label={label} dataKey={dataKey} width={(width / 100) * ratio} />
-                ))}
-              </Table>
-            )}
-          </AutoSizer>
-        </StyledVirtualizedTable>
-        <Modal
-          title={modalType === 'INSERT' ? '북/후문 출입기록 등록' : '출입기록 수정'}
-          visible={is_modal}
-          onCancel={this.handleCancel}
-          width={900}
-          height={600}
-          footer={[null]}
-        >
-          <NothGateCmpnyModal {...this.props} handleAppStart={this.handleAppStart} handleModalOpen={this.handleModalOpen} />
-        </Modal>
-      </div>
+          <StyledVirtualizedTable>
+            <AutoSizer disableHeight>
+              {({ width }) => (
+                <Table
+                  width={width}
+                  height={500}
+                  headerHeight={40}
+                  rowHeight={53}
+                  rowCount={recordList.length}
+                  rowGetter={({ index }) => recordList[index]}
+                  noRowsRenderer={this.noRowsRenderer}
+                  onRowClick={this.onRowClick}
+                >
+                  {this.getColumns().map(({ label, dataKey, ratio }) => (
+                    <Column key={dataKey} label={label} dataKey={dataKey} width={(width / 100) * ratio} />
+                  ))}
+                </Table>
+              )}
+            </AutoSizer>
+          </StyledVirtualizedTable>
+          <AntdModal
+            title={modalType === 'INSERT' ? '북/후문 출입기록 등록' : '출입기록 수정'}
+            visible={is_modal}
+            onCancel={this.handleCancel}
+            width={900}
+            height={600}
+            footer={[null]}
+          >
+            <NothGateCmpnyModal {...this.props} handleAppStart={this.handleAppStart} handleModalOpen={this.handleModalOpen} />
+          </AntdModal>
+        </div>
+      </ContentsWrapper>
     );
   }
 }

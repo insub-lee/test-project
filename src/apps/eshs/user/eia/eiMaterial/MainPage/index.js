@@ -5,11 +5,11 @@ import { Row, Col } from 'antd';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { createStructuredSelector } from 'reselect';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import * as selectors from '../../../../../../containers/common/Auth/selectors';
 import DeptSearchBar from '../../eiDeptSearchBar';
 import ItemTable from '../ItemTable';
 import MaterialTable from '../../eiMaterialTable';
-import MainPageStyled from '../../styled/MainPageStyled';
 
 class MainPage extends Component {
   constructor(props) {
@@ -44,7 +44,7 @@ class MainPage extends Component {
 
   itemListReload = () => {
     const { id, getCallDataHandler, formData } = this.props;
-    const req_no = (formData && formData.materialData && formData.materialData.REQ_NO) || '';
+    const req_no = (formData && formData.materialData && formData.materialData.REQ_NO) || 'null';
     const chk_year = (formData && formData.CHK_YEAR) || '0';
     const apiAry = [
       {
@@ -69,27 +69,17 @@ class MainPage extends Component {
     const materialCnt = (formData && formData.materialCnt) || 0;
     const searchFlag = (formData && formData.searchFlag) || false;
     return (
-      <MainPageStyled>
-        <StyledViewDesigner>
-          <Sketch>
-            <Row>
-              <Col span={10}>
-                <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <MaterialTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <ItemTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
-              </Col>
-            </Row>
-          </Sketch>
-        </StyledViewDesigner>
-      </MainPageStyled>
+      <ContentsWrapper>
+        <div>
+          <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+        </div>
+        <div>
+          <MaterialTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+        </div>
+        <div>
+          <ItemTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+        </div>
+      </ContentsWrapper>
     );
   }
 }

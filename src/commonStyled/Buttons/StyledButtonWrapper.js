@@ -1,38 +1,43 @@
 import styled, { css } from 'styled-components';
 
-const btnWrapRight = css`
-  text-align: right;
-`;
-
-const btnWrapCenter = css`
-  text-align: center;
-`;
-
-const btnWrapMt20 = css`
-  margin-top: 20px;
-`;
-
-const btnWrapInline = css`
-  display: inline-block;
-  width: auto;
-  padding: 0;
-  margin-left: 10px;
-`;
-
 const StyledButtonWrapper = styled.div`
   width: 100%;
-  padding: 10px 0;
+
   &.btn-wrap-inline {
-    ${btnWrapInline}
+    display: inline-block;
+    width: auto;
+    padding: 0;
   }
+
   &.btn-wrap-right {
-    ${btnWrapRight}
+    text-align: right;
   }
+
   &.btn-wrap-center {
-    ${btnWrapCenter}
+    text-align: center;
   }
+
   &.btn-wrap-mt-20 {
-    ${btnWrapMt20}
+    margin-top: 20px;
+  }
+
+  &.btn-wrap-mb-10 {
+    margin-bottom: 10px;
+  }
+
+  &.btn-wrap-mr-5 {
+    margin-right: 5px;
+  }
+
+  &.btn-wrap-ml-5 {
+    margin-left: 5px;
+  }
+
+  .btn-comment {
+    font-size: 12px;
+    color: #ff5f5f;
+    display: inline-block;
+    vertical-align: midde;
   }
 `;
 

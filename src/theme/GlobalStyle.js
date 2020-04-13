@@ -180,6 +180,25 @@ html {
 }
 */
 
+  /* antd-select-dropdown style custom */
+  .inner-ant-select-dropdown {
+    .ant-select-tree {
+      font-size: 12px;
+      padding: 10px;
+      li {
+        margin: 0;
+        white-space: normal;
+        line-height: 1.5;
+        &:last-child {
+          margin-bottom: 0;
+        }
+        .ant-select-tree-node-content-wrapper {
+          padding: 5px;
+        }
+      }
+    }
+  }
+
 @media only screen and (max-width: 1024px) {
   .portalLayout .ant-layout-sider {
     display: none;

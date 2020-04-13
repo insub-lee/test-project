@@ -3,7 +3,7 @@ import { Form, Select } from 'antd';
 
 import PropTypes from 'prop-types';
 
-import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 const FormItem = Form.Item;
 const { Option } = Select;
 
@@ -101,61 +101,60 @@ class DwStd extends Component {
     return (
       <StyledHtmlTable>
         <table>
+          <colgroup>
+            <col width="130px" />
+            <col width="130px" />
+            <col width="*" />
+            <col width="130px" />
+            <col width="*" />
+          </colgroup>
           <thead>
             <tr>
-              <th colSpan="4">정보코드별 검색</th>
+              <th colSpan="5">정보코드별 검색</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th>SCOPE</th>
+              <th rowSpan="3">SCOPE</th>
+              <th>도면 구분</th>
               <td>
-                <StyledHtmlTable>
-                  <table>
-                    <tr>
-                      <th>도면 구분</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangeDwType} style={{ width: '300px' }}>
-                          {dwItems}
-                        </Select>
-                      </td>
-                      <th>적용 Product</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangeProduct} style={{ width: '150px' }}>
-                          {prdItems}
-                        </Select>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>적용 Pkg</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangePkg} style={{ width: '150px' }}>
-                          {pkgItems}
-                        </Select>
-                      </td>
-                      <th>적용 Line Site</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangeFab} style={{ width: '150px' }}>
-                          {lineItems}
-                        </Select>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>적용 Lead</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangeLead} style={{ width: '150px' }}>
-                          {leadItems}
-                        </Select>
-                      </td>
-                      <th>적용 Ball</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangeBall} style={{ width: '150px' }}>
-                          {ballItems}
-                        </Select>
-                      </td>
-                    </tr>
-                  </table>
-                </StyledHtmlTable>
+                <Select allowClear onChange={this.onChangeDwType} style={{ width: '300px' }}>
+                  {dwItems}
+                </Select>
+              </td>
+              <th>적용 Product</th>
+              <td>
+                <Select allowClear onChange={this.onChangeProduct} style={{ width: '150px' }}>
+                  {prdItems}
+                </Select>
+              </td>
+            </tr>
+            <tr>
+              <th>적용 Pkg</th>
+              <td>
+                <Select allowClear onChange={this.onChangePkg} style={{ width: '150px' }}>
+                  {pkgItems}
+                </Select>
+              </td>
+              <th>적용 Line Site</th>
+              <td>
+                <Select allowClear onChange={this.onChangeFab} style={{ width: '150px' }}>
+                  {lineItems}
+                </Select>
+              </td>
+            </tr>
+            <tr>
+              <th>적용 Lead</th>
+              <td>
+                <Select allowClear onChange={this.onChangeLead} style={{ width: '150px' }}>
+                  {leadItems}
+                </Select>
+              </td>
+              <th>적용 Ball</th>
+              <td>
+                <Select allowClear onChange={this.onChangeBall} style={{ width: '150px' }}>
+                  {ballItems}
+                </Select>
               </td>
             </tr>
           </tbody>

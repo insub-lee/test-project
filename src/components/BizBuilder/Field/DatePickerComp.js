@@ -40,6 +40,7 @@ class DatePickerComp extends Component {
 
   render() {
     const { CONFIG, visible, isSearch, readOnly, viewPageData, colData, searchCompRenderer } = this.props;
+    // console.debug('프롭스 딱대!', this.props);
     if (!visible) {
       return '';
     }
@@ -49,8 +50,8 @@ class DatePickerComp extends Component {
         <AntdDatePicker
           style={{ width: '200px' }}
           onChange={this.onChangeSearchHandle}
-          placeholder="날짜를 선택하세요."
-          readOnly={readOnly || CONFIG.property.readOnly}
+          placeholder={CONFIG.property.placeholder}
+          disabled={readOnly || CONFIG.property.readOnly}
         />
       );
     }
@@ -63,9 +64,9 @@ class DatePickerComp extends Component {
         <AntdDatePicker
           style={{ width: '200px' }}
           onChange={this.onChangeHandler}
-          placeholder="날짜를 선택하세요."
+          placeholder={CONFIG.property.placeholder}
           value={(colData && moment(colData)) || undefined}
-          readOnly={readOnly || CONFIG.property.readOnly}
+          disabled={readOnly || CONFIG.property.readOnly}
         />
       );
     }
@@ -75,9 +76,9 @@ class DatePickerComp extends Component {
         <AntdDatePicker
           style={{ width: '200px' }}
           onChange={this.onChangeHandler}
-          placeholder="날짜를 선택하세요."
-          defaultValue={moment(colData)}
-          readOnly={readOnly || CONFIG.property.readOnly}
+          placeholder={CONFIG.property.placeholder}
+          defaultValue={colData ? moment(colData) : undefined}
+          disabled={readOnly || CONFIG.property.readOnly}
         />
       );
     }

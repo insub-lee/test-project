@@ -96,6 +96,13 @@ import BareaLabel from 'components/BizBuilder/Field/BareaLabel';
 import CompNmLabel from 'components/BizBuilder/Field/CompNmLabel';
 import CoverViewComp from 'components/BizBuilder/Field/CoverViewComp';
 import SelectReadComp from 'components/BizBuilder/Field/SelectReadComp';
+import CustomBuilderListComp from 'components/BizBuilder/Field/CustomBuilderListComp';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import TimeInputComp from 'components/BizBuilder/Field/TimeInputComp';
+import CheckboxSingleComp from 'components/BizBuilder/Field/CheckboxSingleComp';
+import RootKeyRadioComp from 'components/BizBuilder/Field/RootKeyRadioComp';
+import RootKeyCheckBoxComp from 'components/BizBuilder/Field/RootKeyCheckBoxComp';
+import ProfileInputComp from 'components/BizBuilder/Field/ProfileInputComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
@@ -194,4 +201,11 @@ export const CompInfo = {
   'components/BizBuilder/Field/CustomEditorComp': { renderer: property => <CustomEditorComp {...property} /> },
   'components/BizBuilder/Field/BareaLabel': { renderer: property => <BareaLabel {...property} /> },
   'components/BizBuilder/Field/CompNmLabel': { renderer: property => <CompNmLabel {...property} /> },
+  'components/BizBuilder/Field/CustomBuilderListComp': { renderer: property => <CustomBuilderListComp {...property} /> },
+  'components/BizBuilder/Field/ExcelDownloadComp': { renderer: property => <ExcelDownloadComp {...property} /> },
+  'components/BizBuilder/Field/TimeInputComp': { renderer: property => <TimeInputComp {...property} /> },
+  'components/BizBuilder/Field/CheckboxSingleComp': { renderer: property => <CheckboxSingleComp {...property} /> },
+  'components/BizBuilder/Field/RootKeyRadioComp': { renderer: property => <RootKeyRadioComp {...property} /> },
+  'components/BizBuilder/Field/RootKeyCheckBoxComp': { renderer: property => <RootKeyCheckBoxComp {...property} /> },
+  'components/BizBuilder/Field/ProfileInputComp': { renderer: property => <ProfileInputComp {...property} /> },
 };

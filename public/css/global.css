@@ -414,7 +414,7 @@ html a:active {
     color: inherit !important;
   } /* antd a color 적용 안되게 */
   .ant-input {
-    line-height: 1 !important;
+    line-height: 1;
   }
   .CustomSCRB:after {
     content: '';

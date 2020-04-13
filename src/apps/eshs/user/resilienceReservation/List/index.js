@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Sketch from 'components/BizBuilder/Sketch';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 import { Table, Checkbox, Popconfirm } from 'antd';
 import moment from 'moment';
@@ -10,13 +11,12 @@ import request from 'utils/request';
 
 import Input from '../Input';
 
-// moment.locale('ko');
+const AntdTable = StyledLineTable(Table);
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
       checkedIndex: '',
-      // currentDate: '',
       timetable: [],
     };
     this.handleGetTimeTable(
@@ -259,9 +259,10 @@ class List extends Component {
   };
 
   render() {
+    const { columns, timeTable, handleGetTimeTable, dateChange } = this;
     const { changeFormData, getExtraApiData, extraApiData, saveTask, formData, sagaKey } = this.props;
     return (
-      <div>
+      <ContentsWrapper>
         <Input
           changeFormData={changeFormData}
           getExtraApiData={getExtraApiData}
@@ -269,15 +270,11 @@ class List extends Component {
           saveTask={saveTask}
           formData={formData}
           sagaKey={sagaKey}
-          handleGetTimeTable={this.handleGetTimeTable}
-          dateChange={this.dateChange}
+          handleGetTimeTable={handleGetTimeTable}
+          dateChange={dateChange}
         />
-        <StyledViewDesigner>
-          <Sketch>
-            <Table columns={this.columns} bordered dataSource={this.timeTable} pagination={false} />
-          </Sketch>
-        </StyledViewDesigner>
-      </div>
+        <AntdTable columns={columns} bordered dataSource={timeTable} pagination={false} />
+      </ContentsWrapper>
     );
   }
 }

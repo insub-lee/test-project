@@ -85,6 +85,14 @@ class AppsRouter extends React.PureComponent {
                   </ErrorBoundary>
                 )}
               />
+              <Route
+                path={`/${basicPath.APPS}/${item.PAGE_ID}`}
+                render={() => (
+                  <ErrorBoundary>
+                    <Comp item={item} authority={authority} />
+                  </ErrorBoundary>
+                )}
+              />
             </Switch>
           </div>
         );

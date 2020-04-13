@@ -1,6 +1,17 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Input, Button, Checkbox, Popconfirm, message, Select, InputNumber } from 'antd';
+import { Input, Checkbox, Popconfirm, message, Select, InputNumber } from 'antd';
+
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
+
 const { Option } = Select;
 class ItemTable extends Component {
   constructor(props) {
@@ -89,8 +100,14 @@ class ItemTable extends Component {
   };
 
   handleVolumeOnChange = e => {
+    const reg = /^-?[0-9]*(\.[0-9]*)?$/;
     const { id, changeFormData, formData } = this.props;
     const itemData = (formData && formData.itemData) || {};
+
+    if (!reg.test(e)) {
+      return '';
+    }
+
     changeFormData(id, 'itemData', { ...itemData, VOLUME: e });
   };
 
@@ -140,154 +157,206 @@ class ItemTable extends Component {
     const itemData = (formData && formData.itemData) || {};
     const btnOk = itemList.length >= 1;
     return (
-      <div className="itemTable">
-        <table>
-          <colgroup>
-            <col width="4%" />
-            <col width="4%" />
-            <col width="6%" />
-            <col width="8%" />
-            <col width="16%" />
-            <col width="16%" />
-            <col width="9%" />
-            <col width="9%" />
-            <col width="9%" />
-            <col width="9%" />
-            <col width="14%" />
-          </colgroup>
-          <thead>
-            <tr>
-              <td colSpan={11}>
-                <Button onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>Excel Download</Button>
-                {!searchFlag && (
+      <ContentsWrapper>
+        <StyledHtmlTable className="tableWrapper">
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
+              Excel Download
+            </StyledButton>
+            {!searchFlag && (
+              <>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
+                  Excel Upload
+                </StyledButton>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
+                  추가
+                </StyledButton>
+                {btnOk && (
                   <>
-                    <Button onClick={() => this.handleAction('EXCEL_UPLOAD')}>Excel Upload</Button>
-                    <Button onClick={() => this.handleAction('SAVE')}>추가</Button>
-                    {btnOk && (
-                      <>
-                        <Button onClick={() => this.handleAction('UPDATE')}>수정</Button>
-                        <Popconfirm
-                          title="선택하신 내용을(를) 정말로 삭제하시겠습니끼?"
-                          onConfirm={() => this.handleAction('DELETE')}
-                          okText="확인"
-                          cancelText="취소"
-                        >
-                          <Button>삭제</Button>
-                        </Popconfirm>
-                        <Button onClick={() => this.handleAction('RESET')}>Reset</Button>
-                      </>
-                    )}
+                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('UPDATE')}>
+                      수정
+                    </StyledButton>
+                    <Popconfirm
+                      title="선택하신 내용을(를) 정말로 삭제하시겠습니끼?"
+                      onConfirm={() => this.handleAction('DELETE')}
+                      okText="확인"
+                      cancelText="취소"
+                    >
+                      <StyledButton className="btn-primary btn-sm btn-first">삭제</StyledButton>
+                    </Popconfirm>
+                    <StyledButton className="btn-primary btn-sm " onClick={() => this.handleAction('RESET')}>
+                      Reset
+                    </StyledButton>
                   </>
                 )}
-              </td>
-            </tr>
-            <tr>
-              <td></td>
-              <td></td>
-              <td>
-                <Input name="GUBUN" value={itemData.GUBUN || ''} onChange={this.handleInputOnChange} />
-              </td>
-              <td>
-                <Select value={itemData.STATUS || '정상'} style={{ width: '100%' }} onChange={this.handleStatusOnChange}>
-                  <Option value="정상">정상</Option>
-                  <Option value="비정상">비정상</Option>
-                </Select>
-              </td>
-              <td>
-                <Input name="MATTER" value={itemData.MATTER || ''} onChange={this.handleInputOnChange} />
-              </td>
-              <td>
-                <Input name="INGREDIENT" value={itemData.INGREDIENT || ''} onChange={this.handleInputOnChange} />
-              </td>
-              <td>
-                <InputNumber name="VOLUME" value={itemData.VOLUME || ''} style={{ width: '100%' }} onChange={this.handleVolumeOnChange} />
-              </td>
-              <td>
-                <Input name="UNIT" value={itemData.UNIT || ''} onChange={this.handleInputOnChange} />
-              </td>
-              <td>
-                <Input name="INPUT_TYPE" value={itemData.INPUT_TYPE || ''} onChange={this.handleInputOnChange} />
-              </td>
-              <td>
-                <Input name="OUTPUT_TYPE" value={itemData.OUTPUT_TYPE || ''} onChange={this.handleInputOnChange} />
-              </td>
-              <td>
-                <Input name="DISCHRGE" value={itemData.DISCHRGE || ''} onChange={this.handleInputOnChange} />
-              </td>
-            </tr>
-            <tr>
-              <td rowSpan={2}>
-                <span>삭제</span>
-              </td>
-              <td rowSpan={2}>
-                <span>Seq</span>
-              </td>
-              <td rowSpan={2}>
-                <span>구분</span>
-              </td>
-              <td rowSpan={2}>
-                <span>
-                  영향구분
-                  <br />
-                  (정상/비정상)
-                </span>
-                )
-              </td>
-              <td colSpan={5}>
-                <span>IN-PUT</span>
-              </td>
-              <td colSpan={2}>
-                <span>OUT-PUT</span>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <span>물질명</span>
-              </td>
-              <td>
-                <span>구성성분</span>
-              </td>
-              <td>
-                <span>사용량</span>
-              </td>
-              <td>
-                <span>단위</span>
-              </td>
-              <td>
-                <span>투입형태</span>
-              </td>
-              <td>
-                <span>배출형태</span>
-              </td>
-              <td>
-                <span>배출처</span>
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            {itemList.map(m => (
-              <tr key={m.SEQ} onClick={() => this.handleRowClick(m)}>
-                <td align="center">
-                  <Checkbox checked={rowSelections.indexOf(m.SEQ) > -1} onChange={() => this.handleRowSelection(m.SEQ)} />
+              </>
+            )}
+          </StyledButtonWrapper>
+          <table className="table-border">
+            <colgroup>
+              <col width="4%" />
+              <col width="4%" />
+              <col width="6%" />
+              <col width="8%" />
+              <col width="16%" />
+              <col width="16%" />
+              <col width="9%" />
+              <col width="9%" />
+              <col width="9%" />
+              <col width="9%" />
+              <col width="14%" />
+            </colgroup>
+            <thead>
+              <tr>
+                <td></td>
+                <td></td>
+                <td>
+                  <AntdInput
+                    name="GUBUN"
+                    value={itemData.GUBUN || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleInputOnChange}
+                  />
                 </td>
-                <td align="center">{m.SEQ}</td>
-                <td align="center">{m.GUBUN}</td>
-                <td align="center">{m.STATUS}</td>
-                <td>{m.MATTER}</td>
-                <td>{m.INGREDIENT}</td>
-                <td>{m.VOLUME.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
-                <td>{m.UNIT}</td>
-                <td>{m.INPUT_TYPE}</td>
-                <td>{m.OUTPUT_TYPE}</td>
-                <td>{m.DISCHRGE}</td>
+                <td>
+                  <AntdSelect className="selectMid" value={itemData.STATUS || '정상'} onChange={this.handleStatusOnChange}>
+                    <Option value="정상">정상</Option>
+                    <Option value="비정상">비정상</Option>
+                  </AntdSelect>{' '}
+                </td>
+                <td>
+                  <AntdInput
+                    name="MATTER"
+                    value={itemData.MATTER || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleInputOnChange}
+                  />
+                </td>
+                <td>
+                  <AntdInput
+                    name="INGREDIENT"
+                    value={itemData.INGREDIENT || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleInputOnChange}
+                  />
+                </td>
+                <td>
+                  <InputNumber
+                    name="VOLUME"
+                    value={itemData.VOLUME || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleVolumeOnChange}
+                  />
+                </td>
+                <td>
+                  <AntdInput name="UNIT" value={itemData.UNIT || ''} className="ant-input-inline ant-input-sm input-left" onChange={this.handleInputOnChange} />
+                </td>
+                <td>
+                  <AntdInput
+                    name="INPUT_TYPE"
+                    value={itemData.INPUT_TYPE || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleInputOnChange}
+                  />
+                </td>
+                <td>
+                  <AntdInput
+                    name="OUTPUT_TYPE"
+                    value={itemData.OUTPUT_TYPE || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleInputOnChange}
+                  />
+                </td>
+                <td>
+                  <AntdInput
+                    name="DISCHRGE"
+                    value={itemData.DISCHRGE || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleInputOnChange}
+                  />
+                </td>
               </tr>
-            ))}
-            <tr>
-              <td colSpan={11}>{itemList.length} 건</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+              <tr>
+                <th rowSpan={2}>
+                  <span>삭제</span>
+                </th>
+                <th rowSpan={2}>
+                  <span>Seq</span>
+                </th>
+                <th rowSpan={2}>
+                  <span>구분</span>
+                </th>
+                <th rowSpan={2}>
+                  <span>
+                    영향구분
+                    <br />
+                    (정상/비정상)
+                  </span>
+                  )
+                </th>
+                <th colSpan={5}>
+                  <span>IN-PUT</span>
+                </th>
+                <th colSpan={2}>
+                  <span>OUT-PUT</span>
+                </th>
+              </tr>
+              <tr>
+                <th>
+                  <span>물질명</span>
+                </th>
+                <th>
+                  <span>구성성분</span>
+                </th>
+                <th>
+                  <span>사용량</span>
+                </th>
+                <th>
+                  <span>단위</span>
+                </th>
+                <th>
+                  <span>투입형태</span>
+                </th>
+                <th>
+                  <span>배출형태</span>
+                </th>
+                <th>
+                  <span>배출처</span>
+                </th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <td colSpan={11}>{itemList.length} 건</td>
+              </tr>
+            </tfoot>
+            <tbody>
+              {itemList.map(m => (
+                <tr key={m.SEQ} className="tr-center tr-pointer" onClick={() => this.handleRowClick(m)}>
+                  <td>
+                    <Checkbox
+                      className="ant-checkbox-wrapper"
+                      defaultChecked={false}
+                      checked={rowSelections.indexOf(m.SEQ) > -1}
+                      onChange={() => this.handleRowSelection(m.SEQ)}
+                    />
+                  </td>
+                  <td>{m.SEQ}</td>
+                  <td>{m.GUBUN}</td>
+                  <td>{m.STATUS}</td>
+                  <td>{m.MATTER}</td>
+                  <td>{m.INGREDIENT}</td>
+                  <td>{m.VOLUME.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
+                  <td>{m.UNIT}</td>
+                  <td>{m.INPUT_TYPE}</td>
+                  <td>{m.OUTPUT_TYPE}</td>
+                  <td>{m.DISCHRGE}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </StyledHtmlTable>
+      </ContentsWrapper>
     );
   }
 }

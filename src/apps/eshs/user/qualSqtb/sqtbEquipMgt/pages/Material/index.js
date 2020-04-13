@@ -4,10 +4,15 @@ import { debounce } from 'lodash';
 
 import { Button, Select, Input, Table, Checkbox } from 'antd';
 import UnitComp from 'components/BizBuilder/Field/UnitComp';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+
+const AntdSelect = StyledSelect(Select);
+const AntdInput = StyledInput(Input);
 
 const { Option } = Select;
-const AntdTable = StyledAntdTable(Table);
+const AntdLineTable = StyledLineTable(Table);
 
 class Material extends Component {
   constructor(props) {
@@ -42,7 +47,8 @@ class Material extends Component {
             if (this.props.viewPageData.viewType !== 'VIEW') {
               return (
                 <>
-                  <Select
+                  <AntdSelect
+                    className="select-mid mr5"
                     key={record.INDEX}
                     defaultValue={record.IS_INPUT}
                     style={{ width: 70 }}
@@ -50,7 +56,7 @@ class Material extends Component {
                   >
                     <Option value="1">IN</Option>
                     <Option value="0">OUT</Option>
-                  </Select>
+                  </AntdSelect>
                 </>
               );
             }
@@ -66,8 +72,19 @@ class Material extends Component {
             if (this.props.viewPageData.viewType !== 'VIEW') {
               return (
                 <span key={record.INDEX}>
-                  <Input name="BATH_NM" defaultValue={record.BATH_NM} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-                  <Input name="BATH_SIZE" defaultValue={record.BATH_SIZE} onChange={e => this.handleInputOnChange(e, record.INDEX)} /> ℓ
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="BATH_NM"
+                    defaultValue={record.BATH_NM}
+                    onChange={e => this.handleInputOnChange(e, record.INDEX)}
+                  />
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="BATH_SIZE"
+                    defaultValue={record.BATH_SIZE}
+                    onChange={e => this.handleInputOnChange(e, record.INDEX)}
+                  />{' '}
+                  ℓ
                 </span>
               );
             }
@@ -118,9 +135,20 @@ class Material extends Component {
             if (this.props.viewPageData.viewType !== 'VIEW') {
               return (
                 <span key={record.INDEX}>
-                  <Select key={record.INDEX} defaultValue={record.PIPE_TYPE} style={{ width: 90 }}></Select>
-                  <Input name="PIPE_NO" defaultValue={record.PIPE_NO} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-                  <Input name="PIPE_SIZE" defaultValue={record.PIPE_SIZE} onChange={e => this.handleInputOnChange(e, record.INDEX)} /> mm
+                  <AntdSelect className="select-mid mr5" key={record.INDEX} defaultValue={record.PIPE_TYPE} style={{ width: 90 }}></AntdSelect>
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="PIPE_NO"
+                    defaultValue={record.PIPE_NO}
+                    onChange={e => this.handleInputOnChange(e, record.INDEX)}
+                  />
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="PIPE_SIZE"
+                    defaultValue={record.PIPE_SIZE}
+                    onChange={e => this.handleInputOnChange(e, record.INDEX)}
+                  />{' '}
+                  mm
                 </span>
               );
             }
@@ -136,7 +164,12 @@ class Material extends Component {
             if (this.props.viewPageData.viewType !== 'VIEW') {
               return (
                 <span key={record.INDEX}>
-                  <Input name="QUANTITY" defaultValue={record.QUANTITY} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="QUANTITY"
+                    defaultValue={record.QUANTITY}
+                    onChange={e => this.handleInputOnChange(e, record.INDEX)}
+                  />
                   <UnitComp
                     colData={record.QUANTITY_UNIT}
                     sagaKey={{ id: record.INDEX }}
@@ -158,7 +191,12 @@ class Material extends Component {
             if (this.props.viewPageData.viewType !== 'VIEW') {
               return (
                 <span key={record.INDEX}>
-                  <Input name="DENSITY" defaultValue={record.DENSITY} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="DENSITY"
+                    defaultValue={record.DENSITY}
+                    onChange={e => this.handleInputOnChange(e, record.INDEX)}
+                  />
                   <UnitComp
                     colData={record.DENSITY_UNIT}
                     sagaKey={{ id: record.INDEX }}
@@ -180,7 +218,12 @@ class Material extends Component {
             if (this.props.viewPageData.viewType !== 'VIEW') {
               return (
                 <span key={record.INDEX}>
-                  <Input name="DI" defaultValue={record.DI} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="DI"
+                    defaultValue={record.DI}
+                    onChange={e => this.handleInputOnChange(e, record.INDEX)}
+                  />
                   <UnitComp
                     colData={record.DI_UNIT}
                     sagaKey={{ id: record.INDEX }}
@@ -202,7 +245,13 @@ class Material extends Component {
             if (this.props.viewPageData.viewType !== 'VIEW') {
               return (
                 <span key={record.INDEX}>
-                  <Input name="RECYCLE_RT" defaultValue={record.RECYCLE_RT} onChange={e => this.handleInputOnChange(e, record.INDEX)} /> %
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="RECYCLE_RT"
+                    defaultValue={record.RECYCLE_RT}
+                    onChange={e => this.handleInputOnChange(e, record.INDEX)}
+                  />{' '}
+                  %
                 </span>
               );
             }
@@ -218,9 +267,24 @@ class Material extends Component {
             if (this.props.viewPageData.viewType !== 'VIEW') {
               return (
                 <span key={record.INDEX}>
-                  <Input name="STORAGETANK_CD" defaultValue={record.STORAGETANK_CD} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-                  <Input name="STORAGEHOUSE_CD" defaultValue={record.STORAGEHOUSE_CD} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-                  <Input name="STORAGEPLACE_NM" defaultValue={record.STORAGEPLACE_NM} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="STORAGETANK_CD"
+                    defaultValue={record.STORAGETANK_CD}
+                    onChange={e => this.handleInputOnChange(e, record.INDEX)}
+                  />
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="STORAGEHOUSE_CD"
+                    defaultValue={record.STORAGEHOUSE_CD}
+                    onChange={e => this.handleInputOnChange(e, record.INDEX)}
+                  />
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="STORAGEPLACE_NM"
+                    defaultValue={record.STORAGEPLACE_NM}
+                    onChange={e => this.handleInputOnChange(e, record.INDEX)}
+                  />
                 </span>
               );
             }
@@ -235,8 +299,19 @@ class Material extends Component {
   }
 
   componentDidMount() {
-    const { id, formData, apiArray, getExtraApiData, viewPageData } = this.props;
-    const taskSeq = (viewPageData && viewPageData.taskSeq) || 0;
+    const { id, formData, apiArray, getExtraApiData, changeFormData } = this.props;
+    const taskSeq = (formData && formData.TASK_PREV_SEQ) || (formData && formData.TASK_SEQ) || 0;
+    changeFormData(id, 'materialReload', qualTaskSeq => {
+      getExtraApiData(
+        id,
+        apiArray.concat({
+          key: 'mtrlList',
+          type: 'GET',
+          url: `/api/eshs/v1/common/eshsGetMtrlList/${qualTaskSeq}`,
+        }),
+        this.handleStart,
+      );
+    });
     if (taskSeq > 0) {
       getExtraApiData(
         id,
@@ -253,9 +328,9 @@ class Material extends Component {
   }
 
   handleStart = () => {
-    const { extraApiData, formData, changeFormData, id } = this.props;
+    const { extraApiData, formData, changeFormData, id, viewPageData } = this.props;
     const { columns, initMaterialRow } = this.state;
-
+    const viewType = (viewPageData && viewPageData.viewType) || '';
     const pipeType = (extraApiData && extraApiData.pipe_type && extraApiData.pipe_type.categoryMapList) || [];
     const newColumn = {
       title: '배관재질/No/Size',
@@ -266,7 +341,8 @@ class Material extends Component {
         if (this.props.viewPageData.viewType !== 'VIEW') {
           return (
             <span key={record.INDEX}>
-              <Select
+              <AntdSelect
+                className="select-mid mr5"
                 key={record.INDEX}
                 defaultValue={record.PIPE_TYPE || String(556)}
                 onChange={value => this.handleSelectOnChange(value, 'PIPE_TYPE', record.INDEX)}
@@ -279,9 +355,20 @@ class Material extends Component {
                       {item.NAME_KOR}
                     </Option>
                   ))}
-              </Select>
-              <Input name="PIPE_NO" defaultValue={record.PIPE_NO} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-              <Input name="PIPE_SIZE" defaultValue={record.PIPE_SIZE} onChange={e => this.handleInputOnChange(e, record.INDEX)} /> mm
+              </AntdSelect>
+              <AntdInput
+                className="ant-input-inline ant-input-sm input-left"
+                name="PIPE_NO"
+                defaultValue={record.PIPE_NO}
+                onChange={e => this.handleInputOnChange(e, record.INDEX)}
+              />
+              <AntdInput
+                className="ant-input-inline ant-input-sm input-left"
+                name="PIPE_SIZE"
+                defaultValue={record.PIPE_SIZE}
+                onChange={e => this.handleInputOnChange(e, record.INDEX)}
+              />{' '}
+              mm
             </span>
           );
         }
@@ -297,12 +384,12 @@ class Material extends Component {
         mtrlList.map((m, index) => true && { ...m, INDEX: index }),
       );
     } else {
-      const materialList = [];
-
-      materialList.push({ ...initMaterialRow, INDEX: 0 });
-      materialList.push({ ...initMaterialRow, INDEX: 1 });
-      materialList.push({ ...initMaterialRow, INDEX: 2 });
-      changeFormData(id, 'materialList', materialList);
+      if (viewType !== 'VIEW') {
+        mtrlList.push({ ...initMaterialRow, INDEX: 0 });
+        mtrlList.push({ ...initMaterialRow, INDEX: 1 });
+        mtrlList.push({ ...initMaterialRow, INDEX: 2 });
+      }
+      changeFormData(id, 'materialList', mtrlList);
     }
 
     this.setState({ columns: columns.map(c => (c.title === '배관재질/No/Size' ? newColumn : c)) });
@@ -336,19 +423,21 @@ class Material extends Component {
   };
 
   debouncehandleSetMaterialTable = () => {
-    const { formData } = this.props;
+    const { formData, sagaKey: id } = this.props;
     const { columns } = this.state;
     const materialList = (formData && formData.materialList) || [];
     return this.setState({
       materialTable: [
-        <AntdTable
+        <AntdLineTable
+          key={`${id}_material`}
+          className="tableWrapper"
           rowKey={materialList && materialList.INDEX}
           columns={columns}
           dataSource={materialList || []}
           bordered
-          pagination={{ pageSize: 100 }}
-          scroll={{ x: 1500, y: 200 }}
-          pagination={false}
+          pagination={{ pageSize: 10 }}
+          scroll={{ x: 1500 }}
+          footer={() => <span>{`${materialList.length} 건`}</span>}
         />,
       ],
     });
@@ -392,7 +481,6 @@ class Material extends Component {
     const viewType = (viewPageData && viewPageData.viewType) || '';
     return (
       <>
-        <hr />
         <span>Material {viewType !== 'VIEW' && <Button onClick={this.handlePlusTd}>[+3]</Button>}</span>
         {materialTable}
       </>
@@ -410,6 +498,7 @@ Material.propTypes = {
   extraApiData: PropTypes.object,
   columns: PropTypes.array,
   viewPageData: PropTypes.object,
+  sagaKey: PropTypes.string,
 };
 Material.defaultProps = {
   apiArray: [
@@ -421,5 +510,6 @@ Material.defaultProps = {
   ],
   extraApiData: { pipe_type: [] },
   columns: [],
+  sagaKey: '',
 };
 export default Material;
