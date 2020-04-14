@@ -283,7 +283,7 @@ class List extends Component {
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
-          <AntdSelect className="select-mid mr5" onChange={value => this.changeSelectValue(value)} defaultValue="0">
+          <AntdSelect className="select-mid mr5" style={{ width: 200 }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
             <Option value="0" disabled>
               선택
             </Option>
