@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select, Popconfirm, Table } from 'antd';
+import { Input, Select, Popconfirm } from 'antd';
 
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
@@ -9,7 +9,6 @@ import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
@@ -18,7 +17,6 @@ import SearchComp from 'apps/eshs/user/environmentMasterRegistration/InputModal/
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
-const AntdTable = StyledLineTable(Table);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -33,12 +31,9 @@ class List extends React.Component {
         CATEGORY: '',
         SUB_CATEGORY: '',
         IS_APPLICATE: 'Y',
-      },
-      subRequestValue: {
-        NAME_KOR: '',
-        NAME_ENG: '',
-        CAS_NO: '',
-        IS_APPLICATE: 'Y',
+        SAFETY_ID: '',
+        SERIAL_NO: '',
+        WORK_ID: '',
       },
       isModified: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
@@ -213,6 +208,13 @@ class List extends React.Component {
     });
   };
 
+  setSubRequestValue = record => {
+    // 하위물질들 정보 등록
+    this.setState({
+      subRequestValue: record,
+    });
+  };
+
   modalColumns = [
     {
       title: 'CAS_NO',
@@ -234,98 +236,6 @@ class List extends React.Component {
     },
   ];
 
-  columns = [
-    {
-      title: '화학물질명_국문',
-      dateIndex: 'NAME_KOR',
-      key: 'NAME_KOR',
-      align: 'center',
-      render: () => {
-        const { subRequestValue } = this.state;
-        return (
-          <AntdInput
-            className="ant-input-sm ant-input-inline"
-            name="NAME_KOR"
-            value={subRequestValue.NAME_KOR}
-            onChange={e => this.handleInputChange(e, 'INPUT', 'NAME_KOR', true)}
-            style={{ width: '70%' }}
-          />
-        );
-      },
-    },
-    {
-      title: '화학물질명_영문',
-      dateIndex: 'NAME_ENG',
-      key: 'NAME_ENG',
-      align: 'center',
-      render: () => {
-        const { subRequestValue } = this.state;
-        return (
-          <AntdInput
-            className="ant-input-sm ant-input-inline"
-            name="NAME_ENG"
-            value={subRequestValue.NAME_ENG}
-            onChange={e => this.handleInputChange(e, 'INPUT', 'NAME_ENG', true)}
-            style={{ width: '70%' }}
-          />
-        );
-      },
-    },
-    {
-      title: 'CAS_NO',
-      dateIndex: 'CAS_NO',
-      key: 'CAS_NO',
-      align: 'center',
-      render: () => {
-        const { subRequestValue } = this.state;
-        return (
-          <AntdInput
-            className="ant-input-sm ant-input-inline"
-            name="CAS_NO"
-            value={subRequestValue.CAS_NO}
-            onChange={e => this.handleInputChange(e, 'INPUT', 'CAS_NO', true)}
-            style={{ width: '70%' }}
-          />
-        );
-      },
-    },
-    {
-      title: '해당여부',
-      dateIndex: 'IS_APPLICATE',
-      key: 'IS_APPLICATE',
-      align: 'center',
-      render: () => {
-        const { subRequestValue } = this.state;
-        return (
-          <AntdSelect
-            className="select-sm"
-            defaultValue="Y"
-            onChange={e => this.handleInputChange(e, 'SELECT', 'IS_APPLICATE', true)}
-            value={subRequestValue.IS_APPLICATE}
-            style={{ width: '100%' }}
-          >
-            <Select.Option value="Y">해당</Select.Option>
-            <Select.Option value="N">비해당</Select.Option>
-          </AntdSelect>
-        );
-      },
-    },
-  ];
-
-  handleSapDeleteClick = () => {
-    const { requestValue, subRequestValue } = this.state;
-    console.debug(Object.assign(requestValue, subRequestValue));
-  };
-
-  dataSource = [
-    {
-      NAME_KOR: 'DD',
-      NAME_ENG: 'DD',
-      CAS_NO: 'DSA',
-      IS_APPLICATE: 'Y',
-    },
-  ];
-
   render() {
     const {
       handleSearchClick,
@@ -336,9 +246,8 @@ class List extends React.Component {
       handleResetClick,
       handleDeleteConfirm,
       handleDeleteClick,
-      handleSapDeleteClick,
     } = this;
-    const { columns, modalColumns, dataSource } = this;
+    const { modalColumns } = this;
     const { requestValue, visible, deleteConfirmMessage, categories, subCategories } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
@@ -416,7 +325,7 @@ class List extends React.Component {
                       <AntdSelect
                         className="select-sm"
                         onChange={e => handleInputChange(e, 'SELECT', 'CATEGORY')}
-                        value={Number(requestValue.CATEGORY)}
+                        value={requestValue.CATEGORY ? Number(requestValue.CATEGORY) : ''}
                         style={{ width: '100%' }}
                       >
                         {categories.map(item => (
@@ -429,7 +338,7 @@ class List extends React.Component {
                       <AntdSelect
                         className="select-sm"
                         onChange={e => handleInputChange(e, 'SELECT', 'SUB_CATEGORY')}
-                        value={Number(requestValue.SUB_CATEGORY)}
+                        value={requestValue.SUB_CATEGORY ? Number(requestValue.SUB_CATEGORY) : ''}
                         style={{ width: '100%' }}
                       >
                         {subCategories.map(item => (
@@ -442,17 +351,6 @@ class List extends React.Component {
               </table>
             </StyledHtmlTable>
           </div>
-          <div className="selSaveWrapper alignLeft">
-            {/* <Popconfirm
-              title={checkedIndex === -1 ? '삭제할 항목을 선택하세요.' : '삭제하시겠습니까?'}
-              onConfirm={checkedIndex === -1 ? null : handleSapDeleteClick}
-            > */}
-            <StyledButton className="btn-light" onClick={this.handleSapDeleteClick}>
-              선택 삭제
-            </StyledButton>
-            {/* </Popconfirm> */}
-          </div>
-          <AntdTable columns={columns} dataSource={dataSource} pagination={false} />
         </ContentsWrapper>
         <Modal
           sagaKey={sagaKey}

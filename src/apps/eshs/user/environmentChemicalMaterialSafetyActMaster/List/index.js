@@ -14,6 +14,7 @@ import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environmentMasterRegistration/InputModal/SearchComp';
 
+const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
 const AntdSearch = StyledSearchInput(Input.Search);
 class List extends React.Component {
@@ -25,11 +26,104 @@ class List extends React.Component {
         CAS_NO: '',
         NAME_KOR: '',
         NAME_ENG: '',
+        IS_EXPOSURE: 'N',
+        IS_PERMISSION: 'N',
+        IS_ALLOW: 'N',
       },
+      subRequestValue: [],
       isModified: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
     };
   }
+
+  mainTableRenderer = () => (
+    <>
+      <tr>
+        <th>화학물질명_국문</th>
+        <td>
+          <AntdInput className="ant-input-sm" name="NAME_KOR" value={this.state.requestValue.NAME_KOR} onChange={e => this.handleInputChange(e, 'INPUT')} />
+        </td>
+        <th>화학물질명_영문</th>
+        <td>
+          <AntdInput className="ant-input-sm" name="NAME_ENG" value={this.state.requestValue.NAME_ENG} onChange={e => this.handleInputChange(e, 'INPUT')} />
+        </td>
+        <th>CAS NO.</th>
+        <td>
+          <AntdInput className="ant-input-sm" name="CAS_NO" value={this.state.requestValue.CAS_NO} onChange={e => this.handleInputChange(e, 'INPUT')} />
+        </td>
+      </tr>
+      <tr>
+        <th>노출기준설정물질</th>
+        <td>
+          <AntdSelect
+            className="select-sm"
+            defaultValue="Y"
+            onChange={e => this.handleInputChange(e, 'SELECT', 'IS_EXPOSURE')}
+            value={this.state.requestValue.IS_EXPOSURE}
+            style={{ width: '100%' }}
+          >
+            <Select.Option value="Y">해당</Select.Option>
+            <Select.Option value="N">비해당</Select.Option>
+          </AntdSelect>
+        </td>
+        <th>허가대상물질</th>
+        <td>
+          <AntdSelect
+            className="select-sm"
+            defaultValue="Y"
+            onChange={e => this.handleInputChange(e, 'SELECT', 'IS_PERMISSION')}
+            value={this.state.requestValue.IS_PERMISSION}
+            style={{ width: '100%' }}
+          >
+            <Select.Option value="Y">해당</Select.Option>
+            <Select.Option value="N">비해당</Select.Option>
+          </AntdSelect>
+        </td>
+        <th>허용기준설정물질(제한물질)</th>
+        <td>
+          <AntdSelect
+            className="select-sm"
+            defaultValue="Y"
+            onChange={e => this.handleInputChange(e, 'SELECT', 'IS_ALLOW')}
+            value={this.state.requestValue.IS_ALLOW}
+            style={{ width: '100%' }}
+          >
+            <Select.Option value="Y">해당</Select.Option>
+            <Select.Option value="N">비해당</Select.Option>
+          </AntdSelect>
+        </td>
+      </tr>
+    </>
+  );
+
+  subTableRenderer = () => (
+    <>
+      <tr>
+        <th>하위물질명_국문</th>
+        <td>하위물질명_국문</td>
+        <th>하위물질명_영문</th>
+        <td>하위물질명_영문</td>
+        <th>CAS_NO</th>
+        <td>CAS_NO</td>
+      </tr>
+      <tr>
+        <th>노출기준설정물질</th>
+        <td>
+          <AntdInput className="ant-input-sm" name="CAS_NO" value={this.state.requestValue.CAS_NO} onChange={e => this.handleInputChange(e, 'INPUT')} />
+        </td>
+        <th>허가대상물질</th>
+        <td>
+          <AntdInput className="ant-input-sm" name="CAS_NO" value={this.state.requestValue.CAS_NO} onChange={e => this.handleInputChange(e, 'INPUT')} />
+        </td>
+        <th>허용기준설정물질(제한물질)</th>
+        <td>
+          <AntdInput className="ant-input-sm" name="CAS_NO" value={this.state.requestValue.CAS_NO} onChange={e => this.handleInputChange(e, 'INPUT')} />
+        </td>
+      </tr>
+    </>
+  );
+
+  htmlTable = [this.mainTableRenderer(), this.subTableRenderer()];
 
   handleSearchClick = () => {
     this.setState({
@@ -113,6 +207,9 @@ class List extends React.Component {
         CAS_NO: '',
         NAME_KOR: '',
         NAME_ENG: '',
+        IS_EXPOSURE: 'N',
+        IS_PERMISSION: 'N',
+        IS_ALLOW: 'N',
       },
       isModified: false,
     });
@@ -184,6 +281,9 @@ class List extends React.Component {
                 <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
                   저장/수정
                 </StyledButton>
+                <StyledButton className="btn-light btn-first" onClick={() => this.subTableRenderer().concat(this.subTableRenderer())}>
+                  하위물질추가
+                </StyledButton>
                 <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
                   <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
                     삭제
@@ -208,10 +308,6 @@ class List extends React.Component {
                 </colgroup>
                 <tbody>
                   <tr>
-                    <th>CAS NO.</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
                     <th>화학물질명_국문</th>
                     <td>
                       <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
@@ -220,7 +316,53 @@ class List extends React.Component {
                     <td>
                       <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
+                    <th>CAS NO.</th>
+                    <td>
+                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
+                    </td>
                   </tr>
+                  <tr>
+                    <th>노출기준설정물질</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue="Y"
+                        onChange={e => handleInputChange(e, 'SELECT', 'IS_EXPOSURE')}
+                        value={requestValue.IS_EXPOSURE}
+                        style={{ width: '100%' }}
+                      >
+                        <Select.Option value="Y">해당</Select.Option>
+                        <Select.Option value="N">비해당</Select.Option>
+                      </AntdSelect>
+                    </td>
+                    <th>허가대상물질</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue="Y"
+                        onChange={e => handleInputChange(e, 'SELECT', 'IS_PERMISSION')}
+                        value={requestValue.IS_PERMISSION}
+                        style={{ width: '100%' }}
+                      >
+                        <Select.Option value="Y">해당</Select.Option>
+                        <Select.Option value="N">비해당</Select.Option>
+                      </AntdSelect>
+                    </td>
+                    <th>허용기준설정물질(제한물질)</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue="Y"
+                        onChange={e => handleInputChange(e, 'SELECT', 'IS_ALLOW')}
+                        value={requestValue.IS_ALLOW}
+                        style={{ width: '100%' }}
+                      >
+                        <Select.Option value="Y">해당</Select.Option>
+                        <Select.Option value="N">비해당</Select.Option>
+                      </AntdSelect>
+                    </td>
+                  </tr>
+                  {this.subTableRenderer()}
                 </tbody>
               </table>
             </StyledHtmlTable>
