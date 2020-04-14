@@ -75,6 +75,7 @@ const StyleMyPageTree = styled.div`
     }
 
     .rst__nodeContent {
+      width: 100%;
       .rstcustom__rowWrapper {
         padding: 0 !important;
 
