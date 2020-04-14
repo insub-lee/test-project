@@ -13,6 +13,9 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import Loadable from 'components/Loadable';
+
+import Loading from '../Common/Loading';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -24,6 +27,7 @@ class ListPage extends Component {
       isRowNo: false,
       isOnRowClick: false,
       rowClickView: 'VIEW',
+      StyledWrap: StyledViewDesigner,
     };
   }
 
@@ -33,6 +37,15 @@ class ListPage extends Component {
     let isRowNo = false;
     let isOnRowClick = false;
     let rowClickView = 'VIEW';
+
+    if (workInfo.BUILDER_STYLE_PATH) {
+      const StyledWrap = Loadable({
+        loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
+        loading: Loading,
+      });
+      this.setState({ StyledWrap });
+    }
+
     if (workInfo && workInfo.OPT_INFO) {
       workInfo.OPT_INFO.forEach(opt => {
         if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
@@ -179,7 +192,7 @@ class ListPage extends Component {
       isBuilderModal,
       changeBuilderModalState,
     } = this.props;
-    const { isMultiDelete } = this.state;
+    const { isMultiDelete, StyledWrap } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -192,7 +205,7 @@ class ListPage extends Component {
       } = workFlowConfig;
 
       return (
-        <StyledViewDesigner>
+        <StyledWrap>
           <Sketch {...bodyStyle}>
             {groups.map((group, groupIndex) => {
               if (group.type === 'listGroup') {
@@ -270,7 +283,7 @@ class ListPage extends Component {
               </Button>
             </div>
           </Sketch>
-        </StyledViewDesigner>
+        </StyledWrap>
       );
     }
     return '';

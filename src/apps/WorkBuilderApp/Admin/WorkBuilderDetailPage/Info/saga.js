@@ -19,11 +19,14 @@ function* fetchData({ id }) {
   const { list } = optList;
   const apiList = yield call(Axios.get, '/api/builder/v1/work/apimaster');
   const { list: apiMasterList } = apiList;
+  const styleResponse = yield call(Axios.get, '/api/builder/v1/work/workstyle');
+  const { list: styleList } = styleResponse;
   const result = {
     workInfo: object,
     processList,
     optList: list,
     apiList: apiMasterList,
+    styleList,
   };
   yield put(actions.successFetchData(result));
   yield put(actions.disableoading());
