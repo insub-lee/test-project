@@ -26,6 +26,9 @@ const StyledInputNumber = Component => styled(Component)`
     &:disabled {
       background: #f5f5f5;
     }
+    .ant-input-number-input {
+      height: auto;
+    }
   }
   &.ant-input-number-inline {
     display: inline-block;
@@ -34,17 +37,17 @@ const StyledInputNumber = Component => styled(Component)`
   &.mr5 {
     margin-right: 5px;
   }
-  &.ant-input-number-mid {
+  &.input-number-mid {
     padding: 0.4rem 0.875rem;
     height: auto;
   }
-  &.ant-input-number-sm {
+  &.input-number-sm {
     padding: 0.313rem 0.844rem;
     font-size: 0.75rem;
     line-height: 1.5;
     height: auto;
   }
-  &.ant-input-number-xs {
+  &.input-number-xs {
     padding: 0.2rem 0.7rem;
     font-size: 0.75rem;
     line-height: 1.5;

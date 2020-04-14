@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
@@ -408,16 +409,16 @@ class List extends React.Component {
         <ContentsWrapper>
           <StyledSearchWrap>
             <span className="input-label">화학물 추가</span>
-            <AntdSearch className="search-item input-width160" placeHolder="검색" onClick={handleSearchClick} value="" />
+            <AntdSearch className="ant-search-inline input-search-mid mr5" placeHolder="검색" onClick={handleSearchClick} value="" style={{ width: '200px' }} />
+            <StyledButtonWrapper className="btn-wrap-inline">
+              <StyledButton className="btn-primary btn-first" onClick={handleMasterModifyClick}>
+                수정
+              </StyledButton>
+              <StyledButton className="btn-light" onClick={handleResetClick}>
+                초기화
+              </StyledButton>
+            </StyledButtonWrapper>
           </StyledSearchWrap>
-          <div className="selSaveWrapper">
-            <StyledButton className="btn-primary btn-first" onClick={handleMasterModifyClick}>
-              수정
-            </StyledButton>
-            <StyledButton className="btn-light" onClick={handleResetClick}>
-              초기화
-            </StyledButton>
-          </div>
           <div className="tableWrapper">
             <StyledHtmlTable>
               <table>
@@ -460,7 +461,6 @@ class List extends React.Component {
                 </tbody>
               </table>
             </StyledHtmlTable>
-            <div className="div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
           </div>
           <div className="selSaveWrapper">
             <Popconfirm

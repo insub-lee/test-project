@@ -11,52 +11,25 @@ import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
-import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environmentMasterRegistration/InputModal/SearchComp';
 
-const AntdSelect = StyledSelect(Select);
+const AntdInput = StyledInput(Input);
 const AntdSearch = StyledSearchInput(Input.Search);
 class List extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       visible: false,
-      categorys: [],
       requestValue: {
-        SAP_NO: '',
-        NAME_SAP: '',
-        VENDOR_CD: '',
-        CATEGORY: '',
+        CAS_NO: '',
+        NAME_KOR: '',
+        NAME_ENG: '',
       },
       isModified: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
     };
   }
-
-  componentDidMount() {
-    this.getCategorys();
-  }
-
-  getCategorys = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    const apiArr = [
-      {
-        key: 'categorys',
-        url: `/api/eshs/v1/common/eshschemicalmaterialcode?CATEGORY=${1950}`,
-        type: 'GET',
-      },
-    ];
-
-    getCallDataHandler(id, apiArr, this.setCategorys);
-  };
-
-  setCategorys = () => {
-    const { result } = this.props;
-    this.setState({
-      categorys: (result.categorys && result.categorys.list) || [],
-    });
-  };
 
   handleSearchClick = () => {
     this.setState({
@@ -67,17 +40,26 @@ class List extends React.Component {
   handleInputChange = (event, type, name) => {
     if (type.toUpperCase() === 'INPUT') {
       const valueObj = { [event.target.name.toUpperCase()]: event.target.value };
-      this.setState(prevState => ({
+      return this.setState(prevState => ({
+        requestValue: Object.assign(prevState.requestValue, valueObj),
+      }));
+    }
+
+    if (type.toUpperCase() === 'SELECT' && name === 'CATEGORY') {
+      const valueObj = { [name.toUpperCase()]: event };
+      this.getSubCategories(event);
+      return this.setState(prevState => ({
         requestValue: Object.assign(prevState.requestValue, valueObj),
       }));
     }
 
     if (type.toUpperCase() === 'SELECT') {
       const valueObj = { [name.toUpperCase()]: event };
-      this.setState(prevState => ({
+      return this.setState(prevState => ({
         requestValue: Object.assign(prevState.requestValue, valueObj),
       }));
     }
+    return null;
   };
 
   handleInputClick = () => {
@@ -87,17 +69,17 @@ class List extends React.Component {
       this.setState({
         isModified: false,
       });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, this.getMaterialList);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetymaster`, requestValue, this.getMaterialList);
     }
     this.setState({
       isModified: false,
     });
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalsafetymaster`, requestValue, this.getMaterialList);
   };
 
   handleDeleteClick = () => {
     const { requestValue } = this.state;
-    if (!requestValue.FACTOR_ID) {
+    if (!requestValue.SAFETY_ID) {
       return this.setState({
         deleteConfirmMessage: '선택된 항목이 없습니다.',
       });
@@ -110,7 +92,7 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetymaster`, requestValue, this.getMaterialList);
   };
 
   getMaterialList = () => {
@@ -119,7 +101,7 @@ class List extends React.Component {
       {
         key: 'materialList',
         type: 'GET',
-        url: '/api/eshs/v1/common/eshschemicalmaterialharmfulfactor',
+        url: '/api/eshs/v1/common/eshschemicalsafetymaster',
       },
     ];
     getCallDataHandler(id, apiArr, this.handleResetClick);
@@ -128,18 +110,12 @@ class List extends React.Component {
   handleResetClick = () => {
     this.setState({
       requestValue: {
-        SAP_NO: '',
-        NAME_SAP: '',
-        VENDOR_CD: '',
-        CATEGORY: '',
+        CAS_NO: '',
+        NAME_KOR: '',
+        NAME_ENG: '',
       },
       isModified: false,
     });
-  };
-
-  handleEshsCmpnyCompChange = data => {
-    const valueObj = { VENDOR_CD: data.WRK_CMPNY_CD }; // 키값 바꾸기
-    this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
   };
 
   handleModalClose = () => {
@@ -158,27 +134,21 @@ class List extends React.Component {
 
   columns = [
     {
-      title: 'SAP_NO',
-      dataIndex: 'SAP_NO',
-      key: 'SAP_NO',
+      title: 'CAS_NO',
+      dataIndex: 'CAS_NO',
+      key: 'CAS_NO',
       align: 'center',
     },
     {
-      title: '화학물질명_SAP',
-      dataIndex: 'NAME_SAP',
-      key: 'NAME_SAP',
+      title: '화학물질명_국문',
+      dataIndex: 'NAME_KOR',
+      key: 'NAME_KOR',
       align: 'center',
     },
     {
-      title: '공급업체',
-      dataIndex: 'VENDOR_NM',
-      key: 'VENDOR_NM',
-      align: 'center',
-    },
-    {
-      title: '위험물 분류',
-      dataIndex: 'CATEGORY',
-      key: 'CATEGORY',
+      title: '화학물질명_영문',
+      dataIndex: 'NAME_ENG',
+      key: 'NAME_ENG',
       align: 'center',
     },
   ];
@@ -195,7 +165,7 @@ class List extends React.Component {
       handleDeleteClick,
     } = this;
     const { columns } = this;
-    const { requestValue, visible, deleteConfirmMessage, categorys } = this.state;
+    const { requestValue, visible, deleteConfirmMessage } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
@@ -230,45 +200,25 @@ class List extends React.Component {
               <table>
                 <colgroup>
                   <col width="15%" />
-                  <col width="35%" />
+                  <col width="18%" />
                   <col width="15%" />
-                  <col width="35%" />
+                  <col width="18%" />
+                  <col width="15%" />
+                  <col width="18%" />
                 </colgroup>
                 <tbody>
                   <tr>
-                    <th>SAP NO.</th>
-                    <td>{requestValue.SAP_NO}</td>
-                    <th>화학물질명_SAP</th>
-                    <td>{requestValue.NAME_SAP}</td>
-                  </tr>
-                  <tr>
-                    <th>공급업체</th>
+                    <th>CAS NO.</th>
                     <td>
-                      <EshsCmpnyComp
-                        searchWidth="50%"
-                        sagaKey={sagaKey}
-                        getExtraApiData={getCallDataHandler}
-                        extraApiData={result}
-                        colData={requestValue.VENDOR_CD}
-                        visible
-                        CONFIG={{ property: { isRequired: false, className: 'ant-input-search input-search-sm' } }}
-                        changeFormData={changeFormData}
-                        COMP_FIELD="VENDOR_CD"
-                        eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-                      />
+                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
-                    <th>위험물 분류</th>
+                    <th>화학물질명_국문</th>
                     <td>
-                      <AntdSelect
-                        className="select-sm"
-                        onChange={e => handleInputChange(e, 'SELECT', 'CATEGORY')}
-                        value={requestValue.CATEGORY}
-                        style={{ width: '100%' }}
-                      >
-                        {categorys.map(item => (
-                          <Select.Option value={item.CODE_ID}>{item.NAME_KOR}</Select.Option>
-                        ))}
-                      </AntdSelect>
+                      <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
+                    </td>
+                    <th>화학물질명_영문</th>
+                    <td>
+                      <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
                   </tr>
                 </tbody>
@@ -283,7 +233,7 @@ class List extends React.Component {
           getCallDataHandler={getCallDataHandler}
           result={result}
           setRequestValue={setRequestValue}
-          apiUrl="/api/eshs/v1/common/eshschemicalmaterialharmfulfactor"
+          apiUrl="/api/eshs/v1/common/eshschemicalsafetymaster"
           tableColumns={columns}
           SearchComp={SearchComp}
           changeFormData={changeFormData}
