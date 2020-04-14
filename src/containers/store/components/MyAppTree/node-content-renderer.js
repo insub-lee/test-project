@@ -63,10 +63,10 @@ class CustomThemeNodeContentRenderer extends Component {
             <span className={`${styles.rowTitle} rstcustom__rowTitle${node.subtitle ? ` ${styles.rowTitleWithSubtitle} rstcustom__rowTitleWithSubtitle` : ''}`}>
               {typeof nodeTitle === 'function'
                 ? nodeTitle({
-                  node,
-                  path,
-                  treeIndex,
-                })
+                    node,
+                    path,
+                    treeIndex,
+                  })
                 : nodeTitle}
             </span>
 
@@ -74,10 +74,10 @@ class CustomThemeNodeContentRenderer extends Component {
               <span className={`${styles.rowSubtitle} rstcustom__rowSubtitle`}>
                 {typeof nodeSubtitle === 'function'
                   ? nodeSubtitle({
-                    node,
-                    path,
-                    treeIndex,
-                  })
+                      node,
+                      path,
+                      treeIndex,
+                    })
                   : nodeSubtitle}
               </span>
             )}
@@ -137,7 +137,9 @@ class CustomThemeNodeContentRenderer extends Component {
                 type="button"
                 aria-label="ordinary"
                 // className={styles.ordinaryButton}
-                className={`${styles.ordinaryButton} rstcustom__ordinaryButton ${node.selectedIndex === node.key ? 'active' : `${node.selectedIndex}/${node.key}`}`}
+                className={`${styles.ordinaryButton} rstcustom__ordinaryButton ${
+                  node.selectedIndex === node.key ? 'active' : `${node.selectedIndex}/${node.key}`
+                }`}
                 style={{ left: -0.5 * scaffoldBlockPxWidth }}
               />
             </div>
