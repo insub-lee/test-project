@@ -26,7 +26,6 @@ class List extends Component {
       code: '',
       selectBoxData: [],
       listData: [],
-      codeType: '',
       pullpath: '',
       nodeOrdinal: '',
       nodeId: '',
@@ -87,7 +86,6 @@ class List extends Component {
       excelData,
       excelNm: initNodeData.NAME_KOR,
     });
-    this.codeFomat(listData && listData[0]);
   };
 
   selectCode = () => {
@@ -97,46 +95,20 @@ class List extends Component {
       const listData = result && result.apiData && result.apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3);
       const pullpath = result && result.apiData && result.apiData.categoryMapList.find(x => x.NODE_ID === changeSelectValue);
       this.setState({ listData, pullpath: pullpath && pullpath.FULLPATH, nodeOrdinal: pullpath && pullpath.NODE_ORDINAL });
-      this.codeFomat(listData && listData[0]);
     } else {
       message.warning('코드 구분을 선택해주세요.');
     }
   };
 
-  codeFomat = codeData => {
-    let codeType = '';
-    if (codeData && codeData.CODE.indexOf('00') === 0) {
-      codeType = '00Format';
-    } else if (codeData && codeData.CODE === codeData.NAME_KOR) {
-      codeType = 'nameFormat';
-    } else {
-      codeType = 'selfTyping';
-    }
-    this.setState({
-      codeType,
-    });
-  };
-
   insertOverlab = () => {
-    const { codeType, listData, name } = this.state;
-    if (codeType === 'selfTyping') {
+    const { changeSelectValue, listData } = this.state;
+    if (changeSelectValue) {
       const overlab = listData && listData[0] && listData.find(item => item.CODE === this.state.code);
       if (overlab) {
         message.warning('기존에 동일한 코드가 존재합니다.');
       } else {
         this.onChangeData('I');
       }
-    } else if (codeType === '00Format') {
-      let max;
-      if (listData && listData[0]) {
-        max =
-          listData.length > 1
-            ? listData.reduce((prev, curr) => (Number(prev.CODE) > Number(curr.CODE) ? Number(prev.CODE) : Number(curr.CODE)))
-            : Number(listData[0].CODE);
-      }
-      this.setState({ code: `${String(max + 1).padStart(3, '0')}` }, () => this.onChangeData('I'));
-    } else if (codeType === 'nameFormat') {
-      this.setState({ code: name }, () => this.onChangeData('I'));
     } else {
       message.warning('코드 구분을 선택해주세요.');
     }
@@ -197,7 +169,7 @@ class List extends Component {
   };
 
   render() {
-    const { selectBoxData, listData, excelData, excelNm, codeType, code, name, useYN } = this.state;
+    const { selectBoxData, listData, excelData, excelNm, code, name, useYN } = this.state;
     const columns = [
       {
         title: '상태',
@@ -229,15 +201,7 @@ class List extends Component {
         width: 150,
         children: [
           {
-            title: (
-              <AntdInput
-                className="ant-input-sm input-center"
-                readOnly={codeType !== 'selfTyping'}
-                onClick={codeType !== 'selfTyping' ? () => message.warning('입력하는 코드형식이 아닙니다') : ''}
-                value={code}
-                onChange={e => this.onChangeValue('code', e.target.value)}
-              />
-            ),
+            title: <AntdInput className="ant-input-sm input-center" value={code} onChange={e => this.onChangeValue('code', e.target.value)} />,
             className: 'th-form',
             dataIndex: 'CODE',
             align: 'center',
@@ -319,7 +283,7 @@ List.propTypes = {
   sagaKey: PropTypes.string,
   submitHandlerBySaga: PropTypes.func,
   getCallDataHandler: PropTypes.func,
-  MAP_ID: PropTypes.string,
+  MAP_ID: PropTypes.number,
   result: PropTypes.any,
   INIT_NODE_ID: PropTypes.number,
 };
