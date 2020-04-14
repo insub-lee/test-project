@@ -6,7 +6,6 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import MdcsContentView from 'components/MdcsContentView';
 import StyledButton from 'components/CommonStyled/StyledButton';
 import StyledModalWrapper from 'components/CommonStyled/StyledModalWrapper';
-import StdModify from 'apps/mdcs/user/MdcsStandard/Intro/StdModify';
 import OpinionModal from '../ApproveView/OpinionModal';
 import HoldRelease from '../ApproveView/holdRelease';
 
@@ -89,7 +88,6 @@ class HoldView extends Component {
         <BizBuilderBase
           sagaKey="approveBase_approveView"
           viewType={selectedViewType}
-          CustomModifyPage={StdModify}
           onCloseModal={this.onCloseModal}
           onChangeForm={this.onChangeForm}
           closeBtnFunc={this.closeBtnFunc}
