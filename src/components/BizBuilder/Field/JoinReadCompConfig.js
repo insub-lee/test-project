@@ -38,6 +38,21 @@ class ComponentConfig extends Component {
           <Radio value="N">N</Radio>
         </Radio.Group>
       </div>,
+      <div className="popoverItem popoverItemInput">
+        <span className="spanLabel">Bold체 조건</span>
+        <Input
+          style={{ width: '50%' }}
+          placeholder="Bold체 여부를 결정할 컬럼명을 입력해주세요."
+          defaultValue={(configInfo && configInfo.property && configInfo.property.boldCondition) || ''}
+          onChange={e => this.handleChangeConfigData('boldCondition', e.target.value)}
+        />
+        <Input
+          style={{ width: '50%' }}
+          placeholder="Bold체 여부를 결정할 값을 입력해주세요."
+          defaultValue={(configInfo && configInfo.property && configInfo.property.boldTarget) || ''}
+          onChange={e => this.handleChangeConfigData('boldTarget', e.target.value)}
+        />
+      </div>,
     ];
   }
 }

@@ -4,11 +4,13 @@ import { Input, InputNumber, Select, Popconfirm } from 'antd';
 
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import Modal from '../InputModal';
@@ -17,6 +19,7 @@ import SearchComp from '../InputModal/SearchComp';
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
+const AntdInputNumber = StyledInputNumber(InputNumber);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -87,7 +90,7 @@ class List extends React.Component {
       this.setState({
         isModified: false,
       });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialMaster`, { requestValue }, this.getMaterialList);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialMaster`, requestValue, this.getMaterialList);
     }
     this.setState({
       isModified: false,
@@ -225,8 +228,14 @@ class List extends React.Component {
           <StyledSearchWrap>
             <div className="search-inner">
               <span className="input-label">화학물 추가</span>
-              <AntdSearch className="search-item input-width160" placeHolder="검색" onClick={handleSearchClick} value="" />
-              <div className="search-button-area">
+              <AntdSearch
+                className="ant-search-inline input-search-mid mr5"
+                placeHolder="검색"
+                onClick={handleSearchClick}
+                value=""
+                style={{ width: '200px' }}
+              />
+              <StyledButtonWrapper className="btn-wrap-inline">
                 <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
                   저장/수정
                 </StyledButton>
@@ -238,7 +247,7 @@ class List extends React.Component {
                 <StyledButton className="btn-light" onClick={handleResetClick}>
                   초기화
                 </StyledButton>
-              </div>
+              </StyledButtonWrapper>
             </div>
           </StyledSearchWrap>
           <div className="tableWrapper">
@@ -301,7 +310,7 @@ class List extends React.Component {
                     </td>
                     <th>수입구분</th>
                     <td>
-                      <AntdSelect className="select-sm" defaultValue="N" onChange={handleInputChange} value={requestValue.IS_IMPORT}>
+                      <AntdSelect className="select-sm" defaultValue="N" onChange={handleInputChange} value={requestValue.IS_IMPORT} style={{ width: '100%' }}>
                         <Select.Option value="N">내수</Select.Option>
                         <Select.Option value="Y">수입</Select.Option>
                       </AntdSelect>
@@ -312,16 +321,16 @@ class List extends React.Component {
                     </td>
                     <th>함량(%) 정량</th>
                     <td>
-                      <InputNumber
+                      <AntdInputNumber
                         value={requestValue.CONTENT_DOSE}
                         onChange={value => handleInputNumberChange(value, 'CONTENT_DOSE')}
-                        className="col-input-number"
+                        className="input-number-sm"
+                        style={{ width: '100%' }}
                       />
                     </td>
                   </tr>
                 </tbody>
               </table>
-              <div className="div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
             </StyledHtmlTable>
           </div>
         </ContentsWrapper>

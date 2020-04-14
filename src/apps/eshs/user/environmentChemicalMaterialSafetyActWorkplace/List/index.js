@@ -11,23 +11,26 @@ import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
-import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environmentMasterRegistration/InputModal/SearchComp';
 
+const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
 class List extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      categories: [],
+      subCategories: [],
       visible: false,
-      categorys: [],
       requestValue: {
-        SAP_NO: '',
-        NAME_SAP: '',
-        VENDOR_CD: '',
+        CAS_NO: '',
+        NAME_KOR: '',
+        NAME_ENG: '',
         CATEGORY: '',
+        SUB_CATEGORY: '',
+        IS_APPLICATE: 'Y',
       },
       isModified: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
@@ -35,26 +38,28 @@ class List extends React.Component {
   }
 
   componentDidMount() {
-    this.getCategorys();
+    this.getCategoryList();
   }
 
-  getCategorys = () => {
+  getCategoryList = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiArr = [
       {
-        key: 'categorys',
-        url: `/api/eshs/v1/common/eshschemicalmaterialcode?CATEGORY=${1950}`,
-        type: 'GET',
+        key: 'codeCategory',
+        type: 'POST',
+        url: `/api/admin/v1/common/categoryMapList`,
+        params: { PARAM: { NODE_ID: 1951 } },
       },
     ];
 
-    getCallDataHandler(id, apiArr, this.setCategorys);
+    getCallDataHandler(id, apiArr, this.setCategory);
   };
 
-  setCategorys = () => {
+  setCategory = () => {
     const { result } = this.props;
+    const category = result.codeCategory.categoryMapList.filter(item => item.PARENT_NODE_ID === 1951);
     this.setState({
-      categorys: (result.categorys && result.categorys.list) || [],
+      categories: category,
     });
   };
 
@@ -67,17 +72,47 @@ class List extends React.Component {
   handleInputChange = (event, type, name) => {
     if (type.toUpperCase() === 'INPUT') {
       const valueObj = { [event.target.name.toUpperCase()]: event.target.value };
-      this.setState(prevState => ({
+      return this.setState(prevState => ({
+        requestValue: Object.assign(prevState.requestValue, valueObj),
+      }));
+    }
+
+    if (type.toUpperCase() === 'SELECT' && name === 'CATEGORY') {
+      const valueObj = { [name.toUpperCase()]: event };
+      this.getSubCategories(event);
+      return this.setState(prevState => ({
         requestValue: Object.assign(prevState.requestValue, valueObj),
       }));
     }
 
     if (type.toUpperCase() === 'SELECT') {
       const valueObj = { [name.toUpperCase()]: event };
-      this.setState(prevState => ({
+      return this.setState(prevState => ({
         requestValue: Object.assign(prevState.requestValue, valueObj),
       }));
     }
+    return null;
+  };
+
+  getSubCategories = value => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'subCategories',
+        type: 'POST',
+        url: `/api/admin/v1/common/categoryMapList`,
+        params: { PARAM: { NODE_ID: value } },
+      },
+    ];
+
+    getCallDataHandler(id, apiArr, this.setSubCategories);
+  };
+
+  setSubCategories = () => {
+    const { result } = this.props;
+    this.setState({
+      subCategories: (result.subCategories && result.subCategories.categoryMapList && result.subCategories.categoryMapList.slice(1)) || [],
+    });
   };
 
   handleInputClick = () => {
@@ -87,17 +122,17 @@ class List extends React.Component {
       this.setState({
         isModified: false,
       });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, this.getMaterialList);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetyworkplace`, requestValue, this.getMaterialList);
     }
     this.setState({
       isModified: false,
     });
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalsafetyworkplace`, requestValue, this.getMaterialList);
   };
 
   handleDeleteClick = () => {
     const { requestValue } = this.state;
-    if (!requestValue.FACTOR_ID) {
+    if (!requestValue.WORK_ID) {
       return this.setState({
         deleteConfirmMessage: '선택된 항목이 없습니다.',
       });
@@ -110,7 +145,7 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetyworkplace`, requestValue, this.getMaterialList);
   };
 
   getMaterialList = () => {
@@ -119,7 +154,7 @@ class List extends React.Component {
       {
         key: 'materialList',
         type: 'GET',
-        url: '/api/eshs/v1/common/eshschemicalmaterialharmfulfactor',
+        url: '/api/eshs/v1/common/eshschemicalsafetyworkplace',
       },
     ];
     getCallDataHandler(id, apiArr, this.handleResetClick);
@@ -128,18 +163,15 @@ class List extends React.Component {
   handleResetClick = () => {
     this.setState({
       requestValue: {
-        SAP_NO: '',
-        NAME_SAP: '',
-        VENDOR_CD: '',
+        CAS_NO: '',
+        NAME_KOR: '',
+        NAME_ENG: '',
         CATEGORY: '',
+        SUB_CATEGORY: '',
+        IS_APPLICATE: 'Y',
       },
       isModified: false,
     });
-  };
-
-  handleEshsCmpnyCompChange = data => {
-    const valueObj = { VENDOR_CD: data.WRK_CMPNY_CD }; // 키값 바꾸기
-    this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
   };
 
   handleModalClose = () => {
@@ -158,27 +190,21 @@ class List extends React.Component {
 
   columns = [
     {
-      title: 'SAP_NO',
-      dataIndex: 'SAP_NO',
-      key: 'SAP_NO',
+      title: 'CAS_NO',
+      dataIndex: 'CAS_NO',
+      key: 'CAS_NO',
       align: 'center',
     },
     {
-      title: '화학물질명_SAP',
-      dataIndex: 'NAME_SAP',
-      key: 'NAME_SAP',
+      title: '화학물질명_국문',
+      dataIndex: 'NAME_KOR',
+      key: 'NAME_KOR',
       align: 'center',
     },
     {
-      title: '공급업체',
-      dataIndex: 'VENDOR_NM',
-      key: 'VENDOR_NM',
-      align: 'center',
-    },
-    {
-      title: '위험물 분류',
-      dataIndex: 'CATEGORY',
-      key: 'CATEGORY',
+      title: '화학물질명_영문',
+      dataIndex: 'NAME_ENG',
+      key: 'NAME_ENG',
       align: 'center',
     },
   ];
@@ -195,7 +221,7 @@ class List extends React.Component {
       handleDeleteClick,
     } = this;
     const { columns } = this;
-    const { requestValue, visible, deleteConfirmMessage, categorys } = this.state;
+    const { requestValue, visible, deleteConfirmMessage, categories, subCategories } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
@@ -229,44 +255,67 @@ class List extends React.Component {
             <StyledHtmlTable>
               <table>
                 <colgroup>
-                  <col width="15%" />
-                  <col width="35%" />
-                  <col width="15%" />
-                  <col width="35%" />
+                  <col width="8%" />
+                  <col width="17%" />
+                  <col width="8%" />
+                  <col width="17%" />
+                  <col width="8%" />
+                  <col width="17%" />
+                  <col width="8%" />
+                  <col width="17%" />
                 </colgroup>
                 <tbody>
                   <tr>
-                    <th>SAP NO.</th>
-                    <td>{requestValue.SAP_NO}</td>
-                    <th>화학물질명_SAP</th>
-                    <td>{requestValue.NAME_SAP}</td>
+                    <th>CAS NO.</th>
+                    <td>
+                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
+                    </td>
+                    <th>화학물질명_국문</th>
+                    <td>
+                      <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
+                    </td>
+                    <th>화학물질명_영문</th>
+                    <td>
+                      <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={e => handleInputChange(e, 'INPUT')} />
+                    </td>
+                    <th>해당여부</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue="Y"
+                        onChange={e => handleInputChange(e, 'SELECT', 'IS_APPLICATE')}
+                        value={requestValue.IS_APPLICATE}
+                        style={{ width: '100%' }}
+                      >
+                        <Select.Option value="Y">해당</Select.Option>
+                        <Select.Option value="N">비해당</Select.Option>
+                      </AntdSelect>
+                    </td>
                   </tr>
                   <tr>
-                    <th>공급업체</th>
-                    <td>
-                      <EshsCmpnyComp
-                        searchWidth="50%"
-                        sagaKey={sagaKey}
-                        getExtraApiData={getCallDataHandler}
-                        extraApiData={result}
-                        colData={requestValue.VENDOR_CD}
-                        visible
-                        CONFIG={{ property: { isRequired: false, className: 'ant-input-search input-search-sm' } }}
-                        changeFormData={changeFormData}
-                        COMP_FIELD="VENDOR_CD"
-                        eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-                      />
-                    </td>
-                    <th>위험물 분류</th>
-                    <td>
+                    <th colSpan={1}>분류</th>
+                    <td colSpan={3}>
                       <AntdSelect
                         className="select-sm"
                         onChange={e => handleInputChange(e, 'SELECT', 'CATEGORY')}
                         value={requestValue.CATEGORY}
                         style={{ width: '100%' }}
                       >
-                        {categorys.map(item => (
-                          <Select.Option value={item.CODE_ID}>{item.NAME_KOR}</Select.Option>
+                        {categories.map(item => (
+                          <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
+                        ))}
+                      </AntdSelect>
+                    </td>
+                    <th colSpan={1}>하위 분류</th>
+                    <td colSpan={3}>
+                      <AntdSelect
+                        className="select-sm"
+                        onChange={e => handleInputChange(e, 'SELECT', 'SUB_CATEGORY')}
+                        value={requestValue.SUB_CATEGORY}
+                        style={{ width: '100%' }}
+                      >
+                        {subCategories.map(item => (
+                          <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
                         ))}
                       </AntdSelect>
                     </td>
@@ -283,7 +332,7 @@ class List extends React.Component {
           getCallDataHandler={getCallDataHandler}
           result={result}
           setRequestValue={setRequestValue}
-          apiUrl="/api/eshs/v1/common/eshschemicalmaterialharmfulfactor"
+          apiUrl="/api/eshs/v1/common/eshschemicalsafetyworkplace"
           tableColumns={columns}
           SearchComp={SearchComp}
           changeFormData={changeFormData}
