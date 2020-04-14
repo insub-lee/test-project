@@ -9,12 +9,16 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import Loadable from 'components/Loadable';
+
+import Loading from '../Common/Loading';
 
 class ModifyPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       uploadFileList: [],
+      StyledWrap: StyledViewDesigner,
     };
   }
 
@@ -23,6 +27,15 @@ class ModifyPage extends Component {
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
+
+    if (workInfo.BUILDER_STYLE_PATH) {
+      const StyledWrap = Loadable({
+        loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
+        loading: Loading,
+      });
+      this.setState({ StyledWrap });
+    }
+
     if (isWorkflowUsed && prcId !== -1) {
       const payload = {
         PRC_ID: Number(prcId),
@@ -167,6 +180,9 @@ class ModifyPage extends Component {
       CustomWorkProcess,
       reloadId,
     } = this.props;
+
+    const { StyledWrap } = this.state;
+
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -175,7 +191,7 @@ class ModifyPage extends Component {
         info: { PRC_ID },
       } = workFlowConfig;
       return (
-        <StyledViewDesigner>
+        <StyledWrap>
           <Sketch {...bodyStyle}>
             {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
@@ -196,7 +212,7 @@ class ModifyPage extends Component {
               </div>
             )}
           </Sketch>
-        </StyledViewDesigner>
+        </StyledWrap>
       );
     }
     return '';
