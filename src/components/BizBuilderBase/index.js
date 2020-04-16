@@ -210,8 +210,11 @@ class BizBuilderBase extends React.Component {
       InputCustomButtonsByModal,
       ModifyCustomButtonsByModal,
       ViewCustomButtonsByModal,
+      compProps,
+      conditional,
     } = this.props;
     const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData } = this.state;
+
     return (
       <div>
         <Spin spinning={dataLoading}>{this.componentRenderer()}</Spin>
@@ -236,6 +239,8 @@ class BizBuilderBase extends React.Component {
             ModifyCustomButtons={ModifyCustomButtonsByModal}
             ViewCustomButtons={ViewCustomButtonsByModal}
             // ListCustomButtons={CustomButtonsByModal}
+            compProps={compProps}
+            conditional={conditional}
           />
         </Modal>
       </div>
