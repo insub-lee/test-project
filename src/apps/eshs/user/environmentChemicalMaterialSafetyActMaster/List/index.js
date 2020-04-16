@@ -46,78 +46,6 @@ class List extends React.Component {
     };
   }
 
-  subTableRenderer = () => {
-    const { subMaterialCount, newInput } = this.state;
-    const inputBox = [];
-
-    const handleTempChange = e => {
-      const valueObj = { [e.target.name]: e.target.value };
-      this.setState(prevState => ({
-        tempValue: Object.assign(prevState.tempValue, valueObj),
-      }));
-    };
-
-    const handleTempSelectChange = (value, name) => {
-      const valueObj = { [name]: value };
-      this.setState(prevState => ({
-        tempValue: Object.assign(prevState.tempValue, valueObj),
-      }));
-    };
-
-    const handleTempCancelClick = () => {
-      this.setState(prevState => ({ subMaterialCount: prevState.subMaterialCount - 1 }));
-    };
-
-    for (let i = 0; i < subMaterialCount; i += 1) {
-      inputBox.push(
-        <>
-          <tr>
-            <th>하위물질명_국문</th>
-            <td>
-              <AntdInput className="ant-input-sm" name="NAME_KOR" onChange={handleTempChange} />
-            </td>
-            <th>하위물질명_영문</th>
-            <td>
-              <AntdInput className="ant-input-sm" name="NAME_ENG" onChange={handleTempChange} />
-            </td>
-            <th>CAS_NO</th>
-            <td>
-              <AntdInput className="ant-input-sm" name="CAS_NO" onChange={handleTempChange} />
-            </td>
-          </tr>
-          <tr>
-            <th>노출기준설정물질</th>
-            <td>
-              <AntdSelect className="select-sm" defaultValue="N" onChange={value => handleTempSelectChange(value, 'IS_EXPOSURE')} style={{ width: '100%' }}>
-                <Select.Option value="Y">해당</Select.Option>
-                <Select.Option value="N">비해당</Select.Option>
-              </AntdSelect>
-            </td>
-            <th>허가대상물질</th>
-            <td>
-              <AntdSelect className="select-sm" defaultValue="N" onChange={value => handleTempSelectChange(value, 'IS_PERMISSION')} style={{ width: '100%' }}>
-                <Select.Option value="Y">해당</Select.Option>
-                <Select.Option value="N">비해당</Select.Option>
-              </AntdSelect>
-            </td>
-            <th>허용기준설정물질(제한물질)</th>
-            <td>
-              <AntdSelect className="select-sm" defaultValue="N" onChange={value => handleTempSelectChange(value, 'IS_ALLOW')} style={{ width: '100%' }}>
-                <Select.Option value="Y">해당</Select.Option>
-                <Select.Option value="N">비해당</Select.Option>
-              </AntdSelect>
-            </td>
-          </tr>
-          {/* <StyledButton name={i} className="btn-primary btn-first" onClick={handleTempCancelClick}> */}
-          <StyledButton name={i} className="btn-primary btn-first" onClick={() => console.debug(this)}>
-            취소
-          </StyledButton>
-        </>,
-      );
-    }
-    return inputBox;
-  };
-
   handleSearchClick = () => {
     this.setState({
       visible: true,
@@ -165,6 +93,30 @@ class List extends React.Component {
   };
 
   handleSubMaterialInputClick = () => {
+    const handleTempChange = e => {
+      const valueObj = { [e.target.name]: e.target.value };
+      console.debug(valueObj);
+      this.setState(prevState => ({
+        tempValue: Object.assign(prevState.tempValue, valueObj),
+      }));
+    };
+
+    const handleTempSelectChange = (value, name) => {
+      const valueObj = { [name]: value };
+      this.setState(prevState => ({
+        tempValue: Object.assign(prevState.tempValue, valueObj),
+      }));
+    };
+
+    const handleTempCancelClick = e => {
+      const index = e.target.name;
+      console.debug('@@@@@@CANCEL', index, e.target);
+      this.setState(prevState => ({
+        newInput: prevState.newInput.filter(item => item.index !== Number(index)),
+        subMaterialCount: prevState.subMaterialCount - 1,
+      }));
+    };
+
     this.setState(prevState => ({
       subMaterialCount: prevState.subMaterialCount + 1,
       subRequestValue: prevState.subMaterialCount ? prevState.subRequestValue.concat(prevState.tempValue) : [],
@@ -176,6 +128,56 @@ class List extends React.Component {
         IS_PERMISSION: 'N',
         IS_ALLOW: 'N',
       },
+      newInput: prevState.newInput.concat({
+        index: prevState.subMaterialCount,
+        value: (
+          <>
+            <tr>
+              <th>하위물질명_국문</th>
+              <td>
+                <AntdInput className="ant-input-sm" name="NAME_KOR" onChange={handleTempChange} />
+              </td>
+              <th>하위물질명_영문</th>
+              <td>
+                <AntdInput className="ant-input-sm" name="NAME_ENG" onChange={handleTempChange} />
+              </td>
+              <th>CAS_NO</th>
+              <td>
+                <AntdInput className="ant-input-sm" name="CAS_NO" onChange={handleTempChange} />
+              </td>
+            </tr>
+            <tr>
+              <th>노출기준설정물질</th>
+              <td>
+                <AntdSelect className="select-sm" defaultValue="N" onChange={value => handleTempSelectChange(value, 'IS_EXPOSURE')} style={{ width: '100%' }}>
+                  <Select.Option value="Y">해당</Select.Option>
+                  <Select.Option value="N">비해당</Select.Option>
+                </AntdSelect>
+              </td>
+              <th>허가대상물질</th>
+              <td>
+                <AntdSelect className="select-sm" defaultValue="N" onChange={value => handleTempSelectChange(value, 'IS_PERMISSION')} style={{ width: '100%' }}>
+                  <Select.Option value="Y">해당</Select.Option>
+                  <Select.Option value="N">비해당</Select.Option>
+                </AntdSelect>
+              </td>
+              <th>허용기준설정물질(제한물질)</th>
+              <td>
+                <AntdSelect className="select-sm" defaultValue="N" onChange={value => handleTempSelectChange(value, 'IS_ALLOW')} style={{ width: '100%' }}>
+                  <Select.Option value="Y">해당</Select.Option>
+                  <Select.Option value="N">비해당</Select.Option>
+                </AntdSelect>
+              </td>
+            </tr>
+            <StyledButton name={prevState.subMaterialCount} className="btn-primary btn-first" onClick={() => console.debug('@@@@추가')}>
+              추가
+            </StyledButton>
+            <StyledButton name={prevState.subMaterialCount} className="btn-primary btn-first" onClick={handleTempCancelClick}>
+              취소
+            </StyledButton>
+          </>
+        ),
+      }),
     }));
   };
 
@@ -210,22 +212,20 @@ class List extends React.Component {
   };
 
   handleResetClick = () => {
-    this.setState(
-      {
-        requestValue: {
-          CAS_NO: '',
-          NAME_KOR: '',
-          NAME_ENG: '',
-          IS_EXPOSURE: 'N',
-          IS_PERMISSION: 'N',
-          IS_ALLOW: 'N',
-        },
-        isModified: false,
-        subMaterialCount: 0,
-        subRequestValue: [],
+    this.setState({
+      requestValue: {
+        CAS_NO: '',
+        NAME_KOR: '',
+        NAME_ENG: '',
+        IS_EXPOSURE: 'N',
+        IS_PERMISSION: 'N',
+        IS_ALLOW: 'N',
       },
-      () => this.subTableRenderer(),
-    );
+      isModified: false,
+      subMaterialCount: 0,
+      subRequestValue: [],
+      newInput: [],
+    });
   };
 
   handleModalClose = () => {
@@ -376,7 +376,7 @@ class List extends React.Component {
                       </AntdSelect>
                     </td>
                   </tr>
-                  {this.subTableRenderer()}
+                  {this.state.newInput.map(item => item.value)}
                 </tbody>
               </table>
             </StyledHtmlTable>
