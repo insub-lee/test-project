@@ -1,19 +1,50 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { message } from 'antd';
+import { Button, message } from 'antd';
+
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import * as selectors from 'containers/common/Auth/selectors';
+
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
-
-class StdModify extends Component {
+import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import InterLock from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/InterLock';
+import Material from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/Material';
+import Header from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/Header';
+class ModifyPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      initLoading: true,
       uploadFileList: [],
+      qualTaskSeq: 0,
     };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const {
+      formData,
+      formData: { interLockReload = '', materialReload = '' },
+      sagaKey,
+      changeFormData,
+      setFormData,
+    } = nextProps;
+    const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
+
+    if (prevState.qualTaskSeq !== qualTaskSeq) {
+      if (typeof interLockReload === 'function') {
+        interLockReload(qualTaskSeq);
+      }
+      if (typeof materialReload === 'function') {
+        materialReload(qualTaskSeq);
+      }
+      changeFormData(sagaKey, 'EQUIP_TASK_SEQ', qualTaskSeq);
+      return { qualTaskSeq };
+    }
+    return null;
   }
 
   fileUploadComplete = (id, response, etcData) => {
@@ -92,48 +123,77 @@ class StdModify extends Component {
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModalHandler, changeViewPage, onChangeForm } = this.props;
+    const { reloadId, onCloseModalHandler, changeViewPage, isBuilderModal, isSaveModalClose, changeBuilderModalStateByParent, workInfo } = this.props;
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler();
     }
     if (typeof changeViewPage === 'function') {
-      changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      const changeViewOptIdx = workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === CHANGE_VIEW_OPT_SEQ);
+      if (changeViewOptIdx !== -1) {
+        const changeViewOpt = workInfo.OPT_INFO[changeViewOptIdx];
+        const optValue = JSON.parse(changeViewOpt.OPT_VALUE);
+        changeViewPage(id, workSeq, taskSeq, optValue.MODIFY);
+      } else {
+        changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      }
     }
-    onChangeForm();
+    if (isBuilderModal) {
+      changeViewPage(reloadId, workSeq, -1, 'LIST');
+      if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
+    }
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage, isBuilderModal, onCloseModal } = this.props;
+    const {
+      sagaKey: id,
+      viewLayer,
+      viewPageData,
+      changeViewPage,
+      isBuilderModal,
+      ModifyCustomButtons,
+      isLoading,
+      reloadId,
+      formData,
+      setFormData,
+      extraApiData,
+      getExtraApiData,
+      changeFormData,
+      deleteTask,
+    } = this.props;
 
+    const { qualTaskSeq } = this.state;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
-      // 로딩
-      if (this.props.isLoading === false && this.state.initLoading) {
-        this.setState(
-          {
-            initLoading: false,
-          },
-          () => loadingComplete(),
-        );
-      }
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
+            <Header
+              sagaKey={id}
+              formData={formData}
+              viewPageData={viewPageData}
+              setFormData={setFormData}
+              changeViewPage={changeViewPage}
+              deleteTask={deleteTask}
+              modifySaveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
+            />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <div className="alignRight">
-              <StyledButton className="btn-primary" onClick={() => this.saveBeforeProcess(id, id, this.saveTask)}>
-                Save
-              </StyledButton>
-              {!isBuilderModal && (
-                <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                  List
-                </StyledButton>
-              )}
-              <StyledButton className="btn-primary" onClick={() => onCloseModal()}>
-                닫기
-              </StyledButton>
-            </div>
+            <InterLock
+              id={id}
+              formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
+              changeFormData={changeFormData}
+              getExtraApiData={getExtraApiData}
+              extraApiData={extraApiData}
+              viewPageData={{ viewType: 'VIEW' }}
+            />
+            <Material
+              id={id}
+              formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
+              changeFormData={changeFormData}
+              getExtraApiData={getExtraApiData}
+              extraApiData={extraApiData}
+              viewPageData={{ viewType: 'VIEW' }}
+            />
           </Sketch>
         </StyledViewDesigner>
       );
@@ -142,12 +202,18 @@ class StdModify extends Component {
   };
 }
 
-StdModify.propTypes = {
-  loadingComplete: PropTypes.func,
+ModifyPage.propTypes = {
+  isLoading: PropTypes.bool,
+  formData: PropTypes.object,
+  changeFormData: PropTypes.func,
+  deleteTask: PropTypes.func,
 };
 
-StdModify.defaultProps = {
-  loadingComplete: () => {},
+ModifyPage.defaultProps = {
+  isLoading: false,
+  formData: {},
+  changeFormData: () => {},
+  deleteTask: () => {},
 };
 
-export default StdModify;
+export default connect(() => createStructuredSelector({ profile: selectors.makeSelectProfile() }))(ModifyPage);

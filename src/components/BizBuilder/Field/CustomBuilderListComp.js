@@ -183,7 +183,7 @@ class CustomBuilderListComp extends React.Component {
       colData,
       CONFIG,
       CONFIG: {
-        property: { modalWidth, modalHeight, placeholder, className, inputBtn },
+        property: { modalTitle, modalWidth, modalHeight, placeholder, className, inputBtn },
       },
       readOnly,
       visible,
@@ -206,7 +206,7 @@ class CustomBuilderListComp extends React.Component {
         />
         {inputBtn === 'Y' && <StyledButton onClick={() => this.handleModalVisible('INPUT')}>등록</StyledButton>}
         <AntdModal
-          title="검색"
+          title={modalTitle || ' '}
           visible={modalVisible}
           width={modalWidth}
           height={modalHeight}

@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectViewDesignerState = state => state.get('apps-mdcs-admin-ViewDesigner-reducer');
+const selectViewDesignerState = state => state.get('apps-mdcs-admin-StyleDesigner-reducer');
 
 const makeSelectActiveTabKey = () => createSelector(selectViewDesignerState, state => state.get('activeTabKey'));
 
