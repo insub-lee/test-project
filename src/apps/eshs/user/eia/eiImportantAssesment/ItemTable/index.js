@@ -12,7 +12,6 @@ import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
 import * as popoverContent from './PopoverContent';
-
 const AntdInput = StyledInput(Input);
 const AntdModal = StyledContentsModal(Modal);
 
