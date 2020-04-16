@@ -68,11 +68,14 @@ const TreeWrapper = styled.div`
     margin-top: 3px;
   }
 
+  .search-box {
+    position: relative;
+  }
+
   .myMenuEdit {
-    display: inline-block;
-    padding-left: 15px;
-    text-align: right;
-    vertical-align: middle;
+    position: absolute;
+    top: 6px;
+    right: 20px;
 
     > button {
       background-color: transparent;
