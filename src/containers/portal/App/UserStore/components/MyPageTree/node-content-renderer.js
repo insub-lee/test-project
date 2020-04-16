@@ -130,7 +130,7 @@ class CustomThemeNodeContentRenderer extends Component {
                 // 클릭 시 글자와 버튼 모두 같이 색상 변경
                 type="button"
                 aria-label={node.expanded ? 'Collapse' : 'Expand'}
-                className={node.expanded ? `${styles.collapseButton} rstcustom__collapseButton` : `${styles.expandButton} rstcustom__expandButton`}
+                className={node.expanded ? `${styles.collapseButton} unlock rstcustom__collapseButton` : `${styles.expandButton} rstcustom__expandButton`}
                 style={{ right: scaffoldBlockPxWidth }}
                 onClick={() =>
                   toggleChildrenVisibility({
