@@ -116,14 +116,19 @@ class InterLock extends Component {
     const interLockList = (extraApiData && extraApiData.interLockList && extraApiData.interLockList.list) || [];
     const viewType = (viewPageData && viewPageData.viewType) || '';
     if (!interLockList.length && viewType !== 'VIEW') {
-      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '', INDEX: 0 });
-      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '', INDEX: 1 });
-      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '', INDEX: 2 });
+      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
+      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
+      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
     }
+
     const td = getCategoryMapListAsTree(treeData.filter(x => x.USE_YN === 'Y'));
     const categoryData = td.length > 0 ? td[0] : [];
     this.setState({ treeData: categoryData.children });
-    changeFormData(id, 'interLockList', interLockList);
+    changeFormData(
+      id,
+      'interLockList',
+      interLockList.map((i, index) => ({ ...i, INDEX: index })),
+    );
     this.debounceHandelSetTable();
   };
 
@@ -163,7 +168,7 @@ class InterLock extends Component {
   };
 
   debounceHandelSetTable = () => {
-    const { formData, sagaKey: id } = this.props;
+    const { formData, id } = this.props;
     const { columns } = this.state;
     const { interLockList } = formData;
     return this.setState({
