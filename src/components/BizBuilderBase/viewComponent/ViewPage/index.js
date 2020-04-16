@@ -9,10 +9,29 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
+import Loadable from 'components/Loadable';
+
+import Loading from '../Common/Loading';
 
 class ViewPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      StyledWrap: StyledViewDesigner,
+    };
+  }
+
   componentDidMount() {
-    const { sagaKey: id, draftId } = this.props;
+    const { sagaKey: id, draftId, workInfo } = this.props;
+
+    if (workInfo.BUILDER_STYLE_PATH) {
+      const StyledWrap = Loadable({
+        loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
+        loading: Loading,
+      });
+      this.setState({ StyledWrap });
+    }
+
     if (draftId !== -1) {
       this.props.getDraftProcess(id, draftId);
     }
@@ -26,12 +45,14 @@ class ViewPage extends Component {
   render = () => {
     const { sagaKey: id, reloadId, viewLayer, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal, ViewCustomButtons } = this.props;
 
+    const { StyledWrap } = this.state;
+
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
 
       return (
-        <StyledViewDesigner>
+        <StyledWrap>
           <Sketch {...bodyStyle}>
             {draftId !== -1 && <SignLine id={id} draftId={draftId} />}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
@@ -64,7 +85,7 @@ class ViewPage extends Component {
               </div>
             )}
           </Sketch>
-        </StyledViewDesigner>
+        </StyledWrap>
       );
     }
     return '';

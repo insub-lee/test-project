@@ -62,6 +62,7 @@ class CustomThemeNodeContentRenderer extends Component {
         style={{
           opacity: isDraggedDescendant ? 0.5 : 1,
           ...style,
+          paddingLeft: 10,
         }}
       >
         <div className={styles.rowContents + (!canDrag ? ` ${styles.rowContentsDragDisabled} rstcustom__rowContentsDragDisabled` : '')}>
@@ -130,7 +131,7 @@ class CustomThemeNodeContentRenderer extends Component {
                 type="button"
                 aria-label={node.expanded ? 'Collapse' : 'Expand'}
                 className={node.expanded ? `${styles.collapseButton} rstcustom__collapseButton` : `${styles.expandButton} rstcustom__expandButton`}
-                style={{ left: -0.5 * scaffoldBlockPxWidth }}
+                style={{ right: scaffoldBlockPxWidth }}
                 onClick={() =>
                   toggleChildrenVisibility({
                     node,
@@ -155,8 +156,10 @@ class CustomThemeNodeContentRenderer extends Component {
                 type="button"
                 aria-label="ordinary"
                 // className={styles.ordinaryButton}
-                className={`${styles.ordinaryButton} rstcustom__ordinaryButton ${node.selectedIndex === node.key ? 'active' : `${node.selectedIndex}/${node.key}`}`}
-                style={{ left: -0.5 * scaffoldBlockPxWidth }}
+                className={`${styles.ordinaryButton} rstcustom__ordinaryButton ${
+                  node.selectedIndex === node.key ? 'active' : `${node.selectedIndex}/${node.key}`
+                }`}
+                style={{ right: scaffoldBlockPxWidth }}
               />
             </div>
           );
