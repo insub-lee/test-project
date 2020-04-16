@@ -22,7 +22,7 @@ class DefaultUploader extends Component {
         fileList: fileList.map(file => ({
           ...file,
           uid: file.seq,
-          url: imgExts.includes(file.fileExt.toLowerCase()) ? file.link : file.down,
+          url: file.fileExt && imgExts.includes(file.fileExt.toLowerCase()) ? file.link : file.down || file.down,
           status: 'done',
         })),
       });
