@@ -86,6 +86,7 @@ class ApproveCond extends Component {
             <Upload
               key={`sqConfirmResult_${record.SEQ}`}
               readOnly={false}
+              onlyDown
               defaultValue={{
                 DETAIL: record.FILE_SEQ
                   ? [{ fileName: record.FILE_NM, seq: record.FILE_SEQ, down: `/down/file/${record.FILE_SEQ}`, name: record.FILE_NM, fileExt: record.fileExt }]
