@@ -180,7 +180,7 @@ class InterLock extends Component {
           columns={columns}
           dataSource={interLockList || []}
           bordered
-          pagination={{ pageSize: 10 }}
+          pagination={{ pageSize: 6 }}
           footer={() => <span>{`${interLockList.length} 건`}</span>}
         />,
       ],
