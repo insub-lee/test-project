@@ -14,6 +14,7 @@ import View from 'components/BizBuilder/PageComp/view';
 import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import moment from 'moment';
 
+import ApproveCond from 'apps/eshs/user/qualSqtb/approveCond';
 import InterLock from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/InterLock';
 import Material from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/Material';
 import Header from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/Header';
@@ -45,7 +46,6 @@ class ModifyPage extends Component {
   appStart = sagaKey => {
     const { setFormData, formData, extraApiData } = this.props;
     const userInfo = (extraApiData && extraApiData.info && extraApiData.info.userInfo) || {};
-    console.debug('new Data ', moment(new Date()).format('YYYY-MM-DD'));
     setFormData(sagaKey, {
       ...formData,
       REQ_EMP_NO: userInfo.EMP_NO,
@@ -150,8 +150,13 @@ class ModifyPage extends Component {
   };
 
   saveTask = (id, reloadId, callbackFunc) => {
-    const { modifyTask } = this.props;
-    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+    const { modifyTask, formData } = this.props;
+    const condFileList = (formData && formData.condFileList) || [];
+    if (condFileList.length) {
+      this.condFileListMoveReal(condFileList);
+    } else {
+      modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+    }
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
@@ -175,6 +180,45 @@ class ModifyPage extends Component {
     }
   };
 
+  condFileListMoveReal = condFileList => {
+    const { sagaKey: id, getExtraApiData } = this.props;
+    const param = { PARAM: { DETAIL: condFileList } };
+
+    const apiArray = [
+      {
+        key: 'condRealFileList',
+        type: 'POST',
+        url: '/upload/moveFileToReal',
+        params: param,
+      },
+    ];
+    getExtraApiData(id, apiArray, this.condFileUploadComplete);
+  };
+
+  condFileUploadComplete = () => {
+    const { sagaKey: id, extraApiData, formData, setFormData, modifyTask } = this.props;
+
+    const condRealFileList = (extraApiData && extraApiData.condRealFileList && extraApiData.condRealFileList.DETAIL) || [];
+    const approveCondList = (formData && formData.approveCondList) || [];
+
+    setFormData(id, {
+      ...formData,
+      approveCondList: approveCondList.map(a => {
+        const key = condRealFileList.findIndex(c => c.rowSeq === a.SEQ);
+        return key > -1
+          ? {
+              ...a,
+              FILE_SEQ: Number(condRealFileList[key].seq),
+              DOWN: `/down/file/${Number(condRealFileList[key].seq)}`,
+              fileExt: condRealFileList[key].fileExt,
+            }
+          : a;
+      }),
+      condFileList: [],
+    });
+    this.saveTask(id, id, this.saveTaskAfter);
+  };
+
   render = () => {
     const {
       sagaKey: id,
@@ -192,7 +236,6 @@ class ModifyPage extends Component {
       changeFormData,
       deleteTask,
     } = this.props;
-
     const { qualTaskSeq } = this.state;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -210,6 +253,14 @@ class ModifyPage extends Component {
               modifySaveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
+            <ApproveCond
+              id={id}
+              formData={formData}
+              changeFormData={changeFormData}
+              getExtraApiData={getExtraApiData}
+              extraApiData={extraApiData}
+              setFormData={setFormData}
+            />
             <InterLock
               id={id}
               formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
