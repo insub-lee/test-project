@@ -4,8 +4,8 @@ import HealthChkResultCodeView from './HealthChkResultCodeView';
 
 class View extends Component {
   render() {
-    const { selectedRow, onCancelPopup } = this.props;
-    return <BizMicroDevBase sagaKey="healthChkResultCodeJView" component={HealthChkResultCodeView} selectedRow={selectedRow} onCancelPopup={onCancelPopup} />;
+    const { selectedRow, onCancelPopup, onSaveAfter } = this.props;
+    return <BizMicroDevBase sagaKey="healthChkResultCodeJView" component={HealthChkResultCodeView} selectedRow={selectedRow} onCancelPopup={onCancelPopup} onSaveAfter={onSaveAfter} />;
   }
 }
 
