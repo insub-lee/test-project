@@ -42,15 +42,15 @@ class List extends React.Component {
       },
       isModified: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
+      newInput: [],
     };
   }
 
   subTableRenderer = () => {
-    const { subMaterialCount } = this.state;
+    const { subMaterialCount, newInput } = this.state;
     const inputBox = [];
 
-    const handleTempChange = (e, i) => {
-      console.debug(i);
+    const handleTempChange = e => {
       const valueObj = { [e.target.name]: e.target.value };
       this.setState(prevState => ({
         tempValue: Object.assign(prevState.tempValue, valueObj),
@@ -62,6 +62,10 @@ class List extends React.Component {
       this.setState(prevState => ({
         tempValue: Object.assign(prevState.tempValue, valueObj),
       }));
+    };
+
+    const handleTempCancelClick = () => {
+      this.setState(prevState => ({ subMaterialCount: prevState.subMaterialCount - 1 }));
     };
 
     for (let i = 0; i < subMaterialCount; i += 1) {
@@ -78,7 +82,7 @@ class List extends React.Component {
             </td>
             <th>CAS_NO</th>
             <td>
-              <AntdInput className="ant-input-sm" name="CAS_NO" onChange={e => handleTempChange(i)} />
+              <AntdInput className="ant-input-sm" name="CAS_NO" onChange={handleTempChange} />
             </td>
           </tr>
           <tr>
@@ -104,6 +108,10 @@ class List extends React.Component {
               </AntdSelect>
             </td>
           </tr>
+          {/* <StyledButton name={i} className="btn-primary btn-first" onClick={handleTempCancelClick}> */}
+          <StyledButton name={i} className="btn-primary btn-first" onClick={() => console.debug(this)}>
+            취소
+          </StyledButton>
         </>,
       );
     }
