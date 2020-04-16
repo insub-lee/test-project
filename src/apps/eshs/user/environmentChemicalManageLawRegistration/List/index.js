@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
@@ -9,6 +10,7 @@ import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import { Popconfirm, Input, InputNumber, Select } from 'antd';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 import SearchComp from '../SearchComp';
@@ -16,6 +18,7 @@ import SearchComp from '../SearchComp';
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
+const AntdInputNumber = StyledInputNumber(InputNumber);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -222,24 +225,24 @@ class List extends React.Component {
         <ContentsWrapper>
           <StyledSearchWrap>
             <span className="input-label">화학물 추가</span>
-            <AntdSearch className="search-item input-width160" placeholder="검색" onClick={handleSearchClick} value="" />
-          </StyledSearchWrap>
-          <div className="selSaveWrapper">
-            <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
-              신규등록
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={handleModifyClick}>
-              수정
-            </StyledButton>
-            <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
-              <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
-                삭제
+            <AntdSearch className="ant-search-inline input-search-mid mr5" placeholder="검색" onClick={handleSearchClick} value="" style={{ width: '200px' }} />
+            <StyledButtonWrapper className="btn-wrap-inline">
+              <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
+                신규등록
               </StyledButton>
-            </Popconfirm>
-            <StyledButton className="btn-light" onClick={handleResetClick}>
-              초기화
-            </StyledButton>
-          </div>
+              <StyledButton className="btn-primary btn-first" onClick={handleModifyClick}>
+                수정
+              </StyledButton>
+              <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
+                <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
+                  삭제
+                </StyledButton>
+              </Popconfirm>
+              <StyledButton className="btn-light" onClick={handleResetClick}>
+                초기화
+              </StyledButton>
+            </StyledButtonWrapper>
+          </StyledSearchWrap>
           <div className="tableWrapper">
             <StyledHtmlTable>
               <table>
@@ -293,8 +296,8 @@ class List extends React.Component {
                     <th rowSpan={3}>제한내용</th>
                     <td rowSpan={3}>
                       <Input.TextArea
-                        name="RESTRICT_CONTENT"
-                        value={requestValue.RESTRICT_CONTENT}
+                        name="RESTRICT_DETAIL"
+                        value={requestValue.RESTRICT_DETAIL}
                         onChange={handleInputChange}
                         autoSize={{ minRows: 4, maxRows: 4 }}
                       />
@@ -342,18 +345,18 @@ class List extends React.Component {
                     </td>
                     <th>제한물질 NO.</th>
                     <td>
-                      <InputNumber
+                      <AntdInputNumber
                         value={requestValue.RESTRICT_NO}
                         onChange={value => handleInputNumberChange(value, 'RESTRICT_NO')}
-                        className="col-input-number"
+                        className="input-number-sm"
                       />
                     </td>
                     <th>금지물질 NO.</th>
                     <td>
-                      <InputNumber
+                      <AntdInputNumber
                         value={requestValue.PROHIBITION_NO}
                         onChange={value => handleInputNumberChange(value, 'PROHIBITION_NO')}
-                        className="col-input-number"
+                        className="input-number-sm"
                       />
                     </td>
                   </tr>

@@ -41,7 +41,7 @@ class NumberComp extends React.Component {
     return visible ? (
       <>
         {readOnly || CONFIG.property.readOnly || viewType === 'LIST' ? (
-          <span>{`${hour} 시 ${minute} 분`}</span>
+          <span>{`${hour || 0} 시 ${minute || 0} 분`}</span>
         ) : (
           <>
             <AntdInputNumber

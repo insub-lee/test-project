@@ -16,7 +16,7 @@ const MyStoreTreeStyledTabList = styled.div`
     height: 100%;
 
     //padding: 10px;
-    background-color: #ffffff;
+    background-color: #152434;
     z-index: 100;
 
     .react-tabs {
