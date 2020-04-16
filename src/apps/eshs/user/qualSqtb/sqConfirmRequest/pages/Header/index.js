@@ -99,11 +99,50 @@ class Header extends Component {
       formData,
       viewPageData: { viewType },
     } = this.props;
+    const REQ_CD = (formData && formData.REQ_CD) || '';
+    if (viewType === 'CONFIRM_RESULT') {
+      return (
+        <>
+          <StyledButtonWrapper className="btn-wrap-left btn-wrap-mb-10">
+            <AntdSearch
+              value={REQ_CD || ''}
+              style={{ width: '150px' }}
+              readOnly
+              onClick={this.handleModalVisible}
+              onSearch={this.handleModalVisible}
+              className="ant-input-inline mr5"
+            />
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+              검색
+            </StyledButton>
+            {REQ_CD && (
+              /* AS_IS 
+                if (!"".equals(qualConfirm.getReqCd()) && ("".equals(qualConfirmResult.getAppStatus()) || "1".equals(qualConfirmResult.getAppStatus()))) {
+                    <IMG align="absMiddle" onClick="save(1)" src="../../image/b_save2.gif" style="CURSOR: hand"> -- 저장
+										<IMG align="absMiddle" onClick="setConfirmLine()" src="../../image/b_appline2.gif" style="CURSOR: hand"> -- 결제선 지정
+										<IMG align="absMiddle" onClick="save(2)" src="../../image/button2_update.gif" style="CURSOR: hand"> -- 수정
+										<IMG align="absMiddle" onClick="goChkSheet()" src="../../image/checksheet_regist.gif" style="CURSOR: hand"> -- checkSheet 수정가능
+                  }
+                if ("3".equals(qualConfirmResult.getAppStatus())){
+										<IMG align="absMiddle" onClick="goChkSheetview()" src="../../image/checksheet_search.gif" style="CURSOR: hand"> -- checkSheet 수정불가
+									}
+              */
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
+                저장
+              </StyledButton>
+            )}
+          </StyledButtonWrapper>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1300} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+            {searchList}
+          </AntdModal>
+        </>
+      );
+    }
     return (
       <>
         <StyledButtonWrapper className="btn-wrap-left btn-wrap-mb-10">
           <AntdSearch
-            value={(formData && formData.REQ_CD) || ''}
+            value={REQ_CD || ''}
             style={{ width: '150px' }}
             readOnly
             onClick={this.handleModalVisible}
@@ -175,6 +214,7 @@ Header.propTypes = {
   viewPageData: PropTypes.object,
   modifySaveTask: PropTypes.func,
   deleteTask: PropTypes.func,
+  btnOnlySearch: PropTypes.bool,
 };
 Header.defaultProps = {
   formData: {},
@@ -185,6 +225,7 @@ Header.defaultProps = {
   viewPageData: {},
   modifySaveTask: () => {},
   deleteTask: () => {},
+  btnOnlySearch: false,
 };
 
 export default Header;
