@@ -40,6 +40,9 @@ const StyledAntdTable = Component => styled(Component)`
       border-radius: 0;
       border: 0;
       border-bottom: 1px solid #e8e8e8;
+      &.ant-table-placeholder-none {
+        display: none;
+      }
     }
     .ant-table-footer {
       border: 0;
