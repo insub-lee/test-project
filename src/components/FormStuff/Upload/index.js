@@ -30,7 +30,9 @@ class DefaultUploader extends Component {
   }
 
   onRemove = file => {
+    const { customRemove } = this.props;
     console.debug('Removed, file', file);
+    customRemove(file);
   };
 
   getCurrentValueJson = fileList =>
@@ -158,12 +160,14 @@ DefaultUploader.propTypes = {
   name: PropTypes.string,
   readOnly: PropTypes.bool,
   multiple: PropTypes.bool,
+  customRemove: PropTypes.func,
 };
 
 DefaultUploader.defaultProps = {
   name: '',
   readOnly: false,
   multiple: true,
+  customRemove: () => {},
 };
 
 export default DefaultUploader;
