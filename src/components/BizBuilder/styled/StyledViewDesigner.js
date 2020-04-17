@@ -179,7 +179,7 @@ const StyledViewDesigner = styled.div`
     width: 100%;
     border-top: 2px solid #888;
     .view-designer-row {
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #eee;
       th {
         background: #f7f7f7;
         text-align: center;
@@ -191,11 +191,11 @@ const StyledViewDesigner = styled.div`
         width: auto;
         background-color: #ffffff;
         color: #666;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid #eee;
       }
       .view-designer-col {
         padding: 4px 4px;
-        border-right: 1px solid #ddd;
+        border-right: 1px solid #eee;
         font-size: 0.8rem;
         > div > span {
           display: block;
@@ -274,8 +274,13 @@ const StyledViewDesigner = styled.div`
           border-radius: 0px;
           padding: 0px 10px;
         }
+
         .ant-textarea {
           height: inherit;
+        }
+
+        .ant-select {
+          font-size: 12px;
         }
       }
     }
@@ -283,14 +288,17 @@ const StyledViewDesigner = styled.div`
 
   .alignRight {
     text-align: right;
+    margin-top: 15px;
   }
 
   .alignLeft {
     text-align: left;
+    margin-top: 15px;
   }
 
   .alignCenter {
     text-align: center;
+    margin-top: 15px;
   }
 
   .view-designer-group-search-wrap {
