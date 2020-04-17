@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { isJSON } from 'utils/helpers';
 import SignLine from 'apps/Workflow/SignLine';
 import ApproveHistory from 'apps/Workflow/ApproveHistory';
-import Sketch from './Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
+import Sketch from './Sketch';
 
 class ContentView extends Component {
   constructor(props) {
