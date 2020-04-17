@@ -60,8 +60,15 @@ class List extends Component {
       isShow: false,
       selectedRow: {}
     });
-    this.getHealthChkResultCodeList();
   };
+
+  onSaveAfter = () => {
+    this.setState({
+      isShow: false,
+      selectedRow: {}
+    });
+    this.getHealthChkResultCodeList();
+  }
 
   columns = [
     {
@@ -134,7 +141,7 @@ class List extends Component {
           <AntdTable
             columns={this.columns}
             dataSource={this.state.codeList}
-            pagenation={false}
+            pagination={false}
             onRow={(record, rowIndex) => ({
               onClick: event => {
                 this.onClickRow(record, rowIndex);
@@ -150,7 +157,7 @@ class List extends Component {
           destroyOnClose
           footer={null}
         >
-          <View selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
+          <View selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} onSaveAfter={this.onSaveAfter} />
         </AntdModal>
       </>
     );

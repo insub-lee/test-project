@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Input, Radio } from 'antd';
+import { Input, Radio, Select } from 'antd';
 import { debounce } from 'lodash';
 
+const { Option } = Select;
 class ComponentConfig extends Component {
   constructor(props) {
     super(props);
@@ -53,6 +54,43 @@ class ComponentConfig extends Component {
           onChange={e => this.handleChangeConfigData('boldTarget', e.target.value)}
         />
       </div>,
+      /*
+          목적 : JoinRead 컴포넌트 클릭시 titleComp 기능 추가
+          변경전 : JoinReadComp 읽기 전용
+          변경후 : CONFIG를 통해 titleComp 기능 사용가능
+          create by. HyoSeong
+      */
+      <div className="popoverItem popoverItemInput">
+        <span className="spanLabel">제목 기능 사용 여부</span>
+        <Radio.Group
+          className="alignCenter"
+          value={(configInfo && configInfo.property && configInfo.property.titleUse) || 'N'}
+          onChange={e => {
+            const { value } = e.target;
+            this.handleChangeConfigData('titleUse', value);
+          }}
+        >
+          <Radio value="Y">Y</Radio>
+          <Radio value="N">N</Radio>
+        </Radio.Group>
+      </div>,
+      configInfo && configInfo.property && configInfo.property.titleUse === 'Y' ? (
+        <div className="popoverItem popoverItemInput">
+          <span className="spanLabel">모달 페이지 설정</span>
+          <Select
+            style={{ width: '100%' }}
+            defaultValue={(configInfo && configInfo.property && configInfo.property.changeViewType) || 'VIEW'}
+            onChange={value => this.handleChangeConfigData('changeViewType', value)}
+          >
+            <Option value="VIEW" disable>
+              View Page
+            </Option>
+            <Option value="MODIFY">Modify Page</Option>
+          </Select>
+        </div>
+      ) : (
+        ''
+      ),
     ];
   }
 }

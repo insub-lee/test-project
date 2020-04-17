@@ -180,118 +180,23 @@ const StyledViewDesigner = styled.div`
     border-top: 2px solid #888;
     .view-designer-row {
       border-bottom: 1px solid #ddd;
+      th {
+        background: #f7f7f7;
+        text-align: center;
+        color: #000;
+        width: 130px;
+        font-weight: 500;
+      }
+      td {
+        width: auto;
+        background-color: #ffffff;
+        color: #666;
+        border-bottom: 1px solid #ddd;
+      }
       .view-designer-col {
-        border: 0;
-        font-size: 12px;
-        /* padding: 5px 10px; */
-        &.mdcsTitleCol {
-          width: 180px;
-          text-align: center;
-          position: relative;
-          background-color: #f7f7f7;
-          background-clip: padding-box;
-          padding: 6px 8px;
-          border-right: 1px solid #ddd;
-          color: rgb(0, 0, 0);
-          > div {
-            height: auto;
-          }
-        }
-        &.mdcsContentsCol {
-          padding: 6px 9px;
-          color: #666;
-          .btnTypeUploader {
-            text-align: right;
-          }
-          > div {
-            height: auto;
-          }
-          .ant-upload.ant-upload-drag {
-            .ant-upload-drag-container {
-              padding: 2px;
-              .fileZone {
-                display: grid;
-                text-align: left;
-                margin: 10px;
-                font-size: 12px;
-              }
-            }
-            p.ant-upload-drag-icon {
-              margin-bottom: 10px;
-            }
-            p.ant-upload-text {
-              font-size: 12px;
-            }
-          }
-
-          .ant-upload-list {
-            -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-            margin: 0;
-            padding-top: 2px;
-            padding-left: 22px;
-            padding-bottom: 2px;
-            padding-right: 50px;
-            color: rgba(0, 0, 0, 0.65);
-            font-size: 12px;
-            font-variant: tabular-nums;
-            line-height: 1.5;
-            list-style: none;
-            -webkit-font-feature-settings: 'tnum';
-            font-feature-settings: 'tnum';
-            zoom: 1;
-            position: absolute;
-            top: 0px;
-
-            .ant-upload-list-item {
-              position: relative;
-              height: 22px;
-              margin: 0;
-              font-size: 12px;
-            }
-          }
-        }
-        &.mdcsContentsSelectCol {
-          position: relative;
-          padding: 6px;
-          .ant-select {
-            font-size: 12px;
-            .ant-select-selection {
-              border: 1px solid rgb(217, 224, 231);
-            }
-          }
-          .wrapper {
-            button {
-              position: absolute;
-              top: 50%;
-              transform: translateY(-50%);
-              left: 0;
-            }
-            &.active {
-              button {
-                right: 5px;
-                left: inherit;
-              }
-            }
-          }
-        }
-        &.mdcsAttachedFileCol {
-          ul li {
-            margin-bottom: 5px;
-            cursor: pointer;
-            &:hover {
-              text-decoration: underline;
-            }
-            &:last-child {
-              margin-bottom: 0;
-            }
-            i {
-              vertical-align: -3px;
-              color: #444;
-              font-size: 16px !important;
-            }
-          }
-        }
+        padding: 4px 4px;
+        border-right: 1px solid #ddd;
+        font-size: 0.8rem;
         > div > span {
           display: block;
           font-size: 0.8rem;
@@ -358,12 +263,6 @@ const StyledViewDesigner = styled.div`
         }
 
         .ant-input {
-          border-top-style: initial;
-          border-right-style: initial;
-          border-left-style: initial;
-          border-top-color: initial;
-          border-right-color: initial;
-          border-left-color: initial;
           height: 30px;
           line-height: 30px;
           color: rgb(51, 51, 51);

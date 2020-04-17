@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { select } from 'redux-saga/effects';
-import { Cookies } from 'react-cookie';
+import { loginPage } from 'utils/commonUtils';
+import * as feed from 'components/Feedback/functions';
 
 function* makeRequestHeader() {
   const authInfo = yield select(state => state.get('auth'));
@@ -9,13 +10,10 @@ function* makeRequestHeader() {
 }
 
 function errorAxiosProcess(error) {
-  if (error.response.status === 401) {
-    const cookies = new Cookies();
-    cookies.remove('empNo', { path: '/' });
-    cookies.remove('access_token', { path: '/' });
-    window.location.href = `/api/common/v1/auth/oauth`;
-  } else {
-    console.log(error);
+  console.error(`${error.response.status} ${error.response.statusText}`, error);
+  if (error.response.status === 401 || error.response.status === 403) {
+    // TODO 사이트접속권한없을 경우 메시지 처리
+    feed.error(`${error.response.status} ${error.response.statusText}`, '[권한오류] 로그인 페이지로 이동합니다.', loginPage, loginPage);
   }
 }
 
@@ -119,7 +117,7 @@ function* getFileDownAxios(fullUrl, payload, headers) {
     errorAxiosProcess(error);
   }
   return {};
-};
+}
 
 export const Axios = {
   get: (fullUrl, payload, headers) => getAxios(fullUrl, payload, headers),
