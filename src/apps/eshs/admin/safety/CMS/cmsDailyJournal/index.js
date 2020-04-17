@@ -7,7 +7,7 @@ class CmsDailyJournal extends Component {
   componantDidMount() {}
 
   render() {
-    return <BizMicroDevBase sagaKey="cmsDailyJournal" component={List} dangerMainYN />;
+    return <BizMicroDevBase sagaKey="cmsDailyJournal" component={List} />;
   }
 }
 
