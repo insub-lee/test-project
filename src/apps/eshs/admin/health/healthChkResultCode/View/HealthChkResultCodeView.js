@@ -47,7 +47,7 @@ class HealthChkResultCodeView extends Component {
   }
 
   onSaveCode = () => {
-    const { sagaKey, submitHandlerBySaga, onCancelPopup } = this.props;
+    const { sagaKey, submitHandlerBySaga, onSaveAfter } = this.props;
     const submitData = {
       PARAM: {
         ...this.state.codeInfo,
@@ -57,7 +57,7 @@ class HealthChkResultCodeView extends Component {
     
     submitHandlerBySaga(sagaKey, (this.state.saveType === 'I' ? 'POST' : 'PUT'), `/api/eshs/v1/common/health/healthChkResultCode/${this.state.codeInfo.CHK_RESULT_ITEM_CD}`, submitData, (id, response) => {
       if (response && response.result === 1) {
-        onCancelPopup();
+        onSaveAfter();
       }
     });
   };

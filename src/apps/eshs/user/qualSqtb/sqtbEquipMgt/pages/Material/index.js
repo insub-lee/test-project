@@ -435,7 +435,7 @@ class Material extends Component {
           columns={columns}
           dataSource={materialList || []}
           bordered
-          pagination={{ pageSize: 10 }}
+          pagination={{ pageSize: 6 }}
           scroll={{ x: 1500 }}
           footer={() => <span>{`${materialList.length} 건`}</span>}
         />,
