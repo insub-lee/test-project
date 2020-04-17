@@ -52,7 +52,7 @@ class ViewPage extends Component {
       const { bodyStyle } = viewLayerData;
 
       return (
-        <StyledWrap>
+        <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
             {draftId !== -1 && <SignLine id={id} draftId={draftId} />}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
