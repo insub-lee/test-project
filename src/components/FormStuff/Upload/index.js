@@ -15,6 +15,7 @@ class DefaultUploader extends Component {
   componentDidMount() {
     const {
       defaultValue: { DETAIL: fileList },
+      onlyDown,
     } = this.props;
     if (fileList) {
       console.debug('# File List', fileList);
@@ -22,7 +23,7 @@ class DefaultUploader extends Component {
         fileList: fileList.map(file => ({
           ...file,
           uid: file.seq,
-          url: imgExts.includes(file.fileExt.toLowerCase()) ? file.link : file.down,
+          url: !onlyDown && file.fileExt && imgExts.includes(file.fileExt.toLowerCase()) ? file.link : file.down || file.down,
           status: 'done',
         })),
       });
@@ -30,7 +31,9 @@ class DefaultUploader extends Component {
   }
 
   onRemove = file => {
+    const { customRemove } = this.props;
     console.debug('Removed, file', file);
+    customRemove(file);
   };
 
   getCurrentValueJson = fileList =>
@@ -158,12 +161,16 @@ DefaultUploader.propTypes = {
   name: PropTypes.string,
   readOnly: PropTypes.bool,
   multiple: PropTypes.bool,
+  customRemove: PropTypes.func,
+  onlyDown: PropTypes.bool,
 };
 
 DefaultUploader.defaultProps = {
   name: '',
   readOnly: false,
   multiple: true,
+  customRemove: () => {},
+  onlyDown: false,
 };
 
 export default DefaultUploader;

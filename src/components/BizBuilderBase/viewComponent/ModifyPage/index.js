@@ -3,18 +3,50 @@ import PropTypes from 'prop-types';
 import { Button, message } from 'antd';
 
 import { isJSON } from 'utils/helpers';
+import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
-import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import Loadable from 'components/Loadable';
+
+import Loading from '../Common/Loading';
+
+const StyledButton = StyledAntdButton(Button);
 
 class ModifyPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       uploadFileList: [],
+      StyledWrap: StyledViewDesigner,
     };
+  }
+
+  componentDidMount() {
+    const { sagaKey: id, getProcessRule, workInfo, workPrcProps } = this.props;
+    const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
+    const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
+    const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
+
+    if (workInfo.BUILDER_STYLE_PATH) {
+      const StyledWrap = Loadable({
+        loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
+        loading: Loading,
+      });
+      this.setState({ StyledWrap });
+    }
+
+    if (isWorkflowUsed && prcId !== -1) {
+      const payload = {
+        PRC_ID: Number(prcId),
+        DRAFT_DATA: {
+          ...workPrcProps,
+        },
+      };
+      getProcessRule(id, payload);
+    }
   }
 
   fileUploadComplete = (id, response, etcData) => {
@@ -63,27 +95,48 @@ class ModifyPage extends Component {
   };
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
-    const { submitExtraHandler, formData, metaList } = this.props;
+    const { submitExtraHandler, formData, metaList, workInfo, processRule } = this.props;
     const { uploadFileList } = this.state;
-    const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
-    // 첨부파일이 없는 경우 체크
-    const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
-    if (isUploadByPass && isUploadByPass.length === 0) {
-      this.saveTask(id, reloadId, this.saveTaskAfter);
-    } else {
-      attachList.map(attachItem => {
-        const { COMP_FIELD } = attachItem;
-        const attachInfo = formData[COMP_FIELD];
-        if (attachInfo) {
-          const { DETAIL, MOVEFILEAPI } = attachInfo;
-          uploadFileList.push({ COMP_FIELD, isComplete: false, isAttempted: false });
-          this.setState({ uploadFileList }, () => {
-            const param = { PARAM: { DETAIL } };
-            const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
-            submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
+    const { OPT_INFO } = workInfo;
+    // workflow 결재 체크 하기
+    const IsWorkProcess = OPT_INFO.filter(f => f.OPT_SEQ === WORKFLOW_OPT_SEQ);
+    let isByPass = true;
+    // eslint-disable-next-line no-unused-expressions
+    IsWorkProcess &&
+      IsWorkProcess.forEach(opt => {
+        if (opt.ISUSED === 'Y') {
+          // workProces validation check
+          const { DRAFT_PROCESS_STEP } = processRule;
+          const ruleCheckList = DRAFT_PROCESS_STEP.filter(rule => rule.ISREQUIRED === 1);
+          ruleCheckList.forEach(rule => {
+            if (rule.APPV_MEMBER.length === 0) {
+              isByPass = false;
+              message.error(`${rule.NODE_NAME_KOR} 단계의 결재를 선택해 주세요`);
+            }
           });
         }
       });
+    if (isByPass) {
+      const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
+      // 첨부파일이 없는 경우 체크
+      const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
+      if (isUploadByPass && isUploadByPass.length === 0) {
+        this.saveTask(id, reloadId, this.saveTaskAfter);
+      } else {
+        attachList.map(attachItem => {
+          const { COMP_FIELD } = attachItem;
+          const attachInfo = formData[COMP_FIELD];
+          if (attachInfo) {
+            const { DETAIL, MOVEFILEAPI } = attachInfo;
+            uploadFileList.push({ COMP_FIELD, isComplete: false, isAttempted: false });
+            this.setState({ uploadFileList }, () => {
+              const param = { PARAM: { DETAIL } };
+              const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
+              submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
+            });
+          }
+        });
+      }
     }
   };
 
@@ -114,32 +167,52 @@ class ModifyPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, viewPageData, changeViewPage, isBuilderModal, ModifyCustomButtons, isLoading, reloadId } = this.props;
+    const {
+      sagaKey: id,
+      viewLayer,
+      workFlowConfig,
+      processRule,
+      setProcessRule,
+      viewPageData,
+      changeViewPage,
+      isBuilderModal,
+      ModifyCustomButtons,
+      isLoading,
+      workInfo,
+      CustomWorkProcess,
+      reloadId,
+    } = this.props;
 
+    const { StyledWrap } = this.state;
+
+    const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
-
+      const { PRC_ID } = processRule;
       return (
-        <StyledViewDesigner>
+        <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
+            {isWorkflowUsed && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
+              <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
+            )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             {ModifyCustomButtons ? (
               <ModifyCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
             ) : (
               <div className="alignRight">
-                <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
+                <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
                   Save
-                </Button>
+                </StyledButton>
                 {!isBuilderModal && (
-                  <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                  <StyledButton className="btn-light" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
                     List
-                  </Button>
+                  </StyledButton>
                 )}
               </div>
             )}
           </Sketch>
-        </StyledViewDesigner>
+        </StyledWrap>
       );
     }
     return '';

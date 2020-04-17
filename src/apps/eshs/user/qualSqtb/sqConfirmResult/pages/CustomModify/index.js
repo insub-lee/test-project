@@ -2,15 +2,23 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, message } from 'antd';
 
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import * as selectors from 'containers/common/Auth/selectors';
+
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import moment from 'moment';
+
+import ApproveCond from 'apps/eshs/user/qualSqtb/approveCond';
 import InterLock from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/InterLock';
 import Material from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/Material';
 import Header from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/Header';
+
 class ModifyPage extends Component {
   constructor(props) {
     super(props);
@@ -20,13 +28,44 @@ class ModifyPage extends Component {
     };
   }
 
+  componentDidMount() {
+    const { sagaKey: id, formData, getExtraApiData } = this.props;
+    const USER_ID = (formData && formData.REG_USER_ID) || 0;
+    const apiArray = [
+      {
+        key: 'info',
+        url: '/api/eshs/v1/common/userinfowithgender',
+        type: 'POST',
+        params: { PARAM: { USER_ID } },
+      },
+    ];
+
+    getExtraApiData(id, apiArray, this.appStart);
+  }
+
+  appStart = sagaKey => {
+    const { setFormData, formData, extraApiData } = this.props;
+    const userInfo = (extraApiData && extraApiData.info && extraApiData.info.userInfo) || {};
+    setFormData(sagaKey, {
+      ...formData,
+      REQ_EMP_NO: userInfo.EMP_NO,
+      REQ_INTRA_PHONE: userInfo.OFFICE_TEL_NO,
+      REQ_EMP_NM: userInfo.NAME,
+      REQ_DEPT_NM: userInfo.DEPT,
+      EXAM_DT: moment(new Date()).format('YYYY-MM-DD'),
+    });
+  };
+
   static getDerivedStateFromProps(nextProps, prevState) {
     const {
+      formData,
       formData: { interLockReload = '', materialReload = '' },
       sagaKey,
       changeFormData,
+      setFormData,
     } = nextProps;
     const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
+
     if (prevState.qualTaskSeq !== qualTaskSeq) {
       if (typeof interLockReload === 'function') {
         interLockReload(qualTaskSeq);
@@ -111,8 +150,13 @@ class ModifyPage extends Component {
   };
 
   saveTask = (id, reloadId, callbackFunc) => {
-    const { modifyTask } = this.props;
-    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+    const { modifyTask, formData } = this.props;
+    const condFileList = (formData && formData.condFileList) || [];
+    if (condFileList.length) {
+      this.condFileListMoveReal(condFileList);
+    } else {
+      modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+    }
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
@@ -136,6 +180,45 @@ class ModifyPage extends Component {
     }
   };
 
+  condFileListMoveReal = condFileList => {
+    const { sagaKey: id, getExtraApiData } = this.props;
+    const param = { PARAM: { DETAIL: condFileList } };
+
+    const apiArray = [
+      {
+        key: 'condRealFileList',
+        type: 'POST',
+        url: '/upload/moveFileToReal',
+        params: param,
+      },
+    ];
+    getExtraApiData(id, apiArray, this.condFileUploadComplete);
+  };
+
+  condFileUploadComplete = () => {
+    const { sagaKey: id, extraApiData, formData, setFormData, modifyTask } = this.props;
+
+    const condRealFileList = (extraApiData && extraApiData.condRealFileList && extraApiData.condRealFileList.DETAIL) || [];
+    const approveCondList = (formData && formData.approveCondList) || [];
+
+    setFormData(id, {
+      ...formData,
+      approveCondList: approveCondList.map(a => {
+        const key = condRealFileList.findIndex(c => c.rowSeq === a.SEQ);
+        return key > -1
+          ? {
+              ...a,
+              FILE_SEQ: Number(condRealFileList[key].seq),
+              DOWN: `/down/file/${Number(condRealFileList[key].seq)}`,
+              fileExt: condRealFileList[key].fileExt,
+            }
+          : a;
+      }),
+      condFileList: [],
+    });
+    this.saveTask(id, id, this.saveTaskAfter);
+  };
+
   render = () => {
     const {
       sagaKey: id,
@@ -149,29 +232,41 @@ class ModifyPage extends Component {
       formData,
       setFormData,
       extraApiData,
+      submitExtraHandler,
       getExtraApiData,
       changeFormData,
       deleteTask,
     } = this.props;
-
     const { qualTaskSeq } = this.state;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
-
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
             <Header
               sagaKey={id}
               formData={formData}
-              viewPageData={viewPageData}
+              viewPageData={{ ...viewPageData, viewType: 'CONFIRM_RESULT' }}
               setFormData={setFormData}
               changeViewPage={changeViewPage}
               deleteTask={deleteTask}
               modifySaveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
+              btnOnlySearch
+              submitExtraHandler={submitExtraHandler}
+              getExtraApiData={getExtraApiData}
+              extraApiData={extraApiData}
+              changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
+            <ApproveCond
+              id={id}
+              formData={formData}
+              changeFormData={changeFormData}
+              getExtraApiData={getExtraApiData}
+              extraApiData={extraApiData}
+              setFormData={setFormData}
+            />
             <InterLock
               id={id}
               formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
@@ -201,6 +296,8 @@ ModifyPage.propTypes = {
   formData: PropTypes.object,
   changeFormData: PropTypes.func,
   deleteTask: PropTypes.func,
+  extraApiData: PropTypes.any,
+  setFormData: PropTypes.func,
 };
 
 ModifyPage.defaultProps = {
@@ -208,6 +305,7 @@ ModifyPage.defaultProps = {
   formData: {},
   changeFormData: () => {},
   deleteTask: () => {},
+  setFormData: () => {},
 };
 
-export default ModifyPage;
+export default connect(() => createStructuredSelector({ profile: selectors.makeSelectProfile() }))(ModifyPage);

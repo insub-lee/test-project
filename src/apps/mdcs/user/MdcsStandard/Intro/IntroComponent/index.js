@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Select, Modal, Radio, Table, Spin } from 'antd';
+import { Modal, Radio, Table } from 'antd';
 
 import draftImg1 from 'apps/mdcs/images/draft_img1.png';
 import message from 'components/Feedback/message';
@@ -16,13 +16,10 @@ import StyledContents from '../../../../styled/StyledContents';
 import StyledButton from '../../../../styled/StyledButton';
 import StyledModalWrapper from '../../../../styled/Modals/StyledModalWrapper';
 
-import StdView from '../StdView';
-import StdInput from '../StdInput';
 import Enactment from './Enactment';
 import Amendment from './Amendment';
 import Abrogation from './Abrogation';
 import AbrogationMulti from './AbrogationMulti';
-import TransferView from './AbrogationMulti/TransferView';
 
 const AntdModal = StyledModalWrapper(Modal);
 
@@ -88,10 +85,11 @@ class IntroComponent extends Component {
     this.setState({ isLoading: false });
   };
 
-  onCloseModalHandler = () => {
+  onCloseModalHandler = (id, redirectUrl) => {
     this.setState({ isShow: false });
     message.success('기안 완료');
-    history.push('/apps/Workflow/User/Draft');
+    // history.push('/apps/Workflow/User/Draft');
+    redirectUrl(id, '/apps/Workflow/User/Draft');
   };
 
   onCloseModal = () => {
@@ -143,11 +141,7 @@ class IntroComponent extends Component {
         <AntdModal destroyOnClose style={{ top: '50px' }} width={900} visible={isShow} onCancel={this.onCloseModal} footer={null} maskClosable={false}>
           <StyledInputView>
             <div className="pop_tit">업무표준</div>
-            <div style={{ display: isLoading ? 'block' : 'none' }}>
-              <Spin tip="Loading...">
-                <div style={{ height: '300px' }} />
-              </Spin>
-            </div>
+
             <div style={{ display: !isLoading ? 'block' : 'none' }}>
               <BizBuilderBase
                 sagaKey={`BizDoc_${selectedworkSeq}`}
@@ -158,6 +152,7 @@ class IntroComponent extends Component {
                 viewType={viewType}
                 workPrcProps={workPrcProps}
                 onCloseModalHandler={this.onCloseModalHandler}
+                onCloseModal={this.onCloseModal}
                 compProps={{ docNumber, NODE_ID: selectedNodeId }}
                 InputCustomButtons={({ saveBeforeProcess, onCloseModal, sagaKey, reloadId }) => (
                   <div style={{ textAlign: 'center', marginTop: '12px' }}>

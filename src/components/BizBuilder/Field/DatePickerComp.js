@@ -77,7 +77,7 @@ class DatePickerComp extends Component {
           style={{ width: '200px' }}
           onChange={this.onChangeHandler}
           placeholder={CONFIG.property.placeholder}
-          defaultValue={colData ? moment(colData) : undefined}
+          value={colData ? moment(colData) : undefined}
           disabled={readOnly || CONFIG.property.readOnly}
         />
       );
