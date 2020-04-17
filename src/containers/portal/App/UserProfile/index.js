@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Cookies } from 'react-cookie';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { intlObj } from 'utils/commonUtils';
+import { intlObj, loginPage } from 'utils/commonUtils';
 import { Button, Popover } from 'antd';
 import { createStructuredSelector } from 'reselect';
 
@@ -42,10 +41,7 @@ class UserProfile extends Component {
         this.onModal();
         break;
       case 'logout': {
-        const cookies = new Cookies();
-        cookies.remove('empNo', { path: '/' });
-        cookies.remove('access_token', { path: '/' });
-        window.location.href = `/signin`;
+        loginPage();
         break;
       }
       // case 'mail':
