@@ -232,6 +232,7 @@ class ModifyPage extends Component {
       formData,
       setFormData,
       extraApiData,
+      submitExtraHandler,
       getExtraApiData,
       changeFormData,
       deleteTask,
@@ -246,11 +247,16 @@ class ModifyPage extends Component {
             <Header
               sagaKey={id}
               formData={formData}
-              viewPageData={viewPageData}
+              viewPageData={{ ...viewPageData, viewType: 'CONFIRM_RESULT' }}
               setFormData={setFormData}
               changeViewPage={changeViewPage}
               deleteTask={deleteTask}
               modifySaveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
+              btnOnlySearch
+              submitExtraHandler={submitExtraHandler}
+              getExtraApiData={getExtraApiData}
+              extraApiData={extraApiData}
+              changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <ApproveCond

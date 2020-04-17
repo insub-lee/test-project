@@ -13,6 +13,7 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import SearchListPage from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/SearchList';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
+import ConfirmCheckSheet from 'apps/eshs/user/qualSqtb/ConfirmCheckSheet';
 const AntdModal = StyledContentsModal(Modal);
 
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -93,13 +94,27 @@ class Header extends Component {
     this.setState({ searchList });
   };
 
+  handleConfirmProcess = (status, action, callBack) => {
+    const { sagaKey: id, formData, changeFormData } = this.props;
+    changeFormData(id, 'APP_STATUS', status);
+    if (typeof callBack === 'function') {
+      callBack(action);
+    }
+  };
+
   render() {
     const { searchList, modalVisible } = this.state;
     const {
       formData,
-      viewPageData: { viewType },
+      viewPageData: { viewType, taskSeq },
+      sagaKey: id,
+      extraApiData,
+      getExtraApiData,
+      changeFormData,
+      submitExtraHandler,
     } = this.props;
     const REQ_CD = (formData && formData.REQ_CD) || '';
+    const APP_STATUS = (formData && formData.APP_STATUS) || '';
     if (viewType === 'CONFIRM_RESULT') {
       return (
         <>
@@ -115,21 +130,46 @@ class Header extends Component {
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
-            {REQ_CD && (
+            {((taskSeq !== -1 && REQ_CD !== '' && !APP_STATUS) || APP_STATUS === '1') && (
               /* AS_IS 
                 if (!"".equals(qualConfirm.getReqCd()) && ("".equals(qualConfirmResult.getAppStatus()) || "1".equals(qualConfirmResult.getAppStatus()))) {
                     <IMG align="absMiddle" onClick="save(1)" src="../../image/b_save2.gif" style="CURSOR: hand"> -- 저장
 										<IMG align="absMiddle" onClick="setConfirmLine()" src="../../image/b_appline2.gif" style="CURSOR: hand"> -- 결제선 지정
-										<IMG align="absMiddle" onClick="save(2)" src="../../image/button2_update.gif" style="CURSOR: hand"> -- 수정
+										<IMG align="absMiddle" onClick="save(2)" src="../../image/button2_update.gif" style="CURSOR: hand"> -- 상신
 										<IMG align="absMiddle" onClick="goChkSheet()" src="../../image/checksheet_regist.gif" style="CURSOR: hand"> -- checkSheet 수정가능
                   }
                 if ("3".equals(qualConfirmResult.getAppStatus())){
 										<IMG align="absMiddle" onClick="goChkSheetview()" src="../../image/checksheet_search.gif" style="CURSOR: hand"> -- checkSheet 수정불가
 									}
               */
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
-                저장
-              </StyledButton>
+              <>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('1', 'MODIFY', this.handleAction)}>
+                  저장
+                </StyledButton>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('2', 'MODIFY', this.handleAction)}>
+                  상신
+                </StyledButton>
+                <ConfirmCheckSheet
+                  viewType="INPUT"
+                  changeFormData={changeFormData}
+                  formData={formData}
+                  sagaKey={id}
+                  extraApiData={extraApiData}
+                  submitExtraHandler={submitExtraHandler}
+                  getExtraApiData={getExtraApiData}
+                />
+              </>
+            )}
+            {APP_STATUS === '3' && (
+              <ConfirmCheckSheet
+                viewType="VIEW"
+                changeFormData={changeFormData}
+                formData={formData}
+                sagaKey={id}
+                extraApiData={extraApiData}
+                submitExtraHandler={submitExtraHandler}
+                getExtraApiData={getExtraApiData}
+              />
             )}
           </StyledButtonWrapper>
           <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1300} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
@@ -214,7 +254,10 @@ Header.propTypes = {
   viewPageData: PropTypes.object,
   modifySaveTask: PropTypes.func,
   deleteTask: PropTypes.func,
-  btnOnlySearch: PropTypes.bool,
+  extraApiData: PropTypes.object,
+  getExtraApiData: PropTypes.func,
+  changeFormData: PropTypes.func,
+  submitExtraHandler: PropTypes.func,
 };
 Header.defaultProps = {
   formData: {},
@@ -225,7 +268,10 @@ Header.defaultProps = {
   viewPageData: {},
   modifySaveTask: () => {},
   deleteTask: () => {},
-  btnOnlySearch: false,
+  extraApiData: {},
+  getExtraApiData: () => {},
+  changeFormData: () => {},
+  submitExtraHandler: () => {},
 };
 
 export default Header;

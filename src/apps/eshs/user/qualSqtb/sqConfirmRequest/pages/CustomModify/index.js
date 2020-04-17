@@ -164,12 +164,15 @@ class ModifyPage extends Component {
           <Sketch {...bodyStyle}>
             <Header
               sagaKey={id}
+              extraApiData={extraApiData}
+              getExtraApiData={getExtraApiData}
               formData={formData}
               viewPageData={viewPageData}
               setFormData={setFormData}
               changeViewPage={changeViewPage}
               deleteTask={deleteTask}
               modifySaveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
+              changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <InterLock
