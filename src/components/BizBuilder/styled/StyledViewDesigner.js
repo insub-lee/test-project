@@ -180,10 +180,23 @@ const StyledViewDesigner = styled.div`
     border-top: 2px solid #888;
     .view-designer-row {
       border-bottom: 1px solid #ddd;
+      th {
+        background: #f7f7f7;
+        text-align: center;
+        color: #000;
+        width: 130px;
+        font-weight: 500;
+      }
+      td {
+        width: auto;
+        background-color: #ffffff;
+        color: #666;
+        border-bottom: 1px solid #ddd;
+      }
       .view-designer-col {
-        border: 0;
-        font-size: 12px;
-        /* padding: 5px 10px; */
+        padding: 4px 4px;
+        border-right: 1px solid #ddd;
+        font-size: 0.8rem;
         > div > span {
           display: block;
           font-size: 0.8rem;
@@ -250,12 +263,6 @@ const StyledViewDesigner = styled.div`
         }
 
         .ant-input {
-          border-top-style: initial;
-          border-right-style: initial;
-          border-left-style: initial;
-          border-top-color: initial;
-          border-right-color: initial;
-          border-left-color: initial;
           height: 30px;
           line-height: 30px;
           color: rgb(51, 51, 51);
