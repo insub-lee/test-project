@@ -22,12 +22,14 @@ const warning = (title, content) => {
   });
 };
 
-const error = (title, content) => {
+const error = (title, content, okCallback, cancelCallback) => {
   Modals.error({
     title,
     content,
     okText: `${intlObj.get(messages.ok)}`,
     cancelText: `${intlObj.get(messages.cancel)}`,
+    onOk: okCallback || (() => {}),
+    onCancel: cancelCallback || (() => {}),
   });
 };
 

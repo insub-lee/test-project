@@ -4,6 +4,7 @@ import { push } from 'react-router-redux';
 import update from 'react-addons-update';
 import { EB } from 'utils/SockjsFunc';
 import { Axios } from 'utils/AxiosFunc';
+import { loginPage } from 'utils/commonUtils';
 import { fromJS } from 'immutable';
 import { checkPath, lang, searchTree } from 'utils/commonUtils';
 import * as treeFunc from 'containers/common/functions/treeFunc';
@@ -41,7 +42,6 @@ function* afterLoginProcess(data, action) {
       yield put(payloadEB);
     } else {
       const { USER_ID } = payloadEB.profile;
-      console.log('action.payload.url============', action.payload.url);
       yield put(payloadEB);
 
       // 1. lang 가져오기
@@ -86,7 +86,7 @@ function* afterLoginProcess(data, action) {
             PAGE_ID,
           });
 
-          yield call(delay, 1000);
+          // yield call(delay, 1000);
 
           // getNotify 호출
           yield put({
@@ -178,11 +178,11 @@ export function* loadAuthorization(action) {
     // const response = yield call(Axios.get, `/api/common/v1/auth/sso?URL=${action.payload.url}`, { });
     // const { username } = action.payload;
     // const response = yield call(Axios.get, `/api/common/v1/auth/login?empno=${username}`, {});
-    const response = yield call(Axios.get, '/api/common/v1/auth/login?empno=X0101006', {});
+    const response = yield call(Axios.get, '/api/common/v1/auth/login', {});
     data = response;
   }
   console.log('LOAD AUTH:', data);
-  if (data.uuid !== '') {
+  if (data.uuid) {
     yield put({
       type: actionTypes.AUTH_REQUEST_UUID,
       payload: {
@@ -191,10 +191,12 @@ export function* loadAuthorization(action) {
         pathname: action.pathname,
       },
     });
-  } else if (data.headers !== undefined) {
+  } else if (data.headers) {
     yield afterLoginProcess(data, action);
   } else {
-    yield put({ type: actionTypes.AUTH_REQUEST_ERROR });
+    // errorAxiosProcess 와 중복 처리됨
+    if (data.code && data.code == '200') loginPage();
+    // yield put({ type: actionTypes.AUTH_REQUEST_ERROR });
   }
 }
 
@@ -204,7 +206,6 @@ export function* checkAuthorization(action) {
     ...action.payload,
   };
   authInfo.lastUrl = action.payload.url;
-  console.debug('@@@ Payload Url : ', action.payload.url);
   console.log('profile:', authInfo.get('uuid'));
   if (authInfo.get('uuid') !== null) {
     console.log('token:', authInfo.uuid);

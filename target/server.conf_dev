@@ -118,6 +118,15 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+    location ~ ^(/api/common/v1/migration) {
+            proxy_pass  http://portal-migration;
+            proxy_connect_timeout 60;
+            proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }    
     location ~ ^(/api/builder/v1/work) {
            proxy_pass  http://builder-common;
            proxy_connect_timeout 60;
@@ -326,6 +335,9 @@ upstream portal-download {
 }
 upstream portal-upload {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:40032;
+}
+upstream portal-migration {
+    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10197;
 }
 upstream thumbor {
     server dev-biz-thumbor.marathon.l4lb.thisdcos.directory:8000;

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
 import globalConfigs from './globalConfigs';
+import { loginPage } from 'utils/commonUtils';
 
 // const getUUID = () => getToken().get('idToken') || 'no token';
 export const getMeta = () => globalConfigs.store.getState().getIn(['auth', 'meta']) || {};
@@ -33,10 +34,7 @@ const request = options => {
     console.error('Request Failed:', error.config);
     if (error.response) {
       if (error.response.status === 401) {
-        const cookies = new Cookies();
-        cookies.remove('empNo', { path: '/' });
-        cookies.remove('access_token', { path: '/' });
-        window.location.href = `/api/common/v1/auth/oauth`;
+        loginPage();
       }
       if (error.response.status === 404) {
         console.error('등록된 페이지가 없습니다.');
