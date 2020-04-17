@@ -209,7 +209,7 @@ class ListPage extends Component {
       } = workFlowConfig;
 
       return (
-        <StyledWrap>
+        <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
             {groups.map((group, groupIndex) => {
               if (group.type === 'listGroup') {

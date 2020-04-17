@@ -37,22 +37,33 @@ class ProfileInputComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, profile, colData, readOnly, visible, isSearch, searchCompRenderer } = this.props;
+    const {
+      CONFIG,
+      profile,
+      colData,
+      readOnly,
+      visible,
+      isSearch,
+      searchCompRenderer,
+      viewPageData: { viewType },
+    } = this.props;
     const ignoreColdata = (CONFIG && CONFIG.property && CONFIG.property.ignoreColdata) || 'N';
     const profileKey = (CONFIG && CONFIG.property && CONFIG.property.profileKey) || '';
+
     if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
       return searchCompRenderer(this.props);
     }
-    return visible ? (
+
+    if (!visible) return '';
+
+    return (
       <Input
-        value={ignoreColdata === 'N' ? colData : profile[`${profileKey}`]}
+        defaultValue={viewType !== 'INPUT' && ignoreColdata === 'N' ? colData : profile[`${profileKey}`]}
         placeholder={CONFIG.property.placeholder}
         onChange={e => this.handleOnChange(e.target.value)}
         readOnly={readOnly || CONFIG.property.readOnly}
         className={CONFIG.property.className || ''}
       />
-    ) : (
-      ''
     );
   }
 }
@@ -73,6 +84,7 @@ ProfileInputComp.propTypes = {
   visible: PropTypes.any,
   isSearch: PropTypes.any,
   searchCompRenderer: PropTypes.any,
+  viewPageData: PropTypes.object,
 };
 
 export default connect(() => createStructuredSelector({ profile: selectors.makeSelectProfile() }))(ProfileInputComp);

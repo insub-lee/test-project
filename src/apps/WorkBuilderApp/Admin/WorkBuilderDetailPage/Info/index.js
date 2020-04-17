@@ -136,6 +136,7 @@ class Info extends Component {
                           OptionInfos[opt.OPT_APP_SETTING_SRC] &&
                           OptionInfos[opt.OPT_APP_SETTING_SRC].renderer({
                             ...this.props,
+                            onSaveClick: this.onSaveClick,
                             optSeq: opt.OPT_SEQ,
                             optConfig: workInfo.OPT_INFO.filter(idx => idx.OPT_SEQ === opt.OPT_SEQ)[0],
                           })}

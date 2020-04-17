@@ -222,12 +222,12 @@ class List extends Component {
   handleModifyWorker = row => {
     const { sagaKey: id, setFormData } = this.props;
     const modifyFormData = {
-      WORKER_SEQ: row.workerSeq,
-      WORKER_SSN: row.workerSsn,
-      WORKER_NM: row.workerNm,
-      WRK_CMPNY_CD: row.wrkCmpnyCd,
-      TEL: row.tel,
-      M_TEL: row.mTel,
+      WORKER_SEQ: row.WORKER_SEQ,
+      WORKER_SSN: row.WORKER_SSN,
+      WORKER_NM: row.WORKER_NM,
+      WRK_CMPNY_CD: row.WRK_CMPNY_CD,
+      TEL: row.TEL,
+      M_TEL: row.M_TEL,
     };
     setFormData(id, modifyFormData);
     this.handleModal('modify', true);
@@ -285,36 +285,36 @@ class List extends Component {
     const columns = [
       {
         title: '교육이수여부',
-        dataIndex: 'eduComplete',
+        dataIndex: 'EDU_CHECK',
         width: '10%',
         align: 'center',
         render: value => {
-          if (value === undefined || value === false) return <CloseOutlined style={{ color: '#ff6666' }} />;
+          if (value === -1) return <CloseOutlined style={{ color: '#ff6666' }} />;
           return <CheckOutlined style={{ color: '#71da71' }} />;
         },
       },
       {
         title: '성명',
-        dataIndex: 'workerNm',
+        dataIndex: 'WORKER_NM',
         width: '15%',
         align: 'center',
       },
       {
         title: '생년월일',
-        dataIndex: 'workerSsn',
+        dataIndex: 'WORKER_SSN',
         width: '20%',
         align: 'center',
         render: value => <span>{value.substr(0, 6)}</span>,
       },
       {
         title: '핸드폰(연락처)',
-        dataIndex: 'mTel',
+        dataIndex: 'M_TEL',
         width: '20%',
         align: 'center',
       },
       {
         title: '긴급연락처',
-        dataIndex: 'tel',
+        dataIndex: 'TEL',
         width: '20%',
         align: 'center',
       },
