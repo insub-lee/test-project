@@ -207,7 +207,7 @@ class InputPage extends Component {
       const { bodyStyle } = viewLayerData;
       const { PRC_ID } = processRule;
       return (
-        <StyledWrap>
+        <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
             {isWorkflowUsed && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
