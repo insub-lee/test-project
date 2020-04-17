@@ -21,7 +21,7 @@ class JoinToolTipComp extends React.Component {
     return (
       <Popover placement="topLeft" title={formData[property.viewDataKey] || text} trigger="hover">
         {property.titleUse === 'Y' ? (
-          <span
+          <div
             role="button"
             tabIndex="0"
             onKeyPress={() => false}
@@ -34,7 +34,7 @@ class JoinToolTipComp extends React.Component {
             style={{ textOverflow: 'ellipsis', overflow: 'hidden', width: '100px', whiteSpace: 'nowrap', fontWeight: `${bold}`, cursor: 'pointer' }}
           >
             {formData[property.viewDataKey] || text}
-          </span>
+          </div>
         ) : (
           <div
             className={property.className || ''}
