@@ -17,6 +17,7 @@ class ApproveCond extends Component {
     super(props);
     this.state = {
       approveCondTable: [],
+      defaultCurrent: 1,
       initApprove: {
         REQ_CD: this.props && this.props.formData && this.props.formData.REQ_CD,
         TASK_SEQ: this.props && this.props.formData && this.props.formData.TASK_SEQ,
@@ -85,6 +86,7 @@ class ApproveCond extends Component {
             <Upload
               key={`sqConfirmResult_${record.SEQ}`}
               readOnly={false}
+              onlyDown
               defaultValue={{
                 DETAIL: record.FILE_SEQ
                   ? [{ fileName: record.FILE_NM, seq: record.FILE_SEQ, down: `/down/file/${record.FILE_SEQ}`, name: record.FILE_NM, fileExt: record.fileExt }]
@@ -166,7 +168,7 @@ class ApproveCond extends Component {
 
   debounceHandelSetTable = () => {
     const { formData, id } = this.props;
-    const { columns } = this.state;
+    const { columns, defaultCurrent } = this.state;
     const approveCondList = (formData && formData.approveCondList) || [];
     return this.setState({
       approveCondTable: [
@@ -177,7 +179,12 @@ class ApproveCond extends Component {
           columns={columns}
           dataSource={approveCondList || []}
           bordered
-          pagination={{ pageSize: 6 }}
+          pagination={{
+            hideOnSinglePage: false,
+            defaultCurrent,
+            pageSize: 6,
+            onChange: page => this.setState({ defaultCurrent: page, approveCondTable: [] }, this.debounceHandelSetTable),
+          }}
           footer={() => <span>{`${approveCondList.length} 건`}</span>}
         />,
       ],
