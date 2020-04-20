@@ -195,9 +195,14 @@ export function* loadAuthorization(action) {
     yield afterLoginProcess(data, action);
   } else {
     // errorAxiosProcess 와 중복 처리됨
-    if (data.code && data.code == '200') loginPage();
+    // 로그인 페이지로 이동
+    if (data.code && data.code == '200') {
+      // OAuth 인증후 이동할 페이지 값 저장
+      loginPage(action.payload.url);
+    } 
     // yield put({ type: actionTypes.AUTH_REQUEST_ERROR });
   }
+  
 }
 
 export function* checkAuthorization(action) {
