@@ -173,7 +173,7 @@ class EshsCmpnyComp extends React.Component {
 
   render() {
     const { CONFIG, visible, readOnly, searchWidth, directSearchTable } = this.props;
-    const { cmpnyModal, cmpny_nm, list, searchList, listType, cursor } = this.state;
+    const { cmpnyModal, cmpny_nm, list, searchList, listType, cursor, cmpnyInfo } = this.state;
     let cmpnyList = [];
     if (listType === 'search') {
       cmpnyList = searchList;
@@ -183,6 +183,7 @@ class EshsCmpnyComp extends React.Component {
     if (readOnly || CONFIG.property.readOnly) {
       return visible ? <span>&nbsp;{cmpny_nm}</span> : '';
     }
+
     return visible ? (
       <>
         {directSearchTable ? (
@@ -301,12 +302,11 @@ EshsCmpnyComp.propTypes = {
   extraApiData: PropTypes.object,
   getExtraApiData: PropTypes.func,
   searchWidth: PropTypes.any,
-  directSearchForDevBase: PropTypes.bool,
+  formData: PropTypes.object,
 };
 
 EshsCmpnyComp.defaultProps = {
   searchWidth: 150,
-  directSearchForDevBase: false,
 };
 
 export default EshsCmpnyComp;

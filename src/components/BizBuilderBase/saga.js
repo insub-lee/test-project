@@ -357,6 +357,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   yield put(actions.successSaveTask(id));
 
   if (typeof callbackFunc === 'function') {
+    console.debug('진입했지?');
     callbackFunc(id, workSeq, taskSeq, formData);
   } else {
     yield put(actions.getBuilderData(reloadId || id, workSeq, -1));
