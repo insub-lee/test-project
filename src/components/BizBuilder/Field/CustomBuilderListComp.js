@@ -175,7 +175,9 @@ class CustomBuilderListComp extends React.Component {
       changeFormData(id, COMP_FIELD, record[dataKey]);
     }
     this.handleModalVisible('CANCEL');
-    customOnRowClick(record);
+    if (typeof customOnRowClick === 'function') {
+      customOnRowClick(record);
+    }
   };
 
   render() {
