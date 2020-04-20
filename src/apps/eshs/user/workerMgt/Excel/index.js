@@ -19,10 +19,10 @@ class Excel extends Component {
     ];
 
     const fields = [
-      { field: 'workerNm', style: { font: { sz: '12' } } },
-      { field: 'workerSsn', style: { font: { sz: '12' } } },
-      { field: 'mTel', style: { font: { sz: '12' } } },
-      { field: 'tel', style: { font: { sz: '12' } } },
+      { field: 'WORKER_NM', style: { font: { sz: '12' } } },
+      { field: 'WORKER_SSN', style: { font: { sz: '12' } } },
+      { field: 'M_TEL', style: { font: { sz: '12' } } },
+      { field: 'TEL', style: { font: { sz: '12' } } },
     ];
 
     return (

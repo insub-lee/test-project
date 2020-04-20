@@ -55,7 +55,7 @@ class Info extends Component {
 
   render() {
     const {
-      info: { workInfo, processList, optList },
+      info: { workInfo, processList, optList, styleList },
       history,
     } = this.props;
     return (
@@ -76,20 +76,39 @@ class Info extends Component {
             <div className="item-cont cont-textarea">{workInfo && workInfo.DSCR}</div>
           </div>
 
-          <div className="item">
-            <div className="item-title">기본 화면 전환 그룹</div>
-            <div className="item-cont cont-row-wrapper">
-              <Select
-                placeholder="화면선택"
-                style={{ width: '200px' }}
-                onChange={val => this.onChangeValue('workInfo', 'VIEW_CHANGE_PROCESS_SEQ', val)}
-                value={workInfo && workInfo.VIEW_CHANGE_PROCESS_SEQ}
-              >
-                {workInfo &&
-                  workInfo.viewChangeProcessList &&
-                  workInfo.viewChangeProcessList.map(item => (
+          {workInfo && workInfo.viewChangeProcessList && workInfo.viewChangeProcessList.length > 0 && (
+            <div className="item">
+              <div className="item-title">기본 화면 전환 그룹</div>
+              <div className="item-cont">
+                <Select
+                  placeholder="화면선택"
+                  style={{ width: '200px' }}
+                  onChange={val => this.onChangeValue('workInfo', 'VIEW_CHANGE_PROCESS_SEQ', val)}
+                  value={workInfo && workInfo.VIEW_CHANGE_PROCESS_SEQ}
+                >
+                  {workInfo.viewChangeProcessList.map(item => (
                     <Option key={`VCPS_${item.VIEW_CHANGE_PROCESS_SEQ}`} value={item.VIEW_CHANGE_PROCESS_SEQ}>
                       {item.VIEW_CHANGE_PROCESS_NAME}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
+            </div>
+          )}
+
+          <div className="item">
+            <div className="item-title">기본 스타일</div>
+            <div className="item-cont">
+              <Select
+                placeholder="선택"
+                style={{ width: '200px' }}
+                onChange={val => this.onChangeValue('workInfo', 'BUILDER_STYLE_PATH', val)}
+                value={workInfo && workInfo.BUILDER_STYLE_PATH}
+              >
+                {styleList &&
+                  styleList.map(item => (
+                    <Option key={`info_builderStyle_${item.STYLE_SEQ}`} value={item.STYLE_PATH}>
+                      {item.STYLE_NAME}
                     </Option>
                   ))}
               </Select>
@@ -117,6 +136,7 @@ class Info extends Component {
                           OptionInfos[opt.OPT_APP_SETTING_SRC] &&
                           OptionInfos[opt.OPT_APP_SETTING_SRC].renderer({
                             ...this.props,
+                            onSaveClick: this.onSaveClick,
                             optSeq: opt.OPT_SEQ,
                             optConfig: workInfo.OPT_INFO.filter(idx => idx.OPT_SEQ === opt.OPT_SEQ)[0],
                           })}

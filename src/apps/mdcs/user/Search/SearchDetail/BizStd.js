@@ -62,9 +62,13 @@ class BizStd extends Component {
     return (
       <StyledHtmlTable>
         <table>
+          <colgroup>
+            <col style={{ width: '15%' }} />
+            <col style={{ width: 'auto' }} />
+          </colgroup>
           <thead>
             <tr>
-              <th colSpan="4">업무표준 정보 선택</th>
+              <th colSpan="2">업무표준 정보 선택</th>
             </tr>
           </thead>
           <tbody>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Select } from 'antd';
+import { Select, Radio } from 'antd';
 import { debounce } from 'lodash';
 
 import { connect } from 'react-redux';
@@ -48,6 +48,17 @@ class ProfileConfig extends Component {
             </Option>
           ))}
         </Select>
+      </div>,
+      // MODIFY 환경에서 ColData값이 아닌 Profile값이 노출되어야 할경우 활성 선택
+      <div className="popoverItem popoverItemInput">
+        <span className="spanLabel">ColData값 무시</span>
+        <Radio.Group
+          onChange={value => this.handleChangeConfigData('ignoreColdata', value)}
+          defaultValue={(configInfo && configInfo.property && configInfo.property.ignoreColdata) || 'N'}
+        >
+          <Radio value="N">비활성</Radio>
+          <Radio value="Y">활성</Radio>
+        </Radio.Group>
       </div>,
     ];
   }

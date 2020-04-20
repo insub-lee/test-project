@@ -18,6 +18,7 @@ import ViewPage from './viewComponent/ViewPage';
 import ListPage from './viewComponent/ListPage';
 import SearchComp from './viewComponent/SearchComp';
 import ModalPopup from './viewComponent/ModalPopup';
+import ExtraBuilder from './viewComponent/ExtraBuilder';
 
 class BizBuilderBase extends React.Component {
   constructor(props) {
@@ -153,6 +154,7 @@ class BizBuilderBase extends React.Component {
         changeViewPage: this.changeViewPage,
         changeFormData: this.changeFormData,
         changeBuilderModalState: this.changeBuilderModalState,
+        ExtraBuilder,
       };
       switch (viewPageData.viewType.toUpperCase()) {
         case 'INPUT':
@@ -208,8 +210,11 @@ class BizBuilderBase extends React.Component {
       InputCustomButtonsByModal,
       ModifyCustomButtonsByModal,
       ViewCustomButtonsByModal,
+      compProps,
+      conditional,
     } = this.props;
     const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData } = this.state;
+
     return (
       <div>
         <Spin spinning={dataLoading}>{this.componentRenderer()}</Spin>
@@ -234,6 +239,8 @@ class BizBuilderBase extends React.Component {
             ModifyCustomButtons={ModifyCustomButtonsByModal}
             ViewCustomButtons={ViewCustomButtonsByModal}
             // ListCustomButtons={CustomButtonsByModal}
+            compProps={compProps}
+            conditional={conditional}
           />
         </Modal>
       </div>
@@ -266,7 +273,6 @@ BizBuilderBase.propTypes = {
   deleteTask: PropTypes.func,
   deleteExtraTask: PropTypes.func,
   deleteFav: PropTypes.func,
-  setFormData: PropTypes.func,
   addNotifyBuilder: PropTypes.func,
   revisionTask: PropTypes.func,
   getRevisionHistory: PropTypes.func,

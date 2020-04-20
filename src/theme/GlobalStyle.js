@@ -69,9 +69,13 @@ html {
   margin-left: 8px;
 }
 
+.ant-checkbox-wrapper {
+  font-size: 12px;
+}
+
 .ant-checkbox-wrapper + span,
 .ant-checkbox + span {
-  padding-left: 8px;
+  padding-left: 5px;
   padding-right: 8px;
 }
 
@@ -113,6 +117,12 @@ html {
   left: 0;
   border: none;
   transform: none;
+}
+
+.ant-checkbox-input:focus+.ant-checkbox-inner, 
+.ant-checkbox-wrapper:hover .ant-checkbox-inner, 
+.ant-checkbox:hover .ant-checkbox-inner {
+  border-color: #6e4e9e;
 }
 
 /* 비활성화(disabled) */

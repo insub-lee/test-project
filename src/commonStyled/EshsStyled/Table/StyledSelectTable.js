@@ -98,7 +98,7 @@ const StyledSelectTable = styled.div`
     width: 1rem;
     height: 1rem;
     border: 1px solid #adb5bd;
-    display: 'none';
+    display: none;
   }
 `;
 

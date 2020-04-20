@@ -13,6 +13,8 @@ const ModalPopup = ({
   InputCustomButtons,
   ModifyCustomButtons,
   ViewCustomButtons,
+  compProps,
+  conditional,
 }) => (
   <BizBuilderBase
     sagaKey={`BizBuilderModalPopup_${sagaKey}_${workSeq || '-1'}`}
@@ -26,6 +28,8 @@ const ModalPopup = ({
     InputCustomButtons={InputCustomButtons}
     ModifyCustomButtons={ModifyCustomButtons}
     ViewCustomButtons={ViewCustomButtons}
+    compProps={compProps}
+    conditional={conditional}
   />
 );
 
