@@ -178,6 +178,7 @@ const StyledViewDesigner = styled.div`
   .view-designer-table {
     width: 100%;
     border-top: 2px solid #888;
+    table-layout: fixed;
     .view-designer-row {
       border-bottom: 1px solid #eee;
       th {
