@@ -266,6 +266,9 @@ class ModifyPage extends Component {
               getExtraApiData={getExtraApiData}
               extraApiData={extraApiData}
               setFormData={setFormData}
+              viewType="INPUT"
+              condTitle="안전확인결과내용"
+              btnPlusTd
             />
             <InterLock
               id={id}
