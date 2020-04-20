@@ -6,7 +6,20 @@ class MainWidget extends Component {
   }
 
   render() {
-    return 'TEST!!!!!';
+    return (
+      <div className="main-widget-wrapper">
+        <div className="main-widget-row">
+          <div className="main-widget-col">가</div>
+          <div className="main-widget-col">나</div>
+          <div className="main-widget-col">다</div>
+        </div>
+        <div className="main-widget-row">
+          <div className="main-widget-col">라</div>
+          <div className="main-widget-col">마</div>
+          <div className="main-widget-col">바</div>
+        </div>
+      </div>
+    );
   }
 }
 
