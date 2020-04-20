@@ -20,8 +20,8 @@ class LabelDateWithoutTime extends React.Component {
 }
 
 LabelDateWithoutTime.propTypes = {
-  colData: PropTypes.string,
-  visible: PropTypes.string,
+  colData: PropTypes.any,
+  visible: PropTypes.bool,
   CONFIG: PropTypes.any,
   isSearch: PropTypes.bool,
   searchCompRenderer: PropTypes.func,
