@@ -2,13 +2,29 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Moment from 'moment';
 
-// 2020-02-13 동작 x. 나중에 수정해야 함.
 Moment.locale('ko');
-const LabelDateWithoutTime = ({ colData, visible, CONFIG }) =>
-  visible ? <span className={CONFIG.property.className || ''}>{Moment(colData).format('YYYY-MM-DD')}</span> : '';
+class LabelDateWithoutTime extends React.Component {
+  render() {
+    const { colData, visible, CONFIG, isSearch, searchCompRenderer } = this.props;
+    if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
+      return searchCompRenderer(this.props);
+    }
+    if (!visible) {
+      return '';
+    }
+    if (!colData || colData === '' || colData === ' ') {
+      return <span className={CONFIG.property.className || ''}> </span>;
+    }
+    return <span className={CONFIG.property.className || ''}>{Moment(colData).format('YYYY-MM-DD')}</span>;
+  }
+}
 
 LabelDateWithoutTime.propTypes = {
   colData: PropTypes.string,
+  visible: PropTypes.string,
+  CONFIG: PropTypes.any,
+  isSearch: PropTypes.bool,
+  searchCompRenderer: PropTypes.func,
 };
 
 export default LabelDateWithoutTime;
