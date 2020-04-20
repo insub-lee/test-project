@@ -25,6 +25,7 @@ class ApproveCond extends Component {
         DEPT_CD: 2118,
         QUAL_COMMENT: '',
         FILE_TYPE: 'TEMP',
+        STEP: '1',
       },
       deptCodeList: ['MN3Q', 'MN3R', 'MN3T', 'MN3S', 'MN1B', '23754', 'ZZZZ', 'ZZZ1', 'ZZ'],
       approveCategories: [],
@@ -35,47 +36,81 @@ class ApproveCond extends Component {
           dataIndex: 'QUAL_COMMENT',
           align: 'center',
           width: '45%',
-          render: (text, record) => (
-            <Input
-              className="ant-input-inline ant-input-sm input-left"
-              defaultValue={record.QUAL_COMMENT || ''}
-              onChange={e => this.debounceHandelOnChange('QUAL_COMMENT', e.target.value, record)}
-            />
-          ),
+          render: (text, record) => {
+            const { viewType } = this.props;
+
+            if (viewType === 'INPUT') {
+              return (
+                <Input
+                  className="ant-input-inline ant-input-sm input-left"
+                  defaultValue={record.QUAL_COMMENT || ''}
+                  onChange={e => this.debounceHandelOnChange('QUAL_COMMENT', e.target.value, record)}
+                />
+              );
+            }
+            if (viewType === 'VIEW') {
+              return <span>{record.QUAL_COMMENT}</span>;
+            }
+          },
         },
         {
           title: 'Categories',
           dataIndex: 'CATEGORY_CD',
           align: 'center',
           width: '20%',
-          render: (text, record) => (
-            <Select defaultValue={record.CATEGORY_CD || ''} style={{ width: '100%' }} onChange={e => this.debounceHandelOnChange('CATEGORY_CD', e, record)}>
-              {this.state &&
-                this.state.approveCategories &&
-                this.state.approveCategories.map(c => (
-                  <Option key={c.NODE_ID} value={c.NODE_ID}>
-                    {c.NAME_KOR}
-                  </Option>
-                ))}
-            </Select>
-          ),
+          render: (text, record) => {
+            const { viewType } = this.props;
+            const approveCategories = this.state.approveCategories || [];
+            if (viewType === 'INPUT') {
+              return (
+                <Select defaultValue={record.CATEGORY_CD || ''} style={{ width: '100%' }} onChange={e => this.debounceHandelOnChange('CATEGORY_CD', e, record)}>
+                  {approveCategories &&
+                    approveCategories.map(c => (
+                      <Option key={c.NODE_ID} value={c.NODE_ID}>
+                        {c.NAME_KOR}
+                      </Option>
+                    ))}
+                </Select>
+              );
+            }
+            if (viewType === 'VIEW') {
+              const nodeIndex = approveCategories.findIndex(a => a.NODE_ID === record.CATEGORY_CD);
+              if (nodeIndex > -1) {
+                return <span>{approveCategories[nodeIndex].NAME_KOR}</span>;
+              }
+              return <span></span>;
+            }
+          },
         },
         {
           title: '담당부서',
           dataIndex: 'DEPT_CD',
           align: 'center',
           width: '20%',
-          render: (text, record) => (
-            <Select defaultValue={record.DEPT_CD || ''} style={{ width: '100%' }} onChange={e => this.debounceHandelOnChange('DEPT_CD', e, record)}>
-              {this.state &&
-                this.state.approveDept &&
-                this.state.approveDept.map(d => (
-                  <Option key={d.NODE_ID} value={d.NODE_ID}>
-                    {d.NAME_KOR}
-                  </Option>
-                ))}
-            </Select>
-          ),
+          render: (text, record) => {
+            const { viewType } = this.props;
+            const approveDept = this.state.approveDept || [];
+
+            if (viewType === 'INPUT') {
+              return (
+                <Select defaultValue={record.DEPT_CD || ''} style={{ width: '100%' }} onChange={e => this.debounceHandelOnChange('DEPT_CD', e, record)}>
+                  {approveDept &&
+                    approveDept.map(d => (
+                      <Option key={d.NODE_ID} value={d.NODE_ID}>
+                        {d.NAME_KOR}
+                      </Option>
+                    ))}
+                </Select>
+              );
+            }
+            if (viewType === 'VIEW') {
+              const nodeIndex = approveDept.findIndex(d => d.NODE_ID === record.DEPT_CD);
+              if (nodeIndex > -1) {
+                return <span>{approveDept[nodeIndex].NAME_KOR}</span>;
+              }
+              return <span></span>;
+            }
+          },
         },
         {
           title: '파일 첨부',
@@ -85,7 +120,7 @@ class ApproveCond extends Component {
           render: (text, record) => (
             <Upload
               key={`sqConfirmResult_${record.SEQ}`}
-              readOnly={false}
+              readOnly={this.props.viewType === 'VIEW'}
               onlyDown
               defaultValue={{
                 DETAIL: record.FILE_SEQ
@@ -124,16 +159,16 @@ class ApproveCond extends Component {
     ];
     if (taskSeq) {
       apiArray.push({
-        key: 'approveCondList',
+        key: `approveCondList`,
         type: 'GET',
-        url: `/api/eshs/v1/common/eshsGetCondList/${taskSeq}`,
+        url: `/api/eshs/v1/common/eshsGetCondList/${taskSeq}/1`,
       });
     }
     getExtraApiData(id, apiArray, this.appStart);
   }
 
   appStart = () => {
-    const { id, extraApiData, changeFormData } = this.props;
+    const { id, extraApiData, setFormData, formData, viewType } = this.props;
     const { deptCodeList } = this.state;
 
     const categories = (extraApiData && extraApiData.approveCategories && extraApiData.approveCategories.categoryMapList) || [];
@@ -144,9 +179,9 @@ class ApproveCond extends Component {
       approveDept: depts.filter(d => deptCodeList.indexOf(d.CODE) > -1 && d.USE_YN === 'Y'),
       approveCondList,
     });
-    changeFormData(id, 'approveCondList', approveCondList);
+    setFormData(id, { ...formData, approveCondList, approveCondViewType: viewType });
 
-    if (!approveCondList.length) {
+    if (!approveCondList.length && viewType === 'INPUT') {
       return this.handlePlusTd();
     }
     this.debounceHandelSetTable();
@@ -202,15 +237,6 @@ class ApproveCond extends Component {
     );
   };
 
-  // handleFileDown = (e, fileSeq, type) => {
-  //   e.stopPropagation();
-  //   if (type === 'REAL') {
-  //     window.location.href = `/down/file/${Number(fileSeq)}`;
-  //   } else if (type === 'TEMP') {
-  //     window.location.href = `/down/tempfile/${Number(fileSeq)}`;
-  //   }
-  // };
-
   saveTempContents = (newFiles, rowSeq) => {
     const { id, formData, setFormData } = this.props;
     const condFileList = (formData && formData.condFileList) || [];
@@ -247,10 +273,11 @@ class ApproveCond extends Component {
 
   render() {
     const { approveCondTable } = this.state;
+    const { condTitle, btnPlusTd } = this.props;
     return (
       <>
         <span>
-          안전확인결과내용 <Button onClick={this.handlePlusTd}>[+3]</Button>
+          {condTitle || ''} {btnPlusTd && <Button onClick={this.handlePlusTd}>[+3]</Button>}
         </span>
         {approveCondTable}
       </>
@@ -265,6 +292,9 @@ ApproveCond.propTypes = {
   getExtraApiData: PropTypes.func,
   extraApiData: PropTypes.object,
   setFormData: PropTypes.func,
+  viewType: PropTypes.string,
+  condTitle: PropTypes.string,
+  btnPlusTd: PropTypes.bool,
 };
 
 ApproveCond.defaultProps = {
@@ -273,6 +303,9 @@ ApproveCond.defaultProps = {
   getExtraApiData: () => {},
   extraApiData: {},
   setFormData: () => {},
+  viewType: 'INPUT',
+  condTitle: '',
+  btnPlusTd: false,
 };
 
 export default ApproveCond;
