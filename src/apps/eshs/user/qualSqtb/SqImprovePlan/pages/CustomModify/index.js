@@ -179,7 +179,7 @@ class ModifyPage extends Component {
             <Header
               sagaKey={id}
               formData={formData}
-              viewPageData={{ ...viewPageData, viewType: 'CONFIRM_RESULT' }}
+              viewPageData={{ ...viewPageData, viewType: 'IMPROVE_PLAN' }}
               setFormData={setFormData}
               changeViewPage={changeViewPage}
               deleteTask={deleteTask}

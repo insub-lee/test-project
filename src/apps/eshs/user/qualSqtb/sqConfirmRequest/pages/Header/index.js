@@ -115,6 +115,32 @@ class Header extends Component {
     } = this.props;
     const REQ_CD = (formData && formData.REQ_CD) || '';
     const APP_STATUS = (formData && formData.APP_STATUS) || '';
+    const QUAL_STATUS = (formData && formData.QUAL_STATUS) || '';
+    if (viewType === 'IMPROVE_PLAN') {
+      return (
+        <>
+          <StyledButtonWrapper className="btn-wrap-left btn-wrap-mb-10">
+            <AntdSearch
+              value={REQ_CD || ''}
+              style={{ width: '150px' }}
+              readOnly
+              onClick={this.handleModalVisible}
+              onSearch={this.handleModalVisible}
+              className="ant-input-inline mr5"
+            />
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+              검색
+            </StyledButton>
+            {QUAL_STATUS !== '2007' && (
+              // NODE_ID = 2007 < 승인 >
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('1', 'MODIFY', this.handleAction)}>
+                저장
+              </StyledButton>
+            )}
+          </StyledButtonWrapper>
+        </>
+      );
+    }
     if (viewType === 'CONFIRM_RESULT') {
       return (
         <>
