@@ -45,6 +45,7 @@ class ExternalDistView extends Component {
     const { id, apiAry, getCallDataHandler, setFormData, docList } = this.props;
     getCallDataHandler(id, apiAry, () => {
       setFormData(id, {
+        ctrlType: 'C',
         docList,
         selectedUserList: [],
         referrer: '',
@@ -83,9 +84,9 @@ class ExternalDistView extends Component {
     });
   };
 
-  onChangeFormData = (key, e) => {
+  onChangeFormData = (key, val) => {
     const { id, changeFormData } = this.props;
-    changeFormData(id, key, e.target.value);
+    changeFormData(id, key, val);
   };
 
   onExternalDistribute = e => {
@@ -119,8 +120,6 @@ class ExternalDistView extends Component {
         list = distDeptList.list.filter(item => item.DEPT_ID === 1461 || item.PRNT_ID === 1461);
       }
     }
-
-    console.debug('##### state >> ', this.state);
       
     return (
       <div>
@@ -133,7 +132,7 @@ class ExternalDistView extends Component {
         </Row>
         <Row style={{ marginTop: '20px' }}>
           <Col span={16}>
-            <Select style={{ width: '250px' }} defaultValue='C'>
+            <Select style={{ width: '250px' }} value={formData.ctrlType} onChange={val => this.onChangeFormData('ctrlType', val)}>
               <Select.Option value='C'>CONTROLLED 배포</Select.Option>
               <Select.Option value='U'>UNCONTROLLED 배포</Select.Option>
             </Select>
@@ -171,7 +170,7 @@ class ExternalDistView extends Component {
             </Row>
             <Row>
               <Col>
-                <AntdTextArea value={formData.referrer} placeholder={`참조란에 2명이상 입력시 ' ; ' 로 구분`} onChange={e => this.onChangeFormData('referrer', e)} />
+                <AntdTextArea value={formData.referrer} placeholder={`참조란에 2명이상 입력시 ' ; ' 로 구분`} onChange={e => this.onChangeFormData('referrer', e.target.value)} />
               </Col>
             </Row>
           </Col>
@@ -182,10 +181,10 @@ class ExternalDistView extends Component {
         </Row>
         <Row>
           <Col span={14} style={{ border: '1px solid #ddd' }}>
-            <AntdTextArea rows={8} value={formData.distribute_reason} onChange={e => this.onChangeFormData('distribute_reason', e)} />
+            <AntdTextArea rows={8} value={formData.distribute_reason} onChange={e => this.onChangeFormData('distribute_reason', e.target.value)} />
           </Col>
           <Col span={10}>
-            <AntdTextArea rows={8} value={formData.comment} onChange={e => this.onChangeFormData('comment', e)} />
+            <AntdTextArea rows={8} value={formData.comment} onChange={e => this.onChangeFormData('comment', e.target.value)} />
           </Col>
         </Row>
         {list !== undefined && (

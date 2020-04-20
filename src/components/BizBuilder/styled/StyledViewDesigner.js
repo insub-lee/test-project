@@ -178,6 +178,7 @@ const StyledViewDesigner = styled.div`
   .view-designer-table {
     width: 100%;
     border-top: 2px solid #888;
+    table-layout: fixed;
     .view-designer-row {
       border-bottom: 1px solid #eee;
       th {
@@ -245,21 +246,21 @@ const StyledViewDesigner = styled.div`
           -webkit-box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
           box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
           cursor: pointer;
-          -webkit-transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
           transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
           user-select: none;
           -ms-touch-action: manipulation;
           touch-action: manipulation;
           height: 30px;
-          padding: 0 15px;
+          /* padding: 0 15px; */
           font-size: 12px;
           border-radius: 4px;
           color: rgba(0, 0, 0, 0.65);
           background-color: #fff;
           border: 1px solid #d9d9d9;
+          vertical-align: middle;
+          &.ant-btn-icon-only {
+            margin-left: 2px;
+          }
         }
 
         .ant-input {

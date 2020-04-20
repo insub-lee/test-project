@@ -15,6 +15,7 @@ let dataSource;
 class RadioMultiSelector extends Component {
   state = {
     isShowModal: false,
+    isItem: false,
     apiFlag: true,
     dataSource: [],
     selectedCheckList: [],
@@ -40,6 +41,7 @@ class RadioMultiSelector extends Component {
     const { categoryMapList: dataList } = extraApiData[COMP_FIELD];
     const selectedValue = colData.split(',').map(val => Number(val));
     const selectedItem = dataList.filter(data => selectedValue.includes(data.NODE_ID)).map(item => ({ title: item.NAME_KOR, value: item.NODE_ID }));
+    const isItem = selectedItem.length > 0;
     dataSource = [
       {
         groupName: COMP_FIELD,
@@ -49,7 +51,7 @@ class RadioMultiSelector extends Component {
         dataSet: dataList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0),
       },
     ];
-    this.setState({ dataSource });
+    this.setState({ dataSource, isItem });
   };
 
   onClickSelectedWin = () => {
@@ -80,10 +82,11 @@ class RadioMultiSelector extends Component {
   };
 
   render() {
+    const { isItem } = this.state;
     return (
       <>
         <StyledMultiSelector>
-          <div className="wrapper">
+          <div className={isItem ? 'wrapper active' : 'wrapper'}>
             <div className="draftWrapper">
               {this.state.dataSource.map(grp =>
                 grp.selectedItem.map(item => (
