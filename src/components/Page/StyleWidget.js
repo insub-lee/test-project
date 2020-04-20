@@ -1467,7 +1467,7 @@ const WidgetHeader = styled.div`
     .iconsWrapper {
       position: absolute;
       // 위젯 헤더 마우스 오버 영역
-      top: -30px;
+      /* top: -30px; */
       right: 0;
       display: inline-block;
       width: 100%;
