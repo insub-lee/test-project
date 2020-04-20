@@ -15,7 +15,7 @@ class LabelDate extends React.Component {
 
 LabelDate.propTypes = {
   colData: PropTypes.string,
-  visible: PropTypes.string,
+  visible: PropTypes.bool,
   CONFIG: PropTypes.any,
   isSearch: PropTypes.bool,
   searchCompRenderer: PropTypes.func,
