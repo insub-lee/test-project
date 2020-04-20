@@ -189,11 +189,12 @@ class CustomCheckListComp extends Component {
   };
 
   render() {
+    const { readOnly } = this.props;
     const { isItem } = this.state;
     return (
       <>
         <StyledMultiSelector>
-          <div className={isItem ? 'wrapper active' : 'wrapper'}>
+          <div className={isItem && !readOnly ? 'wrapper active' : 'wrapper'}>
             <div className="draftWrapper">
               {this.state.dataSource &&
                 this.state.dataSource.map(grp =>
@@ -207,9 +208,11 @@ class CustomCheckListComp extends Component {
                   )),
                 )}
             </div>
-            <StyledButton className="btn-xs btn-primary" onClick={this.onClickSelectedWin}>
-              <Icon type="select" /> 선택
-            </StyledButton>
+            {!readOnly && (
+              <StyledButton className="btn-xs btn-primary" onClick={this.onClickSelectedWin}>
+                <Icon type="select" /> 선택
+              </StyledButton>
+            )}
           </div>
         </StyledMultiSelector>
         <AntdModal
