@@ -4,18 +4,15 @@ import { Input, Modal, message, Popconfirm } from 'antd';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import SearchListPage from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/SearchList';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
+import SearchListPage from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/SearchList';
 import ConfirmCheckSheet from 'apps/eshs/user/qualSqtb/ConfirmCheckSheet';
-const AntdModal = StyledContentsModal(Modal);
 
+const AntdModal = StyledContentsModal(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
 
 class Header extends Component {
@@ -39,7 +36,6 @@ class Header extends Component {
 
   modalRowSelected = record => {
     const { sagaKey: id, setFormData, formData } = this.props;
-    console.debug('record 1111 ', record);
     setFormData(id, { ...formData, REQ_CD: record.REQ_CD, selectRow: { ...record } });
     this.handleModalVisible();
   };
@@ -95,7 +91,7 @@ class Header extends Component {
   };
 
   handleConfirmProcess = (status, action, callBack) => {
-    const { sagaKey: id, formData, changeFormData } = this.props;
+    const { sagaKey: id, changeFormData } = this.props;
     changeFormData(id, 'APP_STATUS', status);
     if (typeof callBack === 'function') {
       callBack(action);
@@ -126,7 +122,7 @@ class Header extends Component {
               readOnly
               onClick={this.handleModalVisible}
               onSearch={this.handleModalVisible}
-              className="ant-input-inline mr5"
+              className="ant-search-inline input-search-mid mr5"
             />
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
@@ -138,6 +134,9 @@ class Header extends Component {
               </StyledButton>
             )}
           </StyledButtonWrapper>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1300} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+            {searchList}
+          </AntdModal>
         </>
       );
     }
@@ -151,7 +150,7 @@ class Header extends Component {
               readOnly
               onClick={this.handleModalVisible}
               onSearch={this.handleModalVisible}
-              className="ant-input-inline mr5"
+              className="ant-search-inline input-search-mid mr5"
             />
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
@@ -213,7 +212,7 @@ class Header extends Component {
             readOnly
             onClick={this.handleModalVisible}
             onSearch={this.handleModalVisible}
-            className="ant-input-inline mr5"
+            className="ant-search-inline input-search-mid mr5"
           />
           <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
             검색
