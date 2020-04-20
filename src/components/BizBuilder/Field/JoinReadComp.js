@@ -68,7 +68,7 @@ JoinReadComp.propTypes = {
   CONFIG: PropTypes.object,
   formData: PropTypes.object,
   rowData: PropTypes.object,
-  colData: PropTypes.string,
+  colData: PropTypes.any,
   sagaKey: PropTypes.string,
   changeViewPage: PropTypes.func,
   changeBuilderModalState: PropTypes.func,

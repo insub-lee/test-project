@@ -105,8 +105,8 @@ DatePickerComp.propTypes = {
   visible: PropTypes.bool,
   isSearch: PropTypes.bool,
   readOnly: PropTypes.bool,
-  viewPageData: PropTypes.string,
-  colData: PropTypes.object,
+  viewPageData: PropTypes.object,
+  colData: PropTypes.string,
 };
 
 export default DatePickerComp;
