@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
-import { Input, Button, Popconfirm } from 'antd';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import { Input, Popconfirm } from 'antd';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 
-const { Search } = Input;
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class Header extends Component {
   constructor(props) {
@@ -66,26 +69,26 @@ class Header extends Component {
     const viewType = (viewPageData && viewPageData.viewType) || '';
     const { SETUP_EMPNO, SETUP_PERSON } = this.state;
     return (
-      <div align="left">
+      <StyledButtonWrapper className="btn-wrap-mb-10">
         <span>장비코드</span>
         &nbsp;
-        <Search value={modalSelectedRow.EQUIP_CD || ''} readOnly onClick={handleModalVisible} style={{ width: '8%' }} />
+        <AntdSearch value={modalSelectedRow.EQUIP_CD || ''} readOnly onClick={handleModalVisible} onSearch={handleModalVisible} style={{ width: '8%' }} />
         &nbsp;
-        <StyledButton className="btn-primary" onClick={() => this.handleAction('SEARCH')}>
+        <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
           검색
         </StyledButton>
-        <StyledButton className="btn-primary" onClick={() => this.handleAction(viewType)}>
+        <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction(viewType)}>
           저장
         </StyledButton>
         {viewType === 'MODIFY' && (
           <>
             <Popconfirm title="정말 삭제하시겠습니까?" onConfirm={() => this.handleAction('DELETE')} okText="확인" cancelText="취소">
-              <StyledButton className="btn-primary">삭제</StyledButton>
+              <StyledButton className="btn-primary btn-sm btn-first">삭제</StyledButton>
             </Popconfirm>
-            <StyledButton className="btn-primary" onClick={() => this.handleAction('REVISION')}>
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('REVISION')}>
               신규등록
             </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => this.handleAction('RESET')}>
+            <StyledButton className="btn-primary btn-sm" onClick={() => this.handleAction('RESET')}>
               Reset
             </StyledButton>
             <div align="right">
@@ -93,7 +96,7 @@ class Header extends Component {
             </div>
           </>
         )}
-      </div>
+      </StyledButtonWrapper>
     );
   }
 }
