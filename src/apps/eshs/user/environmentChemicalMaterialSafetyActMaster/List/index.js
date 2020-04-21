@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select, Popconfirm } from 'antd';
+import { Input, Select, Popconfirm, Checkbox } from 'antd';
 
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
@@ -8,12 +8,13 @@ import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environmentMasterRegistration/InputModal/SearchComp';
 
+const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
 const AntdSearch = StyledSearchInput(Input.Search);
 class List extends React.Component {
@@ -25,11 +26,42 @@ class List extends React.Component {
         CAS_NO: '',
         NAME_KOR: '',
         NAME_ENG: '',
+        IS_EXPOSURE: 'N',
+        IS_PERMISSION: 'N',
+        IS_ALLOW: 'N',
       },
       isModified: false,
+      isMainMaterial: true,
       deleteConfirmMessage: '삭제하시겠습니까?',
+      categories: [],
     };
   }
+
+  componentDidMount() {
+    this.getCategoryList();
+  }
+
+  getCategoryList = () => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'codeCategory',
+        type: 'POST',
+        url: `/api/admin/v1/common/categoryMapList`,
+        params: { PARAM: { NODE_ID: 1949 } },
+      },
+    ];
+
+    getCallDataHandler(id, apiArr, this.setCategory);
+  };
+
+  setCategory = () => {
+    const { result } = this.props;
+    const category = result.codeCategory.categoryMapList.filter(item => item.PARENT_NODE_ID === 1949);
+    this.setState({
+      categories: category.slice(1),
+    });
+  };
 
   handleSearchClick = () => {
     this.setState({
@@ -113,8 +145,12 @@ class List extends React.Component {
         CAS_NO: '',
         NAME_KOR: '',
         NAME_ENG: '',
+        IS_EXPOSURE: 'N',
+        IS_PERMISSION: 'N',
+        IS_ALLOW: 'N',
       },
       isModified: false,
+      isMainMaterial: true,
     });
   };
 
@@ -124,21 +160,22 @@ class List extends React.Component {
     });
   };
 
+  handleSubCheckboxChange = () => {
+    this.setState(prevState => ({
+      isMainMaterial: !prevState.isMainMaterial,
+      requestValue: Object.assign(prevState.requestValue, { SUB_CATEGORY: '', PARENT_NAME: '' }),
+    }));
+  };
+
   setRequestValue = record => {
-    this.setState({
-      requestValue: record,
+    this.setState(prevState => ({
+      requestValue: Object.assign(prevState.requestValue, record),
       visible: false,
-      isModified: true,
-    });
+      isModified: !!prevState.isMainMaterial,
+    }));
   };
 
   columns = [
-    {
-      title: 'CAS_NO',
-      dataIndex: 'CAS_NO',
-      key: 'CAS_NO',
-      align: 'center',
-    },
     {
       title: '화학물질명_국문',
       dataIndex: 'NAME_KOR',
@@ -149,6 +186,12 @@ class List extends React.Component {
       title: '화학물질명_영문',
       dataIndex: 'NAME_ENG',
       key: 'NAME_ENG',
+      align: 'center',
+    },
+    {
+      title: 'CAS_NO',
+      dataIndex: 'CAS_NO',
+      key: 'CAS_NO',
       align: 'center',
     },
   ];
@@ -163,9 +206,10 @@ class List extends React.Component {
       handleResetClick,
       handleDeleteConfirm,
       handleDeleteClick,
+      handleSubCheckboxChange,
     } = this;
     const { columns } = this;
-    const { requestValue, visible, deleteConfirmMessage } = this.state;
+    const { requestValue, visible, deleteConfirmMessage, isMainMaterial } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
@@ -208,10 +252,6 @@ class List extends React.Component {
                 </colgroup>
                 <tbody>
                   <tr>
-                    <th>CAS NO.</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
                     <th>화학물질명_국문</th>
                     <td>
                       <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
@@ -219,6 +259,86 @@ class List extends React.Component {
                     <th>화학물질명_영문</th>
                     <td>
                       <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={e => handleInputChange(e, 'INPUT')} />
+                    </td>
+                    <th>CAS NO.</th>
+                    <td>
+                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>노출기준설정물질</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue="Y"
+                        onChange={e => handleInputChange(e, 'SELECT', 'IS_EXPOSURE')}
+                        value={requestValue.IS_EXPOSURE}
+                        style={{ width: '100%' }}
+                      >
+                        <Select.Option value="Y">해당</Select.Option>
+                        <Select.Option value="N">비해당</Select.Option>
+                      </AntdSelect>
+                    </td>
+                    <th>허가대상물질</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue="Y"
+                        onChange={e => handleInputChange(e, 'SELECT', 'IS_PERMISSION')}
+                        value={requestValue.IS_PERMISSION}
+                        style={{ width: '100%' }}
+                      >
+                        <Select.Option value="Y">해당</Select.Option>
+                        <Select.Option value="N">비해당</Select.Option>
+                      </AntdSelect>
+                    </td>
+                    <th>허용기준설정물질(제한물질)</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue="Y"
+                        onChange={e => handleInputChange(e, 'SELECT', 'IS_ALLOW')}
+                        value={requestValue.IS_ALLOW}
+                        style={{ width: '100%' }}
+                      >
+                        <Select.Option value="Y">해당</Select.Option>
+                        <Select.Option value="N">비해당</Select.Option>
+                      </AntdSelect>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>하위물질 여부</th>
+                    <td style={{ textAlign: 'center' }}>
+                      <Checkbox checked={!isMainMaterial} onChange={handleSubCheckboxChange} />
+                    </td>
+                    <th>하위물질 분류</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue="1"
+                        onChange={e => handleInputChange(e, 'SELECT', 'SUB_CATEGORY')}
+                        value={requestValue.SUB_CATEGORY}
+                        style={{ width: '100%' }}
+                        disabled={isMainMaterial}
+                      >
+                        {this.state.categories.map(item => (
+                          <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
+                        ))}
+                        {/* <Select.Option value="WP">작업환경측정대상 유해인자</Select.Option> */}
+                        {/* <Select.Option value="2">관리대상 유해물질</Select.Option> */}
+                        {/* <Select.Option value="3">특수건강진단 대상 유해인자</Select.Option> */}
+                      </AntdSelect>
+                    </td>
+                    <th>상위물질</th>
+                    <td>
+                      <AntdSearch
+                        className="ant-search-inline input-search-mid input-search-sm"
+                        placeHolder="검색"
+                        onClick={handleSearchClick}
+                        value={requestValue.PARENT_NAME}
+                        style={{ width: '244px' }}
+                        disabled={isMainMaterial}
+                      />
                     </td>
                   </tr>
                 </tbody>
@@ -238,6 +358,7 @@ class List extends React.Component {
           SearchComp={SearchComp}
           changeFormData={changeFormData}
           formData={formData}
+          isSearch={!isMainMaterial}
         />
       </>
     );
