@@ -229,6 +229,10 @@ html {
   box-shadow: unset;
 }
 
+.ant-popover-placement-bottomRight > .ant-popover-content > .ant-popover-arrow {
+  left: inherit;
+}
+
 .submenu01,
 .submenu02 {
   margin: 0;
@@ -369,7 +373,7 @@ html {
 .managerPopover .ant-popover-arrow {
   /*top: 9px !important;*/
   top: 0 !important;
-  left: 12px !important;
+  left: 12px;
   width: 9px;
   height: 9px;
   background: #f3f3f3;

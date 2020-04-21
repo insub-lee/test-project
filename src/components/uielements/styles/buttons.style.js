@@ -22,22 +22,22 @@ const BtnIconNotify = styled.button`
 
 const BtnIconSettings = styled.button`
   width: 32px;
-  height: 35px;
-  background: url(${settings}) no-repeat 8px 11px;
+  height: 45px;
+  background: url(${settings}) no-repeat center;
 `;
 
 const BtnIconReload = styled.button`
   display: inline-block;
   width: 32px;
-  height: 35px;
-  background: url(${reload}) no-repeat 8px 11px;
+  height: 45px;
+  background: url(${reload}) no-repeat center;
 `;
 
 const BtnIconSeeDetails = styled.button`
   display: inline-block;
   width: 33px;
-  height: 35px;
-  background: url(${popup}) no-repeat 8px 11px;
+  height: 45px;
+  background: url(${popup}) no-repeat center;
 `;
 
 const BtnIconFind = styled.button`
