@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select, Popconfirm } from 'antd';
+import { Input, InputNumber, Select, Popconfirm } from 'antd';
 
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
@@ -10,11 +10,13 @@ import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environmentMasterRegistration/InputModal/SearchComp';
 
 const AntdInput = StyledInput(Input);
+const AntdInputNumber = StyledInputNumber(InputNumber);
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
 class List extends React.Component {
@@ -31,9 +33,9 @@ class List extends React.Component {
         CATEGORY: '',
         SUB_CATEGORY: '',
         IS_APPLICATE: 'Y',
-        SAFETY_ID: '',
         SERIAL_NO: '',
         WORK_ID: '',
+        CONTENT_STANDARD: '',
       },
       isModified: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
@@ -72,34 +74,11 @@ class List extends React.Component {
     });
   };
 
-  handleInputChange = (event, type, name, isSub) => {
-    if (!isSub) {
-      if (type.toUpperCase() === 'INPUT') {
-        const valueObj = { [event.target.name.toUpperCase()]: event.target.value };
-        return this.setState(prevState => ({
-          requestValue: Object.assign(prevState.requestValue, valueObj),
-        }));
-      }
-
-      if (type.toUpperCase() === 'SELECT' && name === 'CATEGORY') {
-        const valueObj = { [name.toUpperCase()]: event, SUB_CATEGORY: '' };
-        this.getSubCategories(event);
-        return this.setState(prevState => ({
-          requestValue: Object.assign(prevState.requestValue, valueObj),
-        }));
-      }
-
-      if (type.toUpperCase() === 'SELECT') {
-        const valueObj = { [name.toUpperCase()]: event };
-        return this.setState(prevState => ({
-          requestValue: Object.assign(prevState.requestValue, valueObj),
-        }));
-      }
-    }
+  handleInputChange = (event, type, name) => {
     if (type.toUpperCase() === 'INPUT') {
       const valueObj = { [event.target.name.toUpperCase()]: event.target.value };
       return this.setState(prevState => ({
-        subRequestValue: Object.assign(prevState.subRequestValue, valueObj),
+        requestValue: Object.assign(prevState.requestValue, valueObj),
       }));
     }
 
@@ -107,14 +86,21 @@ class List extends React.Component {
       const valueObj = { [name.toUpperCase()]: event, SUB_CATEGORY: '' };
       this.getSubCategories(event);
       return this.setState(prevState => ({
-        subRequestValue: Object.assign(prevState.subRequestValue, valueObj),
+        requestValue: Object.assign(prevState.requestValue, valueObj),
       }));
     }
 
     if (type.toUpperCase() === 'SELECT') {
       const valueObj = { [name.toUpperCase()]: event };
       return this.setState(prevState => ({
-        subRequestValue: Object.assign(prevState.subRequestValue, valueObj),
+        requestValue: Object.assign(prevState.requestValue, valueObj),
+      }));
+    }
+
+    if (type.toUpperCase() === 'NUMBER') {
+      const valueObj = { [name]: event };
+      return this.setState(prevState => ({
+        requestValue: Object.assign(prevState.requestValue, valueObj),
       }));
     }
     return null;
@@ -189,6 +175,8 @@ class List extends React.Component {
         CATEGORY: '',
         SUB_CATEGORY: '',
         IS_APPLICATE: '',
+        CONTENT_STANDARD: '',
+        SERIAL_NO: '',
       },
       isModified: false,
     });
@@ -205,13 +193,6 @@ class List extends React.Component {
       requestValue: record,
       visible: false,
       isModified: true,
-    });
-  };
-
-  setSubRequestValue = record => {
-    // 하위물질들 정보 등록
-    this.setState({
-      subRequestValue: record,
     });
   };
 
@@ -248,7 +229,7 @@ class List extends React.Component {
       handleDeleteClick,
     } = this;
     const { modalColumns } = this;
-    const { requestValue, visible, deleteConfirmMessage, categories, subCategories } = this.state;
+    const { requestValue, visible, deleteConfirmMessage, categories, subCategories, isModified } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
@@ -267,7 +248,12 @@ class List extends React.Component {
                 <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
                   저장/수정
                 </StyledButton>
-                <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
+                <Popconfirm
+                  title={deleteConfirmMessage}
+                  onConfirm={isModified ? handleDeleteConfirm : null}
+                  okText={isModified ? '삭제' : '확인'}
+                  cancelText="취소"
+                >
                   <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
                     삭제
                   </StyledButton>
@@ -293,6 +279,51 @@ class List extends React.Component {
                 </colgroup>
                 <tbody>
                   <tr>
+                    <th>연번</th>
+                    <td>
+                      <AntdInputNumber
+                        className="ant-input-number input-number-sm"
+                        value={requestValue.SERIAL_NO}
+                        onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
+                        disabled={isModified}
+                      />
+                    </td>
+                    <th>분류</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        onChange={e => handleInputChange(e, 'SELECT', 'CATEGORY')}
+                        value={requestValue.CATEGORY ? Number(requestValue.CATEGORY) : ''}
+                        style={{ width: '100%' }}
+                      >
+                        {categories.map(item => (
+                          <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
+                        ))}
+                      </AntdSelect>
+                    </td>
+                    <th>하위 분류</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        onChange={e => handleInputChange(e, 'SELECT', 'SUB_CATEGORY')}
+                        value={requestValue.SUB_CATEGORY ? Number(requestValue.SUB_CATEGORY) : ''}
+                        style={{ width: '100%' }}
+                      >
+                        {subCategories.map(item => (
+                          <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
+                        ))}
+                      </AntdSelect>
+                    </td>
+                    <th>함량기준</th>
+                    <td>
+                      <AntdInputNumber
+                        className="ant-input-number input-number-sm"
+                        value={requestValue.CONTENT_STANDARD}
+                        onChange={e => handleInputChange(e, 'NUMBER', 'CONTENT_STANDARD')}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
                     <th>CAS NO.</th>
                     <td>
                       <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
@@ -316,34 +347,6 @@ class List extends React.Component {
                       >
                         <Select.Option value="Y">해당</Select.Option>
                         <Select.Option value="N">비해당</Select.Option>
-                      </AntdSelect>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th colSpan={1}>분류</th>
-                    <td colSpan={3}>
-                      <AntdSelect
-                        className="select-sm"
-                        onChange={e => handleInputChange(e, 'SELECT', 'CATEGORY')}
-                        value={requestValue.CATEGORY ? Number(requestValue.CATEGORY) : ''}
-                        style={{ width: '100%' }}
-                      >
-                        {categories.map(item => (
-                          <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
-                        ))}
-                      </AntdSelect>
-                    </td>
-                    <th colSpan={1}>하위 분류</th>
-                    <td colSpan={3}>
-                      <AntdSelect
-                        className="select-sm"
-                        onChange={e => handleInputChange(e, 'SELECT', 'SUB_CATEGORY')}
-                        value={requestValue.SUB_CATEGORY ? Number(requestValue.SUB_CATEGORY) : ''}
-                        style={{ width: '100%' }}
-                      >
-                        {subCategories.map(item => (
-                          <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
-                        ))}
                       </AntdSelect>
                     </td>
                   </tr>

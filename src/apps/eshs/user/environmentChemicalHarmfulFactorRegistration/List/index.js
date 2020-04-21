@@ -195,7 +195,7 @@ class List extends React.Component {
       handleDeleteClick,
     } = this;
     const { columns } = this;
-    const { requestValue, visible, deleteConfirmMessage, categorys } = this.state;
+    const { requestValue, visible, deleteConfirmMessage, categorys, isModified } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
@@ -214,7 +214,12 @@ class List extends React.Component {
                 <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
                   저장/수정
                 </StyledButton>
-                <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
+                <Popconfirm
+                  title={deleteConfirmMessage}
+                  onConfirm={isModified ? handleDeleteConfirm : null}
+                  okText={isModified ? '삭제' : '확인'}
+                  cancelText="취소"
+                >
                   <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
                     삭제
                   </StyledButton>
