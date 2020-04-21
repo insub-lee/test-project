@@ -255,6 +255,7 @@ class EshsCmpnyComp extends React.Component {
                       onChange={this.handleOnChange}
                       placeholder="검색어를 입력하시오"
                       onSearch={this.handleOnSearch}
+                      onClick={this.handleOnSearch}
                     />
                   </InputGroup>
                   {/* &nbsp;&nbsp;
