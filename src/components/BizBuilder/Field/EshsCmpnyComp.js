@@ -237,6 +237,7 @@ class EshsCmpnyComp extends React.Component {
               className={CONFIG.property.className}
               style={{ width: searchWidth }}
               onSearch={this.handleModalVisible}
+              onClick={this.handleModalVisible}
             />
             {/* <Button shape="circle" icon="search" onClick={this.handleModalVisible} /> */}
             &nbsp; <span>{cmpny_nm}</span>
@@ -255,7 +256,6 @@ class EshsCmpnyComp extends React.Component {
                       onChange={this.handleOnChange}
                       placeholder="검색어를 입력하시오"
                       onSearch={this.handleOnSearch}
-                      onClick={this.handleOnSearch}
                     />
                   </InputGroup>
                   {/* &nbsp;&nbsp;
