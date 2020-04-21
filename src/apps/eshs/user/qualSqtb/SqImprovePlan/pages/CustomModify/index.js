@@ -15,8 +15,7 @@ import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import moment from 'moment';
 
 import ApproveCond from 'apps/eshs/user/qualSqtb/approveCond';
-import InterLock from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/InterLock';
-import Material from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/Material';
+import ImproveCond from 'apps/eshs/user/qualSqtb/ImproveCond';
 import Header from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/Header';
 
 class ModifyPage extends Component {
@@ -55,29 +54,6 @@ class ModifyPage extends Component {
       EXAM_DT: moment(new Date()).format('YYYY-MM-DD'),
     });
   };
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const {
-      formData,
-      formData: { interLockReload = '', materialReload = '' },
-      sagaKey,
-      changeFormData,
-      setFormData,
-    } = nextProps;
-    const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
-
-    if (prevState.qualTaskSeq !== qualTaskSeq) {
-      if (typeof interLockReload === 'function') {
-        interLockReload(qualTaskSeq);
-      }
-      if (typeof materialReload === 'function') {
-        materialReload(qualTaskSeq);
-      }
-      changeFormData(sagaKey, 'EQUIP_TASK_SEQ', qualTaskSeq);
-      return { qualTaskSeq };
-    }
-    return null;
-  }
 
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
@@ -151,12 +127,7 @@ class ModifyPage extends Component {
 
   saveTask = (id, reloadId, callbackFunc) => {
     const { modifyTask, formData } = this.props;
-    const condFileList = (formData && formData.condFileList) || [];
-    if (condFileList.length) {
-      this.condFileListMoveReal(condFileList);
-    } else {
-      modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
-    }
+    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
@@ -178,45 +149,6 @@ class ModifyPage extends Component {
       changeViewPage(reloadId, workSeq, -1, 'LIST');
       if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
-  };
-
-  condFileListMoveReal = condFileList => {
-    const { sagaKey: id, getExtraApiData } = this.props;
-    const param = { PARAM: { DETAIL: condFileList } };
-
-    const apiArray = [
-      {
-        key: 'condRealFileList',
-        type: 'POST',
-        url: '/upload/moveFileToReal',
-        params: param,
-      },
-    ];
-    getExtraApiData(id, apiArray, this.condFileUploadComplete);
-  };
-
-  condFileUploadComplete = () => {
-    const { sagaKey: id, extraApiData, formData, setFormData, modifyTask } = this.props;
-
-    const condRealFileList = (extraApiData && extraApiData.condRealFileList && extraApiData.condRealFileList.DETAIL) || [];
-    const approveCondList = (formData && formData.approveCondList) || [];
-
-    setFormData(id, {
-      ...formData,
-      approveCondList: approveCondList.map(a => {
-        const key = condRealFileList.findIndex(c => c.rowSeq === a.SEQ);
-        return key > -1
-          ? {
-              ...a,
-              FILE_SEQ: Number(condRealFileList[key].seq),
-              DOWN: `/down/file/${Number(condRealFileList[key].seq)}`,
-              fileExt: condRealFileList[key].fileExt,
-            }
-          : a;
-      }),
-      condFileList: [],
-    });
-    this.saveTask(id, id, this.saveTaskAfter);
   };
 
   render = () => {
@@ -247,7 +179,7 @@ class ModifyPage extends Component {
             <Header
               sagaKey={id}
               formData={formData}
-              viewPageData={{ ...viewPageData, viewType: 'CONFIRM_RESULT' }}
+              viewPageData={{ ...viewPageData, viewType: 'IMPROVE_PLAN' }}
               setFormData={setFormData}
               changeViewPage={changeViewPage}
               deleteTask={deleteTask}
@@ -259,33 +191,42 @@ class ModifyPage extends Component {
               changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <ApproveCond
-              id={id}
-              formData={formData}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              setFormData={setFormData}
-              viewType="INPUT"
-              condTitle="안전확인결과내용"
-              btnPlusTd
-            />
-            <InterLock
-              id={id}
-              formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={{ viewType: 'VIEW' }}
-            />
-            <Material
-              id={id}
-              formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={{ viewType: 'VIEW' }}
-            />
+            <table width="100%">
+              <colgroup>
+                <col width="50%" />
+                <col width="50%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <td>
+                    <ImproveCond
+                      id={id}
+                      formData={formData}
+                      changeFormData={changeFormData}
+                      getExtraApiData={getExtraApiData}
+                      extraApiData={extraApiData}
+                      setFormData={setFormData}
+                      viewType="INPUT"
+                      condTitle="Qual 개선계획내용"
+                      btnPlusTd
+                    />
+                  </td>
+                  <td>
+                    <ApproveCond
+                      id={id}
+                      formData={formData}
+                      changeFormData={changeFormData}
+                      getExtraApiData={getExtraApiData}
+                      extraApiData={extraApiData}
+                      setFormData={setFormData}
+                      viewType="VIEW"
+                      condTitle=""
+                      btnPlusTd={false}
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </Sketch>
         </StyledViewDesigner>
       );
@@ -301,7 +242,6 @@ ModifyPage.propTypes = {
   deleteTask: PropTypes.func,
   extraApiData: PropTypes.any,
   setFormData: PropTypes.func,
-  modifyTask: PropTypes.func,
 };
 
 ModifyPage.defaultProps = {
@@ -310,7 +250,6 @@ ModifyPage.defaultProps = {
   changeFormData: () => {},
   deleteTask: () => {},
   setFormData: () => {},
-  modifyTask: () => {},
 };
 
 export default connect(() => createStructuredSelector({ profile: selectors.makeSelectProfile() }))(ModifyPage);

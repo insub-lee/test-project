@@ -13,7 +13,7 @@ function errorAxiosProcess(error) {
   console.error(`${error.response.status} ${error.response.statusText}`, error);
   if (error.response.status === 401 || error.response.status === 403) {
     // TODO 사이트접속권한없을 경우 메시지 처리
-    feed.error(`${error.response.status} ${error.response.statusText}`, '[권한오류] 로그인 페이지로 이동합니다.', loginPage, loginPage);
+    feed.error(`${error.response.status} ${error.response.statusText}`, '로그인 페이지로 이동합니다.', loginPage, loginPage);
   }
 }
 

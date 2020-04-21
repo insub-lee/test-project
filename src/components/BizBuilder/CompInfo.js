@@ -103,6 +103,8 @@ import CheckboxSingleComp from 'components/BizBuilder/Field/CheckboxSingleComp';
 import RootKeyRadioComp from 'components/BizBuilder/Field/RootKeyRadioComp';
 import RootKeyCheckBoxComp from 'components/BizBuilder/Field/RootKeyCheckBoxComp';
 import ProfileInputComp from 'components/BizBuilder/Field/ProfileInputComp';
+import CheckableTreeSElectViewComp from 'components/BizBuilder/Field/CheckableTreeSElectViewComp';
+import RadioViewByCategoryMapComp from 'components/BizBuilder/Field/RadioViewByCategoryMapComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
@@ -208,4 +210,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/RootKeyRadioComp': { renderer: property => <RootKeyRadioComp {...property} /> },
   'components/BizBuilder/Field/RootKeyCheckBoxComp': { renderer: property => <RootKeyCheckBoxComp {...property} /> },
   'components/BizBuilder/Field/ProfileInputComp': { renderer: property => <ProfileInputComp {...property} /> },
+  'components/BizBuilder/Field/CheckableTreeSElectViewComp': { renderer: property => <CheckableTreeSElectViewComp {...property} /> },
+  'components/BizBuilder/Field/RadioViewByCategoryMapComp': { renderer: property => <RadioViewByCategoryMapComp {...property} /> },
 };

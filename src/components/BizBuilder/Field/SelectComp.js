@@ -64,7 +64,7 @@ class SelectComp extends Component {
               <Select
                 value={!colData || colData === 0 || (typeof colData === 'string' && colData.trim() === '') ? undefined : Number(colData)}
                 placeholder={placeholder}
-                style={{ width: 300, marginRight: 10 }}
+                style={{ width: '100%', marginRight: 10 }}
                 onChange={value => {
                   this.onChangeHandler(value);
                 }}

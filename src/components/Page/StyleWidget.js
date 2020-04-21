@@ -1467,11 +1467,11 @@ const WidgetHeader = styled.div`
     .iconsWrapper {
       position: absolute;
       // 위젯 헤더 마우스 오버 영역
-      top: -30px;
+      /* top: -30px; */
       right: 0;
       display: inline-block;
       width: 100%;
-      height: 35px;
+      height: 45px;
       background-color: rgba(0, 0, 0, 0.4);
       text-align: right;
       opacity: 0;
@@ -1491,8 +1491,9 @@ const WidgetHeader = styled.div`
 
         > li {
           float: left;
-          width: 31px;
-          height: 35px;
+          button {
+            vertical-align: middle;
+          }
         }
       }
     }

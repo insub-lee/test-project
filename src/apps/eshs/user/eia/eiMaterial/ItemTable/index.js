@@ -7,10 +7,12 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
+const AntdInputNumber = StyledInputNumber(InputNumber);
 
 const { Option } = Select;
 class ItemTable extends Component {
@@ -219,7 +221,7 @@ class ItemTable extends Component {
                   />
                 </td>
                 <td>
-                  <AntdSelect className="selectMid" value={itemData.STATUS || '정상'} onChange={this.handleStatusOnChange}>
+                  <AntdSelect className="select-sm" value={itemData.STATUS || '정상'} onChange={this.handleStatusOnChange}>
                     <Option value="정상">정상</Option>
                     <Option value="비정상">비정상</Option>
                   </AntdSelect>{' '}
@@ -241,10 +243,10 @@ class ItemTable extends Component {
                   />
                 </td>
                 <td>
-                  <InputNumber
+                  <AntdInputNumber
                     name="VOLUME"
                     value={itemData.VOLUME || ''}
-                    className="ant-input-inline ant-input-sm input-left"
+                    className="ant-input-inline ant-input-number-sm input-left"
                     onChange={this.handleVolumeOnChange}
                   />
                 </td>
@@ -292,7 +294,6 @@ class ItemTable extends Component {
                     <br />
                     (정상/비정상)
                   </span>
-                  )
                 </th>
                 <th colSpan={5}>
                   <span>IN-PUT</span>

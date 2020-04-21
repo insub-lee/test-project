@@ -147,11 +147,11 @@ const checkMode = (history, pathArray, singlePathname, appsPathname, data) => {
   }
 };
 
-const loginPage = () => {
+const loginPage = path => {
   const cookies = new Cookies();
   cookies.remove('empNo', { path: '/' });
   cookies.remove('access_token', { path: '/' });
-  window.location.href = `/api/common/v1/auth/oauth`;
+  window.location.href = `/api/common/v1/auth/oauth${path ? `?path=${encodeURI(path)}` : ''}`;
 };
 
 export { lang, intlObj, sortBy, imgUrl, searchTree, bannerImgUrl, isExplorer, isDesktop, getStoreName, checkPath, checkMode, loginPage };
