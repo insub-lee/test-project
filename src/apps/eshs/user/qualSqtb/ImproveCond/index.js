@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
-import { Input, Select, Table, Button } from 'antd';
+import { Input, Select, Table } from 'antd';
 
 const { Option } = Select;
 const AntdLineTable = StyledLineTable(Table);
@@ -151,7 +152,6 @@ class ImproveCond extends Component {
     this.setState({
       improveCategories: categories.filter(c => c.LVL === 3 && c.USE_YN === 'Y'),
       improveDept: depts.filter(d => deptCodeList.indexOf(d.CODE) > -1 && d.USE_YN === 'Y'),
-      improveCondList,
     });
     setFormData(id, { ...formData, improveCondList, improveCondViewType: viewType });
 
@@ -217,7 +217,12 @@ class ImproveCond extends Component {
     return (
       <>
         <span>
-          {condTitle || ''} {btnPlusTd && <Button onClick={this.handlePlusTd}>[+3]</Button>}
+          {condTitle || ''}{' '}
+          {btnPlusTd && (
+            <StyledButton className="btn-primary btn-sm" onClick={this.handlePlusTd}>
+              [+3]
+            </StyledButton>
+          )}
         </span>
         {improveCondTable}
       </>

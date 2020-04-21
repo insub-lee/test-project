@@ -5,9 +5,9 @@ import { debounce } from 'lodash';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 // import Upload from 'components/FormStuff/Upload/FileUploader';
 import Upload from 'components/FormStuff/Upload';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
-import { Input, Select, Table, Button, message } from 'antd';
-import axios from 'axios';
+import { Input, Select, Table, message } from 'antd';
 
 const { Option } = Select;
 const AntdLineTable = StyledLineTable(Table);
@@ -113,13 +113,13 @@ class ApproveCond extends Component {
           },
         },
         {
-          title: '파일 첨부',
+          title: () => (this.props && this.props.viewType === 'INPUT' ? '파일첨부' : '첨부파일'),
           dataIndex: 'FILE_SEQ',
           align: 'center',
           width: '15%',
           render: (text, record) => (
             <Upload
-              key={`sqConfirmResult_${record.SEQ}`}
+              key={`sqApproveCond_${record.SEQ}`}
               readOnly={this.props.viewType === 'VIEW'}
               onlyDown
               defaultValue={{
@@ -177,7 +177,6 @@ class ApproveCond extends Component {
     this.setState({
       approveCategories: categories.filter(c => c.LVL === 3 && c.USE_YN === 'Y'),
       approveDept: depts.filter(d => deptCodeList.indexOf(d.CODE) > -1 && d.USE_YN === 'Y'),
-      approveCondList,
     });
     setFormData(id, { ...formData, approveCondList, approveCondViewType: viewType });
 
@@ -277,7 +276,12 @@ class ApproveCond extends Component {
     return (
       <>
         <span>
-          {condTitle || ''} {btnPlusTd && <Button onClick={this.handlePlusTd}>[+3]</Button>}
+          {condTitle || ''}{' '}
+          {btnPlusTd && (
+            <StyledButton className="btn-primary btn-sm" onClick={this.handlePlusTd}>
+              [+3]
+            </StyledButton>
+          )}
         </span>
         {approveCondTable}
       </>
