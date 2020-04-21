@@ -4,18 +4,15 @@ import { Input, Modal, message, Popconfirm } from 'antd';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import SearchListPage from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/SearchList';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
+import SearchListPage from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/SearchList';
 import ConfirmCheckSheet from 'apps/eshs/user/qualSqtb/ConfirmCheckSheet';
-const AntdModal = StyledContentsModal(Modal);
 
+const AntdModal = StyledContentsModal(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
 
 class Header extends Component {
@@ -39,7 +36,6 @@ class Header extends Component {
 
   modalRowSelected = record => {
     const { sagaKey: id, setFormData, formData } = this.props;
-    console.debug('record 1111 ', record);
     setFormData(id, { ...formData, REQ_CD: record.REQ_CD, selectRow: { ...record } });
     this.handleModalVisible();
   };
@@ -95,7 +91,7 @@ class Header extends Component {
   };
 
   handleConfirmProcess = (status, action, callBack) => {
-    const { sagaKey: id, formData, changeFormData } = this.props;
+    const { sagaKey: id, changeFormData } = this.props;
     changeFormData(id, 'APP_STATUS', status);
     if (typeof callBack === 'function') {
       callBack(action);
@@ -115,6 +111,35 @@ class Header extends Component {
     } = this.props;
     const REQ_CD = (formData && formData.REQ_CD) || '';
     const APP_STATUS = (formData && formData.APP_STATUS) || '';
+    const QUAL_STATUS = (formData && formData.QUAL_STATUS) || '';
+    if (viewType === 'IMPROVE_PLAN') {
+      return (
+        <>
+          <StyledButtonWrapper className="btn-wrap-left btn-wrap-mb-10">
+            <AntdSearch
+              value={REQ_CD || ''}
+              style={{ width: '150px' }}
+              readOnly
+              onClick={this.handleModalVisible}
+              onSearch={this.handleModalVisible}
+              className="ant-search-inline input-search-mid mr5"
+            />
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+              검색
+            </StyledButton>
+            {QUAL_STATUS !== '2007' && (
+              // NODE_ID = 2007 < 승인 >
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('1', 'MODIFY', this.handleAction)}>
+                저장
+              </StyledButton>
+            )}
+          </StyledButtonWrapper>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1500} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+            {searchList}
+          </AntdModal>
+        </>
+      );
+    }
     if (viewType === 'CONFIRM_RESULT') {
       return (
         <>
@@ -125,7 +150,7 @@ class Header extends Component {
               readOnly
               onClick={this.handleModalVisible}
               onSearch={this.handleModalVisible}
-              className="ant-input-inline mr5"
+              className="ant-search-inline input-search-mid mr5"
             />
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
@@ -172,7 +197,7 @@ class Header extends Component {
               />
             )}
           </StyledButtonWrapper>
-          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1300} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1500} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
             {searchList}
           </AntdModal>
         </>
@@ -187,7 +212,7 @@ class Header extends Component {
             readOnly
             onClick={this.handleModalVisible}
             onSearch={this.handleModalVisible}
-            className="ant-input-inline mr5"
+            className="ant-search-inline input-search-mid mr5"
           />
           <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
             검색
@@ -213,7 +238,7 @@ class Header extends Component {
             </>
           )}
         </StyledButtonWrapper>
-        <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1300} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+        <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1500} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
           {searchList}
         </AntdModal>
       </>
