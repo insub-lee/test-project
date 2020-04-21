@@ -301,6 +301,7 @@ ModifyPage.propTypes = {
   deleteTask: PropTypes.func,
   extraApiData: PropTypes.any,
   setFormData: PropTypes.func,
+  modifyTask: PropTypes.func,
 };
 
 ModifyPage.defaultProps = {
@@ -309,6 +310,7 @@ ModifyPage.defaultProps = {
   changeFormData: () => {},
   deleteTask: () => {},
   setFormData: () => {},
+  modifyTask: () => {},
 };
 
 export default connect(() => createStructuredSelector({ profile: selectors.makeSelectProfile() }))(ModifyPage);
