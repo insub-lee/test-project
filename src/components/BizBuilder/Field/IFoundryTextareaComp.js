@@ -15,7 +15,7 @@ class IFoundryTextareaComp extends Component {
     const { isManage, formData, rowClass } = this.props;
     const { formData: prevFormData } = prevProps;
     if (formData.DOCNUMBER && prevFormData.DOCNUMBER && formData.DOCNUMBER !== prevFormData.DOCNUMBER) {
-      if (!isManage && rowClass && formData.DOCNUMBER.indexOf('ME') !== 0) {
+      if (!isManage && rowClass && formData.DOCNUMBER && formData.DOCNUMBER.indexOf('ME') !== 0) {
         const rowNode = document.querySelector(`.${rowClass}`);
         rowNode.style.display = 'none';
       } else if (rowClass) {

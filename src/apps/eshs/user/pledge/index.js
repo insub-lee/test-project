@@ -16,4 +16,3 @@ pledge.propTypes = {};
 pledge.defaultProps = {};
 
 export default pledge;
-// eshs/user/pledge
