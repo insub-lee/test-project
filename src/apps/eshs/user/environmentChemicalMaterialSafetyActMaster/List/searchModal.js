@@ -9,7 +9,7 @@ import { debounce } from 'lodash';
 const AntdModal = StyledContentsModal(Modal);
 const AntdTable = StyledLineTable(Table);
 
-class InputModal extends React.Component {
+class SearchModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -125,7 +125,7 @@ class InputModal extends React.Component {
   }
 }
 
-InputModal.propTypes = {
+SearchModal.propTypes = {
   sagaKey: PropTypes.string,
   visible: PropTypes.bool,
   modalClose: PropTypes.func,
@@ -137,10 +137,9 @@ InputModal.propTypes = {
   SearchComp: PropTypes.any, // React component
   formData: PropTypes.object,
   changeFormData: PropTypes.func,
-  // isSearch: PropTypes.bool,
 };
 
-InputModal.defaultProps = {
+SearchModal.defaultProps = {
   sagaKey: '',
   visible: false,
   modalClose: () => {},
@@ -151,7 +150,6 @@ InputModal.defaultProps = {
   tableColumns: [],
   formData: {},
   changeFormData: () => {},
-  // isSearch: false,
 };
 
-export default InputModal;
+export default SearchModal;

@@ -328,7 +328,7 @@ upstream manual-common {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10500;
 }
 upstream eshs-common {
-    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10510;
+    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10501;
 }
 upstream portal-download {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:40033;

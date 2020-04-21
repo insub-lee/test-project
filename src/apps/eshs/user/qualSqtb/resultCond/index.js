@@ -3,36 +3,36 @@ import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-// import Upload from 'components/FormStuff/Upload/FileUploader';
-import Upload from 'components/FormStuff/Upload';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 
-import { Input, Select, Table, message } from 'antd';
+import Upload from 'components/FormStuff/Upload';
+
+import { Input, Select, Table } from 'antd';
 
 const { Option } = Select;
 const AntdLineTable = StyledLineTable(Table);
 
-class ApproveCond extends Component {
+class ResultCond extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      approveCondTable: [],
+      resultCondTable: [],
       defaultCurrent: 1,
-      initApprove: {
+      initResult: {
         REQ_CD: this.props && this.props.formData && this.props.formData.REQ_CD,
         TASK_SEQ: this.props && this.props.formData && this.props.formData.TASK_SEQ,
         CATEGORY_CD: 2128,
         DEPT_CD: 2118,
         QUAL_COMMENT: '',
         FILE_TYPE: 'TEMP',
-        STEP: '1',
+        STEP: '3',
       },
       deptCodeList: ['MN3Q', 'MN3R', 'MN3T', 'MN3S', 'MN1B', '23754', 'ZZZZ', 'ZZZ1', 'ZZ'],
-      approveCategories: [],
-      approveDept: [],
+      resultCategories: [],
+      resultDept: [],
       columns: [
         {
-          title: '승인조건',
+          title: '개선결과',
           dataIndex: 'QUAL_COMMENT',
           align: 'center',
           width: '45%',
@@ -60,12 +60,12 @@ class ApproveCond extends Component {
           width: '20%',
           render: (text, record) => {
             const { viewType } = this.props;
-            const approveCategories = this.state.approveCategories || [];
+            const resultCategories = this.state.resultCategories || [];
             if (viewType === 'INPUT') {
               return (
                 <Select defaultValue={record.CATEGORY_CD || ''} style={{ width: '100%' }} onChange={e => this.debounceHandelOnChange('CATEGORY_CD', e, record)}>
-                  {approveCategories &&
-                    approveCategories.map(c => (
+                  {resultCategories &&
+                    resultCategories.map(c => (
                       <Option key={c.NODE_ID} value={c.NODE_ID}>
                         {c.NAME_KOR}
                       </Option>
@@ -74,9 +74,9 @@ class ApproveCond extends Component {
               );
             }
             if (viewType === 'VIEW') {
-              const nodeIndex = approveCategories.findIndex(a => a.NODE_ID === record.CATEGORY_CD);
+              const nodeIndex = resultCategories.findIndex(a => a.NODE_ID === record.CATEGORY_CD);
               if (nodeIndex > -1) {
-                return <span>{approveCategories[nodeIndex].NAME_KOR}</span>;
+                return <span>{resultCategories[nodeIndex].NAME_KOR}</span>;
               }
               return <span></span>;
             }
@@ -89,13 +89,12 @@ class ApproveCond extends Component {
           width: '20%',
           render: (text, record) => {
             const { viewType } = this.props;
-            const approveDept = this.state.approveDept || [];
-
+            const resultDept = this.state.resultDept || [];
             if (viewType === 'INPUT') {
               return (
                 <Select defaultValue={record.DEPT_CD || ''} style={{ width: '100%' }} onChange={e => this.debounceHandelOnChange('DEPT_CD', e, record)}>
-                  {approveDept &&
-                    approveDept.map(d => (
+                  {resultDept &&
+                    resultDept.map(d => (
                       <Option key={d.NODE_ID} value={d.NODE_ID}>
                         {d.NAME_KOR}
                       </Option>
@@ -104,9 +103,9 @@ class ApproveCond extends Component {
               );
             }
             if (viewType === 'VIEW') {
-              const nodeIndex = approveDept.findIndex(d => d.NODE_ID === record.DEPT_CD);
+              const nodeIndex = resultDept.findIndex(d => d.NODE_ID === record.DEPT_CD);
               if (nodeIndex > -1) {
-                return <span>{approveDept[nodeIndex].NAME_KOR}</span>;
+                return <span>{resultDept[nodeIndex].NAME_KOR}</span>;
               }
               return <span></span>;
             }
@@ -119,7 +118,7 @@ class ApproveCond extends Component {
           width: '15%',
           render: (text, record) => (
             <Upload
-              key={`sqApproveCond_${record.SEQ}`}
+              key={`sqResultCond_${record.SEQ}`}
               readOnly={this.props.viewType === 'VIEW'}
               onlyDown
               defaultValue={{
@@ -145,13 +144,13 @@ class ApproveCond extends Component {
     const taskSeq = (formData && formData.TASK_SEQ) || 0;
     const apiArray = [
       {
-        key: 'approveCategories',
+        key: 'resultCategories',
         type: 'POST',
         url: '/api/admin/v1/common/categoryMapList',
         params: { PARAM: { NODE_ID: 2127 } },
       },
       {
-        key: 'approveDept',
+        key: 'resultDept',
         type: 'POST',
         url: '/api/admin/v1/common/categoryMapList',
         params: { PARAM: { NODE_ID: 648 } },
@@ -159,9 +158,9 @@ class ApproveCond extends Component {
     ];
     if (taskSeq) {
       apiArray.push({
-        key: `approveCondList`,
+        key: `resultCondList`,
         type: 'GET',
-        url: `/api/eshs/v1/common/eshsGetCondList/${taskSeq}/1`,
+        url: `/api/eshs/v1/common/eshsGetCondList/${taskSeq}/3`,
       });
     }
     getExtraApiData(id, apiArray, this.appStart);
@@ -171,16 +170,16 @@ class ApproveCond extends Component {
     const { id, extraApiData, setFormData, formData, viewType } = this.props;
     const { deptCodeList } = this.state;
 
-    const categories = (extraApiData && extraApiData.approveCategories && extraApiData.approveCategories.categoryMapList) || [];
-    const depts = (extraApiData && extraApiData.approveDept && extraApiData.approveDept.categoryMapList) || [];
-    const approveCondList = (extraApiData && extraApiData.approveCondList && extraApiData.approveCondList.list) || [];
+    const categories = (extraApiData && extraApiData.resultCategories && extraApiData.resultCategories.categoryMapList) || [];
+    const depts = (extraApiData && extraApiData.resultDept && extraApiData.resultDept.categoryMapList) || [];
+    const resultCondList = (extraApiData && extraApiData.resultCondList && extraApiData.resultCondList.list) || [];
     this.setState({
-      approveCategories: categories.filter(c => c.LVL === 3 && c.USE_YN === 'Y'),
-      approveDept: depts.filter(d => deptCodeList.indexOf(d.CODE) > -1 && d.USE_YN === 'Y'),
+      resultCategories: categories.filter(c => c.LVL === 3 && c.USE_YN === 'Y'),
+      resultDept: depts.filter(d => deptCodeList.indexOf(d.CODE) > -1 && d.USE_YN === 'Y'),
     });
-    setFormData(id, { ...formData, approveCondList, approveCondViewType: viewType });
+    setFormData(id, { ...formData, resultCondList, resultCondViewType: viewType });
 
-    if (!approveCondList.length && viewType === 'INPUT') {
+    if (!resultCondList.length && viewType === 'INPUT') {
       return this.handlePlusTd();
     }
     this.debounceHandelSetTable();
@@ -188,38 +187,38 @@ class ApproveCond extends Component {
 
   handlePlusTd = () => {
     const { id, formData, changeFormData } = this.props;
-    const { initApprove } = this.state;
-    const approveCondList = (formData && formData.approveCondList) || [];
-    let index = approveCondList.length + 1;
-    const initApproveList = [
-      { ...initApprove, SEQ: index++ },
-      { ...initApprove, SEQ: index++ },
-      { ...initApprove, SEQ: index++ },
+    const { initResult } = this.state;
+    const resultCondList = (formData && formData.resultCondList) || [];
+    let index = resultCondList.length + 1;
+    const initResultList = [
+      { ...initResult, SEQ: index++ },
+      { ...initResult, SEQ: index++ },
+      { ...initResult, SEQ: index++ },
     ];
-    changeFormData(id, 'approveCondList', approveCondList.concat(initApproveList));
+    changeFormData(id, 'resultCondList', resultCondList.concat(initResultList));
     this.debounceHandelSetTable();
   };
 
   debounceHandelSetTable = () => {
     const { formData, id } = this.props;
     const { columns, defaultCurrent } = this.state;
-    const approveCondList = (formData && formData.approveCondList) || [];
+    const resultCondList = (formData && formData.resultCondList) || [];
     return this.setState({
-      approveCondTable: [
+      resultCondTable: [
         <AntdLineTable
-          key={`${id}_approveCond`}
+          key={`${id}_resultCond`}
           className="tableWrapper"
-          rowKey={approveCondList && approveCondList.INDEX}
+          rowKey={resultCondList && resultCondList.INDEX}
           columns={columns}
-          dataSource={approveCondList || []}
+          dataSource={resultCondList || []}
           bordered
           pagination={{
             hideOnSinglePage: false,
             defaultCurrent,
             pageSize: 6,
-            onChange: page => this.setState({ defaultCurrent: page, approveCondTable: [] }, this.debounceHandelSetTable),
+            onChange: page => this.setState({ defaultCurrent: page, resultCondTable: [] }, this.debounceHandelSetTable),
           }}
-          footer={() => <span>{`${approveCondList.length} 건`}</span>}
+          footer={() => <span>{`${resultCondList.length} 건`}</span>}
         />,
       ],
     });
@@ -227,23 +226,23 @@ class ApproveCond extends Component {
 
   debounceHandelOnChange = (target, value, record) => {
     const { id, changeFormData, formData } = this.props;
-    const approveCondList = (formData && formData.approveCondList) || [];
+    const resultCondList = (formData && formData.resultCondList) || [];
 
     changeFormData(
       id,
-      'approveCondList',
-      approveCondList.map(a => (a.SEQ === record.SEQ ? { ...a, [target]: value } : a)),
+      'resultCondList',
+      resultCondList.map(a => (a.SEQ === record.SEQ ? { ...a, [target]: value } : a)),
     );
   };
 
   saveTempContents = (newFiles, rowSeq) => {
     const { id, formData, setFormData } = this.props;
     const condFileList = (formData && formData.condFileList) || [];
-    const approveCondList = (formData && formData.approveCondList) || [];
+    const resultCondList = (formData && formData.resultCondList) || [];
     if (newFiles.length) {
       setFormData(id, {
         ...formData,
-        approveCondList: approveCondList.map(a =>
+        resultCondList: resultCondList.map(a =>
           a.SEQ === rowSeq ? { ...a, FILE_NM: newFiles[0].fileName, FILE_SEQ: newFiles[0].seq, FILE_TYPE: 'TEMP', DOWN: newFiles[0].down } : a,
         ),
         condFileList: condFileList.filter(f => f.rowSeq !== rowSeq).concat({ ...newFiles[0], rowSeq }),
@@ -254,12 +253,12 @@ class ApproveCond extends Component {
   handleFileRemove = (file, record) => {
     const { id, changeFormData, formData } = this.props;
     const condFileList = (formData && formData.condFileList) || [];
-    const approveCondList = (formData && formData.approveCondList) || [];
+    const resultCondList = (formData && formData.resultCondList) || [];
     if (condFileList.findIndex(c => c.seq === file.seq) < 0) {
       changeFormData(
         id,
-        'approveCondList',
-        approveCondList.map(a => (a.SEQ === record.SEQ ? { ...a, FILE_SEQ: null } : a)),
+        'resultCondList',
+        resultCondList.map(a => (a.SEQ === record.SEQ ? { ...a, FILE_SEQ: null } : a)),
       );
       return this.debounceHandelSetTable();
     }
@@ -271,7 +270,7 @@ class ApproveCond extends Component {
   };
 
   render() {
-    const { approveCondTable } = this.state;
+    const { resultCondTable } = this.state;
     const { condTitle, btnPlusTd } = this.props;
     return (
       <>
@@ -283,13 +282,13 @@ class ApproveCond extends Component {
             </StyledButton>
           )}
         </span>
-        {approveCondTable}
+        {resultCondTable}
       </>
     );
   }
 }
 
-ApproveCond.propTypes = {
+ResultCond.propTypes = {
   formData: PropTypes.object,
   id: PropTypes.string,
   changeFormData: PropTypes.func,
@@ -301,7 +300,7 @@ ApproveCond.propTypes = {
   btnPlusTd: PropTypes.bool,
 };
 
-ApproveCond.defaultProps = {
+ResultCond.defaultProps = {
   formData: {},
   changeFormData: () => {},
   getExtraApiData: () => {},
@@ -312,4 +311,4 @@ ApproveCond.defaultProps = {
   btnPlusTd: false,
 };
 
-export default ApproveCond;
+export default ResultCond;

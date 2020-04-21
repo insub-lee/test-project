@@ -31,6 +31,9 @@ class List extends React.Component {
         CATEGORY: '',
         SUB_CATEGORY: '',
         IS_APPLICATE: 'Y',
+        SAFETY_ID: '',
+        SERIAL_NO: '',
+        WORK_ID: '',
       },
       isModified: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
@@ -69,43 +72,60 @@ class List extends React.Component {
     });
   };
 
-  handleInputChange = (event, type, name) => {
+  handleInputChange = (event, type, name, isSub) => {
+    if (!isSub) {
+      if (type.toUpperCase() === 'INPUT') {
+        const valueObj = { [event.target.name.toUpperCase()]: event.target.value };
+        return this.setState(prevState => ({
+          requestValue: Object.assign(prevState.requestValue, valueObj),
+        }));
+      }
+
+      if (type.toUpperCase() === 'SELECT' && name === 'CATEGORY') {
+        const valueObj = { [name.toUpperCase()]: event, SUB_CATEGORY: '' };
+        this.getSubCategories(event);
+        return this.setState(prevState => ({
+          requestValue: Object.assign(prevState.requestValue, valueObj),
+        }));
+      }
+
+      if (type.toUpperCase() === 'SELECT') {
+        const valueObj = { [name.toUpperCase()]: event };
+        return this.setState(prevState => ({
+          requestValue: Object.assign(prevState.requestValue, valueObj),
+        }));
+      }
+    }
     if (type.toUpperCase() === 'INPUT') {
       const valueObj = { [event.target.name.toUpperCase()]: event.target.value };
       return this.setState(prevState => ({
-        requestValue: Object.assign(prevState.requestValue, valueObj),
+        subRequestValue: Object.assign(prevState.subRequestValue, valueObj),
       }));
     }
 
     if (type.toUpperCase() === 'SELECT' && name === 'CATEGORY') {
-      const valueObj = { [name.toUpperCase()]: event };
+      const valueObj = { [name.toUpperCase()]: event, SUB_CATEGORY: '' };
       this.getSubCategories(event);
       return this.setState(prevState => ({
-        requestValue: Object.assign(prevState.requestValue, valueObj),
+        subRequestValue: Object.assign(prevState.subRequestValue, valueObj),
       }));
     }
 
     if (type.toUpperCase() === 'SELECT') {
       const valueObj = { [name.toUpperCase()]: event };
       return this.setState(prevState => ({
-        requestValue: Object.assign(prevState.requestValue, valueObj),
+        subRequestValue: Object.assign(prevState.subRequestValue, valueObj),
       }));
     }
     return null;
   };
 
   getSubCategories = value => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    const apiArr = [
-      {
-        key: 'subCategories',
-        type: 'POST',
-        url: `/api/admin/v1/common/categoryMapList`,
-        params: { PARAM: { NODE_ID: value } },
-      },
-    ];
-
-    getCallDataHandler(id, apiArr, this.setSubCategories);
+    const { result } = this.props;
+    const category = result.codeCategory.categoryMapList.filter(item => item.PARENT_NODE_ID === value);
+    this.setState({
+      subCategories: category,
+    });
   };
 
   setSubCategories = () => {
@@ -168,7 +188,7 @@ class List extends React.Component {
         NAME_ENG: '',
         CATEGORY: '',
         SUB_CATEGORY: '',
-        IS_APPLICATE: 'Y',
+        IS_APPLICATE: '',
       },
       isModified: false,
     });
@@ -188,7 +208,14 @@ class List extends React.Component {
     });
   };
 
-  columns = [
+  setSubRequestValue = record => {
+    // 하위물질들 정보 등록
+    this.setState({
+      subRequestValue: record,
+    });
+  };
+
+  modalColumns = [
     {
       title: 'CAS_NO',
       dataIndex: 'CAS_NO',
@@ -220,7 +247,7 @@ class List extends React.Component {
       handleDeleteConfirm,
       handleDeleteClick,
     } = this;
-    const { columns } = this;
+    const { modalColumns } = this;
     const { requestValue, visible, deleteConfirmMessage, categories, subCategories } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
@@ -298,7 +325,7 @@ class List extends React.Component {
                       <AntdSelect
                         className="select-sm"
                         onChange={e => handleInputChange(e, 'SELECT', 'CATEGORY')}
-                        value={requestValue.CATEGORY}
+                        value={requestValue.CATEGORY ? Number(requestValue.CATEGORY) : ''}
                         style={{ width: '100%' }}
                       >
                         {categories.map(item => (
@@ -311,7 +338,7 @@ class List extends React.Component {
                       <AntdSelect
                         className="select-sm"
                         onChange={e => handleInputChange(e, 'SELECT', 'SUB_CATEGORY')}
-                        value={requestValue.SUB_CATEGORY}
+                        value={requestValue.SUB_CATEGORY ? Number(requestValue.SUB_CATEGORY) : ''}
                         style={{ width: '100%' }}
                       >
                         {subCategories.map(item => (
@@ -333,7 +360,7 @@ class List extends React.Component {
           result={result}
           setRequestValue={setRequestValue}
           apiUrl="/api/eshs/v1/common/eshschemicalsafetyworkplace"
-          tableColumns={columns}
+          tableColumns={modalColumns}
           SearchComp={SearchComp}
           changeFormData={changeFormData}
           formData={formData}
