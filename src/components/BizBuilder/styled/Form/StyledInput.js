@@ -62,6 +62,12 @@ const StyledInput = Component => styled(Component)`
   &.ant-input-right {
     text-align: right;
   }
+
+  &.ant-input-affix-wrapper {
+    .ant-input-suffix {
+      right: 18px;
+    }
+  }
 `;
 
 export default StyledInput;
