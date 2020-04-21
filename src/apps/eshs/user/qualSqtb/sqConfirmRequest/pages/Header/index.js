@@ -134,7 +134,7 @@ class Header extends Component {
               </StyledButton>
             )}
           </StyledButtonWrapper>
-          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1300} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1500} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
             {searchList}
           </AntdModal>
         </>
@@ -197,7 +197,7 @@ class Header extends Component {
               />
             )}
           </StyledButtonWrapper>
-          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1300} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1500} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
             {searchList}
           </AntdModal>
         </>
@@ -238,7 +238,7 @@ class Header extends Component {
             </>
           )}
         </StyledButtonWrapper>
-        <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1300} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+        <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1500} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
           {searchList}
         </AntdModal>
       </>
