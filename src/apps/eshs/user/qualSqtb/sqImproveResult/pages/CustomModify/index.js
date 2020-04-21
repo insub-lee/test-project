@@ -16,6 +16,7 @@ import moment from 'moment';
 
 import ApproveCond from 'apps/eshs/user/qualSqtb/approveCond';
 import ImproveCond from 'apps/eshs/user/qualSqtb/ImproveCond';
+import ResultCond from 'apps/eshs/user/qualSqtb/resultCond';
 import Header from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/Header';
 
 class ModifyPage extends Component {
@@ -127,7 +128,13 @@ class ModifyPage extends Component {
 
   saveTask = (id, reloadId, callbackFunc) => {
     const { modifyTask, formData } = this.props;
-    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+    const condFileList = (formData && formData.condFileList) || [];
+    console.debug('1111111111111', condFileList);
+    if (condFileList.length) {
+      this.condFileListMoveReal(condFileList);
+    } else {
+      modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+    }
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
@@ -149,6 +156,45 @@ class ModifyPage extends Component {
       changeViewPage(reloadId, workSeq, -1, 'LIST');
       if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
+  };
+
+  condFileListMoveReal = condFileList => {
+    const { sagaKey: id, getExtraApiData } = this.props;
+    const param = { PARAM: { DETAIL: condFileList } };
+
+    const apiArray = [
+      {
+        key: 'condRealFileList',
+        type: 'POST',
+        url: '/upload/moveFileToReal',
+        params: param,
+      },
+    ];
+    getExtraApiData(id, apiArray, this.condFileUploadComplete);
+  };
+
+  condFileUploadComplete = () => {
+    const { sagaKey: id, extraApiData, formData, setFormData, modifyTask } = this.props;
+
+    const condRealFileList = (extraApiData && extraApiData.condRealFileList && extraApiData.condRealFileList.DETAIL) || [];
+    const resultCondList = (formData && formData.resultCondList) || [];
+
+    setFormData(id, {
+      ...formData,
+      resultCondList: resultCondList.map(a => {
+        const key = condRealFileList.findIndex(c => c.rowSeq === a.SEQ);
+        return key > -1
+          ? {
+              ...a,
+              FILE_SEQ: Number(condRealFileList[key].seq),
+              DOWN: `/down/file/${Number(condRealFileList[key].seq)}`,
+              fileExt: condRealFileList[key].fileExt,
+            }
+          : a;
+      }),
+      condFileList: [],
+    });
+    this.saveTask(id, id, this.saveTaskAfter);
   };
 
   render = () => {
@@ -191,6 +237,7 @@ class ModifyPage extends Component {
               changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
+
             <table width="100%">
               <colgroup>
                 <col width="50%" />
@@ -198,8 +245,8 @@ class ModifyPage extends Component {
               </colgroup>
               <tbody>
                 <tr>
-                  <td>
-                    <ImproveCond
+                  <td colSpan={2}>
+                    <ResultCond
                       id={id}
                       formData={formData}
                       changeFormData={changeFormData}
@@ -207,12 +254,27 @@ class ModifyPage extends Component {
                       extraApiData={extraApiData}
                       setFormData={setFormData}
                       viewType="INPUT"
-                      condTitle="Qual 개선계획내용"
+                      condTitle="Qual 개선결과내용"
                       btnPlusTd
                     />
                   </td>
+                </tr>
+                <tr>
                   <td>
                     <ApproveCond
+                      id={id}
+                      formData={formData}
+                      changeFormData={changeFormData}
+                      getExtraApiData={getExtraApiData}
+                      extraApiData={extraApiData}
+                      setFormData={setFormData}
+                      viewType="VIEW"
+                      condTitle=""
+                      btnPlusTd={false}
+                    />
+                  </td>
+                  <td>
+                    <ImproveCond
                       id={id}
                       formData={formData}
                       changeFormData={changeFormData}
@@ -242,6 +304,7 @@ ModifyPage.propTypes = {
   deleteTask: PropTypes.func,
   extraApiData: PropTypes.any,
   setFormData: PropTypes.func,
+  modifyTask: PropTypes.func,
 };
 
 ModifyPage.defaultProps = {
@@ -250,6 +313,7 @@ ModifyPage.defaultProps = {
   changeFormData: () => {},
   deleteTask: () => {},
   setFormData: () => {},
+  modifyTask: () => {},
 };
 
 export default connect(() => createStructuredSelector({ profile: selectors.makeSelectProfile() }))(ModifyPage);
