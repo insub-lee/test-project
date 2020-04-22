@@ -273,7 +273,22 @@ class Input extends Component {
                   <th>이름</th>
                   <td>{userInfo.NAME}</td>
                   <th>소속</th>
+                  <td>{userInfo.DEPT}</td>
+                </tr>
+                <tr>
+                  <th>직위</th>
+                  <td>{userInfo.POSITION}</td>
+                  <th>지역</th>
+                  <td>{userInfo.BAREA_CD}</td>
+                  <th>신청일</th>
                   <td>
+                    <DatePicker
+                      disabledDate={this.disableDate}
+                      defaultValue={moment(currentDate)}
+                      onChange={this.handleOnDateChange}
+                      allowClear={false}
+                      style={{ width: '50%' }}
+                    />
                     <Popconfirm
                       title={this.makePopconfirmTitle()}
                       disabled={
@@ -290,16 +305,6 @@ class Input extends Component {
                         예약
                       </StyledButton>
                     </Popconfirm>
-                  </td>
-                </tr>
-                <tr>
-                  <th>직위</th>
-                  <td>{userInfo.POSITION}</td>
-                  <th>지역</th>
-                  <td>{userInfo.BAREA_CD}</td>
-                  <th>신청일</th>
-                  <td>
-                    <DatePicker disabledDate={this.disableDate} defaultValue={moment(currentDate)} onChange={this.handleOnDateChange} allowClear={false} />
                   </td>
                 </tr>
               </tbody>

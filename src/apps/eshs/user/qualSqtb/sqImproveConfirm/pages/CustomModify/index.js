@@ -15,8 +15,8 @@ import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import moment from 'moment';
 
 import ApproveCond from 'apps/eshs/user/qualSqtb/approveCond';
-import InterLock from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/InterLock';
-import Material from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/Material';
+import ImproveCond from 'apps/eshs/user/qualSqtb/ImproveCond';
+import ConfirmCond from 'apps/eshs/user/qualSqtb/confirmCond';
 import Header from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/Header';
 
 class ModifyPage extends Component {
@@ -55,29 +55,6 @@ class ModifyPage extends Component {
       EXAM_DT: moment(new Date()).format('YYYY-MM-DD'),
     });
   };
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const {
-      formData,
-      formData: { interLockReload = '', materialReload = '' },
-      sagaKey,
-      changeFormData,
-      setFormData,
-    } = nextProps;
-    const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
-
-    if (prevState.qualTaskSeq !== qualTaskSeq) {
-      if (typeof interLockReload === 'function') {
-        interLockReload(qualTaskSeq);
-      }
-      if (typeof materialReload === 'function') {
-        materialReload(qualTaskSeq);
-      }
-      changeFormData(sagaKey, 'EQUIP_TASK_SEQ', qualTaskSeq);
-      return { qualTaskSeq };
-    }
-    return null;
-  }
 
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
@@ -150,13 +127,8 @@ class ModifyPage extends Component {
   };
 
   saveTask = (id, reloadId, callbackFunc) => {
-    const { modifyTask, formData } = this.props;
-    const condFileList = (formData && formData.condFileList) || [];
-    if (condFileList.length) {
-      this.condFileListMoveReal(condFileList);
-    } else {
-      modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
-    }
+    const { modifyTask } = this.props;
+    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
@@ -180,45 +152,6 @@ class ModifyPage extends Component {
     }
   };
 
-  condFileListMoveReal = condFileList => {
-    const { sagaKey: id, getExtraApiData } = this.props;
-    const param = { PARAM: { DETAIL: condFileList } };
-
-    const apiArray = [
-      {
-        key: 'condRealFileList',
-        type: 'POST',
-        url: '/upload/moveFileToReal',
-        params: param,
-      },
-    ];
-    getExtraApiData(id, apiArray, this.condFileUploadComplete);
-  };
-
-  condFileUploadComplete = () => {
-    const { sagaKey: id, extraApiData, formData, setFormData, modifyTask } = this.props;
-
-    const condRealFileList = (extraApiData && extraApiData.condRealFileList && extraApiData.condRealFileList.DETAIL) || [];
-    const approveCondList = (formData && formData.approveCondList) || [];
-
-    setFormData(id, {
-      ...formData,
-      approveCondList: approveCondList.map(a => {
-        const key = condRealFileList.findIndex(c => c.rowSeq === a.SEQ);
-        return key > -1
-          ? {
-              ...a,
-              FILE_SEQ: Number(condRealFileList[key].seq),
-              DOWN: `/down/file/${Number(condRealFileList[key].seq)}`,
-              fileExt: condRealFileList[key].fileExt,
-            }
-          : a;
-      }),
-      condFileList: [],
-    });
-    this.saveTask(id, id, this.saveTaskAfter);
-  };
-
   render = () => {
     const {
       sagaKey: id,
@@ -236,6 +169,7 @@ class ModifyPage extends Component {
       getExtraApiData,
       changeFormData,
       deleteTask,
+      profile,
     } = this.props;
     const { qualTaskSeq } = this.state;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -247,7 +181,7 @@ class ModifyPage extends Component {
             <Header
               sagaKey={id}
               formData={formData}
-              viewPageData={{ ...viewPageData, viewType: 'CONFIRM_RESULT' }}
+              viewPageData={{ ...viewPageData, viewType: 'IMPROVE_PLAN' }}
               setFormData={setFormData}
               changeViewPage={changeViewPage}
               deleteTask={deleteTask}
@@ -259,36 +193,63 @@ class ModifyPage extends Component {
               changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <ApproveCond
-              id={id}
-              formData={formData}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              setFormData={setFormData}
-              viewType="INPUT"
-              condTitle="안전확인결과내용"
-              btnPlusTd
-              initForm={false}
-            />
-            <InterLock
-              id={id}
-              formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={{ viewType: 'VIEW' }}
-              initForm={false}
-            />
-            <Material
-              id={id}
-              formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={{ viewType: 'VIEW' }}
-              initForm={false}
-            />
+            <table width="100%">
+              <colgroup>
+                <col width="49%" />
+                <col width="2%" />
+                <col width="49%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <td colSpan={3}>
+                    <ConfirmCond
+                      id={id}
+                      formData={formData}
+                      changeFormData={changeFormData}
+                      getExtraApiData={getExtraApiData}
+                      extraApiData={extraApiData}
+                      setFormData={setFormData}
+                      initForm={false}
+                      viewType="INPUT"
+                      condTitle="Qual 개선결과내용"
+                      btnPlusTd={false}
+                      profile={profile}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <ApproveCond
+                      id={id}
+                      formData={formData}
+                      changeFormData={changeFormData}
+                      getExtraApiData={getExtraApiData}
+                      extraApiData={extraApiData}
+                      setFormData={setFormData}
+                      viewType="VIEW"
+                      condTitle=""
+                      btnPlusTd={false}
+                      initForm={false}
+                    />
+                  </td>
+                  <td></td>
+                  <td>
+                    <ImproveCond
+                      id={id}
+                      formData={formData}
+                      changeFormData={changeFormData}
+                      getExtraApiData={getExtraApiData}
+                      extraApiData={extraApiData}
+                      setFormData={setFormData}
+                      viewType="VIEW"
+                      condTitle=""
+                      btnPlusTd={false}
+                      initForm={false}
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </Sketch>
         </StyledViewDesigner>
       );

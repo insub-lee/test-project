@@ -167,7 +167,7 @@ class ResultCond extends Component {
   }
 
   appStart = () => {
-    const { id, extraApiData, setFormData, formData, viewType } = this.props;
+    const { id, extraApiData, setFormData, formData, viewType, initForm } = this.props;
     const { deptCodeList } = this.state;
 
     const categories = (extraApiData && extraApiData.resultCategories && extraApiData.resultCategories.categoryMapList) || [];
@@ -177,9 +177,12 @@ class ResultCond extends Component {
       resultCategories: categories.filter(c => c.LVL === 3 && c.USE_YN === 'Y'),
       resultDept: depts.filter(d => deptCodeList.indexOf(d.CODE) > -1 && d.USE_YN === 'Y'),
     });
-    setFormData(id, { ...formData, resultCondList, resultCondViewType: viewType });
-
-    if (!resultCondList.length && viewType === 'INPUT') {
+    setFormData(id, {
+      ...formData,
+      resultCondList,
+      resultCondViewType: viewType,
+    });
+    if (initForm && !resultCondList.length && viewType === 'INPUT') {
       return this.handlePlusTd();
     }
     this.debounceHandelSetTable();
@@ -298,6 +301,7 @@ ResultCond.propTypes = {
   viewType: PropTypes.string,
   condTitle: PropTypes.string,
   btnPlusTd: PropTypes.bool,
+  initForm: PropTypes.bool,
 };
 
 ResultCond.defaultProps = {
@@ -309,6 +313,7 @@ ResultCond.defaultProps = {
   viewType: 'INPUT',
   condTitle: '',
   btnPlusTd: false,
+  initForm: true,
 };
 
 export default ResultCond;

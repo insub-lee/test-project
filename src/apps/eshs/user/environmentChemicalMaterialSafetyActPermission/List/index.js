@@ -1,52 +1,96 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import { Input, InputNumber, Popconfirm, Select } from 'antd';
+import { Input, InputNumber, Select, Popconfirm } from 'antd';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
-
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environmentMasterRegistration/InputModal/SearchComp';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
 
-const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
-const AntdSearch = StyledSearchInput(Input.Search);
 const AntdInputNumber = StyledInputNumber(InputNumber);
+const AntdSelect = StyledSelect(Select);
+const AntdSearch = StyledSearchInput(Input.Search);
+
 class List extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: false,
       requestValue: {
         CAS_NO: '',
-        NAME: '',
-        ORDER_NO: '',
-        IS_APPLICABLE: 'Y',
+        NAME_KOR: '',
+        NAME_ENG: '',
+        IS_PERMISSION: 'Y',
+        SERIAL_NO: '',
+        INVENTORY_ID: '',
       },
+      visible: false,
       isModified: false,
-      deleteConfirmMessage: '삭제하시겠습니까?',
     };
   }
+
+  handleSearchClick = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  handleInputChange = (event, type, name) => {
+    if (type.toUpperCase() === 'INPUT') {
+      const valueObj = { [event.target.name.toUpperCase()]: event.target.value };
+      return this.setState(prevState => ({
+        requestValue: Object.assign(prevState.requestValue, valueObj),
+      }));
+    }
+
+    if (type.toUpperCase() === 'SELECT' && name === 'CATEGORY') {
+      const valueObj = { [name.toUpperCase()]: event, SUB_CATEGORY: '' };
+      this.getSubCategories(event);
+      return this.setState(prevState => ({
+        requestValue: Object.assign(prevState.requestValue, valueObj),
+      }));
+    }
+
+    if (type.toUpperCase() === 'SELECT') {
+      const valueObj = { [name.toUpperCase()]: event };
+      return this.setState(prevState => ({
+        requestValue: Object.assign(prevState.requestValue, valueObj),
+      }));
+    }
+
+    if (type.toUpperCase() === 'NUMBER') {
+      const valueObj = { [name]: event };
+      return this.setState(prevState => ({
+        requestValue: Object.assign(prevState.requestValue, valueObj),
+      }));
+    }
+    return null;
+  };
 
   handleInputClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue, isModified } = this.state;
     if (isModified) {
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialregistrationact`, requestValue, this.getMaterialList);
+      this.setState({
+        isModified: false,
+      });
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetypermission`, requestValue, this.getMaterialList);
     }
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialregistrationact`, requestValue, this.getMaterialList);
+    this.setState({
+      isModified: false,
+    });
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalsafetypermission`, requestValue, this.getMaterialList);
   };
 
   handleDeleteClick = () => {
     const { requestValue } = this.state;
-    if (!requestValue.REG_ID) {
+    if (!requestValue.INVENTORY_ID) {
       return this.setState({
         deleteConfirmMessage: '선택된 항목이 없습니다.',
       });
@@ -59,7 +103,7 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialregistrationact`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetypermission`, requestValue, this.getMaterialList);
   };
 
   getMaterialList = () => {
@@ -68,33 +112,29 @@ class List extends React.Component {
       {
         key: 'materialList',
         type: 'GET',
-        url: '/api/eshs/v1/common/eshschemicalmaterialregistrationact',
+        url: '/api/eshs/v1/common/eshschemicalsafetypermission',
       },
     ];
     getCallDataHandler(id, apiArr, this.handleResetClick);
   };
 
-  handleSearchClick = () => {
+  handleResetClick = () => {
     this.setState({
-      visible: true,
+      requestValue: {
+        CAS_NO: '',
+        NAME_KOR: '',
+        NAME_ENG: '',
+        IS_PERMISSION: 'Y',
+        SERIAL_NO: '',
+        INVENTORY_ID: '',
+      },
+      isModified: false,
     });
   };
 
   handleModalClose = () => {
     this.setState({
       visible: false,
-    });
-  };
-
-  handleResetClick = () => {
-    this.setState({
-      isModified: false,
-      requestValue: {
-        CAS_NO: '',
-        NAME: '',
-        ORDER_NO: '',
-        IS_APPLICABLE: 'Y',
-      },
     });
   };
 
@@ -106,33 +146,7 @@ class List extends React.Component {
     });
   };
 
-  handleInputChange = e => {
-    const valueObj = { [e.target.name.toUpperCase()]: e.target.value };
-    this.setState(prevState => ({
-      requestValue: Object.assign(prevState.requestValue, valueObj),
-    }));
-  };
-
-  handleInputNumberChange = (value, name) => {
-    const valueObj = { [name.toUpperCase()]: value };
-    this.setState(prevState => ({
-      requestValue: Object.assign(prevState.requestValue, valueObj),
-    }));
-  };
-
-  columns = [
-    {
-      title: '순번',
-      dataIndex: 'ORDER_NO',
-      key: 'ORDER_NO',
-      align: 'center',
-    },
-    {
-      title: '화학물질 명칭',
-      dataIndex: 'NAME',
-      key: 'NAME',
-      align: 'center',
-    },
+  modalColumns = [
     {
       title: 'CAS_NO',
       dataIndex: 'CAS_NO',
@@ -140,29 +154,34 @@ class List extends React.Component {
       align: 'center',
     },
     {
-      title: '해당여부',
-      dataIndex: 'IS_APPLICABLE',
-      key: 'IS_APPLICABLE',
+      title: '화학물질명_국문',
+      dataIndex: 'NAME_KOR',
+      key: 'NAME_KOR',
       align: 'center',
-      render: text => (text === 'Y' ? '해당' : '비해당'),
+    },
+    {
+      title: '화학물질명_영문',
+      dataIndex: 'NAME_ENG',
+      key: 'NAME_ENG',
+      align: 'center',
     },
   ];
 
   render() {
-    const { columns } = this;
     const {
-      handleInputClick,
       handleSearchClick,
-      handleResetClick,
+      handleInputChange,
+      handleInputClick,
       handleModalClose,
       setRequestValue,
-      handleInputChange,
-      handleInputNumberChange,
-      handleDeleteClick,
+      handleResetClick,
       handleDeleteConfirm,
+      handleDeleteClick,
     } = this;
-    const { visible, requestValue, deleteConfirmMessage, isModified } = this.state;
+    const { modalColumns } = this;
+    const { requestValue, visible, deleteConfirmMessage, isModified } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
+
     return (
       <>
         <ContentsWrapper>
@@ -177,7 +196,7 @@ class List extends React.Component {
                 style={{ width: '200px' }}
               />
               <StyledButtonWrapper className="btn-wrap-inline">
-                <StyledButton className="btn-primary btn-first" onClick={handleInputClick} style={{ width: '91px' }}>
+                <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
                   저장/수정
                 </StyledButton>
                 <Popconfirm
@@ -186,11 +205,11 @@ class List extends React.Component {
                   okText={isModified ? '삭제' : '확인'}
                   cancelText="취소"
                 >
-                  <StyledButton className="btn-light btn-first" onClick={handleDeleteClick} style={{ width: '91px' }}>
+                  <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
                     삭제
                   </StyledButton>
                 </Popconfirm>
-                <StyledButton className="btn-light" onClick={handleResetClick} style={{ width: '91px' }}>
+                <StyledButton className="btn-light" onClick={handleResetClick}>
                   초기화
                 </StyledButton>
               </StyledButtonWrapper>
@@ -200,41 +219,45 @@ class List extends React.Component {
             <StyledHtmlTable>
               <table>
                 <colgroup>
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
+                  <col width="16.6%" />
+                  <col width="16.6%" />
+                  <col width="16.6%" />
+                  <col width="16.6%" />
+                  <col width="16.6%" />
+                  <col width="16.6%" />
                 </colgroup>
                 <tbody>
                   <tr>
-                    <th>순번</th>
-                    <td>
+                    <th>연번</th>
+                    <td colSpan={2}>
                       <AntdInputNumber
-                        value={requestValue.ORDER_NO}
-                        onChange={value => handleInputNumberChange(value, 'ORDER_NO')}
                         className="ant-input-number input-number-sm"
-                        style={{ width: '100%' }}
+                        value={requestValue.SERIAL_NO}
+                        onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
+                        disabled={isModified}
                       />
                     </td>
-                    <th>화학물질 명칭</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="NAME" value={requestValue.NAME} onChange={handleInputChange} />
+                    <th>CAS NO.</th>
+                    <td colSpan={2}>
+                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
-                    <th>CAS_NO</th>
+                  </tr>
+                  <tr>
+                    <th>화학물질명_국문</th>
                     <td>
-                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
+                    </td>
+                    <th>화학물질명_영문</th>
+                    <td>
+                      <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
                     <th>해당여부</th>
                     <td>
                       <AntdSelect
                         className="select-sm"
                         defaultValue="Y"
-                        value={requestValue.IS_APPLICABLE}
-                        onChange={value => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { IS_APPLICABLE: value }) }))}
+                        onChange={e => handleInputChange(e, 'SELECT', 'IS_PERMISSION')}
+                        value={requestValue.IS_PERMISSION}
                         style={{ width: '100%' }}
                       >
                         <Select.Option value="Y">해당</Select.Option>
@@ -254,8 +277,8 @@ class List extends React.Component {
           getCallDataHandler={getCallDataHandler}
           result={result}
           setRequestValue={setRequestValue}
-          apiUrl="/api/eshs/v1/common/eshschemicalmaterialregistrationact"
-          tableColumns={columns}
+          apiUrl="/api/eshs/v1/common/eshschemicalsafetypermission"
+          tableColumns={modalColumns}
           SearchComp={SearchComp}
           changeFormData={changeFormData}
           formData={formData}
@@ -264,20 +287,21 @@ class List extends React.Component {
     );
   }
 }
-
 List.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
   result: PropTypes.object,
   changeFormData: PropTypes.func,
-  formData: PropTypes.object,
   submitHandlerBySaga: PropTypes.func,
+  formData: PropTypes.object,
 };
 
 List.defaultProps = {
+  sagaKey: '',
   getCallDataHandler: () => {},
   result: {},
   changeFormData: () => {},
+  submitHandlerBySaga: () => {},
   formData: {},
 };
 

@@ -1,6 +1,6 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import MsdsIngredientCompStyled from '../styled/compStyled/MsdsIngredientCompStyled';
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 
 class MsdsEquipmentUsedComp extends React.Component {
   constructor(props) {
@@ -21,29 +21,34 @@ class MsdsEquipmentUsedComp extends React.Component {
     }
     return visible ? (
       <>
-        <MsdsIngredientCompStyled>
-          <table className="msdsIngreDientTable">
+        <StyledHtmlTable className="tableWrapper">
+          <table className="table-border">
+            <colgroup>
+              <col width="15%" />
+              <col width="15%" />
+              <col width="15%" />
+              <col width="15%" />
+              <col width="20%" />
+              <col width="20%" />
+            </colgroup>
             <thead>
               <tr>
-                <td>SITE</td>
-                <td>FAB</td>
-                <td>공정</td>
-                <td>BAY</td>
-                <td>장비명</td>
-                <td>장비코드</td>
+                <th>SITE</th>
+                <th>FAB</th>
+                <th>공정</th>
+                <th>BAY</th>
+                <th>장비명</th>
+                <th>장비코드</th>
               </tr>
             </thead>
-            <tbody>
-              {equipMentUsedList.length ? (
-                ''
-              ) : (
-                <tr className="listCount">
-                  <td colSpan={6}>{equipMentUsedList.length} 건</td>
-                </tr>
-              )}
-            </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan={6}>{equipMentUsedList.length} 건</td>
+              </tr>
+            </tfoot>
+            <tbody></tbody>
           </table>
-        </MsdsIngredientCompStyled>
+        </StyledHtmlTable>
       </>
     ) : (
       ''
