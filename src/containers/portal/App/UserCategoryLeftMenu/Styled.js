@@ -11,7 +11,7 @@ const Styled = styled.div`
   opacity: 1;
   background-color: #152434;
   border-left: 1px solid #35414e;
-  z-index: 1998;
+  z-index: 98;
   transition: left 0.3s ease-out 0s;
 
   &.active {

@@ -21,6 +21,7 @@ import IconWidget10 from 'images/portal/mdcsMain/icon_main10.png';
 
 const StyledMainWidget = styled.div`
   padding: 20px;
+  overflow: hidden;
 
   .main-widget-row {
     .main-widget-col {
@@ -30,28 +31,30 @@ const StyledMainWidget = styled.div`
       margin: 0 0.5% 14px 0.5%;
 
       &.col-1-2 {
-        width: 12.33%;
+        width: 15.666%;
       }
 
       &.col-3 {
         width: 32.33%;
       }
 
+      &.mb-0 {
+        margin-bottom: 0;
+      }
+
       .widget-inner {
-        height: 295px;
+        height: 230px;
 
         .widget-title {
           color: #fff;
-          font-size: 22px;
+          font-size: 20px;
           font-weight: 600;
-          height: 90px;
-          line-height: 90px;
-          padding: 0 35px;
+          padding: 20px 20px 0;
 
           .btn-more {
             position: absolute;
-            top: 35px;
-            right: 35px;
+            top: 22px;
+            right: 20px;
             width: 28px;
             height: 28px;
             background: url(${iconPlusWhite}) no-repeat center;
@@ -60,7 +63,7 @@ const StyledMainWidget = styled.div`
         }
 
         .widget-board {
-          padding: 10px 35px 30px 35px;
+          padding: 15px 25px 0px 25px;
 
           li {
             a {
@@ -70,16 +73,15 @@ const StyledMainWidget = styled.div`
               width: 100%;
               overflow: hidden;
               text-align: left;
-              height: 34px;
-              line-height: 34px;
-              font-size: 16px;
+              font-size: 14px;
+              margin-bottom: 10px;
 
               span.board-txt {
                 display: block;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 word-wrap: normal;
-                width: calc(100% - 40px);
+                width: calc(100% - 35px);
                 overflow: hidden;
 
                 .board-icon {
@@ -125,55 +127,6 @@ const StyledMainWidget = styled.div`
           }
         }
 
-        .widget-detail {
-          position: absolute;
-          left: 0;
-          top: 0;
-          background: rgba(255, 255, 255, 0.95);
-          width: 100%;
-          height: 100%;
-          display: none;
-
-          &.on {
-            background: rgba(0, 0, 0, 0.8);
-            display: block;
-          }
-
-          .detail-inner {
-            padding: 30px;
-
-            .detail-title {
-              padding-bottom: 25px;
-              font-size: 16px;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              word-wrap: normal;
-              width: calc(100% - 35px);
-              overflow: hidden;
-              color: #fff;
-            }
-
-            .detail-content {
-              position: relative;
-              overflow: hidden;
-              height: 100%;
-              max-width: 100%;
-              outline: none;
-              direction: ltr;
-              color: white;
-              font-size: 13px;
-              line-height: 24px;
-              margin-right: 17px;
-
-              > div {
-                overflow-y: scroll;
-                max-height: 195px;
-                padding-right: 20px;
-              }
-            }
-          }
-        }
-
         &.widget-black {
           .widget-title {
             color: #333;
@@ -192,7 +145,7 @@ const StyledMainWidget = styled.div`
           background: #eff3f6;
 
           .widget-board li a span.board-txt {
-            width: calc(100% - 100px);
+            width: calc(100% - 80px);
           }
         }
 
@@ -208,17 +161,17 @@ const StyledMainWidget = styled.div`
         &.widget-approve {
           background: url(${mainColBg2});
           background-size: cover;
-          height: 444px;
+          height: 314px;
 
           .widget-board li a span.board-txt {
             width: 100%;
           }
 
           .widget-number {
-            font-size: 60px;
+            font-size: 45px;
             text-align: center;
             color: white;
-            margin: 20px 0 45px;
+            margin: 10px 0;
 
             strong {
               position: relative;
@@ -240,7 +193,7 @@ const StyledMainWidget = styled.div`
 
       .widget-hover-inner {
         position: relative;
-        height: 215px;
+        height: 150px;
         color: white;
         background: #798ea4;
 
@@ -258,7 +211,7 @@ const StyledMainWidget = styled.div`
             &.widget-icon {
               margin-bottom: 10px;
               margin-top: 0;
-              height: 38px;
+              height: 30px;
 
               &.widget-icon1 {
                 background: url(${IconWidget1}) no-repeat center;
@@ -319,6 +272,7 @@ const StyledMainWidget = styled.div`
             &.widget-title-eng {
               font-size: 11px;
               opacity: 0.7;
+              display: none;
             }
 
             &.widget-item-number {
@@ -326,63 +280,12 @@ const StyledMainWidget = styled.div`
               font-weight: 700;
               position: absolute;
               right: 15px;
-              bottom: 10px;
+              bottom: 15px;
               .total {
                 opacity: 0.6;
                 font-weight: 400;
               }
             }
-          }
-        }
-
-        .widget-board {
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-          height: 100%;
-          color: white;
-          z-index: 1;
-          padding: 20px;
-          background: rgba(65, 93, 124, 0.9);
-          display: none;
-          .widget-title {
-            position: relative;
-            height: 28px;
-            font-size: 16px;
-            font-weight: 500;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            word-wrap: normal;
-            width: calc(100% - 15px);
-            overflow: hidden;
-            .btn-more {
-              position: absolute;
-              color: white;
-              right: 0;
-              top: 1px;
-            }
-          }
-
-          ul {
-            font-size: 0;
-            li > a {
-              display: block;
-              font-size: 14px;
-              line-height: 24px;
-              color: white;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              word-wrap: normal;
-              width: 100%;
-              overflow: hidden;
-            }
-          }
-        }
-
-        &:hover {
-          .widget-board {
-            display: block;
           }
         }
       }
