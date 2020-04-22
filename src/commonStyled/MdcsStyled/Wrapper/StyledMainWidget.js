@@ -86,24 +86,28 @@ const StyledMainWidget = styled.div`
 
                 .board-icon {
                   width: 16px;
-                  height: 18px;
+                  height: 16px;
                   margin-right: 8px;
                   display: inline-block;
 
                   &.icon-file-zip {
-                    background: url(${IconFileZip});
+                    background: url(${IconFileZip}) no-repeat center;
+                    background-size: 100%;
                   }
 
                   &.icon-file-jpg {
-                    background: url(${IconFileJpg});
+                    background: url(${IconFileJpg}) no-repeat center;
+                    background-size: 100%;
                   }
 
                   &.icon-file-ppt {
-                    background: url(${IconFilePpt});
+                    background: url(${IconFilePpt}) no-repeat center;
+                    background-size: 100%;
                   }
 
                   &.icon-file-xls {
-                    background: url(${IconFileXls});
+                    background: url(${IconFileXls}) no-repeat center;
+                    background-size: 100%;
                   }
                 }
 
@@ -216,50 +220,60 @@ const StyledMainWidget = styled.div`
               &.widget-icon1 {
                 background: url(${IconWidget1}) no-repeat center;
                 width: 29px;
+                background-size: 100%;
               }
 
               &.widget-icon2 {
                 background: url(${IconWidget2}) no-repeat center;
+                background-size: 100%;
                 width: 36px;
               }
 
               &.widget-icon3 {
                 background: url(${IconWidget3}) no-repeat center;
+                background-size: 100%;
                 width: 33px;
               }
 
               &.widget-icon4 {
                 background: url(${IconWidget4}) no-repeat center;
+                background-size: 100%;
                 width: 42px;
               }
 
               &.widget-icon5 {
                 background: url(${IconWidget5}) no-repeat center;
+                background-size: 100%;
                 width: 32px;
               }
 
               &.widget-icon6 {
                 background: url(${IconWidget6}) no-repeat center;
+                background-size: 100%;
                 width: 37px;
               }
 
               &.widget-icon7 {
                 background: url(${IconWidget7}) no-repeat center;
+                background-size: 100%;
                 width: 40px;
               }
 
               &.widget-icon8 {
                 background: url(${IconWidget8}) no-repeat center;
+                background-size: 100%;
                 width: 33px;
               }
 
               &.widget-icon9 {
                 background: url(${IconWidget9}) no-repeat center;
+                background-size: 100%;
                 width: 34px;
               }
 
               &.widget-icon10 {
                 background: url(${IconWidget10});
+                background-size: 100%;
                 width: 45px;
               }
             }
