@@ -169,6 +169,7 @@ class List extends Component {
         dataIndex: 'COMP_SRC',
         key: 'COMP_SRC',
         width: '35%',
+        ...this.getColumnSearchProps('COMP_SRC'),
       },
       {
         title: '자세히 / 수정',

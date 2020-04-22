@@ -16,10 +16,10 @@ const AntdModal = StyledAntdModalPad(Modal);
 
 class List extends Component {
   state = {
-    itemList: [],
+    list: [],
     isShow: false,
     selectedRow: {},
-    searchText: '',
+    hospitalName: '',
   }
 
   componentDidMount() {
@@ -30,8 +30,8 @@ class List extends Component {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiAry = [
       {
-        key: 'itemList',
-        url: `/api/eshs/v1/common/health/healthChkItem?searchText=${this.state.searchText}`,
+        key: 'hospitalList',
+        url: `/api/eshs/v1/common/health/healthChkHospital?hospitalName=${this.state.hospitalName}`,
         type: 'GET',
         params: {},
       },
@@ -40,8 +40,8 @@ class List extends Component {
   }
 
   initState = () => {
-    const { result: { itemList } } = this.props;
-    this.setState({ itemList: itemList && itemList.list ? itemList.list : [] });
+    const { result: { hospitalList } } = this.props;
+    this.setState({ list: hospitalList && hospitalList.list ? hospitalList.list : [] });
   };
 
   onClickRow = row => {
@@ -72,58 +72,62 @@ class List extends Component {
 
   columns = [
     {
-      title: '항목코드',
-      dataIndex: 'ITEM_CODE',
-      key: 'ITEM_CODE',
-      width: '10%',
+      title: '검진기관코드',
+      dataIndex: 'HOSPITAL_CODE',
+      key: 'HOSPITAL_CODE',
+      align: 'center',
+      width: '15%',
+    },
+    {
+      title: '지역',
+      dataIndex: 'HOSPITAL_SITE',
+      key: 'HOSPITAL_SITE',
+      align: 'center',
+      width: '15%',
+    },
+    {
+      title: '검진기관명',
+      dataIndex: 'HOSPITAL_NAME',
+      key: 'HOSPITAL_NAME',
       align: 'center',
     },
     {
-      title: '항목명',
-      dataIndex: 'ITEM_NAME',
-      key: 'ITEM_NAME',
+      title: '담당자명',
+      dataIndex: 'MANAGER_NAME',
+      key: 'MANAGER_NAME',
+      width: '15%',
+      align: 'center',
       width: '20%',
     },
     {
-      title: '항목분류',
-      dataIndex: 'ITEM_CLASS',
-      key: 'ITEM_CLASS',
-      width: '15%',
+      title: '담당자 연락처',
+      dataIndex: 'MANAGER_TEL',
+      key: 'MANAGER_TEL',
       align: 'center',
-    },
-    {
-      title: '비고',
-      dataIndex: 'ITEM_DESC',
-      key: 'ITEM_DESC',
-    },
-    {
-      title: '검진 성별',
-      dataIndex: 'ITEM_GENDER',
-      key: 'ITEM_GENDER',
-      width: '10%',
-      align: 'center',
-      render: (text, record) => text === 'C' ? '공통' : text === 'M' ? '남자만' : '여자만'
-    },
-    {
-      title: '필수검진여부',
-      dataIndex: 'ITEM_REQUIRE',
-      key: 'ITEM_REQUIRE',
-      width: '10%',
-      align: 'center',
-      render: (text, record) => text === 'Y' ? '필수검진' : '추가검진'
+      width: '20%',
     },
   ];
 
   render() {
     return (
       <>
+        <AntdModal
+          width={700}
+          visible={this.state.isShow}
+          title="검진기관"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <View selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} onSaveAfter={this.onSaveAfter} />
+        </AntdModal>
         <StyledContentsWrapper>
           <div className="selSaveWrapper alignLeft">
-            <span className="textLabel">항목명</span>
+            <span className="textLabel">검진기관명</span>
             <AntdInput
               className="ant-input-sm ant-input-inline mr5"
               style={{ width: 200 }}
-              onChange={e => this.setState({ searchText: e.target.value })}
+              onChange={e => this.setState({ hospitalName: e.target.value })}
               onPressEnter={this.getList}
               allowClear
             />
@@ -133,7 +137,7 @@ class List extends Component {
           </div>
           <AntdTable
             columns={this.columns}
-            dataSource={this.state.itemList}
+            dataSource={this.state.list}
             bordered={true}
             onRow={(record, rowIndex) => ({
               onClick: event => {
@@ -146,16 +150,6 @@ class List extends Component {
             <StyledButton className="btn-primary btn-sm" onClick={this.onClickAdd}>등록</StyledButton>
           </StyledButtonWrapper>
         </StyledContentsWrapper>
-        <AntdModal
-          width={500}
-          visible={this.state.isShow}
-          title="검진항목"
-          onCancel={this.onCancelPopup}
-          destroyOnClose
-          footer={null}
-        >
-          <View selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} onSaveAfter={this.onSaveAfter} />
-        </AntdModal>
       </>
     );
   }
