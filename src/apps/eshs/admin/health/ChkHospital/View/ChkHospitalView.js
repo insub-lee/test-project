@@ -80,7 +80,8 @@ class ChkHospitalView extends Component {
   };
   
   render() {
-    const { detail, saveType } = this.state;
+    const { saveType } = this.state;
+    const { selectedRow: detail } = this.props;
     return (
       <>
         <StyledHtmlTable>
@@ -104,7 +105,7 @@ class ChkHospitalView extends Component {
                 </td>
               </tr>
               <tr>
-                <th colSpan={2}>김진기관지역</th>
+                <th colSpan={2}>검진기관지역</th>
                 <td>
                   <AntdInput defaultValue={detail.HOSPITAL_SITE} onChange={e => this.onChangeDetail('HOSPITAL_SITE', e.target.value)} />
                 </td>
