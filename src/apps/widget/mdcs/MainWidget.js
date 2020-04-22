@@ -143,7 +143,7 @@ class MainWidget extends Component {
           </div>
         </div>
         <div className="main-widget-row">
-          <div className="main-widget-col col-3">
+          <div className="main-widget-col col-3 mb-0">
             <div className="widget-inner widget-approve">
               <div className="widget-title">
                 결재 요청건
