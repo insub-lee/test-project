@@ -11,6 +11,7 @@ import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsMod
 
 import SearchListPage from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/SearchList';
 import ConfirmCheckSheet from 'apps/eshs/user/qualSqtb/ConfirmCheckSheet';
+import moment from 'moment';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -98,6 +99,14 @@ class Header extends Component {
     }
   };
 
+  handleMakeConfirm = (status, action, callBack) => {
+    const { sagaKey: id, formData, setFormData } = this.props;
+    setFormData(id, { ...formData, QUAL_STATUS: status, QUAL_DT: moment(new Date()).format('YYYY-MM-DD') });
+    if (typeof callBack === 'function') {
+      callBack(action);
+    }
+  };
+
   render() {
     const { searchList, modalVisible } = this.state;
     const {
@@ -112,6 +121,36 @@ class Header extends Component {
     const REQ_CD = (formData && formData.REQ_CD) || '';
     const APP_STATUS = (formData && formData.APP_STATUS) || '';
     const QUAL_STATUS = (formData && formData.QUAL_STATUS) || '';
+    const isAllConfirm = (formData && formData.isAllConfirm) || false;
+    console.debug('여기는 Header', isAllConfirm);
+    if (viewType === 'IMPROVE_RESULT') {
+      return (
+        <>
+          <StyledButtonWrapper className="btn-wrap-left btn-wrap-mb-10">
+            <AntdSearch
+              value={REQ_CD || ''}
+              style={{ width: '150px' }}
+              readOnly
+              onClick={this.handleModalVisible}
+              onSearch={this.handleModalVisible}
+              className="ant-search-inline input-search-mid mr5"
+            />
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+              검색
+            </StyledButton>
+            {isAllConfirm && (
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleMakeConfirm('2007', 'MODIFY', this.handleAction)}>
+                승인
+              </StyledButton>
+            )}
+          </StyledButtonWrapper>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1500} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+            {searchList}
+          </AntdModal>
+        </>
+      );
+    }
+
     if (viewType === 'IMPROVE_PLAN') {
       return (
         <>
@@ -127,7 +166,7 @@ class Header extends Component {
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
-            {QUAL_STATUS !== '2007' && (
+            {QUAL_STATUS !== '2007' && taskSeq > -1 && (
               // NODE_ID = 2007 < 승인 >
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('1', 'MODIFY', this.handleAction)}>
                 저장

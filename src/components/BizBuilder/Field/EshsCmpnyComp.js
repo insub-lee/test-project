@@ -237,6 +237,7 @@ class EshsCmpnyComp extends React.Component {
               className={CONFIG.property.className}
               style={{ width: searchWidth }}
               onSearch={this.handleModalVisible}
+              onClick={this.handleModalVisible}
             />
             {/* <Button shape="circle" icon="search" onClick={this.handleModalVisible} /> */}
             &nbsp; <span>{cmpny_nm}</span>

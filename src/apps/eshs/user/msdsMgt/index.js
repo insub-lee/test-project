@@ -4,11 +4,14 @@ import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 import { Data } from 'react-data-grid-addons';
 import { Modal } from 'antd';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import ListPage from './ListPage';
 import InputPage from './InputPage';
 import ModifyPage from './ModifyPage';
 import ViewPage from './ViewPage';
 import SearchListPage from './SearchListPage';
+
+const AntdModal = StyledContentsModal(Modal);
 
 class MsdsMgt extends Component {
   state = {
@@ -45,7 +48,7 @@ class MsdsMgt extends Component {
           CustomModifyPage={ModifyPage}
           handleModalVisible={this.handleModalVisible}
         />
-        <Modal title="MSDS 검색" visible={searchListVisible} width={1000} height={600} onCancel={this.handleModalVisible} footer={[null]}>
+        <AntdModal title="MSDS 검색" visible={searchListVisible} width={1000} height={600} onCancel={this.handleModalVisible} footer={[null]}>
           <BizBuilderBase
             sagaKey="MsdsSearchList"
             workSeq={3161}
@@ -55,7 +58,7 @@ class MsdsMgt extends Component {
             CustomListPage={SearchListPage}
             listMetaSeq={4141}
           />
-        </Modal>
+        </AntdModal>
       </>
     );
   }
