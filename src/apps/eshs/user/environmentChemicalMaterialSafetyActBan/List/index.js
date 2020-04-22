@@ -158,6 +158,12 @@ class List extends React.Component {
       key: 'NAME_KOR',
       align: 'center',
     },
+    {
+      title: '해당여부',
+      dataIndex: 'IS_BAN',
+      key: 'IS_BAN',
+      align: 'center',
+    },
   ];
 
   render() {
