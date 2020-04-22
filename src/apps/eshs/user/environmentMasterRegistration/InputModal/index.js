@@ -137,6 +137,7 @@ InputModal.propTypes = {
   SearchComp: PropTypes.any, // React component
   formData: PropTypes.object,
   changeFormData: PropTypes.func,
+  // isSearch: PropTypes.bool,
 };
 
 InputModal.defaultProps = {
@@ -150,6 +151,7 @@ InputModal.defaultProps = {
   tableColumns: [],
   formData: {},
   changeFormData: () => {},
+  // isSearch: false,
 };
 
 export default InputModal;

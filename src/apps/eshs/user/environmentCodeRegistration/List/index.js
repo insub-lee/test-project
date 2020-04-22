@@ -27,6 +27,7 @@ class List extends Component {
           code: '',
         },
       ],
+      isModified: false,
     };
   }
 
@@ -51,7 +52,7 @@ class List extends Component {
       key: 'NAME_KOR',
       render: (text, record, index) => {
         const { handleInputChange, handleAddClick, handleModifyClick, handleDeleteClick, handleResetClick } = this;
-        const { inputCode } = this.state;
+        const { inputCode, isModified } = this.state;
         if (index === 0) {
           return (
             <div>
@@ -60,10 +61,10 @@ class List extends Component {
                 <StyledButton className="btn-primary btn-first btn-sm" onClick={handleAddClick}>
                   추가
                 </StyledButton>
-                <Popconfirm title="수정하시겠습니까?" onConfirm={handleModifyClick}>
+                <Popconfirm title={isModified ? '수정하시겠습니까?' : '코드를 선택하세요.'} onConfirm={isModified ? handleModifyClick : null}>
                   <StyledButton className="btn-primary btn-first btn-sm">수정</StyledButton>
                 </Popconfirm>
-                <Popconfirm title="사용상태를 변경하시겠습니까?" onConfirm={handleDeleteClick}>
+                <Popconfirm title={isModified ? '사용상태를 변경하시겠습니까?' : '코드를 선택하세요.'} onConfirm={isModified ? handleDeleteClick : null}>
                   <StyledButton className="btn-primary btn-first btn-sm btn-light">상태변경</StyledButton>
                 </Popconfirm>
                 <StyledButton className="btn-primary btn-first btn-sm btn-light" onClick={handleResetClick}>
@@ -172,6 +173,7 @@ class List extends Component {
     this.setState({
       inputCode: '',
       selectedIndex: -1,
+      isModified: false,
     });
     this.commonDataHandler('postData', 'post', data);
   };
@@ -183,16 +185,18 @@ class List extends Component {
     this.setState({
       inputCode: '',
       selectedIndex: -1,
+      isModified: false,
     });
   };
 
   handleDeleteClick = () => {
     const { selectedIndex, dataSource } = this.state;
-    const params = { CODE: dataSource[selectedIndex].CODE, IS_DELETE: dataSource[selectedIndex].IS_DELETE === '사용' ? 'Y' : 'N' };
+    const params = { CODE_ID: dataSource[selectedIndex].CODE_ID, IS_DELETE: dataSource[selectedIndex].IS_DELETE === '사용' ? 'Y' : 'N' };
     this.commonDataHandler('deleteData', 'delete', params);
     this.setState({
       inputCode: '',
       selectedIndex: -1,
+      isModified: false,
     });
   };
 
@@ -200,6 +204,7 @@ class List extends Component {
     this.setState({
       inputCode: '',
       selectedIndex: -1,
+      isModified: false,
     });
   };
 
@@ -209,6 +214,7 @@ class List extends Component {
         this.setState({
           inputCode: record.NAME_KOR,
           selectedIndex: index,
+          isModified: true,
         });
       }
     },

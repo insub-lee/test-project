@@ -26,7 +26,7 @@ function* fetchData({ id }) {
     processList,
     optList: list,
     apiList: apiMasterList,
-    styleList,
+    styleList: styleList.filter(fNode => fNode.ISUSED === 'Y'),
   };
   yield put(actions.successFetchData(result));
   yield put(actions.disableoading());

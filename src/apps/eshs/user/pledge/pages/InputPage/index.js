@@ -9,9 +9,14 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
+import BizBuilderBase from 'components/BizBuilderBase';
 import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
 import { Input, Modal, Descriptions, Checkbox } from 'antd';
 import Styled from './Styled';
+import CustomListPage from '../ListPage';
+const AntdModal = StyledModalWrapper(Modal);
+
 class InputPage extends Component {
   constructor(props) {
     super(props);
@@ -22,6 +27,7 @@ class InputPage extends Component {
       },
       modalType: '',
       modalVisible: false,
+      pledgeList: [],
     };
   }
 
@@ -60,7 +66,6 @@ class InputPage extends Component {
       changeViewPage(reloadId, workSeq, -1, 'LIST');
       if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
-    console.debug('1단계', id, formData);
     this.savePledgeCallbackFunc(id, formData);
   };
 
@@ -72,7 +77,6 @@ class InputPage extends Component {
         ...formData,
       },
     };
-    console.debug('2단계', id, param);
     submitExtraHandler(id, 'POST', '/api/eshs/v1/common/pledge', param, this.setFormDataForPledgeNo);
   };
 
@@ -85,11 +89,26 @@ class InputPage extends Component {
     }
   };
 
+  resetFormData = () => {
+    const { sagaKey: id, setFormData, responseData } = this.props;
+    const { formData } = responseData;
+    const nextFormData = {
+      ...formData,
+    };
+    setFormData(id, nextFormData);
+  };
+
   handleModalVisible = (type, bool) => {
     this.setState({
       modalType: type,
       modalVisible: bool,
     });
+  };
+
+  handleListRowClick = record => {
+    const { sagaKey: id, workSeq, getDetailData } = this.props;
+    getDetailData(id, workSeq, record.TASK_SEQ, 'INPUT');
+    this.handleModalVisible('', false);
   };
 
   render = () => {
@@ -106,8 +125,9 @@ class InputPage extends Component {
       CustomWorkProcess,
       formData,
       saveTask,
+      workSeq,
     } = this.props;
-    const { cmpnyInfo } = this.state;
+    const { cmpnyInfo, modalVisible } = this.state;
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -178,7 +198,7 @@ class InputPage extends Component {
                     추가
                   </StyledButton>
                 )}
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('검색')} style={{ marginBottom: '5px' }}>
+                <StyledButton className="btn-primary btn-xs btn-first" onClick={this.resetFormData} style={{ marginBottom: '5px' }}>
                   초기화
                 </StyledButton>
               </div>
@@ -201,6 +221,24 @@ class InputPage extends Component {
               </div>
             </Sketch>
           </StyledViewDesigner>
+          <AntdModal
+            title="서약서 검색"
+            width={790}
+            visible={modalVisible}
+            footer={null}
+            onOk={() => this.handleModalVisible('', false)}
+            onCancel={() => this.handleModalVisible('', false)}
+          >
+            <BizBuilderBase
+              key={`${id}_search`}
+              sagaKey={`${id}_search`}
+              workSeq={workSeq}
+              taskSeq={-1}
+              viewType="LIST"
+              CustomListPage={CustomListPage}
+              customOnRowClick={record => this.handleListRowClick(record)}
+            />
+          </AntdModal>
         </>
       );
     }
@@ -223,6 +261,8 @@ InputPage.propTypes = {
   loadingComplete: PropTypes.func,
   getExtraApiData: PropTypes.func,
   submitExtraHandler: PropTypes.func,
+  setFormData: PropTypes.func,
+  responseData: PropTypes.object,
 };
 
 InputPage.defaultProps = {
