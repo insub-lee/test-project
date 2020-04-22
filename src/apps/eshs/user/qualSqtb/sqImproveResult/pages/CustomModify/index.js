@@ -225,7 +225,7 @@ class ModifyPage extends Component {
             <Header
               sagaKey={id}
               formData={formData}
-              viewPageData={{ ...viewPageData, viewType: 'IMPROVE_PLAN' }}
+              viewPageData={{ ...viewPageData, viewType: 'IMPROVE_RESULT' }}
               setFormData={setFormData}
               changeViewPage={changeViewPage}
               deleteTask={deleteTask}
@@ -241,11 +241,12 @@ class ModifyPage extends Component {
             <table width="100%">
               <colgroup>
                 <col width="50%" />
+                <col width="2%" />
                 <col width="50%" />
               </colgroup>
               <tbody>
                 <tr>
-                  <td colSpan={2}>
+                  <td colSpan={3}>
                     <ResultCond
                       id={id}
                       formData={formData}
@@ -256,6 +257,7 @@ class ModifyPage extends Component {
                       viewType="INPUT"
                       condTitle="Qual 개선결과내용"
                       btnPlusTd
+                      initForm={false}
                     />
                   </td>
                 </tr>
@@ -273,6 +275,7 @@ class ModifyPage extends Component {
                       btnPlusTd={false}
                     />
                   </td>
+                  <td></td>
                   <td>
                     <ImproveCond
                       id={id}
