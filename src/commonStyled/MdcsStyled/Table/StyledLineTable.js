@@ -10,6 +10,7 @@ const StyledLineTable = Component => styled(Component)`
       border-bottom: 1px solid #eee;
       table {
         border: 0;
+        table-layout: fixed;
         .ant-table-tbody > tr > td,
         .ant-table-thead > tr > th {
           padding: 8px 16px;

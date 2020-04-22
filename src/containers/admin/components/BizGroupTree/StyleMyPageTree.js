@@ -80,6 +80,16 @@ const StyleMyPageTree = styled.div`
           }
         }
       }
+
+      .node-content-renderer_rowWrapper__wq3Bo {
+        padding: 0;
+        cursor: auto;
+
+        .rstcustom__row {
+          padding: 10px 10px 10px 0;
+          cursor: move;
+        }
+      }
     }
   }
 
