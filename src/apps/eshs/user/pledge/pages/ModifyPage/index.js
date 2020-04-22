@@ -11,13 +11,13 @@ import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import BizBuilderBase from 'components/BizBuilderBase';
-import { CaretDownOutlined } from '@ant-design/icons';
-import { Input, Modal } from 'antd';
+import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
+import { Input, Modal, Descriptions, Checkbox } from 'antd';
 import Styled from './Styled';
 import CustomListPage from '../ListPage';
 const AntdModal = StyledModalWrapper(Modal);
 
-class InputPage extends Component {
+class ModifyPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,66 +27,9 @@ class InputPage extends Component {
       },
       modalType: '',
       modalVisible: false,
+      pledgeList: [],
     };
   }
-
-  componentDidMount() {
-    const { sagaKey: id, getProcessRule, workFlowConfig, workPrcProps } = this.props;
-    const {
-      info: { PRC_ID },
-    } = workFlowConfig;
-    if (PRC_ID !== -1) {
-      const payload = {
-        PRC_ID,
-        DRAFT_DATA: {
-          ...workPrcProps,
-        },
-      };
-      getProcessRule(id, payload);
-    }
-  }
-
-  // 기존 SaveTaskAfter
-  saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const {
-      onCloseModalHandler,
-      changeViewPage,
-      isBuilderModal,
-      reloadId,
-      isSaveModalClose,
-      changeBuilderModalStateByParent,
-      workInfo,
-      redirectUrl,
-    } = this.props;
-    if (typeof onCloseModalHandler === 'function') {
-      onCloseModalHandler(id, redirectUrl);
-    }
-    if (isBuilderModal) {
-      changeViewPage(reloadId, workSeq, -1, 'LIST');
-      if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
-    }
-    this.savePledgeCallbackFunc(id, formData);
-  };
-
-  // 저장후, PLEDGE_NO - 호출 및 FormData
-  savePledgeCallbackFunc = (id, formData) => {
-    const { submitExtraHandler } = this.props;
-    const param = {
-      PARAM: {
-        ...formData,
-      },
-    };
-    submitExtraHandler(id, 'POST', '/api/eshs/v1/common/pledge', param, this.setFormDataForPledgeNo);
-  };
-
-  setFormDataForPledgeNo = (id, response) => {
-    const { setFormData } = this.props;
-    const { nextFormData } = response;
-    const nextFormValid = nextFormData && nextFormData.PLEDGE_NO && true;
-    if (nextFormValid) {
-      setFormData(id, nextFormData);
-    }
-  };
 
   deletePledge = () => {
     const { sagaKey: id, deleteTask, changeViewPage, viewPageData } = this.props;
@@ -97,6 +40,11 @@ class InputPage extends Component {
   resetPage = () => {
     const { sagaKey: id, changeViewPage, workSeq } = this.props;
     changeViewPage(id, workSeq, -1, 'INPUT');
+  };
+
+  modifyTaskCallback = (id, modifyWorkSeq, modifyTaskSeq) => {
+    const { workSeq, getDetailData } = this.props;
+    getDetailData(id, workSeq, modifyTaskSeq, 'MODIFY');
   };
 
   handleModalVisible = (type, bool) => {
@@ -121,13 +69,13 @@ class InputPage extends Component {
       setProcessRule,
       loadingComplete,
       viewPageData,
+      workInfo,
       CustomWorkProcess,
       formData,
-      workInfo,
-      saveTask,
+      modifyTask,
       workSeq,
     } = this.props;
-    const { modalVisible } = this.state;
+    const { cmpnyInfo, modalVisible } = this.state;
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -179,8 +127,19 @@ class InputPage extends Component {
                 >
                   검색
                 </StyledButton>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => saveTask(id, id, this.saveTaskAfter)} style={{ marginBottom: '5px' }}>
-                  추가
+                <StyledButton
+                  className="btn-primary btn-xs btn-first"
+                  // (id, reloadId, workSeq, taskSeq, callbackFunc)
+                  onClick={() => modifyTask(id, id, this.modifyTaskCallback)}
+                  style={{ marginBottom: '5px' }}
+                >
+                  수정
+                </StyledButton>
+                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.deletePledge()} style={{ marginBottom: '5px' }}>
+                  삭제
+                </StyledButton>
+                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => alert('준비중입니다.')} style={{ marginBottom: '5px' }}>
+                  인쇄
                 </StyledButton>
                 <StyledButton className="btn-primary btn-xs btn-first" onClick={this.resetPage} style={{ marginBottom: '5px' }}>
                   초기화
@@ -225,7 +184,7 @@ class InputPage extends Component {
   };
 }
 
-InputPage.propTypes = {
+ModifyPage.propTypes = {
   sagaKey: PropTypes.string,
   workFlowConfig: PropTypes.object,
   workPrcProps: PropTypes.object,
@@ -245,7 +204,7 @@ InputPage.propTypes = {
   modifyTaskBySeq: PropTypes.func,
 };
 
-InputPage.defaultProps = {
+ModifyPage.defaultProps = {
   workFlowConfig: {
     info: {
       PRC_ID: -1,
@@ -254,4 +213,4 @@ InputPage.defaultProps = {
   loadingComplete: () => false,
 };
 
-export default InputPage;
+export default ModifyPage;
