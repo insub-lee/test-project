@@ -17,7 +17,7 @@ class TextComp extends React.Component {
   componentDidMount() {
     const { CONFIG } = this.props;
     const { searchType } = CONFIG.property;
-    if (searchType === 'RANGEDATE' && CONFIG.property.rangeDateSearchType !== ('default' && undefined)) {
+    if (searchType === 'RANGEDATE' && CONFIG.property.rangeDateSearchType !== ('default' || undefined)) {
       const rangeDateSearchType = CONFIG.property.rangeDateSearchType || 'default';
       this.handleOnChangeSearch(this.makeRangeDefaultValue(rangeDateSearchType));
     }
