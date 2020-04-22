@@ -17,7 +17,7 @@ const AntdSelect = StyledSelect(Select);
 
 class HealthChkItemView extends Component {
   state = {
-    itemInfo: {},
+    detail: {},
     saveType: '',
   }
 
@@ -25,13 +25,13 @@ class HealthChkItemView extends Component {
     const { sagaKey: id, selectedRow } = this.props;
     if (selectedRow && Object.keys(selectedRow).length > 0) {
       this.setState({
-        itemInfo: { ...selectedRow },
+        detail: { ...selectedRow },
         saveType: 'U',
       });
     } else {
       this.setState({
         saveType: 'I',
-        itemInfo: {
+        detail: {
           ITEM_CODE: '',
           ITEM_NAME: '',
           ITEM_CLASS: '',
@@ -43,11 +43,11 @@ class HealthChkItemView extends Component {
     }
   }
 
-  onChangeItemInfo = (key, val) =>  {
+  onChangeDetail = (key, val) =>  {
     this.setState(prevState => {
-      let { itemInfo } = prevState;
-      itemInfo[key] = val;
-      return { itemInfo }
+      let { detail } = prevState;
+      detail[key] = val;
+      return { detail }
     });
   }
 
@@ -55,14 +55,14 @@ class HealthChkItemView extends Component {
     const { sagaKey, submitHandlerBySaga, onSaveAfter } = this.props;
     const submitData = {
       PARAM: {
-        ...this.state.itemInfo,
+        ...this.state.detail,
       }
     };
     
     submitHandlerBySaga(sagaKey, (this.state.saveType === 'I' ? 'POST' : 'PUT'), `/api/eshs/v1/common/health/healthChkItem`, submitData, (id, response) => {
       if (response) {
         if (response.result === 1) {
-          message.info(<MessageContent>등록되었습니다.</MessageContent>);
+          message.info(<MessageContent>저장되었습니다.</MessageContent>);
           onSaveAfter();
         } else if (response.result === -1) {
           message.warn(<MessageContent>동일한 코드가 존재합니다.</MessageContent>);
@@ -74,7 +74,7 @@ class HealthChkItemView extends Component {
   };
   
   render() {
-    const { itemInfo, saveType } = this.state;
+    const { detail, saveType } = this.state;
     return (
       <>
         <StyledHtmlTable>
@@ -87,31 +87,31 @@ class HealthChkItemView extends Component {
               <tr>
                 <th>검진항목코드</th>
                 <td>
-                  <AntdInput value={itemInfo.ITEM_CODE} onChange={e => this.onChangeItemInfo('ITEM_CODE', e.target.value)} readOnly={saveType === 'U'} />
+                  <AntdInput value={detail.ITEM_CODE} onChange={e => this.onChangeDetail('ITEM_CODE', e.target.value)} readOnly={saveType === 'U'} />
                 </td>
               </tr>
               <tr>
                 <th>검진항목명</th>
                 <td>
-                  <AntdInput value={itemInfo.ITEM_NAME} onChange={e => this.onChangeItemInfo('ITEM_NAME', e.target.value)} />
+                  <AntdInput value={detail.ITEM_NAME} onChange={e => this.onChangeDetail('ITEM_NAME', e.target.value)} />
                 </td>
               </tr>
               <tr>
                 <th>검진항목분류</th>
                 <td>
-                  <AntdInput value={itemInfo.ITEM_CLASS} onChange={e => this.onChangeItemInfo('ITEM_CLASS', e.target.value)} />
+                  <AntdInput value={detail.ITEM_CLASS} onChange={e => this.onChangeDetail('ITEM_CLASS', e.target.value)} />
                 </td>
               </tr>
               <tr>
-                <th>비고</th>
+                <th>임상적의의</th>
                 <td>
-                  <AntdTextarea value={itemInfo.ITEM_DESC} onChange={e => this.onChangeItemInfo('ITEM_DESC', e.target.value)} />
+                  <AntdTextarea value={detail.ITEM_DESC} onChange={e => this.onChangeDetail('ITEM_DESC', e.target.value)} />
                 </td>
               </tr>
               <tr>
                 <th>검진 성별</th>
                 <td>
-                  <AntdSelect value={itemInfo.ITEM_GENDER} onChange={val => this.onChangeItemInfo('ITEM_GENDER', val)}>
+                  <AntdSelect value={detail.ITEM_GENDER} onChange={val => this.onChangeDetail('ITEM_GENDER', val)}>
                     <AntdSelect.Option value="C">공통</AntdSelect.Option>
                     <AntdSelect.Option value="M">남자만</AntdSelect.Option>
                     <AntdSelect.Option value="F">여자만</AntdSelect.Option>
@@ -121,7 +121,7 @@ class HealthChkItemView extends Component {
               <tr>
                 <th>필수검진여부</th>
                 <td>
-                  <AntdSelect value={itemInfo.ITEM_REQUIRE} onChange={val => this.onChangeItemInfo('ITEM_REQUIRE', val)}>
+                  <AntdSelect value={detail.ITEM_REQUIRE} onChange={val => this.onChangeDetail('ITEM_REQUIRE', val)}>
                     <AntdSelect.Option value="Y">필수검진</AntdSelect.Option>
                     <AntdSelect.Option value="N">추가검진</AntdSelect.Option>
                   </AntdSelect>
