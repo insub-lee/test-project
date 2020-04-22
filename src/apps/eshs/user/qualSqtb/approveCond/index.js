@@ -168,7 +168,7 @@ class ApproveCond extends Component {
   }
 
   appStart = () => {
-    const { id, extraApiData, setFormData, formData, viewType } = this.props;
+    const { id, extraApiData, setFormData, formData, viewType, initForm } = this.props;
     const { deptCodeList } = this.state;
 
     const categories = (extraApiData && extraApiData.approveCategories && extraApiData.approveCategories.categoryMapList) || [];
@@ -180,7 +180,7 @@ class ApproveCond extends Component {
     });
     setFormData(id, { ...formData, approveCondList, approveCondViewType: viewType });
 
-    if (!approveCondList.length && viewType === 'INPUT') {
+    if (initForm && !approveCondList.length && viewType === 'INPUT') {
       return this.handlePlusTd();
     }
     this.debounceHandelSetTable();
@@ -299,6 +299,7 @@ ApproveCond.propTypes = {
   viewType: PropTypes.string,
   condTitle: PropTypes.string,
   btnPlusTd: PropTypes.bool,
+  initForm: PropTypes.bool,
 };
 
 ApproveCond.defaultProps = {
@@ -310,6 +311,7 @@ ApproveCond.defaultProps = {
   viewType: 'INPUT',
   condTitle: '',
   btnPlusTd: false,
+  initForm: true,
 };
 
 export default ApproveCond;

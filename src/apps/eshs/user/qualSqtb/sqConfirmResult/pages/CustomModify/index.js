@@ -269,6 +269,7 @@ class ModifyPage extends Component {
               viewType="INPUT"
               condTitle="안전확인결과내용"
               btnPlusTd
+              initForm={false}
             />
             <InterLock
               id={id}
@@ -277,6 +278,7 @@ class ModifyPage extends Component {
               getExtraApiData={getExtraApiData}
               extraApiData={extraApiData}
               viewPageData={{ viewType: 'VIEW' }}
+              initForm={false}
             />
             <Material
               id={id}
@@ -285,6 +287,7 @@ class ModifyPage extends Component {
               getExtraApiData={getExtraApiData}
               extraApiData={extraApiData}
               viewPageData={{ viewType: 'VIEW' }}
+              initForm={false}
             />
           </Sketch>
         </StyledViewDesigner>
