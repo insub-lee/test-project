@@ -481,22 +481,24 @@ class EshsCondComp extends Component {
             align: 'center',
             width: '15%',
           },
-          {
+        ];
+
+        if (COND_TYPE === 'INPUT') {
+          newColumns.push({
             title: '확인',
             align: 'center',
-            width: () => (COND_TYPE === 'INPUT' ? '5%' : '0%'),
+            width: '5%',
             render: (text, record) => (
               <Checkbox className="ant-checkbox-wrapper" defaultChecked={!!record.QUAL_EMPID} onChange={() => this.handleConfirmChecked(record.SEQ)} />
             ),
-          },
-        ];
+          });
+        }
         columns.push(newColumns);
         break;
       }
       default:
         break;
     }
-    console.debug('여기는 setColumns ', columns);
     this.setState({ columns: 0 in columns ? columns[0] : [] }, () =>
       DEFAULT_LIST === 'Y' && !list.length && COND_TYPE === 'INPUT' ? this.handlePlusTd() : this.debounceHandelSetTable(),
     );
@@ -510,7 +512,6 @@ class EshsCondComp extends Component {
       },
     } = this.props;
     const { columns } = this.state;
-    console.debug('여기는 setTable ', columns);
     const condList = (formData && formData[`${COND_COLUMN}CondList`]) || [];
     return this.setState({
       condTable: [
@@ -530,7 +531,6 @@ class EshsCondComp extends Component {
   };
 
   handlePlusTd = () => {
-    console.debug('여기는 handlePlusTd');
     const {
       sagaKey: id,
       formData,
@@ -547,10 +547,6 @@ class EshsCondComp extends Component {
       { ...initRow, SEQ: index++ },
       { ...initRow, SEQ: index++ },
     ];
-    console.debug('columns', columns);
-    console.debug('initCondList', initCondList);
-    console.debug('condList', condList);
-    console.debug('condList concat', condList.concat(initCondList));
     changeFormData(id, `${COND_COLUMN}CondList`, condList.concat(initCondList));
     this.debounceHandelSetTable();
   };
@@ -581,7 +577,7 @@ class EshsCondComp extends Component {
       CONFIG: {
         property: { COND_COLUMN },
       },
-      profile: { USER_ID, EMP_NO },
+      profile: { USER_ID = '', EMP_NO = '' },
     } = this.props;
 
     const condList = (formData && formData[`${COND_COLUMN}CondList`]) || [];
@@ -643,8 +639,6 @@ class EshsCondComp extends Component {
   render() {
     const { CONFIG } = this.props;
     const { condTable } = this.state;
-    console.debug('CONFIG', CONFIG);
-    console.debug('condTable', condTable);
     return <>{condTable}</>;
   }
 }
@@ -657,6 +651,7 @@ EshsCondComp.propTypes = {
   getExtraApiData: PropTypes.func,
   extraApiData: PropTypes.object,
   setFormData: PropTypes.func,
+  profile: PropTypes.object,
 };
 
 EshsCondComp.defaultProps = {
@@ -667,6 +662,7 @@ EshsCondComp.defaultProps = {
   getExtraApiData: () => {},
   extraApiData: {},
   setFormData: () => {},
+  profile: {},
 };
 
 export default EshsCondComp;

@@ -20,7 +20,7 @@ class DatePickerComp extends Component {
           break;
         }
         default:
-          changeFormData(id, COMP_FIELD, undefined);
+          // changeFormData(id, COMP_FIELD, undefined);
           break;
       }
     }
@@ -41,9 +41,9 @@ class DatePickerComp extends Component {
   render() {
     const { CONFIG, visible, isSearch, readOnly, viewPageData, colData, searchCompRenderer } = this.props;
     // console.debug('프롭스 딱대!', this.props);
-    if (!visible) {
-      return '';
-    }
+    // if (!visible) {
+    //   return '';
+    // }
 
     if (isSearch && CONFIG.property.searchType === 'CUSTOM') {
       return (
@@ -59,39 +59,58 @@ class DatePickerComp extends Component {
       return searchCompRenderer(this.props);
     }
 
-    if (viewPageData.viewType.toUpperCase() === 'INPUT') {
-      return (
-        <AntdDatePicker
-          style={{ width: '200px' }}
-          onChange={this.onChangeHandler}
-          placeholder={CONFIG.property.placeholder}
-          value={(colData && moment(colData)) || undefined}
-          disabled={readOnly || CONFIG.property.readOnly}
-        />
-      );
-    }
+    return visible ? (
+      <>
+        {viewPageData.viewType.toUpperCase() === 'MODIFY' || viewPageData.viewType.toUpperCase() === 'INPUT' ? (
+          <AntdDatePicker
+            style={{ width: '200px' }}
+            onChange={this.onChangeHandler}
+            placeholder={CONFIG.property.placeholder}
+            value={colData ? moment(colData) : undefined}
+            disabled={readOnly || CONFIG.property.readOnly}
+          />
+        ) : (
+          <span className={CONFIG.property.className || ''}>{colData ? moment(colData).format('YYYY-MM-DD') : '선택된 날짜가 없습니다.'}</span>
+        )}
+      </>
+    ) : (
+      ''
+    );
 
-    if (viewPageData.viewType.toUpperCase() === 'MODIFY') {
-      return (
-        <AntdDatePicker
-          style={{ width: '200px' }}
-          onChange={this.onChangeHandler}
-          placeholder={CONFIG.property.placeholder}
-          value={colData ? moment(colData) : undefined}
-          disabled={readOnly || CONFIG.property.readOnly}
-        />
-      );
-    }
+    // 변경 전 소스
+    // if (viewPageData.viewType.toUpperCase() === 'INPUT') {
+    //   return (
+    //     <AntdDatePicker
+    //       style={{ width: '200px' }}
+    //       onChange={this.onChangeHandler}
+    //       placeholder={CONFIG.property.placeholder}
+    //       value={(colData && moment(colData)) || undefined}
+    //       disabled={readOnly || CONFIG.property.readOnly}
+    //     />
+    //   );
+    // }
 
-    if (viewPageData.viewType.toUpperCase() === 'VIEW') {
-      return <span className={CONFIG.property.className || ''}>{moment(colData).year() !== 1 ? moment(colData).format('YYYY-MM-DD') : ''}</span>;
-    }
+    // if (viewPageData.viewType.toUpperCase() === 'MODIFY') {
+    // if (viewPageData.viewType.toUpperCase() === 'MODIFY' || viewPageData.viewType.toUpperCase() === 'INPUT') {
+    //   return (
+    //     <AntdDatePicker
+    //       style={{ width: '200px' }}
+    //       onChange={this.onChangeHandler}
+    //       placeholder={CONFIG.property.placeholder}
+    //       value={colData ? moment(colData) : undefined}
+    //       disabled={readOnly || CONFIG.property.readOnly}
+    //     />
+    //   );
+    // }
 
-    if (viewPageData.viewType.toUpperCase() === 'LIST') {
-      return <span className={CONFIG.property.className || ''}>{moment(colData).year() !== 1 ? moment(colData).format('YYYY-MM-DD') : ''}</span>;
-      // return <span className={CONFIG.property.className || ''}>{moment(colData).format('YYYY-MM-DD')}</span>;
-    }
-    return '';
+    // if (viewPageData.viewType.toUpperCase() === 'VIEW' || viewPageData.viewType.toUpperCase() === 'LIST') {
+    //   return <span className={CONFIG.property.className || ''}>{colData ? moment(colData).format('YYYY-MM-DD') : '선택된 날짜가 없습니다.'}</span>;
+    // }
+
+    // if (viewPageData.viewType.toUpperCase() === 'LIST') {
+    //   return <span className={CONFIG.property.className || ''}>{moment(colData).year() !== 1 ? moment(colData).format('YYYY-MM-DD') : ''}</span>;
+    //   // return <span className={CONFIG.property.className || ''}>{moment(colData).format('YYYY-MM-DD')}</span>;
+    // }
   }
 }
 

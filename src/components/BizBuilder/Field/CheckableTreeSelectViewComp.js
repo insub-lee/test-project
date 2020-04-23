@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class CheckableTreeSElectViewComp extends Component {
+class CheckableTreeSelectViewComp extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,4 +36,4 @@ class CheckableTreeSElectViewComp extends Component {
   }
 }
 
-export default CheckableTreeSElectViewComp;
+export default CheckableTreeSelectViewComp;

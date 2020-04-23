@@ -130,7 +130,7 @@ class List extends React.Component {
       content:
         this.state.viewType.toUpperCase() === 'VIEW' && this.props.result.attachs && this.props.result.attachs.fileList.length
           ? this.props.result.attachs.fileList.map(item => (
-              <img src={`http://192.168.251.14:10197/down/file/${item.file_seq}`} alt={this.state.requestValue.kind} width="150px" />
+              <img src={`http://192.168.251.14:10197/down/file/${item.FILE_SEQ}`} alt={this.state.requestValue.kind} width="150px" />
             ))
           : '',
     },

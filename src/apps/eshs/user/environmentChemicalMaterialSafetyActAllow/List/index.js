@@ -165,6 +165,12 @@ class List extends React.Component {
       key: 'CONTENT_STANDARD',
       align: 'center',
     },
+    {
+      title: '해당여부',
+      dataIndex: 'IS_ALLOW',
+      key: 'IS_ALLOW',
+      align: 'center',
+    },
   ];
 
   render() {
