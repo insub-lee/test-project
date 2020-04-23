@@ -477,14 +477,14 @@ class MyPageTree extends Component {
           title = (
             <div>
               <Popover placement="right" content={buttons} trigger="hover" overlayClassName="mypageTreePopupMenu">
-                <button
+                <span
                   className={`${node.key === selectedIndex ? 'active' : ''}`}
                   onClick={handleTreeOnClick}
                   onMouseOver={() => (!showInsert && !showEdit ? this.onHoverTreeNode(node.key) : '')}
                   style={{ cursor: 'pointer' }}
                 >
                   {node.title}
-                </button>
+                </span>
               </Popover>
               <Popover
                 placement="right"
