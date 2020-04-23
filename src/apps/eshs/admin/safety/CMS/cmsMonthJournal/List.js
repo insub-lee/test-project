@@ -134,7 +134,7 @@ class List extends Component {
             <>
               <span className="textLabel">날짜</span>
               {/* datePiker CSS 없음 대체용으로 사용 */}
-              <div style={{ margin: '0 5px', display: 'inline-block' }}>
+              <div style={{ margin: '0 5px', display: 'inline-block', width: 300 }}>
                 <RangePicker defaultValue={rangeDate} format={['YYYY-MM-DD', 'YYYY-MM-DD']} onChange={(date, dateStrings) => this.dateChange(dateStrings)} />
               </div>
             </>
@@ -212,6 +212,39 @@ class List extends Component {
         </div>
         <StyledHtmlTable className="tableWrapper">
           <table>
+            <colgroup>
+              {listData && listData.list && listData.list[0] && listData.list[0].FULLPATH && listData.list[0].FULLPATH.indexOf('CMS') === -1 ? (
+                <>
+                  <col width="4.54%" />
+                  <col width="4.54%" />
+                  <col width="4.54%" />
+                  <col width="4.54%" />
+                  <col width="4.54%" />
+                  <col width="4.54%" />
+                  <col width="4.54%" />
+                  <col width="4.54%" />
+                  <col width="4.54%" />
+                  <col width="4.54%" />
+                  <col width="4.54%" />
+                </>
+              ) : (
+                <>
+                  <col width="5%" />
+                  <col width="5%" />
+                  <col width="5%" />
+                  <col width="5%" />
+                  <col width="5%" />
+                  <col width="5%" />
+                  <col width="5%" />
+                  <col width="5%" />
+                  <col width="5%" />
+                  <col width="5%" />
+                </>
+              )}
+              <col width="6%" />
+              <col width="22%" />
+              <col width="22%" />
+            </colgroup>
             <tbody>
               <tr>
                 <th
@@ -231,7 +264,11 @@ class List extends Component {
                 <th rowSpan="2">분류3</th>
                 <th rowSpan="2">총 대응건수</th>
                 {listData && listData.list && listData.list[0] && listData.list[0].FULLPATH && listData.list[0].FULLPATH.indexOf('CMS') === -1 ? (
-                  <th rowSpan="2"> 점검수량</th>
+                  <th rowSpan="2">
+                    점검
+                    <br />
+                    수량
+                  </th>
                 ) : (
                   ''
                 )}
@@ -244,9 +281,21 @@ class List extends Component {
                 <th>R</th>
                 <th>C-1</th>
                 <th>FAB</th>
-                <th>가스창고</th>
-                <th>약품공급실</th>
-                <th>가스공급실</th>
+                <th>
+                  가스
+                  <br />
+                  창고
+                </th>
+                <th>
+                  약품
+                  <br />
+                  공급실
+                </th>
+                <th>
+                  가스
+                  <br />
+                  공급실
+                </th>
                 <th>기타</th>
               </tr>
               {listData &&
@@ -255,18 +304,24 @@ class List extends Component {
                   <tr>
                     <th>{item.CLASSIFICATION_PATH}</th>
                     <td>{item.CLASSIFICATION_NM}</td>
-                    <td>{item.TOTAL}</td>
-                    {item.FULLPATH.indexOf('CMS') === -1 ? <td>{item.WEIGHT}</td> : ''}
-                    <td>{item.R}</td>
-                    <td>{item.C_2}</td>
-                    <td>{item.FAB}</td>
-                    <td>{item.GAS_WARHOUSE}</td>
-                    <td>{item.MEDICAL_SUPPLY}</td>
-                    <td>{item.GAS_SUPPLY}</td>
-                    <td>{item.OTHER}</td>
+                    <td style={{ textAlign: 'center' }}>{item.TOTAL}</td>
+                    {item.FULLPATH.indexOf('CMS') === -1 ? <td style={{ textAlign: 'center' }}>{item.WEIGHT}</td> : ''}
+                    <td style={{ textAlign: 'center' }}>{item.R}</td>
+                    <td style={{ textAlign: 'center' }}>{item.C_2}</td>
+                    <td style={{ textAlign: 'center' }}>{item.FAB}</td>
+                    <td style={{ textAlign: 'center' }}>{item.GAS_WARHOUSE}</td>
+                    <td style={{ textAlign: 'center' }}>{item.MEDICAL_SUPPLY}</td>
+                    <td style={{ textAlign: 'center' }}>{item.GAS_SUPPLY}</td>
+                    <td style={{ textAlign: 'center' }}>{item.OTHER}</td>
                     <td>{item.JOURNAL_DATE}</td>
                     <td>
-                      <Popover placement="topLeft" title={item.DETAIL_CONTANT} trigger="hover">
+                      <Popover
+                        style={{ width: '80%' }}
+                        placement="topLeft"
+                        title="상세내용"
+                        content={<div style={{ width: 660 }}>{item.DETAIL_CONTANT}</div>}
+                        trigger="hover"
+                      >
                         <div
                           style={{
                             textOverflow: 'ellipsis',
@@ -281,7 +336,7 @@ class List extends Component {
                       </Popover>
                     </td>
                     <td>
-                      <Popover placement="topLeft" title={item.REMARK} trigger="hover">
+                      <Popover placement="topLeft" title="비고" content={<div style={{ width: 660 }}>{item.REMARK}</div>} trigger="hover">
                         <div
                           style={{
                             textOverflow: 'ellipsis',

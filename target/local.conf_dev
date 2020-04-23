@@ -188,8 +188,15 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
-
-
+    location ~ ^(/api/migration/v1/common/) {
+            proxy_pass  http://migration-common;
+            proxy_connect_timeout 10;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
     location ~ ^/img/thumb/crop/(.*)/(.*)$ {
         proxy_pass http://thumbor/unsafe/$1/http://http://192.168.251.14:40033/down/thumb/$2;
         proxy_connect_timeout 60;
@@ -340,6 +347,9 @@ upstream manual-common {
 }
 upstream eshs-common {
     server 192.168.251.14:10510;
+}
+upstream migration-common {
+    server 192.168.251.14:10610;
 }
 upstream portal-download {
     server 192.168.251.14:10200;

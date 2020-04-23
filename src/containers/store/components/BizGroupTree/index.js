@@ -321,7 +321,7 @@ class BizGroupTree extends Component {
           return {
             title: (
               <Popover placement="right" content={buttons} trigger="hover" overlayClassName="mypageTreePopupMenu">
-                <button
+                <span
                   // className={`${bizIcon} ${bizConfrim} ${bizDeleteIcon} ${node.key === selectedIndex ? 'active' : ''}`}
                   className={`${node.key === selectedIndex ? 'active' : ''}`}
                   onClick={handleTreeOnClick}
@@ -332,7 +332,7 @@ class BizGroupTree extends Component {
                   {node.CHG_YN === 'Y' && node.MENU_EXIST_YN === 'Y' ? <img src={iconBizConfirm} /> : ''}
                   {node.DEL_YN === 'Y' ? <img src={iconBizDelete} /> : ''}
                   <span style={{ marginLeft: 5 }}>{titleInner}</span>
-                </button>
+                </span>
               </Popover>
             ),
 

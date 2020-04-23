@@ -33,5 +33,17 @@ const StyledSelectModal = Component => styled(Component)`
       text-align: center;
     }
   }
+
+  &.multiSelector-w100 {
+    .scrollbar-wrapper {
+      width: 100px !important;
+    }
+  }
+
+  &.multiSelector-w200 {
+    .scrollbar-wrapper {
+      width: 200px !important;
+    }
+  }
 `;
 export default StyledSelectModal;
