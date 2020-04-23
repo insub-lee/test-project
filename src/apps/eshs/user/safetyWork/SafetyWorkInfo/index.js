@@ -2,21 +2,23 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Input, DatePicker, Select, Modal, Radio } from 'antd';
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
+import { Input, DatePicker, Select, Radio } from 'antd';
 
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSelect from 'commonStyled/EshsStyled/Select/StyledSelect';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledPicker from 'commonStyled/Form/StyledPicker';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledTextarea from 'commonStyled/Form/StyledTextarea';
 
-const AntdModal = StyledModalWrapper(Modal);
+const { Option } = Select;
+const { TextArea } = Input;
 const AntdInput = StyledInput(Input);
 const AntdSearch = StyledSearchInput(Input.Search);
-const { Option } = Select;
+const AntdSelect = StyledSelect(Select);
+const AntdDatePicker = StyledPicker(DatePicker);
+const AntdTextArea = StyledTextarea(TextArea);
 
 const EduInfoTableStyled = styled.div`
   .hstCmpnyCd {
@@ -27,58 +29,15 @@ const EduInfoTableStyled = styled.div`
 class SafetyWorkInfo extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      modalType: '',
-      modalVisible: false,
-    };
+    this.state = {};
   }
 
-  handleModalVisible = (type, bool) => {
-    this.setState({
-      modalType: type,
-      modalVisible: bool,
-    });
-  };
-
-  // FormData OnChange - 모달컨트롤
-  handleFormDataOnchange = (field, value, modal) => {
-    const { sagaKey: id, changeFormData } = this.props;
-    changeFormData(id, field, value);
-    if (modal || false) {
-      this.handleModalVisible('', false);
-    }
-  };
-
-  // FormData OnChange - 모달컨트롤
-  handleFormDataOnchange = (field, value, modal) => {
-    const { sagaKey: id, changeFormData } = this.props;
-    changeFormData(id, field, value);
-    if (modal || false) {
-      this.handleModalVisible('', false);
-    }
-  };
-
-  // 2006 - 현재년도 까지 Select 생성
-  renderEduYearSelect = () => {
-    const { formData } = this.props;
-    const endYear = Number(moment().format('YYYY'));
-    const options = [];
-    for (let year = 2006; year <= endYear; year += 1) {
-      options.push(year);
-    }
-    return (
-      <StyledSelect>
-        <Select style={{ width: '200px' }} value={(formData.EDU_YEAR && formData.EDU_YEAR) || ''} onChange={e => this.handleFormDataOnchange('EDU_YEAR', e)}>
-          {options.map(YYYY => (
-            <Option value={`${YYYY}`}>{YYYY}</Option>
-          ))}
-        </Select>
-      </StyledSelect>
-    );
-  };
+  shouldComponentUpdate(nextProps, nextState) {
+    return true;
+  }
 
   render() {
-    const { modalType, modalVisible } = this.state;
+    const { handleModal, formData, handleChangeFormData, profile } = this.props;
     return (
       <EduInfoTableStyled>
         <ContentsWrapper>
@@ -102,7 +61,7 @@ class SafetyWorkInfo extends Component {
                     <span>신청일</span>
                   </th>
                   <td colSpan={8}>
-                    <DatePicker className="ant-input-inline" style={{ width: '200px' }} defaultValue={moment()} />
+                    <AntdDatePicker className="ant-picker-xs" style={{ width: '200px' }} defaultValue={moment()} />
                   </td>
                 </tr>
                 <tr>
@@ -110,34 +69,54 @@ class SafetyWorkInfo extends Component {
                     <span>* 작업지역</span>
                   </th>
                   <td colSpan={8}>
-                    <StyledSelect>
-                      <Select style={{ width: '200px' }} defaultValue="청주">
-                        <Option value="청주">청주</Option>
-                        <Option value="구미">구미</Option>
-                      </Select>
-                    </StyledSelect>
+                    <AntdSelect
+                      className="select-xs"
+                      style={{ width: '200px' }}
+                      defaultValue={formData.SITE}
+                      onChange={value => handleChangeFormData('SITE', value)}
+                    >
+                      <Option value="청주">청주</Option>
+                      <Option value="구미">구미</Option>
+                    </AntdSelect>
                   </td>
                 </tr>
                 <tr>
                   <th colSpan={2}>
                     <span>* 발주회사</span>
                   </th>
-                  <td colSpan={3}>(리드온리)</td>
+                  <td colSpan={3}>
+                    <AntdInput className="ant-input-xs ant-input-inline" defaultValue={formData.REQ_CMPNY_CD} readOnly style={{ width: '200px' }} />
+                    <span style={{ color: '#495057', marginLeft: '5px' }}>{profile.DEPT_NAME_KOR}</span>
+                  </td>
                   <th colSpan={2}>
                     <span>* 작업부서</span>
                   </th>
-                  <td colSpan={3}>(리드온리)</td>
+                  <td colSpan={3}>
+                    <AntdInput className="ant-input-xs ant-input-inline" defaultValue={formData.REQ_DEPT_CD} readOnly style={{ width: '200px' }} />
+                    <span style={{ color: '#495057', marginLeft: '5px' }}>{profile.DEPT_NAME_KOR}</span>
+                  </td>
                 </tr>
                 <tr>
                   <th colSpan={2}>
                     <span>* 담당자</span>
                   </th>
-                  <td colSpan={3}>(본인)</td>
+                  <td colSpan={3}>
+                    <AntdInput className="ant-input-xs ant-input-inline" defaultValue={formData.REQ_EMP_NO} readOnly style={{ width: '200px' }} />
+                    <span style={{ color: '#495057', marginLeft: '5px' }}>{profile.NAME_KOR}</span>
+                  </td>
                   <th colSpan={2}>
                     <span>* 감독자</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdSearch className="input-search-sm" style={{ width: '200px' }} disable />
+                    <AntdSearch
+                      className="input-search-xs"
+                      style={{ width: '200px' }}
+                      value={formData.REQ_SUPERVISOR_EMP_NO}
+                      disable
+                      onClick={() => handleModal('hstUser', true)}
+                      onSearch={() => handleModal('hstUser', true)}
+                    />
+                    {formData.REQ_SUPERVISOR_EMP_NM !== '' && <span style={{ marginLeft: '5px' }}>{formData.REQ_SUPERVISOR_EMP_NM}</span>}
                   </td>
                 </tr>
                 <tr>
@@ -145,13 +124,13 @@ class SafetyWorkInfo extends Component {
                     <span>* 작업업체</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdSearch className="input-search-sm" style={{ width: '200px' }} disable />
+                    <AntdSearch className="input-search-xs" style={{ width: '200px' }} disable />
                   </td>
                   <th colSpan={2}>
                     <span>서약서번호</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdSearch className="input-search-sm" style={{ width: '200px' }} disable />
+                    <AntdSearch className="input-search-xs" style={{ width: '200px' }} disable />
                   </td>
                 </tr>
                 <tr>
@@ -160,22 +139,22 @@ class SafetyWorkInfo extends Component {
                   </th>
                   <td colSpan={3}>(주작업)</td>
                   <th colSpan={2}>
-                    <span>위험성평가</span>
-                  </th>
-                  <td colSpan={3}>
-                    <AntdSearch className="input-search-sm" style={{ width: '200px' }} disable />
-                  </td>
-                </tr>
-                <tr>
-                  <th colSpan={2}>
                     <span>* 보충작업</span>
                   </th>
                   <td colSpan={3}>(보충작업)</td>
+                </tr>
+                <tr>
+                  <th colSpan={2}>
+                    <span>위험성평가</span>
+                  </th>
+                  <td colSpan={3}>
+                    <AntdSearch className="input-search-xs" style={{ width: '200px' }} disable />
+                  </td>
                   <th colSpan={2}>
                     <span>* 검토자</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdSearch className="input-search-sm" style={{ width: '200px' }} disable />
+                    <AntdSearch className="input-search-xs" style={{ width: '200px' }} disable />
                   </td>
                 </tr>
                 <tr>
@@ -183,39 +162,51 @@ class SafetyWorkInfo extends Component {
                     <span>* 작업명</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdInput className="ant-input-sm" style={{ width: '200px' }} />
+                    <AntdInput className="ant-input-xs" style={{ width: '200px' }} />
                   </td>
                   <th colSpan={2}>
                     <span>* 최종검토자</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdSearch className="input-search-sm" style={{ width: '200px' }} disable />
+                    <AntdSearch className="input-search-xs" style={{ width: '200px' }} disable />
                   </td>
                 </tr>
                 <tr>
                   <th colSpan={2}>
                     <span>* 작업내용</span>
                   </th>
-                  <td colSpan={8}>(작업명 인풋)</td>
+                  <td colSpan={8}>
+                    <AntdTextArea autoSize={{ minRows: 4, maxRows: 4 }} />
+                  </td>
                 </tr>
                 <tr>
                   <th colSpan={2}>
                     <span>* 작업동</span>
                   </th>
                   <td colSpan={3}>
-                    {' '}
-                    <StyledSelect>
-                      <Select style={{ width: '200px' }} defaultValue="청주">
-                        <Option value="청주">청주</Option>
-                        <Option value="구미">구미</Option>
-                      </Select>
-                    </StyledSelect>
+                    <AntdSelect
+                      className="select-xs"
+                      style={{ width: '200px' }}
+                      defaultValue={formData.DGUBUN}
+                      onChange={value => handleChangeFormData('DGUBUN', value)}
+                    >
+                      <Option value="C-1">C-1</Option>
+                      <Option value="C-2">C-2</Option>
+                      <Option value="R">R</Option>
+                      <Option value="청주기타">청주기타</Option>
+                      <Option value="F1동">F1동</Option>
+                      <Option value="F3동">F3동</Option>
+                      <Option value="A1동">A1동</Option>
+                      <Option value="D.I동">D.I동</Option>
+                      <Option value="기숙사동">기숙사동</Option>
+                      <Option value="구미기타">구미기타</Option>
+                    </AntdSelect>
                   </td>
                   <th colSpan={2}>
                     <span>* 작업장소</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdInput className="ant-input-sm ant-input-inline" style={{ width: '200px' }} />
+                    <AntdInput className="ant-input-xs ant-input-inline" style={{ width: '200px' }} />
                     <span style={{ color: '#17a9a1', marginLeft: '5px' }}>※ 작업 상세장소 입력</span>
                   </td>
                 </tr>
@@ -224,7 +215,7 @@ class SafetyWorkInfo extends Component {
                     <span>* 작업기간</span>
                   </th>
                   <td colSpan={3}>
-                    <DatePicker className="ant-input-inline" style={{ width: '200px' }} />
+                    <AntdDatePicker className="ant-picker-xs" style={{ width: '200px' }} />
                   </td>
                   <th colSpan={2}>
                     <span>* 작업시간</span>
@@ -241,36 +232,18 @@ class SafetyWorkInfo extends Component {
             </table>
           </StyledHtmlTable>
         </ContentsWrapper>
-        <AntdModal
-          title={modalType === 'hstCmpny' ? '주관회사 검색' : '주관회사 사원'}
-          width={700}
-          visible={modalVisible}
-          footer={null}
-          onOk={() => console.debug('모달닫기')}
-          onCancel={() => console.debug('모달닫기')}
-        >
-          Test
-        </AntdModal>
       </EduInfoTableStyled>
     );
   }
 }
 
 SafetyWorkInfo.propTypes = {
-  sagaKey: PropTypes.string.isRequired,
-  result: PropTypes.object,
   formData: PropTypes.object,
-  setFormData: PropTypes.func.isRequired,
-  getCallDataHandler: PropTypes.func.isRequired,
-  changeFormData: PropTypes.func.isRequired,
-  submitHandlerBySaga: PropTypes.func.isRequired,
-  eshsHstCmpnyList: PropTypes.array,
-  eshsHstCmpnyUserList: PropTypes.array,
+  profile: PropTypes.object,
+  handleModal: PropTypes.func,
+  handleChangeFormData: PropTypes.func,
 };
 
-SafetyWorkInfo.defaultProps = {
-  eshsHstCmpnyList: [],
-  eshsHstCmpnyUserList: [],
-};
+SafetyWorkInfo.defaultProps = {};
 
 export default SafetyWorkInfo;
