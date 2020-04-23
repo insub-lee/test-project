@@ -11,8 +11,8 @@ import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import BizBuilderBase from 'components/BizBuilderBase';
-import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
-import { Input, Modal, Descriptions, Checkbox } from 'antd';
+import { CaretDownOutlined } from '@ant-design/icons';
+import { Input, Modal } from 'antd';
 import Styled from './Styled';
 import CustomListPage from '../ListPage';
 const AntdModal = StyledModalWrapper(Modal);
@@ -27,7 +27,6 @@ class InputPage extends Component {
       },
       modalType: '',
       modalVisible: false,
-      pledgeList: [],
     };
   }
 
@@ -89,13 +88,15 @@ class InputPage extends Component {
     }
   };
 
-  resetFormData = () => {
-    const { sagaKey: id, setFormData, responseData } = this.props;
-    const { formData } = responseData;
-    const nextFormData = {
-      ...formData,
-    };
-    setFormData(id, nextFormData);
+  deletePledge = () => {
+    const { sagaKey: id, deleteTask, changeViewPage, viewPageData } = this.props;
+    const { workSeq, taskSeq } = viewPageData;
+    deleteTask(id, id, workSeq, taskSeq, changeViewPage, () => changeViewPage(id, workSeq, -1, 'INPUT'));
+  };
+
+  resetPage = () => {
+    const { sagaKey: id, changeViewPage, workSeq } = this.props;
+    changeViewPage(id, workSeq, -1, 'INPUT');
   };
 
   handleModalVisible = (type, bool) => {
@@ -107,7 +108,7 @@ class InputPage extends Component {
 
   handleListRowClick = record => {
     const { sagaKey: id, workSeq, getDetailData } = this.props;
-    getDetailData(id, workSeq, record.TASK_SEQ, 'INPUT');
+    getDetailData(id, workSeq, record.TASK_SEQ, 'MODIFY');
     this.handleModalVisible('', false);
   };
 
@@ -120,14 +121,13 @@ class InputPage extends Component {
       setProcessRule,
       loadingComplete,
       viewPageData,
-      changeViewPage,
-      workInfo,
       CustomWorkProcess,
       formData,
+      workInfo,
       saveTask,
       workSeq,
     } = this.props;
-    const { cmpnyInfo, modalVisible } = this.state;
+    const { modalVisible } = this.state;
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -146,7 +146,6 @@ class InputPage extends Component {
           () => loadingComplete(),
         );
       }
-      console.debug('전체프롭스', this.props);
       return (
         <>
           <StyledSearchWrap>
@@ -173,32 +172,17 @@ class InputPage extends Component {
                 >
                   <CaretDownOutlined />
                 </div>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('검색')} style={{ marginBottom: '5px' }}>
+                <StyledButton
+                  className="btn-primary btn-xs btn-first"
+                  onClick={() => this.handleModalVisible('searchPledge', true)}
+                  style={{ marginBottom: '5px' }}
+                >
                   검색
                 </StyledButton>
-                {formData.EDU_NO && formData.EDU_NO !== '' ? (
-                  <>
-                    <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('검색')} style={{ marginBottom: '5px' }}>
-                      수정
-                    </StyledButton>
-                    {formData.WORKER_LIST && formData.WORKER_LIST.length > 0 && (
-                      <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('검색')} style={{ marginBottom: '5px' }}>
-                        저장
-                      </StyledButton>
-                    )}
-                    <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('검색')} style={{ marginBottom: '5px' }}>
-                      삭제
-                    </StyledButton>
-                    <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('검색')} style={{ marginBottom: '5px' }}>
-                      인쇄
-                    </StyledButton>
-                  </>
-                ) : (
-                  <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('검색')} style={{ marginBottom: '5px' }}>
-                    추가
-                  </StyledButton>
-                )}
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={this.resetFormData} style={{ marginBottom: '5px' }}>
+                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => saveTask(id, id, this.saveTaskAfter)} style={{ marginBottom: '5px' }}>
+                  추가
+                </StyledButton>
+                <StyledButton className="btn-primary btn-xs btn-first" onClick={this.resetPage} style={{ marginBottom: '5px' }}>
                   초기화
                 </StyledButton>
               </div>
@@ -214,16 +198,11 @@ class InputPage extends Component {
                   <WorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
                 ))}
               <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-              <div className="alignRight">
-                <StyledButton className="btn-primary" onClick={() => saveTask(id, id, this.saveTaskAfter)}>
-                  저장
-                </StyledButton>
-              </div>
             </Sketch>
           </StyledViewDesigner>
           <AntdModal
             title="서약서 검색"
-            width={790}
+            width="70%"
             visible={modalVisible}
             footer={null}
             onOk={() => this.handleModalVisible('', false)}
@@ -263,6 +242,7 @@ InputPage.propTypes = {
   submitExtraHandler: PropTypes.func,
   setFormData: PropTypes.func,
   responseData: PropTypes.object,
+  modifyTaskBySeq: PropTypes.func,
 };
 
 InputPage.defaultProps = {

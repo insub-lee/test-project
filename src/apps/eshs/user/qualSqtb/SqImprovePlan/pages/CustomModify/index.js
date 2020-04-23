@@ -193,8 +193,9 @@ class ModifyPage extends Component {
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <table width="100%">
               <colgroup>
-                <col width="50%" />
-                <col width="50%" />
+                <col width="49%" />
+                <col width="2%" />
+                <col width="49%" />
               </colgroup>
               <tbody>
                 <tr>
@@ -209,8 +210,10 @@ class ModifyPage extends Component {
                       viewType="INPUT"
                       condTitle="Qual 개선계획내용"
                       btnPlusTd
+                      initForm={false}
                     />
                   </td>
+                  <td></td>
                   <td>
                     <ApproveCond
                       id={id}

@@ -143,7 +143,7 @@ class MainWidget extends Component {
           </div>
         </div>
         <div className="main-widget-row">
-          <div className="main-widget-col col-3">
+          <div className="main-widget-col col-3 mb-0">
             <div className="widget-inner widget-approve">
               <div className="widget-title">
                 결재 요청건
@@ -203,21 +203,100 @@ class MainWidget extends Component {
           </div>
           <div className="main-widget-col col-1-2">
             <div className="widget-hover-inner">
-              <button type="button" className="widget-cover">
-                <span className="widget-icon widget-icon1 "></span>
-              </button>
-              <div className="widget-board">내용</div>
+              <a href="#none" className="widget-cover">
+                <span className="widget-icon widget-icon2"></span>
+                <span className="widget-title-kor">업무표준</span>
+                <span className="widget-title-eng">Operating standard</span>
+                <span className="widget-item-number">
+                  66 <span className="total">/ 120</span>
+                </span>
+              </a>
             </div>
           </div>
-          <div className="main-widget-col col-1-2">외부배포</div>
-          <div className="main-widget-col col-1-2">외부배포</div>
-          <div className="main-widget-col col-1-2">외부배포</div>
-          <div className="main-widget-col col-1-2">외부배포</div>
-          <div className="main-widget-col col-1-2">외부배포</div>
-          <div className="main-widget-col col-1-2">외부배포</div>
-          <div className="main-widget-col col-1-2">외부배포</div>
-          <div className="main-widget-col col-1-2">외부배포</div>
-          <div className="main-widget-col col-1-2">외부배포</div>
+          <div className="main-widget-col col-1-2">
+            <div className="widget-hover-inner">
+              <a href="#none" className="widget-cover">
+                <span className="widget-icon widget-icon3"></span>
+                <span className="widget-title-kor">기술표준</span>
+                <span className="widget-title-eng">Technical standard</span>
+                <span className="widget-item-number">
+                  114 <span className="total">/ 120</span>
+                </span>
+              </a>
+            </div>
+          </div>
+          <div className="main-widget-col col-1-2">
+            <div className="widget-hover-inner">
+              <a href="#none" className="widget-cover">
+                <span className="widget-icon widget-icon4"></span>
+                <span className="widget-title-kor">도면</span>
+                <span className="widget-title-eng">Drawing</span>
+                <span className="widget-item-number">
+                  77 <span className="total">/ 120</span>
+                </span>
+              </a>
+            </div>
+          </div>
+          <div className="main-widget-col col-1-2">
+            <div className="widget-hover-inner">
+              <a href="#none" className="widget-cover">
+                <span className="widget-icon widget-icon5"></span>
+                <span className="widget-title-kor">업무절차</span>
+                <span className="widget-title-eng">Work Process</span>
+                <span className="widget-item-number">
+                  120 <span className="total"></span>
+                </span>
+              </a>
+            </div>
+          </div>
+          <div className="main-widget-col col-1-2 mb-0">
+            <div className="widget-hover-inner">
+              <a href="#none" className="widget-cover">
+                <span className="widget-icon widget-icon7"></span>
+                <span className="widget-title-kor">PDP</span>
+                <span className="widget-title-eng">Plasma Display Panel</span>
+                <span className="widget-item-number">
+                  120 <span className="total"></span>
+                </span>
+              </a>
+            </div>
+          </div>
+          <div className="main-widget-col col-1-2 mb-0">
+            <div className="widget-hover-inner">
+              <a href="#none" className="widget-cover">
+                <span className="widget-icon widget-icon8"></span>
+                <span className="widget-title-kor">NPI</span>
+                <span className="widget-title-eng">New Product Introduction</span>
+                <span className="widget-item-number">
+                  120 <span className="total"></span>
+                </span>
+              </a>
+            </div>
+          </div>
+          <div className="main-widget-col col-1-2 mb-0">
+            <div className="widget-hover-inner">
+              <a href="#none" className="widget-cover">
+                <span className="widget-icon widget-icon9"></span>
+                <span className="widget-title-kor">승인서</span>
+                <span className="widget-title-eng">Approval document</span>
+                <span className="widget-item-number">
+                  12 <span className="total">/ 120</span>
+                </span>
+              </a>
+            </div>
+          </div>
+          <div className="main-widget-col col-1-2 mb-0">
+            <div className="widget-hover-inner">
+              <a href="#none" className="widget-cover">
+                <span className="widget-icon widget-icon10"></span>
+                <span className="widget-title-kor">WDS/I-FOUNDRY</span>
+                <span className="widget-title-eng">Wireless Distribution System</span>
+                <span className="widget-item-number">
+                  6 <span className="total">/ 120</span>
+                </span>
+              </a>
+            </div>
+          </div>
         </div>
       </StyledMainWidget>
     );

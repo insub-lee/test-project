@@ -23,10 +23,10 @@ class List extends Component {
   }
 
   componentDidMount() {
-    this.getHealthChkItemList();
+    this.getList();
   }
 
-  getHealthChkItemList = () => {
+  getList = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiAry = [
       {
@@ -67,7 +67,7 @@ class List extends Component {
       isShow: false,
       selectedRow: {}
     });
-    this.getHealthChkItemList();
+    this.getList();
   }
 
   columns = [
@@ -124,11 +124,11 @@ class List extends Component {
               className="ant-input-sm ant-input-inline mr5"
               style={{ width: 200 }}
               onChange={e => this.setState({ searchText: e.target.value })}
-              onPressEnter={this.getHealthChkItemList}
+              onPressEnter={this.getList}
               allowClear
             />
             <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary btn-sm" onClick={this.getHealthChkItemList}>검색</StyledButton>
+              <StyledButton className="btn-primary btn-sm" onClick={this.getList}>검색</StyledButton>
             </StyledButtonWrapper>
           </div>
           <AntdTable

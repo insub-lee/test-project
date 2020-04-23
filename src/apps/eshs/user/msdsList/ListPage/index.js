@@ -14,11 +14,16 @@ import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { debounce } from 'lodash';
 import BizBuilderBase from 'components/BizBuilderBase';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+
 import CustomViewPage from '../CustomViewPage';
 import CursorStyled from '../CursorStyled';
 
 const { Option } = Select;
 const AntdTable = StyledAntdTable(Table);
+const AntdModal = StyledContentsModal(Modal);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class ListPage extends Component {
   constructor(props) {
@@ -133,15 +138,16 @@ class ListPage extends Component {
               columns={columns}
               dataSource={listData || []}
               rowSelection={rowSelection}
+              scroll={{ x: 1300 }}
               onRow={(record, rowIndex) => ({
                 onClick: event => this.handleViewModalVisible(record.TASK_SEQ),
               })}
             />
           </CursorStyled>
         </Group>
-        <Modal title="MSDS 조회" visible={viewModalVisible} closable onCancel={() => this.handleViewModalVisible(-1)} width={1000} footer={null}>
+        <AntdModal title="MSDS 조회" visible={viewModalVisible} closable onCancel={() => this.handleViewModalVisible(-1)} width={1000} footer={null}>
           <div>{viewModalVisible && this.handleOnViewModal(viewTaskSeq)}</div>
-        </Modal>
+        </AntdModal>
       </div>
     );
   };
@@ -288,8 +294,13 @@ class ListPage extends Component {
                                   <Input style={{ width: 150 }} onChange={e => this.handleOnChangeSearch(e.target.value)} />
                                   &nbsp; &nbsp;
                                   <span>구성성분</span>
-                                  <Input style={{ width: 150 }} value={selectedRowItemCode} onChange={e => this.handleInputChange(e.target.value)} />
-                                  <Button shape="circle" icon="search" onClick={this.searchListModalVisible} />
+                                  <AntdSearch
+                                    className="ant-search-inline input-search-mid mr5"
+                                    style={{ width: 150 }}
+                                    value={selectedRowItemCode}
+                                    onSearch={this.searchListModalVisible}
+                                    onClick={this.searchListModalVisible}
+                                  />
                                 </Contents>
                               </td>
                             </tr>

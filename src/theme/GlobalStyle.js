@@ -220,16 +220,7 @@ html {
   }
 
   /* custom scrollbar 수평 스크롤로 하단에 생기는 공간 없앰 */
-}
-
-.ant-modal-mask {
-  z-index: 2000;
-}
-
-.ant-modal-wrap {
-  z-index: 2000;
-  top: -35px;
-}
+} 
 
 /* Header toktok서브메뉴, 언어선택 서브메뉴 -- content 스타일: StyledHeader.js 정의됨*/
 .ant-popover-placement-bottom > .ant-popover-content > .ant-popover-arrow,

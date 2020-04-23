@@ -143,7 +143,7 @@ class ImproveCond extends Component {
   }
 
   appStart = () => {
-    const { id, extraApiData, setFormData, formData, viewType } = this.props;
+    const { id, extraApiData, setFormData, formData, viewType, initForm } = this.props;
     const { deptCodeList } = this.state;
 
     const categories = (extraApiData && extraApiData.improveCategories && extraApiData.improveCategories.categoryMapList) || [];
@@ -155,7 +155,7 @@ class ImproveCond extends Component {
     });
     setFormData(id, { ...formData, improveCondList, improveCondViewType: viewType });
 
-    if (!improveCondList.length && viewType === 'INPUT') {
+    if (initForm && !improveCondList.length && viewType === 'INPUT') {
       return this.handlePlusTd();
     }
     this.debounceHandelSetTable();
@@ -240,6 +240,7 @@ ImproveCond.propTypes = {
   viewType: PropTypes.string,
   condTitle: PropTypes.string,
   btnPlusTd: PropTypes.bool,
+  initForm: PropTypes.bool,
 };
 
 ImproveCond.defaultProps = {
@@ -251,6 +252,7 @@ ImproveCond.defaultProps = {
   viewType: 'INPUT',
   condTitle: '',
   btnPlusTd: false,
+  initForm: true,
 };
 
 export default ImproveCond;

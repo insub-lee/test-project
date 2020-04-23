@@ -59,7 +59,7 @@ class View extends Component {
                                     col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName.toString().replaceAll(',', ' ')}` : ''
                                   }`,
                                 };
-                                if (col.comp && col.comp.COMP_TYPE === 'LABEL') {
+                                if (col.comp && col.comp.COMP_TAG === 'LABEL') {
                                   return (
                                     <th {...colAttribute}>
                                       <Contents>

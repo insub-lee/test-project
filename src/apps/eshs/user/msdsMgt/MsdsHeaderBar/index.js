@@ -4,6 +4,9 @@ import { Input, Button, Modal } from 'antd';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import BizBuilderBase from 'components/BizBuilderBase';
 import CustomList from 'apps/eshs/admin/environment/air/stack/List';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class MsdsHeaderBar extends React.Component {
   constructor(props) {
@@ -57,8 +60,13 @@ class MsdsHeaderBar extends React.Component {
     return (
       <div>
         <span>MSDS 코드</span>&nbsp;
-        <Input value={selectedRowItemCode} style={{ width: 150 }} onClick={this.handleModalVisible} />
-        <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
+        <AntdSearch
+          className="ant-search-inline input-search-mid mr5"
+          value={selectedRowItemCode}
+          style={{ width: 150 }}
+          onClick={this.handleModalVisible}
+          onSearch={this.handleModalVisible}
+        />
         <StyledButton className="btn-primary" onClick={this.handleSearch}>
           검색
         </StyledButton>

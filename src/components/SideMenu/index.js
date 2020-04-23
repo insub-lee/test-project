@@ -12,7 +12,7 @@ const StyledSideMenu = styled.div`
   opacity: 1;
   background-color: ${props => (props.blackThema ? '#868e96' : '#152434')};
   text-align: center;
-  z-index: 1999;
+  z-index: 99;
 `;
 
 export default StyledSideMenu;
