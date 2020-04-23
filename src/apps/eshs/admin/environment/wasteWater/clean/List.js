@@ -1,24 +1,36 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Table, Input, message } from 'antd';
+import { Table, Input, message, Select } from 'antd';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import ImageUploader from './ImageUploader';
 
-const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
 const AntdLineTable = StyledLineTable(Table);
+
+const { Option } = Select;
+const { TextArea } = Input;
+
+const getBase64 = file =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
 
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cleanNm: '',
-      cleanCd: '',
-      treatmentMethod: '',
+      selectedValue: 4014,
+      imgBool: false,
     };
   }
 
@@ -38,152 +50,167 @@ class List extends Component {
         url: '/api/eshs/v1/common/eshsclean',
         type: 'GET',
       },
+      {
+        key: 'treeSelectData',
+        type: 'POST',
+        url: '/api/admin/v1/common/categoryMapList',
+        params: { PARAM: { NODE_ID: 4013 } },
+      },
     ];
-    getCallDataHandler(id, apiAry);
+    getCallDataHandler(id, apiAry, this.initData);
   };
 
-  onChangeData = value => {
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
+  initData = () => {
+    const {
+      result: { treeSelectData },
+    } = this.props;
+    const nData = treeSelectData && treeSelectData.categoryMapList && treeSelectData.categoryMapList.filter(f => f.PARENT_NODE_ID === 4013);
+    this.setState({ nData });
+    this.listData();
+  };
 
-    const submitData = {
-      PARAM: { CLEAN_CD: this.state.cleanCd, CLEAN_NM: this.state.cleanNm, TREATMENT_METHOD: this.state.treatmentMethod },
-    };
-    if (this.state.cleanNm) {
-      if (value === 'U') {
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsclean', submitData, this.listDataApi);
-      } else if (value === 'D') {
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsclean', submitData, this.listDataApi);
-      } else {
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsclean', submitData, this.listDataApi);
-      }
+  listData = () => {
+    const {
+      result: { treeSelectData, eshsclean },
+    } = this.props;
+    const { selectedValue } = this.state;
+    const selected = eshsclean && eshsclean.list && eshsclean.list.find(f => f.SELECTED_NODE_ID === selectedValue);
+    const imgUrl = `http://192.168.251.14:10197/down/file/${selected && selected.FILE_SEQ}`;
+    const dataSource = treeSelectData && treeSelectData.categoryMapList && treeSelectData.categoryMapList.filter(f => f.PARENT_NODE_ID === selectedValue);
+    this.setState({ dataSource, imgUrl, imgBool: false, fileList: undefined });
+  };
+
+  callBack = (id, response) => {
+    if (response.result) {
+      message.info('등록이 완료되었습니다.');
+      this.listDataApi();
     } else {
-      message.warning('배출시설명을 올바르게 입력하시오.');
+      message.warning('폐이지에 문제가 있습니다.');
     }
-    this.onCancel();
   };
 
-  onCancel() {
-    this.setState({
-      cleanNm: '',
-      cleanCd: '',
-      treatmentMethod: '',
-    });
-  }
+  onChangeData = () => {
+    const { selectedValue, dataSource } = this.state;
+    const { sagaKey: id, submitHandlerBySaga, result } = this.props;
+    const submitData = { PARAM: { DATA_ARRAY: dataSource } };
+    if (result.realFile && result.realFile.DETAIL && result.realFile.DETAIL.length) {
+      // 사진을 수정했다면
+      const fileUploadSubmitData = {
+        PARAM: { FILE_SEQ: Number(result.realFile.DETAIL[0].seq), SELECTED_NODE_ID: selectedValue },
+      };
+      submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsclean', fileUploadSubmitData);
+    }
+    submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsclean', submitData, this.callBack);
+  };
 
-  selectedRecord = record => {
-    this.setState({
-      cleanNm: record.CLEAN_NM,
-      cleanCd: record.CLEAN_CD,
-      treatmentMethod: record.TREATMENT_METHOD,
-    });
+  onChangeSelect = value => {
+    this.setState({ selectedValue: value }, this.listData);
+  };
+
+  handleUploadFileChange = ({ fileList }) => {
+    const responseList = [];
+    fileList.map(item => responseList.push(item.response));
+    this.setState({ fileList, responseList });
+    if (fileList) {
+      this.handlePreview(fileList[0]);
+    }
+  };
+
+  handlePreview = async file => {
+    let previewImage = file && file.preview;
+    if (file && !file.url && !file.preview) {
+      previewImage = await getBase64(file.originFileObj);
+    }
+    this.setState({ previewImage: (file && file.url) || previewImage, imgBool: true });
+  };
+
+  BeforeSaveTask = () => {
+    const { responseList, selectedValue } = this.state;
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiAry = [
+      {
+        key: 'realFile',
+        type: 'POST',
+        url: `/upload/moveFileToReal`,
+        params: { PARAM: { DETAIL: responseList } },
+      },
+    ];
+    if (selectedValue) {
+      getCallDataHandler(id, apiAry, this.onChangeData);
+    } else {
+      message.warning('분류가 선택되지 않았습니다.');
+    }
+  };
+
+  // Input 값 변경
+  onChangeContants = (name, text, record, index) => {
+    const { dataSource } = this.state;
+    const nOtherArr = dataSource;
+    if (name === 'NAME_KOR') {
+      dataSource.splice(index, 1, { NAME_KOR: text, DESCIPTION: record.DESCIPTION, NODE_ID: record.NODE_ID });
+    } else {
+      dataSource.splice(index, 1, { NAME_KOR: record.NAME_KOR, DESCIPTION: text, NODE_ID: record.NODE_ID });
+    }
+    this.setState({ dataSource: nOtherArr });
   };
 
   render() {
-    const { cleanCd, cleanNm, treatmentMethod } = this.state;
-    const {
-      result: { eshsclean },
-    } = this.props;
-    const dataSource = eshsclean && eshsclean.list;
+    const { dataSource, nData, fileList, previewImage, imgUrl, imgBool } = this.state;
     const columns = [
       {
-        title: '코드',
-        align: 'center',
-        width: 150,
-        children: [
-          {
-            title: (
-              <>
-                <div className="td-input-wrapper">
-                  <span className="span-item">{cleanCd}</span>
-                </div>
-              </>
-            ),
-            align: 'center',
-            dataIndex: 'CLEAN_CD',
-            className: 'th-form',
-          },
-        ],
+        title: '설비',
+        align: 'left',
+        dataIndex: 'NAME_KOR',
+        render: (text, record, index) => (
+          <div className="td-input-wrapper">
+            <TextArea className="input-sm input-center" value={text} onChange={e => this.onChangeContants('NAME_KOR', e.target.value, record, index)} />
+          </div>
+        ),
       },
       {
-        title: '방지시설명',
+        title: '용도',
         align: 'left',
-        children: [
-          {
-            title: (
-              <>
-                <div className="td-input-wrapper">
-                  <AntdInput
-                    className="input-sm input-center"
-                    style={{ width: '300px' }}
-                    value={cleanNm}
-                    onChange={e => this.onChangeValue('cleanNm', e.target.value)}
-                  />
-                </div>
-              </>
-            ),
-            align: 'left',
-            dataIndex: 'CLEAN_NM',
-            className: 'th-form',
-          },
-        ],
-      },
-      {
-        title: '처리방법',
-        align: 'left',
-        children: [
-          {
-            title: (
-              <>
-                <div className="td-input-wrapper">
-                  <AntdInput
-                    className="input-sm input-center"
-                    style={{ width: '300px' }}
-                    value={treatmentMethod}
-                    onChange={e => this.onChangeValue('treatmentMethod', e.target.value)}
-                  />
-                </div>
-              </>
-            ),
-            align: 'left',
-            dataIndex: 'TREATMENT_METHOD',
-            className: 'th-form',
-          },
-        ],
+        dataIndex: 'DESCIPTION',
+        render: (text, record, index) => (
+          <div className="td-input-wrapper">
+            <TextArea className="input-sm input-center" value={text} onChange={e => this.onChangeContants('DESCIPTION', e.target.value, record, index)} />
+          </div>
+        ),
       },
     ];
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <ContentsWrapper>
-          <div className="selSaveWrapper alignLeft">
-            <StyledButtonWrapper>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('I')}>
-                추가
-              </StyledButton>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
-                수정
-              </StyledButton>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
-                삭제
-              </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => this.onCancel()}>
-                Reset
-              </StyledButton>
-            </StyledButtonWrapper>
-          </div>
-          <AntdLineTable
-            className="tableWrapper tableCodeWrapper"
-            rowKey={dataSource && dataSource.CLEAN_CD}
-            columns={columns}
-            dataSource={dataSource || []}
-            onRow={record => ({
-              onClick: () => {
-                this.selectedRecord(record);
-              },
-            })}
-            footer={() => <div style={{ textAlign: 'center' }}>{`${dataSource && dataSource.length - 1} 건`}</div>}
+      <ContentsWrapper>
+        <div className="selSaveWrapper alignLeft">
+          <AntdSelect style={{ width: 200 }} className="mr5" onChange={value => this.onChangeSelect(value)} defaultValue={4014}>
+            {nData && nData.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
+          </AntdSelect>
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary btn-first" onClick={this.BeforeSaveTask}>
+              저장
+            </StyledButton>
+          </StyledButtonWrapper>
+        </div>
+        <StyledHtmlTable className="tableWrapper">
+          <ImageUploader
+            accept="image/jpeg, image/png"
+            action="/upload"
+            listType="picture"
+            handleChange={this.handleUploadFileChange}
+            fileList={fileList}
+            previewImage={previewImage}
+            imgUrl={imgUrl}
+            imgBool={imgBool}
           />
-        </ContentsWrapper>
-      </div>
+        </StyledHtmlTable>
+        <AntdLineTable
+          className="tableWrapper tableCodeWrapper"
+          rowKey={dataSource && dataSource.NODE_ID}
+          columns={columns}
+          dataSource={dataSource || []}
+          pagination={false}
+          footer={() => <div style={{ textAlign: 'center' }}>{`${(dataSource && dataSource.length) || 0} 건`}</div>}
+        />
+      </ContentsWrapper>
     );
   }
 }
