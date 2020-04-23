@@ -171,8 +171,8 @@ class Tree extends Component {
           flex: '1 0 50%',
           padding: '0',
           flexDirection: 'column',
-          height: 'calc(100vh - 252px)',
-          maxHeight: 'calc(100vh - 252px)',
+          height: 'calc(100vh - 272px)',
+          maxHeight: 'calc(100vh - 272px)',
           width: '100%',
         }}
       >
