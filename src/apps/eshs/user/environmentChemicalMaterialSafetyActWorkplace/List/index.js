@@ -21,6 +21,7 @@ const AntdInputNumber = StyledInputNumber(InputNumber);
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdTable = StyledLineTable(Table);
+const test = () => console.debug('@@@TEST@@@');
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -38,7 +39,7 @@ class List extends React.Component {
         IS_APPLICATE: 'Y',
         SERIAL_NO: '',
         WORK_ID: '',
-        CONTENT_STANDARD: '',
+        CONTENT_STANDARD: '0',
       },
       subRequestValue: {
         CAS_NO: '',
@@ -47,14 +48,14 @@ class List extends React.Component {
         CATEGORY: '',
         SUB_CATEGORY: '',
         IS_APPLICATE: 'Y',
-        SERIAL_NO: '',
         WORK_ID: '',
-        CONTENT_STANDARD: '',
+        CONTENT_STANDARD: '0',
         PARENT_ID: '',
       },
       dataSource: [{}],
       isModified: false,
       isSubModified: false,
+      selectedIndex: -1,
       deleteConfirmMessage: '삭제하시겠습니까?',
     };
   }
@@ -177,7 +178,13 @@ class List extends React.Component {
       this.setState({
         isModified: false,
       });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetyworkplace`, requestValue, this.getMaterialList);
+      return submitHandlerBySaga(
+        id,
+        'PUT',
+        `/api/eshs/v1/common/eshschemicalsafetyworkplace`,
+        { requestValue, SUB_MATERIALS: dataSource.slice(1) },
+        this.getMaterialList,
+      );
     }
     this.setState({
       isModified: false,
@@ -218,8 +225,7 @@ class List extends React.Component {
         url: '/api/eshs/v1/common/eshschemicalsafetyworkplace',
       },
     ];
-    // getCallDataHandler(id, apiArr, this.handleResetClick);
-    getCallDataHandler(id, apiArr);
+    getCallDataHandler(id, apiArr, this.handleResetClick);
   };
 
   handleResetClick = () => {
@@ -231,10 +237,21 @@ class List extends React.Component {
         CATEGORY: '',
         SUB_CATEGORY: '',
         IS_APPLICATE: '',
-        CONTENT_STANDARD: '',
+        CONTENT_STANDARD: '0',
         SERIAL_NO: '',
       },
       isModified: false,
+      subTableVisible: false,
+      dataSource: [{}],
+      subRequestValue: {
+        CAS_NO: '',
+        NAME_KOR: '',
+        NAME_ENG: '',
+        CATEGORY: '',
+        SUB_CATEGORY: '',
+        IS_APPLICATE: '',
+        CONTENT_STANDARD: '0',
+      },
     });
   };
 
@@ -245,6 +262,8 @@ class List extends React.Component {
   };
 
   setRequestValue = record => {
+    const { setSubMaterials } = this;
+    const { sagaKey: id, getCallDataHandler } = this.props;
     this.setState({
       requestValue: record,
       visible: false,
@@ -256,11 +275,27 @@ class List extends React.Component {
         CATEGORY: record.CATEGORY,
         SUB_CATEGORY: record.SUB_CATEGORY,
         IS_APPLICATE: 'Y',
-        SERIAL_NO: record.SERIAL_NO,
-        CONTENT_STANDARD: '',
-        PARENT_ID: '',
+        CONTENT_STANDARD: '0',
+        PARENT_ID: record.WORK_ID,
       },
     });
+
+    const apiArr = [
+      {
+        key: 'subMaterials',
+        type: 'GET',
+        url: `/api/eshs/v1/common/eshschemicalsafetyworkplacesub?PARENT_ID=${record.WORK_ID}`,
+      },
+    ];
+    getCallDataHandler(id, apiArr, setSubMaterials);
+  };
+
+  setSubMaterials = () => {
+    const { result } = this.props;
+    this.setState(prevState => ({
+      dataSource: prevState.dataSource.slice(0, 1).concat((result.subMaterials && result.subMaterials.list) || []),
+      subTableVisible: ((result.subMaterials && result.subMaterials.list) || []).length > 0,
+    }));
   };
 
   handleSubInputClick = () => {
@@ -275,8 +310,7 @@ class List extends React.Component {
           CATEGORY: prevState.requestValue.CATEGORY,
           SUB_CATEGORY: prevState.requestValue.SUB_CATEGORY,
           IS_APPLICATE: 'Y',
-          SERIAL_NO: prevState.requestValue.SERIAL_NO,
-          CONTENT_STANDARD: '',
+          CONTENT_STANDARD: '0',
           PARENT_ID: '',
         },
       }));
@@ -284,20 +318,6 @@ class List extends React.Component {
   };
 
   columns = [
-    {
-      title: 'CAS_NO',
-      dataIndex: 'CAS_NO',
-      key: 'CAS_NO',
-      align: 'center',
-      render: (text, record, index) => {
-        const { handleSubInputChange } = this;
-        const { subRequestValue } = this.state;
-        if (index === 0) {
-          return <AntdInput className="ant-input-sm" name="CAS_NO" value={subRequestValue.CAS_NO} onChange={e => handleSubInputChange(e, 'INPUT')} />;
-        }
-        return text;
-      },
-    },
     {
       title: '화학물질명_국문',
       dataIndex: 'NAME_KOR',
@@ -322,6 +342,20 @@ class List extends React.Component {
         const { subRequestValue } = this.state;
         if (index === 0) {
           return <AntdInput className="ant-input-sm" name="NAME_ENG" value={subRequestValue.NAME_ENG} onChange={e => handleSubInputChange(e, 'INPUT')} />;
+        }
+        return text;
+      },
+    },
+    {
+      title: 'CAS_NO',
+      dataIndex: 'CAS_NO',
+      key: 'CAS_NO',
+      align: 'center',
+      render: (text, record, index) => {
+        const { handleSubInputChange } = this;
+        const { subRequestValue } = this.state;
+        if (index === 0) {
+          return <AntdInput className="ant-input-sm" name="CAS_NO" value={subRequestValue.CAS_NO} onChange={e => handleSubInputChange(e, 'INPUT')} />;
         }
         return text;
       },
@@ -375,16 +409,24 @@ class List extends React.Component {
     {
       title: '',
       align: 'center',
+      width: '200px',
       render: (text, record, index) => {
-        const { handleSubInputClick } = this;
+        const { handleSubInputClick, handleSubModifyClick, handleSubDeleteClick, handleSubCancelClick } = this;
         const { isSubModified } = this.state;
         if (index === 0) {
           return (
             <>
-              <StyledButton className="btn-primary btn-first" onClick={handleSubInputClick}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={isSubModified ? handleSubModifyClick : handleSubInputClick}>
                 {isSubModified ? '저장' : '추가'}
               </StyledButton>
-              <StyledButton className="btn-primary">{isSubModified ? '삭제' : '초기화'}</StyledButton>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={isSubModified ? handleSubDeleteClick : handleSubCancelClick}>
+                {isSubModified ? '삭제' : '초기화'}
+              </StyledButton>
+              {isSubModified ? (
+                <StyledButton className="btn-primary btn-sm" onClick={handleSubCancelClick}>
+                  취소
+                </StyledButton>
+              ) : null}
             </>
           );
         }
@@ -392,6 +434,17 @@ class List extends React.Component {
       },
     },
   ];
+
+  handleSubMaterialRowClick = (record, index) => {
+    if (index === 0) {
+      return;
+    }
+    this.setState(prevState => ({
+      subRequestValue: Object.assign(prevState.subRequestValue, record),
+      isSubModified: true,
+      selectedIndex: index,
+    }));
+  };
 
   handleSubMaterialAddClick = () => {
     this.setState(prevState => ({
@@ -403,8 +456,63 @@ class List extends React.Component {
         CATEGORY: prevState.requestValue.CATEGORY,
         SUB_CATEGORY: prevState.requestValue.SUB_CATEGORY,
         IS_APPLICATE: 'Y',
-        SERIAL_NO: prevState.requestValue.SERIAL_NO,
-        CONTENT_STANDARD: '',
+        CONTENT_STANDARD: '0',
+        PARENT_ID: '',
+      },
+    }));
+  };
+
+  handleSubModifyClick = () => {
+    const { isSubModified, selectedIndex } = this.state;
+    if (isSubModified) {
+      this.setState(prevState => ({
+        dataSource: [...prevState.dataSource.slice(0, selectedIndex), prevState.subRequestValue, ...prevState.dataSource.slice(selectedIndex + 1)],
+        subRequestValue: {
+          CAS_NO: '',
+          NAME_KOR: '',
+          NAME_ENG: '',
+          CATEGORY: prevState.requestValue.CATEGORY,
+          SUB_CATEGORY: prevState.requestValue.SUB_CATEGORY,
+          IS_APPLICATE: 'Y',
+          CONTENT_STANDARD: '0',
+          PARENT_ID: '',
+        },
+        isSubModified: false,
+      }));
+    }
+  };
+
+  handleSubDeleteClick = () => {
+    const { isSubModified } = this.state;
+    if (isSubModified) {
+      this.setState(prevState => ({
+        dataSource: [...prevState.dataSource.slice(0, prevState.selectedIndex), ...prevState.dataSource.slice(prevState.selectedIndex + 1)],
+        subRequestValue: {
+          CAS_NO: '',
+          NAME_KOR: '',
+          NAME_ENG: '',
+          CATEGORY: prevState.requestValue.CATEGORY,
+          SUB_CATEGORY: prevState.requestValue.SUB_CATEGORY,
+          IS_APPLICATE: 'Y',
+          CONTENT_STANDARD: '0',
+          PARENT_ID: '',
+        },
+        isSubModified: false,
+      }));
+    }
+  };
+
+  handleSubCancelClick = () => {
+    this.setState(prevState => ({
+      isSubModified: false,
+      subRequestValue: {
+        CAS_NO: '',
+        NAME_KOR: '',
+        NAME_ENG: '',
+        CATEGORY: prevState.requestValue.CATEGORY,
+        SUB_CATEGORY: prevState.requestValue.SUB_CATEGORY,
+        IS_APPLICATE: 'Y',
+        CONTENT_STANDARD: '0',
         PARENT_ID: '',
       },
     }));
@@ -429,6 +537,18 @@ class List extends React.Component {
       key: 'NAME_ENG',
       align: 'center',
     },
+    {
+      title: '함량기준',
+      dataIndex: 'CONTENT_STANDARD',
+      key: 'CONTENT_STANDARD',
+      align: 'center',
+    },
+    {
+      title: '해당여부',
+      dataIndex: 'IS_APPLICATE',
+      key: 'IS_APPLICATE',
+      align: 'center',
+    },
   ];
 
   render() {
@@ -442,6 +562,7 @@ class List extends React.Component {
       handleDeleteConfirm,
       handleDeleteClick,
       handleSubMaterialAddClick,
+      handleSubMaterialRowClick,
     } = this;
     const { columns, modalColumns } = this;
     const { requestValue, visible, deleteConfirmMessage, categories, subCategories, isModified, dataSource, subTableVisible } = this.state;
@@ -476,9 +597,22 @@ class List extends React.Component {
                 <StyledButton className="btn-light btn-first" onClick={handleResetClick}>
                   초기화
                 </StyledButton>
-                <Popconfirm disabled={requestValue.SERIAL_NO && requestValue.CATEGORY} title="상위물질 정보를 먼저 입력하세요.">
-                  <StyledButton className="btn-light" onClick={requestValue.SERIAL_NO && requestValue.CATEGORY ? handleSubMaterialAddClick : null}>
-                    하위물질 추가
+                <Popconfirm disabled={requestValue.CATEGORY && requestValue.NAME_KOR} title="상위물질 정보를 먼저 입력하세요.">
+                  <StyledButton
+                    className="btn-light"
+                    onClick={() => {
+                      if (subTableVisible) {
+                        return this.setState({ subTableVisible: false, dataSource: [{}] });
+                      }
+
+                      if (requestValue.CATEGORY && requestValue.NAME_KOR) {
+                        return handleSubMaterialAddClick();
+                      }
+
+                      return null;
+                    }}
+                  >
+                    {subTableVisible ? '하위물질 삭제' : '하위물질 추가'}
                   </StyledButton>
                 </Popconfirm>
               </StyledButtonWrapper>
@@ -546,10 +680,6 @@ class List extends React.Component {
                     </td>
                   </tr>
                   <tr>
-                    <th>CAS NO.</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
                     <th>화학물질명_국문</th>
                     <td>
                       <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
@@ -557,6 +687,10 @@ class List extends React.Component {
                     <th>화학물질명_영문</th>
                     <td>
                       <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={e => handleInputChange(e, 'INPUT')} />
+                    </td>
+                    <th>CAS NO.</th>
+                    <td>
+                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
                     <th>해당여부</th>
                     <td>
@@ -580,8 +714,9 @@ class List extends React.Component {
                 columns={columns}
                 dataSource={dataSource}
                 pagination={false}
-                onRow={record => ({
-                  onClick: () => this.setState(prevState => ({ subRequestValue: Object.assign(prevState.subRequestValue, record) })),
+                onRow={(record, index) => ({
+                  // onClick: () => this.setState(prevState => ({ subRequestValue: Object.assign(prevState.subRequestValue, record), isSubModified: true })),
+                  onClick: () => handleSubMaterialRowClick(record, index),
                 })}
               />
             ) : null}
