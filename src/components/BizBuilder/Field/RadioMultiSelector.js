@@ -113,6 +113,7 @@ class RadioMultiSelector extends Component {
               선택
             </StyledButton>,
           ]}
+          className="multiSelector-w200"
         >
           <MultiSelector onChange={this.onChangeMultiSelector} dataSource={this.state.dataSource}></MultiSelector>
         </AntdModal>
