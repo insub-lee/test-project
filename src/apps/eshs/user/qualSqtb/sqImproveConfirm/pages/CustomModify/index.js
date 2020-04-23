@@ -14,9 +14,6 @@ import View from 'components/BizBuilder/PageComp/view';
 import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import moment from 'moment';
 
-import ApproveCond from 'apps/eshs/user/qualSqtb/approveCond';
-import ImproveCond from 'apps/eshs/user/qualSqtb/ImproveCond';
-import ConfirmCond from 'apps/eshs/user/qualSqtb/confirmCond';
 import Header from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/Header';
 
 class ModifyPage extends Component {
@@ -181,7 +178,7 @@ class ModifyPage extends Component {
             <Header
               sagaKey={id}
               formData={formData}
-              viewPageData={{ ...viewPageData, viewType: 'IMPROVE_PLAN' }}
+              viewPageData={{ ...viewPageData, viewType: 'IMPROVE_RESULT' }}
               setFormData={setFormData}
               changeViewPage={changeViewPage}
               deleteTask={deleteTask}
@@ -193,63 +190,6 @@ class ModifyPage extends Component {
               changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <table width="100%">
-              <colgroup>
-                <col width="49%" />
-                <col width="2%" />
-                <col width="49%" />
-              </colgroup>
-              <tbody>
-                <tr>
-                  <td colSpan={3}>
-                    <ConfirmCond
-                      id={id}
-                      formData={formData}
-                      changeFormData={changeFormData}
-                      getExtraApiData={getExtraApiData}
-                      extraApiData={extraApiData}
-                      setFormData={setFormData}
-                      initForm={false}
-                      viewType="INPUT"
-                      condTitle="Qual 개선결과내용"
-                      btnPlusTd={false}
-                      profile={profile}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <ApproveCond
-                      id={id}
-                      formData={formData}
-                      changeFormData={changeFormData}
-                      getExtraApiData={getExtraApiData}
-                      extraApiData={extraApiData}
-                      setFormData={setFormData}
-                      viewType="VIEW"
-                      condTitle=""
-                      btnPlusTd={false}
-                      initForm={false}
-                    />
-                  </td>
-                  <td></td>
-                  <td>
-                    <ImproveCond
-                      id={id}
-                      formData={formData}
-                      changeFormData={changeFormData}
-                      getExtraApiData={getExtraApiData}
-                      extraApiData={extraApiData}
-                      setFormData={setFormData}
-                      viewType="VIEW"
-                      condTitle=""
-                      btnPlusTd={false}
-                      initForm={false}
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
           </Sketch>
         </StyledViewDesigner>
       );

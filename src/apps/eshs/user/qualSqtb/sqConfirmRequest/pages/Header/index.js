@@ -51,6 +51,11 @@ class Header extends Component {
           changeViewPage(sagaKey, workSeq, selectTask, 'MODIFY');
         }
         break;
+      case 'SEARCH_VIEW':
+        if (selectTask) {
+          changeViewPage(sagaKey, workSeq, selectTask, 'VIEW');
+        }
+        break;
       case 'SAVE':
         saveTask();
         break;
@@ -122,7 +127,30 @@ class Header extends Component {
     const APP_STATUS = (formData && formData.APP_STATUS) || '';
     const QUAL_STATUS = (formData && formData.QUAL_STATUS) || '';
     const isAllConfirm = (formData && formData.isAllConfirm) || false;
-    console.debug('여기는 Header', isAllConfirm);
+
+    if (viewType === 'CONFIRM_VIEW') {
+      return (
+        <>
+          <StyledButtonWrapper className="btn-wrap-left btn-wrap-mb-10">
+            <AntdSearch
+              value={REQ_CD || ''}
+              style={{ width: '150px' }}
+              readOnly
+              onClick={this.handleModalVisible}
+              onSearch={this.handleModalVisible}
+              className="ant-search-inline input-search-mid mr5"
+            />
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH_VIEW')}>
+              검색
+            </StyledButton>
+          </StyledButtonWrapper>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1000} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+            {searchList}
+          </AntdModal>
+        </>
+      );
+    }
+
     if (viewType === 'IMPROVE_RESULT') {
       return (
         <>
@@ -138,13 +166,19 @@ class Header extends Component {
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
-            {isAllConfirm && (
+            {QUAL_STATUS !== '2007' && taskSeq > -1 && (
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
+                저장
+              </StyledButton>
+            )}
+
+            {isAllConfirm && taskSeq > -1 && (
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleMakeConfirm('2007', 'MODIFY', this.handleAction)}>
                 승인
               </StyledButton>
             )}
           </StyledButtonWrapper>
-          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1500} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1000} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
             {searchList}
           </AntdModal>
         </>
@@ -173,7 +207,7 @@ class Header extends Component {
               </StyledButton>
             )}
           </StyledButtonWrapper>
-          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1500} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1000} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
             {searchList}
           </AntdModal>
         </>
@@ -236,7 +270,7 @@ class Header extends Component {
               />
             )}
           </StyledButtonWrapper>
-          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1500} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1000} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
             {searchList}
           </AntdModal>
         </>
@@ -277,7 +311,7 @@ class Header extends Component {
             </>
           )}
         </StyledButtonWrapper>
-        <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1500} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+        <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1000} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
           {searchList}
         </AntdModal>
       </>
