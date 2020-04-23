@@ -375,12 +375,15 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
     if (validKeyList && validKeyList.length > 0) {
       let validFlag = true;
       let validMsg = '';
-
+      console.debug('확인해리스트', validKeyList);
+      console.debug('이게없다고?', validationData);
       validKeyList.forEach(node => {
         if (!validationData[node].flag) {
+          console.debug('1번', node, validationData[node].flag);
           validFlag = validationData[node].flag;
           validMsg = validationData[node].msg;
         } else if (validationData[node].requiredFlag === false) {
+          console.debug('2번', node, validationData[node].requiredFlag);
           validFlag = validationData[node].requiredFlag;
           validMsg = `${validationData[node].requiredMsg}`;
         }
