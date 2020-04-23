@@ -30,7 +30,7 @@ class SqImproveResult extends Component {
           FieldCustomInputPage={EquipInputPage}
           CustomModifyPage={CustomModifyPage}
           workSeq={5561}
-          modifyMetaSeq={6181}
+          modifyMetaSeq={6361}
           viewType="MODIFY"
           loadingComplete={this.loadingComplete}
         />

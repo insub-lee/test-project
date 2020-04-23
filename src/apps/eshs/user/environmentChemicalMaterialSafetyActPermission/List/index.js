@@ -165,6 +165,12 @@ class List extends React.Component {
       key: 'NAME_ENG',
       align: 'center',
     },
+    {
+      title: '해당여부',
+      dataIndex: 'IS_PERMISSION',
+      key: 'IS_PERMISSION',
+      align: 'center',
+    },
   ];
 
   render() {

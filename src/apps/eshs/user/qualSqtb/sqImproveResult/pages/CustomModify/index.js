@@ -14,9 +14,6 @@ import View from 'components/BizBuilder/PageComp/view';
 import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import moment from 'moment';
 
-import ApproveCond from 'apps/eshs/user/qualSqtb/approveCond';
-import ImproveCond from 'apps/eshs/user/qualSqtb/ImproveCond';
-import ResultCond from 'apps/eshs/user/qualSqtb/resultCond';
 import Header from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/Header';
 
 class ModifyPage extends Component {
@@ -128,8 +125,7 @@ class ModifyPage extends Component {
 
   saveTask = (id, reloadId, callbackFunc) => {
     const { modifyTask, formData } = this.props;
-    const condFileList = (formData && formData.condFileList) || [];
-    console.debug('1111111111111', condFileList);
+    const condFileList = (formData && formData.resultFileList) || [];
     if (condFileList.length) {
       this.condFileListMoveReal(condFileList);
     } else {
@@ -192,7 +188,7 @@ class ModifyPage extends Component {
             }
           : a;
       }),
-      condFileList: [],
+      resultFileList: [],
     });
     this.saveTask(id, id, this.saveTaskAfter);
   };
@@ -237,61 +233,6 @@ class ModifyPage extends Component {
               changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-
-            <table width="100%">
-              <colgroup>
-                <col width="50%" />
-                <col width="2%" />
-                <col width="50%" />
-              </colgroup>
-              <tbody>
-                <tr>
-                  <td colSpan={3}>
-                    <ResultCond
-                      id={id}
-                      formData={formData}
-                      changeFormData={changeFormData}
-                      getExtraApiData={getExtraApiData}
-                      extraApiData={extraApiData}
-                      setFormData={setFormData}
-                      viewType="INPUT"
-                      condTitle="Qual 개선결과내용"
-                      btnPlusTd
-                      initForm={false}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <ApproveCond
-                      id={id}
-                      formData={formData}
-                      changeFormData={changeFormData}
-                      getExtraApiData={getExtraApiData}
-                      extraApiData={extraApiData}
-                      setFormData={setFormData}
-                      viewType="VIEW"
-                      condTitle=""
-                      btnPlusTd={false}
-                    />
-                  </td>
-                  <td></td>
-                  <td>
-                    <ImproveCond
-                      id={id}
-                      formData={formData}
-                      changeFormData={changeFormData}
-                      getExtraApiData={getExtraApiData}
-                      extraApiData={extraApiData}
-                      setFormData={setFormData}
-                      viewType="VIEW"
-                      condTitle=""
-                      btnPlusTd={false}
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
           </Sketch>
         </StyledViewDesigner>
       );

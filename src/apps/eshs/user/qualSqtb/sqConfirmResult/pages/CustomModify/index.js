@@ -14,7 +14,6 @@ import View from 'components/BizBuilder/PageComp/view';
 import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import moment from 'moment';
 
-import ApproveCond from 'apps/eshs/user/qualSqtb/approveCond';
 import InterLock from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/InterLock';
 import Material from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/Material';
 import Header from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/Header';
@@ -151,7 +150,7 @@ class ModifyPage extends Component {
 
   saveTask = (id, reloadId, callbackFunc) => {
     const { modifyTask, formData } = this.props;
-    const condFileList = (formData && formData.condFileList) || [];
+    const condFileList = (formData && formData.approveFileList) || [];
     if (condFileList.length) {
       this.condFileListMoveReal(condFileList);
     } else {
@@ -183,7 +182,6 @@ class ModifyPage extends Component {
   condFileListMoveReal = condFileList => {
     const { sagaKey: id, getExtraApiData } = this.props;
     const param = { PARAM: { DETAIL: condFileList } };
-
     const apiArray = [
       {
         key: 'condRealFileList',
@@ -200,7 +198,6 @@ class ModifyPage extends Component {
 
     const condRealFileList = (extraApiData && extraApiData.condRealFileList && extraApiData.condRealFileList.DETAIL) || [];
     const approveCondList = (formData && formData.approveCondList) || [];
-
     setFormData(id, {
       ...formData,
       approveCondList: approveCondList.map(a => {
@@ -214,7 +211,7 @@ class ModifyPage extends Component {
             }
           : a;
       }),
-      condFileList: [],
+      approveFileList: [],
     });
     this.saveTask(id, id, this.saveTaskAfter);
   };
@@ -259,18 +256,6 @@ class ModifyPage extends Component {
               changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <ApproveCond
-              id={id}
-              formData={formData}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              setFormData={setFormData}
-              viewType="INPUT"
-              condTitle="안전확인결과내용"
-              btnPlusTd
-              initForm={false}
-            />
             <InterLock
               id={id}
               formData={{ ...formData, TASK_SEQ: qualTaskSeq }}

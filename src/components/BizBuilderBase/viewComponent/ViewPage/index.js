@@ -11,7 +11,7 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import View from 'components/BizBuilder/PageComp/view';
 import Loadable from 'components/Loadable';
 
-import Loading from '../Common/Loading';
+import Loading from 'components/BizBuilderBase/viewComponent/Common/Loading';
 
 class ViewPage extends Component {
   constructor(props) {

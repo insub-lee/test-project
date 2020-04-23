@@ -103,8 +103,12 @@ import CheckboxSingleComp from 'components/BizBuilder/Field/CheckboxSingleComp';
 import RootKeyRadioComp from 'components/BizBuilder/Field/RootKeyRadioComp';
 import RootKeyCheckBoxComp from 'components/BizBuilder/Field/RootKeyCheckBoxComp';
 import ProfileInputComp from 'components/BizBuilder/Field/ProfileInputComp';
-import CheckableTreeSElectViewComp from 'components/BizBuilder/Field/CheckableTreeSElectViewComp';
+import CheckableTreeSelectViewComp from 'components/BizBuilder/Field/CheckableTreeSelectViewComp';
 import RadioViewByCategoryMapComp from 'components/BizBuilder/Field/RadioViewByCategoryMapComp';
+import EshsCondComp from 'components/BizBuilder/Field/EshsCondComp';
+import MdcsEndDateViewComp from 'components/BizBuilder/Field/MdcsEndDateViewComp';
+import MdcsRevisionHistoryListComp from 'components/BizBuilder/Field/MdcsRevisionHistoryListComp';
+import MdcsProcessListComp from 'components/BizBuilder/Field/MdcsProcessListComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
@@ -210,6 +214,10 @@ export const CompInfo = {
   'components/BizBuilder/Field/RootKeyRadioComp': { renderer: property => <RootKeyRadioComp {...property} /> },
   'components/BizBuilder/Field/RootKeyCheckBoxComp': { renderer: property => <RootKeyCheckBoxComp {...property} /> },
   'components/BizBuilder/Field/ProfileInputComp': { renderer: property => <ProfileInputComp {...property} /> },
-  'components/BizBuilder/Field/CheckableTreeSElectViewComp': { renderer: property => <CheckableTreeSElectViewComp {...property} /> },
+  'components/BizBuilder/Field/CheckableTreeSelectViewComp': { renderer: property => <CheckableTreeSelectViewComp {...property} /> },
   'components/BizBuilder/Field/RadioViewByCategoryMapComp': { renderer: property => <RadioViewByCategoryMapComp {...property} /> },
+  'components/BizBuilder/Field/EshsCondComp': { renderer: property => <EshsCondComp {...property} /> },
+  'components/BizBuilder/Field/MdcsEndDateViewComp': { renderer: property => <MdcsEndDateViewComp {...property} /> },
+  'components/BizBuilder/Field/MdcsRevisionHistoryListComp': { renderer: property => <MdcsRevisionHistoryListComp {...property} /> },
+  'components/BizBuilder/Field/MdcsProcessListComp': { renderer: property => <MdcsProcessListComp {...property} /> },
 };

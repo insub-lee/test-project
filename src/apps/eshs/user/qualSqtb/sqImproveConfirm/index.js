@@ -30,7 +30,7 @@ class SqImproveConfirm extends Component {
           FieldCustomInputPage={EquipInputPage}
           CustomModifyPage={CustomModifyPage}
           workSeq={5561}
-          modifyMetaSeq={6181}
+          modifyMetaSeq={6321}
           viewType="MODIFY"
           loadingComplete={this.loadingComplete}
         />
