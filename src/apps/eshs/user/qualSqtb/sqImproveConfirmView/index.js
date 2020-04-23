@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import BizBuilderBase from 'components/BizBuilderBase';
-import CustomModifyPage from './pages/CustomModify';
+import CustomViewPage from './pages/CustomView';
 
 import EquipInputPage from '../sqtbEquipMgt';
 
-class SqImproveResult extends Component {
+class SqImproveConfirmView extends Component {
   constructor(props) {
     super(props);
 
@@ -28,10 +28,10 @@ class SqImproveResult extends Component {
         <BizBuilderBase
           sagaKey={sagaKey}
           FieldCustomInputPage={EquipInputPage}
-          CustomModifyPage={CustomModifyPage}
+          CustomViewPage={CustomViewPage}
           workSeq={5561}
-          modifyMetaSeq={6361}
-          viewType="MODIFY"
+          viewMetaSeq={6381}
+          viewType="VIEW"
           loadingComplete={this.loadingComplete}
         />
       </>
@@ -39,8 +39,8 @@ class SqImproveResult extends Component {
   }
 }
 
-SqImproveResult.defaultProps = {
-  sagaKey: 'SqImproveResult',
+SqImproveConfirmView.defaultProps = {
+  sagaKey: 'SqImproveConfirmView',
 };
 
-export default SqImproveResult;
+export default SqImproveConfirmView;

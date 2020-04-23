@@ -121,7 +121,7 @@ class Tree extends Component {
       title: (
         <div>
           <Popover placement="right" content={buttons} trigger="hover" overlayClassName="myappTreePopupMenu">
-            <button
+            <span
               type="button"
               className={`${node.NODE_ID === this.props.selectedNode.NODE_ID ? 'active' : ''}`}
               onClick={() => this.onNodeClick(node)}
@@ -130,7 +130,7 @@ class Tree extends Component {
               key={node.NODE_ID}
             >
               {titleInner}
-            </button>
+            </span>
           </Popover>
         </div>
       ),

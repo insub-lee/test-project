@@ -11,6 +11,8 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import View from 'components/BizBuilder/PageComp/view';
 import Loadable from 'components/Loadable';
 
+import Header from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/Header';
+
 import Loading from 'components/BizBuilderBase/viewComponent/Common/Loading';
 
 class ViewPage extends Component {
@@ -43,47 +45,49 @@ class ViewPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, reloadId, viewLayer, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal, ViewCustomButtons } = this.props;
+    const {
+      sagaKey: id,
+      reloadId,
+      viewLayer,
+      viewPageData,
+      changeViewPage,
+      draftId,
+      deleteTask,
+      isBuilderModal,
+      ViewCustomButtons,
+      formData,
+      setFormData,
+      submitExtraHandler,
+      getExtraApiData,
+      extraApiData,
+      changeFormData,
+    } = this.props;
 
     const { StyledWrap } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
-
       return (
         <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
+            <Header
+              sagaKey={id}
+              formData={formData}
+              viewPageData={{ ...viewPageData, viewType: 'CONFIRM_VIEW' }}
+              setFormData={setFormData}
+              changeViewPage={changeViewPage}
+              deleteTask={deleteTask}
+              modifySaveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
+              btnOnlySearch
+              submitExtraHandler={submitExtraHandler}
+              getExtraApiData={getExtraApiData}
+              extraApiData={extraApiData}
+              changeFormData={changeFormData}
+            />
             {draftId !== -1 && <SignLine id={id} draftId={draftId} />}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
             {draftId !== -1 && <ApproveHistory draftId={draftId} />}
-            {ViewCustomButtons ? (
-              <ViewCustomButtons {...this.props} />
-            ) : (
-              <div className="alignRight">
-                <StyledButton className="btn-primary btn-first" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
-                  Modify
-                </StyledButton>
-                <Popconfirm
-                  title="Are you sure delete this task?"
-                  onConfirm={() =>
-                    deleteTask(id, reloadId, viewPageData.workSeq, viewPageData.taskSeq, !isBuilderModal ? changeViewPage : this.builderModalClose)
-                  }
-                  okText="Yes"
-                  cancelText="No"
-                >
-                  <StyledButton className="btn-light btn-first">Delete</StyledButton>
-                </Popconfirm>
-                <StyledButton className="btn-light btn-first" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
-                  Revision
-                </StyledButton>
-                {!isBuilderModal && (
-                  <StyledButton className="btn-light btn-first" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                    List
-                  </StyledButton>
-                )}
-              </div>
-            )}
           </Sketch>
         </StyledWrap>
       );
@@ -105,11 +109,21 @@ ViewPage.propTypes = {
   viewType: PropTypes.string,
   isLoading: PropTypes.bool,
   removeReduxState: PropTypes.func,
+  reloadId: PropTypes.string,
+  viewPageData: PropTypes.object,
+  changeViewPage: PropTypes.func,
+  deleteTask: PropTypes.func,
+  isBuilderModal: PropTypes.any,
+  ViewCustomButtons: PropTypes.any,
+  submitExtraHandler: PropTypes.func,
+  changeFormData: PropTypes.func,
+  setFormData: PropTypes.func,
 };
 
 ViewPage.defaultProps = {
   draftId: -1,
   draftProcess: [],
+  setFormData: () => {},
 };
 
 export default ViewPage;
