@@ -14,6 +14,26 @@ class EshsCondConfig extends Component {
   handleChangeViewCompData = (key, value) => {
     const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
     configInfo.property[key] = value;
+    if (key === 'COND_COLUMN') {
+      let step = '';
+      switch (value) {
+        case 'approve':
+          step = '1';
+          break;
+        case 'improve':
+          step = '2';
+          break;
+        case 'result':
+          step = '3';
+          break;
+        case 'confirm':
+          step = '3';
+          break;
+        default:
+          break;
+      }
+      configInfo.property.STEP = step;
+    }
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
   };
 
@@ -37,8 +57,8 @@ class EshsCondConfig extends Component {
             style={{ width: '100%' }}
             onChange={value => this.handleChangeViewCompData('COND_COLUMN', value)}
           >
-            <Option value="approve">Step 1</Option>
-            <Option value="improve">Step 2</Option>
+            <Option value="approve">Step 1 [approve]</Option>
+            <Option value="improve">Step 2 [improve]</Option>
             <Option value="result">Step 3 [Result]</Option>
             <Option value="confirm">Step 3 [Confirm]</Option>
           </Select>
@@ -52,18 +72,6 @@ class EshsCondConfig extends Component {
           >
             <Option value="INPUT">INPUT</Option>
             <Option value="VIEW">VIEW</Option>
-          </Select>
-        </div>
-        <div className="popoverItem popoverItemInput">
-          <span className="spanLabel">Cond Step 설정</span>
-          <Select
-            defaultValue={(configInfo && configInfo.property && configInfo.property.STEP) || ''}
-            style={{ width: '100%' }}
-            onChange={value => this.handleChangeViewCompData('STEP', value)}
-          >
-            <Option value="1">1</Option>
-            <Option value="2">2</Option>
-            <Option value="3">3</Option>
           </Select>
         </div>
         <div className="popoverItem popoverItemInput">
