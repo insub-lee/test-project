@@ -181,7 +181,15 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
-
+    location ~ ^(/api/migration/v1/common/) {
+            proxy_pass  http://migration-common;
+            proxy_connect_timeout 10;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
     location ~ ^/img/thumb/crop/(.*)/(.*)$ {
         proxy_pass http://thumbor/unsafe/$1/http://dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:40033/down/thumb/$2;
         proxy_connect_timeout 60;
@@ -322,13 +330,16 @@ upstream mdcs-common {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10400;
 }
 upstream edds-common {
-    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10410;
+    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10401;
 }
 upstream manual-common {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10500;
 }
 upstream eshs-common {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10510;
+}
+upstream migration-common {
+    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10012;
 }
 upstream portal-download {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:40033;
@@ -337,7 +348,7 @@ upstream portal-upload {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:40032;
 }
 upstream portal-migration {
-    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10197;
+    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10011;
 }
 upstream thumbor {
     server dev-biz-thumbor.marathon.l4lb.thisdcos.directory:8000;

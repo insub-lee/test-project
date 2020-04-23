@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Input, Row, Col, message, Modal } from 'antd';
+import { Input, Row, Col, message } from 'antd';
 import GGEditor, { Flow } from 'gg-editor';
 
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
@@ -13,6 +13,7 @@ const { TextArea } = Input;
 
 // gg-editor viewPage에서 readOnly 설정
 const graphConfig = {
+  // width: '100%',
   mode: 'readOnly',
   modes: {
     readOnly: ['panCanvas', 'clickEdgeSelected', 'clickNodeSelected', 'clickCanvasSelected', 'clickGroupSelected'],

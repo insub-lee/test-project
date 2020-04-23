@@ -158,6 +158,7 @@ class ListPage extends Component {
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
+            scroll={{ x: 1000 }}
           />
         </Group>
       </div>

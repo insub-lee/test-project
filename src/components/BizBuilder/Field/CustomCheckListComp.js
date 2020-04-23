@@ -226,6 +226,7 @@ class CustomCheckListComp extends Component {
               선택
             </StyledButton>,
           ]}
+          className="multiSelector-w100"
         >
           <MultiSelector onChange={this.onChangeMultiSelector} dataSource={this.state.dataSource}></MultiSelector>
         </AntdModal>
