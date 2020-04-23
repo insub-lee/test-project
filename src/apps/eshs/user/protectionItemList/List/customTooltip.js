@@ -34,7 +34,7 @@ class CustomTooltip extends Component {
       return (
         <div>
           {fileSeqList.map(item => (
-            <img src={`http://192.168.251.14:10197/down/file/${item.file_seq}`} alt="사진이 없습니다." width="150px" />
+            <img src={`http://192.168.251.14:10197/down/file/${item.FILE_SEQ}`} alt="사진이 없습니다." width="150px" />
           ))}
         </div>
       );
