@@ -413,12 +413,14 @@ class EshsCondComp extends Component {
         break;
       }
       case 'confirm': {
+        let changeWidth = '30%';
+        if (COND_TYPE === 'INPUT') changeWidth = '25%';
         const newColumns = [
           {
             title: () => <span>개선결과 확인 {BTN_FLAG === 'Y' && <span onClick={this.handlePlusTd}>[+3]</span>}</span>,
             dataIndex: 'QUAL_COMMENT',
             align: 'center',
-            width: () => (COND_TYPE === 'INPUT' ? '25%' : '30%'),
+            width: `${changeWidth}`,
             render: (text, record) => <span>{record.QUAL_COMMENT}</span>,
           },
           {
