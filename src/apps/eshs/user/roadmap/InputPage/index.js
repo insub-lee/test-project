@@ -7,6 +7,7 @@ import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 // import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import Moment from 'moment';
 import { debounce } from 'lodash';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 class InputPage extends Component {
   constructor(props) {
@@ -161,6 +162,11 @@ class InputPage extends Component {
               </table>
             </div>
           </StyledHtmlTable>
+          <div className="alignRight">
+            <StyledButton className="btn-primary" onClick={() => this.handleOnAddClick(id)}>
+              저장
+            </StyledButton>
+          </div>
         </ContentsWrapper>
       );
     }
