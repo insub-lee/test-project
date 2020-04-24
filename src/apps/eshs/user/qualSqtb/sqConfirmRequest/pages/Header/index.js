@@ -42,7 +42,7 @@ class Header extends Component {
   };
 
   handleAction = type => {
-    const { sagaKey, saveTask, changeViewPage, formData, viewPageData, modifySaveTask, deleteTask } = this.props;
+    const { sagaKey, saveTask, changeViewPage, formData, viewPageData, modifySaveTask, deleteTask, changeFormData } = this.props;
     const { workSeq, taskSeq } = viewPageData;
     const selectTask = (formData && formData.selectRow && formData.selectRow.TASK_SEQ) || 0;
     switch (type) {
@@ -69,7 +69,22 @@ class Header extends Component {
         modifySaveTask();
         break;
       case '상신':
-        message.warning('미구현');
+        changeFormData(sagaKey, 'REQ_STATUS', '2');
+        modifySaveTask();
+
+        message.warning('SQTB_APPROVAL TABLE 결제라인이 지정되어 있다면');
+        message.warning('REQ_STATUS 상태변경 -> 2 ');
+        message.warning('및 엄수필(138941), 박동혁(102655), 지종현(103207), 최동길(104375), 이의락(112688), 각팀의 ESH담당자 총6명한테 메일 발송 ');
+        message.warning('ELSE 결제라인을 먼저 선택해주십시오 메시지 노출');
+        message.warning('개발중인 현재 결제라인 미구현.. 상신시 REQ_STATUS -> 2로 무조건 변경됨');
+
+        /* 
+          SQTB_APPROVAL TABLE 결제라인이 지정되어 있다면 
+          WBT_SQTB_QUAL TABLE의 REQ_STATUS 상태값 2로 변경및 엄수필(138941), 박동혁(102655), 지종현(103207), 최동길(104375), 이의락(112688), 각팀의 ESH담당자 총6명한테 메일 발송해야함
+          결제라인이 지정되어 있지 않으면 '결제라인을 먼저 선택해주십시오' 메시지 노출
+          개발중인 현제 결제라인 미구현.. 상신시 REQ_STATUS -> 2로 무조건 변경및 메일발송 미구현
+        */
+
         break;
       default:
         break;
@@ -127,6 +142,7 @@ class Header extends Component {
     const APP_STATUS = (formData && formData.APP_STATUS) || '';
     const QUAL_STATUS = (formData && formData.QUAL_STATUS) || '';
     const isAllConfirm = (formData && formData.isAllConfirm) || false;
+    const REQ_STATUS = (formData && formData.REQ_STATUS) || '';
 
     if (viewType === 'CONFIRM_VIEW') {
       return (
@@ -290,11 +306,12 @@ class Header extends Component {
           <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
             검색
           </StyledButton>
-          {viewType === 'INPUT' ? (
+          {viewType === 'INPUT' && (
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
               저장
             </StyledButton>
-          ) : (
+          )}
+          {REQ_STATUS === '1' && (
             <>
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
                 저장
