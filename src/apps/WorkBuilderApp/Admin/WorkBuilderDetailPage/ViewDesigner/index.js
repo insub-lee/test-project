@@ -353,6 +353,8 @@ const mapDispatchToProps = dispatch => ({
     changeGroupTitle: (groupIndex, title) => dispatch(actions.changeGroupTitle(groupIndex, title)),
     changeUseGroupTitle: (groupIndex, useTitle) => dispatch(actions.changeUseGroupTitle(groupIndex, useTitle)),
     changeCompData: (groupIndex, rowIndex, colIndex, key, value) => dispatch(actions.changeCompDataByReducer(groupIndex, rowIndex, colIndex, key, value)),
+    changeCompConfig: (groupIndex, rowIndex, colIndex, subKey, key, value) =>
+      dispatch(actions.changeCompConfigByReducer(groupIndex, rowIndex, colIndex, subKey, key, value)),
     removeColComp: (groupIndex, rowIndex, colIndex) => dispatch(actions.removeColCompByReducer(groupIndex, rowIndex, colIndex)),
     removeGroup: groupIndex => dispatch(actions.removeGroup(groupIndex)),
     changeViewCompData: (groupIndex, rowIndex, colIndex, key, value) =>
