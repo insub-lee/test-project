@@ -499,7 +499,7 @@ const reducer = (state = initialState, action) => {
           .setIn(['compData', compIdx], compItem);
       }
       let compItem = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp']);
-      compItem = compItem.set(key, setValue);
+      compItem = compItem.setIn(['CONFIG', subKey, key], setValue);
       return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp'], compItem);
     }
     case actionTypes.CHANGE_VIEW_COMPDATA_REDUCER: {
@@ -587,6 +587,7 @@ const reducer = (state = initialState, action) => {
       const compIdx = compData.findIndex(findNode => findNode.getIn(['CONFIG', 'property', 'compKey']) === compKey);
       const metaSeq = compData.getIn([compIdx, 'META_SEQ']) || -1;
       const layerIdxs = compData.getIn([compIdx, 'CONFIG', 'property', 'layerIdx']);
+      const compField = compData.getIn([compIdx, 'COMP_FIELD']);
       if (metaSeq > 0) compData = compData.setIn([compIdx, 'isRemove'], true).deleteIn([compIdx, 'CONFIG', 'property', 'layerIdx']);
       else compData = compData.delete(compIdx);
       if (layerIdxs && layerIdxs.size > 0) {
@@ -594,12 +595,42 @@ const reducer = (state = initialState, action) => {
         keySet.forEach(key => {
           const keyGroup = layerIdxs.get(key).split('-');
           const viewIdx = compData.findIndex(fNode => fNode.get('COMP_TYPE') === 'VIEW' && fNode.getIn(['CONFIG', 'property', 'layerIdxKey']) === key);
-          compData = compData
-            .deleteIn([viewIdx, 'CONFIG', 'property', 'layer', 'groups', Number(keyGroup[0]), 'rows', Number(keyGroup[1]), 'cols', Number(keyGroup[2]), 'comp'])
-            .setIn(
-              [viewIdx, 'CONFIG', 'property', 'layer', 'groups', Number(keyGroup[0]), 'rows', Number(keyGroup[1]), 'cols', Number(keyGroup[2]), 'className'],
-              '',
-            );
+          if (
+            compField ===
+            compData.getIn([
+              viewIdx,
+              'CONFIG',
+              'property',
+              'layer',
+              'groups',
+              Number(keyGroup[0]),
+              'rows',
+              Number(keyGroup[1]),
+              'cols',
+              Number(keyGroup[2]),
+              'comp',
+              'COMP_FIELD',
+            ])
+          ) {
+            compData = compData
+              .deleteIn([
+                viewIdx,
+                'CONFIG',
+                'property',
+                'layer',
+                'groups',
+                Number(keyGroup[0]),
+                'rows',
+                Number(keyGroup[1]),
+                'cols',
+                Number(keyGroup[2]),
+                'comp',
+              ])
+              .setIn(
+                [viewIdx, 'CONFIG', 'property', 'layer', 'groups', Number(keyGroup[0]), 'rows', Number(keyGroup[1]), 'cols', Number(keyGroup[2]), 'className'],
+                '',
+              );
+          }
         });
       }
       if (layerIdx && layerIdx.length > 0) {
