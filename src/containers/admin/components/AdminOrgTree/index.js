@@ -64,8 +64,7 @@ class AdminOrgTree extends Component {
           selectedIndex,
         });
       } else {
-        treeFunc.mergeArray(nextProps.treeData, this.state.treeData);
-
+        treeFunc.mergeArray(nextProps.treeData, this.state.treeData ? this.state.treeData : []);
         this.setState({
           treeData: toggleExpandedForSelected({ treeData: nextProps.treeData, selectedIndex }),
           selectedIndex,
@@ -245,7 +244,7 @@ class AdminOrgTree extends Component {
               return {
                 title:
                   this.props.type === 'bizgroup' ? (
-                    <button
+                    <span
                       type="button"
                       className={`${node.key === selectedIndex ? 'active' : ''}`}
                       onClick={handleOnClick}
@@ -254,7 +253,7 @@ class AdminOrgTree extends Component {
                       style={{ cursor: 'pointer' }}
                     >
                       {titleInner}
-                    </button>
+                    </span>
                   ) : (
                     <div>
                       <Popover
@@ -264,7 +263,7 @@ class AdminOrgTree extends Component {
                         overlayClassName="myappTreePopupMenu"
                         // onMouseLeave={this.popoverClose}
                       >
-                        <button
+                        <span
                           type="button"
                           className={`${node.key === selectedIndex ? 'active' : ''}`}
                           onClick={handleOnClick}
@@ -273,7 +272,7 @@ class AdminOrgTree extends Component {
                           style={{ cursor: 'pointer' }}
                         >
                           {titleInner}
-                        </button>
+                        </span>
                       </Popover>
                     </div>
                   ),

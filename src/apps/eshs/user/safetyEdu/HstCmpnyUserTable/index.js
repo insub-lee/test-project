@@ -19,11 +19,30 @@ const AntdTable = StyledLineTable(Table);
 class HstCmpnySelectTable extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      searchType: 'SQ_SWTB_HST_CMPNY_EMP',
+      searchValue: '',
+      searchResult: props.eshsHstCmpnyUserList,
+    };
   }
 
+  search = () => {
+    const { eshsHstCmpnyUserList } = this.props;
+    const { searchValue, searchType } = this.state;
+    if (searchValue === '') {
+      this.setState({
+        searchResult: eshsHstCmpnyUserList,
+      });
+      return;
+    }
+    this.setState({
+      searchResult: eshsHstCmpnyUserList.filter(item => item[searchType] === searchValue),
+    });
+  };
+
   render() {
-    const { eshsHstCmpnyUserList, OnClick, handleFormDataOnchange } = this.props;
+    const { searchType, searchResult } = this.state;
+    const { eshsHstCmpnyUserList, rowOnclick } = this.props;
     const columns = [
       {
         title: '사번',
@@ -61,7 +80,7 @@ class HstCmpnySelectTable extends Component {
         <div>
           <span className="input-label">검색구분</span>
           <StyledSelect style={{ display: 'inline' }}>
-            <Select defaultValue="SQ_SWTB_HST_CMPNY_EMP" style={{ width: '120px' }}>
+            <Select defaultValue={searchType} style={{ width: '120px' }} onChange={e => this.setState({ searchType: e })}>
               <Option value="SQ_SWTB_HST_CMPNY_EMP">사번</Option>
               <Option value="EMP_NM">이름</Option>
               <Option value="DUTY">직책</Option>
@@ -71,17 +90,17 @@ class HstCmpnySelectTable extends Component {
             </Select>
           </StyledSelect>
           <span className="input-label">검색어</span>
-          <AntdInput className="ant-input-sm" style={{ width: '200px', display: 'inline' }} onClick={OnClick} />
-          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => console.debug('검색')} style={{ marginBottom: '5px' }}>
+          <AntdInput className="ant-input-sm" style={{ width: '200px', display: 'inline' }} onChange={e => this.setState({ searchValue: e.target.value })} />
+          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.search()} style={{ marginBottom: '5px' }}>
             검색
           </StyledButton>
         </div>
         <ContentsWrapper>
           <AntdTable
             columns={columns}
-            dataSource={eshsHstCmpnyUserList}
+            dataSource={searchResult}
             onRow={record => ({
-              onClick: () => handleFormDataOnchange('LECT_EMP_NO', record.SQ_SWTB_HST_CMPNY_EMP, true),
+              onClick: () => rowOnclick(record),
             })}
             footer={() => (
               <div style={{ textAlign: 'center' }}>{`총 ${

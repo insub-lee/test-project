@@ -19,13 +19,18 @@ class ProfileInputComp extends React.Component {
       sagaKey: id,
       COMP_FIELD,
       changeFormData,
+      viewPageData: { viewType },
+      CONFIG,
       CONFIG: {
         property: { profileKey },
       },
       profile,
     } = this.props;
-
-    changeFormData(id, COMP_FIELD, profile[`${profileKey}`]);
+    const ignoreColdata = (CONFIG && CONFIG.property && CONFIG.property.ignoreColdata) || 'N';
+    const nvlFlag = (CONFIG && CONFIG.property && CONFIG.property.nvlFlag) || 'N';
+    if (viewType === 'INPUT' || ignoreColdata === 'Y' || nvlFlag === 'Y') {
+      changeFormData(id, COMP_FIELD, profile[`${profileKey}`]);
+    }
   }
 
   handleOnChange = value => {
@@ -49,13 +54,26 @@ class ProfileInputComp extends React.Component {
     } = this.props;
     const ignoreColdata = (CONFIG && CONFIG.property && CONFIG.property.ignoreColdata) || 'N';
     const profileKey = (CONFIG && CONFIG.property && CONFIG.property.profileKey) || '';
+    const nvlFlag = (CONFIG && CONFIG.property && CONFIG.property.nvlFlag) || 'N';
 
     if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
       return searchCompRenderer(this.props);
     }
 
     if (!visible) return '';
-
+    // nvl) config nvlFlag 활성했을 경우 colData가 null일때 profile값으로 대체
+    // INPUT PAGE에서는 해당 컴포넌트를 안쓰는데 MODIFY PAGE에서는 NULL일경우 Session정보를 보여줘야 해서 추가
+    if (nvlFlag === 'Y' && !colData) {
+      return (
+        <Input
+          defaultValue={profile[`${profileKey}`]}
+          placeholder={CONFIG.property.placeholder}
+          onChange={e => this.handleOnChange(e.target.value)}
+          readOnly={readOnly || CONFIG.property.readOnly}
+          className={CONFIG.property.className || ''}
+        />
+      );
+    }
     return (
       <Input
         defaultValue={viewType !== 'INPUT' && ignoreColdata === 'N' ? colData : profile[`${profileKey}`]}
@@ -75,7 +93,6 @@ ProfileInputComp.propTypes = {
   CONFIG: PropTypes.any,
   colData: PropTypes.any,
   changeFormData: PropTypes.any,
-  id: PropTypes.any,
   changeValidationData: PropTypes.any,
   readOnly: PropTypes.any,
   compProp: PropTypes.any,

@@ -100,7 +100,7 @@ const renderNode = (rowInfo, setViewMode, removeCategoryInfo, selectedIndex, onH
     title: (
       <div>
         <Popover placement="right" content={buttons} trigger="hover" overlayClassName="myappTreePopupMenu">
-          <button
+          <span
             type="button"
             className={`${node.TEMPLET_IDX === selectedIndex ? 'active' : ''}`}
             onClick={() => handleOnClick(node, setViewMode)}
@@ -109,7 +109,7 @@ const renderNode = (rowInfo, setViewMode, removeCategoryInfo, selectedIndex, onH
             style={{ cursor: 'pointer' }}
           >
             {titleInner}
-          </button>
+          </span>
         </Popover>
       </div>
     ),

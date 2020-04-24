@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
-import OnlyView from 'apps/eshs/user/law/lawAppraise/OnlyView';
+import OnlyView from 'apps/eshs/user/operation/law/lawAppraise/OnlyView';
 import View from './View';
 import Input from './Input';
 import Modify from './Modify';

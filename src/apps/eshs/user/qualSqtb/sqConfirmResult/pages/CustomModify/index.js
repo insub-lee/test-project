@@ -14,7 +14,6 @@ import View from 'components/BizBuilder/PageComp/view';
 import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import moment from 'moment';
 
-import ApproveCond from 'apps/eshs/user/qualSqtb/approveCond';
 import InterLock from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/InterLock';
 import Material from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/Material';
 import Header from 'apps/eshs/user/qualSqtb/sqConfirmRequest/pages/Header';
@@ -29,32 +28,11 @@ class ModifyPage extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, formData, getExtraApiData } = this.props;
-    const USER_ID = (formData && formData.REG_USER_ID) || 0;
-    const apiArray = [
-      {
-        key: 'info',
-        url: '/api/eshs/v1/common/userinfowithgender',
-        type: 'POST',
-        params: { PARAM: { USER_ID } },
-      },
-    ];
+    const { sagaKey: id, formData, changeFormData } = this.props;
+    const EXAM_DT = (formData && formData.EXAM_DT) || '';
 
-    getExtraApiData(id, apiArray, this.appStart);
+    if (!EXAM_DT) changeFormData(id, 'EXAM_DT', moment(new Date()).format('YYYY-MM-DD'));
   }
-
-  appStart = sagaKey => {
-    const { setFormData, formData, extraApiData } = this.props;
-    const userInfo = (extraApiData && extraApiData.info && extraApiData.info.userInfo) || {};
-    setFormData(sagaKey, {
-      ...formData,
-      REQ_EMP_NO: userInfo.EMP_NO,
-      REQ_INTRA_PHONE: userInfo.OFFICE_TEL_NO,
-      REQ_EMP_NM: userInfo.NAME,
-      REQ_DEPT_NM: userInfo.DEPT,
-      EXAM_DT: moment(new Date()).format('YYYY-MM-DD'),
-    });
-  };
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const {
@@ -151,7 +129,7 @@ class ModifyPage extends Component {
 
   saveTask = (id, reloadId, callbackFunc) => {
     const { modifyTask, formData } = this.props;
-    const condFileList = (formData && formData.condFileList) || [];
+    const condFileList = (formData && formData.approveFileList) || [];
     if (condFileList.length) {
       this.condFileListMoveReal(condFileList);
     } else {
@@ -183,7 +161,6 @@ class ModifyPage extends Component {
   condFileListMoveReal = condFileList => {
     const { sagaKey: id, getExtraApiData } = this.props;
     const param = { PARAM: { DETAIL: condFileList } };
-
     const apiArray = [
       {
         key: 'condRealFileList',
@@ -200,7 +177,6 @@ class ModifyPage extends Component {
 
     const condRealFileList = (extraApiData && extraApiData.condRealFileList && extraApiData.condRealFileList.DETAIL) || [];
     const approveCondList = (formData && formData.approveCondList) || [];
-
     setFormData(id, {
       ...formData,
       approveCondList: approveCondList.map(a => {
@@ -214,7 +190,7 @@ class ModifyPage extends Component {
             }
           : a;
       }),
-      condFileList: [],
+      approveFileList: [],
     });
     this.saveTask(id, id, this.saveTaskAfter);
   };
@@ -259,18 +235,6 @@ class ModifyPage extends Component {
               changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <ApproveCond
-              id={id}
-              formData={formData}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              setFormData={setFormData}
-              viewType="INPUT"
-              condTitle="안전확인결과내용"
-              btnPlusTd
-              initForm={false}
-            />
             <InterLock
               id={id}
               formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
@@ -305,6 +269,7 @@ ModifyPage.propTypes = {
   extraApiData: PropTypes.any,
   setFormData: PropTypes.func,
   modifyTask: PropTypes.func,
+  sagaKey: PropTypes.string,
 };
 
 ModifyPage.defaultProps = {

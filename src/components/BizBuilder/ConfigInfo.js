@@ -31,6 +31,7 @@ import CustomBuilderListConfig from 'components/BizBuilder/Field/CustomBuilderLi
 import ExcelDownloadCompConfig from 'components/BizBuilder/Field/ExcelDownloadCompConfig';
 import RootKeyRadioConfig from 'components/BizBuilder/Field/RootKeyRadioConfig';
 import ProfileConfig from 'components/BizBuilder/Field/ProfileConfig';
+import EshsCondConfig from 'components/BizBuilder/Field/EshsCondConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -64,4 +65,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/ExcelDownloadCompConfig': { renderer: property => <ExcelDownloadCompConfig {...property} /> },
   'components/BizBuilder/Field/RootKeyRadioConfig': { renderer: property => <RootKeyRadioConfig {...property} /> },
   'components/BizBuilder/Field/ProfileConfig': { renderer: property => <ProfileConfig {...property} /> },
+  'components/BizBuilder/Field/EshsCondConfig': { renderer: property => <EshsCondConfig {...property} /> },
 };
