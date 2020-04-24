@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import { connect } from 'react-redux';
-// import { createStructuredSelector } from 'reselect';
-import { Input, Modal, Descriptions, Checkbox } from 'antd';
+import { Input, Modal } from 'antd';
 import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
-// import * as selectors from 'containers/common/Auth/selectors';
-import HstCmpnyUserSelectComp from 'apps/eshs/user/safetyEdu/HstCmpnyUserTable';
+import HstCmpnyUserSelectComp from 'apps/eshs/user/safety/safetyEdu/HstCmpnyUserTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
@@ -39,9 +36,9 @@ class SafetyWorkMain extends Component {
         TO_TIME: '', //                 허가 요청시간   (String, 2)
         PLEDGE_NO: '', //               서약서 번호     (String, 13)
         DETB_DANEST: '', //             위험성 평가번호 (String, 13)
-        REQ_CMPNY_CD: '', //            발주회사        (String, 2)
-        REQ_DEPT_CD: '', //             발주회사 부서   (String, 20)
-        REQ_EMP_NO: '', //              발주회사 담당자 (String, 10)
+        REQ_CMPNY_CD: props.profile.PSTN_ID, //            발주회사        (String, 2)
+        REQ_DEPT_CD: props.profile.DEPT_ID, //             발주회사 부서   (String, 20)
+        REQ_EMP_NO: props.profile.USER_ID, //              발주회사 담당자 (String, 10)
         REQ_SUPERVISOR_EMP_NO: '', //   발주회사 감독자 (String, 10)
         EXM_CMPNY_CD: '', //            검토 회사 코드  (String, 2)
         EXM_DEPT_CD: '', //             검토 회사 부서  (String, 20)
@@ -51,12 +48,13 @@ class SafetyWorkMain extends Component {
         FIRE_MANAGER: '', //            화재감시 담당   (String, 50)
         // ------------------------------------------------------------------------ 상단 State 실제 formData
         REQ_SUPERVISOR_EMP_NM: '', //   발주회사 감독자명
+        REQUEST_DT: '',
       },
     };
   }
 
   componentDidMount() {
-    const { sagaKey, getCallDataHandler } = this.props;
+    const { profile, sagaKey, getCallDataHandler } = this.props;
     const apiArr = [
       {
         /* 주관회사사원 : /api/eshs/v1/common/eshsHstCmpnyUser */
@@ -70,12 +68,14 @@ class SafetyWorkMain extends Component {
         type: 'GET',
         url: `/api/eshs/v1/common/EshsCmpnyList/null/null`,
       },
+      {
+        /* 발주회사정보 : /api/eshs/v1/common/eshsGetCompNm?COMP_CD={profile.COMP_CD} */
+        key: `getCompnyNm`,
+        type: 'GET',
+        url: `/api/eshs/v1/common/eshsGetCompNm?COMP_CD=${profile.COMP_CD}`,
+      },
     ];
     getCallDataHandler(sagaKey, apiArr, this.getSearchListData);
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return true;
   }
 
   handleModal = (type, visible) => {
@@ -114,8 +114,10 @@ class SafetyWorkMain extends Component {
     const { modalType, modalVisible, formData } = this.state;
     const { result, profile } = this.props;
     // getCallData
-    const eshsCmpnyList = (result && result.getEshsCmpnyList && result.getEshsCmpnyList.list) || [];
+    // const eshsCmpnyList = (result && result.getEshsCmpnyList && result.getEshsCmpnyList.list) || [];
     const eshsHstCmpnyUserList = (result && result.getHstCmpnyUser && result.getHstCmpnyUser.list) || [];
+    const userCmpnyInfo = (result && result.getCompnyNm && result.getCompnyNm.COMP_NM) || {};
+    console.debug('렌더링-CmpnyInfo', userCmpnyInfo);
     console.debug('렌더링-props', this.props);
     console.debug('렌더링-state', formData);
     return (

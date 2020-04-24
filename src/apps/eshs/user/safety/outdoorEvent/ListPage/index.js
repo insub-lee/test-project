@@ -4,6 +4,10 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import ListCustomButtons from '../CustomButtons/ListCustomButtons';
 import ModifyCustomButtons from '../CustomButtons/ModifyCustomButtons';
 
+/*
+    안전지킴이 - 야외행사승인신청서 - 신청/승인 목록
+*/
+
 const outdoorEvent = () => (
   <BizBuilderBase
     sagaKey="outdoorEvent"

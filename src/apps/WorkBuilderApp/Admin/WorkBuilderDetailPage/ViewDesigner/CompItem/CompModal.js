@@ -103,15 +103,11 @@ class CompModal extends Component {
 
   handleChangeCompConfig = (key, value, configKey) => {
     const {
-      action: { changeCompData },
+      action: { changeCompConfig },
       configProps,
-      groups,
     } = this.props;
     const { groupIndex, rowIndex, colIndex } = configProps;
-    const { CONFIG } = groups[groupIndex].rows[rowIndex].cols[colIndex].comp;
-    const nextConfig = JSON.parse(JSON.stringify(CONFIG));
-    nextConfig[configKey][key] = value;
-    changeCompData(groupIndex, rowIndex, colIndex, 'CONFIG', nextConfig);
+    changeCompConfig(groupIndex, rowIndex, colIndex, configKey, key, value);
   };
 
   handleChangeViewConfig = (key, value, configKey) => {
