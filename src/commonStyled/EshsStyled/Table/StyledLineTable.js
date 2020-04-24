@@ -63,14 +63,6 @@ const StyledLineTable = Component => styled(Component)`
     border-top-right-radius: 0;
   }
 
-  .ant-table-thead > tr > th {
-    background-color: ${primaryColor};
-    color: #ffffff;
-    text-align: center;
-    font-size: 12px;
-    padding: 10px;
-  }
-
   /* tbody */
   .ant-table-tbody > tr {
     &:nth-child(even) > td {
