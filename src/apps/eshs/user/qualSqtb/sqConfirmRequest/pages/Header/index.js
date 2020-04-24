@@ -22,10 +22,34 @@ class Header extends Component {
     this.state = {
       searchList: [],
       modalVisible: false,
+      chkCnt: 0,
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const {
+      sagaKey: id,
+      viewPageData: { viewType, taskSeq, getExtraApiData },
+    } = this.props;
+
+    if (viewType === '') {
+      const apiArray = [
+        {
+          key: 'chkCnt',
+          type: 'POST',
+          url: `/api/eshs/v1/common/eshsGetQualChkSheetByTaskSeq/${taskSeq}`,
+        },
+      ];
+
+      getExtraApiData(id, apiArray, this.appStart);
+    }
+  }
+
+  appStart = () => {
+    const { extraApiData } = this.props;
+    const chkCnt = (extraApiData && extraApiData.chkCnt && extraApiData.chkCnt.result) || 0;
+    this.setState({ chkCnt });
+  };
 
   handleModalVisible = () => {
     const { modalVisible } = this.state;
@@ -112,7 +136,28 @@ class Header extends Component {
   };
 
   handleConfirmProcess = (status, action, callBack) => {
-    const { sagaKey: id, changeFormData } = this.props;
+    const { chkCnt } = this.state;
+    const { sagaKey: id, changeFormData, formData } = this.props;
+    const reqDt = (formData && formData.REQ_DT) || undefined;
+    const examDt = (formData && formData.EXAM_DT) || undefined;
+    const qualComment = (formData && formData.QUAL_COMMENT) || '';
+    if (!examDt) return message.warning('검토일자를 지정하여 주십시오.');
+    if (reqDt > examDt) return message.warning('검토일자는 신청일자 이후여야 합니다');
+    if (qualComment.length > 500) {
+      message.warning(`종합의견 문자수는 ${qualComment.length} 자입니다.`);
+      return message.warning('500자 이내로 작성하여 주십시오.');
+    }
+
+    /* 
+    TODO 결제선 구현후 status === '2' 일경우 조건추가
+    if (f.conLineCnt.value == 0) {
+			alert("결재선을 설정하여 주십시오.");
+			return false;
+    }
+    */
+
+    // 상신시 CheckSheet가 등록되어 있지않다면 상신불가.
+    if (status === '2') if (!chkCnt) return message.warning('저장후 [장비ESH CheckSheet등록]을 완료하여주십시오.');
     changeFormData(id, 'APP_STATUS', status);
     if (typeof callBack === 'function') {
       callBack(action);
@@ -143,7 +188,6 @@ class Header extends Component {
     const QUAL_STATUS = (formData && formData.QUAL_STATUS) || '';
     const isAllConfirm = (formData && formData.isAllConfirm) || false;
     const REQ_STATUS = (formData && formData.REQ_STATUS) || '';
-
     if (viewType === 'CONFIRM_VIEW') {
       return (
         <>
@@ -263,6 +307,7 @@ class Header extends Component {
                 <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('2', 'MODIFY', this.handleAction)}>
                   상신
                 </StyledButton>
+                {/* 저장 / 상신 클릭시 신청일자(REQ_DT) < 검토일자(EXAM_DT) 여야지만 가능 추가하세요 */}
                 <ConfirmCheckSheet
                   viewType="INPUT"
                   changeFormData={changeFormData}
@@ -271,6 +316,7 @@ class Header extends Component {
                   extraApiData={extraApiData}
                   submitExtraHandler={submitExtraHandler}
                   getExtraApiData={getExtraApiData}
+                  handelChangeChkCnt={cnt => this.setState({ chkCnt: cnt })}
                 />
               </>
             )}
