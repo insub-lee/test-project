@@ -1,0 +1,220 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Modal, Input, message, Popconfirm } from 'antd';
+
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+
+import UserSelect from 'components/UserSelect';
+
+const AntdModal = StyledContentsModal(Modal);
+const AntdSearch = StyledSearchInput(Input.Search);
+
+class Edit extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpenOModal: false,
+      isOpenKModal: false,
+      isOpenMModal: false,
+    };
+  }
+
+  componentDidMount() {}
+
+  onUserSelect() {}
+
+  onOfficerSelectedComplete = result => {
+    const { sagaKey, changeFormData } = this.props;
+    if (result.length > 0) {
+      changeFormData(sagaKey, 'OFFICER_NO', result[0].EMP_NO);
+      changeFormData(sagaKey, 'OFFICER_NAME', result[0].NAME_KOR);
+      changeFormData(sagaKey, 'OFFICER_DEPT_KOR', result[0].DEPT_NAME_KOR);
+      this.setState({
+        isOpenOModal: false,
+      });
+    }
+  };
+
+  onKeeperSelectedComplete = result => {
+    const { sagaKey, changeFormData } = this.props;
+    if (result.length > 0) {
+      changeFormData(sagaKey, 'KEEPER_NO', result[0].EMP_NO);
+      changeFormData(sagaKey, 'KEEPER_NAME', result[0].NAME_KOR);
+      changeFormData(sagaKey, 'KEEPER_DEPT_KOR', result[0].DEPT_NAME_KOR);
+      this.setState({
+        isOpenKModal: false,
+      });
+    }
+  };
+
+  onManagerSelectedComplete = result => {
+    const { sagaKey, changeFormData } = this.props;
+
+    if (result.length > 0) {
+      changeFormData(sagaKey, 'MANAGER_NO', result[0].EMP_NO);
+      changeFormData(sagaKey, 'MANAGER_NAME', result[0].NAME_KOR);
+      changeFormData(sagaKey, 'MANAGER_DEPT_KOR', result[0].DEPT_NAME_KOR);
+      this.setState({
+        isOpenMModal: false,
+      });
+    }
+  };
+
+  warning = () => {
+    message.warning('값이 올바르지 않습니다');
+  };
+
+  onSave = () => {
+    const { sagaKey, submitHandlerBySaga, formData, changeFormData } = this.props;
+
+    const submitData = {
+      PARAM: { formData },
+    };
+    if (formData && formData.OFFICER_NO && formData.KEEPER_NO && formData.MANAGER_NO) {
+      if (formData.actionType.trim() === 'U') {
+        submitHandlerBySaga(sagaKey, 'PUT', '/api/eshs/v1/common/eshsproposalofficer', submitData, this.onSaveComplete);
+      } else {
+        submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/eshsproposalofficer', submitData, this.onSaveComplete);
+      }
+      changeFormData(sagaKey, 'actionType', 'I');
+    } else {
+      this.warning();
+    }
+  };
+
+  onRemoveDo = () => {
+    const { sagaKey: id, submitHandlerBySaga, formData, onComplete } = this.props;
+    const param = { PARAM: { ...formData } };
+    submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsproposalofficer', param, onComplete);
+  };
+
+  onSaveComplete = id => {
+    const { onComplete, removeStorageReduxState, changeFormData, sagaKey } = this.props;
+    removeStorageReduxState(id, 'result');
+    removeStorageReduxState(id, 'formData');
+    changeFormData(sagaKey, 'actionType', 'I');
+    onComplete();
+  };
+
+  onCancel = () => {
+    const { sagaKey, changeFormData } = this.props;
+    changeFormData(sagaKey, 'actionType', 'I');
+    this.setState({ isOpenOModal: false, isOpenKModal: false, isOpenMModal: false });
+  };
+
+  render() {
+    const { formData } = this.props;
+    const { isOpenOModal, isOpenKModal, isOpenMModal } = this.state;
+    return (
+      <>
+        <StyledHtmlTable>
+          <table>
+            <colgroup>
+              <col width="20%"></col>
+              <col width="80%"></col>
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>
+                  <span>구분</span>
+                </th>
+                <th>
+                  <span>이름</span>
+                </th>
+              </tr>
+              <tr>
+                <th>
+                  <span>부서명</span>
+                </th>
+                <td>{formData && formData.OFFICER_DEPT_KOR}</td>
+              </tr>
+              <tr>
+                <th>안전책임자</th>
+                <td>
+                  <AntdSearch
+                    readOnly
+                    placeholder="select me"
+                    value={formData && formData.OFFICER_NAME}
+                    onClick={() => this.setState({ isOpenOModal: true })}
+                    onSearch={() => this.setState({ isOpenOModal: true })}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <th>안전유지자</th>
+                <td>
+                  <AntdSearch
+                    readOnly
+                    placeholder="select me"
+                    value={formData && formData.KEEPER_NAME}
+                    onClick={() => this.setState({ isOpenKModal: true })}
+                    onSearch={() => this.setState({ isOpenKModal: true })}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <th>안전보건담당자</th>
+                <td>
+                  <AntdSearch
+                    readOnly
+                    placeholder="select me"
+                    value={formData && formData.MANAGER_NAME}
+                    onClick={() => this.setState({ isOpenMModal: true })}
+                    onSearch={() => this.setState({ isOpenMModal: true })}
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <StyledButtonWrapper className="btn-wrap-center">
+            {formData && formData.actionType === 'I' ? (
+              <StyledButton className="btn-primary btn-first" onClick={() => this.onSave()}>
+                저장
+              </StyledButton>
+            ) : (
+              <>
+                <StyledButton className="btn-primary btn-first" onClick={() => this.onSave()}>
+                  수정
+                </StyledButton>
+                <Popconfirm title="삭제하시겠습니끼?" onConfirm={() => this.onRemoveDo()}>
+                  <StyledButton className="btn-primary  btn-first">삭제</StyledButton>
+                </Popconfirm>
+              </>
+            )}
+            <StyledButton className="btn-light" onClick={() => this.onCancel()}>
+              RESET
+            </StyledButton>
+          </StyledButtonWrapper>
+        </StyledHtmlTable>
+        <AntdModal visible={isOpenOModal || isOpenKModal || isOpenMModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={null}>
+          {isOpenOModal && (
+            <UserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onOfficerSelectedComplete} onCancel={this.onCancel} />
+          )}
+          {isOpenKModal && (
+            <UserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onKeeperSelectedComplete} onCancel={this.onCancel} />
+          )}
+          {isOpenMModal && (
+            <UserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onManagerSelectedComplete} onCancel={this.onCancel} />
+          )}
+        </AntdModal>
+      </>
+    );
+  }
+}
+
+Edit.propTypes = {
+  sagaKey: PropTypes.string,
+  formData: PropTypes.any,
+  submitHandlerBySaga: PropTypes.func,
+  removeStorageReduxState: PropTypes.func,
+  onComplete: PropTypes.func,
+  changeFormData: PropTypes.any,
+};
+
+Edit.defaultProps = {};
+
+export default Edit;
