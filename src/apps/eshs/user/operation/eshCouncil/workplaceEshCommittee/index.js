@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-import List from '../../pages/ListPage';
+import List from 'apps/eshs/user/pages/ListPage';
 
 class WorkplaceEshCommittee extends Component {
   state = {
