@@ -29,8 +29,9 @@ class deleteDataList extends React.Component {
         placeholder="삭제 데이터 출력여부를 선택해 주세요"
         onChange={val => this.onChange(val, optSeq)}
       >
-        <Option value="A">출력</Option>
-        <Option value="Y">비 출력</Option>
+        <Option value="Y">현재 글</Option>
+        <Option value="A">전체 글</Option>
+        <Option value="N">삭제 글</Option>
       </Select>
     );
   }
