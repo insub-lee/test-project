@@ -13,8 +13,8 @@ import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 
-import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
-import SearchComp from 'apps/eshs/user/environmentMasterRegistration/InputModal/SearchComp';
+import Modal from '../InputModal';
+import SearchComp from '../InputModal/SearchComp';
 
 const AntdInput = StyledInput(Input);
 const AntdInputNumber = StyledInputNumber(InputNumber);
@@ -158,7 +158,6 @@ class List extends React.Component {
   getSubCategories = value => {
     const { result } = this.props;
     const category = result.codeCategory.categoryMapList.filter(item => item.PARENT_NODE_ID === value);
-    console.debug('@@@@@@GET SUB CATEGORIES@@@@@@', value, typeof value, category);
     this.setState({
       subCategories: category,
     });

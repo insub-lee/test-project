@@ -14,7 +14,7 @@ import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
-import SearchComp from 'apps/eshs/user/environmentMasterRegistration/InputModal/SearchComp';
+import SearchComp from '../SearchComp';
 
 const AntdInput = StyledInput(Input);
 const AntdInputNumber = StyledInputNumber(InputNumber);

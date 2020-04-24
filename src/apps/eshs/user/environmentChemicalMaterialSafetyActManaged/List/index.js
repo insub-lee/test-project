@@ -14,7 +14,7 @@ import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
-import SearchComp from 'apps/eshs/user/environmentMasterRegistration/InputModal/SearchComp';
+import SearchComp from '../SearchComp';
 
 const AntdInput = StyledInput(Input);
 const AntdInputNumber = StyledInputNumber(InputNumber);
@@ -71,7 +71,7 @@ class List extends React.Component {
         key: 'codeCategory',
         type: 'POST',
         url: `/api/admin/v1/common/categoryMapList`,
-        params: { PARAM: { NODE_ID: 1759 } },
+        params: { PARAM: { NODE_ID: 1952 } },
       },
     ];
 
