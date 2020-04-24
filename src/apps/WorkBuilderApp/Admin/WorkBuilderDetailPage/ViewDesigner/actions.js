@@ -193,6 +193,16 @@ export const changeCompDataByReducer = (groupIndex, rowIndex, colIndex, key, val
   value,
 });
 
+export const changeCompConfigByReducer = (groupIndex, rowIndex, colIndex, subKey, key, value) => ({
+  type: actionTypes.CHANGE_COMP_CONFIG_REDUCER,
+  groupIndex,
+  rowIndex,
+  colIndex,
+  subKey,
+  key,
+  value,
+});
+
 export const addMetaDataBySaga = callbackFunc => ({ type: actionTypes.ADD_METADATA_SAGA, callbackFunc });
 
 export const setInitDataByReducer = (workSeq, viewType, viewName) => ({ type: actionTypes.SET_INIT_DATA_REDUCER, workSeq, viewType, viewName });
