@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Select, Input } from 'antd';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
+const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
-const AntdSearch = StyledSearchInput(Input.Search);
 class SearchComp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      category: [],
+      categories: [],
     };
   }
 
@@ -23,20 +23,21 @@ class SearchComp extends React.Component {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiArr = [
       {
-        key: 'harmfulList',
+        key: 'codeCategory',
         type: 'POST',
         url: `/api/admin/v1/common/categoryMapList`,
-        params: { PARAM: { NODE_ID: 1976 } },
+        params: { PARAM: { NODE_ID: 1953 } },
       },
     ];
 
-    getCallDataHandler(id, apiArr, this.setCategoryList);
+    getCallDataHandler(id, apiArr, this.setCategory);
   };
 
-  setCategoryList = () => {
+  setCategory = () => {
     const { result } = this.props;
+    const category = result.codeCategory.categoryMapList.slice(1);
     this.setState({
-      category: (result.harmfulList && result.harmfulList.categoryMapList && result.harmfulList.categoryMapList.slice(1)) || [],
+      categories: category,
     });
   };
 
@@ -47,7 +48,7 @@ class SearchComp extends React.Component {
 
   render() {
     // const { handleSearchChange } = this;
-    const { category } = this.state;
+    const { categories } = this.state;
     const { KEYWORD, CATEGORY_ID, handleSearchChange } = this.props;
     return (
       <>
@@ -59,15 +60,15 @@ class SearchComp extends React.Component {
             onChange={value => handleSearchChange(value, 'SELECT')}
             style={{ width: '15%' }}
           >
-            {category.map(item => (
+            {categories.map(item => (
               <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
             ))}
             <Select.Option value="">전체 보기</Select.Option>
           </AntdSelect>
-          <AntdSearch
+          <AntdInput.Search
             value={KEYWORD}
             onChange={e => handleSearchChange(e, 'INPUT')}
-            className="input-search-mid ant-input-inline"
+            className="ant-input-mid ant-input-inline search-item input-width160"
             placeholder="검색"
             style={{ width: '20%' }}
           />
