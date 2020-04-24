@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { InputNumber, Row, Col } from 'antd';
+import { InputNumber } from 'antd';
 import { isJSON } from 'utils/helpers';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
