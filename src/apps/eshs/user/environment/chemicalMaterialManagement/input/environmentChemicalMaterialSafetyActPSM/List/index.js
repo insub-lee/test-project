@@ -276,7 +276,7 @@ class List extends React.Component {
                       />
                     </td>
                     <th>제출량 (제조, 취급, 저장 동일여부)</th>
-                    <td>
+                    <td style={{ textAlign: 'center' }}>
                       <Checkbox onChange={() => console.log('@@@@@CHECK@@@@@')} />
                     </td>
                   </tr>
