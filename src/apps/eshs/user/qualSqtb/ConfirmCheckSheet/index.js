@@ -23,12 +23,6 @@ class ConfirmCheckSheet extends Component {
       checkList: [],
       TASK_SEQ: '',
       checkTable: [],
-      pagination: {
-        pageSize: 10,
-        defaultCurrent: 1,
-        onChange: page =>
-          this.setState(prevState => ({ pagination: { ...prevState.pagination, defaultCurrent: page }, checkTable: [] }), this.debounceTableGrid),
-      },
       columns: [
         {
           title: 'Item',
@@ -85,7 +79,7 @@ class ConfirmCheckSheet extends Component {
       {
         key: 'checkList',
         type: 'GET',
-        url: `/api/eshs/v1/common/eshsGetQualChkSheetByReqCd/${TASK_SEQ}`,
+        url: `/api/eshs/v1/common/eshsGetQualChkSheetByTaskSeq/${TASK_SEQ}`,
       },
     ];
 
@@ -107,7 +101,7 @@ class ConfirmCheckSheet extends Component {
   };
 
   debounceTableGrid = () => {
-    const { checkList, columns, pagination } = this.state;
+    const { checkList, columns } = this.state;
     return this.setState({
       checkTable: [
         <AntdLineTable
@@ -117,7 +111,8 @@ class ConfirmCheckSheet extends Component {
           columns={columns}
           dataSource={checkList || []}
           bordered
-          pagination={pagination}
+          pagination={false}
+          scroll={{ y: 392 }}
           footer={() => <span>{`${checkList.length} 건`}</span>}
         />,
       ],
@@ -155,25 +150,35 @@ class ConfirmCheckSheet extends Component {
   };
 
   saveAfter = () => {
-    const { extraApiData } = this.props;
+    const { extraApiData, handelChangeChkCnt } = this.props;
+    const { checkList } = this.state;
 
     const code = (extraApiData && extraApiData.insertChecks && extraApiData.insertChecks.code) || 500;
 
-    if (code === 500) message.warning('실패하였습니다.');
-    else message.success('저장되었습니다.');
+    if (code === 500) return message.warning('실패하였습니다.');
+
+    message.success('저장되었습니다.');
+    return handelChangeChkCnt(checkList.length);
   };
 
   render() {
-    const { modalVisible, checkTable, formData } = this.state;
-    const { viewType } = this.props;
+    const { modalVisible, checkTable } = this.state;
+    const { viewType, formData } = this.props;
     const REQ_CD = (formData && formData.REQ_CD) || '';
 
     return (
       <>
         <StyledButton className="btn-primary btn-sm btn-first" onClick={this.handleModalVisible}>
-          장비 ESH CheckSheet 조회
+          장비 ESH CheckSheet {viewType === 'INPUT' ? '등록' : '조회'}
         </StyledButton>
-        <AntdModal title="ESH Qual 확인 Check Sheet 조회" visible={modalVisible} width={1300} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+        <AntdModal
+          title={viewType === 'INPUT' ? '[ESH Qual 확인 Check Sheet 등록] ' : '[ESH Qual 확인 Check Sheet 조회] '}
+          visible={modalVisible}
+          width={700}
+          heigth={500}
+          onCancel={this.handleModalVisible}
+          footer={[null]}
+        >
           <div>
             <StyledButtonWrapper className="btn-wrap-left btn-wrap-mb-10">
               <span>{`신청번호 : ${REQ_CD}  `}</span>
@@ -200,8 +205,11 @@ ConfirmCheckSheet.propTypes = {
   extraApiData: PropTypes.object,
   getExtraApiData: PropTypes.func,
   viewType: PropTypes.string,
+  handelChangeChkCnt: PropTypes.func,
 };
 
-ConfirmCheckSheet.defaultProps = {};
+ConfirmCheckSheet.defaultProps = {
+  handelChangeChkCnt: () => {},
+};
 
 export default ConfirmCheckSheet;
