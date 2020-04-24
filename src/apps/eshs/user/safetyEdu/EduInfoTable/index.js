@@ -51,13 +51,10 @@ class EduInfoTable extends Component {
     }
   };
 
-  // FormData OnChange - 모달컨트롤
-  handleFormDataOnchange = (field, value, modal) => {
+  rowOnclickForHstCmpnyUser = record => {
     const { sagaKey: id, changeFormData } = this.props;
-    changeFormData(id, field, value);
-    if (modal || false) {
-      this.handleModalVisible('', false);
-    }
+    changeFormData(id, 'LECT_EMP_NO', record.SQ_SWTB_HST_CMPNY_EMP);
+    this.handleModalVisible('', false);
   };
 
   // 2006 - 현재년도 까지 Select 생성
@@ -271,9 +268,7 @@ class EduInfoTable extends Component {
           onCancel={() => this.handleModalVisible('', false)}
         >
           {modalType === 'hstCmpny' && <HstCmpnySelectComp eshsHstCmpnyList={eshsHstCmpnyList} handleFormDataOnchange={this.handleFormDataOnchange} />}
-          {modalType === 'hstUser' && (
-            <HstCmpnyUserSelectComp eshsHstCmpnyUserList={selectedHstCmpnyUserList} handleFormDataOnchange={this.handleFormDataOnchange} />
-          )}
+          {modalType === 'hstUser' && <HstCmpnyUserSelectComp eshsHstCmpnyUserList={selectedHstCmpnyUserList} rowOnclick={this.rowOnclickForHstCmpnyUser} />}
         </AntdModal>
       </EduInfoTableStyled>
     );
