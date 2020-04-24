@@ -27,13 +27,6 @@ class ModifyPage extends Component {
     };
   }
 
-  componentDidMount() {
-    const { sagaKey: id, formData, changeFormData } = this.props;
-    const EXAM_DT = (formData && formData.EXAM_DT) || '';
-
-    if (!EXAM_DT) changeFormData(id, 'EXAM_DT', moment(new Date()).format('YYYY-MM-DD'));
-  }
-
   static getDerivedStateFromProps(nextProps, prevState) {
     const {
       formData,
