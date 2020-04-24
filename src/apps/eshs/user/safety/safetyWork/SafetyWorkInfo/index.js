@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Input, DatePicker, Select, Radio } from 'antd';
-
+import { Input, DatePicker, Select, Radio, Checkbox } from 'antd';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
@@ -23,6 +23,16 @@ const AntdTextArea = StyledTextarea(TextArea);
 const EduInfoTableStyled = styled.div`
   .hstCmpnyCd {
     margin-left: 5px;
+  }
+
+  .ant-checkbox-group {
+    display: block;
+  }
+
+  .ant-checkbox-wrapper {
+    display: block;
+    padding: 5px 0px 5px 0px;
+    display: inline-block;
   }
 `;
 
@@ -61,7 +71,12 @@ class SafetyWorkInfo extends Component {
                     <span>신청일</span>
                   </th>
                   <td colSpan={8}>
-                    <AntdDatePicker className="ant-picker-xs" style={{ width: '200px' }} defaultValue={moment()} />
+                    <AntdDatePicker
+                      className="ant-picker-xs"
+                      style={{ width: '200px' }}
+                      readOnly
+                      defaultValue={formData.REQUEST_DT !== '' ? formData.REQUEST_DT : moment()}
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -86,7 +101,7 @@ class SafetyWorkInfo extends Component {
                   </th>
                   <td colSpan={3}>
                     <AntdInput className="ant-input-xs ant-input-inline" defaultValue={formData.REQ_CMPNY_CD} readOnly style={{ width: '200px' }} />
-                    <span style={{ color: '#495057', marginLeft: '5px' }}>{profile.DEPT_NAME_KOR}</span>
+                    <span style={{ color: '#495057', marginLeft: '5px' }}>{profile.PSTN_NAME_KOR}</span>
                   </td>
                   <th colSpan={2}>
                     <span>* 작업부서</span>
@@ -137,11 +152,41 @@ class SafetyWorkInfo extends Component {
                   <th colSpan={2}>
                     <span>* 주작업</span>
                   </th>
-                  <td colSpan={3}>(주작업)</td>
+                  <td colSpan={3}>
+                    <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => console.debug('작업전 점검 등록 버튼')}>
+                      작업전 점검 등록
+                    </StyledButton>
+                    <Radio.Group>
+                      <Radio value="공통">공통</Radio>
+                      <Radio value="화기작업">
+                        화기작업
+                        <span style={{ color: '#ff6666', marginLeft: '27px' }}>※ 화기작업 : 화염,스파크 등을 발생이키는 작업</span>
+                      </Radio>
+                      <Radio value="일반위험작업">
+                        일반위험작업
+                        <span style={{ color: '#ff6666', marginLeft: '5px' }}>※ 일반위험작업 : 화기작업 이외의 작업 </span>
+                      </Radio>
+                    </Radio.Group>
+                  </td>
                   <th colSpan={2}>
                     <span>* 보충작업</span>
                   </th>
-                  <td colSpan={3}>(보충작업)</td>
+                  <td colSpan={3}>
+                    <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => console.debug('작업전 점검 등록 버튼')}>
+                      작업전 점검 등록
+                    </StyledButton>
+                    <Checkbox.Group>
+                      <Checkbox value="고소">고소</Checkbox>
+                      <Checkbox value="굴착">굴착</Checkbox>
+                      <Checkbox value="밀폐">밀폐공간</Checkbox>
+                      <Checkbox value="방사선">방사선</Checkbox>
+                      <Checkbox value="전기">전기</Checkbox>
+                      <Checkbox value="중량물">중량물</Checkbox>
+                    </Checkbox.Group>
+                    <span style={{ color: '#ff6666' }}>※ 보충작업 : 추가 발생 위험 작업체크(중복체크가능)</span>
+                    <br />
+                    <span style={{ color: '#ff6666' }}>※ 작업장 여건 고려 : 고소, 전기작업 등 </span>
+                  </td>
                 </tr>
                 <tr>
                   <th colSpan={2}>
@@ -176,7 +221,7 @@ class SafetyWorkInfo extends Component {
                     <span>* 작업내용</span>
                   </th>
                   <td colSpan={8}>
-                    <AntdTextArea autoSize={{ minRows: 4, maxRows: 4 }} />
+                    <AntdTextArea autoSize={{ minRows: 2, maxRows: 2 }} onChange={e => handleChangeFormData('WORK_DESC', e.target.value)} />
                   </td>
                 </tr>
                 <tr>
