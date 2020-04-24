@@ -55,6 +55,14 @@ const StyledAntdTable = Component => styled(Component)`
         top: 0;
       }
     }
+
+    .add-row {
+      cursor: pointer;
+
+      &:hover {
+        color: #1fb5ad;
+      }
+    }
   }
   /* table 끝 */
   /* thead */
@@ -150,6 +158,7 @@ const StyledAntdTable = Component => styled(Component)`
       vertical-align: inherit;
     }
   }
+
   /* 안 쓰지만 지우지 말 것 */
   /*
   &.tableCodeWrapper {
