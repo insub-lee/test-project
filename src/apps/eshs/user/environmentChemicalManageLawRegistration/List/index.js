@@ -26,7 +26,7 @@ class List extends React.Component {
       visible: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
       requestValue: {
-        CATEGORY_ID: 1825,
+        CATEGORY_ID: 1977,
         CAS_NO: '',
         NAME_KOR: '',
         NAME_ENG: '',
@@ -59,13 +59,13 @@ class List extends React.Component {
   };
 
   getCategoryList = () => {
-    const mapId = 82;
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiArr = [
       {
         key: 'harmfulList',
-        type: 'GET',
-        url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`,
+        type: 'POST',
+        url: `/api/admin/v1/common/categoryMapList`,
+        params: { PARAM: { NODE_ID: 1976 } },
       },
     ];
 
@@ -75,8 +75,7 @@ class List extends React.Component {
   setCategoryList = () => {
     const { result } = this.props;
     this.setState({
-      getCategorys:
-        (result.harmfulList && result.harmfulList.categoryMapList && result.harmfulList.categoryMapList.filter(item => item.PARENT_NODE_ID === 1819)) || [],
+      getCategorys: (result.harmfulList && result.harmfulList.categoryMapList && result.harmfulList.categoryMapList.slice(1)) || [],
     });
   };
 
@@ -125,7 +124,7 @@ class List extends React.Component {
   handleResetClick = () => {
     this.setState({
       requestValue: {
-        CATEGORY_ID: 1825,
+        CATEGORY_ID: 1977,
         CAS_NO: '',
         NAME_KOR: '',
         NAME_ENG: '',
@@ -270,7 +269,7 @@ class List extends React.Component {
                     <td colSpan={3}>
                       <AntdSelect
                         className="select-sm"
-                        defaultValue={1825}
+                        defaultValue={1977}
                         value={Number(requestValue.CATEGORY_ID)}
                         onChange={value => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { CATEGORY_ID: value }) }))}
                         style={{ width: '40%' }}
