@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Popconfirm } from 'antd';
+import { Input, InputNumber, Select, Popconfirm, Checkbox } from 'antd';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
@@ -236,7 +236,7 @@ class List extends React.Component {
                 <tbody>
                   <tr>
                     <th>연번</th>
-                    <td colSpan={2}>
+                    <td>
                       <AntdInputNumber
                         className="ant-input-number input-number-sm"
                         value={requestValue.SERIAL_NO}
@@ -244,24 +244,16 @@ class List extends React.Component {
                         disabled={isModified}
                       />
                     </td>
-                    <th>CAS NO.</th>
-                    <td colSpan={2}>
-                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
-                  </tr>
-                  <tr>
                     <th>화학물질명_국문</th>
                     <td>
                       <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
-                    <th>함유량 기준</th>
+                    <th>CAS NO.</th>
                     <td>
-                      <AntdInputNumber
-                        className="ant-input-number input-number-sm"
-                        value={requestValue.CONTENT_STANDARD}
-                        onChange={e => handleInputChange(e, 'NUMBER', 'CONTENT_STANDARD')}
-                      />
+                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
+                  </tr>
+                  <tr>
                     <th>해당여부</th>
                     <td>
                       <AntdSelect
@@ -274,6 +266,47 @@ class List extends React.Component {
                         <Select.Option value="Y">해당</Select.Option>
                         <Select.Option value="N">비해당</Select.Option>
                       </AntdSelect>
+                    </td>
+                    <th>기준함량</th>
+                    <td>
+                      <AntdInputNumber
+                        className="ant-input-number input-number-sm"
+                        value={requestValue.CONTENT_STANDARD}
+                        onChange={e => handleInputChange(e, 'NUMBER', 'CONTENT_STANDARD')}
+                      />
+                    </td>
+                    <th>제출량 (제조, 취급, 저장 동일여부)</th>
+                    <td style={{ textAlign: 'center' }}>
+                      <Checkbox onChange={() => console.log('@@@@@CHECK@@@@@')} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>제조</th>
+                    <td>
+                      <AntdInputNumber
+                        className="ant-input-number input-number-sm"
+                        value={requestValue.SERIAL_NO}
+                        onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
+                        disabled={isModified}
+                      />
+                    </td>
+                    <th>취급</th>
+                    <td>
+                      <AntdInputNumber
+                        className="ant-input-number input-number-sm"
+                        value={requestValue.SERIAL_NO}
+                        onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
+                        disabled={isModified}
+                      />
+                    </td>
+                    <th>저장</th>
+                    <td>
+                      <AntdInputNumber
+                        className="ant-input-number input-number-sm"
+                        value={requestValue.SERIAL_NO}
+                        onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
+                        disabled={isModified}
+                      />
                     </td>
                   </tr>
                 </tbody>
