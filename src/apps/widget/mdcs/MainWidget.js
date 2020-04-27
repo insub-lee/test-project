@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import StyledMainWidget from 'commonStyled/MdcsStyled/Wrapper/StyledMainWidget';
+import StyledMainWidget from 'commonStyled/MdcsStyled/StyledMainWidget';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class MainWidget extends Component {
