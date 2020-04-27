@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import Upload from 'components/FormStuff/Upload';
 
 import { Input, Select, Table, Checkbox } from 'antd';
 
 const { Option } = Select;
-const AntdLineTable = StyledLineTable(Table);
+const AntdLineTable = StyledAntdTable(Table);
 
 class EshsCondComp extends Component {
   constructor(props) {
@@ -77,9 +77,12 @@ class EshsCondComp extends Component {
         property: { COND_KEY, COND_COLUMN, COND_TYPE },
       },
     } = this.props;
-
     const list = (extraApiData && extraApiData[`${COND_KEY}CondList`] && extraApiData[`${COND_KEY}CondList`].list) || [];
-    setFormData(id, { ...formData, [`${COND_COLUMN}CondList`]: list, [`${COND_COLUMN}_TYPE`]: COND_TYPE });
+    let isAllConfirm = false;
+    if (COND_COLUMN === 'confirm' && list.length) {
+      isAllConfirm = !list.filter(c => !c.QUAL_EMPID).length; // confirm 전부 체크되었을 경우
+    }
+    setFormData(id, { ...formData, [`${COND_COLUMN}CondList`]: list, [`${COND_COLUMN}_TYPE`]: COND_TYPE, [`isAll${COND_COLUMN}`]: isAllConfirm });
 
     if (COND_COLUMN) {
       return this.setColumns();
@@ -107,7 +110,16 @@ class EshsCondComp extends Component {
       case 'improve': {
         const newColumns = [
           {
-            title: () => <span>개선계획 {BTN_FLAG === 'Y' && <span onClick={this.handlePlusTd}>[+3]</span>}</span>,
+            title: () => (
+              <span>
+                개선계획{' '}
+                {BTN_FLAG === 'Y' && (
+                  <span onClick={this.handlePlusTd} className="add-row">
+                    [+3]
+                  </span>
+                )}
+              </span>
+            ),
             dataIndex: 'QUAL_COMMENT',
             align: 'center',
             width: '50%',
@@ -197,7 +209,16 @@ class EshsCondComp extends Component {
             //   <StyledButton className="btn-primary btn-sm" onClick={this.handlePlusTd}>
             //   [+3]
             // </StyledButton>
-            title: () => <span>승인조건 {BTN_FLAG === 'Y' && <span onClick={this.handlePlusTd}>[+3]</span>}</span>,
+            title: () => (
+              <span>
+                승인조건{' '}
+                {BTN_FLAG === 'Y' && (
+                  <span onClick={this.handlePlusTd} className="add-row">
+                    [+3]
+                  </span>
+                )}
+              </span>
+            ),
             dataIndex: 'QUAL_COMMENT',
             align: 'center',
             width: '45%',
@@ -306,7 +327,16 @@ class EshsCondComp extends Component {
       case 'result': {
         const newColumns = [
           {
-            title: () => <span>개선결과 {BTN_FLAG === 'Y' && <span onClick={this.handlePlusTd}>[+3]</span>}</span>,
+            title: () => (
+              <span>
+                개선결과{' '}
+                {BTN_FLAG === 'Y' && (
+                  <span onClick={this.handlePlusTd} className="add-row">
+                    [+3]
+                  </span>
+                )}
+              </span>
+            ),
             dataIndex: 'QUAL_COMMENT',
             align: 'center',
             width: '45%',
@@ -417,7 +447,16 @@ class EshsCondComp extends Component {
         if (COND_TYPE === 'INPUT') changeWidth = '25%';
         const newColumns = [
           {
-            title: () => <span>개선결과 확인 {BTN_FLAG === 'Y' && <span onClick={this.handlePlusTd}>[+3]</span>}</span>,
+            title: () => (
+              <span>
+                개선결과 확인{' '}
+                {BTN_FLAG === 'Y' && (
+                  <span onClick={this.handlePlusTd} className="add-row">
+                    [+3]
+                  </span>
+                )}
+              </span>
+            ),
             dataIndex: 'QUAL_COMMENT',
             align: 'center',
             width: `${changeWidth}`,
