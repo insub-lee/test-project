@@ -251,6 +251,7 @@ class List extends Component {
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
+          className="tableWrapper"
           rowKey={dataSource && dataSource.WAREHOUSE_CD}
           selectedRowKeys={[]}
           columns={columns}
