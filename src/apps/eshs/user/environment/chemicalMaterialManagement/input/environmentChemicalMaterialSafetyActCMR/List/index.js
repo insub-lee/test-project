@@ -24,15 +24,14 @@ class List extends React.Component {
     super(props);
     this.state = {
       requestValue: {
-        CAS_NO: '',
-        NAME_KOR: '',
-        CONTENT_STANDARD: 0,
-        IS_APPLICATE: 'Y',
         SERIAL_NO: '',
-        PSM_ID: '',
-        PRODUCTION_STOCK: 0,
-        USAGE_STOCK: 0,
-        STORAGE_STOCK: 0,
+        NAME_KOR: '',
+        NAME_ENG: '',
+        CAS_NO: '',
+        CAS_NO_VERIFY: '',
+        CARCINOGENICITY: '',
+        MUTAGENICITY: '',
+        REPRODUCTIVE_TOXICIT: 'N',
       },
       visible: false,
       isModified: false,
@@ -85,17 +84,17 @@ class List extends React.Component {
       this.setState({
         isModified: false,
       });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetypsm`, requestValue, this.getMaterialList);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetycmr`, requestValue, this.getMaterialList);
     }
     this.setState({
       isModified: false,
     });
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalsafetypsm`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalsafetycmr`, requestValue, this.getMaterialList);
   };
 
   handleDeleteClick = () => {
     const { requestValue } = this.state;
-    if (!requestValue.PSM_ID) {
+    if (!requestValue.CMR_ID) {
       return this.setState({
         deleteConfirmMessage: '선택된 항목이 없습니다.',
       });
@@ -108,7 +107,7 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetypsm`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetycmr`, requestValue, this.getMaterialList);
   };
 
   getMaterialList = () => {
@@ -117,7 +116,7 @@ class List extends React.Component {
       {
         key: 'materialList',
         type: 'GET',
-        url: '/api/eshs/v1/common/eshschemicalsafetypsm',
+        url: '/api/eshs/v1/common/eshschemicalsafetycmr',
       },
     ];
     getCallDataHandler(id, apiArr, this.handleResetClick);
@@ -126,15 +125,14 @@ class List extends React.Component {
   handleResetClick = () => {
     this.setState({
       requestValue: {
-        CAS_NO: '',
+        SERIAL_NO: '',
         NAME_KOR: '',
         NAME_ENG: '',
-        IS_APPLICATE: 'Y',
-        SERIAL_NO: '',
-        PSM_ID: '',
-        PRODUCTION_STOCK: 0,
-        USAGE_STOCK: 0,
-        STORAGE_STOCK: 0,
+        CAS_NO: '',
+        CAS_NO_VERIFY: '',
+        CARCINOGENICITY: '',
+        MUTAGENICITY: '',
+        REPRODUCTIVE_TOXICIT: 'N',
       },
       isModified: false,
     });
@@ -154,23 +152,6 @@ class List extends React.Component {
     });
   };
 
-  handleSameValueCheck = () => {
-    const { isSameValue, requestValue } = this.state;
-    if (!isSameValue) {
-      const valueObj = { USAGE_STOCK: requestValue.PRODUCTION_STOCK, STORAGE_STOCK: requestValue.PRODUCTION_STOCK };
-      this.setState(prevState => ({
-        isSameValue: !prevState.isSameValue,
-        requestValue: Object.assign(prevState.requestValue, valueObj),
-      }));
-    } else {
-      const valueObj = { USAGE_STOCK: '', STORAGE_STOCK: '' };
-      this.setState(prevState => ({
-        isSameValue: !prevState.isSameValue,
-        requestValue: Object.assign(prevState.requestValue, valueObj),
-      }));
-    }
-  };
-
   modalColumns = [
     {
       title: 'CAS_NO',
@@ -185,15 +166,27 @@ class List extends React.Component {
       align: 'center',
     },
     {
-      title: '함유량 기준',
-      dataIndex: 'CONTENT_STANDARD',
-      key: 'CONTENT_STANDARD',
+      title: '화학물질명_영문',
+      dataIndex: 'NAME_ENG',
+      key: 'NAME_ENG',
       align: 'center',
     },
     {
-      title: '해당여부',
-      dataIndex: 'IS_APPLICATE',
-      key: 'IS_APPLICATE',
+      title: '발암성(C)',
+      dataIndex: 'CARCINOGENICITY',
+      key: 'CARCINOGENICITY',
+      align: 'center',
+    },
+    {
+      title: '변이원성(M)',
+      dataIndex: 'MUTAGENICITY',
+      key: 'MUTAGENICITY',
+      align: 'center',
+    },
+    {
+      title: '생식독성(R)',
+      dataIndex: 'REPRODUCTIVE_TOXICIT',
+      key: 'REPRODUCTIVE_TOXICIT',
       align: 'center',
     },
   ];
@@ -208,10 +201,9 @@ class List extends React.Component {
       handleResetClick,
       handleDeleteConfirm,
       handleDeleteClick,
-      handleSameValueCheck,
     } = this;
     const { modalColumns } = this;
-    const { requestValue, visible, deleteConfirmMessage, isModified, isSameValue } = this.state;
+    const { requestValue, visible, deleteConfirmMessage, isModified } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
 
     return (
@@ -273,70 +265,76 @@ class List extends React.Component {
                     <td>
                       <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
-                    <th>CAS NO.</th>
+                    <th>화학물질명_영문</th>
                     <td>
-                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
+                      <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
                   </tr>
                   <tr>
-                    <th>해당여부</th>
+                    <th>CAS NO.</th>
+                    <td colSpan={2}>
+                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
+                    </td>
+                    <th>Cas No Verification</th>
+                    <td colSpan={2}>
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue="Y"
+                        onChange={e => handleInputChange(e, 'SELECT', 'CAS_NO_VERIFY')}
+                        value={requestValue.CAS_NO_VERIFY}
+                        style={{ width: '100%' }}
+                      >
+                        <Select.Option value="Y">O</Select.Option>
+                        <Select.Option value="N">X</Select.Option>
+                      </AntdSelect>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>발암성(C)</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue="N"
+                        onChange={e => handleInputChange(e, 'SELECT', 'CARCINOGENICITY')}
+                        value={requestValue.CARCINOGENICITY}
+                        style={{ width: '100%' }}
+                      >
+                        <Select.Option value="1A">1A</Select.Option>
+                        <Select.Option value="1B">1B</Select.Option>
+                        <Select.Option value="2">2</Select.Option>
+                        <Select.Option value="N">해당없음</Select.Option>
+                      </AntdSelect>
+                    </td>
+                    <th>변이원성(M)</th>
                     <td>
                       <AntdSelect
                         className="select-sm"
                         defaultValue="Y"
-                        onChange={e => handleInputChange(e, 'SELECT', 'IS_APPLICATE')}
-                        value={requestValue.IS_APPLICATE}
+                        onChange={e => handleInputChange(e, 'SELECT', 'MUTAGENICITY')}
+                        value={requestValue.MUTAGENICITY}
                         style={{ width: '100%' }}
                       >
-                        <Select.Option value="Y">해당</Select.Option>
-                        <Select.Option value="N">비해당</Select.Option>
+                        <Select.Option value="1A">1A</Select.Option>
+                        <Select.Option value="1B">1B</Select.Option>
+                        <Select.Option value="2">2</Select.Option>
+                        <Select.Option value="N">해당없음</Select.Option>
                       </AntdSelect>
                     </td>
-                    <th>기준함량</th>
+                    <th>생식독성(R)</th>
                     <td>
-                      <AntdInputNumber
-                        className="ant-input-number input-number-sm"
-                        value={requestValue.CONTENT_STANDARD}
-                        onChange={e => handleInputChange(e, 'NUMBER', 'CONTENT_STANDARD')}
-                      />
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue="Y"
+                        onChange={e => handleInputChange(e, 'SELECT', 'REPRODUCTIVE_TOXICIT')}
+                        value={requestValue.REPRODUCTIVE_TOXICIT}
+                        style={{ width: '100%' }}
+                      >
+                        <Select.Option value="1A">1A</Select.Option>
+                        <Select.Option value="1B">1B</Select.Option>
+                        <Select.Option value="2">2</Select.Option>
+                        <Select.Option value="N">해당없음</Select.Option>
+                      </AntdSelect>
                     </td>
-                    <th>제출량 (제조, 취급, 저장 동일여부)</th>
-                    <td style={{ textAlign: 'center' }}>
-                      <Checkbox onChange={handleSameValueCheck} checked={isSameValue} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>{isSameValue ? '제조, 취급, 저장' : '제조'}</th>
-                    <td colSpan={isSameValue ? 5 : 1}>
-                      <AntdInputNumber
-                        className="ant-input-number input-number-sm"
-                        value={requestValue.PRODUCTION_STOCK}
-                        onChange={e => handleInputChange(e, 'NUMBER', 'PRODUCTION_STOCK')}
-                        style={{ width: isSameValue ? '191.8px' : '100%' }}
-                      />
-                    </td>
-                    {isSameValue ? null : (
-                      <>
-                        <th>취급</th>
-                        <td>
-                          <AntdInputNumber
-                            className="ant-input-number input-number-sm"
-                            defaultValue={0}
-                            value={requestValue.USAGE_STOCK}
-                            onChange={e => handleInputChange(e, 'NUMBER', 'USAGE_STOCK')}
-                          />
-                        </td>
-                        <th>저장</th>
-                        <td>
-                          <AntdInputNumber
-                            className="ant-input-number input-number-sm"
-                            defaultValue={0}
-                            value={requestValue.STORAGE_STOCK}
-                            onChange={e => handleInputChange(e, 'NUMBER', 'STORAGE_STOCK')}
-                          />
-                        </td>
-                      </>
-                    )}
                   </tr>
                 </tbody>
               </table>
@@ -350,7 +348,7 @@ class List extends React.Component {
           getCallDataHandler={getCallDataHandler}
           result={result}
           setRequestValue={setRequestValue}
-          apiUrl="/api/eshs/v1/common/eshschemicalsafetypsm"
+          apiUrl="/api/eshs/v1/common/eshschemicalsafetycmr"
           tableColumns={modalColumns}
           SearchComp={SearchComp}
           changeFormData={changeFormData}
