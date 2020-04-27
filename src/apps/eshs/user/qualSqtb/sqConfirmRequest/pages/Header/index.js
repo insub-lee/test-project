@@ -186,8 +186,9 @@ class Header extends Component {
     const REQ_CD = (formData && formData.REQ_CD) || '';
     const APP_STATUS = (formData && formData.APP_STATUS) || '';
     const QUAL_STATUS = (formData && formData.QUAL_STATUS) || '';
-    const isAllConfirm = (formData && formData.isAllConfirm) || false;
+    const isAllconfirm = (formData && formData.isAllconfirm) || false;
     const REQ_STATUS = (formData && formData.REQ_STATUS) || '';
+
     if (viewType === 'CONFIRM_VIEW') {
       return (
         <>
@@ -232,7 +233,45 @@ class Header extends Component {
               </StyledButton>
             )}
 
-            {isAllConfirm && taskSeq > -1 && (
+            {isAllconfirm && taskSeq > -1 && (
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleMakeConfirm('2007', 'MODIFY', this.handleAction)}>
+                승인
+              </StyledButton>
+            )}
+          </StyledButtonWrapper>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1000} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+            {searchList}
+          </AntdModal>
+        </>
+      );
+    }
+    if (viewType === 'IMPROVE_CONFIRM') {
+      return (
+        <>
+          <StyledButtonWrapper className="btn-wrap-left btn-wrap-mb-10">
+            <AntdSearch
+              value={REQ_CD || ''}
+              style={{ width: '150px' }}
+              readOnly
+              onClick={this.handleModalVisible}
+              onSearch={this.handleModalVisible}
+              className="ant-search-inline input-search-mid mr5"
+            />
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+              검색
+            </StyledButton>
+            {QUAL_STATUS !== '2007' && taskSeq > -1 && (
+              /*
+                QUAL_STATUS 2007 (승인), 2008(조건부승인), 2009(미승인)
+                QUAL_STATUS (ESHS Qual 승인. 확인결과 메뉴에서만 [판정] 상태값 변경)
+                승인건에 대해서만 COND 데이터 저장가능 - STEP2 개선계획
+              */
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
+                저장
+              </StyledButton>
+            )}
+
+            {QUAL_STATUS !== '2007' && isAllconfirm && taskSeq > -1 && (
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleMakeConfirm('2007', 'MODIFY', this.handleAction)}>
                 승인
               </StyledButton>
@@ -261,8 +300,12 @@ class Header extends Component {
               검색
             </StyledButton>
             {QUAL_STATUS !== '2007' && taskSeq > -1 && (
-              // NODE_ID = 2007 < 승인 >
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('1', 'MODIFY', this.handleAction)}>
+              /*
+                QUAL_STATUS 2007 (승인), 2008(조건부승인), 2009(미승인)
+                QUAL_STATUS (ESHS Qual 승인. 확인결과 메뉴에서만 [판정] 상태값 변경)
+                승인건에 대해서만 COND 데이터 저장가능 - STEP2 개선계획
+              */
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
                 저장
               </StyledButton>
             )}

@@ -65,7 +65,7 @@ class law extends Component {
           workSeq={1081}
           viewType="LIST"
           loadingComplete={this.loadingComplete}
-          CustomListPage={List}
+          // CustomListPage={List}
           isOpenInputModal={this.isOpenInputModal}
           isOpenModalChange={this.isOpenModifyModal}
         />
