@@ -232,12 +232,6 @@ class Header extends Component {
                 저장
               </StyledButton>
             )}
-
-            {isAllconfirm && taskSeq > -1 && (
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleMakeConfirm('2007', 'MODIFY', this.handleAction)}>
-                승인
-              </StyledButton>
-            )}
           </StyledButtonWrapper>
           <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1000} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
             {searchList}
@@ -400,7 +394,7 @@ class Header extends Component {
               저장
             </StyledButton>
           )}
-          {REQ_STATUS === '1' && (
+          {taskSeq !== -1 && REQ_STATUS === '1' && (
             <>
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
                 저장
