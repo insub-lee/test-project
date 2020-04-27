@@ -53,8 +53,19 @@ class ProfileConfig extends Component {
       <div className="popoverItem popoverItemInput">
         <span className="spanLabel">ColData값 무시</span>
         <Radio.Group
-          onChange={value => this.handleChangeConfigData('ignoreColdata', value)}
+          onChange={e => this.handleChangeConfigData('ignoreColdata', e.target.value)}
           defaultValue={(configInfo && configInfo.property && configInfo.property.ignoreColdata) || 'N'}
+        >
+          <Radio value="N">비활성</Radio>
+          <Radio value="Y">활성</Radio>
+        </Radio.Group>
+      </div>,
+      // MODIFY 환경에서 ColData값이 Null일경우 profile값 노출
+      <div className="popoverItem popoverItemInput">
+        <span className="spanLabel">ColData값 NVL</span>
+        <Radio.Group
+          onChange={e => this.handleChangeConfigData('nvlFlag', e.target.value)}
+          defaultValue={(configInfo && configInfo.property && configInfo.property.nvlFlag) || 'N'}
         >
           <Radio value="N">비활성</Radio>
           <Radio value="Y">활성</Radio>

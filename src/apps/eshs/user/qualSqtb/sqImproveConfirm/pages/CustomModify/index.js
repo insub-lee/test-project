@@ -25,34 +25,6 @@ class ModifyPage extends Component {
     };
   }
 
-  componentDidMount() {
-    const { sagaKey: id, formData, getExtraApiData } = this.props;
-    const USER_ID = (formData && formData.REG_USER_ID) || 0;
-    const apiArray = [
-      {
-        key: 'info',
-        url: '/api/eshs/v1/common/userinfowithgender',
-        type: 'POST',
-        params: { PARAM: { USER_ID } },
-      },
-    ];
-
-    getExtraApiData(id, apiArray, this.appStart);
-  }
-
-  appStart = sagaKey => {
-    const { setFormData, formData, extraApiData } = this.props;
-    const userInfo = (extraApiData && extraApiData.info && extraApiData.info.userInfo) || {};
-    setFormData(sagaKey, {
-      ...formData,
-      REQ_EMP_NO: userInfo.EMP_NO,
-      REQ_INTRA_PHONE: userInfo.OFFICE_TEL_NO,
-      REQ_EMP_NM: userInfo.NAME,
-      REQ_DEPT_NM: userInfo.DEPT,
-      EXAM_DT: moment(new Date()).format('YYYY-MM-DD'),
-    });
-  };
-
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
     const { DETAIL, code } = response;
@@ -178,7 +150,7 @@ class ModifyPage extends Component {
             <Header
               sagaKey={id}
               formData={formData}
-              viewPageData={{ ...viewPageData, viewType: 'IMPROVE_RESULT' }}
+              viewPageData={{ ...viewPageData, viewType: 'IMPROVE_CONFIRM' }}
               setFormData={setFormData}
               changeViewPage={changeViewPage}
               deleteTask={deleteTask}
