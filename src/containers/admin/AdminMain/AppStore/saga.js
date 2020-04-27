@@ -271,8 +271,10 @@ export function* deleteNode(payload) {
       });
       // 성공 시 사용중으로 상태 변경.
       const AppListStore = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
-      const mapList = changeWGCount(AppListStore.get('mapList'), CATG_ID, APP_ID, 0);
-      yield put({ type: constantsAppList.SET_MAPLIST, mapList });
+      if (AppListStore) {
+        const mapList = changeWGCount(AppListStore.get('mapList'), CATG_ID, APP_ID, 0);
+        yield put({ type: constantsAppList.SET_MAPLIST, mapList });
+      }
     } else if (code === 500) {
       feed.error('앱 삭제에 실패 하였습니다.');
     }
