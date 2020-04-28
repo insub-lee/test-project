@@ -216,6 +216,13 @@ const makeSelectIsSaveModalClose = () =>
     (state, id) => state.getIn(['bizBuilderBase', id, 'isSaveModalClose']),
   );
 
+const makeSelectDraftInfo = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
+    (state, id) => (state.getIn(['bizBuilderBase', id, 'draftInfo']) !== undefined ? state.getIn(['bizBuilderBase', id, 'draftInfo']).toJS() : {}),
+  );
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -254,4 +261,5 @@ export {
   makeSelectViewSeq,
   makeSelectViewLayer,
   makeSelectIsSaveModalClose,
+  makeSelectDraftInfo,
 };
