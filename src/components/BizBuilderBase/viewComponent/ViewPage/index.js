@@ -9,9 +9,10 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
-import Loadable from 'components/Loadable';
+import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 
-import Loading from 'components/BizBuilderBase/viewComponent/Common/Loading';
+// import Loadable from 'components/Loadable';
+// import Loading from 'components/BizBuilderBase/viewComponent/Common/Loading';
 
 class ViewPage extends Component {
   constructor(props) {
@@ -25,10 +26,11 @@ class ViewPage extends Component {
     const { sagaKey: id, draftId, workInfo } = this.props;
 
     if (workInfo.BUILDER_STYLE_PATH) {
-      const StyledWrap = Loadable({
-        loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
-        loading: Loading,
-      });
+      // const StyledWrap = Loadable({
+      //   loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
+      //   loading: Loading,
+      // });
+      const StyledWrap = DefaultStyleInfo(workInfo.BUILDER_STYLE_PATH);
       this.setState({ StyledWrap });
     }
 
