@@ -362,6 +362,7 @@ const mapStateToProps = createStructuredSelector({
   viewSeq: selectors.makeSelectViewSeq(),
   viewLayer: selectors.makeSelectViewLayer(),
   isSaveModalClose: selectors.makeSelectIsSaveModalClose(),
+  draftInfo: selectors.makeSelectDraftInfo(),
 });
 
 const mapDispatchToProps = dispatch => ({
