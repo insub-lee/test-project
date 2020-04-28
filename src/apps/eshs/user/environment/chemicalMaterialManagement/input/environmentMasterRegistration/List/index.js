@@ -254,14 +254,14 @@ class List extends React.Component {
             <StyledHtmlTable>
               <table>
                 <colgroup>
-                  <col width="8%" />
-                  <col width="17%" />
-                  <col width="8%" />
-                  <col width="17%" />
-                  <col width="8%" />
-                  <col width="17%" />
-                  <col width="8%" />
-                  <col width="17%" />
+                  <col width="12%" />
+                  <col width="13%" />
+                  <col width="12%" />
+                  <col width="13%" />
+                  <col width="12%" />
+                  <col width="13%" />
+                  <col width="12%" />
+                  <col width="13%" />
                 </colgroup>
                 <tbody>
                   <tr>
