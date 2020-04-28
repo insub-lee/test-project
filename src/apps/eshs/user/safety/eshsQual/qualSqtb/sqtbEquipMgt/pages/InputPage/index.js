@@ -9,7 +9,6 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import Material from '../Material';
-import InterLock from '../InterLock';
 import Header from '../Header';
 
 class InputPage extends Component {
@@ -154,14 +153,6 @@ class InputPage extends Component {
               id={id}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <InterLock
-              id={id}
-              formData={formData}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={viewPageData}
-            />
             <Material
               id={id}
               formData={formData}
