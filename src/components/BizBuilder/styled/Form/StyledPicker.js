@@ -21,7 +21,7 @@ const StyledPicker = Component => styled(Component)`
       &:focus {
         color: #495057;
         background-color: #fff;
-        border-color: #886ab5;
+        border-color: #636a78;
         outline: 0;
         box-shadow: 0 0 0 0.2rem transparent;
       }
