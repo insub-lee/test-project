@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Input } from 'antd';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import LawModal from '../../../apps/eshs/user/law/lawModal';
+import LawModal from 'apps/eshs/user/operation/law/lawModal';
 
 class LawMasterSeqComp extends Component {
   constructor(props) {
