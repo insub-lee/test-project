@@ -192,6 +192,7 @@ class InputPage extends Component {
       changeViewPage,
       workInfo,
       CustomWorkProcess,
+      CustomWorkProcessModal,
       reloadId,
       isBuilderModal,
       isLoading,
@@ -210,7 +211,14 @@ class InputPage extends Component {
         <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
             {isWorkflowUsed && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
-              <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
+              <WorkProcess
+                id={id}
+                CustomWorkProcess={CustomWorkProcess}
+                CustomWorkProcessModal={CustomWorkProcessModal}
+                PRC_ID={PRC_ID}
+                processRule={processRule}
+                setProcessRule={setProcessRule}
+              />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             {InputCustomButtons ? (
