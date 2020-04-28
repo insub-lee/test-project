@@ -33,6 +33,7 @@ import RootKeyRadioConfig from 'components/BizBuilder/Field/RootKeyRadioConfig';
 import ProfileConfig from 'components/BizBuilder/Field/ProfileConfig';
 import EshsCondConfig from 'components/BizBuilder/Field/EshsCondConfig';
 import EshsInterLockConfig from 'components/BizBuilder/Field/EshsInterLockConfig';
+import CustomSelectSearchConfig from 'components/BizBuilder/Field/CustomSelectSearchConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -68,4 +69,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/ProfileConfig': { renderer: property => <ProfileConfig {...property} /> },
   'components/BizBuilder/Field/EshsCondConfig': { renderer: property => <EshsCondConfig {...property} /> },
   'components/BizBuilder/Field/EshsInterLockConfig': { renderer: property => <EshsInterLockConfig {...property} /> },
+  'components/BizBuilder/Field/CustomSelectSearchConfig': { renderer: property => <CustomSelectSearchConfig {...property} /> },
 };
