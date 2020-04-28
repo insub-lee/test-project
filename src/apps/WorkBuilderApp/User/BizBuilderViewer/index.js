@@ -24,6 +24,7 @@ class BizBuilderViewer extends Component {
     const { ID } = params;
     return (
       <BizBuilderBase
+        key={`BizBuilderViewer_Wrapper_${item && item.id ? item.id : ''}_${ID || '-1'}`}
         sagaKey={`BizBuilderViewer_${item && item.id ? item.id : ''}_${ID || '-1'}`}
         workSeq={Number(ID || -1)}
         viewType="LIST"

@@ -7,7 +7,6 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
-import InterLock from '../InterLock';
 import Material from '../Material';
 import Header from '../Header';
 
@@ -128,15 +127,6 @@ class ModifyPage extends Component {
               id={id}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <InterLock
-              id={id}
-              formData={formData}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={viewPageData}
-              viewType="MODIFY"
-            />
             <Material
               id={id}
               formData={formData}
