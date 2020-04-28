@@ -98,6 +98,7 @@ class IntroComponent extends Component {
 
   render() {
     const { selectedDraft, isShow, isLoading, selectedworkSeq, selectedTaskSeq, docNumber, selectedNodeId, viewType, workPrcProps, viewChangeSeq } = this.state;
+    console.debug('viewinfo', selectedworkSeq, viewChangeSeq);
     return (
       <StyledContents>
         <div className="contentWrapper">
