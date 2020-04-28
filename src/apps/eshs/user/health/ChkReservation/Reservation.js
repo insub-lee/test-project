@@ -12,8 +12,8 @@ const AntdModal = StyledAntdModalPad(Modal);
 
 class Reservation extends Component {
   state = {
-    isQuestionnaireShow: false
-  }
+    isQuestionnaireShow: true,
+  };
 
   componentDidMount() {}
 
@@ -31,7 +31,7 @@ class Reservation extends Component {
         <AntdModal
           width={1000}
           visible={this.state.isQuestionnaireShow}
-          title="문진표"
+          title="건강검진 공통 문진표"
           onCancel={this.onCancelQuestionnaire}
           destroyOnClose
           footer={null}
@@ -39,7 +39,7 @@ class Reservation extends Component {
           <Questionnaire onCancelPopup={this.onCancelQuestionnaire} />
         </AntdModal>
         <StyledContentsWrapper>
-          <StyledHtmlTable>
+          <StyledHtmlTable className="tableWrapper">
             <table>
               <colgroup>
                 <col width="10%" />
@@ -58,7 +58,9 @@ class Reservation extends Component {
                   <th>이름</th>
                   <td>홍길동</td>
                   <td colSpan={4}>
-                    <StyledButton className="btn-sm btn-gray" onClick={this.onClickQuestionnaire}>문진표 작성</StyledButton>
+                    <StyledButton className="btn-sm btn-gray" onClick={this.onClickQuestionnaire}>
+                      문진표 작성
+                    </StyledButton>
                   </td>
                 </tr>
                 <tr>
@@ -76,7 +78,7 @@ class Reservation extends Component {
           </StyledHtmlTable>
         </StyledContentsWrapper>
       </>
-    )
+    );
   }
 }
 

@@ -60,6 +60,34 @@ html {
   animation: none;
 }
 
+.ant-modal {
+  top: 35px;
+}
+
+/* 라디오 antd 커스텀 */
+
+.ant-radio-input:focus + .ant-radio-inner, 
+.ant-radio-wrapper:hover .ant-radio, 
+.ant-radio:hover .ant-radio-inner {
+  border-color: #45c1bb;
+}
+
+.ant-radio-checked .ant-radio-inner {
+  border-color: #45c1bb;
+}
+
+.ant-radio-checked:after {
+  border: 1px solid #45c1bb;
+}
+
+.ant-radio-inner:after {
+  background-color: #45c1bb;
+}
+
+.ant-radio-wrapper.radio-item {
+  margin: 0;
+}
+
 /* 체크박스 기본형 - 
   공통화하기 어려움 (예: 모듈에서 옵션으로 제공하는 체크박스를 적용하는 경우가 있음)
   CheckboxGroup 안에 Checkbox 컴포넌트 정의가 없어서 antd 스타일만 적용되는 경우가 있으므로
@@ -81,7 +109,7 @@ html {
 
 .ant-checkbox-wrapper:hover .ant-checkbox-inner,
 .ant-checkbox:hover .ant-checkbox-inner {
-  border-color: #6e4e9e;
+  border-color: #45c1bb;
 }
 
 .ant-checkbox {
@@ -89,12 +117,12 @@ html {
 }
 
 .ant-checkbox-checked:after {
-  border: 1px solid #6e4e9e;
+  border: 1px solid #45c1bb;
 }
 
 .ant-checkbox-checked .ant-checkbox-inner {
-  background-color: #7a59ad;
-  border-color: #6e4e9e;
+  background-color: #45c1bb;
+  border-color: #45c1bb;
 }
 
 .ant-checkbox-inner {
@@ -122,7 +150,7 @@ html {
 .ant-checkbox-input:focus+.ant-checkbox-inner, 
 .ant-checkbox-wrapper:hover .ant-checkbox-inner, 
 .ant-checkbox:hover .ant-checkbox-inner {
-  border-color: #6e4e9e;
+  border-color: #45c1bb;
 }
 
 /* 비활성화(disabled) */
