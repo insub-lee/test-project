@@ -135,7 +135,6 @@ class BizBuilderBase extends React.Component {
       CustomViewPage,
       CustomListPage,
       CustomPage,
-      CustomWorkProcess,
       viewPageData,
       metaList,
       sagaKey: id,
@@ -144,6 +143,7 @@ class BizBuilderBase extends React.Component {
       viewSeq,
       viewLayer,
     } = this.props;
+    console.debug('BisBuilderBase', this.props);
     let component = <div style={{ minHeight: 300 }} />;
     // if (viewPageData && viewPageData.viewType && metaList && workInfo) {
     if (viewSeq > -1 && viewLayer && viewLayer.length > 0) {

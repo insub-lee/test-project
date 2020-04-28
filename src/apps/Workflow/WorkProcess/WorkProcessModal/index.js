@@ -187,6 +187,7 @@ class WorkProcessModal extends Component {
   };
 
   render() {
+    console.debug('workprocessmodal');
     const { prcStep, selectedUserKeys, selectedDeptKeys, deptList, deptUserList, rootKey } = this.state;
     const rowSelection = {
       selectedRowKeys: selectedUserKeys,

@@ -11,7 +11,7 @@ import * as ModifyType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyco
 import StyledInputView from 'apps/mdcs/components/BizBuilderBase/viewComponent/InputPage/Styled';
 import BizBuilderBase from 'components/BizBuilderBase';
 
-import DraftPrcLine from 'apps/mdcs/user/Workflow/DraftPrcLine';
+import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
 import StyledContents from '../../../../styled/StyledContents';
 import StyledButton from '../../../../styled/StyledButton';
 import StyledModalWrapper from '../../../../styled/Modals/StyledModalWrapper';
@@ -149,7 +149,7 @@ class IntroComponent extends Component {
                 workSeq={selectedworkSeq}
                 taskSeq={selectedTaskSeq}
                 viewChangeSeq={viewChangeSeq}
-                CustomWorkProcess={DraftPrcLine}
+                CustomWorkProcessModal={WorkProcessModal}
                 viewType={viewType}
                 workPrcProps={workPrcProps}
                 onCloseModalHandler={this.onCloseModalHandler}
