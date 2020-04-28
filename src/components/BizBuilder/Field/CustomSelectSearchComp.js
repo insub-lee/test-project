@@ -1,6 +1,6 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input, Select } from 'antd';
+import { Input, Select, message } from 'antd';
 import { debounce } from 'lodash';
 
 const { Option } = Select;
@@ -67,7 +67,7 @@ class CustomSelectSearchComp extends React.Component {
         property: { placeholder },
       },
     } = this.props;
-    const { searchText, selectList } = this.state;
+    const { searchType, searchText, selectList } = this.state;
     return (
       <>
         <Select
@@ -87,6 +87,7 @@ class CustomSelectSearchComp extends React.Component {
         </Select>
         <Input
           style={{ width: '50%' }}
+          readOnly={!searchType}
           placeholder="검색어"
           onChange={e => this.handleOnChange('searchText', e.target.value)}
           className={CONFIG.property.className || ''}
