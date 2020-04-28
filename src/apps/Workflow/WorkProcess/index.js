@@ -5,7 +5,7 @@ import { Row, Col, Modal, Icon } from 'antd';
 
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 
-import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
+import BuilderProcessModal from 'apps/Workflow/WorkProcess/BuilderProcessModal';
 import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
 import StyledWorkProcess from 'apps/Workflow/WorkProcess/StyledWorkProcess';
 import SelectApprovePage from 'apps/mdcs/user/Workflow/SelectApprovePage';
@@ -128,7 +128,12 @@ class WorkProcess extends Component {
           destroyOnClose
           maskClosable={false}
         >
-          <WorkProcessModal processRuleProc={processRule} visible={modalVisible} onComplete={this.onProcessRuleComplete} onCloseModal={this.handleCloseModal} />
+          <BuilderProcessModal
+            processRuleProc={processRule}
+            visible={modalVisible}
+            onComplete={this.onProcessRuleComplete}
+            onCloseModal={this.handleCloseModal}
+          />
         </AntdModal>
       </StyledWorkProcess>
     );

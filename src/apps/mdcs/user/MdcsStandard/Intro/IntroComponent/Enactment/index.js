@@ -118,20 +118,18 @@ class Enactment extends Component {
 
   templateFilter = item => {
     const { selectedNodeIds } = this.state;
-    console.debug('templateFilter', item, selectedNodeIds);
     return selectedNodeIds.includes(item.CATEGORYNODEID);
   };
 
   onSelectedWorkSeq = (docType, selectedNodeIds) => {
     let viewChangeSeq;
-    if (selectedNodeIds.includes(289)) {
+    if (selectedNodeIds.includes(2160)) {
       viewChangeSeq = 28;
     } else if (selectedNodeIds.includes(423) || selectedNodeIds.includes(424) || selectedNodeIds.includes(425) || selectedNodeIds.includes(426)) {
       viewChangeSeq = 31;
     } else {
       viewChangeSeq = undefined;
     }
-    console.debug('viewchangeseq', viewChangeSeq);
     switch (docType) {
       case 'BS':
         return { selectedworkSeq: 901, viewChangeSeq };
