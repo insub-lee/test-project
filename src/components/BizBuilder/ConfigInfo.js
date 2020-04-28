@@ -34,6 +34,7 @@ import ProfileConfig from 'components/BizBuilder/Field/ProfileConfig';
 import EshsCondConfig from 'components/BizBuilder/Field/EshsCondConfig';
 import EshsInterLockConfig from 'components/BizBuilder/Field/EshsInterLockConfig';
 import CustomSelectSearchConfig from 'components/BizBuilder/Field/CustomSelectSearchConfig';
+import CustomSearchInputConfig from 'components/BizBuilder/Field/CustomSearchInputConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -70,4 +71,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/EshsCondConfig': { renderer: property => <EshsCondConfig {...property} /> },
   'components/BizBuilder/Field/EshsInterLockConfig': { renderer: property => <EshsInterLockConfig {...property} /> },
   'components/BizBuilder/Field/CustomSelectSearchConfig': { renderer: property => <CustomSelectSearchConfig {...property} /> },
+  'components/BizBuilder/Field/CustomSearchInputConfig': { renderer: property => <CustomSearchInputConfig {...property} /> },
 };

@@ -111,6 +111,7 @@ import MdcsRevisionHistoryListComp from 'components/BizBuilder/Field/MdcsRevisio
 import MdcsProcessListComp from 'components/BizBuilder/Field/MdcsProcessListComp';
 import EshsInterLockComp from 'components/BizBuilder/Field/EshsInterLockComp';
 import CustomSelectSearchComp from 'components/BizBuilder/Field/CustomSelectSearchComp';
+import CustomSearchInputComp from 'components/BizBuilder/Field/CustomSearchInputComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
@@ -224,4 +225,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/MdcsProcessListComp': { renderer: property => <MdcsProcessListComp {...property} /> },
   'components/BizBuilder/Field/EshsInterLockComp': { renderer: property => <EshsInterLockComp {...property} /> },
   'components/BizBuilder/Field/CustomSelectSearchComp': { renderer: property => <CustomSelectSearchComp {...property} /> },
+  'components/BizBuilder/Field/CustomSearchInputComp': { renderer: property => <CustomSearchInputComp {...property} /> },
 };
