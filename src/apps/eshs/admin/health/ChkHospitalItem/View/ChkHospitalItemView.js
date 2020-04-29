@@ -131,6 +131,11 @@ class ChkHospitalItemView extends Component {
 
   // 그룹 추가
   addGroup = () => {
+    if (this.state.groupList.length >= this.state.codeList.length) {
+      message.info(<MessageContent>그룹을 더이상 추가할 수 없습니다.</MessageContent>);
+      return false;
+    }
+
     this.setState(prevState => {
       const { groupList, groupKeyIdx } = prevState;
       const activeGroup = `panel_${groupKeyIdx}`;
