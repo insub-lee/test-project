@@ -6,7 +6,7 @@ class LawClauseSeqComp extends Component {
     const { sagaKey: id, COMP_FIELD, compProps, changeFormData } = this.props;
     if (compProps && compProps.MASTER_SEQ) {
       changeFormData(id, COMP_FIELD, (compProps && compProps.QUARTER) || ''); // 분기 QUARTER_CHECK
-      // changeFormData(id, 'YEAR', (compProps && compProps.YEAR) || ''); // 년도
+      changeFormData(id, 'YEAR', (compProps && compProps.YEAR) || ''); // 년도
       changeFormData(id, 'RECH_LAW_NAME', (compProps && compProps.MASTER_RECH_NAME) || ''); // 법규명
       changeFormData(id, 'RECH_NO', (compProps && compProps.MASTER_NO) || ''); // 법규 관리번호
       changeFormData(id, 'RECH_CLAUSE', (compProps && compProps.CLAUSE_RECH_NAME) || ''); // 조항 명
@@ -20,12 +20,12 @@ class LawClauseSeqComp extends Component {
       visible,
       colData,
       compProps,
-      compProps: { YEAR },
+      compProps: { YEAR, QUARTER },
       formData,
     } = this.props;
     return visible && compProps ? (
       <span>
-        {formData.YYYY || YEAR}년 {colData || 0} 분기
+        {formData.YYYY || YEAR}년 {colData || QUARTER} 분기
       </span>
     ) : (
       ''

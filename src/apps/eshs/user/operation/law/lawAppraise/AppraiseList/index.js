@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Popconfirm, Button } from 'antd';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import * as selectors from 'components/BizBuilderBase/selectors';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -61,10 +64,12 @@ class ClauseList extends Component {
   };
 
   getListData = () => {
-    const { sagaKey, getExtraApiData, YEAR, formData } = this.props;
-    const apiArray = [{ key: `customList`, url: `/api/eshs/v1/common/eshsclause?&YEAR=${YEAR || 2020}`, params: { PARAM: { ...formData } }, type: 'POST' }];
+    const { sagaKey, getExtraApiData, formData, searchData } = this.props;
+    const apiArray = [
+      { key: `customList`, url: `/api/eshs/v1/common/eshsclause?&YEAR=${formData.YEAR || 2020}`, params: { PARAM: { searchData } }, type: 'POST' },
+    ];
     getExtraApiData(sagaKey, apiArray, this.initData);
-    console.log('formData: ', formData);
+    console.log('searchData: ', searchData);
   };
 
   // state값 reset테스트
@@ -116,7 +121,9 @@ class ClauseList extends Component {
 
   setColumns = (cols, widths) => {
     const { isRowNo } = this.state;
-    const { YEAR } = this.props;
+    const {
+      formData: { YEAR },
+    } = this.props;
     const columns = [];
     if (isRowNo) {
       columns.push({
@@ -371,4 +378,5 @@ ClauseList.defaultProps = {
   customOnRowClick: undefined,
 };
 
-export default ClauseList;
+export default connect(() => createStructuredSelector({ searchData: selectors.makeSelectSearchDataById('lawClauseAppraise') }))(ClauseList);
+// export default ClauseList;

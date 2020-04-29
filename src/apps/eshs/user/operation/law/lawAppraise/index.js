@@ -51,11 +51,12 @@ class lawClause extends Component {
         isModifyModal: true,
       });
     }
+    console.debug('record: ', record);
     this.setState({
       masterSeq: record.MASTER_SEQ,
       clauseSeq: record.TASK_SEQ,
-      masterRechName: record.RECH_LAW_NAME,
-      masterRechNo: record.RECH_NO,
+      masterRechName: record.MASTER_LAW_NAME,
+      masterRechNo: record.MASTER_LAW_NO,
       clauseRechName: record.TITLE,
       clauseGubunName: record.RECH_CLAUSE_GUBUN_NAME,
       quarterN: quarterNum,
@@ -125,7 +126,9 @@ class lawClause extends Component {
       sagaKey="lawAppraise"
       baseSagaKey="lawClauseAppraise"
       workSeq={2242}
-      baseWorkSeq={1645}
+      reloadId="lawClauseAppraise"
+      reloadWorkSeq={1645}
+      listMetaSeq={6541}
       compProps={{
         MASTER_SEQ: this.state.masterSeq,
         CLAUSE_TASK_SEQ: this.state.clauseSeq,
@@ -162,6 +165,7 @@ class lawClause extends Component {
         onCloseModalHandler={this.onCancel}
         isOpenModalChange={this.isOpenRevisionDetailModal}
         isOpenAppraiseDetailModal={this.isOpenAppraiseDetailModal}
+        isOpenInputModal={this.isOpenInputModal}
         taskSeqReal={this.state.taskSeqReal}
       />
       <Modal visible={this.state.isRevisionDetailModal || this.state.isAppraiseDetailModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>

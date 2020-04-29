@@ -28,7 +28,6 @@ class OnlyView extends Component {
     const { extraApiData } = this.props;
     const detailData = (extraApiData && extraApiData.detail && extraApiData.detail.data) || {};
     const { ONE_Q_FILE, TWO_Q_FILE, THREE_Q_FILE, FOUR_Q_FILE, MAIN_FILE_NAME, PLAN_FILE_NAME } = detailData;
-    console.debug('detailData: ', detailData);
     const oneQFile = ONE_Q_FILE ? JSON.parse(ONE_Q_FILE) : [];
     const twoQFile = TWO_Q_FILE ? JSON.parse(TWO_Q_FILE) : [];
     const threeQFile = THREE_Q_FILE ? JSON.parse(THREE_Q_FILE) : [];

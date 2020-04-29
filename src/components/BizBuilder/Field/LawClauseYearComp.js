@@ -18,6 +18,7 @@ class LawClauseYearComp extends Component {
   }
 
   componentDidMount = () => {
+    const { sagaKey: id, changeFormData } = this.props;
     const startYear = 2005;
     const endYear = Number(Moment().format('YYYY')) + 1;
     const yearArray = [];
@@ -25,6 +26,7 @@ class LawClauseYearComp extends Component {
       yearArray.push(i);
     }
     this.setState({ yearArray });
+    changeFormData(id, 'YEAR', Number(Moment().format('YYYY')));
   };
 
   onChangeHandler = value => {
@@ -40,14 +42,11 @@ class LawClauseYearComp extends Component {
     const { yearArray } = this.state;
     return visible ? (
       <AntdSelect
-        defaultValue={0}
+        defaultValue={Number(Moment().format('YYYY'))}
         onChange={value => this.onChangeHandler(value)}
         style={{ width: '100%', marginRight: 10 }}
         className={CONFIG.property.className || ''}
       >
-        <Option key={0} value={0}>
-          선택
-        </Option>
         {yearArray.map(year => (
           <Option key={year} value={year}>
             {year}
