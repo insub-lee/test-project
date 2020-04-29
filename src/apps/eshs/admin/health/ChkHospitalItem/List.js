@@ -130,7 +130,7 @@ class List extends Component {
         <AntdModal
           width={`90%`}
           visible={this.state.isShow}
-          title="검진기관"
+          title="검진유형"
           onCancel={this.onCancelPopup}
           destroyOnClose
           footer={null}
@@ -153,7 +153,7 @@ class List extends Component {
           </div>
           <AntdTable
             columns={this.columns}
-            dataSource={this.state.list}
+            dataSource={this.state.list.map(item => ({ ...item, key: item.HOSPITAL_CODE }))}
             bordered={true}
             className="tableWrapper"
           />
