@@ -36,6 +36,7 @@ import ChangeReadDataCompConfig from 'components/BizBuilder/Field/ChangeReadData
 import EshsInterLockConfig from 'components/BizBuilder/Field/EshsInterLockConfig';
 import CustomSelectSearchConfig from 'components/BizBuilder/Field/CustomSelectSearchConfig';
 import CustomSearchInputConfig from 'components/BizBuilder/Field/CustomSearchInputConfig';
+import LabelByNodeIdConfig from 'components/BizBuilder/Field/LabelByNodeIdConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -74,4 +75,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/EshsInterLockConfig': { renderer: property => <EshsInterLockConfig {...property} /> },
   'components/BizBuilder/Field/CustomSelectSearchConfig': { renderer: property => <CustomSelectSearchConfig {...property} /> },
   'components/BizBuilder/Field/CustomSearchInputConfig': { renderer: property => <CustomSearchInputConfig {...property} /> },
+  'components/BizBuilder/Field/LabelByNodeIdConfig': { renderer: property => <LabelByNodeIdConfig {...property} /> },
 };

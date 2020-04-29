@@ -64,6 +64,7 @@ class ComponentConfig extends Component {
     const { configInfo } = this.props;
 
     const compData = (this.props && this.props.configInfo && this.props.configInfo.property && this.props.configInfo.property.compData) || [];
+    console.debug('compData', compData);
     return (
       <>
         <div className="popoverItem popoverItemInput">

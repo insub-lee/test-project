@@ -20,7 +20,8 @@ class SelectReadComp extends Component {
   render() {
     const { extraApiData, colData, visible } = this.props;
     const apiData = extraApiData[`label_${colData}`];
-    return visible && <label>{apiData ? apiData.fullPath_Nm.FULLPATH_NM : ''}</label>;
+
+    return visible && <label>{apiData ? apiData.fullPath_Nm && apiData.fullPath_Nm.FULLPATH_NM : ''}</label>;
   }
 }
 
