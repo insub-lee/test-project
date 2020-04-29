@@ -9,7 +9,6 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-import InterLock from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqtbEquipMgt/pages/InterLock';
 import Material from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqtbEquipMgt/pages/Material';
 import Header from '../Header';
 class InputPage extends Component {
@@ -234,14 +233,6 @@ class InputPage extends Component {
               saveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <InterLock
-              id={id}
-              formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={{ viewType: 'VIEW' }}
-            />
             <Material
               id={id}
               formData={{ ...formData, TASK_SEQ: qualTaskSeq }}

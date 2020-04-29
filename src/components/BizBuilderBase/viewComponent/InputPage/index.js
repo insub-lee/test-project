@@ -9,9 +9,10 @@ import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdBut
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-import Loadable from 'components/Loadable';
+import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 
-import Loading from '../Common/Loading';
+// import Loadable from 'components/Loadable';
+// import Loading from '../Common/Loading';
 
 const StyledButton = StyledAntdButton(Button);
 
@@ -31,10 +32,11 @@ class InputPage extends Component {
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
 
     if (workInfo.BUILDER_STYLE_PATH) {
-      const StyledWrap = Loadable({
-        loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
-        loading: Loading,
-      });
+      // const StyledWrap = Loadable({
+      //   loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
+      //   loading: Loading,
+      // });
+      const StyledWrap = DefaultStyleInfo(workInfo.BUILDER_STYLE_PATH);
       this.setState({ StyledWrap });
     }
 
@@ -192,6 +194,7 @@ class InputPage extends Component {
       changeViewPage,
       workInfo,
       CustomWorkProcess,
+      CustomWorkProcessModal,
       reloadId,
       isBuilderModal,
       isLoading,
@@ -210,7 +213,14 @@ class InputPage extends Component {
         <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
             {isWorkflowUsed && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
-              <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
+              <WorkProcess
+                id={id}
+                CustomWorkProcess={CustomWorkProcess}
+                CustomWorkProcessModal={CustomWorkProcessModal}
+                PRC_ID={PRC_ID}
+                processRule={processRule}
+                setProcessRule={setProcessRule}
+              />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             {InputCustomButtons ? (

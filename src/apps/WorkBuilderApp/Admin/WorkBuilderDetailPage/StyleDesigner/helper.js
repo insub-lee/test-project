@@ -215,7 +215,7 @@ export const setGroupsLayerIdxKey = (groups, oldKey, newKey) =>
             return {
               ...row,
               cols: row.cols.map(col => {
-                if (col.comp && col.comp.CONFIG && col.comp.CONFIG.property.layerIdx && col.comp.CONFIG.property.layerIdx[oldKey]) {
+                if (col && col.comp && col.comp.CONFIG && col.comp.CONFIG.property.layerIdx && col.comp.CONFIG.property.layerIdx[oldKey]) {
                   const tempComp = col.comp;
                   tempComp.CONFIG.property.layerIdx[newKey] = tempComp.CONFIG.property.layerIdx[oldKey];
                   return { ...col, comp: tempComp };

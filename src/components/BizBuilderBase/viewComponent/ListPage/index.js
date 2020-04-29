@@ -13,9 +13,10 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-import Loadable from 'components/Loadable';
+import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 
-import Loading from '../Common/Loading';
+// import Loadable from 'components/Loadable';
+// import Loading from '../Common/Loading';
 
 const AntdTable = StyledAntdTable(Table);
 const StyledButton = StyledAntdButton(Button);
@@ -40,10 +41,11 @@ class ListPage extends Component {
     let rowClickView = 'VIEW';
 
     if (workInfo.BUILDER_STYLE_PATH) {
-      const StyledWrap = Loadable({
-        loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
-        loading: Loading,
-      });
+      // const StyledWrap = Loadable({
+      //   loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
+      //   loading: Loading,
+      // });
+      const StyledWrap = DefaultStyleInfo(workInfo.BUILDER_STYLE_PATH);
       this.setState({ StyledWrap });
     }
 

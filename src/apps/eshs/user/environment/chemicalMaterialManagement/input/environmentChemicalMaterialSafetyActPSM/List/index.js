@@ -26,13 +26,17 @@ class List extends React.Component {
       requestValue: {
         CAS_NO: '',
         NAME_KOR: '',
-        CONTENT_STANDARD: '',
-        IS_ALLOW: 'Y',
+        CONTENT_STANDARD: 0,
+        IS_APPLICATE: 'Y',
         SERIAL_NO: '',
-        INVENTORY_ID: '',
+        PSM_ID: '',
+        PRODUCTION_STOCK: 0,
+        USAGE_STOCK: 0,
+        STORAGE_STOCK: 0,
       },
       visible: false,
       isModified: false,
+      isSameValue: false,
     };
   }
 
@@ -43,16 +47,10 @@ class List extends React.Component {
   };
 
   handleInputChange = (event, type, name) => {
+    const { isSameValue } = this.state;
+
     if (type.toUpperCase() === 'INPUT') {
       const valueObj = { [event.target.name.toUpperCase()]: event.target.value };
-      return this.setState(prevState => ({
-        requestValue: Object.assign(prevState.requestValue, valueObj),
-      }));
-    }
-
-    if (type.toUpperCase() === 'SELECT' && name === 'CATEGORY') {
-      const valueObj = { [name.toUpperCase()]: event, SUB_CATEGORY: '' };
-      this.getSubCategories(event);
       return this.setState(prevState => ({
         requestValue: Object.assign(prevState.requestValue, valueObj),
       }));
@@ -66,6 +64,12 @@ class List extends React.Component {
     }
 
     if (type.toUpperCase() === 'NUMBER') {
+      if (isSameValue && name.toUpperCase() === 'PRODUCTION_STOCK') {
+        const valueObj = { PRODUCTION_STOCK: event, USAGE_STOCK: event, STORAGE_STOCK: event };
+        return this.setState(prevState => ({
+          requestValue: Object.assign(prevState.requestValue, valueObj),
+        }));
+      }
       const valueObj = { [name]: event };
       return this.setState(prevState => ({
         requestValue: Object.assign(prevState.requestValue, valueObj),
@@ -81,17 +85,17 @@ class List extends React.Component {
       this.setState({
         isModified: false,
       });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetyallow`, requestValue, this.getMaterialList);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetypsm`, requestValue, this.getMaterialList);
     }
     this.setState({
       isModified: false,
     });
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalsafetyallow`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalsafetypsm`, requestValue, this.getMaterialList);
   };
 
   handleDeleteClick = () => {
     const { requestValue } = this.state;
-    if (!requestValue.INVENTORY_ID) {
+    if (!requestValue.PSM_ID) {
       return this.setState({
         deleteConfirmMessage: '선택된 항목이 없습니다.',
       });
@@ -104,7 +108,7 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetyallow`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetypsm`, requestValue, this.getMaterialList);
   };
 
   getMaterialList = () => {
@@ -113,7 +117,7 @@ class List extends React.Component {
       {
         key: 'materialList',
         type: 'GET',
-        url: '/api/eshs/v1/common/eshschemicalsafetyallow',
+        url: '/api/eshs/v1/common/eshschemicalsafetypsm',
       },
     ];
     getCallDataHandler(id, apiArr, this.handleResetClick);
@@ -125,9 +129,12 @@ class List extends React.Component {
         CAS_NO: '',
         NAME_KOR: '',
         NAME_ENG: '',
-        IS_ALLOW: 'Y',
+        IS_APPLICATE: 'Y',
         SERIAL_NO: '',
-        INVENTORY_ID: '',
+        PSM_ID: '',
+        PRODUCTION_STOCK: 0,
+        USAGE_STOCK: 0,
+        STORAGE_STOCK: 0,
       },
       isModified: false,
     });
@@ -145,6 +152,23 @@ class List extends React.Component {
       visible: false,
       isModified: true,
     });
+  };
+
+  handleSameValueCheck = () => {
+    const { isSameValue, requestValue } = this.state;
+    if (!isSameValue) {
+      const valueObj = { USAGE_STOCK: requestValue.PRODUCTION_STOCK, STORAGE_STOCK: requestValue.PRODUCTION_STOCK };
+      this.setState(prevState => ({
+        isSameValue: !prevState.isSameValue,
+        requestValue: Object.assign(prevState.requestValue, valueObj),
+      }));
+    } else {
+      const valueObj = { USAGE_STOCK: '', STORAGE_STOCK: '' };
+      this.setState(prevState => ({
+        isSameValue: !prevState.isSameValue,
+        requestValue: Object.assign(prevState.requestValue, valueObj),
+      }));
+    }
   };
 
   modalColumns = [
@@ -168,8 +192,8 @@ class List extends React.Component {
     },
     {
       title: '해당여부',
-      dataIndex: 'IS_ALLOW',
-      key: 'IS_ALLOW',
+      dataIndex: 'IS_APPLICATE',
+      key: 'IS_APPLICATE',
       align: 'center',
     },
   ];
@@ -184,9 +208,10 @@ class List extends React.Component {
       handleResetClick,
       handleDeleteConfirm,
       handleDeleteClick,
+      handleSameValueCheck,
     } = this;
     const { modalColumns } = this;
-    const { requestValue, visible, deleteConfirmMessage, isModified } = this.state;
+    const { requestValue, visible, deleteConfirmMessage, isModified, isSameValue } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
 
     return (
@@ -259,8 +284,8 @@ class List extends React.Component {
                       <AntdSelect
                         className="select-sm"
                         defaultValue="Y"
-                        onChange={e => handleInputChange(e, 'SELECT', 'IS_ALLOW')}
-                        value={requestValue.IS_ALLOW}
+                        onChange={e => handleInputChange(e, 'SELECT', 'IS_APPLICATE')}
+                        value={requestValue.IS_APPLICATE}
                         style={{ width: '100%' }}
                       >
                         <Select.Option value="Y">해당</Select.Option>
@@ -277,37 +302,41 @@ class List extends React.Component {
                     </td>
                     <th>제출량 (제조, 취급, 저장 동일여부)</th>
                     <td style={{ textAlign: 'center' }}>
-                      <Checkbox onChange={() => console.log('@@@@@CHECK@@@@@')} />
+                      <Checkbox onChange={handleSameValueCheck} checked={isSameValue} />
                     </td>
                   </tr>
                   <tr>
-                    <th>제조</th>
-                    <td>
+                    <th>{isSameValue ? '제조, 취급, 저장' : '제조'}</th>
+                    <td colSpan={isSameValue ? 5 : 1}>
                       <AntdInputNumber
                         className="ant-input-number input-number-sm"
-                        value={requestValue.SERIAL_NO}
-                        onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
-                        disabled={isModified}
+                        value={requestValue.PRODUCTION_STOCK}
+                        onChange={e => handleInputChange(e, 'NUMBER', 'PRODUCTION_STOCK')}
+                        style={{ width: isSameValue ? '191.8px' : '100%' }}
                       />
                     </td>
-                    <th>취급</th>
-                    <td>
-                      <AntdInputNumber
-                        className="ant-input-number input-number-sm"
-                        value={requestValue.SERIAL_NO}
-                        onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
-                        disabled={isModified}
-                      />
-                    </td>
-                    <th>저장</th>
-                    <td>
-                      <AntdInputNumber
-                        className="ant-input-number input-number-sm"
-                        value={requestValue.SERIAL_NO}
-                        onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
-                        disabled={isModified}
-                      />
-                    </td>
+                    {isSameValue ? null : (
+                      <>
+                        <th>취급</th>
+                        <td>
+                          <AntdInputNumber
+                            className="ant-input-number input-number-sm"
+                            defaultValue={0}
+                            value={requestValue.USAGE_STOCK}
+                            onChange={e => handleInputChange(e, 'NUMBER', 'USAGE_STOCK')}
+                          />
+                        </td>
+                        <th>저장</th>
+                        <td>
+                          <AntdInputNumber
+                            className="ant-input-number input-number-sm"
+                            defaultValue={0}
+                            value={requestValue.STORAGE_STOCK}
+                            onChange={e => handleInputChange(e, 'NUMBER', 'STORAGE_STOCK')}
+                          />
+                        </td>
+                      </>
+                    )}
                   </tr>
                 </tbody>
               </table>
@@ -321,7 +350,7 @@ class List extends React.Component {
           getCallDataHandler={getCallDataHandler}
           result={result}
           setRequestValue={setRequestValue}
-          apiUrl="/api/eshs/v1/common/eshschemicalsafetyallow"
+          apiUrl="/api/eshs/v1/common/eshschemicalsafetypsm"
           tableColumns={modalColumns}
           SearchComp={SearchComp}
           changeFormData={changeFormData}

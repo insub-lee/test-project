@@ -1,42 +1,39 @@
 import React, { Component } from 'react';
-import { Table, Icon } from 'antd';
+import { Icon } from 'antd';
 import styled from 'styled-components';
 
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-
-const StyledCustomTable = tableComp => styled(tableComp)`
-  .ant-table .ant-table-content .ant-table-body table .ant-table-tbody > tr > td,
-  .ant-table .ant-table-content .ant-table-body table .ant-table-thead > tr > th {
-    padding: 8px 4px;
+const StyledWrap = styled.div`
+  table.mdcsProcessList {
+    width: 100%;
+    margin-bottom: 2px;
+    & > thead > tr.mdcsProcessRow > th,
+    & > tbody > tr.mdcsProcessRow > td {
+      width: 50%;
+      border: solid 1px #cccccc;
+      padding: 4px;
+      div {
+        display: inline-block;
+      }
+      .mdcsDeptName {
+        width: 40%;
+      }
+      .mdcsPstnName {
+        width: 15%;
+      }
+      .mdcsUserName {
+        width: 20%;
+      }
+      .mdcsAppvDttm {
+        width: 20%;
+      }
+      .mdcsAppvStatus {
+        width: 5%;
+      }
+    }
   }
 `;
 
-const AntdTable = StyledCustomTable(StyledAntdTable(Table));
-
-const columns = [
-  {
-    title: 'Rev.',
-    dataIndex: 'VERSION',
-    key: 'TASK_SEQ',
-    width: '30px',
-    align: 'center',
-  },
-  {
-    title: 'Date.',
-    dataIndex: 'END_DTTM',
-    width: '60px',
-    align: 'center',
-    render: text => (text ? text.split(' ')[0] : ''),
-  },
-  {
-    title: 'Short Description(Including the Para./clause)',
-    dataIndex: 'REMARK',
-    width: '550px',
-    render: text => <Icon type="check-circle" />,
-  },
-];
-
-class MdcsRevisionHistoryListComp extends Component {
+class MdcsProcessListComp extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,7 +50,7 @@ class MdcsRevisionHistoryListComp extends Component {
     const reviewerList = list.filter(fNode => fNode.NODE_ID === 106 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
     const mailReviewerList = list.filter(fNode => fNode.NODE_ID === 112 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
     const draftNode = [
-      <tr>
+      <tr className="mdcsProcessRow">
         <td>
           <div className="mdcsDeptName">{draftList[0].DRAFT_DEPT_NAME}</div>
           <div className="mdcsPstnName">{draftList[0].PSTN_NAME}</div>
@@ -95,11 +92,11 @@ class MdcsRevisionHistoryListComp extends Component {
       if (idx % 2 === 0) {
         if (idx + 1 === maxCnt) {
           tempNode = [itemNode, dummyNode];
-          reviewerNode.push(<tr>{tempNode}</tr>);
+          reviewerNode.push(<tr className="mdcsProcessRow">{tempNode}</tr>);
         } else tempNode = [itemNode];
       } else {
         tempNode.push(itemNode);
-        reviewerNode.push(<tr>{tempNode}</tr>);
+        reviewerNode.push(<tr className="mdcsProcessRow">{tempNode}</tr>);
       }
     });
     const mailReviewerNode = [];
@@ -117,11 +114,11 @@ class MdcsRevisionHistoryListComp extends Component {
       if (idx % 2 === 0) {
         if (idx + 1 === maxCnt) {
           tempNode = [itemNode, dummyNode];
-          mailReviewerNode.push(<tr>{tempNode}</tr>);
+          mailReviewerNode.push(<tr className="mdcsProcessRow">{tempNode}</tr>);
         } else tempNode = [itemNode];
       } else {
         tempNode.push(itemNode);
-        mailReviewerNode.push(<tr>{tempNode}</tr>);
+        mailReviewerNode.push(<tr className="mdcsProcessRow">{tempNode}</tr>);
       }
     });
     this.setState({ draftNode, reviewerNode, mailReviewerNode });
@@ -136,29 +133,35 @@ class MdcsRevisionHistoryListComp extends Component {
   render() {
     const { draftNode, reviewerNode, mailReviewerNode } = this.state;
     return (
-      <div className="mdcsProcessList">
-        <table>
+      <StyledWrap>
+        <table className="mdcsProcessList">
           <thead>
-            <th>Preparer</th>
-            <th>Approver</th>
+            <tr className="mdcsProcessRow">
+              <th>Preparer</th>
+              <th>Approver</th>
+            </tr>
           </thead>
           <tbody>{draftNode}</tbody>
         </table>
-        <table>
+        <table className="mdcsProcessList">
           <thead>
-            <th colSpan="2">필수심의권자</th>
+            <tr className="mdcsProcessRow">
+              <th colSpan="2">필수심의권자</th>
+            </tr>
           </thead>
           <tbody>{reviewerNode}</tbody>
         </table>
-        <table>
+        <table className="mdcsProcessList">
           <thead>
-            <th colSpan="2">Mail 심의권자</th>
+            <tr className="mdcsProcessRow">
+              <th colSpan="2">Mail 심의권자</th>
+            </tr>
           </thead>
           <tbody>{mailReviewerNode}</tbody>
         </table>
-      </div>
+      </StyledWrap>
     );
   }
 }
 
-export default MdcsRevisionHistoryListComp;
+export default MdcsProcessListComp;

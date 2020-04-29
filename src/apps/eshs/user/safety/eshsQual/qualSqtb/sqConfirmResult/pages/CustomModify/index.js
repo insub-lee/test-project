@@ -14,7 +14,6 @@ import View from 'components/BizBuilder/PageComp/view';
 import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import moment from 'moment';
 
-import InterLock from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqtbEquipMgt/pages/InterLock';
 import Material from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqtbEquipMgt/pages/Material';
 import Header from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqConfirmRequest/pages/Header';
 
@@ -27,28 +26,28 @@ class ModifyPage extends Component {
     };
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const {
-      formData,
-      formData: { interLockReload = '', materialReload = '' },
-      sagaKey,
-      changeFormData,
-      setFormData,
-    } = nextProps;
-    const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   const {
+  //     formData,
+  //     formData: { interLockReload = '', materialReload = '' },
+  //     sagaKey,
+  //     changeFormData,
+  //     setFormData,
+  //   } = nextProps;
+  //   const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
 
-    if (prevState.qualTaskSeq !== qualTaskSeq) {
-      if (typeof interLockReload === 'function') {
-        interLockReload(qualTaskSeq);
-      }
-      if (typeof materialReload === 'function') {
-        materialReload(qualTaskSeq);
-      }
-      changeFormData(sagaKey, 'EQUIP_TASK_SEQ', qualTaskSeq);
-      return { qualTaskSeq };
-    }
-    return null;
-  }
+  //   if (prevState.qualTaskSeq !== qualTaskSeq) {
+  //     if (typeof interLockReload === 'function') {
+  //       interLockReload(qualTaskSeq);
+  //     }
+  //     if (typeof materialReload === 'function') {
+  //       materialReload(qualTaskSeq);
+  //     }
+  //     changeFormData(sagaKey, 'EQUIP_TASK_SEQ', qualTaskSeq);
+  //     return { qualTaskSeq };
+  //   }
+  //   return null;
+  // }
 
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
@@ -228,15 +227,6 @@ class ModifyPage extends Component {
               changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <InterLock
-              id={id}
-              formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={{ viewType: 'VIEW' }}
-              initForm={false}
-            />
             <Material
               id={id}
               formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
