@@ -32,6 +32,7 @@ import ExcelDownloadCompConfig from 'components/BizBuilder/Field/ExcelDownloadCo
 import RootKeyRadioConfig from 'components/BizBuilder/Field/RootKeyRadioConfig';
 import ProfileConfig from 'components/BizBuilder/Field/ProfileConfig';
 import EshsCondConfig from 'components/BizBuilder/Field/EshsCondConfig';
+import ChangeReadDataCompConfig from 'components/BizBuilder/Field/ChangeReadDataCompConfig';
 import EshsInterLockConfig from 'components/BizBuilder/Field/EshsInterLockConfig';
 import CustomSelectSearchConfig from 'components/BizBuilder/Field/CustomSelectSearchConfig';
 import CustomSearchInputConfig from 'components/BizBuilder/Field/CustomSearchInputConfig';
@@ -70,6 +71,7 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/RootKeyRadioConfig': { renderer: property => <RootKeyRadioConfig {...property} /> },
   'components/BizBuilder/Field/ProfileConfig': { renderer: property => <ProfileConfig {...property} /> },
   'components/BizBuilder/Field/EshsCondConfig': { renderer: property => <EshsCondConfig {...property} /> },
+  'components/BizBuilder/Field/ChangeReadDataCompConfig': { renderer: property => <ChangeReadDataCompConfig {...property} /> },
   'components/BizBuilder/Field/EshsInterLockConfig': { renderer: property => <EshsInterLockConfig {...property} /> },
   'components/BizBuilder/Field/CustomSelectSearchConfig': { renderer: property => <CustomSelectSearchConfig {...property} /> },
   'components/BizBuilder/Field/CustomSearchInputConfig': { renderer: property => <CustomSearchInputConfig {...property} /> },
