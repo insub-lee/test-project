@@ -47,6 +47,10 @@ const Styled = styled.div`
           top: 0;
           left: 0;
         }
+
+        &.pad-none {
+          padding-left: 0;
+        }
       }
 
       .question-table {
@@ -64,7 +68,11 @@ const Styled = styled.div`
           font-weight: 500;
           text-align: center;
           font-size: 14px;
-          padding: 4px 8px;
+          padding: 6px 8px;
+
+          &.bg-lightgray {
+            background: #fbfbfb;
+          }
         }
 
         tbody tr {
@@ -77,6 +85,10 @@ const Styled = styled.div`
             text-align: center;
             font-size: 14px;
             padding: 6px 8px;
+
+            &.bg-lightgray {
+              background: #fbfbfb;
+            }
           }
           td {
             border-bottom: 1px solid #e2e4e8;
@@ -94,10 +106,30 @@ const Styled = styled.div`
             &.td-pad-none {
               padding: 0;
             }
-          }
 
-          &.radio-tr td {
-            padding: 0;
+            &.td-num {
+              position: relative;
+              padding-left: 25px;
+
+              &.extend {
+                padding-left: 30px;
+              }
+
+              span.num {
+                position: absolute;
+                top: 6px;
+                left: 8px;
+              }
+            }
+
+            &.radio-td {
+              padding: 0;
+
+              &.td-2rows .ant-radio-group-solid .ant-radio-button-wrapper {
+                height: 54px;
+                line-height: 54px;
+              }
+            }
           }
         }
       }
@@ -113,7 +145,6 @@ const Styled = styled.div`
       }
 
       &.pad-extend {
-        .question-article,
         .question-txt {
           padding-left: 30px;
         }
@@ -127,6 +158,10 @@ const Styled = styled.div`
 
   .point {
     color: #fa0000 !important;
+  }
+
+  .point2 {
+    color: #ff8100 !important;
   }
 
   span.span-block {
@@ -169,8 +204,18 @@ const Styled = styled.div`
         }
       }
 
+      &.ant-radio-button-wrapper:not(:first-child):before {
+        left: 0;
+      }
+
       &:hover {
         color: #45c1bb;
+      }
+    }
+
+    &.w25 {
+      .ant-radio-button-wrapper {
+        width: 25%;
       }
     }
   }
