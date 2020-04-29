@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const primaryColor = '#886ab5';
+const primaryColor = '#636a78';
 
 const StyledAntdTable = Component => styled(Component)`
   padding: 10px;
@@ -36,6 +36,21 @@ const StyledAntdTable = Component => styled(Component)`
         }
       }
     }
+
+    .ant-table-scroll .ant-table-header {
+      border-top: 1px solid #bbb;
+      .ant-table-thead > tr > th {
+        padding: 6px 8px;
+        border-radius: 0;
+        font-size: 12px;
+        border-right: 0;
+        background-color: #fff;
+        color: #000;
+        border-bottom: 1px solid #e4e4e4;
+        font-size: 0.85rem;
+      } 
+    }
+
     .ant-table-placeholder {
       border-radius: 0;
       border: 0;
@@ -72,14 +87,6 @@ const StyledAntdTable = Component => styled(Component)`
 
   .ant-table-thead > tr:first-child > th:last-child {
     border-top-right-radius: 0;
-  }
-
-  .ant-table-thead > tr > th {
-    background-color: ${primaryColor};
-    color: #ffffff;
-    text-align: center;
-    font-size: 12px;
-    padding: 10px;
   }
 
   /* tbody */
