@@ -25,11 +25,7 @@ class lawClause extends Component {
       masterRechNo: '',
       clauseGubunName: '',
       quarterN: 0,
-      yearSt: '2020',
-      lawAppraise1: 0,
-      lawAppraise2: 0,
-      lawAppraise3: 0,
-      lawAppraise4: 0,
+      yyyy: '2020',
       isRevisionModal: '',
       isRevisionDetailModal: '',
       isAppraiseDetailModal: '',
@@ -63,9 +59,13 @@ class lawClause extends Component {
       clauseRechName: record.TITLE,
       clauseGubunName: record.RECH_CLAUSE_GUBUN_NAME,
       quarterN: quarterNum,
-      yearSt: yearString,
+      yyyy: yearString,
       modifyTaskSeq: quarterSeq,
     });
+  };
+
+  yearSetFunc = value => {
+    this.setState({ yyyy: value });
   };
 
   isOpenAppraiseDetailModal = quarterSeq => {
@@ -81,10 +81,6 @@ class lawClause extends Component {
       veiwTaskSeq: rowData.TASK_SEQ,
       masterRechName: rowData.RECH_LAW_NAME,
       masterRechNo: rowData.RECH_NO,
-      lawAppraise1: rowData.QUARTER_SEQ1,
-      lawAppraise2: rowData.QUARTER_SEQ2,
-      lawAppraise3: rowData.QUARTER_SEQ3,
-      lawAppraise4: rowData.QUARTER_SEQ4,
       clauseRechName: rowData.TITLE,
       clauseGubunName: rowData.RECH_CLAUSE_GUBUN_NAME,
     });
@@ -97,10 +93,6 @@ class lawClause extends Component {
       taskSeqReal: rowData.TASK_SEQ,
       masterRechName: rowData.RECH_LAW_NAME,
       masterRechNo: rowData.RECH_NO,
-      lawAppraise1: rowData.QUARTER_SEQ1,
-      lawAppraise2: rowData.QUARTER_SEQ2,
-      lawAppraise3: rowData.QUARTER_SEQ3,
-      lawAppraise4: rowData.QUARTER_SEQ4,
       clauseRechName: rowData.TITLE,
       clauseGubunName: rowData.RECH_CLAUSE_GUBUN_NAME,
     });
@@ -112,10 +104,6 @@ class lawClause extends Component {
       modifyTaskSeq: rowData.TASK_SEQ,
       masterRechName: rowData.RECH_LAW_NAME,
       masterRechNo: rowData.RECH_NO,
-      lawAppraise1: rowData.QUARTER_SEQ1,
-      lawAppraise2: rowData.QUARTER_SEQ2,
-      lawAppraise3: rowData.QUARTER_SEQ3,
-      lawAppraise4: rowData.QUARTER_SEQ4,
       clauseRechName: rowData.TITLE,
       clauseGubunName: rowData.RECH_CLAUSE_GUBUN_NAME,
     });
@@ -146,7 +134,7 @@ class lawClause extends Component {
         CLAUSE_RECH_NAME: this.state.clauseRechName,
         CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
         QUARTER: this.state.quarterN,
-        YEAR: this.state.yearSt,
+        YEAR: this.state.yyyy,
       }}
       taskSeq={taskSeq}
       viewType={viewType}
@@ -157,123 +145,6 @@ class lawClause extends Component {
       viewMetaSeq={2621}
       onCloseModalHandler={this.onCancel}
     />
-  );
-
-  onShowViewTemplate = (viewType, taskSeq) => (
-    <>
-      <table>
-        <tr>
-          <td colSpan="4">
-            <BizBuilderBase
-              sagaKey="lawClauseViewM"
-              workSeq={1645}
-              compProps={{
-                MASTER_SEQ: this.state.masterSeq,
-                MASTER_RECH_NAME: this.state.masterRechName,
-                MASTER_NO: this.state.masterRechNo,
-                CLAUSE_RECH_NAME: this.state.clauseRechName,
-                CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
-                // QUARTER: this.state.quarterN,
-                // YEAR: this.state.yearSt,
-              }}
-              taskSeq={taskSeq}
-              viewType="VIEW"
-              CustomViewPage={OnlyView}
-              loadingComplete={this.loadingComplete}
-              onCloseModalHandler={this.onCancel}
-            />
-          </td>
-        </tr>
-        <tr style={{ textAlign: 'center' }}>
-          <td>1분기</td>
-          <td>2분기</td>
-          <td>3분기</td>
-          <td>4분기</td>
-        </tr>
-        <tr>
-          <td>
-            <BizBuilderBase
-              sagaKey="lawAppraise1"
-              workSeq={2242}
-              // compProps={{
-              //   MASTER_SEQ: this.state.masterSeq,
-              //   CLAUSE_TASK_SEQ: this.state.clauseSeq,
-              //   MASTER_RECH_NAME: this.state.masterRechName,
-              //   MASTER_NO: this.state.masterRechNo,
-              //   CLAUSE_RECH_NAME: this.state.clauseRechName,
-              //   CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
-              //   QUARTER: 1,
-              //   YEAR: this.state.yearSt,
-              // }}
-              CustomViewPage={OnlyView}
-              taskSeq={this.state.lawAppraise1 || 2901} // 빈 화면 taskSEQ
-              viewType="VIEW"
-              loadingComplete={this.loadingComplete}
-            />
-          </td>
-          <td>
-            <BizBuilderBase
-              sagaKey="lawAppraise2"
-              workSeq={2242}
-              // compProps={{
-              //   MASTER_SEQ: this.state.masterSeq,
-              //   CLAUSE_TASK_SEQ: this.state.clauseSeq,
-              //   MASTER_RECH_NAME: this.state.masterRechName,
-              //   MASTER_NO: this.state.masterRechNo,
-              //   CLAUSE_RECH_NAME: this.state.clauseRechName,
-              //   CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
-              //   QUARTER: 2,
-              //   YEAR: this.state.yearSt,
-              // }}
-              CustomViewPage={OnlyView}
-              taskSeq={this.state.lawAppraise2 || 2901}
-              viewType="VIEW"
-              loadingComplete={this.loadingComplete}
-            />
-          </td>
-          <td>
-            <BizBuilderBase
-              sagaKey="lawAppraise3"
-              workSeq={2242}
-              // compProps={{
-              //   MASTER_SEQ: this.state.masterSeq,
-              //   CLAUSE_TASK_SEQ: this.state.clauseSeq,
-              //   MASTER_RECH_NAME: this.state.masterRechName,
-              //   MASTER_NO: this.state.masterRechNo,
-              //   CLAUSE_RECH_NAME: this.state.clauseRechName,
-              //   CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
-              //   QUARTER: 3,
-              //   YEAR: this.state.yearSt,
-              // }}
-              CustomViewPage={OnlyView}
-              taskSeq={this.state.lawAppraise3 || 2901}
-              viewType="VIEW"
-              loadingComplete={this.loadingComplete}
-            />
-          </td>
-          <td>
-            <BizBuilderBase
-              sagaKey="lawAppraise4"
-              workSeq={2242}
-              // compProps={{
-              //   MASTER_SEQ: this.state.masterSeq,
-              //   CLAUSE_TASK_SEQ: this.state.clauseSeq,
-              //   MASTER_RECH_NAME: this.state.masterRechName,
-              //   MASTER_NO: this.state.masterRechNo,
-              //   CLAUSE_RECH_NAME: this.state.clauseRechName,
-              //   CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
-              //   QUARTER: 4,
-              //   YEAR: this.state.yearSt,
-              // }}
-              CustomViewPage={OnlyView}
-              taskSeq={this.state.lawAppraise4 || 2901}
-              viewType="VIEW"
-              loadingComplete={this.loadingComplete}
-            />
-          </td>
-        </tr>
-      </table>
-    </>
   );
 
   onShowRevisionTemplate = (viewType, taskSeq) => (
@@ -294,7 +165,18 @@ class lawClause extends Component {
         taskSeqReal={this.state.taskSeqReal}
       />
       <Modal visible={this.state.isRevisionDetailModal || this.state.isAppraiseDetailModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
-        <div>{this.state.isRevisionDetailModal && this.onShowViewTemplate('VIEW', this.state.veiwTaskSeq)}</div>
+        {this.state.isRevisionDetailModal && (
+          <BizBuilderBase
+            sagaKey="lawClause_Revision"
+            workSeq={1645}
+            taskSeq={this.state.veiwTaskSeq}
+            viewType="VIEW"
+            loadingComplete={this.loadingComplete}
+            CustomViewPage={OnlyView}
+            YEAR={this.state.yyyy}
+          />
+        )}
+        {/* <div>{this.state.isRevisionDetailModal && this.onShowViewTemplate('VIEW', this.state.veiwTaskSeq)}</div> */}
         <div>{this.state.isAppraiseDetailModal && this.onShowModalTemplate('VIEW', this.state.veiwTaskSeq)}</div>
       </Modal>
     </>
@@ -312,15 +194,18 @@ class lawClause extends Component {
           sagaKey="lawClauseAppraise"
           workSeq={1645}
           viewType="LIST"
+          listMetaSeq={6541}
           loadingComplete={this.loadingComplete}
           CustomListPage={ClauseList}
           isOpenInputModal={this.isOpenInputModal}
           isOpenModalChange={this.isOpenModifyModal}
           isOpenModalPlusChange={this.isOpenPlusModal}
+          yearSetFunc={this.yearSetFunc}
+          YEAR={this.state.yyyy}
         />
         <Modal
           visible={this.state.isInputModal || this.state.isModifyModal || this.state.isViewModal || this.state.isRevisionModal}
-          width="1500px"
+          width="1000px"
           onCancel={this.onCancel}
           destroyOnClose
           footer={[]}
@@ -328,7 +213,19 @@ class lawClause extends Component {
           <div>
             {this.state.isInputModal && this.onShowModalTemplate('INPUT', -1)}
             {this.state.isModifyModal && this.onShowModalTemplate('MODIFY', this.state.modifyTaskSeq)}
-            {this.state.isViewModal && this.onShowViewTemplate('VIEW', this.state.veiwTaskSeq)}
+            {this.state.isViewModal && (
+              <BizBuilderBase
+                sagaKey="lawClause_Revision"
+                workSeq={1645}
+                taskSeq={this.state.veiwTaskSeq}
+                viewType="VIEW"
+                loadingComplete={this.loadingComplete}
+                CustomViewPage={OnlyView}
+                YEAR={this.state.yyyy}
+              />
+            )}
+
+            {/* {this.state.isViewModal && this.onShowViewTemplate('VIEW', this.state.veiwTaskSeq)} */}
             {this.state.isRevisionModal && this.onShowRevisionTemplate('LIST', this.state.veiwTaskSeq)}
           </div>
         </Modal>

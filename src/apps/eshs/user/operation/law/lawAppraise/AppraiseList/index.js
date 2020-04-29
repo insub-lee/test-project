@@ -1,74 +1,77 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, message } from 'antd';
+import { Table, Popconfirm, Button } from 'antd';
 
 import { isJSON } from 'utils/helpers';
-import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
+import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import Contents from 'components/BizBuilder/Common/Contents';
-import { debounce } from 'lodash';
+import Loading from 'components/BizBuilderBase/viewComponent/Common/Loading';
+import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import Loadable from 'components/Loadable';
 
 const AntdTable = StyledAntdTable(Table);
+const StyledButton = StyledAntdButton(Button);
 
-class ClauseListPage extends Component {
+class ClauseList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      initLoading: true,
-      data: [],
-      isOpenModal: false,
-      selectedRechNo: '',
-      selectedLawName: '',
-      selectedRegUserName: '',
-      selectedTaskSeq: '',
-      listVeiwBool: false,
+      isMultiDelete: false,
+      isRowNo: false,
+      isOnRowClick: false,
+      rowClickView: 'VIEW',
+      StyledWrap: StyledViewDesigner,
     };
-    this.debounceList = debounce(this.debounceList, 300);
   }
 
-  componentDidMount() {}
+  componentDidMount = () => {
+    const { workInfo } = this.props;
+    let isMultiDelete = false;
+    let isRowNo = false;
+    let isOnRowClick = false;
+    let rowClickView = 'VIEW';
+    this.getListData();
 
-  listVeiwBool = (id, workSeq) => {
-    const { getListData, formData } = this.props;
-    if (formData && formData.MASTER_SEQ) {
-      getListData(id, workSeq);
-      this.debounceList();
-    } else {
-      message.warning('법규를 선택해주세요.');
+    if (workInfo.BUILDER_STYLE_PATH) {
+      const StyledWrap = Loadable({
+        loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
+        loading: Loading,
+      });
+      this.setState({ StyledWrap });
+    }
+
+    if (workInfo && workInfo.OPT_INFO) {
+      workInfo.OPT_INFO.forEach(opt => {
+        if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
+        if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNo = true;
+        if (opt.OPT_SEQ === ON_ROW_CLICK_OPT_SEQ && opt.ISUSED === 'Y') {
+          isOnRowClick = true;
+          rowClickView = opt.OPT_VALUE === '' ? 'VIEW' : opt.OPT_VALUE;
+        }
+      });
+      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
     }
   };
 
-  debounceList() {
-    this.setState({ listVeiwBool: true });
-  }
-
-  isOpenLawModal = () => {
-    this.setState({ isOpenModal: true });
+  getListData = () => {
+    const { sagaKey, getExtraApiData, YEAR, formData } = this.props;
+    const apiArray = [{ key: `customList`, url: `/api/eshs/v1/common/eshsclause?&YEAR=${YEAR || 2020}`, params: { PARAM: { ...formData } }, type: 'POST' }];
+    getExtraApiData(sagaKey, apiArray, this.initData);
+    console.log('formData: ', formData);
   };
 
-  onCancel = () => {
-    this.setState({
-      isOpenModal: false,
-    });
-  };
-
-  onSelected = rowData => {
-    const { sagaKey: id, changeFormData } = this.props;
-    changeFormData(id, 'MASTER_SEQ', rowData.TASK_SEQ);
-    this.setState({
-      selectedRechNo: rowData.RECH_NO,
-      selectedLawName: rowData.TITLE,
-      selectedRegUserName: rowData.REG_USER_NAME,
-      selectedTaskSeq: rowData.TASK_SEQ,
-    });
-    this.onCancel();
-  };
+  // state값 reset테스트
+  // componentWillUnmount() {
+  //   const { removeReduxState, id } = this.props;
+  //   removeReduxState(id);
+  // }
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -100,53 +103,62 @@ class ClauseListPage extends Component {
 
   setColumnButton = (quarterSeq, record, quarter, year) => {
     const { isOpenInputModal } = this.props;
-    return !quarterSeq ? (
-      <StyledButton className="btn-primary" onClick={() => isOpenInputModal(record, quarter, year)}>
-        평가
-      </StyledButton>
-    ) : (
+    return quarterSeq ? (
       <StyledButton className="btn-primary" onClick={() => isOpenInputModal(record, quarter, year, quarterSeq)}>
         수정
+      </StyledButton>
+    ) : (
+      <StyledButton className="btn-primary" onClick={() => isOpenInputModal(record, quarter, year)}>
+        평가
       </StyledButton>
     );
   };
 
-  setColumns = cols => {
+  setColumns = (cols, widths) => {
+    const { isRowNo } = this.state;
+    const { YEAR } = this.props;
     const columns = [];
-    const yearSt = '2020';
-    cols.forEach(node => {
+    if (isRowNo) {
+      columns.push({
+        dataIndex: 'RNUM',
+        title: 'No.',
+      });
+    }
+    cols.forEach((node, idx) => {
       if (node.comp && node.comp.COMP_FIELD) {
         columns.push({
           dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
           title: node.comp.CONFIG.property.HEADER_NAME_KOR,
-          width: node.style.width,
+          // width: (node.style && node.style.width) || undefined,
+          width: (widths && widths[idx] && `${widths[idx]}%`) || undefined,
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
+          className: node.addonClassName && node.addonClassName.length > 0 ? `${node.addonClassName.toString().replaceAll(',', ' ')}` : '',
+          align: (node.style && node.style.textAlign) || undefined,
         });
       }
     });
-
     columns.push({
-      title: `${yearSt} 준수평가`,
+      title: `${YEAR} 준수평가`,
       children: [
         {
           title: '1분기',
           width: 100,
-          render: record => this.setColumnButton(record.QUARTER_SEQ1, record, 1, yearSt),
+          render: record => this.setColumnButton(record.ONE_Q_SEQ, record, 1, YEAR),
         },
         {
           title: '2분기',
           width: 100,
-          render: record => this.setColumnButton(record.QUARTER_SEQ2, record, 2, yearSt),
+          render: record => this.setColumnButton(record.TWO_Q_SEQ, record, 2, YEAR),
         },
         {
           title: '3분기',
           width: 100,
-          render: record => this.setColumnButton(record.QUARTER_SEQ3, record, 3, yearSt),
+          render: record => this.setColumnButton(record.THREE_Q_SEQ, record, 3, YEAR),
         },
         {
           title: '4분기',
           width: 100,
-          render: record => this.setColumnButton(record.QUARTER_SEQ4, record, 4, yearSt),
+          render: record => this.setColumnButton(record.FOUR_Q_SEQ, record, 4, YEAR),
         },
       ],
     });
@@ -154,10 +166,54 @@ class ClauseListPage extends Component {
     return columns;
   };
 
+  onSelectChange = selectedRowKeys => {
+    const { sagaKey, setListSelectRowKeys } = this.props;
+    setListSelectRowKeys(sagaKey, selectedRowKeys);
+  };
+
+  /* 
+      신규추가 
+      목적 : ListGroup 내에서 Row를 클릭시 원하는 뷰로 이동할 수 있는 Config를 지원하기 위해 생성
+      타입 : func (추가사항. antd - Table Props 참조)
+      create by. JeongHyun
+  */
+  onRowClick = record => {
+    const { sagaKey: id, isBuilderModal, changeBuilderModalState, changeViewPage } = this.props;
+    const { rowClickView } = this.state;
+    return {
+      onClick: () => {
+        if (isBuilderModal) {
+          changeBuilderModalState(true, rowClickView, record.WORK_SEQ, record.TASK_SEQ, record);
+        } else {
+          changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, rowClickView);
+        }
+      },
+    };
+  };
+
   renderList = (group, groupIndex) => {
-    const { listData, formData } = this.props;
-    const filterList = listData.filter(f => f.ISLAST_VER === 'Y');
-    const columns = this.setColumns(group.rows[0].cols);
+    const {
+      listData,
+      listSelectRowKeys,
+      customOnRowClick,
+      extraApiData: { customList },
+    } = this.props;
+    const { isMultiDelete, isOnRowClick } = this.state;
+    const columns = this.setColumns(group.rows[0].cols, group.widths || []);
+    let rowSelection = false;
+    let onRow = false;
+    if (isMultiDelete) {
+      rowSelection = {
+        selectedRowKeys: listSelectRowKeys,
+        onChange: this.onSelectChange,
+      };
+    }
+    if (typeof customOnRowClick === 'function') {
+      onRow = record => ({ onClick: () => customOnRowClick(record) });
+    }
+    if (isOnRowClick) {
+      onRow = this.onRowClick;
+    }
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -167,7 +223,11 @@ class ClauseListPage extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={formData && formData.MASTER_SEQ && listData && this.state.listVeiwBool ? filterList : []}
+            dataSource={(customList && customList.list) || []}
+            // dataSource={list || []}
+            rowSelection={rowSelection}
+            rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
+            onRow={onRow}
           />
         </Group>
       </div>
@@ -175,7 +235,8 @@ class ClauseListPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, isOpenInputModal, getListData, workSeq } = this.props;
+    const { sagaKey: id, viewLayer, formData, viewPageData, getListData, workSeq, removeMultiTask, isOpenInputModal } = this.props;
+    const { isMultiDelete, StyledWrap } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -183,87 +244,109 @@ class ClauseListPage extends Component {
         layer: { groups },
         bodyStyle,
       } = viewLayerData;
-      const {
-        info: { PRC_ID },
-      } = workFlowConfig;
 
-      // 로딩
-      if (this.props.isLoading === false && this.state.initLoading) {
-        this.setState(
-          {
-            initLoading: false,
-          },
-          () => loadingComplete(),
-        );
-      }
       return (
-        <StyledViewDesigner>
+        <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
             {groups.map((group, groupIndex) => {
               if (group.type === 'listGroup') {
                 return this.renderList(group, groupIndex);
               }
               return (
-                <div key={group.key}>
-                  {group.useTitle && <GroupTitle title={group.title} />}
-                  <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-                    <StyledSearchWrap>
+                (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
+                  <StyledSearchWrapper key={group.key}>
+                    {group.useTitle && <GroupTitle title={group.title} />}
+                    <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
                       <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
                         <table className={`view-designer-table table-${groupIndex}`}>
                           <tbody>
                             {group.rows.map((row, rowIndex) => (
                               <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
                                 {row.cols &&
-                                  row.cols.map((col, colIndex) => (
-                                    <td
-                                      key={col.key}
-                                      {...col}
-                                      comp=""
-                                      colSpan={col.span}
-                                      className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
-                                    >
-                                      <Contents>
-                                        {col.comp &&
-                                          this.renderComp(
-                                            col.comp,
-                                            col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
-                                            true,
-                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
-                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
-                                            group.type === 'searchGroup',
-                                          )}
-                                      </Contents>
-                                    </td>
-                                  ))}
+                                  row.cols.map((col, colIndex) =>
+                                    col ? (
+                                      <td
+                                        key={col.key}
+                                        {...col}
+                                        comp=""
+                                        colSpan={col.span}
+                                        className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}${
+                                          col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName.toString().replaceAll(',', ' ')}` : ''
+                                        }`}
+                                      >
+                                        <Contents>
+                                          {col.comp &&
+                                            this.renderComp(
+                                              col.comp,
+                                              col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
+                                              true,
+                                              `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
+                                              `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
+                                              group.type === 'searchGroup',
+                                            )}
+                                        </Contents>
+                                      </td>
+                                    ) : (
+                                      ''
+                                    ),
+                                  )}
                               </tr>
                             ))}
+                            {/* <tr>
+                              <th>법규</th>
+                              <td colSpan={5}></td>
+                            </tr>
+                            <tr>
+                              <th></th>
+                              <td colSpan={2}></td>
+                              <th></th>
+                              <td colSpan={2}></td>
+                            </tr>
+                            <tr>
+                              <th></th>
+                              <td></td>
+                              <th></th>
+                              <td></td>
+                              <th></th>
+                              <td></td>
+                            </tr>
+                            <tr>
+                              <th></th>
+                              <td colSpan={2}></td>
+                              <th></th>
+                              <td colSpan={2}></td>
+                            </tr> */}
                           </tbody>
                         </table>
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
-                        <div align="right">
-                          <StyledButton className="btn-primary" onClick={() => this.listVeiwBool(id, workSeq)}>
+                        <div className="view-designer-group-search-btn-wrap">
+                          <StyledButton className="btn-primary" onClick={() => this.getListData()}>
                             Search
                           </StyledButton>
                         </div>
                       )}
-                    </StyledSearchWrap>
-                  </Group>
-                </div>
+                    </Group>
+                  </StyledSearchWrapper>
+                )
               );
             })}
           </Sketch>
-        </StyledViewDesigner>
+        </StyledWrap>
       );
     }
     return '';
   };
 }
 
-ClauseListPage.propTypes = {
+ClauseList.propTypes = {
+  workInfo: PropTypes.object,
   sagaKey: PropTypes.string,
   workFlowConfig: PropTypes.object,
+  viewPageData: PropTypes.object,
   workPrcProps: PropTypes.object,
+  info: PropTypes.object,
+  setListSelectRowKeys: PropTypes.object,
   viewLayer: PropTypes.array,
   formData: PropTypes.object,
   processRule: PropTypes.object,
@@ -272,16 +355,20 @@ ClauseListPage.propTypes = {
   saveTask: PropTypes.func,
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
-  loadingComplete: PropTypes.func,
-  columns: PropTypes.array,
+  isBuilderModal: PropTypes.bool,
+  changeBuilderModalState: PropTypes.func,
+  changeViewPage: PropTypes.func,
+  isOpenInputModal: PropTypes.func,
+  customOnRowClick: PropTypes.any,
+  getListData: PropTypes.array,
+  workSeq: PropTypes.number,
+  removeMultiTask: PropTypes.any,
+  listData: PropTypes.array,
+  listSelectRowKeys: PropTypes.any,
 };
 
-ClauseListPage.defaultProps = {
-  workFlowConfig: {
-    info: {
-      PRC_ID: -1,
-    },
-  },
+ClauseList.defaultProps = {
+  customOnRowClick: undefined,
 };
 
-export default ClauseListPage;
+export default ClauseList;
