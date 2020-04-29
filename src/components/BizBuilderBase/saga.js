@@ -121,16 +121,19 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeWork
   yield put(actions.removeReduxState(id));
   let formData = {};
   let validationData = {};
+  let draftInfo = {};
   if (viewType === 'MODIFY') {
     const response = yield call(Axios.post, `/api/builder/v1/work/taskEdit/${workSeq}/${taskSeq}`, {}, { BUILDER: 'getDetailData' });
     formData = response.data;
     validationData = response.validationData;
+    draftInfo = response.draftInfo;
   } else {
     const response = yield call(Axios.get, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, {}, { BUILDER: 'getDetailData' });
     formData = response.result;
+    draftInfo = response.draftInfo;
   }
   if (formData) {
-    yield put(actions.setDetailData(id, formData, validationData));
+    yield put(actions.setDetailData(id, formData, validationData, draftInfo));
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
     yield put(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps));
   }

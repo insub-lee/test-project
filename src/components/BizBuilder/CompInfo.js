@@ -109,6 +109,11 @@ import EshsCondComp from 'components/BizBuilder/Field/EshsCondComp';
 import MdcsEndDateViewComp from 'components/BizBuilder/Field/MdcsEndDateViewComp';
 import MdcsRevisionHistoryListComp from 'components/BizBuilder/Field/MdcsRevisionHistoryListComp';
 import MdcsProcessListComp from 'components/BizBuilder/Field/MdcsProcessListComp';
+import EshsInterLockComp from 'components/BizBuilder/Field/EshsInterLockComp';
+import CustomSelectSearchComp from 'components/BizBuilder/Field/CustomSelectSearchComp';
+import CustomSearchInputComp from 'components/BizBuilder/Field/CustomSearchInputComp';
+import MdcsDistDeptListComp from 'components/BizBuilder/Field/MdcsDistDeptListComp';
+import OldScopeComp from 'components/BizBuilder/Field/OldScopeComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
@@ -220,4 +225,9 @@ export const CompInfo = {
   'components/BizBuilder/Field/MdcsEndDateViewComp': { renderer: property => <MdcsEndDateViewComp {...property} /> },
   'components/BizBuilder/Field/MdcsRevisionHistoryListComp': { renderer: property => <MdcsRevisionHistoryListComp {...property} /> },
   'components/BizBuilder/Field/MdcsProcessListComp': { renderer: property => <MdcsProcessListComp {...property} /> },
+  'components/BizBuilder/Field/EshsInterLockComp': { renderer: property => <EshsInterLockComp {...property} /> },
+  'components/BizBuilder/Field/CustomSelectSearchComp': { renderer: property => <CustomSelectSearchComp {...property} /> },
+  'components/BizBuilder/Field/CustomSearchInputComp': { renderer: property => <CustomSearchInputComp {...property} /> },
+  'components/BizBuilder/Field/MdcsDistDeptListComp': { renderer: property => <MdcsDistDeptListComp {...property} /> },
+  'components/BizBuilder/Field/OldScopeComp': { renderer: property => <OldScopeComp {...property} /> },
 };

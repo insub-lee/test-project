@@ -38,7 +38,7 @@ const getTreeData = deptList =>
       })
     : [];
 
-class WorkProcessModal extends Component {
+class BuilderProcessModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -61,7 +61,6 @@ class WorkProcessModal extends Component {
   componentDidMount() {
     const { getDeptList, processRuleProc } = this.props;
     const processStep = fromJS(processRuleProc.DRAFT_PROCESS_STEP).toJS();
-    console.debug('2', processStep);
     const tmpPrcStep = processStep.filter(f => f.APPV_METHOD === 1 && f.PARENT_PRC_RULE_ID !== 0 && f.NODE_TYPE !== 'NS');
     this.setState({ prcStep: tmpPrcStep });
     getDeptList(this.initDeptList);
@@ -110,25 +109,10 @@ class WorkProcessModal extends Component {
     const { onComplete, processRuleProc } = this.props;
     const { prcStep } = this.state;
 
-    const fidx = prcStep.findIndex(f => f.NODE_ID === DraftNode.DIST_NODE);
-    // 배포부서 정보
-    const { APPV_MEMBER: deptIds } = prcStep[fidx];
-    const distDeptList = prcStep
-      .filter(f => f.NODE_ID !== DraftNode.DCC_NODE && f.NODE_ID !== DraftNode.DIST_NODE)
-      .reduce((prevDeptIds, curDept) => {
-        const { APPV_MEMBER: userInfo } = curDept;
-        const retDist = userInfo.reduce((prevUser, user) => {
-          const fidx = prevUser.findIndex(f => f.DEPT_ID === user.DEPT_ID);
-          if (fidx === -1) prevUser.splice(0, 0, { DEPT_ID: user.DEPT_ID, DEPT_NAME_KOR: user.DEPT_NAME_KOR });
-          return prevUser;
-        }, prevDeptIds);
-        return retDist;
-      }, deptIds);
-    const tmpPrcStep = prcStep.map(step => (step.NODE_ID === DraftNode.DIST_NODE ? { ...step, APPV_MEMBER: distDeptList } : { ...step }));
     const { DRAFT_PROCESS_STEP } = processRuleProc;
     const nProcStep = DRAFT_PROCESS_STEP.map(step => {
-      const idx = tmpPrcStep.findIndex(f => f.PRC_RULE_ID === step.PRC_RULE_ID);
-      if (idx > -1) return tmpPrcStep[idx];
+      const idx = prcStep.findIndex(f => f.PRC_RULE_ID === step.PRC_RULE_ID);
+      if (idx > -1) return prcStep[idx];
       return step;
     });
     const tmpProc = { ...processRuleProc, DRAFT_PROCESS_STEP: nProcStep };
@@ -187,7 +171,6 @@ class WorkProcessModal extends Component {
   };
 
   render() {
-    console.debug('workprocessmodal');
     const { prcStep, selectedUserKeys, selectedDeptKeys, deptList, deptUserList, rootKey } = this.state;
     const rowSelection = {
       selectedRowKeys: selectedUserKeys,
@@ -312,7 +295,7 @@ class WorkProcessModal extends Component {
   }
 }
 
-WorkProcessModal.propTypes = {
+BuilderProcessModal.propTypes = {
   visible: PropTypes.bool,
   processRule: PropTypes.object,
   onComplete: PropTypes.func,
@@ -324,7 +307,7 @@ WorkProcessModal.propTypes = {
   initDeptUserList: PropTypes.func,
 };
 
-WorkProcessModal.defaultProps = {
+BuilderProcessModal.defaultProps = {
   visible: false,
   processRule: {},
   deptList: [],
@@ -345,13 +328,13 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const withReducer = injectReducer({
-  key: 'apps.WorkFlow.WorkProcess.WorkProcessModal',
+  key: 'apps.WorkFlow.WorkProcess.BuilderProcessModal',
   reducer,
 });
 const withSaga = injectSaga({
-  key: 'apps.WorkFlow.WorkProcess.WorkProcessModal',
+  key: 'apps.WorkFlow.WorkProcess.BuilderProcessModal',
   saga,
 });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(withSaga, withReducer, withConnect)(WorkProcessModal);
+export default compose(withSaga, withReducer, withConnect)(BuilderProcessModal);

@@ -10,7 +10,6 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import Material from '../../../sqtbEquipMgt/pages/Material';
-import InterLock from '../../../sqtbEquipMgt/pages/InterLock';
 
 class ViewPage extends Component {
   componentDidMount() {
@@ -51,14 +50,6 @@ class ViewPage extends Component {
             {draftId !== -1 && <SignLine id={id} draftId={draftId} />}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
             {draftId !== -1 && <ApproveHistory draftId={draftId} />}
-            <InterLock
-              id={id}
-              formData={formData}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={viewPageData}
-            />
             <Material
               id={id}
               formData={formData}

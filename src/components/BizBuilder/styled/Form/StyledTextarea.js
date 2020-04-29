@@ -18,7 +18,7 @@ const StyledTextarea = Component => styled(Component)`
     &:hover,
     &:focus {
       background-color: #fff;
-      border-color: #4491e0;
+      border-color: #636a78;
       outline: 0;
       box-shadow: 0 0 0 0.2rem transparent;
     }

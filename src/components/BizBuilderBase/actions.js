@@ -76,11 +76,12 @@ export const getDetailData = (id, workSeq, taskSeq, viewType, extraProps, change
   changeWorkflowFormData,
 });
 
-export const setDetailData = (id, data, validationData) => ({
+export const setDetailData = (id, data, validationData, draftInfo) => ({
   type: actionTypes.SET_DETAIL_DATA,
   id,
   data,
   validationData,
+  draftInfo,
 });
 
 export const getProcessRule = (id, payload) => ({
