@@ -37,6 +37,8 @@ class List extends React.Component {
         CONTENT_EXP: '',
         CONTENT_DOSE: 0,
         MASTER_ID: '',
+        IS_INFLAMMABILITY_GAS: '',
+        IS_INFLAMMABILITY_LIQUID: '',
       },
       isModified: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
@@ -49,21 +51,23 @@ class List extends React.Component {
     });
   };
 
-  handleInputChange = e => {
-    let valueObj = {};
-    if (!!e && typeof e === 'object') {
-      valueObj = { [e.target.name]: e.target.value };
+  handleInputChange = (event, type, name) => {
+    if (type.toUpperCase() === 'INPUT') {
+      const valueObj = { [event.target.name.toUpperCase()]: event.target.value };
+      this.setState(prevState => ({
+        requestValue: Object.assign(prevState.requestValue, valueObj),
+      }));
     }
-    if (typeof e === 'string') {
-      valueObj = { IS_IMPORT: e };
+
+    if (type.toUpperCase() === 'SELECT') {
+      const valueObj = { [name.toUpperCase()]: event };
+      this.setState(prevState => ({
+        requestValue: Object.assign(prevState.requestValue, valueObj),
+      }));
     }
-    return this.setState(prevState => ({
-      requestValue: Object.assign(prevState.requestValue, valueObj),
-    }));
   };
 
   handleInputNumberChange = (value, name) => {
-    const { requestValue } = this.state;
     if (typeof value !== 'number') {
       const valueObj = { [name]: '' };
       this.setState(prevState => ({
@@ -74,13 +78,6 @@ class List extends React.Component {
     this.setState(prevState => ({
       requestValue: Object.assign(prevState.requestValue, valueObj),
     }));
-
-    if (name === 'FIR_UNIT_EXCHANGE' || name === 'SEC_UNIT_EXCHANGE') {
-      const kgConvertValue = Math.floor(requestValue.FIR_UNIT_EXCHANGE * requestValue.SEC_UNIT_EXCHANGE * 100) / 100;
-      this.setState(prevState => ({
-        requestValue: Object.assign(prevState.requestValue, { kgConvertValue }),
-      }));
-    }
   };
 
   handleInputClick = () => {
@@ -144,6 +141,8 @@ class List extends React.Component {
         UNIT: '',
         FIR_UNIT_EXCHANGE: 0,
         SEC_UNIT_EXCHANGE: 0,
+        IS_INFLAMMABILITY_GAS: '',
+        IS_INFLAMMABILITY_LIQUID: '',
       },
       isModified: false,
     });
@@ -267,36 +266,36 @@ class List extends React.Component {
                   <tr>
                     <th colSpan={1}>SAP NO.</th>
                     <td colSpan={3}>
-                      <AntdInput className="ant-input-sm" name="SAP_NO" value={requestValue.SAP_NO} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="SAP_NO" value={requestValue.SAP_NO} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
                     <th colSpan={1}>CAS NO.</th>
                     <td colSpan={3}>
-                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
                   </tr>
                   <tr>
                     <th>화학물질명_국문</th>
                     <td>
-                      <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
                     <th>화학물질명_영문</th>
                     <td>
-                      <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
                     <th>화학물질명_SAP</th>
                     <td>
-                      <AntdInput className="ant-input-sm" name="NAME_SAP" value={requestValue.NAME_SAP} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="NAME_SAP" value={requestValue.NAME_SAP} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
                     <th>관용명 및 이명</th>
                     <td>
-                      <AntdInput className="ant-input-sm" name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="NAME_ETC" value={requestValue.NAME_ETC} onChange={e => handleInputChange(e, 'INPUT')} />
                     </td>
                   </tr>
                   <tr>
                     <th>공급업체</th>
-                    <td>
+                    <td colSpan={3}>
                       <EshsCmpnyComp
-                        searchWidth="50%"
+                        searchWidth="146px"
                         sagaKey={sagaKey}
                         getExtraApiData={getCallDataHandler}
                         extraApiData={result}
@@ -308,18 +307,16 @@ class List extends React.Component {
                         eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
                       />
                     </td>
-                    <th>수입구분</th>
+                    <th>MSDS 함량</th>
                     <td>
-                      <AntdSelect className="select-sm" defaultValue="N" onChange={handleInputChange} value={requestValue.IS_IMPORT} style={{ width: '100%' }}>
-                        <Select.Option value="N">내수</Select.Option>
-                        <Select.Option value="Y">수입</Select.Option>
-                      </AntdSelect>
+                      <AntdInput
+                        name="CONTENT_EXP"
+                        value={requestValue.CONTENT_EXP}
+                        onChange={e => handleInputChange(e, 'INPUT')}
+                        className="col-input-number ant-input-sm"
+                      />
                     </td>
-                    <th>함량(%) 표현값</th>
-                    <td>
-                      <AntdInput name="CONTENT_EXP" value={requestValue.CONTENT_EXP} onChange={handleInputChange} className="col-input-number ant-input-sm" />
-                    </td>
-                    <th>함량(%) 정량</th>
+                    <th>함유량</th>
                     <td>
                       <AntdInputNumber
                         value={requestValue.CONTENT_DOSE}
@@ -327,6 +324,53 @@ class List extends React.Component {
                         className="input-number-sm"
                         style={{ width: '100%' }}
                       />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>수입구분</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue="N"
+                        onChange={e => handleInputChange(e, 'SELECT', 'IS_IMPORT')}
+                        value={requestValue.IS_IMPORT}
+                        style={{ width: '100%' }}
+                      >
+                        <Select.Option value="N">내수</Select.Option>
+                        <Select.Option value="Y">수입</Select.Option>
+                      </AntdSelect>
+                    </td>
+                    <th>인화성가스 구분</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue={-1}
+                        onChange={e => handleInputChange(e, 'SELECT', 'IS_INFLAMMABILITY_GAS')}
+                        value={requestValue.IS_INFLAMMABILITY_GAS}
+                        style={{ width: '100%' }}
+                      >
+                        <Select.Option value={1}>1</Select.Option>
+                        <Select.Option value={2}>2</Select.Option>
+                        <Select.Option value={3}>3</Select.Option>
+                        <Select.Option value={4}>4</Select.Option>
+                        <Select.Option value={-1}>해당 없음</Select.Option>
+                      </AntdSelect>
+                    </td>
+                    <th>인화성액체 구분</th>
+                    <td colSpan={3}>
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue={-1}
+                        onChange={e => handleInputChange(e, 'SELECT', 'IS_INFLAMMABILITY_LIQUID')}
+                        value={requestValue.IS_INFLAMMABILITY_LIQUID}
+                        style={{ width: '145px' }}
+                      >
+                        <Select.Option value={1}>1</Select.Option>
+                        <Select.Option value={2}>2</Select.Option>
+                        <Select.Option value={3}>3</Select.Option>
+                        <Select.Option value={4}>4</Select.Option>
+                        <Select.Option value={-1}>해당 없음</Select.Option>
+                      </AntdSelect>
                     </td>
                   </tr>
                 </tbody>

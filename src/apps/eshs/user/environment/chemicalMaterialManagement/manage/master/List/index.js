@@ -5,6 +5,15 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
+import { Input, Select } from 'antd';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
+
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -55,12 +64,20 @@ class List extends React.Component {
           field: 'WRK_CMPNY_NM',
         },
         {
-          headerName: '함량(%) 표현값',
+          headerName: 'MSDS 함량',
           field: 'CONTENT_EXP',
         },
         {
-          headerName: '함량(%) 정량',
+          headerName: '함유량',
           field: 'CONTENT_DOSE',
+        },
+        {
+          headerName: '인화성가스 구분',
+          field: 'IS_INFLAMMABILITY_GAS',
+        },
+        {
+          headerName: '인화성 액체 구분',
+          field: 'IS_INFLAMMABILITY_LIQUID',
         },
       ],
     },
@@ -114,10 +131,6 @@ class List extends React.Component {
         {
           headerName: '조사대상범위(무게함유율%)',
           field: 'INVESTIGATION_TARGET_RANGE',
-        },
-        {
-          headerName: '2018 PRTR(조사대상 화학물질)',
-          field: '',
         },
       ],
     },
@@ -180,7 +193,7 @@ class List extends React.Component {
         },
         {
           headerName: 'PSM(PSM대상물질 51종)',
-          field: 'IS_APPLICATE',
+          field: 'IS_PSM',
         },
         {
           headerName: 'C',
@@ -224,11 +237,39 @@ class List extends React.Component {
   render() {
     return (
       <>
-        <div style={{ width: '100%', height: '100%' }}>
-          <div className="ag-theme-balham tableWrapper" style={{ padding: '0px 20px', height: '540px' }}>
-            <AgGridReact defaultColDef={this.defaultColDef} columnDefs={this.columnDefs} rowData={this.state.rowData} suppressRowTransform />
+        <ContentsWrapper>
+          <div className="selSaveWrapper alignLeft" style={{ paddingBottom: '10px' }}>
+            <div className="textLabel">SAP_NO.</div>
+            <AntdInput
+              className="ant-input-inline ant-input-mid mr5"
+              onChange={() => console.debug('@@INPUT')}
+              style={{ width: '150px' }}
+              placeholder="SAP_NO."
+            />
+            <div className="textLabel">CAS_NO.</div>
+            <AntdInput
+              className="ant-input-inline ant-input-mid mr5"
+              onChange={() => console.debug('@@INPUT')}
+              style={{ width: '150px' }}
+              placeholder="CAS_NO."
+            />
+            <AntdSelect defaultValue="Y" onChange={() => console.debug('@@CHANGE@@')} className="select-mid mr5" style={{ width: '130px' }}>
+              <AntdSelect.Option value="Y">전체</AntdSelect.Option>
+              <AntdSelect.Option value="N">SAP(사용량)</AntdSelect.Option>
+            </AntdSelect>
+            <AntdInput
+              className="ant-input-inline ant-input-mid mr5"
+              onChange={() => console.debug('@@INPUT')}
+              style={{ width: '300px' }}
+              placeholder="화학물질명을 입력하세요."
+            />
           </div>
-        </div>
+          <div style={{ width: '100%', height: '100%' }}>
+            <div className="ag-theme-balham tableWrapper" style={{ padding: '0px 20px', height: '500px' }}>
+              <AgGridReact defaultColDef={this.defaultColDef} columnDefs={this.columnDefs} rowData={this.state.rowData} suppressRowTransform />
+            </div>
+          </div>
+        </ContentsWrapper>
       </>
     );
   }
