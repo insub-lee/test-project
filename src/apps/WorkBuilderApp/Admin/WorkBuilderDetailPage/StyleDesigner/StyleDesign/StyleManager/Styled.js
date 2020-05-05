@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 
 const StyledDiv = styled.div`
-  width: 1000px;
+  width: ${({ defaultWidth }) => defaultWidth || '1000px'};
   padding: 1rem;
+  box-sizing: content-box;
+
   > * {
     box-sizing: border-box;
   }

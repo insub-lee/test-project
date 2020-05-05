@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 
 const createDiv = height => {
   const div = document.createElement('div');
@@ -26,7 +26,11 @@ const createWidthDiv = (width, moveWidth) => {
   div.className = 'resizing-column-width';
   return div;
 };
-const useHooks = ({ onChangeWidths, onChangeHeights }) => {
+const { maxBodyWidth, minBodyWidth } = {
+  maxBodyWidth: 2000,
+  minBodyWidth: 1000,
+};
+const useHooks = ({ defaultWidth, updateBodyWidth, onChangeWidths, onChangeHeights }) => {
   // For Change Widths
   let pageX;
   let curCol;
@@ -38,6 +42,13 @@ const useHooks = ({ onChangeWidths, onChangeHeights }) => {
   let curColForHeight;
   let curColHeight;
   const TableRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
+  const [bodyWidth, setBodyWidth] = useState(defaultWidth || 1000);
+  const [dataTip, setDataTip] = useState(null);
+  // bodyWidth가 업데이트 상위 콜백
+  useEffect(() => {
+    updateBodyWidth(bodyWidth);
+  }, [bodyWidth]);
   useEffect(() => {
     // Add Controller to Table Head Row
     const tableNode = TableRef.current;
@@ -171,6 +182,38 @@ const useHooks = ({ onChangeWidths, onChangeHeights }) => {
     },
     [TableRef],
   );
-  return { TableRef, onChangeCellStyle };
+  const openModal = data => {
+    setShowModal(true);
+    setDataTip(data);
+  };
+  const closeModal = () => {
+    setShowModal(false);
+    setDataTip(null);
+  };
+  const onChangeBodyWidth = e => {
+    const widthValue = Number(e.target.value);
+    if (widthValue >= minBodyWidth && widthValue <= maxBodyWidth) {
+      setBodyWidth(widthValue);
+    }
+  };
+  const onBlurBodyWidth = e => {
+    const widthValue = Number(e.target.value);
+    if (widthValue < minBodyWidth) {
+      e.target.value = minBodyWidth.toString();
+      setBodyWidth(minBodyWidth);
+    } else if (widthValue > maxBodyWidth) {
+      e.target.value = maxBodyWidth.toString();
+      setBodyWidth(maxBodyWidth);
+    }
+  };
+  return {
+    TableRef,
+    showModal,
+    bodyWidth,
+    maxBodyWidth,
+    minBodyWidth,
+    dataTip,
+    action: { openModal, closeModal, onChangeBodyWidth, onBlurBodyWidth, onChangeCellStyle },
+  };
 };
 export default useHooks;
