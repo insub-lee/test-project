@@ -30,6 +30,7 @@ function ListPage(props) {
   const [isMultiDelete, setIsMultiDelete] = useState(false);
   const [isRowNo, setIsRowNo] = useState(false);
   const [rowClickable, setRowClickable] = useState(true);
+  const [processedList, setProcessedList] = useState([]);
 
 
 
@@ -41,19 +42,23 @@ function ListPage(props) {
   }, []);
 
   useEffect(() => {
-    const { listData, formData } = props;
     if (listData instanceof Array) {
-      const { QUARTER, INSPECTION_DATE, IS_INSPECTED } = formData;
-      console.debug("£££ was i ever fired?", QUARTER, INSPECTION_DATE);
-      if (QUARTER && INSPECTION_DATE) {
-        request({
-          method: 'POST',
-          url: address.search,
-          // FIRE_CODE: FE (소화기)
-          params: { listData, QUARTER, INSPECTION_DATE, IS_INSPECTED },
-        }).then(({ response }) => {
-          console.debug('### response: ', response);
-        });
+      if (listData.length > 0) {
+        const { QUARTER, INSPECTION_YEAR, IS_INSPECTED } = formData;
+        if (QUARTER && INSPECTION_YEAR && isSearched) {
+          request({
+            method: 'POST',
+            url: address.search,
+            // FIRE_CODE: FE (소화기)
+            params: { listData, QUARTER, INSPECTION_YEAR, IS_INSPECTED },
+          }).then(({ response }) => {
+            console.debug("£££ response : ", response);
+            const { result, data } = response || {};
+            if (result === 1) {
+              setProcessedList(data);
+            }
+          });
+        }
       }
     }
   }, [props.listData]);
@@ -230,7 +235,7 @@ function ListPage(props) {
               key={`${group.key}_list`}
               className="view-designer-list"
               columns={columns}
-              dataSource={listData || []}
+              dataSource={processedList || []}
               // LOCATION_DESC
               onRow={record => ({
                 onClick: () => (rowClickable ? handleRowClick(record.TASK_SEQ) : null),
