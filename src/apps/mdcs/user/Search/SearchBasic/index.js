@@ -28,7 +28,7 @@ const columns = [
     width: '21%',
     render: (text, row, index) => {
       if (text) {
-        return <text>{text.replace(/&gt;/g, ' > ')}</text>;
+        return <span>{text.replace(/&gt;/g, ' > ')}</span>;
       }
     },
   },
