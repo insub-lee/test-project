@@ -30,7 +30,7 @@ const columns = [
   },
   {
     title: 'Short Description(Including the Para./clause)',
-    dataIndex: 'REMARK',
+    dataIndex: 'COPY_REMARK',
     width: '550px',
     render: text => <pre>{text}</pre>,
   },
