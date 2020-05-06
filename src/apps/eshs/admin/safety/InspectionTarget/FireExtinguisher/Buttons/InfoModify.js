@@ -14,7 +14,7 @@ export default function InfoModify(props) {
   switch (viewType) {
     case 'MODIFY': {
       return [
-        <StyledButton className="btn-primary" onClick={() => saveBeforeProcess(id, reloadId || id, saveTask)}>
+        <StyledButton className="btn-primary" onClick={() => saveBeforeProcess(id, reloadId || id, modifyTask)}>
           저장
         </StyledButton>,
         <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'VIEW')}>
