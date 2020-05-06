@@ -14,7 +14,6 @@ import View from 'components/BizBuilder/PageComp/view';
 import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import moment from 'moment';
 
-import Material from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqtbEquipMgt/pages/Material';
 import Header from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqConfirmRequest/pages/Header';
 
 class ModifyPage extends Component {
@@ -227,15 +226,6 @@ class ModifyPage extends Component {
               changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <Material
-              id={id}
-              formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={{ viewType: 'VIEW' }}
-              initForm={false}
-            />
           </Sketch>
         </StyledViewDesigner>
       );

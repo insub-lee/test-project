@@ -8,7 +8,6 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-import Material from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqtbEquipMgt/pages/Material';
 import Header from '../Header';
 class ModifyPage extends Component {
   constructor(props) {
@@ -174,14 +173,6 @@ class ModifyPage extends Component {
               changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <Material
-              id={id}
-              formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={{ viewType: 'VIEW' }}
-            />
           </Sketch>
         </StyledViewDesigner>
       );

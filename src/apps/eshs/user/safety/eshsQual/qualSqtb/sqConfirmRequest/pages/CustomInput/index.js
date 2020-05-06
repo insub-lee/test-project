@@ -9,7 +9,6 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-import Material from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqtbEquipMgt/pages/Material';
 import Header from '../Header';
 class InputPage extends Component {
   constructor(props) {
@@ -232,16 +231,7 @@ class InputPage extends Component {
               changeViewPage={changeViewPage}
               saveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
             />
-            <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <Material
-              id={id}
-              formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={{ viewType: 'VIEW' }}
-            />
-            ,
+            <View key={`${id}_${viewPageData.viewType}`} {...this.props} />,
           </Sketch>
         </StyledViewDesigner>
       );
