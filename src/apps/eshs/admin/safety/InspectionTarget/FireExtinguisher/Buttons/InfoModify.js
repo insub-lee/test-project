@@ -4,7 +4,7 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
 export default function InfoModify(props) {
   console.debug('### props: ', props);
-  const { sagaKey: id, onCloseModalHandler, viewPageData, changeViewPage, saveBeforeProcess, saveTask, modifyTask, reloadId } = props;
+  const { sagaKey: id, onCloseModalHandler, viewPageData, changeViewPage, saveBeforeProcess, saveTask, reloadId, modifyTask } = props;
 
   // useEffect(() => {
   //   viewPageData.viewType = 'MODIFY';
