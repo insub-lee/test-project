@@ -23,6 +23,12 @@ class ChkHospitalItemView extends Component {
   state = {
     saveType: '',
     detail: {},
+    // detail: {
+    //   HOSPITAL_SITE: '',
+    //   HOSPITAL_CODE: '',
+    //   CHK_TYPE: '',
+    //   CHK_TYPE_NAME: '',
+    // },
     itemList: [],
     hospitalList: [],
     siteList: [],
@@ -131,6 +137,11 @@ class ChkHospitalItemView extends Component {
 
   // 그룹 추가
   addGroup = () => {
+    if (this.state.groupList.length >= this.state.codeList.length) {
+      message.info(<MessageContent>그룹을 더이상 추가할 수 없습니다.</MessageContent>);
+      return false;
+    }
+
     this.setState(prevState => {
       const { groupList, groupKeyIdx } = prevState;
       const activeGroup = `panel_${groupKeyIdx}`;
@@ -368,12 +379,25 @@ class ChkHospitalItemView extends Component {
     const { detail, groupList, saveType } = this.state;
     const { sagaKey, submitHandlerBySaga, onSaveAfter } = this.props;
 
+    // validation check
+    if (!detail.HOSPITAL_CODE || detail.HOSPITAL_CODE === '') {
+      message.info(<MessageContent>검진기관을 선택해 주세요.</MessageContent>);
+      return false;
+    }
+    if (!detail.CHK_TYPE || detail.CHK_TYPE === '') {
+      message.info(<MessageContent>검진유형을 선택해 주세요.</MessageContent>);
+      return false;
+    }
+    if (!detail.CHK_TYPE_NAME || detail.CHK_TYPE_NAME === '') {
+      message.info(<MessageContent>검진유형명을 입려해 주세요.</MessageContent>);
+      return false;
+    }
+
     if (groupList.length === 0) {
       message.info(<MessageContent>그룹을 추가해 주세요.</MessageContent>);
       return false;
     }
-
-    // validation check
+    
     let isValid = true;
     groupList.every(group => {
       if (group.GROUP === '') {

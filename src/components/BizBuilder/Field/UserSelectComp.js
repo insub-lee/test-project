@@ -24,7 +24,8 @@ class UserSelectComp extends React.Component {
         changeFormData(id, COMP_FIELD, `${result[0].USER_ID}`);
         changeFormData(id, COMP_FIELD.replace('NO', 'NM'), `${result[0].NAME_KOR}`);
       } else {
-        changeFormData(id, COMP_FIELD, `${result[0].NAME_KOR}(${result[0].EMP_NO})`);
+        changeFormData(id, COMP_FIELD, `${result[0].EMP_NO}`);
+        changeFormData(id, COMP_FIELD.replace('NO', 'NAME'), `${result[0].NAME_KOR}`);
         changeFormData(id, COMP_FIELD.replace('NO', 'DEPT'), result[0].DEPT_NAME_KOR);
       }
       this.setState({
@@ -55,7 +56,7 @@ class UserSelectComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, readOnly, colData, isSearch, searchCompRenderer, viewType } = this.props;
+    const { CONFIG, visible, readOnly, colData, isSearch, searchCompRenderer, viewType, formData, COMP_FIELD } = this.props;
     if (isSearch && visible) {
       if (CONFIG.property.searchType !== 'CUSTOM') {
         return searchCompRenderer(this.props);
@@ -66,13 +67,15 @@ class UserSelectComp extends React.Component {
     return visible ? (
       <>
         {readOnly || viewType === 'LIST' ? (
-          <span className={CONFIG.property.className || ''}>{colData}</span>
+          <span className={CONFIG.property.className || ''}>
+            {formData[COMP_FIELD.replace('NO', 'NAME')] ? `${formData[COMP_FIELD.replace('NO', 'NAME')]}(${colData})` : colData}
+          </span>
         ) : (
           <>
             <Input
               readOnly
               placeholder="select me"
-              value={colData}
+              value={formData[COMP_FIELD.replace('NO', 'NAME')] ? `${formData[COMP_FIELD.replace('NO', 'NAME')]}(${colData})` : colData}
               onClick={() => this.setState({ isOpenModal: true })}
               className={CONFIG.property.className || ''}
             />
