@@ -53,11 +53,7 @@ class View extends Component {
                                   ...col,
                                   comp: '',
                                   colSpan: col.span,
-                                  className: `view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''} ${
-                                    viewLayer[0].COMP_FIELD
-                                  }-${groupIndex}-${rowIndex}-${colIndex}${
-                                    col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName.toString().replaceAll(',', ' ')}` : ''
-                                  }`,
+                                  className: `view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''} ${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}${col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName.toString().replaceAll(',', ' ')}` : ''}`,
                                 };
                                 if (col.comp && col.comp.COMP_TAG === 'LABEL') {
                                   return (
@@ -91,12 +87,12 @@ class View extends Component {
                                   </td>
                                 );
                               }
-                              return '';
+                              return null;
                             })}
                         </tr>
                       ) : (
-                        ''
-                      ),
+                          ''
+                        ),
                     )}
                   </tbody>
                 </table>
