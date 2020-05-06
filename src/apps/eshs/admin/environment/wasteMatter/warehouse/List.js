@@ -249,19 +249,20 @@ class List extends Component {
               검색
             </StyledButton>
           </StyledButtonWrapper>
-          <AntdLineTable
-            rowKey={dataSource && dataSource.WAREHOUSE_CD}
-            selectedRowKeys={[]}
-            columns={columns}
-            dataSource={dataSource || []}
-            onRow={record => ({
-              onClick: () => {
-                this.selectedRecord(record);
-              },
-            })}
-            footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
-          />
         </div>
+        <AntdLineTable
+          className="tableWrapper"
+          rowKey={dataSource && dataSource.WAREHOUSE_CD}
+          selectedRowKeys={[]}
+          columns={columns}
+          dataSource={dataSource || []}
+          onRow={record => ({
+            onClick: () => {
+              this.selectedRecord(record);
+            },
+          })}
+          footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
+        />
       </ContentsWrapper>
     );
   }
