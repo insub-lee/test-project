@@ -27,7 +27,7 @@ class RichTextEditor extends Component {
     const { defaultValue } = this.props;
     const { defaultValue: prevValue } = prevProps;
     if (defaultValue !== prevValue) {
-      if (defaultValue[0] && defaultValue[0].hasOwnProperty('DETAIL')) {
+      if (defaultValue && defaultValue[0] && defaultValue[0].hasOwnProperty('DETAIL')) {
         const { DETAIL: model } = defaultValue[0];
         this.setState({ model });
       }
@@ -70,10 +70,10 @@ class RichTextEditor extends Component {
         {readOnly ? (
           <FroalaEditorView model={model} />
         ) : (
-          <React.Fragment>
+          <>
             <FroalaEditor key={readOnly} model={model} onModelChange={this.onModelChange} config={config} />
             <input type="hidden" name={name} value={this.getCurrentValue()} data-type="json" />
-          </React.Fragment>
+          </>
         )}
       </div>
     );
