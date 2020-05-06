@@ -18,6 +18,7 @@ import ViewPage from './viewComponent/ViewPage';
 import ListPage from './viewComponent/ListPage';
 import SearchComp from './viewComponent/SearchComp';
 import ModalPopup from './viewComponent/ModalPopup';
+import ExtraBuilder from './viewComponent/ExtraBuilder';
 
 class BizBuilderBase extends React.Component {
   constructor(props) {
@@ -134,7 +135,6 @@ class BizBuilderBase extends React.Component {
       CustomViewPage,
       CustomListPage,
       CustomPage,
-      CustomWorkProcess,
       viewPageData,
       metaList,
       sagaKey: id,
@@ -143,6 +143,7 @@ class BizBuilderBase extends React.Component {
       viewSeq,
       viewLayer,
     } = this.props;
+    console.debug('BisBuilderBase', this.props);
     let component = <div style={{ minHeight: 300 }} />;
     // if (viewPageData && viewPageData.viewType && metaList && workInfo) {
     if (viewSeq > -1 && viewLayer && viewLayer.length > 0) {
@@ -153,6 +154,7 @@ class BizBuilderBase extends React.Component {
         changeViewPage: this.changeViewPage,
         changeFormData: this.changeFormData,
         changeBuilderModalState: this.changeBuilderModalState,
+        ExtraBuilder,
       };
       switch (viewPageData.viewType.toUpperCase()) {
         case 'INPUT':
@@ -208,8 +210,11 @@ class BizBuilderBase extends React.Component {
       InputCustomButtonsByModal,
       ModifyCustomButtonsByModal,
       ViewCustomButtonsByModal,
+      compProps,
+      conditional,
     } = this.props;
     const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData } = this.state;
+
     return (
       <div>
         <Spin spinning={dataLoading}>{this.componentRenderer()}</Spin>
@@ -234,6 +239,8 @@ class BizBuilderBase extends React.Component {
             ModifyCustomButtons={ModifyCustomButtonsByModal}
             ViewCustomButtons={ViewCustomButtonsByModal}
             // ListCustomButtons={CustomButtonsByModal}
+            compProps={compProps}
+            conditional={conditional}
           />
         </Modal>
       </div>
@@ -266,7 +273,6 @@ BizBuilderBase.propTypes = {
   deleteTask: PropTypes.func,
   deleteExtraTask: PropTypes.func,
   deleteFav: PropTypes.func,
-  setFormData: PropTypes.func,
   addNotifyBuilder: PropTypes.func,
   revisionTask: PropTypes.func,
   getRevisionHistory: PropTypes.func,
@@ -293,6 +299,8 @@ BizBuilderBase.propTypes = {
   ModifyCustomButtonsByModal: PropTypes.func,
   ViewCustomButtonsByModal: PropTypes.func,
   ListCustomButtonsByModal: PropTypes.func,
+  getFileDownload: PropTypes.func,
+  setFormData: PropTypes.func,
 };
 
 BizBuilderBase.defaultProps = {
@@ -330,6 +338,7 @@ BizBuilderBase.defaultProps = {
   ModifyCustomButtonsByModal: undefined,
   ViewCustomButtonsByModal: undefined,
   ListCustomButtonsByModal: undefined,
+  getFileDownload: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -353,6 +362,7 @@ const mapStateToProps = createStructuredSelector({
   viewSeq: selectors.makeSelectViewSeq(),
   viewLayer: selectors.makeSelectViewLayer(),
   isSaveModalClose: selectors.makeSelectIsSaveModalClose(),
+  draftInfo: selectors.makeSelectDraftInfo(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -393,6 +403,8 @@ const mapDispatchToProps = dispatch => ({
   setListSelectRowKeys: (id, list) => dispatch(actions.setListSelectRowKeysByReducer(id, list)),
   removeMultiTask: (id, reloadId, callbackFunc) => dispatch(actions.removeMultiTaskBySaga(id, reloadId, callbackFunc)),
   setIsLoading: (id, flag) => dispatch(actions.setIsLoadingByReducer(id, flag)),
+  getFileDownload: (id, url, fileName) => dispatch(actions.getFileDownload(id, url, fileName)),
+  setFormData: (id, formData) => dispatch(actions.setFormDataByReducer(id, formData)),
 });
 
 const withReducer = injectReducer({ key: `apps.bizmicro.components.BizBuilderBase`, reducer });

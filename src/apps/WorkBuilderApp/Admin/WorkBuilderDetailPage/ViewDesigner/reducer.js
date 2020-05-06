@@ -414,6 +414,7 @@ const reducer = (state = initialState, action) => {
       if (compIdx > -1) {
         let compItem = compData.get(compIdx);
         compItem = compItem.set(key, setValue);
+        const compField = compItem.COMP_FIELD;
         const layerIdxs = compItem.getIn(['CONFIG', 'property', 'layerIdx']);
         const keySet = Object.keys(layerIdxs.toJS());
         if (keySet.length > 0) {
@@ -422,7 +423,11 @@ const reducer = (state = initialState, action) => {
               const viewIdx = compData.findIndex(iNode => iNode.get('COMP_TYPE') === 'VIEW' && iNode.getIn(['CONFIG', 'property', 'layerIdxKey']) === layerKey);
               if (viewIdx > -1) {
                 const keys = layerIdxs.get(layerKey).split('-');
-                if (compData.getIn([viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', key])) {
+                if (
+                  compData.getIn([viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', key]) &&
+                  compData.getIn([viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', 'COMP_FIELD']) ===
+                    compField
+                ) {
                   compData = compData.setIn(
                     [viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', key],
                     setValue,
@@ -439,6 +444,62 @@ const reducer = (state = initialState, action) => {
       }
       let compItem = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp']);
       compItem = compItem.set(key, setValue);
+      return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp'], compItem);
+    }
+    case actionTypes.CHANGE_COMP_CONFIG_REDUCER: {
+      const { groupIndex, rowIndex, colIndex, subKey, key, value } = action;
+      const setValue = typeof value === 'object' ? fromJS(value) : value;
+      let compData = state.get('compData');
+      const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
+      const compIdx = compData.findIndex(node => node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey]) === `${groupIndex}-${rowIndex}-${colIndex}`);
+      if (compIdx > -1) {
+        let compItem = compData.get(compIdx);
+        compItem = compItem.setIn(['CONFIG', subKey, key], setValue);
+        const compField = compItem.COMP_FIELD;
+        const layerIdxs = compItem.getIn(['CONFIG', 'property', 'layerIdx']);
+        const keySet = Object.keys(layerIdxs.toJS());
+        if (keySet.length > 0) {
+          keySet.forEach(layerKey => {
+            if (layerKey !== layerIdxKey) {
+              const viewIdx = compData.findIndex(iNode => iNode.get('COMP_TYPE') === 'VIEW' && iNode.getIn(['CONFIG', 'property', 'layerIdxKey']) === layerKey);
+              if (viewIdx > -1) {
+                const keys = layerIdxs.get(layerKey).split('-');
+                if (
+                  compData.getIn([
+                    viewIdx,
+                    'CONFIG',
+                    'property',
+                    'layer',
+                    'groups',
+                    keys[0],
+                    'rows',
+                    keys[1],
+                    'cols',
+                    keys[2],
+                    'comp',
+                    'CONFIG',
+                    subKey,
+                    key,
+                  ]) &&
+                  compData.getIn([viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', 'COMP_FIELD']) ===
+                    compField
+                ) {
+                  compData = compData.setIn(
+                    [viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', 'CONFIG', subKey, key],
+                    setValue,
+                  );
+                }
+              }
+            }
+          });
+          state = state.set('compData', compData);
+        }
+        return state
+          .setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp'], compItem)
+          .setIn(['compData', compIdx], compItem);
+      }
+      let compItem = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp']);
+      compItem = compItem.setIn(['CONFIG', subKey, key], setValue);
       return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp'], compItem);
     }
     case actionTypes.CHANGE_VIEW_COMPDATA_REDUCER: {
@@ -526,6 +587,7 @@ const reducer = (state = initialState, action) => {
       const compIdx = compData.findIndex(findNode => findNode.getIn(['CONFIG', 'property', 'compKey']) === compKey);
       const metaSeq = compData.getIn([compIdx, 'META_SEQ']) || -1;
       const layerIdxs = compData.getIn([compIdx, 'CONFIG', 'property', 'layerIdx']);
+      const compField = compData.getIn([compIdx, 'COMP_FIELD']);
       if (metaSeq > 0) compData = compData.setIn([compIdx, 'isRemove'], true).deleteIn([compIdx, 'CONFIG', 'property', 'layerIdx']);
       else compData = compData.delete(compIdx);
       if (layerIdxs && layerIdxs.size > 0) {
@@ -533,12 +595,42 @@ const reducer = (state = initialState, action) => {
         keySet.forEach(key => {
           const keyGroup = layerIdxs.get(key).split('-');
           const viewIdx = compData.findIndex(fNode => fNode.get('COMP_TYPE') === 'VIEW' && fNode.getIn(['CONFIG', 'property', 'layerIdxKey']) === key);
-          compData = compData
-            .deleteIn([viewIdx, 'CONFIG', 'property', 'layer', 'groups', Number(keyGroup[0]), 'rows', Number(keyGroup[1]), 'cols', Number(keyGroup[2]), 'comp'])
-            .setIn(
-              [viewIdx, 'CONFIG', 'property', 'layer', 'groups', Number(keyGroup[0]), 'rows', Number(keyGroup[1]), 'cols', Number(keyGroup[2]), 'className'],
-              '',
-            );
+          if (
+            compField ===
+            compData.getIn([
+              viewIdx,
+              'CONFIG',
+              'property',
+              'layer',
+              'groups',
+              Number(keyGroup[0]),
+              'rows',
+              Number(keyGroup[1]),
+              'cols',
+              Number(keyGroup[2]),
+              'comp',
+              'COMP_FIELD',
+            ])
+          ) {
+            compData = compData
+              .deleteIn([
+                viewIdx,
+                'CONFIG',
+                'property',
+                'layer',
+                'groups',
+                Number(keyGroup[0]),
+                'rows',
+                Number(keyGroup[1]),
+                'cols',
+                Number(keyGroup[2]),
+                'comp',
+              ])
+              .setIn(
+                [viewIdx, 'CONFIG', 'property', 'layer', 'groups', Number(keyGroup[0]), 'rows', Number(keyGroup[1]), 'cols', Number(keyGroup[2]), 'className'],
+                '',
+              );
+          }
         });
       }
       if (layerIdx && layerIdx.length > 0) {
@@ -710,14 +802,14 @@ const reducer = (state = initialState, action) => {
       const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
 
       const targetCols = state.getIn([...condition, rowIndex, 'cols']);
-      if (targetCols.map(col => (col ? col.get('span') : 0)).reduce((acc, cul) => acc + cul) !== targetCols.size) {
+      if (targetCols.map(col => (col ? col.get('span') || 1 : 0)).reduce((acc, cul) => acc + cul) !== targetCols.size) {
         window.alert('병합된 셀이 있어 불가능 합니다.');
         return state;
       }
 
       const tempSize = state
         .getIn([...condition, 0, 'cols'])
-        .map(col => col.get('span'))
+        .map(col => (col ? col.get('span') || 1 : 0))
         .reduce((acc, curt) => acc + curt);
 
       compList = compList.map(node => {
@@ -758,7 +850,7 @@ const reducer = (state = initialState, action) => {
 
       const tempSize = state
         .getIn([...condition, 0, 'cols'])
-        .map(col => col.get('span'))
+        .map(col => (col ? col.get('span') || 1 : 0))
         .reduce((acc, curt) => acc + curt);
 
       if (retRows.size === rowIndex + 1) {
@@ -858,7 +950,7 @@ const reducer = (state = initialState, action) => {
       const colSpanSizes = rows
         .map(row => {
           const currentCol = row.getIn(['cols', colIndex]);
-          return currentCol ? currentCol.get('span') : 0;
+          return currentCol ? currentCol.get('span') || 1 : 0;
         })
         .filter(size => size !== 0);
 
@@ -918,7 +1010,7 @@ const reducer = (state = initialState, action) => {
       }
 
       /* Check Using Component */
-      if (state.getIn([...condition, groupIndex, 'rows', rowIndex, 'cols']).some(col => col.get('comp'))) {
+      if (state.getIn([...condition, groupIndex, 'rows', rowIndex, 'cols']).some(col => col && col.get('comp'))) {
         window.alert('Component를 사용하는 경우 삭제 불가능합니다.');
         return state;
       }
@@ -1115,8 +1207,8 @@ const reducer = (state = initialState, action) => {
       const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'];
 
       const currentCol = state.getIn([...condition, rowIndex, 'cols', colIndex]);
-      const colSize = currentCol.get('span');
-      const rowSize = currentCol.get('rowSpan');
+      const colSize = (currentCol && currentCol.get('span')) || 1;
+      const rowSize = (currentCol && currentCol.get('rowSpan')) || 1;
 
       let i = 0;
       let nextRows = state.getIn(condition);

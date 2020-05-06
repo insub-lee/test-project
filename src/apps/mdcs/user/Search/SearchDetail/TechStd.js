@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Checkbox, Select } from 'antd';
 import StyledCheckbox from 'components/FormStuff/Checkbox';
 
-import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 
 const { Option } = Select;
 
@@ -145,98 +145,90 @@ class TechStd extends Component {
         <table>
           <thead>
             <tr>
-              <th colSpan="4">기술표준 정보선택</th>
+              <th colSpan={5}>기술표준 정보선택</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <th>중분류</th>
-              <td>
+              <td colSpan={4}>
                 <Checkbox.Group onChange={this.onChangeTechCategory}>{techSubCategoryItems}</Checkbox.Group>
               </td>
             </tr>
             <tr>
-              <th>SCOPE</th>
+              <th rowSpan={5}>SCOPE</th>
+              <th>지역</th>
               <td>
-                <StyledHtmlTable>
-                  <table>
-                    <tr>
-                      <th>지역</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangeRegion} style={{ width: '150px' }}>
-                          {siteItems}
-                        </Select>
-                      </td>
-                      <th>적용 Line/Site</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangeSite} style={{ width: '150px' }}>
-                          {lineItems}
-                        </Select>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Tech</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangeTech} style={{ width: '150px' }}>
-                          {techItems}
-                        </Select>
-                      </td>
-                      <th>Gen</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangeGen} style={{ width: '150px' }}>
-                          {genItems}
-                        </Select>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Memory Density</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangeMemory} style={{ width: '150px' }}>
-                          {memoryItems}
-                        </Select>
-                      </td>
-                      <th>Pkg</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangePkg} style={{ width: '150px' }}>
-                          {pkgItems}
-                        </Select>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Product</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangeProduct} style={{ width: '150px' }}>
-                          {prdItems}
-                        </Select>
-                      </td>
-                      <th>Module</th>
-                      <td>
-                        <Select allowClear onChange={this.onChangeModule} style={{ width: '150px' }}>
-                          {moduleItems}
-                        </Select>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>Customer</th>
-                      <td colSpan={3}>
-                        <Select allowClear onChange={this.onChangeCustomer} style={{ width: '150px' }}>
-                          {customItems}
-                        </Select>
-                      </td>
-                    </tr>
-                  </table>
-                </StyledHtmlTable>
+                <Select allowClear onChange={this.onChangeRegion} style={{ width: '150px' }}>
+                  {siteItems}
+                </Select>
+              </td>
+              <th>적용 Line/Site</th>
+              <td>
+                <Select allowClear onChange={this.onChangeSite} style={{ width: '150px' }}>
+                  {lineItems}
+                </Select>
+              </td>
+            </tr>
+            <tr>
+              <th>Tech</th>
+              <td>
+                <Select allowClear onChange={this.onChangeTech} style={{ width: '150px' }}>
+                  {techItems}
+                </Select>
+              </td>
+              <th>Gen</th>
+              <td>
+                <Select allowClear onChange={this.onChangeGen} style={{ width: '150px' }}>
+                  {genItems}
+                </Select>
+              </td>
+            </tr>
+            <tr>
+              <th>Memory Density</th>
+              <td>
+                <Select allowClear onChange={this.onChangeMemory} style={{ width: '150px' }}>
+                  {memoryItems}
+                </Select>
+              </td>
+              <th>Pkg</th>
+              <td>
+                <Select allowClear onChange={this.onChangePkg} style={{ width: '150px' }}>
+                  {pkgItems}
+                </Select>
+              </td>
+            </tr>
+            <tr>
+              <th>Product</th>
+              <td>
+                <Select allowClear onChange={this.onChangeProduct} style={{ width: '150px' }}>
+                  {prdItems}
+                </Select>
+              </td>
+              <th>Module</th>
+              <td>
+                <Select allowClear onChange={this.onChangeModule} style={{ width: '150px' }}>
+                  {moduleItems}
+                </Select>
+              </td>
+            </tr>
+            <tr>
+              <th>Customer</th>
+              <td colSpan={3}>
+                <Select allowClear onChange={this.onChangeCustomer} style={{ width: '150px' }}>
+                  {customItems}
+                </Select>
               </td>
             </tr>
             <tr>
               <th>Change</th>
-              <td>
+              <td colSpan={4}>
                 <Checkbox.Group onChange={this.onChangeMajor}>{changeItems}</Checkbox.Group>
               </td>
             </tr>
             <tr>
               <th>FMEA 대상</th>
-              <td>
+              <td colSpan={4}>
                 <Checkbox.Group onChange={this.onChangeFMEA}>{fmeaItems}</Checkbox.Group>
               </td>
             </tr>

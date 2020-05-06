@@ -4,7 +4,7 @@ import { TreeSelect, Button, Table, Popconfirm, Icon, Input, message } from 'ant
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 const AntdLineTable = StyledLineTable(Table);
 class List extends Component {

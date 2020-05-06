@@ -120,15 +120,20 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeWork
   /* Redux Reset By Id */
   yield put(actions.removeReduxState(id));
   let formData = {};
+  let validationData = {};
+  let draftInfo = {};
   if (viewType === 'MODIFY') {
     const response = yield call(Axios.post, `/api/builder/v1/work/taskEdit/${workSeq}/${taskSeq}`, {}, { BUILDER: 'getDetailData' });
     formData = response.data;
+    validationData = response.validationData;
+    draftInfo = response.draftInfo;
   } else {
     const response = yield call(Axios.get, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, {}, { BUILDER: 'getDetailData' });
     formData = response.result;
+    draftInfo = response.draftInfo;
   }
   if (formData) {
-    yield put(actions.setDetailData(id, formData));
+    yield put(actions.setDetailData(id, formData, validationData, draftInfo));
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
     yield put(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps));
   }
@@ -373,12 +378,15 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
     if (validKeyList && validKeyList.length > 0) {
       let validFlag = true;
       let validMsg = '';
-
+      console.debug('확인해리스트', validKeyList);
+      console.debug('이게없다고?', validationData);
       validKeyList.forEach(node => {
         if (!validationData[node].flag) {
+          console.debug('1번', node, validationData[node].flag);
           validFlag = validationData[node].flag;
           validMsg = validationData[node].msg;
         } else if (validationData[node].requiredFlag === false) {
+          console.debug('2번', node, validationData[node].requiredFlag);
           validFlag = validationData[node].requiredFlag;
           validMsg = `${validationData[node].requiredMsg}`;
         }
@@ -403,7 +411,7 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
             ...formData,
             TASK_SEQ: taskSeq,
             WORK_SEQ: workSeq,
-            viewType: 'INPUT',
+            viewType: 'MODIFY',
           },
         },
         { BUILDER: 'callApiBysaveBuilder' },
@@ -480,7 +488,7 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
             ...formData,
             TASK_SEQ: taskSeq,
             WORK_SEQ: workSeq,
-            viewType: 'INPUT',
+            viewType: 'MODIFY',
           },
         },
         { BUILDER: 'callApiBysaveBuilder' },
@@ -537,7 +545,8 @@ function* deleteTask({ id, reloadId, workSeq, taskSeq, changeViewPage, callbackF
     if (changeViewOptIdx !== -1) {
       const changeViewOpt = workInfo.OPT_INFO[changeViewOptIdx];
       const optValue = JSON.parse(changeViewOpt.OPT_VALUE);
-      changeViewPage(id, workSeq, taskSeq, optValue.DELETE);
+      changeViewPage(id, workSeq, -1, optValue.DELETE);
+      // changeViewPage(id, workSeq, taskSeq, optValue.DELETE);
     } else {
       changeViewPage(id, workSeq, taskSeq, 'LIST');
     }
@@ -562,7 +571,7 @@ function* revisionTask({ id, workSeq, taskSeq, viewType, revisionType, extraProp
   const response = yield call(Axios.post, `/api/builder/v1/work/revision/${workSeq}/${taskSeq}`, { PARAM: { revisionType } }, { BUILDER: 'revisionTask' });
   const newTaskSeq = response.data.TASK_SEQ;
   yield put(actions.setTaskSeq(id, newTaskSeq));
-  yield put(actions.setDetailData(id, response.data));
+  yield put(actions.setDetailData(id, response.data, response.validationData));
   yield put(actions.getBuilderData(id, workSeq, newTaskSeq, viewType, extraProps));
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, workSeq, newTaskSeq, viewType, extraProps);
@@ -655,6 +664,22 @@ function* removeMultiTask({ id, reloadId, callbackFunc }) {
   }
 }
 
+function* getFileDownload({ url, fileName }) {
+  const blobResponse = yield call(Axios.getDown, url);
+
+  if (window.navigator && window.navigator.msSaveBlob) {
+    window.navigator.msSaveBlob(blobResponse, fileName);
+  } else {
+    const fileUrl = window.URL.createObjectURL(blobResponse);
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+}
+
 export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.sagaKey}`, getBuilderData);
   yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.sagaKey}`, getExtraApiData);
@@ -677,6 +702,7 @@ export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.SUBMIT_EXTRA}_${arg.sagaKey || arg.id}`, submitExtraHandler);
   yield takeLatest(`${actionTypes.REDIRECT_URL}_${arg.sagaKey || arg.id}`, redirectUrl);
   yield takeLatest(`${actionTypes.REMOVE_MULTI_TASK_SAGA}_${arg.sagaKey}`, removeMultiTask);
+  yield takeEvery(`${actionTypes.GET_FILE_DOWNLOAD}_${arg.sagaKey || arg.id}`, getFileDownload);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);

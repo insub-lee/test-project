@@ -21,7 +21,7 @@ class View extends Component {
   };
 
   render() {
-    const { viewLayer, formData } = this.props;
+    const { viewLayer, formData, viewType } = this.props;
     if (viewLayer && viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const {
@@ -31,42 +31,68 @@ class View extends Component {
         <>
           {groups.map((group, groupIndex) => (
             <div key={group.key}>
-              {group.useTitle && <GroupTitle title={group.title} />}
+              {group.useTitle && <GroupTitle viewType={viewType} title={group.title} />}
               <Group key={group.key} className={`view-designer-group group-${groupIndex} ${viewLayer[0].COMP_FIELD}-${groupIndex}`}>
                 <table className={`view-designer-table table-${groupIndex}`}>
+                  {group.widths && group.widths.length > 0 && (
+                    <colgroup>
+                      {group.widths.map(widthsItem => (
+                        <col width={`${widthsItem}%`} />
+                      ))}
+                    </colgroup>
+                  )}
                   <tbody>
                     {group.rows.map((row, rowIndex) =>
                       row ? (
                         <tr key={row.key} className={`view-designer-row row-${rowIndex} ${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`}>
                           {row.cols &&
-                            row.cols.map((col, colIndex) =>
-                              col ? (
-                                <td
-                                  key={col.key}
-                                  {...col}
-                                  comp=""
-                                  colSpan={col.span}
-                                  className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''} ${
+                            row.cols.map((col, colIndex) => {
+                              if (col) {
+                                const colAttribute = {
+                                  key: col.key,
+                                  ...col,
+                                  comp: '',
+                                  colSpan: col.span,
+                                  className: `view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''} ${
                                     viewLayer[0].COMP_FIELD
                                   }-${groupIndex}-${rowIndex}-${colIndex}${
                                     col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName.toString().replaceAll(',', ' ')}` : ''
-                                  }`}
-                                >
-                                  <Contents>
-                                    {col.comp &&
-                                      this.renderComp(
-                                        col.comp,
-                                        col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : undefined,
-                                        true,
-                                        `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
-                                        `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
-                                      )}
-                                  </Contents>
-                                </td>
-                              ) : (
-                                ''
-                              ),
-                            )}
+                                  }`,
+                                };
+                                if (col.comp && col.comp.COMP_TAG === 'LABEL') {
+                                  return (
+                                    <th {...colAttribute}>
+                                      <Contents>
+                                        {col.comp &&
+                                          this.renderComp(
+                                            col.comp,
+                                            col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : undefined,
+                                            true,
+                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
+                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
+                                          )}
+                                      </Contents>
+                                    </th>
+                                  );
+                                }
+
+                                return (
+                                  <td {...colAttribute}>
+                                    <Contents>
+                                      {col.comp &&
+                                        this.renderComp(
+                                          col.comp,
+                                          col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : undefined,
+                                          true,
+                                          `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
+                                          `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
+                                        )}
+                                    </Contents>
+                                  </td>
+                                );
+                              }
+                              return '';
+                            })}
                         </tr>
                       ) : (
                         ''

@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import List from './List';
 
-class EshsBasicCode extends Component {
+class GasType extends Component {
   componantDidMount() {}
 
   render() {
-    return <BizMicroDevBase sagaKey="eshsBasicCode" component={List} />;
+    return <BizMicroDevBase sagaKey="eshsGasType" component={List} />;
   }
 }
 
-EshsBasicCode.propTypes = {};
-EshsBasicCode.defaultProps = {};
+GasType.propTypes = {};
+GasType.defaultProps = {};
 
-export default EshsBasicCode;
+export default GasType;

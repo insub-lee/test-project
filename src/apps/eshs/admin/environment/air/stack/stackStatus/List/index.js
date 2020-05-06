@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm } from 'antd';
+import { Table, Popconfirm, Button } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -8,10 +8,10 @@ import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
+import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import Contents from 'components/BizBuilder/Common/Contents';
-import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -19,9 +19,10 @@ class ListPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      initLoading: true,
       isMultiDelete: false,
       isRowNo: false,
+      isOnRowClick: false,
+      rowClickView: 'VIEW',
     };
   }
 
@@ -29,12 +30,18 @@ class ListPage extends Component {
     const { workInfo } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
+    let isOnRowClick = false;
+    let rowClickView = 'VIEW';
     if (workInfo && workInfo.OPT_INFO) {
       workInfo.OPT_INFO.forEach(opt => {
         if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
         if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNo = true;
+        if (opt.OPT_SEQ === ON_ROW_CLICK_OPT_SEQ && opt.ISUSED === 'Y') {
+          isOnRowClick = true;
+          rowClickView = opt.OPT_VALUE === '' ? 'VIEW' : opt.OPT_VALUE;
+        }
       });
-      this.setState({ isMultiDelete, isRowNo });
+      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
     }
   };
 
@@ -87,6 +94,7 @@ class ListPage extends Component {
           dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
           title: node.comp.CONFIG.property.HEADER_NAME_KOR,
           width: '150px', // builder style 안정화시 수정할것
+          // width: (node.style && node.style.width) || undefined,
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
         });
       }
@@ -99,16 +107,43 @@ class ListPage extends Component {
     setListSelectRowKeys(sagaKey, selectedRowKeys);
   };
 
+  /* 
+      신규추가 
+      목적 : ListGroup 내에서 Row를 클릭시 원하는 뷰로 이동할 수 있는 Config를 지원하기 위해 생성
+      타입 : func (추가사항. antd - Table Props 참조)
+      create by. JeongHyun
+  */
+  onRowClick = record => {
+    const { sagaKey: id, isBuilderModal, changeBuilderModalState, changeViewPage } = this.props;
+    const { rowClickView } = this.state;
+    return {
+      onClick: () => {
+        if (isBuilderModal) {
+          changeBuilderModalState(true, rowClickView, record.WORK_SEQ, record.TASK_SEQ, record);
+        } else {
+          changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, rowClickView);
+        }
+      },
+    };
+  };
+
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, isModalChange } = this.props;
-    const { isMultiDelete } = this.state;
+    const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
+    const { isMultiDelete, isOnRowClick } = this.state;
     const columns = this.setColumns(group.rows[0].cols);
     let rowSelection = false;
+    let onRow = false;
     if (isMultiDelete) {
       rowSelection = {
         selectedRowKeys: listSelectRowKeys,
         onChange: this.onSelectChange,
       };
+    }
+    if (typeof customOnRowClick === 'function') {
+      onRow = record => ({ onClick: () => customOnRowClick(record) });
+    }
+    if (isOnRowClick) {
+      onRow = this.onRowClick;
     }
     return (
       <div key={group.key}>
@@ -121,13 +156,8 @@ class ListPage extends Component {
             columns={columns}
             dataSource={listData || []}
             rowSelection={rowSelection}
-            pagination={{ pageSize: 50 }}
-            scroll={{ x: '800px', y: '800px' }}
-            onRow={record => ({
-              onClick: () => {
-                isModalChange(record);
-              },
-            })}
+            rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
+            onRow={onRow}
           />
         </Group>
       </div>
@@ -140,12 +170,13 @@ class ListPage extends Component {
       viewLayer,
       formData,
       workFlowConfig,
-      loadingComplete,
       viewPageData,
       changeViewPage,
       getListData,
       workSeq,
       removeMultiTask,
+      isBuilderModal,
+      changeBuilderModalState,
     } = this.props;
     const { isMultiDelete } = this.state;
 
@@ -159,15 +190,6 @@ class ListPage extends Component {
         info: { PRC_ID },
       } = workFlowConfig;
 
-      // 로딩
-      if (this.props.isLoading === false && this.state.initLoading) {
-        this.setState(
-          {
-            initLoading: false,
-          },
-          () => loadingComplete(),
-        );
-      }
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
@@ -186,27 +208,31 @@ class ListPage extends Component {
                             {group.rows.map((row, rowIndex) => (
                               <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
                                 {row.cols &&
-                                  row.cols.map((col, colIndex) => (
-                                    <td
-                                      key={col.key}
-                                      {...col}
-                                      comp=""
-                                      colSpan={col.span}
-                                      className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
-                                    >
-                                      <Contents>
-                                        {col.comp &&
-                                          this.renderComp(
-                                            col.comp,
-                                            col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
-                                            true,
-                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
-                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
-                                            group.type === 'searchGroup',
-                                          )}
-                                      </Contents>
-                                    </td>
-                                  ))}
+                                  row.cols.map((col, colIndex) =>
+                                    col ? (
+                                      <td
+                                        key={col.key}
+                                        {...col}
+                                        comp=""
+                                        colSpan={col.span}
+                                        className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
+                                      >
+                                        <Contents>
+                                          {col.comp &&
+                                            this.renderComp(
+                                              col.comp,
+                                              col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
+                                              true,
+                                              `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
+                                              `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
+                                              group.type === 'searchGroup',
+                                            )}
+                                        </Contents>
+                                      </td>
+                                    ) : (
+                                      ''
+                                    ),
+                                  )}
                               </tr>
                             ))}
                           </tbody>
@@ -214,9 +240,9 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
+                          <Button type="primary" className="btn-primary" onClick={() => getListData(id, workSeq)}>
                             Search
-                          </StyledButton>
+                          </Button>
                         </div>
                       )}
                     </Group>
@@ -233,6 +259,7 @@ class ListPage extends Component {
 }
 
 ListPage.propTypes = {
+  workInfo: PropTypes.object,
   sagaKey: PropTypes.string,
   workFlowConfig: PropTypes.object,
   workPrcProps: PropTypes.object,
@@ -240,11 +267,14 @@ ListPage.propTypes = {
   formData: PropTypes.object,
   processRule: PropTypes.object,
   getProcessRule: PropTypes.func,
-  onCloseModleHandler: PropTypes.func,
+  onCloseModalHandler: PropTypes.func,
   saveTask: PropTypes.func,
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
-  loadingComplete: PropTypes.func,
+  isBuilderModal: PropTypes.bool,
+  changeBuilderModalState: PropTypes.func,
+  changeViewPage: PropTypes.func,
+  customOnRowClick: PropTypes.any,
 };
 
 ListPage.defaultProps = {
@@ -253,7 +283,7 @@ ListPage.defaultProps = {
       PRC_ID: -1,
     },
   },
-  loadingComplete: () => {},
+  customOnRowClick: undefined,
 };
 
 export default ListPage;

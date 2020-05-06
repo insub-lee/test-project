@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
 
 class SelectReadComp extends Component {
   componentDidMount() {
@@ -17,10 +18,23 @@ class SelectReadComp extends Component {
   }
 
   render() {
-    const { extraApiData, colData } = this.props;
+    const { extraApiData, colData, visible } = this.props;
     const apiData = extraApiData[`label_${colData}`];
-    return <label>{apiData ? apiData.fullPath_Nm.FULLPATH_NM : ''}</label>;
+
+    return visible && <label>{apiData ? apiData.fullPath_Nm && apiData.fullPath_Nm.FULLPATH_NM : ''}</label>;
   }
 }
+
+SelectReadComp.propTypes = {
+  extraApiData: PropTypes.object,
+  getExtraApiData: PropTypes.func,
+  sagaKey: PropTypes.object,
+  colData: PropTypes.any,
+  visible: PropTypes.bool,
+};
+
+SelectReadComp.defaultProps = {
+  visible: false,
+};
 
 export default SelectReadComp;

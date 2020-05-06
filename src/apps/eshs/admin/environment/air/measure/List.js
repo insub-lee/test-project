@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Table, message, Select } from 'antd';
+import { Table, Select, message } from 'antd';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+
 import Moment from 'moment';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import Sketch from 'components/BizBuilder/Sketch';
-import Group from 'components/BizBuilder/Sketch/Group';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 
-const AntdTable = StyledAntdTable(Table);
+const AntdLineTable = StyledLineTable(Table);
+const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
 Moment.locale('ko');
 
@@ -26,35 +28,18 @@ class List extends Component {
       seq: '1',
       site: 716,
       selectGubun: '1',
+      monthArray: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
     };
   }
 
   componentDidMount() {
+    this.yearOption();
     this.listDataApi();
   }
 
-  initData = () => {
-    const { result, columns } = this.props;
-    const colPlus = result && result.gasType && result.gasType.list;
-    const setCol = columns;
-    colPlus.forEach(itme => {
-      setCol.push({
-        dataIndex: itme.GAS_CD.toLowerCase(),
-        title: itme.GAS_NM,
-        align: 'center',
-      });
-    });
-
-    this.setState({
-      siteList: result && result.site && result.site.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 635 && f.USE_YN === 'Y'),
-      measureList: result && result.measure && result.measure.list,
-      columnsPlus: setCol,
-    });
-  };
-
   listDataApi = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
-    // const { yyyy, mm, seq, site } = this.state;
+    const { yyyy, mm, seq, site } = this.state;
     const apiAry = [
       {
         key: 'site',
@@ -66,13 +51,32 @@ class List extends Component {
         url: '/api/eshs/v1/common/eshsgastype',
         type: 'GET',
       },
-      // {
-      //   key: 'measure',
-      //   url: `/api/eshs/v1/common/eshsmeasure?YYYY=${yyyy}&MM=${mm}&SEQ=${seq}&SITE=${site}`,
-      //   type: 'GET',
-      // },
+      {
+        key: 'measure',
+        url: `/api/eshs/v1/common/eshsmeasure?YYYY=${yyyy}&MM=${mm}&SEQ=${seq}&SITE=${site}`,
+        type: 'GET',
+      },
     ];
     getCallDataHandler(id, apiAry, this.initData);
+  };
+
+  initData = () => {
+    const { result, columns } = this.props;
+    const colPlus = result && result.gasType && result.gasType.list;
+    const setCol = [];
+    colPlus.forEach(itme => {
+      setCol.push({
+        dataIndex: itme.GAS_CD.toLowerCase(),
+        title: itme.GAS_NM,
+        align: 'center',
+      });
+    });
+    const nCol = [...columns, ...setCol];
+    this.setState({
+      siteList: result && result.site && result.site.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 635 && f.USE_YN === 'Y'),
+      measureList: result && result.measure && result.measure.list,
+      columnsPlus: nCol,
+    });
   };
 
   isSearch = () => {
@@ -90,12 +94,7 @@ class List extends Component {
 
   listData = () => {
     const { result } = this.props;
-    this.setState(
-      {
-        measureList: result && result.measure && result.measure.list,
-      },
-      () => this.renderTable(),
-    );
+    this.setState({ measureList: result && result.measure && result.measure.list });
   };
 
   chagneSelect = (value, option) => {
@@ -104,57 +103,14 @@ class List extends Component {
     });
   };
 
-  renderTable = () => {
-    const { measureList, columnsPlus } = this.state;
-    const { result } = this.props;
-
-    return (
-      <AntdTable
-        style={{ cursor: 'pointer' }}
-        rowKey={measureList && `${(measureList.YYYY, measureList.MM, measureList.SEQ, measureList.STACK_CD)}`}
-        columns={columnsPlus}
-        dataSource={measureList || []}
-        bordered
-        pagination={{ pageSize: 100 }}
-        scroll={{ y: 500 }}
-        footer={() => <div style={{ textAlign: 'center' }}>{`${measureList && measureList[0] ? measureList.length : 0} 건`}</div>}
-      />
-    );
-  };
-
   yearOption = () => {
-    // as-is에서는 연도 고정값 추후 검토 요망
-    const tempYear = [];
-    const startYear = 2000;
-    const endYear = 2015;
+    const yearArray = [];
+    const startYear = 2005;
+    const endYear = Number(Moment().format('YYYY')) + 1;
     for (let i = startYear; i <= endYear; i += 1) {
-      tempYear.push(i);
+      yearArray.push(i);
     }
-    return tempYear.map(item => (
-      <Option value={`${item}`} key="yyyy">
-        {item}
-      </Option>
-    ));
-  };
-
-  monthOption = () => {
-    const month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    const tmpMonth = month.map(i => (
-      <Option value={i < 10 ? `0${i}` : i} key="mm">
-        {i < 10 ? `0${i}` : i}
-      </Option>
-    ));
-    return tmpMonth;
-  };
-
-  siteOption = () => {
-    const { siteList } = this.state;
-    const site = siteList.map(item => (
-      <Option value={item.NODE_ID} key="site">
-        {item.NAME_KOR}
-      </Option>
-    ));
-    return site;
+    this.setState({ yearArray });
   };
 
   isExcelUpload = () => {
@@ -162,58 +118,82 @@ class List extends Component {
   };
 
   render() {
+    const { measureList, columnsPlus, siteList, yearArray, monthArray } = this.state;
+
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <StyledViewDesigner>
-          <Sketch>
-            <Group>
-              <div>
-                조회구분
-                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.selectGubun}>
-                  <Option value="1" key="selectGubun">
-                    농도
-                  </Option>
-                  <Option value="2" key="selectGubun">
-                    중량
-                  </Option>
-                </Select>
-                지역
-                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.site}>
-                  {this.siteOption()}
-                </Select>
-                기간(년 월)
-                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.yyyy}>
-                  {this.yearOption()}
-                </Select>
-                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.mm}>
-                  {this.monthOption()}
-                </Select>
-                측정회차(월)
-                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
-                  <Option value="1" key="seq">
-                    1
-                  </Option>
-                  <Option value="2" key="seq">
-                    2
-                  </Option>
-                </Select>
-                <StyledButton className="btn-primary btn-first" onClick={() => this.isSearch()}>
-                  검색
-                </StyledButton>
-                <StyledButton className="btn-primary btn-first" onClick={() => this.isExcelUpload()}>
-                  엑셀 올리기
-                </StyledButton>
-              </div>
-              {this.renderTable()}
-            </Group>
-          </Sketch>
-        </StyledViewDesigner>
-      </div>
+      <ContentsWrapper>
+        <div className="selSaveWrapper alignLeft">
+          <span className="textLabel">조회구분</span>
+          <AntdSelect className="selectMid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.selectGubun}>
+            <Option value="1" key="selectGubun">
+              농도
+            </Option>
+            <Option value="2" key="selectGubun">
+              중량
+            </Option>
+          </AntdSelect>
+          <span className="textLabel">지역</span>
+          <AntdSelect onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.site}>
+            {siteList &&
+              siteList.map(item => (
+                <Option value={item.NODE_ID} key="site">
+                  {item.NAME_KOR}
+                </Option>
+              ))}
+          </AntdSelect>
+          <span className="textLabel">기간(년 월)</span>
+          <AntdSelect className="selectMid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.yyyy}>
+            {yearArray &&
+              yearArray.map(item => (
+                <Option value={`${item}`} key="yyyy">
+                  {item}
+                </Option>
+              ))}
+          </AntdSelect>
+          <AntdSelect className="selectMid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.mm}>
+            {monthArray.map(i => (
+              <Option value={i} key="mm">
+                {`${i}월`}
+              </Option>
+            ))}
+          </AntdSelect>
+          <span className="textLabel">측정회차(월)</span>
+          <AntdSelect className="select-mid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
+            <Option value="1" key="seq">
+              1
+            </Option>
+            <Option value="2" key="seq">
+              2
+            </Option>
+          </AntdSelect>
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary btn-first" onClick={() => this.isSearch()}>
+              검색
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={() => this.isExcelUpload()}>
+              엑셀 올리기
+            </StyledButton>
+          </StyledButtonWrapper>
+        </div>
+        <AntdLineTable
+          className="tableWrapper"
+          rowKey={measureList && `${(measureList.YYYY, measureList.MM, measureList.SEQ, measureList.STACK_CD)}`}
+          columns={columnsPlus}
+          dataSource={measureList || []}
+          scroll={{ x: columnsPlus.length * 150 }}
+          footer={() => <div style={{ textAlign: 'center' }}>{`${measureList && measureList[0] ? measureList.length : 0} 건`}</div>}
+        />
+      </ContentsWrapper>
     );
   }
 }
 
-List.propTypes = {};
+List.propTypes = {
+  sagaKey: PropTypes.string,
+  getCallDataHandler: PropTypes.func,
+  result: PropTypes.any,
+  columns: PropTypes.array,
+};
 
 List.defaultProps = {
   columns: [

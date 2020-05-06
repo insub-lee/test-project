@@ -9,7 +9,7 @@ import StyledInput from 'components/FormStuff/Input';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledDatePicker from 'components/FormStuff/DatePicker';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
-import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 
 const AntdModal = StyledModalWrapper(Modal);
@@ -338,7 +338,7 @@ class SearchBasic extends Component {
                   closeBtnFunc={this.closeBtnFunc}
                   clickCoverView={this.clickCoverView}
                   ViewCustomButtons={({ closeBtnFunc }) => (
-                    <div style={{ textAlign: 'center' }}>
+                    <div style={{ textAlign: 'center', marginTop: '12px' }}>
                       <StyledButton className="btn-primary" onClick={closeBtnFunc}>
                         닫기
                       </StyledButton>
@@ -367,7 +367,7 @@ class SearchBasic extends Component {
                 viewMetaSeq={coverView.viewMetaSeq}
                 onCloseCoverView={this.onCloseCoverView}
                 ViewCustomButtons={({ onCloseCoverView }) => (
-                  <div style={{ textAlign: 'center' }}>
+                  <div style={{ textAlign: 'center', marginTop: '12px' }}>
                     <StyledButton className="btn-primary" onClick={onCloseCoverView}>
                       닫기
                     </StyledButton>

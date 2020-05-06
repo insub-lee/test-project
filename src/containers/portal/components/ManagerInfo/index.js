@@ -83,11 +83,7 @@ class ManagerInfo extends React.Component {
           overlayClassName="managerPopover"
           trigger={trigger === 'click' || trigger === 'hover' ? trigger : 'hover'}
         >
-          <Button
-            style={{
-              verticalAlign: 'middle',
-            }}
-          />
+          <Button />
         </Popover>
 
         <Organization isModal show={show} closeModal={this.closeModal} userProfile={userProfile} isProfile />

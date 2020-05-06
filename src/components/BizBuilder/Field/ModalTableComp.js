@@ -13,6 +13,7 @@ class ModalTableComp extends React.Component {
     this.state = {
       modal: false,
       nColumns: [],
+      customColData: '',
     };
   }
 
@@ -88,13 +89,15 @@ class ModalTableComp extends React.Component {
       COMP_FIELD,
       CONFIG: { property },
       changeValidationData,
+      isSearch,
+      customListColdataFlag,
     } = this.props;
 
     if (property && property.columns) {
       property.columns.forEach(item => {
         if (item.changeFormDataYN === true) {
           changeFormData(id, item.targetIndex || item.dataIndex, record[item.dataIndex]);
-          if ((item.targetIndex || item.dataIndex) === COMP_FIELD && property && property.isRequired) {
+          if ((item.targetIndex || item.dataIndex) === COMP_FIELD.trim() && property && property.isRequired) {
             changeValidationData(
               id,
               COMP_FIELD,
@@ -102,10 +105,15 @@ class ModalTableComp extends React.Component {
               record[item.dataIndex].trim().length > 0 ? '' : `${COMP_FIELD}항목은 필수 입력입니다.`,
             );
           }
+          if ((item.targetIndex || item.dataIndex) === COMP_FIELD.trim() && isSearch) {
+            this.handleOnChangeSearch(record[item.dataIndex]);
+          }
+        }
+        if ((item.targetIndex || item.dataIndex) === COMP_FIELD.trim() && customListColdataFlag) {
+          this.setState({ customColData: record[item.dataIndex] });
         }
       });
     }
-
     this.handleModalVisible();
   };
 
@@ -173,15 +181,28 @@ class ModalTableComp extends React.Component {
     this.setState({ searchText: '' });
   };
 
+  handleOnChangeSearch = value => {
+    const { sagaKey, COMP_FIELD, changeSearchData } = this.props;
+    const searchText = value.length > 0 ? `AND W.${COMP_FIELD} = '${value}'` : '';
+    changeSearchData(sagaKey, COMP_FIELD, searchText);
+  };
+
   render() {
-    const { CONFIG, visible, colData, readOnly } = this.props;
+    const { CONFIG, visible, colData, readOnly, customListColdataFlag } = this.props;
+    const { customColData } = this.state;
     return visible ? (
       <>
         {readOnly || CONFIG.property.readOnly ? (
           <span>{colData}</span>
         ) : (
           <>
-            <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
+            <Input
+              value={customListColdataFlag ? customColData : colData}
+              readOnly
+              className={CONFIG.property.className || ''}
+              style={{ width: 150 }}
+              onClick={this.handleModalVisible}
+            />
             <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
             <Modal visible={this.state.modal} width={800} onCancel={this.handleModalVisible} footer={[]}>
               {this.state.modal && this.modalTableRender()}
@@ -204,9 +225,12 @@ ModalTableComp.propTypes = {
   getExtraApiData: PropTypes.func,
   changeFormData: PropTypes.func,
   changeValidationData: PropTypes.func,
+  changeSearchData: PropTypes.func,
   columns: PropTypes.array,
   extraApiData: PropTypes.any,
   readOnly: PropTypes.bool,
+  isSearch: PropTypes.bool,
+  customListColdataFlag: PropTypes.bool,
 };
 ModalTableComp.defaultProps = {
   columns: [
@@ -223,5 +247,9 @@ ModalTableComp.defaultProps = {
       width: 250,
     },
   ],
+  changeValidationData: () => {},
+  changeFormData: () => {},
+  customListColdataFlag: false, // true => table rowSelected COMP_FIELD값이 INPUT값 설정
+  colData: '',
 };
 export default ModalTableComp;

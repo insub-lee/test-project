@@ -1,5 +1,13 @@
 import styled, { css } from 'styled-components';
 
+const btnRadiusNone = css`
+  border-radius: 0;
+`;
+
+const btnRadius = css`
+  border-radius: 30px;
+`;
+
 const btnLarge = css`
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -12,13 +20,13 @@ const btnSmall = css`
   line-height: 1.5;
 `;
 
-const btnSmallMid = css`
+const btnXsmall = css`
   padding: 0.2rem 0.7rem;
   font-size: 0.75rem;
   line-height: 1.5;
 `;
 
-const btnXsmall = css`
+const btnXxsmall = css`
   padding: 1px 0.844rem;
   font-size: 0.7rem;
   line-height: 1.5;
@@ -71,11 +79,11 @@ const StyledButton = styled.button`
   border: 1px solid transparent;
   background-color: transparent;
   cursor: pointer;
-  padding: 0.5rem 1.125rem;
+  padding: 0.4rem 1.125rem;
   font-size: 0.8125rem;
   line-height: 1.47;
-  border-radius: 30px;
   font-weight: 400;
+  border-radius: 3px;
   color: #212529;
   text-align: center;
   vertical-align: middle;
@@ -83,6 +91,14 @@ const StyledButton = styled.button`
 
   &:focus {
     border: 1px solid transparent;
+  }
+
+  &.btn-radius-none {
+    ${btnRadiusNone}
+  }
+
+  &.btn-radius {
+    ${btnRadius}
   }
 
   &.btn-lg {
@@ -93,12 +109,12 @@ const StyledButton = styled.button`
     ${btnSmall}
   }
 
-  &.btn-sm2 {
-    ${btnSmallMid}
-  }
-
   &.btn-xs {
     ${btnXsmall}
+  }
+
+  &.btn-xxs {
+    ${btnXxsmall}
   }
 
   &.btn-primary {
@@ -118,6 +134,10 @@ const StyledButton = styled.button`
   }
 
   &.btn-first {
+    margin-right: 5px;
+  }
+
+  &.mr5 {
     margin-right: 5px;
   }
 `;

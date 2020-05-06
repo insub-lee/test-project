@@ -1,7 +1,13 @@
 import styled from 'styled-components';
 
 const StyledSearchWrap = styled.div`
-  padding: 5px;
+  padding: 20px 20px 0 20px;
+
+  .search-inner {
+    .input-label {
+      padding: 0 10px;
+    }
+  }
 
   .search-group-layer {
     margin: 10px 0;
@@ -17,6 +23,14 @@ const StyledSearchWrap = styled.div`
         margin-left: 0;
       }
     }
+  }
+
+  .use-label {
+    margin-left: 10px;
+  }
+
+  .input-first {
+    margin-right: 5px;
   }
 
   .input-width100 {
@@ -65,7 +79,7 @@ const StyledSearchWrap = styled.div`
     .ant-input {
       display: inline-block;
       vertical-align: top;
-      width: 300px;
+      width: 100%;
     }
   }
 `;

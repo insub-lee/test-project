@@ -47,12 +47,7 @@ function CustomValueSelectComp(props) {
   }
 
   return (
-    <Select
-      className={CONFIG.property.className || ''}
-      onChange={value => valueHandler(values, value)}
-      style={{ width: 300, marginRight: 10 }}
-      value={defaultValue.text}
-    >
+    <Select className={CONFIG.property.className || ''} onChange={value => valueHandler(values, value)} style={{ width: '100%' }} value={defaultValue.text}>
       {values.map(({ value, text }, idx) => (
         <Option key={`${idx}_${value}_${text}`} value={idx}>
           {text}

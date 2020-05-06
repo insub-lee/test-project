@@ -76,10 +76,12 @@ export const getDetailData = (id, workSeq, taskSeq, viewType, extraProps, change
   changeWorkflowFormData,
 });
 
-export const setDetailData = (id, data) => ({
+export const setDetailData = (id, data, validationData, draftInfo) => ({
   type: actionTypes.SET_DETAIL_DATA,
   id,
   data,
+  validationData,
+  draftInfo,
 });
 
 export const getProcessRule = (id, payload) => ({
@@ -340,3 +342,11 @@ export const setBuilderModalByReducer = (id, flag, builderModalSetting, isSaveMo
 });
 
 export const setIsLoadingByReducer = (id, flag) => ({ type: actionTypes.SET_IS_LOADING_REDUCER, id, flag });
+
+export const getFileDownload = (id, url, fileName) => ({
+  type: `${actionTypes.GET_FILE_DOWNLOAD}_${id}`,
+  url,
+  fileName,
+});
+
+export const setFormDataByReducer = (id, formData) => ({ type: actionTypes.SET_FORMDATA_REDUCER, id, formData });

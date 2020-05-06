@@ -118,8 +118,11 @@ const reducer = (state = initialState, action) => {
       return state.setIn(['bizBuilderBase', id, 'extraApiData', apiKey], response);
     }
     case actionTypes.SET_DETAIL_DATA: {
-      const { id, data } = action;
-      return state.setIn(['bizBuilderBase', id, 'formData'], fromJS(data));
+      const { id, data, validationData, draftInfo } = action;
+      return state
+        .setIn(['bizBuilderBase', id, 'formData'], fromJS(data))
+        .setIn(['bizBuilderBase', id, 'validationData'], fromJS(validationData))
+        .setIn(['bizBuilderBase', id, 'draftInfo'], fromJS(draftInfo));
     }
     case actionTypes.SET_TASK_SEQ: {
       const { id, taskSeq } = action;
@@ -259,6 +262,10 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SET_IS_LOADING_REDUCER: {
       const { id, flag } = action;
       return state.setIn(['bizBuilderBase', id, 'isLoading'], flag);
+    }
+    case actionTypes.SET_FORMDATA_REDUCER: {
+      const { id, formData } = action;
+      return state.setIn(['bizBuilderBase', id, 'formData'], fromJS(formData));
     }
     default:
       return state;

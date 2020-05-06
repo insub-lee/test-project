@@ -1,29 +1,34 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Modal, Table, DatePicker, Input, Button, message } from 'antd';
+import { Modal, Table, DatePicker, Input, Select, message } from 'antd';
 
-import StyledButton from 'apps/mdcs/styled/StyledButton';
-import moment from 'moment';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import Sketch from 'components/BizBuilder/Sketch';
-import Group from 'components/BizBuilder/Sketch/Group';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
-import Highlighter from 'react-highlight-words';
+import Moment from 'moment';
 import BizBuilderBase from 'components/BizBuilderBase';
-import { SearchOutlined } from '@ant-design/icons';
 
-const AntdTable = StyledAntdTable(Table);
+const AntdSelect = StyledSelect(Select);
+const AntdLineTable = StyledLineTable(Table);
+const AntdModal = StyledContentsModal(Modal);
+const AntdSearch = StyledSearchInput(Input.Search);
+
+const { Option } = Select;
 const { RangePicker } = DatePicker;
 
-moment.locale('ko');
+Moment.locale('ko');
 
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dates: [moment(), moment()],
+      dates: [],
       dateStrings: [],
       takeOutList: [],
       taskSeq: -1,
@@ -31,15 +36,20 @@ class List extends Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiAry = [{ key: 'siteItem', url: `/api/eshs/v1/common/eshsBuilderCustomSearch/${4521}`, type: 'POST' }];
+    getCallDataHandler(id, apiAry);
+  }
 
   searchData = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
-    const { dateStrings } = this.state;
+    const { dateStrings, itemCd, site } = this.state;
+    const params = `FROM_DATE=${dateStrings[0] || ''}&TO_DATE=${dateStrings[1] || ''}&ITEM_CD=${itemCd || ''}&SITE=${site}`;
     const apiAry = [
       {
         key: 'TakeOutList',
-        url: `/api/eshs/v1/common/eshsTakeOutList?FROM_DATE=${dateStrings[0] || ''}&TO_DATE=${dateStrings[1] || ''}`,
+        url: `/api/eshs/v1/common/eshsTakeOutList?${params}`,
         type: 'GET',
       },
     ];
@@ -62,67 +72,24 @@ class List extends Component {
     });
   };
 
+  handleItemModalVisible = () => {
+    const { itemModal } = this.state;
+    this.setState({
+      itemModal: !itemModal,
+    });
+  };
+
+  dateChange = dateStrings => {
+    this.setState({ dateStrings });
+  };
+
   renderBuilder = () => (
     <BizBuilderBase sagaKey="takeOutModal" workSeq={4781} taskSeq={this.state.taskSeq} viewType="VIEW" loadingComplete={this.loadingComplete} />
   );
 
-  getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          ref={node => {
-            this.searchInput = node;
-          }}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
-        <Button
-          type="primary"
-          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-          icon={<SearchOutlined />}
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-          Reset
-        </Button>
-      </div>
-    ),
-    filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
-    onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => this.searchInput.select());
-      }
-    },
-    render: text =>
-      this.state.searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[this.state.searchText]}
-          autoEscape
-          textToHighlight={text.toString()}
-        />
-      ) : (
-        text
-      ),
-  });
-
-  handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    this.setState({
-      searchText: selectedKeys[0],
-      searchedColumn: dataIndex,
-    });
+  selectedItemRecord = record => {
+    this.setState({ itemNm: record.ITEM_NM, itemCd: record.ITEM_CD, site: record.SITE });
+    this.handleItemModalVisible();
   };
 
   print = () => {
@@ -130,49 +97,87 @@ class List extends Component {
   };
 
   render() {
-    const { takeOutList } = this.state;
-    const { columns } = this.props;
-    const nColumns = columns.map(nItem => ({ ...nItem, ...this.getColumnSearchProps(nItem.dataIndex) }));
+    const { takeOutList, itemNm } = this.state;
+    const {
+      columns,
+      result: { siteItem },
+      itemColumns,
+    } = this.props;
+    const nSiteItem = siteItem && siteItem.list;
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <StyledViewDesigner>
-          <Sketch>
-            <Group>
+      <>
+        <ContentsWrapper>
+          <div className="selSaveWrapper alignLeft">
+            <AntdSearch
+              className="input-search-mid"
+              value={itemNm}
+              style={{ width: '150px' }}
+              onClick={this.handleItemModalVisible}
+              onSearch={this.handleItemModalVisible}
+            />
+            {/* datePiker CSS 없음 대체용으로 사용 */}
+            <div style={{ margin: '0 5px', display: 'inline-block' }}>
               <RangePicker
                 defaultValue={this.state.dates}
                 format={['YYYY-MM-DD', 'YYYY-MM-DD']}
                 onChange={(date, dateStrings) => this.dateChange(dateStrings)}
               />
-              <StyledButton onClick={this.searchData}>검색</StyledButton>
-              <StyledButton onClick={this.print}>인쇄</StyledButton>
-              <AntdTable
-                style={{ cursor: 'pointer' }}
-                rowKey={takeOutList && takeOutList.TASK_SEQ}
-                columns={nColumns}
-                dataSource={takeOutList || []}
-                bordered
-                onRow={record => ({
-                  onClick: () => {
-                    this.selectedRecord(record);
-                  },
-                })}
-                pagination={{ pageSize: 50 }}
-                scroll={{ y: 600 }}
-                footer={() => <div style={{ textAlign: 'center' }}>{`${takeOutList && takeOutList.length} 건`}</div>}
-              />
-              <Modal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
-                {this.state.modal && this.renderBuilder()}
-              </Modal>
-            </Group>
-          </Sketch>
-        </StyledViewDesigner>
-      </div>
+            </div>
+            <AntdSelect className="mr5" value={0}>
+              <Option value={0}>결제 해결후 사용</Option>
+            </AntdSelect>
+            <AntdSelect className="mr5" value={0}>
+              <Option value={0}>결제 해결후 사용</Option>
+            </AntdSelect>
+            <StyledButtonWrapper className="btn-wrap-inline">
+              <StyledButton className="btn-primary btn-first" onClick={this.searchData}>
+                검색
+              </StyledButton>
+              <StyledButton className="btn-primary" onClick={this.print}>
+                인쇄
+              </StyledButton>
+            </StyledButtonWrapper>
+          </div>
+          <AntdLineTable
+            className="tableWrapper"
+            rowKey={takeOutList && takeOutList.TASK_SEQ}
+            columns={columns}
+            dataSource={takeOutList || []}
+            onRow={record => ({
+              onClick: () => {
+                this.selectedRecord(record);
+              },
+            })}
+            footer={() => <span>{`${takeOutList && takeOutList.length} 건`}</span>}
+          />
+        </ContentsWrapper>
+        <AntdModal className="modal-table-pad" visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={null}>
+          {this.state.modal && this.renderBuilder()}
+        </AntdModal>
+        <AntdModal className="modal-table-pad" visible={this.state.itemModal} width={800} height={600} onCancel={this.handleItemModalVisible} footer={null}>
+          {this.state.itemModal && (
+            <AntdLineTable
+              className="tableWrapper"
+              rowKey={nSiteItem && nSiteItem.ITEM_CD}
+              columns={itemColumns}
+              dataSource={nSiteItem || []}
+              onRow={record => ({
+                onClick: () => {
+                  this.selectedItemRecord(record);
+                },
+              })}
+              footer={() => <span>{`${(nSiteItem && nSiteItem.length) || 0} 건`}</span>}
+            />
+          )}
+        </AntdModal>
+      </>
     );
   }
 }
 
 List.propTypes = {
   columns: PropTypes.array,
+  itemColumns: PropTypes.array,
   result: PropTypes.any,
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
@@ -187,6 +192,28 @@ List.defaultProps = {
     { dataIndex: 'STATUS', title: '결제상태' },
     { dataIndex: 'TAKEOUT_DT', title: '반출일자' },
     { dataIndex: 'WRK_CMPNY_NM', title: '운반업체' },
+  ],
+  itemColumns: [
+    {
+      title: '품목코드',
+      dataIndex: 'ITEM_CD',
+      align: 'center',
+    },
+    {
+      title: '지역',
+      dataIndex: 'SITE_NM',
+      align: 'left',
+    },
+    {
+      title: '품목명',
+      dataIndex: 'ITEM_NM',
+      align: 'center',
+    },
+    {
+      title: '구분',
+      dataIndex: 'GEN_SPEC_GUBUN_NM',
+      align: 'center',
+    },
   ],
 };
 

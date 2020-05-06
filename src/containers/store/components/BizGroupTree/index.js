@@ -218,24 +218,26 @@ class BizGroupTree extends Component {
             PRNT_ID = nextParentNode.BIZGRP_ID;
           }
 
-          const resortTreeData = (data, lvl, pathArr) => {
+          const resortTreeData = (data, pathArr, lvl) => {
             for (let i = 0; i < data.length; i += 1) {
+              // eslint-disable-next-line no-shadow
               const node = data[i];
               const path = [...pathArr, node.key];
 
               node.SORT_SQ = i + 1;
               node.LVL = lvl;
               node.path = path;
+
               if (node.BIZGRP_ID === BIZGRP_ID) {
                 node.PRNT_ID = PRNT_ID;
               }
               if (node.children) {
-                resortTreeData(node.children, lvl + 1, path);
+                resortTreeData(node.children, path, lvl + 1);
               }
             }
           };
 
-          resortTreeData(treeData, treeData[0].LVL, [ROOT_ID]);
+          resortTreeData(treeData, [ROOT_ID], 0);
 
           saveData(null, treeData);
           moveNode(treeFunc.generateList(fromJS(treeData)));
@@ -319,7 +321,7 @@ class BizGroupTree extends Component {
           return {
             title: (
               <Popover placement="right" content={buttons} trigger="hover" overlayClassName="mypageTreePopupMenu">
-                <button
+                <span
                   // className={`${bizIcon} ${bizConfrim} ${bizDeleteIcon} ${node.key === selectedIndex ? 'active' : ''}`}
                   className={`${node.key === selectedIndex ? 'active' : ''}`}
                   onClick={handleTreeOnClick}
@@ -330,7 +332,7 @@ class BizGroupTree extends Component {
                   {node.CHG_YN === 'Y' && node.MENU_EXIST_YN === 'Y' ? <img src={iconBizConfirm} /> : ''}
                   {node.DEL_YN === 'Y' ? <img src={iconBizDelete} /> : ''}
                   <span style={{ marginLeft: 5 }}>{titleInner}</span>
-                </button>
+                </span>
               </Popover>
             ),
 

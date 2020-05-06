@@ -98,7 +98,7 @@ function ListPage(props) {
         workSeq={workSeq} // metadata binding
         viewType={VIEW_TYPE.INPUT}
         taskSeq={taskSeq} // data binding
-        onCloseModleHandler={() => setActivateRegModal(false)}
+        onCloseModalHandler={() => setActivateRegModal(false)}
         baseSagaKey={sagaKey}
         InputCustomButtons={InputButtons}
       />,
@@ -109,7 +109,7 @@ function ListPage(props) {
         viewType={VIEW_TYPE.LIST}
         taskSeq={taskSeq}
         CustomListPage={ListPage}
-        onCloseModleHandler={() => setActivateRegModal(false)}
+        onCloseModalHandler={() => setActivateRegModal(false)}
         baseSagaKey={sagaKey}
         listMetaSeq={META_SEQ.MODAL_LIST} // meta SEQ
         isSearched
@@ -127,7 +127,7 @@ function ListPage(props) {
         workSeq={workSeq} // metadata binding
         viewType={VIEW_TYPE.VIEW}
         taskSeq={taskSeq} // data binding
-        onCloseModleHandler={() => setActivateDetailModal(false)}
+        onCloseModalHandler={() => setActivateDetailModal(false)}
         viewMetaSeq={META_SEQ.VIEW_BASIC}
         baseSagaKey={sagaKey}
         ViewCustomButtons={CustomButtons.Button1}
@@ -140,10 +140,8 @@ function ListPage(props) {
       //       workSeq={workSeq} // metadata binding
       //       viewType={VIEW_TYPE.VIEW}
       //       taskSeq={taskSeq} // data binding
-      //       onCloseModleHandler={() => setActivateDetailModal(false)}
-      //       // viewMetaSeq={META_SEQ.VIEW_INSPECTION}
-      //       // modifyMetaSeq={META_SEQ.MODIFY_INSPECTION}
-      //       viewChangeSeq={39}
+      //       onCloseModalHandler={() => setActivateDetailModal(false)}
+      //       viewMetaSeq={META_SEQ.INSPECTION}
       //       baseSagaKey={sagaKey}
       //       CustomButtons={CustomButtons.Button2}
       //     />
@@ -155,10 +153,8 @@ function ListPage(props) {
       //       workSeq={workSeq} // metadata binding
       //       viewType={VIEW_TYPE.VIEW}
       //       taskSeq={taskSeq} // data binding
-      //       onCloseModleHandler={() => setActivateDetailModal(false)}
-      //       // viewMetaSeq={META_SEQ.VIEW_ISSUE}
-      //       // modifyMetaSeq={META_SEQ.MODIFY_ISSUE}
-      //       viewChangeSeq={40}
+      //       onCloseModalHandler={() => setActivateDetailModal(false)}
+      //       viewMetaSeq={META_SEQ.ISSUE}
       //       baseSagaKey={sagaKey}
       //       CustomButtons={CustomButtons.Button3}
       //     />

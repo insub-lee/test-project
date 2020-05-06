@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, Checkbox, TreeSelect } from 'antd';
 import PropTypes from 'prop-types';
 
-import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledCheckbox from 'components/FormStuff/Checkbox';
 
 const FormItem = Form.Item;
@@ -62,9 +62,13 @@ class BizStd extends Component {
     return (
       <StyledHtmlTable>
         <table>
+          <colgroup>
+            <col style={{ width: '15%' }} />
+            <col style={{ width: 'auto' }} />
+          </colgroup>
           <thead>
             <tr>
-              <th colSpan="4">업무표준 정보 선택</th>
+              <th colSpan="2">업무표준 정보 선택</th>
             </tr>
           </thead>
           <tbody>

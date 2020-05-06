@@ -1,7 +1,8 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, Button, Modal } from 'antd';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import BizBuilderBase from 'components/BizBuilderBase';
 import CustomList from 'apps/eshs/admin/environment/air/stack/List';
 
@@ -86,14 +87,14 @@ class CommonSearchbar extends React.Component {
     switch (viewPageData && viewPageData.viewType.toUpperCase()) {
       case 'INPUT':
         buttonGruop = (
-          <>
-            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('S')}>
+          <StyledButtonWrapper className="btn-wrap-inline btn-wrap-ml-5">
+            <StyledButton className="btn-gray btn-sm mr5" onClick={() => this.onChangeSave('S')}>
               등록
             </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
-          </>
+          </StyledButtonWrapper>
         );
         break;
       case 'MODIFY':

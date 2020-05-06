@@ -6,7 +6,6 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import MdcsContentView from 'components/MdcsContentView';
 import StyledButton from 'components/CommonStyled/StyledButton';
 import StyledModalWrapper from 'components/CommonStyled/StyledModalWrapper';
-import StdModify from 'apps/mdcs/user/MdcsStandard/Intro/StdModify';
 import OpinionModal from '../ApproveView/OpinionModal';
 import HoldRelease from '../ApproveView/holdRelease';
 
@@ -20,7 +19,7 @@ class HoldView extends Component {
       selectedUser: undefined,
       nextApprover: undefined,
       selectedViewType: 'VIEW',
-      modalWidth: 600,
+      modalWidth: 800,
     };
   }
 
@@ -52,9 +51,9 @@ class HoldView extends Component {
     this.props.setOpinionVisible(false);
   };
 
-  handleReqApprove = (e, appvStatus) => {
+  handleReqApprove = e => {
     e.preventDefault();
-    this.props.reqApprove(appvStatus);
+    this.props.reqApprove({});
     this.props.setOpinionVisible(false);
   };
 
@@ -77,27 +76,29 @@ class HoldView extends Component {
     this.setState({ selectedViewType: 'VIEW' });
   };
 
+  clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {};
+
+  closeBtnFunc = () => {};
+
   render() {
     const { selectedRow, opinionVisible } = this.props;
     const { selectedViewType, modalWidth } = this.state;
     return (
       <>
-        <div style={{ padding: '10px' }}>
-          <BizBuilderBase
-            sagaKey="approveBase_approveView"
-            viewType={selectedViewType}
-            CustomViewPage={MdcsContentView}
-            CustomModifyPage={StdModify}
-            onCloseModal={this.onCloseModal}
-            onChangeForm={this.onChangeForm}
-            workSeq={selectedRow && selectedRow.WORK_SEQ}
-            taskSeq={selectedRow && selectedRow.TASK_SEQ}
-            draftId={selectedRow && selectedRow.DRAFT_ID}
-            metaSeq={selectedRow && selectedRow.RULE_CONFIG.META_SEQ}
-            selectedRow={selectedRow}
-            // changeWorkflowFormData={this.changeWorkflowFormData}
-          />
-        </div>
+        <BizBuilderBase
+          sagaKey="approveBase_approveView"
+          viewType={selectedViewType}
+          onCloseModal={this.onCloseModal}
+          onChangeForm={this.onChangeForm}
+          closeBtnFunc={this.closeBtnFunc}
+          clickCoverView={this.clickCoverView}
+          workSeq={selectedRow && selectedRow.WORK_SEQ}
+          taskSeq={selectedRow && selectedRow.TASK_SEQ}
+          metaSeq={selectedRow && selectedRow.RULE_CONFIG.META_SEQ}
+          selectedRow={selectedRow}
+          ViewCustomButtons={() => false}
+          // changeWorkflowFormData={this.changeWorkflowFormData}
+        />
         <ModalWrapper
           title="홀드해제"
           visible={opinionVisible}

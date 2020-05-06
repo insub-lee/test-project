@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import * as PropTypes from 'prop-types';
-import { Input, Checkbox, InputNumber, Select, TreeSelect, Button } from 'antd';
+import { Input, Checkbox, InputNumber, Select, TreeSelect, Button, DatePicker as AntdDatePicker } from 'antd';
 import { debounce } from 'lodash';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
@@ -102,15 +103,11 @@ class CompModal extends Component {
 
   handleChangeCompConfig = (key, value, configKey) => {
     const {
-      action: { changeCompData },
+      action: { changeCompConfig },
       configProps,
-      groups,
     } = this.props;
     const { groupIndex, rowIndex, colIndex } = configProps;
-    const { CONFIG } = groups[groupIndex].rows[rowIndex].cols[colIndex].comp;
-    const nextConfig = JSON.parse(JSON.stringify(CONFIG));
-    nextConfig[configKey][key] = value;
-    changeCompData(groupIndex, rowIndex, colIndex, 'CONFIG', nextConfig);
+    changeCompConfig(groupIndex, rowIndex, colIndex, configKey, key, value);
   };
 
   handleChangeViewConfig = (key, value, configKey) => {
@@ -316,6 +313,46 @@ class CompModal extends Component {
                   </Select>
                 )}
               </div>
+              {comp &&
+                comp.CONFIG &&
+                comp.CONFIG.property &&
+                comp.CONFIG.property.searchType === 'RANGEDATE' &&
+                comp.CONFIG.property.searchCondition === 'BETWEEN' && (
+                  <>
+                    <div className="popoverItem popoverItemInput">
+                      <span className="spanLabel">검색 기본값 타입 설정</span>
+                      <Select
+                        placeholder="기본값을 선택하십시오."
+                        style={{ width: '100%' }}
+                        defaultValue={comp.CONFIG.property.rangeDateSearchType || 'default'}
+                        onChange={value => this.handleChangeViewConfig('rangeDateSearchType', value, 'property')}
+                      >
+                        <Option value="sysdate">sysdate</Option>
+                        <Option value="default">Default</Option>
+                        <Option value="autoMonth">auto Month(startOfMonth, endOfMonth)</Option>
+                        <Option value="custom">User Custom</Option>
+                      </Select>
+                    </div>
+                    {comp.CONFIG.property.rangeDateSearchType === 'custom' && (
+                      <div className="popoverItem popoverItemInput">
+                        <span className="spanLabel">검색 기본값 설정</span>
+                        <AntdDatePicker
+                          style={{ width: '47%' }}
+                          onChange={date => this.handleChangeViewConfig('searchStartDate', moment(date).format('YYYY-MM-DD'), 'property')}
+                          placeholder="지정할 날짜를 선택하세요."
+                          defaultValue={comp.CONFIG.property.searchStartDate && moment(comp.CONFIG.property.searchStartDate)}
+                        />
+                        <div style={{ width: '6%', display: 'inline-block', textAlign: 'center' }}>~</div>
+                        <AntdDatePicker
+                          style={{ width: '47%' }}
+                          onChange={date => this.handleChangeViewConfig('searchEndDate', moment(date).format('YYYY-MM-DD'), 'property')}
+                          placeholder="지정할 날짜를 선택하세요."
+                          defaultValue={comp.CONFIG.property.searchEndDate && moment(comp.CONFIG.property.searchEndDate)}
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
             </div>
           </div>
         )}

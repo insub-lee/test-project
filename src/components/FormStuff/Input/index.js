@@ -17,4 +17,4 @@ const WDTextarea = TextAreaWrapper(TextArea);
 const Textarea = WithDirection(WDTextarea);
 
 export default StyledInput;
-export { InputSearch, InputGroup, Textarea };
+export { StyledInput, InputSearch, InputGroup, Textarea };

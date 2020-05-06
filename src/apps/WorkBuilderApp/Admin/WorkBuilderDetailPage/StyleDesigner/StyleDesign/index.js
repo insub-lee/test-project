@@ -1,183 +1,71 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import JSONInput from 'react-json-editor-ajrm/index';
-import { Drawer } from 'antd';
-import styled from 'styled-components';
 
-import Row from 'components/BizBuilder/Row/BasedHtml';
-import Col from 'components/BizBuilder/Col/BasedHtml';
-import ActionButton from 'components/BizBuilder/ActionButton';
-import Contents from 'components/BizBuilder/Cell';
-import ShadowWrapper from 'components/BizBuilder/ShadowWrapper';
-import StyleEditor from 'components/BizBuilder/StyleEditor';
-import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
+import Sketch from 'components/BizBuilder/Sketch';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 
-import CompRender from './compRender';
+import StyleManager from './StyleManager/index';
 
-const StyledActionBar = styled.div`
-  position: relative;
-  height: 30px;
+const getMaxColSizeByRows = rows => Math.max(...rows.map(row => row.cols.map(col => (col ? col.span || 1 : 0)).reduce((acc, cur) => acc + cur)));
 
-  .button--group--left {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    text-align: left;
+const getDefaultWidths = maxColSize => {
+  const widths = [];
+  for (let i = 0; i < maxColSize; i++) {
+    widths.push(100 / maxColSize);
   }
-  .button--group--right {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    text-align: right;
-  }
-`;
+  return widths;
+};
 
-const StyleDesign = ({ isShowEditor, groups, selectedKeys, action, bodyStyle, tabBodyHeight }) => (
+const StyleDesign = ({ groups, action }) => (
   <div>
-    <StyledActionBar>
-      <div className="button--group--left">
-        <StyleEditor
-          style={bodyStyle}
-          action={{
-            updateBodyStyle: action.updateBodyStyle,
-          }}
-        />
-      </div>
-      <div className="button--group--right">
-        <ActionButton type="button" onClick={() => action.openJsonCodeEditor()}>
-          Open Json Editor
-        </ActionButton>
-      </div>
-    </StyledActionBar>
-    <hr />
-    {/* <div style={{ height: tabBodyHeight > 42 ? tabBodyHeight - 42 : 0 }}> */}
     <div>
-      <Sketch {...bodyStyle}>
+      <Sketch>
         {groups.map((group, groupIndex) => (
           <div key={group.key}>
+            {group.type !== 'group' && (group.type === 'searchGroup' ? 'Search Area' : 'List Area')}
             {group.useTitle && <GroupTitle title={group.title} />}
-            <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-              {group.rows.map((row, rowIndex) =>
-                row ? (
-                  <ShadowWrapper key={row.key}>
-                    <Row gutter={row.gutter || [0, 0]} className={`view-designer-row row-${rowIndex}`}>
-                      {row.cols &&
-                        row.cols.map((col, colIndex) =>
-                          col ? (
-                            <Col
-                              key={col.key}
-                              {...col}
-                              selected={selectedKeys.includes(`${groupIndex}-${rowIndex}-${colIndex}`)}
-                              className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
-                            >
-                              <Contents
-                                selected={selectedKeys.includes(`${groupIndex}-${rowIndex}-${colIndex}`)}
-                                action={{
-                                  selectCell: () => action.selectCell(groupIndex, rowIndex, colIndex),
-                                  updateStyleWidth: (width, diff) => action.updateStyleWidth(groupIndex, rowIndex, colIndex, width, diff),
-                                  updateStyleHeight: height => action.updateStyleHeight(groupIndex, rowIndex, colIndex, height),
-                                  updateStyleRowHeight: () => action.updateStyleRowHeight(groupIndex, rowIndex, colIndex),
-                                }}
-                                widthOption={{
-                                  current: col.style.width,
-                                  diffTarget: row.cols[row.cols.length - 1 === colIndex ? colIndex - 1 : colIndex + 1]
-                                    ? row.cols[row.cols.length - 1 === colIndex ? colIndex - 1 : colIndex + 1].style.width
-                                    : '0%',
-                                }}
-                                option={{ style: col.style }}
-                              >
-                                {col.comp && <CompRender comp={col.comp} />}
-                                {/* {col.comp && <AsyncComponent comp={col.comp} />} */}
-                              </Contents>
-                            </Col>
-                          ) : (
-                            ''
-                          ),
-                        )}
-                    </Row>
-                  </ShadowWrapper>
-                ) : (
-                  ''
-                ),
+            <Group key={group.key} className={`group-${groupIndex}`}>
+              {group.rows.length > 0 && (
+                <StyleManager
+                  key={group.key}
+                  groupKey={group.key}
+                  id={`group-table-${groupIndex}`}
+                  updateCellStyle={(e, rowIndex, colIndex) => {
+                    const { name, value } = e.target;
+                    action.updateCellStyle(groupIndex, rowIndex, colIndex, name, value);
+                  }}
+                  onChangeWidths={widths => action.onChangeWidths(groupIndex, widths)}
+                  onChangeHeights={heights => action.onChangeHeights(groupIndex, heights)}
+                  headers={group.widths || getDefaultWidths(getMaxColSizeByRows(group.rows))}
+                  rows={group.rows}
+                  baseComponent={<div>test</div>}
+                />
               )}
             </Group>
           </div>
         ))}
       </Sketch>
     </div>
-    <Drawer
-      title="JSON Editor"
-      placement="right"
-      width={640}
-      onClose={() => action.closeJsonCodeEditor()}
-      visible={isShowEditor}
-      getContainer={false}
-      maskClosable={false}
-    >
-      <JSONInput
-        placeholder={groups}
-        onChange={({ jsObject, error }) => {
-          if (!error) {
-            action.updateJsonCode(jsObject);
-          }
-        }}
-        theme="dark_vscode_tribute"
-        colors={{
-          string: '#daa520',
-        }}
-        height="100%"
-        width="100%"
-      />
-    </Drawer>
   </div>
 );
 
 StyleDesign.propTypes = {
-  isShowEditor: PropTypes.bool,
   groups: PropTypes.arrayOf(PropTypes.object),
-  selectedKeys: PropTypes.arrayOf(PropTypes.string),
-  bodyStyle: PropTypes.shape({
-    width: PropTypes.string,
-    height: PropTypes.string,
-  }),
   action: PropTypes.shape({
-    openJsonCodeEditor: PropTypes.func,
-    closeJsonCodeEditor: PropTypes.func,
-    updateJsonCode: PropTypes.func,
-    updateStyleWidth: PropTypes.func,
-    updateStyleHeight: PropTypes.func,
-    updateStyleSize: PropTypes.func,
-    updateStyleRowHeight: PropTypes.func,
-    updateBodyStyle: PropTypes.func,
-    selectCell: PropTypes.func,
+    onChangeWidths: PropTypes.func,
+    onChangeHeights: PropTypes.func,
+    updateCellStyle: PropTypes.func,
   }),
-  tabBodyHeight: PropTypes.number,
 };
 
 StyleDesign.defaultProps = {
-  isShowEditor: false,
   groups: [],
-  selectedKeys: [],
-  bodyStyle: {
-    width: '10%',
-    height: '10%',
-  },
   action: {
-    openJsonCodeEditor: () => {},
-    closeJsonCodeEditor: () => {},
-    updateJsonCode: () => {},
-    updateStyleWidth: () => {},
-    updateStyleHeight: () => {},
-    updateStyleSize: () => {},
-    updateStyleRowHeight: () => {},
-    updateBodyStyle: () => {},
-    selectCell: () => {},
+    onChangeWidths: () => {},
+    onChangeHeights: () => {},
+    updateCellStyle: () => {},
   },
-  tabBodyHeight: 0,
 };
 
 export default StyleDesign;

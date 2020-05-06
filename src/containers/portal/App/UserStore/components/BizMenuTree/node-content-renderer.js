@@ -56,6 +56,7 @@ class CustomThemeNodeContentRenderer extends Component {
         style={{
           opacity: isDraggedDescendant ? 0.5 : 1,
           ...style,
+          padding: '10px 10px 10px 0',
         }}
       >
         <div className={styles.rowContents + (!canDrag ? ` ${styles.rowContentsDragDisabled} rstcustom__rowContentsDragDisabled` : '')}>
@@ -158,7 +159,7 @@ class CustomThemeNodeContentRenderer extends Component {
     return (
       <div style={{ height: '100%' }} {...otherProps}>
         {renderButton()}
-        <div className={styles.rowWrapper + (!canDrag ? ` ${styles.rowWrapperDragDisabled}` : '')}>
+        <div style={{ padding: 0 }} className={styles.rowWrapper + (!canDrag ? ` ${styles.rowWrapperDragDisabled}` : '')}>
           {canDrag ? connectDragSource(nodeContent, { dropEffect: 'copy' }) : nodeContent}
         </div>
       </div>

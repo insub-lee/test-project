@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import { Table, Modal, Icon } from 'antd';
 import moment from 'moment';
 
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
-import StyledModalWrapper from 'components/CommonStyled/StyledModalWrapper';
-
-import ApproveView from 'apps/Workflow/components/ApproveBase/viewComponent/ApproveView';
+import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
+import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
 
-const AntdTable = StyledAntdTable(Table);
-const ModalWrapper = StyledModalWrapper(Modal);
+const AntdLineTable = StyledLineTable(Table);
+const AntdModal = StyledContentsModal(Modal);
 
 class UnApproveList extends Component {
   componentDidMount() {
@@ -68,28 +67,33 @@ class UnApproveList extends Component {
     this.props.setViewVisible(true);
   };
 
+  onModalClose = () => {
+    this.props.setViewVisible(false);
+  };
+
   render() {
-    const { unApproveList, selectedRow } = this.props;
-    console.debug(this.props);
+    const { unApproveList } = this.props;
     return (
-      <div>
-        <div style={{ marginBottom: '10px' }}>
-          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
-            <Icon type="form" /> 미결함
-          </p>
-        </div>
-        <AntdTable
-          columns={this.getTableColumns()}
-          dataSource={unApproveList.map(item => ({ ...item, key: `unApproveList_${item.RNUM}` }))}
-          onRow={(record, rowIndex) => ({
-            onClick: e => this.onRowClick(record, rowIndex, e),
-          })}
-          bordered
-        />
-        <ModalWrapper title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+      <>
+        <ContentsWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 미결함
+            </p>
+          </div>
+          <AntdLineTable
+            columns={this.getTableColumns()}
+            dataSource={unApproveList.map(item => ({ ...item, key: `unApproveList_${item.RNUM}` }))}
+            onRow={(record, rowIndex) => ({
+              onClick: e => this.onRowClick(record, rowIndex, e),
+            })}
+            bordered
+          />
+        </ContentsWrapper>
+        <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
           <MdcsAppvView {...this.props} />
-        </ModalWrapper>
-      </div>
+        </AntdModal>
+      </>
     );
   }
 }
@@ -97,8 +101,6 @@ class UnApproveList extends Component {
 UnApproveList.propTypes = {
   unApproveList: PropTypes.array,
   getUnApproveList: PropTypes.func,
-
-
 
   selectedRow: PropTypes.object,
   setSelectedRow: PropTypes.func,
@@ -108,7 +110,6 @@ UnApproveList.propTypes = {
 UnApproveList.defaultProps = {
   unApproveList: [],
   getUnApproveList: () => {},
-
 
   selectedRow: {},
 };

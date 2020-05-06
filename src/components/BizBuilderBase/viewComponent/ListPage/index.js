@@ -6,14 +6,20 @@ import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
+import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import Contents from 'components/BizBuilder/Common/Contents';
-import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
+
+// import Loadable from 'components/Loadable';
+// import Loading from '../Common/Loading';
 
 const AntdTable = StyledAntdTable(Table);
+const StyledButton = StyledAntdButton(Button);
 
 class ListPage extends Component {
   constructor(props) {
@@ -21,6 +27,9 @@ class ListPage extends Component {
     this.state = {
       isMultiDelete: false,
       isRowNo: false,
+      isOnRowClick: false,
+      rowClickView: 'VIEW',
+      StyledWrap: StyledViewDesigner,
     };
   }
 
@@ -28,12 +37,28 @@ class ListPage extends Component {
     const { workInfo } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
+    let isOnRowClick = false;
+    let rowClickView = 'VIEW';
+
+    if (workInfo.BUILDER_STYLE_PATH) {
+      // const StyledWrap = Loadable({
+      //   loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
+      //   loading: Loading,
+      // });
+      const StyledWrap = DefaultStyleInfo(workInfo.BUILDER_STYLE_PATH);
+      this.setState({ StyledWrap });
+    }
+
     if (workInfo && workInfo.OPT_INFO) {
       workInfo.OPT_INFO.forEach(opt => {
         if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
         if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNo = true;
+        if (opt.OPT_SEQ === ON_ROW_CLICK_OPT_SEQ && opt.ISUSED === 'Y') {
+          isOnRowClick = true;
+          rowClickView = opt.OPT_VALUE === '' ? 'VIEW' : opt.OPT_VALUE;
+        }
       });
-      this.setState({ isMultiDelete, isRowNo });
+      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
     }
   };
 
@@ -71,7 +96,7 @@ class ListPage extends Component {
     return <div />;
   };
 
-  setColumns = cols => {
+  setColumns = (cols, widths) => {
     const { isRowNo } = this.state;
     const columns = [];
     if (isRowNo) {
@@ -80,13 +105,16 @@ class ListPage extends Component {
         title: 'No.',
       });
     }
-    cols.forEach(node => {
+    cols.forEach((node, idx) => {
       if (node.comp && node.comp.COMP_FIELD) {
         columns.push({
           dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
           title: node.comp.CONFIG.property.HEADER_NAME_KOR,
-          width: (node.style && node.style.width) || undefined,
+          // width: (node.style && node.style.width) || undefined,
+          width: (widths && widths[idx] && `${widths[idx]}%`) || undefined,
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
+          className: node.addonClassName && node.addonClassName.length > 0 ? `${node.addonClassName.toString().replaceAll(',', ' ')}` : '',
+          align: (node.style && node.style.textAlign) || undefined,
         });
       }
     });
@@ -98,17 +126,45 @@ class ListPage extends Component {
     setListSelectRowKeys(sagaKey, selectedRowKeys);
   };
 
+  /* 
+      신규추가 
+      목적 : ListGroup 내에서 Row를 클릭시 원하는 뷰로 이동할 수 있는 Config를 지원하기 위해 생성
+      타입 : func (추가사항. antd - Table Props 참조)
+      create by. JeongHyun
+  */
+  onRowClick = record => {
+    const { sagaKey: id, isBuilderModal, changeBuilderModalState, changeViewPage } = this.props;
+    const { rowClickView } = this.state;
+    return {
+      onClick: () => {
+        if (isBuilderModal) {
+          changeBuilderModalState(true, rowClickView, record.WORK_SEQ, record.TASK_SEQ, record);
+        } else {
+          changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, rowClickView);
+        }
+      },
+    };
+  };
+
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys } = this.props;
-    const { isMultiDelete } = this.state;
-    const columns = this.setColumns(group.rows[0].cols);
+    const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
+    const { isMultiDelete, isOnRowClick } = this.state;
+    const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
+    let onRow = false;
     if (isMultiDelete) {
       rowSelection = {
         selectedRowKeys: listSelectRowKeys,
         onChange: this.onSelectChange,
       };
     }
+    if (typeof customOnRowClick === 'function') {
+      onRow = record => ({ onClick: () => customOnRowClick(record) });
+    }
+    if (isOnRowClick) {
+      onRow = this.onRowClick;
+    }
+
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -120,6 +176,8 @@ class ListPage extends Component {
             columns={columns}
             dataSource={listData || []}
             rowSelection={rowSelection}
+            rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
+            onRow={onRow}
           />
         </Group>
       </div>
@@ -140,7 +198,7 @@ class ListPage extends Component {
       isBuilderModal,
       changeBuilderModalState,
     } = this.props;
-    const { isMultiDelete } = this.state;
+    const { isMultiDelete, StyledWrap } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -153,7 +211,7 @@ class ListPage extends Component {
       } = workFlowConfig;
 
       return (
-        <StyledViewDesigner>
+        <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
             {groups.map((group, groupIndex) => {
               if (group.type === 'listGroup') {
@@ -161,7 +219,7 @@ class ListPage extends Component {
               }
               return (
                 (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
-                  <div key={group.key}>
+                  <StyledSearchWrapper key={group.key}>
                     {group.useTitle && <GroupTitle title={group.title} />}
                     <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
                       <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
@@ -177,7 +235,9 @@ class ListPage extends Component {
                                         {...col}
                                         comp=""
                                         colSpan={col.span}
-                                        className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
+                                        className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}${
+                                          col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName.toString().replaceAll(',', ' ')}` : ''
+                                        }`}
                                       >
                                         <Contents>
                                           {col.comp &&
@@ -202,36 +262,33 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <Button type="primary" className="btn-primary" onClick={() => getListData(id, workSeq)}>
+                          <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
                             Search
-                          </Button>
+                          </StyledButton>
                         </div>
                       )}
                     </Group>
-                  </div>
+                  </StyledSearchWrapper>
                 )
               );
             })}
             <div className="alignRight">
-              {isMultiDelete && (
-                <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
-                  <Button type="primary" className="btn-primary">
-                    Delete
-                  </Button>
-                </Popconfirm>
-              )}
-              <Button
-                type="primary"
-                className="btn-primary"
+              <StyledButton
+                className="btn-primary btn-first"
                 onClick={() =>
                   isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
                 }
               >
                 Add
-              </Button>
+              </StyledButton>
+              {isMultiDelete && (
+                <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
+                  <StyledButton className="btn-light">Delete</StyledButton>
+                </Popconfirm>
+              )}
             </div>
           </Sketch>
-        </StyledViewDesigner>
+        </StyledWrap>
       );
     }
     return '';
@@ -239,6 +296,7 @@ class ListPage extends Component {
 }
 
 ListPage.propTypes = {
+  workInfo: PropTypes.object,
   sagaKey: PropTypes.string,
   workFlowConfig: PropTypes.object,
   workPrcProps: PropTypes.object,
@@ -246,10 +304,14 @@ ListPage.propTypes = {
   formData: PropTypes.object,
   processRule: PropTypes.object,
   getProcessRule: PropTypes.func,
-  onCloseModleHandler: PropTypes.func,
+  onCloseModalHandler: PropTypes.func,
   saveTask: PropTypes.func,
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
+  isBuilderModal: PropTypes.bool,
+  changeBuilderModalState: PropTypes.func,
+  changeViewPage: PropTypes.func,
+  customOnRowClick: PropTypes.any,
 };
 
 ListPage.defaultProps = {
@@ -258,6 +320,7 @@ ListPage.defaultProps = {
       PRC_ID: -1,
     },
   },
+  customOnRowClick: undefined,
 };
 
 export default ListPage;

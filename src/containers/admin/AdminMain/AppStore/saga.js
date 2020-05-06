@@ -248,7 +248,7 @@ export function* deleteNode(payload) {
     }
   } else if (node.NODE_TYPE === 'A' || node.NODE_TYPE === 'P') {
     const { SITE_ID, APP_ID, PRNT_ID, CATG_ID } = node;
-    const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/deleteApp', {
+    const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/deleteAppCatgMapping', {
       SITE_ID: Number(SITE_ID),
       APP_ID: Number(APP_ID),
       CATG_ID: Number(PRNT_ID),
@@ -271,8 +271,10 @@ export function* deleteNode(payload) {
       });
       // 성공 시 사용중으로 상태 변경.
       const AppListStore = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
-      const mapList = changeWGCount(AppListStore.get('mapList'), CATG_ID, APP_ID, 0);
-      yield put({ type: constantsAppList.SET_MAPLIST, mapList });
+      if (AppListStore) {
+        const mapList = changeWGCount(AppListStore.get('mapList'), CATG_ID, APP_ID, 0);
+        yield put({ type: constantsAppList.SET_MAPLIST, mapList });
+      }
     } else if (code === 500) {
       feed.error('앱 삭제에 실패 하였습니다.');
     }

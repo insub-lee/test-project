@@ -11,6 +11,7 @@ import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
+import * as authSelectors from 'containers/common/Auth/selectors';
 
 class BizMicroDevBase extends React.Component {
   render() {
@@ -28,28 +29,34 @@ BizMicroDevBase.propTypes = {
   result: PropTypes.object,
   formData: PropTypes.object,
   getCallDataHandler: PropTypes.func,
+  getCallDataHandlerReturnRes: PropTypes.func,
   removeReduxState: PropTypes.func,
   changeFormData: PropTypes.func,
   setFormData: PropTypes.func,
   submitHandlerBySaga: PropTypes.func,
+  getFileDownload: PropTypes.func,
 };
 
 BizMicroDevBase.defaultProps = {
   result: {},
   formData: {},
   getCallDataHandler: () => false,
+  getCallDataHandlerReturnRes: () => false,
   changeFormData: () => false,
   setFormData: () => false,
   submitHandlerBySaga: () => false,
+  getFileDownload: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
   result: selectors.makeSelectResponseData(),
   formData: selectors.makeSelectFormData(),
+  profile: authSelectors.makeSelectProfile(),
 });
 
 const mapDispatchToProps = dispatch => ({
   getCallDataHandler: (id, apiAry, callbackFunc) => dispatch(actions.getCallDataHandler(id, apiAry, callbackFunc)),
+  getCallDataHandlerReturnRes: (id, apiInfo, callbackFunc) => dispatch(actions.getCallDataHandlerReturnRes(id, apiInfo, callbackFunc)),
   changeFormData: (id, key, val) => dispatch(actions.changeFormData(id, key, val)),
   setFormData: (id, obj) => dispatch(actions.setFormData(id, obj)),
   submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
@@ -59,6 +66,7 @@ const mapDispatchToProps = dispatch => ({
   removeResponseDataReduxStateByKey: (id, key) => dispatch(actions.removeResponseDataReduxStateByKey(id, key)),
   removeFormDataReduxStateByKey: (id, key) => dispatch(actions.removeFormDataReduxStateByKey(id, key)),
   resetCalledData: id => dispatch(actions.resetCalledData(id)),
+  getFileDownload: (id, url, fileName) => dispatch(actions.getFileDownload(id, url, fileName)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizMicroDevBase`, reducer });

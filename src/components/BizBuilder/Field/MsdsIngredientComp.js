@@ -1,8 +1,8 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input } from 'antd';
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import TableTypeSelector from '../../TableTypeSelector';
-import MsdsIngredientCompStyled from '../styled/compStyled/MsdsIngredientCompStyled';
 
 class MsdsIngredientComp extends React.Component {
   constructor(props) {
@@ -86,30 +86,45 @@ class MsdsIngredientComp extends React.Component {
 
     return visible ? (
       <>
-        {viewType === 'INPUT' || viewType === 'MODIFY' ? (
-          <TableTypeSelector
-            leftTableColumns={leftTableColumns}
-            rightTableColumns={rightTableColumns}
-            apiList={apiList}
-            applyList={applyList}
-            handleApply={this.handleApply}
-            btnText="구성성분 등록"
-            modalTitle="MSDS 검색"
-            rowKey="TASK_SEQ"
-          />
-        ) : (
-          ''
-        )}
-        <MsdsIngredientCompStyled>
-          <table className="msdsIngreDientTable">
+        <StyledHtmlTable className="tableWrapper">
+          <table className="table-border">
+            <colgroup>
+              <col width="25%" />
+              <col width="25%" />
+              <col width="25%" />
+              <col width="25%" />
+            </colgroup>
             <thead>
+              {viewType === 'INPUT' || viewType === 'MODIFY' ? (
+                <tr align="left">
+                  <td colSpan={4}>
+                    <TableTypeSelector
+                      leftTableColumns={leftTableColumns}
+                      rightTableColumns={rightTableColumns}
+                      apiList={apiList}
+                      applyList={applyList}
+                      handleApply={this.handleApply}
+                      btnText="구성성분 등록"
+                      modalTitle="MSDS 검색"
+                      rowKey="TASK_SEQ"
+                    />
+                  </td>
+                </tr>
+              ) : (
+                ''
+              )}
               <tr>
-                <td>ITEM</td>
-                <td>분자식</td>
-                <td>CAS_NO</td>
-                <td>구성비율</td>
+                <th>ITEM</th>
+                <th>분자식</th>
+                <th>CAS_NO</th>
+                <th>구성비율</th>
               </tr>
             </thead>
+            <tfoot>
+              <tr>
+                <td colSpan={4}>{applyList.length} 건</td>
+              </tr>
+            </tfoot>
             <tbody>
               {applyList.map((a, index) => (
                 <tr key={index}>
@@ -127,12 +142,9 @@ class MsdsIngredientComp extends React.Component {
                   </td>
                 </tr>
               ))}
-              <tr className="listCount">
-                <td colSpan={4}>{applyList.length} 건</td>
-              </tr>
             </tbody>
           </table>
-        </MsdsIngredientCompStyled>
+        </StyledHtmlTable>
       </>
     ) : (
       ''

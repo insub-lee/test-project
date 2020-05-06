@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
-import { Row, Select, Popconfirm, Button, Input, InputNumber, message, Checkbox, Modal } from 'antd';
+import { Select, Popconfirm, Button, Input, InputNumber, message, Checkbox, Modal } from 'antd';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 
 import Styled from 'apps/WorkBuilderApp/Admin/WorkBuilderDetailPage/ViewDesigner/CompItem/Styled';

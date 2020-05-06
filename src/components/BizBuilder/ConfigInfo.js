@@ -25,6 +25,18 @@ import ModalTableCompConfig from 'components/BizBuilder/Field/ModalTableCompConf
 import EshsSearchbarConfig from 'components/BizBuilder/Field/EshsSearchbarConfig';
 import DragUploadMDCSViewCompConfig from 'components/BizBuilder/Field/DragUploadMDCSViewCompConfig';
 import CoverViewCompConfig from 'components/BizBuilder/Field/CoverViewCompConfig';
+import DatePickerCompConfig from 'components/BizBuilder/Field/DatePickerCompConfig';
+import TitleCompConfig from 'components/BizBuilder/Field/TitleCompConfig';
+import CustomBuilderListConfig from 'components/BizBuilder/Field/CustomBuilderListConfig';
+import ExcelDownloadCompConfig from 'components/BizBuilder/Field/ExcelDownloadCompConfig';
+import RootKeyRadioConfig from 'components/BizBuilder/Field/RootKeyRadioConfig';
+import ProfileConfig from 'components/BizBuilder/Field/ProfileConfig';
+import EshsCondConfig from 'components/BizBuilder/Field/EshsCondConfig';
+import ChangeReadDataCompConfig from 'components/BizBuilder/Field/ChangeReadDataCompConfig';
+import EshsInterLockConfig from 'components/BizBuilder/Field/EshsInterLockConfig';
+import CustomSelectSearchConfig from 'components/BizBuilder/Field/CustomSelectSearchConfig';
+import CustomSearchInputConfig from 'components/BizBuilder/Field/CustomSearchInputConfig';
+import LabelByNodeIdConfig from 'components/BizBuilder/Field/LabelByNodeIdConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -52,4 +64,16 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/EshsSearchbarConfig': { renderer: property => <EshsSearchbarConfig {...property} /> },
   'components/BizBuilder/Field/DragUploadMDCSViewCompConfig': { renderer: property => <DragUploadMDCSViewCompConfig {...property} /> },
   'components/BizBuilder/Field/CoverViewCompConfig': { renderer: property => <CoverViewCompConfig {...property} /> },
+  'components/BizBuilder/Field/DatePickerCompConfig': { renderer: property => <DatePickerCompConfig {...property} /> },
+  'components/BizBuilder/Field/TitleCompConfig': { renderer: property => <TitleCompConfig {...property} /> },
+  'components/BizBuilder/Field/CustomBuilderListConfig': { renderer: property => <CustomBuilderListConfig {...property} /> },
+  'components/BizBuilder/Field/ExcelDownloadCompConfig': { renderer: property => <ExcelDownloadCompConfig {...property} /> },
+  'components/BizBuilder/Field/RootKeyRadioConfig': { renderer: property => <RootKeyRadioConfig {...property} /> },
+  'components/BizBuilder/Field/ProfileConfig': { renderer: property => <ProfileConfig {...property} /> },
+  'components/BizBuilder/Field/EshsCondConfig': { renderer: property => <EshsCondConfig {...property} /> },
+  'components/BizBuilder/Field/ChangeReadDataCompConfig': { renderer: property => <ChangeReadDataCompConfig {...property} /> },
+  'components/BizBuilder/Field/EshsInterLockConfig': { renderer: property => <EshsInterLockConfig {...property} /> },
+  'components/BizBuilder/Field/CustomSelectSearchConfig': { renderer: property => <CustomSelectSearchConfig {...property} /> },
+  'components/BizBuilder/Field/CustomSearchInputConfig': { renderer: property => <CustomSearchInputConfig {...property} /> },
+  'components/BizBuilder/Field/LabelByNodeIdConfig': { renderer: property => <LabelByNodeIdConfig {...property} /> },
 };

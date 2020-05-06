@@ -1,3 +1,4 @@
+import { Cookies } from 'react-cookie';
 import { DEFAULT_LOCALE } from '../containers/common/LanguageProvider/constants';
 
 const lang = {
@@ -146,4 +147,11 @@ const checkMode = (history, pathArray, singlePathname, appsPathname, data) => {
   }
 };
 
-export { lang, intlObj, sortBy, imgUrl, searchTree, bannerImgUrl, isExplorer, isDesktop, getStoreName, checkPath, checkMode };
+const loginPage = path => {
+  const cookies = new Cookies();
+  cookies.remove('empNo', { path: '/' });
+  cookies.remove('access_token', { path: '/' });
+  window.location.href = `/api/common/v1/auth/oauth${path && typeof path === 'string' ? `?path=${encodeURI(path)}` : ''}`;
+};
+
+export { lang, intlObj, sortBy, imgUrl, searchTree, bannerImgUrl, isExplorer, isDesktop, getStoreName, checkPath, checkMode, loginPage };

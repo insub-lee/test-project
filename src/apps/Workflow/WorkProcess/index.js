@@ -5,9 +5,12 @@ import { Row, Col, Modal, Icon } from 'antd';
 
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 
-import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
+import BuilderProcessModal from 'apps/Workflow/WorkProcess/BuilderProcessModal';
+import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
 import StyledWorkProcess from 'apps/Workflow/WorkProcess/StyledWorkProcess';
 import SelectApprovePage from 'apps/mdcs/user/Workflow/SelectApprovePage';
+
+const AntdModal = StyledSelectModal(Modal);
 
 class WorkProcess extends Component {
   state = {
@@ -18,7 +21,7 @@ class WorkProcess extends Component {
   };
 
   componentDidMount() {
-    const { processRule, viewType, CustomWorkProcess } = this.props;
+    const { processRule } = this.props;
     console.debug('1', processRule);
     const { DRAFT_PROCESS_STEP } = processRule;
     const filterRule = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
@@ -43,8 +46,9 @@ class WorkProcess extends Component {
   };
 
   render() {
-    const { viewType } = this.props;
+    const { viewType, CustomWorkProcessModal } = this.props;
     const { processRule, modalVisible, filterRule } = this.state;
+    console.debug('workprocess', this.props);
     return (
       <StyledWorkProcess>
         <div>
@@ -61,7 +65,7 @@ class WorkProcess extends Component {
               )}
             </div>
           </div>
-          <div style={{ marginBottom: '10px', marginTop: '2px' }}>
+          <div style={{ marginBottom: '10px' }}>
             {filterRule.map(item => (
               <div className="dataWrapper_mdcs">
                 <Row type="flex">
@@ -114,19 +118,33 @@ class WorkProcess extends Component {
             ))}
           </div>
         </div>
-        <Modal
+        <AntdModal
           title="결재선지정"
           visible={modalVisible}
           // onOk={this.handleComplete}
           onCancel={this.handleCloseModal}
-          width="70%"
+          width="62%"
           style={{ top: 50, height: '500px' }}
           footer={[]}
           destroyOnClose
           maskClosable={false}
         >
-          <WorkProcessModal processRuleProc={processRule} visible={modalVisible} onComplete={this.onProcessRuleComplete} onCloseModal={this.handleCloseModal} />
-        </Modal>
+          {typeof CustomWorkProcessModal === 'function' ? (
+            <CustomWorkProcessModal
+              processRuleProc={processRule}
+              visible={modalVisible}
+              onComplete={this.onProcessRuleComplete}
+              onCloseModal={this.handleCloseModal}
+            />
+          ) : (
+            <BuilderProcessModal
+              processRuleProc={processRule}
+              visible={modalVisible}
+              onComplete={this.onProcessRuleComplete}
+              onCloseModal={this.handleCloseModal}
+            />
+          )}
+        </AntdModal>
       </StyledWorkProcess>
     );
   }

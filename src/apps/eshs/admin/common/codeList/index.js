@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Row, Col, Table, Select, Input, message } from 'antd';
+import { Table, Select, Input, message } from 'antd';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
-import StyledButton from 'apps/mdcs/styled/StyledButton';
-import Moment from 'moment';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import ExcelDownloader from '../Excel';
 
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import Sketch from 'components/BizBuilder/Sketch';
-import Group from 'components/BizBuilder/Sketch/Group';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
-
-const AntdTable = StyledAntdTable(Table);
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
+const AntdLineTable = StyledLineTable(Table);
 
 const { Option } = Select;
-
-Moment.locale('ko');
 
 class List extends Component {
   constructor(props) {
@@ -26,7 +26,6 @@ class List extends Component {
       code: '',
       selectBoxData: [],
       listData: [],
-      codeType: '',
       pullpath: '',
       nodeOrdinal: '',
       nodeId: '',
@@ -38,15 +37,11 @@ class List extends Component {
   }
 
   changeSelectValue = value => {
-    this.setState({ changeSelectValue: value, code: '', name: '' }, () => this.selectCode());
+    this.setState({ changeSelectValue: value, code: '', name: '', useYN: '' }, () => this.selectCode());
   };
 
-  changeInputValue = value => {
-    this.setState({ name: value });
-  };
-
-  changeCodeValue = value => {
-    this.setState({ code: value });
+  onChangeValue = (name, value) => {
+    this.setState({ [name]: value });
   };
 
   callBackApi = () => {
@@ -66,72 +61,56 @@ class List extends Component {
   }
 
   initData = () => {
-    const { result, INIT_NODE_ID } = this.props;
+    const {
+      result: { apiData },
+      INIT_NODE_ID,
+    } = this.props;
     const { changeSelectValue } = this.state;
-    const selectBoxData =
-      result && result.apiData && result.apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === INIT_NODE_ID && x.LVL === 2 && x.USE_YN === 'Y');
-    const listDataTemp = result && result.apiData && result.apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3);
-    const listData = listDataTemp && listDataTemp.map(item => ({ ...item, USE_YN: item.USE_YN === 'Y' ? '사용중' : '삭제' }));
-    const pullpath = result && result.apiData && result.apiData.categoryMapList.find(x => x.NODE_ID === changeSelectValue);
-    this.setState({ selectBoxData, listData, pullpath: pullpath && pullpath.FULLPATH, nodeOrdinal: pullpath && pullpath.NODE_ORDINAL });
-    this.codeFomat(listData && listData[0]);
+    const initNodeData = apiData && apiData.categoryMapList.find(x => x.NODE_ID === INIT_NODE_ID);
+    const selectBoxData = apiData && apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === INIT_NODE_ID && x.LVL === 2 && x.USE_YN === 'Y');
+    const listData = apiData && apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3);
+    const excelData =
+      apiData &&
+      apiData.categoryMapList
+        .filter(x => x.FULLPATH.indexOf(`${initNodeData.FULLPATH}`) !== -1 && x.LVL > 2)
+        .map(item => ({
+          ...item,
+          PARENT_NODE: apiData && apiData.categoryMapList.find(f => item.PARENT_NODE_ID === f.NODE_ID).NAME_KOR,
+        }));
+    const pullpath = apiData && apiData.categoryMapList.find(x => x.NODE_ID === changeSelectValue);
+    this.setState({
+      selectBoxData,
+      listData,
+      pullpath: pullpath && pullpath.FULLPATH,
+      nodeOrdinal: pullpath && pullpath.NODE_ORDINAL,
+      excelData,
+      excelNm: initNodeData.NAME_KOR,
+    });
   };
 
   selectCode = () => {
     const { result } = this.props;
     const { changeSelectValue } = this.state;
     if (changeSelectValue) {
-      const listDataTemp = result && result.apiData && result.apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3);
-      const listData = listDataTemp && listDataTemp.map(item => ({ ...item, USE_YN: item.USE_YN === 'Y' ? '사용중' : '삭제' }));
+      const listData = result && result.apiData && result.apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3);
       const pullpath = result && result.apiData && result.apiData.categoryMapList.find(x => x.NODE_ID === changeSelectValue);
       this.setState({ listData, pullpath: pullpath && pullpath.FULLPATH, nodeOrdinal: pullpath && pullpath.NODE_ORDINAL });
-      this.codeFomat(listData && listData[0]);
-      this.renderTable();
     } else {
-      this.warning('코드 구분을 선택해주세요.');
+      message.warning('코드 구분을 선택해주세요.');
     }
-  };
-
-  codeFomat = codeData => {
-    let codeType = '';
-    if (codeData && codeData.CODE.indexOf('00') === 0) {
-      codeType = '00Format';
-    } else if (codeData && codeData.CODE === codeData.NAME_KOR) {
-      codeType = 'nameFormat';
-    } else {
-      codeType = 'selfTyping';
-    }
-    this.setState({
-      codeType,
-    });
-  };
-
-  warning = value => {
-    message.warning(value);
   };
 
   insertOverlab = () => {
-    const { codeType, listData, name } = this.state;
-    if (codeType === 'selfTyping') {
+    const { changeSelectValue, listData } = this.state;
+    if (changeSelectValue) {
       const overlab = listData && listData[0] && listData.find(item => item.CODE === this.state.code);
       if (overlab) {
-        this.warning('기존에 동일한 코드가 존재합니다.');
+        message.warning('기존에 동일한 코드가 존재합니다.');
       } else {
         this.onChangeData('I');
       }
-    } else if (codeType === '00Format') {
-      let max;
-      if (listData && listData[0]) {
-        max =
-          listData.length > 1
-            ? listData.reduce((prev, curr) => (Number(prev.CODE) > Number(curr.CODE) ? Number(prev.CODE) : Number(curr.CODE)))
-            : Number(listData[0].CODE);
-      }
-      this.setState({ code: `00${String(max + 1)}` }, () => this.onChangeData('I'));
-    } else if (codeType === 'nameFormat') {
-      this.setState({ code: name }, () => this.onChangeData('I'));
     } else {
-      this.warning('코드 구분을 선택해주세요.');
+      message.warning('코드 구분을 선택해주세요.');
     }
   };
 
@@ -160,156 +139,157 @@ class List extends Component {
       } else if (value === 'I') {
         submitHandlerBySaga(id, 'POST', '/api/admin/v1/common/categoryMap', submitData, this.callBackApi);
       } else if (!this.state.code) {
-        this.warning('코드가 올바르지 않습니다.');
+        message.warning('코드가 올바르지 않습니다.');
       }
     } else if (!this.state.changeSelectValue) {
-      this.warning('코드 구분을 선택해주세요.');
+      message.warning('코드 구분을 선택해주세요.');
     } else if (!this.state.name) {
-      this.warning('코드명을 올바르게 입력하시오.');
+      message.warning('코드명을 올바르게 입력하시오.');
     }
 
     this.onReset();
   };
 
-  onReset() {
+  onReset = () => {
     this.setState({
       name: '',
       code: '',
+      useYN: '',
     });
-  }
-
-  renderTable() {
-    const { columns } = this.props;
-    const { listData } = this.state;
-    let renderList = [
-      {
-        USE_YN: (
-          <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('R')}>
-            삭제 취소
-          </StyledButton>
-        ),
-        CODE: (
-          <Input
-            readOnly={this.state.codeType !== 'selfTyping'}
-            onClick={this.state.codeType !== 'selfTyping' ? () => this.warning('입력하는 코드형식이 아닙니다') : ''}
-            value={this.state.code}
-            onChange={e => this.changeCodeValue(e.target.value)}
-          />
-        ),
-        NAME_KOR: (
-          <>
-            <Input style={{ width: '300px' }} value={this.state.name} onChange={e => this.changeInputValue(e.target.value)}></Input>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
-              추가
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
-              수정
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
-              삭제
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
-              Reset
-            </StyledButton>
-          </>
-        ),
-      },
-    ];
-
-    renderList = [...renderList, ...(listData || [])];
-    return (
-      <AntdTable
-        style={{ cursor: 'pointer' }}
-        rowKey={renderList.NODE_ID}
-        key={renderList.NODE_ID}
-        columns={columns}
-        dataSource={renderList}
-        bordered
-        onRow={record => ({
-          onClick: () => {
-            this.selectedRecord(record);
-          },
-        })}
-        pagination={{ pageSize: 100 }}
-        scroll={{ y: 800 }}
-        footer={() => <div style={{ textAlign: 'center' }}>{`${renderList.length - 1} 건`}</div>}
-      />
-    );
-  }
-
-  selectedRecord = record => {
-    if (record.PARENT_NODE_ID) {
-      this.setState({
-        changeSelectValue: record.PARENT_NODE_ID,
-        name: record.NAME_KOR,
-        code: record.CODE,
-        nodeId: record.NODE_ID,
-      });
-    }
   };
 
-  renderSelect = () => {
-    const { selectBoxData } = this.state;
-    return (
-      <Col span={4}>
-        <Select style={{ width: '200px' }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
-          <Option value="0" disabled>
-            선택
-          </Option>
-          {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
-        </Select>
-      </Col>
-    );
+  selectedRecord = record => {
+    this.setState({
+      changeSelectValue: record.PARENT_NODE_ID,
+      name: record.NAME_KOR,
+      code: record.CODE,
+      nodeId: record.NODE_ID,
+      useYN: record.USE_YN,
+    });
   };
 
   render() {
-    return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <StyledViewDesigner>
-          <Sketch>
-            <Group>
-              <Row>
-                {this.renderSelect()}
-                <Col span={4}>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.selectCode()}>
-                    검색
+    const { selectBoxData, listData, excelData, excelNm, code, name, useYN } = this.state;
+    const columns = [
+      {
+        title: '상태',
+        align: 'center',
+        width: 150,
+        children: [
+          {
+            title: (
+              <>
+                {useYN === 'Y' ? (
+                  <span className="span-item">사용</span>
+                ) : (
+                  <StyledButton className="btn-primary btn-sm" onClick={() => this.onChangeData('R')}>
+                    삭제 취소
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first">엑셀받기</StyledButton>
-                </Col>
-              </Row>
-              {this.renderTable()}
-            </Group>
-          </Sketch>
-        </StyledViewDesigner>
-      </div>
+                )}
+              </>
+            ),
+            dataIndex: 'USE_YN',
+            className: 'th-form',
+            align: 'center',
+            width: 150,
+            render: item => <span>{item === 'Y' ? '사용중' : '삭제'}</span>,
+          },
+        ],
+      },
+      {
+        title: '코드',
+        width: 150,
+        children: [
+          {
+            title: <AntdInput className="ant-input-sm input-center" value={code} onChange={e => this.onChangeValue('code', e.target.value)} />,
+            className: 'th-form',
+            dataIndex: 'CODE',
+            align: 'center',
+          },
+        ],
+      },
+      {
+        align: 'left',
+        title: '코드명',
+        children: [
+          {
+            title: (
+              <>
+                <AntdInput
+                  className="ant-input-inline ant-input-sm input-left mr5"
+                  style={{ width: '300px' }}
+                  value={name}
+                  onChange={e => this.onChangeValue('name', e.target.value)}
+                />
+                <StyledButtonWrapper className="btn-wrap-inline">
+                  <StyledButton className="btn-primary btn-sm btn-first" onClick={this.insertOverlab}>
+                    추가
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('U')}>
+                    수정
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('D')}>
+                    삭제
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-sm" onClick={this.onReset}>
+                    Reset
+                  </StyledButton>
+                </StyledButtonWrapper>
+              </>
+            ),
+            className: 'th-form',
+            dataIndex: 'NAME_KOR',
+            align: 'left',
+          },
+        ],
+      },
+    ];
+    return (
+      <ContentsWrapper>
+        <div className="selSaveWrapper alignLeft">
+          <AntdSelect className="select-mid mr5" style={{ width: 200 }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
+            <Option value="0" disabled>
+              선택
+            </Option>
+            {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
+          </AntdSelect>
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary btn-first" onClick={this.selectCode}>
+              검색
+            </StyledButton>
+            <ExcelDownloader dataList={excelData} excelNm={excelNm} />
+          </StyledButtonWrapper>
+        </div>
+        <AntdLineTable
+          className="tableWrapper"
+          rowKey={listData.NODE_ID}
+          key={listData.NODE_ID}
+          columns={columns}
+          dataSource={listData || []}
+          bordered
+          onRow={record => ({
+            onClick: () => {
+              this.selectedRecord(record);
+            },
+          })}
+          footer={() => <span>{`${listData && listData.length} 건`}</span>}
+        />
+      </ContentsWrapper>
     );
   }
 }
 
-List.propTypes = {};
+List.propTypes = {
+  sagaKey: PropTypes.string,
+  submitHandlerBySaga: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
+  MAP_ID: PropTypes.number,
+  result: PropTypes.any,
+  INIT_NODE_ID: PropTypes.number,
+};
 
 List.defaultProps = {
   getCallDataHandler: () => {},
-  formData: {},
-  columns: [
-    {
-      title: '상태',
-      dataIndex: 'USE_YN',
-      align: 'center',
-      width: 150,
-    },
-    {
-      title: '코드',
-      dataIndex: 'CODE',
-      align: 'center',
-      width: 150,
-    },
-    {
-      title: '코드명',
-      dataIndex: 'NAME_KOR',
-      align: 'left',
-    },
-  ],
 };
 
 export default List;

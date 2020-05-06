@@ -25,7 +25,7 @@ const CheckList = ({ onChange, dataSource, onClear, props, isMultiple }) => (
                   </Col>
                   <Col style={{ textAlign: 'center' }}>
                     <StyledButton
-                      className="btn-gray btn-xs"
+                      className="btn-gray btn-xxs"
                       onClick={() => {
                         onClear(ListItems.groupKey);
                       }}

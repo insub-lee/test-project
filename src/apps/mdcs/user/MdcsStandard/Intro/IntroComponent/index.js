@@ -1,28 +1,25 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Select, Modal, Radio, Table, Spin } from 'antd';
+import { Modal, Radio, Table } from 'antd';
 
 import draftImg1 from 'apps/mdcs/images/draft_img1.png';
 import message from 'components/Feedback/message';
-
+import history from 'utils/history';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
 import * as ModifyType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
 import StyledInputView from 'apps/mdcs/components/BizBuilderBase/viewComponent/InputPage/Styled';
 import BizBuilderBase from 'components/BizBuilderBase';
 
-import DraftPrcLine from 'apps/mdcs/user/Workflow/DraftPrcLine';
+import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
 import StyledContents from '../../../../styled/StyledContents';
 import StyledButton from '../../../../styled/StyledButton';
 import StyledModalWrapper from '../../../../styled/Modals/StyledModalWrapper';
 
-import StdView from '../StdView';
-import StdInput from '../StdInput';
 import Enactment from './Enactment';
 import Amendment from './Amendment';
 import Abrogation from './Abrogation';
 import AbrogationMulti from './AbrogationMulti';
-import TransferView from './AbrogationMulti/TransferView';
 
 const AntdModal = StyledModalWrapper(Modal);
 
@@ -32,7 +29,7 @@ class IntroComponent extends Component {
     this.state = {
       selectedDraft: DraftType.ENACTMENT,
       isShow: false,
-      isLoading: true,
+      isLoading: false,
       docType: '',
       selectedworkSeq: 0,
       viewChangeSeq: undefined,
@@ -88,13 +85,20 @@ class IntroComponent extends Component {
     this.setState({ isLoading: false });
   };
 
+  onCloseModalHandler = (id, redirectUrl) => {
+    this.setState({ isShow: false });
+    message.success('기안 완료');
+    // history.push('/apps/Workflow/User/Draft');
+    redirectUrl(id, '/apps/Workflow/User/Draft');
+  };
+
   onCloseModal = () => {
     this.setState({ isShow: false });
   };
 
   render() {
     const { selectedDraft, isShow, isLoading, selectedworkSeq, selectedTaskSeq, docNumber, selectedNodeId, viewType, workPrcProps, viewChangeSeq } = this.state;
-    console.debug('selectedWorkSeq', selectedworkSeq, selectedTaskSeq, docNumber, workPrcProps, viewChangeSeq);
+    console.debug('viewinfo', selectedworkSeq, viewChangeSeq);
     return (
       <StyledContents>
         <div className="contentWrapper">
@@ -138,26 +142,29 @@ class IntroComponent extends Component {
         <AntdModal destroyOnClose style={{ top: '50px' }} width={900} visible={isShow} onCancel={this.onCloseModal} footer={null} maskClosable={false}>
           <StyledInputView>
             <div className="pop_tit">업무표준</div>
-            <div style={{ display: isLoading ? 'block' : 'none' }}>
-              <Spin tip="Loading...">
-                <div style={{ height: '300px' }} />
-              </Spin>
-            </div>
+
             <div style={{ display: !isLoading ? 'block' : 'none' }}>
               <BizBuilderBase
                 sagaKey={`BizDoc_${selectedworkSeq}`}
                 workSeq={selectedworkSeq}
                 taskSeq={selectedTaskSeq}
-                compProps={{ docNumber, NODE_ID: selectedNodeId, onCloseModleHandler: this.onCompleteCloseModal }}
-                CustomInputPage={StdInput}
-                CustomViewPage={StdView}
-                CustomWorkProcess={DraftPrcLine}
                 viewChangeSeq={viewChangeSeq}
-                workPrcProps={workPrcProps}
+                CustomWorkProcessModal={WorkProcessModal}
                 viewType={viewType}
-                loadingComplete={this.loadingComplete}
+                workPrcProps={workPrcProps}
+                onCloseModalHandler={this.onCloseModalHandler}
                 onCloseModal={this.onCloseModal}
-                // revisionType={revisionType}
+                compProps={{ docNumber, NODE_ID: selectedNodeId }}
+                InputCustomButtons={({ saveBeforeProcess, onCloseModal, sagaKey, reloadId }) => (
+                  <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                    <StyledButton className="btn-primary btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                      저장
+                    </StyledButton>
+                    <StyledButton className="btn-light btn-sm" onClick={() => onCloseModal()}>
+                      닫기
+                    </StyledButton>
+                  </div>
+                )}
               />
             </div>
           </StyledInputView>

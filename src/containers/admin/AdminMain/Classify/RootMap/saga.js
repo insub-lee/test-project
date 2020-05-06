@@ -9,7 +9,7 @@ import * as constantTypes from './constants';
 import * as selectors from './selectors';
 
 function* getRootMapList({ payload }) {
-  const response = yield call(Axios.get, `/api/admin/v1/common/categoryRootMap?GUBUN=${payload.GUBUN}`);
+  const response = yield call(Axios.get, `/api/admin/v1/common/categoryRootMap?GUBUN=${payload.GUBUN}&searchText=${payload.searchText}`);
   const { rootMapList } = response;
   yield put(actions.setRootMapList(rootMapList));
 }

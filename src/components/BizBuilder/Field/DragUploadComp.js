@@ -39,7 +39,16 @@ class DragUploadComp extends Component {
     };
 
     const { MULTIPLE_UPLOAD, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST, PREVIEW_SETTING } = CONFIG.property;
-    this.setState({ fileInfo: initfiles, options: { MULTIPLE_UPLOAD, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST, PREVIEW_SETTING } });
+    this.setState({
+      fileInfo: initfiles,
+      options: {
+        MULTIPLE_UPLOAD: MULTIPLE_UPLOAD || 'N',
+        MULTIPLE_SELECT: MULTIPLE_SELECT || 'N',
+        FILTER_EXTENSION: FILTER_EXTENSION || 'N',
+        EXTENSION_LIST: EXTENSION_LIST || 'N',
+        PREVIEW_SETTING: PREVIEW_SETTING || 'N',
+      },
+    });
   }
 
   changeFormDataHanlder = () => {

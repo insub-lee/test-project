@@ -314,24 +314,27 @@ class MyPageTree extends Component {
             PRNT_ID = nextParentNode.MENU_ID;
           }
 
-          const resortTreeData = (data, lvl, pathArr) => {
+          // eslint-disable-next-line no-shadow
+          const resortTreeData = (data, pathArr, lvl) => {
             for (let i = 0; i < data.length; i += 1) {
+              // eslint-disable-next-line no-shadow
               const node = data[i];
               const path = [...pathArr, node.key];
 
               node.SORT_SQ = i + 1;
               node.LVL = lvl;
               node.path = path;
+
               if (node.MENU_ID === MENU_ID) {
                 node.PRNT_ID = PRNT_ID;
               }
               if (node.children) {
-                resortTreeData(node.children, lvl + 1, path);
+                resortTreeData(node.children, path, lvl + 1);
               }
             }
           };
 
-          resortTreeData(treeData, treeData[0].LVL, [ROOT_ID]);
+          resortTreeData(treeData, [ROOT_ID], 0);
 
           saveData(null, treeData);
           moveNode(treeFunc.generateList(fromJS(treeData)));
@@ -474,14 +477,14 @@ class MyPageTree extends Component {
           title = (
             <div>
               <Popover placement="right" content={buttons} trigger="hover" overlayClassName="mypageTreePopupMenu">
-                <button
+                <span
                   className={`${node.key === selectedIndex ? 'active' : ''}`}
                   onClick={handleTreeOnClick}
                   onMouseOver={() => (!showInsert && !showEdit ? this.onHoverTreeNode(node.key) : '')}
                   style={{ cursor: 'pointer' }}
                 >
                   {node.title}
-                </button>
+                </span>
               </Popover>
               <Popover
                 placement="right"

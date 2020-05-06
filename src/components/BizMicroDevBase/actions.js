@@ -7,6 +7,13 @@ export const getCallDataHandler = (id, apiArys, callbackFunc) => ({
   callbackFunc,
 });
 
+export const getCallDataHandlerReturnRes = (id, apiInfo, callbackFunc) => ({
+  type: `${actionTypes.GET_CALLDATA_SAGA_RETURN_RES}_${id}`,
+  id,
+  apiInfo,
+  callbackFunc,
+});
+
 export const setCallDataHandler = (id, apiKey, response) => ({
   type: `${actionTypes.SET_CALLDATA_SAGA}_${id}`,
   id,
@@ -62,4 +69,10 @@ export const removeFormDataReduxStateByKey = (id, key) => ({
 export const resetCalledData = id => ({
   type: `${actionTypes.RESET_CALLED_DATA}_${id}`,
   id,
+});
+
+export const getFileDownload = (id, url, fileName) => ({
+  type: `${actionTypes.GET_FILE_DOWNLOAD}_${id}`,
+  url,
+  fileName,
 });

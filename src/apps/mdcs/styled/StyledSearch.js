@@ -6,9 +6,9 @@ const StyledSearch = styled.div`
       border-bottom: 0;
       margin: 0;
       background: #4491e0;
-      padding: 0 30px;
       height: 55px;
       line-height: 55px;
+      text-align: center;
       .ant-tabs-nav-wrap {
         margin-bottom: 0;
         .ant-tabs-ink-bar {
@@ -141,7 +141,7 @@ const StyledSearch = styled.div`
             width: 20%;
             float: left;
             padding: 10px 15px;
-            height: 100%;
+            height: calc(100vh - 146px);
             border-right: 1px solid #ebf0f6;
           }
           &.formWrapper {

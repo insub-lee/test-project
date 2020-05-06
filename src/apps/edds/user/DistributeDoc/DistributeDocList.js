@@ -4,15 +4,47 @@ import { Table, Icon, Button, Modal } from 'antd';
 
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+
+import DocView from './DocView';
+import Redistribute from './Redistribute';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledModalWrapper(Modal);
 
 class DistributeDocList extends Component {
+  state = {
+    isShow: false,
+    isRedistShow: false,
+    selectedRow: {},
+  };
+  
   componentDidMount() {
     const { id, apiAry, getCallDataHandler } = this.props;
     getCallDataHandler(id, apiAry, () => {});
-  }
+  };
+
+  onClickRow = row => {
+    this.setState({
+      selectedRow: row,
+      isShow: true,
+    });
+  };
+
+  onCancelPopup = () => {
+    this.setState({
+      isShow: false,
+      isRedistShow: false,
+    });
+  };
+
+  onClickMail = row => {
+    this.setState({
+      selectedRow: row,
+      isRedistShow: true,
+    });
+  };
 
   columns = [
     {
@@ -41,7 +73,7 @@ class DistributeDocList extends Component {
       dataIndex: 'TITLE',
       key: 'TITLE',
       ellipsis: true,
-      render: (text, record) => <Button type="link">{text}</Button>
+      render: (text, record) => <Button type="link" onClick={() => this.onClickRow(record)}>{text}</Button>
     },
     {
       title: '배포자',
@@ -68,7 +100,7 @@ class DistributeDocList extends Component {
       key: 'RE_DIST',
       width: '10%',
       align: 'center',
-      render: (text, record) => <Icon type="mail" style={{ cursor: 'pointer' }} onClick={this.onClickMail} />,
+      render: (text, record) => <Icon type="mail" style={{ cursor: 'pointer' }} onClick={() => this.onClickMail(record)} />,
     },
   ]
 
@@ -82,14 +114,36 @@ class DistributeDocList extends Component {
     }
 
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <div style={{ marginBottom: '10px' }}>
-          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
-            <Icon type="form" /> 배포문서 목록
-          </p>
-        </div>
-        <AntdTable dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))} columns={this.columns} />
-      </div>
+      <>
+        <ContentsWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 배포문서 목록
+            </p>
+          </div>
+          <AntdTable dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))} columns={this.columns} />
+        </ContentsWrapper>
+        <AntdModal
+          width={700}
+          visible={this.state.isShow}
+          title="배포문서 다운로드"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={[<StyledButton className="btn-light" onClick={this.onCancelPopup}>닫기</StyledButton>]}
+        >
+          <DocView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
+        </AntdModal>
+        <AntdModal
+          width={500}
+          visible={this.state.isRedistShow}
+          title="재배포 요청"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <Redistribute selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
+        </AntdModal>
+      </>
     );
   }
 }

@@ -94,9 +94,29 @@ import TakeOutSearchComp from 'components/BizBuilder/Field/TakeOutSearchComp';
 import CustomEditorComp from 'components/BizBuilder/Field/CustomEditorComp';
 import BareaLabel from 'components/BizBuilder/Field/BareaLabel';
 import CompNmLabel from 'components/BizBuilder/Field/CompNmLabel';
-import SRDReqCustomSelectComp from 'components/BizBuilder/Field/SRDReqCustomSelectComp';
 import CoverViewComp from 'components/BizBuilder/Field/CoverViewComp';
 import SelectReadComp from 'components/BizBuilder/Field/SelectReadComp';
+import CustomBuilderListComp from 'components/BizBuilder/Field/CustomBuilderListComp';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import TimeInputComp from 'components/BizBuilder/Field/TimeInputComp';
+import CheckboxSingleComp from 'components/BizBuilder/Field/CheckboxSingleComp';
+import RootKeyRadioComp from 'components/BizBuilder/Field/RootKeyRadioComp';
+import RootKeyCheckBoxComp from 'components/BizBuilder/Field/RootKeyCheckBoxComp';
+import ProfileInputComp from 'components/BizBuilder/Field/ProfileInputComp';
+import CheckableTreeSelectViewComp from 'components/BizBuilder/Field/CheckableTreeSelectViewComp';
+import RadioViewByCategoryMapComp from 'components/BizBuilder/Field/RadioViewByCategoryMapComp';
+import EshsCondComp from 'components/BizBuilder/Field/EshsCondComp';
+import MdcsEndDateViewComp from 'components/BizBuilder/Field/MdcsEndDateViewComp';
+import MdcsRevisionHistoryListComp from 'components/BizBuilder/Field/MdcsRevisionHistoryListComp';
+import MdcsProcessListComp from 'components/BizBuilder/Field/MdcsProcessListComp';
+import ChangeReadDataComp from 'components/BizBuilder/Field/ChangeReadDataComp';
+import LawClauseYearComp from 'components/BizBuilder/Field/LawClauseYearComp';
+import EshsInterLockComp from 'components/BizBuilder/Field/EshsInterLockComp';
+import CustomSelectSearchComp from 'components/BizBuilder/Field/CustomSelectSearchComp';
+import CustomSearchInputComp from 'components/BizBuilder/Field/CustomSearchInputComp';
+import MdcsDistDeptListComp from 'components/BizBuilder/Field/MdcsDistDeptListComp';
+import OldScopeComp from 'components/BizBuilder/Field/OldScopeComp';
+import LabelByNodeIdComp from 'components/BizBuilder/Field/LabelByNodeIdComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
@@ -195,5 +215,25 @@ export const CompInfo = {
   'components/BizBuilder/Field/CustomEditorComp': { renderer: property => <CustomEditorComp {...property} /> },
   'components/BizBuilder/Field/BareaLabel': { renderer: property => <BareaLabel {...property} /> },
   'components/BizBuilder/Field/CompNmLabel': { renderer: property => <CompNmLabel {...property} /> },
-  'components/BizBuilder/Field/SRDReqCustomSelectComp': { renderer: property => <SRDReqCustomSelectComp {...property} /> },
+  'components/BizBuilder/Field/CustomBuilderListComp': { renderer: property => <CustomBuilderListComp {...property} /> },
+  'components/BizBuilder/Field/ExcelDownloadComp': { renderer: property => <ExcelDownloadComp {...property} /> },
+  'components/BizBuilder/Field/TimeInputComp': { renderer: property => <TimeInputComp {...property} /> },
+  'components/BizBuilder/Field/CheckboxSingleComp': { renderer: property => <CheckboxSingleComp {...property} /> },
+  'components/BizBuilder/Field/RootKeyRadioComp': { renderer: property => <RootKeyRadioComp {...property} /> },
+  'components/BizBuilder/Field/RootKeyCheckBoxComp': { renderer: property => <RootKeyCheckBoxComp {...property} /> },
+  'components/BizBuilder/Field/ProfileInputComp': { renderer: property => <ProfileInputComp {...property} /> },
+  'components/BizBuilder/Field/CheckableTreeSelectViewComp': { renderer: property => <CheckableTreeSelectViewComp {...property} /> },
+  'components/BizBuilder/Field/RadioViewByCategoryMapComp': { renderer: property => <RadioViewByCategoryMapComp {...property} /> },
+  'components/BizBuilder/Field/EshsCondComp': { renderer: property => <EshsCondComp {...property} /> },
+  'components/BizBuilder/Field/MdcsEndDateViewComp': { renderer: property => <MdcsEndDateViewComp {...property} /> },
+  'components/BizBuilder/Field/MdcsRevisionHistoryListComp': { renderer: property => <MdcsRevisionHistoryListComp {...property} /> },
+  'components/BizBuilder/Field/MdcsProcessListComp': { renderer: property => <MdcsProcessListComp {...property} /> },
+  'components/BizBuilder/Field/ChangeReadDataComp': { renderer: property => <ChangeReadDataComp {...property} /> },
+  'components/BizBuilder/Field/LawClauseYearComp': { renderer: property => <LawClauseYearComp {...property} /> },
+  'components/BizBuilder/Field/EshsInterLockComp': { renderer: property => <EshsInterLockComp {...property} /> },
+  'components/BizBuilder/Field/CustomSelectSearchComp': { renderer: property => <CustomSelectSearchComp {...property} /> },
+  'components/BizBuilder/Field/CustomSearchInputComp': { renderer: property => <CustomSearchInputComp {...property} /> },
+  'components/BizBuilder/Field/MdcsDistDeptListComp': { renderer: property => <MdcsDistDeptListComp {...property} /> },
+  'components/BizBuilder/Field/OldScopeComp': { renderer: property => <OldScopeComp {...property} /> },
+  'components/BizBuilder/Field/LabelByNodeIdComp': { renderer: property => <LabelByNodeIdComp {...property} /> },
 };

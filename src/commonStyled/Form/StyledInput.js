@@ -23,6 +23,44 @@ const StyledInput = Component => styled(Component)`
       outline: 0;
       box-shadow: 0 0 0 0.2rem transparent;
     }
+    &:disabled {
+      background: #f5f5f5;
+    }
+  }
+  &.ant-input-inline {
+    display: inline-block;
+    vertical-align: middle;
+  }
+  &.mr5 {
+    margin-right: 5px;
+  }
+  &.ant-input-mid {
+    padding: 0.4rem 0.875rem;
+    height: auto;
+  }
+  &.ant-input-sm {
+    padding: 0.313rem 0.844rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    height: auto;
+  }
+  &.ant-input-xs {
+    padding: 0.2rem 0.7rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    height: auto;
+  }
+  &.ant-input-pointer {
+    cursor: pointer;
+  }
+  &.ant-input-center {
+    text-align: center;
+  }
+  &.ant-input-left {
+    text-align: left;
+  }
+  &.ant-input-right {
+    text-align: right;
   }
 `;
 
