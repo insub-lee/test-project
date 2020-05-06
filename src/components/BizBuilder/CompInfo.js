@@ -52,7 +52,6 @@ import RadioMaterialLabelComp from 'components/BizBuilder/Field/RadioMaterialLab
 import RadioPopupComp from 'components/BizBuilder/Field/RadioPopupComp';
 import SelectYearComp from 'components/BizBuilder/Field/SelectYearComp';
 import SelectSiteComp from 'components/BizBuilder/Field/SelectSiteComp';
-import ManageCodeComp from 'components/BizBuilder/Field/ManageCodeComp';
 import JoinReadComp from 'components/BizBuilder/Field/JoinReadComp';
 import AttachDownComp from 'components/BizBuilder/Field/AttachDownComp';
 import DatePickerComp from 'components/BizBuilder/Field/DatePickerComp';
@@ -175,7 +174,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/RadioPopupComp': { renderer: property => <RadioPopupComp {...property} /> },
   'components/BizBuilder/Field/SelectYearComp': { renderer: property => <SelectYearComp {...property} /> },
   'components/BizBuilder/Field/SelectSiteComp': { renderer: property => <SelectSiteComp {...property} /> },
-  'components/BizBuilder/Field/ManageCodeComp': { renderer: property => <ManageCodeComp {...property} /> },
   'components/BizBuilder/Field/JoinReadComp': { renderer: property => <JoinReadComp {...property} /> },
   'components/BizBuilder/Field/AttachDownComp': { renderer: property => <AttachDownComp {...property} /> },
   'components/BizBuilder/Field/TitleModalComp': { renderer: property => <TitleModalComp {...property} /> },

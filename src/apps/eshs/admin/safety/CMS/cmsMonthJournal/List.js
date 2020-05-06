@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import BizBuilderBase from 'components/BizBuilderBase';
 
-import { Input, Select, Popover, message, DatePicker } from 'antd';
+import { Input, Select, Popover, message, DatePicker, Modal } from 'antd';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledModal from 'commonStyled/Modal/StyledModal';
 
 const { TextArea } = Input;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const AntdSelect = StyledSelect(Select);
+const AntdModal = StyledModal(Modal);
 
 moment.locale('ko');
 
@@ -109,6 +112,11 @@ class List extends Component {
     this.setState({ rangeDate: dates });
   };
 
+  onModalChange = seq => {
+    const { isModal } = this.state;
+    this.setState({ isModal: !isModal, taskSeq: seq });
+  };
+
   render() {
     const {
       fixedTeam,
@@ -122,6 +130,8 @@ class List extends Component {
       monthArray,
       yearArray,
       rangeDate,
+      isModal,
+      taskSeq,
     } = this.state;
     const {
       result: { detailData, listData },
@@ -274,8 +284,8 @@ class List extends Component {
                 )}
                 <th colSpan="7"> 건물별 대응 건수</th>
                 <th rowSpan="2">날짜</th>
-                <th rowSpan="2">상세내용</th>
-                <th rowSpan="2">비고</th>
+                <th rowSpan="2">이벤트명</th>
+                <th rowSpan="2">원인 및 조치사항</th>
               </tr>
               <tr>
                 <th>R</th>
@@ -315,11 +325,50 @@ class List extends Component {
                     <td style={{ textAlign: 'center' }}>{item.OTHER}</td>
                     <td>{item.JOURNAL_DATE}</td>
                     <td>
+                      {/* <Popover
+                        style={{ width: '80%' }}
+                        placement="topLeft"
+                        title="이벤트명"
+                        content={<div style={{ width: 660 }}>{item.DETAIL_CONTANT}</div>}
+                        trigger="hover"
+                      >
+                        <div
+                          style={{
+                            textOverflow: 'ellipsis',
+                            overflow: 'hidden',
+                            width: '100px',
+                            whiteSpace: 'nowrap',
+                            fontWeight: `bold`,
+                          }}
+                        >
+                          {item.DETAIL_CONTANT}
+                        </div>
+                      </Popover> */}
                       <Popover
                         style={{ width: '80%' }}
                         placement="topLeft"
-                        title="상세내용"
-                        content={<div style={{ width: 660 }}>{item.DETAIL_CONTANT}</div>}
+                        title="이벤트명"
+                        content={
+                          <div style={{ width: 660 }}>
+                            {item &&
+                              item.DETAIL_CONTANT2.map(detailItem => {
+                                console.log(detailItem);
+                                return (
+                                  <>
+                                    <span
+                                      tabIndex={0}
+                                      role="button"
+                                      onKeyPress={() => this.onModalChange(JSON.parse(detailItem.value).task_seq)}
+                                      onClick={() => this.onModalChange(JSON.parse(detailItem.value).task_seq)}
+                                    >
+                                      {JSON.parse(detailItem.value).detail_contant || ''}
+                                    </span>
+                                    <hr />
+                                  </>
+                                );
+                              })}
+                          </div>
+                        }
                         trigger="hover"
                       >
                         <div
@@ -336,7 +385,22 @@ class List extends Component {
                       </Popover>
                     </td>
                     <td>
-                      <Popover placement="topLeft" title="비고" content={<div style={{ width: 660 }}>{item.REMARK}</div>} trigger="hover">
+                      <Popover
+                        placement="topLeft"
+                        title="원인 및 조치사항"
+                        content={
+                          <div style={{ width: 660 }}>
+                            {item &&
+                              item.DETAIL_CONTANT2.map(detailItem => (
+                                <>
+                                  <span>{JSON.parse(detailItem.value).remark || ''}</span>
+                                  {JSON.parse(detailItem.value).remark ? <hr /> : ''}
+                                </>
+                              ))}
+                          </div>
+                        }
+                        trigger="hover"
+                      >
                         <div
                           style={{
                             textOverflow: 'ellipsis',
@@ -382,6 +446,9 @@ class List extends Component {
             </tbody>
           </table>
         </StyledHtmlTable>
+        <AntdModal width={1000} visible={isModal} title="이벤트 상세보기" onCancel={this.onModalChange} destroyOnClose footer={null}>
+          {isModal && <BizBuilderBase sagaKey="cmsDetailJournal" workSeq={5781} taskSeq={taskSeq} viewType="MODIFY" onCloseModalHandler={this.onModalChange} />}
+        </AntdModal>
       </ContentsWrapper>
     );
   }
