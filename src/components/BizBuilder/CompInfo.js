@@ -87,7 +87,7 @@ import EshsSearchbar from 'components/BizBuilder/Field/EshsSearchbar';
 import StackCustomComp from 'components/BizBuilder/Field/StackCustomComp';
 import EshsSiteItemSearchbar from 'components/BizBuilder/Field/EshsSiteItemSearchbar';
 import ViewUploadedFileComp from 'components/BizBuilder/Field/ViewUploadedFileComp';
-import FlexTableComp from 'components/BizBuilder/Field/FlexTableComp';
+import CustomDataTableComp from 'components/BizBuilder/Field/CustomDataTableComp';
 import ModalTableComp from 'components/BizBuilder/Field/ModalTableComp';
 import TakeOutCustomComp from 'components/BizBuilder/Field/TakeOutCustomComp';
 import TakeOutSearchComp from 'components/BizBuilder/Field/TakeOutSearchComp';
@@ -117,6 +117,8 @@ import CustomSearchInputComp from 'components/BizBuilder/Field/CustomSearchInput
 import MdcsDistDeptListComp from 'components/BizBuilder/Field/MdcsDistDeptListComp';
 import OldScopeComp from 'components/BizBuilder/Field/OldScopeComp';
 import LabelByNodeIdComp from 'components/BizBuilder/Field/LabelByNodeIdComp';
+import NodeIdMultiViewComp from 'components/BizBuilder/Field/NodeIdMultiViewComp';
+import NodeNameByCodeComp from 'components/BizBuilder/Field/NodeNameByCodeComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
@@ -208,7 +210,7 @@ export const CompInfo = {
   'components/BizBuilder/Field/StackCustomComp': { renderer: property => <StackCustomComp {...property} /> },
   'components/BizBuilder/Field/EshsSiteItemSearchbar': { renderer: property => <EshsSiteItemSearchbar {...property} /> },
   'components/BizBuilder/Field/ViewUploadedFileComp': { renderer: property => <ViewUploadedFileComp {...property} /> },
-  'components/BizBuilder/Field/FlexTableComp': { renderer: property => <FlexTableComp {...property} /> },
+  'components/BizBuilder/Field/CustomDataTableComp': { renderer: property => <CustomDataTableComp {...property} /> },
   'components/BizBuilder/Field/ModalTableComp': { renderer: property => <ModalTableComp {...property} /> },
   'components/BizBuilder/Field/TakeOutCustomComp': { renderer: property => <TakeOutCustomComp {...property} /> },
   'components/BizBuilder/Field/TakeOutSearchComp': { renderer: property => <TakeOutSearchComp {...property} /> },
@@ -236,4 +238,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/MdcsDistDeptListComp': { renderer: property => <MdcsDistDeptListComp {...property} /> },
   'components/BizBuilder/Field/OldScopeComp': { renderer: property => <OldScopeComp {...property} /> },
   'components/BizBuilder/Field/LabelByNodeIdComp': { renderer: property => <LabelByNodeIdComp {...property} /> },
+  'components/BizBuilder/Field/NodeIdMultiViewComp': { renderer: property => <NodeIdMultiViewComp {...property} /> },
+  'components/BizBuilder/Field/NodeNameByCodeComp': { renderer: property => <NodeNameByCodeComp {...property} /> },
 };

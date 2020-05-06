@@ -1182,9 +1182,7 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th rowSpan="2">위암</th>
                     <th className="bg-lightgray">
-                      위장조영검사
-                      <br />
-                      <span className="span-sm">(위장 X선 촬영)</span>
+                      위장조영검사 <span className="span-sm">(위장 X선 촬영)</span>
                     </th>
                     <td className="td-pad-none">
                       <AntInput className="ant-input-xxs ant-input-inline ant-input-full" />
@@ -1242,9 +1240,7 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th rowSpan="3">대장암</th>
                     <th className="bg-lightgray">
-                      분변잠혈검사
-                      <br />
-                      <span className="span-sm">(대변 검사)</span>
+                      분변잠혈검사 <span className="span-sm">(대변 검사)</span>
                     </th>
                     <td className="td-pad-none">
                       <AntInput className="ant-input-xxs ant-input-inline ant-input-full" />
@@ -1264,9 +1260,7 @@ class QuestionnaireView extends Component {
                   </tr>
                   <tr>
                     <th className="bg-lightgray">
-                      대장이중조영검사
-                      <br />
-                      <span className="span-sm">(대장 X선 촬영)</span>
+                      대장이중조영검사 <span className="span-sm">(대장 X선 촬영)</span>
                     </th>
                     <td className="td-pad-none">
                       <AntInput className="ant-input-xxs ant-input-inline ant-input-full" />

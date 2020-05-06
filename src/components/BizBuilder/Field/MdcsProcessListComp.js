@@ -49,24 +49,27 @@ class MdcsProcessListComp extends Component {
     const approveList = list.filter(fNode => fNode.NODE_ID === 107 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
     const reviewerList = list.filter(fNode => fNode.NODE_ID === 106 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
     const mailReviewerList = list.filter(fNode => fNode.NODE_ID === 112 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
-    const draftNode = [
-      <tr className="mdcsProcessRow">
-        <td>
-          <div className="mdcsDeptName">{draftList[0].DRAFT_DEPT_NAME}</div>
-          <div className="mdcsPstnName">{draftList[0].PSTN_NAME}</div>
-          <div className="mdcsUserName">{draftList[0].DRAFT_USER_NAME}</div>
-          <div className="mdcsAppvDttm">{draftList[0].APPV_DTTM}</div>
-          <div className="mdcsAppvStatus">{draftList[0].APPV_STATUS ? <Icon type="check-circle" /> : ''}</div>
-        </td>
-        <td>
-          <div className="mdcsDeptName">{approveList[0].DRAFT_DEPT_NAME}</div>
-          <div className="mdcsPstnName">{approveList[0].PSTN_NAME}</div>
-          <div className="mdcsUserName">{approveList[0].DRAFT_USER_NAME}</div>
-          <div className="mdcsAppvDttm">{approveList[0].APPV_DTTM}</div>
-          <div className="mdcsAppvStatus">{approveList[0].APPV_STATUS ? <Icon type="check-circle" /> : ''}</div>
-        </td>
-      </tr>,
-    ];
+    let draftNode = [];
+    if (draftList && draftList.length > 0 && approveList && approveList.length > 0) {
+      draftNode = [
+        <tr key="MdcsProcessListComp-draftList-approveList" className="mdcsProcessRow">
+          <td>
+            <div className="mdcsDeptName">{draftList[0].DRAFT_DEPT_NAME}</div>
+            <div className="mdcsPstnName">{draftList[0].PSTN_NAME}</div>
+            <div className="mdcsUserName">{draftList[0].DRAFT_USER_NAME}</div>
+            <div className="mdcsAppvDttm">{draftList[0].APPV_DTTM}</div>
+            <div className="mdcsAppvStatus">{draftList[0].APPV_STATUS ? <Icon type="check-circle" /> : ''}</div>
+          </td>
+          <td>
+            <div className="mdcsDeptName">{approveList[0].DRAFT_DEPT_NAME}</div>
+            <div className="mdcsPstnName">{approveList[0].PSTN_NAME}</div>
+            <div className="mdcsUserName">{approveList[0].DRAFT_USER_NAME}</div>
+            <div className="mdcsAppvDttm">{approveList[0].APPV_DTTM}</div>
+            <div className="mdcsAppvStatus">{approveList[0].APPV_STATUS ? <Icon type="check-circle" /> : ''}</div>
+          </td>
+        </tr>,
+      ];
+    }
     const dummyNode = (
       <td>
         <div className="mdcsDeptName"></div>
@@ -92,11 +95,19 @@ class MdcsProcessListComp extends Component {
       if (idx % 2 === 0) {
         if (idx + 1 === maxCnt) {
           tempNode = [itemNode, dummyNode];
-          reviewerNode.push(<tr className="mdcsProcessRow">{tempNode}</tr>);
+          reviewerNode.push(
+            <tr key={`MdcsProcessListComp-reviewerList_${node.RESULT_ID}_${idx}`} className="mdcsProcessRow">
+              {tempNode}
+            </tr>,
+          );
         } else tempNode = [itemNode];
       } else {
         tempNode.push(itemNode);
-        reviewerNode.push(<tr className="mdcsProcessRow">{tempNode}</tr>);
+        reviewerNode.push(
+          <tr key={`MdcsProcessListComp-reviewerList_${node.RESULT_ID}_${idx}`} className="mdcsProcessRow">
+            {tempNode}
+          </tr>,
+        );
       }
     });
     const mailReviewerNode = [];
@@ -114,11 +125,19 @@ class MdcsProcessListComp extends Component {
       if (idx % 2 === 0) {
         if (idx + 1 === maxCnt) {
           tempNode = [itemNode, dummyNode];
-          mailReviewerNode.push(<tr className="mdcsProcessRow">{tempNode}</tr>);
+          mailReviewerNode.push(
+            <tr key={`MdcsProcessListComp-mailReviewerList_${node.RESULT_ID}_${idx}`} className="mdcsProcessRow">
+              {tempNode}
+            </tr>,
+          );
         } else tempNode = [itemNode];
       } else {
         tempNode.push(itemNode);
-        mailReviewerNode.push(<tr className="mdcsProcessRow">{tempNode}</tr>);
+        mailReviewerNode.push(
+          <tr key={`MdcsProcessListComp-mailReviewerList_${node.RESULT_ID}_${idx}`} className="mdcsProcessRow">
+            {tempNode}
+          </tr>,
+        );
       }
     });
     this.setState({ draftNode, reviewerNode, mailReviewerNode });
@@ -134,31 +153,37 @@ class MdcsProcessListComp extends Component {
     const { draftNode, reviewerNode, mailReviewerNode } = this.state;
     return (
       <StyledWrap>
-        <table className="mdcsProcessList">
-          <thead>
-            <tr className="mdcsProcessRow">
-              <th>Preparer</th>
-              <th>Approver</th>
-            </tr>
-          </thead>
-          <tbody>{draftNode}</tbody>
-        </table>
-        <table className="mdcsProcessList">
-          <thead>
-            <tr className="mdcsProcessRow">
-              <th colSpan="2">필수심의권자</th>
-            </tr>
-          </thead>
-          <tbody>{reviewerNode}</tbody>
-        </table>
-        <table className="mdcsProcessList">
-          <thead>
-            <tr className="mdcsProcessRow">
-              <th colSpan="2">Mail 심의권자</th>
-            </tr>
-          </thead>
-          <tbody>{mailReviewerNode}</tbody>
-        </table>
+        {draftNode && draftNode.length > 0 && (
+          <table className="mdcsProcessList">
+            <thead>
+              <tr className="mdcsProcessRow">
+                <th>Preparer</th>
+                <th>Approver</th>
+              </tr>
+            </thead>
+            <tbody>{draftNode}</tbody>
+          </table>
+        )}
+        {reviewerNode && reviewerNode.length > 0 && (
+          <table className="mdcsProcessList">
+            <thead>
+              <tr className="mdcsProcessRow">
+                <th colSpan="2">필수심의권자</th>
+              </tr>
+            </thead>
+            <tbody>{reviewerNode}</tbody>
+          </table>
+        )}
+        {mailReviewerNode && mailReviewerNode.length > 0 && (
+          <table className="mdcsProcessList">
+            <thead>
+              <tr className="mdcsProcessRow">
+                <th colSpan="2">Mail 심의권자</th>
+              </tr>
+            </thead>
+            <tbody>{mailReviewerNode}</tbody>
+          </table>
+        )}
       </StyledWrap>
     );
   }
