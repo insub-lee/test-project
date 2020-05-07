@@ -117,6 +117,7 @@ import CustomSearchInputComp from 'components/BizBuilder/Field/CustomSearchInput
 import MdcsDistDeptListComp from 'components/BizBuilder/Field/MdcsDistDeptListComp';
 import OldScopeComp from 'components/BizBuilder/Field/OldScopeComp';
 import LabelByNodeIdComp from 'components/BizBuilder/Field/LabelByNodeIdComp';
+import EshsQualCondComp from 'components/BizBuilder/Field/EshsQualCondComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
@@ -236,4 +237,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/MdcsDistDeptListComp': { renderer: property => <MdcsDistDeptListComp {...property} /> },
   'components/BizBuilder/Field/OldScopeComp': { renderer: property => <OldScopeComp {...property} /> },
   'components/BizBuilder/Field/LabelByNodeIdComp': { renderer: property => <LabelByNodeIdComp {...property} /> },
+  'components/BizBuilder/Field/EshsQualCondComp': { renderer: property => <EshsQualCondComp {...property} /> },
 };
