@@ -69,7 +69,6 @@ class ClauseList extends Component {
       { key: `customList`, url: `/api/eshs/v1/common/eshsclause?&YEAR=${formData.YEAR || 2020}`, params: { PARAM: { searchData } }, type: 'POST' },
     ];
     getExtraApiData(sagaKey, apiArray, this.initData);
-    console.log('searchData: ', searchData);
   };
 
   // state값 reset테스트
@@ -221,6 +220,7 @@ class ClauseList extends Component {
     if (isOnRowClick) {
       onRow = this.onRowClick;
     }
+    const filterList = customList && customList.list && customList.list.filter(item => item.ISLAST_VER === 'Y');
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -230,7 +230,7 @@ class ClauseList extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={(customList && customList.list) || []}
+            dataSource={filterList || []}
             // dataSource={list || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}

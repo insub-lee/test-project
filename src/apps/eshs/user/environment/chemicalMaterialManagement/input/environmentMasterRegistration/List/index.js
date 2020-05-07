@@ -39,11 +39,39 @@ class List extends React.Component {
         MASTER_ID: '',
         IS_INFLAMMABILITY_GAS: '',
         IS_INFLAMMABILITY_LIQUID: '',
+        SITE: props.profile.BAREA_CD,
       },
       isModified: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
+      categories: [],
     };
   }
+
+  componentDidMount() {
+    this.getCategoryList();
+  }
+
+  getCategoryList = () => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'codeCategory',
+        type: 'POST',
+        url: `/api/admin/v1/common/categoryMapList`,
+        params: { PARAM: { NODE_ID: 1721 } },
+      },
+    ];
+
+    getCallDataHandler(id, apiArr, this.setCategory);
+  };
+
+  setCategory = () => {
+    const { result } = this.props;
+    const category = result.codeCategory.categoryMapList.filter(item => item.PARENT_NODE_ID === 1721);
+    this.setState({
+      categories: category,
+    });
+  };
 
   handleSearchClick = () => {
     this.setState({
@@ -126,6 +154,7 @@ class List extends React.Component {
   };
 
   handleResetClick = () => {
+    const { profile } = this.props;
     this.setState({
       requestValue: {
         SAP_NO: '',
@@ -143,6 +172,7 @@ class List extends React.Component {
         SEC_UNIT_EXCHANGE: 0,
         IS_INFLAMMABILITY_GAS: '',
         IS_INFLAMMABILITY_LIQUID: '',
+        SITE: profile.BAREA_CD,
       },
       isModified: false,
     });
@@ -160,11 +190,11 @@ class List extends React.Component {
   };
 
   setRequestValue = record => {
-    this.setState({
-      requestValue: record,
+    this.setState(prevState => ({
+      requestValue: Object.assign(prevState.requestValue, record),
       visible: false,
       isModified: true,
-    });
+    }));
   };
 
   columns = [
@@ -219,8 +249,8 @@ class List extends React.Component {
       handleDeleteClick,
     } = this;
     const { columns } = this;
-    const { requestValue, visible, deleteConfirmMessage } = this.state;
-    const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
+    const { requestValue, visible, deleteConfirmMessage, categories } = this.state;
+    const { sagaKey, getCallDataHandler, result, changeFormData, formData, profile } = this.props;
     return (
       <>
         <ContentsWrapper>
@@ -340,6 +370,10 @@ class List extends React.Component {
                         <Select.Option value="Y">수입</Select.Option>
                       </AntdSelect>
                     </td>
+                    <th>지역</th>
+                    <td>
+                      {(categories.find(item => item.CODE === profile.BAREA_CD) && categories.find(item => item.CODE === profile.BAREA_CD).NAME_KOR) || ''}
+                    </td>
                     <th>인화성가스 구분</th>
                     <td>
                       <AntdSelect
@@ -403,6 +437,7 @@ List.propTypes = {
   changeFormData: PropTypes.func,
   submitHandlerBySaga: PropTypes.func,
   formData: PropTypes.object,
+  profile: PropTypes.object,
 };
 
 List.defaultProps = {

@@ -28,7 +28,6 @@ class ClauseList extends Component {
       isOnRowClick: false,
       rowClickView: 'VIEW',
       StyledWrap: StyledViewDesigner,
-      yearSt: '2020',
     };
   }
 
@@ -38,6 +37,7 @@ class ClauseList extends Component {
     let isRowNo = false;
     let isOnRowClick = false;
     let rowClickView = 'VIEW';
+    this.getListData();
 
     if (workInfo.BUILDER_STYLE_PATH) {
       const StyledWrap = Loadable({
@@ -58,6 +58,12 @@ class ClauseList extends Component {
       });
       this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
     }
+  };
+
+  getListData = () => {
+    const { sagaKey: id, getExtraApiData, taskOriginSeq } = this.props;
+    const apiArray = [{ key: `customList`, url: `/api/eshs/v1/common/eshsappraiseHistory?&TASK_ORIGIN_SEQ=${taskOriginSeq}`, type: 'GET' }];
+    getExtraApiData(id, apiArray, this.initData);
   };
 
   // state값 reset테스트
@@ -95,20 +101,21 @@ class ClauseList extends Component {
   };
 
   setColumnButton = (quarterSeq, record, quarter, year) => {
-    const { isOpenInputModal } = this.props;
-    return !quarterSeq ? (
-      <StyledButton className="btn-primary" onClick={() => isOpenInputModal(record, quarter, year)}>
-        평가
+    const { isOpenAppraiseDetailModal } = this.props;
+    return quarterSeq ? (
+      <StyledButton className="btn-primary" onClick={() => isOpenAppraiseDetailModal(quarterSeq, record, quarter, year)}>
+        보기
       </StyledButton>
     ) : (
-      <StyledButton className="btn-primary" onClick={() => isOpenInputModal(record, quarter, year, quarterSeq)}>
-        수정
-      </StyledButton>
+      ''
     );
   };
 
   setColumns = (cols, widths) => {
-    const { isRowNo, yearSt } = this.state;
+    const { isRowNo } = this.state;
+    const {
+      formData: { YEAR },
+    } = this.props;
     const columns = [];
     if (isRowNo) {
       columns.push({
@@ -130,27 +137,27 @@ class ClauseList extends Component {
       }
     });
     columns.push({
-      title: `${yearSt} 준수평가`,
+      title: `${YEAR} 준수평가`,
       children: [
         {
           title: '1분기',
           width: 100,
-          render: record => this.setColumnButton(record.QUARTER_SEQ1, record, 1, yearSt),
+          render: record => this.setColumnButton(record.ONE_Q_SEQ, record, 1, YEAR),
         },
         {
           title: '2분기',
           width: 100,
-          render: record => this.setColumnButton(record.QUARTER_SEQ2, record, 2, yearSt),
+          render: record => this.setColumnButton(record.TWO_Q_SEQ, record, 2, YEAR),
         },
         {
           title: '3분기',
           width: 100,
-          render: record => this.setColumnButton(record.QUARTER_SEQ3, record, 3, yearSt),
+          render: record => this.setColumnButton(record.THREE_Q_SEQ, record, 3, YEAR),
         },
         {
           title: '4분기',
           width: 100,
-          render: record => this.setColumnButton(record.QUARTER_SEQ4, record, 4, yearSt),
+          render: record => this.setColumnButton(record.FOUR_Q_SEQ, record, 4, YEAR),
         },
       ],
     });
@@ -184,8 +191,19 @@ class ClauseList extends Component {
   };
 
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, customOnRowClick } = this.props;
+    const {
+      extraApiData: { customList },
+      listSelectRowKeys,
+      customOnRowClick,
+      taskOriginSeq,
+      taskSeqReal,
+    } = this.props;
     const { isMultiDelete, isOnRowClick } = this.state;
+    // const filterList =
+    //   extraApiData &&
+    //   extraApiData.customList &&
+    //   extraApiData.customList.list &&
+    //   extraApiData.customList.list.filter(f => (taskOriginSeq === 0 ? f.TASK_SEQ === taskSeqReal : f.TASK_ORIGIN_SEQ === taskOriginSeq));
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
@@ -201,7 +219,6 @@ class ClauseList extends Component {
     if (isOnRowClick) {
       onRow = this.onRowClick;
     }
-    const filterList = listData.filter(filter => filter.ISLAST_VER === 'Y');
 
     return (
       <div key={group.key}>
@@ -212,7 +229,8 @@ class ClauseList extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={filterList || []}
+            // dataSource={filterList || []}
+            dataSource={(customList && customList.list) || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
@@ -285,7 +303,7 @@ class ClauseList extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
+                          <StyledButton className="btn-primary" onClick={this.getListData}>
                             Search
                           </StyledButton>
                         </div>

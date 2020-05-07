@@ -2,19 +2,19 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Table, Select, Input, message } from 'antd';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 
 import TableTypeSelector from 'components/TableTypeSelector';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
-const AntdLineTable = StyledLineTable(Table);
+const AntdLineTable = StyledAntdTable(Table);
 
 const { Option } = Select;
 

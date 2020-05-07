@@ -19,7 +19,7 @@ class JoinToolTipComp extends React.Component {
     const text = colData && colData.replace(/(<([^>]+)>)/gi, '').replace('Powered by Froala Editor', '');
     const bold = property.boldCondition && property.boldTarget && String(rowData[property.boldCondition]) === String(property.boldTarget) ? 'bold' : '';
     return (
-      <Popover placement="topLeft" title={formData[property.viewDataKey] || text} trigger="hover">
+      <Popover placement="topLeft" title="상세" content={formData[property.viewDataKey] || text} trigger="hover">
         {property.titleUse === 'Y' ? (
           <div
             role="button"
