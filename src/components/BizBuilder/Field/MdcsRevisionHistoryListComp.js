@@ -11,6 +11,13 @@ const StyledCustomTable = tableComp => styled(tableComp)`
   }
 `;
 
+const StyledPre = styled.pre`
+  margin-top: 0px;
+  margin-bottom: 0px;
+  overflow: hidden;
+  white-space: pre-wrap;
+`;
+
 const AntdTable = StyledCustomTable(StyledAntdTable(Table));
 
 const columns = [
@@ -32,7 +39,7 @@ const columns = [
     title: 'Short Description(Including the Para./clause)',
     dataIndex: 'COPY_REMARK',
     width: '550px',
-    render: text => <pre>{text}</pre>,
+    render: text => <StyledPre>{text}</StyledPre>,
   },
 ];
 
