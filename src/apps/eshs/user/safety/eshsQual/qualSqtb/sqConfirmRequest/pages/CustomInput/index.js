@@ -15,7 +15,6 @@ class InputPage extends Component {
     super(props);
     this.state = {
       uploadFileList: [],
-      qualTaskSeq: 0,
     };
   }
 
@@ -33,26 +32,6 @@ class InputPage extends Component {
       };
       getProcessRule(id, payload);
     }
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const {
-      formData: { interLockReload = '', materialReload = '' },
-      changeFormData,
-      sagaKey,
-    } = nextProps;
-    const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
-    if (prevState.qualTaskSeq !== qualTaskSeq) {
-      if (typeof interLockReload === 'function') {
-        interLockReload(qualTaskSeq);
-      }
-      if (typeof materialReload === 'function') {
-        materialReload(qualTaskSeq);
-      }
-      changeFormData(sagaKey, 'EQUIP_TASK_SEQ', qualTaskSeq);
-      return { qualTaskSeq };
-    }
-    return null;
   }
 
   fileUploadComplete = (id, response, etcData) => {
@@ -216,7 +195,6 @@ class InputPage extends Component {
       const {
         info: { PRC_ID },
       } = workFlowConfig;
-      const { qualTaskSeq } = this.state;
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>

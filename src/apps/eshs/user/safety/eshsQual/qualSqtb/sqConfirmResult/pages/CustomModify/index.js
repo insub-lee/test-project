@@ -25,29 +25,6 @@ class ModifyPage extends Component {
     };
   }
 
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //   const {
-  //     formData,
-  //     formData: { interLockReload = '', materialReload = '' },
-  //     sagaKey,
-  //     changeFormData,
-  //     setFormData,
-  //   } = nextProps;
-  //   const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
-
-  //   if (prevState.qualTaskSeq !== qualTaskSeq) {
-  //     if (typeof interLockReload === 'function') {
-  //       interLockReload(qualTaskSeq);
-  //     }
-  //     if (typeof materialReload === 'function') {
-  //       materialReload(qualTaskSeq);
-  //     }
-  //     changeFormData(sagaKey, 'EQUIP_TASK_SEQ', qualTaskSeq);
-  //     return { qualTaskSeq };
-  //   }
-  //   return null;
-  // }
-
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
     const { DETAIL, code } = response;
@@ -120,7 +97,7 @@ class ModifyPage extends Component {
 
   saveTask = (id, reloadId, callbackFunc) => {
     const { modifyTask, formData } = this.props;
-    const condFileList = (formData && formData.approveFileList) || [];
+    const condFileList = (formData && formData.condFileList) || [];
     if (condFileList.length) {
       this.condFileListMoveReal(condFileList);
     } else {
@@ -167,21 +144,19 @@ class ModifyPage extends Component {
     const { sagaKey: id, extraApiData, formData, setFormData, modifyTask } = this.props;
 
     const condRealFileList = (extraApiData && extraApiData.condRealFileList && extraApiData.condRealFileList.DETAIL) || [];
-    const approveCondList = (formData && formData.approveCondList) || [];
+    const condList = (formData && formData.condList) || [];
     setFormData(id, {
       ...formData,
-      approveCondList: approveCondList.map(a => {
-        const key = condRealFileList.findIndex(c => c.rowSeq === a.SEQ);
+      condList: condList.map((a, index) => {
+        const key = condRealFileList.findIndex(c => index === c.targetIndex);
         return key > -1
           ? {
               ...a,
-              FILE_SEQ: Number(condRealFileList[key].seq),
-              DOWN: `/down/file/${Number(condRealFileList[key].seq)}`,
-              fileExt: condRealFileList[key].fileExt,
+              APPROVE_FILE_SEQ: Number(condRealFileList[key].seq),
             }
           : a;
       }),
-      approveFileList: [],
+      condFileList: [],
     });
     this.saveTask(id, id, this.saveTaskAfter);
   };

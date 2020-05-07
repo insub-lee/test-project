@@ -14,28 +14,7 @@ class ModifyPage extends Component {
     super(props);
     this.state = {
       uploadFileList: [],
-      qualTaskSeq: 0,
     };
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const {
-      formData: { interLockReload = '', materialReload = '' },
-      sagaKey,
-      changeFormData,
-    } = nextProps;
-    const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
-    if (prevState.qualTaskSeq !== qualTaskSeq) {
-      if (typeof interLockReload === 'function') {
-        interLockReload(qualTaskSeq);
-      }
-      if (typeof materialReload === 'function') {
-        materialReload(qualTaskSeq);
-      }
-      changeFormData(sagaKey, 'EQUIP_TASK_SEQ', qualTaskSeq);
-      return { qualTaskSeq };
-    }
-    return null;
   }
 
   fileUploadComplete = (id, response, etcData) => {
@@ -152,7 +131,6 @@ class ModifyPage extends Component {
       deleteTask,
     } = this.props;
 
-    const { qualTaskSeq } = this.state;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
