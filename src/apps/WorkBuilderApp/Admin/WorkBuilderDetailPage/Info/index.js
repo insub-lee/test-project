@@ -62,6 +62,69 @@ class Info extends Component {
       <Wrapper>
         <div>
           <div className="item">
+            <div className="item-title">기본정보</div>
+            <div className="item-cont">
+              <table className="work-builder-detail-page-info-basic">
+                <tbody>
+                  <tr>
+                    <td className="wb-info-basic-title">시스템명</td>
+                    <td className="wb-info-basic-content">{workInfo && workInfo.TOTAL_BUILDER_NAME}</td>
+                    <td className="wb-info-basic-title">업무명(게시판명)</td>
+                    <td className="wb-info-basic-content">
+                      <Input onChange={e => this.onChangeValue('workInfo', 'NAME_KOR', e.target.value)} value={workInfo && workInfo.NAME_KOR} />
+                    </td>
+                    <td className="wb-info-basic-title">등록일</td>
+                    <td className="wb-info-basic-content">{workInfo && workInfo.REG_DTTM}</td>
+                  </tr>
+                  <tr>
+                    <td className="wb-info-basic-title">기본 화면 전환 그룹</td>
+                    <td className="wb-info-basic-content">
+                      {workInfo && workInfo.viewChangeProcessList && workInfo.viewChangeProcessList.length > 0 && (
+                        <Select
+                          placeholder="화면선택"
+                          style={{ width: '100%' }}
+                          onChange={val => this.onChangeValue('workInfo', 'VIEW_CHANGE_PROCESS_SEQ', val)}
+                          value={workInfo && workInfo.VIEW_CHANGE_PROCESS_SEQ}
+                        >
+                          {workInfo.viewChangeProcessList.map(item => (
+                            <Option key={`VCPS_${item.VIEW_CHANGE_PROCESS_SEQ}`} value={item.VIEW_CHANGE_PROCESS_SEQ}>
+                              {item.VIEW_CHANGE_PROCESS_NAME}
+                            </Option>
+                          ))}
+                        </Select>
+                      )}
+                    </td>
+                    <td className="wb-info-basic-title">기본 스타일</td>
+                    <td className="wb-info-basic-content">
+                      <Select
+                        placeholder="선택"
+                        style={{ width: '100%' }}
+                        onChange={val => this.onChangeValue('workInfo', 'BUILDER_STYLE_PATH', val)}
+                        value={workInfo && workInfo.BUILDER_STYLE_PATH}
+                      >
+                        {styleList &&
+                          styleList.map(item => (
+                            <Option key={`info_builderStyle_${item.STYLE_SEQ}`} value={item.STYLE_PATH}>
+                              {item.STYLE_NAME}
+                            </Option>
+                          ))}
+                      </Select>
+                    </td>
+                    <td className="wb-info-basic-title"></td>
+                    <td className="wb-info-basic-content"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="item">
+            <div className="item-title">요약</div>
+            <div className="item-cont cont-row-wrapper">
+              <pre>{workInfo && workInfo.DSCR}</pre>
+            </div>
+          </div>
+
+          {/* <div className="item">
             <div className="item-title">업무명 (게시판명)</div>
             <div className="item-cont">
               <Input onChange={e => this.onChangeValue('workInfo', 'NAME_KOR', e.target.value)} value={workInfo && workInfo.NAME_KOR} />
@@ -113,7 +176,7 @@ class Info extends Component {
                   ))}
               </Select>
             </div>
-          </div>
+          </div> */}
 
           <div className="item">
             <div className="item-title">옵션</div>

@@ -115,6 +115,7 @@ class ListPage extends Component {
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
           <AntdTable
+            bordered
             rowKey="TASK_SEQ"
             key={`${group.key}_list`}
             className="view-designer-list"

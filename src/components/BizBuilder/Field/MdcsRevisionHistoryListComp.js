@@ -11,6 +11,13 @@ const StyledCustomTable = tableComp => styled(tableComp)`
   }
 `;
 
+const StyledPre = styled.pre`
+  margin-top: 0px;
+  margin-bottom: 0px;
+  overflow: hidden;
+  white-space: pre-wrap;
+`;
+
 const AntdTable = StyledCustomTable(StyledAntdTable(Table));
 
 const columns = [
@@ -26,13 +33,13 @@ const columns = [
     dataIndex: 'END_DTTM',
     width: '60px',
     align: 'center',
-    render: text => (text ? text.split(' ')[0] : ''),
+    // render: text => (text ? text.split(' ')[0] : ''),
   },
   {
     title: 'Short Description(Including the Para./clause)',
     dataIndex: 'COPY_REMARK',
     width: '550px',
-    render: text => <pre>{text}</pre>,
+    render: text => <StyledPre>{text}</StyledPre>,
   },
 ];
 
@@ -51,7 +58,7 @@ class MdcsRevisionHistoryListComp extends Component {
 
   componentDidMount() {
     const { sagaKey, submitExtraHandler, formData } = this.props;
-    const url = `/api/builder/v1/work/revision/${formData.WORK_SEQ}/${formData.TASK_SEQ}`;
+    const url = `/api/mdcs/v1/common/mdcsrevisionListHandler?WORK_SEQ=${formData.WORK_SEQ}&TASK_SEQ=${formData.TASK_SEQ}`;
     submitExtraHandler(sagaKey, 'GET', url, {}, this.initData);
   }
 

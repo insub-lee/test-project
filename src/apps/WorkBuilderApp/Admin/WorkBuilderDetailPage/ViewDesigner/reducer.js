@@ -943,7 +943,7 @@ const reducer = (state = initialState, action) => {
         rows
           .map(row => {
             const currentCol = row.getIn(['cols', colIndex]);
-            return currentCol ? currentCol.get('rowSpan') : 0;
+            return currentCol ? currentCol.get('rowSpan') || 1 : 0;
           })
           .toJS()
           .reduce((acc, cul) => acc + cul) !== rows.size;
@@ -1076,7 +1076,7 @@ const reducer = (state = initialState, action) => {
       }
 
       /* Check Using Component */
-      if (state.getIn([...condition, groupIndex, 'rows']).some(row => row.getIn(['cols', colIndex]).get('comp'))) {
+      if (state.getIn([...condition, groupIndex, 'rows']).some(row => row.getIn(['cols', colIndex]) && row.getIn(['cols', colIndex]).get('comp'))) {
         window.alert('Component를 사용하는 경우 삭제 불가능합니다.');
         return state;
       }
@@ -1137,14 +1137,15 @@ const reducer = (state = initialState, action) => {
           const keyGroup = key.split('-');
           return { groupIndex: Number(keyGroup[0]), rowIndex: Number(keyGroup[1]), colIndex: Number(keyGroup[2]) };
         });
-
       const sortedSelectedKeys = sortBy(testKeys, ['rowIndex']);
       const { groupIndex, colIndex, rowIndex } = sortedSelectedKeys[0];
       const { rowIndex: lastRowIndex } = sortedSelectedKeys[sortedSelectedKeys.length - 1];
 
       const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'];
 
-      const rowSize = sortedSelectedKeys.map(obj => state.getIn([...condition, obj.rowIndex, 'cols', obj.colIndex, 'rowSpan'])).reduce((acc, cul) => acc + cul);
+      const rowSize = sortedSelectedKeys
+        .map(obj => state.getIn([...condition, obj.rowIndex, 'cols', obj.colIndex, 'rowSpan']) || 1)
+        .reduce((acc, cul) => acc + cul);
 
       let i = 0;
       let nextRows = state.getIn(condition);
@@ -1241,8 +1242,8 @@ const reducer = (state = initialState, action) => {
 
       const currentCol = state.getIn([...condition, colIndex]);
 
-      const colSize = currentCol.get('span');
-      const rowSize = currentCol.get('rowSpan');
+      const colSize = currentCol.get('span') || 1;
+      const rowSize = currentCol.get('rowSpan') || 1;
 
       let i = 0;
       let nextCols = state.getIn(condition);

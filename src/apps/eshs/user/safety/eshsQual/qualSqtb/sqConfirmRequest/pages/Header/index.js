@@ -227,7 +227,7 @@ class Header extends Component {
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
-            {QUAL_STATUS !== '2007' && taskSeq > -1 && (
+            {!!QUAL_STATUS && QUAL_STATUS !== '2007' && taskSeq > -1 && (
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
                 저장
               </StyledButton>

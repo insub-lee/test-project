@@ -25,7 +25,7 @@ export const checkEqualRowSpan = (selectedKeys, groups) => {
         prevCol = groups[testKeys[index - differ].groupIndex].rows[testKeys[index - differ].rowIndex].cols[testKeys[index - differ].colIndex];
         differ += 1;
       }
-      return prevCol.rowSpan !== currentCol.rowSpan;
+      return (prevCol.rowSpan || 1) !== (currentCol.rowSpan || 1);
     }
     return false;
   });
@@ -59,7 +59,7 @@ export const checkCanRemoveRow = ({ groupIndex, rowIndex, colIndex }, groups) =>
       return true;
     }
     if (index > 0) {
-      return col.rowSpan !== currentCols[index - 1].rowSpan;
+      return (col.rowSpan || 1) !== (currentCols[index - 1].rowSpan || 1);
     }
     return false;
   });
@@ -134,7 +134,7 @@ export const checkRowContinuity = (selectedKeys, groups) => {
     !sortedKeys.some((key, index) => {
       if (index > 0) {
         const { rowSpan } = groups[groupIndex].rows[sortedKeys[index - 1].rowIndex].cols[colIndex];
-        return key.rowIndex !== sortedKeys[index - 1].rowIndex + rowSpan;
+        return key.rowIndex !== sortedKeys[index - 1].rowIndex + (rowSpan || 1);
       }
       return false;
     }) && checkEqualColSpan(selectedKeys, groups)
@@ -172,7 +172,7 @@ export const checkColContinuity = (selectedKeys, groups) => {
 export const cleanAllNullArray = rows =>
   rows.filter((row, index) =>
     index > 0
-      ? !(rows[index - 1].cols.every(col => (col ? col.rowSpan : 1) === 1) && row.cols.every(col => col === null))
+      ? !(rows[index - 1].cols.every(col => (col ? col.rowSpan || 1 : 1) === 1) && row.cols.every(col => col === null))
       : !row.cols.every(col => col === null),
   );
 

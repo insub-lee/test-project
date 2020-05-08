@@ -14,7 +14,6 @@ import View from 'components/BizBuilder/PageComp/view';
 import { CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import moment from 'moment';
 
-import Material from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqtbEquipMgt/pages/Material';
 import Header from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqConfirmRequest/pages/Header';
 
 class ModifyPage extends Component {
@@ -25,29 +24,6 @@ class ModifyPage extends Component {
       qualTaskSeq: 0,
     };
   }
-
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //   const {
-  //     formData,
-  //     formData: { interLockReload = '', materialReload = '' },
-  //     sagaKey,
-  //     changeFormData,
-  //     setFormData,
-  //   } = nextProps;
-  //   const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
-
-  //   if (prevState.qualTaskSeq !== qualTaskSeq) {
-  //     if (typeof interLockReload === 'function') {
-  //       interLockReload(qualTaskSeq);
-  //     }
-  //     if (typeof materialReload === 'function') {
-  //       materialReload(qualTaskSeq);
-  //     }
-  //     changeFormData(sagaKey, 'EQUIP_TASK_SEQ', qualTaskSeq);
-  //     return { qualTaskSeq };
-  //   }
-  //   return null;
-  // }
 
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
@@ -121,7 +97,7 @@ class ModifyPage extends Component {
 
   saveTask = (id, reloadId, callbackFunc) => {
     const { modifyTask, formData } = this.props;
-    const condFileList = (formData && formData.approveFileList) || [];
+    const condFileList = (formData && formData.condFileList) || [];
     if (condFileList.length) {
       this.condFileListMoveReal(condFileList);
     } else {
@@ -168,21 +144,19 @@ class ModifyPage extends Component {
     const { sagaKey: id, extraApiData, formData, setFormData, modifyTask } = this.props;
 
     const condRealFileList = (extraApiData && extraApiData.condRealFileList && extraApiData.condRealFileList.DETAIL) || [];
-    const approveCondList = (formData && formData.approveCondList) || [];
+    const condList = (formData && formData.condList) || [];
     setFormData(id, {
       ...formData,
-      approveCondList: approveCondList.map(a => {
-        const key = condRealFileList.findIndex(c => c.rowSeq === a.SEQ);
+      condList: condList.map((a, index) => {
+        const key = condRealFileList.findIndex(c => index === c.targetIndex);
         return key > -1
           ? {
               ...a,
-              FILE_SEQ: Number(condRealFileList[key].seq),
-              DOWN: `/down/file/${Number(condRealFileList[key].seq)}`,
-              fileExt: condRealFileList[key].fileExt,
+              APPROVE_FILE_SEQ: Number(condRealFileList[key].seq),
             }
           : a;
       }),
-      approveFileList: [],
+      condFileList: [],
     });
     this.saveTask(id, id, this.saveTaskAfter);
   };
@@ -227,15 +201,6 @@ class ModifyPage extends Component {
               changeFormData={changeFormData}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <Material
-              id={id}
-              formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={{ viewType: 'VIEW' }}
-              initForm={false}
-            />
           </Sketch>
         </StyledViewDesigner>
       );
