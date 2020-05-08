@@ -70,7 +70,7 @@ class DatePickerComp extends Component {
             disabled={readOnly || CONFIG.property.readOnly}
           />
         ) : (
-          <span className={CONFIG.property.className || ''}>{colData ? moment(colData).format('YYYY-MM-DD') : '선택된 날짜가 없습니다.'}</span>
+          <span className={CONFIG.property.className || ''}>{colData ? moment(colData).format('YYYY-MM-DD') : ''}</span>
         )}
       </>
     ) : (
