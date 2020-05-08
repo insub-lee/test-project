@@ -17,10 +17,10 @@ const AntdLineTable = StyledLineTable(Table);
 const FormItem = Form.Item;
 
 const columns = [
-  { title: 'No.', key: 'id', width: '11%', dataIndex: 'id' },
+  { title: 'No.', key: 'id', width: '12%', dataIndex: 'id' },
   { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION' },
   { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM' },
-  { title: 'Title', align: 'left', key: 'title', width: '35%', dataIndex: 'title' },
+  { title: 'Title', align: 'left', key: 'title', dataIndex: 'title' },
   {
     title: '종류',
     key: 'fullPathStr',
@@ -32,8 +32,8 @@ const columns = [
       }
     },
   },
-  { title: '기안부서', key: 'deptName', width: '10%', dataIndex: 'deptName' },
-  { title: '기안자', key: 'name', width: '7%', dataIndex: 'name' },
+  { title: '기안부서', key: 'deptName', width: '12%', dataIndex: 'deptName' },
+  { title: '기안자', key: 'name', width: '8%', dataIndex: 'name' },
 ];
 
 // Table NODE_ID 값
@@ -357,7 +357,7 @@ class SearchBasic extends Component {
             onCancel={this.onCloseCoverView}
             destroyOnClose
           >
-            <div className="pop_tit">검색 내용 보기</div>
+            <div className="pop_tit">표지 보기</div>
             <div className="SearchContentLayer">
               <BizBuilderBase
                 sagaKey="CoverView"

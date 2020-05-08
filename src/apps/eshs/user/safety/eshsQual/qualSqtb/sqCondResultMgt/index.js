@@ -4,7 +4,7 @@ import CustomViewPage from './pages/CustomView';
 
 import EquipInputPage from '../sqtbEquipMgt';
 
-class SqImproveConfirmView extends Component {
+class sqCondResultMgt extends Component {
   constructor(props) {
     super(props);
 
@@ -22,7 +22,7 @@ class SqImproveConfirmView extends Component {
   componentDidMount() {}
 
   render() {
-    const { sagaKey, taskSeq } = this.props;
+    const { sagaKey } = this.props;
     return (
       <>
         <BizBuilderBase
@@ -30,8 +30,7 @@ class SqImproveConfirmView extends Component {
           FieldCustomInputPage={EquipInputPage}
           CustomViewPage={CustomViewPage}
           workSeq={5561}
-          viewMetaSeq={6381}
-          taskSeq={taskSeq || -1}
+          viewMetaSeq={6601}
           viewType="VIEW"
           loadingComplete={this.loadingComplete}
         />
@@ -40,9 +39,8 @@ class SqImproveConfirmView extends Component {
   }
 }
 
-SqImproveConfirmView.defaultProps = {
-  sagaKey: 'SqImproveConfirmView',
-  taskSeq: -1,
+sqCondResultMgt.defaultProps = {
+  sagaKey: 'sqCondResultMgt',
 };
 
-export default SqImproveConfirmView;
+export default sqCondResultMgt;
