@@ -1,20 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import { isJSON } from 'utils/helpers';
-
-const StyledWrap = styled.div`
-  table.mdcsDistDeptList {
-    width: 100%;
-    margin-bottom: 2px;
-    & > thead > tr.mdcsDistDeptRow > th,
-    & > tbody > tr.mdcsDistDeptRow > td {
-      border: solid 1px #cccccc;
-      padding: 4px;
-    }
-  }
-`;
-
 class NodeIdMultiViewComp extends Component {
   constructor(props) {
     super(props);
