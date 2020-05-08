@@ -43,9 +43,14 @@ export const masterColumnDefs = [
         field: 'CONTENT_EXP',
       },
       {
-        headerName: '함유량',
+        headerName: '함량 %',
         field: 'CONTENT_DOSE',
       },
+    ],
+  },
+  {
+    headerName: 'MSDS 정보(제품기준)',
+    children: [
       {
         headerName: '인화성가스 구분',
         field: 'IS_INFLAMMABILITY_GAS',
@@ -59,14 +64,6 @@ export const masterColumnDefs = [
   {
     headerName: '화학물질관리법',
     children: [
-      {
-        headerName: '유독물질 검색(함량 판단 기준)',
-        field: 'HARMFUL_MATERIAL',
-      },
-      {
-        headerName: '사고대비물질 검색(함량 판단 기준)',
-        field: 'ACCIDENT_MATERIAL',
-      },
       {
         headerName: '유독물질',
         field: 'TOXIC_EXPRESSION',
@@ -88,24 +85,8 @@ export const masterColumnDefs = [
         field: 'BAN_CONTENT_FACTOR',
       },
       {
-        headerName: '유해화학물질(함량기준 X)',
-        field: 'HARMFUL_MATERIAL_NO_CONTENT',
-      },
-      {
-        headerName: '유해화학물질(함량기준 분류)',
-        field: 'HARMFUL_MATERIAL_CONTENT',
-      },
-      {
-        headerName: 'PRTR(대상물질 구분)',
-        field: 'PRTR_GROUP',
-      },
-      {
-        headerName: 'PRTR(취급량 기준)',
-        field: 'PRTR_USAGE',
-      },
-      {
-        headerName: '조사대상범위(무게함유율%)',
-        field: 'INVESTIGATION_TARGET_RANGE',
+        headerName: 'PRTR 대상물질',
+        field: 'IS_PRTR',
       },
     ],
   },
@@ -147,7 +128,7 @@ export const masterColumnDefs = [
         field: 'IS_ALLOW',
       },
       {
-        headerName: '작업환경측정물질(산안법시행규칙93조)',
+        headerName: '금지물질(산안법 117조)',
         field: 'IS_BAN',
       },
       {
@@ -156,30 +137,34 @@ export const masterColumnDefs = [
       },
       {
         headerName: '관리대상물질(보건기준 420조)',
-        field: 'IS_WORKSPACE_MATERIAL_CONTENT',
-      },
-      {
-        headerName: '특별관리대상물질(보건기준 440조)',
         field: 'IS_MANAGED',
       },
       {
-        headerName: '특수건강검진대상(산안법 201조)',
+        headerName: '특별관리대상물질(보건기준 440조)',
         field: 'IS_SPE_MANAGED',
+      },
+      {
+        headerName: '특수건강검진대상(산안법 201조)',
+        field: 'IS_APPLICATE',
       },
       {
         headerName: 'PSM(PSM대상물질 51종)',
         field: 'IS_PSM',
       },
       {
-        headerName: 'C',
+        headerName: '도급승인대상물질',
+        field: 'IS_CONTRACT',
+      },
+      {
+        headerName: '발암성(C)',
         field: 'CARCINOGENICITY',
       },
       {
-        headerName: 'M',
+        headerName: '변이독성(M)',
         field: 'MUTAGENICITY',
       },
       {
-        headerName: 'R',
+        headerName: '생식독성(R)',
         field: 'REPRODUCTIVE_TOXICIT',
       },
     ],
@@ -231,9 +216,14 @@ export const sapUsageColumn = [
         field: 'CONTENT_EXP',
       },
       {
-        headerName: '함유량',
+        headerName: '함량 %',
         field: 'CONTENT_DOSE',
       },
+    ],
+  },
+  {
+    headerName: 'MSDS 정보(제품기준)',
+    children: [
       {
         headerName: '인화성가스 구분',
         field: 'IS_INFLAMMABILITY_GAS',

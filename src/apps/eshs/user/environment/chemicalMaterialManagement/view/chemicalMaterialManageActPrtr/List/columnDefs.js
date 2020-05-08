@@ -2,6 +2,7 @@ export const columnDefs = [
   {
     headerName: '호',
     field: 'CATEGORY',
+    width: 70,
   },
   {
     headerName: 'CAS_NO',
@@ -26,5 +27,6 @@ export const columnDefs = [
   {
     headerName: '조사대상범위 [무게함유율 (%)]',
     field: 'INVESTIGATION_TARGET_RANGE',
+    width: 200,
   },
 ];

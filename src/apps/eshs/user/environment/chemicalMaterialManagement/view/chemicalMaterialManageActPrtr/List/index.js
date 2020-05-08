@@ -97,7 +97,7 @@ class List extends React.Component {
               className="ant-input-inline ant-input-mid mr5"
               onChange={e => handleInputChange(e.target.value, 'CATEGORY')}
               style={{ width: '150px' }}
-              placeholder="CATEGORY"
+              placeholder="호"
             />
             <div className="textLabel">화학물질명</div>
             <AntdInput
