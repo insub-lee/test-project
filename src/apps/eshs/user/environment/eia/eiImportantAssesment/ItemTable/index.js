@@ -4,7 +4,7 @@ import Upload from 'components/Upload';
 import { debounce } from 'lodash';
 import PropTypes from 'prop-types';
 
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';

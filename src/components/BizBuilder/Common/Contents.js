@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const StyledContents = styled.div`
   position: relative;
-  height: 100%;
+  /* height: 100%; 20200508 주석 */
   .cell-body {
     display: flex;
     align-items: center;

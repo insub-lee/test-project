@@ -38,7 +38,7 @@ const Styled = styled.div`
 
       .toolbar-item {
         padding: 5px 7px;
-        font-size: 0.8rem;
+        font-size: 12px;
         cursor: pointer;
         width: 26px;
         vertical-align: middle;

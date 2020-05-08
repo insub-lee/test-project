@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import BizBuilderBase from 'components/BizBuilderBase';
-import CustomViewPage from './pages/CustomView';
+import CustomModifyPage from './pages/CustomModify';
 
 import EquipInputPage from '../sqtbEquipMgt';
 
@@ -28,10 +28,10 @@ class sqCondResultMgt extends Component {
         <BizBuilderBase
           sagaKey={sagaKey}
           FieldCustomInputPage={EquipInputPage}
-          CustomViewPage={CustomViewPage}
+          CustomModifyPage={CustomModifyPage}
           workSeq={5561}
-          viewMetaSeq={6601}
-          viewType="VIEW"
+          modifyMetaSeq={6641}
+          viewType="MODIFY"
           loadingComplete={this.loadingComplete}
         />
       </>

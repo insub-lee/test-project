@@ -14,7 +14,18 @@ class ModifyPage extends Component {
     super(props);
     this.state = {
       uploadFileList: [],
+      qualTaskSeq: 0,
     };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { sagaKey, changeFormData } = nextProps;
+    const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
+    if (prevState.qualTaskSeq !== qualTaskSeq) {
+      changeFormData(sagaKey, 'EQUIP_TASK_SEQ', qualTaskSeq);
+      return { qualTaskSeq };
+    }
+    return null;
   }
 
   fileUploadComplete = (id, response, etcData) => {

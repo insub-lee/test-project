@@ -197,10 +197,9 @@ const StyledViewDesigner = styled.div`
       .view-designer-col {
         padding: 4px 4px;
         border-right: 1px solid #eee;
-        font-size: 0.8rem;
+        font-size: 12px;
         > div > span {
           display: block;
-          font-size: 0.8rem;
         }
         .ant-radio-group {
           -webkit-box-sizing: border-box;
