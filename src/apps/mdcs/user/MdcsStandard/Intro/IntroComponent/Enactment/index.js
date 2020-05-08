@@ -125,11 +125,29 @@ class Enactment extends Component {
     let viewChangeSeq;
     if (selectedNodeIds.includes(2160)) {
       viewChangeSeq = 28;
-    } else if (selectedNodeIds.includes(423) || selectedNodeIds.includes(424) || selectedNodeIds.includes(425) || selectedNodeIds.includes(426)) {
+    } else if (
+      selectedNodeIds.includes(2434) ||
+      selectedNodeIds.includes(2445) ||
+      selectedNodeIds.includes(2456) ||
+      selectedNodeIds.includes(2467) ||
+      selectedNodeIds.includes(2478) ||
+      selectedNodeIds.includes(2489) ||
+      selectedNodeIds.includes(2500) ||
+      selectedNodeIds.includes(2511) ||
+      selectedNodeIds.includes(2522) ||
+      selectedNodeIds.includes(2533) ||
+      selectedNodeIds.includes(2544) ||
+      selectedNodeIds.includes(2555) ||
+      selectedNodeIds.includes(2566) ||
+      selectedNodeIds.includes(2577) ||
+      selectedNodeIds.includes(2587) ||
+      selectedNodeIds.includes(2590)
+    ) {
       viewChangeSeq = 31;
     } else {
       viewChangeSeq = undefined;
     }
+    console.debug('enactment view', selectedNodeIds, viewChangeSeq);
     switch (docType) {
       case 'BS':
         return { selectedworkSeq: 901, viewChangeSeq };
