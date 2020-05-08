@@ -2,12 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import * as selectors from 'containers/common/Auth/selectors';
+
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
 import Upload from 'components/FormStuff/Upload';
-import ViewModal from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqImproveConfirmView';
+import ConfirmResult from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqConfirmResult';
 
 import { Input, Select, Table, Checkbox, message, Modal } from 'antd';
 
@@ -16,11 +20,10 @@ const AntdModal = StyledContentsModal(Modal);
 const { Option } = Select;
 const AntdLineTable = StyledAntdTable(Table);
 
-class EshsQualComdComp extends Component {
+class EshsQualCondComp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      condTable: [],
       initRow: {
         REQ_CD: this.props && this.props.formData && this.props.formData.REQ_CD,
         TASK_SEQ: this.props && this.props.formData && this.props.formData.TASK_SEQ,
@@ -28,10 +31,9 @@ class EshsQualComdComp extends Component {
       deptCodeList: ['MN3Q', 'MN3R', 'MN3T', 'MN3S', 'MN1B', '23754', 'ZZZZ', 'ZZZ1', 'ZZ'],
       columns: [],
       modalVisible: false,
-      viewModal: [],
+      confirmResult: [],
     };
     this.debounceHandelOnChange = debounce(this.debounceHandelOnChange, 300);
-    this.debounceHandelSetTable = debounce(this.debounceHandelSetTable, 300);
   }
 
   componentDidMount() {
@@ -126,7 +128,7 @@ class EshsQualComdComp extends Component {
         render: (text, record) => (
           <span
             className="add-row"
-            onClick={() => this.setState({ viewModal: [<ViewModal taskSeq={record.TASK_SEQ || -1} />] }, () => this.handleModalVisible())}
+            onClick={() => this.setState({ confirmResult: [<ConfirmResult taskSeq={record.TASK_SEQ || -1} />] }, () => this.handleModalVisible())}
           >
             {text}
           </span>
@@ -368,44 +370,44 @@ class EshsQualComdComp extends Component {
         align: 'center',
         width: '10%',
         render: (text, record, index) => (
-          <Checkbox className="ant-checkbox-wrapper" defaultChecked={!!record.RESULT_QUAL_EMPID} onChange={() => this.handleConfirmChecked(index)} />
+          <Checkbox className="ant-checkbox-wrapper" checked={!!record.RESULT_QUAL_EMPID} onChange={() => this.handleConfirmChecked(index)} />
         ),
       });
     }
 
-    this.setState({ columns }, () => this.debounceHandelSetTable());
+    this.setState({ columns });
   };
 
   handleModalVisible = () => {
     const { modalVisible } = this.state;
-    if (modalVisible) return this.setState({ viewModal: [], modalVisible: !modalVisible });
+    if (modalVisible) return this.setState({ confirmResult: [], modalVisible: !modalVisible });
     return this.setState({ modalVisible: !modalVisible });
   };
 
   debounceHandelSetTable = () => {
-    const {
-      formData,
-      CONFIG: {
-        property: { ALL_LIST },
-      },
-    } = this.props;
-    const { columns } = this.state;
-    const condList = (formData && formData.condList) || [];
-    return this.setState({
-      condTable: [
-        <AntdLineTable
-          key="condTable"
-          className="tableWrapper"
-          rowKey={condList && condList.INDEX}
-          columns={columns}
-          dataSource={condList || []}
-          bordered
-          scroll={ALL_LIST === 'Y' ? { y: 45 * 12 } : { y: 45 * 6 }}
-          pagination={false}
-          footer={() => <span>{`${condList.length} 건`}</span>}
-        />,
-      ],
-    });
+    // const {
+    //   formData,
+    //   CONFIG: {
+    //     property: { ALL_LIST },
+    //   },
+    // } = this.props;
+    // const { columns } = this.state;
+    // const condList = (formData && formData.condList) || [];
+    // return this.setState({
+    //   condTable: [
+    //     <AntdLineTable
+    //       key="condTable"
+    //       className="tableWrapper"
+    //       rowKey={condList && condList.INDEX}
+    //       columns={columns}
+    //       dataSource={condList || []}
+    //       bordered
+    //       scroll={ALL_LIST === 'Y' ? { y: 45 * 12 } : { y: 45 * 6 }}
+    //       pagination={false}
+    //       footer={() => <span>{`${condList.length} 건`}</span>}
+    //     />,
+    //   ],
+    // });
   };
 
   handlePlusTd = () => {
@@ -431,7 +433,6 @@ class EshsQualComdComp extends Component {
       initCondList.push({ ...initRow, RESULT_CATEGORY_CD: 2128, RESULT_DEPT_CD: 2118, RESULT_FILE_TYPE: 'TEMP', STEP: '3' });
     }
     changeFormData(id, 'condList', condList.concat(initCondList));
-    this.debounceHandelSetTable();
   };
 
   debounceHandelOnChange = (target, value, targetIndex) => {
@@ -481,12 +482,11 @@ class EshsQualComdComp extends Component {
     const condFileList = (formData && formData.condFileList) || [];
     const condList = (formData && formData.condList) || [];
     if (condFileList.findIndex(c => c.seq === file.seq) < 0) {
-      changeFormData(
+      return changeFormData(
         id,
         'condList',
         condList.map((a, index) => (index === targetIndex ? { ...a, [target]: null } : a)),
       );
-      return this.debounceHandelSetTable();
     }
     return changeFormData(
       id,
@@ -496,19 +496,37 @@ class EshsQualComdComp extends Component {
   };
 
   render() {
-    const { condTable, modalVisible, viewModal } = this.state;
+    const {
+      formData,
+      CONFIG: {
+        property: { ALL_LIST },
+      },
+    } = this.props;
+
+    const { columns, modalVisible, confirmResult } = this.state;
+    const condList = (formData && formData.condList) || [];
     return (
       <>
-        {condTable}
-        <AntdModal title="확인 개선결과 조회" visible={modalVisible} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
-          {viewModal}
+        <AntdLineTable
+          key="condTable"
+          className="tableWrapper"
+          rowKey="INDEX"
+          columns={columns}
+          dataSource={condList || []}
+          bordered
+          scroll={ALL_LIST === 'Y' ? { y: 45 * 12 } : { y: 45 * 6 }}
+          pagination={false}
+          footer={() => <span>{`${condList.length} 건`}</span>}
+        />
+        <AntdModal title="확인 개선결과 조회" visible={modalVisible} width={1000} height={600} onCancel={this.handleModalVisible} footer={[null]}>
+          {confirmResult}
         </AntdModal>
       </>
     );
   }
 }
 
-EshsQualComdComp.propTypes = {
+EshsQualCondComp.propTypes = {
   CONFIG: PropTypes.object,
   sagaKey: PropTypes.string,
   formData: PropTypes.object,
@@ -519,7 +537,7 @@ EshsQualComdComp.propTypes = {
   profile: PropTypes.object,
 };
 
-EshsQualComdComp.defaultProps = {
+EshsQualCondComp.defaultProps = {
   CONFIG: {},
   sagaKey: '',
   formData: {},
@@ -530,4 +548,4 @@ EshsQualComdComp.defaultProps = {
   profile: {},
 };
 
-export default EshsQualComdComp;
+export default connect(() => createStructuredSelector({ profile: selectors.makeSelectProfile() }))(EshsQualCondComp);

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Input, Checkbox, message, Select, Popover } from 'antd';
 import { debounce } from 'lodash';
 
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
