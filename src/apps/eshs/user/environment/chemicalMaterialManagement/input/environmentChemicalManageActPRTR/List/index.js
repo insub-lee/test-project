@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Input, InputNumber, Popconfirm } from 'antd';
+import { Input, InputNumber, Popconfirm, Select } from 'antd';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
@@ -13,11 +13,12 @@ import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
-// import SearchComp from '../SearchComp';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
 
 const AntdInput = StyledInput(Input);
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdInputNumber = StyledInputNumber(InputNumber);
+const AntdSelect = StyledSelect(Select);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -27,11 +28,10 @@ class List extends React.Component {
         CAS_NO: '',
         NAME_KOR: '',
         NAME_ENG: '',
-        GROUP_NAME: '',
+        GROUP_NAME: 'I',
         HANDLE_AMOUNT: 0,
         INVESTIGATION_TARGET_RANGE: 0,
         CATEGORY: '',
-        SUB_CATEGORY: '',
       },
       isModified: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
@@ -96,12 +96,10 @@ class List extends React.Component {
         CAS_NO: '',
         NAME_KOR: '',
         NAME_ENG: '',
-        GROUP_NAME: '',
+        GROUP_NAME: 'I',
         HANDLE_AMOUNT: '',
-
         INVESTIGATION_TARGET_RANGE: '',
         CATEGORY: '',
-        SUB_CATEGORY: '',
       },
     });
   };
@@ -128,7 +126,26 @@ class List extends React.Component {
     }));
   };
 
+  handleSelectChange = (value, name) => {
+    const valueObj = { [name]: value };
+    this.setState(prevState => ({
+      requestValue: Object.assign(prevState.requestValue, valueObj),
+    }));
+  };
+
   columns = [
+    {
+      title: '호',
+      dataIndex: 'CATEGORY',
+      key: 'CATEGORY',
+      align: 'center',
+    },
+    {
+      title: '그룹',
+      dataIndex: 'GROUP_NAME',
+      key: 'GROUP_NAME',
+      align: 'center',
+    },
     {
       title: 'CAS_NO',
       dataIndex: 'CAS_NO',
@@ -147,18 +164,6 @@ class List extends React.Component {
       key: 'NAME_ENG',
       align: 'center',
     },
-    {
-      title: '호',
-      dataIndex: 'CATEGORY',
-      key: 'CATEGORY',
-      align: 'center',
-    },
-    {
-      title: '하위 호',
-      dataIndex: 'SUB_CATEGORY',
-      key: 'SUB_CATEGORY',
-      align: 'center',
-    },
   ];
 
   render() {
@@ -173,6 +178,7 @@ class List extends React.Component {
       handleInputNumberChange,
       handleDeleteClick,
       handleDeleteConfirm,
+      handleSelectChange,
     } = this;
     const { visible, requestValue, deleteConfirmMessage, isModified } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
@@ -231,7 +237,17 @@ class List extends React.Component {
                   <tr>
                     <th>그룹</th>
                     <td>
-                      <AntdInput className="ant-input-sm" name="GROUP_NAME" value={requestValue.GROUP_NAME} onChange={handleInputChange} />
+                      {/* <AntdInput className="ant-input-sm" name="GROUP_NAME" value={requestValue.GROUP_NAME} onChange={handleInputChange} /> */}
+                      <AntdSelect
+                        className="select-sm"
+                        defaultValue="I"
+                        value={requestValue.GROUP_NAME}
+                        onChange={e => handleSelectChange(e, 'GROUP_NAME')}
+                        style={{ width: '100%' }}
+                      >
+                        <Select.Option value="I">I</Select.Option>
+                        <Select.Option value="II">II</Select.Option>
+                      </AntdSelect>
                     </td>
                     <th>취급량(kg/년)</th>
                     <td>
@@ -252,13 +268,19 @@ class List extends React.Component {
                   </tr>
                   <tr>
                     <th colSpan={1}>호</th>
-                    <td colSpan={2}>
-                      <AntdInput className="ant-input-sm" name="CATEGORY" value={requestValue.CATEGORY} onChange={handleInputChange} />
+                    <td colSpan={5}>
+                      <AntdInput
+                        className="ant-input-sm"
+                        name="CATEGORY"
+                        value={requestValue.CATEGORY}
+                        onChange={handleInputChange}
+                        style={{ width: '191.85px' }}
+                      />
                     </td>
-                    <th colSpan={1}>하위 호</th>
+                    {/* <th colSpan={1}>하위 호</th>
                     <td colSpan={2}>
                       <AntdInput className="ant-input-sm" name="SUB_CATEGORY" value={requestValue.SUB_CATEGORY} onChange={handleInputChange} />
-                    </td>
+                    </td> */}
                   </tr>
                 </tbody>
               </table>

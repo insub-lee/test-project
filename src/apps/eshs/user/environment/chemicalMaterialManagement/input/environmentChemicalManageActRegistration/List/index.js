@@ -40,8 +40,8 @@ class List extends React.Component {
         CONTENT_FACTOR: '',
         ETC: '',
         EXPRESSION: '',
-        RESTRICT_NO: 0,
-        PROHIBITION_NO: 0,
+        RESTRICT_NO: '',
+        PROHIBITION_NO: '',
       },
       getCategorys: [],
       isModified: false,
@@ -138,8 +138,8 @@ class List extends React.Component {
         CONTENT_FACTOR: '',
         ETC: '',
         EXPRESSION: '',
-        RESTRICT_NO: 0,
-        PROHIBITION_NO: 0,
+        RESTRICT_NO: '',
+        PROHIBITION_NO: '',
       },
       isModified: false,
     });
@@ -352,19 +352,11 @@ class List extends React.Component {
                     </td>
                     <th>제한물질 NO.</th>
                     <td>
-                      <AntdInputNumber
-                        value={requestValue.RESTRICT_NO}
-                        onChange={value => handleInputNumberChange(value, 'RESTRICT_NO')}
-                        className="input-number-sm"
-                      />
+                      <AntdInput name="RESTRICT_NO" value={requestValue.RESTRICT_NO} onChange={handleInputChange} className="ant-input-sm" />
                     </td>
                     <th>금지물질 NO.</th>
                     <td>
-                      <AntdInputNumber
-                        value={requestValue.PROHIBITION_NO}
-                        onChange={value => handleInputNumberChange(value, 'PROHIBITION_NO')}
-                        className="input-number-sm"
-                      />
+                      <AntdInput name="PROHIBITION_NO" value={requestValue.PROHIBITION_NO} onChange={handleInputChange} className="ant-input-sm" />
                     </td>
                   </tr>
                 </tbody>
