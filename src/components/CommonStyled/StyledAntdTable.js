@@ -85,12 +85,13 @@ export const CustomStyledAntdTable = Component => styled(Component)`
   .ant-table-thead > tr > th,
   .ant-table-tbody > tr > td {
     font-size: 12px;
-    padding: 14px;
+    padding: 6px 8px;
     text-align: center;
     background-color: ${customPrimaryColor};
   }
 
   .ant-table-thead > tr > th {
+    background: #eaf2ff;
     border-top: 1px solid #aeb4be;
     border-bottom: 1px solid #aeb4be;
     font-weight: 400;
@@ -103,6 +104,18 @@ export const CustomStyledAntdTable = Component => styled(Component)`
   .ant-table-tbody > tr:nth-child(2n) {
     > td {
       background-color: #f6f8fa;
+    }
+  }
+
+  /* bordered 옵션 시 */
+  .ant-table-bordered .ant-table-body > table {
+    border: 0;
+  }
+
+  .ant-table-bordered .ant-table-thead > tr > th,
+  .ant-table-bordered .ant-table-tbody > tr > td {
+    &:last-child {
+      border-right: 0;
     }
   }
 

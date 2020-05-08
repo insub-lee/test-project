@@ -9,14 +9,12 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-import Material from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqtbEquipMgt/pages/Material';
 import Header from '../Header';
 class InputPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       uploadFileList: [],
-      qualTaskSeq: 0,
     };
   }
 
@@ -34,26 +32,6 @@ class InputPage extends Component {
       };
       getProcessRule(id, payload);
     }
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const {
-      formData: { interLockReload = '', materialReload = '' },
-      changeFormData,
-      sagaKey,
-    } = nextProps;
-    const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
-    if (prevState.qualTaskSeq !== qualTaskSeq) {
-      if (typeof interLockReload === 'function') {
-        interLockReload(qualTaskSeq);
-      }
-      if (typeof materialReload === 'function') {
-        materialReload(qualTaskSeq);
-      }
-      changeFormData(sagaKey, 'EQUIP_TASK_SEQ', qualTaskSeq);
-      return { qualTaskSeq };
-    }
-    return null;
   }
 
   fileUploadComplete = (id, response, etcData) => {
@@ -217,7 +195,6 @@ class InputPage extends Component {
       const {
         info: { PRC_ID },
       } = workFlowConfig;
-      const { qualTaskSeq } = this.state;
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
@@ -232,16 +209,7 @@ class InputPage extends Component {
               changeViewPage={changeViewPage}
               saveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
             />
-            <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <Material
-              id={id}
-              formData={{ ...formData, TASK_SEQ: qualTaskSeq }}
-              changeFormData={changeFormData}
-              getExtraApiData={getExtraApiData}
-              extraApiData={extraApiData}
-              viewPageData={{ viewType: 'VIEW' }}
-            />
-            ,
+            <View key={`${id}_${viewPageData.viewType}`} {...this.props} />,
           </Sketch>
         </StyledViewDesigner>
       );

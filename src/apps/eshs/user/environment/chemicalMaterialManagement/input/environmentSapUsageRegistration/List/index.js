@@ -72,7 +72,7 @@ class List extends React.Component {
               style={{ width: '50%' }}
               disabled={this.state.isModified && !index}
             >
-              {this.makeYearRange().map(item => (
+              {this.createYearRange().map(item => (
                 <Option value={item.toString()}>{item.toString()}</Option>
               ))}
             </AntdSelect>
@@ -81,7 +81,7 @@ class List extends React.Component {
         if (index === this.state.selectedIndex) {
           return (
             <AntdSelect defaultValue={record.YEAR} onChange={this.handleYearChange} style={{ width: '50%' }} disabled={this.state.isModified && !index}>
-              {this.makeYearRange().map(item => (
+              {this.createYearRange().map(item => (
                 <Option value={item.toString()}>{item.toString()}</Option>
               ))}
             </AntdSelect>
@@ -241,13 +241,13 @@ class List extends React.Component {
     }));
   };
 
-  makeYearRange = () => {
+  createYearRange = () => {
     const yearRange = [];
     const maxYear = moment()
       .add(5, 'year')
       .year();
     let minYear = moment()
-      .subtract(3, 'year')
+      .subtract(4, 'year')
       .year();
     while (minYear !== maxYear) {
       yearRange.push(minYear);
@@ -409,16 +409,24 @@ class List extends React.Component {
       <>
         <ContentsWrapper>
           <StyledSearchWrap>
-            <span className="input-label">화학물 추가</span>
-            <AntdSearch className="ant-search-inline input-search-mid mr5" placeHolder="검색" onClick={handleSearchClick} value="" style={{ width: '200px' }} />
-            <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary btn-first" onClick={handleMasterModifyClick}>
-                수정
-              </StyledButton>
-              <StyledButton className="btn-light" onClick={handleResetClick}>
-                초기화
-              </StyledButton>
-            </StyledButtonWrapper>
+            <div className="search-inner">
+              <span className="input-label">화학물 추가</span>
+              <AntdSearch
+                className="ant-search-inline input-search-mid mr5"
+                placeHolder="검색"
+                onClick={handleSearchClick}
+                value=""
+                style={{ width: '200px' }}
+              />
+              <StyledButtonWrapper className="btn-wrap-inline">
+                <StyledButton className="btn-primary btn-first" onClick={handleMasterModifyClick}>
+                  수정
+                </StyledButton>
+                <StyledButton className="btn-light" onClick={handleResetClick}>
+                  초기화
+                </StyledButton>
+              </StyledButtonWrapper>
+            </div>
           </StyledSearchWrap>
           <div className="tableWrapper">
             <StyledHtmlTable>
@@ -446,7 +454,7 @@ class List extends React.Component {
                         name="UNIT"
                         value={requestValue.UNIT}
                         onChange={handleInputChange}
-                        disabled={!isSelectSapMaterial()}
+                        style={{ width: '100%', visibility: !isSelectSapMaterial() ? 'hidden' : 'visible' }}
                       />
                     </td>
                     <th>kg환산계수</th>
@@ -455,7 +463,7 @@ class List extends React.Component {
                         value={requestValue.CONVERT_COEFFICIENT}
                         onChange={value => handleInputNumberChange(value, 'CONVERT_COEFFICIENT')}
                         className="col-input-number"
-                        disabled={!isSelectSapMaterial()}
+                        style={{ width: '100%', visibility: !isSelectSapMaterial() ? 'hidden' : 'visible' }}
                       />
                     </td>
                   </tr>
@@ -463,16 +471,21 @@ class List extends React.Component {
               </table>
             </StyledHtmlTable>
           </div>
-          <div className="selSaveWrapper">
-            <Popconfirm
-              title={checkedIndex === -1 ? '삭제할 항목을 선택하세요.' : '삭제하시겠습니까?'}
-              onConfirm={checkedIndex === -1 ? null : handleSapDeleteClick}
-            >
-              <StyledButton className="btn-light">선택 삭제</StyledButton>
-            </Popconfirm>
-          </div>
-          <AntdTable columns={columns} dataSource={dataSource} pagination={false} />
-          <div className="div-comment div-comment-antd">제품사용량: 당해출고량 * kg환산계수</div>
+          {!isSelectSapMaterial() ? null : (
+            <>
+              <div className="selSaveWrapper">
+                <Popconfirm
+                  placement="leftTop"
+                  title={checkedIndex === -1 ? '삭제할 항목을 선택하세요.' : '삭제하시겠습니까?'}
+                  onConfirm={checkedIndex === -1 ? null : handleSapDeleteClick}
+                >
+                  <StyledButton className="btn-light">선택 삭제</StyledButton>
+                </Popconfirm>
+              </div>
+              <AntdTable columns={columns} dataSource={dataSource} pagination={false} />
+              <div className="div-comment div-comment-antd">제품사용량: 당해출고량 * kg환산계수</div>
+            </>
+          )}
         </ContentsWrapper>
         <Modal
           SearchComp={SearchComp}

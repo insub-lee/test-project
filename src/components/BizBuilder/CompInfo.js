@@ -52,7 +52,6 @@ import RadioMaterialLabelComp from 'components/BizBuilder/Field/RadioMaterialLab
 import RadioPopupComp from 'components/BizBuilder/Field/RadioPopupComp';
 import SelectYearComp from 'components/BizBuilder/Field/SelectYearComp';
 import SelectSiteComp from 'components/BizBuilder/Field/SelectSiteComp';
-import ManageCodeComp from 'components/BizBuilder/Field/ManageCodeComp';
 import JoinReadComp from 'components/BizBuilder/Field/JoinReadComp';
 import AttachDownComp from 'components/BizBuilder/Field/AttachDownComp';
 import DatePickerComp from 'components/BizBuilder/Field/DatePickerComp';
@@ -117,6 +116,7 @@ import CustomSearchInputComp from 'components/BizBuilder/Field/CustomSearchInput
 import MdcsDistDeptListComp from 'components/BizBuilder/Field/MdcsDistDeptListComp';
 import OldScopeComp from 'components/BizBuilder/Field/OldScopeComp';
 import LabelByNodeIdComp from 'components/BizBuilder/Field/LabelByNodeIdComp';
+import EshsQualCondComp from 'components/BizBuilder/Field/EshsQualCondComp';
 import NodeIdMultiViewComp from 'components/BizBuilder/Field/NodeIdMultiViewComp';
 import NodeNameByCodeComp from 'components/BizBuilder/Field/NodeNameByCodeComp';
 
@@ -175,7 +175,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/RadioPopupComp': { renderer: property => <RadioPopupComp {...property} /> },
   'components/BizBuilder/Field/SelectYearComp': { renderer: property => <SelectYearComp {...property} /> },
   'components/BizBuilder/Field/SelectSiteComp': { renderer: property => <SelectSiteComp {...property} /> },
-  'components/BizBuilder/Field/ManageCodeComp': { renderer: property => <ManageCodeComp {...property} /> },
   'components/BizBuilder/Field/JoinReadComp': { renderer: property => <JoinReadComp {...property} /> },
   'components/BizBuilder/Field/AttachDownComp': { renderer: property => <AttachDownComp {...property} /> },
   'components/BizBuilder/Field/TitleModalComp': { renderer: property => <TitleModalComp {...property} /> },
@@ -238,6 +237,7 @@ export const CompInfo = {
   'components/BizBuilder/Field/MdcsDistDeptListComp': { renderer: property => <MdcsDistDeptListComp {...property} /> },
   'components/BizBuilder/Field/OldScopeComp': { renderer: property => <OldScopeComp {...property} /> },
   'components/BizBuilder/Field/LabelByNodeIdComp': { renderer: property => <LabelByNodeIdComp {...property} /> },
+  'components/BizBuilder/Field/EshsQualCondComp': { renderer: property => <EshsQualCondComp {...property} /> },
   'components/BizBuilder/Field/NodeIdMultiViewComp': { renderer: property => <NodeIdMultiViewComp {...property} /> },
   'components/BizBuilder/Field/NodeNameByCodeComp': { renderer: property => <NodeNameByCodeComp {...property} /> },
 };
