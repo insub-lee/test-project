@@ -128,7 +128,7 @@ class SearchList extends Component {
           onCancel={this.onCloseCoverView}
           destroyOnClose
         >
-          <div className="pop_tit">검색 내용 보기</div>
+          <div className="pop_tit">표지보기</div>
           <div className="SearchContentLayer">
             <BizBuilderBase
               sagaKey="CoverView"
