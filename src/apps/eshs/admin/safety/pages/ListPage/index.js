@@ -9,7 +9,7 @@ import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import BizBuilderBase from 'components/BizBuilderBase';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
@@ -19,7 +19,6 @@ import _ from 'lodash';
 import { address, VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/internal_constants';
 
 const AntdTable = StyledAntdTable(Table);
-
 
 function ListPage(props) {
   const [activateRegModal, setActivateRegModal] = useState(false);
@@ -31,8 +30,6 @@ function ListPage(props) {
   const [isRowNo, setIsRowNo] = useState(false);
   const [rowClickable, setRowClickable] = useState(true);
   const [processedList, setProcessedList] = useState([]);
-
-
 
   useEffect(() => {
     const { viewSeq } = props;
@@ -52,7 +49,7 @@ function ListPage(props) {
             // FIRE_CODE: FE (소화기)
             params: { listData, QUARTER, INSPECTION_YEAR, IS_INSPECTED },
           }).then(({ response }) => {
-            console.debug("£££ response : ", response);
+            console.debug('£££ response : ', response);
             const { result, data } = response || {};
             if (result === 1) {
               setProcessedList(data);
@@ -244,8 +241,19 @@ function ListPage(props) {
     return null;
   };
 
-
-  const { CustomButtons, sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq, listData } = props;
+  const {
+    CustomButtons,
+    sagaKey: id,
+    viewLayer,
+    formData,
+    workFlowConfig,
+    loadingComplete,
+    viewPageData,
+    changeViewPage,
+    getListData,
+    workSeq,
+    listData,
+  } = props;
   const { ViewButtons } = CustomButtons || false;
   if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
     const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -304,7 +312,7 @@ function ListPage(props) {
                     {group.type === 'searchGroup' && group.useSearch && (
                       <div className="view-designer-group-search-btn-wrap">
                         <StyledButton
-                          className="btn-primary"
+                          className="btn-gray"
                           onClick={() => {
                             getListData(id, workSeq);
                             setIsSearched(true);
