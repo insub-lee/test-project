@@ -25,7 +25,7 @@ const StyledSearchWrapper = styled.div`
             background: #f7f7f7;
             text-align: center;
             color: #000;
-            font-size: 0.8rem;
+            font-size: 12px;
             padding: 6px 8px;
             border-bottom: 1px solid #ddd;
             width: 130px;

@@ -29,7 +29,7 @@ const TreeWrapper = styled.div`
       border: 1px solid #e5e5e5;
       border-radius: 4px;
       padding: 0.5rem 0.6rem;
-      font-size: 0.8rem;
+      font-size: 12px;
       font-weight: 400;
       line-height: 1.47;
       color: #495057;
