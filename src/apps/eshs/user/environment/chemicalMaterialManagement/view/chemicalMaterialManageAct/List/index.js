@@ -7,46 +7,45 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
 import { Input, Select } from 'antd';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import { debounce } from 'lodash';
-import { masterColumnDefs, sapUsageColumn } from './columnDefs';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import { columnDefs } from './columnDefs';
 
-const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
-
+const AntdInput = StyledInput(Input);
 class List extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       rowData: [],
-      isMasterColumns: true,
-      requestValue: {
-        SAP_NO: '',
-        CAS_NO: '',
-        KEYWORD: '',
-      },
+      categories: [],
+      CAS_NO: '',
+      KEYWORD: '',
+      CATEGORY_ID: '',
     };
     this.getSearchData = debounce(this.getSearchData, 300);
   }
 
   defaultColDef = {
-    width: 120,
+    width: 170,
     resizable: true,
   };
 
   componentDidMount() {
     this.getRowData();
+    this.getCategoryList();
   }
 
   getRowData = () => {
+    const { CAS_NO, KEYWORD, CATEGORY_ID } = this.state;
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiArr = [
       {
         key: 'chemicalMaterials',
         type: 'GET',
-        url: '/api/eshs/v1/common/eshschemicalmaterialmastermanagement',
+        url: `/api/eshs/v1/common/eshschemicalmaterialmanageactview?CAS_NO=${CAS_NO}&KEYWORD=${KEYWORD}&CATEGORY=${CATEGORY_ID}`,
       },
     ];
     getCallDataHandler(id, apiArr, this.setRowData);
@@ -59,57 +58,59 @@ class List extends React.Component {
     });
   };
 
-  handleSelectChange = () => {
-    this.setState(prevState => ({
-      isMasterColumns: !prevState.isMasterColumns,
-    }));
+  getCategoryList = () => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'codeCategory',
+        type: 'POST',
+        url: `/api/admin/v1/common/categoryMapList`,
+        params: { PARAM: { NODE_ID: 1976 } },
+      },
+    ];
+
+    getCallDataHandler(id, apiArr, this.setCategory);
+  };
+
+  setCategory = () => {
+    const { result } = this.props;
+    const category = result.codeCategory.categoryMapList.filter(item => item.PARENT_NODE_ID === 1976);
+    this.setState({
+      categories: category,
+    });
   };
 
   handleInputChange = (value, name) => {
     const { getSearchData } = this;
-    const valueObj = { [name]: value };
     this.setState(
-      prevState => ({
-        requestValue: Object.assign(prevState.requestValue, valueObj),
-      }),
+      {
+        [name]: value,
+      },
       getSearchData(),
     );
   };
 
   getSearchData = () => {
-    const { requestValue } = this.state;
+    const { CAS_NO, KEYWORD, CATEGORY_ID } = this.state;
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiArr = [
       {
         key: 'chemicalMaterials',
-        type: 'POST',
-        url: '/api/eshs/v1/common/eshschemicalmaterialmastermanagement',
-        params: requestValue,
+        type: 'GET',
+        url: `/api/eshs/v1/common/eshschemicalmaterialmanageactview?CAS_NO=${CAS_NO}&KEYWORD=${KEYWORD}&CATEGORY=${CATEGORY_ID}`,
       },
     ];
-    getCallDataHandler(id, apiArr);
+    getCallDataHandler(id, apiArr, this.setRowData);
   };
 
   render() {
     const { defaultColDef } = this;
-    const { handleSelectChange, handleInputChange } = this;
-    const { rowData, isMasterColumns } = this.state;
+    const { handleInputChange } = this;
+    const { rowData, categories } = this.state;
     return (
       <>
         <ContentsWrapper>
           <div className="selSaveWrapper alignLeft" style={{ paddingBottom: '10px' }}>
-            <div className="textLabel">분류</div>
-            <AntdSelect defaultValue="Y" onChange={handleSelectChange} className="select-mid mr5" style={{ width: '130px' }}>
-              <AntdSelect.Option value="Y">전체</AntdSelect.Option>
-              <AntdSelect.Option value="N">SAP(사용량)</AntdSelect.Option>
-            </AntdSelect>
-            <div className="textLabel">SAP_NO.</div>
-            <AntdInput
-              className="ant-input-inline ant-input-mid mr5"
-              onChange={e => handleInputChange(e.target.value, 'SAP_NO')}
-              style={{ width: '150px' }}
-              placeholder="SAP_NO."
-            />
             <div className="textLabel">CAS_NO.</div>
             <AntdInput
               className="ant-input-inline ant-input-mid mr5"
@@ -117,6 +118,12 @@ class List extends React.Component {
               style={{ width: '150px' }}
               placeholder="CAS_NO."
             />
+            <AntdSelect className="select-mid mr5" onChange={e => handleInputChange(e, 'CATEGORY_ID')} style={{ width: '240px' }}>
+              {categories.map(item => (
+                <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
+              ))}
+              <Select.Option value="">전체 보기</Select.Option>
+            </AntdSelect>
             <AntdInput
               className="ant-input-inline ant-input-mid mr5"
               onChange={e => handleInputChange(e.target.value, 'KEYWORD')}
@@ -129,12 +136,7 @@ class List extends React.Component {
           </div>
           <div style={{ width: '100%', height: '100%' }}>
             <div className="ag-theme-balham tableWrapper" style={{ padding: '0px 20px', height: '500px' }}>
-              <AgGridReact
-                defaultColDef={defaultColDef}
-                columnDefs={isMasterColumns ? masterColumnDefs : sapUsageColumn}
-                rowData={rowData}
-                suppressRowTransform
-              />
+              <AgGridReact defaultColDef={defaultColDef} columnDefs={columnDefs} rowData={rowData} suppressRowTransform />
             </div>
           </div>
         </ContentsWrapper>
