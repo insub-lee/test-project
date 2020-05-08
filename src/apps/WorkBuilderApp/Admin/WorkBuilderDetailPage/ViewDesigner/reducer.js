@@ -538,7 +538,8 @@ const reducer = (state = initialState, action) => {
         .set('workInfo', fromJS({ workSeq, viewType }))
         .setIn(['viewData', 'WORK_SEQ'], workSeq)
         .setIn(['viewData', 'COMP_TAG'], viewType)
-        .setIn(['viewData', 'NAME_KOR'], viewName || '기본 입력 화면');
+        .setIn(['viewData', 'NAME_KOR'], viewName || '기본 입력 화면')
+        .setIn(['viewData', 'CONFIG', 'property', 'layerIdxKey'], `layerIdx_${getNewKey()}`);
     }
     case actionTypes.SET_INIT_LIST_DATA_REDUCER: {
       const { workSeq, viewType, viewName } = action;
@@ -548,6 +549,7 @@ const reducer = (state = initialState, action) => {
         .setIn(['viewData', 'WORK_SEQ'], workSeq)
         .setIn(['viewData', 'COMP_TAG'], viewType)
         .setIn(['viewData', 'NAME_KOR'], viewName)
+        .setIn(['viewData', 'CONFIG', 'property', 'layerIdxKey'], `layerIdx_${getNewKey()}`)
         .setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups'], fromJS([initialSearchGroup, initialListGroup]));
     }
     case actionTypes.SET_WORK_INFO_REDUCER: {
