@@ -1,11 +1,14 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, Button, Modal, Table } from 'antd';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 
 const AntdTable = StyledAntdTable(Table);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class ModalTableComp extends React.Component {
   constructor(props) {
@@ -196,14 +199,22 @@ class ModalTableComp extends React.Component {
           <span>{colData}</span>
         ) : (
           <>
-            <Input
+            <AntdSearch
+              value={customListColdataFlag ? customColData : colData}
+              readOnly
+              className={CONFIG.property.className || ''}
+              onClick={this.handleModalVisible}
+              onSearch={this.handleModalVisible}
+              style={{ width: '100%' }}
+            />
+            {/* <Input
               value={customListColdataFlag ? customColData : colData}
               readOnly
               className={CONFIG.property.className || ''}
               style={{ width: 150 }}
               onClick={this.handleModalVisible}
             />
-            <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
+            <Button shape="circle" icon="search" onClick={this.handleModalVisible} /> */}
             <Modal visible={this.state.modal} width={800} onCancel={this.handleModalVisible} footer={[]}>
               {this.state.modal && this.modalTableRender()}
             </Modal>
