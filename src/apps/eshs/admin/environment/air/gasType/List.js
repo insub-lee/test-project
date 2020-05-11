@@ -247,12 +247,12 @@ List.defaultProps = {
     },
     {
       title: '가스분자량',
-      dataIndex: 'PERMISSION_DENSITY',
+      dataIndex: 'GAS_WEIGHT',
       align: 'right',
     },
     {
       title: '법적허용 농도(PPM)',
-      dataIndex: 'GAS_WEIGHT',
+      dataIndex: 'PERMISSION_DENSITY',
       align: 'center',
     },
     {

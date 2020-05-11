@@ -213,12 +213,13 @@ class List extends React.Component {
                   <tr>
                     <th>순번</th>
                     <td>
-                      <AntdInputNumber
+                      {/* <AntdInputNumber
                         value={requestValue.ORDER_NO}
                         onChange={value => handleInputNumberChange(value, 'ORDER_NO')}
                         className="ant-input-number input-number-sm"
                         style={{ width: '100%' }}
-                      />
+                      /> */}
+                      {requestValue.ORDER_NO}
                     </td>
                     <th>화학물질 명칭</th>
                     <td>
