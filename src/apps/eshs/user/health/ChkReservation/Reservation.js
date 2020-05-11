@@ -12,7 +12,7 @@ const AntdModal = StyledAntdModalPad(Modal);
 
 class Reservation extends Component {
   state = {
-    isQuestionnaireShow: true,
+    isQuestionnaireShow: false,
   };
 
   componentDidMount() {}
@@ -29,7 +29,7 @@ class Reservation extends Component {
     return (
       <>
         <AntdModal
-          width={1000}
+          width={1050}
           visible={this.state.isQuestionnaireShow}
           title="건강검진 공통 문진표"
           onCancel={this.onCancelQuestionnaire}
