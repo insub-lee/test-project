@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
 export default function InfoModify(props) {
-  console.debug('### props: ', props);
   const { sagaKey: id, onCloseModalHandler, viewPageData, changeViewPage, saveBeforeProcess, saveTask, modifyTask, reloadId } = props;
 
   // useEffect(() => {
