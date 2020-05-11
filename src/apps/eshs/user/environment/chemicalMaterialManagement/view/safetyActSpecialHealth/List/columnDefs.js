@@ -1,11 +1,11 @@
 export const columnDefs = [
   {
-    headerName: '분류',
-    field: 'CATEGORY',
-  },
-  {
     headerName: '연번',
     field: 'SERIAL_NO',
+  },
+  {
+    headerName: '분류',
+    field: 'CATEGORY',
   },
   {
     headerName: '화학물질명_국문',
