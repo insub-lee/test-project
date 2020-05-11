@@ -32,7 +32,14 @@ class SafetyWorkSearch extends Component {
   handleGetSafetyWorkList = () => {
     const { site, searchType, keyword } = this.state;
     const { sagaKey: id, getCallDataHandler } = this.props;
-    const type = 'searchList';
+    let type = 'searchList';
+    switch (id) {
+      case 'safetyWorkEmergency_search':
+        type = 'searchListEmergency';
+        break;
+      default:
+        break;
+    }
     const apiArr = [
       {
         key: 'getSafetyWorkList',

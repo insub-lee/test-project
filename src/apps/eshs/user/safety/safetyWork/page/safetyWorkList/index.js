@@ -5,6 +5,7 @@ import { Input, Modal } from 'antd';
 import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import HstCmpnyUserSelectComp from 'apps/eshs/user/safety/safetyEdu/HstCmpnyUserTable';
+import WorkerSearch from 'apps/eshs/user/safety/workerMgt/Search';
 import CustomListPage from 'apps/eshs/user/safety/pledge/pages/ListPage';
 import BizBuilderBase from 'components/BizBuilderBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
@@ -14,22 +15,25 @@ import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import SafetyWorkerTable from '../../SafetyWorker';
 import SafetyEdu from '../../../safetyEdu';
+import SafetyWorkerTable from '../../commonComponents/SafetyWorker';
+import SafetyEquipTable from '../../commonComponents/SafetyEquip';
+import SafetyEquipSelect from '../../commonComponents/SafetyEquip/EquipSelect';
+import SafetyWorkInfo from '../../commonComponents/SafetyWorkInfo';
+import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import Styled from './Styled';
-import SearchSafetyWork from '../search';
-import SafetyWorkInfo from '../../SafetyWorkInfo';
 
 const AntdModal = StyledModalWrapper(Modal);
 
-class SafetyWorkMain extends Component {
+class SafetyWorkList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalType: '',
+      modalTitle: '',
       modalVisible: false,
-      selectedWorkerList: [],
       formData: {
+        // ------------------------------------------------------------------------ SWTB_SFAETY_WORK - 안전작업 정보
         WORK_NO: '', //                 작업번호        (String, 13)
         TITLE: '', //                   작업명          (String, 100)
         WCATEGORY: '', //               작업종류        (String, 40)
@@ -56,16 +60,21 @@ class SafetyWorkMain extends Component {
         REQUEST_GB: '일반', //          신청구분        (String, 6)   [일반, 긴급, 미허가]
         FINAL_OK_EMP_NO: '', //         최종결재자 사번 (String, 10)
         FIRE_MANAGER: '', //            화재감시 담당   (String, 50)
-        // ------------------------------------------------------------------------ SWTB_SFAETY_WORK - 안전작업 정보
-        WORKER_LIST: [],
         // ------------------------------------------------------------------------ SWTB_WORKER_TR - 안전작업 투입 작업자 정보
+        WORKER_LIST: [],
+        // ------------------------------------------------------------------------ SWTB_EQUIP - 안전작업 투입 장비 정보
+        EQUIP_LIST: [],
+        // ------------------------------------------------------------------------ fileUpload
+        fileList: [],
+        responseList: [],
+        // ------------------------------------------------------------------------ DB insert 시 제외되는 데이터 (View 에서만 사용됨)
         REQ_CMPNY_NM: props.profile.PSTN_NAME_KOR, // 발주회사명
         REQ_DEPT_NM: props.profile.DEPT_NAME_KOR, // 발주부서명
         REQ_EMP_NM: props.profile.NAME_KOR, // 담당자명
         REQ_SUPERVISOR_EMP_NM: '', //   발주회사 감독자명
         EXM_EMP_NM: '', // 검토회사 담당자명
         FINAL_OK_EMP_NM: '', // 최종결재자 사번
-        REQUEST_DT: '',
+        REQUEST_DT: moment().format('YYYY-MM-DD'),
       },
     };
   }
@@ -84,6 +93,12 @@ class SafetyWorkMain extends Component {
         key: 'getEshsCmpnyList',
         type: 'GET',
         url: `/api/eshs/v1/common/EshsCmpnyList/null/null`,
+      },
+      {
+        /* SWTB_장비리스트 : /api/eshs/v1/common/eshsSwtbEquip */
+        key: 'getSwtbEquipList',
+        type: 'GET',
+        url: `/api/eshs/v1/common/eshsSwtbEquip`,
       },
     ];
     getCallDataHandler(sagaKey, apiArr);
@@ -116,7 +131,10 @@ class SafetyWorkMain extends Component {
       formData: {
         ...searchSafetyWork,
         FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
+        REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
         SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
+        fileList: [],
+        responseList: [],
       },
     });
   };
@@ -135,7 +153,7 @@ class SafetyWorkMain extends Component {
     ];
 
     if (formData.WORK_NO === '') {
-      message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 등록 후 클릭하십시오.</MessageContent>);
+      message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 등록해주십시오.</MessageContent>);
       return;
     }
     if (formData.WRK_CMPNY_CD === '') {
@@ -155,8 +173,6 @@ class SafetyWorkMain extends Component {
       WORK_NO: formData.WORK_NO,
       WORKER_NM: worker.WORKER_NM,
       WORKER_SSN: worker.WORKER_SSN,
-      FROM_DT: '',
-      TO_DT: '',
       POSITION: '작업자',
       REMARK: '',
       WORKER_IDX: '',
@@ -174,17 +190,55 @@ class SafetyWorkMain extends Component {
   };
 
   // 작업자 로우셀렉트
-  workerTableRowSelect = (selectedRowKeys, selectedRows) => {
+  workerRemove = index => {
+    const { formData } = this.state;
+    const nextWorkerList = formData.WORKER_LIST.filter((worker, idx) => idx !== index);
     this.setState({
-      selectedWorkerList: selectedRowKeys,
+      formData: {
+        ...formData,
+        WORKER_LIST: nextWorkerList,
+      },
     });
-    console.debug(selectedRowKeys);
   };
 
   // 모달 핸들러
   handleModal = (type, visible) => {
+    let title = '';
+    switch (type) {
+      case 'supervisor':
+        title = '감독자 선택';
+        break;
+      case 'cmpny':
+        title = '작업업체 선택';
+        break;
+      case 'pledge':
+        title = '서약서 선택';
+        break;
+      case 'worker':
+        title = '작업자 선택';
+        break;
+      case 'equip':
+        title = '투입장비 선택';
+        break;
+      case 'safetyEdu':
+        title = '안전교육 등록';
+        break;
+      case 'safetyWork':
+        title = '안전작업 선택';
+        break;
+      case 'exm':
+        title = '검토자 선택';
+        break;
+      case 'final':
+        title = '최종 검토자 선택';
+        break;
+      default:
+        break;
+    }
+
     this.setState({
       modalType: type,
+      modalTitle: title,
       modalVisible: visible,
     });
   };
@@ -198,6 +252,7 @@ class SafetyWorkMain extends Component {
         field = 'REQ_SUPERVISOR_EMP_NO';
         this.setState({
           modalType: '',
+          modalTitle: '',
           modalVisible: false,
           formData: {
             ...formData,
@@ -210,6 +265,7 @@ class SafetyWorkMain extends Component {
         field = 'EXM_EMP_NO';
         this.setState({
           modalType: '',
+          modalTitle: '',
           modalVisible: false,
           formData: {
             ...formData,
@@ -224,6 +280,7 @@ class SafetyWorkMain extends Component {
         field = 'FINAL_OK_EMP_NO';
         this.setState({
           modalType: '',
+          modalTitle: '',
           modalVisible: false,
           formData: {
             ...formData,
@@ -240,6 +297,7 @@ class SafetyWorkMain extends Component {
     const { formData } = this.state;
     this.setState({
       modalType: '',
+      modalTitle: '',
       modalVisible: false,
       formData: {
         ...formData,
@@ -254,6 +312,7 @@ class SafetyWorkMain extends Component {
     const { formData } = this.state;
     this.setState({
       modalType: '',
+      modalTitle: '',
       modalVisible: false,
       formData: {
         ...formData,
@@ -289,6 +348,7 @@ class SafetyWorkMain extends Component {
     this.setState(
       {
         modalType: '',
+        modalTitle: '',
         modalVisible: false,
         formData: {
           ...formData,
@@ -329,13 +389,10 @@ class SafetyWorkMain extends Component {
         }
         break;
       case 'UPDATE':
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkUpdateCallback);
         break;
       case 'DELETE':
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/safetyWork', submitData);
-        break;
-      case 'SAVE':
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/safetyWork', submitData);
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkDeleteCallback);
         break;
       default:
         break;
@@ -364,6 +421,19 @@ class SafetyWorkMain extends Component {
   safetyWorkAddCallback = (id, response) => {
     const { formData } = this.state;
     const { WORK_NO } = response;
+    if (formData.WORK_NO === '') {
+      if (WORK_NO === '') {
+        message.error(<MessageContent>안전작업 추가 신청 실패</MessageContent>);
+        return;
+      }
+      message.success(<MessageContent>안전작업 추가 신청 완료</MessageContent>);
+    } else {
+      if (WORK_NO === '') {
+        message.error(<MessageContent>안전작업 연장 신청 실패</MessageContent>);
+        return;
+      }
+      message.success(<MessageContent>안전작업 연장 신청 완료</MessageContent>);
+    }
     this.setState({
       formData: {
         ...formData,
@@ -372,18 +442,146 @@ class SafetyWorkMain extends Component {
     });
   };
 
+  // 작업 저장 콜백
+  safetyWorkUpdateCallback = (id, response) => {
+    const { result } = response;
+    if (result && result === 'fail') {
+      message.error(<MessageContent>안전작업 정보를 저장하지 못하였습니다.</MessageContent>);
+      return;
+    }
+    message.success(<MessageContent>안전작업 정보를 저장하였습니다.</MessageContent>);
+  };
+
+  // 작업 삭제 콜백
+  safetyWorkDeleteCallback = (id, response) => {
+    const { formData } = this.state;
+    const { result } = response;
+    if (result && result === 'fail') {
+      message.error(<MessageContent>안전작업 정보 삭제에 실패했습니다.</MessageContent>);
+      return;
+    }
+    this.setState(
+      {
+        formData: {
+          ...formData,
+          WORK_NO: '',
+          TITLE: '',
+          WCATEGORY: '',
+          SUB_WCATEGORY: [],
+          WORK_DESC: '',
+          WRK_CMPNY_CD: '',
+          WLOC: '',
+          WGUBUN: '신규',
+          SITE: '청주',
+          DGUBUN: 'C-1',
+          FROM_DT: '',
+          TO_DT: '',
+          FROM_TIME: '09',
+          TO_TIME: '18',
+          PLEDGE_NO: '',
+          DETB_DANEST: '',
+          REQ_SUPERVISOR_EMP_NO: '',
+          EXM_CMPNY_CD: '',
+          EXM_DEPT_CD: '',
+          EXM_EMP_NO: '',
+          REQUEST_GB: '일반',
+          FINAL_OK_EMP_NO: '',
+          FIRE_MANAGER: '',
+          WORKER_LIST: [],
+          EQUIP_LIST: [],
+          fileList: [],
+          responseList: [],
+          REQ_SUPERVISOR_EMP_NM: '',
+          EXM_EMP_NM: '',
+          FINAL_OK_EMP_NM: '',
+        },
+      },
+      () => message.success(<MessageContent>안전작업 정보를 삭제하였습니다.</MessageContent>),
+    );
+  };
+
+  // 작업자 추가
+  workerAdd = workers => {
+    const { formData } = this.state;
+    const workerSeqList = formData.WORKER_LIST.map(worker => worker.WORKER_SEQ);
+    const newWorkers = workers
+      .filter(worker => !workerSeqList.includes(worker.WORKER_SEQ))
+      .map(worker => ({
+        key: worker.WORKER_SEQ,
+        WORK_NO: formData.WORK_NO,
+        WORKER_NM: worker.WORKER_NM,
+        WORKER_SSN: worker.WORKER_SSN,
+        POSITION: '작업자',
+        REMARK: '',
+        WORKER_IDX: '',
+        WORKER_SEQ: worker.WORKER_SEQ,
+        EDU_CHECK: worker.EDU_CHECK,
+        TEL: worker.TEL,
+        M_TEL: worker.M_TEL,
+      }));
+    this.setState({
+      modalType: '',
+      modalTitle: '',
+      modalVisible: false,
+      formData: {
+        ...formData,
+        WORKER_LIST: formData.WORKER_LIST.concat(newWorkers),
+      },
+    });
+  };
+
+  // 작업장비 추가
+  equipAdd = equip => {
+    const { formData } = this.state;
+    const newEquip = {
+      EGROUP: equip.CODE,
+      EQUIP_NM: equip.NAME_KOR,
+    };
+    const prevEquipList = formData.EQUIP_LIST || [];
+    this.setState({
+      modalType: '',
+      modalTitle: '',
+      modalVisible: false,
+      formData: {
+        ...formData,
+        EQUIP_LIST: prevEquipList.concat(newEquip),
+      },
+    });
+  };
+
+  equipRemove = index => {
+    const { formData } = this.state;
+    const nextEquipList = formData.EQUIP_LIST.filter((equip, idx) => idx !== index);
+    this.setState({
+      formData: {
+        ...formData,
+        EQUIP_LIST: nextEquipList,
+      },
+    });
+  };
+
+  // 테스트업로드
+  handleUploadFileChange = ({ fileList }) => {
+    const { formData } = this.state;
+    const responseList = [];
+    fileList.map(item => responseList.push(item.response));
+    this.setState({
+      formData: {
+        ...formData,
+        fileList,
+        responseList,
+      },
+    });
+  };
+
   render() {
-    const { modalType, modalVisible, formData, selectedWorkerList } = this.state;
+    const { modalType, modalTitle, modalVisible, formData } = this.state;
     const { result } = this.props;
     // getCallData
     // const eshsCmpnyList = (result && result.getEshsCmpnyList && result.getEshsCmpnyList.list) || [];
     const eshsHstCmpnyUserList = (result && result.getHstCmpnyUser && result.getHstCmpnyUser.list) || [];
-    const rowSelection = {
-      columnWidth: '10%',
-      selectedRowKeys: selectedWorkerList,
-      onChange: this.workerTableRowSelect,
-    };
-    console.debug('렌더링-state', formData);
+    const eshsSwtbEquip = (result && result.getSwtbEquipList && result.getSwtbEquipList.list) || [];
+    console.debug('렌더링-state', this.state);
     return (
       <Styled>
         <StyledSearchWrap>
@@ -391,7 +589,12 @@ class SafetyWorkMain extends Component {
             <div className="searchCmpnyWrap">
               <label>
                 작업번호
-                <Input className="ant-input-sm" style={{ width: '150px', marginLeft: '5px', marginRight: '5px' }} value={formData.WORK_NO} />
+                <Input
+                  className="ant-input-sm"
+                  style={{ width: '150px', marginLeft: '5px', marginRight: '5px' }}
+                  value={formData.WORK_NO}
+                  onClick={() => this.handleModal('safetyWork', true)}
+                />
               </label>
             </div>
             <div
@@ -408,14 +611,17 @@ class SafetyWorkMain extends Component {
             </StyledButton>
             {formData.WORK_NO === '' ? (
               <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('ADD')} style={{ marginBottom: '5px' }}>
-                추가 / 연장
+                추가
               </StyledButton>
             ) : (
               <>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('추가 / 연장')} style={{ marginBottom: '5px' }}>
+                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('ADD')} style={{ marginBottom: '5px' }}>
+                  연장
+                </StyledButton>
+                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('UPDATE')} style={{ marginBottom: '5px' }}>
                   저장
                 </StyledButton>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('추가 / 연장')} style={{ marginBottom: '5px' }}>
+                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('DELETE')} style={{ marginBottom: '5px' }}>
                   삭제
                 </StyledButton>
               </>
@@ -441,12 +647,22 @@ class SafetyWorkMain extends Component {
             handleChangeFormData={this.handleChangeFormData}
             handleWorkCategory={this.handleWorkCategory}
             handleUploadFileChange={this.handleUploadFileChange}
+            fileList={this.state.fileList || []}
           />
           <div className="middleTitle">
             <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
             <span className="middleTitleText">작업자</span>
-            <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => console.debug('+버튼')}>
-              작업자 인원 추가
+            <StyledButton
+              className="btn-primary btn-xxs btn-first"
+              onClick={() => {
+                if (formData.WORK_NO === '') {
+                  message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
+                  return;
+                }
+                this.handleModal('worker', true);
+              }}
+            >
+              작업자 추가
             </StyledButton>
             <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.handleModal('safetyEdu', true)}>
               안전교육 등록
@@ -456,20 +672,31 @@ class SafetyWorkMain extends Component {
             </StyledButton>
           </div>
           <div>
-            <SafetyWorkerTable workerList={formData.WORKER_LIST} rowSelection={rowSelection} handleWorkerPosition={this.handleWorkerPosition} />
+            <SafetyWorkerTable workerList={formData.WORKER_LIST} handleWorkerPosition={this.handleWorkerPosition} workerRemove={this.workerRemove} />
           </div>
           <div className="middleTitle">
             <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
             <span className="middleTitleText">투입장비</span>
-            <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => console.debug('+버튼')}>
+            <StyledButton
+              className="btn-primary btn-xxs btn-first"
+              onClick={() => {
+                if (formData.WORK_NO === '') {
+                  message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
+                  return;
+                }
+                this.handleModal('equip', true);
+              }}
+            >
               투입 장비 추가
             </StyledButton>
           </div>
-          <div>투입장비 테이블 들어올곳</div>
+          <div>
+            <SafetyEquipTable equipList={formData.EQUIP_LIST} equipRemove={this.equipRemove} />
+          </div>
         </ContentsWrapper>
         <AntdModal
-          title="모달테스트"
-          width={modalType === 'cmpny' ? '790px' : '70%'}
+          title={modalTitle}
+          width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '70%'}
           visible={modalVisible}
           footer={null}
           onOk={() => this.handleModal('', false)}
@@ -503,7 +730,8 @@ class SafetyWorkMain extends Component {
               customOnRowClick={record => this.handlePledgeSelect(record)}
             />
           )}
-          {modalType === 'worker' && <div>Test</div>}
+          {modalType === 'worker' && <BizMicroDevBase component={WorkerSearch} sagaKey="Worker_search" onSave={this.workerAdd} />}
+          {modalType === 'equip' && <SafetyEquipSelect equipList={eshsSwtbEquip} rowSelect={this.equipAdd} />}
           {modalType === 'safetyEdu' && <SafetyEdu />}
           {modalType === 'safetyWork' && <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />}
         </AntdModal>
@@ -512,7 +740,7 @@ class SafetyWorkMain extends Component {
   }
 }
 
-SafetyWorkMain.propTypes = {
+SafetyWorkList.propTypes = {
   // type - number
   // type - string
   sagaKey: PropTypes.string,
@@ -525,4 +753,4 @@ SafetyWorkMain.propTypes = {
   getCallDataHandlerReturnRes: PropTypes.func,
 };
 
-export default SafetyWorkMain;
+export default SafetyWorkList;

@@ -4,7 +4,7 @@ import { Table, Select } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
-
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 const AntdTable = StyledLineTable(Table);
 const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
@@ -16,14 +16,18 @@ class SafetyWorker extends Component {
   }
 
   render() {
-    const { workerList, rowSelection, handleWorkerPosition } = this.props;
+    const { workerList, handleWorkerPosition, workerRemove } = this.props;
     const columns = [
       {
-        title: '검색',
-        dataIndex: '',
+        title: '삭제',
+        dataIndex: 'WORKER_SEQ',
         width: '10%',
         align: 'center',
-        render: () => <span>검색버튼</span>,
+        render: (value, record, index) => (
+          <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => workerRemove(index)}>
+            작업자 제외
+          </StyledButton>
+        ),
       },
       {
         title: '성명',
@@ -53,13 +57,13 @@ class SafetyWorker extends Component {
       {
         title: '핸드폰(연락처)',
         dataIndex: 'M_TEL',
-        width: '15%',
+        width: '20%',
         align: 'center',
       },
       {
         title: '긴급연락처',
         dataIndex: 'TEL',
-        width: '15%',
+        width: '20%',
         align: 'center',
       },
       {
@@ -79,7 +83,6 @@ class SafetyWorker extends Component {
         pagination={false}
         columns={columns}
         dataSource={workerList}
-        rowSelection={rowSelection}
         footer={() => <div style={{ textAlign: 'center' }}>{`총 ${workerList.length === 0 ? 0 : workerList.length} 명`}</div>}
       />
     );
@@ -87,7 +90,8 @@ class SafetyWorker extends Component {
 }
 SafetyWorker.propTypes = {
   workerList: PropTypes.array,
-  rowSelection: PropTypes.object,
+  handleWorkerPosition: PropTypes.func,
+  workerRemove: PropTypes.func,
 };
 
 SafetyWorker.defaultProps = {
