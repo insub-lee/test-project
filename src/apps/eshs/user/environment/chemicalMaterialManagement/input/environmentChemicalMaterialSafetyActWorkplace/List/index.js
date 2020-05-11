@@ -520,6 +520,12 @@ class List extends React.Component {
 
   modalColumns = [
     {
+      title: '연번',
+      dataIndex: 'SERIAL_NO',
+      key: 'SERIAL_NO',
+      align: 'center',
+    },
+    {
       title: 'CAS_NO',
       dataIndex: 'CAS_NO',
       key: 'CAS_NO',
@@ -635,13 +641,14 @@ class List extends React.Component {
                   <tr>
                     <th>연번</th>
                     <td>
-                      <AntdInputNumber
+                      {/* <AntdInputNumber
                         className="ant-input-number input-number-sm"
                         value={requestValue.SERIAL_NO}
                         onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
                         disabled={isModified}
                         // min={MAX_SERIAL_NO}
-                      />
+                      /> */}
+                      {requestValue.SERIAL_NO}
                     </td>
                     <th>분류</th>
                     <td>
@@ -663,7 +670,7 @@ class List extends React.Component {
                         onChange={e => handleInputChange(e, 'SELECT', 'SUB_CATEGORY')}
                         value={requestValue.SUB_CATEGORY ? Number(requestValue.SUB_CATEGORY) : ''}
                         style={{ width: '100%' }}
-                        disabled={requestValue.CATEGORY === 1958}
+                        disabled={requestValue.CATEGORY === 1958 || !requestValue.CATEGORY}
                       >
                         {subCategories.map(item => (
                           <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
