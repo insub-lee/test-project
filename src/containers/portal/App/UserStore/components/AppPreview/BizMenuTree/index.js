@@ -254,7 +254,7 @@ class BizMenuTree extends Component {
               }
             };
 
-            resortTreeData(treeData, [ROOT_ID], 0);
+            resortTreeData(treeData, [ROOT_ID], treeData[0].LVL);
 
             saveData(null, treeData);
             moveNode(BIZGRP_ID, treeFunc.generateList(fromJS(treeData)));
