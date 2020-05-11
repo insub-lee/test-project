@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledModalWrapper from 'commonStyled/MdcsStyled/Modal/StyleModalWrapper';
-
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import BizBuilderBase from 'components/BizBuilderBase';
 import CoverViewer from '../CoverViewer';
 
@@ -65,10 +65,17 @@ class SearchList extends Component {
     });
   };
 
-  clickCoverView = () => {
+  clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    this.setState({ coverView: { visible: true, workSeq, taskSeq, viewMetaSeq } });
+  };
+
+  onCloseCoverView = () => {
     this.setState({
       coverView: {
-        visible: true,
+        visible: false,
+        workSeq: undefined,
+        taskSeq: undefined,
+        viewMetaSeq: undefined,
       },
     });
   };
@@ -105,7 +112,6 @@ class SearchList extends Component {
               sagaKey="SearchView"
               viewType="VIEW"
               workSeq={SearchView.workSeq}
-              // CustomButtons={() => <Button>수정</Button>}
               taskSeq={SearchView.taskSeq}
               draftId={SearchView.draftId}
               closeBtnFunc={this.closeBtnFunc}
@@ -117,22 +123,29 @@ class SearchList extends Component {
           className="modalWrapper modalTechDoc modalCustom"
           visible={coverView.visible}
           footer={null}
-          width={1080}
-          onCancel={() => {
-            this.setState({ coverView: { ...coverView, visible: false } });
-          }}
-          onOk={() => {
-            this.setState({ coverView: { ...coverView, visible: false } });
-          }}
+          width={800}
           okButtonProps={null}
+          onCancel={this.onCloseCoverView}
           destroyOnClose
         >
-          <>
-            <div className="pop_tit">검색 내용 보기</div>
-            <div className="pop_con">
-              <CoverViewer nodeId={SearchView.nodeId} taskSeq={SearchView.taskSeq} workSeq={SearchView.workSeq} />
-            </div>
-          </>
+          <div className="pop_tit">표지보기</div>
+          <div className="SearchContentLayer">
+            <BizBuilderBase
+              sagaKey="CoverView"
+              viewType="VIEW"
+              workSeq={coverView.workSeq}
+              taskSeq={coverView.taskSeq}
+              viewMetaSeq={coverView.viewMetaSeq}
+              onCloseCoverView={this.onCloseCoverView}
+              ViewCustomButtons={({ onCloseCoverView }) => (
+                <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                  <StyledButton className="btn-primary" onClick={onCloseCoverView}>
+                    닫기
+                  </StyledButton>
+                </div>
+              )}
+            />
+          </div>
         </AntdModal>
       </>
     );

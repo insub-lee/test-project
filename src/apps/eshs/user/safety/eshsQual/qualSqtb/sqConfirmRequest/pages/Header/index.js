@@ -137,10 +137,12 @@ class Header extends Component {
 
   handleConfirmProcess = (status, action, callBack) => {
     const { chkCnt } = this.state;
-    const { sagaKey: id, changeFormData, formData } = this.props;
+    const { sagaKey: id, setFormData, formData, changeFormData } = this.props;
     const reqDt = (formData && formData.REQ_DT) || undefined;
     const examDt = (formData && formData.EXAM_DT) || undefined;
     const qualComment = (formData && formData.QUAL_COMMENT) || '';
+    const qualStatus = (formData && formData.QUAL_STATUS) || '';
+    const fQualStatus = (formData && formData.F_QUAL_STATUS) || '';
     if (!examDt) return message.warning('검토일자를 지정하여 주십시오.');
     if (reqDt > examDt) return message.warning('검토일자는 신청일자 이후여야 합니다');
     if (qualComment.length > 500) {
@@ -158,10 +160,19 @@ class Header extends Component {
 
     // 상신시 CheckSheet가 등록되어 있지않다면 상신불가.
     if (status === '2') if (!chkCnt) return message.warning('저장후 [장비ESH CheckSheet등록]을 완료하여주십시오.');
-    changeFormData(id, 'APP_STATUS', status);
-    if (typeof callBack === 'function') {
-      callBack(action);
+    if (!fQualStatus) {
+      // F_QUAL_STATUS 처음 판정이 등록될 경우에만 저장
+      // 조건부 승인으로 등록되었다가 승인으로 바뀔경우 리스트에서 표시해주기 위해
+      // 조건부 승인 -> 승인으로 바뀔경우 LIST 판정 [*승인] 으로 표시됨
+      // 처음부터 승인으로 저장될경우 LIST 판정 [승인]
+      setFormData(id, { ...formData, APP_STATUS: status, F_QUAL_STATUS: qualStatus });
+    } else {
+      changeFormData(id, 'APP_STATUS', status);
     }
+    if (typeof callBack === 'function') {
+      return callBack(action);
+    }
+    return '';
   };
 
   handleMakeConfirm = (status, action, callBack) => {
@@ -227,7 +238,7 @@ class Header extends Component {
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
-            {QUAL_STATUS !== '2007' && taskSeq > -1 && (
+            {!!QUAL_STATUS && QUAL_STATUS !== '2007' && taskSeq > -1 && (
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
                 저장
               </StyledButton>
@@ -344,7 +355,6 @@ class Header extends Component {
                 <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('2', 'MODIFY', this.handleAction)}>
                   상신
                 </StyledButton>
-                {/* 저장 / 상신 클릭시 신청일자(REQ_DT) < 검토일자(EXAM_DT) 여야지만 가능 추가하세요 */}
                 <ConfirmCheckSheet
                   viewType="INPUT"
                   changeFormData={changeFormData}

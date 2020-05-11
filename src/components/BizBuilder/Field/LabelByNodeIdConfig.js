@@ -42,7 +42,7 @@ class LabelByNodeIdConfig extends Component {
           <span className="spanLabel">필드 선택</span>
           <Select
             style={{ width: '100%' }}
-            placeholder="Select component"
+            placeholder="Select Field"
             defaultValue={(configInfo && configInfo.property && configInfo.property.targetField) || ''}
             onChange={value => this.handleChangeViewCompData('targetField', value)}
           >

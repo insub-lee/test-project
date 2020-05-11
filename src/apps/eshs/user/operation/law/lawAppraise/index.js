@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 import { Modal } from 'antd';
+import StyledModal from 'commonStyled/Modal/StyledModal';
 import ClauseList from './AppraiseList';
 import ModalInput from '../ModalInput';
 import ModalModify from '../ModalModify';
 import OnlyView from './OnlyView';
 import RevisionHistory from './RevisionHistory';
+
+const AntdModal = StyledModal(Modal);
 
 class lawClause extends Component {
   constructor(props) {
@@ -28,7 +31,7 @@ class lawClause extends Component {
       yyyy: '2020',
       isRevisionModal: '',
       isRevisionDetailModal: '',
-      isAppraiseDetailModal: '',
+      isAppraiseDetailModal: false,
       taskSeqReal: '',
     };
   }
@@ -51,7 +54,6 @@ class lawClause extends Component {
         isModifyModal: true,
       });
     }
-    console.debug('record: ', record);
     this.setState({
       masterSeq: record.MASTER_SEQ,
       clauseSeq: record.TASK_SEQ,
@@ -144,54 +146,11 @@ class lawClause extends Component {
       loadingComplete={this.loadingComplete}
       CustomModifyPage={ModalModify}
       CustomInputPage={ModalInput}
-      CustomViewPage={OnlyView}
-      viewMetaSeq={2621}
       onCloseModalHandler={this.onCancel}
     />
   );
 
-  onShowRevisionTemplate = (viewType, taskSeq) => (
-    <>
-      <BizBuilderBase
-        sagaKey="lawClause_Revision"
-        listMetaSeq={2601}
-        workSeq={1645}
-        taskSeq={-1}
-        compProps={{ MASTER_SEQ: this.state.masterSeq, MASTER_RECH_NAME: this.state.masterRechName, MASTER_NO: this.state.masterRechNo }}
-        revisionTaskSeq={taskSeq}
-        viewType={viewType}
-        loadingComplete={this.loadingComplete}
-        CustomListPage={RevisionHistory}
-        onCloseModalHandler={this.onCancel}
-        isOpenModalChange={this.isOpenRevisionDetailModal}
-        isOpenAppraiseDetailModal={this.isOpenAppraiseDetailModal}
-        isOpenInputModal={this.isOpenInputModal}
-        taskSeqReal={this.state.taskSeqReal}
-      />
-      <Modal visible={this.state.isRevisionDetailModal || this.state.isAppraiseDetailModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
-        {this.state.isRevisionDetailModal && (
-          <BizBuilderBase
-            sagaKey="lawClause_Revision"
-            workSeq={1645}
-            taskSeq={this.state.veiwTaskSeq}
-            viewType="VIEW"
-            loadingComplete={this.loadingComplete}
-            CustomViewPage={OnlyView}
-            YEAR={this.state.yyyy}
-          />
-        )}
-        {/* <div>{this.state.isRevisionDetailModal && this.onShowViewTemplate('VIEW', this.state.veiwTaskSeq)}</div> */}
-        <div>{this.state.isAppraiseDetailModal && this.onShowModalTemplate('VIEW', this.state.veiwTaskSeq)}</div>
-      </Modal>
-    </>
-  );
-
   render() {
-    /* const {
-      match: { params },
-      item,
-    } = this.props;
-    const { ID } = params; */
     return (
       <>
         <BizBuilderBase
@@ -207,32 +166,74 @@ class lawClause extends Component {
           yearSetFunc={this.yearSetFunc}
           YEAR={this.state.yyyy}
         />
-        <Modal
-          visible={this.state.isInputModal || this.state.isModifyModal || this.state.isViewModal || this.state.isRevisionModal}
+        <AntdModal visible={this.state.isInputModal} width="1000px" onCancel={this.onCancel} destroyOnClose title="분기별 평가 등록" footer={[]}>
+          {this.state.isInputModal && this.onShowModalTemplate('INPUT', -1)}
+        </AntdModal>
+        <AntdModal visible={this.state.isModifyModal} width="1000px" onCancel={this.onCancel} destroyOnClose title="분기별 평가 수정" footer={[]}>
+          {this.state.isModifyModal && this.onShowModalTemplate('MODIFY', this.state.modifyTaskSeq)}
+        </AntdModal>
+        <AntdModal visible={this.state.isRevisionModal} width="1000px" onCancel={this.onCancel} destroyOnClose title="Rev History" footer={[]}>
+          {this.state.isRevisionModal && (
+            <>
+              <BizBuilderBase
+                sagaKey="lawClause_Revision"
+                listMetaSeq={2601}
+                workSeq={1645}
+                taskOriginSeq={this.state.veiwTaskSeq}
+                viewType="LIST"
+                loadingComplete={this.loadingComplete}
+                CustomListPage={RevisionHistory}
+                onCloseModalHandler={this.onCancel}
+                isOpenModalChange={this.isOpenRevisionDetailModal}
+                isOpenAppraiseDetailModal={this.isOpenAppraiseDetailModal}
+                taskSeqReal={this.state.taskSeqReal}
+              />
+              <AntdModal
+                visible={this.state.isRevisionDetailModal}
+                width="1000px"
+                onCancel={this.onCancel}
+                title="분기별 법규 준수평가 1분기~4분기 조회"
+                destroyOnClose
+                footer={[]}
+              >
+                {this.state.isRevisionDetailModal && (
+                  <BizBuilderBase
+                    sagaKey="lawClause_Revision_Modal"
+                    workSeq={1645}
+                    taskSeq={this.state.veiwTaskSeq}
+                    viewType="VIEW"
+                    loadingComplete={this.loadingComplete}
+                    CustomViewPage={OnlyView}
+                    YEAR={this.state.yyyy}
+                  />
+                )}
+              </AntdModal>
+              <AntdModal visible={this.state.isAppraiseDetailModal} width="1000px" onCancel={this.onCancel} title="분기별 평가 보기" destroyOnClose footer={[]}>
+                {this.state.isAppraiseDetailModal && this.onShowModalTemplate('VIEW', this.state.veiwTaskSeq)}
+              </AntdModal>
+            </>
+          )}
+        </AntdModal>
+        <AntdModal
+          visible={this.state.isViewModal}
           width="1000px"
           onCancel={this.onCancel}
           destroyOnClose
+          title="분기별 법규 준수평가 1분기~4분기 조회"
           footer={[]}
         >
-          <div>
-            {this.state.isInputModal && this.onShowModalTemplate('INPUT', -1)}
-            {this.state.isModifyModal && this.onShowModalTemplate('MODIFY', this.state.modifyTaskSeq)}
-            {this.state.isViewModal && (
-              <BizBuilderBase
-                sagaKey="lawClause_Revision"
-                workSeq={1645}
-                taskSeq={this.state.veiwTaskSeq}
-                viewType="VIEW"
-                loadingComplete={this.loadingComplete}
-                CustomViewPage={OnlyView}
-                YEAR={this.state.yyyy}
-              />
-            )}
-
-            {/* {this.state.isViewModal && this.onShowViewTemplate('VIEW', this.state.veiwTaskSeq)} */}
-            {this.state.isRevisionModal && this.onShowRevisionTemplate('LIST', this.state.veiwTaskSeq)}
-          </div>
-        </Modal>
+          {this.state.isViewModal && (
+            <BizBuilderBase
+              sagaKey="lawClause_Total_View"
+              workSeq={1645}
+              taskSeq={this.state.veiwTaskSeq}
+              viewType="VIEW"
+              loadingComplete={this.loadingComplete}
+              CustomViewPage={OnlyView}
+              YEAR={this.state.yyyy}
+            />
+          )}
+        </AntdModal>
       </>
     );
   }

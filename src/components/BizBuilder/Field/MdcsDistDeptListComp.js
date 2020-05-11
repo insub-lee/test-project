@@ -46,18 +46,20 @@ class MdcsDistDeptListComp extends Component {
     const { distributeDept } = this.state;
     return (
       <StyledWrap>
-        <table className="mdcsDistDeptList">
-          <thead>
-            <tr className="mdcsDistDeptRow">
-              <th>배포부서</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{distributeDept}</td>
-            </tr>
-          </tbody>
-        </table>
+        {distributeDept && distributeDept.length > 0 && (
+          <table className="mdcsDistDeptList">
+            <thead>
+              <tr className="mdcsDistDeptRow">
+                <th>배포부서</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="mdcsDistDeptRow">
+                <td>{distributeDept}</td>
+              </tr>
+            </tbody>
+          </table>
+        )}
       </StyledWrap>
     );
   }

@@ -20,7 +20,7 @@ import TreeSelectRootKeyCompConfig from 'components/BizBuilder/Field/TreeSelectR
 import SelectYearCompConfig from 'components/BizBuilder/Field/SelectYearCompConfig';
 import CustomValueSelectCompConfig from 'components/BizBuilder/Field/CustomValueSelectCompConfig';
 import ViewUploadedFileCompConfig from 'components/BizBuilder/Field/ViewUploadedFileCompConfig';
-import FlexTableCompConfig from 'components/BizBuilder/Field/FlexTableCompConfig';
+import CustomDataTableCompConfig from 'components/BizBuilder/Field/CustomDataTableCompConfig';
 import ModalTableCompConfig from 'components/BizBuilder/Field/ModalTableCompConfig';
 import EshsSearchbarConfig from 'components/BizBuilder/Field/EshsSearchbarConfig';
 import DragUploadMDCSViewCompConfig from 'components/BizBuilder/Field/DragUploadMDCSViewCompConfig';
@@ -37,6 +37,7 @@ import EshsInterLockConfig from 'components/BizBuilder/Field/EshsInterLockConfig
 import CustomSelectSearchConfig from 'components/BizBuilder/Field/CustomSelectSearchConfig';
 import CustomSearchInputConfig from 'components/BizBuilder/Field/CustomSearchInputConfig';
 import LabelByNodeIdConfig from 'components/BizBuilder/Field/LabelByNodeIdConfig';
+import EshsQualCondConfig from 'components/BizBuilder/Field/EshsQualCondConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -59,7 +60,7 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/SelectYearCompConfig': { renderer: property => <SelectYearCompConfig {...property} /> },
   'components/BizBuilder/Field/CustomValueSelectCompConfig': { renderer: property => <CustomValueSelectCompConfig {...property} /> },
   'components/BizBuilder/Field/ViewUploadedFileCompConfig': { renderer: property => <ViewUploadedFileCompConfig {...property} /> },
-  'components/BizBuilder/Field/FlexTableCompConfig': { renderer: property => <FlexTableCompConfig {...property} /> },
+  'components/BizBuilder/Field/CustomDataTableCompConfig': { renderer: property => <CustomDataTableCompConfig {...property} /> },
   'components/BizBuilder/Field/ModalTableCompConfig': { renderer: property => <ModalTableCompConfig {...property} /> },
   'components/BizBuilder/Field/EshsSearchbarConfig': { renderer: property => <EshsSearchbarConfig {...property} /> },
   'components/BizBuilder/Field/DragUploadMDCSViewCompConfig': { renderer: property => <DragUploadMDCSViewCompConfig {...property} /> },
@@ -76,4 +77,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/CustomSelectSearchConfig': { renderer: property => <CustomSelectSearchConfig {...property} /> },
   'components/BizBuilder/Field/CustomSearchInputConfig': { renderer: property => <CustomSearchInputConfig {...property} /> },
   'components/BizBuilder/Field/LabelByNodeIdConfig': { renderer: property => <LabelByNodeIdConfig {...property} /> },
+  'components/BizBuilder/Field/EshsQualCondConfig': { renderer: property => <EshsQualCondConfig {...property} /> },
 };

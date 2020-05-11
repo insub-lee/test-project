@@ -71,6 +71,21 @@ const Wrapper = styled.div`
       margin: 0;
     }
   }
+
+  .work-builder-detail-page-info-basic {
+    width: 100%;
+    .wb-info-basic-title {
+      border: 1px solid #e7e7e7;
+      width: 12%;
+      background-color: #f6f6f6;
+      padding: 4px;
+    }
+    .wb-info-basic-content {
+      border: 1px solid #e7e7e7;
+      width: 21%;
+      padding: 4px;
+    }
+  }
 `;
 
 export default Wrapper;
