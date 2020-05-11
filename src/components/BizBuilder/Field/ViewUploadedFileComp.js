@@ -32,7 +32,6 @@ function ViewUploadedFileComp(props) {
     };
 
     let down = '';
-    console.debug('### 1: ', DETAIL);
     if (DETAIL !== undefined) {
       down = DETAIL[0].down;
     }
