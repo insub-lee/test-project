@@ -139,11 +139,11 @@ class ListPage extends Component {
         onChange: this.onSelectChange,
       };
     }
-    if (typeof customOnRowClick === 'function') {
-      onRow = record => ({ onClick: () => customOnRowClick(record) });
-    }
     if (isOnRowClick) {
       onRow = this.onRowClick;
+    }
+    if (typeof customOnRowClick === 'function') {
+      onRow = record => ({ onClick: () => customOnRowClick(record) });
     }
     return (
       <div key={group.key}>

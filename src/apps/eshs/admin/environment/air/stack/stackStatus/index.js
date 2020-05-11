@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 import CustomList from './List';
 
-class stackStatus extends Component {
+class StackStatus extends Component {
   componentDidMount() {}
 
   render() {
+    const { customOnRowClick } = this.props;
     return (
       <BizBuilderBase
         sagaKey="stackLookUp"
@@ -16,13 +17,16 @@ class stackStatus extends Component {
         listMetaSeq={4461}
         CustomListPage={CustomList} // 버튼 및 리스트 크기 이슈로  custom Page 사용
         loadingComplete={this.loadingComplete}
+        customOnRowClick={customOnRowClick}
       />
     );
   }
 }
 
-stackStatus.propTypes = {};
+StackStatus.propTypes = {
+  customOnRowClick: PropTypes.func,
+};
 
-stackStatus.defaultProps = {};
+StackStatus.defaultProps = {};
 
-export default stackStatus;
+export default StackStatus;

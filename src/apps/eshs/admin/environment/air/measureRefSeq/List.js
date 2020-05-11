@@ -1,19 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { DatePicker, Select, message } from 'antd';
+import { DatePicker, Select, Input, Modal, message } from 'antd';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledModalWrapper from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StackStatus from 'apps/eshs/admin/environment/air/stack/stackStatus';
 
 import Moment from 'moment';
+import Graph from './Graph';
 
 const AntdSelect = StyledSelect(Select);
+const AntdInput = StyledInput(Input);
+const AntdModal = StyledModalWrapper(Modal);
+
 const { Option } = Select;
-const { MonthPicker } = DatePicker;
+const { MonthPicker, RangePicker } = DatePicker;
 Moment.locale('ko');
 
 class List extends Component {
@@ -22,21 +29,32 @@ class List extends Component {
     this.state = {
       measureList: [],
       dateStrings: Moment().format('YYYY-MM'),
+      rangeDateStrings: [Moment().format('YYYY-MM'), Moment().format('YYYY-MM')],
       seq: 1,
       selectGubun: 1,
+      isModal: false,
     };
   }
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, refStack } = this.props;
     const apiAry = [
       {
         key: 'gasType',
         url: '/api/eshs/v1/common/eshsgastype',
         type: 'GET',
       },
+      refStack
+        ? {
+            key: 'gasType',
+            url: '/api/eshs/v1/common/eshsgastype',
+            type: 'GET',
+          }
+        : {},
     ];
-    this.isSearch();
+    if (!refStack) {
+      this.isSearch();
+    }
     getCallDataHandler(id, apiAry, this.initData);
   }
 
@@ -50,16 +68,23 @@ class List extends Component {
   };
 
   isSearch = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    const { dateStrings, seq } = this.state;
+    const { sagaKey: id, getCallDataHandler, refStack } = this.props;
+    const { dateStrings, rangeDateStrings, seq, stackCd } = this.state;
+    const setDate = refStack
+      ? `START_DATE=${`${rangeDateStrings[0]}-01`}&&END_DATE=${`${rangeDateStrings[1]}-31`}&&STACK_CD=${stackCd}`
+      : `START_DATE=${`${dateStrings}-01`}&&END_DATE=${`${dateStrings}-31`}`;
     const apiAry = [
       {
         key: 'measure',
-        url: `/api/eshs/v1/common/eshsmeasure?START_DATE=${`${dateStrings}-01`}&&END_DATE=${`${dateStrings}-31`}&&SEQ=${seq}`,
+        url: `/api/eshs/v1/common/eshsmeasure?${setDate}&&SEQ=${seq}`,
         type: 'GET',
       },
     ];
-    getCallDataHandler(id, apiAry, this.listData);
+    if (!refStack || (refStack && stackCd)) {
+      getCallDataHandler(id, apiAry, this.listData);
+    } else {
+      message.warning('stack 종류를 먼저 선택해주세요.');
+    }
   };
 
   listData = () => {
@@ -73,12 +98,22 @@ class List extends Component {
     });
   };
 
-  isExcelUpload = () => {
-    message.info('개발 중 입니다.');
+  onChangeModal = () => {
+    const { isModal } = this.state;
+    this.setState({ isModal: !isModal });
   };
 
   dateChange = dateStrings => {
     this.setState({ dateStrings });
+  };
+
+  rangeDateChange = rangeDateStrings => {
+    this.setState({ rangeDateStrings });
+  };
+
+  customOnRowClick = record => {
+    this.setState({ stackCd: record.STACK_CD });
+    this.onChangeModal();
   };
 
   calculate = (gasCd, hourFlow, density, workDay, gasWeight) => {
@@ -111,12 +146,13 @@ class List extends Component {
 
   render() {
     const { measureList, gasList, selectGubun, gasColor } = this.state;
+    const { refStack } = this.props;
 
     return (
       <StyledContentsWrapper>
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">조회구분</span>
-          <AntdSelect className="select-sm" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.selectGubun}>
+          <AntdSelect className="select-mid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.selectGubun}>
             <Option value={1} key="selectGubun">
               측정항목
             </Option>
@@ -125,10 +161,20 @@ class List extends Component {
             </Option>
           </AntdSelect>
           <div style={{ margin: '0 5px', display: 'inline-block' }}>
-            <MonthPicker defaultValue={Moment(Moment(), 'YYYY-MM')} format="YYYY-MM" onChange={(date, dateStrings) => this.dateChange(dateStrings)} />
+            {refStack ? (
+              <RangePicker
+                defaultValue={[Moment(Moment(), 'YYYY-MM'), Moment(Moment(), 'YYYY-MM')]}
+                // mode="month"
+                picker="month"
+                format={['YYYY-MM', 'YYYY-MM']}
+                onChange={(date, dateStrings) => this.rangeDateChange(dateStrings)}
+              />
+            ) : (
+              <MonthPicker defaultValue={Moment(Moment(), 'YYYY-MM')} format="YYYY-MM" onChange={(date, dateStrings) => this.dateChange(dateStrings)} />
+            )}
           </div>
           <span className="textLabel">측정회차(월)</span>
-          <AntdSelect className="select-sm mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
+          <AntdSelect className="select-mid mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
             <Option value={1} key="seq">
               1
             </Option>
@@ -136,12 +182,14 @@ class List extends Component {
               2
             </Option>
           </AntdSelect>
+          {refStack ? (
+            <AntdInput style={{ width: 200 }} className="input-mid ant-input-inline mr5" value={this.state.stackCd} readOnly onClick={this.onChangeModal} />
+          ) : (
+            ''
+          )}
           <StyledButtonWrapper className="btn-wrap-inline">
             <StyledButton className="btn-primary btn-first" onClick={() => this.isSearch()}>
               검색
-            </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => this.isExcelUpload()}>
-              엑셀 올리기
             </StyledButton>
           </StyledButtonWrapper>
         </div>
@@ -211,6 +259,12 @@ class List extends Component {
         ) : (
           ''
         )}
+        <StyledHtmlTable className="tableWrapper">
+          <Graph graphData={measureList} gasList={gasList} gasColor={gasColor} selectGubun={selectGubun} refStack={refStack} />
+        </StyledHtmlTable>
+        <AntdModal width={800} visible={this.state.isModal} title="Stack 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
+          <StackStatus customOnRowClick={this.customOnRowClick} />
+        </AntdModal>
       </StyledContentsWrapper>
     );
   }
@@ -220,6 +274,7 @@ List.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
   result: PropTypes.any,
+  refStack: PropTypes.bool,
 };
 
 List.defaultProps = {};
