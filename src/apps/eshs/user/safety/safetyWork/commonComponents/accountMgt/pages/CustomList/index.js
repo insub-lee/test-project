@@ -1,30 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import { Table, Select, Input } from 'antd';
+import { Table, Popconfirm, Button } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-import Loadable from 'components/Loadable';
 
-import Loading from 'components/BizBuilderBase/viewComponent/Common/Loading';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-
-const { Option } = Select;
 const AntdTable = StyledAntdTable(Table);
-const AntdInput = StyledInput(Input);
-const AntdSelect = StyledSelect(Select);
 
-class ListPage extends Component {
+class CustomList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,11 +23,6 @@ class ListPage extends Component {
       isRowNo: false,
       isOnRowClick: false,
       rowClickView: 'VIEW',
-      StyledWrap: StyledViewDesigner,
-      searchType: 'PLEDGE_NO',
-      searchYear: moment().format('YYYY'),
-      searchValue: '',
-      searchListData: [],
     };
   }
 
@@ -46,15 +32,6 @@ class ListPage extends Component {
     let isRowNo = false;
     let isOnRowClick = false;
     let rowClickView = 'VIEW';
-
-    if (workInfo.BUILDER_STYLE_PATH) {
-      const StyledWrap = Loadable({
-        loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
-        loading: Loading,
-      });
-      this.setState({ StyledWrap });
-    }
-
     if (workInfo && workInfo.OPT_INFO) {
       workInfo.OPT_INFO.forEach(opt => {
         if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
@@ -67,6 +44,12 @@ class ListPage extends Component {
       this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
     }
   };
+
+  // state값 reset테스트
+  // componentWillUnmount() {
+  //   const { removeReduxState, id } = this.props;
+  //   removeReduxState(id);
+  // }
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -96,7 +79,7 @@ class ListPage extends Component {
     return <div />;
   };
 
-  setColumns = (cols, widths) => {
+  setColumns = cols => {
     const { isRowNo } = this.state;
     const columns = [];
     if (isRowNo) {
@@ -105,16 +88,13 @@ class ListPage extends Component {
         title: 'No.',
       });
     }
-    cols.forEach((node, idx) => {
+    cols.forEach(node => {
       if (node.comp && node.comp.COMP_FIELD) {
         columns.push({
           dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
           title: node.comp.CONFIG.property.HEADER_NAME_KOR,
-          // width: (node.style && node.style.width) || undefined,
-          width: (widths && widths[idx] && `${widths[idx]}%`) || undefined,
+          width: (node.style && node.style.width) || undefined,
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
-          className: node.addonClassName && node.addonClassName.length > 0 ? `${node.addonClassName.toString().replaceAll(',', ' ')}` : '',
-          align: (node.style && node.style.textAlign) || undefined,
         });
       }
     });
@@ -146,26 +126,10 @@ class ListPage extends Component {
     };
   };
 
-  /*
-      검색버튼 클릭시 State 변경
-  */
-  onClickSearchBtn = listData => {
-    const { searchType, searchYear, searchValue } = this.state;
-    if (searchValue === '') {
-      this.setState({
-        searchListData: listData.filter(data => data.YEAR === searchYear),
-      });
-    } else {
-      this.setState({
-        searchListData: listData.filter(data => data.YEAR === searchYear && data[searchType] === searchValue),
-      });
-    }
-  };
-
-  renderList = (group, groupIndex, listData) => {
-    const { listSelectRowKeys, workInfo, customOnRowClick } = this.props;
+  renderList = (group, groupIndex) => {
+    const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
     const { isMultiDelete, isOnRowClick } = this.state;
-    const columns = this.setColumns(group.rows[0].cols, group.widths || []);
+    const columns = this.setColumns(group.rows[0].cols);
     let rowSelection = false;
     let onRow = false;
     if (isMultiDelete) {
@@ -200,21 +164,6 @@ class ListPage extends Component {
     );
   };
 
-  renderYearSelect = () => {
-    const endYear = Number(moment().format('YYYY'));
-    const options = [];
-    for (let year = 2006; year <= endYear; year += 1) {
-      options.push(year);
-    }
-    return (
-      <AntdSelect className="select-xs mr5" style={{ width: '100px' }} value={this.state.searchYear} onChange={e => this.setState({ searchYear: e })}>
-        {options.map(YYYY => (
-          <Option value={`${YYYY}`}>{YYYY}</Option>
-        ))}
-      </AntdSelect>
-    );
-  };
-
   render = () => {
     const {
       sagaKey: id,
@@ -228,9 +177,8 @@ class ListPage extends Component {
       removeMultiTask,
       isBuilderModal,
       changeBuilderModalState,
-      listData,
     } = this.props;
-    const { isMultiDelete, StyledWrap, searchValue, searchType, searchListData } = this.state;
+    const { isMultiDelete } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -243,59 +191,74 @@ class ListPage extends Component {
       } = workFlowConfig;
 
       return (
-        <StyledWrap className={viewPageData.viewType}>
+        <StyledViewDesigner>
           <Sketch {...bodyStyle}>
-            <>
-              <StyledSearchWrapper style={{ marginBottom: '5px' }}>
-                <Group className="view-designer-group group-0">
-                  <div className="view-designer-group-search-wrap">
-                    <table className="view-designer-table table-0" style={{ border: '1px solid white' }}>
-                      <tbody>
-                        <tr classNmae="view-designer-row row-0">
-                          <td classsName="view-designer-col" tyle={{ height: '35px' }}>
-                            <span style={{ fontSize: '0.8rem', margin: '0px 10px 0px 10px', verticalAlign: 'middle' }}>검색구분</span>
-                            <AntdSelect className="select-xs mr5" style={{ width: 150 }} value={searchType} onChange={e => this.setState({ searchType: e })}>
-                              <Option value="PLEDGE_NO">서약서번호</Option>
-                              <Option value="CREATE_DT">서약일</Option>
-                              <Option value="WRK_CMPNY_CD">업체코드</Option>
-                              <Option value="WRK_CMPNY_NM">업체명</Option>
-                            </AntdSelect>
-                            {this.renderYearSelect()}
-                            <AntdInput
-                              className="ant-input-xs ant-input-inline"
-                              style={{ width: '200px' }}
-                              onChange={e => this.setState({ searchValue: e.target.value })}
-                            />
-                            <StyledButton
-                              className="btn-primary btn-xs btn-first"
-                              onClick={() => this.onClickSearchBtn(listData)}
-                              style={{ marginLeft: '10px' }}
-                            >
-                              검색
-                            </StyledButton>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+            {groups.map((group, groupIndex) => {
+              if (group.type === 'listGroup') {
+                return this.renderList(group, groupIndex);
+              }
+              return (
+                (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
+                  <div key={group.key}>
+                    {group.useTitle && <GroupTitle title={group.title} />}
+                    <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
+                      <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
+                        <table className={`view-designer-table table-${groupIndex}`}>
+                          <tbody>
+                            {group.rows.map((row, rowIndex) => (
+                              <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
+                                {row.cols &&
+                                  row.cols.map((col, colIndex) =>
+                                    col ? (
+                                      <td
+                                        key={col.key}
+                                        {...col}
+                                        comp=""
+                                        colSpan={col.span}
+                                        className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
+                                      >
+                                        <Contents>
+                                          {col.comp &&
+                                            this.renderComp(
+                                              col.comp,
+                                              col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
+                                              true,
+                                              `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
+                                              `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
+                                              group.type === 'searchGroup',
+                                            )}
+                                        </Contents>
+                                      </td>
+                                    ) : (
+                                      ''
+                                    ),
+                                  )}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      {group.type === 'searchGroup' && group.useSearch && (
+                        <div className="view-designer-group-search-btn-wrap">
+                          <Button type="primary" className="btn-primary" onClick={() => getListData(id, workSeq)}>
+                            Search
+                          </Button>
+                        </div>
+                      )}
+                    </Group>
                   </div>
-                </Group>
-              </StyledSearchWrapper>
-              {groups.map((group, groupIndex) => {
-                if (group.type === 'listGroup') {
-                  return this.renderList(group, groupIndex, searchListData);
-                }
-                return '';
-              })}
-            </>
+                )
+              );
+            })}
           </Sketch>
-        </StyledWrap>
+        </StyledViewDesigner>
       );
     }
     return '';
   };
 }
 
-ListPage.propTypes = {
+CustomList.propTypes = {
   workInfo: PropTypes.object,
   sagaKey: PropTypes.string,
   workFlowConfig: PropTypes.object,
@@ -312,17 +275,15 @@ ListPage.propTypes = {
   changeBuilderModalState: PropTypes.func,
   changeViewPage: PropTypes.func,
   customOnRowClick: PropTypes.any,
-  listData: PropTypes.array,
 };
 
-ListPage.defaultProps = {
+CustomList.defaultProps = {
   workFlowConfig: {
     info: {
       PRC_ID: -1,
     },
   },
   customOnRowClick: undefined,
-  listData: [],
 };
 
-export default ListPage;
+export default CustomList;

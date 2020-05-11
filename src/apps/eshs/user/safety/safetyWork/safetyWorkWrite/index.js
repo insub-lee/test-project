@@ -1,7 +1,7 @@
 import React from 'react';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import Styeld from './Styled';
-import SafetyWorkMain from './main';
+import safetyWorkWrite from './page';
 
 /*
     안전지킴이 - 안전작업신청 - 안전작업 신청
@@ -9,7 +9,7 @@ import SafetyWorkMain from './main';
 
 const safetyWork = () => (
   <Styeld>
-    <BizMicroDevBase component={SafetyWorkMain} sagaKey="safetyWork" />
+    <BizMicroDevBase component={safetyWorkWrite} sagaKey="safetyWork" />
   </Styeld>
 );
 

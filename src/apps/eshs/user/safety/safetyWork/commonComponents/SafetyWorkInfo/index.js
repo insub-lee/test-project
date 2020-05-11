@@ -3,6 +3,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Input, DatePicker, Select, Radio, Checkbox } from 'antd';
+import Upload from 'components/FormStuff/Upload/DropZone';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
@@ -27,12 +28,19 @@ const EduInfoTableStyled = styled.div`
 
   .ant-checkbox-group {
     display: block;
+    .ant-checkbox-wrapper {
+      display: block;
+      padding: 5px 0px 5px 0px;
+      display: inline-block;
+    }
   }
 
-  .ant-checkbox-wrapper {
+  .ant-radio-wrapper {
     display: block;
-    padding: 5px 0px 5px 0px;
-    display: inline-block;
+  }
+
+  .tableInBtnWrap {
+    margin: 0px 0px 5px 0px;
   }
 `;
 
@@ -42,12 +50,10 @@ class SafetyWorkInfo extends Component {
     this.state = {};
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return true;
-  }
-
   render() {
-    const { handleModal, formData, handleChangeFormData, profile } = this.props;
+    const { handleModal, formData, handleChangeFormData, handleWorkCategory, handleUploadFileChange } = this.props;
+    const fromTimes = ['09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'];
+    const toTimes = ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'];
     return (
       <EduInfoTableStyled>
         <ContentsWrapper>
@@ -71,12 +77,7 @@ class SafetyWorkInfo extends Component {
                     <span>신청일</span>
                   </th>
                   <td colSpan={8}>
-                    <AntdDatePicker
-                      className="ant-picker-xs"
-                      style={{ width: '200px' }}
-                      readOnly
-                      defaultValue={formData.REQUEST_DT !== '' ? formData.REQUEST_DT : moment()}
-                    />
+                    <span>{formData.REQUEST_DT !== '' ? formData.REQUEST_DT : ''}</span>
                   </td>
                 </tr>
                 <tr>
@@ -84,12 +85,7 @@ class SafetyWorkInfo extends Component {
                     <span>* 작업지역</span>
                   </th>
                   <td colSpan={8}>
-                    <AntdSelect
-                      className="select-xs"
-                      style={{ width: '200px' }}
-                      defaultValue={formData.SITE}
-                      onChange={value => handleChangeFormData('SITE', value)}
-                    >
+                    <AntdSelect className="select-xs" style={{ width: '200px' }} value={formData.SITE} onChange={value => handleChangeFormData('SITE', value)}>
                       <Option value="청주">청주</Option>
                       <Option value="구미">구미</Option>
                     </AntdSelect>
@@ -100,15 +96,15 @@ class SafetyWorkInfo extends Component {
                     <span>* 발주회사</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdInput className="ant-input-xs ant-input-inline" defaultValue={formData.REQ_CMPNY_CD} readOnly style={{ width: '200px' }} />
-                    <span style={{ color: '#495057', marginLeft: '5px' }}>{profile.PSTN_NAME_KOR}</span>
+                    <AntdInput className="ant-input-xs ant-input-inline" value={formData.REQ_CMPNY_CD} readOnly style={{ width: '200px' }} />
+                    <span style={{ color: '#495057', marginLeft: '5px' }}>{formData.REQ_CMPNY_NM}</span>
                   </td>
                   <th colSpan={2}>
                     <span>* 작업부서</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdInput className="ant-input-xs ant-input-inline" defaultValue={formData.REQ_DEPT_CD} readOnly style={{ width: '200px' }} />
-                    <span style={{ color: '#495057', marginLeft: '5px' }}>{profile.DEPT_NAME_KOR}</span>
+                    <AntdInput className="ant-input-xs ant-input-inline" value={formData.REQ_DEPT_CD} readOnly style={{ width: '200px' }} />
+                    <span style={{ color: '#495057', marginLeft: '5px' }}>{formData.REQ_DEPT_NM}</span>
                   </td>
                 </tr>
                 <tr>
@@ -116,8 +112,8 @@ class SafetyWorkInfo extends Component {
                     <span>* 담당자</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdInput className="ant-input-xs ant-input-inline" defaultValue={formData.REQ_EMP_NO} readOnly style={{ width: '200px' }} />
-                    <span style={{ color: '#495057', marginLeft: '5px' }}>{profile.NAME_KOR}</span>
+                    <AntdInput className="ant-input-xs ant-input-inline" value={formData.REQ_EMP_NO} readOnly style={{ width: '200px' }} />
+                    <span style={{ color: '#495057', marginLeft: '5px' }}>{formData.REQ_EMP_NM}</span>
                   </td>
                   <th colSpan={2}>
                     <span>* 감독자</span>
@@ -128,8 +124,8 @@ class SafetyWorkInfo extends Component {
                       style={{ width: '200px' }}
                       value={formData.REQ_SUPERVISOR_EMP_NO}
                       disable
-                      onClick={() => handleModal('hstUser', true)}
-                      onSearch={() => handleModal('hstUser', true)}
+                      onClick={() => handleModal('supervisor', true)}
+                      onSearch={() => handleModal('supervisor', true)}
                     />
                     {formData.REQ_SUPERVISOR_EMP_NM !== '' && <span style={{ marginLeft: '5px' }}>{formData.REQ_SUPERVISOR_EMP_NM}</span>}
                   </td>
@@ -139,13 +135,28 @@ class SafetyWorkInfo extends Component {
                     <span>* 작업업체</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdSearch className="input-search-xs" style={{ width: '200px' }} disable />
+                    <AntdSearch
+                      className="input-search-xs"
+                      style={{ width: '200px' }}
+                      value={formData.WRK_CMPNY_CD}
+                      disable
+                      onClick={() => handleModal('cmpny', true)}
+                      onSearch={() => handleModal('cmpny', true)}
+                    />
+                    {formData.WRK_CMPNY_NM !== '' && <span style={{ marginLeft: '5px' }}>{formData.WRK_CMPNY_NM}</span>}
                   </td>
                   <th colSpan={2}>
                     <span>서약서번호</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdSearch className="input-search-xs" style={{ width: '200px' }} disable />
+                    <AntdSearch
+                      className="input-search-xs"
+                      style={{ width: '200px' }}
+                      value={formData.PLEDGE_NO}
+                      disable
+                      onClick={() => handleModal('pledge', true)}
+                      onSearch={() => handleModal('pledge', true)}
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -153,14 +164,28 @@ class SafetyWorkInfo extends Component {
                     <span>* 주작업</span>
                   </th>
                   <td colSpan={3}>
-                    <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => console.debug('작업전 점검 등록 버튼')}>
-                      작업전 점검 등록
-                    </StyledButton>
-                    <Radio.Group>
+                    <div className="tableInBtnWrap">
+                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => console.debug('작업전 점검 등록 버튼')}>
+                        작업전 점검 등록
+                      </StyledButton>
+                    </div>
+                    <Radio.Group value={formData.WCATEGORY} onChange={value => handleWorkCategory(value.target.value)}>
                       <Radio value="공통">공통</Radio>
                       <Radio value="화기작업">
                         화기작업
-                        <span style={{ color: '#ff6666', marginLeft: '27px' }}>※ 화기작업 : 화염,스파크 등을 발생이키는 작업</span>
+                        <span style={{ color: '#ff6666', marginLeft: '27px' }}>※ 화기작업 : 화염, 스파크 등을 발생이키는 작업</span>
+                        {formData.WCATEGORY === '화기작업' && (
+                          <>
+                            <br />
+                            <span style={{ color: '#495057', marginLeft: '5px' }}>화제관리 담당자명 : </span>
+                            <AntdInput
+                              className="ant-input-xs ant-input-inline"
+                              value={formData.FIRE_MANAGER}
+                              style={{ width: '100px' }}
+                              onChange={e => handleChangeFormData('FIRE_MANAGER', e.target.value)}
+                            />
+                          </>
+                        )}
                       </Radio>
                       <Radio value="일반위험작업">
                         일반위험작업
@@ -172,10 +197,12 @@ class SafetyWorkInfo extends Component {
                     <span>* 보충작업</span>
                   </th>
                   <td colSpan={3}>
-                    <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => console.debug('작업전 점검 등록 버튼')}>
-                      작업전 점검 등록
-                    </StyledButton>
-                    <Checkbox.Group>
+                    <div className="tableInBtnWrap">
+                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => console.debug('작업전 점검 등록 버튼')}>
+                        작업전 점검 등록
+                      </StyledButton>
+                    </div>
+                    <Checkbox.Group value={formData.SUB_WCATEGORY} onChange={e => handleChangeFormData('SUB_WCATEGORY', e)}>
                       <Checkbox value="고소">고소</Checkbox>
                       <Checkbox value="굴착">굴착</Checkbox>
                       <Checkbox value="밀폐">밀폐공간</Checkbox>
@@ -199,7 +226,15 @@ class SafetyWorkInfo extends Component {
                     <span>* 검토자</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdSearch className="input-search-xs" style={{ width: '200px' }} disable />
+                    <AntdSearch
+                      className="input-search-xs"
+                      style={{ width: '200px' }}
+                      value={formData.EXM_EMP_NO}
+                      disable
+                      onClick={() => handleModal('exm', true)}
+                      onSearch={() => handleModal('exm', true)}
+                    />
+                    {formData.EXM_EMP_NM !== '' && <span style={{ marginLeft: '5px' }}>{formData.EXM_EMP_NM}</span>}
                   </td>
                 </tr>
                 <tr>
@@ -207,13 +242,26 @@ class SafetyWorkInfo extends Component {
                     <span>* 작업명</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdInput className="ant-input-xs" style={{ width: '200px' }} />
+                    <AntdInput
+                      className="ant-input-xs"
+                      style={{ width: '200px' }}
+                      value={formData.TITLE}
+                      onChange={e => handleChangeFormData('TITLE', e.target.value)}
+                    />
                   </td>
                   <th colSpan={2}>
                     <span>* 최종검토자</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdSearch className="input-search-xs" style={{ width: '200px' }} disable />
+                    <AntdSearch
+                      className="input-search-xs"
+                      style={{ width: '200px' }}
+                      value={formData.FINAL_OK_EMP_NO}
+                      disable
+                      onClick={() => handleModal('final', true)}
+                      onSearch={() => handleModal('final', true)}
+                    />
+                    {formData.FINAL_OK_EMP_NM !== '' && <span style={{ marginLeft: '5px' }}>{formData.FINAL_OK_EMP_NM}</span>}
                   </td>
                 </tr>
                 <tr>
@@ -221,7 +269,11 @@ class SafetyWorkInfo extends Component {
                     <span>* 작업내용</span>
                   </th>
                   <td colSpan={8}>
-                    <AntdTextArea autoSize={{ minRows: 2, maxRows: 2 }} onChange={e => handleChangeFormData('WORK_DESC', e.target.value)} />
+                    <AntdTextArea
+                      autoSize={{ minRows: 2, maxRows: 2 }}
+                      value={formData.WORK_DESC}
+                      onChange={e => handleChangeFormData('WORK_DESC', e.target.value)}
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -232,7 +284,7 @@ class SafetyWorkInfo extends Component {
                     <AntdSelect
                       className="select-xs"
                       style={{ width: '200px' }}
-                      defaultValue={formData.DGUBUN}
+                      value={formData.DGUBUN}
                       onChange={value => handleChangeFormData('DGUBUN', value)}
                     >
                       <Option value="C-1">C-1</Option>
@@ -251,7 +303,12 @@ class SafetyWorkInfo extends Component {
                     <span>* 작업장소</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdInput className="ant-input-xs ant-input-inline" style={{ width: '200px' }} />
+                    <AntdInput
+                      className="ant-input-xs ant-input-inline"
+                      style={{ width: '200px' }}
+                      value={formData.WLOC}
+                      onChange={e => handleChangeFormData('WLOC', e.target.value)}
+                    />
                     <span style={{ color: '#17a9a1', marginLeft: '5px' }}>※ 작업 상세장소 입력</span>
                   </td>
                 </tr>
@@ -260,18 +317,54 @@ class SafetyWorkInfo extends Component {
                     <span>* 작업기간</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdDatePicker className="ant-picker-xs" style={{ width: '200px' }} />
+                    <AntdDatePicker
+                      className="ant-picker-xs"
+                      style={{ width: '200px' }}
+                      value={formData.FROM_DT !== '' ? moment(formData.FROM_DT) : undefined}
+                      onChange={e => handleChangeFormData('FROM_DT', e.format('YYYY-MM-DD'))}
+                    />
                   </td>
                   <th colSpan={2}>
                     <span>* 작업시간</span>
                   </th>
-                  <td colSpan={3}></td>
+                  <td colSpan={3}>
+                    <AntdSelect
+                      className="select-xs"
+                      style={{ width: '100px' }}
+                      value={formData.FROM_TIME}
+                      onChange={value => handleChangeFormData('FROM_TIME', value)}
+                    >
+                      {fromTimes.map(item => (
+                        <Option value={item} key="fromTime">
+                          {item}
+                        </Option>
+                      ))}
+                    </AntdSelect>
+                    <span style={{ margin: '0px 5px 0px 5px' }}>~</span>
+                    <AntdSelect
+                      className="select-xs"
+                      style={{ width: '100px' }}
+                      value={formData.TO_TIME}
+                      onChange={value => handleChangeFormData('TO_TIME', value)}
+                    >
+                      {toTimes.map(item => (
+                        <Option value={item} key="toTime">
+                          {item}
+                        </Option>
+                      ))}
+                    </AntdSelect>
+                  </td>
                 </tr>
                 <tr>
                   <th colSpan={2}>
                     <span>첨부</span>
                   </th>
-                  <td colSpan={8}>(파일업로드)</td>
+                  <td colSpan={8}>
+                    {/*
+                      { handleChange, fileList, customRequest, action, limit, disabled, onRemove }
+                    */}
+                    <Upload action="/upload" handleChange={handleUploadFileChange} fileList={formData.fileList} />
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -284,9 +377,10 @@ class SafetyWorkInfo extends Component {
 
 SafetyWorkInfo.propTypes = {
   formData: PropTypes.object,
-  profile: PropTypes.object,
   handleModal: PropTypes.func,
   handleChangeFormData: PropTypes.func,
+  handleWorkCategory: PropTypes.func,
+  handleUploadFileChange: PropTypes.func,
 };
 
 SafetyWorkInfo.defaultProps = {};

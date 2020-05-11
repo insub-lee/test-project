@@ -149,6 +149,12 @@ class List extends React.Component {
 
   modalColumns = [
     {
+      title: 'SERIAL_NO',
+      dataIndex: 'SERIAL_NO',
+      key: 'SERIAL_NO',
+      align: 'center',
+    },
+    {
       title: 'CAS_NO',
       dataIndex: 'CAS_NO',
       key: 'CAS_NO',
@@ -237,12 +243,13 @@ class List extends React.Component {
                   <tr>
                     <th>연번</th>
                     <td colSpan={2}>
-                      <AntdInputNumber
+                      {/* <AntdInputNumber
                         className="ant-input-number input-number-sm"
                         value={requestValue.SERIAL_NO}
                         onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
                         disabled={isModified}
-                      />
+                      /> */}
+                      {requestValue.SERIAL_NO}
                     </td>
                     <th>CAS NO.</th>
                     <td colSpan={2}>
