@@ -262,12 +262,13 @@ class List extends React.Component {
                   <tr>
                     <th>연번</th>
                     <td>
-                      <AntdInputNumber
+                      {/* <AntdInputNumber
                         className="ant-input-number input-number-sm"
                         value={requestValue.SERIAL_NO}
                         onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
                         disabled={isModified}
-                      />
+                      /> */}
+                      {requestValue.SERIAL_NO}
                     </td>
                     <th>화학물질명_국문</th>
                     <td>
