@@ -4,9 +4,7 @@ import PropTypes from 'prop-types';
 import { Input, Modal } from 'antd';
 import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
-import HstCmpnyUserSelectComp from 'apps/eshs/user/safety/safetyEdu/HstCmpnyUserTable';
-import WorkerSearch from 'apps/eshs/user/safety/workerMgt/Search';
-import CustomListPage from 'apps/eshs/user/safety/pledge/pages/ListPage';
+import HstCmpnyUserSelectComp from 'apps/eshs/user/safety/safetyWork/safetyEdu/HstCmpnyUserTable';
 import BizBuilderBase from 'components/BizBuilderBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
@@ -15,7 +13,9 @@ import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import SafetyEdu from '../../../safetyEdu';
+import WorkerSearch from '../../workerMgt/Search';
+import CustomListPage from '../../pledge/pages/ListPage';
+import SafetyEdu from '../../safetyEdu';
 import SafetyWorkerTable from '../../commonComponents/SafetyWorker';
 import SafetyEquipTable from '../../commonComponents/SafetyEquip';
 import SafetyEquipSelect from '../../commonComponents/SafetyEquip/EquipSelect';
@@ -25,7 +25,7 @@ import Styled from './Styled';
 
 const AntdModal = StyledModalWrapper(Modal);
 
-class SafetyWorkList extends Component {
+class SafetyWorkMain extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -740,7 +740,7 @@ class SafetyWorkList extends Component {
   }
 }
 
-SafetyWorkList.propTypes = {
+SafetyWorkMain.propTypes = {
   // type - number
   // type - string
   sagaKey: PropTypes.string,
@@ -753,4 +753,4 @@ SafetyWorkList.propTypes = {
   getCallDataHandlerReturnRes: PropTypes.func,
 };
 
-export default SafetyWorkList;
+export default SafetyWorkMain;
