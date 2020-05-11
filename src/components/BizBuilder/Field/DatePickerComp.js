@@ -48,7 +48,7 @@ class DatePickerComp extends Component {
     if (isSearch && CONFIG.property.searchType === 'CUSTOM') {
       return (
         <AntdDatePicker
-          style={{ width: '200px' }}
+          style={{ width: '100%' }}
           onChange={this.onChangeSearchHandle}
           placeholder={CONFIG.property.placeholder}
           disabled={readOnly || CONFIG.property.readOnly}
@@ -63,7 +63,7 @@ class DatePickerComp extends Component {
       <>
         {viewPageData.viewType.toUpperCase() === 'MODIFY' || viewPageData.viewType.toUpperCase() === 'INPUT' ? (
           <AntdDatePicker
-            style={{ width: '200px' }}
+            style={{ width: '100%' }}
             onChange={this.onChangeHandler}
             placeholder={CONFIG.property.placeholder}
             value={colData ? moment(colData) : undefined}
@@ -81,7 +81,7 @@ class DatePickerComp extends Component {
     // if (viewPageData.viewType.toUpperCase() === 'INPUT') {
     //   return (
     //     <AntdDatePicker
-    //       style={{ width: '200px' }}
+    //       style={{ width:'100%' }}
     //       onChange={this.onChangeHandler}
     //       placeholder={CONFIG.property.placeholder}
     //       value={(colData && moment(colData)) || undefined}
@@ -94,7 +94,7 @@ class DatePickerComp extends Component {
     // if (viewPageData.viewType.toUpperCase() === 'MODIFY' || viewPageData.viewType.toUpperCase() === 'INPUT') {
     //   return (
     //     <AntdDatePicker
-    //       style={{ width: '200px' }}
+    //       style={{ width:'100%' }}
     //       onChange={this.onChangeHandler}
     //       placeholder={CONFIG.property.placeholder}
     //       value={colData ? moment(colData) : undefined}
