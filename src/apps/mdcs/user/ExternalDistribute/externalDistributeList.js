@@ -138,7 +138,7 @@ class ExternalDistributeList extends Component {
             </p>
           </div>
           <AntdTable
-            dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))}
+            dataSource={list.map(item => ({ ...item, key: `${item.TRANS_NO}_${item.RECV_USER_ID}` }))}
             columns={this.columns}
           />
         </ContentsWrapper>

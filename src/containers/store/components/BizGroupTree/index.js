@@ -237,7 +237,7 @@ class BizGroupTree extends Component {
             }
           };
 
-          resortTreeData(treeData, [ROOT_ID], 0);
+          resortTreeData(treeData, [ROOT_ID], treeData[0].LVL);
 
           saveData(null, treeData);
           moveNode(treeFunc.generateList(fromJS(treeData)));

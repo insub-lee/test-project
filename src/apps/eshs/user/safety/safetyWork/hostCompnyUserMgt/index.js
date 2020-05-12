@@ -1,11 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import List from './List';
 
-class hostCompnyUserMgt extends Component {
-  render() {
-    return <BizMicroDevBase component={List} sagaKey="EshshostCompny" />;
-  }
-}
+const hostCompnyUserMgt = () => <BizMicroDevBase component={List} sagaKey="EshshostCompny" />;
 
 export default hostCompnyUserMgt;

@@ -98,6 +98,11 @@ class List extends React.Component {
       <>
         <ContentsWrapper>
           <div className="selSaveWrapper alignLeft" style={{ paddingBottom: '10px' }}>
+            <div className="textLabel">분류</div>
+            <AntdSelect defaultValue="Y" onChange={handleSelectChange} className="select-mid mr5" style={{ width: '130px' }}>
+              <AntdSelect.Option value="Y">전체</AntdSelect.Option>
+              <AntdSelect.Option value="N">SAP(사용량)</AntdSelect.Option>
+            </AntdSelect>
             <div className="textLabel">SAP_NO.</div>
             <AntdInput
               className="ant-input-inline ant-input-mid mr5"
@@ -112,10 +117,6 @@ class List extends React.Component {
               style={{ width: '150px' }}
               placeholder="CAS_NO."
             />
-            <AntdSelect defaultValue="Y" onChange={handleSelectChange} className="select-mid mr5" style={{ width: '130px' }}>
-              <AntdSelect.Option value="Y">전체</AntdSelect.Option>
-              <AntdSelect.Option value="N">SAP(사용량)</AntdSelect.Option>
-            </AntdSelect>
             <AntdInput
               className="ant-input-inline ant-input-mid mr5"
               onChange={e => handleInputChange(e.target.value, 'KEYWORD')}
