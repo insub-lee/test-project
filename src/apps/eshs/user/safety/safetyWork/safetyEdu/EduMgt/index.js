@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Modal, Descriptions, Checkbox } from 'antd';
+import { Input, Modal, Descriptions } from 'antd';
 import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';

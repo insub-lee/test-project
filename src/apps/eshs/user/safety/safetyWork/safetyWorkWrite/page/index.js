@@ -470,6 +470,7 @@ class SafetyWorkMain extends Component {
           SUB_WCATEGORY: [],
           WORK_DESC: '',
           WRK_CMPNY_CD: '',
+          WRK_CMPNY_NM: '',
           WLOC: '',
           WGUBUN: '신규',
           SITE: '청주',
