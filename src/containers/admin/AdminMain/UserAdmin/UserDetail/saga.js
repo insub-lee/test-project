@@ -34,12 +34,12 @@ export function* insertUserInfo(payload) {
     onSaveSuccess();
     yield put({
       type: actionType.GET_USER_DATA,
-      userId: userInfo.userId,
+      userId: result.userId,
     });
     /*    
     // 저장후 리스트로
     history.push({
-      pathname: `/admin/adminmain/account/user/${data.userId}`, state: listParam,
+      pathname: `/admin/adminmain/account/user/${result.userId}`, state: listParam,
     });
     */
   } else {

@@ -79,6 +79,7 @@ class ExternalDistributeMgntList extends Component {
       dataIndex: 'RECV_DEPT_NAME',
       key: 'RECV_DEPT_NAME',
       width: '15%',
+      ellipsis: true,
       render: (text, record) => <Button type="link" onClick={() => this.onClickDept(record)}>{text}</Button>
     },
     {

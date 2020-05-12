@@ -592,13 +592,14 @@ class List extends React.Component {
                   <tr>
                     <th>연번</th>
                     <td>
-                      <AntdInputNumber
+                      {/* <AntdInputNumber
                         className="ant-input-number input-number-sm"
                         value={requestValue.SERIAL_NO}
                         onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
                         disabled={isModified}
                         // min={MAX_SERIAL_NO}
-                      />
+                      /> */}
+                      {requestValue.SERIAL_NO}
                     </td>
                     <th>CAS NO.</th>
                     <td>

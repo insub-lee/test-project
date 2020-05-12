@@ -1,5 +1,17 @@
 import * as actionTypes from './constants';
 
+export const getCustomDataBind = (httpMethod, rtnUrl, param) => ({
+  type: actionTypes.GET_CUSTOMER_DATABIND,
+  httpMethod,
+  rtnUrl,
+  param,
+});
+
+export const setCustomDataBind = list => ({
+  type: actionTypes.SET_CUSTOMER_DATABIND,
+  list,
+});
+
 export const getApproveList = () => ({
   type: actionTypes.GET_APPROVE_LIST,
 });
@@ -32,7 +44,7 @@ export const setPartialInit = () => ({
 });
 
 export const submitHandlerBySaga = (id, httpMethod, apiUrl, submitData, callbackFunc) => ({
-  type: `${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${id}`,
+  type: actionTypes.PUBLIC_ACTIONMETHOD_SAGA,
   id,
   httpMethod,
   apiUrl,

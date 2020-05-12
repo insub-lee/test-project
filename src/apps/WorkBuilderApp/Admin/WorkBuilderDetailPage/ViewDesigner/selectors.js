@@ -48,6 +48,8 @@ const makeSelectListViewList = () => createSelector(selectViewDesignerState, sta
 
 const makeSelectViewChangeProcesslist = () => createSelector(selectViewDesignerState, state => state.get('viewChangeProcesslist').toJS());
 
+const makeSelectDataNodeList = () => createSelector(selectViewDesignerState, state => state.get('dataNodeList').toJS());
+
 export {
   makeSelectIsShowEditor,
   makeSelectGroups,
@@ -72,4 +74,5 @@ export {
   makeSelectViewViewList,
   makeSelectListViewList,
   makeSelectViewChangeProcesslist,
+  makeSelectDataNodeList,
 };

@@ -126,7 +126,8 @@ class InputModal extends React.Component {
         />
         <AntdTable
           columns={tableColumns}
-          dataSource={formData.dataSource}
+          // dataSource={formData.dataSource}
+          dataSource={(result.materialList && result.materialList.list) || []}
           pagination={{ pageSize: 10 }}
           onRow={record => ({
             onClick: () => handleRowClick(record),
