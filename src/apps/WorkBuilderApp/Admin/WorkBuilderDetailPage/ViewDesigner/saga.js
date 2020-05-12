@@ -23,7 +23,7 @@ function* getMetaData({ workSeq, viewType, viewID, viewName }) {
   const compResponse = yield call(Axios.get, '/api/builder/v1/work/ComponentPool');
   const classNameResponse = yield call(Axios.get, '/api/builder/v1/work/classmanage');
   if (response && response.resultType && response.resultType.length > 0 && response[response.resultType] && response[response.resultType].length > 0) {
-    const { viewChangeProcesslist } = response;
+    const { viewChangeProcesslist, dataNodeList } = response;
     let metaList = response[response.resultType].map(node => ({ ...node, CONFIG: JSON.parse(node.CONFIG) }));
     metaList = metaList.map(node => ({
       ...node,
@@ -51,6 +51,9 @@ function* getMetaData({ workSeq, viewType, viewID, viewName }) {
     }
     if (compResponse) {
       yield put(actions.setComponentPoolListByReducer(compResponse.compPoolList, compResponse.colGroup));
+    }
+    if (dataNodeList) {
+      yield put(actions.setDataNodeListByReducer(dataNodeList));
     }
   } else {
     yield put(actions.setInitDataByReducer(workSeq, viewType));

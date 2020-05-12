@@ -1,6 +1,6 @@
 import * as actionTypes from './constants';
 
-export const getBuilderData = (id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData) => ({
+export const getBuilderData = (id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData, detailData) => ({
   type: `${actionTypes.GET_BUILDER_DATA}_${id}`,
   id,
   workSeq,
@@ -9,6 +9,7 @@ export const getBuilderData = (id, workSeq, taskSeq, viewType, extraProps, condi
   extraProps,
   conditional,
   changeWorkflowFormData,
+  detailData,
 });
 
 export const setBuilderData = (
@@ -23,6 +24,8 @@ export const setBuilderData = (
   workFlow,
   apiList,
   viewProcessList,
+  viewSetData,
+  fieldSelectData,
   formData,
   validationData,
 ) => ({
@@ -38,6 +41,8 @@ export const setBuilderData = (
   workFlow,
   apiList,
   viewProcessList,
+  viewSetData,
+  fieldSelectData,
   formData,
   validationData,
 });
