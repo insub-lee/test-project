@@ -8,6 +8,8 @@ const makeSelectUnApproveList = () => createSelector(selectApproveBase, state =>
 
 const makeSelectDraftList = () => createSelector(selectApproveBase, state => state.get('draftList').toJS());
 
+const makeSelectCustomDataList = () => createSelector(selectApproveBase, state => state.get('customDataList').toJS());
+
 const makeSelectSelectedRow = () => createSelector(selectApproveBase, state => state.get('selectedRow').toJS());
 
 const makeSelectViewVisible = () => createSelector(selectApproveBase, state => state.get('viewVisible'));
@@ -22,6 +24,7 @@ export {
   makeSelectApproveList,
   makeSelectUnApproveList,
   makeSelectDraftList,
+  makeSelectCustomDataList,
   makeSelectSelectedRow,
   makeSelectViewVisible,
   makeSelectOpinionVisible,

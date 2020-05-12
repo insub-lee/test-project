@@ -17,3 +17,5 @@ export const FAIL_APPROVE = `${prefix}/FAIL_APPROVE`;
 export const GET_USERINFO = `${prefix}/GET_USERINFO`;
 export const SET_USERINFO = `${prefix}/SET_USERINFO`;
 export const PUBLIC_ACTIONMETHOD_SAGA = `${prefix}/PUBLIC_ACTIONMETHOD_SAGA`;
+export const GET_CUSTOMER_DATABIND = `${prefix}/GET_CUSTOMER_DATABIND`;
+export const SET_CUSTOMER_DATABIND = `${prefix}/SET_CUSTOMER_DATABIND`;
