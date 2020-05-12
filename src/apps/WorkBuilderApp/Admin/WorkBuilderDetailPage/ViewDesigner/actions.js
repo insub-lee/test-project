@@ -335,3 +335,8 @@ export const submitHandlerBySaga = (httpMethod, apiUrl, submitData, callbackFunc
   submitData,
   callbackFunc,
 });
+
+export const setDataNodeListByReducer = dataNodeList => ({
+  type: actionTypes.SET_DATA_NODE_LIST_REDUCER,
+  dataNodeList,
+});

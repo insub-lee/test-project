@@ -186,6 +186,7 @@ const initialState = fromJS({
   viewViewList: [],
   listViewList: [],
   viewChangeProcesslist: [],
+  dataNodeList: [],
 });
 
 const initialSearchGroup = fromJS({
@@ -1323,6 +1324,10 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SET_VIEW_CHANGE_PROCESS_LIST_REDUCER: {
       const { list } = action;
       return state.set('viewChangeProcesslist', fromJS(list));
+    }
+    case actionTypes.SET_DATA_NODE_LIST_REDUCER: {
+      const { dataNodeList } = action;
+      return state.set('dataNodeList', fromJS(dataNodeList));
     }
     default:
       return state;

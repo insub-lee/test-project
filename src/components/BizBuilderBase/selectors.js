@@ -223,6 +223,13 @@ const makeSelectDraftInfo = () =>
     (state, id) => (state.getIn(['bizBuilderBase', id, 'draftInfo']) !== undefined ? state.getIn(['bizBuilderBase', id, 'draftInfo']).toJS() : {}),
   );
 
+const makeSelectFieldSelectData = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
+    (state, id) => (state.getIn(['bizBuilderBase', id, 'fieldSelectData']) !== undefined ? state.getIn(['bizBuilderBase', id, 'fieldSelectData']).toJS() : {}),
+  );
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -262,4 +269,5 @@ export {
   makeSelectViewLayer,
   makeSelectIsSaveModalClose,
   makeSelectDraftInfo,
+  makeSelectFieldSelectData,
 };
