@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Radio, Input, Checkbox } from 'antd';
+import { Radio, Input, Checkbox, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
@@ -13,20 +14,62 @@ const AntInput = StyledInput(Input);
 class QuestionnaireView extends Component {
   state = {
     qData: {},
+    year: '',
+    saveType: 'I',
+  };
+
+  componentDidMount() {
+    const { sagaKey, getCallDataHandlerReturnRes } = this.props;
+    console.debug('##### componentDidMount #####');
+    console.debug('sagaKey >> ', sagaKey);
+    const apiInfo = {
+      key: 'questionnaire',
+      url: `/api/eshs/v1/common/health/healthChkQuestionnaire`,
+      type: 'GET',
+      params: {},
+    };
+    getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, res) => {
+      if (res && res.detail) {
+        this.setState({
+          qData: JSON.parse(res.detail.ANSWER_JSON),
+          year: res.detail.YEAR,
+          saveType: 'U',
+        });
+      }
+    });
   }
 
-  componentDidMount() {}
+  onSave = () => {
+    const { saveType, qData, year } = this.state;
+    const { sagaKey, submitHandlerBySaga, onCancelPopup } = this.props;
+
+    const submitData = {
+      YEAR: year,
+      ANSWER : { ...qData }
+    };
+    Modal.confirm({
+      title: `설문을 ${saveType === 'I' ? '등록' : '저장'}하시겠습니까?`,
+        icon: <ExclamationCircleOutlined />,
+        onOk() {
+          submitHandlerBySaga(sagaKey, (saveType === 'I' ? 'POST' : 'PUT'), '/api/eshs/v1/common/health/healthChkQuestionnaire', submitData, () => {
+            onCancelPopup();
+          });
+        }
+    });
+  };
 
   onChangeDataOneKey = (key, val) => {
     this.setState(prevState => {
       const { qData } = prevState;
-      qData[key] = val;
-
       if (key.indexOf('MENTAL_QUESTION') > -1) {
+        console.debug('qData.MENTAL_SCORE >> ', qData.MENTAL_SCORE);
+        console.debug('qData[', key, '] >> ', qData[key]);
         let socre = qData.MENTAL_SCORE ? Number(qData.MENTAL_SCORE) : 0;
-        socre = socre + Number(val);
+        let selVal = qData[key] ? Number(qData[key]) : 0;
+        socre = socre - selVal + Number(val);
         qData['MENTAL_SCORE'] = socre;
       }
+      qData[key] = val;
       return { qData }
     });
   };
@@ -57,7 +100,7 @@ class QuestionnaireView extends Component {
   };
 
   render() {
-    const { qData } = this.state;
+    const { qData, saveType } = this.state;
     console.debug('### qData >> ', qData);
     return (
       <Styled>
@@ -65,7 +108,7 @@ class QuestionnaireView extends Component {
           <div className="text-area">
             <p>* 검진 대상자는 문진 문항을 빠짐없이 표시하여야만 정확한 건강 위험 평과 결과를 통보받으실 수 있습니다.</p>
             <p>* 귀하께서는 국민건강보험공단 또는 보건소에서 제공하는 건강 관련 정보 및 사업 안내를 메일 또는 우편 등으로 받아 보는 것에 동의하십니까?</p>
-            <Radio.Group style={{ paddingLeft: 10 }} onChange={e => this.onChangeDataOneKey('RECEIVE_AGREE', e.target.value)}>
+            <Radio.Group style={{ paddingLeft: 10 }} value={qData.RECEIVE_AGREE} onChange={e => this.onChangeDataOneKey('RECEIVE_AGREE', e.target.value)}>
               <Radio value="Y">예</Radio>
               <Radio value="N">아니오</Radio>
             </Radio.Group>
@@ -97,13 +140,19 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>뇌졸중(중풍)</th>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE1', 'DIAGNOSIS', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE1 ? qData.QUESTION1.DISEASE1.DIAGNOSIS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE1', 'DIAGNOSIS', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
                     </td>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE1', 'MEDICATION', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE1 ? qData.QUESTION1.DISEASE1.MEDICATION : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE1', 'MEDICATION', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
@@ -112,13 +161,19 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>심근경색/협심증</th>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE2', 'DIAGNOSIS', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE2 ? qData.QUESTION1.DISEASE2.DIAGNOSIS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE2', 'DIAGNOSIS', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
                     </td>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE2', 'MEDICATION', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE2 ? qData.QUESTION1.DISEASE2.MEDICATION : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE2', 'MEDICATION', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
@@ -127,13 +182,19 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>고혈압</th>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE3', 'DIAGNOSIS', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE3 ? qData.QUESTION1.DISEASE3.DIAGNOSIS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE3', 'DIAGNOSIS', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
                     </td>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE3', 'MEDICATION', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE3 ? qData.QUESTION1.DISEASE3.MEDICATION : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE3', 'MEDICATION', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
@@ -142,13 +203,19 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>당뇨병</th>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE4', 'DIAGNOSIS', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE4 ? qData.QUESTION1.DISEASE4.DIAGNOSIS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE4', 'DIAGNOSIS', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
                     </td>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE4', 'MEDICATION', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE4 ? qData.QUESTION1.DISEASE4.MEDICATION : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE4', 'MEDICATION', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
@@ -157,13 +224,19 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>이상지질혈증</th>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE5', 'DIAGNOSIS', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE5 ? qData.QUESTION1.DISEASE5.DIAGNOSIS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE5', 'DIAGNOSIS', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
                     </td>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE5', 'MEDICATION', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE5 ? qData.QUESTION1.DISEASE5.MEDICATION : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE5', 'MEDICATION', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
@@ -172,13 +245,19 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>폐결핵</th>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE6', 'DIAGNOSIS', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE6 ? qData.QUESTION1.DISEASE6.DIAGNOSIS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE6', 'DIAGNOSIS', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
                     </td>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE6', 'MEDICATION', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE6 ? qData.QUESTION1.DISEASE6.MEDICATION : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE6', 'MEDICATION', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
@@ -187,13 +266,19 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>기타(암포함)</th>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE7', 'DIAGNOSIS', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE7 ? qData.QUESTION1.DISEASE7.DIAGNOSIS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE7', 'DIAGNOSIS', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
                     </td>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE7', 'MEDICATION', e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION1 && qData.QUESTION1.DISEASE7 ? qData.QUESTION1.DISEASE7.MEDICATION : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION1', 'DISEASE7', 'MEDICATION', e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
@@ -217,7 +302,10 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>뇌졸중(중풍)</th>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataTowKey('QUESTION2', 'DISEASE1',e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION2 ? qData.QUESTION2.DISEASE1 : ''}
+                        onChange={e => this.onChangeDataTowKey('QUESTION2', 'DISEASE1',e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
@@ -226,7 +314,10 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>심근경색/협심증</th>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataTowKey('QUESTION2', 'DISEASE2',e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION2 ? qData.QUESTION2.DISEASE2 : ''}
+                        onChange={e => this.onChangeDataTowKey('QUESTION2', 'DISEASE2',e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
@@ -235,7 +326,10 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>고혈압</th>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataTowKey('QUESTION2', 'DISEASE3',e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION2 ? qData.QUESTION2.DISEASE3 : ''}
+                        onChange={e => this.onChangeDataTowKey('QUESTION2', 'DISEASE3',e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
@@ -244,7 +338,10 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>당뇨병</th>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataTowKey('QUESTION2', 'DISEASE4',e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION2 ? qData.QUESTION2.DISEASE4 : ''}
+                        onChange={e => this.onChangeDataTowKey('QUESTION2', 'DISEASE4',e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
@@ -253,7 +350,10 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>기타(암포함)</th>
                     <td className="radio-td">
-                      <Radio.Group buttonStyle="solid" onChange={e => this.onChangeDataTowKey('QUESTION2', 'DISEASE5',e.target.value)}>
+                      <Radio.Group buttonStyle="solid"
+                        value={qData.QUESTION2 ? qData.QUESTION2.DISEASE5 : ''}
+                        onChange={e => this.onChangeDataTowKey('QUESTION2', 'DISEASE5',e.target.value)}
+                      >
                         <Radio.Button value="Y">예</Radio.Button>
                         <Radio.Button value="N">아니오</Radio.Button>
                       </Radio.Group>
@@ -269,7 +369,7 @@ class QuestionnaireView extends Component {
                 <b>B형간염 바이러스 보유자</b>입니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('QUESTION3', e.target.value)}>
+                <Radio.Group value={qData.QUESTION3} onChange={e => this.onChangeDataOneKey('QUESTION3', e.target.value)}>
                   <Radio value="Y">예</Radio>
                   <Radio value="N">아니오</Radio>
                   <Radio value="Z">모름</Radio>
@@ -287,11 +387,11 @@ class QuestionnaireView extends Component {
                 <b>평생 총 5갑(100개비) 이상</b>의 <b>일반담배(궐련)</b>를 피운 적이 있습니까?
               </p>
               <div className="question-article">
-                <Radio.Group onchange={e => this.onChangeDataOneKey('QUESTION4', e.target.value)}>
-                  <Radio value="Y">
+                <Radio.Group value={qData.QUESTION4} onChange={e => this.onChangeDataOneKey('QUESTION4', e.target.value)}>
+                  <Radio value="N">
                     <b>아니오 (☞ 5번 문항으로 가세요)</b>
                   </Radio>
-                  <Radio value="N">
+                  <Radio value="Y">
                     예, 지금은 끊었음 <b>(☞ 4-1번 문항으로 가세요)</b>
                   </Radio>
                 </Radio.Group>
@@ -303,7 +403,7 @@ class QuestionnaireView extends Component {
                 <span className="question-num">4-1.</span>
                 <b>현재 일반담배(궐련)</b>을 피우십니까?
               </p>
-              <Radio.Group onChange={e => this.onChangeDataTowKey('QUESTION4-1', 'GENERAL_SMOKING', e.target.value)}>
+              <Radio.Group value={qData.QUESTION4_1 ? qData.QUESTION4_1.GENERAL_SMOKING : ''} onChange={e => this.onChangeDataTowKey('QUESTION4_1', 'GENERAL_SMOKING', e.target.value)}>
                 <table className="question-table">
                   <colgroup>
                     <col style={{ width: '5%' }} />
@@ -319,10 +419,20 @@ class QuestionnaireView extends Component {
                       </td>
                       <td className="td-left">1. 현재 피움</td>
                       <td>
-                        총 <AntInput className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }} onChange={e => this.onChangeDataThreeKey('QUESTION4-1', 'SMOKING', 'SMOKING_YEAR', e.target.value)} /> 년
+                        총 
+                        <AntInput
+                          className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }}
+                          value={qData.QUESTION4_1 && qData.QUESTION4_1.SMOKING ? qData.QUESTION4_1.SMOKING.SMOKING_YEAR : ''}
+                          onChange={e => this.onChangeDataThreeKey('QUESTION4_1', 'SMOKING', 'SMOKING_YEAR', e.target.value)} 
+                        /> 년
                       </td>
                       <td className="td-left">
-                        하루 평균 <AntInput className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }} onChange={e => this.onChangeDataThreeKey('QUESTION4-1', 'SMOKING', 'DAY_AVG_SMOKING_CNT', e.target.value)} /> 개비
+                        하루 평균 
+                        <AntInput
+                          className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }}
+                          value={qData.QUESTION4_1 && qData.QUESTION4_1.SMOKING ? qData.QUESTION4_1.SMOKING.DAY_AVG_SMOKING_CNT : ''}
+                          onChange={e => this.onChangeDataThreeKey('QUESTION4_1', 'SMOKING', 'DAY_AVG_SMOKING_CNT', e.target.value)}
+                        /> 개비
                       </td>
                       <td></td>
                     </tr>
@@ -332,13 +442,28 @@ class QuestionnaireView extends Component {
                       </td>
                       <td className="td-left">2. 과거에는 피웠으나 현재에는 피우지 않음</td>
                       <td>
-                        총 <AntInput className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }} style={{ width: 50 }} onChange={e => this.onChangeDataThreeKey('QUESTION4-1', 'NO_SMOKING', 'SMOKING_YEAR', e.target.value)} /> 년
+                        총 
+                        <AntInput
+                          className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }}
+                          value={qData.QUESTION4_1 && qData.QUESTION4_1.NO_SMOKING ? qData.QUESTION4_1.NO_SMOKING.SMOKING_YEAR : ''}
+                          onChange={e => this.onChangeDataThreeKey('QUESTION4_1', 'NO_SMOKING', 'SMOKING_YEAR', e.target.value)}
+                        /> 년
                       </td>
                       <td className="td-left">
-                        흡연했을 때 하루 평균 <AntInput className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }} onChange={e => this.onChangeDataThreeKey('QUESTION4-1', 'NO_SMOKING', 'DAY_AVG_SMOKING_CNT', e.target.value)} /> 개비
+                        흡연했을 때 하루 평균 
+                        <AntInput
+                          className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }}
+                          value={qData.QUESTION4_1 && qData.QUESTION4_1.NO_SMOKING ? qData.QUESTION4_1.NO_SMOKING.DAY_AVG_SMOKING_CNT : ''}
+                          onChange={e => this.onChangeDataThreeKey('QUESTION4_1', 'NO_SMOKING', 'DAY_AVG_SMOKING_CNT', e.target.value)}
+                        /> 개비
                       </td>
                       <td>
-                        끊은 지 <AntInput className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }} style={{ width: 50 }} onChange={e => this.onChangeDataThreeKey('QUESTION4-1', 'NO_SMOKING', 'NO_SMOKING_YEAR', e.target.value)} /> 년
+                        끊은 지 
+                        <AntInput
+                          className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }}
+                          value={qData.QUESTION4_1 && qData.QUESTION4_1.NO_SMOKING ? qData.QUESTION4_1.NO_SMOKING.NO_SMOKING_YEAR : ''}
+                          onChange={e => this.onChangeDataThreeKey('QUESTION4_1', 'NO_SMOKING', 'NO_SMOKING_YEAR', e.target.value)}
+                        /> 년
                       </td>
                     </tr>
                   </tbody>
@@ -352,11 +477,11 @@ class QuestionnaireView extends Component {
                 <b>궐련형 전자담배(가열담배, 예) 아이코스, 글로, 릴 등)을</b>&nbsp;피운 적이 있습니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataTowKey('QUESTION5', e.target.value)}>
-                  <Radio value="a">
+                <Radio.Group value={qData.QUESTION5} onChange={e => this.onChangeDataOneKey('QUESTION5', e.target.value)}>
+                  <Radio value="N">
                     <b>아니오 (☞ 6번 문항으로 가세요)</b>
                   </Radio>
-                  <Radio value="b">
+                  <Radio value="Y">
                     예, 지금은 끊었음 <b>(☞ 5-1번 문항으로 가세요)</b>
                   </Radio>
                 </Radio.Group>
@@ -368,7 +493,7 @@ class QuestionnaireView extends Component {
                 <span className="question-num">5-1.</span>
                 <b>현재 일반 궐련형 전자담배(가열담배)</b>을 피우십니까?
               </p>
-              <Radio.Group onChange={e => this.onChangeDataTowKey('QUESTION5-1', 'ELEC_SMOKING', e.target.value)}>
+              <Radio.Group value={qData.QUESTION5_1 ? qData.QUESTION5_1.ELEC_SMOKING : ''} onChange={e => this.onChangeDataTowKey('QUESTION5_1', 'ELEC_SMOKING', e.target.value)}>
                 <table className="question-table">
                   <colgroup>
                     <col style={{ width: '5%' }} />
@@ -380,30 +505,55 @@ class QuestionnaireView extends Component {
                   <tbody>
                     <tr>
                       <td>
-                        <Radio value="a" className="radio-item"></Radio>
+                        <Radio value="Y" className="radio-item"></Radio>
                       </td>
                       <td className="td-left">1. 현재 피움</td>
                       <td>
-                        총 <AntInput className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }} onChange={e => this.onChangeDataThreeKey('QUESTION5-1', 'SMOKING', 'SMOKING_YEAR', e.target.value)} /> 년
+                        총 
+                        <AntInput
+                          className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }}
+                          value={qData.QUESTION5_1 && qData.QUESTION5_1.SMOKING ? qData.QUESTION5_1.SMOKING.SMOKING_YEAR : ''}
+                          onChange={e => this.onChangeDataThreeKey('QUESTION5_1', 'SMOKING', 'SMOKING_YEAR', e.target.value)}
+                        /> 년
                       </td>
                       <td className="td-left">
-                        하루 평균 <AntInput className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }} onChange={e => this.onChangeDataThreeKey('QUESTION5-1', 'SMOKING', 'DAY_AVG_SMOKING_CNT', e.target.value)} /> 개비
+                        하루 평균 
+                        <AntInput
+                          className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }}
+                          value={qData.QUESTION5_1 && qData.QUESTION5_1.SMOKING ? qData.QUESTION5_1.SMOKING.DAY_AVG_SMOKING_CNT : ''}
+                          onChange={e => this.onChangeDataThreeKey('QUESTION5_1', 'SMOKING', 'DAY_AVG_SMOKING_CNT', e.target.value)}
+                        /> 개비
                       </td>
                       <td></td>
                     </tr>
                     <tr>
                       <td>
-                        <Radio value="b" className="radio-item"></Radio>
+                        <Radio value="N" className="radio-item"></Radio>
                       </td>
                       <td className="td-left">2. 과거에는 피웠으나 현재에는 피우지 않음</td>
                       <td>
-                        총 <AntInput className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }} onChange={e => this.onChangeDataThreeKey('QUESTION5-1', 'NO_SMOKING', 'SMOKING_YEAR', e.target.value)} /> 년
+                        총 
+                        <AntInput
+                          className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }}
+                          value={qData.QUESTION5_1 && qData.QUESTION5_1.NO_SMOKING ? qData.QUESTION5_1.NO_SMOKING.SMOKING_YEAR : ''}
+                          onChange={e => this.onChangeDataThreeKey('QUESTION5_1', 'NO_SMOKING', 'SMOKING_YEAR', e.target.value)}
+                        /> 년
                       </td>
                       <td className="td-left">
-                        흡연했을 때 하루 평균 <AntInput className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }} onChange={e => this.onChangeDataThreeKey('QUESTION5-1', 'NO_SMOKING', 'DAY_AVG_SMOKING_CNT', e.target.value)} /> 개비
+                        흡연했을 때 하루 평균 
+                        <AntInput
+                          className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }}
+                          value={qData.QUESTION5_1 && qData.QUESTION5_1.NO_SMOKING ? qData.QUESTION5_1.NO_SMOKING.DAY_AVG_SMOKING_CNT : ''}
+                          onChange={e => this.onChangeDataThreeKey('QUESTION5_1', 'NO_SMOKING', 'DAY_AVG_SMOKING_CNT', e.target.value)}
+                        /> 개비
                       </td>
                       <td>
-                        끊은 지 <AntInput className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }} onChange={e => this.onChangeDataThreeKey('QUESTION5-1', 'NO_SMOKING', 'NO_SMOKING_YEAR', e.target.value)} /> 년
+                        끊은 지 
+                        <AntInput
+                          className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }}
+                          value={qData.QUESTION5_1 && qData.QUESTION5_1.NO_SMOKING ? qData.QUESTION5_1.NO_SMOKING.NO_SMOKING_YEAR : ''}
+                          onChange={e => this.onChangeDataThreeKey('QUESTION5_1', 'NO_SMOKING', 'NO_SMOKING_YEAR', e.target.value)}
+                        /> 년
                       </td>
                     </tr>
                   </tbody>
@@ -417,7 +567,7 @@ class QuestionnaireView extends Component {
                 <b>액상형 전자담배</b>를 사용한 경험이 있습니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('QUESTION6', e.target.value)}>
+                <Radio.Group value={qData.QUESTION6} onChange={e => this.onChangeDataOneKey('QUESTION6', e.target.value)}>
                   <Radio value="Y">
                     예 <b>(☞ 6-1번 문항으로 가세요)</b>
                   </Radio>
@@ -434,7 +584,7 @@ class QuestionnaireView extends Component {
                 <b>최근 한 달 동안 액상형 전자담배</b>를 사용한 경험이 있습니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('QUESTION6-1', e.target.value)}>
+                <Radio.Group value={qData.QUESTION6_1} onChange={e => this.onChangeDataOneKey('QUESTION6_1', e.target.value)}>
                   <Radio value="0">
                     <b>아니오</b>
                   </Radio>
@@ -456,15 +606,30 @@ class QuestionnaireView extends Component {
                 <span className="question-num">7.</span>술을 마시는 횟수는 어느 정도입니까? (1개만 응답)
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('QUESTION7', e.target.value)}>
+                <Radio.Group value={qData.QUESTION7} onChange={e => this.onChangeDataOneKey('QUESTION7', e.target.value)}>
                   <Radio value="0">
-                    일주일에 <AntInput className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }} onChange={e => {e.stopPropagation(); this.onChangeDataOneKey('QUESTION7_WEEK_CNT', e.target.value)}} /> 번
+                    일주일에 
+                    <AntInput
+                      className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }}
+                      value={qData.QUESTION7_WEEK_CNT}
+                      onChange={e => {e.stopPropagation(); this.onChangeDataOneKey('QUESTION7_WEEK_CNT', e.target.value)}}
+                    /> 번
                   </Radio>
                   <Radio value="1">
-                    한 달에 <AntInput className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }} onChange={e => this.onChangeDataOneKey('QUESTION7_MONTH_CNT', e.target.value)} /> 번
+                    한 달에 
+                    <AntInput
+                      className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }}
+                      value={qData.QUESTION7_MONTH_CNT}
+                      onChange={e => this.onChangeDataOneKey('QUESTION7_MONTH_CNT', e.target.value)}
+                    /> 번
                   </Radio>
                   <Radio value="2">
-                    1년에 <AntInput className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }} onChange={e => this.onChangeDataOneKey('QUESTION7_YEAR_CNT', e.target.value)} /> 번
+                    1년에 
+                    <AntInput
+                      className="ant-input-xxs ant-input-inline ml5" style={{ width: 50 }}
+                      value={qData.QUESTION7_YEAR_CNT}
+                      onChange={e => this.onChangeDataOneKey('QUESTION7_YEAR_CNT', e.target.value)}
+                    /> 번
                   </Radio>
                   <Radio value="3">
                     <b>술을 마시지 않는다</b>
@@ -503,76 +668,156 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>소주</th>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL1', 'GLASS', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL1 ? qData.QUESTION7_1.ALCOHOL1.GLASS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL1', 'GLASS', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL1', 'BOTTLE', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL1 ? qData.QUESTION7_1.ALCOHOL1.BOTTLE : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL1', 'BOTTLE', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL1', 'CAN', e.target.value)}/>
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL1 ? qData.QUESTION7_1.ALCOHOL1.CAN : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL1', 'CAN', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL1', 'CC', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL1 ? qData.QUESTION7_1.ALCOHOL1.CC : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL1', 'CC', e.target.value)}
+                      />
                     </td>
                   </tr>
                   <tr>
                     <th>맥주</th>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL2', 'GLASS', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL2 ? qData.QUESTION7_1.ALCOHOL2.GLASS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL2', 'GLASS', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL2', 'BOTTLE', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL2 ? qData.QUESTION7_1.ALCOHOL2.BOTTLE : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL2', 'BOTTLE', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL2', 'CAN', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL2 ? qData.QUESTION7_1.ALCOHOL2.CAN : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL2', 'CAN', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL2', 'CC', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL2 ? qData.QUESTION7_1.ALCOHOL2.CC : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL2', 'CC', e.target.value)}
+                      />
                     </td>
                   </tr>
                   <tr>
                     <th>양주</th>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL3', 'GLASS', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL3 ? qData.QUESTION7_1.ALCOHOL3.GLASS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL3', 'GLASS', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL3', 'BOTTLE', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL3 ? qData.QUESTION7_1.ALCOHOL3.BOTTLE : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL3', 'BOTTLE', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL3', 'CAN', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL3 ? qData.QUESTION7_1.ALCOHOL3.CAN : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL3', 'CAN', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL3', 'CC', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL3 ? qData.QUESTION7_1.ALCOHOL3.CC : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL3', 'CC', e.target.value)}
+                      />
                     </td>
                   </tr>
                   <tr>
                     <th>막걸리</th>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL4', 'GLASS', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL4 ? qData.QUESTION7_1.ALCOHOL4.GLASS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL4', 'GLASS', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL4', 'BOTTLE', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL4 ? qData.QUESTION7_1.ALCOHOL4.BOTTLE : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL4', 'BOTTLE', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL4', 'CAN', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL4 ? qData.QUESTION7_1.ALCOHOL4.CAN : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL4', 'CAN', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL4', 'CC', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL4 ? qData.QUESTION7_1.ALCOHOL4.CC : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL4', 'CC', e.target.value)}
+                      />
                     </td>
                   </tr>
                   <tr>
                     <th>와인</th>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL5', 'GLASS', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL5 ? qData.QUESTION7_1.ALCOHOL5.GLASS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL5', 'GLASS', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL5', 'BOTTLE', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL5 ? qData.QUESTION7_1.ALCOHOL5.BOTTLE : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL5', 'BOTTLE', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL5', 'CAN', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL5 ? qData.QUESTION7_1.ALCOHOL5.CAN : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL5', 'CAN', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-1', 'ALCOHOL5', 'CC', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_1 && qData.QUESTION7_1.ALCOHOL5 ? qData.QUESTION7_1.ALCOHOL5.CC : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_1', 'ALCOHOL5', 'CC', e.target.value)}
+                      />
                     </td>
                   </tr>
                 </tbody>
@@ -609,76 +854,156 @@ class QuestionnaireView extends Component {
                 <tr>
                     <th>소주</th>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL1', 'GLASS', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL1 ? qData.QUESTION7_2.ALCOHOL1.GLASS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL1', 'GLASS', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL1', 'BOTTLE', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL1 ? qData.QUESTION7_2.ALCOHOL1.BOTTLE : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL1', 'BOTTLE', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL1', 'CAN', e.target.value)}/>
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL1 ? qData.QUESTION7_2.ALCOHOL1.CAN : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL1', 'CAN', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL1', 'CC', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL1 ? qData.QUESTION7_2.ALCOHOL1.CC : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL1', 'CC', e.target.value)}
+                      />
                     </td>
                   </tr>
                   <tr>
                     <th>맥주</th>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL2', 'GLASS', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL2 ? qData.QUESTION7_2.ALCOHOL2.GLASS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL2', 'GLASS', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL2', 'BOTTLE', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL2 ? qData.QUESTION7_2.ALCOHOL2.BOTTLE : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL2', 'BOTTLE', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL2', 'CAN', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL2 ? qData.QUESTION7_2.ALCOHOL2.CAN : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL2', 'CAN', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL2', 'CC', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL2 ? qData.QUESTION7_2.ALCOHOL2.CC : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL2', 'CC', e.target.value)}
+                      />
                     </td>
                   </tr>
                   <tr>
                     <th>양주</th>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL3', 'GLASS', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL3 ? qData.QUESTION7_2.ALCOHOL3.GLASS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL3', 'GLASS', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL3', 'BOTTLE', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL3 ? qData.QUESTION7_2.ALCOHOL3.BOTTLE : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL3', 'BOTTLE', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL3', 'CAN', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL3 ? qData.QUESTION7_2.ALCOHOL3.CAN : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL3', 'CAN', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL3', 'CC', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL3 ? qData.QUESTION7_2.ALCOHOL3.CC : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL3', 'CC', e.target.value)}
+                      />
                     </td>
                   </tr>
                   <tr>
                     <th>막걸리</th>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL4', 'GLASS', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL4 ? qData.QUESTION7_2.ALCOHOL4.GLASS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL4', 'GLASS', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL4', 'BOTTLE', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL4 ? qData.QUESTION7_2.ALCOHOL4.BOTTLE : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL4', 'BOTTLE', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL4', 'CAN', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL4 ? qData.QUESTION7_2.ALCOHOL4.CAN : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL4', 'CAN', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL4', 'CC', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL4 ? qData.QUESTION7_2.ALCOHOL4.CC : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL4', 'CC', e.target.value)}
+                      />
                     </td>
                   </tr>
                   <tr>
                     <th>와인</th>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL5', 'GLASS', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL5 ? qData.QUESTION7_2.ALCOHOL5.GLASS : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL5', 'GLASS', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL5', 'BOTTLE', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL5 ? qData.QUESTION7_2.ALCOHOL5.BOTTLE : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL5', 'BOTTLE', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL5', 'CAN', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL5 ? qData.QUESTION7_2.ALCOHOL5.CAN : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL5', 'CAN', e.target.value)}
+                      />
                     </td>
                     <td className="td-pad-none">
-                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full" onChange={e => this.onChangeDataThreeKey('QUESTION7-2', 'ALCOHOL5', 'CC', e.target.value)} />
+                      <AntInput
+                        className="ant-input-xxs ant-input-inline ant-input-full"
+                        value={qData.QUESTION7_2 && qData.QUESTION7_2.ALCOHOL5 ? qData.QUESTION7_2.ALCOHOL5.CC : ''}
+                        onChange={e => this.onChangeDataThreeKey('QUESTION7_2', 'ALCOHOL5', 'CC', e.target.value)}
+                      />
                     </td>
                   </tr>
                 </tbody>
@@ -698,7 +1023,12 @@ class QuestionnaireView extends Component {
               </p>
               <div className="question-article">
                 <p>
-                  주당 (<AntInput className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }} onChange={e => this.onChangeDataOneKey('QUESTION8-1', e.target.value)} />) 일
+                  주당 (
+                  <AntInput
+                    className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }}
+                    value={qData.QUESTION8_1}
+                    onChange={e => this.onChangeDataOneKey('QUESTION8_1', e.target.value)}
+                  />) 일
                 </p>
               </div>
             </div>
@@ -709,8 +1039,17 @@ class QuestionnaireView extends Component {
               </p>
               <div className="question-article">
                 <p>
-                  하루에 (<AntInput className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }} onChange={e => this.onChangeDataTowKey('QUESTION8-2', 'HOUR', e.target.value)} />) 시간 (
-                  <AntInput className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }} onChange={e => this.onChangeDataTowKey('QUESTION8-2', 'MINUTE', e.target.value)} />) 분
+                  하루에 (
+                  <AntInput
+                    className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }}
+                    value={qData.QUESTION8_2_HOUR}
+                    onChange={e => this.onChangeDataOneKey('QUESTION8_2_HOUR', e.target.value)}
+                  />) 시간 (
+                  <AntInput
+                    className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }}
+                    value={qData.QUESTION8_2_MINUTE}
+                    onChange={e => this.onChangeDataOneKey('QUESTION8_2_MINUTE', e.target.value)}
+                  />) 분
                 </p>
               </div>
             </div>
@@ -725,7 +1064,12 @@ class QuestionnaireView extends Component {
               </p>
               <div className="question-article">
                 <p>
-                  주당 (<AntInput className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }} onChange={e => this.onChangeDataOneKey('QUESTION9-1', e.target.value)} />) 일
+                  주당 (
+                  <AntInput
+                    className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }}
+                    value={qData.QUESTION9_1}
+                    onChange={e => this.onChangeDataOneKey('QUESTION9_1', e.target.value)}
+                  />) 일
                 </p>
               </div>
             </div>
@@ -736,8 +1080,17 @@ class QuestionnaireView extends Component {
               </p>
               <div className="question-article">
                 <p>
-                  하루에 (<AntInput className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }} onChange={e => this.onChangeDataTowKey('QUESTION9-2', 'HOUR', e.target.value)} />) 시간 (
-                  <AntInput className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }} onChange={e => this.onChangeDataTowKey('QUESTION9-2', 'HOUR', e.target.value)} />) 분
+                  하루에 (
+                  <AntInput
+                    className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }}
+                    value={qData.QUESTION9_2_HOUR}
+                    onChange={e => this.onChangeDataOneKey('QUESTION9_2_HOUR', e.target.value)}
+                  />) 시간 (
+                  <AntInput
+                    className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }}
+                    value={qData.QUESTION9_2_MINUTE}
+                    onChange={e => this.onChangeDataOneKey('QUESTION9_2_MINUTE', e.target.value)}
+                  />) 분
                 </p>
               </div>
             </div>
@@ -748,7 +1101,12 @@ class QuestionnaireView extends Component {
               </p>
               <div className="question-article">
                 <p>
-                  주당 (<AntInput className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }} onChange={e => this.onChangeDataOneKey('QUESTION10', e.target.value)} />) 일
+                  주당 (
+                  <AntInput
+                    className="ant-input-xs ant-input-inline ml5 mr5" style={{ width: 50 }}
+                    value={qData.QUESTION10}
+                    onChange={e => this.onChangeDataOneKey('QUESTION10', e.target.value)}
+                  />) 일
                 </p>
               </div>
             </div>
@@ -803,7 +1161,7 @@ class QuestionnaireView extends Component {
                       <span className="num">1.</span>일을 하는 것에 대한 흥미나 재미가 거의 없음
                     </td>
                     <td className="radio-td" colSpan="4">
-                      <Radio.Group buttonStyle="solid" className="w25" onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION1', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w25" value={qData.MENTAL_QUESTION1} onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION1', e.target.value)}>
                         <Radio.Button value="0">0</Radio.Button>
                         <Radio.Button value="1">1</Radio.Button>
                         <Radio.Button value="2">2</Radio.Button>
@@ -816,7 +1174,7 @@ class QuestionnaireView extends Component {
                       <span className="num">2.</span>가라앉은 느낌, 우울감 혹은 절망감
                     </td>
                     <td className="radio-td" colSpan="4">
-                      <Radio.Group buttonStyle="solid" className="w25" onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION2', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w25" value={qData.MENTAL_QUESTION2} onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION2', e.target.value)}>
                         <Radio.Button value="0">0</Radio.Button>
                         <Radio.Button value="1">1</Radio.Button>
                         <Radio.Button value="2">2</Radio.Button>
@@ -829,7 +1187,7 @@ class QuestionnaireView extends Component {
                       <span className="num">3.</span>잠들기 어렵거나 자꾸 깨어남, 혹은 너무 많이 잠
                     </td>
                     <td className="radio-td" colSpan="4">
-                      <Radio.Group buttonStyle="solid" className="w25" onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION3', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w25" value={qData.MENTAL_QUESTION3} onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION3', e.target.value)}>
                         <Radio.Button value="0">0</Radio.Button>
                         <Radio.Button value="1">1</Radio.Button>
                         <Radio.Button value="2">2</Radio.Button>
@@ -842,7 +1200,7 @@ class QuestionnaireView extends Component {
                       <span className="num">4.</span>피곤함, 기력이 저하됨
                     </td>
                     <td className="radio-td" colSpan="4">
-                      <Radio.Group buttonStyle="solid" className="w25" onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION4', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w25" value={qData.MENTAL_QUESTION4} onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION4', e.target.value)}>
                         <Radio.Button value="0">0</Radio.Button>
                         <Radio.Button value="1">1</Radio.Button>
                         <Radio.Button value="2">2</Radio.Button>
@@ -855,7 +1213,7 @@ class QuestionnaireView extends Component {
                       <span className="num">5.</span>식욕 저하 혹은 과식
                     </td>
                     <td className="radio-td" colSpan="4">
-                      <Radio.Group buttonStyle="solid" className="w25" onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION5', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w25" value={qData.MENTAL_QUESTION5} onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION5', e.target.value)}>
                         <Radio.Button value="0">0</Radio.Button>
                         <Radio.Button value="1">1</Radio.Button>
                         <Radio.Button value="2">2</Radio.Button>
@@ -869,7 +1227,7 @@ class QuestionnaireView extends Component {
                       되었다는 느낌
                     </td>
                     <td className="radio-td td-2rows" colSpan="4">
-                      <Radio.Group buttonStyle="solid" className="w25" onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION6', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w25" value={qData.MENTAL_QUESTION6} onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION6', e.target.value)}>
                         <Radio.Button value="0">0</Radio.Button>
                         <Radio.Button value="1">1</Radio.Button>
                         <Radio.Button value="2">2</Radio.Button>
@@ -882,7 +1240,7 @@ class QuestionnaireView extends Component {
                       <span className="num">7.</span> 신문을 읽거나 TV를 볼 때 집중하기 어려움
                     </td>
                     <td className="radio-td" colSpan="4">
-                      <Radio.Group buttonStyle="solid" className="w25" onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION7', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w25" value={qData.MENTAL_QUESTION7} onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION7', e.target.value)}>
                         <Radio.Button value="0">0</Radio.Button>
                         <Radio.Button value="1">1</Radio.Button>
                         <Radio.Button value="2">2</Radio.Button>
@@ -896,7 +1254,7 @@ class QuestionnaireView extends Component {
                       서성거림
                     </td>
                     <td className="radio-td td-2rows" colSpan="4">
-                      <Radio.Group buttonStyle="solid" className="w25" onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION8', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w25" value={qData.MENTAL_QUESTION8} onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION8', e.target.value)}>
                         <Radio.Button value="0">0</Radio.Button>
                         <Radio.Button value="1">1</Radio.Button>
                         <Radio.Button value="2">2</Radio.Button>
@@ -909,7 +1267,7 @@ class QuestionnaireView extends Component {
                       <span className="num">9.</span>나는 차라리 죽는 것이 낫겠다는 등의 생각 혹은 어떤 식으로든 스스로를 자해하는 생각듦
                     </td>
                     <td className="radio-td td-2rows" colSpan="4">
-                      <Radio.Group buttonStyle="solid" className="w25" onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION9', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w25" value={qData.MENTAL_QUESTION9} onChange={e => this.onChangeDataOneKey('MENTAL_QUESTION9', e.target.value)}>
                         <Radio.Button value="0">0</Radio.Button>
                         <Radio.Button value="1">1</Radio.Button>
                         <Radio.Button value="2">2</Radio.Button>
@@ -941,10 +1299,14 @@ class QuestionnaireView extends Component {
                 현재 신체 어느 부위에든 불편한 증상이 있습니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('CANCER_QUESTION1', e.target.value)}>
+                <Radio.Group value={qData.CANCER_QUESTION1} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION1', e.target.value)}>
                   <Radio value="Y">
                     예 (증상:
-                    <AntInput className="ant-input-xxs ant-input-inline ml5 mr5" style={{ width: 100 }} onChange={e => {e.stopPropagation(); this.onChangeDataOneKey('CANCER_QUESTION1_SYMPTOM', e.target.value)}} />)
+                    <AntInput
+                      className="ant-input-xxs ant-input-inline ml5 mr5" style={{ width: 100 }}
+                      value={qData.CANCER_QUESTION1_SYMPTOM}
+                      onChange={e => {e.stopPropagation(); this.onChangeDataOneKey('CANCER_QUESTION1_SYMPTOM', e.target.value)}}
+                    />)
                   </Radio>
                   <Radio value="N">
                     <b>아니오</b>
@@ -959,12 +1321,17 @@ class QuestionnaireView extends Component {
                 최근 6개월간 특별한 이유 없이 5kg 이상의 체중 감소가 있었습니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('CANCER_QUESTION2', e.target.value)}>
-                  <Radio value="Y">
+                <Radio.Group value={qData.CANCER_QUESTION2} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION2', e.target.value)}>
+                  <Radio value="N">
                     <b>아니오</b>
                   </Radio>
-                  <Radio value="N">
-                    체중 감소 (<AntInput className="ant-input-xxs ant-input-inline ml5 mr5" style={{ width: 50 }} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION2_WEIGHT', e.target.value)} /> kg)
+                  <Radio value="Y">
+                    체중 감소 (
+                    <AntInput
+                      className="ant-input-xxs ant-input-inline ml5 mr5" style={{ width: 50 }}
+                      value={qData.CANCER_QUESTION2_WEIGHT}
+                      onChange={e => this.onChangeDataOneKey('CANCER_QUESTION2_WEIGHT', e.target.value)}
+                    /> kg)
                   </Radio>
                 </Radio.Group>
               </div>
@@ -1008,13 +1375,19 @@ class QuestionnaireView extends Component {
                     <td>위암</td>
                     <td colSpan={2} className="radio-td">
                       <Radio.Group
-                        buttonStyle="solid" className="w50" value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER1 ? qData.CANCER_QUESTION3.CANCER1 : ""} onChange={e => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER1', e.target.value)}>
+                        buttonStyle="solid" className="w50"
+                        value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER1 ? qData.CANCER_QUESTION3.CANCER1 : ''}
+                        onChange={e => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER1', e.target.value)}
+                      >
                         <Radio.Button value="N">{qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER1 && qData.CANCER_QUESTION3.CANCER1 === 'N' ? 'O' : ''}</Radio.Button>
                         <Radio.Button value="Z">{qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER1 && qData.CANCER_QUESTION3.CANCER1 === 'Z' ? 'O' : ''}</Radio.Button>
                       </Radio.Group>
                     </td>
                     <td colSpan={5} className="chk-custom">
-                      <Checkbox.Group value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER1 ? qData.CANCER_QUESTION3.CANCER1 : ""} onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER1', val)}>
+                      <Checkbox.Group
+                        value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER1 ? qData.CANCER_QUESTION3.CANCER1 : []}
+                        onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER1', val)}
+                      >
                         <Checkbox value="0" />
                         <Checkbox value="1" />
                         <Checkbox value="2" />
@@ -1033,7 +1406,7 @@ class QuestionnaireView extends Component {
                       </Radio.Group>
                     </td>
                     <td colSpan={5} className="chk-custom">
-                      <Checkbox.Group value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER2 ? qData.CANCER_QUESTION3.CANCER2 : ""} onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER2', val)}>
+                      <Checkbox.Group value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER2 ? qData.CANCER_QUESTION3.CANCER2 : []} onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER2', val)}>
                         <Checkbox value="0" />
                         <Checkbox value="1" />
                         <Checkbox value="2" />
@@ -1052,7 +1425,7 @@ class QuestionnaireView extends Component {
                       </Radio.Group>
                     </td>
                     <td colSpan={5} className="chk-custom">
-                      <Checkbox.Group value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER3 ? qData.CANCER_QUESTION3.CANCER3 : ""} onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER3', val)}>
+                      <Checkbox.Group value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER3 ? qData.CANCER_QUESTION3.CANCER3 : []} onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER3', val)}>
                         <Checkbox value="0" />
                         <Checkbox value="1" />
                         <Checkbox value="2" />
@@ -1071,7 +1444,7 @@ class QuestionnaireView extends Component {
                       </Radio.Group>
                     </td>
                     <td colSpan={5} className="chk-custom">
-                      <Checkbox.Group value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER4 ? qData.CANCER_QUESTION3.CANCER4 : ""} onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER4', val)}>
+                      <Checkbox.Group value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER4 ? qData.CANCER_QUESTION3.CANCER4 : []} onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER4', val)}>
                         <Checkbox value="0" />
                         <Checkbox value="1" />
                         <Checkbox value="2" />
@@ -1090,7 +1463,7 @@ class QuestionnaireView extends Component {
                       </Radio.Group>
                     </td>
                     <td colSpan={5} className="chk-custom">
-                      <Checkbox.Group value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER5 ? qData.CANCER_QUESTION3.CANCER5 : ""} onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER5', val)}>
+                      <Checkbox.Group value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER5 ? qData.CANCER_QUESTION3.CANCER5 : []} onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER5', val)}>
                         <Checkbox value="0" />
                         <Checkbox value="1" />
                         <Checkbox value="2" />
@@ -1109,7 +1482,7 @@ class QuestionnaireView extends Component {
                       </Radio.Group>
                     </td>
                     <td colSpan={5} className="chk-custom">
-                      <Checkbox.Group value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER6 ? qData.CANCER_QUESTION3.CANCER6 : ""} onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER6', val)}>
+                      <Checkbox.Group value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER6 ? qData.CANCER_QUESTION3.CANCER6 : []} onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER6', val)}>
                         <Checkbox value="0" />
                         <Checkbox value="1" />
                         <Checkbox value="2" />
@@ -1130,7 +1503,7 @@ class QuestionnaireView extends Component {
                       </Radio.Group>
                     </td>
                     <td colSpan={5} className="chk-custom">
-                      <Checkbox.Group value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER7 ? qData.CANCER_QUESTION3.CANCER7 : ""} onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER7', val)}>
+                      <Checkbox.Group value={qData.CANCER_QUESTION3 && qData.CANCER_QUESTION3.CANCER7 ? qData.CANCER_QUESTION3.CANCER7 : []} onChange={val => this.onChangeDataTowKey('CANCER_QUESTION3', 'CANCER7', val)}>
                         <Checkbox value="0" />
                         <Checkbox value="1" />
                         <Checkbox value="2" />
@@ -1191,7 +1564,11 @@ class QuestionnaireView extends Component {
                       위장조영검사 <span className="span-sm">(위장 X선 촬영)</span>
                     </th>
                     <td colSpan={4} className="radio-td">
-                      <Radio.Group className="w25" buttonStyle="solid" onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK1', e.target.value)}>
+                      <Radio.Group
+                        className="w25" buttonStyle="solid"
+                        value={qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK1 && qData.CANCER_QUESTION4.CHECK1 ? qData.CANCER_QUESTION4.CHECK1 : ''}
+                        onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK1', e.target.value)}
+                      >
                         <Radio.Button value="0">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK1 && qData.CANCER_QUESTION4.CHECK1 === '0' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="1">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK1 && qData.CANCER_QUESTION4.CHECK1 === '1' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="2">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK1 && qData.CANCER_QUESTION4.CHECK1 === '2' ? 'O': ''}</Radio.Button>
@@ -1202,7 +1579,11 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th className="bg-lightgray">위내시경</th>
                     <td colSpan={4} className="radio-td">
-                      <Radio.Group className="w25" buttonStyle="solid" onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK2', e.target.value)}>
+                      <Radio.Group
+                        className="w25" buttonStyle="solid"
+                        value={qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK2 && qData.CANCER_QUESTION4.CHECK2 ? qData.CANCER_QUESTION4.CHECK2 : ''}
+                        onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK2', e.target.value)}
+                      >
                         <Radio.Button value="0">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK2 && qData.CANCER_QUESTION4.CHECK2 === '0' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="1">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK2 && qData.CANCER_QUESTION4.CHECK2 === '1' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="2">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK2 && qData.CANCER_QUESTION4.CHECK2 === '2' ? 'O': ''}</Radio.Button>
@@ -1214,7 +1595,11 @@ class QuestionnaireView extends Component {
                     <th>유방암</th>
                     <th className="bg-lightgray">유방촬영</th>
                     <td colSpan={4} className="radio-td">
-                      <Radio.Group className="w25" buttonStyle="solid" onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK3', e.target.value)}>
+                      <Radio.Group
+                        className="w25" buttonStyle="solid"
+                        value={qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK3 && qData.CANCER_QUESTION4.CHECK3 ? qData.CANCER_QUESTION4.CHECK3 : ''}
+                        onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK3', e.target.value)}
+                      >
                         <Radio.Button value="0">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK3 && qData.CANCER_QUESTION4.CHECK3 === '0' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="1">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK3 && qData.CANCER_QUESTION4.CHECK3 === '1' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="2">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK3 && qData.CANCER_QUESTION4.CHECK3 === '2' ? 'O': ''}</Radio.Button>
@@ -1228,7 +1613,11 @@ class QuestionnaireView extends Component {
                       분변잠혈검사 <span className="span-sm">(대변 검사)</span>
                     </th>
                     <td colSpan={4} className="radio-td">
-                      <Radio.Group className="w25" buttonStyle="solid" onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK4', e.target.value)}>
+                      <Radio.Group
+                        className="w25" buttonStyle="solid"
+                        value={qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK4 && qData.CANCER_QUESTION4.CHECK4 ? qData.CANCER_QUESTION4.CHECK4 : ''}
+                        onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK4', e.target.value)}
+                      >
                         <Radio.Button value="0">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK4 && qData.CANCER_QUESTION4.CHECK4 === '0' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="1">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK4 && qData.CANCER_QUESTION4.CHECK4 === '1' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="2">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK4 && qData.CANCER_QUESTION4.CHECK4 === '2' ? 'O': ''}</Radio.Button>
@@ -1241,7 +1630,11 @@ class QuestionnaireView extends Component {
                       대장이중조영검사 <span className="span-sm">(대장 X선 촬영)</span>
                     </th>
                     <td colSpan={4} className="radio-td">
-                      <Radio.Group className="w25" buttonStyle="solid" onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK5', e.target.value)}>
+                      <Radio.Group
+                        className="w25" buttonStyle="solid"
+                        value={qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK5 && qData.CANCER_QUESTION4.CHECK5 ? qData.CANCER_QUESTION4.CHECK5 : ''}
+                        onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK5', e.target.value)}
+                      >
                         <Radio.Button value="0">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK5 && qData.CANCER_QUESTION4.CHECK5 === '0' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="1">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK5 && qData.CANCER_QUESTION4.CHECK5 === '1' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="2">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK5 && qData.CANCER_QUESTION4.CHECK5 === '2' ? 'O': ''}</Radio.Button>
@@ -1252,7 +1645,11 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th className="bg-lightgray">대장내시경</th>
                     <td colSpan={4} className="radio-td">
-                      <Radio.Group className="w25" buttonStyle="solid" onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK6', e.target.value)}>
+                      <Radio.Group
+                        className="w25" buttonStyle="solid"
+                        value={qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK6 && qData.CANCER_QUESTION4.CHECK6 ? qData.CANCER_QUESTION4.CHECK6 : ''}
+                        onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK6', e.target.value)}
+                      >
                         <Radio.Button value="0">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK6 && qData.CANCER_QUESTION4.CHECK6 === '0' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="1">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK6 && qData.CANCER_QUESTION4.CHECK6 === '1' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="2">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK6 && qData.CANCER_QUESTION4.CHECK6 === '2' ? 'O': ''}</Radio.Button>
@@ -1264,7 +1661,11 @@ class QuestionnaireView extends Component {
                     <th>자궁경부암</th>
                     <th className="bg-lightgray">자궁경부세포검사</th>
                     <td colSpan={4} className="radio-td">
-                      <Radio.Group className="w25" buttonStyle="solid" onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK7', e.target.value)}>
+                      <Radio.Group
+                        className="w25" buttonStyle="solid"
+                        value={qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK7 && qData.CANCER_QUESTION4.CHECK7 ? qData.CANCER_QUESTION4.CHECK7 : ''}
+                        onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK7', e.target.value)}
+                      >
                         <Radio.Button value="0">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK7 && qData.CANCER_QUESTION4.CHECK7 === '0' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="1">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK7 && qData.CANCER_QUESTION4.CHECK7 === '1' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="2">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK7 && qData.CANCER_QUESTION4.CHECK7 === '2' ? 'O': ''}</Radio.Button>
@@ -1276,7 +1677,11 @@ class QuestionnaireView extends Component {
                     <th>폐암</th>
                     <th className="bg-lightgray">흉부CT</th>
                     <td colSpan={4} className="radio-td">
-                      <Radio.Group className="w25" buttonStyle="solid" onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK8', e.target.value)}>
+                      <Radio.Group
+                        className="w25" buttonStyle="solid"
+                        value={qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK8 && qData.CANCER_QUESTION4.CHECK8 ? qData.CANCER_QUESTION4.CHECK8 : ''}
+                        onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK8', e.target.value)}
+                      >
                         <Radio.Button value="0">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK8 && qData.CANCER_QUESTION4.CHECK8 === '0' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="1">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK8 && qData.CANCER_QUESTION4.CHECK8 === '1' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="2">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK8 && qData.CANCER_QUESTION4.CHECK8 === '2' ? 'O': ''}</Radio.Button>
@@ -1298,7 +1703,11 @@ class QuestionnaireView extends Component {
                   </tr>
                   <tr>
                     <td colSpan={4} className="radio-td">
-                      <Radio.Group className="w25" buttonStyle="solid" onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK9', e.target.value)}>
+                      <Radio.Group
+                        className="w25" buttonStyle="solid"
+                        value={qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK9 && qData.CANCER_QUESTION4.CHECK9 ? qData.CANCER_QUESTION4.CHECK9 : ''}
+                        onChange={e => this.onChangeDataTowKey('CANCER_QUESTION4', 'CHECK9', e.target.value)}
+                      >
                         <Radio.Button value="0">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK9 && qData.CANCER_QUESTION4.CHECK9 === '0' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="1">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK9 && qData.CANCER_QUESTION4.CHECK9 === '1' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="2">{qData.CANCER_QUESTION4 && qData.CANCER_QUESTION4.CHECK9 && qData.CANCER_QUESTION4.CHECK9 === '2' ? 'O': ''}</Radio.Button>
@@ -1343,7 +1752,7 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>질환 유무</th>
                     <td colSpan={6} className="radio-td">
-                      <Radio.Group className="w16" buttonStyle="solid" onChange={e => this.onChangeDataOneKey('CANCER_QUESTION5', e.target.value)}>
+                      <Radio.Group className="w16" buttonStyle="solid" value={qData.CANCER_QUESTION5} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION5', e.target.value)}>
                         <Radio.Button value="0">{qData.CANCER_QUESTION5 && qData.CANCER_QUESTION5 === '0' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="1">{qData.CANCER_QUESTION5 && qData.CANCER_QUESTION5 === '1' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="2">{qData.CANCER_QUESTION5 && qData.CANCER_QUESTION5 === '2' ? 'O': ''}</Radio.Button>
@@ -1389,7 +1798,7 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>질환 유무</th>
                     <td colSpan={6} className="radio-td">
-                      <Radio.Group className="w16" buttonStyle="solid" onChange={e => this.onChangeDataOneKey('CANCER_QUESTION6', e.target.value)}>
+                      <Radio.Group className="w16" buttonStyle="solid" value={qData.CANCER_QUESTION6} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION6', e.target.value)}>
                         <Radio.Button value="0">{qData.CANCER_QUESTION6 && qData.CANCER_QUESTION6 === '0' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="1">{qData.CANCER_QUESTION6 && qData.CANCER_QUESTION6 === '1' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="2">{qData.CANCER_QUESTION6 && qData.CANCER_QUESTION6 === '2' ? 'O': ''}</Radio.Button>
@@ -1435,7 +1844,7 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>질환 유무</th>
                     <td colSpan={6} className="radio-td">
-                      <Radio.Group className="w16" buttonStyle="solid" onChange={e => this.onChangeDataOneKey('CANCER_QUESTION7', e.target.value)}>
+                      <Radio.Group className="w16" buttonStyle="solid" value={qData.CANCER_QUESTION7} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION7', e.target.value)}>
                         <Radio.Button value="0">{qData.CANCER_QUESTION7 && qData.CANCER_QUESTION7 === '0' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="1">{qData.CANCER_QUESTION7 && qData.CANCER_QUESTION7 === '1' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="2">{qData.CANCER_QUESTION7 && qData.CANCER_QUESTION7 === '2' ? 'O': ''}</Radio.Button>
@@ -1487,7 +1896,7 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>질환 유무</th>
                     <td colSpan={7} className="radio-td">
-                      <Radio.Group className="w14" buttonStyle="solid" onChange={e => this.onChangeDataOneKey('CANCER_QUESTION8', e.target.value)}>
+                      <Radio.Group className="w14" buttonStyle="solid" value={qData.CANCER_QUESTION8} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION8', e.target.value)}>
                         <Radio.Button value="0">{qData.CANCER_QUESTION8 && qData.CANCER_QUESTION8 === '0' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="1">{qData.CANCER_QUESTION8 && qData.CANCER_QUESTION8 === '1' ? 'O': ''}</Radio.Button>
                         <Radio.Button value="2">{qData.CANCER_QUESTION8 && qData.CANCER_QUESTION8 === '2' ? 'O': ''}</Radio.Button>
@@ -1512,9 +1921,14 @@ class QuestionnaireView extends Component {
                 월경을 언제 시작하셨습니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('CANCER_QUESTION9', e.target.value)}>
+                <Radio.Group value={qData.CANCER_QUESTION9} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION9', e.target.value)}>
                   <Radio value="0">
-                    만 <AntInput className="ant-input-xxs ant-input-inline ml5 mr5" style={{ width: 50 }} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION9_AGE', e.target.value)} /> 세
+                    만 
+                    <AntInput
+                      className="ant-input-xxs ant-input-inline ml5 mr5" style={{ width: 50 }}
+                      value={qData.CANCER_QUESTION9_AGE}
+                      onChange={e => this.onChangeDataOneKey('CANCER_QUESTION9_AGE', e.target.value)}
+                    /> 세
                   </Radio>
                   <Radio value="1">초경이 없었음</Radio>
                 </Radio.Group>
@@ -1527,11 +1941,16 @@ class QuestionnaireView extends Component {
                 현재 월경의 상태는 어떠십니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('CANCER_QUESTION10', e.target.value)}>
+                <Radio.Group value={qData.CANCER_QUESTION10} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION10', e.target.value)}>
                   <Radio value="0">아직 월경이 있음</Radio>
                   <Radio value="1">자궁적축술을 하였음</Radio>
                   <Radio value="2">
-                    폐경되었음 (폐경연령: 만<AntInput className="ant-input-xxs ant-input-inline ml5 mr5" style={{ width: 50 }} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION10_AGE', e.target.value)} /> 세)
+                    폐경되었음 (폐경연령: 만
+                    <AntInput
+                      className="ant-input-xxs ant-input-inline ml5 mr5" style={{ width: 50 }}
+                      value={qData.CANCER_QUESTION10_AGE}
+                      onChange={e => this.onChangeDataOneKey('CANCER_QUESTION10_AGE', e.target.value)}
+                    /> 세)
                   </Radio>
                 </Radio.Group>
               </div>
@@ -1543,7 +1962,7 @@ class QuestionnaireView extends Component {
                 폐경 후 증상을 완화하기 위해서 호르몬 제제를 복용하고 계시거나 과거에 복용하신 적이 있습니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('CANCER_QUESTION11', e.target.value)}>
+                <Radio.Group value={qData.CANCER_QUESTION11} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION11', e.target.value)}>
                   <Radio value="0">호르몬 제제를 복용한 적이 없음</Radio>
                   <Radio value="1">2년 미만 복용</Radio>
                   <Radio value="2">2년 이상~5년 미만 복용</Radio>
@@ -1559,7 +1978,7 @@ class QuestionnaireView extends Component {
                 자녀를 몇 명 출산하셨습니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('CANCER_QUESTION12', e.target.value)}>
+                <Radio.Group value={qData.CANCER_QUESTION12} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION12', e.target.value)}>
                   <Radio value="0">1명</Radio>
                   <Radio value="1">2명 이상</Radio>
                   <Radio value="2">출산한 적 없음</Radio>
@@ -1573,7 +1992,7 @@ class QuestionnaireView extends Component {
                 모유 수유 여부 및 총 수유 기간은?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('CANCER_QUESTION13', e.target.value)}>
+                <Radio.Group value={qData.CANCER_QUESTION13} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION13', e.target.value)}>
                   <Radio value="0">6개월 미만</Radio>
                   <Radio value="1">6개월~1년 미만</Radio>
                   <Radio value="2">1년 이상</Radio>
@@ -1590,7 +2009,7 @@ class QuestionnaireView extends Component {
                 (양성 종양이란 악성 종양인 암이 아닌 기타 물혹, 덩어리 등을 말합니다.)
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('CANCER_QUESTION14', e.target.value)}>
+                <Radio.Group value={qData.CANCER_QUESTION14} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION14', e.target.value)}>
                   <Radio value="0">예</Radio>
                   <Radio value="1">아니오</Radio>
                   <Radio value="2">모르겠음</Radio>
@@ -1604,7 +2023,7 @@ class QuestionnaireView extends Component {
                 피임약을 복용하고 계시거나 과거에 복용한 적이 있습니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('CANCER_QUESTION15', e.target.value)}>
+                <Radio.Group value={qData.CANCER_QUESTION15} onChange={e => this.onChangeDataOneKey('CANCER_QUESTION15', e.target.value)}>
                   <Radio value="0">피임약을 복용한 적 없음</Radio>
                   <Radio value="1">1년 미만 복용</Radio>
                   <Radio value="2">1년 이상 복용</Radio>
@@ -1652,7 +2071,7 @@ class QuestionnaireView extends Component {
                       <span className="num">1.</span>오늘이 몇 월이고, 무슨 요일인지 잘 모른다
                     </td>
                     <td colSpan={3} className="radio-td">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION1', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION1} onChange={e => this.onChangeDataOneKey('OLD_QUESTION1', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION1 && qData.OLD_QUESTION1 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION1 && qData.OLD_QUESTION1 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION1 && qData.OLD_QUESTION1 === '2' ? '2' : ''}</Radio.Button>
@@ -1664,7 +2083,7 @@ class QuestionnaireView extends Component {
                       <span className="num">2.</span>자기가 놔둔 물건을 찾지 못한다
                     </td>
                     <td colSpan={3} className="radio-td">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION2', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION2} onChange={e => this.onChangeDataOneKey('OLD_QUESTION2', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION2 && qData.OLD_QUESTION2 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION2 && qData.OLD_QUESTION2 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION2 && qData.OLD_QUESTION2 === '2' ? '2' : ''}</Radio.Button>
@@ -1676,7 +2095,7 @@ class QuestionnaireView extends Component {
                       <span className="num">3.</span>같은 질문을 반복해서 한다
                     </td>
                     <td colSpan={3} className="radio-td">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION3', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION3} onChange={e => this.onChangeDataOneKey('OLD_QUESTION3', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION3 && qData.OLD_QUESTION3 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION3 && qData.OLD_QUESTION3 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION3 && qData.OLD_QUESTION3 === '2' ? '2' : ''}</Radio.Button>
@@ -1688,7 +2107,7 @@ class QuestionnaireView extends Component {
                       <span className="num">4.</span>약속을 하고서 잊어버린다
                     </td>
                     <td colSpan={3} className="radio-td">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION4', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION4} onChange={e => this.onChangeDataOneKey('OLD_QUESTION4', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION4 && qData.OLD_QUESTION4 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION4 && qData.OLD_QUESTION4 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION4 && qData.OLD_QUESTION4 === '2' ? '2' : ''}</Radio.Button>
@@ -1700,7 +2119,7 @@ class QuestionnaireView extends Component {
                       <span className="num">5.</span>물건을 가지러 갔다가 잊어버리고 그냥 온다
                     </td>
                     <td colSpan={3} className="radio-td">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION5', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION5} onChange={e => this.onChangeDataOneKey('OLD_QUESTION5', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION5 && qData.OLD_QUESTION5 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION5 && qData.OLD_QUESTION5 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION5 && qData.OLD_QUESTION5 === '2' ? '2' : ''}</Radio.Button>
@@ -1712,7 +2131,7 @@ class QuestionnaireView extends Component {
                       <span className="num">6.</span>물건이나 사람의 이름을 대기가 힘들어 머뭇거린다
                     </td>
                     <td colSpan={3} className="radio-td">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION6', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION6} onChange={e => this.onChangeDataOneKey('OLD_QUESTION6', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION6 && qData.OLD_QUESTION6 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION6 && qData.OLD_QUESTION6 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION6 && qData.OLD_QUESTION6 === '2' ? '2' : ''}</Radio.Button>
@@ -1724,7 +2143,7 @@ class QuestionnaireView extends Component {
                       <span className="num">7.</span>대화 중 내용이 이해되지 않아 반복해서 물어본다
                     </td>
                     <td colSpan={3} className="radio-td">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION7', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION7} onChange={e => this.onChangeDataOneKey('OLD_QUESTION7', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION7 && qData.OLD_QUESTION7 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION7 && qData.OLD_QUESTION7 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION7 && qData.OLD_QUESTION7 === '2' ? '2' : ''}</Radio.Button>
@@ -1736,7 +2155,7 @@ class QuestionnaireView extends Component {
                       <span className="num">8.</span>길을 잃거나 헤맨 적이 있다
                     </td>
                     <td colSpan={3} className="radio-td">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION8', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION8} onChange={e => this.onChangeDataOneKey('OLD_QUESTION8', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION8 && qData.OLD_QUESTION8 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION8 && qData.OLD_QUESTION8 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION8 && qData.OLD_QUESTION8 === '2' ? '2' : ''}</Radio.Button>
@@ -1750,7 +2169,7 @@ class QuestionnaireView extends Component {
                       (예: 물건값이나 거스름돈 계산을 못한다)
                     </td>
                     <td colSpan={3} className="radio-td td-2rows">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION9', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION9} onChange={e => this.onChangeDataOneKey('OLD_QUESTION9', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION9 && qData.OLD_QUESTION9 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION9 && qData.OLD_QUESTION9 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION9 && qData.OLD_QUESTION9 === '2' ? '2' : ''}</Radio.Button>
@@ -1762,7 +2181,7 @@ class QuestionnaireView extends Component {
                       <span className="num">10.</span>예전에 비해 성격이 변했다
                     </td>
                     <td colSpan={3} className="radio-td">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION10', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION10} onChange={e => this.onChangeDataOneKey('OLD_QUESTION10', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION10 && qData.OLD_QUESTION10 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION10 && qData.OLD_QUESTION10 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION10 && qData.OLD_QUESTION10 === '2' ? '2' : ''}</Radio.Button>
@@ -1775,7 +2194,7 @@ class QuestionnaireView extends Component {
                       (세탁기, 전기밥솥, 경운기 등)
                     </td>
                     <td colSpan={3} className="radio-td td-2rows">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION11', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION11} onChange={e => this.onChangeDataOneKey('OLD_QUESTION11', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION11 && qData.OLD_QUESTION11 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION11 && qData.OLD_QUESTION11 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION11 && qData.OLD_QUESTION11 === '2' ? '2' : ''}</Radio.Button>
@@ -1787,7 +2206,7 @@ class QuestionnaireView extends Component {
                       <span className="num">12.</span>예전에 비해 방이나 집안의 정리정돈을 하지 못한다
                     </td>
                     <td colSpan={3} className="radio-td">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION12', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION12} onChange={e => this.onChangeDataOneKey('OLD_QUESTION12', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION12 && qData.OLD_QUESTION12 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION12 && qData.OLD_QUESTION12 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION12 && qData.OLD_QUESTION12 === '2' ? '2' : ''}</Radio.Button>
@@ -1799,7 +2218,7 @@ class QuestionnaireView extends Component {
                       <span className="num">13.</span>상황에 맞게 스스로 옷을 선택하여 입지 못한다
                     </td>
                     <td colSpan={3} className="radio-td">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION13', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION13} onChange={e => this.onChangeDataOneKey('OLD_QUESTION13', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION13 && qData.OLD_QUESTION13 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION13 && qData.OLD_QUESTION13 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION13 && qData.OLD_QUESTION13 === '2' ? '2' : ''}</Radio.Button>
@@ -1813,7 +2232,7 @@ class QuestionnaireView extends Component {
                       (신체적인 문제(관절염)로 인한 것은 제외됨)
                     </td>
                     <td colSpan={3} className="radio-td td-2rows">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION14', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION14} onChange={e => this.onChangeDataOneKey('OLD_QUESTION14', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION14 && qData.OLD_QUESTION14 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION14 && qData.OLD_QUESTION14 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION14 && qData.OLD_QUESTION14 === '2' ? '2' : ''}</Radio.Button>
@@ -1825,7 +2244,7 @@ class QuestionnaireView extends Component {
                       <span className="num">15.</span>내복이나 옷이 더러워져도 갈아입지 않으려고 한다
                     </td>
                     <td colSpan={3} className="radio-td">
-                      <Radio.Group buttonStyle="solid" className="w33" onChange={e => this.onChangeDataOneKey('OLD_QUESTION15', e.target.value)}>
+                      <Radio.Group buttonStyle="solid" className="w33" value={qData.OLD_QUESTION15} onChange={e => this.onChangeDataOneKey('OLD_QUESTION15', e.target.value)}>
                         <Radio.Button value="0">{qData.OLD_QUESTION15 && qData.OLD_QUESTION15 === '0' ? '0' : ''}</Radio.Button>
                         <Radio.Button value="1">{qData.OLD_QUESTION15 && qData.OLD_QUESTION15 === '1' ? '1' : ''}</Radio.Button>
                         <Radio.Button value="2">{qData.OLD_QUESTION15 && qData.OLD_QUESTION15 === '2' ? '2' : ''}</Radio.Button>
@@ -1846,7 +2265,7 @@ class QuestionnaireView extends Component {
                 인플루엔자(독감) 예방접종을 매년 하십니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('VACCINATION_QUESTION1', e.target.value)}>
+                <Radio.Group value={qData.VACCINATION_QUESTION1} onChange={e => this.onChangeDataOneKey('VACCINATION_QUESTION1', e.target.value)}>
                   <Radio value="Y">예</Radio>
                   <Radio value="N">아니오</Radio>
                 </Radio.Group>
@@ -1859,7 +2278,7 @@ class QuestionnaireView extends Component {
                 폐렴 예방접종을 받으셨습니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('VACCINATION_QUESTION2', e.target.value)}>
+                <Radio.Group value={qData.VACCINATION_QUESTION2} onChange={e => this.onChangeDataOneKey('VACCINATION_QUESTION2', e.target.value)}>
                   <Radio value="Y">예</Radio>
                   <Radio value="N">아니오</Radio>
                 </Radio.Group>
@@ -1877,7 +2296,7 @@ class QuestionnaireView extends Component {
                 음식을 차려 주면 남의 도움 없이 혼자서 식사하십니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('LIFE_QUESTION1', e.target.value)}>
+                <Radio.Group value={qData.LIFE_QUESTION1} onChange={e => this.onChangeDataOneKey('LIFE_QUESTION1', e.target.value)}>
                   <Radio value="Y">예</Radio>
                   <Radio value="N">아니오</Radio>
                 </Radio.Group>
@@ -1890,7 +2309,7 @@ class QuestionnaireView extends Component {
                 옷을 챙겨 입을 때 남의 도움 없이 혼자서 하십니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('LIFE_QUESTION2', e.target.value)}>
+                <Radio.Group value={qData.LIFE_QUESTION2} onChange={e => this.onChangeDataOneKey('LIFE_QUESTION2', e.target.value)}>
                   <Radio value="Y">예</Radio>
                   <Radio value="N">아니오</Radio>
                 </Radio.Group>
@@ -1903,7 +2322,7 @@ class QuestionnaireView extends Component {
                 대소변을 보기 위해 화장실 출입할 때 남의 도움없이 혼자서 하십니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('LIFE_QUESTION3', e.target.value)}>
+                <Radio.Group value={qData.LIFE_QUESTION3} onChange={e => this.onChangeDataOneKey('LIFE_QUESTION3', e.target.value)}>
                   <Radio value="Y">예</Radio>
                   <Radio value="N">아니오</Radio>
                 </Radio.Group>
@@ -1916,7 +2335,7 @@ class QuestionnaireView extends Component {
                 목욕하실 때 남의 도움 없이 혼자서 하십니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('LIFE_QUESTION4', e.target.value)}>
+                <Radio.Group value={qData.LIFE_QUESTION4} onChange={e => this.onChangeDataOneKey('LIFE_QUESTION4', e.target.value)}>
                   <Radio value="Y">예</Radio>
                   <Radio value="N">아니오</Radio>
                 </Radio.Group>
@@ -1929,7 +2348,7 @@ class QuestionnaireView extends Component {
                 식사 준비를 다른 사람의 도움 없이 혼자서 하십니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('LIFE_QUESTION5', e.target.value)}>
+                <Radio.Group value={qData.LIFE_QUESTION5} onChange={e => this.onChangeDataOneKey('LIFE_QUESTION5', e.target.value)}>
                   <Radio value="Y">예</Radio>
                   <Radio value="N">아니오</Radio>
                 </Radio.Group>
@@ -1942,7 +2361,7 @@ class QuestionnaireView extends Component {
                 상점, 이웃, 병원, 관공서 등 걸어서 갔다 올 수 있는 곳의 외출을 다른 사람의 도움 없이 혼자서 하십니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('LIFE_QUESTION6', e.target.value)}>
+                <Radio.Group value={qData.LIFE_QUESTION6} onChange={e => this.onChangeDataOneKey('LIFE_QUESTION6', e.target.value)}>
                   <Radio value="Y">예</Radio>
                   <Radio value="N">아니오</Radio>
                 </Radio.Group>
@@ -1959,7 +2378,7 @@ class QuestionnaireView extends Component {
                 낙상에 관한 질문입니다. 지난 6개월간 넘어진 적이 있습니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('FALL_QUESTION1', e.target.value)}>
+                <Radio.Group value={qData.FALL_QUESTION1} onChange={e => this.onChangeDataOneKey('FALL_QUESTION1', e.target.value)}>
                   <Radio value="Y">예</Radio>
                   <Radio value="N">아니오</Radio>
                 </Radio.Group>
@@ -1972,7 +2391,7 @@ class QuestionnaireView extends Component {
                 배뇨장애, 소변을 보는데 장애가 있거나 소변을 지릴 경우가 있습니까?
               </p>
               <div className="question-article">
-                <Radio.Group onChange={e => this.onChangeDataOneKey('FALL_QUESTION2', e.target.value)}>
+                <Radio.Group value={qData.FALL_QUESTION2} onChange={e => this.onChangeDataOneKey('FALL_QUESTION2', e.target.value)}>
                   <Radio value="Y">예</Radio>
                   <Radio value="N">아니오</Radio>
                 </Radio.Group>
@@ -1983,10 +2402,8 @@ class QuestionnaireView extends Component {
           {/* examination-area */}
         </StyledContentsWrapper>
         <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-          <StyledButton className="btn-light mr5" onClick={this.props.onCancelPopup}>
-            닫기
-          </StyledButton>
-          <StyledButton className="btn-primary">저장</StyledButton>
+          <StyledButton className="btn-light mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
+          <StyledButton className="btn-primary" onClick={this.onSave}>{saveType === 'I' ? '등록' : '저장'}</StyledButton>
         </StyledButtonWrapper>
       </Styled>
     );

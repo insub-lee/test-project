@@ -26,6 +26,8 @@ class Reservation extends Component {
   };
 
   render() {
+    const { profile } = this.props;
+    console.debug('profile >> ', profile);
     return (
       <>
         <AntdModal
@@ -54,9 +56,9 @@ class Reservation extends Component {
               <tbody>
                 <tr>
                   <th>사번</th>
-                  <td>123123</td>
+                  <td>{profile.EMP_NO}</td>
                   <th>이름</th>
-                  <td>홍길동</td>
+                  <td>{profile.NAME_KOR}</td>
                   <td colSpan={4}>
                     <StyledButton className="btn-sm btn-gray" onClick={this.onClickQuestionnaire}>
                       문진표 작성
@@ -69,9 +71,9 @@ class Reservation extends Component {
                   <th>검진차수</th>
                   <td>1차</td>
                   <th>검진기관</th>
-                  <td>하나병원</td>
+                  <td></td>
                   <th>검진예약일</th>
-                  <td>2020-05-06</td>
+                  <td></td>
                 </tr>
               </tbody>
             </table>
