@@ -10,7 +10,7 @@ import * as actions from './actions';
 import * as selectors from './selectors';
 
 function* getApproveList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/approveList`, {});
+  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/approveList`, { PARAM: { REL_TYPE: 1 } });
   if (response) {
     const { list } = response;
     yield put(actions.setApproveList(list));
@@ -42,7 +42,7 @@ function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
 }
 
 function* getUnApproveList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/unApproveList`, {});
+  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/unApproveList`, { PARAM: { REL_TYPE: 1 } });
   if (response) {
     const { list } = response;
     yield put(actions.setUnApproveList(list));
