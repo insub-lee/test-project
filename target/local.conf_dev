@@ -127,7 +127,8 @@
     }
     location ~ ^(/api/common/v1/migration) {
             proxy_pass  http://portal-migration;
-            proxy_connect_timeout 60;
+            #proxy_connect_timeout 1800;
+            proxy_read_timeout      1800; # default 60
             proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
             proxy_set_header     user_agent $http_user_agent;
@@ -190,7 +191,8 @@
     }
     location ~ ^(/api/migration/v1/common/) {
             proxy_pass  http://migration-common;
-            proxy_connect_timeout 10;
+            #proxy_connect_timeout 1800;
+            proxy_read_timeout      1800; # default 60
             proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
             proxy_set_header     user_agent $http_user_agent;
@@ -273,9 +275,9 @@
     }
 
 
-    error_page  404         = @notfound;
-    error_page  500 502 504 = @server_error;
-    error_page  503         = @maintenance;
+    #error_page  404         = @notfound;
+    #error_page  500 502 504 = @server_error;
+    #error_page  503         = @maintenance;
 
     location @notfound {
             root  C:/Users/goodrhys/git/neo-intelligence-flow-ui/build;
