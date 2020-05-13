@@ -1,13 +1,16 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, Button, Modal, Table } from 'antd';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+
 const AntdTable = StyledAntdTable(Table);
+const AntdModal = StyledModal(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
 
 class ModalTableComp extends React.Component {
@@ -191,7 +194,7 @@ class ModalTableComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, colData, readOnly, customListColdataFlag } = this.props;
+    const { CONFIG, visible, colData, readOnly, customListColdataFlag, NAME_KOR, COMP_FIELD } = this.props;
     const { customColData } = this.state;
     return visible ? (
       <>
@@ -207,17 +210,9 @@ class ModalTableComp extends React.Component {
               onSearch={this.handleModalVisible}
               style={{ width: '100%' }}
             />
-            {/* <Input
-              value={customListColdataFlag ? customColData : colData}
-              readOnly
-              className={CONFIG.property.className || ''}
-              style={{ width: 150 }}
-              onClick={this.handleModalVisible}
-            />
-            <Button shape="circle" icon="search" onClick={this.handleModalVisible} /> */}
-            <Modal visible={this.state.modal} width={800} onCancel={this.handleModalVisible} footer={[]}>
+            <AntdModal title={NAME_KOR || COMP_FIELD} visible={this.state.modal} width={800} onCancel={this.handleModalVisible} footer={[]}>
               {this.state.modal && this.modalTableRender()}
-            </Modal>
+            </AntdModal>
           </>
         )}
       </>
@@ -230,6 +225,7 @@ class ModalTableComp extends React.Component {
 ModalTableComp.propTypes = {
   CONFIG: PropTypes.any,
   COMP_FIELD: PropTypes.string,
+  NAME_KOR: PropTypes.string,
   colData: PropTypes.string,
   sagaKey: PropTypes.string,
   visible: PropTypes.bool,
