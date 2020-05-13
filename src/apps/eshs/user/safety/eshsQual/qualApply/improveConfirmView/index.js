@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import BizBuilderBase from 'components/BizBuilderBase';
-import CustomInput from 'apps/eshs/user/safety/eshsQual/qualApply/confirmRequest/pages/CustomInput';
-import CustomModify from 'apps/eshs/user/safety/eshsQual/qualApply/confirmRequest/pages/CustomModify';
 
-class ConfirmRequest extends Component {
+class ImproveConfrimView extends Component {
   constructor(props) {
     super(props);
 
@@ -25,22 +23,20 @@ class ConfirmRequest extends Component {
     return (
       <>
         <BizBuilderBase
-          CustomInputPage={CustomInput}
-          CustomModifyPage={CustomModify}
           sagaKey={sagaKey}
           workSeq={6821}
-          viewType="INPUT"
+          modifyMetaSeq={6843}
+          viewType="VIEW"
           loadingComplete={this.loadingComplete}
-          InputCustomButtons={() => null}
-          ModifyCustomButtons={() => null}
+          ViewCustomButtons={() => null}
         />
       </>
     );
   }
 }
 
-ConfirmRequest.defaultProps = {
-  sagaKey: 'ConfirmRequest',
+ImproveConfrimView.defaultProps = {
+  sagaKey: 'ImproveConfrimView',
 };
 
-export default ConfirmRequest;
+export default ImproveConfrimView;
