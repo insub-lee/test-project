@@ -84,7 +84,14 @@ class List extends Component {
   };
 
   renderBuilder = () => (
-    <BizBuilderBase sagaKey="takeOutModal" workSeq={4781} taskSeq={this.state.taskSeq} viewType="VIEW" loadingComplete={this.loadingComplete} />
+    <BizBuilderBase
+      sagaKey="takeOutModal"
+      workSeq={4781}
+      taskSeq={this.state.taskSeq}
+      viewType="VIEW"
+      loadingComplete={this.loadingComplete}
+      ViewCustomButtons={() => null}
+    />
   );
 
   selectedItemRecord = record => {

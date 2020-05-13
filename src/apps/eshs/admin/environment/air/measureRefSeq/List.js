@@ -8,7 +8,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledModalWrapper from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StackStatus from 'apps/eshs/admin/environment/air/stack/stackStatus';
 
@@ -16,7 +16,7 @@ import Moment from 'moment';
 import Graph from './Graph';
 
 const AntdSelect = StyledSelect(Select);
-const AntdInput = StyledInput(Input);
+const AntdSearch = StyledSearchInput(Input);
 const AntdModal = StyledModalWrapper(Modal);
 
 const { Option } = Select;
@@ -29,7 +29,7 @@ class List extends Component {
     this.state = {
       measureList: [],
       dateStrings: Moment().format('YYYY-MM'),
-      rangeDateStrings: [Moment().format('YYYY-MM'), Moment().format('YYYY-MM')],
+      rangeDateStrings: [Moment(Moment().subtract(1, 'years')).format('YYYY-MM'), Moment().format('YYYY-MM')],
       seq: 1,
       selectGubun: 1,
       isModal: false,
@@ -61,10 +61,7 @@ class List extends Component {
   initData = () => {
     const { result } = this.props;
     const gasList = result && result.gasType && result.gasType.list;
-    const gasColor = gasList
-      .map(item => ({ [item.GAS_CD]: `#${Math.floor(Math.random() * 16777215).toString(16)}` }))
-      .reduce((resultColor, item) => ({ ...resultColor, ...item }), {});
-    this.setState({ gasList, gasColor });
+    this.setState({ gasList });
   };
 
   isSearch = () => {
@@ -145,7 +142,7 @@ class List extends Component {
   };
 
   render() {
-    const { measureList, gasList, selectGubun, gasColor } = this.state;
+    const { measureList, gasList, selectGubun, rangeDateStrings } = this.state;
     const { refStack } = this.props;
 
     return (
@@ -163,9 +160,8 @@ class List extends Component {
           <div style={{ margin: '0 5px', display: 'inline-block' }}>
             {refStack ? (
               <RangePicker
-                defaultValue={[Moment(Moment(), 'YYYY-MM'), Moment(Moment(), 'YYYY-MM')]}
-                // mode="month"
-                picker="month"
+                defaultValue={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
+                mode={['month', 'month']}
                 format={['YYYY-MM', 'YYYY-MM']}
                 onChange={(date, dateStrings) => this.rangeDateChange(dateStrings)}
               />
@@ -174,16 +170,16 @@ class List extends Component {
             )}
           </div>
           <span className="textLabel">측정회차(월)</span>
-          <AntdSelect className="select-mid mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
+          <AntdSelect style={{ width: 100 }} className="select-mid mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
             <Option value={1} key="seq">
-              1
+              1 회차
             </Option>
             <Option value={2} key="seq">
-              2
+              2 회차
             </Option>
           </AntdSelect>
           {refStack ? (
-            <AntdInput style={{ width: 200 }} className="input-mid ant-input-inline mr5" value={this.state.stackCd} readOnly onClick={this.onChangeModal} />
+            <AntdSearch style={{ width: 200 }} className="input-mid ant-input-inline mr5" value={this.state.stackCd} readOnly onClick={this.onChangeModal} />
           ) : (
             ''
           )}
@@ -260,11 +256,15 @@ class List extends Component {
           ''
         )}
         <StyledHtmlTable className="tableWrapper">
-          <Graph graphData={measureList} gasList={gasList} gasColor={gasColor} selectGubun={selectGubun} refStack={refStack} />
+          <Graph graphData={measureList} gasList={gasList} selectGubun={selectGubun} refStack={refStack} />
         </StyledHtmlTable>
-        <AntdModal width={800} visible={this.state.isModal} title="Stack 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
-          <StackStatus customOnRowClick={this.customOnRowClick} />
-        </AntdModal>
+        {refStack ? (
+          <AntdModal width={800} visible={this.state.isModal} title="Stack 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
+            <StackStatus customOnRowClick={this.customOnRowClick} />
+          </AntdModal>
+        ) : (
+          ''
+        )}
       </StyledContentsWrapper>
     );
   }
