@@ -9,12 +9,12 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 const AntdModal = StyledContentsModal(Modal);
 // eslint-disable-next-line react/prefer-stateless-function
-class ValidationView extends Component {
+class ApproveView extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      selectedValue: 1,
+      selectedValue: 2,
       workProcess: {},
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
     };
@@ -27,22 +27,29 @@ class ValidationView extends Component {
   }
 
   initProcessData = (sagaKey, response) => {
-    const { WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ, TITLE } = this.props;
+    const { WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ, TITLE, selectedRow, setSelectedRow } = this.props;
+    const { selectedValue } = this.state;
+    const nSelectRow = { ...selectedRow, APPV_STATUS: selectedValue };
+    setSelectedRow(nSelectRow);
     const draftData = { WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ };
     const { DRAFT_PROCESS } = response;
     const tProc = { ...DRAFT_PROCESS, DRAFT_DATA: draftData, REL_TYPE: 2, WORK_SEQ, TASK_SEQ, DRAFT_TITLE: TITLE };
-    console.debug(tProc);
     this.setState({ workProcess: { DRAFT_PROCESS: tProc } });
   };
 
   onSelectRadio = e => {
+    const { selectedRow, setSelectedRow } = this.props;
+    const nSelectRow = { ...selectedRow, APPV_STATUS: e.target.value };
+    setSelectedRow(nSelectRow);
     this.setState({ selectedValue: e.target.value });
   };
 
-  onClickEvent = () => {
-    const { onValidateProcess, WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ } = this.props;
-    const { selectedValue, workProcess } = this.state;
-    onValidateProcess(selectedValue, workProcess, WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ);
+  onClickEvent = e => {
+    e.preventDefault();
+    const { selectedValue } = this.state;
+    const { onModalClose, reqApprove } = this.props;
+    reqApprove(selectedValue);
+    onModalClose();
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
@@ -64,7 +71,6 @@ class ValidationView extends Component {
   render() {
     const { WORK_SEQ, TASK_SEQ, onModalClose } = this.props;
     const { selectedValue, coverView } = this.state;
-
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -74,9 +80,8 @@ class ValidationView extends Component {
                 <th style={{ width: '150px' }}>유효성 점검 </th>
                 <td>
                   <Radio.Group defaultValue={selectedValue} onChange={this.onSelectRadio}>
-                    <Radio value={1}>유효</Radio>
-                    <Radio value={2}>개정</Radio>
-                    <Radio value={3}>폐기</Radio>
+                    <Radio value={2}>유효</Radio>
+                    <Radio value={9}>부결</Radio>
                   </Radio.Group>
                 </td>
               </tr>
@@ -130,13 +135,13 @@ class ValidationView extends Component {
   }
 }
 
-ValidationView.propTypes = {
+ApproveView.propTypes = {
   onModalClose: PropTypes.func,
 };
 
-ValidationView.defaultProps = {
+ApproveView.defaultProps = {
   selectedValue: 1,
   onModalClose: () => false,
 };
 
-export default ValidationView;
+export default ApproveView;

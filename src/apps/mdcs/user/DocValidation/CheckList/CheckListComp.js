@@ -114,6 +114,7 @@ class CheckListComp extends Component {
             TASK_ORIGIN_SEQ={taskOrginSeq}
             TITLE={title}
             onValidateProcess={this.onValidateProcess}
+            onModalClose={this.onModalClose}
           />
         </AntdModal>
       </ContentsWrapper>

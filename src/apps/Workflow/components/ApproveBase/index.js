@@ -82,7 +82,7 @@ const mapDispatchToProps = dispatch => ({
   getApproveList: () => dispatch(actions.getApproveList()),
   getUnApproveList: () => dispatch(actions.getUnApproveList()),
   getDraftList: () => dispatch(actions.getDraftList()),
-  getCustomDataBind: (rtnUrl, param) => dispatch(actions.getCustomDataBind(rtnUrl, param)),
+  getCustomDataBind: (httpMethod, rtnUrl, param) => dispatch(actions.getCustomDataBind(httpMethod, rtnUrl, param)),
   submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
     dispatch(actions.submitHandlerBySaga(id, httpMethod, apiUrl, submitData, callbackFunc)),
   setSelectedRow: row => dispatch(actions.setSelectedRow(row)),
