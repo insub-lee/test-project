@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 const StyledButtonWrapper = styled.div`
-
   &.btn-wrap-inline {
     display: inline-block;
     width: auto;
