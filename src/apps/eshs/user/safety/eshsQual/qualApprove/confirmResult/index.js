@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import BizBuilderBase from 'components/BizBuilderBase';
-import CustomInput from 'apps/eshs/user/safety/eshsQual/qualApply/confirmRequest/pages/CustomInput';
-import CustomModify from 'apps/eshs/user/safety/eshsQual/qualApply/confirmRequest/pages/CustomModify';
+import CustomModify from 'apps/eshs/user/safety/eshsQual/qualApprove/confirmResult/pages/CustomModify';
 
-class ConfirmRequest extends Component {
+class ConfirmResult extends Component {
   constructor(props) {
     super(props);
 
@@ -21,17 +20,17 @@ class ConfirmRequest extends Component {
   componentDidMount() {}
 
   render() {
-    const { sagaKey } = this.props;
+    const { sagaKey, taskSeq } = this.props;
     return (
       <>
         <BizBuilderBase
-          CustomInputPage={CustomInput}
-          CustomModifyPage={CustomModify}
           sagaKey={sagaKey}
           workSeq={6821}
-          viewType="INPUT"
+          taskSeq={taskSeq}
+          modifyMetaSeq={7041}
+          viewType="MODIFY"
+          CustomModifyPage={CustomModify}
           loadingComplete={this.loadingComplete}
-          InputCustomButtons={() => null}
           ModifyCustomButtons={() => null}
         />
       </>
@@ -39,8 +38,9 @@ class ConfirmRequest extends Component {
   }
 }
 
-ConfirmRequest.defaultProps = {
-  sagaKey: 'ConfirmRequest',
+ConfirmResult.defaultProps = {
+  sagaKey: 'ConfirmResult',
+  taskSeq: -1,
 };
 
-export default ConfirmRequest;
+export default ConfirmResult;

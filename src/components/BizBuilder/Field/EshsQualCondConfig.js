@@ -53,6 +53,7 @@ class EshsCondConfig extends Component {
             <Option value="INPUT">INPUT</Option>
             <Option value="VIEW">VIEW</Option>
             <Option value="CHECK">CHECK</Option>
+            <Option value="CHECK_VIEW">CHECK[VIEW]</Option>
           </Select>
         </div>
       </>
