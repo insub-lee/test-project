@@ -3,7 +3,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import CustomInput from 'apps/eshs/user/safety/eshsQual/qualApply/confirmRequest/pages/CustomInput';
 import CustomModify from 'apps/eshs/user/safety/eshsQual/qualApply/confirmRequest/pages/CustomModify';
 
-class ConfirmRequest extends Component {
+class InterLockRequest extends Component {
   constructor(props) {
     super(props);
 
@@ -29,6 +29,8 @@ class ConfirmRequest extends Component {
           CustomModifyPage={CustomModify}
           sagaKey={sagaKey}
           workSeq={6821}
+          inputMetaSeq={7421}
+          // modifyMetaSeq={7161}
           viewType="INPUT"
           loadingComplete={this.loadingComplete}
           InputCustomButtons={() => null}
@@ -39,8 +41,8 @@ class ConfirmRequest extends Component {
   }
 }
 
-ConfirmRequest.defaultProps = {
-  sagaKey: 'ConfirmRequest',
+InterLockRequest.defaultProps = {
+  sagaKey: 'InterLockRequest',
 };
 
-export default ConfirmRequest;
+export default InterLockRequest;
