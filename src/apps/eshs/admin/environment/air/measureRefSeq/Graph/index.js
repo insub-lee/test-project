@@ -33,30 +33,34 @@ class Graph extends Component {
   };
 
   render() {
-    const { graphData, gasList, gasColor, selectGubun, refStack } = this.props;
+    const { graphData, gasList, selectGubun, refStack } = this.props;
     const graphList = graphData && graphData.map(gasData => gasData && gasData.GAS && gasData.GAS.map(item => JSON.parse(item.value)));
     let barData;
     if (selectGubun === 2) {
-      barData = graphList.map(temps =>
-        temps.map(element => ({
-          name: element[refStack ? 'MEASURE_DT' : 'STACK_CD'],
-          [element.GAS_CD]: this.calculate(element.GAS_CD, element.HOUR_FLOW, element.DENSITY, element.WORK_DAY, element.GAS_WEIGHT),
-        })),
-      );
+      barData =
+        graphList &&
+        graphList.map(temps =>
+          temps.map(element => ({
+            name: element[refStack ? 'MEASURE_DT' : 'STACK_CD'],
+            [element.GAS_CD]: this.calculate(element.GAS_CD, element.HOUR_FLOW, element.DENSITY, element.WORK_DAY, element.GAS_WEIGHT),
+          })),
+        );
     } else {
-      barData = graphList.map(temps =>
-        temps.map(element => ({
-          name: element[refStack ? 'MEASURE_DT' : 'STACK_CD'],
-          [element.GAS_CD]: element.DENSITY || 0,
-        })),
-      );
+      barData =
+        graphList &&
+        graphList.map(temps =>
+          temps.map(element => ({
+            name: element[refStack ? 'MEASURE_DT' : 'STACK_CD'],
+            [element.GAS_CD]: element.DENSITY || 0,
+          })),
+        );
     }
 
     return (
       <BarChart
         width={1200}
         height={600}
-        data={barData.map(i => i.reduce((result, item) => ({ ...result, ...item }), {}))}
+        data={barData && barData.map(i => i.reduce((result, item) => ({ ...result, ...item }), {}))}
         margin={{
           top: 5,
           right: 30,
@@ -69,7 +73,8 @@ class Graph extends Component {
         <YAxis />
         <Tooltip />
         <Legend />
-        {gasList && gasList.map(item => <Bar dataKey={item.GAS_CD} stackId="a" fill={gasColor[item.GAS_CD]} />)}
+        {gasList &&
+          gasList.map((item, index) => <Bar dataKey={item.GAS_CD} stackId="a" fill={`#${Math.floor(((index + 10) / 100) * 16777215).toString(16)}`} />)}
       </BarChart>
     );
   }
@@ -78,7 +83,6 @@ class Graph extends Component {
 Graph.propTypes = {
   gasList: PropTypes.array,
   graphData: PropTypes.array,
-  gasColor: PropTypes.array,
   selectGubun: PropTypes.number,
   refStack: PropTypes.bool,
 };

@@ -131,8 +131,8 @@ class IntroComponent extends Component {
                   </li>
                   {selectedDraft === DraftType.ENACTMENT && <Enactment {...this.props} onShowModal={this.onShowModalEnactment} />}
                   {selectedDraft === DraftType.AMENDMENT && <Amendment {...this.props} onShowModal={this.onShowModalAmendment} />}
-                  {selectedDraft === DraftType.ABROGATION && <Abrogation />}
-                  {selectedDraft === 'ABROGATION_MULTI' && <AbrogationMulti />}
+                  {selectedDraft === DraftType.ABROGATION && <Abrogation {...this.props} />}
+                  {selectedDraft === 'ABROGATION_MULTI' && <AbrogationMulti {...this.props} />}
                 </ul>
               </div>
             </div>

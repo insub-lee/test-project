@@ -1,12 +1,13 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, Modal } from 'antd';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import BizBuilderBase from 'components/BizBuilderBase';
 import CustomList from 'apps/eshs/admin/environment/air/stack/List';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import StyledModal from 'commonStyled/Modal/StyledModal';
+
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdModal = StyledModal(Modal);
@@ -81,7 +82,7 @@ class CommonSearchbar extends React.Component {
         listMetaSeq={property.listMetaSeq || undefined}
         viewType="LIST"
         loadingComplete={this.props.loadingComplete}
-        isModalChange={this.isModalChange}
+        customOnRowClick={this.isModalChange}
       />
     );
   };
@@ -104,7 +105,7 @@ class CommonSearchbar extends React.Component {
         break;
       case 'MODIFY':
         buttonGruop = (
-          <>
+          <StyledButtonWrapper className="btn-wrap-inline btn-wrap-ml-5">
             <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('M')}>
               저장
             </StyledButton>
@@ -117,7 +118,7 @@ class CommonSearchbar extends React.Component {
             <StyledButton className="btn-primary btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
-          </>
+          </StyledButtonWrapper>
         );
         break;
       default:

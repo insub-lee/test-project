@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BizBuilderBase from 'components/BizBuilderBase';
-import CustomInput from 'apps/eshs/user/safety/eshsQual/qualApply/confirmRequest/pages/CustomInput';
-import CustomModify from 'apps/eshs/user/safety/eshsQual/qualApply/confirmRequest/pages/CustomModify';
+import CustomInput from 'apps/eshs/user/safety/eshsQual/qualApply/interLockRequest/pages/CustomInput';
+import CustomModify from 'apps/eshs/user/safety/eshsQual/qualApply/interLockRequest/pages/CustomModify';
 
 class InterLockRequest extends Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class InterLockRequest extends Component {
           sagaKey={sagaKey}
           workSeq={6821}
           inputMetaSeq={7421}
-          // modifyMetaSeq={7161}
+          modifyMetaSeq={7501}
           viewType="INPUT"
           loadingComplete={this.loadingComplete}
           InputCustomButtons={() => null}
