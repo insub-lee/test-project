@@ -1,8 +1,8 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, InputNumber } from 'antd';
-import TableTypeSelector from '../../TableTypeSelector';
-import MsdsIngredientCompStyled from '../styled/compStyled/MsdsIngredientCompStyled';
+import TableTypeSelector from 'components/TableTypeSelector';
+import MsdsIngredientCompStyled from 'components/BizBuilder/styled/compStyled/MsdsIngredientCompStyled';
 
 class TakeOutCustomComp extends React.Component {
   constructor(props) {
