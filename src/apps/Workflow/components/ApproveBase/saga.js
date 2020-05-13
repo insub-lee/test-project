@@ -34,6 +34,7 @@ function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
       httpMethodInfo = Axios.get;
       break;
   }
+  console.debug(param);
   const response = yield call(httpMethodInfo, `${rtnUrl}`, param);
   if (response) {
     const { list } = response;
