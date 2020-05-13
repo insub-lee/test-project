@@ -445,6 +445,50 @@ class EshsQualHeaderComp extends Component {
         </>
       );
     }
+    if (HeaderType === 'INTERLOCT_REQUEST') {
+      return (
+        <>
+          <StyledButtonWrapper className="btn-wrap-left btn-wrap-mb-10">
+            <AntdSearch
+              value={REQ_CD || ''}
+              style={{ width: '150px' }}
+              readOnly
+              onClick={this.handleModalVisible}
+              onSearch={this.handleModalVisible}
+              className="ant-search-inline input-search-mid mr5"
+            />
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+              검색
+            </StyledButton>
+            {viewType === 'INPUT' && (
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
+                저장
+              </StyledButton>
+            )}
+            {taskSeq !== -1 && REQ_STATUS === '1' && (
+              <>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
+                  저장
+                </StyledButton>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('CONFIRM_LINE')}>
+                  결제선지정
+                </StyledButton>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('상신')}>
+                  상신
+                </StyledButton>
+                <Popconfirm title="정말 삭제하시겠습니까?" onConfirm={() => this.handleAction('DELETE')} okText="확인" cancelText="취소">
+                  <StyledButton className="btn-primary btn-sm">삭제</StyledButton>
+                </Popconfirm>
+              </>
+            )}
+          </StyledButtonWrapper>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1000} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+            {searchList}
+          </AntdModal>
+        </>
+      );
+    }
+
     return '';
   }
 }

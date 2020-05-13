@@ -33,6 +33,8 @@ class EshsQualHeaderConfig extends Component {
             <Option value="CONFIRM_RESULT">점검 결과</Option>
             <Option value="IMPROVE_RESULT">개선항목 관리</Option>
             <Option value="CONFIRM_VIEW">개선결과 조회</Option>
+            <Option value="INTERLOCT_REQUEST">InterLock 해제신청</Option>
+            <Option value="INTERLOCK_RESULT">InterLock 해제결과</Option>
             {/* <Option value="improve">Step 2 [improve]</Option>
             <Option value="result">Step 3 [Result]</Option>
             <Option value="confirm">Step 3 [Confirm]</Option> */}
