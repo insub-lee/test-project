@@ -151,24 +151,20 @@ class QuestionnaireView extends Component {
                     <th>입사일</th>
                     <td></td>
                     <th>
-                      현직전입일
-                      <br />
-                      <span className="span-xs">현부서근무시작일</span>
+                      현직전입일 <span className="span-xs">(현부서근무시작일)</span>
                     </th>
                     <td></td>
                   </tr>
                   <tr>
                     <th>폭로개월</th>
                     <td>
-                      <AntInput className="ant-input-xxs ant-input-full"></AntInput>
+                      <AntInput className="ant-input-xxs ant-input-full" placeholder="입력해 주세요."></AntInput>
                     </td>
                     <th>
-                      1일폭로시간
-                      <br />
-                      <span className="span-xs">(1일작업시간)</span>
+                      1일폭로시간 <span className="span-xs">(1일작업시간)</span>
                     </th>
                     <td>
-                      <AntInput className="ant-input-xxs ant-input-full"></AntInput>
+                      <AntInput className="ant-input-xxs ant-input-full" placeholder="입력해 주세요."></AntInput>
                     </td>
                   </tr>
                   <tr>
@@ -180,6 +176,44 @@ class QuestionnaireView extends Component {
                   <tr>
                     <th>주소</th>
                     <td colSpan={3}></td>
+                  </tr>
+                </tbody>
+              </table>
+              <table className="question-table" style={{ marginTop: 10, borderTop: '1px solid #e2e4e8' }}>
+                <colgroup>
+                  <col style={{ width: '20%' }} />
+                  <col style={{ width: '40%' }} />
+                  <col style={{ width: '40%' }} />
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th rowSpan="3">
+                      과거직력 <span className="span-xs">(현부서 제외)</span>
+                    </th>
+                    <td>작업공정명</td>
+                    <td>노출기간</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <AntInput className="ant-input-xxs ant-input-full" placeholder="입력해 주세요."></AntInput>
+                    </td>
+                    <td>
+                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full ant-input-right" style={{ width: 50 }}></AntInput>{' '}
+                      <span className="txt">년</span>
+                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full ant-input-right" style={{ width: 50 }}></AntInput>{' '}
+                      <span className="txt">개월</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <AntInput className="ant-input-xxs ant-input-full" placeholder="입력해 주세요."></AntInput>
+                    </td>
+                    <td>
+                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full ant-input-right" style={{ width: 50 }}></AntInput>{' '}
+                      <span className="txt">년</span>
+                      <AntInput className="ant-input-xxs ant-input-inline ant-input-full ant-input-right" style={{ width: 50 }}></AntInput>{' '}
+                      <span className="txt">개월</span>
+                    </td>
                   </tr>
                 </tbody>
               </table>

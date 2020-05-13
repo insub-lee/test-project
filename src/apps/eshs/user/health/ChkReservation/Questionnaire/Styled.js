@@ -213,6 +213,10 @@ const Styled = styled.div`
     color: #999 !important;
   }
 
+  span.txt {
+    vertical-align: middle;
+  }
+
   .ant-radio-group-solid {
     display: block;
 
