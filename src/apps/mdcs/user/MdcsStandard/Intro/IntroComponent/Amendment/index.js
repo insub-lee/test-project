@@ -88,7 +88,8 @@ class Amendment extends Component {
 
   onSearchRevisionData = () => {
     const { sagaKey, submitHandlerBySaga } = this.props;
-    submitHandlerBySaga(sagaKey, 'POST', `/api/mdcs/v1/common/mdcsrevisionListHandler`, {}, this.onInitDataBind);
+    const { searchValue } = this.state;
+    submitHandlerBySaga(sagaKey, 'POST', `/api/mdcs/v1/common/mdcsrevisionListHandler`, { PARAM: { DOCNUMBER: searchValue || '' } }, this.onInitDataBind);
   };
 
   onSelectedWorkSeq = selectedNodeIds => {
@@ -125,7 +126,7 @@ class Amendment extends Component {
       <>
         <li>
           <div className="label-txt">문서번호검색</div>
-          <Input onChange={this.onChangeSearchValue} />
+          <Input onPressEnter={this.onSearchRevisionData} onChange={this.onChangeSearchValue} />
         </li>
         <div className="btn-wrap">
           <StyledButton className="btn-primary" onClick={this.onSearchRevisionData}>
