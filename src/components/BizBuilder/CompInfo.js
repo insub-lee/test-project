@@ -120,6 +120,7 @@ import EshsQualCondComp from 'components/BizBuilder/Field/EshsQualCondComp';
 import NodeIdMultiViewComp from 'components/BizBuilder/Field/NodeIdMultiViewComp';
 import NodeNameByCodeComp from 'components/BizBuilder/Field/NodeNameByCodeComp';
 import EshsQualHeaderComp from 'components/BizBuilder/Field/EshsQualHeaderComp';
+import MDCSTechScopeViewComp from 'components/BizBuilder/Field/MDCSTechScopeViewComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
@@ -242,4 +243,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/NodeIdMultiViewComp': { renderer: property => <NodeIdMultiViewComp {...property} /> },
   'components/BizBuilder/Field/NodeNameByCodeComp': { renderer: property => <NodeNameByCodeComp {...property} /> },
   'components/BizBuilder/Field/EshsQualHeaderComp': { renderer: property => <EshsQualHeaderComp {...property} /> },
+  'components/BizBuilder/Field/MDCSTechScopeViewComp': { renderer: property => <MDCSTechScopeViewComp {...property} /> },
 };

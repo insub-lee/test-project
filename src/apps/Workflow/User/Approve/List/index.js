@@ -118,7 +118,6 @@ class ApproveList extends Component {
     this.setState({ coverView });
   };
 
-
   handleReqApprove = e => {
     const { reqApprove, setOpinionVisible } = this.props;
     e.preventDefault();
@@ -144,6 +143,7 @@ class ApproveList extends Component {
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
+            className="tableWrapper"
           />
         </ContentsWrapper>
         {/* <ModalWrapper title="표준문서 기결함" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>

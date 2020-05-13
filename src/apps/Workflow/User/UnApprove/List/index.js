@@ -28,7 +28,7 @@ class UnApproveList extends Component {
       title: '구분',
       dataIndex: 'APPVGUBUN',
       key: 'APPVGUBUN',
-      width: '10%',
+      width: '18%',
       align: 'center',
     },
     {
@@ -88,6 +88,7 @@ class UnApproveList extends Component {
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
+            className="tableWrapper"
           />
         </ContentsWrapper>
         <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>

@@ -173,6 +173,7 @@ class ViewDesigner extends Component {
       isLoadingContent,
       workName,
       classNameList,
+      dataNodeList,
     } = this.props;
     return (
       <div style={{ height: '100%' }}>
@@ -211,6 +212,7 @@ class ViewDesigner extends Component {
                       hiddenField={viewData.CONFIG.property.layer.hiddenField || []}
                       compList={compList.filter(fNode => fNode.COMP_TYPE === 'FIELD' && !fNode.isRemove) || []}
                       classNameList={classNameList}
+                      dataNodeList={dataNodeList}
                     />
                   </Spin>
                 </div>
@@ -331,6 +333,7 @@ const mapStateToProps = createStructuredSelector({
   viewViewList: selectors.makeSelectViewViewList(),
   listViewList: selectors.makeSelectListViewList(),
   viewChangeProcessList: selectors.makeSelectViewChangeProcesslist(),
+  dataNodeList: selectors.makeSelectDataNodeList(),
 });
 
 const mapDispatchToProps = dispatch => ({
