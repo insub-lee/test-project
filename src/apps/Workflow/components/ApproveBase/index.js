@@ -31,7 +31,8 @@ ApproveBase.propTypes = {
   getUnApproveList: PropTypes.func,
   draftList: PropTypes.array,
   getDraftList: PropTypes.func,
-
+  getCustomDataBind: PropTypes.func,
+  customDataList: PropTypes.array,
   selectedRow: PropTypes.object,
   setSelectedRow: PropTypes.func,
   viewVisible: PropTypes.bool,
@@ -53,7 +54,8 @@ ApproveBase.defaultProps = {
   getUnApproveList: () => {},
   draftList: [],
   getDraftList: () => {},
-
+  customDataList: [],
+  getCustomDataBind: () => {},
   selectedRow: {},
   viewVisible: false,
   opinionVisible: false,
@@ -67,6 +69,7 @@ const mapStateToProps = createStructuredSelector({
   approveList: selectors.makeSelectApproveList(),
   unApproveList: selectors.makeSelectUnApproveList(),
   draftList: selectors.makeSelectDraftList(),
+  customDataList: selectors.makeSelectCustomDataList(),
   selectedRow: selectors.makeSelectSelectedRow(),
   viewVisible: selectors.makeSelectViewVisible(),
   opinionVisible: selectors.makeSelectOpinionVisible(),
@@ -79,6 +82,7 @@ const mapDispatchToProps = dispatch => ({
   getApproveList: () => dispatch(actions.getApproveList()),
   getUnApproveList: () => dispatch(actions.getUnApproveList()),
   getDraftList: () => dispatch(actions.getDraftList()),
+  getCustomDataBind: (httpMethod, rtnUrl, param) => dispatch(actions.getCustomDataBind(httpMethod, rtnUrl, param)),
   submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
     dispatch(actions.submitHandlerBySaga(id, httpMethod, apiUrl, submitData, callbackFunc)),
   setSelectedRow: row => dispatch(actions.setSelectedRow(row)),

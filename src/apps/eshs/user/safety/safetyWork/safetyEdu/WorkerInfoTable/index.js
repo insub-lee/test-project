@@ -68,7 +68,7 @@ class WorkerInfoTable extends Component {
       <AntdTable
         columns={columns}
         dataSource={workerList}
-        rowSelection={rowSelection}
+        pagination={false}
         footer={() => <div style={{ textAlign: 'center' }}>{`총 ${workerList.length === 0 ? 0 : workerList.length} 건`}</div>}
       />
     );

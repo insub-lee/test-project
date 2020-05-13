@@ -119,8 +119,12 @@ import LabelByNodeIdComp from 'components/BizBuilder/Field/LabelByNodeIdComp';
 import EshsQualCondComp from 'components/BizBuilder/Field/EshsQualCondComp';
 import NodeIdMultiViewComp from 'components/BizBuilder/Field/NodeIdMultiViewComp';
 import NodeNameByCodeComp from 'components/BizBuilder/Field/NodeNameByCodeComp';
+import EshsQualHeaderComp from 'components/BizBuilder/Field/EshsQualHeaderComp';
+import MDCSTechScopeViewComp from 'components/BizBuilder/Field/MDCSTechScopeViewComp';
+import VaildationListComp from 'components/BizBuilder/Field/VaildationListComp';
 
 export const CompInfo = {
+  'components/BizBuilder/Field/VaildationListComp': { renderer: property => <VaildationListComp {...property} /> },
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
   'components/BizBuilder/Field/CoverViewComp': { renderer: property => <CoverViewComp {...property} /> },
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -240,4 +244,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/EshsQualCondComp': { renderer: property => <EshsQualCondComp {...property} /> },
   'components/BizBuilder/Field/NodeIdMultiViewComp': { renderer: property => <NodeIdMultiViewComp {...property} /> },
   'components/BizBuilder/Field/NodeNameByCodeComp': { renderer: property => <NodeNameByCodeComp {...property} /> },
+  'components/BizBuilder/Field/EshsQualHeaderComp': { renderer: property => <EshsQualHeaderComp {...property} /> },
+  'components/BizBuilder/Field/MDCSTechScopeViewComp': { renderer: property => <MDCSTechScopeViewComp {...property} /> },
 };

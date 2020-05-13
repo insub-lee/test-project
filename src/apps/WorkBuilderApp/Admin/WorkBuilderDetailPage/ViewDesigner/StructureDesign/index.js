@@ -62,6 +62,7 @@ const StructureDesign = ({
   hiddenField,
   compList,
   classNameList,
+  dataNodeList,
 }) => {
   const [compConfigModal, setCompConfigModal] = useState([false, '', {}, 'COMP']);
   return (
@@ -294,6 +295,7 @@ const StructureDesign = ({
             groups={groups}
             classNameList={classNameList}
             onCloseModal={() => setCompConfigModal([false, '', {}, 'COMP'])}
+            dataNodeList={dataNodeList}
           />
         ) : (
           <HiddenModal
@@ -305,6 +307,7 @@ const StructureDesign = ({
             compList={compList}
             onCloseModal={() => setCompConfigModal([false, '', {}, 'COMP'])}
             hiddenField={hiddenField}
+            dataNodeList={dataNodeList}
           />
         )}
       </Modal>

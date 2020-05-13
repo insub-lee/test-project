@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import BizBuilderBase from 'components/BizBuilderBase';
+import CustomInput from 'apps/eshs/user/safety/eshsQual/qualApply/confirmRequest/pages/CustomInput';
+import CustomModify from 'apps/eshs/user/safety/eshsQual/qualApply/confirmRequest/pages/CustomModify';
 
 class ConfirmRequest extends Component {
   constructor(props) {
@@ -22,7 +24,16 @@ class ConfirmRequest extends Component {
     const { sagaKey } = this.props;
     return (
       <>
-        <BizBuilderBase sagaKey={sagaKey} workSeq={6821} viewType="INPUT" loadingComplete={this.loadingComplete} />
+        <BizBuilderBase
+          CustomInputPage={CustomInput}
+          CustomModifyPage={CustomModify}
+          sagaKey={sagaKey}
+          workSeq={6821}
+          viewType="INPUT"
+          loadingComplete={this.loadingComplete}
+          InputCustomButtons={() => null}
+          ModifyCustomButtons={() => null}
+        />
       </>
     );
   }

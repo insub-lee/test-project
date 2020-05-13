@@ -10,6 +10,7 @@ import { ConfigInfo } from 'components/BizBuilder/ConfigInfo';
 import Styled from './Styled';
 
 const { Option } = Select;
+const { TextArea } = Input;
 
 const getTreeData = flatData =>
   getTreeFromFlatData({
@@ -48,6 +49,7 @@ class CompModal extends Component {
     this.handleChangeHeaderName = debounce(this.handleChangeHeaderName, 500);
     this.handleChangeCompConfig = debounce(this.handleChangeCompConfig, 500);
     this.handleChangeCompData = debounce(this.handleChangeCompData, 500);
+    this.handleChangeViewConfig = debounce(this.handleChangeViewConfig, 500);
   }
 
   componentDidMount() {
@@ -173,7 +175,7 @@ class CompModal extends Component {
   };
 
   render() {
-    const { configType, configProps, compPoolList, groups, onCloseModal, classNameList, action } = this.props;
+    const { configType, configProps, compPoolList, groups, onCloseModal, classNameList, action, dataNodeList } = this.props;
     const { viewType, groupType, groupIndex, rowIndex, colIndex } = configProps;
     const { comp, addonClassName } = groups[groupIndex].rows[rowIndex].cols[colIndex];
     const { submitHandlerBySaga } = action;
@@ -413,6 +415,50 @@ class CompModal extends Component {
                   </Option>
                 ))}
               </Select>
+            </div>
+            <div className="popoverItem popoverItemInput">
+              <span className="spanLabel">데이터 조회 설정</span>
+              <Input
+                placeholder="데이터 키"
+                style={{ width: '50%', marginRight: '5px' }}
+                defaultValue={comp.CONFIG.property.compSelectDataKey}
+                onChange={e => this.handleChangeViewConfig('compSelectDataKey', e.target.value, 'property')}
+              />
+              <Select
+                placeholder="데이터 타입"
+                style={{ width: 'calc(50% - 5px)' }}
+                defaultValue={comp.CONFIG.property.compSelectDataType}
+                onChange={value => this.handleChangeViewConfig('compSelectDataType', value, 'property')}
+                allowClear
+              >
+                <Option key="CompModal_compSelectDataType_List" value="ARRAY">
+                  JsonArray
+                </Option>
+                <Option key="CompModal_compSelectDataType_Object" value="OBJECT">
+                  JsonObject
+                </Option>
+              </Select>
+              <Select
+                placeholder="필드 컴포넌트 데이터"
+                style={{ width: '100%' }}
+                defaultValue={comp.CONFIG.property.compSelectDataClass}
+                onChange={value => this.handleChangeViewConfig('compSelectDataClass', value, 'property')}
+                allowClear
+              >
+                {dataNodeList.map(node => (
+                  <Option key={`${node.SERVICE_NAME}_${node.DATA_NODE_ID}`} value={node.SERVICE_NAME}>
+                    {node.NAME_KOR}
+                  </Option>
+                ))}
+              </Select>
+              {comp.CONFIG.property.compSelectDataClass && comp.CONFIG.property.compSelectDataClass.length > 0 && (
+                <TextArea
+                  defaultValue={comp.CONFIG.property.compSelectDataParam}
+                  placeholder="데이터 파라미터"
+                  onChange={e => this.handleChangeViewConfig('compSelectDataParam', e.target.value, 'property')}
+                  rows={5}
+                />
+              )}
             </div>
             {ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC] && (
               <div>{ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC].renderer({ ...configProps, configInfo: comp.CONFIG, submitHandlerBySaga })}</div>
