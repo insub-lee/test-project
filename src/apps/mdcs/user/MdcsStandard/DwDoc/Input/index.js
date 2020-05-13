@@ -10,9 +10,9 @@ import MessageContent from 'components/Feedback/message.style2';
 import FileUpload from 'components/FormStuff/Upload';
 import WorkFlowBase from 'apps/Workflow/WorkFlowBase';
 import * as Degree from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContent from '../../../../styled/Modals/StyledContent';
 import CheckSelectList from '../../../../components/CheckSelectList';
-import StyledButton from '../../../../styled/StyledButton';
 import { clone } from '../../utils';
 
 const { Option } = Select;
@@ -362,7 +362,7 @@ class DwDocInput extends Component {
                     <div className="w100Table">
                       <Col span={3}>
                         제정이력
-                        <StyledButton className="btn-gray btn-xxs" onClick={this.onCopyDesc}>
+                        <StyledButton className="btn-gray btn-xxs btn-block btn-block-center-mt5" onClick={this.onCopyDesc}>
                           Copy Description
                         </StyledButton>
                       </Col>

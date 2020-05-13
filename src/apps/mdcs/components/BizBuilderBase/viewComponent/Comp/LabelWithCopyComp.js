@@ -3,7 +3,7 @@ import React from 'react';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const onCopyHandler = (CONFIG, changeFormData, formData, id) => {
   const { copyKey, compKey } = CONFIG.property.OPTION_BUTTON;
@@ -25,7 +25,7 @@ const LabelComp = ({ CONFIG, changeFormData, formData, id, readOnly }) => (
   <>
     <span>{CONFIG.property.NAME_KOR}</span>
     {CONFIG && CONFIG.property && CONFIG.property.optionCopyKey && CONFIG.property.optionCompKey && !readOnly && (
-      <StyledButton className="btn-gray btn-xxs" onClick={() => onCopyHandler(CONFIG, changeFormData, formData, id)}>
+      <StyledButton className="btn-gray btn-xxs btn-block btn-block-center-mt5" onClick={() => onCopyHandler(CONFIG, changeFormData, formData, id)}>
         Copy Description
       </StyledButton>
     )}

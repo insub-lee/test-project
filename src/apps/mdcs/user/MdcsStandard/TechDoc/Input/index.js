@@ -5,7 +5,7 @@ import RichTextEditor from 'components/FormStuff/RichTextEditor';
 import { froalaEditorConfig } from 'components/FormStuff/config';
 import FileUpload from 'components/FormStuff/Upload';
 import StyledContent from 'apps/mdcs/styled/Modals/StyledContent';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -375,7 +375,7 @@ class TechDocInput extends Component {
                   <div className="w100Table">
                     <Col span={4}>
                       재개정 이력
-                      <StyledButton className="btn-gray btn-xxs" onClick={this.handlerCopyDesc}>
+                      <StyledButton className="btn-gray btn-xxs btn-block btn-block-center-mt5" onClick={this.handlerCopyDesc}>
                         Copy Description
                       </StyledButton>
                     </Col>

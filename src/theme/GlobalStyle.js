@@ -797,6 +797,10 @@ div.button input {
   overflow: hidden;
 }
 
+.ant-empty-normal .ant-empty-image {
+  display: none;
+}
+
 `;
 
 export default GlobalStyle;
