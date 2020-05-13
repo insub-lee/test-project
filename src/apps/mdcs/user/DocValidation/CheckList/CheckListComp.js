@@ -39,6 +39,14 @@ class CheckListComp extends Component {
       key: 'TITLE',
     },
     {
+      title: '상태',
+      dataIndex: 'STATUS',
+      key: 'STATUS',
+      align: 'center',
+      width: '10%',
+      render: (text, record) => (text === 9 ? '부결' : '점검대기'),
+    },
+    {
       title: 'Effect Date',
       dataIndex: 'END_DTTM',
       key: 'END_DTTM',
