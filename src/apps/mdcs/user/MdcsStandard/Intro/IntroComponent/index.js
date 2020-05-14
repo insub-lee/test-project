@@ -12,8 +12,8 @@ import StyledInputView from 'apps/mdcs/components/BizBuilderBase/viewComponent/I
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContents from '../../../../styled/StyledContents';
-import StyledButton from '../../../../styled/StyledButton';
 import StyledModalWrapper from '../../../../styled/Modals/StyledModalWrapper';
 
 import Enactment from './Enactment';
@@ -169,7 +169,7 @@ class IntroComponent extends Component {
                 compProps={{ docNumber, NODE_ID: selectedNodeId }}
                 InputCustomButtons={({ saveBeforeProcess, onCloseModal, sagaKey, reloadId }) => (
                   <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                    <StyledButton className="btn-primary btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
                       저장
                     </StyledButton>
                     <StyledButton className="btn-light btn-sm" onClick={() => onCloseModal()}>

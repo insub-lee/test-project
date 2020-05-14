@@ -4,7 +4,7 @@ import { debounce } from 'lodash';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
-import StyledButton from 'components/CommonStyled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const onCopyHandler = (CONFIG, changeFormData, formData, id) => {
   const { optionCopyKey, optionCompKey } = CONFIG.property;
@@ -27,7 +27,7 @@ const LabelComp = ({ NAME_KOR, CONFIG, changeFormData, formData, sagaKey: id, re
     <div className={CONFIG.property.className || ''}>
       <span>{NAME_KOR}</span>
       {CONFIG && CONFIG.property && CONFIG.property.optionCopyKey && CONFIG.property.optionCompKey && !readOnly && (
-        <StyledButton className="btn-gray btn-xxs" onClick={() => onCopyHandler(CONFIG, changeFormData, formData, id)}>
+        <StyledButton className="btn-gray btn-xxs btn-block btn-block-center-mt5" onClick={() => onCopyHandler(CONFIG, changeFormData, formData, id)}>
           Copy Description
         </StyledButton>
       )}
