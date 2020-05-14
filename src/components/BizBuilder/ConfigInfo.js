@@ -38,6 +38,8 @@ import CustomSelectSearchConfig from 'components/BizBuilder/Field/CustomSelectSe
 import CustomSearchInputConfig from 'components/BizBuilder/Field/CustomSearchInputConfig';
 import LabelByNodeIdConfig from 'components/BizBuilder/Field/LabelByNodeIdConfig';
 import EshsQualCondConfig from 'components/BizBuilder/Field/EshsQualCondConfig';
+import ListButtonConfig from 'components/BizBuilder/Field/ListButtonConfig';
+import UserSelectConfig from 'components/BizBuilder/Field/UserSelectConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -78,4 +80,6 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/CustomSearchInputConfig': { renderer: property => <CustomSearchInputConfig {...property} /> },
   'components/BizBuilder/Field/LabelByNodeIdConfig': { renderer: property => <LabelByNodeIdConfig {...property} /> },
   'components/BizBuilder/Field/EshsQualCondConfig': { renderer: property => <EshsQualCondConfig {...property} /> },
+  'components/BizBuilder/Field/ListButtonConfig': { renderer: property => <ListButtonConfig {...property} /> },
+  'components/BizBuilder/Field/UserSelectConfig': { renderer: property => <UserSelectConfig {...property} /> },
 };
