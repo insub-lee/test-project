@@ -7,12 +7,11 @@ const StyledVirtualizedTable = styled.div`
   flex: 1 0 auto;
   flex-direction: column;
   overflow: auto;
-  border-top: 1px solid #bbb;
-  border-bottom: 1px solid #eee;
 
   .ReactVirtualized__Table__headerRow {
     background-color: #fff;
     color: #000;
+    border-top: 1px solid #bbb;
     border-bottom: 1px solid #e4e4e4;
     font-size: 12px;
     padding: 6px;
@@ -24,6 +23,7 @@ const StyledVirtualizedTable = styled.div`
     color: #666;
     font-size: 12px;
     padding: 4px 6px;
+    border-bottom: 1px solid #eee;
 
     &:nth-child(even) {
       background-color: #f6f8fa;
