@@ -81,6 +81,18 @@ class IntroComponent extends Component {
     });
   };
 
+  onShowModalAbrogation = (selectedworkSeq, selectedTaskSeq, viewChangeSeq, selectedNodeId, viewType, workPrcProps) => {
+    this.setState({
+      isShow: true,
+      selectedworkSeq,
+      selectedTaskSeq,
+      selectedNodeId,
+      viewType,
+      workPrcProps,
+      viewChangeSeq,
+    });
+  };
+
   loadingComplete = () => {
     this.setState({ isLoading: false });
   };
@@ -131,7 +143,7 @@ class IntroComponent extends Component {
                   </li>
                   {selectedDraft === DraftType.ENACTMENT && <Enactment {...this.props} onShowModal={this.onShowModalEnactment} />}
                   {selectedDraft === DraftType.AMENDMENT && <Amendment {...this.props} onShowModal={this.onShowModalAmendment} />}
-                  {selectedDraft === DraftType.ABROGATION && <Abrogation {...this.props} />}
+                  {selectedDraft === DraftType.ABROGATION && <Abrogation {...this.props} onShowModal={this.onShowModalAbrogation} />}
                   {selectedDraft === 'ABROGATION_MULTI' && <AbrogationMulti {...this.props} />}
                 </ul>
               </div>
