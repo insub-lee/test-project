@@ -42,8 +42,10 @@ export function* insertDaemonInfo(payload) {
       pathname: `/admin/adminmain/daemon/detail/${result.daemonId}`, state: listParam,
     });
     */
+  } else if (result.code === 400) {
+    feed.error(`${intlObj.get(messages.udtFail)} ${result.msg}`);
   } else {
-    feed.error(`${intlObj.get(messages.regFail)}`);
+    feed.error(`${intlObj.get(messages.udtFail)}`);
   }
 }
 
