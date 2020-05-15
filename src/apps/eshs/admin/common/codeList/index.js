@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Table, Select, Input, message } from 'antd';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import ExcelDownloader from '../Excel';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
-const AntdLineTable = StyledLineTable(Table);
+const AntdLineTable = StyledAntdTable(Table);
 
 const { Option } = Select;
 
@@ -182,7 +182,7 @@ class List extends Component {
                 {useYN === 'Y' ? (
                   <span className="span-item">사용</span>
                 ) : (
-                  <StyledButton className="btn-primary btn-sm" onClick={() => this.onChangeData('R')}>
+                  <StyledButton className="btn-gray btn-xs" onClick={() => this.onChangeData('R')}>
                     삭제 취소
                   </StyledButton>
                 )}
@@ -198,13 +198,14 @@ class List extends Component {
       },
       {
         title: '코드',
+        align: 'left',
         width: 150,
         children: [
           {
-            title: <AntdInput className="ant-input-sm input-center" value={code} onChange={e => this.onChangeValue('code', e.target.value)} />,
+            title: <AntdInput className="ant-input-xs input-left" value={code} onChange={e => this.onChangeValue('code', e.target.value)} />,
             className: 'th-form',
             dataIndex: 'CODE',
-            align: 'center',
+            align: 'left',
           },
         ],
       },
@@ -216,22 +217,22 @@ class List extends Component {
             title: (
               <>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm input-left mr5"
+                  className="ant-input-inline ant-input-xs input-left mr5"
                   style={{ width: '300px' }}
                   value={name}
                   onChange={e => this.onChangeValue('name', e.target.value)}
                 />
                 <StyledButtonWrapper className="btn-wrap-inline">
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={this.insertOverlab}>
+                  <StyledButton className="btn-gray btn-xs btn-first" onClick={this.insertOverlab}>
                     추가
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('U')}>
+                  <StyledButton className="btn-gray btn-xs btn-first" onClick={() => this.onChangeData('U')}>
                     수정
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('D')}>
+                  <StyledButton className="btn-gray btn-xs btn-first" onClick={() => this.onChangeData('D')}>
                     삭제
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-sm" onClick={this.onReset}>
+                  <StyledButton className="btn-gray btn-xs" onClick={this.onReset}>
                     Reset
                   </StyledButton>
                 </StyledButtonWrapper>
@@ -247,14 +248,14 @@ class List extends Component {
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
-          <AntdSelect className="select-mid mr5" style={{ width: 200 }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
+          <AntdSelect className="select-sm mr5" style={{ width: 200 }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
             <Option value="0" disabled>
               선택
             </Option>
             {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
           </AntdSelect>
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={this.selectCode}>
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.selectCode}>
               검색
             </StyledButton>
             <ExcelDownloader dataList={excelData} excelNm={excelNm} />

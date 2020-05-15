@@ -25,6 +25,21 @@ const StyledSelect = Component => styled(Component)`
     &.select-mid {
       .ant-select-selection {
         padding: 0.4rem 0.875rem;
+        font-size: 0.75rem;
+        height: auto;
+      }
+    }
+    &.select-sm {
+      .ant-select-selection {
+        padding: 0.313rem 0.613rem;
+        font-size: 0.75rem;
+        height: auto;
+      }
+    }
+    &.select-xs {
+      .ant-select-selection {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.75rem;
         height: auto;
       }
     }
