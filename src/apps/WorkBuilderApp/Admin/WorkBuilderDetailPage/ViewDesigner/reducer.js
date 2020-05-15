@@ -1450,43 +1450,43 @@ const addHiddenComp = (state, compItem) => {
 
 const addHiddenCompItem = (state, selectedComp) => {
   const { COMP_TAG, COMP_SRC, COMP_SETTING_SRC, COL_DB_TYPE, COL_GROUP_IDX, COMP_CONFIG, COMP_NAME, COL_TYPE_IDX } = selectedComp;
-  if (COL_TYPE_IDX !== VIEW_TYPE_IDX) {
-    // const hiddenField = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField']);
-    let compData = state.get('compData');
-    const workSeq = state.getIn(['workInfo', 'workSeq']);
-    const COMP_TYPE = 'FIELD';
-    const COMP_FIELD = '';
-    let info = { type: COL_DB_TYPE, nullable: true, defaultValue: '', size: 0 };
-    let property = {
-      COMP_SRC,
-      COMP_SETTING_SRC,
-      layerIdx: {},
-      compKey: `Comp_${getNewKey()}`,
-      COMP_NAME,
-    };
-    if (COMP_CONFIG && COMP_CONFIG.length > 0 && isJSON(COMP_CONFIG)) {
-      const compConfig = JSON.parse(COMP_CONFIG);
-      if (JSON.parse(COMP_CONFIG).info) info = { ...info, ...compConfig.info };
-      if (JSON.parse(COMP_CONFIG).property) property = { ...property, ...compConfig.property };
-    }
-    const compItem = fromJS({
-      WORK_SEQ: workSeq,
-      COMP_TAG,
-      COMP_TYPE,
-      COMP_FIELD,
-      ORD: compData.size + 1,
-      PRNT_SEQ: workSeq,
-      FIELD_TYPE: 'USER',
-      CONFIG: {
-        info,
-        property,
-        option: {},
-      },
-    });
-    compData = compData.push(compItem);
-    return state.updateIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField'], hiddenField => hiddenField.push(compItem)).set('compData', compData);
+  // if (COL_TYPE_IDX !== VIEW_TYPE_IDX) {
+  // const hiddenField = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField']);
+  let compData = state.get('compData');
+  const workSeq = state.getIn(['workInfo', 'workSeq']);
+  const COMP_TYPE = 'FIELD';
+  const COMP_FIELD = '';
+  let info = { type: COL_DB_TYPE, nullable: true, defaultValue: '', size: 0 };
+  let property = {
+    COMP_SRC,
+    COMP_SETTING_SRC,
+    layerIdx: {},
+    compKey: `Comp_${getNewKey()}`,
+    COMP_NAME,
+  };
+  if (COMP_CONFIG && COMP_CONFIG.length > 0 && isJSON(COMP_CONFIG)) {
+    const compConfig = JSON.parse(COMP_CONFIG);
+    if (JSON.parse(COMP_CONFIG).info) info = { ...info, ...compConfig.info };
+    if (JSON.parse(COMP_CONFIG).property) property = { ...property, ...compConfig.property };
   }
-  return state;
+  const compItem = fromJS({
+    WORK_SEQ: workSeq,
+    COMP_TAG,
+    COMP_TYPE,
+    COMP_FIELD,
+    ORD: compData.size + 1,
+    PRNT_SEQ: workSeq,
+    FIELD_TYPE: 'USER',
+    CONFIG: {
+      info,
+      property,
+      option: {},
+    },
+  });
+  compData = compData.push(compItem);
+  return state.updateIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField'], hiddenField => hiddenField.push(compItem)).set('compData', compData);
+  // }
+  // return state;
 };
 
 export default reducer;
