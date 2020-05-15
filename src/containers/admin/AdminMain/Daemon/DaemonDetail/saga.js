@@ -42,10 +42,10 @@ export function* insertDaemonInfo(payload) {
       pathname: `/admin/adminmain/daemon/detail/${result.daemonId}`, state: listParam,
     });
     */
-  } else if (result.code === 400) {
-    feed.error(`${intlObj.get(messages.udtFail)} ${result.msg}`);
+  } else if (result.msg) {
+    feed.error(`${intlObj.get(messages.regFail)}`, `${result.msg}`);
   } else {
-    feed.error(`${intlObj.get(messages.udtFail)}`);
+    feed.error(`${intlObj.get(messages.regFail)}`);
   }
 }
 
@@ -66,8 +66,8 @@ export function* updatetDaemonInfo(payload) {
       pathname: `/admin/adminmain/account/user/${userInfo.userId}`, state: listParam,
     });
     */
-  } else if (result.code === 400) {
-    feed.error(`${intlObj.get(messages.udtFail)} ${result.msg}`);
+  } else if (result.msg) {
+    feed.error(`${intlObj.get(messages.udtFail)}`, `${result.msg}`);
   } else {
     feed.error(`${intlObj.get(messages.udtFail)}`);
   }
@@ -84,7 +84,7 @@ export function* deleteDaemon(payload) {
       state: listParam,
     });
   } else if (result.msg) {
-    feed.error(`${intlObj.get(messages.delFail)} ${result.msg}`);
+    feed.error(`${intlObj.get(messages.delFail)}`, `${result.msg}`);
   } else {
     feed.error(`${intlObj.get(messages.delFail)}`);
   }
