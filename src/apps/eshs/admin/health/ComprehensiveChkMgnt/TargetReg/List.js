@@ -36,7 +36,7 @@ class List extends Component {
     const today = new Date();
     const currYear = today.getFullYear();
     const yearList = [];
-    for (let i=2020; i>=1998; i--) {
+    for (let i=currYear; i>=1998; i--) {
       yearList.push(i);
     }
     this.setState(prevState => {
@@ -47,7 +47,24 @@ class List extends Component {
         searchInfo,
       }
     });
+    const { sagaKey, getCallDataHandler } = this.props;
+    const apiAry = [
+      {
+        key: 'workAreaList',
+        url: `/api/admin/v1/common/categoryMap?MAP_ID=29`,
+        type: 'GET',
+        params: {},
+      }
+    ];
+    getCallDataHandler(sagaKey, apiAry, this.initData);
   }
+
+  initData = () => {
+    const { result } = this.props;
+    if (result.workAreaList) {
+      this.setState({ workAreaList: result.workAreaList.categoryMapList });
+    }
+  };
 
   getList = () => {
     const { sagaKey, getCallDataHandlerReturnRes } = this.props;
@@ -173,10 +190,11 @@ class List extends Component {
               onChange={val => this.onChangeSearchInfo('WORK_AREA_CD', val)}
             >
               <AntdSelect.Option value="">지역전체</AntdSelect.Option>
-              <AntdSelect.Option value="C1">청주</AntdSelect.Option>
-              <AntdSelect.Option value="H3">구미</AntdSelect.Option>
-              <AntdSelect.Option value="A6">서울</AntdSelect.Option>
-              <AntdSelect.Option value="Z3">해외</AntdSelect.Option>
+              {this.state.workAreaList.map(item => (
+                item.LVL !== 0 && (
+                  <AntdSelect.Option value={item.CODE}>{item.NAME_KOR}</AntdSelect.Option>
+                )
+              ))}
             </AntdSelect>
             <AntdSelect defaultValue={this.state.searchInfo.CHK_YEAR} className="select-sm mr5" placeholder="년도" style={{ width: 100 }}>
               {this.state.yearList.map(year => (

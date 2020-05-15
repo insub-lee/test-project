@@ -13,7 +13,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import * as feed from 'components/Feedback/functions';
 import Footer from 'containers/admin/App/Footer';
-import StyledButton from 'components/Button/StyledButton.js';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import * as actions from './actions';
 
 import reducer from './reducer';
@@ -273,7 +273,7 @@ class DaemonDetail extends React.Component {
     const { daemonId } = this.state;
     const listParam = setListState(this.state);
     deleteDaemon(daemonId, history, listParam);
-  }
+  };
 
   render() {
     const formItemLayout = {
