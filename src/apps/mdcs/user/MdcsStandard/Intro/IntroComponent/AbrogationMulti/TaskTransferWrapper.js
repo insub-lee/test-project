@@ -1,59 +1,34 @@
 import styled from 'styled-components';
+
+const primaryColor = '#886ab5';
+
 const Wrapper = styled.div`
   width: 100%;
-  .ant-col {
-    padding: 10px;
-  }
-  .basicWrapper {
-    width: 100%;
-    height: 260px;
-    border: 1px solid #e8e8e8;
-    border-top: 1px solid #4491e0;
-    &.treeWrapper {
-      .basicTitle {
-        font-size: 13px;
-        color: #000;
-        padding: 8px 16px;
-        border-bottom: 1px solid #e8e8e8;
+  .taskTransferList {
+    /* height: 251px;
+    overflow: auto; */
+    .taskTransferTable {
+      /* width: 501px; */
+      .ant-table-body {
+        margin: 0px;
       }
-      .depthTree {
-        width: 100%;
-        max-height: 222px;
-        overflow-y: auto;
-        .site-tree-search-value {
-          color: #f50;
-        }
-        li .ant-tree-node-content-wrapper {
-          font-size: 12px;
-        }
+
+      .ant-table-thead > tr > th {
+        background-color: ${primaryColor};
+        text-align: center;
+        font-size: 12px;
+        padding: 10px;
       }
     }
-    &.userListWrapper,
-    &.selectedUserWrapper {
-      .userList {
-        width: 100%;
-      }
-      .ant-list-bordered {
-        border: 0;
-        border-radius: 0;
-        .ant-list-header {
-          font-size: 13px;
-          color: #000;
-        }
-        .ant-spin-nested-loading {
-          overflow-y: scroll;
-          height: 222px;
-          .ant-list-items {
-            max-height: 222px;
-            li {
-              .ant-checkbox-wrapper + span,
-              .ant-checkbox + span {
-                font-size: 13px;
-              }
-            }
-          }
-        }
-      }
+    .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-thead > tr > th {
+      padding: 4px 2px;
+    }
+    .ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-tbody > tr > td {
+      padding: 2px;
+      font-size: 12px;
+    }
+    .ant-table colgroup > col.ant-table-selection-col {
+      width: 32px;
     }
   }
 
@@ -66,6 +41,9 @@ const Wrapper = styled.div`
     button {
       width: 38px;
       margin: 0 auto;
+    }
+    > div {
+      margin: auto;
     }
   }
 
