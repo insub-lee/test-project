@@ -3,21 +3,21 @@ import PropTypes from 'prop-types';
 
 import { Table, Select, Input, Modal } from 'antd';
 
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import Edit from './Edit';
 import CompanyModal from './CompanyModal';
 
-const AntdLineTable = StyledLineTable(Table);
+const AntdLineTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
-const AntdModal = StyledContentsModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 const { Option } = Select;
 
@@ -203,7 +203,7 @@ class List extends Component {
       <>
         <ContentsWrapper>
           <div className="selSaveWrapper alignLeft">
-            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.siteSBV}>
+            <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.siteSBV}>
               <Option value="0" key="siteSBV">
                 지역전체
               </Option>
@@ -211,32 +211,32 @@ class List extends Component {
             </AntdSelect>
             <span className="textLabel">회사</span>
             <AntdInput
-              style={{ width: '250px' }}
-              className="ant-input-inline input-pointer mr5"
+              style={{ width: '200px' }}
+              className="ant-input-inline ant-input-sm input-pointer mr5"
               value={this.state.companyName}
               onClick={() => this.setState({ modalCompany: true })}
               placeholder="여기를 클릭해주세요."
             />
-            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.filterPlantSBV}>
+            <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.filterPlantSBV}>
               <Option value="0" key="filterPlantSBV">
                 정수장전체
               </Option>
               {this.selectOptionRender('filterPlantSB')}
             </AntdSelect>
-            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.fabSBV}>
+            <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.fabSBV}>
               <Option value="0" key="fabSBV">
                 FAB전체
               </Option>
               {this.selectOptionRender('fabSB')}
             </AntdSelect>
-            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.treatmentPlantSBV}>
+            <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.treatmentPlantSBV}>
               <Option value="0" key="treatmentPlantSBV">
                 처리장전체
               </Option>
               {this.selectOptionRender('treatmentPlantSB')}
             </AntdSelect>
             <span className="textLabel">DI 시설</span>
-            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.di}>
+            <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.di}>
               <Option value="total" key="di">
                 전체
               </Option>
@@ -248,7 +248,7 @@ class List extends Component {
               </Option>
             </AntdSelect>
             <span className="textLabel">구분</span>
-            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.gubun}>
+            <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.gubun}>
               <Option value="0" key="gubun">
                 전체
               </Option>
@@ -265,11 +265,11 @@ class List extends Component {
                 처리장
               </Option>
             </AntdSelect>
-            <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary btn-first" onClick={() => this.listDataApi()}>
+            <StyledButtonWrapper className="btn-wrap-mt-10 btn-wrap-center">
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.listDataApi()}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => this.isOpenEdit()}>
+              <StyledButton className="btn-primary btn-sm" onClick={() => this.isOpenEdit()}>
                 추가
               </StyledButton>
             </StyledButtonWrapper>

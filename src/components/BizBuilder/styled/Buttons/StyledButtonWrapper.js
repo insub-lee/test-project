@@ -19,6 +19,10 @@ const StyledButtonWrapper = styled.div`
     margin-top: 20px;
   }
 
+  &.btn-wrap-mt-10 {
+    margin-top: 10px;
+  }
+
   &.btn-wrap-mb-10 {
     margin-bottom: 10px;
   }
