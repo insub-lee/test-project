@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { List, Table, Row, Col, Checkbox, Button, Icon } from 'antd';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import TaskTransferWrapper from './TaskTransferWrapper';
 
 // Component Attribute 및 Event Method 정리
@@ -23,78 +23,186 @@ const columns = [
     dataIndex: 'DOCNUMBER',
     title: '문서번호',
     align: 'center',
-    width: '25%',
+    width: '102px',
   },
   {
     dataIndex: 'VERSION',
     title: 'REV.',
     align: 'center',
-    width: '20%',
+    width: '48px',
   },
   {
     dataIndex: 'TITLE',
     title: '제목',
-    align: 'center',
-    width: '50%',
+    width: '410px',
     ellipsis: true,
   },
 ];
 
-const TaskTransfer = ({ sourceList, selectedList }) => (
-  <TaskTransferWrapper>
-    <Row gutter={0}>
-      <Col span={11}>
-        <div className="taskTransferTitle">
-          <span>폐기 대상 사내표</span>
-          <span>건</span>
+class TaskTransfer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      leftSelectedRows: [],
+      rightSelectedRows: [],
+    };
+  }
+
+  onLeftSelectRow = row => {
+    this.setState(prevState => {
+      const { leftSelectedRows } = prevState;
+      const rowIdx = leftSelectedRows.findIndex(iNode => iNode.TASK_SEQ === row.TASK_SEQ);
+      if (rowIdx > -1) {
+        leftSelectedRows.splice(rowIdx, 1);
+        return { leftSelectedRows };
+      }
+      leftSelectedRows.push(row);
+      return { leftSelectedRows };
+    });
+  };
+
+  onRightSelectRow = row => {
+    this.setState(prevState => {
+      const { rightSelectedRows } = prevState;
+      const rowIdx = rightSelectedRows.findIndex(iNode => iNode.TASK_SEQ === row.TASK_SEQ);
+      if (rowIdx > -1) {
+        rightSelectedRows.splice(rowIdx, 1);
+        return { rightSelectedRows };
+      }
+      rightSelectedRows.push(row);
+      return { rightSelectedRows };
+    });
+  };
+
+  onClickAddSelectRow = () => {
+    this.props.setSelectedList('ADD', this.state.leftSelectedRows, this.removeCheck);
+  };
+
+  onClickRemoveSelectRow = () => this.props.setSelectedList('REMOVE', this.state.rightSelectedRows, this.removeCheck);
+
+  removeCheck = flag => {
+    if (flag === 'ADD') {
+      this.setState({ leftSelectedRows: [] });
+    } else {
+      this.setState({ rightSelectedRows: [] });
+    }
+  };
+
+  render() {
+    const { sourceList, selectedList, submitTask } = this.props;
+    const { leftSelectedRows, rightSelectedRows } = this.state;
+    const leftRowSelection = {
+      selectedRowKeys: leftSelectedRows.map(item => item.TASK_SEQ),
+      getCheckboxProps: item => ({ disabled: item.disabled }),
+      onChange: (selectedRowKeys, selectedRows) =>
+        this.setState({
+          leftSelectedRows: selectedRows,
+        }),
+    };
+
+    const rightRowSelection = {
+      selectedRowKeys: rightSelectedRows.map(item => item.TASK_SEQ),
+      onChange: (selectedRowKeys, selectedRows) => {
+        this.setState({
+          rightSelectedRows: selectedRows,
+        });
+      },
+    };
+
+    return (
+      <TaskTransferWrapper>
+        <Row gutter={0}>
+          <Col span={11}>
+            <div className="taskTransferTitle">
+              <span>폐기 대상 사내표</span>
+              <span>건</span>
+            </div>
+            <div className="taskTransferList">
+              <Table
+                className="taskTransferTable"
+                bordered
+                columns={columns}
+                dataSource={sourceList}
+                size="small"
+                pagination={false}
+                rowKey={record => record.TASK_SEQ}
+                rowSelection={leftRowSelection}
+                scroll={{ y: 250, x: 600 }}
+                onRow={row => ({
+                  onClick: () => {
+                    if (row.disabled) return;
+                    this.onLeftSelectRow(row);
+                  },
+                })}
+              />
+            </div>
+          </Col>
+          <Col span={2}>
+            <div className="userAddWrapper">
+              <div>
+                <div>
+                  <StyledButton className="btn-light btn-sm" onClick={this.onClickAddSelectRow}>
+                    <Icon type="double-right" />
+                  </StyledButton>
+                </div>
+                <div>
+                  <StyledButton className="btn-light btn-sm" onClick={this.onClickRemoveSelectRow}>
+                    <Icon type="double-left" />
+                  </StyledButton>
+                </div>
+              </div>
+            </div>
+          </Col>
+          <Col span={11}>
+            <div className="taskTransferTitle">
+              <span>선택된 사내표준</span>
+              <span>건</span>
+            </div>
+            <div className="taskTransferList">
+              <Table
+                className="taskTransferTable"
+                bordered
+                columns={columns}
+                dataSource={selectedList}
+                size="small"
+                pagination={false}
+                rowKey={record => record.TASK_SEQ}
+                rowSelection={rightRowSelection}
+                scroll={{ y: 250, x: 600 }}
+                onRow={row => ({
+                  onClick: () => {
+                    this.onRightSelectRow(row);
+                  },
+                })}
+              />
+            </div>
+          </Col>
+        </Row>
+        <div className="applyButtonWrapper">
+          {/* <StyledButton className="btn-sm btn-gray btn-first" onClick={() => false}>
+            취소
+          </StyledButton> */}
+          <StyledButton className="btn-sm btn-primary" onClick={submitTask}>
+            등록
+          </StyledButton>
         </div>
-        <div className="taskTransferList">
-          <Table bordered columns={columns} dataSource={sourceList} size="small" pagination={false} />
-        </div>
-      </Col>
-      <Col span={2}>
-        <div className="userAddWrapper">
-          <div>
-            <StyledButton className="btn-light btn-sm" onClick={() => false}>
-              <Icon type="double-right" />
-            </StyledButton>
-          </div>
-          <div>
-            <StyledButton className="btn-light btn-sm" onClick={() => false}>
-              <Icon type="double-left" />
-            </StyledButton>
-          </div>
-        </div>
-      </Col>
-      <Col span={11}>
-        <div className="taskTransferTitle">
-          <span>선택된 사내표준</span>
-          <span>건</span>
-        </div>
-        <div className="taskTransferList">
-          <Table bordered columns={columns} dataSource={selectedList} size="small" pagination={false} />
-        </div>
-      </Col>
-    </Row>
-    <div className="applyButtonWrapper">
-      <StyledButton className="btn-sm btn-gray btn-first" onClick={() => false}>
-        취소
-      </StyledButton>
-      <StyledButton className="btn-sm btn-primary" onClick={() => false}>
-        등록
-      </StyledButton>
-    </div>
-  </TaskTransferWrapper>
-);
+      </TaskTransferWrapper>
+    );
+  }
+}
 
 TaskTransfer.propTypes = {
-  selectedDeptId: PropTypes.number,
-  selectedUserList: PropTypes.array,
-  initUserList: PropTypes.array,
+  setSelectedList: PropTypes.func,
+  submitTask: PropTypes.func,
+  sourceList: PropTypes.array,
+  selectedList: PropTypes.array,
 };
 
 TaskTransfer.defaultProps = {
-  selectedDeptId: -1,
+  setSelectedList: () => false,
+  submitTask: () => false,
+  sourceList: [],
+  selectedList: [],
 };
 
 export default TaskTransfer;
