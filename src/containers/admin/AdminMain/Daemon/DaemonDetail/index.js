@@ -123,6 +123,8 @@ class DaemonDetail extends React.Component {
     switch (type) {
       case 'schedule':
         return val !== '' && !cronValid(val) ? 'error' : '';
+      case 'daemonKey':
+        return val !== '' ? '' : 'error';
       default:
         return val !== '' ? 'success' : 'error';
     }
@@ -438,7 +440,7 @@ class DaemonDetail extends React.Component {
                     <label htmlFor="s7">{intlObj.get(messages.daemoKey)}</label>
                   </th>
                   <td>
-                    <FormItem {...formItemLayout}>
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.validStatus(this.state.daemonKey, 'daemonKey')}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.daemoKey)}
