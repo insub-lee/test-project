@@ -101,6 +101,10 @@ const StyledButton = styled.button`
     margin-right: 5px;
   }
 
+  &.ml5 {
+    margin-left: 5px;
+  }
+
   &.mt5 {
     margin-top: 5px;
   }
