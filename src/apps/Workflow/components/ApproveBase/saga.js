@@ -34,6 +34,7 @@ function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
       httpMethodInfo = Axios.get;
       break;
   }
+  console.debug(param);
   const response = yield call(httpMethodInfo, `${rtnUrl}`, param);
   if (response) {
     const { list } = response;
@@ -51,7 +52,7 @@ function* getUnApproveList() {
 }
 
 function* getDraftList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/draftList`, {});
+  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/draftList`, { PARAM: { REL_TYPE: 1 } });
   if (response) {
     const { list } = response;
     yield put(actions.setDraftList(list));

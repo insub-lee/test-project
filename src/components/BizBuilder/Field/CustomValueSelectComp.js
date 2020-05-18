@@ -16,9 +16,9 @@ function CustomValueSelectComp(props) {
     setValues(customValues instanceof Array ? [...customValues] : [{ ...init }]);
     const isReg = typeof setDefault === 'string' ? setDefault : 'N';
     setDefaultValue(definedValue instanceof Object ? { ...definedValue } : { ...init });
-
+    const value = (definedValue && definedValue.value) || '';
     if (isReg === 'Y') {
-      onChangeHandler(definedValue.value);
+      onChangeHandler(value || '');
     }
   }, []);
 

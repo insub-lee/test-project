@@ -49,6 +49,7 @@ class CompModal extends Component {
     this.handleChangeHeaderName = debounce(this.handleChangeHeaderName, 500);
     this.handleChangeCompConfig = debounce(this.handleChangeCompConfig, 500);
     this.handleChangeCompData = debounce(this.handleChangeCompData, 500);
+    this.handleChangeViewConfig = debounce(this.handleChangeViewConfig, 500);
   }
 
   componentDidMount() {

@@ -1,10 +1,11 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, Modal, Select } from 'antd';
-import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
+import StyledVirtualizedTable from 'components/BizBuilder/styled/Table/StyledVirtualizedTable';
 import { Table, Column } from 'react-virtualized';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
 const AntdModal = StyledContentsModal(Modal);
@@ -12,6 +13,7 @@ const AntdModal = StyledContentsModal(Modal);
 const { Option } = Select;
 const InputGroup = Input.Group;
 const AntdSearch = StyledSearchInput(Input.Search);
+const AntdSelect = StyledSelect(Select);
 class EshsCmpnyComp extends React.Component {
   constructor(props) {
     super(props);
@@ -191,14 +193,14 @@ class EshsCmpnyComp extends React.Component {
         {directSearchTable ? (
           <>
             <StyledSearchWrap>
-              <div className="search-group-layer">
+              <div className="search-group-layer mb0">
                 <InputGroup className="search-item search-input-group" compact>
-                  <Select value={this.state.searchType} onChange={this.searchTypeChange}>
+                  <AntdSelect className="select-sm" value={this.state.searchType} onChange={this.searchTypeChange}>
                     <Option value="name">이름</Option>
                     <Option value="code">코드</Option>
-                  </Select>
+                  </AntdSelect>
                   <AntdSearch
-                    className="searchInput"
+                    className="searchInput input-search-sm"
                     value={this.state.searchText}
                     name="searchName"
                     onChange={this.handleOnChange}
@@ -212,8 +214,8 @@ class EshsCmpnyComp extends React.Component {
               <Table
                 width={750}
                 height={500}
-                headerHeight={40}
-                rowHeight={53}
+                headerHeight={35}
+                rowHeight={30}
                 rowCount={cmpnyList.length}
                 rowGetter={({ index }) => cmpnyList[index]}
                 noRowsRenderer={this.noRowsRenderer}
@@ -243,14 +245,14 @@ class EshsCmpnyComp extends React.Component {
             &nbsp; <span>{cmpny_nm}</span>
             <AntdModal title="Vandor 검색" visible={cmpnyModal} width={800} height={600} onCancel={this.handleModalVisible}>
               <StyledSearchWrap>
-                <div className="search-group-layer">
+                <div className="search-group-layer mb0">
                   <InputGroup className="search-item search-input-group" compact>
-                    <Select value={this.state.searchType} onChange={this.searchTypeChange}>
+                    <AntdSelect className="select-sm" value={this.state.searchType} onChange={this.searchTypeChange}>
                       <Option value="name">이름</Option>
                       <Option value="code">코드</Option>
-                    </Select>
+                    </AntdSelect>
                     <AntdSearch
-                      // className="search-item ant-input-group"
+                      className="input-search-sm"
                       value={this.state.searchText}
                       name="searchName"
                       onChange={this.handleOnChange}
@@ -266,8 +268,8 @@ class EshsCmpnyComp extends React.Component {
                 <Table
                   width={750}
                   height={500}
-                  headerHeight={40}
-                  rowHeight={53}
+                  headerHeight={35}
+                  rowHeight={30}
                   rowCount={cmpnyList.length}
                   rowGetter={({ index }) => cmpnyList[index]}
                   noRowsRenderer={this.noRowsRenderer}

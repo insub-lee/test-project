@@ -12,8 +12,8 @@ import StyledInputView from 'apps/mdcs/components/BizBuilderBase/viewComponent/I
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContents from '../../../../styled/StyledContents';
-import StyledButton from '../../../../styled/StyledButton';
 import StyledModalWrapper from '../../../../styled/Modals/StyledModalWrapper';
 
 import Enactment from './Enactment';
@@ -81,6 +81,18 @@ class IntroComponent extends Component {
     });
   };
 
+  onShowModalAbrogation = (selectedworkSeq, selectedTaskSeq, viewChangeSeq, selectedNodeId, viewType, workPrcProps) => {
+    this.setState({
+      isShow: true,
+      selectedworkSeq,
+      selectedTaskSeq,
+      selectedNodeId,
+      viewType,
+      workPrcProps,
+      viewChangeSeq,
+    });
+  };
+
   loadingComplete = () => {
     this.setState({ isLoading: false });
   };
@@ -131,8 +143,8 @@ class IntroComponent extends Component {
                   </li>
                   {selectedDraft === DraftType.ENACTMENT && <Enactment {...this.props} onShowModal={this.onShowModalEnactment} />}
                   {selectedDraft === DraftType.AMENDMENT && <Amendment {...this.props} onShowModal={this.onShowModalAmendment} />}
-                  {selectedDraft === DraftType.ABROGATION && <Abrogation />}
-                  {selectedDraft === 'ABROGATION_MULTI' && <AbrogationMulti />}
+                  {selectedDraft === DraftType.ABROGATION && <Abrogation {...this.props} onShowModal={this.onShowModalAbrogation} />}
+                  {selectedDraft === 'ABROGATION_MULTI' && <AbrogationMulti {...this.props} />}
                 </ul>
               </div>
             </div>
@@ -157,7 +169,7 @@ class IntroComponent extends Component {
                 compProps={{ docNumber, NODE_ID: selectedNodeId }}
                 InputCustomButtons={({ saveBeforeProcess, onCloseModal, sagaKey, reloadId }) => (
                   <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                    <StyledButton className="btn-primary btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
                       저장
                     </StyledButton>
                     <StyledButton className="btn-light btn-sm" onClick={() => onCloseModal()}>

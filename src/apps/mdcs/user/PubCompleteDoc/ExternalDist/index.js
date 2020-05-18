@@ -5,8 +5,8 @@ import ExternalDistView from './ExternalDistView';
 // eslint-disable-next-line react/prefer-stateless-function
 class ExternalDist extends Component {
   render() {
-    const { docList, onExternalDistComplete } = this.props;
-    return <BizMicroDevBase id="externalDist" component={ExternalDistView} docList={docList} onExternalDistComplete={onExternalDistComplete} />;
+    const { docList, onExternalDistComplete, onExternalDistCancel } = this.props;
+    return <BizMicroDevBase id="externalDist" component={ExternalDistView} docList={docList} onExternalDistComplete={onExternalDistComplete} onExternalDistCancel={onExternalDistCancel} />;
   }
 }
 

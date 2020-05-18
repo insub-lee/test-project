@@ -154,7 +154,7 @@ const Styled = styled.div`
                     width: 1px;
                     height: 100%;
                     background-color: #d9d9d9;
-                    content: "";
+                    content: '';
                   }
                 }
 
@@ -205,8 +205,16 @@ const Styled = styled.div`
     font-size: 13px;
   }
 
+  span.span-xs {
+    font-size: 11px;
+  }
+
   span.span-gray {
     color: #999 !important;
+  }
+
+  span.txt {
+    vertical-align: middle;
   }
 
   .ant-radio-group-solid {

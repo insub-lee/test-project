@@ -23,6 +23,10 @@ const StyledSearchWrap = styled.div`
         margin-left: 0;
       }
     }
+
+    &.mb0 {
+      margin-bottom: 0;
+    }
   }
 
   .use-label {

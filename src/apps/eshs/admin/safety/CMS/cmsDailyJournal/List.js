@@ -346,22 +346,23 @@ List.defaultProps = {
       ],
     },
     {
-      title: `상세내용`,
-      dataIndex: 'DETAIL_CONTANT',
+      title: `이벤트명`,
+      dataIndex: 'TITLE',
       align: 'center',
       render: (text, record) => (
         <Popover placement="topLeft" title={text} trigger="hover">
-          <div
+          <span
             style={{
               textOverflow: 'ellipsis',
               overflow: 'hidden',
               width: '100px',
               whiteSpace: 'nowrap',
+              textAlign: 'center',
               fontWeight: `${record.IMPORTANT === 1 ? 'bold' : ''}`,
             }}
           >
             {text}
-          </div>
+          </span>
         </Popover>
       ),
     },
@@ -371,17 +372,18 @@ List.defaultProps = {
       align: 'center',
       render: (text, record) => (
         <Popover placement="topLeft" title={text} trigger="hover">
-          <div
+          <span
             style={{
               textOverflow: 'ellipsis',
               overflow: 'hidden',
               width: '100px',
               whiteSpace: 'nowrap',
+              textAlign: 'center',
               fontWeight: `${record.IMPORTANT === 1 ? 'bold' : ''}`,
             }}
           >
             {text}
-          </div>
+          </span>
         </Popover>
       ),
     },

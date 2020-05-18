@@ -45,7 +45,7 @@ const StyledButton = styled.button`
   }
 
   &.btn-xxs {
-    padding: 1px 0.844rem;
+    padding: 1px 0.75rem;
     font-size: 0.7rem;
     line-height: 1.5;
   }
@@ -99,6 +99,22 @@ const StyledButton = styled.button`
 
   &.mr5 {
     margin-right: 5px;
+  }
+
+  &.ml5 {
+    margin-left: 5px;
+  }
+
+  &.mt5 {
+    margin-top: 5px;
+  }
+
+  &.btn-block {
+    display: block;
+  }
+
+  &.btn-block-center-mt5 {
+    margin: 5px auto 0;
   }
 `;
 

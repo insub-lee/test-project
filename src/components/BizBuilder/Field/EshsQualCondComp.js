@@ -11,7 +11,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
 import Upload from 'components/FormStuff/Upload';
-import ConfirmResult from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqConfirmResult';
+import ConfirmResult from 'apps/eshs/user/safety/eshsQual/qualApprove/confirmResult';
 
 import { Input, Select, Table, Checkbox, message, Modal } from 'antd';
 
@@ -136,7 +136,7 @@ class EshsQualCondComp extends Component {
       });
     }
 
-    if (RESULT_TYPE === 'CHECK') resultWidth = '40%';
+    if (RESULT_TYPE === 'CHECK' || RESULT_TYPE === 'CHECK_VIEW') resultWidth = '40%';
 
     columns.push({
       title: () => (
@@ -322,7 +322,7 @@ class EshsQualCondComp extends Component {
                 </Select>
               );
             }
-            if (RESULT_TYPE === 'VIEW' || RESULT_TYPE === 'CHECK') {
+            if (RESULT_TYPE === 'VIEW' || RESULT_TYPE === 'CHECK' || RESULT_TYPE === 'CHECK_VIEW') {
               const nodeIndex = condDept.findIndex(d => d.NODE_ID === record.RESULT_DEPT_CD);
               if (nodeIndex > -1) {
                 return <span>{condDept[nodeIndex].NAME_KOR}</span>;
@@ -340,7 +340,7 @@ class EshsQualCondComp extends Component {
           render: (text, record, index) => (
             <Upload
               key={`result_${index}`}
-              readOnly={RESULT_TYPE === 'VIEW' || RESULT_TYPE === 'CHECK'}
+              readOnly={RESULT_TYPE === 'VIEW' || RESULT_TYPE === 'CHECK' || RESULT_TYPE === 'CHECK_VIEW'}
               onlyDown
               defaultValue={{
                 DETAIL: record.RESULT_FILE_SEQ
@@ -372,6 +372,14 @@ class EshsQualCondComp extends Component {
         render: (text, record, index) => (
           <Checkbox className="ant-checkbox-wrapper" checked={!!record.RESULT_QUAL_EMPID} onChange={() => this.handleConfirmChecked(index)} />
         ),
+      });
+    }
+    if (RESULT_TYPE === 'CHECK_VIEW') {
+      columns.push({
+        title: '확인자',
+        align: 'center',
+        dataIndex: 'RESULT_QUAL_EMP_NAME',
+        width: '10%',
       });
     }
 

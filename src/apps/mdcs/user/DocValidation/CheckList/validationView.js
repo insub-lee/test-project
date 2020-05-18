@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Radio, Button } from 'antd';
+import { Radio, Button, Modal } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
+const AntdModal = StyledContentsModal(Modal);
 // eslint-disable-next-line react/prefer-stateless-function
 class ValidationView extends Component {
   constructor(props) {
@@ -13,6 +16,7 @@ class ValidationView extends Component {
     this.state = {
       selectedValue: 1,
       workProcess: {},
+      coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
     };
   }
 
@@ -41,9 +45,26 @@ class ValidationView extends Component {
     onValidateProcess(selectedValue, workProcess, WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ);
   };
 
+  clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'VIEW' };
+    this.setState({ coverView });
+  };
+
+  onCloseCoverView = () => {
+    const { coverView } = this.state;
+    const tempCoverView = { ...coverView, visible: false };
+    this.setState({ coverView: tempCoverView });
+  };
+
+  onCloseModal = () => {
+    const { onModalClose } = this.props;
+    onModalClose();
+  };
+
   render() {
-    const { WORK_SEQ, TASK_SEQ } = this.props;
-    const { selectedValue } = this.state;
+    const { WORK_SEQ, TASK_SEQ, onModalClose } = this.props;
+    const { selectedValue, coverView } = this.state;
+
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -66,19 +87,56 @@ class ValidationView extends Component {
           <Button type="primary" style={{ marginRight: '5px' }} onClick={this.onClickEvent}>
             확인
           </Button>
-          <Button>닫기</Button>
+          <Button onClick={this.onCloseModal}>닫기</Button>
         </div>
 
-        <BizBuilderBase sagaKey="validateView" workSeq={WORK_SEQ} taskSeq={TASK_SEQ} viewType="VIEW" ViewCustomButtons={() => false} />
+        <BizBuilderBase
+          sagaKey="validateView"
+          workSeq={WORK_SEQ}
+          taskSeq={TASK_SEQ}
+          viewType="VIEW"
+          clickCoverView={this.clickCoverView}
+          ViewCustomButtons={() => false}
+        />
+
+        <AntdModal
+          className="modalWrapper modalTechDoc modalCustom"
+          title="표지 보기"
+          width={800}
+          destroyOnClose
+          visible={coverView.visible}
+          onCancel={this.onCloseCoverView}
+          footer={[]}
+        >
+          <BizBuilderBase
+            sagaKey="CoverView"
+            viewType={coverView.viewType}
+            workSeq={coverView.workSeq}
+            taskSeq={coverView.taskSeq}
+            viewMetaSeq={coverView.viewMetaSeq}
+            onCloseCoverView={this.onCloseCoverView}
+            onCloseModalHandler={this.onClickModifyDoCoverView}
+            ViewCustomButtons={({ onCloseCoverView }) => (
+              <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                <StyledButton className="btn-primary" onClick={onCloseCoverView}>
+                  닫기
+                </StyledButton>
+              </div>
+            )}
+          />
+        </AntdModal>
       </>
     );
   }
 }
 
-ValidationView.propTypes = {};
+ValidationView.propTypes = {
+  onModalClose: PropTypes.func,
+};
 
 ValidationView.defaultProps = {
   selectedValue: 1,
+  onModalClose: () => false,
 };
 
 export default ValidationView;

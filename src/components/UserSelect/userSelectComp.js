@@ -6,6 +6,7 @@ import { List, Tree, Row, Col, Checkbox, Button, Icon, Modal } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import UserSelectWrapper from 'commonStyled/MdcsStyled/Wrapper/UserSelectWrapper';
 
 // Component Attribute 및 Event Method 정리
@@ -164,6 +165,7 @@ class UserSelectComp extends Component {
   render() {
     const { treeDataSource, userDataList, result } = this.props;
     console.debug('userselect', result);
+    console.debug('treeDataSource >> ', treeDataSource);
     return (
       <UserSelectWrapper>
         <Row gutter={0}>
@@ -233,14 +235,14 @@ class UserSelectComp extends Component {
             </div>
           </Col>
         </Row>
-        <div className="applyButtonWrapper">
-          <StyledButton className="btn-sm btn-gray btn-first" onClick={this.onCancelUserSelect}>
+        <StyledButtonWrapper className="btn-wrap-center">
+          <StyledButton className="btn-sm btn-gray mr5" onClick={this.onCancelUserSelect}>
             취소
           </StyledButton>
           <StyledButton className="btn-sm btn-primary" onClick={this.onRegist}>
             등록
           </StyledButton>
-        </div>
+        </StyledButtonWrapper>
       </UserSelectWrapper>
     );
   }

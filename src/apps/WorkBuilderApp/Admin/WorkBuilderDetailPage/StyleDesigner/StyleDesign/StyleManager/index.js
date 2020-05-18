@@ -9,6 +9,23 @@ import ColorPickerWithState from './ColorPickerWithState';
 
 const StyledBodyOption = styled.div`
   padding: 0 1rem;
+  .label {
+    width: 100px;
+    margin-right: 10px;
+    &:after {
+      content: ':';
+      margin-right: 5px;
+    }
+  }
+  .selector {
+    width: 100px;
+    border: 1px solid #e3e3e3;
+    color: #000000;
+    margin: 0 5px;
+  }
+  .option {
+    margin: 10px 0;
+  }
 `;
 const StyleInputNumber = styled.input`
   border: 1px solid #e3e3e3;
@@ -47,7 +64,9 @@ const StyleOption = styled.div`
 const StyleManager = ({
   groupKey,
   id,
+  defaultWidthType,
   defaultWidth,
+  updateBodyWidthType,
   updateBodyWidth,
   onChangeWidths,
   onChangeHeights,
@@ -59,30 +78,42 @@ const StyleManager = ({
   const {
     TableRef,
     showModal,
+    bodyWidthType,
     bodyWidth,
     maxBodyWidth,
     minBodyWidth,
     dataTip,
-    action: { openModal, closeModal, onChangeBodyWidth, onBlurBodyWidth, onChangeCellStyle },
-  } = useHooks({ defaultWidth, updateBodyWidth, onChangeWidths, onChangeHeights });
+    action: { openModal, closeModal, onChangeBodyWidthType, onChangeBodyWidth, onBlurBodyWidth, onChangeCellStyle },
+  } = useHooks({ defaultWidthType, defaultWidth, updateBodyWidthType, updateBodyWidth, onChangeWidths, onChangeHeights });
 
   const [rowIndex, colIndex] = dataTip ? dataTip.split('-') : [-1, -1];
   const { style = {} } = dataTip ? rows[rowIndex].cols[colIndex] : { style: {} };
   return (
     <div>
       <StyledBodyOption>
-        <strong>전체 Width</strong>
-        <StyleInputNumber
-          type="number"
-          defaultValue={bodyWidth}
-          placeholder="1000 이상 2000 이하"
-          min={minBodyWidth}
-          max={maxBodyWidth}
-          onChange={onChangeBodyWidth}
-          onBlur={onBlurBodyWidth}
-        />
-        <strong>px</strong>
-        <span>(1000이상 2000이하 조절 가능합니다.)</span>
+        <div className="option">
+          <strong className="label">Width 타입</strong>
+          <select name="type" id="width-type" className="selector" onChange={onChangeBodyWidthType} value={bodyWidthType}>
+            <option value="%">%</option>
+            <option value="px">px</option>
+          </select>
+        </div>
+        <div className="option">
+          <strong className="label">전체 Width</strong>
+          <StyleInputNumber
+            type="number"
+            id="style-body-width-input"
+            defaultValue={bodyWidth}
+            placeholder={getBodyWidthPlaceholder(bodyWidthType)}
+            min={minBodyWidth}
+            max={maxBodyWidth}
+            onChange={onChangeBodyWidth}
+            onBlur={onBlurBodyWidth}
+          />
+          <strong>{bodyWidthType}</strong>
+          {bodyWidthType === '%' && <span>(100%이상 200%이하 조절 가능합니다.)</span>}
+          {bodyWidthType === 'px' && <span>(1000이상 2000이하 조절 가능합니다.)</span>}
+        </div>
       </StyledBodyOption>
       <StyledDiv defaultWidth={`${bodyWidth}px`}>
         <AutoSizer disableHeight style={{ width: '1000px', height: 'auto' }}>
@@ -214,7 +245,9 @@ const StyleManager = ({
 };
 StyleManager.propTypes = {
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  defaultWidthType: PropTypes.string,
   defaultWidth: PropTypes.number,
+  updateBodyWidthType: PropTypes.func,
   updateBodyWidth: PropTypes.func,
   onChangeWidths: PropTypes.func,
   onChangeHeights: PropTypes.func,
@@ -224,7 +257,9 @@ StyleManager.propTypes = {
   baseComponent: PropTypes.object,
 };
 StyleManager.defaultProps = {
+  defaultWidthType: 'px',
   defaultWidth: 1000,
+  updateBodyWidthType: () => {},
   updateBodyWidth: () => {},
   onChangeWidths: () => {},
   onChangeHeights: () => {},
