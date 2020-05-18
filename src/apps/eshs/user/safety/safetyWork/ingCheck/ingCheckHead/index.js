@@ -19,7 +19,7 @@ class IngCheckHead extends Component {
   }
 
   render() {
-    const { ingCheckHead, handleChangeHeadFormData } = this.props;
+    const { ingCheckHead, handleChangeHeadFormData, handleModal } = this.props;
     return (
       <ContentsWrapper>
         <StyledHtmlTable>
@@ -82,34 +82,31 @@ class IngCheckHead extends Component {
               </tr>
               <tr>
                 <th colSpan={2}>
-                  <span>점검회사</span>
-                </th>
-                <td colSpan={8}>
-                  <AntdSearch
-                    className="input-search-xs"
-                    style={{ width: '200px' }}
-                    value={ingCheckHead.CHECK_CMPNY_CD ? ingCheckHead.CHECK_CMPNY_CD : ''}
-                    onClick={() => console.debug('ddd')}
-                    onSearch={() => console.debug('ddd')}
-                  />
-                  {ingCheckHead.CHECK_CMPNY_NM && ingCheckHead.CHECK_CMPNY_NM !== '' && (
-                    <span style={{ marginLeft: '5px' }}>{ingCheckHead.CHECK_CMPNY_NM}</span>
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <th colSpan={2}>
                   <span>점검자</span>
                 </th>
-                <td colSpan={8}>
+                <td colSpan={3}>
                   <AntdSearch
                     className="input-search-xs"
                     style={{ width: '200px' }}
                     value={ingCheckHead.CHECK_EMP_NO ? ingCheckHead.CHECK_EMP_NO : ''}
-                    onClick={() => console.debug('ddd')}
-                    onSearch={() => console.debug('ddd')}
+                    onClick={() => handleModal('userSelect', true)}
+                    onSearch={() => handleModal('userSelect', true)}
                   />
                   {ingCheckHead.CHECK_EMP_NM && ingCheckHead.CHECK_EMP_NM !== '' && <span style={{ marginLeft: '5px' }}>{ingCheckHead.CHECK_EMP_NM}</span>}
+                </td>
+                <th colSpan={2}>
+                  <span>점검회사</span>
+                </th>
+                <td colSpan={3}>
+                  <AntdInput
+                    className="ant-input-xs ant-input-inline"
+                    style={{ width: '200px' }}
+                    value={ingCheckHead.CHECK_CMPNY_CD ? ingCheckHead.CHECK_CMPNY_CD : ''}
+                    readOnly
+                  />
+                  {ingCheckHead.CHECK_CMPNY_NM && ingCheckHead.CHECK_CMPNY_NM !== '' && (
+                    <span style={{ marginLeft: '5px' }}>{ingCheckHead.CHECK_CMPNY_NM}</span>
+                  )}
                 </td>
               </tr>
               <tr>
@@ -135,6 +132,7 @@ class IngCheckHead extends Component {
 IngCheckHead.propTypes = {
   ingCheckHead: PropTypes.object,
   handleChangeHeadFormData: PropTypes.func,
+  handleModal: PropTypes.func,
 };
 
 IngCheckHead.defaultProps = {};
