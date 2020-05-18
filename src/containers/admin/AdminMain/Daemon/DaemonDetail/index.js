@@ -13,7 +13,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import * as feed from 'components/Feedback/functions';
 import Footer from 'containers/admin/App/Footer';
-import StyledButton from 'components/Button/StyledButton.js';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import * as actions from './actions';
 
 import reducer from './reducer';
@@ -123,6 +123,8 @@ class DaemonDetail extends React.Component {
     switch (type) {
       case 'schedule':
         return val !== '' && !cronValid(val) ? 'error' : '';
+      case 'daemonKey':
+        return val !== '' ? '' : 'error';
       default:
         return val !== '' ? 'success' : 'error';
     }
@@ -183,7 +185,7 @@ class DaemonDetail extends React.Component {
     this.setState({ mode: 'D' });
   };
 
-  handleScheduleDayChange = e => {
+  handleScheduleMonthChange = e => {
     const cronSchedule = this.state.schedule ? this.state.schedule : defaultCronExpress;
     const cronArray = cronSchedule.split(' ');
     cronArray[3] = e;
@@ -198,6 +200,16 @@ class DaemonDetail extends React.Component {
     const cronArray = cronSchedule.split(' ');
     cronArray[5] = e;
     cronArray[3] = '*';
+    this.setState({
+      schedule: cronArray.join(' '),
+    });
+  };
+
+  handleScheduleDayChange = e => {
+    const cronSchedule = this.state.schedule ? this.state.schedule : defaultCronExpress;
+    const cronArray = cronSchedule.split(' ');
+    cronArray[3] = `1/${e}`;
+    cronArray[5] = '*';
     this.setState({
       schedule: cronArray.join(' '),
     });
@@ -273,7 +285,7 @@ class DaemonDetail extends React.Component {
     const { daemonId } = this.state;
     const listParam = setListState(this.state);
     deleteDaemon(daemonId, history, listParam);
-  }
+  };
 
   render() {
     const formItemLayout = {
@@ -428,7 +440,7 @@ class DaemonDetail extends React.Component {
                     <label htmlFor="s7">{intlObj.get(messages.daemoKey)}</label>
                   </th>
                   <td>
-                    <FormItem {...formItemLayout}>
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.validStatus(this.state.daemonKey, 'daemonKey')}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.daemoKey)}
@@ -481,10 +493,10 @@ class DaemonDetail extends React.Component {
                         <Tabs defaultActiveKey="1" style={{ width: 250 }}>
                           <TabPane tab="매월" key="1">
                             <Select
-                              name="day"
+                              name="month"
                               style={{ width: 120 }}
                               placeholder={intlObj.get(messages.selectPlaceholder)}
-                              onChange={this.handleScheduleDayChange}
+                              onChange={this.handleScheduleMonthChange}
                             >
                               {Array.from(Array(31), (e, i) => (
                                 <Option key={i + 1} value={i + 1}>
@@ -494,7 +506,7 @@ class DaemonDetail extends React.Component {
                               <Option key="99" value="L">
                                 {intlObj.get(messages.lastday)}
                               </Option>
-                            </Select>
+                            </Select>&nbsp;일
                           </TabPane>
                           <TabPane tab="매주" key="2">
                             <Select
@@ -508,7 +520,21 @@ class DaemonDetail extends React.Component {
                                   {e}
                                 </Option>
                               ))}
-                            </Select>
+                            </Select>&nbsp;요일
+                          </TabPane>
+                          <TabPane tab="매일" key="3">
+                            <Select
+                              name="day"
+                              style={{ width: 120 }}
+                              placeholder={intlObj.get(messages.selectPlaceholder)}
+                              onChange={this.handleScheduleDayChange}
+                            >
+                              {Array.from(Array(31), (e, i) => (
+                                <Option key={i + 1} value={i + 1}>
+                                  {i + 1}
+                                </Option>
+                              ))}
+                            </Select>&nbsp;일마다
                           </TabPane>
                         </Tabs>
                         <TimePicker

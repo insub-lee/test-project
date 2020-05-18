@@ -2,20 +2,21 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Table, Input, message, Select } from 'antd';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import ImageUploader from './ImageUploader';
 
 const AntdSelect = StyledSelect(Select);
-const AntdLineTable = StyledLineTable(Table);
+const AntdLineTable = StyledAntdTable(Table);
+const AntdTextArea = StyledTextarea(Input.TextArea);
 
 const { Option } = Select;
-const { TextArea } = Input;
 
 const getBase64 = file =>
   new Promise((resolve, reject) => {
@@ -163,7 +164,7 @@ class List extends Component {
         dataIndex: 'NAME_KOR',
         render: (text, record, index) => (
           <div className="td-input-wrapper">
-            <TextArea className="input-sm input-center" value={text} onChange={e => this.onChangeContants('NAME_KOR', e.target.value, record, index)} />
+            <AntdTextArea className="input-sm input-center" value={text} onChange={e => this.onChangeContants('NAME_KOR', e.target.value, record, index)} />
           </div>
         ),
       },
@@ -173,7 +174,7 @@ class List extends Component {
         dataIndex: 'DESCIPTION',
         render: (text, record, index) => (
           <div className="td-input-wrapper">
-            <TextArea className="input-sm input-center" value={text} onChange={e => this.onChangeContants('DESCIPTION', e.target.value, record, index)} />
+            <AntdTextArea className="input-sm input-center" value={text} onChange={e => this.onChangeContants('DESCIPTION', e.target.value, record, index)} />
           </div>
         ),
       },
@@ -181,11 +182,11 @@ class List extends Component {
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
-          <AntdSelect style={{ width: 200 }} className="mr5" onChange={value => this.onChangeSelect(value)} defaultValue={4014}>
+          <AntdSelect style={{ width: 200 }} className="select-sm mr5" onChange={value => this.onChangeSelect(value)} defaultValue={4014}>
             {nData && nData.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
           </AntdSelect>
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={this.BeforeSaveTask}>
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.BeforeSaveTask}>
               저장
             </StyledButton>
           </StyledButtonWrapper>
@@ -204,6 +205,7 @@ class List extends Component {
         </StyledHtmlTable>
         <AntdLineTable
           className="tableWrapper tableCodeWrapper"
+          bordered
           rowKey={dataSource && dataSource.NODE_ID}
           columns={columns}
           dataSource={dataSource || []}
