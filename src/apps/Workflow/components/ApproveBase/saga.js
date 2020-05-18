@@ -10,7 +10,7 @@ import * as actions from './actions';
 import * as selectors from './selectors';
 
 function* getApproveList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/approveList`, {});
+  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/approveList`, { PARAM: { relTypes: [1, 99] } });
   if (response) {
     const { list } = response;
     yield put(actions.setApproveList(list));
@@ -18,8 +18,31 @@ function* getApproveList() {
   }
 }
 
+function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
+  let httpMethodInfo = Axios.put;
+  switch (httpMethod.toUpperCase()) {
+    case 'POST':
+      httpMethodInfo = Axios.post;
+      break;
+    case 'PUT':
+      httpMethodInfo = Axios.put;
+      break;
+    case 'DELETE':
+      httpMethodInfo = Axios.delete;
+      break;
+    default:
+      httpMethodInfo = Axios.get;
+      break;
+  }
+  const response = yield call(httpMethodInfo, `${rtnUrl}`, param);
+  if (response) {
+    const { list } = response;
+    yield put(actions.setCustomDataBind(list));
+  }
+}
+
 function* getUnApproveList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/unApproveList`, {});
+  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/unApproveList`, { PARAM: { relTypes: [1, 99] } });
   if (response) {
     const { list } = response;
     yield put(actions.setUnApproveList(list));
@@ -28,7 +51,7 @@ function* getUnApproveList() {
 }
 
 function* getDraftList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/draftList`, {});
+  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/draftList`, { PARAM: { relTypes: [1, 99] } });
   if (response) {
     const { list } = response;
     yield put(actions.setDraftList(list));
@@ -88,6 +111,7 @@ function* submitHandlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc
       httpMethodInfo = Axios.get;
       break;
   }
+  console.debug('submitHandler');
   const response = yield call(httpMethodInfo, apiUrl, submitData);
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, response);
@@ -103,4 +127,5 @@ export default function* watcher() {
   yield takeEvery(actionTypes.SUCCESS_APPROVE, successApprove);
   yield takeEvery(actionTypes.FAIL_APPROVE, failApprove);
   yield takeLatest(actionTypes.GET_USERINFO, getUserInfo);
+  yield takeEvery(actionTypes.GET_CUSTOMER_DATABIND, getCustomDataBind);
 }

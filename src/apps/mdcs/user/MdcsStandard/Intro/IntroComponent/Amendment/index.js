@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Table } from 'antd';
 
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
 
@@ -88,17 +88,37 @@ class Amendment extends Component {
 
   onSearchRevisionData = () => {
     const { sagaKey, submitHandlerBySaga } = this.props;
-    submitHandlerBySaga(sagaKey, 'POST', `/api/mdcs/v1/common/mdcsrevisionListHandler`, {}, this.onInitDataBind);
+    const { searchValue } = this.state;
+    submitHandlerBySaga(sagaKey, 'POST', `/api/mdcs/v1/common/mdcsrevisionListHandler`, { PARAM: { DOCNUMBER: searchValue || '' } }, this.onInitDataBind);
   };
 
   onSelectedWorkSeq = selectedNodeIds => {
-    if (selectedNodeIds.includes(289)) {
-      return 28;
+    let viewChangeSeq;
+    if (selectedNodeIds.includes(2160)) {
+      viewChangeSeq = 28;
+    } else if (
+      selectedNodeIds.includes(2434) ||
+      selectedNodeIds.includes(2445) ||
+      selectedNodeIds.includes(2456) ||
+      selectedNodeIds.includes(2467) ||
+      selectedNodeIds.includes(2478) ||
+      selectedNodeIds.includes(2489) ||
+      selectedNodeIds.includes(2500) ||
+      selectedNodeIds.includes(2511) ||
+      selectedNodeIds.includes(2522) ||
+      selectedNodeIds.includes(2533) ||
+      selectedNodeIds.includes(2544) ||
+      selectedNodeIds.includes(2555) ||
+      selectedNodeIds.includes(2566) ||
+      selectedNodeIds.includes(2577) ||
+      selectedNodeIds.includes(2587) ||
+      selectedNodeIds.includes(2590)
+    ) {
+      viewChangeSeq = 31;
+    } else {
+      viewChangeSeq = undefined;
     }
-    if (selectedNodeIds.includes(423) || selectedNodeIds.includes(424) || selectedNodeIds.includes(425) || selectedNodeIds.includes(426)) {
-      return 31;
-    }
-    return undefined;
+    return viewChangeSeq;
   };
 
   onTableRowClick = (draftType, workSeq, taskSeq, nodeId, fullPath, change) => {
@@ -125,7 +145,7 @@ class Amendment extends Component {
       <>
         <li>
           <div className="label-txt">문서번호검색</div>
-          <Input onChange={this.onChangeSearchValue} />
+          <Input onPressEnter={this.onSearchRevisionData} onChange={this.onChangeSearchValue} />
         </li>
         <div className="btn-wrap">
           <StyledButton className="btn-primary" onClick={this.onSearchRevisionData}>

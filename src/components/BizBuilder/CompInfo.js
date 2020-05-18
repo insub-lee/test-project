@@ -122,8 +122,14 @@ import NodeNameByCodeComp from 'components/BizBuilder/Field/NodeNameByCodeComp';
 import SelectMonthComp from 'components/BizBuilder/Field/SelectMonthComp';
 import ListButtonComp from 'components/BizBuilder/Field/ListButtonComp';
 import MultiUserSelectComp from 'components/BizBuilder/Field/MultiUserSelectComp';
+import EshsQualHeaderComp from 'components/BizBuilder/Field/EshsQualHeaderComp';
+import MDCSTechScopeViewComp from 'components/BizBuilder/Field/MDCSTechScopeViewComp';
+import VaildationListComp from 'components/BizBuilder/Field/VaildationListComp';
+import EshsQualInterLockReviewComp from 'components/BizBuilder/Field/EshsQualInterLockReviewComp';
+import DefaultValueComp from 'components/BizBuilder/Field/DefaultValueComp';
 
 export const CompInfo = {
+  'components/BizBuilder/Field/VaildationListComp': { renderer: property => <VaildationListComp {...property} /> },
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
   'components/BizBuilder/Field/CoverViewComp': { renderer: property => <CoverViewComp {...property} /> },
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -246,4 +252,8 @@ export const CompInfo = {
   'components/BizBuilder/Field/SelectMonthComp': { renderer: property => <SelectMonthComp {...property} /> },
   'components/BizBuilder/Field/ListButtonComp': { renderer: property => <ListButtonComp {...property} /> },
   'components/BizBuilder/Field/MultiUserSelectComp': { renderer: property => <MultiUserSelectComp {...property} /> },
+  'components/BizBuilder/Field/EshsQualHeaderComp': { renderer: property => <EshsQualHeaderComp {...property} /> },
+  'components/BizBuilder/Field/MDCSTechScopeViewComp': { renderer: property => <MDCSTechScopeViewComp {...property} /> },
+  'components/BizBuilder/Field/EshsQualInterLockReviewComp': { renderer: property => <EshsQualInterLockReviewComp {...property} /> },
+  'components/BizBuilder/Field/DefaultValueComp': { renderer: property => <DefaultValueComp {...property} /> },
 };

@@ -1,10 +1,16 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input, Button, Modal } from 'antd';
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import { Input, Modal } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import CustomList from 'apps/eshs/admin/environment/air/stack/List';
+
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+
+const AntdSearch = StyledSearchInput(Input.Search);
+const AntdModal = StyledModal(Modal);
 
 class CommonSearchbar extends React.Component {
   constructor(props) {
@@ -76,7 +82,7 @@ class CommonSearchbar extends React.Component {
         listMetaSeq={property.listMetaSeq || undefined}
         viewType="LIST"
         loadingComplete={this.props.loadingComplete}
-        isModalChange={this.isModalChange}
+        customOnRowClick={this.isModalChange}
       />
     );
   };
@@ -88,10 +94,10 @@ class CommonSearchbar extends React.Component {
       case 'INPUT':
         buttonGruop = (
           <StyledButtonWrapper className="btn-wrap-inline btn-wrap-ml-5">
-            <StyledButton className="btn-gray btn-sm mr5" onClick={() => this.onChangeSave('S')}>
+            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('S')}>
               등록
             </StyledButton>
-            <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            <StyledButton className="btn-primary btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
           </StyledButtonWrapper>
@@ -99,20 +105,20 @@ class CommonSearchbar extends React.Component {
         break;
       case 'MODIFY':
         buttonGruop = (
-          <>
-            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('M')}>
+          <StyledButtonWrapper className="btn-wrap-inline btn-wrap-ml-5">
+            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('M')}>
               저장
             </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('D')}>
+            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('D')}>
               삭제
             </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
+            <StyledButton className="btn-primary btn-sm mr5" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
               신규등록
             </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            <StyledButton className="btn-primary btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
-          </>
+          </StyledButtonWrapper>
         );
         break;
       default:
@@ -123,15 +129,32 @@ class CommonSearchbar extends React.Component {
   }
 
   render() {
-    const { CONFIG, visible, colData } = this.props;
+    const { CONFIG, visible, colData, NAME_KOR, readOnly, COMP_FIELD } = this.props;
     return visible ? (
       <div>
-        <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
-        <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
+        <AntdSearch
+          value={colData}
+          readOnly
+          className={CONFIG.property.className || ''}
+          style={{ width: 150 }}
+          onClick={this.handleModalVisible}
+          onSearch={this.handleModalVisible}
+        />
         {this.ButtonRender()}
-        <Modal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
-          {this.state.modal && this.BizbuilderbaseRender()}
-        </Modal>
+        {readOnly || CONFIG.property.readOnly ? (
+          ''
+        ) : (
+          <AntdModal
+            className="modal-table-pad"
+            title={NAME_KOR || COMP_FIELD}
+            visible={this.state.modal}
+            width={800}
+            onCancel={this.handleModalVisible}
+            footer={[null]}
+          >
+            <div>{this.state.modal && this.BizbuilderbaseRender()}</div>
+          </AntdModal>
+        )}
       </div>
     ) : (
       ''
@@ -140,9 +163,11 @@ class CommonSearchbar extends React.Component {
 }
 
 CommonSearchbar.propTypes = {
-  CONFIG: PropTypes.any,
+  CONFIG: PropTypes.object,
+  COMP_FIELD: PropTypes.string,
   colData: PropTypes.string,
   sagaKey: PropTypes.string,
+  NAME_KOR: PropTypes.string,
   readOnly: PropTypes.bool,
   visible: PropTypes.bool,
   viewPageData: PropTypes.func,
@@ -151,6 +176,7 @@ CommonSearchbar.propTypes = {
   saveTask: PropTypes.func,
   modifyTask: PropTypes.func,
   deleteTask: PropTypes.func,
+  changeFormData: PropTypes.func,
 };
 
 export default CommonSearchbar;

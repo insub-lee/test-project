@@ -26,11 +26,19 @@ const createWidthDiv = (width, moveWidth) => {
   div.className = 'resizing-column-width';
   return div;
 };
+
 const { maxBodyWidth, minBodyWidth } = {
-  maxBodyWidth: 2000,
-  minBodyWidth: 1000,
+  maxBodyWidth: {
+    px: 2000,
+    percent: 200,
+  },
+  minBodyWidth: {
+    px: 1000,
+    percent: 100,
+  },
 };
-const useHooks = ({ defaultWidth, updateBodyWidth, onChangeWidths, onChangeHeights }) => {
+
+const useHooks = ({ defaultWidthType, defaultWidth, updateBodyWidthType, updateBodyWidth, onChangeWidths, onChangeHeights }) => {
   // For Change Widths
   let pageX;
   let curCol;
@@ -43,12 +51,19 @@ const useHooks = ({ defaultWidth, updateBodyWidth, onChangeWidths, onChangeHeigh
   let curColHeight;
   const TableRef = useRef(null);
   const [showModal, setShowModal] = useState(false);
+  const [bodyWidthType, setBodyWidthType] = useState(defaultWidthType || 'px');
   const [bodyWidth, setBodyWidth] = useState(defaultWidth || 1000);
   const [dataTip, setDataTip] = useState(null);
+
   // bodyWidth가 업데이트 상위 콜백
   useEffect(() => {
     updateBodyWidth(bodyWidth);
   }, [bodyWidth]);
+
+  useEffect(() => {
+    updateBodyWidthType(bodyWidthType);
+  }, [bodyWidthType]);
+
   useEffect(() => {
     // Add Controller to Table Head Row
     const tableNode = TableRef.current;
@@ -190,30 +205,48 @@ const useHooks = ({ defaultWidth, updateBodyWidth, onChangeWidths, onChangeHeigh
     setShowModal(false);
     setDataTip(null);
   };
+
+  const onChangeBodyWidthType = e => {
+    const { value } = e.target;
+    setBodyWidthType(value);
+    if (value === 'px') {
+      setBodyWidth(minBodyWidth.px);
+      document.querySelector('#style-body-width-input').value = minBodyWidth.px;
+    } else if (value === '%') {
+      setBodyWidth(minBodyWidth.percent);
+      document.querySelector('#style-body-width-input').value = minBodyWidth.percent;
+    }
+  };
+
   const onChangeBodyWidth = e => {
     const widthValue = Number(e.target.value);
-    if (widthValue >= minBodyWidth && widthValue <= maxBodyWidth) {
+    const type = bodyWidthType === 'px' ? 'px' : 'percent';
+    if (widthValue >= minBodyWidth[type] && widthValue <= maxBodyWidth[type]) {
       setBodyWidth(widthValue);
     }
   };
+
   const onBlurBodyWidth = e => {
     const widthValue = Number(e.target.value);
-    if (widthValue < minBodyWidth) {
-      e.target.value = minBodyWidth.toString();
-      setBodyWidth(minBodyWidth);
-    } else if (widthValue > maxBodyWidth) {
-      e.target.value = maxBodyWidth.toString();
-      setBodyWidth(maxBodyWidth);
+    const type = bodyWidthType === 'px' ? 'px' : 'percent';
+    if (widthValue < minBodyWidth[type]) {
+      e.target.value = minBodyWidth[type].toString();
+      setBodyWidth(minBodyWidth[type]);
+    } else if (widthValue > maxBodyWidth[type]) {
+      e.target.value = maxBodyWidth[type].toString();
+      setBodyWidth(maxBodyWidth[type]);
     }
   };
+
   return {
     TableRef,
     showModal,
+    bodyWidthType,
     bodyWidth,
     maxBodyWidth,
     minBodyWidth,
     dataTip,
-    action: { openModal, closeModal, onChangeBodyWidth, onBlurBodyWidth, onChangeCellStyle },
+    action: { openModal, closeModal, onChangeBodyWidthType, onChangeBodyWidth, onBlurBodyWidth, onChangeCellStyle },
   };
 };
 export default useHooks;

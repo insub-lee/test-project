@@ -29,6 +29,7 @@ const StyledContentsWrapper = styled.div`
       display: inline-block;
       vertical-align: middle;
       padding: 0 12px;
+      font-size: 12px;
     }
     &.alignLeft {
       text-align: left;

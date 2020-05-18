@@ -467,6 +467,18 @@ const StyledViewDesigner = styled.div`
       }
     }
   }
+
+  .ant-upload.ant-upload-drag {
+    padding: 15px;
+
+    .ant-upload-drag-icon {
+      margin-bottom: 10px;
+    }
+
+    .ant-upload-text {
+      font-size: 12px;
+    }
+  }
 `;
 
 export default StyledViewDesigner;

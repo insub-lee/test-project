@@ -190,7 +190,7 @@ class AdminOrgTree extends Component {
                   }
                 };
 
-                resortTreeData(treeData, 0);
+                resortTreeData(treeData, treeData[0].LVL);
                 moveNode(treeFunc.generateList(fromJS(treeData)));
               }
             }}

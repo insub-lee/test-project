@@ -50,8 +50,9 @@ class ApproveList extends Component {
       title: '구분',
       dataIndex: 'APPVGUBUN',
       key: 'APPVGUBUN',
-      width: '10%',
+      width: '12%',
       align: 'center',
+      render: (text, record) => (record.REL_TYPE === 1 ? text : '폐기'),
     },
     {
       title: '유형',
@@ -118,7 +119,6 @@ class ApproveList extends Component {
     this.setState({ coverView });
   };
 
-
   handleReqApprove = e => {
     const { reqApprove, setOpinionVisible } = this.props;
     e.preventDefault();
@@ -144,6 +144,7 @@ class ApproveList extends Component {
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
+            className="tableWrapper"
           />
         </ContentsWrapper>
         {/* <ModalWrapper title="표준문서 기결함" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>

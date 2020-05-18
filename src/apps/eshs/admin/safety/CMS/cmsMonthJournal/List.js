@@ -55,10 +55,6 @@ class List extends Component {
     this.searchList();
   }
 
-  onChangeValue = (name, value) => {
-    this.setState({ [name]: value });
-  };
-
   initData = () => {
     const {
       result: { initData },
@@ -108,12 +104,13 @@ class List extends Component {
     this.searchList();
   };
 
-  dateChange = dates => {
-    this.setState({ rangeDate: dates });
+  onChangeValue = (name, value) => {
+    this.setState({ [name]: value });
   };
 
   onModalChange = seq => {
     const { isModal } = this.state;
+    if (isModal) this.searchList();
     this.setState({ isModal: !isModal, taskSeq: seq });
   };
 
@@ -145,7 +142,11 @@ class List extends Component {
               <span className="textLabel">날짜</span>
               {/* datePiker CSS 없음 대체용으로 사용 */}
               <div style={{ margin: '0 5px', display: 'inline-block', width: 300 }}>
-                <RangePicker defaultValue={rangeDate} format={['YYYY-MM-DD', 'YYYY-MM-DD']} onChange={(date, dateStrings) => this.dateChange(dateStrings)} />
+                <RangePicker
+                  defaultValue={rangeDate}
+                  format={['YYYY-MM-DD', 'YYYY-MM-DD']}
+                  onChange={(date, dateStrings) => this.onChangeValue('rangeDate', dateStrings)}
+                />
               </div>
             </>
           ) : (
@@ -325,25 +326,6 @@ class List extends Component {
                     <td style={{ textAlign: 'center' }}>{item.OTHER}</td>
                     <td>{item.JOURNAL_DATE}</td>
                     <td>
-                      {/* <Popover
-                        style={{ width: '80%' }}
-                        placement="topLeft"
-                        title="이벤트명"
-                        content={<div style={{ width: 660 }}>{item.DETAIL_CONTANT}</div>}
-                        trigger="hover"
-                      >
-                        <div
-                          style={{
-                            textOverflow: 'ellipsis',
-                            overflow: 'hidden',
-                            width: '100px',
-                            whiteSpace: 'nowrap',
-                            fontWeight: `bold`,
-                          }}
-                        >
-                          {item.DETAIL_CONTANT}
-                        </div>
-                      </Popover> */}
                       <Popover
                         style={{ width: '80%' }}
                         placement="topLeft"
@@ -351,22 +333,19 @@ class List extends Component {
                         content={
                           <div style={{ width: 660 }}>
                             {item &&
-                              item.DETAIL_CONTANT2.map(detailItem => {
-                                console.log(detailItem);
-                                return (
-                                  <>
-                                    <span
-                                      tabIndex={0}
-                                      role="button"
-                                      onKeyPress={() => this.onModalChange(JSON.parse(detailItem.value).task_seq)}
-                                      onClick={() => this.onModalChange(JSON.parse(detailItem.value).task_seq)}
-                                    >
-                                      {JSON.parse(detailItem.value).detail_contant || ''}
-                                    </span>
-                                    <hr />
-                                  </>
-                                );
-                              })}
+                              item.DETAIL_DATA.map(detailItem => (
+                                <>
+                                  <span
+                                    tabIndex={0}
+                                    role="button"
+                                    onKeyPress={() => this.onModalChange(JSON.parse(detailItem.value).task_seq)}
+                                    onClick={() => this.onModalChange(JSON.parse(detailItem.value).task_seq)}
+                                  >
+                                    {JSON.parse(detailItem.value).title || ''}
+                                  </span>
+                                  <hr />
+                                </>
+                              ))}
                           </div>
                         }
                         trigger="hover"
@@ -380,7 +359,7 @@ class List extends Component {
                             fontWeight: `bold`,
                           }}
                         >
-                          {item.DETAIL_CONTANT}
+                          {item.TITLE}
                         </div>
                       </Popover>
                     </td>
@@ -391,7 +370,7 @@ class List extends Component {
                         content={
                           <div style={{ width: 660 }}>
                             {item &&
-                              item.DETAIL_CONTANT2.map(detailItem => (
+                              item.DETAIL_DATA.map(detailItem => (
                                 <>
                                   <span>{JSON.parse(detailItem.value).remark || ''}</span>
                                   {JSON.parse(detailItem.value).remark ? <hr /> : ''}

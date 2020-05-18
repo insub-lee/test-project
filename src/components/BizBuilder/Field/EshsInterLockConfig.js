@@ -23,17 +23,6 @@ class EshsInterLockConfig extends Component {
     return (
       <>
         <div className="popoverItem popoverItemInput">
-          <span className="spanLabel">InterLock Column 설정</span>
-          <Select
-            defaultValue={(configInfo && configInfo.property && configInfo.property.INTERLOCK_COLUMN) || ''}
-            style={{ width: '100%' }}
-            onChange={value => this.handleChangeViewCompData('INTERLOCK_COLUMN', value)}
-          >
-            <Option value="">추가예정</Option>
-            <Option value="DEFAULT">기본컬럼</Option>
-          </Select>
-        </div>
-        <div className="popoverItem popoverItemInput">
           <span className="spanLabel">ViewType 설정</span>
           <Select
             defaultValue={(configInfo && configInfo.property && configInfo.property.INTERLOCK_TYPE) || ''}
@@ -43,16 +32,6 @@ class EshsInterLockConfig extends Component {
             <Option value="INPUT">INPUT</Option>
             <Option value="VIEW">VIEW</Option>
           </Select>
-        </div>
-        <div className="popoverItem popoverItemInput">
-          <span className="spanLabel">리스트 Default값</span>
-          <Radio.Group
-            onChange={e => this.handleChangeViewCompData('DEFAULT_LIST', e.target.value)}
-            value={(configInfo && configInfo.property && configInfo.property.DEFAULT_LIST) || 'N'}
-          >
-            <Radio value="N">미사용</Radio>
-            <Radio value="Y">사용</Radio>
-          </Radio.Group>
         </div>
         <div className="popoverItem popoverItemInput">
           <span className="spanLabel">리스트 추가 버튼</span>

@@ -263,7 +263,7 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
+                          <StyledButton className="btn-gray" onClick={() => getListData(id, workSeq)}>
                             Search
                           </StyledButton>
                         </div>

@@ -130,6 +130,39 @@ const Styled = styled.div`
                 line-height: 54px;
               }
             }
+
+            &.chk-custom {
+              padding: 0;
+
+              .ant-checkbox-group {
+                width: 100%;
+
+                .ant-checkbox-wrapper {
+                  position: relative;
+                  font-size: 12px;
+                  width: 20%;
+                  /* width: 14.285%; */
+                  text-align: center;
+                  height: 34px;
+                  line-height: 34px;
+
+                  &:not(:first-child):before {
+                    position: absolute;
+                    top: 0;
+                    left: 1px;
+                    display: block;
+                    width: 1px;
+                    height: 100%;
+                    background-color: #d9d9d9;
+                    content: '';
+                  }
+                }
+
+                .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+                  margin-left: 0;
+                }
+              }
+            }
           }
         }
       }
@@ -172,8 +205,16 @@ const Styled = styled.div`
     font-size: 13px;
   }
 
+  span.span-xs {
+    font-size: 11px;
+  }
+
   span.span-gray {
     color: #999 !important;
+  }
+
+  span.txt {
+    vertical-align: middle;
   }
 
   .ant-radio-group-solid {
@@ -213,9 +254,33 @@ const Styled = styled.div`
       }
     }
 
+    &.w14 {
+      .ant-radio-button-wrapper {
+        width: 14.28%;
+      }
+    }
+
+    &.w16 {
+      .ant-radio-button-wrapper {
+        width: 16.66%;
+      }
+    }
+
     &.w25 {
       .ant-radio-button-wrapper {
         width: 25%;
+      }
+    }
+
+    &.w33 {
+      .ant-radio-button-wrapper {
+        width: 33.33%;
+      }
+    }
+
+    &.w50 {
+      .ant-radio-button-wrapper {
+        width: 50%;
       }
     }
   }
