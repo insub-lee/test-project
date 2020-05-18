@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { DatePicker, Select, Input, Modal, message } from 'antd';
+import { DatePicker, Select, Input, Modal, message, Table } from 'antd';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
@@ -10,7 +10,7 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledModalWrapper from 'components/BizBuilder/styled/Modal/StyledAntdModal';
-import StackStatus from 'apps/eshs/admin/environment/air/stack/stackStatus';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 
 import Moment from 'moment';
 import Graph from './Graph';
@@ -18,9 +18,10 @@ import Graph from './Graph';
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input);
 const AntdModal = StyledModalWrapper(Modal);
+const AntdTable = StyledAntdTable(Table);
 
 const { Option } = Select;
-const { MonthPicker, RangePicker } = DatePicker;
+const { RangePicker } = DatePicker;
 Moment.locale('ko');
 
 class List extends Component {
@@ -28,33 +29,21 @@ class List extends Component {
     super(props);
     this.state = {
       measureList: [],
-      dateStrings: Moment().format('YYYY-MM'),
       rangeDateStrings: [Moment(Moment().subtract(1, 'years')).format('YYYY-MM'), Moment().format('YYYY-MM')],
-      seq: 1,
       selectGubun: 1,
       isModal: false,
     };
   }
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHandler, refStack } = this.props;
+    const { sagaKey: id, getCallDataHandler } = this.props;
     const apiAry = [
       {
         key: 'gasType',
         url: '/api/eshs/v1/common/eshsgastype',
         type: 'GET',
       },
-      // refStack
-      //   ? {
-      //       key: 'gasType',
-      //       url: '/api/eshs/v1/common/eshsgastype',
-      //       type: 'GET',
-      //     }
-      //   : {},
     ];
-    if (!refStack) {
-      this.isSearch();
-    }
     getCallDataHandler(id, apiAry, this.initData);
   }
 
@@ -66,19 +55,17 @@ class List extends Component {
   };
 
   isSearch = () => {
-    const { sagaKey: id, getCallDataHandler, refStack } = this.props;
-    const { dateStrings, rangeDateStrings, seq, stackCd } = this.state;
-    const setDate = refStack
-      ? `START_DATE=${`${rangeDateStrings[0]}-01`}&&END_DATE=${`${rangeDateStrings[1]}-31`}&&STACK_CD=${stackCd}`
-      : `START_DATE=${`${dateStrings}-01`}&&END_DATE=${`${dateStrings}-31`}`;
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { rangeDateStrings, gasCd } = this.state;
+    const setDate = `START_DATE=${`${rangeDateStrings[0]}-01`}&&END_DATE=${`${rangeDateStrings[1]}-31`}&&GAS_CD=${gasCd}`;
     const apiAry = [
       {
         key: 'measure',
-        url: `/api/eshs/v1/common/eshsmeasure?${setDate}&&SEQ=${seq}`,
-        type: 'GET',
+        url: `/api/eshs/v1/common/eshsmeasure?${setDate}`,
+        type: 'POST',
       },
     ];
-    if (!refStack || (refStack && stackCd)) {
+    if (gasCd) {
       getCallDataHandler(id, apiAry, this.listData);
     } else {
       message.warning('stack 종류를 먼저 선택해주세요.');
@@ -112,9 +99,8 @@ class List extends Component {
     this.setState({ isModal: !isModal });
   };
 
-  customOnRowClick = record => {
-    console.debug('확인해봐');
-    this.setState({ stackCd: record.STACK_CD });
+  onRowClick = record => {
+    this.setState({ gasCd: record.GAS_CD });
     this.onChangeModal();
   };
 
@@ -151,95 +137,31 @@ class List extends Component {
     return calculateData;
   };
 
-  densityList = name => {
-    const { measureList, selectGubun } = this.state;
-    let list;
-    if (name) {
-      list = measureList && measureList.filter(element => element.GUBUN_NAME === name);
-    } else {
-      list = measureList;
-    }
-    const temp =
-      list &&
-      list
-        .map(element => element.GAS.map(gasItem => JSON.parse(gasItem.value)))
-        .map(i =>
-          i.reduce(
-            (accumulator, currentValue) => ({
-              ...accumulator,
-              [currentValue.GAS_CD]:
-                selectGubun === 1
-                  ? currentValue.DENSITY
-                  : this.calculate(currentValue.GAS_CD, currentValue.HOUR_FLOW, currentValue.DENSITY, currentValue.WORK_DAY, currentValue.GAS_WEIGHT),
-            }),
-            {},
-          ),
-        );
-    return temp;
-  };
-
-  dataSet = () => {
-    const { refStack } = this.props;
-    const { measureList, gasList } = this.state;
-    const hour = measureList && measureList.map(element => Number(element.HOUR_FLOW));
-    const minute = measureList && measureList.map(element => Number(element.MINUTE_FLOW));
-    const temp = this.densityList();
-    const gasDensityList =
-      gasList &&
-      gasList.map(
-        item =>
-          temp &&
-          temp.reduce(
-            (accumulator, currentValue) => ({
-              ...accumulator,
-              [item.GAS_CD]: accumulator[item.GAS_CD] ? accumulator[item.GAS_CD].concat(currentValue[item.GAS_CD] || []) : [currentValue[item.GAS_CD]] || [],
-            }),
-            {},
-          ),
-      );
-    if (!refStack) {
-      const acid = this.avg('Acid');
-      const toxic = this.avg('Toxic');
-      const VOC = this.avg('VOC');
-      this.setState({ gasDensityList, hour, minute, acid, toxic, VOC });
-    } else {
-      const avg = this.avg();
-      this.setState({ gasDensityList, hour, minute, avg });
-    }
-  };
-
-  avg = name => {
-    const { measureList, gasList } = this.state;
-    let avg;
-    if (name) {
-      avg = measureList && measureList.filter(element => element.GUBUN_NAME === name);
-    } else {
-      avg = measureList;
-    }
-    const hour = avg.reduce((pre, cur) => ({ HOUR_FLOW: Number(pre.HOUR_FLOW) + Number(cur.HOUR_FLOW) }), { HOUR_FLOW: 0 });
-    const temp = this.densityList(name);
-    const avgList =
-      gasList &&
-      gasList
-        .map(
-          item =>
-            temp &&
-            temp.reduce(
-              (accumulator, currentValue) => ({
-                ...accumulator,
-                [item.GAS_CD]: accumulator[item.GAS_CD] ? Number(accumulator[item.GAS_CD] + currentValue[item.GAS_CD]) || 0 : currentValue[item.GAS_CD] || 0,
-              }),
-              {},
-            ),
-        )
-        .reduce((result, item) => ({ ...result, ...item }), {});
-
-    return { ...avgList, LENGTH: avg.length, HOUR_FLOW: hour.HOUR_FLOW };
-  };
+  columns = [
+    {
+      title: '가스종류명',
+      dataIndex: 'GAS_CD',
+      align: 'center',
+    },
+    {
+      title: '가스분자량',
+      dataIndex: 'GAS_WEIGHT',
+      align: 'right',
+    },
+    {
+      title: '법적허용 농도(PPM)',
+      dataIndex: 'PERMISSION_DENSITY',
+      align: 'center',
+    },
+    {
+      title: '단위',
+      dataIndex: 'UNIT',
+      align: 'left',
+    },
+  ];
 
   render() {
-    const { measureList, gasList, selectGubun, rangeDateStrings, gasDensityList, hour, minute, acid, toxic, VOC, avg } = this.state;
-    const { refStack } = this.props;
+    const { measureList, gasList, selectGubun, rangeDateStrings, avg } = this.state;
     return (
       <StyledContentsWrapper>
         <div className="selSaveWrapper alignLeft">
@@ -253,35 +175,14 @@ class List extends Component {
             </Option>
           </AntdSelect>
           <div style={{ margin: '0 5px', display: 'inline-block' }}>
-            {refStack ? (
-              <RangePicker
-                defaultValue={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
-                mode={['month', 'month']}
-                format={['YYYY-MM', 'YYYY-MM']}
-                onChange={(date, dateStrings) => this.onChangeState('rangeDateStrings', dateStrings)}
-              />
-            ) : (
-              <MonthPicker
-                defaultValue={Moment(Moment(), 'YYYY-MM')}
-                format="YYYY-MM"
-                onChange={(date, dateStrings) => this.onChangeState('dateStrings', dateStrings)}
-              />
-            )}
+            <RangePicker
+              defaultValue={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
+              mode={['month', 'month']}
+              format={['YYYY-MM', 'YYYY-MM']}
+              onChange={(date, dateStrings) => this.onChangeState('rangeDateStrings', dateStrings)}
+            />
           </div>
-          <span className="textLabel">측정회차(월)</span>
-          <AntdSelect style={{ width: 100 }} className="select-mid mr5" onChange={value => this.onChangeState('seq', value)} value={this.state.seq}>
-            <Option value={1} key="seq">
-              1 회차
-            </Option>
-            <Option value={2} key="seq">
-              2 회차
-            </Option>
-          </AntdSelect>
-          {refStack ? (
-            <AntdSearch style={{ width: 200 }} className="input-mid ant-input-inline mr5" value={this.state.stackCd} readOnly onClick={this.onChangeModal} />
-          ) : (
-            ''
-          )}
+          <AntdSearch style={{ width: 200 }} className="input-mid ant-input-inline mr5" value={this.state.gasCd} readOnly onClick={this.onChangeModal} />
           <StyledButtonWrapper className="btn-wrap-inline">
             <StyledButton className="btn-primary btn-first" onClick={() => this.isSearch()}>
               검색
@@ -296,20 +197,14 @@ class List extends Component {
                   <tr>
                     <th>계통</th>
                     <th>STACK</th>
-                    <th>측정여부(Y/N)</th>
                     <th>측정일자</th>
-                    <th>분당 배출량</th>
-                    <th>시간당 배출량</th>
-                    {gasList && gasList.map(item => <th>{item.GAS_CD}</th>)}
+                    {measureList && measureList.map(item => <th>{item.STACK_CD}</th>)}
                   </tr>
                   {measureList.map(item => (
                     <tr>
                       <td>{item.GUBUN_NAME}</td>
                       <td>{item.STACK_CD}</td>
-                      <td>{item.IS_MEASURE}</td>
                       <td>{item.MEASURE_DT}</td>
-                      <td>{item.MINUTE_FLOW}</td>
-                      <td>{item.HOUR_FLOW}</td>
                       <>
                         {selectGubun === 1 ? (
                           <>
@@ -393,45 +288,14 @@ class List extends Component {
                         </td>
                       ))}
                   </tr>
-                  {refStack ? (
-                    <tr>
-                      <td colSpan={5}>평균</td>
-                      <td>{avg && (avg.HOUR_FLOW / avg.LENGTH).toFixed(3)}</td>
-                      {gasList &&
-                        gasList.map(item => (
-                          <td>{avg && avg[item.GAS_CD] && (avg[item.GAS_CD] !== 0 ? avg[item.GAS_CD] / avg.LENGTH : avg[item.GAS_CD]).toFixed(3)}</td>
-                        ))}
-                    </tr>
-                  ) : (
-                    <>
-                      <tr>
-                        <td colSpan={5}>ACID 평균</td>
-                        <td>{acid && (acid.HOUR_FLOW / acid.LENGTH).toFixed(3)}</td>
-                        {gasList &&
-                          gasList.map(item => (
-                            <td>{acid && acid[item.GAS_CD] && (acid[item.GAS_CD] !== 0 ? acid[item.GAS_CD] / acid.LENGTH : acid[item.GAS_CD]).toFixed(3)}</td>
-                          ))}
-                      </tr>
-                      <tr>
-                        <td colSpan={5}>TOXIC 평균</td>
-                        <td>{toxic && (toxic.HOUR_FLOW / toxic.LENGTH).toFixed(3)}</td>
-                        {gasList &&
-                          gasList.map(item => (
-                            <td>
-                              {toxic && toxic[item.GAS_CD] && (toxic[item.GAS_CD] !== 0 ? toxic[item.GAS_CD] / toxic.LENGTH : toxic[item.GAS_CD]).toFixed(3)}
-                            </td>
-                          ))}
-                      </tr>
-                      <tr>
-                        <td colSpan={5}>VOCs 평균</td>
-                        <td>{VOC && (VOC.HOUR_FLOW / VOC.LENGTH).toFixed(3)}</td>
-                        {gasList &&
-                          gasList.map(item => (
-                            <td>{VOC && VOC[item.GAS_CD] && (VOC[item.GAS_CD] !== 0 ? VOC[item.GAS_CD] / VOC.LENGTH : VOC[item.GAS_CD]).toFixed(3)}</td>
-                          ))}
-                      </tr>
-                    </>
-                  )}
+                  <tr>
+                    <td colSpan={5}>평균</td>
+                    <td>{avg && (avg.HOUR_FLOW / avg.LENGTH).toFixed(3)}</td>
+                    {gasList &&
+                      gasList.map(item => (
+                        <td>{avg && avg[item.GAS_CD] && (avg[item.GAS_CD] !== 0 ? avg[item.GAS_CD] / avg.LENGTH : avg[item.GAS_CD]).toFixed(3)}</td>
+                      ))}
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -439,16 +303,18 @@ class List extends Component {
         ) : (
           ''
         )}
-        <StyledHtmlTable className="tableWrapper">
-          <Graph graphData={measureList} gasList={gasList} selectGubun={selectGubun} refStack={refStack} />
-        </StyledHtmlTable>
-        {refStack ? (
-          <AntdModal width={800} visible={this.state.isModal} title="Stack 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
-            <StackStatus customOnRowClick={this.customOnRowClick} />
-          </AntdModal>
-        ) : (
-          ''
-        )}
+        <StyledHtmlTable className="tableWrapper">{/* <Graph graphData={measureList} gasList={gasList} selectGubun={selectGubun} /> */}</StyledHtmlTable>
+        <AntdModal width={800} visible={this.state.isModal} title="Stack 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
+          <AntdTable
+            dataSource={gasList}
+            columns={this.columns}
+            onRow={record => ({
+              onClick: () => {
+                this.onRowClick(record);
+              },
+            })}
+          />
+        </AntdModal>
       </StyledContentsWrapper>
     );
   }
@@ -458,7 +324,6 @@ List.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
   result: PropTypes.any,
-  refStack: PropTypes.bool,
 };
 
 List.defaultProps = {};

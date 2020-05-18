@@ -139,19 +139,6 @@ class ListPage extends Component {
       타입 : func (추가사항. antd - Table Props 참조)
       create by. JeongHyun
   */
-  onRowClick = record => {
-    const { sagaKey: id, isBuilderModal, changeBuilderModalState, changeViewPage } = this.props;
-    const { rowClickView } = this.state;
-    return {
-      onClick: () => {
-        if (isBuilderModal) {
-          changeBuilderModalState(true, rowClickView, record.WORK_SEQ, record.TASK_SEQ, record);
-        } else {
-          changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, rowClickView);
-        }
-      },
-    };
-  };
 
   renderList = (group, groupIndex) => {
     const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
@@ -167,9 +154,6 @@ class ListPage extends Component {
     }
     if (typeof customOnRowClick === 'function' && isOnRowClick) {
       onRow = record => ({ onClick: () => customOnRowClick(record) });
-    }
-    if (isOnRowClick) {
-      onRow = this.onRowClick;
     }
 
     return (
