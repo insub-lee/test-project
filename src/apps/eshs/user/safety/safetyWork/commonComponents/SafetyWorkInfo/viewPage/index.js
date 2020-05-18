@@ -2,23 +2,13 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Input, DatePicker, Select, Radio, Checkbox } from 'antd';
-import Upload from 'components/FormStuff/Upload/DropZone';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import { Input } from 'antd';
+// import Upload from 'components/FormStuff/Upload/DropZone';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledTextarea from 'commonStyled/Form/StyledTextarea';
 
-const { Option } = Select;
 const { TextArea } = Input;
-const AntdInput = StyledInput(Input);
-const AntdSearch = StyledSearchInput(Input.Search);
-const AntdSelect = StyledSelect(Select);
-const AntdDatePicker = StyledPicker(DatePicker);
 const AntdTextArea = StyledTextarea(TextArea);
 
 const EduInfoTableStyled = styled.div`
@@ -51,7 +41,7 @@ class SafetyWorkInfo extends Component {
   }
 
   render() {
-    const { handleModal, formData } = this.props;
+    const { formData, viewPage } = this.props;
     return (
       <EduInfoTableStyled>
         <ContentsWrapper>
@@ -119,8 +109,7 @@ class SafetyWorkInfo extends Component {
                     <span>작업업체</span>
                   </th>
                   <td colSpan={3}>
-                    <span>{formData.WRK_CMPNY_CD}</span>
-                    {formData.WRK_CMPNY_NM !== '' && <span style={{ marginLeft: '5px' }}>{formData.WRK_CMPNY_NM}</span>}
+                    <span>{formData.WRK_CMPNY_NM}</span>
                   </td>
                   <th colSpan={2}>
                     <span>서약서번호</span>
@@ -147,7 +136,7 @@ class SafetyWorkInfo extends Component {
                     <span>보충작업</span>
                   </th>
                   <td colSpan={3}>
-                    <span>{formData.SUB_WCATEGORY.toString().replace(',', ', ')}</span>
+                    <span>{formData.SUB_WCATEGORY.toString().replace(/,/gi, ', ')}</span>
                   </td>
                 </tr>
                 <tr>
@@ -214,12 +203,14 @@ class SafetyWorkInfo extends Component {
                     <span>{`${formData.FROM_TIME} ~ ${formData.TO_TIME}`}</span>
                   </td>
                 </tr>
-                <tr>
-                  <th colSpan={2}>
-                    <span>첨부</span>
-                  </th>
-                  <td colSpan={8}></td>
-                </tr>
+                {viewPage !== 'ingCheck' && (
+                  <tr>
+                    <th colSpan={2}>
+                      <span>첨부</span>
+                    </th>
+                    <td colSpan={8}></td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </StyledHtmlTable>
@@ -232,8 +223,11 @@ class SafetyWorkInfo extends Component {
 SafetyWorkInfo.propTypes = {
   formData: PropTypes.object,
   handleModal: PropTypes.func,
+  viewPage: PropTypes.string,
 };
 
-SafetyWorkInfo.defaultProps = {};
+SafetyWorkInfo.defaultProps = {
+  viewPage: '',
+};
 
 export default SafetyWorkInfo;

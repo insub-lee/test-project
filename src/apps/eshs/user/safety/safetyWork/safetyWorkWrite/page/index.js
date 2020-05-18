@@ -50,9 +50,9 @@ class SafetyWorkMain extends Component {
         TO_TIME: '18', //                 허가 요청시간   (String, 2)
         PLEDGE_NO: '', //               서약서 번호     (String, 13)
         DETB_DANEST: '', //             위험성 평가번호 (String, 13)
-        REQ_CMPNY_CD: props.profile.PSTN_ID, // 발주회사        (String, 2)
-        REQ_DEPT_CD: props.profile.DEPT_ID, //  발주회사 부서   (String, 20)
-        REQ_EMP_NO: props.profile.USER_ID, // 발주회사 담당자 (String, 10)
+        REQ_CMPNY_CD: '', // 발주회사        (String, 10)
+        REQ_DEPT_CD: '', //  발주회사 부서   (String, 20)
+        REQ_EMP_NO: '', // 발주회사 담당자 (String, 10)
         REQ_SUPERVISOR_EMP_NO: '', //   발주회사 감독자 (String, 10)
         EXM_CMPNY_CD: '', //            검토 회사 코드  (String, 2)
         EXM_DEPT_CD: '', //             검토 회사 부서  (String, 20)
@@ -68,9 +68,9 @@ class SafetyWorkMain extends Component {
         fileList: [],
         responseList: [],
         // ------------------------------------------------------------------------ DB insert 시 제외되는 데이터 (View 에서만 사용됨)
-        REQ_CMPNY_NM: props.profile.PSTN_NAME_KOR, // 발주회사명
-        REQ_DEPT_NM: props.profile.DEPT_NAME_KOR, // 발주부서명
-        REQ_EMP_NM: props.profile.NAME_KOR, // 담당자명
+        REQ_CMPNY_NM: '', // 발주회사명
+        REQ_DEPT_NM: '', // 발주부서명
+        REQ_EMP_NM: '', // 담당자명
         REQ_SUPERVISOR_EMP_NM: '', //   발주회사 감독자명
         EXM_EMP_NM: '', // 검토회사 담당자명
         FINAL_OK_EMP_NM: '', // 최종결재자 사번
@@ -80,7 +80,7 @@ class SafetyWorkMain extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey, getCallDataHandler } = this.props;
+    const { sagaKey, getCallDataHandler, profile } = this.props;
     const apiArr = [
       {
         /* 주관회사사원 : /api/eshs/v1/common/eshsHstCmpnyUser */
@@ -100,9 +100,31 @@ class SafetyWorkMain extends Component {
         type: 'GET',
         url: `/api/eshs/v1/common/eshsSwtbEquip`,
       },
+      {
+        key: 'getMyInfo',
+        type: 'GET',
+        url: `/api/eshs/v1/common/EshsUserSearch?searchType=safetyWork&keyword=${profile.USER_ID}`,
+      },
     ];
-    getCallDataHandler(sagaKey, apiArr);
+    getCallDataHandler(sagaKey, apiArr, this.initForm);
   }
+
+  initForm = () => {
+    const { formData } = this.state;
+    const { result } = this.props;
+    const myInfo = (result && result.getMyInfo && result.getMyInfo.myInfo) || {};
+    this.setState({
+      formData: {
+        ...formData,
+        REQ_CMPNY_CD: myInfo.CMPNY_ID,
+        REQ_DEPT_CD: myInfo.DEPT_ID,
+        REQ_EMP_NO: myInfo.EMP_NO,
+        REQ_CMPNY_NM: myInfo.CMPNY_NM,
+        REQ_DEPT_NM: myInfo.DEPT_NM,
+        REQ_EMP_NM: myInfo.EMP_NM,
+      },
+    });
+  };
 
   handleGetSafetyWork = () => {
     const { formData } = this.state;
@@ -583,6 +605,7 @@ class SafetyWorkMain extends Component {
     const eshsHstCmpnyUserList = (result && result.getHstCmpnyUser && result.getHstCmpnyUser.list) || [];
     const eshsSwtbEquip = (result && result.getSwtbEquipList && result.getSwtbEquipList.list) || [];
     console.debug('렌더링-state', this.state);
+    console.debug('렌더링-props', this.props);
     return (
       <Styled>
         <StyledSearchWrap>

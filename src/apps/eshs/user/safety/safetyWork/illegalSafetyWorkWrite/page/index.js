@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Input, Modal } from 'antd';
-import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
+import { CaretDownOutlined } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
@@ -11,61 +11,48 @@ import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import SafetyEquipTable from '../../commonComponents/SafetyEquip';
-import SafetyEquipSelect from '../../commonComponents/SafetyEquip/EquipSelect';
-import SafetyWorkInfo from '../../commonComponents/SafetyEmergencyWorkInfo';
+import SafetyWorkInfo from '../../commonComponents/illegalSafetyWorkInfo';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import Styled from './Styled';
 
 const AntdModal = StyledModalWrapper(Modal);
 
-class emergencyWorkWrite extends Component {
+class WritePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      init: true,
       modalType: '',
       modalTitle: '',
       modalVisible: false,
       formData: {
-        WORK_NO: '',
-        TITLE: '',
-        WCATEGORY: '',
-        SUB_WCATEGORY: [],
-        WORK_DESC: '',
-        WRK_CMPNY_CD: '',
-        WLOC: '',
-        WGUBUN: '신규',
-        SITE: '청주',
-        REQ_CMPNY_CD: '',
-        REQ_DEPT_CD: '',
-        REQ_EMP_NO: '',
-        REQ_SUPERVISOR_EMP_NO: '',
-        REQUEST_GB: '긴급',
-        FIRE_MANAGER: '',
-        EQUIP_LIST: [],
-        fileList: [],
-        responseList: [],
-        REQ_CMPNY_NM: '',
-        REQ_DEPT_NM: '',
-        REQ_EMP_NM: '',
-        REQUEST_DT: '',
+        WORK_NO: '', //                 작업번호        (String, 13)
+        TITLE: '', //                   작업명          (String, 100)
+        WCATEGORY: '', //               작업종류        (String, 40)
+        SUB_WCATEGORY: [], //           보충작업종류    (String, 40)
+        WORK_DESC: '', //               작업내용        (String, 300)
+        WRK_CMPNY_CD: '', //            작업업체 코드   (String, 10)
+        WLOC: '', //                    작업장소        (String, 100)
+        WGUBUN: '신규', //              작업구분        (String, 4)   [신규, 변경, 이설, 철거, 기타]
+        SITE: '청주', //                지역            (String, 4)   [이천, 청주, 구미]
+        REQ_CMPNY_CD: '', // 발주회사        (String, 2)
+        REQ_DEPT_CD: '', //  발주회사 부서   (String, 20)
+        REQUEST_GB: '미허가', //          신청구분        (String, 6)   [일반, 긴급, 미허가]
+        CREATE_DT: '',
+        REQ_CMPNY_NM: '', // 발주회사명
+        REQ_DEPT_NM: '', // 발주부서명
       },
     };
   }
 
   componentDidMount() {
-    const { sagaKey, getCallDataHandler, initWorkNo, profile } = this.props;
-    const { init } = this.state;
-    if (initWorkNo && initWorkNo !== '' && init) {
-      this.setState(
-        {
-          init: false,
-        },
-        () => this.handleGetSafetyWork(initWorkNo),
-      );
-    }
+    const { sagaKey, getCallDataHandler, profile } = this.props;
     const apiArr = [
+      {
+        /* 주관회사사원 : /api/eshs/v1/common/eshsHstCmpnyUser */
+        key: 'getHstCmpnyUser',
+        type: 'GET',
+        url: `/api/eshs/v1/common/eshsHstCmpnyUser`,
+      },
       {
         /* 거래처전체리스트 : /api/eshs/v1/common/EshsCmpnyList/null/null */
         key: 'getEshsCmpnyList',
@@ -73,22 +60,12 @@ class emergencyWorkWrite extends Component {
         url: `/api/eshs/v1/common/EshsCmpnyList/null/null`,
       },
       {
-        /* SWTB_장비리스트 : /api/eshs/v1/common/eshsSwtbEquip */
-        key: 'getSwtbEquipList',
-        type: 'GET',
-        url: `/api/eshs/v1/common/eshsSwtbEquip`,
-      },
-      {
         key: 'getMyInfo',
         type: 'GET',
         url: `/api/eshs/v1/common/EshsUserSearch?searchType=safetyWork&keyword=${profile.USER_ID}`,
       },
     ];
-    if (initWorkNo && initWorkNo !== '') {
-      getCallDataHandler(sagaKey, apiArr);
-    } else {
-      getCallDataHandler(sagaKey, apiArr, this.initForm);
-    }
+    getCallDataHandler(sagaKey, apiArr, this.initForm);
   }
 
   initForm = () => {
@@ -100,25 +77,22 @@ class emergencyWorkWrite extends Component {
         ...formData,
         REQ_CMPNY_CD: myInfo.CMPNY_ID,
         REQ_DEPT_CD: myInfo.DEPT_ID,
-        REQ_EMP_NO: myInfo.EMP_NO,
         REQ_CMPNY_NM: myInfo.CMPNY_NM,
         REQ_DEPT_NM: myInfo.DEPT_NM,
-        REQ_EMP_NM: myInfo.EMP_NM,
       },
     });
   };
 
-  handleGetSafetyWork = workNo => {
+  handleGetSafetyWork = () => {
     const { formData } = this.state;
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
-    const type = 'searchOneEmergency';
-    const WORK_NO = workNo || formData.WORK_NO;
+    const type = 'searchOne';
     const apiInfo = {
       key: 'getSafetyWork',
       type: 'GET',
-      url: `/api/eshs/v1/common/safetyWork?type=${type}&keyword=${WORK_NO}`,
+      url: `/api/eshs/v1/common/safetyWork?type=${type}&keyword=${formData.WORK_NO}`,
     };
-    if (WORK_NO === '') {
+    if (formData.WORK_NO === '') {
       message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 검색하십시오.</MessageContent>);
       return;
     }
@@ -133,10 +107,73 @@ class emergencyWorkWrite extends Component {
     this.setState({
       formData: {
         ...searchSafetyWork,
+        FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
+        REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
         SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
-        CREATE_DT: (searchSafetyWork.CREATE_DT && moment(searchSafetyWork.CREATE_DT).format('YYYY-MM-DD')) || '',
         fileList: [],
         responseList: [],
+      },
+    });
+  };
+
+  // 안전교육 수료자 가져오기
+  handleGetWorkers = () => {
+    const { formData } = this.state;
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const type = 'searchByEdu';
+    const apiArr = [
+      {
+        key: 'getWorkers',
+        type: 'GET',
+        url: `/api/eshs/v1/common/eshsWorker?type=${type}&keyword=${formData.WRK_CMPNY_CD}`,
+      },
+    ];
+
+    if (formData.WORK_NO === '') {
+      message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 등록해주십시오.</MessageContent>);
+      return;
+    }
+    if (formData.WRK_CMPNY_CD === '') {
+      message.error(<MessageContent>작업업체를 먼저 지정해 주십시오.</MessageContent>);
+      return;
+    }
+    getCallDataHandler(id, apiArr, this.getWorkerCallback);
+  };
+
+  // 작업자 검색 콜백
+  getWorkerCallback = () => {
+    const { result } = this.props;
+    const { formData } = this.state;
+    const searchWorkerList = (result && result.getWorkers && result.getWorkers.workerList) || [];
+    const nextWorkerList = searchWorkerList.map(worker => ({
+      key: worker.WORKER_SEQ,
+      WORK_NO: formData.WORK_NO,
+      WORKER_NM: worker.WORKER_NM,
+      WORKER_SSN: worker.WORKER_SSN,
+      POSITION: '작업자',
+      REMARK: '',
+      WORKER_IDX: '',
+      WORKER_SEQ: worker.WORKER_SEQ,
+      EDU_CHECK: worker.EDU_CHECK,
+      TEL: worker.TEL,
+      M_TEL: worker.M_TEL,
+    }));
+    this.setState({
+      formData: {
+        ...formData,
+        WORKER_LIST: nextWorkerList,
+      },
+    });
+  };
+
+  // 작업자 로우셀렉트
+  workerRemove = index => {
+    const { formData } = this.state;
+    const nextWorkerList = formData.WORKER_LIST.filter((worker, idx) => idx !== index);
+    this.setState({
+      formData: {
+        ...formData,
+        WORKER_LIST: nextWorkerList,
       },
     });
   };
@@ -148,15 +185,13 @@ class emergencyWorkWrite extends Component {
       case 'cmpny':
         title = '작업업체 선택';
         break;
-      case 'equip':
-        title = '투입장비 선택';
-        break;
       case 'safetyWork':
         title = '긴급작업 선택';
         break;
       default:
         break;
     }
+
     this.setState({
       modalType: type,
       modalTitle: title,
@@ -187,7 +222,6 @@ class emergencyWorkWrite extends Component {
         formData: {
           ...formData,
           WCATEGORY: value,
-          FIRE_MANAGER: '',
         },
       });
       return;
@@ -234,16 +268,15 @@ class emergencyWorkWrite extends Component {
     const submitData = { PARAM: formData };
     switch (type) {
       case 'ADD':
-        // 작업번호 생성 및 작업정보 입력
         if (this.validFormData(formData)) {
-          submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkAddCallback);
+          submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/illegalsafetyWork', submitData, this.safetyWorkAddCallback);
         }
         break;
       case 'UPDATE':
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkUpdateCallback);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/illegalsafetyWork', submitData, this.safetyWorkUpdateCallback);
         break;
       case 'DELETE':
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkDeleteCallback);
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/illegalsafetyWork', submitData, this.safetyWorkDeleteCallback);
         break;
       default:
         break;
@@ -254,7 +287,6 @@ class emergencyWorkWrite extends Component {
   validFormData = formData => {
     const validList = [
       { field: 'WRK_CMPNY_CD', name: '작업업체' },
-      { field: 'WCATEGORY', name: '주작업' },
       { field: 'TITLE', name: '작업명' },
       { field: 'WLOC', name: '작업장소' },
     ];
@@ -285,7 +317,7 @@ class emergencyWorkWrite extends Component {
     });
   };
 
-  // 작업 수정 콜백
+  // 작업 저장 콜백
   safetyWorkUpdateCallback = (id, response) => {
     const { result } = response;
     if (result && result === 'fail') {
@@ -300,7 +332,7 @@ class emergencyWorkWrite extends Component {
     const { formData } = this.state;
     const { result } = response;
     if (result && result === 'fail') {
-      message.error(<MessageContent>안전작업 정보 삭제에 실패했습니다.</MessageContent>);
+      message.error(<MessageContent>긴급작업 정보 삭제에 실패했습니다.</MessageContent>);
       return;
     }
     this.setState(
@@ -316,68 +348,16 @@ class emergencyWorkWrite extends Component {
           WLOC: '',
           WGUBUN: '신규',
           SITE: '청주',
-          REQ_SUPERVISOR_EMP_NO: '',
-          REQUEST_GB: '긴급',
-          FIRE_MANAGER: '',
-          EQUIP_LIST: [],
-          fileList: [],
-          responseList: [],
           REQUEST_DT: '',
+          CREATE_DT: '',
         },
       },
-      () => message.success(<MessageContent>안전작업 정보를 삭제하였습니다.</MessageContent>),
+      () => message.success(<MessageContent>긴급작업 정보를 삭제하였습니다.</MessageContent>),
     );
-  };
-
-  // 작업장비 추가
-  equipAdd = equip => {
-    const { formData } = this.state;
-    const newEquip = {
-      EGROUP: equip.CODE,
-      EQUIP_NM: equip.NAME_KOR,
-    };
-    const prevEquipList = formData.EQUIP_LIST || [];
-    this.setState({
-      modalType: '',
-      modalTitle: '',
-      modalVisible: false,
-      formData: {
-        ...formData,
-        EQUIP_LIST: prevEquipList.concat(newEquip),
-      },
-    });
-  };
-
-  equipRemove = index => {
-    const { formData } = this.state;
-    const nextEquipList = formData.EQUIP_LIST.filter((equip, idx) => idx !== index);
-    this.setState({
-      formData: {
-        ...formData,
-        EQUIP_LIST: nextEquipList,
-      },
-    });
-  };
-
-  // 테스트업로드
-  handleUploadFileChange = ({ fileList }) => {
-    const { formData } = this.state;
-    const responseList = [];
-    fileList.map(item => responseList.push(item.response));
-    this.setState({
-      formData: {
-        ...formData,
-        fileList,
-        responseList,
-      },
-    });
   };
 
   render() {
     const { modalType, modalTitle, modalVisible, formData } = this.state;
-    const { result, viewType } = this.props;
-    const eshsSwtbEquip = (result && result.getSwtbEquipList && result.getSwtbEquipList.list) || [];
-    console.debug('렌더링-state', this.state);
     return (
       <Styled>
         <StyledSearchWrap>
@@ -419,11 +399,6 @@ class emergencyWorkWrite extends Component {
                 </StyledButton>
               </>
             )}
-            {viewType !== 'modal' && (
-              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => alert('준비중')} style={{ marginBottom: '5px' }}>
-                일반작업으로 변경
-              </StyledButton>
-            )}
           </div>
         </StyledSearchWrap>
         <ContentsWrapper>
@@ -435,25 +410,6 @@ class emergencyWorkWrite extends Component {
             handleUploadFileChange={this.handleUploadFileChange}
             fileList={this.state.fileList || []}
           />
-          <div className="middleTitle">
-            <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
-            <span className="middleTitleText">투입장비</span>
-            <StyledButton
-              className="btn-primary btn-xxs btn-first"
-              onClick={() => {
-                if (formData.WORK_NO === '') {
-                  message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
-                  return;
-                }
-                this.handleModal('equip', true);
-              }}
-            >
-              투입 장비 추가
-            </StyledButton>
-          </div>
-          <div>
-            <SafetyEquipTable equipList={formData.EQUIP_LIST} equipRemove={this.equipRemove} />
-          </div>
         </ContentsWrapper>
         <AntdModal
           title={modalTitle}
@@ -477,9 +433,8 @@ class emergencyWorkWrite extends Component {
               eshsCmpnyCompResult={(cmpnyInfo, field) => this.handleCmpnySelect(cmpnyInfo, field)}
             />
           )}
-          {modalType === 'equip' && <SafetyEquipSelect equipList={eshsSwtbEquip} rowSelect={this.equipAdd} />}
           {modalType === 'safetyWork' && (
-            <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWorkEmergency_search" rowSelect={this.handleSafetyWorkSelect} />
+            <BizMicroDevBase component={SearchSafetyWork} sagaKey="illegalSafetyWork_search" rowSelect={this.handleSafetyWorkSelect} />
           )}
         </AntdModal>
       </Styled>
@@ -487,12 +442,10 @@ class emergencyWorkWrite extends Component {
   }
 }
 
-emergencyWorkWrite.propTypes = {
+WritePage.propTypes = {
   // type - number
   // type - string
   sagaKey: PropTypes.string,
-  initWorkNo: PropTypes.string,
-  viewType: PropTypes.string,
   // type - object
   result: PropTypes.object,
   profile: PropTypes.object,
@@ -502,9 +455,4 @@ emergencyWorkWrite.propTypes = {
   getCallDataHandlerReturnRes: PropTypes.func,
 };
 
-emergencyWorkWrite.defaultProps = {
-  initWorkNo: '',
-  viewType: '',
-};
-
-export default emergencyWorkWrite;
+export default WritePage;
