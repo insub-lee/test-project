@@ -21,7 +21,7 @@ class ConfirmRequest extends Component {
   componentDidMount() {}
 
   render() {
-    const { sagaKey } = this.props;
+    const { sagaKey, taskSeq, viewType } = this.props;
     return (
       <>
         <BizBuilderBase
@@ -29,7 +29,8 @@ class ConfirmRequest extends Component {
           CustomModifyPage={CustomModify}
           sagaKey={sagaKey}
           workSeq={6821}
-          viewType="INPUT"
+          taskSeq={taskSeq}
+          viewType={viewType}
           loadingComplete={this.loadingComplete}
           InputCustomButtons={() => null}
           ModifyCustomButtons={() => null}
@@ -41,6 +42,8 @@ class ConfirmRequest extends Component {
 
 ConfirmRequest.defaultProps = {
   sagaKey: 'ConfirmRequest',
+  viewType: 'INPUT',
+  taskSeq: -1,
 };
 
 export default ConfirmRequest;

@@ -37,6 +37,7 @@ class ImproveConfrimView extends Component {
 
 ImproveConfrimView.defaultProps = {
   sagaKey: 'ImproveConfrimView',
+  taskSeq: -1,
 };
 
 export default ImproveConfrimView;
