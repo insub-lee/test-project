@@ -121,6 +121,7 @@ import NodeIdMultiViewComp from 'components/BizBuilder/Field/NodeIdMultiViewComp
 import NodeNameByCodeComp from 'components/BizBuilder/Field/NodeNameByCodeComp';
 import SelectMonthComp from 'components/BizBuilder/Field/SelectMonthComp';
 import ListButtonComp from 'components/BizBuilder/Field/ListButtonComp';
+import MultiUserSelectComp from 'components/BizBuilder/Field/MultiUserSelectComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
@@ -244,4 +245,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/NodeNameByCodeComp': { renderer: property => <NodeNameByCodeComp {...property} /> },
   'components/BizBuilder/Field/SelectMonthComp': { renderer: property => <SelectMonthComp {...property} /> },
   'components/BizBuilder/Field/ListButtonComp': { renderer: property => <ListButtonComp {...property} /> },
+  'components/BizBuilder/Field/MultiUserSelectComp': { renderer: property => <MultiUserSelectComp {...property} /> },
 };

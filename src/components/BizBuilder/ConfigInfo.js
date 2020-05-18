@@ -40,6 +40,7 @@ import LabelByNodeIdConfig from 'components/BizBuilder/Field/LabelByNodeIdConfig
 import EshsQualCondConfig from 'components/BizBuilder/Field/EshsQualCondConfig';
 import ListButtonConfig from 'components/BizBuilder/Field/ListButtonConfig';
 import UserSelectConfig from 'components/BizBuilder/Field/UserSelectConfig';
+import MultiUserSelectConfig from 'components/BizBuilder/Field/MultiUserSelectConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -82,4 +83,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/EshsQualCondConfig': { renderer: property => <EshsQualCondConfig {...property} /> },
   'components/BizBuilder/Field/ListButtonConfig': { renderer: property => <ListButtonConfig {...property} /> },
   'components/BizBuilder/Field/UserSelectConfig': { renderer: property => <UserSelectConfig {...property} /> },
+  'components/BizBuilder/Field/MultiUserSelectConfig': { renderer: property => <MultiUserSelectConfig {...property} /> },
 };
