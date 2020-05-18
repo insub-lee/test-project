@@ -9,8 +9,9 @@ function CustomValueSelectComp(props) {
   const [values, setValues] = useState([]);
   const [defaultValue, setDefaultValue] = useState({});
 
-  const { CONFIG, COMP_FIELD } = props;
-
+  const { CONFIG, COMP_FIELD, isSearch } = props;
+  console.debug('props', props);
+  console.debug('values', values);
   useEffect(() => {
     const { customValues, definedValue, setDefault } = props.CONFIG.property;
     setValues(customValues instanceof Array ? [...customValues] : [{ ...init }]);
@@ -24,7 +25,8 @@ function CustomValueSelectComp(props) {
 
   function valueHandler(set, idx) {
     const { value } = set[idx];
-    onChangeHandler(value);
+    if (isSearch) onChangeSearchDataHandler(value);
+    else onChangeHandler(value);
     setDefaultValue(set[idx]);
   }
 
@@ -44,6 +46,20 @@ function CustomValueSelectComp(props) {
       changeValidationData(id, COMP_FIELD, value.trim() !== '', value.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
     }
     changeFormData(id, COMP_FIELD, value);
+  }
+
+  function onChangeSearchDataHandler(value) {
+    const {
+      changeSearchData,
+      COMP_FIELD,
+      sagaKey: id,
+      CONFIG: {
+        property: { searchCondition },
+      },
+    } = props;
+
+    const searchText = value ? `AND ${COMP_FIELD} ${searchCondition} '${value}'` : '';
+    changeSearchData(id, COMP_FIELD, searchText);
   }
 
   return (
