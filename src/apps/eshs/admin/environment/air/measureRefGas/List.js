@@ -242,60 +242,6 @@ class List extends Component {
                       </>
                     </tr>
                   ))}
-                  <tr>
-                    <td colSpan={4}>최고농도(MAX)</td>
-                    <td>{Math.max.apply(null, minute)}</td>
-                    <td>{Math.max.apply(null, hour)}</td>
-                    {selectGubun === 1 ? (
-                      <>
-                        {gasList &&
-                          gasList.map(item => (
-                            <td>
-                              {gasDensityList &&
-                                gasDensityList.map(
-                                  density =>
-                                    density[item.GAS_CD] && density[item.GAS_CD].reduce((previous, current) => (previous > current ? previous : current)),
-                                )}
-                            </td>
-                          ))}
-                      </>
-                    ) : (
-                      <>
-                        {gasList &&
-                          gasList.map(item => (
-                            <td>
-                              {gasDensityList &&
-                                gasDensityList.map(
-                                  density =>
-                                    density[item.GAS_CD] && density[item.GAS_CD].reduce((previous, current) => (previous > current ? previous : current)),
-                                )}
-                            </td>
-                          ))}
-                      </>
-                    )}
-                  </tr>
-                  <tr>
-                    <td colSpan={4}>최저농도(MIN)</td>
-                    <td>{Math.min.apply(null, minute)}</td>
-                    <td>{Math.min.apply(null, hour)}</td>
-                    {gasList &&
-                      gasList.map(item => (
-                        <td>
-                          {gasDensityList &&
-                            gasDensityList.map(
-                              density => density[item.GAS_CD] && density[item.GAS_CD].reduce((previous, current) => (previous > current ? current : previous)),
-                            )}
-                        </td>
-                      ))}
-                  </tr>
-                  <tr>
-                    <td colSpan={5}>평균</td>
-                    <td>{avg && (avg.HOUR_FLOW / avg.LENGTH).toFixed(3)}</td>
-                    {gasList &&
-                      gasList.map(item => (
-                        <td>{avg && avg[item.GAS_CD] && (avg[item.GAS_CD] !== 0 ? avg[item.GAS_CD] / avg.LENGTH : avg[item.GAS_CD]).toFixed(3)}</td>
-                      ))}
-                  </tr>
                 </tbody>
               </table>
             </div>
