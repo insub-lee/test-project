@@ -20,13 +20,14 @@ class InterLockResult extends Component {
   componentDidMount() {}
 
   render() {
-    const { sagaKey } = this.props;
+    const { sagaKey, taskSeq } = this.props;
     return (
       <>
         <BizBuilderBase
           sagaKey={sagaKey}
           workSeq={6821}
           modifyMetaSeq={7581}
+          taskSeq={taskSeq}
           CustomModifyPage={CustomModify}
           viewType="MODIFY"
           loadingComplete={this.loadingComplete}
@@ -40,6 +41,7 @@ class InterLockResult extends Component {
 
 InterLockResult.defaultProps = {
   sagaKey: 'InterLockResult',
+  taskSeq: -1,
 };
 
 export default InterLockResult;
