@@ -14,6 +14,9 @@ class UserSelectConfig extends React.Component {
 
   handleChangeViewCompData = (key, value) => {
     const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
+    if (key === 'isSubComp') {
+      configInfo.property.expression = null;
+    }
     configInfo.property[key] = value;
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
   };
@@ -28,30 +31,36 @@ class UserSelectConfig extends React.Component {
           <Checkbox checked={configInfo.property.isMultiple} onChange={e => handleChangeViewCompData('isMultiple', e.target.checked)} />
         </div>
         <div className="popoverItem popoverItemInput">
-          <span className="spanLabel">노출될 컬럼</span>
-          <AntdSelect
-            defaultValue={configInfo.property.exposuredCol}
-            onChange={value => handleChangeViewCompData('exposuredCol', value)}
-            className="select-sm"
-            style={{ width: '100%' }}
-          >
-            <Select.Option value="1">TEST</Select.Option>
-            <Select.Option value="1">TEST</Select.Option>
-            <Select.Option value="1">TEST</Select.Option>
-            <Select.Option value="1">TEST</Select.Option>
-          </AntdSelect>
-        </div>
-        <div className="popoverItem popoverItemInput">
           <span className="spanLabel">
-            선택화면 바로 노출 여부l
+            선택화면 바로 노출 여부
             <br />
             (서브빌더 사용시 체크)
           </span>
           <Checkbox checked={configInfo.property.isSubComp} onChange={e => handleChangeViewCompData('isSubComp', e.target.checked)} />
         </div>
         <div className="popoverItem popoverItemInput">
+          <span className="spanLabel">표현식</span>
+          <AntdSelect
+            defaultValue={configInfo.property.expression}
+            value={configInfo.property.expression}
+            onChange={value => handleChangeViewCompData('expression', value)}
+            className="select-sm"
+            style={{ width: '100%' }}
+            disabled={configInfo.property.isSubComp}
+          >
+            <Select.Option value="name">이름</Select.Option>
+            <Select.Option value="empNo">사번</Select.Option>
+            <Select.Option value="nameAndEmpNo">이름, 사번</Select.Option>
+            <Select.Option value="All">이름, 사번, 부서</Select.Option>
+          </AntdSelect>
+        </div>
+        <div className="popoverItem popoverItemInput">
           <span className="spanLabel">placeholder 설정</span>
-          <AntdInput defaultValue={configInfo.property.placeholder} onChange={e => handleChangeViewCompData('placeholder', e.target.value)} />
+          <AntdInput
+            disabled={configInfo.property.isSubComp}
+            defaultValue={configInfo.property.placeholder}
+            onChange={e => handleChangeViewCompData('placeholder', e.target.value)}
+          />
         </div>
       </>
     );

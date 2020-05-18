@@ -134,7 +134,7 @@ class MultiUserSelectComp extends React.Component {
           onClick={() => this.setState({ isOpenModal: true })}
           className={CONFIG.property.className || ''}
         />
-        <Modal visible={this.state.isOpenModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
+        <Modal visible={this.state.isOpenModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={null}>
           <UserSelect onUserSelectHandler={null} onUserSelectedComplete={this.onSelectedComplete} onCancel={this.onCancel} />
         </Modal>
       </>
