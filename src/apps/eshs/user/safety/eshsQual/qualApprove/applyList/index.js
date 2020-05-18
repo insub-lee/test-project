@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import BizBuilderBase from 'components/BizBuilderBase';
-import CustomModify from 'apps/eshs/user/safety/eshsQual/qualApprove/interLockResult/pages/CustomModify';
 
-class InterLockResult extends Component {
+class ApplyList extends Component {
   constructor(props) {
     super(props);
 
@@ -26,9 +25,8 @@ class InterLockResult extends Component {
         <BizBuilderBase
           sagaKey={sagaKey}
           workSeq={6821}
-          modifyMetaSeq={7581}
-          CustomModifyPage={CustomModify}
-          viewType="MODIFY"
+          listMetaSeq={8041}
+          viewType="LIST"
           loadingComplete={this.loadingComplete}
           InputCustomButtons={() => null}
           ModifyCustomButtons={() => null}
@@ -38,8 +36,8 @@ class InterLockResult extends Component {
   }
 }
 
-InterLockResult.defaultProps = {
-  sagaKey: 'InterLockResult',
+ApplyList.defaultProps = {
+  sagaKey: 'ApplyList',
 };
 
-export default InterLockResult;
+export default ApplyList;

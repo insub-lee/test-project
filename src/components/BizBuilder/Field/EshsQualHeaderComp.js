@@ -70,8 +70,25 @@ class EshsQualHeaderComp extends Component {
     const { sagaKey, saveTask, changeViewPage, formData, viewPageData, modifySaveTask, deleteTask, changeFormData } = this.props;
     const { workSeq, taskSeq } = viewPageData;
     const selectTask = (formData && formData.selectRow && formData.selectRow.TASK_SEQ) || 0;
+    const gubun = (formData && formData.GUBUN) || '';
+    const selectGubun = (formData && formData.selectRow && formData.selectRow.GUBUN) || '';
+    let msg = '';
+    if (gubun !== selectGubun) {
+      switch (selectGubun) {
+        case 'CF':
+          msg = 'InterLock 해제 신청건이 아닙니다.';
+          break;
+        case 'IL':
+          msg = 'ESH Qual 확인 신청건이 아닙니다.';
+          break;
+        default:
+          msg = '신청번호를 입력하세요';
+          break;
+      }
+    }
     switch (type) {
       case 'SEARCH':
+        if (msg) return message.warning(msg);
         if (selectTask) {
           changeViewPage(sagaKey, workSeq, selectTask, 'MODIFY');
         }
@@ -117,8 +134,10 @@ class EshsQualHeaderComp extends Component {
   };
 
   searchListRender = () => {
+    const { formData } = this.props;
     const { modalVisible } = this.state;
     const searchList = [];
+    const gubun = (formData && formData.GUBUN) || '';
     if (!modalVisible) {
       searchList.push(
         <BizBuilderBase
@@ -130,10 +149,26 @@ class EshsQualHeaderComp extends Component {
           CustomListPage={SearchListPage}
           listMetaSeq={6844}
           customOnRowClick={record => this.modalRowSelected(record)}
+          listGubun={gubun}
         />,
       );
     }
     this.setState({ searchList });
+  };
+
+  handleValidationChk = actionType => {
+    // 빌더 필수체크를 사용 불가 INPUT page[신청, InterLock 해제신청] 두개중 신청 페이지에서만 유효성검사가 필요.
+    const { formData } = this.props;
+    const hookDt = (formData && formData.HOOKUP_DT) || '';
+    const chkDt = (formData && formData.CHK_DT) || '';
+    const completeDt = (formData && formData.COMPLETE_DT) || '';
+
+    let msg = '';
+    if (!hookDt) msg = 'Hookup요청일을 입력하세요.';
+    else if (!chkDt) msg = '확인요청일을 입력하세요.';
+    else if (!completeDt) msg = '완료예정일을 입력하세요.';
+    if (msg) return message.warning(msg);
+    return this.handleAction(actionType);
   };
 
   handleConfirmProcess = (status, action, callBack) => {
@@ -141,12 +176,12 @@ class EshsQualHeaderComp extends Component {
     const { sagaKey: id, setFormData, formData, changeFormData } = this.props;
     const reqDt = (formData && formData.REQ_DT) || undefined;
     const examDt = (formData && formData.EXAM_DT) || undefined;
+    const gubun = (formData && formData.GUBUN) || '';
     const qualComment = (formData && formData.QUAL_COMMENT) || '';
     const qualStatus = (formData && formData.QUAL_STATUS) || '';
     const fQualStatus = (formData && formData.F_QUAL_STATUS) || '';
 
-    console.debug('여기는 handleConfirmProcess  ', qualStatus);
-    console.debug('여기는 handleConfirmProcess  ', typeof qualStatus);
+    if (!qualStatus) return message.warning('판정을 선택하여 주십시오.');
     if (!examDt) return message.warning('검토일자를 지정하여 주십시오.');
     if (reqDt > examDt) return message.warning('검토일자는 신청일자 이후여야 합니다');
     if (qualComment.length > 500) {
@@ -163,7 +198,7 @@ class EshsQualHeaderComp extends Component {
     */
 
     // 상신시 CheckSheet가 등록되어 있지않다면 상신불가.
-    if (status === '2') if (!chkCnt) return message.warning('저장후 [장비ESH CheckSheet등록]을 완료하여주십시오.');
+    if (status === '2' && gubun === 'CF') if (!chkCnt) return message.warning('저장후 [장비ESH CheckSheet등록]을 완료하여주십시오.');
     if (!fQualStatus) {
       // F_QUAL_STATUS 처음 판정이 등록될 경우에만 저장
       // 조건부 승인으로 등록되었다가 승인으로 바뀔경우 리스트에서 표시해주기 위해
@@ -418,19 +453,19 @@ class EshsQualHeaderComp extends Component {
               검색
             </StyledButton>
             {viewType === 'INPUT' && (
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleValidationChk('SAVE')}>
                 저장
               </StyledButton>
             )}
             {taskSeq !== -1 && REQ_STATUS === '1' && (
               <>
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleValidationChk('MODIFY')}>
                   저장
                 </StyledButton>
                 <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('CONFIRM_LINE')}>
                   결제선지정
                 </StyledButton>
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('상신')}>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleValidationChk('상신')}>
                   상신
                 </StyledButton>
                 <Popconfirm title="정말 삭제하시겠습니까?" onConfirm={() => this.handleAction('DELETE')} okText="확인" cancelText="취소">
@@ -445,7 +480,7 @@ class EshsQualHeaderComp extends Component {
         </>
       );
     }
-    if (HeaderType === 'INTERLOCT_REQUEST') {
+    if (HeaderType === 'INTERLOCK_REQUEST') {
       return (
         <>
           <StyledButtonWrapper className="btn-wrap-left btn-wrap-mb-10">
@@ -488,7 +523,49 @@ class EshsQualHeaderComp extends Component {
         </>
       );
     }
-
+    if (HeaderType === 'INTERLOCK_RESULT') {
+      return (
+        <>
+          <StyledButtonWrapper className="btn-wrap-left btn-wrap-mb-10">
+            <AntdSearch
+              value={REQ_CD || ''}
+              style={{ width: '150px' }}
+              readOnly
+              onClick={this.handleModalVisible}
+              onSearch={this.handleModalVisible}
+              className="ant-search-inline input-search-mid mr5"
+            />
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+              검색
+            </StyledButton>
+            {((taskSeq !== -1 && REQ_CD !== '' && !APP_STATUS) || APP_STATUS === '1') && (
+              /* AS_IS 
+                if (!"".equals(qualConfirm.getReqCd()) && ("".equals(qualConfirmResult.getAppStatus()) || "1".equals(qualConfirmResult.getAppStatus()))) {
+                    <IMG align="absMiddle" onClick="save(1)" src="../../image/b_save2.gif" style="CURSOR: hand"> -- 저장
+										<IMG align="absMiddle" onClick="setConfirmLine()" src="../../image/b_appline2.gif" style="CURSOR: hand"> -- 결제선 지정
+										<IMG align="absMiddle" onClick="save(2)" src="../../image/button2_update.gif" style="CURSOR: hand"> -- 상신
+										<IMG align="absMiddle" onClick="goChkSheet()" src="../../image/checksheet_regist.gif" style="CURSOR: hand"> -- checkSheet 수정가능
+                  }
+                if ("3".equals(qualConfirmResult.getAppStatus())){
+										<IMG align="absMiddle" onClick="goChkSheetview()" src="../../image/checksheet_search.gif" style="CURSOR: hand"> -- checkSheet 수정불가
+									}
+              */
+              <>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('1', 'MODIFY', this.handleAction)}>
+                  저장
+                </StyledButton>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('2', 'MODIFY', this.handleAction)}>
+                  상신
+                </StyledButton>
+              </>
+            )}
+          </StyledButtonWrapper>
+          <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1000} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+            {searchList}
+          </AntdModal>
+        </>
+      );
+    }
     return '';
   }
 }

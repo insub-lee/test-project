@@ -86,7 +86,7 @@ class SearchBasic extends Component {
 
   callApi = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
-    const params = { ...this.state, status: this.state.status === 2 ? [1, 2] : [8] };
+    const params = { ...this.state, status: this.state.status === 2 ? [1, 2] : [99] };
     const apiArr = [
       {
         key: 'listData',
