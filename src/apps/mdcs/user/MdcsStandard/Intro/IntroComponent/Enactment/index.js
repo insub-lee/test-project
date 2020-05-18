@@ -34,12 +34,10 @@ class Enactment extends Component {
   };
 
   initDataBind = id => {
-    const {
-      result: {
-        categoryInfo: { categoryMapList: categoryList },
-        docTemplateInfoByCategory: { list: templateList },
-      },
-    } = this.props;
+    const { result } = this.props;
+    const categoryList = result && result.categoryInfo && result.categoryInfo.categoryMapList !== null ? result.categoryInfo.categoryMapList : [];
+    const templateList =
+      result && result.docTemplateInfoByCategory && result.docTemplateInfoByCategory.list !== null ? result.docTemplateInfoByCategory.list : [];
 
     this.setState({
       categoryList,
@@ -147,7 +145,6 @@ class Enactment extends Component {
     } else {
       viewChangeSeq = undefined;
     }
-    console.debug('enactment view', selectedNodeIds, viewChangeSeq);
     switch (docType) {
       case 'BS':
         return { selectedworkSeq: 901, viewChangeSeq };
