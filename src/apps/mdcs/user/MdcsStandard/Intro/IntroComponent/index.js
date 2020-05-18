@@ -13,14 +13,15 @@ import BizBuilderBase from 'components/BizBuilderBase';
 
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import ApproveBase from 'apps/Workflow/components/ApproveBase';
 import StyledContents from '../../../../styled/StyledContents';
 import StyledModalWrapper from '../../../../styled/Modals/StyledModalWrapper';
 
 import Enactment from './Enactment';
 import Amendment from './Amendment';
 import Abrogation from './Abrogation';
+import AbrogationDraft from './Abrogation/abrogationDraft';
 import AbrogationMulti from './AbrogationMulti';
-
 const AntdModal = StyledModalWrapper(Modal);
 
 class IntroComponent extends Component {
@@ -29,11 +30,14 @@ class IntroComponent extends Component {
     this.state = {
       selectedDraft: DraftType.ENACTMENT,
       isShow: false,
+      isAbrogationShow: false,
       isLoading: false,
       docType: '',
       selectedworkSeq: 0,
       viewChangeSeq: undefined,
       selectedtaskSeq: undefined,
+      selectedTaskOriginSeq: undefined,
+      title: undefined,
       isInitState: false,
       selectedNodeId: 0,
       docNumber: undefined,
@@ -81,11 +85,13 @@ class IntroComponent extends Component {
     });
   };
 
-  onShowModalAbrogation = (selectedworkSeq, selectedTaskSeq, viewChangeSeq, selectedNodeId, viewType, workPrcProps) => {
+  onShowModalAbrogation = (selectedworkSeq, selectedTaskSeq, selectedTaskOriginSeq, title, viewChangeSeq, selectedNodeId, viewType, workPrcProps) => {
     this.setState({
-      isShow: true,
+      isAbrogationShow: true,
       selectedworkSeq,
       selectedTaskSeq,
+      selectedTaskOriginSeq,
+      title,
       selectedNodeId,
       viewType,
       workPrcProps,
@@ -108,9 +114,36 @@ class IntroComponent extends Component {
     this.setState({ isShow: false });
   };
 
+  onCloseAbrogationModal = () => {
+    this.setState({ isAbrogationShow: false });
+  };
+
+  onAbrogationProcess = workProcess => {
+    const { sagaKey, submitHandlerBySaga } = this.props;
+    const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
+    submitHandlerBySaga(sagaKey, 'POST', prefixUrl, { DRAFT_PROCESS: workProcess }, this.onCompleteProc);
+  };
+
+  onCompleteProc = () => {
+    console.debug('dkdkdkkd');
+  };
+
   render() {
-    const { selectedDraft, isShow, isLoading, selectedworkSeq, selectedTaskSeq, docNumber, selectedNodeId, viewType, workPrcProps, viewChangeSeq } = this.state;
-    console.debug('viewinfo', selectedworkSeq, viewChangeSeq);
+    const {
+      selectedDraft,
+      isShow,
+      isAbrogationShow,
+      isLoading,
+      selectedworkSeq,
+      selectedTaskSeq,
+      selectedTaskOriginSeq,
+      title,
+      docNumber,
+      selectedNodeId,
+      viewType,
+      workPrcProps,
+      viewChangeSeq,
+    } = this.state;
     return (
       <StyledContents>
         <div className="contentWrapper">
@@ -143,14 +176,39 @@ class IntroComponent extends Component {
                   </li>
                   {selectedDraft === DraftType.ENACTMENT && <Enactment {...this.props} onShowModal={this.onShowModalEnactment} />}
                   {selectedDraft === DraftType.AMENDMENT && <Amendment {...this.props} onShowModal={this.onShowModalAmendment} />}
-                  {selectedDraft === DraftType.ABROGATION && <Abrogation {...this.props} onShowModal={this.onShowModalAbrogation} />}
+                  {selectedDraft === DraftType.ABROGATION && <Abrogation {...this.props} onShowModalAbrogation={this.onShowModalAbrogation} />}
                   {selectedDraft === 'ABROGATION_MULTI' && <AbrogationMulti {...this.props} />}
                 </ul>
               </div>
             </div>
           </div>
         </div>
-
+        <AntdModal
+          destroyOnClose
+          style={{ top: '50px' }}
+          width={900}
+          visible={isAbrogationShow}
+          onCancel={this.onCloseAbrogationModal}
+          footer={null}
+          maskClosable={false}
+        >
+          <StyledInputView>
+            <div className="pop_tit">표준 폐기</div>
+            <div style={{ display: !isLoading ? 'block' : 'none' }}>
+              <ApproveBase
+                id="abrogationProc"
+                WORK_SEQ={selectedworkSeq}
+                TASK_SEQ={selectedTaskSeq}
+                TASK_ORIGIN_SEQ={selectedTaskOriginSeq}
+                workPrcProps={workPrcProps}
+                TITLE={title}
+                component={AbrogationDraft}
+                onAbrogationProcess={this.onAbrogationProcess}
+              />
+              ;
+            </div>
+          </StyledInputView>
+        </AntdModal>
         <AntdModal destroyOnClose style={{ top: '50px' }} width={900} visible={isShow} onCancel={this.onCloseModal} footer={null} maskClosable={false}>
           <StyledInputView>
             <div className="pop_tit">업무표준</div>
