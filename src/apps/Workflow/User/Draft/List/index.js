@@ -44,6 +44,7 @@ class DraftList extends Component {
       key: 'APPVGUBUN',
       width: '12%',
       align: 'center',
+      render: (text, record) => (record.REL_TYPE === 1 ? text : '폐기'),
     },
     {
       title: '프로세스상태',
