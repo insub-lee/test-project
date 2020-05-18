@@ -10,8 +10,6 @@ function CustomValueSelectComp(props) {
   const [defaultValue, setDefaultValue] = useState({});
 
   const { CONFIG, COMP_FIELD, isSearch } = props;
-  console.debug('props', props);
-  console.debug('values', values);
   useEffect(() => {
     const { customValues, definedValue, setDefault } = props.CONFIG.property;
     setValues(customValues instanceof Array ? [...customValues] : [{ ...init }]);
