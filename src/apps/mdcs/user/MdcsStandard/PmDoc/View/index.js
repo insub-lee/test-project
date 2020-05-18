@@ -8,9 +8,9 @@ import FileUpload from 'components/FormStuff/Upload';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContent from '../../../../styled/Modals/StyledContent';
 import StyledModalWrapper from '../../../../styled/Modals/StyledModalWrapper';
-import StyledButton from '../../../../styled/StyledButton';
 import TableSelection from '../TableSelection';
 import * as columData from '../TableSelection/columData';
 
@@ -335,7 +335,7 @@ class PmDocView extends Component {
                   <div className="w100Table">
                     <Col span={4}>
                       Short Description(Including the Para./clause)
-                      <StyledButton className="btn-gray btn-xxs" onClick={this.handlerCopyDesc}>
+                      <StyledButton className="btn-gray btn-xxs btn-block btn-block-center-mt5" onClick={this.handlerCopyDesc}>
                         Copy Description
                       </StyledButton>
                     </Col>

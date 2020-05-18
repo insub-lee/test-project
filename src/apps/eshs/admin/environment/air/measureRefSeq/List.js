@@ -113,6 +113,7 @@ class List extends Component {
   };
 
   customOnRowClick = record => {
+    console.debug('확인해봐');
     this.setState({ stackCd: record.STACK_CD });
     this.onChangeModal();
   };

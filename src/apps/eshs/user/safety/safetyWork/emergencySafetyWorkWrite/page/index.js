@@ -19,10 +19,11 @@ import Styled from './Styled';
 
 const AntdModal = StyledModalWrapper(Modal);
 
-class SafetyWorkMain extends Component {
+class emergencyWorkWrite extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      init: true,
       modalType: '',
       modalTitle: '',
       modalVisible: false,
@@ -36,25 +37,34 @@ class SafetyWorkMain extends Component {
         WLOC: '',
         WGUBUN: '신규',
         SITE: '청주',
-        REQ_CMPNY_CD: props.profile.PSTN_ID,
-        REQ_DEPT_CD: props.profile.DEPT_ID,
-        REQ_EMP_NO: props.profile.USER_ID,
+        REQ_CMPNY_CD: '',
+        REQ_DEPT_CD: '',
+        REQ_EMP_NO: '',
         REQ_SUPERVISOR_EMP_NO: '',
         REQUEST_GB: '긴급',
         FIRE_MANAGER: '',
         EQUIP_LIST: [],
         fileList: [],
         responseList: [],
-        REQ_CMPNY_NM: props.profile.PSTN_NAME_KOR,
-        REQ_DEPT_NM: props.profile.DEPT_NAME_KOR,
-        REQ_EMP_NM: props.profile.NAME_KOR,
+        REQ_CMPNY_NM: '',
+        REQ_DEPT_NM: '',
+        REQ_EMP_NM: '',
         REQUEST_DT: '',
       },
     };
   }
 
   componentDidMount() {
-    const { sagaKey, getCallDataHandler } = this.props;
+    const { sagaKey, getCallDataHandler, initWorkNo, profile } = this.props;
+    const { init } = this.state;
+    if (initWorkNo && initWorkNo !== '' && init) {
+      this.setState(
+        {
+          init: false,
+        },
+        () => this.handleGetSafetyWork(initWorkNo),
+      );
+    }
     const apiArr = [
       {
         /* 거래처전체리스트 : /api/eshs/v1/common/EshsCmpnyList/null/null */
@@ -68,20 +78,47 @@ class SafetyWorkMain extends Component {
         type: 'GET',
         url: `/api/eshs/v1/common/eshsSwtbEquip`,
       },
+      {
+        key: 'getMyInfo',
+        type: 'GET',
+        url: `/api/eshs/v1/common/EshsUserSearch?searchType=safetyWork&keyword=${profile.USER_ID}`,
+      },
     ];
-    getCallDataHandler(sagaKey, apiArr);
+    if (initWorkNo && initWorkNo !== '') {
+      getCallDataHandler(sagaKey, apiArr);
+    } else {
+      getCallDataHandler(sagaKey, apiArr, this.initForm);
+    }
   }
 
-  handleGetSafetyWork = () => {
+  initForm = () => {
+    const { formData } = this.state;
+    const { result } = this.props;
+    const myInfo = (result && result.getMyInfo && result.getMyInfo.myInfo) || {};
+    this.setState({
+      formData: {
+        ...formData,
+        REQ_CMPNY_CD: myInfo.CMPNY_ID,
+        REQ_DEPT_CD: myInfo.DEPT_ID,
+        REQ_EMP_NO: myInfo.EMP_NO,
+        REQ_CMPNY_NM: myInfo.CMPNY_NM,
+        REQ_DEPT_NM: myInfo.DEPT_NM,
+        REQ_EMP_NM: myInfo.EMP_NM,
+      },
+    });
+  };
+
+  handleGetSafetyWork = workNo => {
     const { formData } = this.state;
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
     const type = 'searchOneEmergency';
+    const WORK_NO = workNo || formData.WORK_NO;
     const apiInfo = {
       key: 'getSafetyWork',
       type: 'GET',
-      url: `/api/eshs/v1/common/safetyWork?type=${type}&keyword=${formData.WORK_NO}`,
+      url: `/api/eshs/v1/common/safetyWork?type=${type}&keyword=${WORK_NO}`,
     };
-    if (formData.WORK_NO === '') {
+    if (WORK_NO === '') {
       message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 검색하십시오.</MessageContent>);
       return;
     }
@@ -338,7 +375,7 @@ class SafetyWorkMain extends Component {
 
   render() {
     const { modalType, modalTitle, modalVisible, formData } = this.state;
-    const { result } = this.props;
+    const { result, viewType } = this.props;
     const eshsSwtbEquip = (result && result.getSwtbEquipList && result.getSwtbEquipList.list) || [];
     console.debug('렌더링-state', this.state);
     return (
@@ -382,9 +419,11 @@ class SafetyWorkMain extends Component {
                 </StyledButton>
               </>
             )}
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => alert('준비중')} style={{ marginBottom: '5px' }}>
-              일반작업으로 변경
-            </StyledButton>
+            {viewType !== 'modal' && (
+              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => alert('준비중')} style={{ marginBottom: '5px' }}>
+                일반작업으로 변경
+              </StyledButton>
+            )}
           </div>
         </StyledSearchWrap>
         <ContentsWrapper>
@@ -448,10 +487,12 @@ class SafetyWorkMain extends Component {
   }
 }
 
-SafetyWorkMain.propTypes = {
+emergencyWorkWrite.propTypes = {
   // type - number
   // type - string
   sagaKey: PropTypes.string,
+  initWorkNo: PropTypes.string,
+  viewType: PropTypes.string,
   // type - object
   result: PropTypes.object,
   profile: PropTypes.object,
@@ -461,4 +502,9 @@ SafetyWorkMain.propTypes = {
   getCallDataHandlerReturnRes: PropTypes.func,
 };
 
-export default SafetyWorkMain;
+emergencyWorkWrite.defaultProps = {
+  initWorkNo: '',
+  viewType: '',
+};
+
+export default emergencyWorkWrite;

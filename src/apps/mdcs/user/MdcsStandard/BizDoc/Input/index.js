@@ -7,7 +7,7 @@ import FileUpload from 'components/FormStuff/Upload';
 import RichTextEditor from 'components/FormStuff/RichTextEditor';
 // import FroalaEditorView from 'components/FormStuff/RichTextEditor/FroalaEditorView';
 import { froalaEditorConfig } from 'components/FormStuff/config';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContent from 'apps/mdcs/styled/Modals/StyledContent';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -181,7 +181,7 @@ class BizDocListInput extends Component {
                     <div className="w100Table">
                       <Col span={4}>
                         재개정 이력
-                        <StyledButton className="btn-gray btn-xxs" onClick={() => this.onCopyDescHandler()}>
+                        <StyledButton className="btn-gray btn-xxs btn-block btn-block-center-mt5" onClick={() => this.onCopyDescHandler()}>
                           Copy Description
                         </StyledButton>
                       </Col>

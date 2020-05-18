@@ -5,17 +5,23 @@ import { Button, message } from 'antd';
 import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-import SearchBar from '../SearchBar';
+import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 
-class CustomInput extends Component {
+// import Loadable from 'components/Loadable';
+// import Loading from '../Common/Loading';
+
+const StyledButton = StyledAntdButton(Button);
+
+class CustomModify extends Component {
   constructor(props) {
     super(props);
     this.state = {
       uploadFileList: [],
+      StyledWrap: StyledViewDesigner,
     };
   }
 
@@ -24,6 +30,16 @@ class CustomInput extends Component {
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
+
+    if (workInfo.BUILDER_STYLE_PATH) {
+      // const StyledWrap = Loadable({
+      //   loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
+      //   loading: Loading,
+      // });
+      const StyledWrap = DefaultStyleInfo(workInfo.BUILDER_STYLE_PATH);
+      this.setState({ StyledWrap });
+    }
+
     if (isWorkflowUsed && prcId !== -1) {
       const payload = {
         PRC_ID: Number(prcId),
@@ -126,28 +142,13 @@ class CustomInput extends Component {
     }
   };
 
-  saveTask = (id, reloadId) => {
-    const { saveTask, saveTaskAfterCallbackFunc } = this.props;
-    saveTask(id, reloadId, typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.saveTaskAfter);
+  saveTask = (id, reloadId, callbackFunc) => {
+    const { modifyTask } = this.props;
+    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
   };
 
-  // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
-
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const {
-      onCloseModalHandler,
-      changeViewPage,
-      isBuilderModal,
-      reloadId,
-      isSaveModalClose,
-      changeBuilderModalStateByParent,
-      workInfo,
-      redirectUrl,
-    } = this.props;
+    const { reloadId, onCloseModalHandler, changeViewPage, isBuilderModal, isSaveModalClose, changeBuilderModalStateByParent, workInfo } = this.props;
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler();
     }
@@ -156,9 +157,9 @@ class CustomInput extends Component {
       if (changeViewOptIdx !== -1) {
         const changeViewOpt = workInfo.OPT_INFO[changeViewOptIdx];
         const optValue = JSON.parse(changeViewOpt.OPT_VALUE);
-        changeViewPage(id, workSeq, taskSeq, optValue.INPUT);
+        changeViewPage(id, workSeq, taskSeq, optValue.MODIFY);
       } else {
-        changeViewPage(id, workSeq, taskSeq, 'MODIFY');
+        changeViewPage(id, workSeq, taskSeq, 'VIEW');
       }
     }
     if (isBuilderModal) {
@@ -176,78 +177,64 @@ class CustomInput extends Component {
       setProcessRule,
       viewPageData,
       changeViewPage,
+      isBuilderModal,
+      ModifyCustomButtons,
+      isLoading,
       workInfo,
       CustomWorkProcess,
       reloadId,
-      isBuilderModal,
-      isLoading,
-      InputCustomButtons,
-      loadingComplete,
-      ExtraBuilder,
-      formData,
-      setFormData,
+      deleteTask,
     } = this.props;
-    // Work Process 사용여부
+
+    const { StyledWrap } = this.state;
+
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
-      const {
-        info: { PRC_ID },
-      } = workFlowConfig;
+      const { PRC_ID } = processRule;
       return (
-        <StyledViewDesigner>
+        <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
-            {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
+            {isWorkflowUsed && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
-            <SearchBar
-              sagaKey={id}
-              ExtraBuilder={ExtraBuilder}
-              viewPageData={viewPageData}
-              changeViewPage={changeViewPage}
-              formData={formData}
-              setFormData={setFormData}
-              saveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
-              loadingComplete={loadingComplete}
+            <View
+              key={`${id}_${viewPageData.viewType}`}
+              {...this.props}
+              deleteTask={deleteTask}
+              modifySaveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
             />
-            <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
+            {ModifyCustomButtons ? (
+              <ModifyCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
+            ) : (
+              <div className="alignRight">
+                <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
+                  Save
+                </StyledButton>
+                {!isBuilderModal && (
+                  <StyledButton className="btn-light" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                    List
+                  </StyledButton>
+                )}
+              </div>
+            )}
           </Sketch>
-        </StyledViewDesigner>
+        </StyledWrap>
       );
     }
     return '';
   };
 }
 
-CustomInput.propTypes = {
-  sagaKey: PropTypes.string,
-  workFlowConfig: PropTypes.object,
-  workPrcProps: PropTypes.object,
-  viewLayer: PropTypes.array,
-  formData: PropTypes.object,
-  processRule: PropTypes.object,
-  getProcessRule: PropTypes.func,
-  onCloseModalHandler: PropTypes.func,
-  saveTask: PropTypes.func,
-  setProcessRule: PropTypes.func,
-  CustomWorkProcess: PropTypes.func,
+CustomModify.propTypes = {
   isLoading: PropTypes.bool,
-  ExtraBuilder: PropTypes.func,
-  setFormData: PropTypes.func,
-  loadingComplete: PropTypes.any,
+  // loadingComplete: PropTypes.func,
 };
 
-CustomInput.defaultProps = {
-  workFlowConfig: {
-    info: {
-      PRC_ID: -1,
-    },
-  },
-  CustomWorkProcess: undefined,
+CustomModify.defaultProps = {
   isLoading: false,
-  ExtraBuilder: () => {},
-  setFormData: () => {},
+  // loadingComplete: () => {},
 };
 
-export default CustomInput;
+export default CustomModify;

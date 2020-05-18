@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Button, Upload } from 'antd';
+import { Icon, Upload } from 'antd';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledImageUploader from './StyledImageUploader';
 
 class ImageUploader extends Component {
@@ -15,10 +16,10 @@ class ImageUploader extends Component {
       <StyledImageUploader>
         <Upload accept={accept} action={action} listType={listType} fileList={fileList} onChange={handleChange}>
           {fileList.length >= 1 ? null : (
-            <Button className="ant-upload-text">
-              <Icon type="plus" />
+            <StyledButton className="btn-sm btn-gray ant-upload-text" style={{ marginBottom: 10 }}>
+              <Icon type="plus" style={{ marginRight: 5 }} />
               Image Upload
-            </Button>
+            </StyledButton>
           )}
         </Upload>
         {imgBool ? (

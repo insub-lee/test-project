@@ -4,17 +4,17 @@ import moment from 'moment';
 import { Table, Icon, Modal, Button } from 'antd';
 import { ExportOutlined } from '@ant-design/icons';
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
+import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import ContentView from './ContentView';
 import ExternalDist from './ExternalDist';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledAntdModalPad(Modal);
 
 class PubCompleteDocList extends Component {
   // eslint-disable-next-line react/state-in-constructor
@@ -176,9 +176,9 @@ class PubCompleteDocList extends Component {
           title="외부배포"
           onCancel={this.onExternalDistCancel}
           destroyOnClose
-          footer={[<Button onClick={this.onExternalDistCancel}>취소</Button>]}
+          footer={null}
         >
-          <ExternalDist docList={this.state.selectedPubDocList} onExternalDistComplete={this.onExternalDistComplete} />
+          <ExternalDist docList={this.state.selectedPubDocList} onExternalDistComplete={this.onExternalDistComplete} onExternalDistCancel={this.onExternalDistCancel} />
         </AntdModal>
       </>
     );

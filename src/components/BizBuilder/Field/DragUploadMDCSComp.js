@@ -158,12 +158,12 @@ class DragUploadMDCSComp extends Component {
             {fileList.map(file => (
               <div style={{ height: '25px' }}>
                 {file.type === 'LoadingOutlined' ? (
-                  <LoadingOutlined style={{ fontSize: '18px', marginRight: '5px' }} />
+                  <LoadingOutlined style={{ fontSize: '18px', marginRight: '5px', verticalAlign: 'middle' }} />
                 ) : (
-                  <Icon type={file.type} style={{ fontSize: '18px', marginRight: '5px' }} />
+                  <Icon type={file.type} style={{ fontSize: '18px', marginRight: '5px', verticalAlign: 'middle' }} />
                 )}
-                <div style={{ verticalAlign: 'middle', height: '28px', display: 'inline-block', cursor: 'pointer' }}>{file.fileName}</div>
-                <Icon onClick={() => this.onClickRemoveFile(file)} type="delete" style={{ fontSize: '15px', verticalAlign: 'baseline', marginLeft: '10px' }} />
+                <div style={{ verticalAlign: 'middle', height: '28px', display: 'inline', cursor: 'pointer' }}>{file.fileName}</div>
+                <Icon onClick={() => this.onClickRemoveFile(file)} type="delete" style={{ fontSize: '15px', marginLeft: '10px', verticalAlign: 'middle' }} />
               </div>
             ))}
           </div>

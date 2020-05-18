@@ -4,7 +4,7 @@ import { Button, Modal, Icon } from 'antd';
 import { FileSearchOutlined, ExclamationCircleOutlined, FileProtectOutlined } from '@ant-design/icons';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledModalWrapper from 'components/CommonStyled/StyledModalWrapper';
 import ContentView from './ContentView';
 

@@ -39,6 +39,8 @@ import CustomSearchInputConfig from 'components/BizBuilder/Field/CustomSearchInp
 import LabelByNodeIdConfig from 'components/BizBuilder/Field/LabelByNodeIdConfig';
 import EshsQualCondConfig from 'components/BizBuilder/Field/EshsQualCondConfig';
 import EshsQualHeaderConfig from 'components/BizBuilder/Field/EshsQualHeaderConfig';
+import DefaultValueConfig from 'components/BizBuilder/Field/DefaultValueConfig';
+import TextDefaultValueConfig from 'components/BizBuilder/Field/TextDefaultValueConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -80,4 +82,6 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/LabelByNodeIdConfig': { renderer: property => <LabelByNodeIdConfig {...property} /> },
   'components/BizBuilder/Field/EshsQualCondConfig': { renderer: property => <EshsQualCondConfig {...property} /> },
   'components/BizBuilder/Field/EshsQualHeaderConfig': { renderer: property => <EshsQualHeaderConfig {...property} /> },
+  'components/BizBuilder/Field/DefaultValueConfig': { renderer: property => <DefaultValueConfig {...property} /> },
+  'components/BizBuilder/Field/TextDefaultValueConfig': { renderer: property => <TextDefaultValueConfig {...property} /> },
 };

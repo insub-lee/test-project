@@ -47,9 +47,9 @@ class CustomSelectSearchComp extends React.Component {
     let result = '';
 
     if (searchCondition === 'LIKE') {
-      result = searchText.length > 0 ? `AND ${searchType} ${searchCondition} '%${searchText}%'` : '';
+      result = searchText.length > 0 ? `AND ${searchType}::VARCHAR ${searchCondition} '%${searchText}%'` : '';
     } else {
-      result = searchText.length > 0 ? `AND ${searchType} ${searchCondition} '${searchText}'` : '';
+      result = searchText.length > 0 ? `AND ${searchType}::VARCHAR ${searchCondition} '${searchText}'` : '';
     }
 
     changeSearchData(sagaKey, COMP_FIELD, result);

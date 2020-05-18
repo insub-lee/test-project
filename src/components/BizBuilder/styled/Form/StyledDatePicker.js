@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 
-const StyledPicker = Component => styled(Component)`
+const StyledDatePicker = Component => styled(Component)`
   &.ant-picker,
   &.ant-calendar-picker {
+    vertical-align: middle;
+
     .ant-input {
       display: block;
       width: 100%;
@@ -73,4 +75,4 @@ const StyledPicker = Component => styled(Component)`
   }
 `;
 
-export default StyledPicker;
+export default StyledDatePicker;

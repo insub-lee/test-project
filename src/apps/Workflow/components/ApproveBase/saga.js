@@ -10,7 +10,7 @@ import * as actions from './actions';
 import * as selectors from './selectors';
 
 function* getApproveList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/approveList`, { PARAM: { REL_TYPE: 1 } });
+  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/approveList`, { PARAM: { relTypes: [1, 99] } });
   if (response) {
     const { list } = response;
     yield put(actions.setApproveList(list));
@@ -34,7 +34,6 @@ function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
       httpMethodInfo = Axios.get;
       break;
   }
-  console.debug(param);
   const response = yield call(httpMethodInfo, `${rtnUrl}`, param);
   if (response) {
     const { list } = response;
@@ -43,7 +42,7 @@ function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
 }
 
 function* getUnApproveList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/unApproveList`, { PARAM: { REL_TYPE: 1 } });
+  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/unApproveList`, { PARAM: { relTypes: [1, 99] } });
   if (response) {
     const { list } = response;
     yield put(actions.setUnApproveList(list));
@@ -52,7 +51,7 @@ function* getUnApproveList() {
 }
 
 function* getDraftList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/draftList`, {});
+  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/draftList`, { PARAM: { relTypes: [1, 99] } });
   if (response) {
     const { list } = response;
     yield put(actions.setDraftList(list));
