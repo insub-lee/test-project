@@ -63,25 +63,7 @@ class List extends Component {
     const {
       result: { eshsGroupUnit },
     } = this.props;
-    const initList =
-      eshsGroupUnit &&
-      eshsGroupUnit.list &&
-      eshsGroupUnit.list.map(item => ({
-        ...item,
-        FILTER_PLANT_NM: item.GUBUN === 'FILTER_PLANT' ? this.state.filterPlantSB.find(f => f.CODE === item.FILTER_PLANT_CD) : '',
-        FAB_NM: item.GUBUN === 'FAB' ? this.state.fabSB.find(f => f.CODE === item.FAB) : '',
-        TREATMENT_PLANT_NM: item.GUBUN === 'TREATMENT_PLANT' ? this.state.treatmentPlantSB.find(f => f.CODE === item.TREATMENT_PLANT_CD) : '',
-      }));
-    const listData =
-      initList &&
-      initList.map(item => ({
-        ...item,
-        FILTER_PLANT_NM: item.FILTER_PLANT_NM ? item.FILTER_PLANT_NM.NAME_KOR : '',
-        FAB_NM: item.FAB_NM ? item.FAB_NM.NAME_KOR : '',
-        TREATMENT_PLANT_NM: item.TREATMENT_PLANT_NM ? item.TREATMENT_PLANT_NM.NAME_KOR : '',
-        IS_DI: item.IS_DI === '1' ? 'O' : 'X',
-        IS_DEL: item.IS_DEL === '0' ? 'O' : 'X',
-      }));
+    const listData = eshsGroupUnit && eshsGroupUnit.list;
     this.setState({ listData });
   };
 
@@ -150,7 +132,7 @@ class List extends Component {
     const selectData =
       this.state[`${codegubun}`] &&
       this.state[`${codegubun}`].map(item => (
-        <Option value={item.CODE} key={`${codegubun}V`}>
+        <Option value={item.NODE_ID} key={`${codegubun}V`}>
           {item.NAME_KOR}
         </Option>
       ));
@@ -163,13 +145,13 @@ class List extends Component {
       modalProps: {
         groupUnitCd: record.GROUP_UNIT_CD,
         groupUnitNm: record.GROUP_UNIT_NM,
-        siteSBV: record.SITE,
+        siteSBV: Number(record.SITE),
         companyName: record.COMPANY_NM,
         companyCd: record.COMPANY_CD,
-        gubun: record.GUBUN,
-        filterPlantSBV: record.FILTER_PLANT_CD || '0',
-        fabSBV: record.FAB || '0',
-        treatmentPlantSBV: record.TREATMENT_PLANT_CD || '0',
+        gubun: Number(record.GUBUN),
+        filterPlantSBV: Number(record.FILTER_PLANT_CD) || '0',
+        fabSBV: Number(record.FAB) || '0',
+        treatmentPlantSBV: Number(record.TREATMENT_PLANT_CD) || '0',
         di: record.IS_DI === 'O' ? '1' : '0',
         del: record.IS_DEL === 'O' ? '0' : '1',
       },

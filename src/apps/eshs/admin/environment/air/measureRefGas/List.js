@@ -68,7 +68,7 @@ class List extends Component {
     if (gasCd) {
       getCallDataHandler(id, apiAry, this.listData);
     } else {
-      message.warning('stack 종류를 먼저 선택해주세요.');
+      message.warning('GAS 종류를 먼저 선택해주세요.');
     }
   };
 
@@ -76,7 +76,7 @@ class List extends Component {
     const {
       result: { measure },
     } = this.props;
-    this.setState({ measureList: (measure && measure.list) || [] }, this.dataSet);
+    this.setState({ measureList: (measure && measure.list) || [], stackList: (measure && measure.stackList) || [] }, this.dataSet);
   };
 
   onChangeState = (name, value) => {
@@ -100,7 +100,7 @@ class List extends Component {
   };
 
   onRowClick = record => {
-    this.setState({ gasCd: record.GAS_CD });
+    this.setState({ gasCd: record.GAS_CD, gasWeight: record.GAS_WEIGHT });
     this.onChangeModal();
   };
 
@@ -117,14 +117,14 @@ class List extends Component {
         case 'Sox':
         case 'Nox':
         case 'THC':
-          calculateData = ((hourFlow * density) / 22.4 / 1000000) * gasWeight * 24 * workDay;
+          calculateData = (((hourFlow * density) / 22.4 / 1000000) * gasWeight * 24 * workDay).toFixed(9);
           break;
         case 'Cr':
         case 'Pb':
         case 'Ni':
         case 'As':
         case '먼지':
-          calculateData = ((hourFlow * density) / 1000000) * 24 * workDay;
+          calculateData = (((hourFlow * density) / 1000000) * 24 * workDay).toFixed(9);
           break;
         default:
           calculateData = density;
@@ -161,7 +161,7 @@ class List extends Component {
   ];
 
   render() {
-    const { measureList, gasList, selectGubun, rangeDateStrings, avg } = this.state;
+    const { measureList, stackList, gasList, selectGubun, rangeDateStrings, gasWeight, gasCd } = this.state;
     return (
       <StyledContentsWrapper>
         <div className="selSaveWrapper alignLeft">
@@ -193,53 +193,49 @@ class List extends Component {
           <StyledHtmlTable className="tableWrapper">
             <div style={{ overflowX: 'scroll' }}>
               <table>
+                <colgroup>
+                  <col width="150px" />
+                  {stackList.map(() => (
+                    <col width="100px" />
+                  ))}
+                </colgroup>
                 <tbody>
                   <tr>
-                    <th>계통</th>
-                    <th>STACK</th>
-                    <th>측정일자</th>
-                    {measureList && measureList.map(item => <th>{item.STACK_CD}</th>)}
+                    <td style={{ textAlign: 'center' }}>구분</td>
+                    <td colSpan={stackList.length} style={{ textAlign: 'center' }}>
+                      {this.state.gasCd}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>회차</th>
+                    {stackList.map(item => (
+                      <th>{item.STACK_CD}</th>
+                    ))}
                   </tr>
                   {measureList.map(item => (
                     <tr>
-                      <td>{item.GUBUN_NAME}</td>
-                      <td>{item.STACK_CD}</td>
-                      <td>{item.MEASURE_DT}</td>
-                      <>
-                        {selectGubun === 1 ? (
-                          <>
-                            {gasList &&
-                              gasList.map(gasType => (
-                                <td>
-                                  {item.GAS.map(gasItem => (
-                                    <>{gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD ? JSON.parse(gasItem.value).DENSITY : undefined}</>
-                                  ))}
-                                </td>
-                              ))}
-                          </>
-                        ) : (
-                          <>
-                            {gasList &&
-                              gasList.map(gasType => (
-                                <td>
-                                  {item.GAS.map(gasItem => (
-                                    <>
-                                      {gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD
-                                        ? this.calculate(
-                                            gasType.GAS_CD,
-                                            item.HOUR_FLOW,
-                                            JSON.parse(gasItem.value).DENSITY,
-                                            item.WORK_DAY,
-                                            JSON.parse(gasItem.value).GAS_WEIGHT,
-                                          )
-                                        : undefined}
-                                    </>
-                                  ))}
-                                </td>
-                              ))}
-                          </>
-                        )}
-                      </>
+                      <td>{`${item.MEASURE_DT} / ${item.SEQ}차`}</td>
+                      {selectGubun === 1
+                        ? item.DENSITY.map(gasItem => (
+                            <td>
+                              {stackList.map(stackItem => (stackItem.STACK_CD === JSON.parse(gasItem.value).stack_cd ? JSON.parse(gasItem.value).density : ''))}
+                            </td>
+                          ))
+                        : item.DENSITY.map(gasItem => (
+                            <td>
+                              {stackList.map(stackItem =>
+                                stackItem.STACK_CD === JSON.parse(gasItem.value).stack_cd
+                                  ? this.calculate(
+                                      gasCd,
+                                      JSON.parse(gasItem.value).hour_flow,
+                                      JSON.parse(gasItem.value).density,
+                                      JSON.parse(gasItem.value).work_day,
+                                      gasWeight,
+                                    )
+                                  : '',
+                              )}
+                            </td>
+                          ))}
                     </tr>
                   ))}
                 </tbody>
@@ -249,8 +245,10 @@ class List extends Component {
         ) : (
           ''
         )}
-        <StyledHtmlTable className="tableWrapper">{/* <Graph graphData={measureList} gasList={gasList} selectGubun={selectGubun} /> */}</StyledHtmlTable>
-        <AntdModal width={800} visible={this.state.isModal} title="Stack 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
+        <StyledHtmlTable className="tableWrapper">
+          {measureList.length > 0 ? <Graph graphData={measureList} stackList={stackList} selectGubun={selectGubun} gasCd={gasCd} gasWeight={gasWeight} /> : ''}
+        </StyledHtmlTable>
+        <AntdModal width={800} visible={this.state.isModal} title="Gas 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
           <AntdTable
             dataSource={gasList}
             columns={this.columns}
