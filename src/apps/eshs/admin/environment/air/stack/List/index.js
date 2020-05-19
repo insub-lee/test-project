@@ -34,7 +34,7 @@ class ListPage extends Component {
   }
 
   componentDidMount = () => {
-    const { workInfo } = this.props;
+    const { workInfo, listMetaSeq } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
     let isOnRowClick = false;
@@ -54,8 +54,15 @@ class ListPage extends Component {
         if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
         if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNo = true;
         if (opt.OPT_SEQ === ON_ROW_CLICK_OPT_SEQ && opt.ISUSED === 'Y') {
-          isOnRowClick = true;
-          rowClickView = opt.OPT_VALUE === '' ? 'VIEW' : opt.OPT_VALUE;
+          if (!isJSON(opt.OPT_VALUE)) {
+            isOnRowClick = true;
+            rowClickView = opt.OPT_VALUE === '' ? 'VIEW' : opt.OPT_VALUE;
+          } else {
+            const ObjOptVal = JSON.parse(opt.OPT_VALUE);
+            const optMetalist = ObjOptVal.LIST || [];
+            isOnRowClick = optMetalist.includes(listMetaSeq.toString());
+            rowClickView = ObjOptVal.VIEW || 'VIEW';
+          }
         }
       });
       this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
@@ -132,19 +139,6 @@ class ListPage extends Component {
       타입 : func (추가사항. antd - Table Props 참조)
       create by. JeongHyun
   */
-  onRowClick = record => {
-    const { sagaKey: id, isBuilderModal, changeBuilderModalState, changeViewPage } = this.props;
-    const { rowClickView } = this.state;
-    return {
-      onClick: () => {
-        if (isBuilderModal) {
-          changeBuilderModalState(true, rowClickView, record.WORK_SEQ, record.TASK_SEQ, record);
-        } else {
-          changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, rowClickView);
-        }
-      },
-    };
-  };
 
   renderList = (group, groupIndex) => {
     const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
@@ -158,11 +152,8 @@ class ListPage extends Component {
         onChange: this.onSelectChange,
       };
     }
-    if (typeof customOnRowClick === 'function') {
+    if (typeof customOnRowClick === 'function' && isOnRowClick) {
       onRow = record => ({ onClick: () => customOnRowClick(record) });
-    }
-    if (isOnRowClick) {
-      onRow = this.onRowClick;
     }
 
     return (

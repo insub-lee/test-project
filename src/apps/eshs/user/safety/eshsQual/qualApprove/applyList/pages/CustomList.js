@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm, Button } from 'antd';
+import { Table, Popconfirm, Button, Modal } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -14,12 +14,14 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
 // import Loadable from 'components/Loadable';
 // import Loading from '../Common/Loading';
 
 const AntdTable = StyledAntdTable(Table);
 const StyledButton = StyledAntdButton(Button);
+const AntdModal = StyledContentsModal(Modal);
 
 class CustomList extends Component {
   constructor(props) {
@@ -30,6 +32,9 @@ class CustomList extends Component {
       isOnRowClick: false,
       rowClickView: 'VIEW',
       StyledWrap: StyledViewDesigner,
+      modalContent: [],
+      modalVisible: false,
+      modalTitle: '',
     };
   }
 
@@ -118,7 +123,58 @@ class CustomList extends Component {
         });
       }
     });
-    return columns;
+
+    return columns.map(c => {
+      if (c.title === '신청' || c.title === '승인')
+        return {
+          ...c,
+          render: (text, record) => (
+            <span style={{ cursor: 'pointer' }} onClick={() => this.setModalContent(c.title, record.TASK_SEQ, record.GUBUN)}>
+              {text}
+            </span>
+          ),
+        };
+      return c;
+    });
+
+    // return columns;
+  };
+
+  setModalContent = (title, taskSeq, gubun) => {
+    const { ConfirmRequest, ConfirmResult, InterLockRequest, InterLockResult } = this.props;
+    let modalContent = [];
+    let modalTitle = '';
+    if (title === '신청') {
+      if (gubun === 'CF') {
+        modalContent = [ConfirmRequest(taskSeq, 'MODIFY')];
+        modalTitle = '[ESH Qual 확인신청]';
+      } else if (gubun === 'IL') {
+        modalContent = [InterLockRequest(taskSeq, 'MODIFY')];
+        modalTitle = '[InterLock 해제신청]';
+      }
+    } else if (title === '승인') {
+      if (gubun === 'CF') {
+        modalContent = [ConfirmResult(taskSeq)];
+        modalTitle = '[ESH Qual 확인결과]';
+      } else if (gubun === 'IL') {
+        modalTitle = '[InterLock 해제결과]';
+        modalContent = [InterLockResult(taskSeq)];
+      }
+    }
+    console.debug('여기는 setModalContent taskSeq [ ', taskSeq, ' ]  title[ ', title, ' ]  gubun[ ', gubun, ' ]');
+    this.setState(
+      {
+        modalContent,
+        modalTitle,
+      },
+      this.handleModalVisible,
+    );
+  };
+
+  handleModalVisible = () => {
+    const { modalVisible } = this.state;
+    if (modalVisible) return this.setState({ modalVisible: !modalVisible, modalContent: [], modalTitle: '' });
+    return this.setState({ modalVisible: !modalVisible });
   };
 
   onSelectChange = selectedRowKeys => {
@@ -147,7 +203,7 @@ class CustomList extends Component {
   };
 
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, workInfo, customOnRowClick, listGubun } = this.props;
+    const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
     const { isMultiDelete, isOnRowClick } = this.state;
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
@@ -165,10 +221,6 @@ class CustomList extends Component {
       onRow = this.onRowClick;
     }
 
-    console.debug('리스트 GUBUN [ ', listGubun, ' ]');
-    let filterList = [];
-    if (listGubun) filterList = listData && listData.filter(l => l.GUBUN === listGubun);
-    else filterList = listData || [];
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -179,7 +231,7 @@ class CustomList extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData && listGubun ? listData.filter(l => l.GUBUN === listGubun) : listData || []}
+            dataSource={listData || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
@@ -203,7 +255,7 @@ class CustomList extends Component {
       isBuilderModal,
       changeBuilderModalState,
     } = this.props;
-    const { isMultiDelete, StyledWrap } = this.state;
+    const { isMultiDelete, StyledWrap, modalContent, modalVisible, modalTitle } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -277,22 +329,11 @@ class CustomList extends Component {
                 )
               );
             })}
-            {/* <div className="alignRight">
-              <StyledButton
-                className="btn-primary btn-first"
-                onClick={() =>
-                  isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
-                }
-              >
-                Add
-              </StyledButton>
-              {isMultiDelete && (
-                <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
-                  <StyledButton className="btn-light">Delete</StyledButton>
-                </Popconfirm>
-              )}
-            </div> */}
           </Sketch>
+
+          <AntdModal title={modalTitle || ' '} visible={modalVisible} width={1000} onCancel={() => this.handleModalVisible('CANCEL')} footer={[null]}>
+            {modalContent}
+          </AntdModal>
         </StyledWrap>
       );
     }
@@ -317,7 +358,10 @@ CustomList.propTypes = {
   changeBuilderModalState: PropTypes.func,
   changeViewPage: PropTypes.func,
   customOnRowClick: PropTypes.any,
-  listGubun: PropTypes.string,
+  ConfirmRequest: PropTypes.func,
+  ConfirmResult: PropTypes.func,
+  InterLockRequest: PropTypes.func,
+  InterLockResult: PropTypes.func,
 };
 
 CustomList.defaultProps = {
@@ -327,6 +371,10 @@ CustomList.defaultProps = {
     },
   },
   customOnRowClick: undefined,
+  ConfirmRequest: () => {},
+  ConfirmResult: () => {},
+  InterLockRequest: () => {},
+  InterLockResult: () => {},
 };
 
 export default CustomList;

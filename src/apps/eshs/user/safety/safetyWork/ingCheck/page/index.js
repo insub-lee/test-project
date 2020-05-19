@@ -10,6 +10,7 @@ import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import UserSelect from 'components/UserSelect';
 import SafetyWorkerTable from '../../commonComponents/SafetyWorker/viewPage';
 import SafetyEquipTable from '../../commonComponents/SafetyEquip/viewPage';
 import SafetyWorkInfo from '../../commonComponents/SafetyWorkInfo/viewPage';
@@ -240,6 +241,7 @@ class SafetyWorkMain extends Component {
         FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
         REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
         SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
+        INIT_INGCHECK: !searchSafetyWork.INGCHECK_HEAD,
         INGCHECK_HEAD: searchSafetyWork.INGCHECK_HEAD || {},
         INGCHECK_DETAIL: searchSafetyWork.INGCHECK_DETAIL || [],
         fileList: [],
@@ -257,6 +259,9 @@ class SafetyWorkMain extends Component {
         break;
       case 'penalty':
         title = '점검항목 추가';
+        break;
+      case 'userSelect':
+        title = '점검자 선택';
         break;
       default:
         break;
@@ -329,6 +334,7 @@ class SafetyWorkMain extends Component {
     });
   };
 
+  // 점검항목 저장(단일)
   handleRowSeletePenaltyItem = record => {
     const { formData } = this.state;
     const addPenalty = {
@@ -349,6 +355,7 @@ class SafetyWorkMain extends Component {
     });
   };
 
+  // 점검항목 저장(다수)
   handleSavePenaltyItems = items => {
     const { formData } = this.state;
     const newItems = items.map(item => ({
@@ -366,6 +373,35 @@ class SafetyWorkMain extends Component {
         ...formData,
         INGCHECK_DETAIL: formData.INGCHECK_DETAIL.concat(newItems),
       },
+    });
+  };
+
+  // 점검자 선택
+  onSelectedComplete = result => {
+    const { formData } = this.state;
+    if (result.length > 0) {
+      const userInfo = result[0];
+      this.setState({
+        modalTitle: '',
+        modalType: '',
+        modalVisible: false,
+        formData: {
+          ...formData,
+          INGCHECK_HEAD: {
+            ...formData.INGCHECK_HEAD,
+            CHECK_CMPNY_CD: userInfo.DEPT_ID,
+            CHECK_CMPNY_NM: userInfo.DEPT_NAME_KOR,
+            CHECK_EMP_NO: userInfo.USER_ID,
+            CHECK_EMP_NM: userInfo.NAME_KOR,
+          },
+        },
+      });
+      return;
+    }
+    this.setState({
+      modalTitle: '',
+      modalType: '',
+      modalVisible: false,
     });
   };
 
@@ -419,7 +455,7 @@ class SafetyWorkMain extends Component {
         <ContentsWrapper>
           <SafetyWorkInfo formData={formData} viewPage="ingCheck" />
           <div className="ingCheckHeader">
-            <IngCheckHead ingCheckHead={formData.INGCHECK_HEAD} handleChangeHeadFormData={this.handleChangeHeadFormData} />
+            <IngCheckHead ingCheckHead={formData.INGCHECK_HEAD} handleChangeHeadFormData={this.handleChangeHeadFormData} handleModal={this.handleModal} />
           </div>
           <div className="middleTitle">
             <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
@@ -463,6 +499,7 @@ class SafetyWorkMain extends Component {
             <PenaltyItem penaltyItem={penaltyItem || []} rowSelect={this.handleRowSeletePenaltyItem} onSave={this.handleSavePenaltyItems} />
           )}
           {modalType === 'safetyWork' && <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />}
+          {modalType === 'userSelect' && <UserSelect onUserSelectHandler={undefined} onUserSelectedComplete={this.onSelectedComplete} onCancel={undefined} />}
         </AntdModal>
       </Styled>
     );
