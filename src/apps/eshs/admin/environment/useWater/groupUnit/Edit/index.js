@@ -3,19 +3,19 @@ import PropTypes from 'prop-types';
 
 import { Input, message, Select, Modal, Radio } from 'antd';
 
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import CompanyModal from '../CompanyModal';
 
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
-const AntdModal = StyledContentsModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 const { Option } = Select;
 
@@ -163,8 +163,8 @@ class List extends Component {
   render() {
     const { modalProps, sagaKey: id, getCallDataHandler, result } = this.props;
     return (
-      <div style={{ padding: '10px 15px', backgroundthor: 'white' }}>
-        <ContentsWrapper>
+      <div>
+        <StyledContentsWrapper>
           <StyledHtmlTable>
             <div>
               <table>
@@ -292,7 +292,7 @@ class List extends Component {
               </table>
             </div>
           </StyledHtmlTable>
-          <StyledButtonWrapper className="btn-wrap-center">
+          <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
             {!modalProps ? (
               <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('I')}>
                 저장
@@ -311,7 +311,7 @@ class List extends Component {
               Reset
             </StyledButton>
           </StyledButtonWrapper>
-        </ContentsWrapper>
+        </StyledContentsWrapper>
         <AntdModal
           className="modal-table-pad"
           visible={this.state.modalCompany}
