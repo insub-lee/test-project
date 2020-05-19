@@ -6,7 +6,7 @@ import StyledSelect from '../styled/Form/StyledSelect';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
-class UserSelectConfig extends React.Component {
+class MultiUserSelectConfig extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -67,7 +67,7 @@ class UserSelectConfig extends React.Component {
   }
 }
 
-UserSelectConfig.propTypes = {
+MultiUserSelectConfig.propTypes = {
   changeViewCompData: PropTypes.func,
   groupIndex: PropTypes.number,
   rowIndex: PropTypes.number,
@@ -75,4 +75,4 @@ UserSelectConfig.propTypes = {
   configInfo: PropTypes.object,
 };
 
-export default UserSelectConfig;
+export default MultiUserSelectConfig;

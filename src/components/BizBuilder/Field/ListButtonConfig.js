@@ -82,15 +82,6 @@ class ListButtonConfig extends React.Component {
             <Select.Option value="MODIFY">MODIFY</Select.Option>
           </AntdSelect>
         </div>
-        <div className="popoverItem popoverItemInput">
-          <span className="spanLabel">Import 경로</span>
-          <AntdInput
-            defaultValue={configInfo.property.IMPORT_PATH}
-            placeholder="Import 경로를 입력하세요"
-            onChange={e => handleChangeViewCompData('IMPORT_PATH', e.target.value)}
-            style={{ width: '100%' }}
-          />
-        </div>
       </>
     );
   }

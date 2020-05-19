@@ -1,7 +1,30 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, Modal } from 'antd';
-import UserSelect from 'components/UserSelect';
+import { isJSON } from 'utils/helpers';
+import CustomUserSelect from 'components/CustomUserSelect';
+
+const setFormDataValue = (value, colData, COMP_FIELD, COMP_TAG, WORK_SEQ) => {
+  if (typeof colData === 'object') {
+    const tempData = colData;
+    tempData[0].DETAIL = value;
+    return tempData;
+  }
+  if (colData && colData.length > 0 && isJSON(colData)) {
+    JSON.parse(colData)[0].DETAIL = value;
+    return colData;
+  }
+  return [
+    {
+      WORK_SEQ,
+      TASK_SEQ: -1,
+      CONT_SEQ: -1,
+      FIELD_NM: COMP_FIELD,
+      TYPE: COMP_TAG,
+      DETAIL: value,
+    },
+  ];
+};
 
 class MultiUserSelectComp extends React.Component {
   constructor(props) {
@@ -11,30 +34,24 @@ class MultiUserSelectComp extends React.Component {
     };
   }
 
+  onUserSelect = userList => {
+    const { sagaKey: id, COMP_FIELD, COMP_TAG, changeFormData, colData, workSeq, parentWorkSeq, parentTaskSeq } = this.props;
+    changeFormData(id, 'PARENT_SEQ', parentWorkSeq);
+    changeFormData(id, 'PARENT_TASK_SEQ', parentTaskSeq);
+
+    changeFormData(id, COMP_FIELD, setFormDataValue(userList, colData, COMP_FIELD, COMP_TAG, workSeq));
+  };
+
   onSelectedComplete = result => {
     const { CONFIG } = this.props;
     if (result.length) {
       const data = this.multipleCheck(CONFIG.property.isMultiple, result);
       this.subBuilderCheck(data, this.props);
-      // 커스텀영역이 필요하지만 일단 id 기준으로 야외행사 신청서 일경우 따로 formData Change 지정(이정현)
-      // 발견된 이슈사항 :: result 조회시 EMP_NO (사번)이 NAME 으로 나타나고 있습니다.
-      // if (id === 'outdoorEvent') {
-      //   changeFormData(id, COMP_FIELD, `${result[0].USER_ID}`);
-      //   changeFormData(id, COMP_FIELD.replace('NO', 'NM'), `${result[0].NAME_KOR}`);
-      // } else {
-      //   changeFormData(id, COMP_FIELD, `${result[0].EMP_NO}`);
-      //   changeFormData(id, COMP_FIELD.replace('NO', 'NAME'), `${result[0].NAME_KOR}`);
-      //   changeFormData(id, COMP_FIELD.replace('NO', 'DEPT'), result[0].DEPT_NAME_KOR);
-      // }
-      // this.setState({
-      //   isOpenModal: false,
-      // });
     }
   };
 
   multipleCheck = (isMultiple, result) => {
     if (isMultiple) {
-      // return JSON.stringify(result);
       return result;
     }
     return result[0];
@@ -42,13 +59,10 @@ class MultiUserSelectComp extends React.Component {
 
   subBuilderCheck = (data, { sagaKey: id, saveTask, changeFormData, COMP_FIELD, CONFIG, parentWorkSeq, parentTaskSeq }) => {
     if (CONFIG.property.isSubComp) {
-      console.debug('@@@@SUBBUILDER@@@@');
       changeFormData(id, 'PARENT_SEQ', parentWorkSeq);
       changeFormData(id, 'PARENT_TASK_SEQ', parentTaskSeq);
-      changeFormData(id, 'EDU_USERS', data);
       saveTask(id, id);
     } else {
-      console.debug('@@@@@MAIN BUILDER@@@@@');
       changeFormData(id, COMP_FIELD, data);
     }
   };
@@ -75,8 +89,7 @@ class MultiUserSelectComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, readOnly, colData, isSearch, searchCompRenderer, viewType, formData, COMP_FIELD, viewPageData } = this.props;
-
+    const { CONFIG, visible, readOnly, colData, isSearch, searchCompRenderer, formData, COMP_FIELD, viewPageData } = this.props;
     if (!visible) {
       return null;
     }
@@ -91,7 +104,7 @@ class MultiUserSelectComp extends React.Component {
     if (CONFIG.property.isSubComp) {
       return (
         <>
-          <UserSelect onUserSelectHandler={null} onUserSelectedComplete={this.onSelectedComplete} onCancel={this.onCancel} />
+          <CustomUserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onSelectedComplete} onCancel={this.onCancel} isWorkBuilder />
         </>
       );
     }
@@ -135,35 +148,10 @@ class MultiUserSelectComp extends React.Component {
           className={CONFIG.property.className || ''}
         />
         <Modal visible={this.state.isOpenModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={null}>
-          <UserSelect onUserSelectHandler={null} onUserSelectedComplete={this.onSelectedComplete} onCancel={this.onCancel} />
+          <CustomUserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onSelectedComplete} onCancel={this.onCancel} isWorkBuilder />
         </Modal>
       </>
     );
-
-    // return visible ? (
-    //   <>
-    //     {readOnly || viewType === 'LIST' ? (
-    //       <span className={CONFIG.property.className || ''}>
-    //         {formData[COMP_FIELD.replace('NO', 'NAME')] ? `${formData[COMP_FIELD.replace('NO', 'NAME')]}(${colData})` : colData}
-    //       </span>
-    //     ) : (
-    //       <>
-    //         <Input
-    //           readOnly
-    //           placeholder="select me"
-    //           value={formData[COMP_FIELD.replace('NO', 'NAME')] ? `${formData[COMP_FIELD.replace('NO', 'NAME')]}(${colData})` : colData}
-    //           onClick={() => this.setState({ isOpenModal: true })}
-    //           className={CONFIG.property.className || ''}
-    //         />
-    //         <Modal visible={this.state.isOpenModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
-    //           <UserSelect onUserSelectHandler={null} onUserSelectedComplete={this.onSelectedComplete} onCancel={this.onCancel} />
-    //         </Modal>
-    //       </>
-    //     )}
-    //   </>
-    // ) : (
-    //   ''
-    // );
   }
 }
 
@@ -181,6 +169,10 @@ MultiUserSelectComp.propTypes = {
   viewType: PropTypes.string,
   formData: PropTypes.object,
   viewPageData: PropTypes.object,
+  workSeq: PropTypes.number,
+  COMP_TAG: PropTypes.string,
+  parentWorkSeq: PropTypes.number,
+  parentTaskSeq: PropTypes.number,
 };
 
 export default MultiUserSelectComp;
