@@ -33,16 +33,16 @@ class Graph extends Component {
   };
 
   render() {
-    const { graphData, gasList, selectGubun, refStack } = this.props;
-    const graphList = graphData && graphData.map(gasData => gasData && gasData.GAS && gasData.GAS.map(item => JSON.parse(item.value)));
+    const { graphData, stackList, selectGubun, refStack, gasCd, gasWeight } = this.props;
+    const graphList = graphData && graphData.map(gasData => gasData && gasData.DENSITY && gasData.DENSITY.map(item => JSON.parse(item.value)));
     let barData;
     if (selectGubun === 2) {
       barData =
         graphList &&
         graphList.map(temps =>
           temps.map(element => ({
-            name: element[refStack ? 'MEASURE_DT' : 'STACK_CD'],
-            [element.GAS_CD]: this.calculate(element.GAS_CD, element.HOUR_FLOW, element.DENSITY, element.WORK_DAY, element.GAS_WEIGHT),
+            name: element.measure_dt,
+            [element.stack_Cd]: this.calculate(gasCd, element.hour_flow, element.density, element.work_day, gasWeight),
           })),
         );
     } else {
@@ -50,12 +50,11 @@ class Graph extends Component {
         graphList &&
         graphList.map(temps =>
           temps.map(element => ({
-            name: element[refStack ? 'MEASURE_DT' : 'STACK_CD'],
-            [element.GAS_CD]: element.DENSITY || 0,
+            name: element.measure_dt,
+            [element.stack_cd]: element.density || 0,
           })),
         );
     }
-
     return (
       <BarChart
         width={1200}
@@ -73,15 +72,15 @@ class Graph extends Component {
         <YAxis />
         <Tooltip />
         <Legend />
-        {gasList &&
-          gasList.map((item, index) => <Bar dataKey={item.GAS_CD} stackId="a" fill={`#${Math.floor(((index + 10) / 100) * 16777215).toString(16)}`} />)}
+        {stackList &&
+          stackList.map((item, index) => <Bar dataKey={item.STACK_CD} stackId="a" fill={`#${Math.floor(((index + 10) / 100) * 16777215).toString(16)}`} />)}
       </BarChart>
     );
   }
 }
 
 Graph.propTypes = {
-  gasList: PropTypes.array,
+  stackList: PropTypes.array,
   graphData: PropTypes.array,
   selectGubun: PropTypes.number,
   refStack: PropTypes.bool,

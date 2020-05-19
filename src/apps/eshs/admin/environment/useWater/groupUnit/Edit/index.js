@@ -145,7 +145,7 @@ class List extends Component {
     const selectData =
       this.props[`${codegubun}`] &&
       this.props[`${codegubun}`].map(item => (
-        <Option value={item.CODE} key={codegubun}>
+        <Option value={item.NODE_ID} key={codegubun}>
           {item.NAME_KOR}
         </Option>
       ));
