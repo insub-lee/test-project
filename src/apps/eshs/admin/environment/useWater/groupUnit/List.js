@@ -5,11 +5,11 @@ import { Table, Select, Input, Modal } from 'antd';
 
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
 
 import Edit from './Edit';
 import CompanyModal from './CompanyModal';
@@ -17,7 +17,7 @@ import CompanyModal from './CompanyModal';
 const AntdLineTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
-const AntdModal = StyledAntdModal(Modal);
+const AntdModalPad = StyledAntdModalPad(Modal);
 
 const { Option } = Select;
 
@@ -201,7 +201,7 @@ class List extends Component {
     const { listData } = this.state;
     return (
       <>
-        <ContentsWrapper>
+        <StyledContentsWrapper>
           <div className="selSaveWrapper alignLeft">
             <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.siteSBV}>
               <Option value="0" key="siteSBV">
@@ -286,16 +286,8 @@ class List extends Component {
             })}
             footer={() => <div style={{ textAlign: 'center' }}>{`${listData && listData.length} 건`}</div>}
           />
-        </ContentsWrapper>
-        <AntdModal
-          className="modal-table-pad"
-          visible={this.state.modalEdit}
-          width="600px"
-          onCancel={this.onCancel}
-          destroyOnClose
-          footer={null}
-          title="관리 단위 등록/수정"
-        >
+        </StyledContentsWrapper>
+        <AntdModalPad visible={this.state.modalEdit} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="관리 단위 등록/수정">
           <div>
             {this.state.modalEdit && (
               <Edit
@@ -312,22 +304,14 @@ class List extends Component {
               />
             )}
           </div>
-        </AntdModal>
-        <AntdModal
-          className="modal-table-pad"
-          visible={this.state.modalCompany}
-          width="600px"
-          onCancel={this.onCancel}
-          destroyOnClose
-          footer={null}
-          title="회사 선택"
-        >
+        </AntdModalPad>
+        <AntdModalPad visible={this.state.modalCompany} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="회사 선택">
           <div>
             {this.state.modalCompany && (
               <CompanyModal sagaKey={id} getCallDataHandler={getCallDataHandler} result={result} selectedModalRecord={this.selectedModalRecord} />
             )}
           </div>
-        </AntdModal>
+        </AntdModalPad>
       </>
     );
   }
