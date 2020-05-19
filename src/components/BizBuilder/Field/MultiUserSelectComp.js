@@ -34,6 +34,12 @@ class MultiUserSelectComp extends React.Component {
     };
   }
 
+  componnentDidMount() {
+    const { sagaKey: id, changeFormData, parentTaskSeq, parentWorkSeq } = this.props;
+    changeFormData(id, 'PARENT_SEQ', parentWorkSeq);
+    changeFormData(id, 'PARENT_TASK_SEQ', parentTaskSeq);
+  }
+
   onUserSelect = userList => {
     const { sagaKey: id, COMP_FIELD, COMP_TAG, changeFormData, colData, workSeq, parentWorkSeq, parentTaskSeq } = this.props;
     changeFormData(id, 'PARENT_SEQ', parentWorkSeq);
@@ -89,7 +95,7 @@ class MultiUserSelectComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, readOnly, colData, isSearch, searchCompRenderer, formData, COMP_FIELD, viewPageData } = this.props;
+    const { CONFIG, visible, colData, isSearch, searchCompRenderer, formData, COMP_FIELD } = this.props;
     if (!visible) {
       return null;
     }
@@ -109,33 +115,7 @@ class MultiUserSelectComp extends React.Component {
       );
     }
 
-    if (readOnly || viewPageData.viewType.toUpperCase() === 'LIST' || viewPageData.viewType.toUpperCase() === 'VIEW') {
-      switch (CONFIG.property.expression) {
-        case 'name':
-          return (
-            <>
-              <span>NAME</span>
-            </>
-          );
-
-        case 'empNo':
-          return (
-            <>
-              <span>EMPNO</span>
-            </>
-          );
-
-        case 'nameAndEmpNo':
-          return (
-            <>
-              <span>NAME</span>
-              <span>EMPNO</span>
-            </>
-          );
-        default:
-          return null;
-      }
-    }
+    // if (readOnly || viewPageData.viewType.toUpperCase() === 'LIST' || viewPageData.viewType.toUpperCase() === 'VIEW') {};
 
     return (
       <>
