@@ -19,12 +19,13 @@ class ImproveConfrimView extends Component {
   componentDidMount() {}
 
   render() {
-    const { sagaKey } = this.props;
+    const { sagaKey, taskSeq } = this.props;
     return (
       <>
         <BizBuilderBase
           sagaKey={sagaKey}
           workSeq={6821}
+          taskSeq={taskSeq}
           modifyMetaSeq={6843}
           viewType="VIEW"
           loadingComplete={this.loadingComplete}
