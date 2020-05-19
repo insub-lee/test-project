@@ -10,6 +10,7 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 
 import Edit from './Edit';
 import CompanyModal from './CompanyModal';
@@ -184,70 +185,72 @@ class List extends Component {
     return (
       <>
         <StyledContentsWrapper>
-          <div className="selSaveWrapper alignLeft">
-            <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.siteSBV}>
-              <Option value="0" key="siteSBV">
-                지역전체
-              </Option>
-              {this.selectOptionRender('siteSB')}
-            </AntdSelect>
-            <span className="textLabel">회사</span>
-            <AntdInput
-              style={{ width: '200px' }}
-              className="ant-input-inline ant-input-sm input-pointer mr5"
-              value={this.state.companyName}
-              onClick={() => this.setState({ modalCompany: true })}
-              placeholder="여기를 클릭해주세요."
-            />
-            <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.filterPlantSBV}>
-              <Option value="0" key="filterPlantSBV">
-                정수장전체
-              </Option>
-              {this.selectOptionRender('filterPlantSB')}
-            </AntdSelect>
-            <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.fabSBV}>
-              <Option value="0" key="fabSBV">
-                FAB전체
-              </Option>
-              {this.selectOptionRender('fabSB')}
-            </AntdSelect>
-            <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.treatmentPlantSBV}>
-              <Option value="0" key="treatmentPlantSBV">
-                처리장전체
-              </Option>
-              {this.selectOptionRender('treatmentPlantSB')}
-            </AntdSelect>
-            <span className="textLabel">DI 시설</span>
-            <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.di}>
-              <Option value="total" key="di">
-                전체
-              </Option>
-              <Option value="1" key="di">
-                O
-              </Option>
-              <Option value="0" key="di">
-                X
-              </Option>
-            </AntdSelect>
-            <span className="textLabel">구분</span>
-            <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.gubun}>
-              <Option value="0" key="gubun">
-                전체
-              </Option>
-              <Option value="COMPANY" key="gubun">
-                회사
-              </Option>
-              <Option value="FILTER_PLANT" key="gubun">
-                정수장
-              </Option>
-              <Option value="FAB" key="gubun">
-                FAB
-              </Option>
-              <Option value="TREATMENT_PLANT" key="gubun">
-                처리장
-              </Option>
-            </AntdSelect>
-            <StyledButtonWrapper className="btn-wrap-mt-10 btn-wrap-center">
+          <StyledCustomSearch>
+            <div className="search-input-area">
+              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.siteSBV}>
+                <Option value="0" key="siteSBV">
+                  지역전체
+                </Option>
+                {this.selectOptionRender('siteSB')}
+              </AntdSelect>
+              <span className="text-label">회사</span>
+              <AntdInput
+                style={{ width: '200px' }}
+                className="ant-input-inline ant-input-sm input-pointer mr5"
+                value={this.state.companyName}
+                onClick={() => this.setState({ modalCompany: true })}
+                placeholder="여기를 클릭해주세요."
+              />
+              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.filterPlantSBV}>
+                <Option value="0" key="filterPlantSBV">
+                  정수장전체
+                </Option>
+                {this.selectOptionRender('filterPlantSB')}
+              </AntdSelect>
+              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.fabSBV}>
+                <Option value="0" key="fabSBV">
+                  FAB전체
+                </Option>
+                {this.selectOptionRender('fabSB')}
+              </AntdSelect>
+              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.treatmentPlantSBV}>
+                <Option value="0" key="treatmentPlantSBV">
+                  처리장전체
+                </Option>
+                {this.selectOptionRender('treatmentPlantSB')}
+              </AntdSelect>
+              <span className="text-label">DI 시설</span>
+              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.di}>
+                <Option value="total" key="di">
+                  전체
+                </Option>
+                <Option value="1" key="di">
+                  O
+                </Option>
+                <Option value="0" key="di">
+                  X
+                </Option>
+              </AntdSelect>
+              <span className="text-label">구분</span>
+              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.gubun}>
+                <Option value="0" key="gubun">
+                  전체
+                </Option>
+                <Option value="COMPANY" key="gubun">
+                  회사
+                </Option>
+                <Option value="FILTER_PLANT" key="gubun">
+                  정수장
+                </Option>
+                <Option value="FAB" key="gubun">
+                  FAB
+                </Option>
+                <Option value="TREATMENT_PLANT" key="gubun">
+                  처리장
+                </Option>
+              </AntdSelect>
+            </div>
+            <StyledButtonWrapper className="btn-area">
               <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.listDataApi()}>
                 검색
               </StyledButton>
@@ -255,7 +258,7 @@ class List extends Component {
                 추가
               </StyledButton>
             </StyledButtonWrapper>
-          </div>
+          </StyledCustomSearch>
           <AntdLineTable
             className="tableWrapper"
             rowKey={listData && listData.GROUP_UNIT_CD}

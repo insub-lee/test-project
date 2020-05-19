@@ -55,7 +55,7 @@ class CompanyModal extends Component {
     const modalList = result && result.modalData && result.modalData.eshsHstCmpnyList;
     return (
       <StyledContentsWrapper>
-        <StyledCustomSearch>
+        <StyledCustomSearch className="search-wrapper-modal">
           <span className="text-label">검색구분</span>
           <AntdSelect className="select-sm mr5" onChange={value => this.onChangetValue('modalSearchtype', value)} value={this.state.modalSearchtype}>
             <Option value="HST_CMPNY_CD">코드</Option>
