@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
 const StyledCustomSearchWrapper = styled.div`
+  padding: 20px 20px 0 20px;
+
   .text-label {
     display: inline-block;
     vertical-align: middle;
@@ -14,6 +16,10 @@ const StyledCustomSearchWrapper = styled.div`
 
   &.search-wrapper-right {
     text-align: right;
+  }
+
+  &.search-wrapper-modal {
+    padding: 0;
   }
 `;
 
