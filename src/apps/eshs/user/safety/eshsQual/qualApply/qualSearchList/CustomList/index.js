@@ -147,7 +147,7 @@ class CustomList extends Component {
   };
 
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
+    const { listData, listSelectRowKeys, workInfo, customOnRowClick, listGubun } = this.props;
     const { isMultiDelete, isOnRowClick } = this.state;
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
@@ -165,6 +165,10 @@ class CustomList extends Component {
       onRow = this.onRowClick;
     }
 
+    console.debug('리스트 GUBUN [ ', listGubun, ' ]');
+    let filterList = [];
+    if (listGubun) filterList = listData && listData.filter(l => l.GUBUN === listGubun);
+    else filterList = listData || [];
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -175,7 +179,7 @@ class CustomList extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData || []}
+            dataSource={listData && listGubun ? listData.filter(l => l.GUBUN === listGubun) : listData || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
@@ -313,6 +317,7 @@ CustomList.propTypes = {
   changeBuilderModalState: PropTypes.func,
   changeViewPage: PropTypes.func,
   customOnRowClick: PropTypes.any,
+  listGubun: PropTypes.string,
 };
 
 CustomList.defaultProps = {

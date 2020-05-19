@@ -102,9 +102,8 @@ class Abrogation extends Component {
     return viewChangeSeq;
   };
 
-  onTableRowClick = (draftType, workSeq, taskSeq, nodeId, fullPath, change) => {
-    const { onShowModal } = this.props;
-
+  onTableRowClick = (draftType, workSeq, taskSeq, taskOriginSeq, title, nodeId, fullPath, change) => {
+    const { onShowModalAbrogation } = this.props;
     const fixed = false;
     const selectedNodeIds = fullPath
       .split('|')
@@ -116,7 +115,7 @@ class Abrogation extends Component {
       nodeIds: selectedNodeIds,
       degreeFlag: Number(change),
     };
-    onShowModal(workSeq, taskSeq, viewChangeSeq, nodeId, 'REVISION', workPrcProps);
+    onShowModalAbrogation(workSeq, taskSeq, taskOriginSeq, title, viewChangeSeq, nodeId, 'REVISION', workPrcProps);
   };
 
   render() {
@@ -137,35 +136,19 @@ class Abrogation extends Component {
           columns={columns}
           dataSource={revisionList}
           onRow={record => ({
-            onClick: () => this.onTableRowClick(DraftType.AMENDMENT, record.WORK_SEQ, record.TASK_SEQ, record.NODE_ID, record.FULLPATH, record.CHANGE),
+            onClick: () =>
+              this.onTableRowClick(
+                DraftType.ABROGATION,
+                record.WORK_SEQ,
+                record.TASK_SEQ,
+                record.TASK_ORIGIN_SEQ,
+                record.TITLE,
+                record.NODE_ID,
+                record.FULLPATH,
+                record.CHANGE,
+              ),
           })}
         />
-        {/*
-    <li>
-      <div className="label-txt">대분류</div>
-      <Select placeholder="대분류(문서구분)" onChange={action.onChangeByStep1} value={values[0]}>
-        {options[0]}
-      </Select>
-    </li>
-    <li>
-      <div className="label-txt">중분류</div>
-      <Select placeholder="중분류" onChange={action.onChangeByStep2} value={values[1]}>
-        {options[1]}
-      </Select>
-    </li>
-    <li>
-      <div className="label-txt">소분류</div>
-      <Select placeholder="소분류(업무기능)" onChange={action.onChangeByStep3} value={values[2]}>
-        {options[2]}
-      </Select>
-    </li>
-    <li>
-      <div className="label-txt">문서LEVEL</div>
-      <Select placeholder="문서LEVEL/종류" onChange={action.onChangeByStep4} value={values[3]}>
-        {options[3]}
-      </Select>
-    </li>
-    */}
       </>
     );
   }

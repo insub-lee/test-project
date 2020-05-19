@@ -115,7 +115,7 @@ class TaskTransfer extends Component {
           <Col span={11}>
             <div className="taskTransferTitle">
               <span>폐기 대상 사내표</span>
-              <span>건</span>
+              <span>{sourceList.length}건</span>
             </div>
             <div className="taskTransferList">
               <Table
@@ -156,7 +156,7 @@ class TaskTransfer extends Component {
           <Col span={11}>
             <div className="taskTransferTitle">
               <span>선택된 사내표준</span>
-              <span>건</span>
+              <span>{selectedList.length}건</span>
             </div>
             <div className="taskTransferList">
               <Table

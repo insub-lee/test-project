@@ -21,7 +21,7 @@ class InterLockRequest extends Component {
   componentDidMount() {}
 
   render() {
-    const { sagaKey } = this.props;
+    const { sagaKey, taskSeq, viewType } = this.props;
     return (
       <>
         <BizBuilderBase
@@ -29,9 +29,10 @@ class InterLockRequest extends Component {
           CustomModifyPage={CustomModify}
           sagaKey={sagaKey}
           workSeq={6821}
+          taskSeq={taskSeq}
           inputMetaSeq={7421}
           modifyMetaSeq={7501}
-          viewType="INPUT"
+          viewType={viewType}
           loadingComplete={this.loadingComplete}
           InputCustomButtons={() => null}
           ModifyCustomButtons={() => null}
@@ -43,6 +44,8 @@ class InterLockRequest extends Component {
 
 InterLockRequest.defaultProps = {
   sagaKey: 'InterLockRequest',
+  taskSeq: -1,
+  viewType: 'INPUT',
 };
 
 export default InterLockRequest;

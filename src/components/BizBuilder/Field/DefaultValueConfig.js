@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
-import { Input, Select, Table, Checkbox } from 'antd';
+import { Input, Select, Table, Checkbox, Button } from 'antd';
 import { debounce } from 'lodash';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
@@ -55,11 +55,12 @@ class ComponentConfig extends Component {
               defaultValue={text || ''}
               name="targetIndex"
               onChange={e => debounceChangeViewCompData(record.COMP_FIELD, e.target.value, 'DEFAULT_VALUE')}
-              placeholder="Select Option Name"
+              placeholder="초기값 입력"
             />
           ),
         },
       ],
+      compDataTable: [],
     };
     const debounceChangeViewCompData = debounce(this.handleChangeViewCompData, 500);
   }
@@ -92,23 +93,34 @@ class ComponentConfig extends Component {
       configInfo.property[key] = value;
     }
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
+    if (key === 'compData') this.setCompDataTable(value);
+  };
+
+  setCompDataTable = compData => {
+    const { columns } = this.state;
+    this.setState({
+      compDataTable: [
+        <AntdLineTable key="compDataTable" columns={columns} rowKey="COMP_FIELD" dataSource={compData || []} scroll={{ y: 132 }} pagination={false} />,
+      ],
+    });
   };
 
   render() {
     const {
-      configInfo,
       configInfo: {
         property: { compData },
       },
     } = this.props;
-    const { columns } = this.state;
+    const { compDataTable } = this.state;
     return (
       <>
         <div className="popoverItem popoverItemInput">
-          <span className="spanLabel">초기값 설정</span>
-          <div className="popoverInnerCom">
-            <AntdLineTable key="compDataTable" columns={columns} rowKey="COMP_FIELD" dataSource={compData || []} scroll={{ y: 132 }} pagination={false} />
-          </div>
+          <span className="spanLabel">
+            초기값 설정
+            <br />
+            <Button onClick={() => this.setState({ compDataTable: [] }, this.configStart)}>[리스트 reload 설정값 초기화됨]</Button>
+          </span>
+          <div className="popoverInnerCom">{compDataTable}</div>
         </div>
       </>
     );

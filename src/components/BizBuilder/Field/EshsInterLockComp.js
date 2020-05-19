@@ -168,7 +168,7 @@ class EshsInterLockComp extends Component {
             width: '5%',
             render: text => <span>{text === '1' ? '선택' : ''}</span>,
           },
-          { title: '해제여부', dataIndex: 'IL_KIND', align: 'center', width: '10%' },
+          { title: '해제여부', dataIndex: 'IS_DEL', align: 'center', width: '10%', render: text => <span>{text === '1' ? '해제' : ''}</span> },
           {
             title: '종류/형식',
             dataIndex: 'FULL_PATH',
@@ -196,7 +196,7 @@ class EshsInterLockComp extends Component {
           },
           {
             title: '승인상태',
-            dataIndex: 'QUAL_STATUS',
+            dataIndex: 'QUAL_STATUS_NM',
             align: 'center',
             width: '8%',
           },
