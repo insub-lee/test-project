@@ -42,7 +42,7 @@ class Graph extends Component {
         graphList.map(temps =>
           temps.map(element => ({
             name: element.measure_dt,
-            [element.stack_Cd]: this.calculate(gasCd, element.hour_flow, element.density, element.work_day, gasWeight),
+            [element.stack_cd]: this.calculate(gasCd, element.hour_flow, element.density, element.work_day, gasWeight),
           })),
         );
     } else {
