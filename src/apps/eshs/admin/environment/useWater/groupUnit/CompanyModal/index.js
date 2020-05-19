@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Select, Input } from 'antd';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 
-const AntdLineTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
 
@@ -53,27 +54,26 @@ class CompanyModal extends Component {
     const { modalcolumns, result, selectedModalRecord } = this.props;
     const modalList = result && result.modalData && result.modalData.eshsHstCmpnyList;
     return (
-      <ContentsWrapper>
-        <div className="selSaveWrapper alignLeft">
-          <span className="textLabel">검색구분</span>
-          <AntdSelect className="select-mid mr5" onChange={value => this.onChangetValue('modalSearchtype', value)} value={this.state.modalSearchtype}>
+      <StyledContentsWrapper>
+        <StyledCustomSearch>
+          <span className="text-label">검색구분</span>
+          <AntdSelect className="select-sm mr5" onChange={value => this.onChangetValue('modalSearchtype', value)} value={this.state.modalSearchtype}>
             <Option value="HST_CMPNY_CD">코드</Option>
             <Option value="HST_CMPNY_NM">회사명</Option>
           </AntdSelect>
-          <span className="textLabel">검색어</span>
+          <span className="text-label">검색어</span>
           <AntdInput
             style={{ width: '150px', margin: '5px' }}
-            className="ant-input-inline mr5"
+            className="ant-input-inline mr5 ant-input-sm"
             value={this.state.modalSearch}
             onChange={e => this.onChangetValue('modalSearch', e.target.value)}
             name="modalSearch"
           />
-          <StyledButton className="btn-primary btn-first" onClick={() => this.selectCodeApi('search')}>
+          <StyledButton className="btn-primary btn-sm" onClick={() => this.selectCodeApi('search')}>
             검색
           </StyledButton>
-        </div>
-        <AntdLineTable
-          className="tableWrapper"
+        </StyledCustomSearch>
+        <AntdTable
           key={modalList.HST_CMPNY_CD}
           columns={modalcolumns}
           dataSource={modalList}
@@ -84,7 +84,7 @@ class CompanyModal extends Component {
           })}
           footer={() => <div style={{ textAlign: 'center' }}>{`${modalList.length} 건`}</div>}
         />
-      </ContentsWrapper>
+      </StyledContentsWrapper>
     );
   }
 }

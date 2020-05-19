@@ -9,13 +9,13 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
 
 import CompanyModal from '../CompanyModal';
 
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
-const AntdModal = StyledAntdModal(Modal);
+const AntdModalPad = StyledAntdModalPad(Modal);
 
 const { Option } = Select;
 
@@ -185,7 +185,7 @@ class List extends Component {
                     <th>관리단위명</th>
                     <td>
                       <AntdInput
-                        className="ant-input-inline"
+                        className="ant-input-inline ant-input-xs"
                         style={{ width: '100%' }}
                         value={this.state.groupUnitNm}
                         onChange={e => this.changeInputValue(e)}
@@ -198,7 +198,7 @@ class List extends Component {
                     <th>지역</th>
                     <td>
                       <AntdSelect
-                        className="select-mid"
+                        className="select-xs"
                         style={{ width: '100%' }}
                         onChange={(value, option) => this.changeSelectValue(value, option)}
                         value={this.state.siteSB}
@@ -212,7 +212,7 @@ class List extends Component {
                     <td>
                       <AntdInput
                         style={{ width: '100%' }}
-                        className="ant-input-inline input-pointer"
+                        className="ant-input-inline input-pointer ant-input-xs"
                         value={this.state.companyName}
                         onClick={() => this.setState({ modalCompany: true })}
                         placeholder="여기를 클릭해주세요."
@@ -223,7 +223,7 @@ class List extends Component {
                     <th>정수장</th>
                     <td>
                       <AntdSelect
-                        className="select-mid"
+                        className="select-xs"
                         style={{ width: '100%' }}
                         onChange={(value, option) => this.changeSelectValue(value, option)}
                         value={this.state.filterPlantSB}
@@ -240,7 +240,7 @@ class List extends Component {
                     <th>건물/FAB</th>
                     <td>
                       <AntdSelect
-                        className="select-mid"
+                        className="select-xs"
                         style={{ width: '100%' }}
                         onChange={(value, option) => this.changeSelectValue(value, option)}
                         value={this.state.fabSB}
@@ -257,7 +257,7 @@ class List extends Component {
                     <th>처리장</th>
                     <td>
                       <AntdSelect
-                        className="select-mid"
+                        className="select-xs"
                         style={{ width: '100%' }}
                         onChange={(value, option) => this.changeSelectValue(value, option)}
                         value={this.state.treatmentPlantSB}
@@ -294,39 +294,31 @@ class List extends Component {
           </StyledHtmlTable>
           <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
             {!modalProps ? (
-              <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('I')}>
+              <StyledButton className="btn-primary mr5 btn-sm" onClick={() => this.onChangeData('I')}>
                 저장
               </StyledButton>
             ) : (
               <>
-                <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
+                <StyledButton className="btn-primary mr5 btn-sm" onClick={() => this.onChangeData('U')}>
                   수정
                 </StyledButton>
-                <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
+                <StyledButton className="btn-primary mr5 btn-sm" onClick={() => this.onChangeData('D')}>
                   삭제
                 </StyledButton>
               </>
             )}
-            <StyledButton className="btn-primary" onClick={() => this.onReset()}>
+            <StyledButton className="btn-primary btn-sm" onClick={() => this.onReset()}>
               Reset
             </StyledButton>
           </StyledButtonWrapper>
         </StyledContentsWrapper>
-        <AntdModal
-          className="modal-table-pad"
-          visible={this.state.modalCompany}
-          width="600px"
-          onCancel={this.onCancel}
-          destroyOnClose
-          footer={null}
-          title="회사 선택"
-        >
+        <AntdModalPad visible={this.state.modalCompany} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="회사 선택">
           <div>
             {this.state.modalCompany && (
               <CompanyModal sagaKey={id} getCallDataHandler={getCallDataHandler} result={result} selectedModalRecord={this.selectedModalRecord} />
             )}
           </div>
-        </AntdModal>
+        </AntdModalPad>
       </div>
     );
   }
