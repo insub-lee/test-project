@@ -24,7 +24,7 @@ export default function InfoModify(props) {
     case 'VIEW': {
       return (
         <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
-          정보수정
+          정보수정/결과입력
         </StyledButton>
       );
     }
