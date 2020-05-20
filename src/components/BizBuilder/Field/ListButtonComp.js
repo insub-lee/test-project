@@ -41,6 +41,7 @@ class ListButtonComp extends React.Component {
             workSeq={CONFIG.property.SELECTED_BUILDER}
             viewType={CONFIG.property.VIEW_TYPE}
             parentTaskSeq={rowData.TASK_SEQ}
+            parentWorkSeq={CONFIG.property.SELECTED_BUILDER}
           />
         </Modal>
       </>
