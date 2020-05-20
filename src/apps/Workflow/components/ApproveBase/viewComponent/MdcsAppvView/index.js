@@ -222,7 +222,7 @@ class MdcsAppvView extends Component {
                         <td>{item.PSTN_NAME}</td>
                         <td>{item.APPV_STATUS}</td>
                         <td>{item.OPINION}</td>
-                        <td>{item.REG_DTTM}</td>
+                        <td>{moment(item.REG_DTTM).format('YYYY-MM-DD')}</td>
                       </tr>
                     ))}
                   </table>
