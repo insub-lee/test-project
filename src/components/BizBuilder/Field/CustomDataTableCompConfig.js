@@ -108,6 +108,7 @@ function CustomDataTableCompConfig(props) {
           break;
         }
         case DATA_INDEX_: {
+          // value = value.toUpperCase();
           temp[idx].dataIndex = value;
           break;
         }
