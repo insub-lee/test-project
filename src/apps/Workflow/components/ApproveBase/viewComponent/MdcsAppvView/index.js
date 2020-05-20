@@ -191,7 +191,7 @@ class MdcsAppvView extends Component {
               >
                 <th style={{ width: '150px' }}>선택된 실무자 </th>
                 <td>
-                  <StyledButton onClick={this.onClickUserSelect} className="btn-gary btn-xs">
+                  <StyledButton onClick={this.onClickUserSelect} className="btn-gray btn-xs">
                     <Icon type="search" style={{ marginRight: '5px' }} />
                     실무자검색
                   </StyledButton>
