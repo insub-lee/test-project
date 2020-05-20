@@ -6,18 +6,19 @@ import { Radio, Input, Button, Icon, Select, message, Modal, Table } from 'antd'
 import BizBuilderBase from 'components/BizBuilderBase';
 import UserSelect from 'components/UserSelect';
 
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledTextarea from 'commonStyled/Form/StyledTextarea';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledTagDraft from 'components/BizBuilder/styled/Tag/StyledTagDraft';
 
-const AntdModal = StyledContentsModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
 const { Option } = Select;
 const { TextArea } = Input;
 const AntdTextArea = StyledTextarea(Input.TextArea);
-const AntdLineTable = StyledLineTable(Table);
+const AntdLineTable = StyledAntdTable(Table);
 let timeout;
 
 class MdcsAppvView extends Component {
@@ -239,18 +240,19 @@ class MdcsAppvView extends Component {
               >
                 <th style={{ width: '150px' }}>선택된 실무자 </th>
                 <td>
-                  {nextApprover &&
-                    nextApprover.map(user => (
-                      <div className="draftInfoBox">
-                        <Icon type="user" />
-                        <span className="infoTxt">{`${user.NAME_KOR} (${user.DEPT_NAME_KOR})`}</span>
-                      </div>
-                    ))}
-
-                  <StyledButton onClick={this.onClickUserSelect} className="btn-light btn-sm">
+                  <StyledButton onClick={this.onClickUserSelect} className="btn-light btn-xs">
                     <Icon type="search" style={{ marginRight: '5px' }} />
                     조직도 검색
                   </StyledButton>
+                  <div>
+                    {nextApprover &&
+                      nextApprover.map(user => (
+                        <StyledTagDraft>
+                          <Icon type="user" />
+                          <span className="infoTxt">{`${user.NAME_KOR} (${user.DEPT_NAME_KOR})`}</span>
+                        </StyledTagDraft>
+                      ))}
+                  </div>
                 </td>
               </tr>
               <tr>
@@ -262,13 +264,13 @@ class MdcsAppvView extends Component {
             </tbody>
           </table>
           <StyledButtonWrapper className="btn-wrap-center" style={{ marginTop: '10px' }}>
-            <StyledButton key="ok" className="btn-primary btn-first" onClick={e => false}>
+            <StyledButton key="ok" className="btn-primary mr5 btn-sm" onClick={e => false}>
               표지 수정
             </StyledButton>
-            <StyledButton key="ok" className="btn-primary btn-first" onClick={e => this.handleReqApprove(e, selectedRow.APPV_STATUS)}>
+            <StyledButton key="ok" className="btn-primary mr5 btn-sm" onClick={e => this.handleReqApprove(e, selectedRow.APPV_STATUS)}>
               승인
             </StyledButton>
-            <StyledButton key="close" className="btn-light" onClick={this.onModalClose}>
+            <StyledButton key="close" className="btn-light btn-sm" onClick={this.onModalClose}>
               닫기
             </StyledButton>
           </StyledButtonWrapper>
