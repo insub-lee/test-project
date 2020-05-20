@@ -111,7 +111,7 @@ function* submitHandlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc
       httpMethodInfo = Axios.get;
       break;
   }
-  console.debug('submitHandler');
+  console.debug('submitHandler', submitData);
   const response = yield call(httpMethodInfo, apiUrl, submitData);
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, response);

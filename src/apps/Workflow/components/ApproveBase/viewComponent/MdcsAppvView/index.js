@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -34,85 +35,37 @@ class MdcsAppvView extends Component {
       viewMetaSeq: undefined,
     },
     isUserSelect: false,
+    procResult: [],
   };
 
   componentDidMount() {
-    const { selectedRow, setSelectedRow, APPV_STATUS } = this.props;
-    console.debug('this.props', this.props);
+    const { id, selectedRow, setSelectedRow, APPV_STATUS, submitHandlerBySaga } = this.props;
+    console.debug('view', selectedRow);
+    const { WORK_SEQ, TASK_SEQ, DRAFT_PRC_ID } = selectedRow;
     const appvStatus = selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS == 10 ? 20 : 2;
     const nSelectRow = { ...selectedRow, APPV_STATUS: appvStatus };
     setSelectedRow(nSelectRow);
+    console.debug('view', this.props);
+    const prefixUrl = '/api/workflow/v1/common/workprocess/draftprocresult';
+    const param = {
+      PARAM: {
+        WORK_SEQ,
+        TASK_SEQ,
+        PARENT_DRAFT_PRC_ID: DRAFT_PRC_ID,
+      },
+    };
+    submitHandlerBySaga(id, 'POST', prefixUrl, param, this.initDataDelegate);
   }
+
+  initDataDelegate = (id, response) => {
+    const { procResult } = response;
+    this.setState({ procResult });
+  };
 
   onChange = e => {
     const { selectedRow, setSelectedRow, APPV_STATUS } = this.props;
     const nSelectRow = { ...selectedRow, APPV_STATUS: e.target.value };
     setSelectedRow(nSelectRow);
-  };
-
-  fetch(value, callback) {
-    if (timeout) {
-      clearTimeout(timeout);
-      timeout = null;
-    }
-    timeout = this.setTimeout(this.fake, 500);
-  }
-
-  fake = (value, callBackFunc) => {
-    const { getUserInfo } = this.props;
-    const searchInfo = { KEYWORD: value, START: 0, ENDL: 10000 };
-    getUserInfo(searchInfo, this.onSearchComplete);
-  };
-
-  onSearchComplete = list => {
-    console.debug(list);
-    this.setState({
-      userInfo: list,
-    });
-  };
-
-  onSearchHandler = value => {
-    if (timeout) {
-      clearTimeout(timeout);
-      timeout = null;
-    }
-    timeout = setTimeout(this.fake, 500, value, this.onSearchComplete);
-  };
-
-  onChangeHandler = (value, option) => {
-    this.setState({
-      selectedUser: {
-        value,
-        text: option.props.children,
-      },
-    });
-  };
-
-  onApplyUSer = () => {
-    const { selectedRow, setSelectedRow } = this.props;
-    const { selectedUser } = this.state;
-
-    if (!selectedUser) {
-      message.error('실무자를 선택해 주세요');
-      return;
-    }
-    this.setState(
-      prevState => ({
-        nextApprover: prevState.selectedUser,
-        selectedUser: undefined,
-      }),
-      () => {
-        const nRuleConfig = selectedRow.RULE_CONFIG;
-        const nSelectedRow = {
-          ...selectedRow,
-          RULE_CONFIG: {
-            ...nRuleConfig,
-            NEXT_APPV_USER_ID: this.state.nextApprover.value,
-          },
-        };
-        setSelectedRow(nSelectedRow);
-      },
-    );
   };
 
   handleReqApprove = (e, appvStatus) => {
@@ -123,10 +76,6 @@ class MdcsAppvView extends Component {
 
   onModalClose = () => {
     this.props.setViewVisible(false);
-  };
-
-  clearUser = e => {
-    this.setState({ selectedUser: undefined, nextApprover: undefined });
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
@@ -186,8 +135,10 @@ class MdcsAppvView extends Component {
 
   onUserSelectedComplete = result => {
     const { selectedRow, setSelectedRow } = this.props;
+    const userList = result.map(item => item.USER_ID);
     this.setState(
       {
+        userList,
         nextApprover: result,
         isUserSelect: false,
       },
@@ -216,7 +167,7 @@ class MdcsAppvView extends Component {
   render() {
     const { selectedRow } = this.props;
     const { DRAFT_DATA } = selectedRow;
-    const { modalWidth, coverView, isUserSelect, nextApprover } = this.state;
+    const { modalWidth, coverView, isUserSelect, nextApprover, procResult, userList } = this.state;
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -240,9 +191,9 @@ class MdcsAppvView extends Component {
               >
                 <th style={{ width: '150px' }}>선택된 실무자 </th>
                 <td>
-                  <StyledButton onClick={this.onClickUserSelect} className="btn-light btn-xs">
+                  <StyledButton onClick={this.onClickUserSelect} className="btn-gary btn-xs">
                     <Icon type="search" style={{ marginRight: '5px' }} />
-                    조직도 검색
+                    실무자검색
                   </StyledButton>
                   <div>
                     {nextApprover &&
@@ -253,6 +204,28 @@ class MdcsAppvView extends Component {
                         </StyledTagDraft>
                       ))}
                   </div>
+                </td>
+              </tr>
+              <tr style={{ display: procResult.length > 0 ? 'table-row' : 'none' }}>
+                <td colSpan={2}>
+                  <table style={{ width: '100%' }}>
+                    <tr>
+                      <th>실무자</th>
+                      <th>직급</th>
+                      <th>검토결과</th>
+                      <th>검토의견</th>
+                      <th>검토일</th>
+                    </tr>
+                    {procResult.map(item => (
+                      <tr>
+                        <td>{item.DRAFT_USER_NAME}</td>
+                        <td>{item.PSTN_NAME}</td>
+                        <td>{item.APPV_STATUS}</td>
+                        <td>{item.OPINION}</td>
+                        <td>{item.REG_DTTM}</td>
+                      </tr>
+                    ))}
+                  </table>
                 </td>
               </tr>
               <tr>
@@ -333,7 +306,7 @@ class MdcsAppvView extends Component {
           footer={[]}
         >
           <UserSelect
-            initUserList={this.state.nextApprover}
+            initUserList={userList}
             // treeDataSource={distDeptList}
             // userDataList={result.userList && result.userList.list}
             // onTreeSelect={this.onTreeSelect}
