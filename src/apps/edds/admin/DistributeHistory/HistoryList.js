@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, Modal, Button } from 'antd';
+import { Table, Icon, Modal } from 'antd';
 
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad'
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import DocView from './DocView';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledContentsModal(Modal);
+const AntdModal = StyledAntdModalPad(Modal);
 
 class HistoryList extends Component {
   state = {
@@ -103,7 +104,17 @@ class HistoryList extends Component {
 
     return (
       <>
-        <ContentsWrapper>
+        <AntdModal
+          width={700}
+          visible={this.state.isShow}
+          title="배포문서 상세"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={[<StyledButton className="btn-light" onClick={this.onCancelPopup}>닫기</StyledButton>]}
+        >
+          <DocView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
+        </AntdModal>
+        <StyledContentsWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 배포 이력
@@ -118,17 +129,7 @@ class HistoryList extends Component {
               }
             })}
           />
-        </ContentsWrapper>
-        <AntdModal
-          width={700}
-          visible={this.state.isShow}
-          title="배포문서 상세"
-          onCancel={this.onCancelPopup}
-          destroyOnClose
-          footer={[<Button onClick={this.onCancelPopup}>닫기</Button>]}
-        >
-          <DocView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
-        </AntdModal>
+        </StyledContentsWrapper>
       </>
     );
   }
