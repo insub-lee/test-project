@@ -135,9 +135,10 @@ class MdcsAppvView extends Component {
 
   onUserSelectedComplete = result => {
     const { selectedRow, setSelectedRow } = this.props;
+    const userList = result.map(item => item.USER_ID);
     this.setState(
       {
-        userList: result,
+        userList,
         nextApprover: result,
         isUserSelect: false,
       },
@@ -190,9 +191,9 @@ class MdcsAppvView extends Component {
               >
                 <th style={{ width: '150px' }}>선택된 실무자 </th>
                 <td>
-                  <StyledButton onClick={this.onClickUserSelect} className="btn-light btn-xs">
+                  <StyledButton onClick={this.onClickUserSelect} className="btn-gary btn-xs">
                     <Icon type="search" style={{ marginRight: '5px' }} />
-                    조직도 검색
+                    실무자검색
                   </StyledButton>
                   <div>
                     {nextApprover &&
