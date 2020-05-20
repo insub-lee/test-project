@@ -10,7 +10,7 @@ const TreeWrapper = styled.div`
     .ant-select {
       font-size: 12px;
       width: 100%;
-      
+
       .ant-select-selection {
         border: 0;
         border-bottom: 1px solid #e8e8e8;
@@ -33,7 +33,7 @@ const TreeWrapper = styled.div`
       }
 
       li .ant-tree-node-content-wrapper {
-        font-size: 12px;
+        font-size: 11px;
       }
     }
   }
