@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm, Button } from 'antd';
+import { Table, Popconfirm, Button, Modal } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -14,14 +14,16 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
 // import Loadable from 'components/Loadable';
 // import Loading from '../Common/Loading';
 
 const AntdTable = StyledAntdTable(Table);
 const StyledButton = StyledAntdButton(Button);
+const AntdModal = StyledContentsModal(Modal);
 
-class ListPage extends Component {
+class CustomList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,6 +32,9 @@ class ListPage extends Component {
       isOnRowClick: false,
       rowClickView: 'VIEW',
       StyledWrap: StyledViewDesigner,
+      modalContent: [],
+      modalVisible: false,
+      modalTitle: '',
     };
   }
 
@@ -118,7 +123,57 @@ class ListPage extends Component {
         });
       }
     });
-    return columns;
+
+    return columns.map(c => {
+      if (c.title === '신청' || c.title === '승인')
+        return {
+          ...c,
+          render: (text, record) => (
+            <span style={{ cursor: 'pointer' }} onClick={() => this.setModalContent(c.title, record.TASK_SEQ, record.GUBUN)}>
+              {text}
+            </span>
+          ),
+        };
+      return c;
+    });
+
+    // return columns;
+  };
+
+  setModalContent = (title, taskSeq, gubun) => {
+    const { ConfirmRequest, ConfirmResult, InterLockRequest, InterLockResult } = this.props;
+    let modalContent = [];
+    let modalTitle = '';
+    if (title === '신청') {
+      if (gubun === 'CF') {
+        modalContent = [ConfirmRequest(taskSeq, 'MODIFY')];
+        modalTitle = '[ESH Qual 확인신청]';
+      } else if (gubun === 'IL') {
+        modalContent = [InterLockRequest(taskSeq, 'MODIFY')];
+        modalTitle = '[InterLock 해제신청]';
+      }
+    } else if (title === '승인') {
+      if (gubun === 'CF') {
+        modalContent = [ConfirmResult(taskSeq)];
+        modalTitle = '[ESH Qual 확인결과]';
+      } else if (gubun === 'IL') {
+        modalTitle = '[InterLock 해제결과]';
+        modalContent = [InterLockResult(taskSeq)];
+      }
+    }
+    this.setState(
+      {
+        modalContent,
+        modalTitle,
+      },
+      this.handleModalVisible,
+    );
+  };
+
+  handleModalVisible = () => {
+    const { modalVisible } = this.state;
+    if (modalVisible) return this.setState({ modalVisible: !modalVisible, modalContent: [], modalTitle: '' });
+    return this.setState({ modalVisible: !modalVisible });
   };
 
   onSelectChange = selectedRowKeys => {
@@ -178,20 +233,11 @@ class ListPage extends Component {
             dataSource={listData || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
-            onRow={record => ({ onClick: () => this.customOnRowClick(record) })}
+            onRow={onRow}
           />
         </Group>
       </div>
     );
-  };
-
-  customOnRowClick = record => {
-    const {
-      viewPageData: { workSeq },
-      modifySagaKey,
-      changeViewPage,
-    } = this.props;
-    changeViewPage(modifySagaKey, workSeq, record.TASK_SEQ, 'MODIFY');
   };
 
   render = () => {
@@ -208,7 +254,7 @@ class ListPage extends Component {
       isBuilderModal,
       changeBuilderModalState,
     } = this.props;
-    const { isMultiDelete, StyledWrap } = this.state;
+    const { isMultiDelete, StyledWrap, modalContent, modalVisible, modalTitle } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -283,6 +329,10 @@ class ListPage extends Component {
               );
             })}
           </Sketch>
+
+          <AntdModal title={modalTitle || ' '} visible={modalVisible} width={1000} onCancel={() => this.handleModalVisible('CANCEL')} footer={[null]}>
+            {modalContent}
+          </AntdModal>
         </StyledWrap>
       );
     }
@@ -290,7 +340,7 @@ class ListPage extends Component {
   };
 }
 
-ListPage.propTypes = {
+CustomList.propTypes = {
   workInfo: PropTypes.object,
   sagaKey: PropTypes.string,
   workFlowConfig: PropTypes.object,
@@ -307,15 +357,23 @@ ListPage.propTypes = {
   changeBuilderModalState: PropTypes.func,
   changeViewPage: PropTypes.func,
   customOnRowClick: PropTypes.any,
+  ConfirmRequest: PropTypes.func,
+  ConfirmResult: PropTypes.func,
+  InterLockRequest: PropTypes.func,
+  InterLockResult: PropTypes.func,
 };
 
-ListPage.defaultProps = {
+CustomList.defaultProps = {
   workFlowConfig: {
     info: {
       PRC_ID: -1,
     },
   },
   customOnRowClick: undefined,
+  ConfirmRequest: () => {},
+  ConfirmResult: () => {},
+  InterLockRequest: () => {},
+  InterLockResult: () => {},
 };
 
-export default ListPage;
+export default CustomList;

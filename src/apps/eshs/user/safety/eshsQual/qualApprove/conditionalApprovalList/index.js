@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import BizBuilderBase from 'components/BizBuilderBase';
-
-class ImproveConfrimView extends Component {
+import CustomList from 'apps/eshs/user/safety/eshsQual/qualApprove/conditionalApprovalList/pages/CustomList';
+class ConditionalApprovalList extends Component {
   constructor(props) {
     super(props);
 
@@ -19,26 +19,24 @@ class ImproveConfrimView extends Component {
   componentDidMount() {}
 
   render() {
-    const { sagaKey, taskSeq } = this.props;
+    const { sagaKey } = this.props;
     return (
       <>
         <BizBuilderBase
+          CustomListPage={CustomList}
           sagaKey={sagaKey}
           workSeq={6821}
-          taskSeq={taskSeq}
-          modifyMetaSeq={6843}
-          viewType="VIEW"
+          listMetaSeq={8161}
+          viewType="LIST"
           loadingComplete={this.loadingComplete}
-          ViewCustomButtons={() => null}
         />
       </>
     );
   }
 }
 
-ImproveConfrimView.defaultProps = {
-  sagaKey: 'ImproveConfrimView',
-  taskSeq: -1,
+ConditionalApprovalList.defaultProps = {
+  sagaKey: 'ConditionalApprovalList',
 };
 
-export default ImproveConfrimView;
+export default ConditionalApprovalList;
