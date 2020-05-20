@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Input, Modal, Button, DatePicker, Select, Table } from 'antd';
-import { AppstoreTwoTone } from '@ant-design/icons';
+import { Input, Modal, Button, DatePicker, Table } from 'antd';
 import styled from 'styled-components';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledPicker from 'commonStyled/Form/StyledPicker';
@@ -17,7 +15,8 @@ import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import message from 'components/Feedback/message';
 import Group from 'components/BizBuilder/Sketch/Group';
 import MessageContent from 'components/Feedback/message.style2';
-import WritePage from '../../emergencySafetyWorkWrite/page';
+import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
+import IngCheckViewer from '../../ingCheck';
 import Styled from './Styled';
 
 const AntdModal = StyledModalWrapper(Modal);
@@ -25,9 +24,6 @@ const AntdTable = StyledLineTable(Table);
 const AntdSearch = StyledSearchInput(Input.Search);
 const StyledButton = StyledAntdButton(Button);
 const AntdDatePicker = StyledPicker(DatePicker);
-const AntdSelect = StyledSelect(Select);
-
-const { Option } = Select;
 
 const CustomTableStyled = styled.div`
   .ant-table-column-title {
@@ -35,7 +31,7 @@ const CustomTableStyled = styled.div`
   }
 `;
 
-class SafetyWorkMain extends Component {
+class SafetyWorkList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,21 +40,18 @@ class SafetyWorkMain extends Component {
       modalVisible: false,
       selectedWork: '',
       searchValues: {
-        START_CREATE_DT: '', // 신청기간(START)
-        END_CREATE_DT: '', // 신청기간(END)
-        SITE: '', // 작업지역
+        WORK_NO: '', // 작업번호
         REQ_CMPNY_CD: '', // 발주회사코드
         REQ_CMPNY_NM: '', // 발주회사명
+        REQ_DEPT_CD: '', // 발주부서코드
+        REQ_DEPT_NM: '', // 발주부서명
         WRK_CMPNY_CD: '', // 작업업체코드
         WRK_CMPNY_NM: '', // 작업업체명
+        START_CHECK_DT: '', // 점검기간(START)
+        END_CHECK_DT: '', // 점검기간(END)
       },
-      formData: {
-        EXM_CMPNY_CD: props.profile.DEPT_ID, // 승인자 회사
-        EXM_DEPT_CD: props.profile.DEPT_ID, // 승인자 부서
-        EXM_EMP_NO: props.profile.USER_ID, // 승인자 사번
-        WORK_LIST: [], // 승인할 작업번호 리스트
-      },
-      safetyWorkList: [],
+      safetyWorks: [],
+      ingCheckList: [],
     };
   }
 
@@ -67,9 +60,9 @@ class SafetyWorkMain extends Component {
     const { searchValues } = this.state;
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
     const apiInfo = {
-      key: 'getEsafetyWorkList',
+      key: 'getIngCheckList',
       type: 'POST',
-      url: `/api/eshs/v1/common/emergencySafetyWork`,
+      url: `/api/eshs/v1/common/ingCheckList`,
       params: { serachValues: { ...searchValues } },
     };
     getCallDataHandlerReturnRes(id, apiInfo, this.onSearchCallback);
@@ -77,21 +70,16 @@ class SafetyWorkMain extends Component {
 
   // 검색Action Callback
   onSearchCallback = (id, response) => {
-    const { formData } = this.state;
-    const result = response.emergencySafetyWorkList;
+    const result = response.list;
     if (result.length > 0) {
       this.setState({
-        safetyWorkList: result,
-        formData: {
-          ...formData,
-          WORK_LIST: [],
-        },
+        ingCheckList: result,
       });
       return;
     }
     this.setState(
       {
-        safetyWorkList: [],
+        ingCheckList: [],
       },
       () => message.error(<MessageContent>검색결과가 없습니다.</MessageContent>),
     );
@@ -102,11 +90,14 @@ class SafetyWorkMain extends Component {
     let title = '';
     const selectedWork = workNo || '';
     switch (type) {
+      case 'supervisor':
+        title = '감독자 선택';
+        break;
       case 'cmpny':
         title = '작업업체 선택';
         break;
-      case 'eSafetyWorkWrite':
-        title = '긴급작업 등록';
+      case 'ingCheckView':
+        title = '안전작업 점검 상세정보';
         break;
       default:
         break;
@@ -160,117 +151,82 @@ class SafetyWorkMain extends Component {
     });
   };
 
-  // 승인할 작업 선택
-  handleChangeWorkSelect = rowkeys => {
-    const { formData } = this.state;
-    this.setState({
-      formData: {
-        ...formData,
-        WORK_LIST: rowkeys,
-      },
-    });
-  };
-
-  acceptSafetyWork = () => {
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const { formData } = this.state;
-    if (formData.WORK_LIST && formData.WORK_LIST.length === 0) {
-      message.error(<MessageContent>선택된 긴급작업이 없습니다.</MessageContent>);
-      return;
-    }
-    const submitData = {
-      PARAM: {
-        ...formData,
-      },
-    };
-    submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/emergencySafetyWork', submitData, this.acceptSafetyWorkCallback);
-  };
-
-  acceptSafetyWorkCallback = (id, response) => {
-    const { result } = response;
-    if (result === 'success') {
-      message.success(<MessageContent>긴급작업 승인을 완료하였습니다.</MessageContent>);
-      this.onSearch();
-    }
-    if (result === 'fail') {
-      message.error(<MessageContent>긴급작업 승인에 실패하였습니다.</MessageContent>);
-    }
-  };
-
   render() {
-    const { modalType, modalTitle, modalVisible, searchValues, safetyWorkList, selectedWork, formData } = this.state;
-    const rowSelection = {
-      selectedRowKeys: formData.WORK_LIST,
-      columnWidth: '5%',
-      onChange: this.handleChangeWorkSelect,
-    };
+    const { modalType, modalTitle, modalVisible, searchValues, safetyWorks, selectedWork, ingCheckList } = this.state;
     const columns = [
-      {
-        title: '승인',
-        dataIndex: 'EXM_EMP_NO',
-        width: '5%',
-        align: 'center',
-        render: value => {
-          if (value === '-1') {
-            return <span style={{ color: '#ff6666' }}>미승인</span>;
-          }
-          return <span style={{ color: '#17a9a1' }}>승인</span>;
-        },
-      },
       {
         title: '작업번호',
         dataIndex: 'WORK_NO',
-        width: '15%',
         align: 'center',
         render: value => (
           <span
-            tabIndex={0}
+            onClick={() => this.handleModal('ingCheckView', true, value)}
             role="button"
-            onKeyPress={() => this.handleModal('eSafetyWorkWrite', true, value)}
-            onClick={() => this.handleModal('eSafetyWorkWrite', true, value)}
+            tabIndex="0"
+            onKeyPress={() => this.handleModal('ingCheckView', true, value)}
+            style={{ cursor: 'pointer', color: '#1fb5ad' }}
           >
             {value}
           </span>
         ),
       },
       {
-        title: '작업명',
-        dataIndex: 'TITLE',
-        width: '15%',
-        align: 'center',
-      },
-      {
-        title: '작업장소',
-        dataIndex: 'WLOC',
-        width: '15%',
-        align: 'center',
-      },
-      {
-        title: '발주회사',
-        dataIndex: 'REQ_CMPNY_NM',
-        width: '10%',
-        align: 'center',
-      },
-      {
         title: '작업업체',
-        dataIndex: 'WRK_CMPNY_NM',
-        width: '10%',
+        children: [
+          {
+            title: '업체명',
+            dataIndex: 'WRK_CMPNY_NM',
+            key: 'WRK_CMPNY_NM',
+            align: 'center',
+          },
+          {
+            title: '벌점',
+            dataIndex: 'WRK_CMPNY_PT',
+            key: 'WRK_CMPNY_PT',
+            align: 'center',
+          },
+        ],
+      },
+      {
+        title: '발주팀',
+        children: [
+          {
+            title: '발주사',
+            dataIndex: 'REQ_CMPNY_NM',
+            key: 'REQ_CMPNY_NM',
+            align: 'center',
+          },
+          {
+            title: '팀명',
+            dataIndex: 'REQ_DEPT_NM',
+            key: 'REQ_DEPT_NM',
+            align: 'center',
+          },
+          {
+            title: '벌점',
+            dataIndex: 'REQ_CMPNY_PT',
+            key: 'REQ_CMPNY_PT',
+            align: 'center',
+          },
+        ],
+      },
+      {
+        title: '주작업',
+        dataIndex: 'WCATEGORY',
         align: 'center',
       },
       {
-        title: '등록일',
-        dataIndex: 'CREATE_DT',
-        width: '10%',
+        title: '점검임',
+        dataIndex: 'CHECK_DT',
         align: 'center',
+        render: value => <span>{moment(value).format('YYYY-MM-DD')}</span>,
       },
       {
-        title: '승인자',
-        dataIndex: 'EXM_EMP_NM',
-        width: '10%',
+        title: '점검결과',
+        dataIndex: 'CHECK_STATUS',
         align: 'center',
       },
     ];
-
     return (
       <Styled>
         <StyledSearchWrapper>
@@ -280,52 +236,45 @@ class SafetyWorkMain extends Component {
                 <tbody>
                   <tr className="view-designer-row">
                     <td className="view-designer-col view-designer-label">
-                      <span>신청기간</span>
+                      <span>작업번호</span>
                     </td>
                     <td className="view-designer-col">
-                      <div styled={{ width: '100%' }}>
-                        <AntdDatePicker
-                          className="ant-picker-xs"
-                          style={{ width: '45%' }}
-                          value={searchValues.START_CREATE_DT !== '' ? moment(searchValues.START_CREATE_DT) : undefined}
-                          onChange={e => {
-                            if (e === null) {
-                              this.handleChangeSearchValue('START_CREATE_DT', '');
-                              return;
-                            }
-                            this.handleChangeSearchValue('START_CREATE_DT', e.format('YYYY-MM-DD'));
-                          }}
-                        />
-                        <span styled={{ margin: '0px 10px 0px 10px' }}> ~ </span>
-                        <AntdDatePicker
-                          className="ant-picker-xs"
-                          style={{ width: '45%' }}
-                          value={searchValues.END_CREATE_DT !== '' ? moment(searchValues.END_CREATE_DT) : undefined}
-                          onChange={e => {
-                            if (e === null) {
-                              this.handleChangeSearchValue('END_CREATE_DT', '');
-                              return;
-                            }
-                            this.handleChangeSearchValue('END_CREATE_DT', e.format('YYYY-MM-DD'));
-                          }}
+                      <div>
+                        <AntdSearch
+                          className="ant-search-inline input-search-xs mr5"
+                          style={{ width: '50%' }}
+                          value={searchValues.WORK_NO}
+                          onChange={e => this.handleChangeSearchValue('WORK_NO', e.target.value)}
+                          onSearch={() => this.handleModal('safetyWork', true)}
                         />
                       </div>
                     </td>
                     <td className="view-designer-col view-designer-label">
-                      <span>작업지역</span>
+                      <span>발주회사</span>
                     </td>
                     <td className="view-designer-col">
                       <div>
-                        <AntdSelect
-                          className="select-xs"
-                          style={{ width: '45%' }}
-                          value={searchValues.SITE}
-                          onChange={value => this.handleChangeSearchValue('SITE', value)}
-                        >
-                          <Option value="">전체</Option>
-                          <Option value="청주">청주</Option>
-                          <Option value="구미">구미</Option>
-                        </AntdSelect>
+                        <AntdSearch
+                          className="ant-search-inline input-search-xs mr5"
+                          style={{ width: '50%' }}
+                          value={searchValues.REQ_CMPNY_CD}
+                          onClick={() => this.handleModal('', false)}
+                          onSearch={() => this.handleModal('', false)}
+                        />
+                      </div>
+                    </td>
+                    <td className="view-designer-col view-designer-label">
+                      <span>주관팀</span>
+                    </td>
+                    <td className="view-designer-col">
+                      <div>
+                        <AntdSearch
+                          className="ant-search-inline input-search-xs mr5"
+                          style={{ width: '50%' }}
+                          value={searchValues.REQ_DEPT_CD}
+                          onClick={() => this.handleModal('', false)}
+                          onSearch={() => this.handleModal('', false)}
+                        />
                       </div>
                     </td>
                   </tr>
@@ -336,26 +285,44 @@ class SafetyWorkMain extends Component {
                     <td className="view-designer-col">
                       <div>
                         <AntdSearch
-                          className="input-search-xs"
-                          style={{ width: '45%' }}
+                          className="ant-search-inline input-search-xs mr5"
+                          style={{ width: '50%' }}
                           value={searchValues.WRK_CMPNY_CD}
-                          disable
                           onClick={() => this.handleModal('cmpny', true)}
                           onSearch={() => this.handleModal('cmpny', true)}
                         />
-                        {searchValues.WRK_CMPNY_NM !== '' && <span style={{ marginLeft: '5px' }}>{searchValues.WRK_CMPNY_NM}</span>}
+                        {searchValues.WRK_CMPNY_NM !== '' && <span>{searchValues.WRK_CMPNY_NM}</span>}
                       </div>
                     </td>
                     <td className="view-designer-col view-designer-label">
-                      <span>발주회사</span>
+                      <span>점검기간</span>
                     </td>
                     <td className="view-designer-col">
                       <div>
-                        <AntdSearch
-                          className="ant-search-inline input-search-xs mr5"
+                        <AntdDatePicker
+                          className="ant-picker-xs"
                           style={{ width: '45%' }}
-                          value={searchValues.REQ_CMPNY_CD}
-                          onClick={() => alert('발주회사 portal user / eshs user 작업된 후 개발예정')}
+                          value={searchValues.START_CHECK_DT !== '' ? moment(searchValues.START_CHECK_DT) : undefined}
+                          onChange={e => {
+                            if (e === null) {
+                              this.handleChangeSearchValue('START_CHECK_DT', '');
+                              return;
+                            }
+                            this.handleChangeSearchValue('START_CHECK_DT', e.format('YYYY-MM-DD'));
+                          }}
+                        />
+                        <span styled={{ margin: '0px 10px 0px 10px', width: '10%' }}> ~ </span>
+                        <AntdDatePicker
+                          className="ant-picker-xs"
+                          style={{ width: '45%' }}
+                          value={searchValues.END_CHECK_DT !== '' ? moment(searchValues.END_CHECK_DT) : undefined}
+                          onChange={e => {
+                            if (e === null) {
+                              this.handleChangeSearchValue('END_CHECK_DT', '');
+                              return;
+                            }
+                            this.handleChangeSearchValue('END_CHECK_DT', e.format('YYYY-MM-DD'));
+                          }}
                         />
                       </div>
                     </td>
@@ -367,32 +334,25 @@ class SafetyWorkMain extends Component {
               <StyledButton className="btn-primary btn-gray btn-first" onClick={() => this.onSearch()}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary btn-gray btn-first" onClick={() => this.acceptSafetyWork()}>
-                승인
+              <StyledButton className="btn-primary btn-gray btn-first" onClick={() => alert('엑셀받기')}>
+                엑셀받기
               </StyledButton>
             </div>
           </Group>
         </StyledSearchWrapper>
         <ContentsWrapper>
-          <div className="middleTitle">
-            <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
-            <span className="middleTitleText">긴급작업 현황</span>
-          </div>
           <CustomTableStyled>
             <AntdTable
-              rowKey="WORK_NO"
-              key="emergency_list"
               pagination={false}
               columns={columns}
-              dataSource={safetyWorkList}
-              rowSelection={rowSelection}
-              footer={() => <div style={{ textAlign: 'center' }}>{`총 ${safetyWorkList.length === 0 ? 0 : safetyWorkList.length} 건`}</div>}
+              dataSource={ingCheckList}
+              footer={() => <div style={{ textAlign: 'center' }}>{`총 ${ingCheckList.length === 0 ? 0 : ingCheckList.length} 건`}</div>}
             />
           </CustomTableStyled>
         </ContentsWrapper>
         <AntdModal
           title={modalTitle}
-          width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '90%'}
+          width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '70%'}
           visible={modalVisible}
           footer={null}
           onOk={() => this.handleModal('', false)}
@@ -412,22 +372,21 @@ class SafetyWorkMain extends Component {
               eshsCmpnyCompResult={(cmpnyInfo, field) => this.handleCmpnySelect(cmpnyInfo, field)}
             />
           )}
-          {modalType === 'eSafetyWorkWrite' && (
-            <BizMicroDevBase initWorkNo={selectedWork} viewType="modal" component={WritePage} sagaKey="emergencySafetyWork_write" />
-          )}
+          {modalType === 'safetyWork' && <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />}
+          {modalType === 'ingCheckView' && <IngCheckViewer workNo={selectedWork} pageType="modal" />}
         </AntdModal>
       </Styled>
     );
   }
 }
 
-SafetyWorkMain.propTypes = {
+SafetyWorkList.propTypes = {
   sagaKey: PropTypes.string,
   result: PropTypes.object,
-  profile: PropTypes.object,
   getCallDataHandler: PropTypes.func,
   getCallDataHandlerReturnRes: PropTypes.func,
-  submitHandlerBySaga: PropTypes.func,
 };
 
-export default SafetyWorkMain;
+SafetyWorkList.defaultProps = {};
+
+export default SafetyWorkList;

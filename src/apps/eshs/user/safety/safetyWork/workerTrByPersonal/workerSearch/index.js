@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Input, Table, Select } from 'antd';
-import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
@@ -25,8 +24,6 @@ class List extends Component {
         wrkCmpnyNm: '',
         keyword: '',
       },
-      selectedRowKeys: [],
-      selectedWorkers: [],
     };
   }
 
@@ -111,13 +108,6 @@ class List extends Component {
     getCallDataHandlerReturnRes(id, apiInfo);
   };
 
-  onChangeRowSelection = (selectedRowKeys, selectedRows) => {
-    this.setState({
-      selectedRowKeys,
-      selectedWorkers: selectedRows,
-    });
-  };
-
   renderYearSelect = () => {
     const { searchValue } = this.state;
     const endYear = Number(moment().format('YYYY'));
@@ -160,56 +150,42 @@ class List extends Component {
   };
 
   render() {
-    const { result, onSave } = this.props;
-    const { searchValue, selectedRowKeys, selectedWorkers } = this.state;
+    const { result, onRow } = this.props;
+    const { searchValue } = this.state;
     const eshsCmpnyList = (result && result.getCmpnyList && result.getCmpnyList.list) || [];
     const eshsWorkerList = (result && result.getWorkers && result.getWorkers.workerList) || [];
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.onChangeRowSelection,
-    };
     const columns = [
-      {
-        title: '교육이수',
-        dataIndex: 'EDU_CHECK',
-        width: '10%',
-        align: 'center',
-        render: value => {
-          if (value === -1) return <CloseOutlined style={{ color: '#ff6666' }} />;
-          return <CheckOutlined style={{ color: '#71da71' }} />;
-        },
-      },
-      {
-        title: '업체',
-        dataIndex: '',
-        width: '30%',
-        align: 'center',
-        render: () => <span>{`${searchValue.wrkCmpnyNm} (${searchValue.year})`}</span>,
-      },
       {
         title: '성명',
         dataIndex: 'WORKER_NM',
-        width: '15%',
+        width: '20%',
         align: 'center',
       },
       {
         title: '생년월일',
         dataIndex: 'WORKER_SSN',
-        width: '15%',
+        width: '20%',
         align: 'center',
         render: value => <span>{value.substr(0, 6)}</span>,
       },
       {
         title: '핸드폰(연락처)',
         dataIndex: 'M_TEL',
-        width: '15%',
+        width: '20%',
         align: 'center',
       },
       {
         title: '긴급연락처',
         dataIndex: 'TEL',
-        width: '15%',
+        width: '20%',
         align: 'center',
+      },
+      {
+        title: '업체',
+        dataIndex: '',
+        width: '20%',
+        align: 'center',
+        render: () => <span>{`${searchValue.wrkCmpnyNm} (${searchValue.year})`}</span>,
       },
     ];
 
@@ -254,21 +230,18 @@ class List extends Component {
               >
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('등록')}>
-                작업자 등록
-              </StyledButton>
-              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => onSave(selectedWorkers)}>
-                저장
-              </StyledButton>
             </div>
           </div>
         </StyledSearchWrap>
         <AntdTable
           columns={columns}
           pagination={false}
-          rowSelection={rowSelection}
-          scroll={{ y: 392 }}
           dataSource={eshsWorkerList}
+          onRow={record => ({
+            onClick: () => {
+              onRow(record);
+            },
+          })}
           footer={() => <div style={{ textAlign: 'center' }}>{`총 ${eshsWorkerList.length === 0 ? 0 : eshsWorkerList.length} 명`}</div>}
         />
       </Styled>
@@ -280,7 +253,7 @@ List.propTypes = {
   result: PropTypes.object,
   getCallDataHandlerReturnRes: PropTypes.func,
   removeReduxState: PropTypes.func,
-  onSave: PropTypes.func, // 저장버튼
+  onRow: PropTypes.func,
 };
 
 export default List;

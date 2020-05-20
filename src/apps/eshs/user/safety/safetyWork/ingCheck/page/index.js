@@ -26,6 +26,7 @@ class SafetyWorkMain extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      init: true,
       modalType: '',
       modalTitle: '',
       modalVisible: false,
@@ -73,7 +74,8 @@ class SafetyWorkMain extends Component {
 
   // 페이지 랜더링 후 불러올 데이터
   componentDidMount() {
-    const { sagaKey, getCallDataHandler } = this.props;
+    const { init } = this.state;
+    const { sagaKey, getCallDataHandler, workNo } = this.props;
     const apiArr = [
       {
         /* 주관회사사원 : /api/eshs/v1/common/eshsHstCmpnyUser */
@@ -95,7 +97,21 @@ class SafetyWorkMain extends Component {
       },
     ];
     getCallDataHandler(sagaKey, apiArr);
+    if (init && workNo) this.init();
   }
+
+  init = () => {
+    const { workNo } = this.props;
+    const { init } = this.state;
+    if (init) {
+      this.setState(
+        {
+          init: false,
+        },
+        () => this.handleGetSafetyWork(workNo),
+      );
+    }
+  };
 
   // 작업중 점검 등록 / 수정 / 삭제
   submitFormData = type => {
@@ -105,11 +121,15 @@ class SafetyWorkMain extends Component {
     switch (type) {
       case 'SAVE':
         if (this.validFormData(formData.INGCHECK_HEAD)) {
-          submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/ingCheck', submitData);
+          if (formData.INIT_INGCHECK) {
+            submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/ingCheck', submitData, this.saveCallback);
+          } else {
+            submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/ingCheck', submitData, this.updateCallback);
+          }
         }
         break;
       case 'DELETE':
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/ingCheck', submitData, this.safetyWorkDeleteCallback);
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/ingCheck', submitData, this.deleteCallback);
         break;
       default:
         break;
@@ -134,26 +154,24 @@ class SafetyWorkMain extends Component {
   };
 
   // 작업중 점검 내용 저장 콜백
-  safetyWorkAddCallback = (id, response) => {
+  saveCallback = (id, response) => {
     const { formData } = this.state;
-    const { WORK_NO } = response;
-    if (formData.WORK_NO === '') {
-      if (WORK_NO === '') {
-        message.error(<MessageContent>작업중 점검내용 저장 실패</MessageContent>);
-        return;
-      }
-      message.success(<MessageContent>작업중 점검내용 저장 완료</MessageContent>);
+    const { result } = response;
+    if (result && result === 'success') {
+      this.setState({
+        formData: {
+          ...formData,
+          INIT_INGCHECK: false,
+        },
+      });
+      message.success(<MessageContent>점검정보를 저장하였습니다.</MessageContent>);
+      return;
     }
-    this.setState({
-      formData: {
-        ...formData,
-        WORK_NO,
-      },
-    });
+    message.error(<MessageContent>점검정보 저장에 실패하였습니다.</MessageContent>);
   };
 
   // 작업중 점검 내용 저장 콜백
-  safetyWorkUpdateCallback = (id, response) => {
+  updateCallback = (id, response) => {
     const { result } = response;
     if (result && result === 'fail') {
       message.error(<MessageContent>작업중 점검내용 수정에 실패하였습니다.</MessageContent>);
@@ -163,7 +181,7 @@ class SafetyWorkMain extends Component {
   };
 
   // 작업중 점검 내용 삭제 콜백
-  safetyWorkDeleteCallback = (id, response) => {
+  deleteCallback = (id, response) => {
     const { formData } = this.state;
     const { result } = response;
     if (result && result === 'fail') {
@@ -174,39 +192,9 @@ class SafetyWorkMain extends Component {
       {
         formData: {
           ...formData,
-          WORK_NO: '',
-          TITLE: '',
-          WCATEGORY: '',
-          SUB_WCATEGORY: [],
-          WORK_DESC: '',
-          WRK_CMPNY_CD: '',
-          WRK_CMPNY_NM: '',
-          WLOC: '',
-          WGUBUN: '신규',
-          SITE: '청주',
-          DGUBUN: 'C-1',
-          FROM_DT: '',
-          TO_DT: '',
-          FROM_TIME: '09',
-          TO_TIME: '18',
-          PLEDGE_NO: '',
-          DETB_DANEST: '',
-          REQ_SUPERVISOR_EMP_NO: '',
-          EXM_CMPNY_CD: '',
-          EXM_DEPT_CD: '',
-          EXM_EMP_NO: '',
-          REQUEST_GB: '일반',
-          FINAL_OK_EMP_NO: '',
-          FIRE_MANAGER: '',
-          WORKER_LIST: [],
-          EQUIP_LIST: [],
           INGCHECK_HEAD: {},
           INGCHECK_DETAIL: [],
-          fileList: [],
-          responseList: [],
-          REQ_SUPERVISOR_EMP_NM: '',
-          EXM_EMP_NM: '',
-          FINAL_OK_EMP_NM: '',
+          INIT_INGCHECK: true,
         },
       },
       () => message.success(<MessageContent>작업중 점검내용을 삭제하였습니다.</MessageContent>),
@@ -389,8 +377,8 @@ class SafetyWorkMain extends Component {
           ...formData,
           INGCHECK_HEAD: {
             ...formData.INGCHECK_HEAD,
-            CHECK_CMPNY_CD: userInfo.DEPT_ID,
-            CHECK_CMPNY_NM: userInfo.DEPT_NAME_KOR,
+            CHECK_CMPNY_CD: 72761,
+            CHECK_CMPNY_NM: 'MAGNACHIP반도체',
             CHECK_EMP_NO: userInfo.USER_ID,
             CHECK_EMP_NM: userInfo.NAME_KOR,
           },
@@ -406,13 +394,9 @@ class SafetyWorkMain extends Component {
   };
 
   render() {
-    const { result } = this.props;
+    const { result, pageType } = this.props;
     const { modalType, modalTitle, modalVisible, formData } = this.state;
     const penaltyItem = (result && result.getSwtbPenaltyItem && result.getSwtbPenaltyItem.penaltyActiveItems) || [];
-    console.debug('formData', this.state.formData);
-    console.debug('프롭스', this.props);
-    console.debug('화긴', penaltyItem);
-
     return (
       <Styled>
         <StyledSearchWrap>
@@ -449,6 +433,11 @@ class SafetyWorkMain extends Component {
                   삭제
                 </StyledButton>
               </>
+            )}
+            {pageType && pageType === 'modal' && (
+              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => alert('인쇄')} style={{ marginBottom: '5px' }}>
+                인쇄
+              </StyledButton>
             )}
           </div>
         </StyledSearchWrap>
@@ -507,6 +496,8 @@ class SafetyWorkMain extends Component {
 }
 
 SafetyWorkMain.propTypes = {
+  pageType: PropTypes.string,
+  workNo: PropTypes.string,
   result: PropTypes.object,
   sagaKey: PropTypes.string,
   getCallDataHandlerReturnRes: PropTypes.func,
