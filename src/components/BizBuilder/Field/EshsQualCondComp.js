@@ -13,7 +13,7 @@ import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsMod
 import Upload from 'components/FormStuff/Upload';
 import ConfirmResult from 'apps/eshs/user/safety/eshsQual/qualApprove/confirmResult';
 
-import { Input, Select, Table, Checkbox, message, Modal } from 'antd';
+import { Input, Select, Table, Checkbox, message, Modal, Tooltip } from 'antd';
 
 const AntdModal = StyledContentsModal(Modal);
 
@@ -160,15 +160,21 @@ class EshsQualCondComp extends Component {
           render: (text, record, index) => {
             if (APPROVE_TYPE === 'INPUT') {
               return (
-                <Input
-                  className="ant-input-inline ant-input-sm input-left"
-                  defaultValue={record.APPROVE_QUAL_COMMENT || ''}
-                  onChange={e => this.debounceHandelOnChange('APPROVE_QUAL_COMMENT', e.target.value, index)}
-                />
+                <Tooltip title={text}>
+                  <Input
+                    className="ant-input-inline ant-input-sm input-left"
+                    defaultValue={record.APPROVE_QUAL_COMMENT || ''}
+                    onChange={e => this.debounceHandelOnChange('APPROVE_QUAL_COMMENT', e.target.value, index)}
+                  />
+                </Tooltip>
               );
             }
             if (APPROVE_TYPE === 'VIEW') {
-              return <span>{record.APPROVE_QUAL_COMMENT}</span>;
+              return (
+                <Tooltip title={text}>
+                  <span>{record.APPROVE_QUAL_COMMENT}</span>{' '}
+                </Tooltip>
+              );
             }
             return '';
           },
@@ -290,14 +296,20 @@ class EshsQualCondComp extends Component {
           render: (text, record, index) => {
             if (RESULT_TYPE === 'INPUT') {
               return (
-                <Input
-                  className="ant-input-inline ant-input-sm input-left"
-                  defaultValue={record.RESULT_QUAL_COMMENT || ''}
-                  onChange={e => this.debounceHandelOnChange('RESULT_QUAL_COMMENT', e.target.value, index)}
-                />
+                <Tooltip title={text}>
+                  <Input
+                    className="ant-input-inline ant-input-sm input-left"
+                    defaultValue={record.RESULT_QUAL_COMMENT || ''}
+                    onChange={e => this.debounceHandelOnChange('RESULT_QUAL_COMMENT', e.target.value, index)}
+                  />
+                </Tooltip>
               );
             }
-            return <span>{record.RESULT_QUAL_COMMENT || ''}</span>;
+            return (
+              <Tooltip title={text}>
+                <span>{record.RESULT_QUAL_COMMENT || ''}</span>{' '}
+              </Tooltip>
+            );
           },
         },
         {

@@ -21,7 +21,7 @@ import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 const AntdTable = StyledAntdTable(Table);
 const StyledButton = StyledAntdButton(Button);
 
-class ListPage extends Component {
+class CustomList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -147,9 +147,10 @@ class ListPage extends Component {
   };
 
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
+    const { listSelectRowKeys, workInfo, customOnRowClick } = this.props;
     const { isMultiDelete, isOnRowClick } = this.state;
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
+    const listData = (this.props && this.props.listData) || [];
     let rowSelection = false;
     let onRow = false;
     if (isMultiDelete) {
@@ -175,23 +176,14 @@ class ListPage extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData || []}
+            dataSource={(listData && listData.filter(l => l.GUBUN === 'CF' && l.F_QUAL_STATUS === '2008')) || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
-            onRow={record => ({ onClick: () => this.customOnRowClick(record) })}
+            onRow={onRow}
           />
         </Group>
       </div>
     );
-  };
-
-  customOnRowClick = record => {
-    const {
-      viewPageData: { workSeq },
-      modifySagaKey,
-      changeViewPage,
-    } = this.props;
-    changeViewPage(modifySagaKey, workSeq, record.TASK_SEQ, 'MODIFY');
   };
 
   render = () => {
@@ -282,6 +274,21 @@ class ListPage extends Component {
                 )
               );
             })}
+            {/* <div className="alignRight">
+              <StyledButton
+                className="btn-primary btn-first"
+                onClick={() =>
+                  isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
+                }
+              >
+                Add
+              </StyledButton>
+              {isMultiDelete && (
+                <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
+                  <StyledButton className="btn-light">Delete</StyledButton>
+                </Popconfirm>
+              )}
+            </div> */}
           </Sketch>
         </StyledWrap>
       );
@@ -290,7 +297,7 @@ class ListPage extends Component {
   };
 }
 
-ListPage.propTypes = {
+CustomList.propTypes = {
   workInfo: PropTypes.object,
   sagaKey: PropTypes.string,
   workFlowConfig: PropTypes.object,
@@ -307,9 +314,10 @@ ListPage.propTypes = {
   changeBuilderModalState: PropTypes.func,
   changeViewPage: PropTypes.func,
   customOnRowClick: PropTypes.any,
+  listData: PropTypes.any,
 };
 
-ListPage.defaultProps = {
+CustomList.defaultProps = {
   workFlowConfig: {
     info: {
       PRC_ID: -1,
@@ -318,4 +326,4 @@ ListPage.defaultProps = {
   customOnRowClick: undefined,
 };
 
-export default ListPage;
+export default CustomList;
