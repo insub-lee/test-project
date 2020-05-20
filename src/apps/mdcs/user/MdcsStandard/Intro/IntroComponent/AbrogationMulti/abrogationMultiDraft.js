@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import { Input, Button } from 'antd';
+import { Input, Button, Table } from 'antd';
+import moment from 'moment';
+
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
-import BizBuilderBase from 'components/BizBuilderBase';
 
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+const AntdLineTable = StyledLineTable(Table);
+
 const { TextArea } = Input;
-class AbrogationDraft extends Component {
+class AbrogationMultiDraft extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,19 +24,23 @@ class AbrogationDraft extends Component {
   componentDidMount() {
     const { id, submitHandlerBySaga, workPrcProps } = this.props;
     const url = '/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder';
-    submitHandlerBySaga(id, 'POST', url, { PARAM: { PRC_ID: 106, DRAFT_DATA: { ...workPrcProps } } }, this.initProcessData);
+    submitHandlerBySaga(id, 'POST', url, { PARAM: { PRC_ID: 106, DRAFT_DATA: { ...workPrcProps, isMultiAbrogation: true } } }, this.initProcessData);
   }
 
   initProcessData = (sagaKey, response) => {
-    const { WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ, TITLE } = this.props;
-    const draftData = { WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ };
+    const { workPrcProps } = this.props;
+    console.debug('workPrcProps', workPrcProps);
     const { DRAFT_PROCESS } = response;
-    const tProc = { ...DRAFT_PROCESS, DRAFT_DATA: draftData, REL_TYPE: 99, WORK_SEQ, TASK_SEQ, DRAFT_TITLE: TITLE };
-    this.setState({ workProcess: { DRAFT_PROCESS: tProc }, draftWorkProc: tProc });
+    const tProc = { ...DRAFT_PROCESS, REL_TYPE: 999 };
+    this.setState({ workProcess: { DRAFT_PROCESS: tProc }, draftWorkProc: { DRAFT_PROCESS: tProc } });
   };
 
   setProcessRule = (id, processRule) => {
     this.setState({ draftWorkProc: processRule });
+  };
+
+  onChangeTitle = e => {
+    this.setState({ draftTitle: e.target.value });
   };
 
   onChangeDescription = e => {
@@ -44,17 +52,53 @@ class AbrogationDraft extends Component {
   };
 
   onClickEvent = () => {
-    const { onAbrogationProcess } = this.props;
-    const { draftWorkProc, descOfChange, revHistory } = this.state;
+    const { onAbrogationMultiProcess } = this.props;
+    const { draftWorkProc, descOfChange, revHistory, draftTitle } = this.state;
     const DRAFT_DATA = draftWorkProc.DRAFT_DATA ? draftWorkProc.DRAFT_DATA : {};
     const nDraftData = { ...DRAFT_DATA, descOfChange, revHistory };
-    const nDraftWorkProc = { ...draftWorkProc, DRAFT_DATA: nDraftData };
-    onAbrogationProcess(nDraftWorkProc);
+    const nDraftWorkProc = { ...draftWorkProc, DRAFT_TITLE: draftTitle, DRAFT_DATA: nDraftData };
+    onAbrogationMultiProcess(nDraftWorkProc);
   };
 
+  getTableColumns = () => [
+    {
+      title: 'Title',
+      dataIndex: 'TITLE',
+      key: 'TITLE',
+      ellipsis: true,
+    },
+    {
+      title: '개정번호',
+      dataIndex: 'VERSION',
+      key: 'VERSION',
+      width: '13%',
+      align: 'center',
+    },
+    {
+      title: '작성자',
+      dataIndex: 'REG_USER_NAME',
+      key: 'REG_USER_NAME',
+      width: '12%',
+      align: 'center',
+    },
+    {
+      title: '부서',
+      dataIndex: 'REG_DEPT_NAME',
+      key: 'REG_DEPT_NAME',
+      width: '17%',
+      align: 'center',
+    },
+    {
+      title: '기안일',
+      dataIndex: 'REG_DTTM',
+      key: 'REG_DTTM',
+      width: '15%',
+      align: 'center',
+      render: (text, record) => moment(text).format('YYYY-MM-DD'),
+    },
+  ];
+
   render() {
-    const { WORK_SEQ, TASK_SEQ } = this.props;
-    console.debug('props', this.props);
     const { workProcess } = this.state;
     return (
       <>
@@ -70,6 +114,12 @@ class AbrogationDraft extends Component {
           )}
           <table>
             <tbody>
+              <tr>
+                <th style={{ width: '300px' }}>제목 </th>
+                <td>
+                  <Input style={{ width: '100%' }} onChange={this.onChangeTitle}></Input>
+                </td>
+              </tr>
               <tr>
                 <th style={{ width: '300px' }}>Description Of Change(From/To) </th>
                 <td>
@@ -91,10 +141,24 @@ class AbrogationDraft extends Component {
             <Button onClick={this.onCloseModal}>닫기</Button>
           </div>
         </StyledHtmlTable>
-        <BizBuilderBase sagaKey="validateView" workSeq={WORK_SEQ} taskSeq={TASK_SEQ} viewType="VIEW" ViewCustomButtons={() => false} />
+        <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
+          <AntdLineTable
+            columns={this.getTableColumns()}
+            dataSource={
+              workProcess && workProcess.DRAFT_PROCESS && workProcess.DRAFT_PROCESS.DRAFT_DATA.abrogationList !== null
+                ? workProcess.DRAFT_PROCESS.DRAFT_DATA.abrogationList
+                : []
+            }
+            onRow={(record, rowIndex) => ({
+              onClick: e => this.onRowClick(record, rowIndex, e),
+            })}
+            bordered
+            className="tableWrapper"
+          />
+        </StyledHtmlTable>
       </>
     );
   }
 }
 
-export default AbrogationDraft;
+export default AbrogationMultiDraft;
