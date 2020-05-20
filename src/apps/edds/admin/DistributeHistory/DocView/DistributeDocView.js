@@ -90,12 +90,12 @@ class DistributeDocView extends Component {
                     <th>개정번호</th>
                     <td>{detail.VERSION}</td>
                   </tr>
-                  <tr>
+                  {/* <tr>
                     <th>관리유형</th>
                     <td></td>
                     <th>소스시스템</th>
                     <td></td>
-                  </tr>
+                  </tr> */}
                   <tr>
                     <th>DRM 권한</th>
                     <td colSpan={3}>
