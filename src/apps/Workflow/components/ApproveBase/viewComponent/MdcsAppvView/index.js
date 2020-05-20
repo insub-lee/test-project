@@ -185,7 +185,24 @@ class MdcsAppvView extends Component {
   ];
 
   onUserSelectedComplete = result => {
-    this.setState({ nextApprover: result, isUserSelect: false });
+    const { selectedRow, setSelectedRow } = this.props;
+    this.setState(
+      {
+        nextApprover: result,
+        isUserSelect: false,
+      },
+      () => {
+        const nRuleConfig = selectedRow.RULE_CONFIG;
+        const nSelectedRow = {
+          ...selectedRow,
+          RULE_CONFIG: {
+            ...nRuleConfig,
+            NEXT_APPV_USER_ID: this.state.nextApprover,
+          },
+        };
+        setSelectedRow(nSelectedRow);
+      },
+    );
   };
 
   onClickUserSelect = () => {
