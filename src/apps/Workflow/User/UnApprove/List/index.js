@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { Table, Modal, Icon } from 'antd';
 import moment from 'moment';
 
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
-const AntdLineTable = StyledLineTable(Table);
-const AntdModal = StyledContentsModal(Modal);
+const AntdLineTable = StyledAntdTable(Table);
+const AntdModal = StyledAntdModal(Modal);
 
 class UnApproveList extends Component {
   componentDidMount() {
@@ -76,7 +76,7 @@ class UnApproveList extends Component {
     const { unApproveList } = this.props;
     return (
       <>
-        <ContentsWrapper>
+        <StyledContentsWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 미결함
@@ -91,7 +91,7 @@ class UnApproveList extends Component {
             bordered
             className="tableWrapper"
           />
-        </ContentsWrapper>
+        </StyledContentsWrapper>
         <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
           <MdcsAppvView {...this.props} />
         </AntdModal>

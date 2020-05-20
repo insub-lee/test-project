@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { List, Tree, Row, Col, Checkbox, Button, Icon, Modal } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import UserSelectWrapper from 'commonStyled/MdcsStyled/Wrapper/UserSelectWrapper';
 
 // Component Attribute 및 Event Method 정리
@@ -236,11 +236,11 @@ class UserSelectComp extends Component {
           </Col>
         </Row>
         <StyledButtonWrapper className="btn-wrap-center">
-          <StyledButton className="btn-sm btn-gray mr5" onClick={this.onCancelUserSelect}>
-            취소
-          </StyledButton>
-          <StyledButton className="btn-sm btn-primary" onClick={this.onRegist}>
+          <StyledButton className="btn-sm btn-primary mr5" onClick={this.onRegist}>
             등록
+          </StyledButton>
+          <StyledButton className="btn-sm btn-light" onClick={this.onCancelUserSelect}>
+            취소
           </StyledButton>
         </StyledButtonWrapper>
       </UserSelectWrapper>
