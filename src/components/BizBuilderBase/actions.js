@@ -355,3 +355,13 @@ export const getFileDownload = (id, url, fileName) => ({
 });
 
 export const setFormDataByReducer = (id, formData) => ({ type: actionTypes.SET_FORMDATA_REDUCER, id, formData });
+
+export const setIsTaskFavoriteByReducer = (id, flag) => ({ type: actionTypes.SET_IS_TASK_FAVORITE_REDUCER, id, flag });
+
+export const setTaskFavoriteBySaga = (id, workSeq, taskOriginSeq, flag) => ({
+  type: `${actionTypes.SET_TASK_FAVORITE_SAGA}_${id}`,
+  id,
+  workSeq,
+  taskOriginSeq,
+  flag,
+});
