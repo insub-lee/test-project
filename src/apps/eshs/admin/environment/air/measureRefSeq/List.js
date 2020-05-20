@@ -44,13 +44,6 @@ class List extends Component {
         url: '/api/eshs/v1/common/eshsgastype',
         type: 'GET',
       },
-      // refStack
-      //   ? {
-      //       key: 'gasType',
-      //       url: '/api/eshs/v1/common/eshsgastype',
-      //       type: 'GET',
-      //     }
-      //   : {},
     ];
     if (!refStack) {
       this.isSearch();
@@ -113,7 +106,6 @@ class List extends Component {
   };
 
   customOnRowClick = record => {
-    console.debug('확인해봐');
     this.setState({ stackCd: record.STACK_CD });
     this.onChangeModal();
   };
@@ -131,14 +123,14 @@ class List extends Component {
         case 'Sox':
         case 'Nox':
         case 'THC':
-          calculateData = ((hourFlow * density) / 22.4 / 1000000) * gasWeight * 24 * workDay;
+          calculateData = (((hourFlow * density) / 22.4 / 1000000) * gasWeight * 24 * workDay).toFixed(9);
           break;
         case 'Cr':
         case 'Pb':
         case 'Ni':
         case 'As':
         case '먼지':
-          calculateData = ((hourFlow * density) / 1000000) * 24 * workDay;
+          calculateData = (((hourFlow * density) / 1000000) * 24 * workDay).toFixed(9);
           break;
         default:
           calculateData = density;
@@ -227,7 +219,9 @@ class List extends Component {
             temp.reduce(
               (accumulator, currentValue) => ({
                 ...accumulator,
-                [item.GAS_CD]: accumulator[item.GAS_CD] ? Number(accumulator[item.GAS_CD] + currentValue[item.GAS_CD]) || 0 : currentValue[item.GAS_CD] || 0,
+                [item.GAS_CD]: accumulator[item.GAS_CD]
+                  ? Number(accumulator[item.GAS_CD]) + Number(currentValue[item.GAS_CD]) || 0
+                  : currentValue[item.GAS_CD] || 0,
               }),
               {},
             ),
@@ -307,77 +301,49 @@ class List extends Component {
                       <td>{item.GUBUN_NAME}</td>
                       <td>{item.STACK_CD}</td>
                       <td>{item.IS_MEASURE}</td>
-                      <td>{item.MEASURE_DT}</td>
-                      <td>{item.MINUTE_FLOW}</td>
-                      <td>{item.HOUR_FLOW}</td>
-                      <>
-                        {selectGubun === 1 ? (
-                          <>
-                            {gasList &&
-                              gasList.map(gasType => (
-                                <td>
-                                  {item.GAS.map(gasItem => (
-                                    <>{gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD ? JSON.parse(gasItem.value).DENSITY : undefined}</>
-                                  ))}
-                                </td>
-                              ))}
-                          </>
-                        ) : (
-                          <>
-                            {gasList &&
-                              gasList.map(gasType => (
-                                <td>
-                                  {item.GAS.map(gasItem => (
-                                    <>
-                                      {gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD
-                                        ? this.calculate(
-                                            gasType.GAS_CD,
-                                            item.HOUR_FLOW,
-                                            JSON.parse(gasItem.value).DENSITY,
-                                            item.WORK_DAY,
-                                            JSON.parse(gasItem.value).GAS_WEIGHT,
-                                          )
-                                        : undefined}
-                                    </>
-                                  ))}
-                                </td>
-                              ))}
-                          </>
-                        )}
-                      </>
+                      <td>{JSON.parse(item.GAS[0].value).MEASURE_DT}</td>
+                      <td>{JSON.parse(item.GAS[0].value).MINUTE_FLOW}</td>
+                      <td>{JSON.parse(item.GAS[0].value).HOUR_FLOW}</td>
+                      {selectGubun === 1
+                        ? gasList &&
+                          gasList.map(gasType => (
+                            <td>
+                              {item.GAS.map(gasItem => (gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD ? JSON.parse(gasItem.value).DENSITY : undefined))}
+                            </td>
+                          ))
+                        : gasList &&
+                          gasList.map(gasType => (
+                            <td>
+                              {item.GAS.map(gasItem =>
+                                gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD
+                                  ? this.calculate(
+                                      gasType.GAS_CD,
+                                      JSON.parse(gasItem.value).HOUR_FLOW,
+                                      JSON.parse(gasItem.value).DENSITY,
+                                      JSON.parse(gasItem.value).WORK_DAY,
+                                      JSON.parse(gasItem.value).GAS_WEIGHT,
+                                    )
+                                  : undefined,
+                              )}
+                            </td>
+                          ))}
                     </tr>
                   ))}
                   <tr>
                     <td colSpan={4}>최고농도(MAX)</td>
                     <td>{Math.max.apply(null, minute)}</td>
                     <td>{Math.max.apply(null, hour)}</td>
-                    {selectGubun === 1 ? (
-                      <>
-                        {gasList &&
-                          gasList.map(item => (
-                            <td>
-                              {gasDensityList &&
-                                gasDensityList.map(
-                                  density =>
-                                    density[item.GAS_CD] && density[item.GAS_CD].reduce((previous, current) => (previous > current ? previous : current)),
-                                )}
-                            </td>
-                          ))}
-                      </>
-                    ) : (
-                      <>
-                        {gasList &&
-                          gasList.map(item => (
-                            <td>
-                              {gasDensityList &&
-                                gasDensityList.map(
-                                  density =>
-                                    density[item.GAS_CD] && density[item.GAS_CD].reduce((previous, current) => (previous > current ? previous : current)),
-                                )}
-                            </td>
-                          ))}
-                      </>
-                    )}
+                    {gasList &&
+                      gasList.map(item => (
+                        <td>
+                          {gasDensityList &&
+                            gasDensityList.map(
+                              density =>
+                                density[item.GAS_CD] &&
+                                density[item.GAS_CD].reduce((previous, current) => (Number(previous) > Number(current) ? previous : current)),
+                            )}
+                        </td>
+                      ))}
                   </tr>
                   <tr>
                     <td colSpan={4}>최저농도(MIN)</td>
@@ -388,7 +354,9 @@ class List extends Component {
                         <td>
                           {gasDensityList &&
                             gasDensityList.map(
-                              density => density[item.GAS_CD] && density[item.GAS_CD].reduce((previous, current) => (previous > current ? current : previous)),
+                              density =>
+                                density[item.GAS_CD] &&
+                                density[item.GAS_CD].reduce((previous, current) => (Number(previous) > Number(current) ? current : previous)),
                             )}
                         </td>
                       ))}
