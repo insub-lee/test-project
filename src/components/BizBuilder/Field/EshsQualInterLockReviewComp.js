@@ -74,12 +74,21 @@ class EshsQualInterLockReviewComp extends Component {
           TASK_SEQ: (this.props && this.props.formData && this.props.formData.TASK_SEQ) || '',
         },
       ],
+      examResultList: [
+        { value: '1', text: '작다' },
+        { value: '2', text: '보통' },
+        { value: '3', text: '크다' },
+        { value: '4', text: '매우크다' },
+      ],
       ExamResult: (seq, val) => (
         <AntdSelect key={`EXAM_RESULT_${seq}`} defaultValue={val} style={{ width: '100%' }} onChange={e => this.handleOnChange('EXAM_RESULT', e, seq)}>
-          <Option value="1">작다</Option>
-          <Option value="2">보통</Option>
-          <Option value="3">크다</Option>
-          <Option value="4">매우크다</Option>
+          {this.state &&
+            this.state.examResultList &&
+            this.state.examResultList.map(e => (
+              <Option key={e.value} value={e.value}>
+                {e.text}
+              </Option>
+            ))}
         </AntdSelect>
       ),
       ExamComment: (seq, val) => (
@@ -135,8 +144,11 @@ class EshsQualInterLockReviewComp extends Component {
   };
 
   render() {
-    const { formData } = this.props;
-    const { ExamResult, ExamComment } = this.state;
+    const {
+      formData,
+      viewPageData: { viewType },
+    } = this.props;
+    const { ExamResult, ExamComment, examResultList } = this.state;
     const reviewList = (formData && formData.reviewList) || [];
     return (
       <StyledHtmlTable className="tableWrapper">
@@ -158,8 +170,10 @@ class EshsQualInterLockReviewComp extends Component {
                 <th>
                   <span>{e.TITLE}</span>
                 </th>
-                <td>{ExamResult(e.SEQ, e.EXAM_RESULT)}</td>
-                <td>{ExamComment(e.SEQ, e.EXAM_COMMENT)}</td>
+                <td>
+                  {viewType !== 'VIEW' ? ExamResult(e.SEQ, e.EXAM_RESULT) : examResultList[examResultList.findIndex(ex => ex.value === e.EXAM_RESULT)].text}
+                </td>
+                <td>{viewType !== 'VIEW' ? ExamComment(e.SEQ, e.EXAM_COMMENT) : e.EXAM_COMMENT}</td>
               </tr>
             ))}
           </tbody>

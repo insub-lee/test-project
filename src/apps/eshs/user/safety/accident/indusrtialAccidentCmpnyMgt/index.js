@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button, message, Popconfirm } from 'antd';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-import CustomInput from './pages/CustomInput';
-import CustomModify from './pages/CustomModify';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import CustomList from './pages/CustomList';
+
+const StyledButton = StyledAntdButton(Button);
 
 class IndusrtialAccidentCmpnyMgt extends Component {
   state = {
@@ -17,20 +19,86 @@ class IndusrtialAccidentCmpnyMgt extends Component {
     });
   };
 
+  inputCustomButtons = ({ ...props }) => {
+    const {
+      sagaKey: id,
+      reloadId,
+      isLoading,
+      saveTask,
+      changeViewPage,
+      listSagaKey,
+      viewPageData: { workSeq },
+    } = props;
+    return (
+      <div className="alignRight">
+        <StyledButton
+          className="btn-primary btn-first"
+          onClick={() => saveTask(id, reloadId, () => this.saveAfter(changeViewPage, workSeq, id, listSagaKey))}
+          loading={isLoading}
+        >
+          저장
+        </StyledButton>
+      </div>
+    );
+  };
+
+  modifyCustomButtons = ({ ...props }) => {
+    const {
+      sagaKey: id,
+      reloadId,
+      saveBeforeProcess,
+      listSagaKey,
+      viewPageData,
+      viewPageData: { workSeq, taskSeq },
+      changeViewPage,
+      modifyTask,
+      deleteTask,
+      isLoading,
+    } = props;
+    return (
+      <div className="alignRight">
+        <StyledButton
+          className="btn-primary btn-first"
+          onClick={() => modifyTask(id, reloadId, () => changeViewPage(listSagaKey, workSeq, -1, 'LIST'))}
+          loading={isLoading}
+        >
+          수정
+        </StyledButton>
+        <Popconfirm
+          title="Are you sure ?"
+          onConfirm={() => deleteTask(id, listSagaKey, workSeq, taskSeq, () => changeViewPage(id, workSeq, -1, 'INPUT'))}
+          okText="Yes"
+          cancelText="No"
+        >
+          <StyledButton className="btn-primary btn-first">미사용</StyledButton>
+        </Popconfirm>
+        <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+          RESET
+        </StyledButton>
+      </div>
+    );
+  };
+
+  saveAfter = (changeViewPage, workSeq, sagaKey, listSagaKey) => {
+    changeViewPage(sagaKey, workSeq, -1, 'INPUT');
+    changeViewPage(listSagaKey, workSeq, -1, 'LIST');
+  };
+
   render() {
+    const { listSagaKey, sagaKey } = this.props;
     return (
       <>
         <BizBuilderBase
-          sagaKey="IndusrtialAccidentCmpnyMgt"
-          listSagaKey="IndusrtialAccidentCmpnyList"
+          sagaKey={sagaKey}
+          listSagaKey={listSagaKey}
           workSeq={2201}
           viewType="INPUT"
-          CustomInputPage={CustomInput}
-          CustomModifyPage={CustomModify}
+          InputCustomButtons={this.inputCustomButtons}
+          ModifyCustomButtons={this.modifyCustomButtons}
           loadingComplete={this.loadingComplete}
         />
         <BizBuilderBase
-          sagaKey="IndusrtialAccidentCmpnyList"
+          sagaKey={listSagaKey}
           modifySagaKey="IndusrtialAccidentCmpnyMgt"
           CustomListPage={CustomList}
           workSeq={2201}
@@ -42,8 +110,14 @@ class IndusrtialAccidentCmpnyMgt extends Component {
   }
 }
 
-IndusrtialAccidentCmpnyMgt.propTypes = {};
+IndusrtialAccidentCmpnyMgt.propTypes = {
+  listSagaKey: PropTypes.string,
+  sagaKey: PropTypes.string,
+};
 
-IndusrtialAccidentCmpnyMgt.defaultProps = {};
+IndusrtialAccidentCmpnyMgt.defaultProps = {
+  listSagaKey: 'IndusrtialAccidentCmpnyList',
+  sagaKey: 'IndusrtialAccidentCmpnyMgt',
+};
 
 export default IndusrtialAccidentCmpnyMgt;

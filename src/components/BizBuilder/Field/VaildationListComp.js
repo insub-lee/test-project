@@ -49,7 +49,7 @@ class VaildationListComp extends Component {
     return (
       <AntdLineTable
         columns={this.getTableColumns()}
-        dataSource={vailList.length > 0 ? vailList : null}
+        dataSource={vailList && vailList.length > 0 ? vailList : null}
         onRow={(record, rowIndex) => ({
           onClick: e => this.onRowClick(record, rowIndex, e),
         })}

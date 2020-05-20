@@ -45,7 +45,20 @@ class ViewPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, reloadId, viewLayer, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal, ViewCustomButtons } = this.props;
+    const {
+      sagaKey: id,
+      reloadId,
+      viewLayer,
+      viewPageData,
+      changeViewPage,
+      draftId,
+      deleteTask,
+      isBuilderModal,
+      ViewCustomButtons,
+      isTaskFavorite,
+      formData,
+      setTaskFavorite,
+    } = this.props;
 
     const { StyledWrap } = this.state;
 
@@ -63,6 +76,14 @@ class ViewPage extends Component {
               <ViewCustomButtons {...this.props} />
             ) : (
               <div className="alignRight">
+                {isTaskFavorite && (
+                  <StyledButton
+                    className="btn-light btn-first"
+                    onClick={() => setTaskFavorite(id, formData.WORK_SEQ, formData.TASK_ORIGIN_SEQ, formData.BUILDER_TASK_FAVORITE || 'N')}
+                  >
+                    {formData.BUILDER_TASK_FAVORITE === 'Y' ? '즐겨찾기 해제' : '즐겨찾기 추가'}
+                  </StyledButton>
+                )}
                 <StyledButton className="btn-primary btn-first" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
                   Modify
                 </StyledButton>
