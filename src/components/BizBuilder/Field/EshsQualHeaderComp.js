@@ -30,10 +30,13 @@ class EshsQualHeaderComp extends Component {
   componentDidMount() {
     const {
       sagaKey: id,
-      viewPageData: { viewType, taskSeq, getExtraApiData },
+      getExtraApiData,
+      viewPageData: { taskSeq },
+      CONFIG: {
+        property: { HeaderType },
+      },
     } = this.props;
-
-    if (viewType === '') {
+    if (HeaderType === 'CONFIRM_RESULT') {
       const apiArray = [
         {
           key: 'chkCnt',
@@ -50,6 +53,7 @@ class EshsQualHeaderComp extends Component {
     const { extraApiData } = this.props;
     const chkCnt = (extraApiData && extraApiData.chkCnt && extraApiData.chkCnt.result) || 0;
     this.setState({ chkCnt });
+    console.debug('chkCnt [ ', chkCnt, ' ]');
   };
 
   handleModalVisible = () => {
