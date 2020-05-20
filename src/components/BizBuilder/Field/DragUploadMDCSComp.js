@@ -7,12 +7,21 @@ import { LoadingOutlined } from '@ant-design/icons';
 const { Dragger } = Upload;
 
 class DragUploadMDCSComp extends Component {
-  state = {
-    fileInfo: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      fileInfo: {
+        WORK_SEQ: -1,
+        TASK_SEQ: -1,
+        CONT_SEQ: -1,
+        FIELD_NM: undefined,
+        TYPE: undefined,
+        DETAIL: [],
+      },
+    };
+  }
 
   componentDidMount() {
-    console.debug('componentDidMount');
     const { WORK_SEQ, COMP_FIELD, COMP_TAG, colData } = this.props;
     const initfiles = {
       WORK_SEQ,
@@ -69,6 +78,7 @@ class DragUploadMDCSComp extends Component {
     }
     const tmpDetail = fileList.map(fl => (fl.uid === file.uid ? { ...fl, ...response, type: doctype, down } : fl));
     const tmpFileInfo = { ...fileInfo, DETAIL: tmpDetail };
+    console.debug('tmpFileInfo', tmpFileInfo);
     this.setState({ fileInfo: tmpFileInfo }, () => this.changeFormDataHanlder());
   };
 
