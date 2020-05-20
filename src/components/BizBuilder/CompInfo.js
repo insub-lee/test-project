@@ -16,6 +16,7 @@ import DragUploadPdfComp from 'components/BizBuilder/Field/DragUploadPdfComp';
 import TreeSelectComp from 'components/BizBuilder/Field/TreeSelectComp';
 import SelectComp from 'components/BizBuilder/Field/SelectComp';
 import CustomValueSelectComp from 'components/BizBuilder/Field/CustomValueSelectComp';
+import CustomValueRadioComp from 'components/BizBuilder/Field/CustomValueRadioComp';
 import ReadOnlyTextComp from 'components/BizBuilder/Field/ReadOnlyTextComp';
 import CheckboxComp from 'components/BizBuilder/Field/CheckboxComp';
 import RadioComp from 'components/BizBuilder/Field/RadioComp';
@@ -137,6 +138,7 @@ export const CompInfo = {
   'components/BizBuilder/Field/TreeSelectComp': { renderer: property => <TreeSelectComp {...property} /> },
   'components/BizBuilder/Field/SelectComp': { renderer: property => <SelectComp {...property} /> },
   'components/BizBuilder/Field/CustomValueSelectComp': { renderer: property => <CustomValueSelectComp {...property} /> },
+  'components/BizBuilder/Field/CustomValueRadioComp': { renderer: property => <CustomValueRadioComp {...property} /> },
   'components/BizBuilder/Field/ReadOnlyTextComp': { renderer: property => <ReadOnlyTextComp {...property} /> },
   'components/BizBuilder/Field/CheckboxComp': { renderer: property => <CheckboxComp {...property} /> },
   'components/BizBuilder/Field/RadioComp': { renderer: property => <RadioComp {...property} /> },
