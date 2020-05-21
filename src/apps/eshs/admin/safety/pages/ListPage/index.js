@@ -17,9 +17,9 @@ import request from 'utils/request';
 import _ from 'lodash';
 
 import { address, VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/internal_constants';
+import ViewPage from '../ViewPage';
 
 const AntdTable = StyledAntdTable(Table);
-
 
 function ListPage(props) {
   const [activateRegModal, setActivateRegModal] = useState(false);
@@ -32,8 +32,6 @@ function ListPage(props) {
   const [rowClickable, setRowClickable] = useState(true);
   const [processedList, setProcessedList] = useState([]);
 
-
-
   useEffect(() => {
     const { viewSeq } = props;
     if (META_SEQ.MODAL_LIST === viewSeq) {
@@ -42,22 +40,37 @@ function ListPage(props) {
   }, []);
 
   useEffect(() => {
+    if (props?.shouldSearchAll) {
+      getListData(id, workSeq);
+    }
+  }, [props?.shouldSearchAll]);
+
+  useEffect(() => {
     if (listData instanceof Array) {
       if (listData.length > 0) {
-        const { QUARTER, INSPECTION_YEAR, IS_INSPECTED } = formData;
-        if (QUARTER && INSPECTION_YEAR && isSearched) {
-          request({
-            method: 'POST',
-            url: address.search,
-            // FIRE_CODE: FE (소화기)
-            params: { listData, QUARTER, INSPECTION_YEAR, IS_INSPECTED },
-          }).then(({ response }) => {
-            console.debug("£££ response : ", response);
-            const { result, data } = response || {};
-            if (result === 1) {
-              setProcessedList(data);
-            }
+        if (props?.shouldSearchAll) {
+          const temp = listData.map(e => {
+            const splitedDT = e?.REG_DTTM.split(' ');
+            return { ...e, REG_DTTM: splitedDT[0] };
           });
+          setProcessedList(temp);
+        } else {
+          const { QUARTER, INSPECTION_YEAR, IS_INSPECTED } = formData;
+          if (QUARTER && INSPECTION_YEAR && isSearched) {
+            request({
+              method: 'POST',
+              url: address.search,
+              // FIRE_CODE: FE (소화기)
+              data: { listData, QUARTER, INSPECTION_YEAR, IS_INSPECTED },
+            }).then((response, error) => {
+              if (!error) {
+                const { result, data } = response.response || {};
+                if (result === 1) {
+                  setProcessedList(data);
+                }
+              }
+            });
+          }
         }
       }
     }
@@ -65,15 +78,15 @@ function ListPage(props) {
 
   useEffect(() => {
     const { workInfo } = props;
-    let isMultiDelete = false;
-    let isRowNo = false;
+    let isMultiDeleteTemp = false;
+    let isRowNoTemp = false;
     if (workInfo && workInfo.OPT_INFO) {
       workInfo.OPT_INFO.forEach(opt => {
-        if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
-        if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNo = true;
+        if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDeleteTemp = true;
+        if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNoTemp = true;
       });
-      setIsMultiDelete(isMultiDelete);
-      setIsRowNo(isRowNo);
+      setIsMultiDelete(isMultiDeleteTemp);
+      setIsRowNo(isRowNoTemp);
     }
   }, []);
 
@@ -112,6 +125,7 @@ function ListPage(props) {
         onCloseModalHandler={() => setActivateRegModal(false)}
         baseSagaKey={sagaKey}
         listMetaSeq={META_SEQ.MODAL_LIST} // meta SEQ
+        shouldSearchAll
         isSearched
       />,
     ];
@@ -120,18 +134,21 @@ function ListPage(props) {
   const openDetailModal = (changedSagaKey, taskSeq) => {
     const { workSeq, sagaKey, CustomButtons, loadingComplete } = props;
 
-    return [
-      <BizBuilderBase
-        key={`${changedSagaKey}_MODAL_DETAIL`}
-        sagaKey={`${changedSagaKey}_MODAL_DETAIL`}
-        workSeq={workSeq} // metadata binding
-        viewType={VIEW_TYPE.VIEW}
-        taskSeq={taskSeq} // data binding
-        onCloseModalHandler={() => setActivateDetailModal(false)}
-        viewMetaSeq={META_SEQ.VIEW_BASIC}
-        baseSagaKey={sagaKey}
-        ViewCustomButtons={CustomButtons.Button1}
-      />,
+    return (
+      <>
+        <BizBuilderBase
+          key={`${changedSagaKey}_MODAL_DETAIL`}
+          sagaKey={`${changedSagaKey}_MODAL_DETAIL`}
+          workSeq={workSeq} // metadata binding
+          viewType={VIEW_TYPE.VIEW}
+          taskSeq={taskSeq} // data binding
+          onCloseModalHandler={() => setActivateDetailModal(false)}
+          viewMetaSeq={META_SEQ.VIEW_BASIC}
+          baseSagaKey={sagaKey}
+          ViewCustomButtons={CustomButtons.DetailButtons}
+          CustomViewPage={ViewPage}
+        />
+        {/*
       // <div style={{ display: 'flex' }}>
       //   <div style={{ width: '50%' }}>
       //     <BizBuilderBase
@@ -160,7 +177,9 @@ function ListPage(props) {
       //     />
       //   </div>
       // </div>,
-    ];
+      */}
+      </>
+    );
   };
 
   const renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
@@ -220,7 +239,7 @@ function ListPage(props) {
 
   const renderList = (group, groupIndex) => {
     if (isSearched) {
-      const { listData, sagaKey: id, changeFormData, COMP_FIELD } = props;
+      // const { listData, sagaKey: id, changeFormData, COMP_FIELD } = props;
       const columns = setColumns(group.rows[0].cols);
       return (
         <div key={group.key}>
@@ -231,7 +250,7 @@ function ListPage(props) {
               key={`${group.key}_list`}
               className="view-designer-list"
               columns={columns}
-              dataSource={processedList || []}
+              dataSource={processedList}
               // LOCATION_DESC
               onRow={record => ({
                 onClick: () => (rowClickable ? handleRowClick(record.TASK_SEQ) : null),
@@ -244,9 +263,21 @@ function ListPage(props) {
     return null;
   };
 
-
-  const { CustomButtons, sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq, listData } = props;
+  const {
+    CustomButtons,
+    sagaKey: id,
+    viewLayer,
+    formData,
+    workFlowConfig,
+    loadingComplete,
+    viewPageData,
+    changeViewPage,
+    getListData,
+    workSeq,
+    listData,
+  } = props;
   const { ViewButtons } = CustomButtons || false;
+
   if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
     const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
     const {
