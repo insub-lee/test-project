@@ -16,7 +16,7 @@ export default function Save({ saveTask, saveBeforeProcess, onCloseModalHandler,
       method: 'POST',
       url: `${address.generatePositionNo}`,
       // FIRE_CODE: FE (소화기)
-      params: { FIRE_CODE: 'FE', BUILDING_CODE, STAIR_NO, INSTALLED_LOCATION, CHIP_NO },
+      data: { FIRE_CODE: 'FE', BUILDING_CODE, STAIR_NO, INSTALLED_LOCATION, CHIP_NO },
     }).then(({ response }) => {
       const { result } = response || 1;
       const { data } = response || 1;
@@ -81,7 +81,7 @@ export default function Save({ saveTask, saveBeforeProcess, onCloseModalHandler,
     request({
       method: 'POST',
       url: `${address.afterProcessing}`,
-      params: {
+      data: {
         COMPANY_CD: 1,
         CHIP_NO,
         POSITION_NO,
