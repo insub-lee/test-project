@@ -24,39 +24,24 @@ const CustomValueRadioComp = props => {
   useEffect(() => {
     const { VALUES } = props.CONFIG.property;
     setValues(VALUES instanceof Array ? [...VALUES] : [{ ...init }]);
-
-    // onChangeHandler(definedValue.value);
   }, []);
-
-  // function valueHandler(set, idx) {
-  //   const { value } = set[idx];
-  //   onChangeHandler(value);
-  //   setDefaultValue(set[idx]);
-  // }
 
   useEffect(() => {
     onChangeHandler(defaultValue);
   }, [defaultValue]);
 
   function onChangeHandler(value) {
-    console.debug('£££ onChangeHandler :', value, isRequired, changeFormData);
-    if (value instanceof String) {
-      // if (isRequired) {
-      //   // 기본값인지 체크
-      //   changeValidationData(id, COMP_FIELD, value.trim() !== '', value.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
-      // }
+    console.debug('£££ onChangeHandler :', value instanceof String, value, isRequired, changeFormData);
+    if (typeof value === 'string') {
+      if (isRequired) {
+        // 기본값인지 체크
+        changeValidationData(id, COMP_FIELD, value.trim() !== '', value.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
+      }
       changeFormData(id, COMP_FIELD, value);
     }
   }
 
   return (
-    // <Select className={CONFIG.property.className || ''} onChange={value => valueHandler(values, value)} style={{ width: '100%' }} value={defaultValue.text}>
-    //   {values.map(({ value, text }, idx) => (
-    //     <Option key={`${idx}_${value}_${text}`} value={idx}>
-    //       {text}
-    //     </Option>
-    //   ))}
-    // </Select>
     <div style={{ textAlign: 'center' }}>
       <RadioGroup value={defaultValue} onChange={e => setDefaultValue(e.target.value)}>
         {values.map(({ value, text }) => (
