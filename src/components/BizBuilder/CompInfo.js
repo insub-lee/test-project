@@ -118,9 +118,11 @@ import CustomSearchInputComp from 'components/BizBuilder/Field/CustomSearchInput
 import MdcsDistDeptListComp from 'components/BizBuilder/Field/MdcsDistDeptListComp';
 import OldScopeComp from 'components/BizBuilder/Field/OldScopeComp';
 import LabelByNodeIdComp from 'components/BizBuilder/Field/LabelByNodeIdComp';
+import ViewDateComp from 'components/BizBuilder/Field/ViewDateComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
+  'components/BizBuilder/Field/ViewDateComp': { renderer: property => <ViewDateComp {...property} /> },
   'components/BizBuilder/Field/CoverViewComp': { renderer: property => <CoverViewComp {...property} /> },
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
   'components/BizBuilder/Field/FmeaLabelComp': { renderer: property => <FmeaLabelComp {...property} /> },

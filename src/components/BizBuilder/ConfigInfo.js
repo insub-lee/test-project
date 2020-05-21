@@ -38,9 +38,11 @@ import EshsInterLockConfig from 'components/BizBuilder/Field/EshsInterLockConfig
 import CustomSelectSearchConfig from 'components/BizBuilder/Field/CustomSelectSearchConfig';
 import CustomSearchInputConfig from 'components/BizBuilder/Field/CustomSearchInputConfig';
 import LabelByNodeIdConfig from 'components/BizBuilder/Field/LabelByNodeIdConfig';
+import ViewDateCompConfig from 'components/BizBuilder/Field/ViewDateCompConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
+  'components/BizBuilder/Field/ViewDateCompConfig': { renderer: property => <ViewDateCompConfig {...property} /> },
   'components/BizBuilder/Field/TreeSelectCompConfig': { renderer: property => <TreeSelectCompConfig {...property} /> },
   'components/BizBuilder/Field/SelectCompConfig': { renderer: property => <SelectCompConfig {...property} /> },
   'components/BizBuilder/Field/CheckboxCompConfig': { renderer: property => <CheckboxCompConfig {...property} /> },
