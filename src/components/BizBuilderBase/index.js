@@ -364,6 +364,7 @@ const mapStateToProps = createStructuredSelector({
   isSaveModalClose: selectors.makeSelectIsSaveModalClose(),
   draftInfo: selectors.makeSelectDraftInfo(),
   fieldSelectData: selectors.makeSelectFieldSelectData(),
+  isTaskFavorite: selectors.makeSelectIsTaskFavorite(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -406,6 +407,7 @@ const mapDispatchToProps = dispatch => ({
   setIsLoading: (id, flag) => dispatch(actions.setIsLoadingByReducer(id, flag)),
   getFileDownload: (id, url, fileName) => dispatch(actions.getFileDownload(id, url, fileName)),
   setFormData: (id, formData) => dispatch(actions.setFormDataByReducer(id, formData)),
+  setTaskFavorite: (id, workSeq, taskOriginSeq, flag) => dispatch(actions.setTaskFavoriteBySaga(id, workSeq, taskOriginSeq, flag)),
 });
 
 const withReducer = injectReducer({ key: `apps.bizmicro.components.BizBuilderBase`, reducer });

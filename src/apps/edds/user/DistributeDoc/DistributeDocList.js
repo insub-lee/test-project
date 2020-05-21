@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Icon, Button, Modal } from 'antd';
 
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad'
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 
 import DocView from './DocView';
 import Redistribute from './Redistribute';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledAntdModalPad(Modal);
 
 class DistributeDocList extends Component {
   state = {
@@ -21,9 +21,13 @@ class DistributeDocList extends Component {
   };
   
   componentDidMount() {
+    this.getList();
+  };
+
+  getList = () => {
     const { id, apiAry, getCallDataHandler } = this.props;
     getCallDataHandler(id, apiAry, () => {});
-  };
+  }
 
   onClickRow = row => {
     this.setState({
@@ -33,6 +37,7 @@ class DistributeDocList extends Component {
   };
 
   onCancelPopup = () => {
+    this.getList();
     this.setState({
       isShow: false,
       isRedistShow: false,
@@ -73,7 +78,7 @@ class DistributeDocList extends Component {
       dataIndex: 'TITLE',
       key: 'TITLE',
       ellipsis: true,
-      render: (text, record) => <Button type="link" onClick={() => this.onClickRow(record)}>{text}</Button>
+      render: (text, record) => <StyledButton className="btn-link" onClick={() => this.onClickRow(record)}>{text}</StyledButton>
     },
     {
       title: '배포자',
@@ -115,16 +120,8 @@ class DistributeDocList extends Component {
 
     return (
       <>
-        <ContentsWrapper>
-          <div className="pageTitle">
-            <p>
-              <Icon type="form" /> 배포문서 목록
-            </p>
-          </div>
-          <AntdTable dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))} columns={this.columns} />
-        </ContentsWrapper>
         <AntdModal
-          width={700}
+          width={750}
           visible={this.state.isShow}
           title="배포문서 다운로드"
           onCancel={this.onCancelPopup}
@@ -143,6 +140,14 @@ class DistributeDocList extends Component {
         >
           <Redistribute selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
+        <StyledContentsWrapper>
+          {/* <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 배포문서 목록
+            </p>
+          </div> */}
+          <AntdTable dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))} columns={this.columns} />
+        </StyledContentsWrapper>
       </>
     );
   }

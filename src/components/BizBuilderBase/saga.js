@@ -5,7 +5,7 @@ import React from 'react';
 import { Axios } from 'utils/AxiosFunc';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import { TOTAL_DATA_OPT_SEQ, BUILDER_MODAL_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { TOTAL_DATA_OPT_SEQ, BUILDER_MODAL_OPT_SEQ, CHANGE_VIEW_OPT_SEQ, TASK_FAVORITE_OPT_CODE } from 'components/BizBuilder/Common/Constants';
 import history from 'utils/history';
 import { isJSON } from 'utils/helpers';
 
@@ -169,6 +169,10 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, condition
         responseFieldSelectData,
       ),
     );
+  }
+  if (viewType === 'VIEW') {
+    const taskFavoriteOptIdx = work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_CODE === TASK_FAVORITE_OPT_CODE && opt.ISUSED === 'Y');
+    yield put(actions.setIsTaskFavoriteByReducer(id, !!(taskFavoriteOptIdx > -1)));
   }
   yield put(actions.setBuilderModalByReducer(id, isBuilderModal, builderModalSetting, isSaveModalClose));
   if (viewType === 'LIST') {
@@ -785,6 +789,18 @@ function* getFileDownload({ url, fileName }) {
   }
 }
 
+function* setTaskFavorite({ id, workSeq, taskOriginSeq, flag }) {
+  const response = yield call(Axios.post, '/api/builder/v1/work/TaskFavorite', {
+    PARAM: { WORK_SEQ: workSeq, TASK_ORIGIN_SEQ: taskOriginSeq, PREV_FAVORITE_FLAG: flag },
+  });
+
+  if (response) {
+    const { taskFavorite } = response;
+    console.debug(taskFavorite);
+    yield put(actions.changeFormData(id, 'BUILDER_TASK_FAVORITE', taskFavorite ? 'Y' : 'N'));
+  }
+}
+
 export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.sagaKey}`, getBuilderData);
   yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.sagaKey}`, getExtraApiData);
@@ -808,6 +824,7 @@ export default function* watcher(arg) {
   yield takeLatest(`${actionTypes.REDIRECT_URL}_${arg.sagaKey || arg.id}`, redirectUrl);
   yield takeLatest(`${actionTypes.REMOVE_MULTI_TASK_SAGA}_${arg.sagaKey}`, removeMultiTask);
   yield takeEvery(`${actionTypes.GET_FILE_DOWNLOAD}_${arg.sagaKey || arg.id}`, getFileDownload);
+  yield takeLatest(`${actionTypes.SET_TASK_FAVORITE_SAGA}_${arg.sagaKey || arg.id}`, setTaskFavorite);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);

@@ -66,7 +66,7 @@ const mapDispatchToProps = dispatch => ({
   removeResponseDataReduxStateByKey: (id, key) => dispatch(actions.removeResponseDataReduxStateByKey(id, key)),
   removeFormDataReduxStateByKey: (id, key) => dispatch(actions.removeFormDataReduxStateByKey(id, key)),
   resetCalledData: id => dispatch(actions.resetCalledData(id)),
-  getFileDownload: (id, url, fileName) => dispatch(actions.getFileDownload(id, url, fileName)),
+  getFileDownload: (id, url, fileName, callbackFunc) => dispatch(actions.getFileDownload(id, url, fileName, callbackFunc)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizMicroDevBase`, reducer });
