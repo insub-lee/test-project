@@ -21,6 +21,7 @@ import SafetyEquipTable from '../../commonComponents/SafetyEquip';
 import SafetyEquipSelect from '../../commonComponents/SafetyEquip/EquipSelect';
 import SafetyWorkInfo from '../../commonComponents/SafetyWorkInfo';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
+import Bfcheck from '../../bfCheck';
 import Styled from './Styled';
 
 const AntdModal = StyledModalWrapper(Modal);
@@ -253,6 +254,12 @@ class SafetyWorkMain extends Component {
         break;
       case 'final':
         title = '최종 검토자 선택';
+        break;
+      case 'mainBfcheck':
+        title = '작업전 점검 등록 (주작업)';
+        break;
+      case 'subBfcheck':
+        title = '작업전 점검 등록 (보충작업)';
         break;
       default:
         break;
@@ -729,6 +736,7 @@ class SafetyWorkMain extends Component {
           {(modalType === 'supervisor' || modalType === 'exm' || modalType === 'final') && (
             <HstCmpnyUserSelectComp eshsHstCmpnyUserList={eshsHstCmpnyUserList} rowOnclick={this.handleHstUserSelect} />
           )}
+          {(modalType === 'mainBfcheck' || modalType === 'subBfcheck') && <Bfcheck initFormData={formData} pageType={modalType} />}
           {modalType === 'cmpny' && (
             <EshsCmpnyComp
               sagaKey={this.props.sagaKey}
