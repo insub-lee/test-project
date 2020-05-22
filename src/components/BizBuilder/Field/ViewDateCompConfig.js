@@ -13,7 +13,7 @@ function ViewDateCompConfig(props) {
   // componentDidMount
   useEffect(() => {
     const { TIME_FORMAT } = props.configInfo.property || {};
-    setTimeFormat(TIME_FORMAT || []);
+    setTimeFormat(TIME_FORMAT || 'YYYY-MM-DD');
   }, []);
 
   useEffect(() => {
@@ -31,19 +31,23 @@ function ViewDateCompConfig(props) {
   // key={`${Math.random()} customValueRadioComp > Radio`}
   return [
     <div className="popoverItem popoverItemInput">
-      <span className="spanLabel">DATE OUTPUT</span>
+      <span className="spanLabel">공지</span>
+      <span style={{ display: 'block', textAlign: 'center' }}>현재는 - 이외의 특수 문자는 지원하지않습니다.(띄어쓰기 가능)</span>
+    </div>,
+    <div className="popoverItem popoverItemInput">
+      <span className="spanLabel">PRESET</span>
       <span style={{ display: 'block', textAlign: 'center' }}>
         <RadioGroup value={timeFormat} onChange={e => setTimeFormat(e.target.value)}>
           <Radio value="YYYY-MM-DD">YYYY-MM-DD</Radio>
           <Radio value="YYYY-MM-DD h:mm:ss">YYYY-MM-DD h:mm:ss</Radio>
-          <Radio value="YYYY-MM-DD h:m">YYYY-MM-DD h:mm</Radio>
+          <Radio value="YYYY-MM-DD h:mm">YYYY-MM-DD h:mm</Radio>
         </RadioGroup>
       </span>
     </div>,
     <div className="popoverItem popoverItemInput">
       <span className="spanLabel">DATE FORMAT INPUT</span>
       <span style={{ display: 'block', textAlign: 'center' }}>
-        <Input defaultValue={timeFormat} onChange={e => setTimeFormat(e.target.value)} />
+        <Input value={timeFormat} onChange={e => setTimeFormat(e.target.value)} />
       </span>
     </div>,
   ];

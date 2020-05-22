@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Radio } from 'antd';
-import AntRadiobox from '../../../containers/store/components/uielements/radiobox.style';
+// import { Radio } from 'antd';
+import moment from 'moment';
+// import AntRadiobox from '../../../containers/store/components/uielements/radiobox.style';
 
-const init = { value: null, text: null };
-const RadioGroup = AntRadiobox(Radio.Group);
+// const init = { value: null, text: null };
+// const RadioGroup = AntRadiobox(Radio.Group);
 
 const ViewDateComp = props => {
-  const [values, setValues] = useState([]);
-  const [defaultValue, setDefaultValue] = useState('');
+  const [timeFormat, setTimeFormat] = useState('YYYY-MM-DD');
+  const [time, setTime] = useState('');
 
   const {
     changeFormData,
@@ -22,16 +23,22 @@ const ViewDateComp = props => {
   } = props;
 
   useEffect(() => {
-    const { VALUES } = props.CONFIG.property;
-    setValues(VALUES instanceof Array ? [...VALUES] : [{ ...init }]);
+    const { TIME_FORMAT } = props.CONFIG.property;
+    if (typeof TIME_FORMAT === 'string') {
+      setTimeFormat(TIME_FORMAT);
+    }
   }, []);
 
   useEffect(() => {
-    onChangeHandler(defaultValue);
-  }, [defaultValue]);
+    setTime(moment().format(timeFormat));
+  }, [timeFormat]);
+
+  useEffect(() => {
+    onChangeHandler(time);
+  }, [time]);
 
   function onChangeHandler(value) {
-    console.debug('£££ onChangeHandler :', value instanceof String, value, isRequired, changeFormData);
+    // console.debug('£££ onChangeHandler :', value instanceof String, value, isRequired, changeFormData);
     if (typeof value === 'string') {
       if (isRequired) {
         // 기본값인지 체크
@@ -41,17 +48,7 @@ const ViewDateComp = props => {
     }
   }
 
-  return (
-    <div style={{ textAlign: 'center' }}>
-      <RadioGroup value={defaultValue} onChange={e => setDefaultValue(e.target.value)}>
-        {values.map(({ value, text }) => (
-          <Radio key={`${Math.random()}customValueRadioComp > Radio`} value={value}>
-            {text}
-          </Radio>
-        ))}
-      </RadioGroup>
-    </div>
-  );
+  return <div style={{ textAlign: 'center' }}>{time}</div>;
 };
 
 ViewDateComp.propTypes = { CONFIG: PropTypes.objectOf(PropTypes.object), COMP_FIELD: PropTypes.string };
