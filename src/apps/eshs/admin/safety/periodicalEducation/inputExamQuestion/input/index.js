@@ -94,7 +94,7 @@ class InputPage extends React.Component {
             <AntdInput placeholder="보기 4" style={{ width: '100%', marginBottom: '10px' }} />
           </Card>
         </div>
-        <div style={{ padding: '15px' }}>
+        <div style={{ padding: '30px' }}>
           <StyledButton className="btn-primary mr5">저장</StyledButton>
           <StyledButton className="btn-light">취소</StyledButton>
         </div>
