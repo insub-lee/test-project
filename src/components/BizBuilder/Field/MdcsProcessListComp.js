@@ -18,10 +18,10 @@ const StyledWrap = styled.div`
         width: 40%;
       }
       .mdcsPstnName {
-        width: 15%;
+        width: 17%;
       }
       .mdcsUserName {
-        width: 20%;
+        width: 18%;
       }
       .mdcsAppvDttm {
         width: 20%;
@@ -44,11 +44,31 @@ class MdcsProcessListComp extends Component {
   }
 
   initData = (id, response) => {
-    const { list } = response;
+    const { list, processList } = response;
+    processList.forEach(item => {
+      if (item.NODE_ID === 107 || item.NODE_ID === 106 || item.NODE_ID === 112) {
+        const appvMemeber = JSON.parse(item.APPV_MEMBER);
+        if (appvMemeber.length > 0) {
+          appvMemeber.forEach(subNode => {
+            const findIdx = list.findIndex(iNode => iNode.NODE_ID === item.NODE_ID && iNode.ORG_APPV_USER_ID === subNode.USER_ID);
+            if (findIdx === -1)
+              list.push({
+                NODE_ID: item.NODE_ID,
+                APPV_STATUS: 0,
+                APPV_DTTM: '',
+                DRAFT_USER_NAME: subNode.NAME_KOR,
+                PSTN_NAME: subNode.PSTN_NAME_KOR,
+                DRAFT_DEPT_NAME: subNode.DEPT_NAME_KOR,
+              });
+          });
+        }
+      }
+    });
     const draftList = list.filter(fNode => fNode.NODE_ID === 101 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
     const approveList = list.filter(fNode => fNode.NODE_ID === 107 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
     const reviewerList = list.filter(fNode => fNode.NODE_ID === 106 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
     const mailReviewerList = list.filter(fNode => fNode.NODE_ID === 112 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
+
     let draftNode = [];
     if (draftList && draftList.length > 0 && approveList && approveList.length > 0) {
       draftNode = [
