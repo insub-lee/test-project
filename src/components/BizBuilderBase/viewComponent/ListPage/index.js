@@ -10,7 +10,7 @@ import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdBut
 import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
@@ -34,7 +34,7 @@ class ListPage extends Component {
   }
 
   componentDidMount = () => {
-    const { workInfo } = this.props;
+    const { workInfo, listMetaSeq } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
     let isOnRowClick = false;
@@ -54,8 +54,15 @@ class ListPage extends Component {
         if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
         if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNo = true;
         if (opt.OPT_SEQ === ON_ROW_CLICK_OPT_SEQ && opt.ISUSED === 'Y') {
-          isOnRowClick = true;
-          rowClickView = opt.OPT_VALUE === '' ? 'VIEW' : opt.OPT_VALUE;
+          if (!isJSON(opt.OPT_VALUE)) {
+            isOnRowClick = true;
+            rowClickView = opt.OPT_VALUE === '' ? 'VIEW' : opt.OPT_VALUE;
+          } else {
+            const ObjOptVal = JSON.parse(opt.OPT_VALUE);
+            const optMetalist = ObjOptVal.LIST || [];
+            isOnRowClick = optMetalist.includes(listMetaSeq.toString());
+            rowClickView = ObjOptVal.VIEW || 'VIEW';
+          }
         }
       });
       this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
@@ -158,11 +165,11 @@ class ListPage extends Component {
         onChange: this.onSelectChange,
       };
     }
-    if (typeof customOnRowClick === 'function') {
-      onRow = record => ({ onClick: () => customOnRowClick(record) });
-    }
     if (isOnRowClick) {
       onRow = this.onRowClick;
+    }
+    if (typeof customOnRowClick === 'function' && isOnRowClick) {
+      onRow = record => ({ onClick: () => customOnRowClick(record) });
     }
 
     return (
@@ -170,6 +177,7 @@ class ListPage extends Component {
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
           <AntdTable
+            bordered
             rowKey="TASK_SEQ"
             key={`${group.key}_list`}
             className="view-designer-list"
@@ -262,7 +270,7 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
+                          <StyledButton className="btn-gray" onClick={() => getListData(id, workSeq)}>
                             Search
                           </StyledButton>
                         </div>

@@ -38,6 +38,11 @@ import EshsInterLockConfig from 'components/BizBuilder/Field/EshsInterLockConfig
 import CustomSelectSearchConfig from 'components/BizBuilder/Field/CustomSelectSearchConfig';
 import CustomSearchInputConfig from 'components/BizBuilder/Field/CustomSearchInputConfig';
 import LabelByNodeIdConfig from 'components/BizBuilder/Field/LabelByNodeIdConfig';
+import EshsQualCondConfig from 'components/BizBuilder/Field/EshsQualCondConfig';
+import EshsQualHeaderConfig from 'components/BizBuilder/Field/EshsQualHeaderConfig';
+import DefaultValueConfig from 'components/BizBuilder/Field/DefaultValueConfig';
+import TextDefaultValueConfig from 'components/BizBuilder/Field/TextDefaultValueConfig';
+import TextareaCompConfig from 'components/BizBuilder/Field/TextareaCompConfig';
 import ViewDateCompConfig from 'components/BizBuilder/Field/ViewDateCompConfig';
 
 export const ConfigInfo = {
@@ -80,4 +85,9 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/CustomSelectSearchConfig': { renderer: property => <CustomSelectSearchConfig {...property} /> },
   'components/BizBuilder/Field/CustomSearchInputConfig': { renderer: property => <CustomSearchInputConfig {...property} /> },
   'components/BizBuilder/Field/LabelByNodeIdConfig': { renderer: property => <LabelByNodeIdConfig {...property} /> },
+  'components/BizBuilder/Field/EshsQualCondConfig': { renderer: property => <EshsQualCondConfig {...property} /> },
+  'components/BizBuilder/Field/EshsQualHeaderConfig': { renderer: property => <EshsQualHeaderConfig {...property} /> },
+  'components/BizBuilder/Field/DefaultValueConfig': { renderer: property => <DefaultValueConfig {...property} /> },
+  'components/BizBuilder/Field/TextDefaultValueConfig': { renderer: property => <TextDefaultValueConfig {...property} /> },
+  'components/BizBuilder/Field/TextareaCompConfig': { renderer: property => <TextareaCompConfig {...property} /> },
 };

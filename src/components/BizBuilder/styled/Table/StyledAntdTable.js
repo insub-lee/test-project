@@ -13,16 +13,17 @@ const StyledAntdTable = Component => styled(Component)`
         border: 0;
         .ant-table-tbody > tr > td,
         .ant-table-thead > tr > th {
-          padding: 6px 8px;
           border-radius: 0;
           font-size: 12px;
-          border-right: 0;
         }
         .ant-table-thead > tr > th {
           background-color: #fff;
           color: #000;
           border-bottom: 1px solid #e4e4e4;
-          font-size: 0.85rem;
+          padding: 8px 8px;
+        }
+        .ant-table-tbody > tr > td {
+          padding: 6px 8px;
         }
         .ant-table-tbody > tr {
           &.ant-table-row-selected {
@@ -48,7 +49,7 @@ const StyledAntdTable = Component => styled(Component)`
         color: #000;
         border-bottom: 1px solid #e4e4e4;
         font-size: 0.85rem;
-      } 
+      }
     }
 
     .ant-table-placeholder {
@@ -80,6 +81,19 @@ const StyledAntdTable = Component => styled(Component)`
     }
   }
   /* table 끝 */
+
+  /* bordered 옵션 시 */
+  .ant-table-bordered .ant-table-body > table {
+    border: 0;
+  }
+
+  .ant-table-bordered .ant-table-thead > tr > th,
+  .ant-table-bordered .ant-table-tbody > tr > td {
+    &:last-child {
+      border-right: 0;
+    }
+  }
+
   /* thead */
   .ant-table-thead > tr:first-child > th:first-child {
     border-top-left-radius: 0;
@@ -152,7 +166,7 @@ const StyledAntdTable = Component => styled(Component)`
 
   .ant-table-pagination.ant-pagination {
     float: none;
-    margin: 20px auto;
+    margin: 20px auto 0;
     text-align: center;
     font-size: 11px;
   }
@@ -165,38 +179,6 @@ const StyledAntdTable = Component => styled(Component)`
       vertical-align: inherit;
     }
   }
-
-  /* 안 쓰지만 지우지 말 것 */
-  /*
-  &.tableCodeWrapper {
-    .ant-table .ant-table-content .ant-table-body table .ant-table-thead > tr > th {
-      padding: 0;
-      .ant-table-header-column {
-        width: 100%;
-        .th-label {
-          padding: 6px 8px;
-          display: block;
-          border-bottom: 1px solid #ddd;
-          text-align: center;
-          &.th-label-left {
-            text-align: left;
-          }
-        }
-        .td-input-wrapper {
-          padding: 6px 8px;
-          height: 42px;
-          .span-item {
-            font-size: 12px;
-            display: block;
-            line-height: 32px;
-            text-align: center;
-          }
-        }
-      }
-    }
-  }
-  */
-  /* 안 쓰지만 지우지 말 것 */
 `;
 
 export default StyledAntdTable;

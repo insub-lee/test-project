@@ -25,7 +25,7 @@ class sqConfirmResult extends Component {
   };
 
   render() {
-    const { sagaKey } = this.props;
+    const { sagaKey, taskSeq } = this.props;
     return (
       <>
         <BizBuilderBase
@@ -33,6 +33,7 @@ class sqConfirmResult extends Component {
           FieldCustomInputPage={EquipInputPage}
           CustomModifyPage={CustomModifyPage}
           workSeq={5561}
+          taskSeq={taskSeq}
           viewType="MODIFY"
           modifyMetaSeq={5761}
           loadingComplete={this.loadingComplete}
@@ -45,6 +46,7 @@ class sqConfirmResult extends Component {
 
 sqConfirmResult.defaultProps = {
   sagaKey: 'sqConfirmResult',
+  taskSeq: -1,
 };
 
 export default sqConfirmResult;

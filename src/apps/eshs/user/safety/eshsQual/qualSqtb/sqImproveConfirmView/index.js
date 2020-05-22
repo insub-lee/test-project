@@ -22,7 +22,7 @@ class SqImproveConfirmView extends Component {
   componentDidMount() {}
 
   render() {
-    const { sagaKey } = this.props;
+    const { sagaKey, taskSeq } = this.props;
     return (
       <>
         <BizBuilderBase
@@ -31,6 +31,7 @@ class SqImproveConfirmView extends Component {
           CustomViewPage={CustomViewPage}
           workSeq={5561}
           viewMetaSeq={6381}
+          taskSeq={taskSeq || -1}
           viewType="VIEW"
           loadingComplete={this.loadingComplete}
         />
@@ -41,6 +42,7 @@ class SqImproveConfirmView extends Component {
 
 SqImproveConfirmView.defaultProps = {
   sagaKey: 'SqImproveConfirmView',
+  taskSeq: -1,
 };
 
 export default SqImproveConfirmView;

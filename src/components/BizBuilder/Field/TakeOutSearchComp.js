@@ -1,15 +1,22 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, Button, Modal, Table, DatePicker } from 'antd';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import moment from 'moment';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+
 const AntdTable = StyledAntdTable(Table);
+const AntdSearch = StyledSearchInput(Input.Search);
+const AntdModal = StyledModal(Modal);
 const { RangePicker } = DatePicker;
 
 class TakeOutSearchComp extends React.Component {
@@ -19,7 +26,7 @@ class TakeOutSearchComp extends React.Component {
       modal: false,
       modalList: [],
       dates: [moment(), moment()],
-      dateStrings: [],
+      dateStrings: [moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')],
     };
   }
 
@@ -183,32 +190,32 @@ class TakeOutSearchComp extends React.Component {
     switch (viewPageData && viewPageData.viewType.toUpperCase()) {
       case 'INPUT':
         buttonGruop = (
-          <>
-            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('S')}>
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('S')}>
               등록
             </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            <StyledButton className="btn-primary btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
-          </>
+          </StyledButtonWrapper>
         );
         break;
       case 'MODIFY':
         buttonGruop = (
-          <>
-            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('M')}>
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('M')}>
               저장
             </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('D')}>
+            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('D')}>
               삭제
             </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
+            <StyledButton className="btn-primary btn-sm mr5" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
               신규등록
             </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            <StyledButton className="btn-primary btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
-          </>
+          </StyledButtonWrapper>
         );
         break;
       default:
@@ -222,12 +229,18 @@ class TakeOutSearchComp extends React.Component {
     const { CONFIG, visible, colData, viewPageData, sagaKey: id, changeViewPage } = this.props;
     return visible ? (
       <div>
-        <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
-        <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
+        <AntdSearch
+          value={colData}
+          readOnly
+          className="ant-search-inline input-search-mid mr5"
+          style={{ width: 150, display: 'inline-block' }}
+          onClick={this.handleModalVisible}
+          onSearch={this.handleModalVisible}
+        />
         {this.ButtonRender()}
-        <Modal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
+        <AntdModal title="반출증번호 검색" visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
           {this.state.modal && this.modalTableRender()}
-        </Modal>
+        </AntdModal>
       </div>
     ) : (
       ''

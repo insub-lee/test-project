@@ -57,11 +57,19 @@ const StyledHeader = styled.header`
           line-height: 33px;
           color: #000;
           font-size: 16px;
+
+          span, div {
+            vertical-align: middle;
+
+            button {
+              vertical-align: text-bottom;
+            }
+          }
         }
 
         .gotoHome {
-            background: transparent;
-            cursor: pointer;
+          background: transparent;
+          cursor: pointer;
         }
 
         .managerInfo {

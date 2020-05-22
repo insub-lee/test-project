@@ -95,9 +95,8 @@ class List extends Component {
       title: '담당자명',
       dataIndex: 'MANAGER_NAME',
       key: 'MANAGER_NAME',
-      width: '15%',
       align: 'center',
-      width: '20%',
+      width: '15%',
     },
     {
       title: '담당자 연락처',

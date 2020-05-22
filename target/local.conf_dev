@@ -30,6 +30,7 @@
             #add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
             #expires off;
     }
+
     location ~ ^(/oauth/) {
             proxy_pass  http://portal-oauth;
             proxy_connect_timeout 60;
@@ -43,6 +44,7 @@
             #add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
             #expires off;
     }
+
     location ~ ^(/api/common/v1/account) {
             proxy_pass  http://portal-account;
             proxy_connect_timeout 60;
@@ -51,7 +53,7 @@
             proxy_set_header     user_agent $http_user_agent;
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
-     }
+    }
 
     location ~ ^(/api/bizstore/v1/store) {
             proxy_pass  http://portal-appstore;
@@ -62,6 +64,7 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/bizstore/v1/mypage) {
             proxy_pass  http://portal-mypage;
             proxy_connect_timeout 60;
@@ -71,6 +74,7 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/portal/v1/dock) {
             proxy_pass  http://portal-dock;
             proxy_connect_timeout 60;
@@ -80,6 +84,7 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/bizstore/v1/bizgroup) {
             proxy_pass  http://portal-bizgroup;
             proxy_connect_timeout 60;
@@ -89,6 +94,7 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/portal/v1/page) {
             proxy_pass  http://portal-page;
             proxy_connect_timeout 60;
@@ -98,6 +104,7 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/admin/v1/common) {
             proxy_pass  http://portal-admin;
             proxy_connect_timeout 60;
@@ -107,6 +114,7 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/common/v1/notify) {
             proxy_pass  http://common-notify;
             proxy_connect_timeout 60;
@@ -116,6 +124,7 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/bizstore/v1/appmanage) {
             proxy_pass  http://portal-appmanage;
             proxy_connect_timeout 60;
@@ -125,15 +134,28 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/common/v1/migration) {
             proxy_pass  http://portal-migration;
-            proxy_connect_timeout 60;
+            #proxy_connect_timeout 1800;
+            proxy_read_timeout      1800; # default 60
             proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
             proxy_set_header     user_agent $http_user_agent;
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
-    }    
+    }  
+
+    location ~ ^(/api/common/v1/filemanage) {
+            proxy_pass  http://portal-filemanage;
+		    proxy_connect_timeout 60;
+            proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }     
+
     location ~ ^(/api/builder/v1/work) {
            proxy_pass  http://builder-common;
            proxy_connect_timeout 60;
@@ -143,6 +165,7 @@
            proxy_set_header     referer $http_referer;
            proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/workflow/v1/common) {
            proxy_pass  http://workflow-common;
            proxy_connect_timeout 60;
@@ -152,6 +175,7 @@
            proxy_set_header     referer $http_referer;
            proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/manual/v1/) {
             proxy_pass  http://manual-common;
             proxy_connect_timeout 10;
@@ -161,6 +185,7 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/mdcs/v1/common) {
             proxy_pass  http://mdcs-common;
             proxy_connect_timeout 10;
@@ -170,6 +195,7 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/edds/v1/common) {
             proxy_pass  http://edds-common;
             proxy_connect_timeout 10;
@@ -179,6 +205,7 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/eshs/v1/common/) {
             proxy_pass  http://eshs-common;
             proxy_connect_timeout 10;
@@ -188,15 +215,18 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+
     location ~ ^(/api/migration/v1/common/) {
             proxy_pass  http://migration-common;
-            proxy_connect_timeout 10;
+            #proxy_connect_timeout 1800;
+            proxy_read_timeout      1800; # default 60
             proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
             proxy_set_header     user_agent $http_user_agent;
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+
     location ~ ^/img/thumb/crop/(.*)/(.*)$ {
         proxy_pass http://thumbor/unsafe/$1/http://http://192.168.251.14:40033/down/thumb/$2;
         proxy_connect_timeout 60;
@@ -261,7 +291,6 @@
         proxy_set_header     host $http_host;
     }
 
-
     location / {
         proxy_pass  http://127.0.0.1:3000;
         proxy_connect_timeout 10;
@@ -272,10 +301,9 @@
         proxy_set_header     host $http_host;
     }
 
-
-    error_page  404         = @notfound;
-    error_page  500 502 504 = @server_error;
-    error_page  503         = @maintenance;
+    #error_page  404         = @notfound;
+    #error_page  500 502 504 = @server_error;
+    #error_page  503         = @maintenance;
 
     location @notfound {
             root  C:/Users/goodrhys/git/neo-intelligence-flow-ui/build;
@@ -358,7 +386,10 @@ upstream portal-upload {
     server 192.168.251.14:10199;
 }
 upstream portal-migration {
-    server 192.168.251.14:10197;
+    server 192.168.251.14:10201;
+}
+upstream portal-filemanage {
+    server 192.168.251.14:10202;
 }
 upstream thumbor {
     # hosts 파일에 등록 후 사용 192.168.251.14, 192.168.251.15, 192.168.251.16

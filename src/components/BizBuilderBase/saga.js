@@ -5,7 +5,7 @@ import React from 'react';
 import { Axios } from 'utils/AxiosFunc';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import { TOTAL_DATA_OPT_SEQ, BUILDER_MODAL_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { TOTAL_DATA_OPT_SEQ, BUILDER_MODAL_OPT_SEQ, CHANGE_VIEW_OPT_SEQ, TASK_FAVORITE_OPT_CODE } from 'components/BizBuilder/Common/Constants';
 import history from 'utils/history';
 import { isJSON } from 'utils/helpers';
 
@@ -15,7 +15,7 @@ import * as selectors from './selectors';
 
 // BuilderBase 에서 API 호출시 HEADER 에 값을 추가하여 별도로 로그관리를 함 (필요할 경우 workSeq, taskSeq 추가)
 
-function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData }) {
+function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData, detailData }) {
   if (taskSeq === -1) yield put(actions.removeReduxState(id));
   const response = yield call(Axios.get, `/api/builder/v1/work/workBuilder/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
   const { work, metaList, formData, validationData, apiList, viewProcessList } = response;
@@ -37,6 +37,98 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, condition
       isSaveModalClose = tempObj.saveModalClose || false;
     }
   }
+
+  const viewPageData = yield select(selectors.makeSelectViewPageDataById(id));
+  const upperCaseViewType = viewType && viewType.length > 0 ? viewType.toUpperCase() : viewPageData.viewType;
+  let viewSetData = {};
+  let responseFieldSelectData = {};
+  if (extraProps) {
+    let viewSeq = -1;
+    let viewLayer = {};
+    const { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq } = extraProps;
+    const reduxFormData = detailData;
+    let viewChangeProcessSeq = -1;
+    if (reduxFormData && reduxFormData.VIEW_CHANGE_PROCESS_SEQ && reduxFormData.VIEW_CHANGE_PROCESS_SEQ > -1) {
+      viewChangeProcessSeq = reduxFormData.VIEW_CHANGE_PROCESS_SEQ;
+    } else if (formData && formData.VIEW_CHANGE_PROCESS_SEQ && formData.VIEW_CHANGE_PROCESS_SEQ > -1) {
+      viewChangeProcessSeq = formData.VIEW_CHANGE_PROCESS_SEQ;
+    }
+    if (upperCaseViewType === 'INPUT' && inputMetaSeq > -1) {
+      viewSeq = inputMetaSeq;
+    } else if (upperCaseViewType === 'MODIFY' && modifyMetaSeq > -1) {
+      viewSeq = modifyMetaSeq;
+    } else if (upperCaseViewType === 'VIEW' && viewMetaSeq > -1) {
+      viewSeq = viewMetaSeq;
+    } else if (upperCaseViewType === 'LIST' && listMetaSeq > -1) {
+      viewSeq = listMetaSeq;
+    } else if (viewChangeSeq && viewChangeSeq > 0) {
+      const findIdx = viewProcessList.findIndex(iNode => iNode.VIEW_CHANGE_PROCESS_SEQ === viewChangeSeq);
+      if (findIdx > -1) {
+        const viewChangeProcessInfo = viewProcessList[findIdx];
+        viewSeq = viewChangeProcessInfo[`${upperCaseViewType}_META_SEQ`] || -1;
+        // state = state.setIn(['bizBuilderBase', id, 'formData', 'VIEW_CHANGE_PROCESS_SEQ'], viewChangeSeq);
+      }
+    } else if (viewChangeProcessSeq > -1) {
+      const findIdx = viewProcessList.findIndex(iNode => iNode.VIEW_CHANGE_PROCESS_SEQ === viewChangeProcessSeq);
+      if (findIdx > -1) {
+        const viewChangeProcessInfo = viewProcessList[findIdx];
+        viewSeq = viewChangeProcessInfo[`${upperCaseViewType}_META_SEQ`] || -1;
+      }
+    } else if (work.VIEW_CHANGE_PROCESS_SEQ && work.VIEW_CHANGE_PROCESS_SEQ > -1) {
+      const findIdx = viewProcessList.findIndex(iNode => iNode.VIEW_CHANGE_PROCESS_SEQ === work.VIEW_CHANGE_PROCESS_SEQ);
+      if (findIdx > -1) {
+        const viewChangeProcessInfo = viewProcessList[findIdx];
+        viewSeq = viewChangeProcessInfo[`${upperCaseViewType}_META_SEQ`] || -1;
+      }
+    } else {
+      viewSeq = work[`VW_${upperCaseViewType}`];
+    }
+    viewLayer = metaList.filter(fNode => fNode.COMP_TYPE === 'VIEW' && fNode.COMP_TAG === upperCaseViewType && fNode.META_SEQ === viewSeq);
+
+    // state = state.setIn(['bizBuilderBase', id, 'viewSeq'], viewSeq).setIn(['bizBuilderBase', id, 'viewLayer'], fromJS(viewLayer || []));
+    viewSetData = { viewSeq, viewLayer };
+
+    if (viewLayer && viewLayer.length === 1 && isJSON(viewLayer[0].CONFIG)) {
+      const viewLayerConfig = JSON.parse(viewLayer[0].CONFIG);
+      if (viewLayerConfig.property && viewLayerConfig.property.layer && viewLayerConfig.property.layer.groups) {
+        const fieldSelectDataObject = {};
+        const currentLayer = viewLayerConfig.property.layer;
+        currentLayer.groups.forEach(group => {
+          if (group && group.rows && group.rows.length > 0) {
+            group.rows.forEach(row => {
+              if (row && row.cols && row.cols.length > 0) {
+                row.cols.forEach(col => {
+                  if (col && col.comp && col.comp.CONFIG && col.comp.CONFIG.property && col.comp.CONFIG.property.compSelectDataClass) {
+                    const tempProperty = col.comp.CONFIG.property;
+                    fieldSelectDataObject[tempProperty.compSelectDataKey] = {
+                      key: tempProperty.compSelectDataKey,
+                      serviceClass: tempProperty.compSelectDataClass,
+                      type: tempProperty.compSelectDataType,
+                      param: tempProperty.compSelectDataParam,
+                      config: col.comp.CONFIG,
+                      COMP_FIELD: col.comp.COMP_FIELD,
+                    };
+                  }
+                });
+              }
+            });
+          }
+        });
+
+        const fieldSelectDataKeySet = Object.keys(fieldSelectDataObject);
+        const fieldSelectData = fieldSelectDataKeySet.map(key => fieldSelectDataObject[key]);
+        if (fieldSelectData && fieldSelectData.length > 0) {
+          responseFieldSelectData = yield call(
+            Axios.post,
+            '/api/builder/v1/work/CallApi',
+            { fieldSelectData, formData: taskSeq && taskSeq > 0 ? detailData : formData, WORK_SEQ: workSeq, TASK_SEQ: taskSeq },
+            { BUILDER: 'getBuilderData' },
+          );
+        }
+      }
+    }
+  }
+
   if (taskSeq === -1) {
     // yield put(actions.initFormData(id, workSeq, formData));
     yield put(
@@ -52,22 +144,39 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, condition
         workFlow,
         apiList,
         viewProcessList,
+        viewSetData,
+        responseFieldSelectData,
         formData,
         validationData,
       ),
     );
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
   } else {
-    yield put(actions.setBuilderData(id, workSeq, taskSeq, viewType, extraProps, response, work, metaList, workFlow, apiList, viewProcessList));
+    yield put(
+      actions.setBuilderData(
+        id,
+        workSeq,
+        taskSeq,
+        viewType,
+        extraProps,
+        response,
+        work,
+        metaList,
+        workFlow,
+        apiList,
+        viewProcessList,
+        viewSetData,
+        responseFieldSelectData,
+      ),
+    );
+  }
+  if (viewType === 'VIEW') {
+    const taskFavoriteOptIdx = work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_CODE === TASK_FAVORITE_OPT_CODE && opt.ISUSED === 'Y');
+    yield put(actions.setIsTaskFavoriteByReducer(id, !!(taskFavoriteOptIdx > -1)));
   }
   yield put(actions.setBuilderModalByReducer(id, isBuilderModal, builderModalSetting, isSaveModalClose));
   if (viewType === 'LIST') {
     yield put(actions.getListDataBySaga(id, workSeq, conditional));
-    // const responseList = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
-    // if (responseList) {
-    //   const { list } = responseList;
-    //   yield put(actions.setListDataByReducer(id, list));
-    // }
   }
 }
 
@@ -135,7 +244,7 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeWork
   if (formData) {
     yield put(actions.setDetailData(id, formData, validationData, draftInfo));
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
-    yield put(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps));
+    yield put(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps, undefined, undefined, formData));
   }
   /* Disable Data Loading */
   // yield put(actions.disableDataLoading());
@@ -680,6 +789,18 @@ function* getFileDownload({ url, fileName }) {
   }
 }
 
+function* setTaskFavorite({ id, workSeq, taskOriginSeq, flag }) {
+  const response = yield call(Axios.post, '/api/builder/v1/work/TaskFavorite', {
+    PARAM: { WORK_SEQ: workSeq, TASK_ORIGIN_SEQ: taskOriginSeq, PREV_FAVORITE_FLAG: flag },
+  });
+
+  if (response) {
+    const { taskFavorite } = response;
+    console.debug(taskFavorite);
+    yield put(actions.changeFormData(id, 'BUILDER_TASK_FAVORITE', taskFavorite ? 'Y' : 'N'));
+  }
+}
+
 export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.sagaKey}`, getBuilderData);
   yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.sagaKey}`, getExtraApiData);
@@ -703,6 +824,7 @@ export default function* watcher(arg) {
   yield takeLatest(`${actionTypes.REDIRECT_URL}_${arg.sagaKey || arg.id}`, redirectUrl);
   yield takeLatest(`${actionTypes.REMOVE_MULTI_TASK_SAGA}_${arg.sagaKey}`, removeMultiTask);
   yield takeEvery(`${actionTypes.GET_FILE_DOWNLOAD}_${arg.sagaKey || arg.id}`, getFileDownload);
+  yield takeLatest(`${actionTypes.SET_TASK_FAVORITE_SAGA}_${arg.sagaKey || arg.id}`, setTaskFavorite);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);

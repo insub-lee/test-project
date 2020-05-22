@@ -27,7 +27,7 @@ class ListPage extends Component {
   }
 
   componentDidMount = () => {
-    const { workInfo } = this.props;
+    const { workInfo, listMetaSeq } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
     let isOnRowClick = false;
@@ -37,8 +37,15 @@ class ListPage extends Component {
         if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
         if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNo = true;
         if (opt.OPT_SEQ === ON_ROW_CLICK_OPT_SEQ && opt.ISUSED === 'Y') {
-          isOnRowClick = true;
-          rowClickView = opt.OPT_VALUE === '' ? 'VIEW' : opt.OPT_VALUE;
+          if (!isJSON(opt.OPT_VALUE)) {
+            isOnRowClick = true;
+            rowClickView = opt.OPT_VALUE === '' ? 'VIEW' : opt.OPT_VALUE;
+          } else {
+            const ObjOptVal = JSON.parse(opt.OPT_VALUE);
+            const optMetalist = ObjOptVal.LIST || [];
+            isOnRowClick = optMetalist.includes(listMetaSeq.toString());
+            rowClickView = ObjOptVal.VIEW || 'VIEW';
+          }
         }
       });
       this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
@@ -139,11 +146,11 @@ class ListPage extends Component {
         onChange: this.onSelectChange,
       };
     }
-    if (typeof customOnRowClick === 'function') {
-      onRow = record => ({ onClick: () => customOnRowClick(record) });
-    }
     if (isOnRowClick) {
       onRow = this.onRowClick;
+    }
+    if (typeof customOnRowClick === 'function' && isOnRowClick) {
+      onRow = record => ({ onClick: () => customOnRowClick(record) });
     }
     return (
       <div key={group.key}>

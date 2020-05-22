@@ -31,8 +31,8 @@ class DragUploadComp extends Component {
     const { WORK_SEQ, COMP_FIELD, COMP_TAG, colData, CONFIG } = this.props;
     const initfiles = {
       WORK_SEQ,
-      TASK_SEQ: -1,
-      CONT_SEQ: -1,
+      TASK_SEQ: (colData && colData.TASK_SEQ) || -1,
+      CONT_SEQ: (colData && colData.CONT_SEQ) || -1,
       FIELD_NM: COMP_FIELD,
       TYPE: COMP_TAG,
       DETAIL: colData && colData.DETAIL ? colData.DETAIL : [],

@@ -1,10 +1,20 @@
-import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input, Button, Modal, Table, Select, message } from 'antd';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import * as PropTypes from 'prop-types';
 
+import { Input, Modal, Table, Select, message } from 'antd';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+
+const AntdSelect = StyledSelect(Select);
+const AntdSearch = StyledSearchInput(Input.Search);
+const AntdModal = StyledModal(Modal);
 const AntdTable = StyledAntdTable(Table);
+
 const { Option } = Select;
 
 class EshsSiteItemSearchbar extends React.Component {
@@ -33,7 +43,7 @@ class EshsSiteItemSearchbar extends React.Component {
   };
 
   initData = () => {
-    const { extraApiData, sagaKey: id } = this.props;
+    const { extraApiData } = this.props;
     this.setState({
       siteList: extraApiData && extraApiData.site && extraApiData.site.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 635 && f.USE_YN === 'Y'),
       itemData: extraApiData && extraApiData.item && extraApiData.item.list,
@@ -54,7 +64,7 @@ class EshsSiteItemSearchbar extends React.Component {
   };
 
   modalTableRender = () => {
-    const { columns, sagaKey: id } = this.props;
+    const { columns } = this.props;
     const { itemData } = this.state;
     return (
       <AntdTable
@@ -91,24 +101,38 @@ class EshsSiteItemSearchbar extends React.Component {
     const { CONFIG, visible, colData, viewPageData, sagaKey: id, changeViewPage, changeFormData, formData } = this.props;
     const { siteList } = this.state;
     return visible ? (
-      <div>
-        지역
-        <Select style={{ width: '100px', margin: '10px' }} onChange={value => changeFormData(id, 'SITE', value)} value={Number(formData.SITE) || ''}>
+      <>
+        {/* builderWrapper CSS 정해지면 수정 */}
+        <span style={{ display: 'inline-block', verticalAlign: 'middle', padding: '0 12px' }}>지역</span>
+        <AntdSelect
+          style={{ width: '150px' }}
+          className="select-mid mr5"
+          onChange={value => changeFormData(id, 'SITE', value)}
+          value={Number(formData.SITE) || ''}
+        >
           {siteList.map(item => (
             <Option value={item.NODE_ID} key="site">
               {item.NAME_KOR}
             </Option>
           ))}
-        </Select>
-        <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
-        <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
-        <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-          Reset
-        </StyledButton>
-        <Modal visible={this.state.modal} width={800} onCancel={this.handleModalVisible} footer={[]}>
+        </AntdSelect>
+        <AntdSearch
+          value={colData}
+          readOnly
+          className="ant-search-inline input-search-mid mr5"
+          style={{ width: 150, display: 'inline-block' }}
+          onClick={this.handleModalVisible}
+          onSearch={this.handleModalVisible}
+        />
+        <StyledButtonWrapper className="btn-wrap-inline">
+          <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            Reset
+          </StyledButton>
+        </StyledButtonWrapper>
+        <AntdModal title="품목 검색" visible={this.state.modal} width={800} onCancel={this.handleModalVisible} footer={[]}>
           {this.state.modal && this.modalTableRender()}
-        </Modal>
-      </div>
+        </AntdModal>
+      </>
     ) : (
       ''
     );
@@ -119,15 +143,15 @@ EshsSiteItemSearchbar.propTypes = {
   CONFIG: PropTypes.any,
   colData: PropTypes.string,
   sagaKey: PropTypes.string,
-  compProps: PropTypes.any,
+  COMP_FIELD: PropTypes.string,
   visible: PropTypes.bool,
   viewPageData: PropTypes.func,
   changeViewPage: PropTypes.func,
-  setViewPageData: PropTypes.func,
-  saveTask: PropTypes.func,
-  modifyTask: PropTypes.func,
-  deleteTask: PropTypes.func,
+  getExtraApiData: PropTypes.func,
+  changeFormData: PropTypes.func,
   columns: PropTypes.array,
+  formData: PropTypes.object,
+  extraApiData: PropTypes.object,
 };
 EshsSiteItemSearchbar.defaultProps = {
   columns: [

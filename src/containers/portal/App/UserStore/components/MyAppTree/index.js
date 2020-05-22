@@ -439,7 +439,7 @@ class MyAppTree extends Component {
                   }
                 };
 
-                resortTreeData(treeData, 0);
+                resortTreeData(treeData, treeData[0].LVL);
                 moveMymenu(generateList(fromJS(treeData)));
               }
             }}

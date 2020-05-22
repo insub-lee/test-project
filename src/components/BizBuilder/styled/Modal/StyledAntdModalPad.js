@@ -19,10 +19,9 @@ const StyledAntdModal = Component => styled(Component)`
       text-align: left;
       background: #4491e0;
       border-bottom: 0;
-      padding: 12px 24px;
+      padding: 12px 20px;
       .ant-modal-title {
         color: #fff;
-        font-size: 18px;
       }
     }
     .ant-modal-body {

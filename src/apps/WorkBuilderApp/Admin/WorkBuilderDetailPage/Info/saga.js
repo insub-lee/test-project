@@ -24,7 +24,7 @@ function* fetchData({ id }) {
   const result = {
     workInfo: object,
     processList,
-    optList: list,
+    optList: list.sort((a, b) => (a.OPT_SEQ > b.OPT_SEQ ? 1 : -1)),
     apiList: apiMasterList,
     styleList: styleList.filter(fNode => fNode.ISUSED === 'Y'),
   };

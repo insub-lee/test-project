@@ -3,11 +3,14 @@ import PropTypes from 'prop-types';
 
 import { DatePicker, Popconfirm } from 'antd';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 
 import moment from 'moment';
 import request from 'utils/request';
+
+const AntdDatePicker = StyledDatePicker(DatePicker);
 
 class Input extends Component {
   constructor(props) {
@@ -240,7 +243,8 @@ class Input extends Component {
                   <td>{userInfo.BAREA_CD}</td>
                   <th>신청일</th>
                   <td>
-                    <DatePicker
+                    <AntdDatePicker
+                      className="ant-picker-xs"
                       disabledDate={this.disableDate}
                       defaultValue={moment(currentDate)}
                       onChange={this.handleOnDateChange}
@@ -259,7 +263,7 @@ class Input extends Component {
                             .format('w')
                       }
                     >
-                      <StyledButton className="btn-primary btn-sm" onClick={this.handleButtonClick}>
+                      <StyledButton className="btn-gray btn-xs ml5" onClick={this.handleButtonClick}>
                         예약
                       </StyledButton>
                     </Popconfirm>

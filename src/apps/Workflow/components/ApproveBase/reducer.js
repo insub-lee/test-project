@@ -5,6 +5,7 @@ const initialState = fromJS({
   approveList: [],
   unApproveList: [],
   draftList: [],
+  customDataList: [],
   selectedRow: {},
   viewVisible: false,
   opinionVisible: false,
@@ -31,6 +32,11 @@ const appReducer = (state = initialState, action) => {
         .set('opinionVisible', false)
         .set('selectedRow', fromJS({}))
         .set('opinion', '');
+    }
+    case actionTypes.SET_CUSTOMER_DATABIND: {
+      const { list } = action;
+      console.debug('setcustomer', action);
+      return state.set('customDataList', fromJS(list));
     }
     case actionTypes.SET_SELECTED_ROW: {
       const { row } = action;

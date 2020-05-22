@@ -1,12 +1,12 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { InputNumber } from 'antd';
+import { Input, message } from 'antd';
 import { debounce } from 'lodash';
-import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
+import StyledInput from 'commonStyled/Form/StyledInput';
 
-const AntdInputNumber = StyledInputNumber(InputNumber);
+const AntdInput = StyledInput(Input);
 
-class NumberComp extends React.Component {
+class TimeInputComp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,16 +23,25 @@ class NumberComp extends React.Component {
   }
 
   onChange = (name, value) => {
-    this.setState({ [name]: value }, this.handleOnChange);
+    this.setState({ [name]: Number(value.replace(/[^0-9A-Z_]/gi, '')) }, this.handleOnChange);
   };
 
   handleOnChange = () => {
     const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData } = this.props;
     const { hour, minute } = this.state;
-    if (CONFIG.property.isRequired) {
-      changeValidationData(id, COMP_FIELD, !!(hour || minute), !(hour || minute) ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
+    if (hour >= 0 && hour <= 24 && minute >= 0 && minute <= 60) {
+      if (CONFIG.property.isRequired) {
+        changeValidationData(id, COMP_FIELD, !!(hour || minute), !(hour || minute) ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
+      }
+      changeFormData(id, COMP_FIELD, `${String(hour || 0).padStart(2, '0')}:${String(minute || 0).padStart(2, '0')}`);
+    } else {
+      message.warning('시간을 올바르게 입력하시오');
+      if (hour >= 0 && hour <= 24) {
+        this.setState({ minute: 0 });
+      } else {
+        this.setState({ hour: 0 });
+      }
     }
-    changeFormData(id, COMP_FIELD, `${String(hour || 0).padStart(2, '0')}:${String(minute || 0).padStart(2, '0')}`);
   };
 
   render() {
@@ -44,26 +53,24 @@ class NumberComp extends React.Component {
           <span>{`${hour || 0} 시 ${minute || 0} 분`}</span>
         ) : (
           <>
-            <AntdInputNumber
+            <AntdInput
               value={hour || 0}
-              style={{ width: '100px' }}
-              max={24}
-              min={0}
+              style={{ width: '30%' }}
+              maxLength={2}
               placeholder={CONFIG.property.placeholder}
-              onChange={value => this.onChange('hour', value)}
-              className={`mr5 ant-input-number-inline ${CONFIG.property.className || ''}`}
+              onChange={e => this.onChange('hour', e.target.value)}
+              className={`mr5 ant-input-inline ${CONFIG.property.className || ''}`}
             />
-            <span style={{ display: 'inline-block', marginRight: '5px' }}>시</span>
-            <AntdInputNumber
+            시{' '}
+            <AntdInput
               value={minute || 0}
-              style={{ width: '100px' }}
-              max={59}
-              min={0}
+              style={{ width: '30%' }}
+              maxLength={2}
               placeholder={CONFIG.property.placeholder}
-              onChange={value => this.onChange('minute', value)}
-              className={`mr5 ant-input-number-inline ${CONFIG.property.className || ''}`}
+              onChange={e => this.onChange('minute', e.target.value)}
+              className={`mr5 ant-input-inline ${CONFIG.property.className || ''}`}
             />
-            <span style={{ display: 'inline-block' }}>분</span>
+            분
           </>
         )}
       </>
@@ -73,7 +80,7 @@ class NumberComp extends React.Component {
   }
 }
 
-NumberComp.propTypes = {
+TimeInputComp.propTypes = {
   COMP_FIELD: PropTypes.any,
   NAME_KOR: PropTypes.any,
   CONFIG: PropTypes.any,
@@ -86,4 +93,4 @@ NumberComp.propTypes = {
   visible: PropTypes.bool,
 };
 
-export default NumberComp;
+export default TimeInputComp;

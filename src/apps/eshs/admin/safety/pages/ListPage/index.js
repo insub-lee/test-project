@@ -9,7 +9,7 @@ import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import BizBuilderBase from 'components/BizBuilderBase';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
@@ -335,7 +335,7 @@ function ListPage(props) {
                     {group.type === 'searchGroup' && group.useSearch && (
                       <div className="view-designer-group-search-btn-wrap">
                         <StyledButton
-                          className="btn-primary"
+                          className="btn-gray"
                           onClick={() => {
                             getListData(id, workSeq);
                             setIsSearched(true);

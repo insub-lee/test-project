@@ -34,12 +34,10 @@ class Enactment extends Component {
   };
 
   initDataBind = id => {
-    const {
-      result: {
-        categoryInfo: { categoryMapList: categoryList },
-        docTemplateInfoByCategory: { list: templateList },
-      },
-    } = this.props;
+    const { result } = this.props;
+    const categoryList = result && result.categoryInfo && result.categoryInfo.categoryMapList !== null ? result.categoryInfo.categoryMapList : [];
+    const templateList =
+      result && result.docTemplateInfoByCategory && result.docTemplateInfoByCategory.list !== null ? result.docTemplateInfoByCategory.list : [];
 
     this.setState({
       categoryList,
@@ -125,7 +123,24 @@ class Enactment extends Component {
     let viewChangeSeq;
     if (selectedNodeIds.includes(2160)) {
       viewChangeSeq = 28;
-    } else if (selectedNodeIds.includes(423) || selectedNodeIds.includes(424) || selectedNodeIds.includes(425) || selectedNodeIds.includes(426)) {
+    } else if (
+      selectedNodeIds.includes(2434) ||
+      selectedNodeIds.includes(2445) ||
+      selectedNodeIds.includes(2456) ||
+      selectedNodeIds.includes(2467) ||
+      selectedNodeIds.includes(2478) ||
+      selectedNodeIds.includes(2489) ||
+      selectedNodeIds.includes(2500) ||
+      selectedNodeIds.includes(2511) ||
+      selectedNodeIds.includes(2522) ||
+      selectedNodeIds.includes(2533) ||
+      selectedNodeIds.includes(2544) ||
+      selectedNodeIds.includes(2555) ||
+      selectedNodeIds.includes(2566) ||
+      selectedNodeIds.includes(2577) ||
+      selectedNodeIds.includes(2587) ||
+      selectedNodeIds.includes(2590)
+    ) {
       viewChangeSeq = 31;
     } else {
       viewChangeSeq = undefined;

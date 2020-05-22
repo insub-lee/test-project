@@ -4,8 +4,6 @@ import { Table, Modal, Icon, Button, Input } from 'antd';
 import moment from 'moment';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView/holdview';
-import OpinionModal from 'apps/Workflow/components/ApproveBase/viewComponent/ApproveView/OpinionModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
@@ -44,14 +42,15 @@ class DraftList extends Component {
       title: '구분',
       dataIndex: 'APPVGUBUN',
       key: 'APPVGUBUN',
-      width: '10%',
+      width: '12%',
       align: 'center',
+      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
     },
     {
       title: '프로세스상태',
       dataIndex: 'STATUS_NM',
       key: 'STATUS_NM',
-      width: '10%',
+      width: '12%',
       align: 'center',
     },
     {

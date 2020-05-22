@@ -45,7 +45,7 @@ const StyledButton = styled.button`
   }
 
   &.btn-xxs {
-    padding: 1px 0.844rem;
+    padding: 1px 0.75rem;
     font-size: 0.7rem;
     line-height: 1.5;
   }
@@ -93,12 +93,39 @@ const StyledButton = styled.button`
     }
   }
 
+  &.btn-link {
+    color: rgba(0,0,0,.65);
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    &:hover {
+      color: #000;
+      text-decoration: underline;
+    }
+  }
+
   &.btn-first {
     margin-right: 5px;
   }
 
   &.mr5 {
     margin-right: 5px;
+  }
+
+  &.ml5 {
+    margin-left: 5px;
+  }
+
+  &.mt5 {
+    margin-top: 5px;
+  }
+
+  &.btn-block {
+    display: block;
+  }
+
+  &.btn-block-center-mt5 {
+    margin: 5px auto 0;
   }
 `;
 

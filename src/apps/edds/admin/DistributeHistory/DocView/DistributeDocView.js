@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import base64 from 'base-64';
 import { Input, Table } from 'antd';
 
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 
 const AntdTable = StyledAntdTable(Table);
+const AntdTextarea = StyledTextarea(Input.TextArea);
 
 class DistributeDocView extends Component {
   
@@ -17,31 +18,31 @@ class DistributeDocView extends Component {
       key: 'distributeDocView',
       url: '/api/edds/v1/common/distributeDoc',
       type: 'POST',
-      params: { PARAM: { ...selectedRow } },
+      params: { PARAM: { ...selectedRow, IS_ADMIN: true } },
     }];
     getCallDataHandler(id, apiAry, () => {});
   }
 
   columns = [
     {
-      title: 'No',
-      dataIndex: 'RNUM',
-      key: 'RNUM',
+      title: 'SEQ',
+      dataIndex: 'FILE_SEQ',
+      key: 'FILE_SEQ',
       align: 'center',
-      width: '10%',
+      width: '15%',
     },
     {
       title: '파일명',
-      dataIndex: 'NAME',
-      key: 'NAME',
+      dataIndex: 'FILE_NAME',
+      key: 'FILE_NAME',
     },
     {
       title: '다운로드 일자',
-      dataIndex: 'DOWN_DATE',
-      key: 'DOWN_DATE',
-      width: '20%',
+      dataIndex: 'DOWNLOAD_DTTM',
+      key: 'DOWNLOAD_DTTM',
+      width: '30%',
       align: 'center',
-      render: (text, record) => record.DOWN_DATE && moment(record.DOWN_DATE).format('YYYY-MM-DD HH:mm:ss'),
+      render: (text, record) => record.DOWNLOAD_DTTM && moment(record.DOWNLOAD_DTTM).format('YYYY-MM-DD HH:mm:ss'),
     },
   ]
 
@@ -57,8 +58,8 @@ class DistributeDocView extends Component {
     return (
       <div>
         {Object.keys(detail).length > 0 && (
-          <React.Fragment>
-            <StyledTable>
+          <>
+            <StyledHtmlTable>
               <table>
                 <colgroup>
                   <col width="100px" />
@@ -89,12 +90,12 @@ class DistributeDocView extends Component {
                     <th>개정번호</th>
                     <td>{detail.VERSION}</td>
                   </tr>
-                  <tr>
+                  {/* <tr>
                     <th>관리유형</th>
                     <td></td>
                     <th>소스시스템</th>
                     <td></td>
-                  </tr>
+                  </tr> */}
                   <tr>
                     <th>DRM 권한</th>
                     <td colSpan={3}>
@@ -104,14 +105,17 @@ class DistributeDocView extends Component {
                   <tr>
                     <th>전달사항</th>
                     <td colSpan={3}>
-                      <Input.TextArea value={detail.DISTRIBUTE_REASON} readOnly />
+                      <AntdTextarea value={detail.DISTRIBUTE_REASON} readOnly />
                     </td>
                   </tr>
                 </tbody>
               </table>
-            </StyledTable>
-            <AntdTable dataSource={detail.fileList.map(item => ({ ...item, key: item.SEQ }))} columns={this.columns} pagination={false} />
-          </React.Fragment>
+            </StyledHtmlTable>
+            <AntdTable
+              dataSource={detail.fileList.map(item => ({ ...item, key: item.SEQ }))}
+              columns={this.columns}
+            />
+          </>
         )}
       </div>
     )

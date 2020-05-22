@@ -15,7 +15,15 @@ const UserSelectWrapper = styled.div`
           color: #f50;
         }
         li .ant-tree-node-content-wrapper {
-          font-size: 12px;
+          font-size: 11px;
+        }
+        .ant-tree-child-tree {
+          li {
+            padding: 0;
+            &:first-child {
+              padding: 0;
+            }
+          }
         }
       }
       .userList {
@@ -34,7 +42,7 @@ const UserSelectWrapper = styled.div`
             li {
               .ant-checkbox-wrapper + span,
               .ant-checkbox + span {
-                font-size: 13px;
+                font-size: 12px;
               }
             }
           }
@@ -55,7 +63,7 @@ const UserSelectWrapper = styled.div`
           li {
             .ant-checkbox-wrapper + span,
             .ant-checkbox + span {
-              font-size: 13px;
+              font-size: 12px;
             }
           }
         }

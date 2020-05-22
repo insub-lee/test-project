@@ -3,21 +3,22 @@ import PropTypes from 'prop-types';
 
 import { Table, Select, Input, Modal } from 'antd';
 
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 
 import Edit from './Edit';
 import CompanyModal from './CompanyModal';
 
-const AntdLineTable = StyledLineTable(Table);
+const AntdLineTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
-const AntdModal = StyledContentsModal(Modal);
+const AntdModalPad = StyledAntdModalPad(Modal);
 
 const { Option } = Select;
 
@@ -63,25 +64,7 @@ class List extends Component {
     const {
       result: { eshsGroupUnit },
     } = this.props;
-    const initList =
-      eshsGroupUnit &&
-      eshsGroupUnit.list &&
-      eshsGroupUnit.list.map(item => ({
-        ...item,
-        FILTER_PLANT_NM: item.GUBUN === 'FILTER_PLANT' ? this.state.filterPlantSB.find(f => f.CODE === item.FILTER_PLANT_CD) : '',
-        FAB_NM: item.GUBUN === 'FAB' ? this.state.fabSB.find(f => f.CODE === item.FAB) : '',
-        TREATMENT_PLANT_NM: item.GUBUN === 'TREATMENT_PLANT' ? this.state.treatmentPlantSB.find(f => f.CODE === item.TREATMENT_PLANT_CD) : '',
-      }));
-    const listData =
-      initList &&
-      initList.map(item => ({
-        ...item,
-        FILTER_PLANT_NM: item.FILTER_PLANT_NM ? item.FILTER_PLANT_NM.NAME_KOR : '',
-        FAB_NM: item.FAB_NM ? item.FAB_NM.NAME_KOR : '',
-        TREATMENT_PLANT_NM: item.TREATMENT_PLANT_NM ? item.TREATMENT_PLANT_NM.NAME_KOR : '',
-        IS_DI: item.IS_DI === '1' ? 'O' : 'X',
-        IS_DEL: item.IS_DEL === '0' ? 'O' : 'X',
-      }));
+    const listData = eshsGroupUnit && eshsGroupUnit.list;
     this.setState({ listData });
   };
 
@@ -150,7 +133,7 @@ class List extends Component {
     const selectData =
       this.state[`${codegubun}`] &&
       this.state[`${codegubun}`].map(item => (
-        <Option value={item.CODE} key={`${codegubun}V`}>
+        <Option value={item.NODE_ID} key={`${codegubun}V`}>
           {item.NAME_KOR}
         </Option>
       ));
@@ -163,13 +146,13 @@ class List extends Component {
       modalProps: {
         groupUnitCd: record.GROUP_UNIT_CD,
         groupUnitNm: record.GROUP_UNIT_NM,
-        siteSBV: record.SITE,
+        siteSBV: Number(record.SITE),
         companyName: record.COMPANY_NM,
         companyCd: record.COMPANY_CD,
-        gubun: record.GUBUN,
-        filterPlantSBV: record.FILTER_PLANT_CD || '0',
-        fabSBV: record.FAB || '0',
-        treatmentPlantSBV: record.TREATMENT_PLANT_CD || '0',
+        gubun: Number(record.GUBUN),
+        filterPlantSBV: Number(record.FILTER_PLANT_CD) || '0',
+        fabSBV: Number(record.FAB) || '0',
+        treatmentPlantSBV: Number(record.TREATMENT_PLANT_CD) || '0',
         di: record.IS_DI === 'O' ? '1' : '0',
         del: record.IS_DEL === 'O' ? '0' : '1',
       },
@@ -201,79 +184,81 @@ class List extends Component {
     const { listData } = this.state;
     return (
       <>
-        <ContentsWrapper>
-          <div className="selSaveWrapper alignLeft">
-            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.siteSBV}>
-              <Option value="0" key="siteSBV">
-                지역전체
-              </Option>
-              {this.selectOptionRender('siteSB')}
-            </AntdSelect>
-            <span className="textLabel">회사</span>
-            <AntdInput
-              style={{ width: '250px' }}
-              className="ant-input-inline input-pointer mr5"
-              value={this.state.companyName}
-              onClick={() => this.setState({ modalCompany: true })}
-              placeholder="여기를 클릭해주세요."
-            />
-            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.filterPlantSBV}>
-              <Option value="0" key="filterPlantSBV">
-                정수장전체
-              </Option>
-              {this.selectOptionRender('filterPlantSB')}
-            </AntdSelect>
-            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.fabSBV}>
-              <Option value="0" key="fabSBV">
-                FAB전체
-              </Option>
-              {this.selectOptionRender('fabSB')}
-            </AntdSelect>
-            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.treatmentPlantSBV}>
-              <Option value="0" key="treatmentPlantSBV">
-                처리장전체
-              </Option>
-              {this.selectOptionRender('treatmentPlantSB')}
-            </AntdSelect>
-            <span className="textLabel">DI 시설</span>
-            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.di}>
-              <Option value="total" key="di">
-                전체
-              </Option>
-              <Option value="1" key="di">
-                O
-              </Option>
-              <Option value="0" key="di">
-                X
-              </Option>
-            </AntdSelect>
-            <span className="textLabel">구분</span>
-            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.gubun}>
-              <Option value="0" key="gubun">
-                전체
-              </Option>
-              <Option value="COMPANY" key="gubun">
-                회사
-              </Option>
-              <Option value="FILTER_PLANT" key="gubun">
-                정수장
-              </Option>
-              <Option value="FAB" key="gubun">
-                FAB
-              </Option>
-              <Option value="TREATMENT_PLANT" key="gubun">
-                처리장
-              </Option>
-            </AntdSelect>
-            <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary btn-first" onClick={() => this.listDataApi()}>
+        <StyledContentsWrapper>
+          <StyledCustomSearch>
+            <div className="search-input-area">
+              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.siteSBV}>
+                <Option value="0" key="siteSBV">
+                  지역전체
+                </Option>
+                {this.selectOptionRender('siteSB')}
+              </AntdSelect>
+              <span className="text-label">회사</span>
+              <AntdInput
+                style={{ width: '200px' }}
+                className="ant-input-inline ant-input-sm input-pointer mr5"
+                value={this.state.companyName}
+                onClick={() => this.setState({ modalCompany: true })}
+                placeholder="여기를 클릭해주세요."
+              />
+              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.filterPlantSBV}>
+                <Option value="0" key="filterPlantSBV">
+                  정수장전체
+                </Option>
+                {this.selectOptionRender('filterPlantSB')}
+              </AntdSelect>
+              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.fabSBV}>
+                <Option value="0" key="fabSBV">
+                  FAB전체
+                </Option>
+                {this.selectOptionRender('fabSB')}
+              </AntdSelect>
+              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.treatmentPlantSBV}>
+                <Option value="0" key="treatmentPlantSBV">
+                  처리장전체
+                </Option>
+                {this.selectOptionRender('treatmentPlantSB')}
+              </AntdSelect>
+              <span className="text-label">DI 시설</span>
+              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.di}>
+                <Option value="total" key="di">
+                  전체
+                </Option>
+                <Option value="1" key="di">
+                  O
+                </Option>
+                <Option value="0" key="di">
+                  X
+                </Option>
+              </AntdSelect>
+              <span className="text-label">구분</span>
+              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.gubun}>
+                <Option value="0" key="gubun">
+                  전체
+                </Option>
+                <Option value="COMPANY" key="gubun">
+                  회사
+                </Option>
+                <Option value="FILTER_PLANT" key="gubun">
+                  정수장
+                </Option>
+                <Option value="FAB" key="gubun">
+                  FAB
+                </Option>
+                <Option value="TREATMENT_PLANT" key="gubun">
+                  처리장
+                </Option>
+              </AntdSelect>
+            </div>
+            <StyledButtonWrapper className="btn-area">
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.listDataApi()}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => this.isOpenEdit()}>
+              <StyledButton className="btn-primary btn-sm" onClick={() => this.isOpenEdit()}>
                 추가
               </StyledButton>
             </StyledButtonWrapper>
-          </div>
+          </StyledCustomSearch>
           <AntdLineTable
             className="tableWrapper"
             rowKey={listData && listData.GROUP_UNIT_CD}
@@ -286,16 +271,8 @@ class List extends Component {
             })}
             footer={() => <div style={{ textAlign: 'center' }}>{`${listData && listData.length} 건`}</div>}
           />
-        </ContentsWrapper>
-        <AntdModal
-          className="modal-table-pad"
-          visible={this.state.modalEdit}
-          width="600px"
-          onCancel={this.onCancel}
-          destroyOnClose
-          footer={null}
-          title="관리 단위 등록/수정"
-        >
+        </StyledContentsWrapper>
+        <AntdModalPad visible={this.state.modalEdit} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="관리 단위 등록/수정">
           <div>
             {this.state.modalEdit && (
               <Edit
@@ -312,22 +289,14 @@ class List extends Component {
               />
             )}
           </div>
-        </AntdModal>
-        <AntdModal
-          className="modal-table-pad"
-          visible={this.state.modalCompany}
-          width="600px"
-          onCancel={this.onCancel}
-          destroyOnClose
-          footer={null}
-          title="회사 선택"
-        >
+        </AntdModalPad>
+        <AntdModalPad visible={this.state.modalCompany} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="회사 선택">
           <div>
             {this.state.modalCompany && (
               <CompanyModal sagaKey={id} getCallDataHandler={getCallDataHandler} result={result} selectedModalRecord={this.selectedModalRecord} />
             )}
           </div>
-        </AntdModal>
+        </AntdModalPad>
       </>
     );
   }

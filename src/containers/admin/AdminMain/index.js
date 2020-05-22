@@ -13,6 +13,8 @@ import WorkBuilderOptionMgr from 'apps/WorkBuilderApp/Admin/WorkBuilderOptionMgr
 import WorkBuilderSysFieldMgr from 'apps/WorkBuilderApp/Admin/WorkBuilderSysFieldMgr';
 import WorkBuilderClassNameMgr from 'apps/WorkBuilderApp/Admin/WorkBuilderClassNameMgr';
 import WorkBuilderStyleMgr from 'apps/WorkBuilderApp/Admin/WorkBuilderStyleMgr';
+import WorkBuilderDataNodeMgr from 'apps/WorkBuilderApp/Admin/WorkBuilderDataNodeMgr';
+
 import FileManager from 'apps/FileManager';
 import ProcessMgr from 'apps/Workflow/Admin/ProcessMgr';
 
@@ -33,6 +35,7 @@ import Menu from './Menu';
 import App from './App';
 import Classify from './Classify';
 import Node from './Node';
+import DaemonManager from './Daemon';
 
 // const wrap = dragDropContext(HTML5Backend);
 
@@ -84,6 +87,8 @@ class wrap extends PureComponent {
           <Route path="/admin/adminmain/WorkBuilderSysFieldMgr" component={WorkBuilderSysFieldMgr} />
           <Route path="/admin/adminmain/WorkBuilderClassNameMgr" component={WorkBuilderClassNameMgr} />
           <Route path="/admin/adminmain/WorkBuilderStyleMgr" component={WorkBuilderStyleMgr} />
+          <Route path="/admin/adminmain/WorkBuilderDataNodeMgr" component={WorkBuilderDataNodeMgr} />
+          <Route path="/admin/adminmain/daemon" component={DaemonManager} />
           {/* Route 추가시 아래의 Route 위에 추가 하세요 */}
           <Route path="/admin/adminmain/:MENU/" component={Menu} />
         </Switch>

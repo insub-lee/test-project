@@ -21,7 +21,6 @@ class ModifyPage extends Component {
     super(props);
     this.state = {
       uploadFileList: [],
-      qualTaskSeq: 0,
     };
   }
 
@@ -125,7 +124,7 @@ class ModifyPage extends Component {
 
   saveTask = (id, reloadId, callbackFunc) => {
     const { modifyTask, formData } = this.props;
-    const condFileList = (formData && formData.resultFileList) || [];
+    const condFileList = (formData && formData.condFileList) || [];
     if (condFileList.length) {
       this.condFileListMoveReal(condFileList);
     } else {
@@ -170,25 +169,23 @@ class ModifyPage extends Component {
   };
 
   condFileUploadComplete = () => {
-    const { sagaKey: id, extraApiData, formData, setFormData, modifyTask } = this.props;
+    const { sagaKey: id, extraApiData, formData, setFormData } = this.props;
 
     const condRealFileList = (extraApiData && extraApiData.condRealFileList && extraApiData.condRealFileList.DETAIL) || [];
-    const resultCondList = (formData && formData.resultCondList) || [];
+    const condList = (formData && formData.condList) || [];
 
     setFormData(id, {
       ...formData,
-      resultCondList: resultCondList.map(a => {
-        const key = condRealFileList.findIndex(c => c.rowSeq === a.SEQ);
+      condList: condList.map((a, index) => {
+        const key = condRealFileList.findIndex(c => index === c.targetIndex);
         return key > -1
           ? {
               ...a,
-              FILE_SEQ: Number(condRealFileList[key].seq),
-              DOWN: `/down/file/${Number(condRealFileList[key].seq)}`,
-              fileExt: condRealFileList[key].fileExt,
+              RESULT_FILE_SEQ: Number(condRealFileList[key].seq),
             }
           : a;
       }),
-      resultFileList: [],
+      condFileList: [],
     });
     this.saveTask(id, id, this.saveTaskAfter);
   };
@@ -211,7 +208,6 @@ class ModifyPage extends Component {
       changeFormData,
       deleteTask,
     } = this.props;
-    const { qualTaskSeq } = this.state;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
@@ -249,6 +245,7 @@ ModifyPage.propTypes = {
   extraApiData: PropTypes.any,
   setFormData: PropTypes.func,
   modifyTask: PropTypes.func,
+  sagaKey: PropTypes.string,
 };
 
 ModifyPage.defaultProps = {

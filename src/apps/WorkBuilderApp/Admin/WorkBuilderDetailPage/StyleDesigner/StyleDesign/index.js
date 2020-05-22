@@ -31,6 +31,10 @@ const StyleDesign = ({ groups, action }) => (
                   key={group.key}
                   groupKey={group.key}
                   id={`group-table-${groupIndex}`}
+                  defaultWidth={1000} // init body width
+                  defaultWidthType={'px'} // init body width type ( '%' or 'px' )
+                  updateBodyWidthType={type => console.debug('@ body type', type)}
+                  updateBodyWidth={width => console.debug('@ body type', width)}
                   updateCellStyle={(e, rowIndex, colIndex) => {
                     const { name, value } = e.target;
                     action.updateCellStyle(groupIndex, rowIndex, colIndex, name, value);

@@ -186,6 +186,7 @@ const initialState = fromJS({
   viewViewList: [],
   listViewList: [],
   viewChangeProcesslist: [],
+  dataNodeList: [],
 });
 
 const initialSearchGroup = fromJS({
@@ -538,7 +539,8 @@ const reducer = (state = initialState, action) => {
         .set('workInfo', fromJS({ workSeq, viewType }))
         .setIn(['viewData', 'WORK_SEQ'], workSeq)
         .setIn(['viewData', 'COMP_TAG'], viewType)
-        .setIn(['viewData', 'NAME_KOR'], viewName || '기본 입력 화면');
+        .setIn(['viewData', 'NAME_KOR'], viewName || '기본 입력 화면')
+        .setIn(['viewData', 'CONFIG', 'property', 'layerIdxKey'], `layerIdx_${getNewKey()}`);
     }
     case actionTypes.SET_INIT_LIST_DATA_REDUCER: {
       const { workSeq, viewType, viewName } = action;
@@ -548,6 +550,7 @@ const reducer = (state = initialState, action) => {
         .setIn(['viewData', 'WORK_SEQ'], workSeq)
         .setIn(['viewData', 'COMP_TAG'], viewType)
         .setIn(['viewData', 'NAME_KOR'], viewName)
+        .setIn(['viewData', 'CONFIG', 'property', 'layerIdxKey'], `layerIdx_${getNewKey()}`)
         .setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups'], fromJS([initialSearchGroup, initialListGroup]));
     }
     case actionTypes.SET_WORK_INFO_REDUCER: {
@@ -943,7 +946,7 @@ const reducer = (state = initialState, action) => {
         rows
           .map(row => {
             const currentCol = row.getIn(['cols', colIndex]);
-            return currentCol ? currentCol.get('rowSpan') : 0;
+            return currentCol ? currentCol.get('rowSpan') || 1 : 0;
           })
           .toJS()
           .reduce((acc, cul) => acc + cul) !== rows.size;
@@ -1076,7 +1079,7 @@ const reducer = (state = initialState, action) => {
       }
 
       /* Check Using Component */
-      if (state.getIn([...condition, groupIndex, 'rows']).some(row => row.getIn(['cols', colIndex]).get('comp'))) {
+      if (state.getIn([...condition, groupIndex, 'rows']).some(row => row.getIn(['cols', colIndex]) && row.getIn(['cols', colIndex]).get('comp'))) {
         window.alert('Component를 사용하는 경우 삭제 불가능합니다.');
         return state;
       }
@@ -1137,14 +1140,15 @@ const reducer = (state = initialState, action) => {
           const keyGroup = key.split('-');
           return { groupIndex: Number(keyGroup[0]), rowIndex: Number(keyGroup[1]), colIndex: Number(keyGroup[2]) };
         });
-
       const sortedSelectedKeys = sortBy(testKeys, ['rowIndex']);
       const { groupIndex, colIndex, rowIndex } = sortedSelectedKeys[0];
       const { rowIndex: lastRowIndex } = sortedSelectedKeys[sortedSelectedKeys.length - 1];
 
       const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'];
 
-      const rowSize = sortedSelectedKeys.map(obj => state.getIn([...condition, obj.rowIndex, 'cols', obj.colIndex, 'rowSpan'])).reduce((acc, cul) => acc + cul);
+      const rowSize = sortedSelectedKeys
+        .map(obj => state.getIn([...condition, obj.rowIndex, 'cols', obj.colIndex, 'rowSpan']) || 1)
+        .reduce((acc, cul) => acc + cul);
 
       let i = 0;
       let nextRows = state.getIn(condition);
@@ -1241,8 +1245,8 @@ const reducer = (state = initialState, action) => {
 
       const currentCol = state.getIn([...condition, colIndex]);
 
-      const colSize = currentCol.get('span');
-      const rowSize = currentCol.get('rowSpan');
+      const colSize = currentCol.get('span') || 1;
+      const rowSize = currentCol.get('rowSpan') || 1;
 
       let i = 0;
       let nextCols = state.getIn(condition);
@@ -1320,6 +1324,10 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SET_VIEW_CHANGE_PROCESS_LIST_REDUCER: {
       const { list } = action;
       return state.set('viewChangeProcesslist', fromJS(list));
+    }
+    case actionTypes.SET_DATA_NODE_LIST_REDUCER: {
+      const { dataNodeList } = action;
+      return state.set('dataNodeList', fromJS(dataNodeList));
     }
     default:
       return state;
@@ -1442,43 +1450,43 @@ const addHiddenComp = (state, compItem) => {
 
 const addHiddenCompItem = (state, selectedComp) => {
   const { COMP_TAG, COMP_SRC, COMP_SETTING_SRC, COL_DB_TYPE, COL_GROUP_IDX, COMP_CONFIG, COMP_NAME, COL_TYPE_IDX } = selectedComp;
-  if (COL_TYPE_IDX !== VIEW_TYPE_IDX) {
-    // const hiddenField = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField']);
-    let compData = state.get('compData');
-    const workSeq = state.getIn(['workInfo', 'workSeq']);
-    const COMP_TYPE = 'FIELD';
-    const COMP_FIELD = '';
-    let info = { type: COL_DB_TYPE, nullable: true, defaultValue: '', size: 0 };
-    let property = {
-      COMP_SRC,
-      COMP_SETTING_SRC,
-      layerIdx: {},
-      compKey: `Comp_${getNewKey()}`,
-      COMP_NAME,
-    };
-    if (COMP_CONFIG && COMP_CONFIG.length > 0 && isJSON(COMP_CONFIG)) {
-      const compConfig = JSON.parse(COMP_CONFIG);
-      if (JSON.parse(COMP_CONFIG).info) info = { ...info, ...compConfig.info };
-      if (JSON.parse(COMP_CONFIG).property) property = { ...property, ...compConfig.property };
-    }
-    const compItem = fromJS({
-      WORK_SEQ: workSeq,
-      COMP_TAG,
-      COMP_TYPE,
-      COMP_FIELD,
-      ORD: compData.size + 1,
-      PRNT_SEQ: workSeq,
-      FIELD_TYPE: 'USER',
-      CONFIG: {
-        info,
-        property,
-        option: {},
-      },
-    });
-    compData = compData.push(compItem);
-    return state.updateIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField'], hiddenField => hiddenField.push(compItem)).set('compData', compData);
+  // if (COL_TYPE_IDX !== VIEW_TYPE_IDX) {
+  // const hiddenField = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField']);
+  let compData = state.get('compData');
+  const workSeq = state.getIn(['workInfo', 'workSeq']);
+  const COMP_TYPE = 'FIELD';
+  const COMP_FIELD = '';
+  let info = { type: COL_DB_TYPE, nullable: true, defaultValue: '', size: 0 };
+  let property = {
+    COMP_SRC,
+    COMP_SETTING_SRC,
+    layerIdx: {},
+    compKey: `Comp_${getNewKey()}`,
+    COMP_NAME,
+  };
+  if (COMP_CONFIG && COMP_CONFIG.length > 0 && isJSON(COMP_CONFIG)) {
+    const compConfig = JSON.parse(COMP_CONFIG);
+    if (JSON.parse(COMP_CONFIG).info) info = { ...info, ...compConfig.info };
+    if (JSON.parse(COMP_CONFIG).property) property = { ...property, ...compConfig.property };
   }
-  return state;
+  const compItem = fromJS({
+    WORK_SEQ: workSeq,
+    COMP_TAG,
+    COMP_TYPE,
+    COMP_FIELD,
+    ORD: compData.size + 1,
+    PRNT_SEQ: workSeq,
+    FIELD_TYPE: 'USER',
+    CONFIG: {
+      info,
+      property,
+      option: {},
+    },
+  });
+  compData = compData.push(compItem);
+  return state.updateIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField'], hiddenField => hiddenField.push(compItem)).set('compData', compData);
+  // }
+  // return state;
 };
 
 export default reducer;

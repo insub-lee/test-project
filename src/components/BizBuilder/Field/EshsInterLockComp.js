@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import { debounce } from 'lodash';
-import { TreeSelect, Input, Button, Checkbox, Table } from 'antd';
+import { TreeSelect, Input, Select, Checkbox, Table, DatePicker } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import moment from 'moment';
 
 import StyledInput from 'commonStyled/Form/StyledInput';
 
 const AntdInput = StyledInput(Input);
 const AntdLineTable = StyledAntdTable(Table);
+
+const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 const getCategoryMapListAsTree = flatData =>
   getTreeFromFlatData({
@@ -30,41 +34,27 @@ class EshsInterLockComp extends Component {
     super(props);
     this.state = {
       treeData: [],
-      interLockTable: [],
-      initInterLock: { IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' },
+      initInterLock: { IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '', REQ_GUBUN: '4', FROM_DT: '', TO_DT: '' },
       columns: [],
     };
-    this.debounceHandelSetTable = debounce(this.debounceHandelSetTable, 300);
-    this.debounceHandelInputChange = debounce(this.debounceHandelInputChange, 300);
+    this.handleOnChange = debounce(this.handleOnChange, 300);
   }
 
   componentDidMount() {
-    const { sagaKey: id, getExtraApiData, apiArray, formData, changeFormData } = this.props;
-    const taskSeq =
-      (formData && formData.CHILDREN_TASK_SEQ) ||
-      (formData && formData.TASK_PREV_SEQ) ||
-      (formData && formData.EQUIP_TASK_SEQ) ||
-      (formData && formData.TASK_SEQ) ||
-      0;
+    const {
+      sagaKey: id,
+      getExtraApiData,
+      apiArray,
+      viewPageData: { taskSeq },
+    } = this.props;
 
-    changeFormData(id, 'interLockReload', qaulTaskSeq => {
-      getExtraApiData(
-        id,
-        apiArray.concat({
-          key: 'interLockList',
-          type: 'GET',
-          url: `/api/eshs/v1/common/eshsGetInterLockList/${qaulTaskSeq}`,
-        }),
-        this.setColumns,
-      );
-    });
     if (taskSeq > 0) {
       getExtraApiData(
         id,
         apiArray.concat({
           key: 'interLockList',
           type: 'GET',
-          url: `/api/eshs/v1/common/eshsGetInterLockList/${taskSeq}`,
+          url: `/api/eshs/v1/common/eshsSqQualInterLock?TASK_SEQ=${taskSeq}`,
         }),
         this.setColumns,
       );
@@ -76,59 +66,139 @@ class EshsInterLockComp extends Component {
   setColumns = () => {
     const {
       CONFIG: {
-        property: { INTERLOCK_COLUMN, INTERLOCK_TYPE, BTN_FLAG },
+        property: { INTERLOCK_TYPE, BTN_FLAG },
       },
     } = this.props;
 
     const columns = [];
-    switch (INTERLOCK_COLUMN) {
-      case 'DEFAULT': {
+    switch (INTERLOCK_TYPE) {
+      case 'INPUT': {
         const newColumns = [
-          { title: '삭제', dataIndex: '', align: 'center', width: '10%', render: (text, record) => <Checkbox key={record.INDEX}></Checkbox> },
-          { title: '해제취소', dataIndex: '', align: 'center', width: '10%', render: (text, record) => <span></span> },
+          {
+            title: '선택',
+            dataIndex: 'IS_DEL',
+            align: 'center',
+            width: '5%',
+            render: (text, record, index) => (
+              <Checkbox checked={text === '1'} onChange={e => this.handleOnChange('IS_DEL', e.target.checked ? '1' : '0', index)}></Checkbox>
+            ),
+          },
+          { title: '해제여부', dataIndex: 'IL_KIND', align: 'center', width: '10%' },
           {
             title: () => (
               <span>
                 종류/형식
-                {BTN_FLAG === 'Y' && <span onClick={this.handlePlusTd}>[+3]</span>}
+                <span className="add-row" onClick={this.handlePlusTd}>
+                  [+1]
+                </span>
               </span>
             ),
             dataIndex: 'IL_KIND_FORM',
-            width: '20%',
+            width: '15%',
             align: 'center',
-            render: (text, record) => {
-              if (INTERLOCK_TYPE !== 'VIEW') {
-                return (
-                  <TreeSelect
-                    style={{ width: '100%' }}
-                    dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                    treeData={(this && this.state && this.state.treeData) || ''}
-                    value={record.IL_KIND_FORM || ''}
-                    onChange={value => this.onChangeHandler(value, record.INDEX)}
-                  />
-                );
-              }
-              return <span>{record.FULL_PATH || ''}</span>;
-            },
+            render: (text, record, index) => (
+              <TreeSelect
+                style={{ width: '100%' }}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                treeData={(this && this.state && this.state.treeData) || ''}
+                value={record.IL_KIND_FORM || ''}
+                onChange={value => this.handleOnChange('IL_KIND_FORM', value, index)}
+              />
+            ),
           },
           {
             title: '세부기능',
             dataIndex: 'IL_FUNC',
             align: 'center',
-            width: '60%',
-            render: (text, record) => {
-              if (INTERLOCK_TYPE !== 'VIEW') {
-                return (
-                  <AntdInput
-                    className="ant-input-inline ant-input-sm input-left"
-                    defaultValue={record.IL_FUNC || ''}
-                    onChange={e => this.handleInputChange(e, record.INDEX)}
-                  />
-                );
-              }
+            width: '30%',
+            render: (text, record, index) => (
+              <AntdInput
+                className="ant-input-inline ant-input-sm input-left"
+                defaultValue={record.IL_FUNC || ''}
+                onChange={e => this.handleOnChange('IL_FUNC', e.target.value, index)}
+              />
+            ),
+          },
+          {
+            title: '신청구분',
+            dataIndex: 'REQ_GUBUN',
+            align: 'center',
+            width: '12%',
+            render: (text, record, index) => (
+              <Select defaultValue={text} style={{ width: '100%' }} onChange={value => this.handleOnChange('REQ_GUBUN', value, index)}>
+                <Option value="4">등록</Option>
+                <Option value="1">일정기간해제</Option>
+                <Option value="2">영구해제</Option>
+                <Option value="3">변경해제</Option>
+              </Select>
+            ),
+          },
+          {
+            title: '해제신청기간',
+            dataIndex: 'FROM_DT',
+            align: 'center',
+            width: '20%',
+            render: (text, record, index) =>
+              record.REQ_GUBUN === '1' ? (
+                <RangePicker
+                  defaultValue={text ? [moment(record.FROM_DT), moment(record.TO_DT)] : [null, null]}
+                  onChange={(dateType, stringType) => this.handleRangeOnChange(stringType, index)}
+                />
+              ) : (
+                ''
+              ),
+          },
+          {
+            title: '승인상태',
+            dataIndex: 'QUAL_STATUS',
+            align: 'center',
+            width: '8%',
+          },
+        ];
 
-              return <span>{record.IL_FUNC || ''}</span>;
-            },
+        columns.push(newColumns);
+        break;
+      }
+      case 'VIEW': {
+        const newColumns = [
+          {
+            title: '선택',
+            dataIndex: 'IS_DEL',
+            align: 'center',
+            width: '5%',
+            render: text => <span>{text === '1' ? '선택' : ''}</span>,
+          },
+          { title: '해제여부', dataIndex: 'IS_DEL', align: 'center', width: '10%', render: text => <span>{text === '1' ? '해제' : ''}</span> },
+          {
+            title: '종류/형식',
+            dataIndex: 'FULL_PATH',
+            width: '15%',
+            align: 'center',
+          },
+          {
+            title: '세부기능',
+            dataIndex: 'IL_FUNC',
+            align: 'center',
+            width: '30%',
+          },
+          {
+            title: '신청구분',
+            dataIndex: 'REQ_GUBUN_NM',
+            align: 'center',
+            width: '12%',
+          },
+          {
+            title: '해제신청기간',
+            dataIndex: 'FROM_DT',
+            align: 'center',
+            width: '20%',
+            render: (text, record) => <span>{record.REQ_GUBUN === '1' ? `${text || ''} ~ ${record.TO_DT || ''}` : ''}</span>,
+          },
+          {
+            title: '승인상태',
+            dataIndex: 'QUAL_STATUS_NM',
+            align: 'center',
+            width: '8%',
           },
         ];
 
@@ -145,111 +215,87 @@ class EshsInterLockComp extends Component {
     const {
       extraApiData,
       sagaKey: id,
-      changeFormData,
+      formData,
+      setFormData,
       CONFIG: {
-        property: { INTERLOCK_COLUMN, INTERLOCK_TYPE, BTN_FLAG, DEFAULT_LIST },
+        property: { INTERLOCK_TYPE },
       },
     } = this.props;
+    const { initInterLock } = this.state;
     const treeData = (extraApiData && extraApiData.treeData && extraApiData.treeData.categoryMapList) || [];
     const interLockList = (extraApiData && extraApiData.interLockList && extraApiData.interLockList.list) || [];
-    if (!interLockList.length && DEFAULT_LIST === 'Y' && INTERLOCK_TYPE !== 'VIEW') {
-      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
-      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
-      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
+    if (!(0 in interLockList) && INTERLOCK_TYPE === 'INPUT') {
+      interLockList.push(initInterLock);
     }
 
     const td = getCategoryMapListAsTree(treeData.filter(x => x.USE_YN === 'Y'));
     const categoryData = td.length > 0 ? td[0] : [];
     this.setState({ treeData: categoryData.children });
-    changeFormData(
-      id,
-      'interLockList',
-      interLockList.map((i, index) => ({ ...i, INDEX: index })),
-    );
-    this.debounceHandelSetTable();
+
+    setFormData(id, { ...formData, INTERLOCK_TYPE, interLockList });
   };
 
-  onChangeHandler = (value, key) => {
+  handleOnChange = (key, value, index) => {
     const { sagaKey: id, changeFormData, formData } = this.props;
-    const { interLockList } = formData;
+    const interLockList = (formData && formData.interLockList) || [];
+
     changeFormData(
       id,
       'interLockList',
-      interLockList.map((i, index) => (index === key ? { ...i, IL_KIND_FORM: value } : i)),
+      interLockList.map((i, seq) => (seq === index ? { ...i, [key]: value } : i)),
     );
-    this.debounceHandelSetTable();
   };
 
-  // handleInputChange = (e, key) => {
-  //   const { id, changeFormData, formData } = this.props;
-  //   const { interLockList } = formData;
-  //   changeFormData(
-  //     id,
-  //     'interLockList',
-  //     interLockList.map((i, index) => (index === key ? { ...i, IL_FUNC: e.target.value } : i)),
-  //   );
-  // };
+  handleRangeOnChange = (dateArr, index) => {
+    const { sagaKey: id, changeFormData, formData } = this.props;
+    const interLockList = (formData && formData.interLockList) || [];
+
+    changeFormData(
+      id,
+      'interLockList',
+      interLockList.map((i, seq) =>
+        seq === index
+          ? {
+              ...i,
+              FROM_DT: 0 in dateArr ? dateArr[0] : '',
+              TO_DT: 1 in dateArr ? dateArr[1] : '',
+            }
+          : i,
+      ),
+    );
+  };
 
   handlePlusTd = () => {
     const { sagaKey: id, changeFormData, formData } = this.props;
     const { initInterLock } = this.state;
     const { interLockList } = formData;
-    let index = interLockList.length;
-    const initInterLockList = [
-      { ...initInterLock, INDEX: index++ },
-      { ...initInterLock, INDEX: index++ },
-      { ...initInterLock, INDEX: index++ },
-    ];
+    const initInterLockList = [initInterLock];
     changeFormData(id, 'interLockList', interLockList.concat(initInterLockList));
-    this.debounceHandelSetTable();
-  };
-
-  debounceHandelSetTable = () => {
-    const { formData, id } = this.props;
-    const { columns } = this.state;
-    const { interLockList } = formData;
-    return this.setState({
-      interLockTable: [
-        <AntdLineTable
-          key={`${id}_interLock`}
-          className="tableWrapper"
-          rowKey={interLockList && interLockList.INDEX}
-          columns={columns}
-          dataSource={interLockList || []}
-          bordered
-          scroll={{ y: 135 }}
-          pagination={false}
-          footer={() => <span>{`${interLockList.length} 건`}</span>}
-        />,
-      ],
-    });
-  };
-
-  handleInputChange = (e, rowIndex) => {
-    e.persist();
-    this.debounceHandelInputChange(e, rowIndex);
-  };
-
-  debounceHandelInputChange = (e, rowIndex) => {
-    const { sagaKey: id, changeFormData, formData } = this.props;
-    const { interLockList } = formData;
-    changeFormData(
-      id,
-      'interLockList',
-      interLockList.map((i, index) => (index === rowIndex ? { ...i, IL_FUNC: e.target.value } : i)),
-    );
   };
 
   render() {
-    const { CONFIG } = this.props;
-    const { interLockTable } = this.state;
-    return <>{interLockTable}</>;
+    const { formData, sagaKey: id } = this.props;
+    const { columns } = this.state;
+    const interLockList = (formData && formData.interLockList) || [];
+    return (
+      <>
+        <AntdLineTable
+          key={`${id}_interLock`}
+          className="tableWrapper"
+          columns={columns}
+          dataSource={interLockList || []}
+          bordered
+          scroll={{ y: 270 }}
+          pagination={false}
+          footer={() => <span>{`${interLockList.length} 건`}</span>}
+        />
+      </>
+    );
   }
 }
 
 EshsInterLockComp.propTypes = {
   CONFIG: PropTypes.object,
-  id: PropTypes.string,
   getExtraApiData: PropTypes.func,
   changeFormData: PropTypes.func,
   formData: PropTypes.object,
@@ -257,6 +303,7 @@ EshsInterLockComp.propTypes = {
   extraApiData: PropTypes.object,
   viewPageData: PropTypes.object,
   sagaKey: PropTypes.string,
+  setFormData: PropTypes.func,
 };
 
 EshsInterLockComp.defaultProps = {

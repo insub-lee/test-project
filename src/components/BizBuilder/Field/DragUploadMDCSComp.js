@@ -7,17 +7,26 @@ import { LoadingOutlined } from '@ant-design/icons';
 const { Dragger } = Upload;
 
 class DragUploadMDCSComp extends Component {
-  state = {
-    fileInfo: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      fileInfo: {
+        WORK_SEQ: -1,
+        TASK_SEQ: -1,
+        CONT_SEQ: -1,
+        FIELD_NM: undefined,
+        TYPE: undefined,
+        DETAIL: [],
+      },
+    };
+  }
 
   componentDidMount() {
-    console.debug('componentDidMount');
     const { WORK_SEQ, COMP_FIELD, COMP_TAG, colData } = this.props;
     const initfiles = {
       WORK_SEQ,
-      TASK_SEQ: -1,
-      CONT_SEQ: -1,
+      TASK_SEQ: (colData && colData.TASK_SEQ) || -1,
+      CONT_SEQ: (colData && colData.CONT_SEQ) || -1,
       FIELD_NM: COMP_FIELD,
       TYPE: COMP_TAG,
       DETAIL: colData && colData.DETAIL ? colData.DETAIL : [],
@@ -69,6 +78,7 @@ class DragUploadMDCSComp extends Component {
     }
     const tmpDetail = fileList.map(fl => (fl.uid === file.uid ? { ...fl, ...response, type: doctype, down } : fl));
     const tmpFileInfo = { ...fileInfo, DETAIL: tmpDetail };
+    console.debug('tmpFileInfo', tmpFileInfo);
     this.setState({ fileInfo: tmpFileInfo }, () => this.changeFormDataHanlder());
   };
 
@@ -158,12 +168,12 @@ class DragUploadMDCSComp extends Component {
             {fileList.map(file => (
               <div style={{ height: '25px' }}>
                 {file.type === 'LoadingOutlined' ? (
-                  <LoadingOutlined style={{ fontSize: '18px', marginRight: '5px' }} />
+                  <LoadingOutlined style={{ fontSize: '18px', marginRight: '5px', verticalAlign: 'middle' }} />
                 ) : (
-                  <Icon type={file.type} style={{ fontSize: '18px', marginRight: '5px' }} />
+                  <Icon type={file.type} style={{ fontSize: '18px', marginRight: '5px', verticalAlign: 'middle' }} />
                 )}
-                <div style={{ verticalAlign: 'middle', height: '28px', display: 'inline-block', cursor: 'pointer' }}>{file.fileName}</div>
-                <Icon onClick={() => this.onClickRemoveFile(file)} type="delete" style={{ fontSize: '15px', verticalAlign: 'baseline', marginLeft: '10px' }} />
+                <div style={{ verticalAlign: 'middle', height: '28px', display: 'inline', cursor: 'pointer' }}>{file.fileName}</div>
+                <Icon onClick={() => this.onClickRemoveFile(file)} type="delete" style={{ fontSize: '15px', marginLeft: '10px', verticalAlign: 'middle' }} />
               </div>
             ))}
           </div>

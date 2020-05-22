@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactExport from 'react-data-export';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import { FileExcelOutlined } from '@ant-design/icons';
 
 const { ExcelFile } = ReactExport;
@@ -88,7 +88,7 @@ class ExcelDownloadComp extends Component {
         filename={this.props.fileName}
         element={
           <span className={this.props.className}>
-            <StyledButton className={`btn-primary ${btnSize}`}>
+            <StyledButton className={`btn-primary btn-sm ${btnSize}`}>
               <FileExcelOutlined />
               &nbsp;{this.props.btnText}
             </StyledButton>
