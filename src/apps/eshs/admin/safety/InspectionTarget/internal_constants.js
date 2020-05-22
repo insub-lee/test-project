@@ -4,6 +4,7 @@ export const address = {
   generatePositionNo: `${baseUrl}generatePositionNo`,
   afterProcessing: `${baseUrl}afterProcessing`,
   search: `${baseUrl}search`,
+  insertIssueNote: `${baseUrl}insertIssueNote`,
 };
 export const VIEW_TYPE = { INPUT: 'INPUT', VIEW: 'VIEW', MODIFY: 'MODIFY', LIST: 'LIST' };
 export const META_SEQ = {
