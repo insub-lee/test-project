@@ -40,7 +40,7 @@ function CustomDataTableComp(props) {
         // FIRE_CODE: FE (소화기)
         data: formData,
       }).then(({ response }) => {
-        console.debug('### response of CustomDataTableComp: ', response);
+        // console.debug('### response of CustomDataTableComp: ', response);
         if (response?.result === 1) {
           // console.debug('£££ result : ', response?.data instanceof Object);
           if (response?.data instanceof Array) {

@@ -31,7 +31,7 @@ const CustomValueRadioComp = props => {
   }, [defaultValue]);
 
   function onChangeHandler(value) {
-    console.debug('£££ onChangeHandler :', value instanceof String, value, isRequired, changeFormData);
+    // console.debug('£££ onChangeHandler :', value instanceof String, value, isRequired, changeFormData);
     if (typeof value === 'string') {
       if (isRequired) {
         // 기본값인지 체크
