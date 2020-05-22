@@ -95,7 +95,7 @@ class MultiUserSelectComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, colData, isSearch, searchCompRenderer, formData, COMP_FIELD } = this.props;
+    const { CONFIG, visible, colData, isSearch, searchCompRenderer, formData, COMP_FIELD, readOnly, viewPageData } = this.props;
     if (!visible) {
       return null;
     }
@@ -115,7 +115,10 @@ class MultiUserSelectComp extends React.Component {
       );
     }
 
-    // if (readOnly || viewPageData.viewType.toUpperCase() === 'LIST' || viewPageData.viewType.toUpperCase() === 'VIEW') {};
+    if (readOnly || viewPageData.viewType.toUpperCase() === 'LIST' || viewPageData.viewType.toUpperCase() === 'VIEW') {
+      console.debug(typeof colData, JSON.parse(colData));
+      return <span>TEST</span>;
+    }
 
     return (
       <>

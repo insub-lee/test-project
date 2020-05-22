@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select } from 'antd';
+import { Input, Select, Checkbox } from 'antd';
 import { debounce } from 'lodash';
 import request from 'utils/request';
 import StyledInput from '../styled/Form/StyledInput';
@@ -82,6 +82,10 @@ class ListButtonConfig extends React.Component {
             <Select.Option value="MODIFY">MODIFY</Select.Option>
           </AntdSelect>
         </div>
+        <div className="popoverItem popoverItemInput">
+          <span className="spanLabel">버튼 삭제 여부</span>
+          <Checkbox defaultValue={configInfo.property.hasNoButtons} onChange={e => handleChangeViewCompData('hasNoButtons', e.target.checked)} />
+        </div>
       </>
     );
   }
@@ -93,6 +97,10 @@ ListButtonConfig.propTypes = {
   rowIndex: PropTypes.number,
   colIndex: PropTypes.number,
   configInfo: PropTypes.object,
+};
+
+ListButtonConfig.defaultProps = {
+  configInfo: { property: { hasButtons: true } },
 };
 
 export default ListButtonConfig;

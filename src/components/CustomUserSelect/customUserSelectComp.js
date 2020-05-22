@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { List, Tree, Row, Col, Checkbox, Button, Icon, Modal } from 'antd';
+import { List, Tree, Row, Col, Checkbox, Icon } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
 import StyledButton from 'commonStyled/Buttons/StyledButton';
@@ -10,7 +10,6 @@ import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import UserSelectWrapper from 'commonStyled/MdcsStyled/Wrapper/UserSelectWrapper';
 
 // Component Attribute 및 Event Method 정리
-// 빌더에서 UserSelectComp 쓸 때 사용
 // <UserSelect
 //   initUserList={this.state.selectedUserList}  **초기값 셋팅 (int)
 //   treeDataSource={list} ** 부서정보 Data Bind
@@ -39,11 +38,13 @@ const getTreeData = deptList =>
     : [];
 
 class CustomUserSelectComp extends Component {
-  state = {
-    deptUserList: [],
-    checkUserList: [],
-    selectedUserList: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      checkUserList: [],
+      selectedUserList: [],
+    };
+  }
 
   onInitComplete = id => {
     const { result } = this.props;
@@ -166,9 +167,6 @@ class CustomUserSelectComp extends Component {
 
   render() {
     const { treeDataSource, userDataList, result, isWorkBuilder } = this.props;
-    console.debug('userselect', result);
-    console.debug('treeDataSource >> ', treeDataSource);
-    console.debug('@@@@PROPS@@@@', this.props);
     return (
       <UserSelectWrapper>
         <Row gutter={0}>
@@ -251,8 +249,6 @@ class CustomUserSelectComp extends Component {
   }
 }
 CustomUserSelectComp.propTypes = {
-  selectedDeptId: PropTypes.number,
-  selectedUserList: PropTypes.array,
   initUserList: PropTypes.array,
   isWorkBuilder: PropTypes.bool,
 };

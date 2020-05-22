@@ -1,8 +1,8 @@
 import React from 'react';
 import BizBuilderBase from 'components/BizBuilderBase';
-import UserSelect from 'components/UserSelect';
+import List from './List';
 
-const RegistMember = () => <BizBuilderBase sagaKey="RegistMember" workSeq={7553} viewType="INPUT" CustomInputPage={UserSelect} />;
+const RegistMember = () => <BizBuilderBase sagaKey="RegistMember" workSeq={7553} viewType="MODIFY" CustomListPage={List} />;
 
 RegistMember.propTypes = {};
 

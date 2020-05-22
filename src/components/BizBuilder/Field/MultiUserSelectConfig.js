@@ -1,11 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select, Checkbox } from 'antd';
-import StyledInput from '../styled/Form/StyledInput';
-import StyledSelect from '../styled/Form/StyledSelect';
+import { Checkbox } from 'antd';
 
-const AntdInput = StyledInput(Input);
-const AntdSelect = StyledSelect(Select);
 class MultiUserSelectConfig extends React.Component {
   constructor(props) {
     super(props);
@@ -27,10 +23,6 @@ class MultiUserSelectConfig extends React.Component {
     return (
       <>
         <div className="popoverItem popoverItemInput">
-          <span className="spanLabel">다중입력 여부</span>
-          <Checkbox checked={configInfo.property.isMultiple} onChange={e => handleChangeViewCompData('isMultiple', e.target.checked)} />
-        </div>
-        <div className="popoverItem popoverItemInput">
           <span className="spanLabel">
             선택화면 바로 노출 여부
             <br />
@@ -38,7 +30,7 @@ class MultiUserSelectConfig extends React.Component {
           </span>
           <Checkbox checked={configInfo.property.isSubComp} onChange={e => handleChangeViewCompData('isSubComp', e.target.checked)} />
         </div>
-        <div className="popoverItem popoverItemInput">
+        {/* <div className="popoverItem popoverItemInput">
           <span className="spanLabel">표현식</span>
           <AntdSelect
             defaultValue={configInfo.property.expression}
@@ -53,15 +45,15 @@ class MultiUserSelectConfig extends React.Component {
             <Select.Option value="nameAndEmpNo">이름, 사번</Select.Option>
             <Select.Option value="All">이름, 사번, 부서</Select.Option>
           </AntdSelect>
-        </div>
-        <div className="popoverItem popoverItemInput">
+        </div> */}
+        {/* <div className="popoverItem popoverItemInput">
           <span className="spanLabel">placeholder 설정</span>
           <AntdInput
             disabled={configInfo.property.isSubComp}
             defaultValue={configInfo.property.placeholder}
             onChange={e => handleChangeViewCompData('placeholder', e.target.value)}
           />
-        </div>
+        </div> */}
       </>
     );
   }

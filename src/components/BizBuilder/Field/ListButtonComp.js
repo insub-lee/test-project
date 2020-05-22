@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'antd';
-import BizBuilderBase from 'components/BizBuilderBase';
+// import BizBuilderBase from 'components/BizBuilderBase';
 import ExtraBuilder from 'components/BizBuilderBase/viewComponent/ExtraBuilder';
 import StyledButton from '../styled/Buttons/StyledButton';
 
@@ -42,6 +42,10 @@ class ListButtonComp extends React.Component {
             viewType={CONFIG.property.VIEW_TYPE}
             parentTaskSeq={rowData.TASK_SEQ}
             parentWorkSeq={CONFIG.property.SELECTED_BUILDER}
+            ViewCustomButtons={CONFIG.property.hasNoButtons ? () => null : null}
+            InputCustomButtons={CONFIG.property.hasNoButtons ? () => null : null}
+            ModifyCustomButtons={CONFIG.property.hasNoButtons ? () => null : null}
+            ListCustomButtons={CONFIG.property.hasNoButtons ? () => null : null}
           />
         </Modal>
       </>

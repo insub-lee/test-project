@@ -44,6 +44,7 @@ import MultiUserSelectConfig from 'components/BizBuilder/Field/MultiUserSelectCo
 import EshsQualHeaderConfig from 'components/BizBuilder/Field/EshsQualHeaderConfig';
 import DefaultValueConfig from 'components/BizBuilder/Field/DefaultValueConfig';
 import TextDefaultValueConfig from 'components/BizBuilder/Field/TextDefaultValueConfig';
+import JsonTableConfig from 'components/BizBuilder/Field/JsonTableConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -90,4 +91,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/EshsQualHeaderConfig': { renderer: property => <EshsQualHeaderConfig {...property} /> },
   'components/BizBuilder/Field/DefaultValueConfig': { renderer: property => <DefaultValueConfig {...property} /> },
   'components/BizBuilder/Field/TextDefaultValueConfig': { renderer: property => <TextDefaultValueConfig {...property} /> },
+  'components/BizBuilder/Field/JsonTableConfig': { renderer: property => <JsonTableConfig {...property} /> },
 };
