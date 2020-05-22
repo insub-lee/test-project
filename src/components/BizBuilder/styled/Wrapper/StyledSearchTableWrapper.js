@@ -1,36 +1,36 @@
 import styled from 'styled-components';
 
-const StyledSearchWrapper = styled.div`
+const StyledSearchTableWrapper = styled.div`
   margin-bottom: 40px;
-  background: #f2f4f7;
-  border-radius: 5px;
-  border: 2px solid #b5bdcb;
-  padding: 15px 10px;
-
   .view-designer-group-search-wrap {
     width: 100%;
     display: block;
 
     .view-designer-table {
-      border: 0;
+      border: 1px solid #ddd;
       border-spacing: 0;
       width: 100%;
       table-layout: fixed;
 
       .view-designer-row {
-        border-bottom: 0;
         .view-designer-col {
-          padding: 4px 8px;
+          border-bottom: 1px solid #ddd;
+          padding: 6px 8px;
           font-size: 12px;
           width: auto;
-          background-color: transparent;
+          background-color: #ffffff;
           color: #666;
-          border: 0;
+          border-right: 1px solid #ddd;
           &.view-designer-label {
-            text-align: left;
+            background: #f7f7f7;
+            text-align: center;
             color: #000;
+            font-size: 12px;
+            padding: 6px 8px;
+            border-bottom: 1px solid #ddd;
             width: 130px;
             font-weight: 500;
+            border-right: 1px solid #ddd;
           }
         }
       }
@@ -44,4 +44,4 @@ const StyledSearchWrapper = styled.div`
   }
 `;
 
-export default StyledSearchWrapper;
+export default StyledSearchTableWrapper;

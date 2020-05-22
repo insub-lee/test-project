@@ -7,12 +7,12 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
-import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import message from 'components/Feedback/message';
 import Group from 'components/BizBuilder/Sketch/Group';
 import MessageContent from 'components/Feedback/message.style2';
@@ -21,11 +21,11 @@ import SafetyWorkViewer from '../../safetyWorkView';
 import Styled from './Styled';
 
 const AntdModal = StyledModalWrapper(Modal);
-const AntdTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdSearch = StyledSearchInput(Input.Search);
-const StyledButton = StyledAntdButton(Button);
-const AntdDatePicker = StyledPicker(DatePicker);
+const AntdDatePicker = StyledDatePicker(DatePicker);
 const AntdSelect = StyledSelect(Select);
+const StyledButton = StyledAntdButton(Button);
 
 const { Option } = Select;
 
@@ -566,19 +566,19 @@ class SafetyWorkList extends Component {
               </table>
             </div>
             <div className="view-designer-group-search-btn-wrap">
-              <StyledButton className="btn-primary btn-gray btn-first" onClick={() => this.onSearch()}>
+              <StyledButton className="btn-gray mr5 btn-sm" onClick={() => this.onSearch()}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary btn-gray btn-first" onClick={() => alert('목록인쇄')}>
+              <StyledButton className="btn-gray mr5 btn-sm" onClick={() => alert('목록인쇄')}>
                 목록인쇄
               </StyledButton>
-              <StyledButton className="btn-primary btn-gray" onClick={() => alert('점검일지 인쇄')}>
+              <StyledButton className="btn-gray  btn-sm" onClick={() => alert('점검일지 인쇄')}>
                 점검일지 인쇄
               </StyledButton>
             </div>
           </Group>
         </StyledSearchWrapper>
-        <ContentsWrapper>
+        <StyledContentsWrapper>
           <CustomTableStyled>
             <AntdTable
               pagination={false}
@@ -587,7 +587,7 @@ class SafetyWorkList extends Component {
               footer={() => <div style={{ textAlign: 'center' }}>{`총 ${safetyWorks.length === 0 ? 0 : safetyWorks.length} 건`}</div>}
             />
           </CustomTableStyled>
-        </ContentsWrapper>
+        </StyledContentsWrapper>
         <AntdModal
           title={modalTitle}
           width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '70%'}
