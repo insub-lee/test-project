@@ -41,6 +41,7 @@ import EshsQualCondConfig from 'components/BizBuilder/Field/EshsQualCondConfig';
 import EshsQualHeaderConfig from 'components/BizBuilder/Field/EshsQualHeaderConfig';
 import DefaultValueConfig from 'components/BizBuilder/Field/DefaultValueConfig';
 import TextDefaultValueConfig from 'components/BizBuilder/Field/TextDefaultValueConfig';
+import EshsCmpnyConfig from 'components/BizBuilder/Field/EshsCmpnyConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -84,4 +85,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/EshsQualHeaderConfig': { renderer: property => <EshsQualHeaderConfig {...property} /> },
   'components/BizBuilder/Field/DefaultValueConfig': { renderer: property => <DefaultValueConfig {...property} /> },
   'components/BizBuilder/Field/TextDefaultValueConfig': { renderer: property => <TextDefaultValueConfig {...property} /> },
+  'components/BizBuilder/Field/EshsCmpnyConfig': { renderer: property => <EshsCmpnyConfig {...property} /> },
 };
