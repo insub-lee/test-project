@@ -126,6 +126,7 @@ import EshsQualInterLockReviewComp from 'components/BizBuilder/Field/EshsQualInt
 import DefaultValueComp from 'components/BizBuilder/Field/DefaultValueComp';
 import TextDefaultValueComp from 'components/BizBuilder/Field/TextDefaultValueComp';
 import CustomTreeSelectSearchComp from 'components/BizBuilder/Field/CustomTreeSelectSearchComp';
+import NumberCompFloat from 'components/BizBuilder/Field/NumberCompFloat';
 
 export const CompInfo = {
   'components/BizBuilder/Field/VaildationListComp': { renderer: property => <VaildationListComp {...property} /> },
@@ -254,4 +255,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/DefaultValueComp': { renderer: property => <DefaultValueComp {...property} /> },
   'components/BizBuilder/Field/TextDefaultValueComp': { renderer: property => <TextDefaultValueComp {...property} /> },
   'components/BizBuilder/Field/CustomTreeSelectSearchComp': { renderer: property => <CustomTreeSelectSearchComp {...property} /> },
+  'components/BizBuilder/Field/NumberCompFloat': { renderer: property => <NumberCompFloat {...property} /> },
 };
