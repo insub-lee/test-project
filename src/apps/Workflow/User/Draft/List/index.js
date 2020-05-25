@@ -4,6 +4,8 @@ import { Table, Modal, Icon, Button, Input } from 'antd';
 import moment from 'moment';
 
 import BizBuilderBase from 'components/BizBuilderBase';
+import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
+
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
@@ -23,6 +25,7 @@ class DraftList extends Component {
         taskSeq: undefined,
         viewMetaSeq: undefined,
       },
+      workPrcProps: undefined,
     };
   }
 
@@ -74,6 +77,8 @@ class DraftList extends Component {
     if (record.STATUS === 3) {
       record.PROC_STATUS = 3;
     }
+    const { DRAFT_DATA } = record;
+    this.setState({ workPrcProps: { ...DRAFT_DATA } });
     this.props.setSelectedRow(record);
     this.props.setViewVisible(true);
   };
@@ -114,8 +119,13 @@ class DraftList extends Component {
 
   onClickModify = () => {
     const { selectedRow } = this.props;
+    console.debug('draft', this.props);
     const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
-    this.setState({ coverView });
+    this.setState(prevState => {
+      const { workPrcProps } = prevState;
+      const nWorkPrcProps = { ...workPrcProps, draftMethod: 'modify', darft_id: selectedRow.DRAFT_ID };
+      return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
+    });
   };
 
   onClickModifyDoCoverView = () => {
@@ -127,8 +137,9 @@ class DraftList extends Component {
 
   render() {
     // const { approveList } = this.props;
-    const { draftList, selectedRow, opinionVisible, setOpinionVisible } = this.props;
-    const { modalWidth, coverView } = this.state;
+    const { draftList, selectedRow, opinionVisible, setOpinionVisible, profile } = this.props;
+    const { modalWidth, coverView, workPrcProps } = this.state;
+
     return (
       <>
         <ContentsWrapper>
@@ -173,13 +184,18 @@ class DraftList extends Component {
             ViewCustomButtons={({ closeBtnFunc, onClickModify }) => (
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
                 {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
-                  <StyledButton className="btn-primary btn-first" onClick={this.onHoldRelase}>
-                    홀드해제
-                  </StyledButton>
+                  <>
+                    <StyledButton className="btn-primary btn-first" onClick={this.onHoldRelase}>
+                      홀드해제
+                    </StyledButton>
+                    {profile && profile.USER_ID === selectedRow.DRAFTER_ID && (
+                      <StyledButton className="btn-primary btn-first" onClick={onClickModify}>
+                        표지수정
+                      </StyledButton>
+                    )}
+                  </>
                 )}
-                <StyledButton className="btn-primary btn-first" onClick={onClickModify}>
-                  표지수정
-                </StyledButton>
+
                 <StyledButton className="btn-light" onClick={closeBtnFunc}>
                   닫기
                 </StyledButton>
@@ -203,6 +219,8 @@ class DraftList extends Component {
             workSeq={coverView.workSeq}
             taskSeq={coverView.taskSeq}
             viewMetaSeq={coverView.viewMetaSeq}
+            CustomWorkProcessModal={WorkProcessModal}
+            workPrcProps={workPrcProps}
             onCloseCoverView={this.onCloseCoverView}
             onCloseModalHandler={this.onClickModifyDoCoverView}
             ViewCustomButtons={({ onCloseCoverView }) => (

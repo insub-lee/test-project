@@ -134,6 +134,7 @@ class Amendment extends Component {
       draftType,
       nodeIds: selectedNodeIds,
       degreeFlag: Number(change),
+      draftMethod: 'insert',
     };
     onShowModal(workSeq, taskSeq, viewChangeSeq, nodeId, 'REVISION', workPrcProps);
   };

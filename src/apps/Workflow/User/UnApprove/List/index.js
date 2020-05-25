@@ -38,6 +38,7 @@ class UnApproveList extends Component {
       key: 'NODETYPE',
       width: '10%',
       align: 'center',
+      render: (text, record) => (record.APPV_USER_ID === record.ORG_APPV_USER_ID ? text : `${text}(위임결재)`),
     },
     {
       title: 'Title',
@@ -74,6 +75,7 @@ class UnApproveList extends Component {
 
   render() {
     const { unApproveList } = this.props;
+    console.debug(unApproveList);
     return (
       <>
         <StyledContentsWrapper>
