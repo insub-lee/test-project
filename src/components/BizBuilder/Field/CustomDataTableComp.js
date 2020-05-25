@@ -42,8 +42,9 @@ function CustomDataTableComp(props) {
       }).then(({ response }) => {
         // console.debug('### response of CustomDataTableComp: ', response);
         if (response?.result === 1) {
-          // console.debug('£££ result : ', response?.data instanceof Object);
+          // console.debug('£££ result 1 : ', response?.data instanceof Object, response?.data);
           if (response?.data instanceof Array) {
+            // console.debug('£££ result 2 : ', response?.data instanceof Array, response?.data);
             setDataSource(response?.data);
             setIsLoaded(true);
           }
@@ -85,14 +86,14 @@ function CustomDataTableComp(props) {
       case cont.RADIO_: {
         result = (
           <RadioGroup value={text}>
-            <Radio value="Y">정상</Radio>
-            <Radio value="N">불량</Radio>
+            <Radio value="Y">Y</Radio>
+            <Radio value="N">N</Radio>
           </RadioGroup>
         );
       }
     }
     // console.debug('£££ colRenderer: ', result);
-    return <div>{result}</div>;
+    return <div style={{ textAlign: 'center' }}>{result}</div>;
   };
 
   const columnRenderer = () => {
