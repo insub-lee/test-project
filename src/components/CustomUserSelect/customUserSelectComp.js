@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 import { List, Tree, Row, Col, Checkbox, Icon } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import UserSelectWrapper from 'commonStyled/MdcsStyled/Wrapper/UserSelectWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import UserSelectWrapper from 'components/BizBuilder/styled/Wrapper/UserSelectWrapper';
 
 // Component Attribute 및 Event Method 정리
 // <UserSelect
