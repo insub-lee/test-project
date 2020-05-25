@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Input, message, Popconfirm } from 'antd';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
 
 import UserSelect from 'components/UserSelect';
 
-const AntdModal = StyledContentsModal(Modal);
+const AntdModal = StyledAntdModalPad(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
 
 class Edit extends Component {
@@ -136,6 +136,7 @@ class Edit extends Component {
                 <th>안전책임자</th>
                 <td>
                   <AntdSearch
+                    className="input-search-xs"
                     readOnly
                     placeholder="select me"
                     value={formData && formData.OFFICER_NAME}
@@ -148,6 +149,7 @@ class Edit extends Component {
                 <th>안전유지자</th>
                 <td>
                   <AntdSearch
+                    className="input-search-xs"
                     readOnly
                     placeholder="select me"
                     value={formData && formData.KEEPER_NAME}
@@ -160,6 +162,7 @@ class Edit extends Component {
                 <th>안전보건담당자</th>
                 <td>
                   <AntdSearch
+                    className="input-search-xs"
                     readOnly
                     placeholder="select me"
                     value={formData && formData.MANAGER_NAME}
@@ -170,27 +173,34 @@ class Edit extends Component {
               </tr>
             </tbody>
           </table>
-          <StyledButtonWrapper className="btn-wrap-center">
+          <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
             {formData && formData.actionType === 'I' ? (
-              <StyledButton className="btn-primary btn-first" onClick={() => this.onSave()}>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onSave()}>
                 저장
               </StyledButton>
             ) : (
               <>
-                <StyledButton className="btn-primary btn-first" onClick={() => this.onSave()}>
+                <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onSave()}>
                   수정
                 </StyledButton>
                 <Popconfirm title="삭제하시겠습니끼?" onConfirm={() => this.onRemoveDo()}>
-                  <StyledButton className="btn-primary  btn-first">삭제</StyledButton>
+                  <StyledButton className="btn-primary btn-sm mr5">삭제</StyledButton>
                 </Popconfirm>
               </>
             )}
-            <StyledButton className="btn-light" onClick={() => this.onCancel()}>
+            <StyledButton className="btn-light btn-sm" onClick={() => this.onCancel()}>
               RESET
             </StyledButton>
           </StyledButtonWrapper>
         </StyledHtmlTable>
-        <AntdModal visible={isOpenOModal || isOpenKModal || isOpenMModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={null}>
+        <AntdModal
+          className="modal-none-head"
+          visible={isOpenOModal || isOpenKModal || isOpenMModal}
+          width="1000px"
+          onCancel={this.onCancel}
+          destroyOnClose
+          footer={null}
+        >
           {isOpenOModal && (
             <UserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onOfficerSelectedComplete} onCancel={this.onCancel} />
           )}
