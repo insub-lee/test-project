@@ -15,13 +15,14 @@ export default function Add({ sagaKey, detail, title, viewMetaSeqHandler, onClos
         const { POSITION_NO, REG_DATE, REG_USER_ID, CHIP_NO } = formData;
 
         if (typeof REG_DATE === 'string') {
-          const processedDate = REG_DATE.split('-').join('');
+          // const processedDate = REG_DATE.split('-').join('');
 
+          console.trace('£££ insertIssueNote');
           // console.debug('£££ data : ', ISSUE_YN, POSITION_NO, REG_DATE, processedDate, ISSUE_NOTE, REG_USER_ID, CHIP_NO);
           request({
             method: 'POST',
-            url: `${address.insertIssueNote}`,
-            data: { ISSUE_YN, POSITION_NO, REG_DATE: processedDate, ISSUE_NOTE, REG_USER_ID, CHIP_NO },
+            url: `${address.registerIssueNote}`,
+            data: { ISSUE_YN, POSITION_NO, REG_DATE, ISSUE_NOTE, REG_USER_ID, CHIP_NO },
           }).then(({ response }) => {
             console.debug('£££ response : ', response);
             if (response?.result === 1) {
@@ -41,7 +42,7 @@ export default function Add({ sagaKey, detail, title, viewMetaSeqHandler, onClos
     }
   };
 
-  const shoudFireAPI = () => {
+  const shoudFireAPI = title => {
     if (title === '저장') {
       insertIssueNote();
     } else {
@@ -51,7 +52,7 @@ export default function Add({ sagaKey, detail, title, viewMetaSeqHandler, onClos
   };
 
   return (
-    <StyledButton className="btn-primary" onClick={() => shoudFireAPI()}>
+    <StyledButton className="btn-primary" onClick={() => shoudFireAPI(title)}>
       {title}
     </StyledButton>
   );
