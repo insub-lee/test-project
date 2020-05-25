@@ -26,7 +26,8 @@ class ModifyPage extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getProcessRule, workInfo, workPrcProps } = this.props;
+    const { sagaKey: id, getProcessRuleByModify, workInfo, workPrcProps, draftInfo } = this.props;
+    console.debug('modify', workPrcProps, this.props);
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
@@ -43,11 +44,12 @@ class ModifyPage extends Component {
     if (isWorkflowUsed && prcId !== -1) {
       const payload = {
         PRC_ID: Number(prcId),
+        DRAFT_INFO: draftInfo,
         DRAFT_DATA: {
           ...workPrcProps,
         },
       };
-      getProcessRule(id, payload);
+      getProcessRuleByModify(id, payload);
     }
   }
 
@@ -182,6 +184,7 @@ class ModifyPage extends Component {
       isLoading,
       workInfo,
       CustomWorkProcess,
+      CustomWorkProcessModal,
       reloadId,
     } = this.props;
 
@@ -196,7 +199,14 @@ class ModifyPage extends Component {
         <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
             {isWorkflowUsed && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
-              <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
+              <WorkProcess
+                id={id}
+                CustomWorkProcess={CustomWorkProcess}
+                CustomWorkProcessModal={CustomWorkProcessModal}
+                PRC_ID={PRC_ID}
+                processRule={processRule}
+                setProcessRule={setProcessRule}
+              />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             {ModifyCustomButtons ? (

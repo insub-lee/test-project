@@ -31,10 +31,18 @@ class ApproveList extends Component {
         taskSeq: undefined,
         viewMetaSeq: undefined,
       },
+      isDcc: false,
     };
   }
 
   componentDidMount() {
+    const { profile } = this.props;
+    const { ACCOUNT_IDS_DETAIL } = profile;
+    const vList = ACCOUNT_IDS_DETAIL && ACCOUNT_IDS_DETAIL.V.split(',');
+    const vId = vList.findIndex(v => v === '1221');
+    if (vId >= 0) {
+      this.setState({ isDcc: true });
+    }
     this.props.getApproveList();
   }
 
@@ -60,6 +68,7 @@ class ApproveList extends Component {
       key: 'NODETYPE',
       width: '10%',
       align: 'center',
+      render: (text, record) => (record.APPV_USER_ID === record.ORG_APPV_USER_ID ? text : `${text}(위임결재)`),
     },
     {
       title: 'Title',
@@ -113,6 +122,12 @@ class ApproveList extends Component {
     this.setState({ coverView });
   };
 
+  onCloseCoverView = () => {
+    const { coverView } = this.state;
+    const tempCoverView = { ...coverView, visible: false };
+    this.setState({ coverView: tempCoverView });
+  };
+
   onClickModify = () => {
     const { selectedRow } = this.props;
     const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
@@ -128,8 +143,8 @@ class ApproveList extends Component {
 
   render() {
     const { approveList, selectedRow, opinionVisible, setOpinionVisible } = this.props;
-    console.debug('selectedRow', selectedRow);
-    const { modalWidth, coverView } = this.state;
+    const { modalWidth, coverView, isDcc } = this.state;
+    
     return (
       <>
         <ContentsWrapper>
@@ -176,13 +191,17 @@ class ApproveList extends Component {
                 ViewCustomButtons={({ closeBtnFunc, onClickModify }) => (
                   <div style={{ textAlign: 'center', marginTop: '12px' }}>
                     {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
-                      <StyledButton className="btn-primary btn-first" onClick={this.onHoldRelase}>
-                        홀드해제
-                      </StyledButton>
+                      <>
+                        <StyledButton className="btn-primary btn-first" onClick={this.onHoldRelase}>
+                          홀드해제
+                        </StyledButton>
+                        {isDcc && (
+                          <StyledButton className="btn-primary btn-first" onClick={onClickModify}>
+                            표지수정
+                          </StyledButton>
+                        )}
+                      </>
                     )}
-                    <StyledButton className="btn-primary btn-first" onClick={onClickModify}>
-                      표지수정
-                    </StyledButton>
                     <StyledButton className="btn-light" onClick={closeBtnFunc}>
                       닫기
                     </StyledButton>
@@ -220,6 +239,42 @@ class ApproveList extends Component {
                   닫기
                 </StyledButton>
               </div>
+            </AntdModal>
+            <AntdModal
+              className="modalWrapper modalTechDoc modalCustom"
+              title="표지 보기"
+              width={modalWidth}
+              destroyOnClose
+              visible={coverView.visible}
+              onCancel={this.onCloseCoverView}
+              footer={[]}
+            >
+              <BizBuilderBase
+                sagaKey="CoverView"
+                viewType={coverView.viewType}
+                workSeq={coverView.workSeq}
+                taskSeq={coverView.taskSeq}
+                viewMetaSeq={coverView.viewMetaSeq}
+                onCloseCoverView={this.onCloseCoverView}
+                onCloseModalHandler={this.onClickModifyDoCoverView}
+                ViewCustomButtons={({ onCloseCoverView }) => (
+                  <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                    <StyledButton className="btn-primary" onClick={onCloseCoverView}>
+                      닫기
+                    </StyledButton>
+                  </div>
+                )}
+                ModifyCustomButtons={({ onCloseCoverView, saveBeforeProcess, sagaKey, reloadId }) => (
+                  <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                    <StyledButton className="btn-primary btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                      저장
+                    </StyledButton>
+                    <StyledButton className="btn-light" onClick={onCloseCoverView}>
+                      닫기
+                    </StyledButton>
+                  </div>
+                )}
+              />
             </AntdModal>
           </div>
         ) : (

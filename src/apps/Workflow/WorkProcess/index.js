@@ -22,7 +22,6 @@ class WorkProcess extends Component {
 
   componentDidMount() {
     const { processRule } = this.props;
-    console.debug('1', processRule);
     const { DRAFT_PROCESS_STEP } = processRule;
     const filterRule = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
     const filterItem = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
@@ -39,6 +38,7 @@ class WorkProcess extends Component {
 
   onProcessRuleComplete = processRule => {
     const { DRAFT_PROCESS_STEP } = processRule;
+    console.debug('processRule', processRule);
     const filterRule = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
     const filterItem = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
     this.setState({ modalVisible: false, processRule, filterRule, filterItem });
@@ -48,7 +48,7 @@ class WorkProcess extends Component {
   render() {
     const { viewType, CustomWorkProcessModal } = this.props;
     const { processRule, modalVisible, filterRule } = this.state;
-    console.debug('dkdkdkdk');
+
     return (
       <StyledWorkProcess>
         <div>
