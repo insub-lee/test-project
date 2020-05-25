@@ -35,7 +35,12 @@ class EshsSiteItemSearchbar extends React.Component {
   apiData = () => {
     const { getExtraApiData, sagaKey: id } = this.props;
     const apiArray = [
-      { key: 'site', url: '/api/admin/v1/common/categoryMapList?MAP_ID=65', type: 'GET' },
+      {
+        key: 'site',
+        type: 'POST',
+        url: '/api/admin/v1/common/categoryMapList',
+        params: { PARAM: { NODE_ID: 635 } },
+      },
       { key: 'item', url: '/api/eshs/v1/common/eshsWMItem?ORDER_BY=2', type: 'GET' },
       { key: 'siteItem', url: '/api/builder/v1/work/taskList/4521', type: 'POST' },
     ];

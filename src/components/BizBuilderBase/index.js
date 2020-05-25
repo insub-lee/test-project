@@ -392,6 +392,7 @@ const mapDispatchToProps = dispatch => ({
   removeReduxState: id => dispatch(actions.removeReduxState(id)),
   changeValidationData: (id, key, flag, msg) => dispatch(actions.changeValidationDataByReducr(id, key, flag, msg)),
   getProcessRule: (id, payload) => dispatch(actions.getProcessRule(id, payload)),
+  getProcessRuleByModify: (id, payload) => dispatch(actions.getProcessRuleByModify(id, payload)),
   setProcessRule: (id, processRule) => dispatch(actions.setProcessRule(id, processRule)),
   setProcessStep: (id, processStep) => dispatch(actions.setProcessStep(id, processStep)),
   getDraftProcess: (id, draftId) => dispatch(actions.getDraftProcess(id, draftId)),

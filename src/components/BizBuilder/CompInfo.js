@@ -120,13 +120,19 @@ import LabelByNodeIdComp from 'components/BizBuilder/Field/LabelByNodeIdComp';
 import EshsQualCondComp from 'components/BizBuilder/Field/EshsQualCondComp';
 import NodeIdMultiViewComp from 'components/BizBuilder/Field/NodeIdMultiViewComp';
 import NodeNameByCodeComp from 'components/BizBuilder/Field/NodeNameByCodeComp';
+import SelectMonthComp from 'components/BizBuilder/Field/SelectMonthComp';
+import ListButtonComp from 'components/BizBuilder/Field/ListButtonComp';
+import MultiUserSelectComp from 'components/BizBuilder/Field/MultiUserSelectComp';
 import EshsQualHeaderComp from 'components/BizBuilder/Field/EshsQualHeaderComp';
 import MDCSTechScopeViewComp from 'components/BizBuilder/Field/MDCSTechScopeViewComp';
 import VaildationListComp from 'components/BizBuilder/Field/VaildationListComp';
 import EshsQualInterLockReviewComp from 'components/BizBuilder/Field/EshsQualInterLockReviewComp';
 import DefaultValueComp from 'components/BizBuilder/Field/DefaultValueComp';
 import TextDefaultValueComp from 'components/BizBuilder/Field/TextDefaultValueComp';
+import JsonTableComp from 'components/BizBuilder/Field/JsonTableComp';
+import EducationExamComp from 'components/BizBuilder/Field/EducationExamComp';
 import CustomTreeSelectSearchComp from 'components/BizBuilder/Field/CustomTreeSelectSearchComp';
+import NumberCompFloat from 'components/BizBuilder/Field/NumberCompFloat';
 import ViewDateComp from 'components/BizBuilder/Field/ViewDateComp';
 
 export const CompInfo = {
@@ -252,10 +258,16 @@ export const CompInfo = {
   'components/BizBuilder/Field/EshsQualCondComp': { renderer: property => <EshsQualCondComp {...property} /> },
   'components/BizBuilder/Field/NodeIdMultiViewComp': { renderer: property => <NodeIdMultiViewComp {...property} /> },
   'components/BizBuilder/Field/NodeNameByCodeComp': { renderer: property => <NodeNameByCodeComp {...property} /> },
+  'components/BizBuilder/Field/SelectMonthComp': { renderer: property => <SelectMonthComp {...property} /> },
+  'components/BizBuilder/Field/ListButtonComp': { renderer: property => <ListButtonComp {...property} /> },
+  'components/BizBuilder/Field/MultiUserSelectComp': { renderer: property => <MultiUserSelectComp {...property} /> },
   'components/BizBuilder/Field/EshsQualHeaderComp': { renderer: property => <EshsQualHeaderComp {...property} /> },
   'components/BizBuilder/Field/MDCSTechScopeViewComp': { renderer: property => <MDCSTechScopeViewComp {...property} /> },
   'components/BizBuilder/Field/EshsQualInterLockReviewComp': { renderer: property => <EshsQualInterLockReviewComp {...property} /> },
   'components/BizBuilder/Field/DefaultValueComp': { renderer: property => <DefaultValueComp {...property} /> },
   'components/BizBuilder/Field/TextDefaultValueComp': { renderer: property => <TextDefaultValueComp {...property} /> },
+  'components/BizBuilder/Field/JsonTableComp': { renderer: property => <JsonTableComp {...property} /> },
+  'components/BizBuilder/Field/EducationExamComp': { renderer: property => <EducationExamComp {...property} /> },
   'components/BizBuilder/Field/CustomTreeSelectSearchComp': { renderer: property => <CustomTreeSelectSearchComp {...property} /> },
+  'components/BizBuilder/Field/NumberCompFloat': { renderer: property => <NumberCompFloat {...property} /> },
 };

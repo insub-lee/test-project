@@ -4,9 +4,9 @@ import { Table, Column, AutoSizer } from 'react-virtualized';
 import { Select, Input } from 'antd';
 import debounce from 'lodash/debounce';
 
-import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledVirtualizedTable from 'components/BizBuilder/styled/Table/StyledVirtualizedTable';
+import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -161,7 +161,7 @@ class List extends Component {
     const { isHqSelect, hqList, deptList, searchValue, userList, selectedDept } = this.state;
     return (
       <div>
-        <StyledSearchWrap>
+        <StyledSearchWrapper>
           <div className="search-group-layer">
             <Select defaultValue="지역 전체" className="search-item input-width120" onChange={this.handleBaseareaChange}>
               <Option value="">지역 전체</Option>
@@ -188,7 +188,7 @@ class List extends Component {
               <Search placeholder=" 검색어를 입력하세요" onChange={this.handleSearchValueChange} value={searchValue} />
             </InputGroup>
           </div>
-        </StyledSearchWrap>
+        </StyledSearchWrapper>
         <div className="alignRight">
           <StyledButton className="btn-primary" onClick={this.handleListReset}>
             검색 초기화

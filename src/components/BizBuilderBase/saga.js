@@ -257,6 +257,13 @@ function* getProcessRule({ id, payload }) {
   yield put(actions.setProcessRule(id, DRAFT_PROCESS));
 }
 
+// processRule  조회
+function* getProcessRuleByModify({ id, payload }) {
+  const response = yield call(Axios.post, `/api/workflow/v1/common/workprocess/defaultPrcRuleModifyHanlder`, { PARAM: { ...payload } });
+  const { DRAFT_PROCESS } = response;
+  yield put(actions.setProcessRule(id, DRAFT_PROCESS));
+}
+
 function* getTaskSeq({ id, workSeq }) {
   const response = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {}, { BUILDER: 'getTaskSeq' });
   const {
@@ -355,6 +362,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
         { BUILDER: 'callApiBysaveBuilder' },
       );
 
+      console.debug('@@@@@@@BEFORE SAVE@@@@@@@@@@');
       if (beforeResponse) {
         const { retFlag, retMsg } = beforeResponse;
         if (retFlag === false) {
@@ -482,6 +490,8 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
   const validationData = yield select(selectors.makeSelectValidationDataById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
   const extraApiList = yield select(selectors.makeSelectApiListById(id));
+  const processRule = yield select(selectors.makeSelectProcessRuleById(id));
+
   if (validationData) {
     const validKeyList = Object.keys(validationData);
     if (validKeyList && validKeyList.length > 0) {
@@ -603,6 +613,19 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
         { BUILDER: 'callApiBysaveBuilder' },
       );
     }
+  }
+
+  if (Object.keys(processRule).length !== 0) {
+    // 결재 저장
+    const forthResponse = yield call(Axios.post, `/api/workflow/v1/common/workprocess/draft`, {
+      DRAFT_PROCESS: {
+        ...processRule,
+        DRAFT_TITLE: formData.TITLE,
+        WORK_SEQ: workSeq,
+        TASK_SEQ: taskSeq,
+        REL_TYPE: 1, // 고정(사용안하게 되면 삭제필요)
+      },
+    });
   }
 
   yield put(actions.successSaveTask(id));
@@ -806,6 +829,7 @@ export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.sagaKey}`, getExtraApiData);
   yield takeEvery(`${actionTypes.GET_DETAIL_DATA}_${arg.sagaKey}`, getDetailData);
   yield takeEvery(`${actionTypes.GET_PROCESS_RULE}_${arg.sagaKey}`, getProcessRule);
+  yield takeEvery(`${actionTypes.GET_PROCESS_RULE_MODIFY}_${arg.sagaKey}`, getProcessRuleByModify);
   yield takeEvery(`${actionTypes.GET_TASK_SEQ}_${arg.sagaKey}`, getTaskSeq);
   // yield takeEvery(`${actionTypes.SAVE_TEMP_CONTENTS}_${arg.id}`, saveTempContents);
   yield takeLatest(`${actionTypes.TEMP_SAVE_TASK}_${arg.sagaKey}`, tempSaveTask);

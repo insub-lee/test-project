@@ -32,8 +32,12 @@ class SearchBar extends Component {
       ExtraBuilder,
       loadingComplete,
       viewPageData: { workSeq },
+      formData,
+      listMetaSeq,
+      gubun,
     } = this.props;
 
+    console.debug('gubun [ ', gubun, ' ] ');
     return this.setState({
       SearchList: [
         <BizBuilderBase
@@ -42,9 +46,11 @@ class SearchBar extends Component {
           workSeq={workSeq}
           taskSeq={-1}
           viewType="LIST"
+          listMetaSeq={listMetaSeq}
           CustomListPage={CustomList}
           loadingComplete={loadingComplete}
           customOnRowClick={record => this.handleListRowClick(record)}
+          gubun={gubun}
         />,
       ],
     });

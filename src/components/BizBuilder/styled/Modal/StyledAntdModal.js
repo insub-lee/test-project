@@ -33,9 +33,16 @@ const StyledAntdModal = Component => styled(Component)`
       text-align: center;
     }
   }
+
   &.modal-table-pad {
     .ant-modal-body {
       padding: 20px;
+    }
+  }
+
+  &.modal-none-head {
+    .ant-modal-close-x {
+      display: none;
     }
   }
 `;

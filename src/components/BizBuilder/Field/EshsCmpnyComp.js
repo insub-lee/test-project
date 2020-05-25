@@ -1,12 +1,13 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input, Modal, Select } from 'antd';
+import { Input, Modal, Select, Button } from 'antd';
 import StyledVirtualizedTable from 'components/BizBuilder/styled/Table/StyledVirtualizedTable';
 import { Table, Column } from 'react-virtualized';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
 const AntdModal = StyledContentsModal(Modal);
 
@@ -32,11 +33,19 @@ class EshsCmpnyComp extends React.Component {
   }
 
   componentDidMount() {
-    const { getExtraApiData, sagaKey: id } = this.props;
+    const {
+      getExtraApiData,
+      sagaKey: id,
+      CONFIG: {
+        property: { GUBUN },
+      },
+    } = this.props;
+    const gubun = (this.props && this.props.CONFIG && this.props.CONFIG.property && this.props.CONFIG.property.GUBUN) || 'SQ';
+
     const apiValue = [
       {
         key: 'cmpnyList',
-        url: '/api/eshs/v1/common/EshsCmpnyList/null/null',
+        url: `/api/eshs/v1/common/EshsCmpnyList?gubun=${gubun}`,
         type: 'GET',
       },
     ];
@@ -76,20 +85,16 @@ class EshsCmpnyComp extends React.Component {
     const { getExtraApiData, sagaKey: id } = this.props;
     const { searchType, searchText } = this.state;
     const apiValue = [];
+    const gubun = (this.props && this.props.CONFIG && this.props.CONFIG.property && this.props.CONFIG.property.GUBUN) || 'SQ';
+
     if (searchText) {
       apiValue.push({
         key: 'searchList',
-        url: `/api/eshs/v1/common/EshsCmpnyList/${searchType}/${searchText}`,
+        url: `/api/eshs/v1/common/EshsCmpnyList?searchType=${searchType}&searchText=${searchText}&gubun=${gubun}`,
         type: 'GET',
       });
-    } else {
-      apiValue.push({
-        key: 'searchList',
-        url: `/api/eshs/v1/common/EshsCmpnyList/null/null`,
-        type: 'GET',
-      });
+      getExtraApiData(id, apiValue, this.setSearchList);
     }
-    getExtraApiData(id, apiValue, this.setSearchList);
   };
 
   // setSearchList = sagaKey => {
@@ -151,15 +156,9 @@ class EshsCmpnyComp extends React.Component {
     }
   };
 
-  handleOnChange = e => {
+  handleOnChange = (value, target) => {
     this.setState({
-      searchText: e.target.value,
-    });
-  };
-
-  searchTypeChange = e => {
-    this.setState({
-      searchType: e,
+      [target]: value,
     });
   };
 
@@ -177,7 +176,7 @@ class EshsCmpnyComp extends React.Component {
 
   render() {
     const { CONFIG, visible, readOnly, searchWidth, directSearchTable } = this.props;
-    const { cmpnyModal, cmpny_nm, list, searchList, listType, cursor, cmpnyInfo } = this.state;
+    const { cmpnyModal, cmpny_nm, list, searchList, listType, cursor, cmpnyInfo, searchText, searchType } = this.state;
     let cmpnyList = [];
     if (listType === 'search') {
       cmpnyList = searchList;
@@ -187,7 +186,6 @@ class EshsCmpnyComp extends React.Component {
     if (readOnly || CONFIG.property.readOnly) {
       return visible ? <span>&nbsp;{cmpny_nm}</span> : '';
     }
-
     return visible ? (
       <>
         {directSearchTable ? (
@@ -195,15 +193,15 @@ class EshsCmpnyComp extends React.Component {
             <StyledSearchWrap>
               <div className="search-group-layer mb0">
                 <InputGroup className="search-item search-input-group" compact>
-                  <AntdSelect className="select-sm" value={this.state.searchType} onChange={this.searchTypeChange}>
+                  <AntdSelect className="select-sm" value={searchType} onChange={value => this.handleOnChange(value, 'searchType')}>
                     <Option value="name">이름</Option>
                     <Option value="code">코드</Option>
                   </AntdSelect>
                   <AntdSearch
                     className="searchInput input-search-sm"
-                    value={this.state.searchText}
                     name="searchName"
-                    onChange={this.handleOnChange}
+                    value={searchText}
+                    onChange={e => this.handleOnChange(e.target.value, 'searchText')}
                     placeholder="검색어를 입력하시오"
                     onSearch={this.handleOnSearch}
                   />
@@ -243,11 +241,22 @@ class EshsCmpnyComp extends React.Component {
             />
             {/* <Button shape="circle" icon="search" onClick={this.handleModalVisible} /> */}
             &nbsp; <span>{cmpny_nm}</span>
-            <AntdModal title="Vandor 검색" visible={cmpnyModal} width={800} height={600} onCancel={this.handleModalVisible}>
+            <AntdModal
+              title="Vandor 검색"
+              visible={cmpnyModal}
+              width={800}
+              height={600}
+              footer={[
+                <StyledButton className="btn-primary" onClick={this.handleModalVisible}>
+                  닫기
+                </StyledButton>,
+              ]}
+              onCancel={this.handleModalVisible}
+            >
               <StyledSearchWrap>
                 <div className="search-group-layer mb0">
-                  <InputGroup className="search-item search-input-group" compact>
-                    <AntdSelect className="select-sm" value={this.state.searchType} onChange={this.searchTypeChange}>
+                  {/* <InputGroup className="search-item search-input-group" compact>
+                    <AntdSelect className="select-sm" value={searchType} onChange={this.searchTypeChange}>
                       <Option value="name">이름</Option>
                       <Option value="code">코드</Option>
                     </AntdSelect>
@@ -256,6 +265,21 @@ class EshsCmpnyComp extends React.Component {
                       value={this.state.searchText}
                       name="searchName"
                       onChange={this.handleOnChange}
+                      placeholder="검색어를 입력하시오"
+                      onSearch={this.handleOnSearch}
+                    />
+                  </InputGroup> */}
+
+                  <InputGroup className="search-item search-input-group" compact>
+                    <AntdSelect className="select-sm" value={searchType} onChange={value => this.handleOnChange(value, 'searchType')}>
+                      <Option value="name">이름</Option>
+                      <Option value="code">코드</Option>
+                    </AntdSelect>
+                    <AntdSearch
+                      className="searchInput input-search-sm"
+                      name="searchName"
+                      value={searchText}
+                      onChange={e => this.handleOnChange(e.target.value, 'searchText')}
                       placeholder="검색어를 입력하시오"
                       onSearch={this.handleOnSearch}
                     />

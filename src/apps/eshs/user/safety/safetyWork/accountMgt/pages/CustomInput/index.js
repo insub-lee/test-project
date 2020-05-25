@@ -186,6 +186,8 @@ class CustomInput extends Component {
       ExtraBuilder,
       formData,
       setFormData,
+      listMetaSeq,
+      gubun,
     } = this.props;
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
@@ -210,6 +212,8 @@ class CustomInput extends Component {
               setFormData={setFormData}
               saveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
               loadingComplete={loadingComplete}
+              listMetaSeq={listMetaSeq}
+              gubun={gubun}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
           </Sketch>

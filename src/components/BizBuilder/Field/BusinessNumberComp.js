@@ -59,7 +59,7 @@ class BusinessNumberComp extends React.Component {
         defaultValue={colData}
         min={0}
         max={10 ** CONFIG.info.size}
-        style={{ width: 300, marginRight: 10 }}
+        style={{ width: '100%' }}
         placeholder={CONFIG.property.placeholder}
         onChange={e => this.handleOnChange(e)}
         readOnly={readOnly || CONFIG.property.readOnly}
