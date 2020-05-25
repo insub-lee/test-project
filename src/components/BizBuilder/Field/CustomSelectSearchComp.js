@@ -2,7 +2,11 @@ import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, Select, message } from 'antd';
 import { debounce } from 'lodash';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
 
 class CustomSelectSearchComp extends React.Component {
@@ -70,27 +74,27 @@ class CustomSelectSearchComp extends React.Component {
     const { searchType, searchText, selectList } = this.state;
     return (
       <>
-        <Select
+        <AntdSelect
           placeholder={placeholder || '검색구분'}
           style={{ width: '50%' }}
           onChange={value => {
             this.handleOnChange('searchType', value);
           }}
           disabled={readOnly || CONFIG.property.readOnly}
-          className={CONFIG.property.className || ''}
+          className="select-sm"
         >
           {selectList.map(item => (
             <Option key={`select_${item.COMP_FIELD}`} value={`${item.COMP_FIELD}`}>
               {item.NAME_KOR}
             </Option>
           ))}
-        </Select>
-        <Input
+        </AntdSelect>
+        <AntdInput
           style={{ width: '50%' }}
           readOnly={!searchType}
           placeholder="검색어"
           onChange={e => this.handleOnChange('searchText', e.target.value)}
-          className={CONFIG.property.className || ''}
+          className="ant-input-inline ant-input-sm input-left"
         />
       </>
     );

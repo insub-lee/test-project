@@ -30,30 +30,29 @@ export function InputButtons(props) {
     </div>
   );
 }
-
-export function Button1(props) {
+export function DetailButtons(props) {
   return (
     <div className="alignRight">
+      <History {...props} detail="관리" />
+      <History {...props} detail="Chip" />
+      <Add {...props} title="ISSUE 추가" />
       <InfoModify {...props} />
     </div>
   );
 }
 
-export function Button2(props) {
+export function ViewHistory(props) {
   return (
     <div className="alignRight">
-      <ResultInput {...props} />
-      <History {...props} />
-      <History {...props} />
+      <Leave {...props} />
     </div>
   );
 }
 
-export function Button3(props) {
+export function IssueAdd(props) {
   return (
     <div className="alignRight">
-      <Save {...props} />
-      <Add {...props} />
+      <Add {...props} title="저장" />
     </div>
   );
 }

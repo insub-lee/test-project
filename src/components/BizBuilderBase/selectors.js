@@ -230,6 +230,13 @@ const makeSelectFieldSelectData = () =>
     (state, id) => (state.getIn(['bizBuilderBase', id, 'fieldSelectData']) !== undefined ? state.getIn(['bizBuilderBase', id, 'fieldSelectData']).toJS() : {}),
   );
 
+const makeSelectIsTaskFavorite = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
+    (state, id) => state.getIn(['bizBuilderBase', id, 'isTaskFavorite']) || false,
+  );
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -270,4 +277,5 @@ export {
   makeSelectIsSaveModalClose,
   makeSelectDraftInfo,
   makeSelectFieldSelectData,
+  makeSelectIsTaskFavorite,
 };

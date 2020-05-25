@@ -3,7 +3,6 @@ import { DatePicker as AntdDatePicker } from 'antd';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-// coldata 로 넣기, readonly 체크, modify일 때, view일 때 수정해서 날짜형 라벨로 쓸 수 있게 수정, setViewPage 날려라
 class DatePickerComp extends Component {
   // Config 설정 추가로 마운트 완료후 cahngeFormData가 필요하여 추가 by.이정현
   componentDidMount() {

@@ -85,7 +85,7 @@ function* getCallDataHandlerReturnRes({ id, apiInfo, callbackFunc }) {
   }
 }
 
-function* getFileDownload({ url, fileName }) {
+function* getFileDownload({ id, url, fileName, callbackFunc }) {
   const blobResponse = yield call(Axios.getDown, url);
 
   if (window.navigator && window.navigator.msSaveBlob){
@@ -98,6 +98,10 @@ function* getFileDownload({ url, fileName }) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  if (callbackFunc && typeof callbackFunc === 'function') {
+    callbackFunc(id);
   }
 }
 

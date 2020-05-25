@@ -248,6 +248,10 @@ const reducer = (state = initialState, action) => {
       const { id, formData } = action;
       return state.setIn(['bizBuilderBase', id, 'formData'], fromJS(formData));
     }
+    case actionTypes.SET_IS_TASK_FAVORITE_REDUCER: {
+      const { id, flag } = action;
+      return state.setIn(['bizBuilderBase', id, 'isTaskFavorite'], flag);
+    }
     default:
       return state;
   }

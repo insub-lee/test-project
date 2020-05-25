@@ -48,6 +48,7 @@ class WorkProcess extends Component {
   render() {
     const { viewType, CustomWorkProcessModal } = this.props;
     const { processRule, modalVisible, filterRule } = this.state;
+    console.debug('dkdkdkdk');
     return (
       <StyledWorkProcess>
         <div>

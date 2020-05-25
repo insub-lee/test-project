@@ -5,13 +5,13 @@ import PropTypes from 'prop-types';
 import { List, Tree, Row, Col, Checkbox, Button, Icon, Modal } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import UserSelectWrapper from 'commonStyled/MdcsStyled/Wrapper/UserSelectWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import UserSelectWrapper from 'components/BizBuilder/styled/Wrapper/UserSelectWrapper';
 
 // Component Attribute 및 Event Method 정리
 // <UserSelect
-//   initUserList={this.state.selectedUserList}  **초기값 셋팅 (int)
+//   initUserList={this.state.selectedUserList}  **초기값 셋팅 int[] USER_ID 배열값
 //   treeDataSource={list} ** 부서정보 Data Bind
 //   onTreeSelect={this.onTreeSelect} ** 부서 선택 이벤트 (이 이벤트에서 비동기 해당 부서원을 DataBind해 Props(userDataList)로 전달하는 기능으로 활용)
 //   userDataList={result.userList && result.userList.list}
@@ -73,6 +73,7 @@ class UserSelectComp extends Component {
 
   componentDidMount() {
     const { initUserList, treeDataSource } = this.props;
+    console.debug('initUserList', initUserList);
     this.setState({
       checkUserList: [],
       selectedUserList: [],
@@ -164,8 +165,6 @@ class UserSelectComp extends Component {
 
   render() {
     const { treeDataSource, userDataList, result } = this.props;
-    console.debug('userselect', result);
-    console.debug('treeDataSource >> ', treeDataSource);
     return (
       <UserSelectWrapper>
         <Row gutter={0}>
@@ -235,12 +234,12 @@ class UserSelectComp extends Component {
             </div>
           </Col>
         </Row>
-        <StyledButtonWrapper className="btn-wrap-center">
-          <StyledButton className="btn-sm btn-gray mr5" onClick={this.onCancelUserSelect}>
-            취소
-          </StyledButton>
-          <StyledButton className="btn-sm btn-primary" onClick={this.onRegist}>
+        <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-10">
+          <StyledButton className="btn-sm btn-primary mr5" onClick={this.onRegist}>
             등록
+          </StyledButton>
+          <StyledButton className="btn-sm btn-light" onClick={this.onCancelUserSelect}>
+            취소
           </StyledButton>
         </StyledButtonWrapper>
       </UserSelectWrapper>
