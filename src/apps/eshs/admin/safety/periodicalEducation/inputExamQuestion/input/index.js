@@ -11,6 +11,7 @@ class InputPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      eduDate: {},
       questions: {
         0: {
           title: '',
@@ -55,6 +56,7 @@ class InputPage extends React.Component {
 
   componentDidMount() {
     this.getQuestions();
+    this.getEducationDate();
   }
 
   getQuestions = () => {
@@ -77,6 +79,26 @@ class InputPage extends React.Component {
         (result.questions && result.questions.list.length && result.questions.list[0].QUESTIONS && { ...JSON.parse(result.questions.list[0].QUESTIONS) }) ||
         prevState.questions,
     }));
+  };
+
+  getEducationDate = () => {
+    const { sagaKey: id, getCallDataHandler, parentWorkSeq, parentTaskSeq } = this.props;
+    const apiArr = [
+      {
+        key: 'eduDate',
+        url: `/api/eshs/v1/common/edudate?WORK_SEQ=${parentWorkSeq}&TASK_SEQ=${parentTaskSeq}`,
+        type: 'GET',
+      },
+    ];
+
+    getCallDataHandler(id, apiArr, this.setEducationDate);
+  };
+
+  setEducationDate = () => {
+    const { result } = this.props;
+    this.setState({
+      eduDate: (result.eduDate && result.eduDate.list.length && result.eduDate.list[0]) || {},
+    });
   };
 
   handleInputChange = (no, key, value) => {
@@ -112,17 +134,21 @@ class InputPage extends React.Component {
   render() {
     const { handleInputChange, handleSaveClick } = this;
     const { questionsLenght } = this;
-    const { questions } = this.state;
+    const { questions, eduDate } = this.state;
     const { handleModalClose, result } = this.props;
     const isModify = result.questions && result.questions.list.length && result.questions.list[0].EXAM_ID;
     return (
       <>
+        <div style={{ textAlign: 'left' }}>
+          <p style={{ display: 'inline-block', width: '5%', textAlign: 'center' }}>교육명</p>
+          <p style={{ display: 'inline-block' }}>{`${eduDate.EDU_YEAR}년 ${eduDate.EDU_MONTH}월 정기교육`}</p>
+        </div>
         {questionsLenght.map((v, i) => (
           <div style={{ marginTop: '30px', marginLeft: '100px', marginBottom: '10px' }}>
             <Card
               title={
                 <>
-                  <div className="ant-card-head-title">{`${i + 1}번 문항`}</div>
+                  <div className="ant-card-head-title">{`${i + 1}번 문제`}</div>
                   <AntdInput
                     defaultValue={questions[i].title || ''}
                     value={questions[i].title || ''}
@@ -134,7 +160,7 @@ class InputPage extends React.Component {
               style={{ width: '90%' }}
             >
               <div style={{ textAlign: 'right' }}>
-                <p style={{ display: 'inline-block', width: '10%', textAlign: 'center' }}>정답</p>
+                <p style={{ display: 'inline-block', width: '5%', textAlign: 'center' }}>정답</p>
                 <AntdSelect
                   defaultValue={(questions[i] && questions[i].answer) || '정답'}
                   value={(questions[i] && questions[i].answer) || '정답'}
