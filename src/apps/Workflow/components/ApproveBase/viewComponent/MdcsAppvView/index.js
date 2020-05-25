@@ -212,7 +212,7 @@ class MdcsAppvView extends Component {
               >
                 <th style={{ width: '150px' }}>선택된 실무자 </th>
                 <td>
-                  <StyledButton onClick={this.onClickUserSelect} className="btn-gary btn-xs">
+                  <StyledButton onClick={this.onClickUserSelect} className="btn-gray btn-xs">
                     <Icon type="search" style={{ marginRight: '5px' }} />
                     실무자검색
                   </StyledButton>
@@ -228,22 +228,29 @@ class MdcsAppvView extends Component {
                 </td>
               </tr>
               <tr style={{ display: procResult.length > 0 ? 'table-row' : 'none' }}>
-                <td colSpan={2}>
-                  <table style={{ width: '100%' }}>
+                <td colSpan={2} style={{ padding: 0, border: 0 }}>
+                  <table style={{ width: '100%', borderTop: 0 }}>
+                    <colgroup>
+                      <col width="10%" />
+                      <col width="10%" />
+                      <col width="10%" />
+                      <col width="55%" />
+                      <col width="15%" />
+                    </colgroup>
                     <tr>
                       <th>실무자</th>
                       <th>직급</th>
-                      <th>검토결과</th>
+                      <th>결과</th>
                       <th>검토의견</th>
-                      <th>검토일</th>
+                      <th style={{ borderRight: 0 }}>검토일</th>
                     </tr>
                     {procResult.map(item => (
                       <tr>
-                        <td>{item.DRAFT_USER_NAME}</td>
-                        <td>{item.PSTN_NAME}</td>
-                        <td>{item.APPV_STATUS}</td>
+                        <td style={{ textAlign: 'center' }}>{item.DRAFT_USER_NAME}</td>
+                        <td style={{ textAlign: 'center' }}>{item.PSTN_NAME}</td>
+                        <td style={{ textAlign: 'center' }}>{item.APPV_STATUS}</td>
                         <td>{item.OPINION}</td>
-                        <td>{moment(item.REG_DTTM).format('YYYY-MM-DD')}</td>
+                        <td style={{ textAlign: 'center' }}>{moment(item.REG_DTTM).format('YYYY-MM-DD')}</td>
                       </tr>
                     ))}
                   </table>

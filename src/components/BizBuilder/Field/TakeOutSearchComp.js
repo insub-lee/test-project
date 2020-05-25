@@ -290,8 +290,8 @@ TakeOutSearchComp.defaultProps = {
       align: 'center',
     },
     {
-      title: '반출증번호',
-      dataIndex: 'WRK_CMPNY_NM',
+      title: '운반업체',
+      dataIndex: 'TRANS_VENDOR_NM',
       align: 'center',
     },
   ],

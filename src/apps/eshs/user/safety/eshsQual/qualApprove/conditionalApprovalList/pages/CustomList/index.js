@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm, Button } from 'antd';
+import { Table, Popconfirm, Button, Modal } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -14,12 +14,14 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
 // import Loadable from 'components/Loadable';
 // import Loading from '../Common/Loading';
 
 const AntdTable = StyledAntdTable(Table);
 const StyledButton = StyledAntdButton(Button);
+const AntdModal = StyledContentsModal(Modal);
 
 class CustomList extends Component {
   constructor(props) {
@@ -30,6 +32,8 @@ class CustomList extends Component {
       isOnRowClick: false,
       rowClickView: 'VIEW',
       StyledWrap: StyledViewDesigner,
+      modalContent: [],
+      modalVisible: false,
     };
   }
 
@@ -97,6 +101,7 @@ class CustomList extends Component {
   };
 
   setColumns = (cols, widths) => {
+    const { ConfirmView } = this.props;
     const { isRowNo } = this.state;
     const columns = [];
     if (isRowNo) {
@@ -118,7 +123,24 @@ class CustomList extends Component {
         });
       }
     });
-    return columns;
+    return columns.map(c =>
+      c.title === '신청번호'
+        ? {
+            ...c,
+            render: (text, record) => (
+              <span style={{ cursor: 'pointer' }} onClick={() => this.setState({ modalContent: ConfirmView(record.TASK_SEQ) }, this.handleModalVisible)}>
+                {text}
+              </span>
+            ),
+          }
+        : c,
+    );
+  };
+
+  handleModalVisible = () => {
+    const { modalVisible } = this.state;
+    if (modalVisible) return this.setState({ modalVisible: !modalVisible, modalContent: [] });
+    return this.setState({ modalVisible: !modalVisible });
   };
 
   onSelectChange = selectedRowKeys => {
@@ -200,7 +222,7 @@ class CustomList extends Component {
       isBuilderModal,
       changeBuilderModalState,
     } = this.props;
-    const { isMultiDelete, StyledWrap } = this.state;
+    const { isMultiDelete, StyledWrap, modalContent, modalVisible } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -290,6 +312,9 @@ class CustomList extends Component {
               )}
             </div> */}
           </Sketch>
+          <AntdModal title="개선결과 조회" visible={modalVisible} width={1000} onCancel={() => this.handleModalVisible('CANCEL')} footer={[null]}>
+            {modalContent}
+          </AntdModal>
         </StyledWrap>
       );
     }

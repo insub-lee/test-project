@@ -129,6 +129,8 @@ class CustomModifyPage extends Component {
       setFormData,
       loadingComplete,
       deleteTask,
+      listMetaSeq,
+      gubun,
     } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -148,6 +150,8 @@ class CustomModifyPage extends Component {
               setFormData={setFormData}
               loadingComplete={loadingComplete}
               deleteTask={deleteTask}
+              listMetaSeq={listMetaSeq}
+              gubun={gubun}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
           </Sketch>

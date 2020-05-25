@@ -3,15 +3,16 @@ import PropTypes from 'prop-types';
 
 import { Table, Modal } from 'antd';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import Edit from './Edit';
 
-const AntdModal = StyledContentsModal(Modal);
-const AntdLineTable = StyledLineTable(Table);
+const AntdModal = StyledAntdModal(Modal);
+const AntdTable = StyledAntdTable(Table);
 
 class List extends Component {
   constructor(props) {
@@ -133,25 +134,27 @@ class List extends Component {
 
     return (
       <>
-        <ContentsWrapper>
-          <div className="selSaveWrapper">
-            <StyledButton className="btn-primary" onClick={this.onModalChange}>
-              추가
-            </StyledButton>
+        <StyledContentsWrapper>
+          <div className="tableWrapper">
+            <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+              <StyledButton className="btn-primary btn-sm" onClick={this.onModalChange}>
+                추가
+              </StyledButton>
+            </StyledButtonWrapper>
+            <AntdTable
+              className="ant-table-no-pad"
+              rowKey={() => totalData.SIPA_SEQ}
+              pagination={false}
+              dataSource={totalData}
+              columns={columns}
+              onRow={record => ({
+                onClick: () => {
+                  this.onUpdateDo(record);
+                },
+              })}
+            />
           </div>
-          <AntdLineTable
-            className="tableWrapper"
-            rowKey={() => totalData.SIPA_SEQ}
-            pagination={false}
-            dataSource={totalData}
-            columns={columns}
-            onRow={record => ({
-              onClick: () => {
-                this.onUpdateDo(record);
-              },
-            })}
-          />
-        </ContentsWrapper>
+        </StyledContentsWrapper>
         <AntdModal
           className="modal-table-pad"
           title="안전관계자"

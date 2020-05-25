@@ -65,6 +65,9 @@ class DaemonDetail extends React.Component {
       listSortDirection: location === undefined ? '' : location.sortDirectionParam,
       listKeyword: location === undefined ? '' : location.keyword,
       listStopYn: location === undefined ? '' : location.stopYn,
+      selectedMonth: '',
+      selectedWeek: '',
+      selectedDay: '',
     };
     if (daemonId && this.state.mode === 'D') {
       this.props.getDaemonInfo(Number(daemonId));
@@ -192,6 +195,9 @@ class DaemonDetail extends React.Component {
     cronArray[5] = '*';
     this.setState({
       schedule: cronArray.join(' '),
+      selectedMonth: e,
+      selectedWeek: '',
+      selectedDay: '',
     });
   };
 
@@ -202,6 +208,9 @@ class DaemonDetail extends React.Component {
     cronArray[3] = '*';
     this.setState({
       schedule: cronArray.join(' '),
+      selectedMonth: '',
+      selectedWeek: e,
+      selectedDay: '',
     });
   };
 
@@ -212,6 +221,9 @@ class DaemonDetail extends React.Component {
     cronArray[5] = '*';
     this.setState({
       schedule: cronArray.join(' '),
+      selectedMonth: '',
+      selectedWeek: '',
+      selectedDay: e,
     });
   };
 
@@ -497,6 +509,7 @@ class DaemonDetail extends React.Component {
                               style={{ width: 120 }}
                               placeholder={intlObj.get(messages.selectPlaceholder)}
                               onChange={this.handleScheduleMonthChange}
+                              value={this.state.selectedMonth}
                             >
                               {Array.from(Array(31), (e, i) => (
                                 <Option key={i + 1} value={i + 1}>
@@ -514,6 +527,7 @@ class DaemonDetail extends React.Component {
                               style={{ width: 120 }}
                               placeholder={intlObj.get(messages.selectPlaceholder)}
                               onChange={this.handleScheduleWeekChange}
+                              value={this.state.selectedWeek}
                             >
                               {moment.weekdaysShort(true).map((e, i) => (
                                 <Option key={i} value={i}>
@@ -528,6 +542,7 @@ class DaemonDetail extends React.Component {
                               style={{ width: 120 }}
                               placeholder={intlObj.get(messages.selectPlaceholder)}
                               onChange={this.handleScheduleDayChange}
+                              value={this.state.selectedDay}
                             >
                               {Array.from(Array(31), (e, i) => (
                                 <Option key={i + 1} value={i + 1}>

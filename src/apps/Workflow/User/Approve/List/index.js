@@ -51,7 +51,7 @@ class ApproveList extends Component {
       title: 'No',
       dataIndex: 'RNUM',
       key: 'rnum',
-      width: '5%',
+      width: '8%',
       align: 'center',
     },
     {

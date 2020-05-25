@@ -7,7 +7,7 @@ import { getTreeFromFlatData } from 'react-sortable-tree';
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
-import UserSelectWrapper from 'commonStyled/MdcsStyled/Wrapper/UserSelectWrapper';
+import UserSelectWrapper from 'components/BizBuilder/styled/Wrapper/UserSelectWrapper';
 
 // Component Attribute 및 Event Method 정리
 // <UserSelect
@@ -245,7 +245,7 @@ class UserSelectComp extends Component {
             </div>
           </Col>
         </Row>
-        <StyledButtonWrapper className="btn-wrap-center">
+        <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-10">
           <StyledButton className="btn-sm btn-primary mr5" onClick={this.onRegist}>
             등록
           </StyledButton>
