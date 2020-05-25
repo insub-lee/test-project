@@ -87,9 +87,9 @@ class InputPage extends React.Component {
     }));
   };
 
-  handleSaveClick = () => {
+  handleSaveClick = isModify => {
     const { questions } = this.state;
-    const { sagaKey: id, submitHandlerBySaga, handleModalClose, parentWorkSeq, parentTaskSeq, profile } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, handleModalClose, parentWorkSeq, parentTaskSeq, profile, result } = this.props;
     const questionArr = [questions[0], questions[1], questions[2], questions[3], questions[4]];
 
     const apiArr = {
@@ -98,10 +98,15 @@ class InputPage extends React.Component {
         PARENT_TASK_SEQ: parentTaskSeq,
         QUESTIONS: JSON.stringify(questionArr),
         REG_USER_ID: profile.USER_ID,
+        EXAM_ID: (result.questions && result.questions.list.length && result.questions.list[0].EXAM_ID) || '',
       },
     };
 
-    submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eduexam`, apiArr, handleModalClose);
+    if (isModify) {
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eduexam`, apiArr, handleModalClose);
+    }
+
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eduexam`, apiArr, handleModalClose);
   };
 
   render() {
@@ -109,7 +114,7 @@ class InputPage extends React.Component {
     const { questionsLenght } = this;
     const { questions } = this.state;
     const { handleModalClose, result } = this.props;
-    questionsLenght.map((v, i) => console.debug(v, i));
+    const isModify = result.questions && result.questions.list.length && result.questions.list[0].EXAM_ID;
     return (
       <>
         {questionsLenght.map((v, i) => (
@@ -117,7 +122,7 @@ class InputPage extends React.Component {
             <Card
               title={
                 <>
-                  <div className="ant-card-head-title">{`${i}번 문항`}</div>
+                  <div className="ant-card-head-title">{`${i + 1}번 문항`}</div>
                   <AntdInput
                     defaultValue={questions[i].title || ''}
                     value={questions[i].title || ''}
@@ -129,6 +134,7 @@ class InputPage extends React.Component {
               style={{ width: '90%' }}
             >
               <div style={{ textAlign: 'right' }}>
+                <p style={{ display: 'inline-block', width: '10%', textAlign: 'center' }}>정답</p>
                 <AntdSelect
                   defaultValue={(questions[i] && questions[i].answer) || '정답'}
                   value={(questions[i] && questions[i].answer) || '정답'}
@@ -141,40 +147,48 @@ class InputPage extends React.Component {
                   <Select.Option value={4}>4</Select.Option>
                 </AntdSelect>
               </div>
+              <p style={{ display: 'inline-block', width: '5%' }}>1.</p>
               <AntdInput
+                className="ant-input-inline"
                 defaultValue={questions[i].firstSelection || ''}
                 value={questions[i].firstSelection || ''}
                 onChange={e => handleInputChange(i, 'firstSelection', e.target.value)}
                 placeholder="보기 1"
-                style={{ width: '100%', marginBottom: '10px' }}
+                style={{ width: '95%', marginBottom: '10px' }}
               />
+              <p style={{ display: 'inline-block', width: '5%' }}>2.</p>
               <AntdInput
+                className="ant-input-inline"
                 defaultValue={questions[i].secondSelection || ''}
                 value={questions[i].secondSelection || ''}
                 onChange={e => handleInputChange(i, 'secondSelection', e.target.value)}
                 placeholder="보기 2"
-                style={{ width: '100%', marginBottom: '10px' }}
+                style={{ width: '95%', marginBottom: '10px' }}
               />
+              <p style={{ display: 'inline-block', width: '5%' }}>3.</p>
               <AntdInput
+                className="ant-input-inline"
                 defaultValue={questions[i].thirdSelection || ''}
                 value={questions[i].thirdSelection || ''}
                 onChange={e => handleInputChange(i, 'thirdSelection', e.target.value)}
                 placeholder="보기 3"
-                style={{ width: '100%', marginBottom: '10px' }}
+                style={{ width: '95%', marginBottom: '10px' }}
               />
+              <p style={{ display: 'inline-block', width: '5%' }}>4.</p>
               <AntdInput
+                className="ant-input-inline"
                 defaultValue={questions[i].fourthSelection || ''}
                 value={questions[i].fourthSelection || ''}
                 onChange={e => handleInputChange(i, 'fourthSelection', e.target.value)}
                 placeholder="보기 4"
-                style={{ width: '100%', marginBottom: '10px' }}
+                style={{ width: '95%', marginBottom: '10px' }}
               />
             </Card>
           </div>
         ))}
         <div style={{ padding: '30px' }}>
-          <StyledButton className="btn-primary mr5" onClick={handleSaveClick}>
-            {(result.questions && result.questions.list.length && result.questions.list[0].EXAM_ID) || false ? '수정' : '저장'}
+          <StyledButton className="btn-primary mr5" onClick={() => handleSaveClick(isModify)}>
+            {isModify ? '수정' : '저장'}
           </StyledButton>
           <StyledButton className="btn-light" onClick={handleModalClose}>
             취소
