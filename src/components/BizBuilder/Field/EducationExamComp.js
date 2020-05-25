@@ -21,9 +21,16 @@ class EducationExamComp extends React.Component {
 
   handleSaveClick = () => {};
 
+  handleModalClose = () => {
+    this.setState({
+      modalVisible: false,
+    });
+  };
+
   render() {
-    const { handleButtonClick } = this;
-    const { visible, rowData } = this.props;
+    const { handleButtonClick, handleModalClose } = this;
+    const { modalVisible } = this.state;
+    const { visible, rowData, WORK_SEQ } = this.props;
 
     if (!visible) {
       return null;
@@ -35,15 +42,15 @@ class EducationExamComp extends React.Component {
           평가문항 관리
         </StyledButton>
         <AntdModal
-          visible={this.state.modalVisible}
-          onCancel={() => this.setState({ modalVisible: false })}
-          onOk={() => this.setState({ modalVisible: false })}
+          visible={modalVisible}
+          onCancel={handleModalClose}
+          onOk={handleModalClose}
           footer={null}
           width="80%"
           style={{ textAlign: 'center' }}
           title="평가문항 등록"
         >
-          <InputExamQuestion parentTaskSeq={rowData.TASK_SEQ} />
+          <InputExamQuestion parentWorkSeq={WORK_SEQ} parentTaskSeq={rowData.TASK_SEQ} handleModalClose={handleModalClose} />
         </AntdModal>
       </>
     );
@@ -53,6 +60,7 @@ class EducationExamComp extends React.Component {
 EducationExamComp.propTypes = {
   rowData: PropTypes.object,
   visible: PropTypes.bool,
+  WORK_SEQ: PropTypes.number,
 };
 
 EducationExamComp.defatulProps = {
@@ -60,6 +68,7 @@ EducationExamComp.defatulProps = {
   changeFormData: null,
   rowData: null,
   visible: false,
+  WORK_SEQ: -1,
 };
 
 export default EducationExamComp;
