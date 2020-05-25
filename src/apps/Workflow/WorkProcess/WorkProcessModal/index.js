@@ -60,8 +60,8 @@ class WorkProcessModal extends Component {
 
   componentDidMount() {
     const { getDeptList, processRuleProc } = this.props;
+    console.debug('workprocessModal', this.props);
     const processStep = fromJS(processRuleProc.DRAFT_PROCESS_STEP).toJS();
-    console.debug('2', processStep);
     const tmpPrcStep = processStep.filter(f => f.APPV_METHOD === 1 && f.PARENT_PRC_RULE_ID !== 0 && f.NODE_TYPE !== 'NS');
     this.setState({ prcStep: tmpPrcStep });
     getDeptList(this.initDeptList);
@@ -137,7 +137,7 @@ class WorkProcessModal extends Component {
 
   handleAddUser = (prcRuleId, nodeId, nodeType) => {
     const { prcStep, selectedDeptKeys, deptList, selectedUserKeys, deptUserList } = this.state;
-
+    console.debug(prcRuleId);
     const tmpPrcStep = prcStep.map(step => {
       const { APPV_MEMBER: appvMember } = step;
       if (step.PRC_RULE_ID === prcRuleId) {
@@ -187,8 +187,7 @@ class WorkProcessModal extends Component {
   };
 
   render() {
-    console.debug('workprocessmodal');
-    const { prcStep, selectedUserKeys, selectedDeptKeys, deptList, deptUserList, rootKey } = this.state;
+    const { prcStep, prcButton, selectedUserKeys, selectedDeptKeys, deptList, deptUserList, rootKey } = this.state;
     const rowSelection = {
       selectedRowKeys: selectedUserKeys,
       onChange: this.onDeptUserCheck,
@@ -247,7 +246,7 @@ class WorkProcessModal extends Component {
                     <StyledButton
                       className="btn-light btn-sm"
                       ghost
-                      style={{ width: '150px' }}
+                      style={{ width: '150px', display: item.APPV_STATUS !== 2 ? '' : 'none' }}
                       onClick={() => this.handleAddUser(item.PRC_RULE_ID, item.NODE_ID, item.NODE_TYPE)}
                     >
                       {item.NODE_NAME_KOR}

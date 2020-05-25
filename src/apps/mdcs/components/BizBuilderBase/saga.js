@@ -51,6 +51,12 @@ function* getProcessRule({ id, payload }) {
   yield put(actions.setProcessRule(id, DRAFT_PROCESS));
 }
 
+function* getProcessRuleByModify({ id, payload }) {
+  const response = yield call(Axios.post, `/api/workflow/v1/common/workprocess/defaultPrcRuleModifyHanlder`, { PARAM: { ...payload } });
+  const { DRAFT_PROCESS } = response;
+  yield put(actions.setProcessRule(id, DRAFT_PROCESS));
+}
+
 function* getTaskSeq({ id, workSeq }) {
   const response = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {}, { BUILDER: 'getTaskSeq' });
   const {
@@ -300,6 +306,7 @@ export default function* watcher() {
   yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.id}`, getExtraApiData);
   yield takeEvery(`${actionTypes.GET_DETAIL_DATA}_${arg.id}`, getDetailData);
   yield takeEvery(`${actionTypes.GET_PROCESS_RULE}_${arg.id}`, getProcessRule);
+  yield takeEvery(`${actionTypes.GET_PROCESS_RULE_MODIFY}_${arg.id}`, getProcessRuleByModify);
   yield takeEvery(`${actionTypes.GET_TASK_SEQ}_${arg.id}`, getTaskSeq);
   // yield takeEvery(`${actionTypes.SAVE_TEMP_CONTENTS}_${arg.id}`, saveTempContents);
   yield takeLatest(`${actionTypes.TEMP_SAVE_TASK}_${arg.id}`, tempSaveTask);

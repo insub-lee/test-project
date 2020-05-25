@@ -36,16 +36,23 @@ class MdcsAppvView extends Component {
     },
     isUserSelect: false,
     procResult: [],
+    isMultiSelect: true,
+    workPrcProps: undefined,
+    isDcc: false,
   };
 
   componentDidMount() {
-    const { id, selectedRow, setSelectedRow, APPV_STATUS, submitHandlerBySaga } = this.props;
-    console.debug('view', selectedRow);
-    const { WORK_SEQ, TASK_SEQ, DRAFT_PRC_ID } = selectedRow;
+    const { id, selectedRow, setSelectedRow, APPV_STATUS, submitHandlerBySaga, profile } = this.props;
+    const { WORK_SEQ, TASK_SEQ, DRAFT_PRC_ID, STEP } = selectedRow;
     const appvStatus = selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS == 10 ? 20 : 2;
     const nSelectRow = { ...selectedRow, APPV_STATUS: appvStatus };
     setSelectedRow(nSelectRow);
-    console.debug('view', this.props);
+
+    const strVgroup = profile && profile.ACCOUNT_IDS_DETAIL && profile.ACCOUNT_IDS_DETAIL.V;
+    const vList = strVgroup.split(',').findIndex(x => x === '1221');
+    if (vList !== -1 && STEP === 2) {
+      this.setState({ isDCC: true });
+    }
     const prefixUrl = '/api/workflow/v1/common/workprocess/draftprocresult';
     const param = {
       PARAM: {
@@ -64,8 +71,10 @@ class MdcsAppvView extends Component {
 
   onChange = e => {
     const { selectedRow, setSelectedRow, APPV_STATUS } = this.props;
+    const isMultiSelect = APPV_STATUS !== 10;
     const nSelectRow = { ...selectedRow, APPV_STATUS: e.target.value };
     setSelectedRow(nSelectRow);
+    this.setState({ isMultiSelect });
   };
 
   handleReqApprove = (e, appvStatus) => {
@@ -91,6 +100,7 @@ class MdcsAppvView extends Component {
 
   onClickModify = () => {
     const { selectedRow } = this.props;
+    console.debug('modify', selectedRow);
     const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
     this.setState({ coverView });
   };
@@ -164,10 +174,21 @@ class MdcsAppvView extends Component {
     this.setState({ isUserSelect: false });
   };
 
+  onClickModify = () => {
+    const { selectedRow } = this.props;
+    console.debug('modify', this.props);
+    const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
+    this.setState(prevState => {
+      const { workPrcProps } = prevState;
+      const nWorkPrcProps = { ...workPrcProps, draftMethod: 'modify', darft_id: selectedRow.DRAFT_ID };
+      return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
+    });
+  };
+
   render() {
     const { selectedRow } = this.props;
     const { DRAFT_DATA } = selectedRow;
-    const { modalWidth, coverView, isUserSelect, nextApprover, procResult, userList } = this.state;
+    const { modalWidth, coverView, isUserSelect, nextApprover, procResult, userList, isMultiSelect, workPrcProps, isDCC } = this.state;
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -244,9 +265,12 @@ class MdcsAppvView extends Component {
             </tbody>
           </table>
           <StyledButtonWrapper className="btn-wrap-center" style={{ marginTop: '10px' }}>
-            <StyledButton key="ok" className="btn-primary mr5 btn-sm" onClick={e => false}>
-              표지 수정
-            </StyledButton>
+            {isDCC && (
+              <StyledButton key="ok" className="btn-primary mr5 btn-sm" onClick={this.onClickModify}>
+                표지 수정
+              </StyledButton>
+            )}
+
             <StyledButton key="ok" className="btn-primary mr5 btn-sm" onClick={e => this.handleReqApprove(e, selectedRow.APPV_STATUS)}>
               승인
             </StyledButton>
@@ -293,9 +317,20 @@ class MdcsAppvView extends Component {
             workSeq={coverView.workSeq}
             taskSeq={coverView.taskSeq}
             viewMetaSeq={coverView.viewMetaSeq}
+            workPrcProps={workPrcProps}
             onCloseCoverView={this.onCloseCoverView}
             ViewCustomButtons={({ onCloseCoverView }) => (
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                <StyledButton className="btn-light" onClick={onCloseCoverView}>
+                  닫기
+                </StyledButton>
+              </div>
+            )}
+            ModifyCustomButtons={({ onCloseCoverView, saveBeforeProcess, sagaKey, reloadId }) => (
+              <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                <StyledButton className="btn-primary btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                  저장
+                </StyledButton>
                 <StyledButton className="btn-light" onClick={onCloseCoverView}>
                   닫기
                 </StyledButton>
@@ -309,7 +344,7 @@ class MdcsAppvView extends Component {
           width={1000}
           destroyOnClose
           visible={isUserSelect}
-          onCancel={this.onCloseCoverView}
+          onCancel={this.onCancelUserSelect}
           footer={[]}
         >
           <UserSelect
@@ -320,6 +355,7 @@ class MdcsAppvView extends Component {
             // onUserSelectHandler={this.onUserSelect}
             onUserSelectedComplete={this.onUserSelectedComplete}
             onCancel={this.onCancelUserSelect}
+            isMultiSelect={isMultiSelect}
           />
         </AntdModal>
       </>

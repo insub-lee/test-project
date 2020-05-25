@@ -194,6 +194,7 @@ class Enactment extends Component {
       draftType: DraftType.ENACTMENT,
       nodeIds: selectedNodeIds,
       degreeFlag: ModifyType.MAJOR,
+      draftMethod: 'insert',
     };
     this.props.onShowModal(selectedworkSeq, viewChangeSeq, docNumber.join(''), selectedNodeIds[3], 'INPUT', workPrcProps);
     this.initStateData();

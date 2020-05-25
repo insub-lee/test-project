@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { List, Tree, Row, Col, Checkbox, Button, Icon, Modal } from 'antd';
+import { List, Tree, Row, Col, Checkbox, Icon, message } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -41,6 +41,7 @@ class UserSelectComp extends Component {
     deptUserList: [],
     checkUserList: [],
     selectedUserList: [],
+    isMulti: true,
   };
 
   onInitComplete = id => {
@@ -72,11 +73,12 @@ class UserSelectComp extends Component {
   };
 
   componentDidMount() {
-    const { initUserList, treeDataSource } = this.props;
-    console.debug('initUserList', initUserList);
+    const { initUserList, treeDataSource, isMultiSelect } = this.props;
+    console.debug('initUserList', initUserList, isMultiSelect);
     this.setState({
       checkUserList: [],
       selectedUserList: [],
+      isMulti: isMultiSelect === undefined ? true : isMultiSelect,
     });
     !treeDataSource && this.onInitTreeData();
     initUserList && this.onInitUserSelect();
@@ -92,8 +94,13 @@ class UserSelectComp extends Component {
   ];
 
   onCheckUser = e => {
+    const { isMulti } = this.state;
     this.setState(prevState => {
       const { checkUserList } = prevState;
+      if (!isMulti && checkUserList.length >= 1 && checkUserList[0] !== e.target.value) {
+        message.warning('복수의 사용자를 선택할 수 없습니다.!!');
+        return { checkUserList };
+      }
       const idx = checkUserList.findIndex(x => x === e.target.value);
       if (idx === -1) {
         checkUserList.splice(idx, 0, e.target.value);
@@ -106,21 +113,25 @@ class UserSelectComp extends Component {
 
   onSelectedUser = () => {
     const { userDataList, result } = this.props;
-    const { checkUserList } = this.state;
+    const { checkUserList, selectedUserList, isMulti } = this.state;
     const nUserList = userDataList || (result && result.userList && result.userList.list);
-
-    this.setState(prevState => {
-      const { selectedUserList } = prevState;
-      const resultUserList = selectedUserList !== undefined ? selectedUserList : [];
-      checkUserList.forEach(chkUser => {
-        const idx = resultUserList.findIndex(user => user.USER_ID === chkUser);
-        if (idx === -1) {
-          const addUser = nUserList.filter(user => user.USER_ID === chkUser).length > 0 ? nUserList.filter(user => user.USER_ID === chkUser)[0] : {};
-          resultUserList.push(addUser);
-        }
+    if (isMulti) {
+      this.setState(prevState => {
+        const { selectedUserList } = prevState;
+        const resultUserList = selectedUserList !== undefined ? selectedUserList : [];
+        checkUserList.forEach(chkUser => {
+          const idx = resultUserList.findIndex(user => user.USER_ID === chkUser);
+          if (idx === -1) {
+            const addUser = nUserList.filter(user => user.USER_ID === chkUser).length > 0 ? nUserList.filter(user => user.USER_ID === chkUser)[0] : {};
+            resultUserList.push(addUser);
+          }
+        });
+        return { selectedUserList: resultUserList, checkUserList: [] };
       });
-      return { selectedUserList: resultUserList, checkUserList: [] };
-    });
+    } else {
+      const selectedUser = nUserList.filter(user => user.USER_ID === checkUserList[0]);
+      this.setState({ selectedUserList: selectedUser, checkUserList: [] });
+    }
   };
 
   onDelete = userId => {
