@@ -17,12 +17,36 @@ class EduMgt extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      init: true,
       eduInfo: {},
       safetyEduList: [],
       modalType: '',
       modalVisible: false,
     };
   }
+
+  componentDidMount() {
+    const { init } = this.state;
+    const { eduNo } = this.props;
+    if (init && eduNo) {
+      this.setState(
+        {
+          init: false,
+        },
+        () => this.initSafetyEdu(eduNo),
+      );
+    }
+  }
+
+  initSafetyEdu = eduNo => {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const apiInfo = {
+      key: 'getSafetyEduList',
+      type: 'GET',
+      url: `/api/eshs/v1/common/safetyEdu?type=searchOne&keyword=${eduNo}`,
+    };
+    getCallDataHandlerReturnRes(id, apiInfo, this.selectSafeEduCallback);
+  };
 
   handleModalVisible = (type, bool) => {
     this.setState({
@@ -81,7 +105,6 @@ class EduMgt extends Component {
   };
 
   render() {
-    const { formData } = this.props;
     const { modalType, modalVisible, eduInfo, safetyEduList } = this.state;
     return (
       <Styled>
@@ -95,7 +118,7 @@ class EduMgt extends Component {
                   style={{ width: '200px', marginLeft: '5px', marginRight: '5px' }}
                   readOnly
                   onClick={() => this.handleModalVisible('searchEdu', true)}
-                  value={(formData.EDU_NO && formData.EDU_NO) || ''}
+                  value={(eduInfo.EDU_NO && eduInfo.EDU_NO) || ''}
                 />
               </label>
             </div>
@@ -139,7 +162,7 @@ class EduMgt extends Component {
 }
 EduMgt.propTypes = {
   sagaKey: PropTypes.string,
-  formData: PropTypes.object,
+  eduNo: PropTypes.string,
   getCallDataHandlerReturnRes: PropTypes.func,
 };
 

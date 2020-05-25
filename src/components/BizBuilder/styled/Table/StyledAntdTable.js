@@ -5,6 +5,10 @@ const primaryColor = '#636a78';
 const StyledAntdTable = Component => styled(Component)`
   padding: 10px;
 
+  &.ant-table-no-pad {
+    padding: 0;
+  }
+
   .ant-table .ant-table-content {
     .ant-table-body {
       border-top: 1px solid #bbb;

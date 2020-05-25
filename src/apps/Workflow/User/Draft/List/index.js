@@ -35,7 +35,7 @@ class DraftList extends Component {
       title: 'No',
       dataIndex: 'RNUM',
       key: 'rnum',
-      width: '5%',
+      width: '8%',
       align: 'center',
     },
     {
@@ -44,7 +44,7 @@ class DraftList extends Component {
       key: 'APPVGUBUN',
       width: '12%',
       align: 'center',
-      render: (text, record) => (record.REL_TYPE === 1 ? text : '폐기'),
+      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
     },
     {
       title: '프로세스상태',

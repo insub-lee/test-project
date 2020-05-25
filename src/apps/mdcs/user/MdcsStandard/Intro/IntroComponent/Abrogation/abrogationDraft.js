@@ -27,9 +27,7 @@ class AbrogationDraft extends Component {
     const { WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ, TITLE } = this.props;
     const draftData = { WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ };
     const { DRAFT_PROCESS } = response;
-    const { DRAFT_DATA } = DRAFT_PROCESS;
-    const nDraftData = { ...DRAFT_DATA, draftData };
-    const tProc = { ...DRAFT_PROCESS, DRAFT_DATA: nDraftData, REL_TYPE: 99, WORK_SEQ, TASK_SEQ, DRAFT_TITLE: TITLE };
+    const tProc = { ...DRAFT_PROCESS, DRAFT_DATA: draftData, REL_TYPE: 99, WORK_SEQ, TASK_SEQ, DRAFT_TITLE: TITLE };
     this.setState({ workProcess: { DRAFT_PROCESS: tProc }, draftWorkProc: tProc });
   };
 

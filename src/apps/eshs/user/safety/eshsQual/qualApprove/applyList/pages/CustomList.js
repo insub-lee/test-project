@@ -161,7 +161,6 @@ class CustomList extends Component {
         modalContent = [InterLockResult(taskSeq)];
       }
     }
-    console.debug('여기는 setModalContent taskSeq [ ', taskSeq, ' ]  title[ ', title, ' ]  gubun[ ', gubun, ' ]');
     this.setState(
       {
         modalContent,

@@ -22,6 +22,7 @@ import Amendment from './Amendment';
 import Abrogation from './Abrogation';
 import AbrogationDraft from './Abrogation/abrogationDraft';
 import AbrogationMulti from './AbrogationMulti';
+import AbrogationMultiDraft from './AbrogationMulti/abrogationMultiDraft';
 const AntdModal = StyledModalWrapper(Modal);
 
 class IntroComponent extends Component {
@@ -31,12 +32,14 @@ class IntroComponent extends Component {
       selectedDraft: DraftType.ENACTMENT,
       isShow: false,
       isAbrogationShow: false,
+      isAbrogationMultiShow: false,
       isLoading: false,
       docType: '',
       selectedworkSeq: 0,
       viewChangeSeq: undefined,
       selectedtaskSeq: undefined,
       selectedTaskOriginSeq: undefined,
+      abrogationList: undefined,
       title: undefined,
       isInitState: false,
       selectedNodeId: 0,
@@ -99,6 +102,14 @@ class IntroComponent extends Component {
     });
   };
 
+  onShowAbrogationMulti = workPrcProps => {
+    console.debug('onShowAbrogationMulti', workPrcProps);
+    this.setState({
+      isAbrogationMultiShow: true,
+      workPrcProps,
+    });
+  };
+
   loadingComplete = () => {
     this.setState({ isLoading: false });
   };
@@ -118,6 +129,10 @@ class IntroComponent extends Component {
     this.setState({ isAbrogationShow: false });
   };
 
+  onCloseAbrogationMultiModal = () => {
+    this.setState({ isAbrogationMultiShow: false });
+  };
+
   onAbrogationProcess = workProcess => {
     const { sagaKey, submitHandlerBySaga } = this.props;
     const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
@@ -125,7 +140,18 @@ class IntroComponent extends Component {
   };
 
   onCompleteProc = () => {
-    console.debug('dkdkdkkd');
+    this.setState({
+      isShow: false,
+      isAbrogationShow: false,
+      isAbrogationMultiShow: false,
+    });
+    history.push('/apps/Workflow/User/Draft');
+  };
+
+  onAbrogationMultiProcess = workPrcProps => {
+    const { sagaKey, submitHandlerBySaga } = this.props;
+    const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
+    submitHandlerBySaga(sagaKey, 'POST', prefixUrl, { DRAFT_PROCESS: workPrcProps }, this.onCompleteProc);
   };
 
   render() {
@@ -133,6 +159,7 @@ class IntroComponent extends Component {
       selectedDraft,
       isShow,
       isAbrogationShow,
+      isAbrogationMultiShow,
       isLoading,
       selectedworkSeq,
       selectedTaskSeq,
@@ -177,12 +204,34 @@ class IntroComponent extends Component {
                   {selectedDraft === DraftType.ENACTMENT && <Enactment {...this.props} onShowModal={this.onShowModalEnactment} />}
                   {selectedDraft === DraftType.AMENDMENT && <Amendment {...this.props} onShowModal={this.onShowModalAmendment} />}
                   {selectedDraft === DraftType.ABROGATION && <Abrogation {...this.props} onShowModalAbrogation={this.onShowModalAbrogation} />}
-                  {selectedDraft === 'ABROGATION_MULTI' && <AbrogationMulti {...this.props} />}
+                  {selectedDraft === 'ABROGATION_MULTI' && <AbrogationMulti {...this.props} onShowAbrogationMulti={this.onShowAbrogationMulti} />}
                 </ul>
               </div>
             </div>
           </div>
         </div>
+        <AntdModal
+          destroyOnClose
+          style={{ top: '50px' }}
+          width={900}
+          visible={isAbrogationMultiShow}
+          onCancel={this.onCloseAbrogationMultiModal}
+          footer={null}
+          maskClosable={false}
+        >
+          <StyledInputView>
+            <div className="pop_tit">표준 일괄 폐기</div>
+            <div style={{ display: !isLoading ? 'block' : 'none' }}>
+              <ApproveBase
+                id="abrogationProc"
+                workPrcProps={workPrcProps}
+                component={AbrogationMultiDraft}
+                onAbrogationMultiProcess={this.onAbrogationMultiProcess}
+              />
+              ;
+            </div>
+          </StyledInputView>
+        </AntdModal>
         <AntdModal
           destroyOnClose
           style={{ top: '50px' }}

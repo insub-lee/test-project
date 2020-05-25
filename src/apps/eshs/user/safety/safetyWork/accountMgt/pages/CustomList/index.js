@@ -6,14 +6,20 @@ import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
+
+// import Loadable from 'components/Loadable';
+// import Loading from '../Common/Loading';
 
 const AntdTable = StyledAntdTable(Table);
+const StyledButton = StyledAntdButton(Button);
 
 class CustomList extends Component {
   constructor(props) {
@@ -23,6 +29,7 @@ class CustomList extends Component {
       isRowNo: false,
       isOnRowClick: false,
       rowClickView: 'VIEW',
+      StyledWrap: StyledViewDesigner,
     };
   }
 
@@ -32,6 +39,16 @@ class CustomList extends Component {
     let isRowNo = false;
     let isOnRowClick = false;
     let rowClickView = 'VIEW';
+
+    if (workInfo.BUILDER_STYLE_PATH) {
+      // const StyledWrap = Loadable({
+      //   loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
+      //   loading: Loading,
+      // });
+      const StyledWrap = DefaultStyleInfo(workInfo.BUILDER_STYLE_PATH);
+      this.setState({ StyledWrap });
+    }
+
     if (workInfo && workInfo.OPT_INFO) {
       workInfo.OPT_INFO.forEach(opt => {
         if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
@@ -79,7 +96,7 @@ class CustomList extends Component {
     return <div />;
   };
 
-  setColumns = cols => {
+  setColumns = (cols, widths) => {
     const { isRowNo } = this.state;
     const columns = [];
     if (isRowNo) {
@@ -88,13 +105,16 @@ class CustomList extends Component {
         title: 'No.',
       });
     }
-    cols.forEach(node => {
+    cols.forEach((node, idx) => {
       if (node.comp && node.comp.COMP_FIELD) {
         columns.push({
           dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
           title: node.comp.CONFIG.property.HEADER_NAME_KOR,
-          width: (node.style && node.style.width) || undefined,
+          // width: (node.style && node.style.width) || undefined,
+          width: (widths && widths[idx] && `${widths[idx]}%`) || undefined,
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
+          className: node.addonClassName && node.addonClassName.length > 0 ? `${node.addonClassName.toString().replaceAll(',', ' ')}` : '',
+          align: (node.style && node.style.textAlign) || undefined,
         });
       }
     });
@@ -127,9 +147,11 @@ class CustomList extends Component {
   };
 
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
+    const { listSelectRowKeys, workInfo, customOnRowClick, gubun } = this.props;
     const { isMultiDelete, isOnRowClick } = this.state;
-    const columns = this.setColumns(group.rows[0].cols);
+
+    const listData = (this.props && this.props.listData) || [];
+    const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
     if (isMultiDelete) {
@@ -145,16 +167,19 @@ class CustomList extends Component {
       onRow = this.onRowClick;
     }
 
+    console.debug('gubun [ ', gubun, ' ]');
+
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
           <AntdTable
+            bordered
             rowKey="TASK_SEQ"
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData || []}
+            dataSource={(listData && listData.filter(l => l.GUBUN === gubun)) || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
@@ -178,7 +203,7 @@ class CustomList extends Component {
       isBuilderModal,
       changeBuilderModalState,
     } = this.props;
-    const { isMultiDelete } = this.state;
+    const { isMultiDelete, StyledWrap } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -191,7 +216,7 @@ class CustomList extends Component {
       } = workFlowConfig;
 
       return (
-        <StyledViewDesigner>
+        <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
             {groups.map((group, groupIndex) => {
               if (group.type === 'listGroup') {
@@ -199,7 +224,7 @@ class CustomList extends Component {
               }
               return (
                 (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
-                  <div key={group.key}>
+                  <StyledSearchWrapper key={group.key}>
                     {group.useTitle && <GroupTitle title={group.title} />}
                     <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
                       <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
@@ -215,7 +240,9 @@ class CustomList extends Component {
                                         {...col}
                                         comp=""
                                         colSpan={col.span}
-                                        className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
+                                        className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}${
+                                          col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName.toString().replaceAll(',', ' ')}` : ''
+                                        }`}
                                       >
                                         <Contents>
                                           {col.comp &&
@@ -240,18 +267,33 @@ class CustomList extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <Button type="primary" className="btn-primary" onClick={() => getListData(id, workSeq)}>
+                          <StyledButton className="btn-gray" onClick={() => getListData(id, workSeq)}>
                             Search
-                          </Button>
+                          </StyledButton>
                         </div>
                       )}
                     </Group>
-                  </div>
+                  </StyledSearchWrapper>
                 )
               );
             })}
+            {/* <div className="alignRight">
+              <StyledButton
+                className="btn-primary btn-first"
+                onClick={() =>
+                  isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
+                }
+              >
+                Add
+              </StyledButton>
+              {isMultiDelete && (
+                <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
+                  <StyledButton className="btn-light">Delete</StyledButton>
+                </Popconfirm>
+              )}
+            </div> */}
           </Sketch>
-        </StyledViewDesigner>
+        </StyledWrap>
       );
     }
     return '';
@@ -275,6 +317,7 @@ CustomList.propTypes = {
   changeBuilderModalState: PropTypes.func,
   changeViewPage: PropTypes.func,
   customOnRowClick: PropTypes.any,
+  gubun: PropTypes.string,
 };
 
 CustomList.defaultProps = {
@@ -284,6 +327,7 @@ CustomList.defaultProps = {
     },
   },
   customOnRowClick: undefined,
+  gubun: 'SQ',
 };
 
 export default CustomList;

@@ -270,8 +270,6 @@ class SafetyWorkMain extends Component {
         align: 'center',
       },
     ];
-    console.debug('긴급작업 허가 - state', this.state);
-    console.debug('긴급작업 허가 - props', this.props);
 
     return (
       <Styled>

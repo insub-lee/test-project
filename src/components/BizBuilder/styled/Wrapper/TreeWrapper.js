@@ -33,7 +33,7 @@ const TreeWrapper = styled.div`
       }
 
       li .ant-tree-node-content-wrapper {
-        font-size: 12px;
+        font-size: 11px;
       }
     }
   }
