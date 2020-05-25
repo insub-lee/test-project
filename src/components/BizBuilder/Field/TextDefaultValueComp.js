@@ -14,11 +14,27 @@ class TextDefaultValueComp extends React.Component {
     const { CONFIG } = this.props;
     const defaultValue = (CONFIG && CONFIG.property && CONFIG.property.defaultValue) || '';
 
-    if (defaultValue) this.handleOnChange(defaultValue);
+    if (defaultValue) this.handleOnChange(defaultValue, 'init');
   }
 
-  handleOnChange = value => {
-    const { sagaKey: id, COMP_FIELD, CONFIG, changeFormData, changeValidationData } = this.props;
+  handleOnChange = (value, flag) => {
+    const {
+      sagaKey: id,
+      COMP_FIELD,
+      CONFIG,
+      changeFormData,
+      changeValidationData,
+      CONFIG: {
+        property: { isRequired },
+      },
+      NAME_KOR,
+    } = this.props;
+    if (isRequired && flag) {
+      changeValidationData(id, COMP_FIELD, true, '');
+    } else if (isRequired) {
+      // 기본값인지 체크
+      changeValidationData(id, COMP_FIELD, value.toString().trim() !== '', value.toString().trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
+    }
     changeFormData(id, COMP_FIELD, value);
   };
 
@@ -49,11 +65,9 @@ TextDefaultValueComp.propTypes = {
   CONFIG: PropTypes.any,
   colData: PropTypes.any,
   changeFormData: PropTypes.any,
-  id: PropTypes.any,
+  sagaKey: PropTypes.string,
   changeValidationData: PropTypes.any,
   readOnly: PropTypes.any,
-  compProp: PropTypes.any,
-  changeSearchData: PropTypes.any,
 };
 
 export default TextDefaultValueComp;
