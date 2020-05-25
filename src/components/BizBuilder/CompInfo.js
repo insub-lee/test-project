@@ -132,6 +132,7 @@ import TextDefaultValueComp from 'components/BizBuilder/Field/TextDefaultValueCo
 import JsonTableComp from 'components/BizBuilder/Field/JsonTableComp';
 import EducationExamComp from 'components/BizBuilder/Field/EducationExamComp';
 import CustomTreeSelectSearchComp from 'components/BizBuilder/Field/CustomTreeSelectSearchComp';
+import NumberCompFloat from 'components/BizBuilder/Field/NumberCompFloat';
 import ViewDateComp from 'components/BizBuilder/Field/ViewDateComp';
 
 export const CompInfo = {
@@ -268,4 +269,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/JsonTableComp': { renderer: property => <JsonTableComp {...property} /> },
   'components/BizBuilder/Field/EducationExamComp': { renderer: property => <EducationExamComp {...property} /> },
   'components/BizBuilder/Field/CustomTreeSelectSearchComp': { renderer: property => <CustomTreeSelectSearchComp {...property} /> },
+  'components/BizBuilder/Field/NumberCompFloat': { renderer: property => <NumberCompFloat {...property} /> },
 };
