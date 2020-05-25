@@ -32,7 +32,6 @@ function ViewUploadedFileComp(props) {
     };
 
     let down = '';
-    console.debug('### 1: ', DETAIL);
     if (DETAIL !== undefined) {
       down = DETAIL[0].down;
     }
@@ -198,7 +197,7 @@ ViewUploadedFileComp.defaultProps = {
 };
 
 ViewUploadedFileComp.propTypes = {
-  CONFIG: PropTypes.object,
+  CONFIG: PropTypes.shape({ info: PropTypes.object, property: PropTypes.object, option: PropTypes.object }),
   formData: PropTypes.object,
   colData: PropTypes.string,
 };

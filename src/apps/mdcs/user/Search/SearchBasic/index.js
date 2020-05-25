@@ -337,8 +337,16 @@ class SearchBasic extends Component {
                   taskSeq={SearchView.taskSeq}
                   closeBtnFunc={this.closeBtnFunc}
                   clickCoverView={this.clickCoverView}
-                  ViewCustomButtons={({ closeBtnFunc }) => (
+                  ViewCustomButtons={({ closeBtnFunc, isTaskFavorite, sagaKey, formData, setTaskFavorite }) => (
                     <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                      {isTaskFavorite && (
+                        <StyledButton
+                          className="btn-light btn-first"
+                          onClick={() => setTaskFavorite(sagaKey, formData.WORK_SEQ, formData.TASK_ORIGIN_SEQ, formData.BUILDER_TASK_FAVORITE || 'N')}
+                        >
+                          {formData.BUILDER_TASK_FAVORITE === 'Y' ? '즐겨찾기 해제' : '즐겨찾기 추가'}
+                        </StyledButton>
+                      )}
                       <StyledButton className="btn-primary" onClick={closeBtnFunc}>
                         닫기
                       </StyledButton>

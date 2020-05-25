@@ -93,6 +93,17 @@ const StyledButton = styled.button`
     }
   }
 
+  &.btn-link {
+    color: rgba(0,0,0,.65);
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    &:hover {
+      color: #000;
+      text-decoration: underline;
+    }
+  }
+
   &.btn-first {
     margin-right: 5px;
   }

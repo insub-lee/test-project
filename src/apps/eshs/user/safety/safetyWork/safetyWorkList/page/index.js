@@ -7,12 +7,12 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
-import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import message from 'components/Feedback/message';
 import Group from 'components/BizBuilder/Sketch/Group';
 import MessageContent from 'components/Feedback/message.style2';
@@ -21,11 +21,11 @@ import SafetyWorkViewer from '../../safetyWorkView';
 import Styled from './Styled';
 
 const AntdModal = StyledModalWrapper(Modal);
-const AntdTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdSearch = StyledSearchInput(Input.Search);
-const StyledButton = StyledAntdButton(Button);
-const AntdDatePicker = StyledPicker(DatePicker);
+const AntdDatePicker = StyledDatePicker(DatePicker);
 const AntdSelect = StyledSelect(Select);
+const StyledButton = StyledAntdButton(Button);
 
 const { Option } = Select;
 
@@ -35,7 +35,7 @@ const CustomTableStyled = styled.div`
   }
 `;
 
-class SafetyWorkMain extends Component {
+class SafetyWorkList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,6 +44,7 @@ class SafetyWorkMain extends Component {
       modalVisible: false,
       selectedWork: '',
       searchValues: {
+        VIEW_TYPE: props.viewPage,
         WORK_NO: '', // 작업번호
         REQ_CMPNY_CD: '', // 발주회사코드
         REQ_CMPNY_NM: '', // 발주회사명
@@ -190,7 +191,27 @@ class SafetyWorkMain extends Component {
   };
 
   render() {
+    const { viewPage } = this.props;
     const { modalType, modalTitle, modalVisible, searchValues, safetyWorks, selectedWork } = this.state;
+    let STTLMNT_STATUS_LIST = [
+      { label: '전체', value: '' },
+      { label: '신청저장', value: '0' },
+      { label: '신청상신', value: '1' },
+      { label: '신청승인', value: '2A' },
+      { label: '신청불결', value: '2F' },
+      { label: '허가상신', value: '3' },
+      { label: '허가승인', value: '4A' },
+      { label: '허가부결', value: '4F' },
+    ];
+    if (viewPage === 'accept') {
+      STTLMNT_STATUS_LIST = [
+        { label: '전체', value: '' },
+        { label: '신청승인', value: '2A' },
+        { label: '허가상신', value: '3' },
+        { label: '허가승인', value: '4A' },
+        { label: '허가부결', value: '4F' },
+      ];
+    }
     const columns = [
       {
         title: '작업번호',
@@ -498,14 +519,11 @@ class SafetyWorkMain extends Component {
                           value={searchValues.STTLMNT_STATUS}
                           onChange={value => this.handleChangeSearchValue('STTLMNT_STATUS', value)}
                         >
-                          <Option value="">전체</Option>
-                          <Option value="0">신청저장</Option>
-                          <Option value="1">신청상신</Option>
-                          <Option value="2A">신청승인</Option>
-                          <Option value="2F">신청불결</Option>
-                          <Option value="3">허가상신</Option>
-                          <Option value="4A">허가승인</Option>
-                          <Option value="4F">허가부결</Option>
+                          {STTLMNT_STATUS_LIST.map(item => (
+                            <Option key={`STTLMNT_STATUS_${item.value}`} value={item.value}>
+                              {item.label}
+                            </Option>
+                          ))}
                         </AntdSelect>
                       </div>
                     </td>
@@ -548,19 +566,19 @@ class SafetyWorkMain extends Component {
               </table>
             </div>
             <div className="view-designer-group-search-btn-wrap">
-              <StyledButton className="btn-primary btn-gray" onClick={() => this.onSearch()}>
+              <StyledButton className="btn-gray mr5 btn-sm" onClick={() => this.onSearch()}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary btn-gray" onClick={() => alert('목록인쇄')}>
+              <StyledButton className="btn-gray mr5 btn-sm" onClick={() => alert('목록인쇄')}>
                 목록인쇄
               </StyledButton>
-              <StyledButton className="btn-primary btn-gray" onClick={() => alert('점검일지 인쇄')}>
+              <StyledButton className="btn-gray  btn-sm" onClick={() => alert('점검일지 인쇄')}>
                 점검일지 인쇄
               </StyledButton>
             </div>
           </Group>
         </StyledSearchWrapper>
-        <ContentsWrapper>
+        <StyledContentsWrapper>
           <CustomTableStyled>
             <AntdTable
               pagination={false}
@@ -569,7 +587,7 @@ class SafetyWorkMain extends Component {
               footer={() => <div style={{ textAlign: 'center' }}>{`총 ${safetyWorks.length === 0 ? 0 : safetyWorks.length} 건`}</div>}
             />
           </CustomTableStyled>
-        </ContentsWrapper>
+        </StyledContentsWrapper>
         <AntdModal
           title={modalTitle}
           width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '70%'}
@@ -600,7 +618,8 @@ class SafetyWorkMain extends Component {
   }
 }
 
-SafetyWorkMain.propTypes = {
+SafetyWorkList.propTypes = {
+  viewPage: PropTypes.string,
   sagaKey: PropTypes.string,
   result: PropTypes.object,
   profile: PropTypes.object,
@@ -608,4 +627,8 @@ SafetyWorkMain.propTypes = {
   getCallDataHandlerReturnRes: PropTypes.func,
 };
 
-export default SafetyWorkMain;
+SafetyWorkList.defaultProps = {
+  viewPage: '',
+};
+
+export default SafetyWorkList;

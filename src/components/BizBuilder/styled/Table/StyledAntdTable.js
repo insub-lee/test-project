@@ -166,7 +166,7 @@ const StyledAntdTable = Component => styled(Component)`
 
   .ant-table-pagination.ant-pagination {
     float: none;
-    margin: 20px auto;
+    margin: 20px auto 0;
     text-align: center;
     font-size: 11px;
   }

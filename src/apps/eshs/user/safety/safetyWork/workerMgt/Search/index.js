@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Input, Modal, Table, Select } from 'antd';
+import { Input, Table, Select } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
@@ -11,7 +10,6 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import Styled from './Styled';
 
-const AntdModal = StyledModalWrapper(Modal);
 const AntdSelect = StyledSelect(Select);
 const AntdTable = StyledLineTable(Table);
 const AntdInput = StyledInput(Input);
@@ -215,8 +213,6 @@ class List extends Component {
       },
     ];
 
-    console.debug('서치렌더', this.state);
-    console.debug('서치렌더', this.props);
     return (
       <Styled>
         <StyledSearchWrap>

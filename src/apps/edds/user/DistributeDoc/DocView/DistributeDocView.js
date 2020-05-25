@@ -4,14 +4,22 @@ import moment from 'moment';
 import base64 from 'base-64';
 import { Input, Table } from 'antd';
 
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 
 const AntdTable = StyledAntdTable(Table);
+const AntdTextarea = StyledTextarea(Input.TextArea);
 
 class DistributeDocView extends Component {
   
   componentDidMount() {
+    this.getFileList();
+  }
+
+  getFileList = () => {
     const { id, getCallDataHandler, selectedRow } = this.props;
     const apiAry = [{
       key: 'distributeDocView',
@@ -20,24 +28,39 @@ class DistributeDocView extends Component {
       params: { PARAM: { ...selectedRow } },
     }];
     getCallDataHandler(id, apiAry, () => {});
-  }
+  };
 
   onClickDownload = row => {
-    const { id, getFileDownload } = this.props;
     const {
+      id,
+      getFileDownload,
       result: {
         distributeDocView: { detail },
       },
     } = this.props;
-    const drmInfo = {
-      pr: detail.PR,
-      uc: detail.UC,
-      bk: detail.BK,
-      ed: detail.ED,
-    };
-    const acl = base64.encode(JSON.stringify({ drmInfo: { ...drmInfo } }));
-    const url = `/down/eddsfile/${row.SEQ}/${acl}`;
-    getFileDownload(id, url, row.NAME);
+
+    if (row.FINE_DOWN_CNT <= 0) {
+      message.info(<MessageContent>다운로드가 불가능합니다.<br /><br />다운로드를 원하시면 재배포 요청하시기 바랍니다.</MessageContent>);
+    } else {
+      const drmInfo = {
+        pr: detail.PR,
+        uc: detail.UC,
+        bk: detail.BK,
+        ed: detail.ED,
+      };
+      const acl = base64.encode(JSON.stringify({ 
+        drmInfo: { ...drmInfo },
+        docInfo: { 
+          TRANS_NO: row.TRANS_NO, 
+          RECV_USER_ID: row.RECV_USER_ID, 
+          FILE_DOWN_CNT: row.FILE_DOWN_CNT 
+        } 
+      }));
+      const url = `/down/eddsfile/${row.FILE_SEQ}/${acl}`;
+      getFileDownload(id, url, row.FILE_NAME, () => {
+        this.getFileList();
+      });
+    }
   };
 
   columns = [
@@ -46,28 +69,29 @@ class DistributeDocView extends Component {
       dataIndex: 'RNUM',
       key: 'RNUM',
       align: 'center',
-      width: '10%',
+      width: '8%',
     },
     {
       title: '파일명',
-      dataIndex: 'NAME',
-      key: 'NAME',
+      dataIndex: 'FILE_NAME',
+      key: 'FILE_NAME',
       render: (text, record) => <li style={{ cursor: 'pointer' }} onClick={() => this.onClickDownload(record)}>{text}</li>
     },
     {
-      title: '다운',
-      dataIndex: 'DOWN_CNT',
-      key: 'DOWN_CNT',
-      width: '10%',
+      title: '다운가능횟수',
+      dataIndex: 'FILE_DOWN_CNT',
+      key: 'FILE_DOWN_CNT',
+      width: '20%',
+      align: 'center',
       render: (text, record) => `${text}회`
     },
     {
       title: '다운로드 일자',
-      dataIndex: 'DOWN_DATE',
-      key: 'DOWN_DATE',
-      width: '20%',
+      dataIndex: 'DOWNLOAD_DTTM',
+      key: 'DOWNLOAD_DTTM',
+      width: '30%',
       align: 'center',
-      render: (text, record) => record.DOWN_DATE && moment(record.DOWN_DATE).format('YYYY-MM-DD HH:mm:ss'),
+      render: (text, record) => record.DOWNLOAD_DTTM && moment(record.DOWNLOAD_DTTM).format('YYYY-MM-DD HH:mm:ss'),
     },
   ]
 
@@ -83,8 +107,8 @@ class DistributeDocView extends Component {
     return (
       <div id="EDDS_DOWN">
         {Object.keys(detail).length > 0 && (
-          <React.Fragment>
-            <StyledTable>
+          <>
+            <StyledHtmlTable>
               <table>
                 <colgroup>
                   <col width="100px" />
@@ -105,7 +129,7 @@ class DistributeDocView extends Component {
                   </tr>
                   <tr>
                     <th>발송일</th>
-                    <td>{moment(detail.REG_DTTM).format('YYYY-MM-DD')}</td>
+                    <td>{moment(detail.REG_DTTM).format('YYYY-MM-DD HH:mm:ss')}</td>
                     <th>발송자ID</th>
                     <td>{detail.DIST_USER_ID}</td>
                   </tr>
@@ -115,12 +139,12 @@ class DistributeDocView extends Component {
                     <th>개정번호</th>
                     <td>{detail.VERSION}</td>
                   </tr>
-                  <tr>
+                  {/* <tr>
                     <th>관리유형</th>
                     <td></td>
                     <th>소스시스템</th>
                     <td></td>
-                  </tr>
+                  </tr> */}
                   <tr>
                     <th>DRM 권한</th>
                     <td colSpan={3}>
@@ -130,14 +154,19 @@ class DistributeDocView extends Component {
                   <tr>
                     <th>전달사항</th>
                     <td colSpan={3}>
-                      <Input.TextArea value={detail.DISTRIBUTE_REASON} readOnly />
+                      <AntdTextarea value={detail.DISTRIBUTE_REASON} readOnly />
                     </td>
                   </tr>
                 </tbody>
               </table>
-            </StyledTable>
-            <AntdTable dataSource={detail.fileList.map(item => ({ ...item, key: item.SEQ }))} columns={this.columns} pagination={false} />
-          </React.Fragment>
+            </StyledHtmlTable>
+            <AntdTable
+              dataSource={detail.fileList.map(item => ({ ...item, key: item.SEQ }))}
+              columns={this.columns}
+              pagination={false}
+              style={{ marginTop: 10 }}
+            />
+          </>
         )}
       </div>
     )

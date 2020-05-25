@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Select } from 'antd';
-
+import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import TaskTransfer from './TaskTransfer';
@@ -77,7 +77,15 @@ class AbrogationMulti extends Component {
     );
   };
 
-  submitTask = () => console.debug('submit');
+  submitTask = () => {
+    const { onShowAbrogationMulti } = this.props;
+    const { selectedList } = this.state;
+    const workPrcProps = {
+      draftType: DraftType.ABROGATION,
+      abrogationList: selectedList,
+    };
+    onShowAbrogationMulti(workPrcProps);
+  };
 
   render() {
     const { sourceList, selectedList } = this.state;
