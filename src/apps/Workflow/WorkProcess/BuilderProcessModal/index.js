@@ -12,8 +12,8 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledFillTable from 'commonStyled/MdcsStyled/Table/StyledFillTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledAntdPointTable from 'components/BizBuilder/styled/Table/StyledAntdPointTable';
 import StyledWorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal/StyledWorkProcessModal';
 import * as DraftNode from 'apps/Workflow/WorkFlowBase/Nodes/Constants/approveconst';
 import reducer from './reducer';
@@ -21,7 +21,7 @@ import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 
-const AntdFillTable = StyledFillTable(Table);
+const AntdPointTable = StyledAntdPointTable(Table);
 
 const getTreeData = deptList =>
   deptList.length > 0
@@ -205,7 +205,7 @@ class BuilderProcessModal extends Component {
                   )}
                 </div>
                 <div className="userList">
-                  <AntdFillTable
+                  <AntdPointTable
                     rowSelection={rowSelection}
                     columns={this.getColumns()}
                     dataSource={deptUserList.map(item => ({
