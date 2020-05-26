@@ -4,6 +4,7 @@ import { Card, Input, Select } from 'antd';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
@@ -12,6 +13,9 @@ class InputPage extends React.Component {
     super(props);
     this.state = {
       eduDate: {},
+      selectedDate: {},
+      PARENT_WORK_SEQ: props.parentWorkSeq,
+      PARENT_TASK_SEQ: props.parentTaskSeq,
       questions: {
         0: {
           title: '',
@@ -57,6 +61,8 @@ class InputPage extends React.Component {
   componentDidMount() {
     this.getQuestions();
     this.getEducationDate();
+    this.getEduacationYears();
+    this.getEducationMonths();
   }
 
   getQuestions = () => {
@@ -74,10 +80,50 @@ class InputPage extends React.Component {
 
   setQuestions = () => {
     const { result } = this.props;
+    const initQuestions = {
+      0: {
+        title: '',
+        firstSelection: '',
+        secondSelection: '',
+        thirdSelection: '',
+        fourthSelection: '',
+      },
+      1: {
+        title: '',
+        firstSelection: '',
+        secondSelection: '',
+        thirdSelection: '',
+        fourthSelection: '',
+      },
+      2: {
+        title: '',
+        firstSelection: '',
+        secondSelection: '',
+        thirdSelection: '',
+        fourthSelection: '',
+      },
+      3: {
+        title: '',
+        firstSelection: '',
+        secondSelection: '',
+        thirdSelection: '',
+        fourthSelection: '',
+      },
+      4: {
+        title: '',
+        firstSelection: '',
+        secondSelection: '',
+        thirdSelection: '',
+        fourthSelection: '',
+      },
+    };
+
     this.setState(prevState => ({
       questions:
         (result.questions && result.questions.list.length && result.questions.list[0].QUESTIONS && { ...JSON.parse(result.questions.list[0].QUESTIONS) }) ||
-        prevState.questions,
+        initQuestions,
+      PARENT_WORK_SEQ: (result.questions && result.questions.list.length && result.questions.list[0].PARENT_WORK_SEQ) || prevState.PARENT_WORK_SEQ,
+      PARENT_TASK_SEQ: (result.questions && result.questions.list.length && result.questions.list[0].PARENT_TASK_SEQ) || prevState.PARENT_TASK_SEQ,
     }));
   };
 
@@ -98,6 +144,7 @@ class InputPage extends React.Component {
     const { result } = this.props;
     this.setState({
       eduDate: (result.eduDate && result.eduDate.list.length && result.eduDate.list[0]) || {},
+      selectedDate: (result.eduDate && result.eduDate.list.length && result.eduDate.list[0]) || {},
     });
   };
 
@@ -109,15 +156,69 @@ class InputPage extends React.Component {
     }));
   };
 
+  handleSelectChange = (key, value) => {
+    const valueObj = { [key]: value };
+
+    this.setState(
+      prevState => ({
+        selectedDate: Object.assign(prevState.selectedDate, valueObj),
+      }),
+      key === 'EDU_MONTH' ? this.getEducationInfoByDate : this.getEducationMonths,
+    );
+  };
+
+  getEducationInfoByDate = () => {
+    const { selectedDate } = this.state;
+    const { sagaKey: id, getCallDataHandler } = this.props;
+
+    const apiArr = [
+      {
+        key: 'questions',
+        url: `/api/eshs/v1/common/edusearchbydate?EDU_YEAR=${selectedDate.EDU_YEAR}&EDU_MONTH=${selectedDate.EDU_MONTH}`,
+        type: 'GET',
+      },
+    ];
+
+    getCallDataHandler(id, apiArr, this.setQuestions);
+  };
+
+  getEduacationYears = () => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'educationYears',
+        url: `/api/eshs/v1/common/eduyears`,
+        type: 'GET',
+      },
+    ];
+
+    getCallDataHandler(id, apiArr, this.getEducationMonths);
+  };
+
+  getEducationMonths = () => {
+    const { selectedDate } = this.state;
+    const { sagaKey: id, getCallDataHandler } = this.props;
+
+    const apiArr = [
+      {
+        key: 'educationMonths',
+        url: `/api/eshs/v1/common/edumonths?EDU_YEAR=${selectedDate.EDU_YEAR}`,
+        type: 'GET',
+      },
+    ];
+
+    getCallDataHandler(id, apiArr);
+  };
+
   handleSaveClick = isModify => {
-    const { questions } = this.state;
-    const { sagaKey: id, submitHandlerBySaga, handleModalClose, parentWorkSeq, parentTaskSeq, profile, result } = this.props;
+    const { questions, PARENT_WORK_SEQ, PARENT_TASK_SEQ } = this.state;
+    const { sagaKey: id, submitHandlerBySaga, handleModalClose, profile, result } = this.props;
     const questionArr = [questions[0], questions[1], questions[2], questions[3], questions[4]];
 
     const apiArr = {
       PARAM: {
-        PARENT_WORK_SEQ: parentWorkSeq,
-        PARENT_TASK_SEQ: parentTaskSeq,
+        PARENT_WORK_SEQ,
+        PARENT_TASK_SEQ,
         QUESTIONS: JSON.stringify(questionArr),
         REG_USER_ID: profile.USER_ID,
         EXAM_ID: (result.questions && result.questions.list.length && result.questions.list[0].EXAM_ID) || '',
@@ -132,17 +233,31 @@ class InputPage extends React.Component {
   };
 
   render() {
-    const { handleInputChange, handleSaveClick } = this;
+    const { handleInputChange, handleSaveClick, handleSelectChange } = this;
     const { questionsLenght } = this;
-    const { questions, eduDate } = this.state;
+    const { questions, eduDate, selectedDate } = this.state;
     const { handleModalClose, result } = this.props;
-    const isModify = result.questions && result.questions.list.length && result.questions.list[0].EXAM_ID;
+    const isModify = result.questions && result.questions.list && result.questions.list.length && result.questions.list[0].EXAM_ID;
     return (
       <>
-        <div style={{ textAlign: 'left' }}>
-          <p style={{ display: 'inline-block', width: '5%', textAlign: 'center' }}>교육명</p>
-          <p style={{ display: 'inline-block' }}>{`${eduDate.EDU_YEAR}년 ${eduDate.EDU_MONTH}월 정기교육`}</p>
-        </div>
+        <ContentsWrapper>
+          <div className="selSaveWrapper alignLeft">
+            <p style={{ display: 'inline-block', width: '5%', textAlign: 'center' }}>교육명</p>
+            <p style={{ display: 'inline-block' }}>{`${Number(eduDate.EDU_YEAR)}년 ${Number(eduDate.EDU_MONTH)}월 정기교육`}</p>
+          </div>
+          <div className="selSaveWrapper">
+            <AntdSelect className="mr5" value={selectedDate.EDU_YEAR} onChange={value => handleSelectChange('EDU_YEAR', value)} style={{ width: '15%' }}>
+              {result.educationYears &&
+                result.educationYears.list &&
+                result.educationYears.list.map(year => <Select.Option value={year.EDU_YEAR.toString()}>{`${year.EDU_YEAR}년`}</Select.Option>)}
+            </AntdSelect>
+            <AntdSelect value={selectedDate.EDU_MONTH} onChange={value => handleSelectChange('EDU_MONTH', value)} style={{ width: '15%' }}>
+              {result.educationMonths &&
+                result.educationMonths.list &&
+                result.educationMonths.list.map(month => <Select.Option value={month.EDU_MONTH}>{`${month.EDU_MONTH}월`}</Select.Option>)}
+            </AntdSelect>
+          </div>
+        </ContentsWrapper>
         {questionsLenght.map((v, i) => (
           <div style={{ marginTop: '30px', marginLeft: '100px', marginBottom: '10px' }}>
             <Card
