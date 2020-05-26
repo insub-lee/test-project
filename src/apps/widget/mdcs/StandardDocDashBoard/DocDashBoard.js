@@ -85,7 +85,8 @@ class DocDashBoard extends Component {
               <span className="widget-title-kor">업무표준</span>
               <span className="widget-title-eng">Operating standard</span>
               <span className="widget-item-number">
-                {(docCntObj && docCntObj[901].NEW_CNT) || 0} <span className="total">/ {(docCntObj && docCntObj[901].TOTAL_CNT) || 0}</span>
+                {(docCntObj && docCntObj[901] && docCntObj[901].NEW_CNT) || 0}{' '}
+                <span className="total">/ {(docCntObj && docCntObj[901] && docCntObj[901].TOTAL_CNT) || 0}</span>
               </span>
             </a>
           </div>
@@ -97,7 +98,8 @@ class DocDashBoard extends Component {
               <span className="widget-title-kor">기술표준</span>
               <span className="widget-title-eng">Technical standard</span>
               <span className="widget-item-number">
-                {(docCntObj && docCntObj[1921].NEW_CNT) || 0} <span className="total">/ {(docCntObj && docCntObj[1921].TOTAL_CNT) || 0}</span>
+                {(docCntObj && docCntObj[1921] && docCntObj[1921].NEW_CNT) || 0}{' '}
+                <span className="total">/ {(docCntObj && docCntObj[1921] && docCntObj[1921].TOTAL_CNT) || 0}</span>
               </span>
             </a>
           </div>
@@ -109,7 +111,8 @@ class DocDashBoard extends Component {
               <span className="widget-title-kor">도면</span>
               <span className="widget-title-eng">Drawing</span>
               <span className="widget-item-number">
-                {(docCntObj && docCntObj[1881].NEW_CNT) || 0} <span className="total">/ {(docCntObj && docCntObj[1881].TOTAL_CNT) || 0}</span>
+                {(docCntObj && docCntObj[1881] && docCntObj[1881].NEW_CNT) || 0}{' '}
+                <span className="total">/ {(docCntObj && docCntObj[1881] && docCntObj[1881].TOTAL_CNT) || 0}</span>
               </span>
             </a>
           </div>
@@ -121,7 +124,8 @@ class DocDashBoard extends Component {
               <span className="widget-title-kor">업무절차</span>
               <span className="widget-title-eng">Work Process</span>
               <span className="widget-item-number">
-                {(docCntObj && docCntObj[3013].NEW_CNT) || 0} <span className="total">/ {(docCntObj && docCntObj[3013].TOTAL_CNT) || 0}</span>
+                {(docCntObj && docCntObj[3013] && docCntObj[3013].NEW_CNT) || 0}{' '}
+                <span className="total">/ {(docCntObj && docCntObj[3013] && docCntObj[3013].TOTAL_CNT) || 0}</span>
               </span>
             </a>
           </div>
@@ -133,7 +137,8 @@ class DocDashBoard extends Component {
               <span className="widget-title-kor">NPI</span>
               <span className="widget-title-eng">New Product Introduction</span>
               <span className="widget-item-number">
-                {(docCntObj && docCntObj[2975].NEW_CNT) || 0} <span className="total">/ {(docCntObj && docCntObj[2975].TOTAL_CNT) || 0}</span>
+                {(docCntObj && docCntObj[2975] && docCntObj[2975].NEW_CNT) || 0}{' '}
+                <span className="total">/ {(docCntObj && docCntObj[2975] && docCntObj[2975].TOTAL_CNT) || 0}</span>
               </span>
             </a>
           </div>
@@ -145,7 +150,8 @@ class DocDashBoard extends Component {
               <span className="widget-title-kor">WDS/I-FOUNDRY</span>
               <span className="widget-title-eng">Wireless Distribution System</span>
               <span className="widget-item-number">
-                {(docCntObj && docCntObj[2941].NEW_CNT) || 0} <span className="total">/ {(docCntObj && docCntObj[2941].TOTAL_CNT) || 0}</span>
+                {(docCntObj && docCntObj[2941] && docCntObj[2941].NEW_CNT) || 0}{' '}
+                <span className="total">/ {(docCntObj && docCntObj[2941] && docCntObj[2941].TOTAL_CNT) || 0}</span>
               </span>
             </a>
           </div>

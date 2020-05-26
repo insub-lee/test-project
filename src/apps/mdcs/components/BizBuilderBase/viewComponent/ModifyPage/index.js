@@ -15,7 +15,20 @@ class ModifyPage extends Component {
   }
 
   componentDidMount() {
-    const { revisionTask, id, workSeq, taskSeq } = this.props;
+    const { revisionTask, id, workSeq, taskSeq, getProcessRuleByModify, workFlowConfig, workPrcProps } = this.props;
+    const {
+      info: { PRC_ID },
+    } = workFlowConfig;
+
+    if (PRC_ID !== -1) {
+      const payload = {
+        PRC_ID,
+        DRAFT_DATA: {
+          ...workPrcProps,
+        },
+      };
+      getProcessRuleByModify(id, payload);
+    }
     revisionTask(id, workSeq, taskSeq);
   }
 

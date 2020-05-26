@@ -6,6 +6,7 @@ export const SET_EXTRA_API_DATA = `${prefix}SET_EXTRA_API_DATA`;
 export const GET_DETAIL_DATA = `${prefix}GET_DETAIL_DATA`;
 export const SET_DETAIL_DATA = `${prefix}SET_DETAIL_DATA`;
 export const GET_PROCESS_RULE = `${prefix}GET_PROCESS_RULE`;
+export const GET_PROCESS_RULE_MODIFY = `${prefix}GET_PROCESS_RULE_MODIFY`;
 export const SET_PROCESS_RULE = `${prefix}SET_PROCESS_RULE`;
 export const SET_PROCESS_STEP = `${prefix}SET_PROCESS_STEP`;
 export const GET_TASK_SEQ = `${prefix}GET_TASK_SEQ`;

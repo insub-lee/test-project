@@ -47,14 +47,13 @@ class AbrogationDraft extends Component {
     const { onAbrogationProcess } = this.props;
     const { draftWorkProc, descOfChange, revHistory } = this.state;
     const DRAFT_DATA = draftWorkProc.DRAFT_DATA ? draftWorkProc.DRAFT_DATA : {};
-    const nDraftData = { ...DRAFT_DATA, descOfChange, revHistory };
+    const nDraftData = { ...DRAFT_DATA, draftMethod: 'insert', descOfChange, revHistory };
     const nDraftWorkProc = { ...draftWorkProc, DRAFT_DATA: nDraftData };
     onAbrogationProcess(nDraftWorkProc);
   };
 
   render() {
     const { WORK_SEQ, TASK_SEQ } = this.props;
-    console.debug('props', this.props);
     const { workProcess } = this.state;
     return (
       <>

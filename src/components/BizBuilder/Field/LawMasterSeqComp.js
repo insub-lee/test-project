@@ -66,13 +66,14 @@ class LawMasterSeqComp extends Component {
     changeSearchData(sagaKey, COMP_FIELD, searchText);
   };
 
+  // getcallDataHandler로 변경할것
   callList = () => {
     const fetchData = async () => {
       const result = await request({
         url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/eshslawlist',
         method: 'GET',
       });
-      return result.response.list;
+      return result.response && result.response.list;
     };
     return fetchData();
   };
@@ -83,7 +84,7 @@ class LawMasterSeqComp extends Component {
         url: `http://eshs-dev.magnachip.com/api/eshs/v1/common/eshslawlist?TYPE=${type}&TEXT=${text}`,
         method: 'GET',
       });
-      return result.response.list;
+      return result.response && result.response.list;
     };
     return fetchData();
   };

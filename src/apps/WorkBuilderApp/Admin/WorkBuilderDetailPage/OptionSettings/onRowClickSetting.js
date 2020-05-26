@@ -99,6 +99,7 @@ class onRowClickSetting extends React.Component {
         ? JSON.parse(optConfig.OPT_VALUE)
         : { VIEW: optConfig.OPT_VALUE, LIST: [] };
     const optPagelist = optValue.LIST || [];
+    console.debug('전체프롭스', this.props);
     return (
       <Wrapper>
         <Input.Group compact>

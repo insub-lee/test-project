@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import { TreeSelect } from 'antd';
 
@@ -23,14 +24,21 @@ class TreeSelectComp extends Component {
       getExtraApiData,
       sagaKey: id,
       CONFIG: {
-        property: { mapId },
+        property: { rootkey },
       },
       viewType,
       colData,
     } = this.props;
-    const apiArray = [{ key: `treeSelect_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
+    const apiArray = [
+      {
+        key: viewType !== 'VIEW' ? `treeSelect_${rootkey}` : `treeSelect_${colData}`,
+        url: `/api/admin/v1/common/categoryMapList`,
+        type: 'POST',
+        params: { PARAM: { NODE_ID: Number(rootkey) } },
+      },
+    ];
     if (colData && colData.length > 0) getExtraApiData(id, apiArray);
-    else if (viewType !== 'VIEW') getExtraApiData(id, apiArray);
+    else if (viewType !== 'VIEW' && viewType !== 'LIST') getExtraApiData(id, apiArray);
   }
 
   onChangeHandler = value => {
@@ -46,7 +54,7 @@ class TreeSelectComp extends Component {
     const {
       CONFIG,
       CONFIG: {
-        property: { mapId, selectableFlag, placeholder, viewLang, rootkey },
+        property: { selectableFlag, placeholder, viewLang, rootkey },
       },
       colData,
       extraApiData,
@@ -54,9 +62,10 @@ class TreeSelectComp extends Component {
       visible,
       searchCompRenderer,
       isSearch,
+      viewType,
     } = this.props;
 
-    const apiData = extraApiData[`treeSelect_${mapId}`];
+    const apiData = viewType !== 'VIEW' ? extraApiData[`treeSelect_${rootkey}`] : extraApiData[`treeSelect_${colData}`];
     let categoryData;
     if (readOnly || CONFIG.property.readOnly) {
       categoryData = apiData && apiData.categoryMapList && apiData.categoryMapList.find(item => item.NODE_ID === Number(colData));
@@ -72,7 +81,6 @@ class TreeSelectComp extends Component {
           )) ||
         [];
     }
-    // const categoryData = tempData.length > 0 ? tempData[0] : [];
     if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
       return searchCompRenderer({ ...this.props, searchTreeData: categoryData });
     }
@@ -103,5 +111,24 @@ class TreeSelectComp extends Component {
     );
   }
 }
+
+TreeSelectComp.propTypes = {
+  CONFIG: PropTypes.object,
+  COMP_FIELD: PropTypes.string,
+  colData: PropTypes.string,
+  sagaKey: PropTypes.string,
+  NAME_KOR: PropTypes.string,
+  viewType: PropTypes.string,
+  readOnly: PropTypes.bool,
+  visible: PropTypes.bool,
+  changeFormData: PropTypes.func,
+  extraApiData: PropTypes.func,
+  searchCompRenderer: PropTypes.func,
+  getExtraApiData: PropTypes.func,
+  changeValidationData: PropTypes.func,
+  isSearch: PropTypes.bool,
+};
+
+TreeSelectComp.defaultProps = {};
 
 export default TreeSelectComp;
