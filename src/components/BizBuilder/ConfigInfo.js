@@ -49,6 +49,7 @@ import JsonTableConfig from 'components/BizBuilder/Field/JsonTableConfig';
 import TextareaCompConfig from 'components/BizBuilder/Field/TextareaCompConfig';
 import NumberCompFloatConfig from 'components/BizBuilder/Field/NumberCompFloatConfig';
 import ViewDateCompConfig from 'components/BizBuilder/Field/ViewDateCompConfig';
+import EducationExamConfig from 'components/BizBuilder/Field/EducationExamConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -100,4 +101,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/JsonTableConfig': { renderer: property => <JsonTableConfig {...property} /> },
   'components/BizBuilder/Field/TextareaCompConfig': { renderer: property => <TextareaCompConfig {...property} /> },
   'components/BizBuilder/Field/NumberCompFloatConfig': { renderer: property => <NumberCompFloatConfig {...property} /> },
+  'components/BizBuilder/Field/EducationExamConfig': { renderer: property => <EducationExamConfig {...property} /> },
 };
