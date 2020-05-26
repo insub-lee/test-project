@@ -15,7 +15,7 @@ import injectSaga from 'utils/injectSaga';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledFillTable from 'commonStyled/MdcsStyled/Table/StyledFillTable';
+import StyledAntdPointTable from 'components/BizBuilder/styled/Table/StyledAntdPointTable';
 import StyledWorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal/StyledWorkProcessModal';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import * as DraftNode from 'apps/Workflow/WorkFlowBase/Nodes/Constants/approveconst';
@@ -24,7 +24,7 @@ import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 
-const AntdFillTable = StyledFillTable(Table);
+const AntdPointTable = StyledAntdPointTable(Table);
 const AntdSearchInput = StyledSearchInput(Input.Search);
 
 const getTreeData = deptList =>
@@ -163,9 +163,7 @@ class WorkProcessModal extends Component {
           dataIndex: 'DEPT_ID',
           align: 'left',
           width: 150,
-          render: (text, record) => (
-            <a onClick={() => this.onDeptNameClick(record)}>{record.NAME_KOR}</a>
-          ),
+          render: (text, record) => <a onClick={() => this.onDeptNameClick(record)}>{record.NAME_KOR}</a>,
         },
       ],
     },
@@ -268,29 +266,29 @@ class WorkProcessModal extends Component {
 
   onSearchDept = val => {
     if (!val || val === '' || val.length === 0) {
-      message.info(<MessageContent>검색어를 한글자 이상 입력해 주세요</MessageContent>)
+      message.info(<MessageContent>검색어를 한글자 이상 입력해 주세요</MessageContent>);
       return false;
     }
     const { getDeptListByName } = this.props;
     const payload = {
-      DEPT_NAME: val
+      DEPT_NAME: val,
     };
     getDeptListByName(payload, response => {
-      this.setState({ deptList2: response.list })
+      this.setState({ deptList2: response.list });
     });
   };
 
   onSearchUser = val => {
     if (!val || val === '' || val.length === 0) {
-      message.info(<MessageContent>검색어를 한글자 이상 입력해 주세요</MessageContent>)
+      message.info(<MessageContent>검색어를 한글자 이상 입력해 주세요</MessageContent>);
       return false;
     }
     const { getUserListByName } = this.props;
     const payload = {
-      USER_NAME: val
+      USER_NAME: val,
     };
     getUserListByName(payload, response => {
-      this.setState({ deptUserList: response.list })
+      this.setState({ deptUserList: response.list });
     });
   };
 
@@ -309,7 +307,7 @@ class WorkProcessModal extends Component {
       selectedRowKeys: selectedUserKeys,
       onChange: this.onDeptUserCheck,
     };
-    
+
     const deptRowSelection = {
       selectedRowKeys: selectedDeptKeys,
       onChange: this.onDeptCheck,
@@ -321,28 +319,32 @@ class WorkProcessModal extends Component {
           <Col span={9}>
             <div className="basicWrapper deptWrapper">
               <div className="tabButtonWrapper">
-                <Button className={tabIdx === 0 ? 'on' : ''} onClick={() => this.onClickTab(0)}>전체</Button>
-                <Button className={tabIdx === 1 ? 'on' : ''} onClick={() => this.onClickTab(1)}>사용자</Button>
-                <Button className={tabIdx === 2 ? 'on' : ''} onClick={() => this.onClickTab(2)}>부서</Button>
+                <Button className={tabIdx === 0 ? 'on' : ''} onClick={() => this.onClickTab(0)}>
+                  전체
+                </Button>
+                <Button className={tabIdx === 1 ? 'on' : ''} onClick={() => this.onClickTab(1)}>
+                  사용자
+                </Button>
+                <Button className={tabIdx === 2 ? 'on' : ''} onClick={() => this.onClickTab(2)}>
+                  부서
+                </Button>
               </div>
               <div className="tabContentsWrapper">
-                <div className="deptTree" style={{ display: `${tabIdx === 1 ? 'none': ''}`}}>
-                  {tabIdx === 0 && (
-                    deptList.length > 0 && (
-                      <Tree
-                        checkable
-                        autoExpandParent={false}
-                        defaultExpandedKeys={rootKey}
-                        checkedKeys={selectedDeptKeys}
-                        onSelect={this.onTreeNodeSelect}
-                        onCheck={this.onTreeNodeCheck}
-                        treeData={getTreeData(deptList)}
-                        onExpand={this.onExpand}
-                      />
-                    )
+                <div className="deptTree" style={{ display: `${tabIdx === 1 ? 'none' : ''}` }}>
+                  {tabIdx === 0 && deptList.length > 0 && (
+                    <Tree
+                      checkable
+                      autoExpandParent={false}
+                      defaultExpandedKeys={rootKey}
+                      checkedKeys={selectedDeptKeys}
+                      onSelect={this.onTreeNodeSelect}
+                      onCheck={this.onTreeNodeCheck}
+                      treeData={getTreeData(deptList)}
+                      onExpand={this.onExpand}
+                    />
                   )}
                   {tabIdx === 2 && (
-                    <AntdFillTable
+                    <AntdPointTable
                       rowSelection={deptRowSelection}
                       columns={this.getDeptColumns()}
                       dataSource={deptList2.map(item => ({ ...item, key: item.DEPT_ID }))}
@@ -350,12 +352,12 @@ class WorkProcessModal extends Component {
                       pagination={false}
                       size="small"
                       scroll={{ y: 220 }}
-                      className="non-top-border"
+                      className="non-top-border page-custom"
                     />
                   )}
                 </div>
                 <div className="userList">
-                  <AntdFillTable
+                  <AntdPointTable
                     rowSelection={rowSelection}
                     columns={this.getColumns()}
                     dataSource={deptUserList.map(item => ({ ...item, key: item.USER_ID }))}
@@ -364,7 +366,7 @@ class WorkProcessModal extends Component {
                     size="small"
                     // scroll
                     scroll={{ y: tabIdx === 1 ? 395 : 220 }}
-                    className={`${tabIdx === 1 ? 'non-top-border' : ''}`}
+                    className={`${tabIdx === 1 ? 'non-top-border' : ''} page-custom`}
                   />
                 </div>
               </div>
@@ -453,7 +455,7 @@ WorkProcessModal.propTypes = {
   getDeptList: PropTypes.func,
   getDeptUserList: PropTypes.func,
   initDeptUserList: PropTypes.func,
-  getUserListByName: PropTypes.func
+  getUserListByName: PropTypes.func,
 };
 
 WorkProcessModal.defaultProps = {

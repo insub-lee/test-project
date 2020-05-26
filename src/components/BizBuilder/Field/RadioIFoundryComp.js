@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Radio, Popover, Checkbox, Button } from 'antd';
 
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import message from 'components/Feedback/message';
 
 class RadioIFoundryComp extends Component {
