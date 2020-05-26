@@ -24,6 +24,12 @@ const StyledFillTable = Component => styled(Component)`
       }
     }
   }
+
+  &.non-top-border {
+    .ant-table {
+      border: 0;
+    }
+  }
 `;
 
 export default StyledFillTable;
