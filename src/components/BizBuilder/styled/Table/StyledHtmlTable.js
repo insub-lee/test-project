@@ -120,6 +120,7 @@ const StyledHtmlTable = styled.div`
 
   &.radioFoundry {
     margin-top: 7px;
+    width: 500px;
     .applyButtonWrapper {
       text-align: center;
       margin-top: 10px;

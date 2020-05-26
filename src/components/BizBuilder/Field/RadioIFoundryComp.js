@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Radio, Popover, Checkbox, Button } from 'antd';
 
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import message from 'components/Feedback/message';
 
 class RadioIFoundryComp extends Component {
@@ -123,7 +123,7 @@ class RadioIFoundryComp extends Component {
             N
           </Checkbox>
         </Checkbox.Group>
-        <StyledHtmlTable className="radioFoundryResult" style={{ display: foundry_flag === 'Y' ? 'inline-block' : 'none', marginTop: '8px', width: '100%' }}>
+        <StyledHtmlTable className="radioFoundryResult" style={{ display: foundry_flag === 'Y' ? 'inline-block' : 'none', marginTop: '8px', width: '500px' }}>
           <table>
             <tbody>
               <tr>

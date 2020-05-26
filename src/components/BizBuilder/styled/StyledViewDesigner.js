@@ -269,7 +269,7 @@ const StyledViewDesigner = styled.div`
           border-image: initial;
           border: 1px solid #e5e5e5;
           border-radius: 4px;
-          padding: 0.2rem 0.7rem;
+          padding: 0.2rem 0.5rem;
           font-size: 0.75rem;
           line-height: 1.5;
           height: auto;
@@ -286,6 +286,7 @@ const StyledViewDesigner = styled.div`
 
         .ant-textarea {
           height: inherit;
+          padding: 0.5em 0.5rem;
         }
 
         .ant-select {
@@ -304,9 +305,17 @@ const StyledViewDesigner = styled.div`
             border: 1px solid #e5e5e5;
             border-radius: 4px;
             transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+            min-height: auto;
 
             .ant-select-selection__rendered {
-              line-height: none;
+              line-height: normal;
+              margin: 0;
+
+              > li {
+                height: auto;
+                line-height: normal;
+                margin-top: 0;
+              }
             }
           }
         }

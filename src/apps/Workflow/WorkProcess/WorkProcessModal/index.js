@@ -8,20 +8,24 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledFillTable from 'commonStyled/MdcsStyled/Table/StyledFillTable';
+import StyledAntdPointTable from 'components/BizBuilder/styled/Table/StyledAntdPointTable';
 import StyledWorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal/StyledWorkProcessModal';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import * as DraftNode from 'apps/Workflow/WorkFlowBase/Nodes/Constants/approveconst';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 
-const AntdFillTable = StyledFillTable(Table);
+const AntdPointTable = StyledAntdPointTable(Table);
+const AntdSearchInput = StyledSearchInput(Input.Search);
 
 const getTreeData = deptList =>
   deptList.length > 0
@@ -47,9 +51,11 @@ class WorkProcessModal extends Component {
       selectedUserKeys: [],
       selectedDeptKeys: [],
       deptList: [],
+      deptList2: [],
       deptUserList: [],
       visible: false,
       curDistDeptList: [],
+      tabIdx: 0,
     };
   }
 
@@ -88,17 +94,78 @@ class WorkProcessModal extends Component {
     this.setState({ selectedUserKeys });
   };
 
-  getColumns = () => [
+  getColumns = () => {
+    let columns = [
+      {
+        title: '사용자 정보',
+        dataIndex: 'USER_ID',
+        key: 'USER_ID',
+        render: (text, record) => (
+          <span>
+            <UserOutlined />
+            {`${record.NAME_KOR}/${record.PSTN_NAME_KOR}`}
+          </span>
+        ),
+      },
+    ];
+
+    if (this.state.tabIdx === 1) {
+      columns = [
+        {
+          title: '사용자 정보',
+          dataIndex: 'USER_ID',
+          key: 'USER_ID',
+          align: 'left',
+          children: [
+            {
+              title: (
+                <AntdSearchInput
+                  placeholder="사용자 검색"
+                  className="input-search-sm"
+                  onSearch={val => this.onSearchUser(val)}
+                  onPressEnter={e => this.onSearchUser(e.target.value)}
+                />
+              ),
+              dataIndex: 'USER_ID',
+              align: 'left',
+              width: 150,
+              ellipsis: true,
+              render: (text, record) => (
+                <span>
+                  <UserOutlined />
+                  {`${record.NAME_KOR} ${record.PSTN_ID !== -1 ? record.PSTN_NAME_KOR : ''}/${record.DEPT_NAME_KOR}`}
+                </span>
+              ),
+            },
+          ],
+        },
+      ];
+    }
+    return columns;
+  };
+
+  getDeptColumns = () => [
     {
-      title: '사용자 정보',
-      dataIndex: 'USER_ID',
-      key: 'USER_ID',
-      render: (text, record) => (
-        <span>
-          <UserOutlined />
-          {`${record.NAME_KOR}/${record.PSTN_NAME_KOR}`}
-        </span>
-      ),
+      title: '부서정보',
+      dataIndex: 'DEPT_ID',
+      key: 'DEPT_ID',
+      align: 'left',
+      children: [
+        {
+          title: (
+            <AntdSearchInput
+              placeholder="부서 검색"
+              className="input-search-sm"
+              onSearch={val => this.onSearchDept(val)}
+              onPressEnter={e => this.onSearchDept(e.target.value)}
+            />
+          ),
+          dataIndex: 'DEPT_ID',
+          align: 'left',
+          width: 150,
+          render: (text, record) => <a onClick={() => this.onDeptNameClick(record)}>{record.NAME_KOR}</a>,
+        },
+      ],
     },
   ];
 
@@ -136,14 +203,16 @@ class WorkProcessModal extends Component {
   };
 
   handleAddUser = (prcRuleId, nodeId, nodeType) => {
-    const { prcStep, selectedDeptKeys, deptList, selectedUserKeys, deptUserList } = this.state;
-    console.debug(prcRuleId);
+    const { prcStep, selectedDeptKeys, deptList, deptList2, selectedUserKeys, deptUserList, tabIdx } = this.state;
     const tmpPrcStep = prcStep.map(step => {
       const { APPV_MEMBER: appvMember } = step;
       if (step.PRC_RULE_ID === prcRuleId) {
         if (step.NODE_ID === DraftNode.DIST_NODE) {
           // 부서정보 처리 하기
-          const selectDeptIds = deptList.filter(f => selectedDeptKeys.includes(f.DEPT_ID.toString()));
+          let selectDeptIds = deptList.filter(f => selectedDeptKeys.includes(f.DEPT_ID.toString()));
+          if (tabIdx === 2) {
+            selectDeptIds = deptList2.filter(f => selectedDeptKeys.includes(f.DEPT_ID));
+          }
           const selectDeptMember = selectDeptIds.reduce((retIds, deptId) => {
             const idx = retIds.findIndex(f => f.DEPT_ID === deptId.DEPT_ID);
             if (idx === -1) retIds.splice(0, 0, { DEPT_ID: deptId.DEPT_ID, DEPT_NAME_KOR: deptId.NAME_KOR, ISFIXED: 'N' });
@@ -186,53 +255,118 @@ class WorkProcessModal extends Component {
     this.setState({ prcStep: tempPrcStep });
   };
 
+  onClickTab = tabIdx => {
+    this.setState({
+      tabIdx,
+      deptUserList: [],
+      selectedUserKeys: [],
+      selectedDeptKeys: [],
+    });
+  };
+
+  onSearchDept = val => {
+    if (!val || val === '' || val.length === 0) {
+      message.info(<MessageContent>검색어를 한글자 이상 입력해 주세요</MessageContent>);
+      return false;
+    }
+    const { getDeptListByName } = this.props;
+    const payload = {
+      DEPT_NAME: val,
+    };
+    getDeptListByName(payload, response => {
+      this.setState({ deptList2: response.list });
+    });
+  };
+
+  onSearchUser = val => {
+    if (!val || val === '' || val.length === 0) {
+      message.info(<MessageContent>검색어를 한글자 이상 입력해 주세요</MessageContent>);
+      return false;
+    }
+    const { getUserListByName } = this.props;
+    const payload = {
+      USER_NAME: val,
+    };
+    getUserListByName(payload, response => {
+      this.setState({ deptUserList: response.list });
+    });
+  };
+
+  onDeptCheck = selectedRowKeys => {
+    this.setState({ selectedDeptKeys: selectedRowKeys });
+  };
+
+  onDeptNameClick = row => {
+    const { getDeptUserList } = this.props;
+    getDeptUserList(row.DEPT_ID, this.initDeptUserList);
+  };
+
   render() {
-    const { prcStep, prcButton, selectedUserKeys, selectedDeptKeys, deptList, deptUserList, rootKey } = this.state;
+    const { prcStep, prcButton, selectedUserKeys, selectedDeptKeys, deptList, deptList2, deptUserList, rootKey, tabIdx } = this.state;
     const rowSelection = {
       selectedRowKeys: selectedUserKeys,
       onChange: this.onDeptUserCheck,
     };
+
+    const deptRowSelection = {
+      selectedRowKeys: selectedDeptKeys,
+      onChange: this.onDeptCheck,
+    };
+
     return (
       <StyledWorkProcessModal>
         <Row gutter={0}>
-          <Col span={7}>
+          <Col span={9}>
             <div className="basicWrapper deptWrapper">
               <div className="tabButtonWrapper">
-                <Button className="on">전체</Button>
-                <Button>사용자</Button>
-                <Button>부서</Button>
+                <Button className={tabIdx === 0 ? 'on' : ''} onClick={() => this.onClickTab(0)}>
+                  전체
+                </Button>
+                <Button className={tabIdx === 1 ? 'on' : ''} onClick={() => this.onClickTab(1)}>
+                  사용자
+                </Button>
+                <Button className={tabIdx === 2 ? 'on' : ''} onClick={() => this.onClickTab(2)}>
+                  부서
+                </Button>
               </div>
               <div className="tabContentsWrapper">
-                <div className="deptTree">
-                  {deptList.length > 0 && (
-                    <>
-                      {/* <Search style={{ margin: '2px' }} placeholder="부서검색" onChange={this.onChangeSearch} onPressEnter={this.onPressEnterSearch} /> */}
-                      <Tree
-                        checkable
-                        autoExpandParent={false}
-                        defaultExpandedKeys={rootKey}
-                        checkedKeys={selectedDeptKeys}
-                        onSelect={this.onTreeNodeSelect}
-                        onCheck={this.onTreeNodeCheck}
-                        treeData={getTreeData(deptList)}
-                        onExpand={this.onExpand}
-                      />
-                    </>
+                <div className="deptTree" style={{ display: `${tabIdx === 1 ? 'none' : ''}` }}>
+                  {tabIdx === 0 && deptList.length > 0 && (
+                    <Tree
+                      checkable
+                      autoExpandParent={false}
+                      defaultExpandedKeys={rootKey}
+                      checkedKeys={selectedDeptKeys}
+                      onSelect={this.onTreeNodeSelect}
+                      onCheck={this.onTreeNodeCheck}
+                      treeData={getTreeData(deptList)}
+                      onExpand={this.onExpand}
+                    />
+                  )}
+                  {tabIdx === 2 && (
+                    <AntdPointTable
+                      rowSelection={deptRowSelection}
+                      columns={this.getDeptColumns()}
+                      dataSource={deptList2.map(item => ({ ...item, key: item.DEPT_ID }))}
+                      rowKey="DEPT_ID"
+                      pagination={false}
+                      size="small"
+                      scroll={{ y: 220 }}
+                      className="non-top-border page-custom"
+                    />
                   )}
                 </div>
                 <div className="userList">
-                  <AntdFillTable
+                  <AntdPointTable
                     rowSelection={rowSelection}
                     columns={this.getColumns()}
-                    dataSource={deptUserList.map(item => ({
-                      ...item,
-                      key: item.USER_ID,
-                    }))}
+                    dataSource={deptUserList.map(item => ({ ...item, key: item.USER_ID }))}
                     rowKey="USER_ID"
                     pagination={false}
                     size="small"
                     // scroll
-                    scroll={{ y: 220 }}
+                    scroll={{ y: tabIdx === 1 ? 395 : 220 }}
+                    className={`${tabIdx === 1 ? 'non-top-border' : ''} page-custom`}
                   />
                 </div>
               </div>
@@ -257,7 +391,7 @@ class WorkProcessModal extends Component {
               </ul>
             </div>
           </Col>
-          <Col span={12}>
+          <Col span={10}>
             <div className="basicWrapper selectedWrapper">
               {prcStep.map(item => (
                 <React.Fragment key={`node_${item.NODE_ID}`}>
@@ -321,6 +455,7 @@ WorkProcessModal.propTypes = {
   getDeptList: PropTypes.func,
   getDeptUserList: PropTypes.func,
   initDeptUserList: PropTypes.func,
+  getUserListByName: PropTypes.func,
 };
 
 WorkProcessModal.defaultProps = {
@@ -341,6 +476,8 @@ const mapDispatchToProps = dispatch => ({
   initDeptUserList: () => dispatch(actions.initDeptUserList()),
   submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
     dispatch(actions.submitHandlerBySaga(id, httpMethod, apiUrl, submitData, callbackFunc)),
+  getUserListByName: (payload, callbackFunc) => dispatch(actions.getUserListByName(payload, callbackFunc)),
+  getDeptListByName: (payload, callbackFunc) => dispatch(actions.getDeptListByName(payload, callbackFunc)),
 });
 
 const withReducer = injectReducer({
