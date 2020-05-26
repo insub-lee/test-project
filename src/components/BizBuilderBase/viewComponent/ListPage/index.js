@@ -34,7 +34,8 @@ class ListPage extends Component {
   }
 
   componentDidMount = () => {
-    const { workInfo, listMetaSeq } = this.props;
+    const { workInfo, listMetaSeq, viewSeq } = this.props;
+    console.debug('전체프롭스', this.props);
     let isMultiDelete = false;
     let isRowNo = false;
     let isOnRowClick = false;
@@ -55,12 +56,15 @@ class ListPage extends Component {
         if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNo = true;
         if (opt.OPT_SEQ === ON_ROW_CLICK_OPT_SEQ && opt.ISUSED === 'Y') {
           if (!isJSON(opt.OPT_VALUE)) {
+            console.debug('조건1');
             isOnRowClick = true;
             rowClickView = opt.OPT_VALUE === '' ? 'VIEW' : opt.OPT_VALUE;
           } else {
             const ObjOptVal = JSON.parse(opt.OPT_VALUE);
             const optMetalist = ObjOptVal.LIST || [];
-            isOnRowClick = optMetalist.includes(listMetaSeq.toString());
+            const targetViewSeq = listMetaSeq === -1 ? viewSeq : listMetaSeq;
+            console.debug('조건2', optMetalist, targetViewSeq, optMetalist.includes(targetViewSeq.toString()));
+            isOnRowClick = optMetalist.includes(targetViewSeq.toString());
             rowClickView = ObjOptVal.VIEW || 'VIEW';
           }
         }
@@ -171,7 +175,7 @@ class ListPage extends Component {
     if (typeof customOnRowClick === 'function' && isOnRowClick) {
       onRow = record => ({ onClick: () => customOnRowClick(record) });
     }
-
+    console.debug('확인해보자', this.state);
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
