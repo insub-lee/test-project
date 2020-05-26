@@ -6,6 +6,8 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import BuilderProcessModal from 'apps/Workflow/WorkProcess/BuilderProcessModal';
+import WorkProcess from 'apps/Workflow/WorkProcess';
 
 const AntdModal = StyledContentsModal(Modal);
 // eslint-disable-next-line react/prefer-stateless-function
@@ -29,6 +31,7 @@ class ValidationView extends Component {
   initProcessData = (sagaKey, response) => {
     const { WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ, TITLE } = this.props;
     const draftData = { WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ };
+    console.debug('valiation', response);
     const { DRAFT_PROCESS } = response;
     const tProc = { ...DRAFT_PROCESS, DRAFT_DATA: draftData, REL_TYPE: 2, WORK_SEQ, TASK_SEQ, DRAFT_TITLE: TITLE };
     this.setState({ workProcess: { DRAFT_PROCESS: tProc } });
@@ -41,6 +44,7 @@ class ValidationView extends Component {
   onClickEvent = () => {
     const { onValidateProcess, WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ } = this.props;
     const { selectedValue, workProcess } = this.state;
+    console.debug('workProcess', workProcess);
     onValidateProcess(selectedValue, workProcess, WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ);
   };
 
@@ -60,13 +64,26 @@ class ValidationView extends Component {
     onModalClose();
   };
 
+  setProcessRule = (id, processRule) => {
+    this.setState({ workProcess: { DRAFT_PROCESS: { ...processRule } } });
+  };
+
   render() {
     const { WORK_SEQ, TASK_SEQ, onModalClose } = this.props;
-    const { selectedValue, coverView } = this.state;
+    const { selectedValue, coverView, workProcess } = this.state;
 
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
+          {workProcess && workProcess.DRAFT_PROCESS && (
+            <WorkProcess
+              id="work"
+              CustomWorkProcessModal={BuilderProcessModal}
+              setProcessRule={this.setProcessRule}
+              processRule={workProcess.DRAFT_PROCESS ? workProcess.DRAFT_PROCESS : {}}
+              PRC_ID={105}
+            />
+          )}
           <table>
             <tbody>
               <tr>

@@ -39,6 +39,7 @@ class MdcsAppvView extends Component {
     isMultiSelect: true,
     workPrcProps: undefined,
     isDcc: false,
+    opinion: undefined,
   };
 
   componentDidMount() {
@@ -79,6 +80,8 @@ class MdcsAppvView extends Component {
 
   handleReqApprove = (e, appvStatus) => {
     e.preventDefault();
+    const { opinion } = this.state;
+    this.props.setOpinion(opinion);
     this.props.reqApprove(appvStatus);
     this.props.setOpinionVisible(false);
   };
@@ -185,6 +188,10 @@ class MdcsAppvView extends Component {
     });
   };
 
+  onChangeOpinion = e => {
+    this.setState({ opinion: e.target.value });
+  };
+
   render() {
     const { selectedRow } = this.props;
     const { DRAFT_DATA } = selectedRow;
@@ -259,7 +266,8 @@ class MdcsAppvView extends Component {
               <tr>
                 <th>의견 </th>
                 <td>
-                  <AntdTextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} />
+                  {/* <AntdTextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} /> */}
+                  <AntdTextArea rows={4} onChange={this.onChangeOpinion} />
                 </td>
               </tr>
             </tbody>
