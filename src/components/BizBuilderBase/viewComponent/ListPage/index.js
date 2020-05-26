@@ -34,7 +34,7 @@ class ListPage extends Component {
   }
 
   componentDidMount = () => {
-    const { workInfo, listMetaSeq } = this.props;
+    const { workInfo, listMetaSeq, viewSeq } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
     let isOnRowClick = false;
@@ -60,7 +60,8 @@ class ListPage extends Component {
           } else {
             const ObjOptVal = JSON.parse(opt.OPT_VALUE);
             const optMetalist = ObjOptVal.LIST || [];
-            isOnRowClick = optMetalist.includes(listMetaSeq.toString());
+            const targetViewSeq = listMetaSeq === -1 ? viewSeq : listMetaSeq;
+            isOnRowClick = optMetalist.includes(targetViewSeq.toString());
             rowClickView = ObjOptVal.VIEW || 'VIEW';
           }
         }
@@ -171,7 +172,7 @@ class ListPage extends Component {
     if (typeof customOnRowClick === 'function' && isOnRowClick) {
       onRow = record => ({ onClick: () => customOnRowClick(record) });
     }
-
+    console.debug('확인해보자', this.state);
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}

@@ -49,6 +49,7 @@ class EducationExamComp extends React.Component {
           width="80%"
           style={{ textAlign: 'center' }}
           title="평가문항 등록"
+          destroyOnClose
         >
           <InputExamQuestion parentWorkSeq={WORK_SEQ} parentTaskSeq={rowData.TASK_SEQ} handleModalClose={handleModalClose} />
         </AntdModal>
