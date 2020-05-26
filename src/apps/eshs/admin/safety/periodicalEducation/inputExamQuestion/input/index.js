@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Input, Select } from 'antd';
+import { Card, Input, Select, message } from 'antd';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -214,6 +214,10 @@ class InputPage extends React.Component {
     const { questions, PARENT_WORK_SEQ, PARENT_TASK_SEQ } = this.state;
     const { sagaKey: id, submitHandlerBySaga, handleModalClose, profile, result } = this.props;
     const questionArr = [questions[0], questions[1], questions[2], questions[3], questions[4]];
+
+    if (questionArr.filter(question => !question.answer)) {
+      return message.error('정답을 모두 입력해주세요.');
+    }
 
     const apiArr = {
       PARAM: {

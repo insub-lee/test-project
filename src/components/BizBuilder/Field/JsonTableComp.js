@@ -35,7 +35,6 @@ class JsonTableComp extends React.Component {
         columns.push({ title: tempCol[i], dataIndex: tempCol[i], key: tempCol[i], align: 'left' });
       }
     }
-    console.debug(columns);
     return columns;
   };
 
@@ -59,9 +58,7 @@ class JsonTableComp extends React.Component {
     });
   };
 
-  handleSearchChange = value => {
-    console.debug(value);
-  };
+  // handleSearchChange = value => {};
 
   render() {
     const { handleSearchChange, createColumns } = this;
