@@ -215,7 +215,7 @@ class InputPage extends React.Component {
     const { sagaKey: id, submitHandlerBySaga, handleModalClose, profile, result } = this.props;
     const questionArr = [questions[0], questions[1], questions[2], questions[3], questions[4]];
 
-    if (questionArr.filter(question => !question.answer)) {
+    if (questionArr.filter(question => !question.answer).length) {
       return message.error('정답을 모두 입력해주세요.');
     }
 

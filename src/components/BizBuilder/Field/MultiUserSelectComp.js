@@ -67,6 +67,7 @@ class MultiUserSelectComp extends React.Component {
     if (CONFIG.property.isSubComp) {
       changeFormData(id, 'PARENT_SEQ', parentWorkSeq);
       changeFormData(id, 'PARENT_TASK_SEQ', parentTaskSeq);
+      changeFormData(id, COMP_FIELD, data);
       saveTask(id, id);
     } else {
       changeFormData(id, COMP_FIELD, data);

@@ -35,6 +35,7 @@ class ListButtonComp extends React.Component {
           onOk={() => this.setState({ modalVisible: false })}
           footer={null}
           width="80%"
+          destroyOnClose
         >
           <ExtraBuilder
             sagaKey={`sub${sagaKey}`}
