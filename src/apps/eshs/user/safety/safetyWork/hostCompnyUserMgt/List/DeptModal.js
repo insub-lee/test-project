@@ -6,10 +6,12 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
 
 const { Option } = Select;
 const AntdLineTable = StyledLineTable(Table);
 const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
 
 class DeptModal extends Component {
   constructor(props) {
@@ -216,14 +218,14 @@ class DeptModal extends Component {
     return (
       <>
         <div>
-          <Select defaultValue={dfValue} style={{ width: 130, padding: 3 }} onChange={this.handleSearchDept}>
+          <AntdSelect className="select-mid mr5" defaultValue={dfValue} style={{ width: 180, padding: 3 }} onChange={this.handleSearchDept}>
             {cmpnyList.map(c => (
               <Option key={c.HST_CMPNY_CD} style={{ height: 30 }}>
                 {c.HST_CMPNY_NM}
               </Option>
             ))}
-          </Select>
-          <StyledButton className="btn-primary btn-first" onClick={this.handleDwExcel}>
+          </AntdSelect>
+          <StyledButton className="btn-primary" onClick={this.handleDwExcel}>
             엑셀받기
           </StyledButton>
           {renderTable}

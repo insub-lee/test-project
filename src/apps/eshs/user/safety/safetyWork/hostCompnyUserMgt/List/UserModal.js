@@ -79,29 +79,23 @@ class UserModal extends Component {
     });
   };
 
-  handleInputChange = e => {
+  handleOnChange = (target, value) => {
     const { id, changeFormData, formData } = this.props;
     const { userData, selectedUser } = formData;
     const type = (formData && formData.userModalType) || '';
-    if (type === 'INSERT') changeFormData(id, 'userData', { ...userData, [e.target.name]: e.target.value });
-    else if (type === 'UPDATE') changeFormData(id, 'selectedUser', { ...selectedUser, [e.target.name]: e.target.value });
-  };
-
-  handleSiteOnChange = e => {
-    const { id, changeFormData, formData } = this.props;
-    const { userData, selectedUser } = formData;
-    const type = (formData && formData.userModalType) || '';
-    if (type === 'INSERT') changeFormData(id, 'userData', { ...userData, SITE: e });
-    else if (type === 'UPDATE') changeFormData(id, 'selectedUser', { ...selectedUser, SITE: e });
+    if (type === 'INSERT') changeFormData(id, 'userData', { ...userData, [target]: value });
+    else if (type === 'UPDATE') changeFormData(id, 'selectedUser', { ...selectedUser, [target]: value });
   };
 
   handleDeptChange = e => {
     const { id, changeFormData, formData } = this.props;
+    const { searchDept } = this.state;
     const { userData, selectedUser } = formData;
-    const code = e.split('&&');
+    const index = searchDept.findIndex(s => s.DEPT_CD === e);
+
     const type = (formData && formData.userModalType) || '';
-    if (type === 'INSERT') changeFormData(id, 'userData', { ...userData, DEPT_CD: code[1], DEPT_NM: code[2] });
-    else if (type === 'UPDATE') changeFormData(id, 'selectedUser', { ...selectedUser, DEPT_CD: code[1], DEPT_NM: code[2] });
+    if (type === 'INSERT') changeFormData(id, 'userData', { ...userData, DEPT_CD: searchDept[index].DEPT_CD, DEPT_NM: searchDept[index].DEPT_NM });
+    else if (type === 'UPDATE') changeFormData(id, 'selectedUser', { ...selectedUser, DEPT_CD: searchDept[index].DEPT_CD, DEPT_NM: searchDept[index].DEPT_NM });
   };
 
   render() {
@@ -125,7 +119,7 @@ class UserModal extends Component {
             <tr>
               <th>* 회사</th>
               <td>
-                <AntdSelect value={dfValue} style={{ width: '50%' }} onChange={this.handleSearchDept}>
+                <AntdSelect className="select-mid mr5" value={dfValue} style={{ width: '50%' }} onChange={this.handleSearchDept}>
                   {cmpnyList.map(c => (
                     <Option key={c.HST_CMPNY_CD} style={{ height: 30 }}>
                       {c.HST_CMPNY_NM}
@@ -142,7 +136,7 @@ class UserModal extends Component {
                   style={{ width: '50%' }}
                   name="EMP_NM"
                   value={userData.EMP_NM || ''}
-                  onChange={this.handleInputChange}
+                  onChange={e => this.handleOnChange('EMP_NM', e.target.value)}
                   placeholder="이름"
                 />
               </td>
@@ -155,13 +149,13 @@ class UserModal extends Component {
                   name="EMP_POSITION"
                   style={{ width: '50%' }}
                   value={userData.EMP_POSITION || ''}
-                  onChange={this.handleInputChange}
+                  onChange={e => this.handleOnChange('EMP_POSITION', e.target.value)}
                   placeholder="직위"
                 />
                 <span>&nbsp;(ex. 부장)</span>
               </td>
             </tr>
-            <tr>
+            {/* <tr>
               <th>직책</th>
               <td>
                 <AntdInput
@@ -169,23 +163,18 @@ class UserModal extends Component {
                   style={{ width: '50%' }}
                   name="DUTY"
                   value={userData.DUTY || ''}
-                  onChange={this.handleInputChange}
+                  onChange={e => this.handleOnChange('DUTY', e.target.value)}
                   placeholder="직책"
                 />
                 <span>&nbsp;(ex. 팀장)</span>
               </td>
-            </tr>
+            </tr> */}
             <tr>
               <th>* 부서</th>
               <td>
-                <AntdSelect
-                  defaultValue={' '}
-                  value={userData.DEPT_CD ? `${userData.HST_CMPNY_CD}&&${userData.DEPT_CD}&&${userData.DEPT_NM}` : ''}
-                  style={{ width: '50%' }}
-                  onChange={this.handleDeptChange}
-                >
+                <AntdSelect className="select-mid mr5" value={userData.DEPT_CD} style={{ width: '50%' }} onChange={this.handleDeptChange}>
                   {searchDept.map(d => (
-                    <Option key={`${d.HST_CMPNY_CD}&&${d.DEPT_CD}&&${d.DEPT_NM}`} style={{ height: 30 }}>
+                    <Option key={d.DEPT_CD} style={{ height: 30 }}>
                       {d.DEPT_NM}
                     </Option>
                   ))}
@@ -195,7 +184,12 @@ class UserModal extends Component {
             <tr>
               <th>* 근무지</th>
               <td>
-                <AntdSelect defaultValue={userData.SITE || '청주'} style={{ width: '50%' }} onChange={this.handleSiteOnChange}>
+                <AntdSelect
+                  className="select-mid mr5"
+                  defaultValue={userData.SITE || '청주'}
+                  style={{ width: '50%' }}
+                  onChange={value => this.handleOnChange('SITE', value)}
+                >
                   <Option value="청주">청주</Option>
                   <Option value="구미">구미</Option>
                 </AntdSelect>
@@ -209,7 +203,7 @@ class UserModal extends Component {
                   style={{ width: '50%' }}
                   name="TEL"
                   value={userData.TEL || ''}
-                  onChange={this.handleInputChange}
+                  onChange={e => this.handleOnChange('TEL', e.target.value)}
                   placeholder="사내전화"
                 />
               </td>
@@ -240,7 +234,7 @@ class UserModal extends Component {
                   name="EMP_NM"
                   style={{ width: '50%' }}
                   value={selectedUser.EMP_NM || ''}
-                  onChange={this.handleInputChange}
+                  onChange={e => this.handleOnChange('EMP_NM', e.target.value)}
                   placeholder="이름"
                 />
               </td>
@@ -253,13 +247,13 @@ class UserModal extends Component {
                   name="EMP_POSITION"
                   value={selectedUser.EMP_POSITION || ''}
                   style={{ width: '50%' }}
-                  onChange={this.handleInputChange}
+                  onChange={e => this.handleOnChange('EMP_POSITION', e.target.value)}
                   placeholder="직위"
                 />
                 <span>&nbsp;(ex. 부장)</span>
               </td>
             </tr>
-            <tr>
+            {/* <tr>
               <th>직책</th>
               <td>
                 <AntdInput
@@ -267,22 +261,27 @@ class UserModal extends Component {
                   name="DUTY"
                   value={selectedUser.DUTY || ''}
                   style={{ width: '50%' }}
-                  onChange={this.handleInputChange}
+                  onChange={e => this.handleOnChange('DUTY', e.target.value)}
                   placeholder="직책"
                 />
                 <span>&nbsp;(ex. 팀장)</span>
               </td>
-            </tr>
+            </tr> */}
             <tr>
               <th>* 부서</th>
               <td>
                 <AntdSelect
-                  value={`${selectedUser.HST_CMPNY_CD}&&${selectedUser.DEPT_CD}&&${selectedUser.DEPT_NM}`}
+                  className="select-mid mr5"
+                  value={
+                    searchDept.findIndex(s => s.DEPT_CD === selectedUser.DEPT_CD) > -1
+                      ? searchDept[searchDept.findIndex(s => s.DEPT_CD === selectedUser.DEPT_CD)].DEPT_CD
+                      : selectedUser.DEPT_NM
+                  }
                   style={{ width: '50%' }}
                   onChange={this.handleDeptChange}
                 >
                   {searchDept.map(d => (
-                    <Option key={`${d.HST_CMPNY_CD}&&${d.DEPT_CD}&&${d.DEPT_NM}`} style={{ height: 30 }}>
+                    <Option key={d.DEPT_CD} style={{ height: 30 }}>
                       {d.DEPT_NM}
                     </Option>
                   ))}
@@ -292,7 +291,12 @@ class UserModal extends Component {
             <tr>
               <th>* 근무지</th>
               <td>
-                <AntdSelect defaultValue={selectedUser.SITE || '청주'} style={{ width: '50%' }} onChange={this.handleSiteOnChange}>
+                <AntdSelect
+                  className="select-mid mr5"
+                  defaultValue={selectedUser.SITE || '청주'}
+                  style={{ width: '50%' }}
+                  onChange={value => this.handleOnChange('SITE', value)}
+                >
                   <Option value="청주">청주</Option>
                   <Option value="구미">구미</Option>
                 </AntdSelect>
@@ -306,7 +310,7 @@ class UserModal extends Component {
                   style={{ width: '50%' }}
                   name="TEL"
                   value={selectedUser.TEL || ''}
-                  onChange={this.handleInputChange}
+                  onChange={e => this.handleOnChange('TEL', e.target.value)}
                   placeholder="사내전화"
                 />
               </td>
