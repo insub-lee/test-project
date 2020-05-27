@@ -2,7 +2,9 @@
 import React, { Component } from 'react';
 import { Table, Column, AutoSizer } from 'react-virtualized';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
+import StyledVirtualizedTable from 'components/BizBuilder/styled/Table/StyledVirtualizedTable';
+import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+
 import SearchBar from './SearchBar';
 
 class List extends Component {
@@ -40,22 +42,19 @@ class List extends Component {
   };
 
   onRowClick = e => {
-    const { id, changeFormData } = this.props;
+    const { id, formData, setFormData } = this.props;
 
-    changeFormData(id, 'userModalType', 'UPDATE');
-    changeFormData(id, 'selectedUser', e.rowData);
-    changeFormData(id, 'userModal', true);
+    setFormData(id, { ...formData, userModalType: 'UPDATE', selectedUser: e.rowData, userModal: true });
   };
 
   noRowsRenderer = () => <div className="noRows">0 명</div>;
 
   getColumns = () => [
-    { label: '소속', dataKey: 'BELONG', width: 350, ratio: 25 },
-    { label: '이름', dataKey: 'EMP_NM', width: 200, ratio: 14 },
-    { label: '직위', dataKey: 'EMP_POSITION', width: 200, ratio: 12 },
-    { label: '직책', dataKey: 'DUTY', width: 200, ratio: 12 },
-    { label: '근무지', dataKey: 'SITE', width: 200, ratio: 12 },
-    { label: '전화번호', dataKey: 'TEL', width: 350, ratio: 25 },
+    { label: '소속', dataKey: 'BELONG', width: 350, ratio: 31 },
+    { label: '이름', dataKey: 'EMP_NM', width: 200, ratio: 17 },
+    { label: '직위', dataKey: 'EMP_POSITION', width: 200, ratio: 13 },
+    { label: '근무지', dataKey: 'SITE', width: 200, ratio: 13 },
+    { label: '전화번호', dataKey: 'TEL', width: 350, ratio: 26 },
   ];
 
   getTablewidth = () => {
@@ -68,21 +67,21 @@ class List extends Component {
     const list = this.setList();
     return (
       <ContentsWrapper>
-        <div className="selSaveWrapper alignLeft">
-          <SearchBar {...this.props} handleAppStart={this.handleAppStart} />
-        </div>
+        <SearchBar {...this.props} handleAppStart={this.handleAppStart} />
+
         <StyledVirtualizedTable>
           <AutoSizer disableHeight>
             {({ width }) => (
               <Table
                 width={width}
-                height={500}
+                height={700}
                 headerHeight={40}
                 rowHeight={53}
                 rowCount={list.length}
                 rowGetter={({ index }) => list[index]}
                 noRowsRenderer={this.noRowsRenderer}
                 onRowClick={this.onRowClick}
+                style={{ cursor: 'pointer' }}
               >
                 {this.getColumns().map(({ label, dataKey, ratio }) => (
                   <Column key={dataKey} label={label} dataKey={dataKey} width={(width / 100) * ratio} />

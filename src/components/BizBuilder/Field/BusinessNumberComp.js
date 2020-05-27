@@ -1,6 +1,6 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { InputNumber } from 'antd';
+import { Input } from 'antd';
 import { debounce } from 'lodash';
 
 class BusinessNumberComp extends React.Component {
@@ -10,12 +10,12 @@ class BusinessNumberComp extends React.Component {
     // this.handleOnChangeSearch = debounce(this.handleOnChangeSearch, 300);
   }
 
-  handleOnChange = e => {
-    const value = String(e);
+  handleOnChange = value => {
     const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData } = this.props;
     if (CONFIG.property.isRequired) {
       changeValidationData(id, COMP_FIELD, value.trim().length > 0, value.trim().length > 0 ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
-      if (!this.handleBusinessNumberCheck(value)) {
+
+      if (!this.handleBusinessNumberCheck(value.replace(/-/gi, ''))) {
         changeValidationData(id, COMP_FIELD, false, '사업자번호등록번호가 맞지 않습니다');
       }
     }
@@ -55,13 +55,11 @@ class BusinessNumberComp extends React.Component {
       return searchCompRenderer(this.props);
     }
     return visible ? (
-      <InputNumber
+      <Input
         defaultValue={colData}
-        min={0}
-        max={10 ** CONFIG.info.size}
         style={{ width: '100%' }}
         placeholder={CONFIG.property.placeholder}
-        onChange={e => this.handleOnChange(e)}
+        onChange={e => this.handleOnChange(e.target.value)}
         readOnly={readOnly || CONFIG.property.readOnly}
         className={CONFIG.property.className || ''}
       />
