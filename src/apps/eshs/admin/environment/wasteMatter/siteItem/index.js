@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
-import CustomList from './List';
 
 class SiteItem extends Component {
   componentDidMount() {}
@@ -13,16 +12,7 @@ class SiteItem extends Component {
   };
 
   render() {
-    return (
-      <BizBuilderBase
-        sagaKey="siteItem"
-        workSeq={4521}
-        CustomListPage={CustomList}
-        viewType="LIST"
-        loadingComplete={this.loadingComplete}
-        isModalChange={this.isModalChange}
-      />
-    );
+    return <BizBuilderBase sagaKey="siteItem" workSeq={4521} viewType="LIST" loadingComplete={this.loadingComplete} />;
   }
 }
 
