@@ -51,8 +51,9 @@ class List extends Component {
     const apiAry = [
       {
         key: 'site',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=65',
-        type: 'GET',
+        url: '/api/admin/v1/common/categoryMapList',
+        type: 'POST',
+        params: { PARAM: { NODE_ID: 635 } },
       },
       {
         key: 'wasteItem',
