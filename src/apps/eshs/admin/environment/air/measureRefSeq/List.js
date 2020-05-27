@@ -10,7 +10,7 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledModalWrapper from 'components/BizBuilder/styled/Modal/StyledAntdModal';
-import StackStatus from 'apps/eshs/admin/environment/air/stack/stackStatus';
+import BizBuilderBase from 'components/BizBuilderBase';
 
 import Moment from 'moment';
 import Graph from './Graph';
@@ -62,7 +62,7 @@ class List extends Component {
     const { sagaKey: id, getCallDataHandler, refStack } = this.props;
     const { dateStrings, rangeDateStrings, seq, stackCd } = this.state;
     const setDate = refStack
-      ? `START_DATE=${`${rangeDateStrings[0]}-01`}&&END_DATE=${`${rangeDateStrings[1]}-31`}&&STACK_CD=${stackCd}`
+      ? `START_DATE=${Moment(rangeDateStrings[0]).format('YYYY-MM-01')}&&END_DATE=${Moment(rangeDateStrings[1]).format('YYYY-MM-31')}&&STACK_CD=${stackCd}`
       : `START_DATE=${`${dateStrings}-01`}&&END_DATE=${`${dateStrings}-31`}`;
     const apiAry = [
       {
@@ -248,11 +248,24 @@ class List extends Component {
           </AntdSelect>
           <div style={{ margin: '0 5px', display: 'inline-block' }}>
             {refStack ? (
+              // mode 사용 시 open value 관리해야함
               <RangePicker
-                defaultValue={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
+                value={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
+                open={this.state.isopen}
                 mode={['month', 'month']}
                 format={['YYYY-MM', 'YYYY-MM']}
-                onChange={(date, dateStrings) => this.onChangeState('rangeDateStrings', dateStrings)}
+                onOpenChange={status => {
+                  this.setState({ isopen: status });
+                }}
+                onPanelChange={value => {
+                  if (value[0] < Moment().endOf('month') && value[1] < Moment().endOf('month')) {
+                    this.setState({
+                      rangeDateStrings: value,
+                    });
+                  } else {
+                    message.warning('날짜가 올바르지 않습니다.');
+                  }
+                }}
               />
             ) : (
               <MonthPicker
@@ -412,7 +425,14 @@ class List extends Component {
         </StyledHtmlTable>
         {refStack ? (
           <AntdModal width={800} visible={this.state.isModal} title="Stack 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
-            <StackStatus customOnRowClick={this.customOnRowClick} />
+            <BizBuilderBase
+              sagaKey="stackModal"
+              workSeq={4401}
+              viewType="LIST"
+              listMetaSeq={4461}
+              customOnRowClick={this.customOnRowClick}
+              ViewCustomButtons={() => null}
+            />
           </AntdModal>
         ) : (
           ''
