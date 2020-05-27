@@ -9,9 +9,12 @@ import CustomList from './pages/CustomList';
 const StyledButton = StyledAntdButton(Button);
 
 class IndusrtialAccidentCmpnyMgt extends Component {
-  state = {
-    isLoading: true,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true,
+    };
+  }
 
   loadingComplete = () => {
     this.setState({
@@ -19,7 +22,7 @@ class IndusrtialAccidentCmpnyMgt extends Component {
     });
   };
 
-  inputCustomButtons = ({ ...props }) => {
+  inputCustomButtons = ({ ...inputProps }) => {
     const {
       sagaKey: id,
       reloadId,
@@ -27,13 +30,26 @@ class IndusrtialAccidentCmpnyMgt extends Component {
       saveTask,
       changeViewPage,
       listSagaKey,
+      inputMetaSeq,
       viewPageData: { workSeq },
-    } = props;
+      setFormData,
+      formData,
+    } = inputProps;
+    const { saveAfter, initFormData } = this.props;
+
+    console.debug('saveAfter', saveAfter);
+    console.debug('setFormData', setFormData);
+    console.debug('formData', formData);
+    console.debug('initFormData', initFormData);
+    const bizRegNo = (formData && formData.BIZ_REG_NO) || '';
+    if (JSON.stringify(initFormData) !== '{}' && !bizRegNo) {
+      setFormData(id, { ...formData, ...initFormData });
+    }
     return (
-      <div className="alignRight">
+      <div className={inputMetaSeq === 2227 ? 'alignRight' : 'alignCenter'}>
         <StyledButton
           className="btn-primary btn-first"
-          onClick={() => saveTask(id, reloadId, () => this.saveAfter(changeViewPage, workSeq, id, listSagaKey))}
+          onClick={() => saveTask(id, reloadId, typeof saveAfter === 'function' ? saveAfter : () => this.saveAfter(changeViewPage, workSeq, id, listSagaKey))}
           loading={isLoading}
         >
           저장
@@ -85,39 +101,49 @@ class IndusrtialAccidentCmpnyMgt extends Component {
   };
 
   render() {
-    const { listSagaKey, sagaKey } = this.props;
+    const { listSagaKey, sagaKey, inputMetaSeq, initFormData } = this.props;
     return (
       <>
         <BizBuilderBase
           sagaKey={sagaKey}
           listSagaKey={listSagaKey}
           workSeq={2201}
+          inputMetaSeq={inputMetaSeq}
           viewType="INPUT"
           InputCustomButtons={this.inputCustomButtons}
           ModifyCustomButtons={this.modifyCustomButtons}
           loadingComplete={this.loadingComplete}
+          initFormData={initFormData}
         />
-        <BizBuilderBase
-          sagaKey={listSagaKey}
-          modifySagaKey="IndusrtialAccidentCmpnyMgt"
-          CustomListPage={CustomList}
-          workSeq={2201}
-          viewType="LIST"
-          loadingComplete={this.loadingComplete}
-        />
+        {inputMetaSeq === 2227 && (
+          <BizBuilderBase
+            sagaKey={listSagaKey}
+            modifySagaKey="IndusrtialAccidentCmpnyMgt"
+            CustomListPage={CustomList}
+            workSeq={2201}
+            viewType="LIST"
+            loadingComplete={this.loadingComplete}
+          />
+        )}
       </>
     );
   }
 }
-
+// 8921 -- 미등록 업체 등록페이지
 IndusrtialAccidentCmpnyMgt.propTypes = {
   listSagaKey: PropTypes.string,
   sagaKey: PropTypes.string,
+  inputMetaSeq: PropTypes.number,
+  saveAfter: PropTypes.any,
+  initFormData: PropTypes.object,
 };
 
 IndusrtialAccidentCmpnyMgt.defaultProps = {
   listSagaKey: 'IndusrtialAccidentCmpnyList',
   sagaKey: 'IndusrtialAccidentCmpnyMgt',
+  inputMetaSeq: 2227,
+  saveAfter: undefined,
+  initFormData: {},
 };
 
 export default IndusrtialAccidentCmpnyMgt;

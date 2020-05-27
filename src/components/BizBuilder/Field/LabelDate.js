@@ -9,7 +9,11 @@ class LabelDate extends React.Component {
     if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
       return searchCompRenderer(this.props);
     }
-    return visible ? <span className={CONFIG.property.className || ''}>{colData === 'NOW()' ? Moment().format('YYYY-MM-DD hh:mm:ss') : colData}</span> : '';
+    return visible ? (
+      <span className={CONFIG.property.className || ''}>{colData === 'NOW()' ? Moment().format('YYYY-MM-DD') : Moment(colData).format('YYYY-MM-DD')}</span>
+    ) : (
+      ''
+    );
   }
 }
 

@@ -70,7 +70,7 @@ class emergencyWorkWrite extends Component {
         /* 거래처전체리스트 : /api/eshs/v1/common/EshsCmpnyList/null/null */
         key: 'getEshsCmpnyList',
         type: 'GET',
-        url: `/api/eshs/v1/common/EshsCmpnyList/null/null`,
+        url: `/api/eshs/v1/common/EshsCmpnyList?gubun=SW`,
       },
       {
         /* SWTB_장비리스트 : /api/eshs/v1/common/eshsSwtbEquip */
@@ -471,7 +471,7 @@ class emergencyWorkWrite extends Component {
               colData={formData.WRK_CMPNY_CD}
               directSearchTable
               visible
-              CONFIG={{ property: { isRequired: false } }}
+              CONFIG={{ property: { isRequired: false, GUBUN: 'SW' } }}
               changeFormData={() => false}
               COMP_FIELD="WRK_CMPNY_CD"
               eshsCmpnyCompResult={(cmpnyInfo, field) => this.handleCmpnySelect(cmpnyInfo, field)}

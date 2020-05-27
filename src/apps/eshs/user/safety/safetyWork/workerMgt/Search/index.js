@@ -72,7 +72,7 @@ class List extends Component {
     const apiInfo = {
       key: 'getCmpnyList',
       type: 'GET',
-      url: `/api/eshs/v1/common/EshsCmpnyList/year/${year}`,
+      url: `/api/eshs/v1/common/EshsCmpnyList?searchType=year&searchText=${year}&gubun=SW`,
     };
     getCallDataHandlerReturnRes(id, apiInfo, this.getCmpnyListAfter);
   };

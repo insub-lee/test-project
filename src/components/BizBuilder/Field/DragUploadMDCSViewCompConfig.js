@@ -85,12 +85,20 @@ class DragUploadMDCSViewCompConfig extends Component {
     this.setState({ drmInfo: tDrmInfo }, () => this.onSaveConfig());
   };
 
+  onChangeOriginDownGroupIds = e => {
+    const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
+    const { value } = e.target;
+    configInfo.property.originDownGroupIds = value.split(',');
+    changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
+  };
+
   render() {
     const {
       downType,
       drmInfo: { pr, uc, bk, ed },
       optList,
     } = this.state;
+    const { configInfo } = this.props;
     console.debug('this.state', this.state);
     return (
       <StyledHtmlTable>
@@ -145,6 +153,12 @@ class DragUploadMDCSViewCompConfig extends Component {
               <th>Expire Date</th>
               <td>
                 <Input value={ed} onChange={this.onChangeExpire}></Input>
+              </td>
+            </tr>
+            <tr>
+              <th>원본 다운로드 허용 가상그룹ID(구분자:,)</th>
+              <td>
+                <Input value={configInfo && configInfo.property && configInfo.property.originDownGroupIds} onChange={this.onChangeOriginDownGroupIds} />
               </td>
             </tr>
           </tbody>
