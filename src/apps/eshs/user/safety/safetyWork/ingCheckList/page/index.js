@@ -366,7 +366,7 @@ class SafetyWorkList extends Component {
               colData={searchValues.WRK_CMPNY_CD}
               directSearchTable
               visible
-              CONFIG={{ property: { isRequired: false } }}
+              CONFIG={{ property: { isRequired: false, GUBUN: 'SW' } }}
               changeFormData={() => false}
               COMP_FIELD="WRK_CMPNY_CD"
               eshsCmpnyCompResult={(cmpnyInfo, field) => this.handleCmpnySelect(cmpnyInfo, field)}
