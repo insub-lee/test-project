@@ -41,7 +41,6 @@ class EshsCmpnyComp extends React.Component {
       },
     } = this.props;
     const gubun = (this.props && this.props.CONFIG && this.props.CONFIG.property && this.props.CONFIG.property.GUBUN) || 'SQ';
-
     const apiValue = [
       {
         key: 'cmpnyList',
@@ -104,12 +103,25 @@ class EshsCmpnyComp extends React.Component {
     this.setState({ searchList, listType: 'search' });
   };
 
-  getColumns = () => [
-    { label: '코드', dataKey: 'WRK_CMPNY_CD', width: 75, ratio: 10 },
-    { label: '이름', dataKey: 'WRK_CMPNY_NM', width: 375, ratio: 50 },
-    { label: '사업자등록번호', dataKey: 'BIZ_REG_NO', width: 150, ratio: 20 },
-    { label: '전화번호', dataKey: 'TEL', width: 150, ratio: 20 },
-  ];
+  getColumns = () => {
+    const gubun = (this.props && this.props.CONFIG && this.props.CONFIG.property && this.props.CONFIG.property.GUBUN) || 'SQ';
+    if (gubun === 'SQ') {
+      return [
+        { label: '코드', dataKey: 'WRK_CMPNY_CD', width: 75, ratio: 10 },
+        { label: '이름', dataKey: 'WRK_CMPNY_NM', width: 375, ratio: 50 },
+        { label: '사업자등록번호', dataKey: 'BIZ_REG_NO', width: 150, ratio: 20 },
+        { label: '전화번호', dataKey: 'TEL', width: 150, ratio: 20 },
+      ];
+    }
+    return [
+      { label: '지역', dataKey: 'SITE', width: 75, ratio: 10 },
+      { label: '년도', dataKey: 'YEAR', width: 75, ratio: 10 },
+      { label: '이름', dataKey: 'WRK_CMPNY_NM', width: 375, ratio: 50 },
+      { label: '코드', dataKey: 'WRK_CMPNY_CD', width: 75, ratio: 10 },
+      { label: '사업자등록번호', dataKey: 'BIZ_REG_NO', width: 150, ratio: 20 },
+      { label: '전화번호', dataKey: 'TEL', width: 150, ratio: 20 },
+    ];
+  };
 
   handleModalVisible = () => {
     const { readOnly } = this.props;
@@ -177,6 +189,7 @@ class EshsCmpnyComp extends React.Component {
   render() {
     const { CONFIG, visible, readOnly, searchWidth, directSearchTable } = this.props;
     const { cmpnyModal, cmpny_nm, list, searchList, listType, cursor, cmpnyInfo, searchText, searchType } = this.state;
+    const gubun = (this.props && this.props.CONFIG && this.props.CONFIG.property && this.props.CONFIG.property.GUBUN) || 'SQ';
     let cmpnyList = [];
     if (listType === 'search') {
       cmpnyList = searchList;
@@ -193,10 +206,20 @@ class EshsCmpnyComp extends React.Component {
             <StyledSearchWrap>
               <div className="search-group-layer mb0">
                 <InputGroup className="search-item search-input-group" compact>
-                  <AntdSelect className="select-sm" value={searchType} onChange={value => this.handleOnChange(value, 'searchType')}>
-                    <Option value="name">이름</Option>
-                    <Option value="code">코드</Option>
-                  </AntdSelect>
+                  {gubun === 'SQ' && (
+                    <AntdSelect className="select-sm" value={searchType} onChange={value => this.handleOnChange(value, 'searchType')}>
+                      <Option value="name">이름</Option>
+                      <Option value="code">코드</Option>
+                    </AntdSelect>
+                  )}
+                  {gubun === 'SW' && (
+                    <AntdSelect className="select-sm" value={searchType} onChange={value => this.handleOnChange(value, 'searchType')}>
+                      <Option value="name">이름</Option>
+                      <Option value="code">코드</Option>
+                      <Option value="site">작업지역</Option>
+                      <Option value="year">년도</Option>
+                    </AntdSelect>
+                  )}
                   <AntdSearch
                     className="searchInput input-search-sm"
                     name="searchName"
