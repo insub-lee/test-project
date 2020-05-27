@@ -20,31 +20,34 @@ class CustomCheckListComp extends Component {
     isItem: false,
     apiFlag: true,
     dataSource: [],
+    mapList: undefined,
   };
 
   componentDidMount() {
-    const { getExtraApiData, sagaKey: id, apiArys, COMP_FIELD, changeFormData, colData } = this.props;
-    getExtraApiData(id, apiArys, this.initDataBind);
-    console.debug('componentDidMount', colData);
-    // const initColData = colData === '' ? [] : colData;
-    // changeFormData(id, COMP_FIELD, initColData);
+    const { fieldSelectData, CONFIG } = this.props;
+
+    if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
+      if (fieldSelectData[CONFIG.property.compSelectDataKey]) {
+        const mapList = fieldSelectData[CONFIG.property.compSelectDataKey];
+        console.debug('maplist', mapList);
+        this.initDataBind(mapList);
+      }
+    }
   }
 
-  initDataBind = sagaKey => {
+  initDataBind = mapList => {
+    const { colData } = this.props;
     const {
-      extraApiData: {
-        REGION: { categoryMapList: regionList },
-        FAB: { categoryMapList: fabList },
-        DENSITY: { categoryMapList: densityList },
-        PKG: { categoryMapList: pkgList },
-        MODULE: { categoryMapList: moduleList },
-        PRODUCT: { categoryMapList: prdList },
-        GEN: { categoryMapList: genList },
-        TECH: { categoryMapList: techList },
-        CUSTOMER: { categoryMapList: customList },
-      },
-      colData,
-    } = this.props;
+      FAB: fabList,
+      REGION: regionList,
+      DENSITY: densityList,
+      PKG: pkgList,
+      MODULE: moduleList,
+      PRODUCT: prdList,
+      GEN: genList,
+      TECH: techList,
+      CUSTOMER: customList,
+    } = mapList;
 
     dataSource = [
       {
@@ -141,7 +144,6 @@ class CustomCheckListComp extends Component {
   };
 
   onChangeMultiSelector = (dataList, selectedValue) => {
-    console.debug('dataList', dataList);
     this.setState({ selectedCheckList: dataList, isItem: true });
   };
 
@@ -190,7 +192,8 @@ class CustomCheckListComp extends Component {
 
   render() {
     const { readOnly } = this.props;
-    const { isItem } = this.state;
+    const { isItem, dataSource } = this.state;
+    console.debug('datasource', dataSource);
     return (
       <>
         <StyledMultiSelector>
@@ -228,7 +231,7 @@ class CustomCheckListComp extends Component {
           ]}
           className="multiSelector-w100"
         >
-          <MultiSelector onChange={this.onChangeMultiSelector} dataSource={this.state.dataSource}></MultiSelector>
+          <MultiSelector onChange={this.onChangeMultiSelector} dataSource={dataSource}></MultiSelector>
         </AntdModal>
       </>
     );
