@@ -171,7 +171,7 @@ class IntroComponent extends Component {
       workPrcProps,
       viewChangeSeq,
     } = this.state;
-    console.debug('workPrcProps', workPrcProps);
+
     return (
       <StyledContents>
         <div className="contentWrapper">

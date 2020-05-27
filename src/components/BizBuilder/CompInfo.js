@@ -136,8 +136,10 @@ import NumberCompFloat from 'components/BizBuilder/Field/NumberCompFloat';
 import ViewDateComp from 'components/BizBuilder/Field/ViewDateComp';
 import MDCSDccViewComp from 'components/BizBuilder/Field/MDCSDccViewComp';
 import DragUploadViewComp from 'components/BizBuilder/Field/DragUploadViewComp';
+import CategoryViewComp from 'components/BizBuilder/Field/CategoryViewComp';
 
 export const CompInfo = {
+  'components/BizBuilder/Field/CategoryViewComp': { renderer: property => <CategoryViewComp {...property} /> },
   'components/BizBuilder/Field/VaildationListComp': { renderer: property => <VaildationListComp {...property} /> },
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
   'components/BizBuilder/Field/ViewDateComp': { renderer: property => <ViewDateComp {...property} /> },
