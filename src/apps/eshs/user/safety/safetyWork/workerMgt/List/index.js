@@ -394,7 +394,7 @@ class List extends Component {
               colData={formData.wrk_cmpny_cd}
               directSearchTable
               visible
-              CONFIG={{ property: { isRequired: false } }}
+              CONFIG={{ property: { isRequired: false, GUBUN: 'SW' } }}
               changeFormData={() => false}
               COMP_FIELD="WRK_CMPNY_CD"
               eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleSelectCmpny(companyInfo, COMP_FIELD)}

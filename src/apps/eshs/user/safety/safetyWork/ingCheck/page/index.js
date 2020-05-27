@@ -87,7 +87,7 @@ class SafetyWorkMain extends Component {
         /* 거래처전체리스트 : /api/eshs/v1/common/EshsCmpnyList/null/null */
         key: 'getEshsCmpnyList',
         type: 'GET',
-        url: `/api/eshs/v1/common/EshsCmpnyList/null/null`,
+        url: `/api/eshs/v1/common/EshsCmpnyList?gubun=SW`,
       },
       {
         /* 점검항목리스트 : /api/eshs/v1/common/penaltyItem */

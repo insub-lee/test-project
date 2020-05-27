@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Select, Input, Button, Modal, message } from 'antd';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
@@ -34,7 +35,7 @@ class SearchBar extends Component {
   };
 
   handleOnSearch = () => {
-    const { id, changeFormData, formData, result } = this.props;
+    const { id, setFormData, formData, result } = this.props;
     const searchSite = (formData && formData.searchSite === 'all' ? '' : formData.searchSite) || '';
     const searchCmpny = (formData && formData.searchCmpny === 'all' ? '' : formData.searchCmpny) || '';
     const searchName = (formData && formData.searchName) || '';
@@ -50,20 +51,15 @@ class SearchBar extends Component {
     else if (searchCmpny) searchList = userList.filter(u => u.HST_CMPNY_CD === searchCmpny);
     else if (searchName) searchList = userList.filter(u => u.EMP_NM === searchName);
     else searchList = userList;
-    if (searchList.length) changeFormData(id, 'is_search', true);
-    changeFormData(id, 'is_search', true);
-    changeFormData(id, 'searchList', searchList);
+    setFormData(id, { ...formData, is_search: true, searchList });
   };
 
   showUserModal = () => {
-    const { id, changeFormData } = this.props;
-    changeFormData(id, 'userModal', true);
-    changeFormData(id, 'userModalType', 'INSERT');
+    const { id, setFormData, formData } = this.props;
+    setFormData(id, { ...formData, userModal: true, userModalType: 'INSERT' });
   };
 
   handleUserOk = e => {
-    console.debug('1111111111111111111');
-    console.debug('eeeeeeeeeeee', e);
     if (this.validationCheck()) {
       const { id, submitHandlerBySaga, formData } = this.props;
       const type = (formData && formData.userModalType) || '';
@@ -88,9 +84,8 @@ class SearchBar extends Component {
   };
 
   handleUserCancel = e => {
-    const { id, changeFormData } = this.props;
-    changeFormData(id, 'userModal', false);
-    changeFormData(id, 'userModalType', ' ');
+    const { id, setFormData, formData } = this.props;
+    setFormData(id, { ...formData, userModal: false, userModalType: '' });
   };
 
   showDeptModal = () => {
@@ -99,9 +94,8 @@ class SearchBar extends Component {
   };
 
   handleDeptCancel = () => {
-    const { id, changeFormData } = this.props;
-    changeFormData(id, 'deptModal', false);
-    changeFormData(id, 'selectedDept', {});
+    const { id, setFormData, formData } = this.props;
+    setFormData(id, { ...formData, deptModal: false, selectedDept: {} });
   };
 
   validationCheck = () => {
@@ -149,7 +143,7 @@ class SearchBar extends Component {
         <div className="selSaveWrapper alignLeft">
           <AntdSelect
             className="select-mid mr5"
-            style={{ width: '10%' }}
+            style={{ width: '15%' }}
             defaultValue={formData.searchSite && formData.searchSite === 'all' ? formData.searchSite : '지역 전체'}
             onChange={this.handleSiteOnChange}
           >
@@ -159,7 +153,7 @@ class SearchBar extends Component {
           </AntdSelect>
           <AntdSelect
             className="select-mid mr5"
-            style={{ width: '10%' }}
+            style={{ width: '15%' }}
             defaultValue={formData.searchCmpny && formData.searchCmpny === 'all' ? formData.searchCmpny : '회사 전체'}
             onChange={this.handleCmpnyOnChange}
           >
@@ -171,7 +165,7 @@ class SearchBar extends Component {
             ))}
           </AntdSelect>
           <AntdInput
-            className="ant-input-inline mr5"
+            className="ant-input-inline ant-input-mid mr5 "
             style={{ width: '10%' }}
             value={formData.searchName || ''}
             name="searchName"
@@ -195,14 +189,13 @@ class SearchBar extends Component {
           visible={(formData && formData.userModal) || false}
           width={500}
           height={400}
-          destroyOnClose
           onCancel={this.handleUserCancel}
           footer={[
-            <StyledButtonWrapper className="btn-wrap-center">
-              <StyledButton className="btn-primary btn-first" onClick={this.handleUserOk}>
+            <StyledButtonWrapper className="btn-wrap-center btn-wrap-mb-10">
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={this.handleUserOk}>
                 {formData && formData.userModalType === 'INSERT' ? '추가' : '저장'}
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={this.handleUserCancel}>
+              <StyledButton className="btn-primary btn-sm" onClick={this.handleUserCancel}>
                 닫기
               </StyledButton>
             </StyledButtonWrapper>,
