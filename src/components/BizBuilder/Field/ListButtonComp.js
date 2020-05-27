@@ -19,7 +19,7 @@ class ListButtonComp extends React.Component {
 
   render() {
     const { handleButtonClick } = this;
-    const { visible, CONFIG, sagaKey, rowData } = this.props;
+    const { visible, CONFIG, sagaKey, rowData, workSeq } = this.props;
     if (!visible) {
       return null;
     }
@@ -39,7 +39,8 @@ class ListButtonComp extends React.Component {
         >
           <ExtraBuilder
             sagaKey={`sub${sagaKey}`}
-            workSeq={CONFIG.property.SELECTED_BUILDER}
+            workSeq={CONFIG.property.SELECTED_BUILDER ? CONFIG.property.SELECTED_BUILDER : workSeq}
+            listMetaSeq={CONFIG.property.SELECTED_BUILDER ? -1 : CONFIG.property.SELECTED_META_SEQ}
             viewType={CONFIG.property.VIEW_TYPE}
             parentTaskSeq={rowData.TASK_SEQ}
             parentWorkSeq={CONFIG.property.SELECTED_BUILDER}
@@ -59,6 +60,7 @@ ListButtonComp.propTypes = {
   CONFIG: PropTypes.object,
   sagaKey: PropTypes.string,
   rowData: PropTypes.object,
+  workSeq: PropTypes.number,
 };
 
 export default ListButtonComp;

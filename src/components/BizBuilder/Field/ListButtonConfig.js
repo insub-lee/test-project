@@ -13,6 +13,7 @@ class ListButtonConfig extends React.Component {
     super(props);
     this.state = {
       builderList: [],
+      metaList: [],
     };
 
     this.handleChangeViewCompData = debounce(this.handleChangeViewCompData, 500);
@@ -34,6 +35,23 @@ class ListButtonConfig extends React.Component {
     this.setState({ builderList: response.response.list });
   };
 
+  getMetaSeq = async (workSeq = this.props.configInfo.property.SELECTED_BUILDER, viewType = this.props.configInfo.property.VIEW_TYPE) => {
+    const metaList = await request({
+      method: 'GET',
+      url: `/api/eshs/v1/common/eshsbuilderworkmeta?WORK_SEQ=${workSeq}&COMP_TAG=${viewType}`,
+    });
+    return this.setMetaSeq(metaList);
+  };
+
+  setMetaSeq = response => {
+    this.setState({ metaList: response.response.list });
+  };
+
+  handleSelectedBuilderChange = (key, value) => {
+    this.handleChangeViewCompData(key, value);
+    return key.toUpperCase() === 'SELECTED_BUILDER' ? this.getMetaSeq(value) : this.getMetaSeq(undefined, value);
+  };
+
   handleChangeViewCompData = (key, value) => {
     const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
     configInfo.property[key] = value;
@@ -41,8 +59,8 @@ class ListButtonConfig extends React.Component {
   };
 
   render() {
-    const { handleChangeViewCompData } = this;
-    const { builderList } = this.state;
+    const { handleChangeViewCompData, handleSelectedBuilderChange } = this;
+    const { builderList, metaList } = this.state;
     const { configInfo } = this.props;
     return (
       <>
@@ -60,7 +78,7 @@ class ListButtonConfig extends React.Component {
           <AntdSelect
             className="select-sm"
             defaultValue={configInfo.property.SELECTED_BUILDER || ''}
-            onChange={value => handleChangeViewCompData('SELECTED_BUILDER', value)}
+            onChange={value => handleSelectedBuilderChange('SELECTED_BUILDER', value)}
             style={{ width: '100%' }}
           >
             {builderList.map(builder => (
@@ -73,8 +91,9 @@ class ListButtonConfig extends React.Component {
           <AntdSelect
             className="select-sm"
             defaultValue={configInfo.property.VIEW_TYPE || ''}
-            onChange={value => handleChangeViewCompData('VIEW_TYPE', value)}
+            onChange={value => handleSelectedBuilderChange('VIEW_TYPE', value)}
             style={{ width: '100%' }}
+            disabled={!configInfo.property.SELECTED_BUILDER}
           >
             <Select.Option value="LIST">LIST</Select.Option>
             <Select.Option value="VIEW">VIEW</Select.Option>
@@ -83,7 +102,21 @@ class ListButtonConfig extends React.Component {
           </AntdSelect>
         </div>
         <div className="popoverItem popoverItemInput">
-          <span className="spanLabel">버튼 삭제 여부</span>
+          <span className="spanLabel">metaSeq 선택</span>
+          <AntdSelect
+            className="select-sm"
+            defaultValue={configInfo.property.VIEW_TYPE || ''}
+            onChange={value => handleChangeViewCompData('VIEW_TYPE', value)}
+            style={{ width: '100%' }}
+            disabled={!configInfo.property.VIEW_TYPE}
+          >
+            {metaList.map(meta => (
+              <Select.Option value={meta.META_SEQ}>{meta.NAME_KOR}</Select.Option>
+            ))}
+          </AntdSelect>
+        </div>
+        <div className="popoverItem popoverItemInput">
+          <span className="spanLabel">빌더 버튼 삭제 여부</span>
           <Checkbox defaultValue={configInfo.property.hasNoButtons} onChange={e => handleChangeViewCompData('hasNoButtons', e.target.checked)} />
         </div>
       </>
