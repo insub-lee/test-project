@@ -38,7 +38,7 @@ class TreeSelectComp extends Component {
       },
     ];
     if (colData && colData.length > 0) getExtraApiData(id, apiArray);
-    else if (viewType !== 'VIEW' && viewType !== 'LIST') getExtraApiData(id, apiArray);
+    else if (viewType !== 'VIEW') getExtraApiData(id, apiArray);
   }
 
   onChangeHandler = value => {

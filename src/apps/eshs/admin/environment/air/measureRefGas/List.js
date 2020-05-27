@@ -57,11 +57,11 @@ class List extends Component {
   isSearch = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const { rangeDateStrings, gasCd } = this.state;
-    const setDate = `START_DATE=${`${rangeDateStrings[0]}-01`}&&END_DATE=${`${rangeDateStrings[1]}-31`}&&GAS_CD=${gasCd}`;
+    const setDate = `START_DATE=${Moment(rangeDateStrings[0]).format('YYYY-MM-01')}&END_DATE=${Moment(rangeDateStrings[1]).format('YYYY-MM-31')}`;
     const apiAry = [
       {
         key: 'measure',
-        url: `/api/eshs/v1/common/eshsmeasure?${setDate}`,
+        url: `/api/eshs/v1/common/eshsmeasure?${setDate}&GAS_CD=${gasCd}`,
         type: 'POST',
       },
     ];
@@ -175,11 +175,25 @@ class List extends Component {
             </Option>
           </AntdSelect>
           <div style={{ margin: '0 5px', display: 'inline-block' }}>
+            {/* mode 사용 시 open value 관리해야함 */}
             <RangePicker
-              defaultValue={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
+              value={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
+              open={this.state.isopen}
               mode={['month', 'month']}
               format={['YYYY-MM', 'YYYY-MM']}
-              onChange={(date, dateStrings) => this.onChangeState('rangeDateStrings', dateStrings)}
+              disabledDate={current => current && current < Moment().endOf('month')}
+              onOpenChange={status => {
+                this.setState({ isopen: status });
+              }}
+              onPanelChange={value => {
+                if (value[0] < Moment().endOf('month') && value[1] < Moment().endOf('month')) {
+                  this.setState({
+                    rangeDateStrings: value,
+                  });
+                } else {
+                  message.warning('날짜가 올바르지 않습니다.');
+                }
+              }}
             />
           </div>
           <AntdSearch style={{ width: 200 }} className="input-mid ant-input-inline mr5" value={this.state.gasCd} readOnly onClick={this.onChangeModal} />

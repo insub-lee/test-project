@@ -12,8 +12,27 @@ class CheckableTreeSelectComp extends Component {
   };
 
   componentDidMount() {
-    const { sagaKey, getExtraApiData, apiArys } = this.props;
-    getExtraApiData(sagaKey, apiArys, this.initDatBind);
+    const { fieldSelectData, CONFIG, colData } = this.props;
+    if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
+      if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey].length > 0) {
+        const scopeList = fieldSelectData[CONFIG.property.compSelectDataKey];
+        const scopeTreeData = scopeList
+          .filter(f => f.LVL === 1)
+          .map(scope => ({
+            title: scope.NAME_KOR,
+            value: scope.NODE_ID,
+            key: scope.NODE_ID,
+            parentValue: scope.PARENT_NODE_ID,
+            children: this.getTreeData(scopeList, scope.NODE_ID),
+          }));
+
+        if (colData) {
+          const selectedValue = colData.split(',').map(col => Number(col));
+          this.setState({ selectedValue });
+        }
+        this.setState({ scopeTreeData });
+      }
+    }
   }
 
   getTreeData = (categoryMapList, rootId) =>
@@ -32,31 +51,6 @@ class CheckableTreeSelectComp extends Component {
           rootKey: rootId,
         })
       : [];
-
-  initDatBind = sagaKey => {
-    const {
-      colData,
-      extraApiData: {
-        list: { categoryMapList: scopeList },
-      },
-    } = this.props;
-
-    const scopeTreeData = scopeList
-      .filter(f => f.LVL === 1)
-      .map(scope => ({
-        title: scope.NAME_KOR,
-        value: scope.NODE_ID,
-        key: scope.NODE_ID,
-        parentValue: scope.PARENT_NODE_ID,
-        children: this.getTreeData(scopeList, scope.NODE_ID),
-      }));
-
-    if (colData) {
-      const selectedValue = colData.split(',').map(col => Number(col));
-      this.setState({ selectedValue });
-    }
-    this.setState({ scopeTreeData });
-  };
 
   onChangeTree = nodeIds => {
     const { changeFormData, COMP_FIELD, sagaKey } = this.props;
