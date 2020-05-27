@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Select, Input, DatePicker, message } from 'antd';
 import { Table, Column, AutoSizer } from 'react-virtualized';
 import { debounce } from 'lodash';
-import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
+import StyledVirtualizedTable from 'components/BizBuilder/styled/Table/StyledVirtualizedTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
@@ -35,14 +35,6 @@ class NothGateCmpnyModal extends Component {
     this.handleSearchData = debounce(this.handleSearchData, 500);
   }
 
-  handleAppStart = () => {
-    const { result } = this.props;
-    const nothGateCmpnyList = (result && result.NothGateCmpnyList && result.NothGateCmpnyList.List) || [];
-    this.setState({
-      nothGateCmpnyList,
-    });
-  };
-
   componentDidMount = () => {
     const { id, getCallDataHandler, changeFormData } = this.props;
     const apiAry = [
@@ -59,6 +51,14 @@ class NothGateCmpnyModal extends Component {
     });
     changeFormData(id, 'nothGateSearch', { searchType: 'BIZ_REG_NO' });
     getCallDataHandler(id, apiAry, this.handleAppStart);
+  };
+
+  handleAppStart = () => {
+    const { result } = this.props;
+    const nothGateCmpnyList = (result && result.NothGateCmpnyList && result.NothGateCmpnyList.List) || [];
+    this.setState({
+      nothGateCmpnyList,
+    });
   };
 
   onRowClick = e => {
@@ -435,7 +435,7 @@ class NothGateCmpnyModal extends Component {
                 {({ width }) => (
                   <Table
                     width={width}
-                    height={500}
+                    height={300}
                     headerHeight={40}
                     rowHeight={53}
                     rowCount={nothGateCmpnyList.length}
