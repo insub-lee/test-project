@@ -1,21 +1,45 @@
 import React, { Component } from 'react';
-import { Modal } from 'antd';
+import { Modal, Select, Input } from 'antd';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 
 import Questionnaire from './Questionnaire';
 
 const AntdModal = StyledAntdModalPad(Modal);
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
 
 class Reservation extends Component {
   state = {
     isQuestionnaireShow: false,
+    reservationInfo: {},
+    hospitalList: [],
   };
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { sagaKey, getCallDataHandler } = this.props;
+    const apiAry = [
+      {
+        key: 'hospitalList',
+        url: `/api/eshs/v1/common/health/healthChkHospital`,
+        type: 'GET',
+        params: {},
+      },
+    ];
+    getCallDataHandler(sagaKey, apiAry, this.initState);
+  }
+
+  initState = () => {
+    const { result } = this.props;
+    this.setState({
+      hospitalList: result.hospitalList && result.hospitalList.list ? result.hospitalList.list : [],
+    })
+  };
 
   onClickQuestionnaire = () => {
     this.setState({ isQuestionnaireShow: true });
@@ -27,7 +51,8 @@ class Reservation extends Component {
 
   render() {
     const { profile } = this.props;
-    console.debug('profile >> ', profile);
+    const { hospitalList } = this.state;
+
     return (
       <>
         <AntdModal
@@ -38,7 +63,7 @@ class Reservation extends Component {
           destroyOnClose
           footer={null}
         >
-          <Questionnaire onCancelPopup={this.onCancelQuestionnaire} />
+          <Questionnaire onCancelPopup={this.onCancelQuestionnaire} profile={profile} />
         </AntdModal>
         <StyledContentsWrapper>
           <StyledHtmlTable className="tableWrapper">
@@ -71,9 +96,17 @@ class Reservation extends Component {
                   <th>검진차수</th>
                   <td>1차</td>
                   <th>검진기관</th>
-                  <td></td>
+                  <td>
+                    <AntdSelect placeholer="검진기관 선택" className="select-sm" style={{ width: '95%' }}>
+                      {hospitalList.map(item => (
+                        <AntdSelect.Option value={item.HOSPITAL_CODE}>{item.HOSPITAL_NAME}</AntdSelect.Option>
+                      ))}
+                    </AntdSelect>
+                  </td>
                   <th>검진예약일</th>
-                  <td></td>
+                  <td>
+                    <AntdInput className="ant-input-sm" readOnly onClick={this.onClickCalendar} />
+                  </td>
                 </tr>
               </tbody>
             </table>

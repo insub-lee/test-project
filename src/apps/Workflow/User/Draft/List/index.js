@@ -26,6 +26,7 @@ class DraftList extends Component {
         viewMetaSeq: undefined,
       },
       workPrcProps: undefined,
+      opinion: undefined,
     };
   }
 
@@ -111,8 +112,10 @@ class DraftList extends Component {
   };
 
   handleReqApprove = e => {
-    const { reqApprove, setOpinionVisible } = this.props;
+    const { reqApprove, setOpinionVisible, setOpinion } = this.props;
+    const { opinion } = this.state;
     e.preventDefault();
+    setOpinion(opinion);
     reqApprove({});
     setOpinionVisible(false);
   };
@@ -133,6 +136,10 @@ class DraftList extends Component {
     const { coverView } = this.state;
     this.setState({ coverView: { ...coverView, visible: false } });
     getDraftList();
+  };
+
+  onChangeOpinion = e => {
+    this.setState({ opinion: e.target.value });
   };
 
   render() {
@@ -257,7 +264,7 @@ class DraftList extends Component {
                 <tr>
                   <th>의견</th>
                   <td>
-                    <TextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} />
+                    <TextArea rows={4} onChange={this.onChangeOpinion} />
                   </td>
                 </tr>
               </tbody>

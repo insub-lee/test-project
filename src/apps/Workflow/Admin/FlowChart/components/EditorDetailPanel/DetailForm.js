@@ -80,7 +80,6 @@ class DetailForm extends React.Component {
     const { getSelected, update } = propsAPI;
     const item = getSelected()[0];
     update(item, {
-      gubun: e,
       stepType: e,
     });
   };
@@ -158,6 +157,7 @@ class DetailForm extends React.Component {
               <Option value="NU">사용자</Option>
               <Option value="ND">부서</Option>
               <Option value="NG">그룹</Option>
+              <Option value="NS">시스템</Option>
             </Select>,
           )}
         </Item>
