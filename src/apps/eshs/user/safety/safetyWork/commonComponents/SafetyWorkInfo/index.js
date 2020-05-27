@@ -12,6 +12,8 @@ import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledPicker from 'commonStyled/Form/StyledPicker';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledTextarea from 'commonStyled/Form/StyledTextarea';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -49,6 +51,15 @@ class SafetyWorkInfo extends Component {
     super(props);
     this.state = {};
   }
+
+  onClickBfcheckBtn = type => {
+    const { handleModal, formData } = this.props;
+    if (!formData.WORK_NO || formData.WORK_NO === '') {
+      message.error(<MessageContent>작업번호가 없습니다.</MessageContent>);
+      return;
+    }
+    handleModal(type, true);
+  };
 
   render() {
     const { handleModal, formData, handleChangeFormData, handleWorkCategory, handleUploadFileChange } = this.props;
@@ -165,7 +176,7 @@ class SafetyWorkInfo extends Component {
                   </th>
                   <td colSpan={3}>
                     <div className="tableInBtnWrap">
-                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => console.debug('작업전 점검 등록 버튼')}>
+                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.onClickBfcheckBtn('mainBfcheck')}>
                         작업전 점검 등록
                       </StyledButton>
                     </div>
@@ -198,7 +209,7 @@ class SafetyWorkInfo extends Component {
                   </th>
                   <td colSpan={3}>
                     <div className="tableInBtnWrap">
-                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => console.debug('작업전 점검 등록 버튼')}>
+                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.onClickBfcheckBtn('subBfcheck')}>
                         작업전 점검 등록
                       </StyledButton>
                     </div>

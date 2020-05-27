@@ -27,11 +27,11 @@ class SafetyEduList extends Component {
   searchSafetyEdu = () => {
     const { searchSafetyEdu } = this.props;
     const { searchType, searchValue } = this.state;
-    if (searchValue !== '') {
-      searchSafetyEdu(searchType, searchValue);
-    } else {
-      message.error(<MessageContent>검색어를 입력해 주십시오.</MessageContent>);
-    }
+    searchSafetyEdu(searchType, searchValue);
+    // if (searchValue !== '') {
+    // } else {
+    //   message.error(<MessageContent>검색어를 입력해 주십시오.</MessageContent>);
+    // }
   };
 
   render() {

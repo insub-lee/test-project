@@ -15,14 +15,14 @@ class VaildationListComp extends Component {
       title: '개정번호',
       dataIndex: 'VERSION',
       key: 'VERSION',
-      width: '6%',
+      width: '15%',
       align: 'center',
     },
     {
       title: '점검일자',
       dataIndex: 'REG_DTTM',
       key: 'REG_DTTM',
-      width: '10%',
+      width: '15%',
       align: 'center',
       render: (text, record) => moment(text).format('YYYY-MM-DD'),
     },
@@ -31,6 +31,7 @@ class VaildationListComp extends Component {
       dataIndex: 'CHECK_TYPE',
       key: 'CHECK_TYPE',
       align: 'center',
+      width: '55%',
       render: (text, record) => (text === 'Y' ? '유효' : text === 'R' ? '개정' : '폐기'),
     },
     {
@@ -38,7 +39,7 @@ class VaildationListComp extends Component {
       dataIndex: 'STATUS',
       key: 'STATUS',
       align: 'center',
-      width: '10%',
+      width: '15%',
       render: (text, record) => (text === 2 ? '완료' : '진행중'),
     },
   ];
@@ -49,7 +50,7 @@ class VaildationListComp extends Component {
     return (
       <AntdLineTable
         columns={this.getTableColumns()}
-        dataSource={vailList.length > 0 ? vailList : null}
+        dataSource={vailList && vailList.length > 0 ? vailList : null}
         onRow={(record, rowIndex) => ({
           onClick: e => this.onRowClick(record, rowIndex, e),
         })}

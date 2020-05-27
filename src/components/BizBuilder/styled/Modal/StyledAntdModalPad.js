@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const StyledAntdModal = Component => styled(Component)`
+const StyledAntdModalPad = Component => styled(Component)`
   .ant-modal-content {
     border-radius: 6px;
     .ant-modal-close-x {
@@ -19,10 +19,9 @@ const StyledAntdModal = Component => styled(Component)`
       text-align: left;
       background: #4491e0;
       border-bottom: 0;
-      padding: 12px 24px;
+      padding: 12px 20px;
       .ant-modal-title {
         color: #fff;
-        font-size: 18px;
       }
     }
     .ant-modal-body {
@@ -34,5 +33,11 @@ const StyledAntdModal = Component => styled(Component)`
       text-align: center;
     }
   }
+
+  &.modal-none-head {
+    .ant-modal-close-x {
+      display: none;
+    }
+  }
 `;
-export default StyledAntdModal;
+export default StyledAntdModalPad;

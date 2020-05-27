@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Radio, Form, Modal, Input, Select, Button } from 'antd';
+import { Table, Radio, Form, Modal, Input, Select, Checkbox } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
 import StyledRadio from 'components/FormStuff/Radio';
@@ -76,6 +76,7 @@ const initState = {
     viewMetaSeq: undefined,
   },
   isLastVer: 'Y',
+  workSeqList: [],
 };
 
 const InputGroup = Input.Group;
@@ -190,6 +191,12 @@ class SearchBasic extends Component {
     this.setState({ coverView: { visible: true, workSeq, taskSeq, viewMetaSeq } });
   };
 
+  onChangeDocType = workSeqList => {
+    console.debug(typeof workSeqList);
+    console.debug(workSeqList);
+    this.setState({ workSeqList });
+  };
+
   render() {
     const { nodeIdList, status, docNo, keyword, type, drafter, draftDept, startDateTemp, endDateTemp, visible, SearchView, coverView, gubun } = this.state;
     const { result } = this.props;
@@ -214,6 +221,19 @@ class SearchBasic extends Component {
             <StyledHtmlTable style={{ padding: '10px' }}>
               <table style={{ marginBottom: '10px' }}>
                 <tbody>
+                  <tr>
+                    <th>문서종류</th>
+                    <td colSpan={3}>
+                      <Checkbox.Group onChange={this.onChangeDocType}>
+                        <Checkbox value={901}>업무표준</Checkbox>
+                        <Checkbox value={1921}>기술표준</Checkbox>
+                        <Checkbox value={1881}>도면</Checkbox>
+                        <Checkbox value={2941}>TDS</Checkbox>
+                        <Checkbox value={2975}>NPI</Checkbox>
+                        <Checkbox value={3013}>Work Process</Checkbox>
+                      </Checkbox.Group>
+                    </td>
+                  </tr>
                   <tr>
                     <th>문서번호</th>
                     <td>
@@ -337,8 +357,16 @@ class SearchBasic extends Component {
                   taskSeq={SearchView.taskSeq}
                   closeBtnFunc={this.closeBtnFunc}
                   clickCoverView={this.clickCoverView}
-                  ViewCustomButtons={({ closeBtnFunc }) => (
+                  ViewCustomButtons={({ closeBtnFunc, isTaskFavorite, sagaKey, formData, setTaskFavorite }) => (
                     <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                      {isTaskFavorite && (
+                        <StyledButton
+                          className="btn-light btn-first"
+                          onClick={() => setTaskFavorite(sagaKey, formData.WORK_SEQ, formData.TASK_ORIGIN_SEQ, formData.BUILDER_TASK_FAVORITE || 'N')}
+                        >
+                          {formData.BUILDER_TASK_FAVORITE === 'Y' ? '즐겨찾기 해제' : '즐겨찾기 추가'}
+                        </StyledButton>
+                      )}
                       <StyledButton className="btn-primary" onClick={closeBtnFunc}>
                         닫기
                       </StyledButton>

@@ -28,38 +28,28 @@ class WorkerInfoTable extends Component {
         },
       },
       {
-        title: '교육이수일',
-        dataIndex: 'RECENT_EDU',
-        width: '20%',
-        align: 'center',
-        render: value => {
-          if (value) return <span>{moment(value).format('YYYY-MM-DD')}</span>;
-          return '';
-        },
-      },
-      {
         title: '성명',
         dataIndex: 'WORKER_NM',
-        width: '15%',
+        width: '20%',
         align: 'center',
       },
       {
         title: '생년월일',
         dataIndex: 'WORKER_SSN',
-        width: '15%',
+        width: '20%',
         align: 'center',
         render: value => <span>{value.substr(0, 6)}</span>,
       },
       {
         title: '핸드폰(연락처)',
         dataIndex: 'M_TEL',
-        width: '15%',
+        width: '20%',
         align: 'center',
       },
       {
         title: '긴급연락처',
         dataIndex: 'TEL',
-        width: '15%',
+        width: '20%',
         align: 'center',
       },
     ];
@@ -68,6 +58,7 @@ class WorkerInfoTable extends Component {
       <AntdTable
         columns={columns}
         dataSource={workerList}
+        rowSelection={rowSelection}
         pagination={false}
         footer={() => <div style={{ textAlign: 'center' }}>{`총 ${workerList.length === 0 ? 0 : workerList.length} 건`}</div>}
       />

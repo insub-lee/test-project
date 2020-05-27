@@ -263,24 +263,61 @@ const StyledViewDesigner = styled.div`
         }
 
         .ant-input {
-          height: 30px;
-          line-height: 30px;
           color: rgb(51, 51, 51);
           vertical-align: middle;
-          font-size: 12px;
           border-width: 0px 0px 1px;
           border-image: initial;
-          border: 1px solid rgb(217, 224, 231);
-          border-radius: 0px;
-          padding: 0px 10px;
+          border: 1px solid #e5e5e5;
+          border-radius: 4px;
+          padding: 0.2rem 0.5rem;
+          font-size: 0.75rem;
+          line-height: 1.5;
+          height: auto;
+          transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+
+          &:hover {
+            color: #495057;
+            background-color: #fff;
+            border-color: #636a78;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem transparent;
+          }
         }
 
         .ant-textarea {
           height: inherit;
+          padding: 0.5em 0.5rem;
         }
 
         .ant-select {
           font-size: 12px;
+
+          .ant-select-selection {
+            display: block;
+            width: 100%;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.75rem;
+            height: auto;
+            font-weight: 400;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+            min-height: auto;
+
+            .ant-select-selection__rendered {
+              line-height: normal;
+              margin: 0;
+
+              > li {
+                height: auto;
+                line-height: normal;
+                margin-top: 0;
+              }
+            }
+          }
         }
       }
     }

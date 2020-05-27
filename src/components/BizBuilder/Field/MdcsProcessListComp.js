@@ -18,10 +18,10 @@ const StyledWrap = styled.div`
         width: 40%;
       }
       .mdcsPstnName {
-        width: 15%;
+        width: 17%;
       }
       .mdcsUserName {
-        width: 20%;
+        width: 18%;
       }
       .mdcsAppvDttm {
         width: 20%;
@@ -44,11 +44,31 @@ class MdcsProcessListComp extends Component {
   }
 
   initData = (id, response) => {
-    const { list } = response;
+    const { list, processList } = response;
+    processList.forEach(item => {
+      if (item.NODE_ID === 107 || item.NODE_ID === 106 || item.NODE_ID === 112) {
+        const appvMemeber = JSON.parse(item.APPV_MEMBER);
+        if (appvMemeber.length > 0) {
+          appvMemeber.forEach(subNode => {
+            const findIdx = list.findIndex(iNode => iNode.NODE_ID === item.NODE_ID && iNode.ORG_APPV_USER_ID === subNode.USER_ID);
+            if (findIdx === -1)
+              list.push({
+                NODE_ID: item.NODE_ID,
+                APPV_STATUS: 0,
+                APPV_DTTM: '',
+                DRAFT_USER_NAME: subNode.NAME_KOR,
+                PSTN_NAME: subNode.PSTN_NAME_KOR,
+                DRAFT_DEPT_NAME: subNode.DEPT_NAME_KOR,
+              });
+          });
+        }
+      }
+    });
     const draftList = list.filter(fNode => fNode.NODE_ID === 101 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
     const approveList = list.filter(fNode => fNode.NODE_ID === 107 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
     const reviewerList = list.filter(fNode => fNode.NODE_ID === 106 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
     const mailReviewerList = list.filter(fNode => fNode.NODE_ID === 112 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
+
     let draftNode = [];
     if (draftList && draftList.length > 0 && approveList && approveList.length > 0) {
       draftNode = [
@@ -58,14 +78,26 @@ class MdcsProcessListComp extends Component {
             <div className="mdcsPstnName">{draftList[0].PSTN_NAME}</div>
             <div className="mdcsUserName">{draftList[0].DRAFT_USER_NAME}</div>
             <div className="mdcsAppvDttm">{draftList[0].APPV_DTTM}</div>
-            <div className="mdcsAppvStatus">{draftList[0].APPV_STATUS ? <Icon type="check-circle" /> : ''}</div>
+            <div className="mdcsAppvStatus">
+              {draftList[0].APPV_STATUS === 2 || draftList[0].APPV_STATUS === 20 ? (
+                <Icon type="check-circle" />
+              ) : (
+                (draftList[0].APPV_STATUS === 3 && <Icon type="stop" />) || ''
+              )}
+            </div>
           </td>
           <td>
             <div className="mdcsDeptName">{approveList[0].DRAFT_DEPT_NAME}</div>
             <div className="mdcsPstnName">{approveList[0].PSTN_NAME}</div>
             <div className="mdcsUserName">{approveList[0].DRAFT_USER_NAME}</div>
             <div className="mdcsAppvDttm">{approveList[0].APPV_DTTM}</div>
-            <div className="mdcsAppvStatus">{approveList[0].APPV_STATUS ? <Icon type="check-circle" /> : ''}</div>
+            <div className="mdcsAppvStatus">
+              {approveList[0].APPV_STATUS === 2 || approveList[0].APPV_STATUS === 20 ? (
+                <Icon type="check-circle" />
+              ) : (
+                (draftList[0].APPV_STATUS === 3 && <Icon type="stop" />) || ''
+              )}
+            </div>
           </td>
         </tr>,
       ];
@@ -89,7 +121,9 @@ class MdcsProcessListComp extends Component {
           <div className="mdcsPstnName">{node.PSTN_NAME}</div>
           <div className="mdcsUserName">{node.DRAFT_USER_NAME}</div>
           <div className="mdcsAppvDttm">{node.APPV_DTTM}</div>
-          <div className="mdcsAppvStatus">{node.APPV_STATUS === 2 ? <Icon type="check-circle" /> : ''}</div>
+          <div className="mdcsAppvStatus">
+            {node.APPV_STATUS === 2 || node.APPV_STATUS === 20 ? <Icon type="check-circle" /> : (draftList[0].APPV_STATUS === 3 && <Icon type="stop" />) || ''}
+          </div>
         </td>
       );
       if (idx % 2 === 0) {
@@ -119,7 +153,9 @@ class MdcsProcessListComp extends Component {
           <div className="mdcsPstnName">{node.PSTN_NAME}</div>
           <div className="mdcsUserName">{node.DRAFT_USER_NAME}</div>
           <div className="mdcsAppvDttm">{node.APPV_DTTM}</div>
-          <div className="mdcsAppvStatus">{node.APPV_STATUS === 2 ? <Icon type="check-circle" /> : ''}</div>
+          <div className="mdcsAppvStatus">
+            {node.APPV_STATUS === 2 || node.APPV_STATUS === 20 ? <Icon type="check-circle" /> : (draftList[0].APPV_STATUS === 3 && <Icon type="stop" />) || ''}
+          </div>
         </td>
       );
       if (idx % 2 === 0) {

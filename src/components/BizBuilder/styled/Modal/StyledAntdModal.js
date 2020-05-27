@@ -4,9 +4,9 @@ const StyledAntdModal = Component => styled(Component)`
   .ant-modal-content {
     border-radius: 6px;
     .ant-modal-close-x {
-      width: 50px;
-      height: 50px;
-      line-height: 50px;
+      width: 46px;
+      height: 46px;
+      line-height: 46px;
       font-size: 14px;
       > i {
         color: #fff;
@@ -19,7 +19,7 @@ const StyledAntdModal = Component => styled(Component)`
       text-align: left;
       background: #4491e0;
       border-bottom: 0;
-      padding: 16px 24px;
+      padding: 12px 20px;
       .ant-modal-title {
         color: #fff;
       }
@@ -33,9 +33,16 @@ const StyledAntdModal = Component => styled(Component)`
       text-align: center;
     }
   }
+
   &.modal-table-pad {
     .ant-modal-body {
       padding: 20px;
+    }
+  }
+
+  &.modal-none-head {
+    .ant-modal-close-x {
+      display: none;
     }
   }
 `;

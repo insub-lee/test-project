@@ -2,16 +2,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { List, Tree, Row, Col, Checkbox, Button, Icon, Modal } from 'antd';
+import { List, Tree, Row, Col, Checkbox, Icon, message } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import UserSelectWrapper from 'commonStyled/MdcsStyled/Wrapper/UserSelectWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import UserSelectWrapper from 'components/BizBuilder/styled/Wrapper/UserSelectWrapper';
 
 // Component Attribute 및 Event Method 정리
 // <UserSelect
-//   initUserList={this.state.selectedUserList}  **초기값 셋팅 (int)
+//   initUserList={this.state.selectedUserList}  **초기값 셋팅 int[] USER_ID 배열값
 //   treeDataSource={list} ** 부서정보 Data Bind
 //   onTreeSelect={this.onTreeSelect} ** 부서 선택 이벤트 (이 이벤트에서 비동기 해당 부서원을 DataBind해 Props(userDataList)로 전달하는 기능으로 활용)
 //   userDataList={result.userList && result.userList.list}
@@ -41,6 +41,7 @@ class UserSelectComp extends Component {
     deptUserList: [],
     checkUserList: [],
     selectedUserList: [],
+    isMulti: true,
   };
 
   onInitComplete = id => {
@@ -72,10 +73,12 @@ class UserSelectComp extends Component {
   };
 
   componentDidMount() {
-    const { initUserList, treeDataSource } = this.props;
+    const { initUserList, treeDataSource, isMultiSelect } = this.props;
+    console.debug('initUserList', initUserList, isMultiSelect);
     this.setState({
       checkUserList: [],
       selectedUserList: [],
+      isMulti: isMultiSelect === undefined ? true : isMultiSelect,
     });
     !treeDataSource && this.onInitTreeData();
     initUserList && this.onInitUserSelect();
@@ -91,8 +94,13 @@ class UserSelectComp extends Component {
   ];
 
   onCheckUser = e => {
+    const { isMulti } = this.state;
     this.setState(prevState => {
       const { checkUserList } = prevState;
+      if (!isMulti && checkUserList.length >= 1 && checkUserList[0] !== e.target.value) {
+        message.warning('복수의 사용자를 선택할 수 없습니다.!!');
+        return { checkUserList };
+      }
       const idx = checkUserList.findIndex(x => x === e.target.value);
       if (idx === -1) {
         checkUserList.splice(idx, 0, e.target.value);
@@ -105,21 +113,25 @@ class UserSelectComp extends Component {
 
   onSelectedUser = () => {
     const { userDataList, result } = this.props;
-    const { checkUserList } = this.state;
+    const { checkUserList, selectedUserList, isMulti } = this.state;
     const nUserList = userDataList || (result && result.userList && result.userList.list);
-
-    this.setState(prevState => {
-      const { selectedUserList } = prevState;
-      const resultUserList = selectedUserList !== undefined ? selectedUserList : [];
-      checkUserList.forEach(chkUser => {
-        const idx = resultUserList.findIndex(user => user.USER_ID === chkUser);
-        if (idx === -1) {
-          const addUser = nUserList.filter(user => user.USER_ID === chkUser).length > 0 ? nUserList.filter(user => user.USER_ID === chkUser)[0] : {};
-          resultUserList.push(addUser);
-        }
+    if (isMulti) {
+      this.setState(prevState => {
+        const { selectedUserList } = prevState;
+        const resultUserList = selectedUserList !== undefined ? selectedUserList : [];
+        checkUserList.forEach(chkUser => {
+          const idx = resultUserList.findIndex(user => user.USER_ID === chkUser);
+          if (idx === -1) {
+            const addUser = nUserList.filter(user => user.USER_ID === chkUser).length > 0 ? nUserList.filter(user => user.USER_ID === chkUser)[0] : {};
+            resultUserList.push(addUser);
+          }
+        });
+        return { selectedUserList: resultUserList, checkUserList: [] };
       });
-      return { selectedUserList: resultUserList, checkUserList: [] };
-    });
+    } else {
+      const selectedUser = nUserList.filter(user => user.USER_ID === checkUserList[0]);
+      this.setState({ selectedUserList: selectedUser, checkUserList: [] });
+    }
   };
 
   onDelete = userId => {
@@ -164,8 +176,6 @@ class UserSelectComp extends Component {
 
   render() {
     const { treeDataSource, userDataList, result } = this.props;
-    console.debug('userselect', result);
-    console.debug('treeDataSource >> ', treeDataSource);
     return (
       <UserSelectWrapper>
         <Row gutter={0}>
@@ -235,12 +245,12 @@ class UserSelectComp extends Component {
             </div>
           </Col>
         </Row>
-        <StyledButtonWrapper className="btn-wrap-center">
-          <StyledButton className="btn-sm btn-gray mr5" onClick={this.onCancelUserSelect}>
-            취소
-          </StyledButton>
-          <StyledButton className="btn-sm btn-primary" onClick={this.onRegist}>
+        <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-10">
+          <StyledButton className="btn-sm btn-primary mr5" onClick={this.onRegist}>
             등록
+          </StyledButton>
+          <StyledButton className="btn-sm btn-light" onClick={this.onCancelUserSelect}>
+            취소
           </StyledButton>
         </StyledButtonWrapper>
       </UserSelectWrapper>

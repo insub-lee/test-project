@@ -37,6 +37,9 @@ class SafetyWorkSearch extends Component {
       case 'safetyWorkEmergency_search':
         type = 'searchListEmergency';
         break;
+      case 'illegalSafetyWork_search':
+        type = 'searchListIllegal';
+        break;
       default:
         break;
     }

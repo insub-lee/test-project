@@ -5,7 +5,7 @@ import React from 'react';
 import { Axios } from 'utils/AxiosFunc';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import { TOTAL_DATA_OPT_SEQ, BUILDER_MODAL_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { TOTAL_DATA_OPT_SEQ, BUILDER_MODAL_OPT_SEQ, CHANGE_VIEW_OPT_SEQ, TASK_FAVORITE_OPT_CODE } from 'components/BizBuilder/Common/Constants';
 import history from 'utils/history';
 import { isJSON } from 'utils/helpers';
 
@@ -170,6 +170,10 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, condition
       ),
     );
   }
+  if (viewType === 'VIEW') {
+    const taskFavoriteOptIdx = work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_CODE === TASK_FAVORITE_OPT_CODE && opt.ISUSED === 'Y');
+    yield put(actions.setIsTaskFavoriteByReducer(id, !!(taskFavoriteOptIdx > -1)));
+  }
   yield put(actions.setBuilderModalByReducer(id, isBuilderModal, builderModalSetting, isSaveModalClose));
   if (viewType === 'LIST') {
     yield put(actions.getListDataBySaga(id, workSeq, conditional));
@@ -249,6 +253,13 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeWork
 // processRule  조회
 function* getProcessRule({ id, payload }) {
   const response = yield call(Axios.post, `/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder`, { PARAM: { ...payload } });
+  const { DRAFT_PROCESS } = response;
+  yield put(actions.setProcessRule(id, DRAFT_PROCESS));
+}
+
+// processRule  조회
+function* getProcessRuleByModify({ id, payload }) {
+  const response = yield call(Axios.post, `/api/workflow/v1/common/workprocess/defaultPrcRuleModifyHanlder`, { PARAM: { ...payload } });
   const { DRAFT_PROCESS } = response;
   yield put(actions.setProcessRule(id, DRAFT_PROCESS));
 }
@@ -351,6 +362,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
         { BUILDER: 'callApiBysaveBuilder' },
       );
 
+      console.debug('@@@@@@@BEFORE SAVE@@@@@@@@@@');
       if (beforeResponse) {
         const { retFlag, retMsg } = beforeResponse;
         if (retFlag === false) {
@@ -478,6 +490,8 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
   const validationData = yield select(selectors.makeSelectValidationDataById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
   const extraApiList = yield select(selectors.makeSelectApiListById(id));
+  const processRule = yield select(selectors.makeSelectProcessRuleById(id));
+
   if (validationData) {
     const validKeyList = Object.keys(validationData);
     if (validKeyList && validKeyList.length > 0) {
@@ -599,6 +613,19 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
         { BUILDER: 'callApiBysaveBuilder' },
       );
     }
+  }
+
+  if (Object.keys(processRule).length !== 0) {
+    // 결재 저장
+    const forthResponse = yield call(Axios.post, `/api/workflow/v1/common/workprocess/draft`, {
+      DRAFT_PROCESS: {
+        ...processRule,
+        DRAFT_TITLE: formData.TITLE,
+        WORK_SEQ: workSeq,
+        TASK_SEQ: taskSeq,
+        REL_TYPE: 1, // 고정(사용안하게 되면 삭제필요)
+      },
+    });
   }
 
   yield put(actions.successSaveTask(id));
@@ -785,11 +812,24 @@ function* getFileDownload({ url, fileName }) {
   }
 }
 
+function* setTaskFavorite({ id, workSeq, taskOriginSeq, flag }) {
+  const response = yield call(Axios.post, '/api/builder/v1/work/TaskFavorite', {
+    PARAM: { WORK_SEQ: workSeq, TASK_ORIGIN_SEQ: taskOriginSeq, PREV_FAVORITE_FLAG: flag },
+  });
+
+  if (response) {
+    const { taskFavorite } = response;
+    console.debug(taskFavorite);
+    yield put(actions.changeFormData(id, 'BUILDER_TASK_FAVORITE', taskFavorite ? 'Y' : 'N'));
+  }
+}
+
 export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.sagaKey}`, getBuilderData);
   yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.sagaKey}`, getExtraApiData);
   yield takeEvery(`${actionTypes.GET_DETAIL_DATA}_${arg.sagaKey}`, getDetailData);
   yield takeEvery(`${actionTypes.GET_PROCESS_RULE}_${arg.sagaKey}`, getProcessRule);
+  yield takeEvery(`${actionTypes.GET_PROCESS_RULE_MODIFY}_${arg.sagaKey}`, getProcessRuleByModify);
   yield takeEvery(`${actionTypes.GET_TASK_SEQ}_${arg.sagaKey}`, getTaskSeq);
   // yield takeEvery(`${actionTypes.SAVE_TEMP_CONTENTS}_${arg.id}`, saveTempContents);
   yield takeLatest(`${actionTypes.TEMP_SAVE_TASK}_${arg.sagaKey}`, tempSaveTask);
@@ -808,6 +848,7 @@ export default function* watcher(arg) {
   yield takeLatest(`${actionTypes.REDIRECT_URL}_${arg.sagaKey || arg.id}`, redirectUrl);
   yield takeLatest(`${actionTypes.REMOVE_MULTI_TASK_SAGA}_${arg.sagaKey}`, removeMultiTask);
   yield takeEvery(`${actionTypes.GET_FILE_DOWNLOAD}_${arg.sagaKey || arg.id}`, getFileDownload);
+  yield takeLatest(`${actionTypes.SET_TASK_FAVORITE_SAGA}_${arg.sagaKey || arg.id}`, setTaskFavorite);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);

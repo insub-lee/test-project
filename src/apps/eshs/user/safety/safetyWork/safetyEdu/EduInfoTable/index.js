@@ -3,17 +3,15 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Input, DatePicker, Select, Modal, Radio } from 'antd';
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
-
+import BizMicroDevBase from 'components/BizMicroDevBase';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSelect from 'commonStyled/EshsStyled/Select/StyledSelect';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import HstCmpnySelectComp from '../HstCmpnySelectTable';
-import HstCmpnyUserSelectComp from '../HstCmpnyUserTable';
+import UserSelect from 'components/UserSelect';
+import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 
 const AntdModal = StyledModalWrapper(Modal);
 const AntdInput = StyledInput(Input);
@@ -31,13 +29,26 @@ class EduInfoTable extends Component {
     super(props);
     this.state = {
       modalType: '',
+      modalTitle: '',
       modalVisible: false,
     };
   }
 
   handleModalVisible = (type, bool) => {
+    let title = '';
+    switch (type) {
+      case 'userSelect':
+        title = '내부강사 선택';
+        break;
+      case 'safetyWork':
+        title = '안전작업 선택';
+        break;
+      default:
+        break;
+    }
     this.setState({
       modalType: type,
+      modalTitle: title,
       modalVisible: bool,
     });
   };
@@ -54,6 +65,42 @@ class EduInfoTable extends Component {
   rowOnclickForHstCmpnyUser = record => {
     const { sagaKey: id, changeFormData } = this.props;
     changeFormData(id, 'LECT_EMP_NO', record.SQ_SWTB_HST_CMPNY_EMP);
+    this.handleModalVisible('', false);
+  };
+
+  // 내부강사 선택
+  onSelectedComplete = result => {
+    const { sagaKey: id, setFormData, formData } = this.props;
+    if (result.length > 0) {
+      const userInfo = result[0];
+      this.setState(
+        {
+          modalTitle: '',
+          modalType: '',
+          modalVisible: false,
+        },
+        () =>
+          setFormData(id, {
+            ...formData,
+            LECT_CMPNY_CD: '72761',
+            LECT_CMPNY_NM: 'MAGNACHIP반도체',
+            LECT_EMP_NO: userInfo.USER_ID,
+            LECT_EMP_NM: userInfo.NAME_KOR,
+          }),
+      );
+      return;
+    }
+    this.setState({
+      modalTitle: '',
+      modalType: '',
+      modalVisible: false,
+    });
+  };
+
+  // 작업번호 선택
+  handleSafetyWorkSelect = record => {
+    const { sagaKey: id, changeFormData } = this.props;
+    changeFormData(id, 'WORK_NO', record.WORK_NO);
     this.handleModalVisible('', false);
   };
 
@@ -77,18 +124,8 @@ class EduInfoTable extends Component {
   };
 
   render() {
-    const { eshsHstCmpnyList, eshsHstCmpnyUserList, formData } = this.props;
-    const { modalType, modalVisible } = this.state;
-    let selectedHstCmpny = {};
-    let selectedHstCmpnyUser = {};
-    let selectedHstCmpnyUserList = [];
-    if (formData.LECT_CMPNY_CD || false) {
-      selectedHstCmpny = eshsHstCmpnyList.filter(item => item.HST_CMPNY_CD === formData.LECT_CMPNY_CD).pop();
-      selectedHstCmpnyUserList = eshsHstCmpnyUserList.filter(item => item.HST_CMPNY_CD === formData.LECT_CMPNY_CD);
-    }
-    if (formData.LECT_EMP_NO || false) {
-      selectedHstCmpnyUser = eshsHstCmpnyUserList.filter(item => item.SQ_SWTB_HST_CMPNY_EMP === formData.LECT_EMP_NO).pop();
-    }
+    const { formData } = this.props;
+    const { modalType, modalVisible, modalTitle } = this.state;
     return (
       <EduInfoTableStyled>
         <ContentsWrapper>
@@ -149,55 +186,25 @@ class EduInfoTable extends Component {
                   </td>
                 </tr>
                 <tr>
-                  <th rowSpan={4} colSpan={1}>
+                  <th rowSpan={3} colSpan={1}>
                     <span>강사구분</span>
                   </th>
-                  <th rowSpan={2} colSpan={1}>
+                  <th colSpan={1}>
                     <Radio checked={formData.LECT_HOST_GB && formData.LECT_HOST_GB === 1} onClick={() => this.handleFormDataOnchange('LECT_HOST_GB', 1)} />
                     <span>내부강사</span>
                   </th>
                   <th colSpan={1}>
-                    <span>교육회사</span>
+                    <span>강사/교육회사</span>
                   </th>
                   <td colSpan={7}>
                     <AntdSearch
                       className="input-search-sm"
                       style={{ width: '200px' }}
-                      value={selectedHstCmpny.HST_CMPNY_NM || ''}
-                      onClick={() => this.handleModalVisible('hstCmpny', true)}
-                      onSearch={() => this.handleModalVisible('hstCmpny', true)}
+                      value={(formData.LECT_EMP_NM && formData.LECT_EMP_NM) || ''}
+                      onClick={() => this.handleModalVisible('userSelect', true)}
+                      onSearch={() => this.handleModalVisible('userSelect', true)}
                     />
-                    {formData.LECT_CMPNY_CD && formData.LECT_CMPNY_CD !== '' && (
-                      <span className="hstCmpnyCd">{`( 주관회사 코드 : ${formData.LECT_CMPNY_CD} )`}</span>
-                    )}
-                  </td>
-                </tr>
-                <tr>
-                  <th colSpan={1}>
-                    <span>성명</span>
-                  </th>
-                  <td colSpan={7}>
-                    <AntdSearch
-                      className="input-search-sm"
-                      style={{ width: '200px' }}
-                      value={selectedHstCmpnyUser.EMP_NM || ''}
-                      disable
-                      onClick={() => {
-                        if (formData.LECT_CMPNY_CD && formData.LECT_CMPNY_CD !== '') {
-                          this.handleModalVisible('hstUser', true);
-                        } else {
-                          message.error(<MessageContent>먼저 교육회사를 선택하십시오.</MessageContent>);
-                        }
-                      }}
-                      onSearch={() => {
-                        if (formData.LECT_CMPNY_CD && formData.LECT_CMPNY_CD !== '') {
-                          this.handleModalVisible('hstUser', true);
-                        } else {
-                          message.error(<MessageContent>먼저 교육회사를 선택하십시오.</MessageContent>);
-                        }
-                      }}
-                    />
-                    {formData.LECT_EMP_NO && formData.LECT_EMP_NO !== '' && <span className="hstCmpnyCd">{`( 내부강사 사번 : ${formData.LECT_EMP_NO} )`}</span>}
+                    {formData.LECT_CMPNY_NM && <span style={{ marginLeft: '5px' }}>{formData.LECT_CMPNY_NM}</span>}
                   </td>
                 </tr>
                 <tr>
@@ -250,8 +257,8 @@ class EduInfoTable extends Component {
                       style={{ width: '200px' }}
                       value={(formData.WORK_NO && formData.WORK_NO) || ''}
                       disable
-                      onClick={() => alert('준비중')}
-                      onSearch={() => alert('준비중')}
+                      onClick={() => this.handleModalVisible('safetyWork', true)}
+                      onSearch={() => this.handleModalVisible('safetyWork', true)}
                     />
                   </td>
                 </tr>
@@ -260,15 +267,15 @@ class EduInfoTable extends Component {
           </StyledHtmlTable>
         </ContentsWrapper>
         <AntdModal
-          title={modalType === 'hstCmpny' ? '주관회사 검색' : '주관회사 사원'}
-          width={700}
+          title={modalTitle}
+          width="70%"
           visible={modalVisible}
           footer={null}
           onOk={() => this.handleModalVisible('', false)}
           onCancel={() => this.handleModalVisible('', false)}
         >
-          {modalType === 'hstCmpny' && <HstCmpnySelectComp eshsHstCmpnyList={eshsHstCmpnyList} handleFormDataOnchange={this.handleFormDataOnchange} />}
-          {modalType === 'hstUser' && <HstCmpnyUserSelectComp eshsHstCmpnyUserList={selectedHstCmpnyUserList} rowOnclick={this.rowOnclickForHstCmpnyUser} />}
+          {modalType === 'userSelect' && <UserSelect onUserSelectHandler={undefined} onUserSelectedComplete={this.onSelectedComplete} onCancel={undefined} />}
+          {modalType === 'safetyWork' && <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />}
         </AntdModal>
       </EduInfoTableStyled>
     );
@@ -277,19 +284,11 @@ class EduInfoTable extends Component {
 
 EduInfoTable.propTypes = {
   sagaKey: PropTypes.string.isRequired,
-  result: PropTypes.object,
   formData: PropTypes.object,
-  setFormData: PropTypes.func.isRequired,
-  getCallDataHandler: PropTypes.func.isRequired,
   changeFormData: PropTypes.func.isRequired,
-  submitHandlerBySaga: PropTypes.func.isRequired,
-  eshsHstCmpnyList: PropTypes.array,
-  eshsHstCmpnyUserList: PropTypes.array,
+  setFormData: PropTypes.func,
 };
 
-EduInfoTable.defaultProps = {
-  eshsHstCmpnyList: [],
-  eshsHstCmpnyUserList: [],
-};
+EduInfoTable.defaultProps = {};
 
 export default EduInfoTable;

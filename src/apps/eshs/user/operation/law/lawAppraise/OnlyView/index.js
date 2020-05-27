@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import EditorComp from 'components/BizBuilder/Field/EditorComp';
 
 class OnlyView extends Component {
@@ -44,7 +44,7 @@ class OnlyView extends Component {
     const CONFIG = { property: { className: '' } };
 
     return (
-      <ContentsWrapper>
+      <StyledContentsWrapper>
         <StyledHtmlTable>
           <table>
             <colgroup>
@@ -187,7 +187,7 @@ class OnlyView extends Component {
             </tbody>
           </table>
         </StyledHtmlTable>
-      </ContentsWrapper>
+      </StyledContentsWrapper>
     );
   };
 }

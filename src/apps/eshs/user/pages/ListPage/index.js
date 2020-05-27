@@ -35,7 +35,7 @@ class ListPage extends Component {
     const getTableName = async () => {
       const result = await request({
         method: 'GET',
-        url: `/api/eshs/v1/common/increasereadcount?workSeq=${this.props.workSeq}`,
+        url: `/api/eshs/v1/common/increasereadcount?WORK_SEQ=${this.props.workSeq}`,
       });
       return result.response.tableName;
     };

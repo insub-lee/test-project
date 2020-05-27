@@ -351,24 +351,37 @@ class EduMgt extends Component {
   };
 
   selectSafetyEdu = record => {
-    const { sagaKey: id, setFormData } = this.props;
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const apiArr = {
+      key: 'getSafetyEduInfo',
+      type: 'GET',
+      url: `/api/eshs/v1/common/safetyEdu?type=searchOne&keyword=${record.EDU_NO}`,
+    };
+    getCallDataHandlerReturnRes(id, apiArr, this.selectSafetyEduCallback);
+  };
+
+  selectSafetyEduCallback = (id, response) => {
+    const { setFormData } = this.props;
+    const record = response.safetyEduInfo;
     const { worker } = this.state;
     const nextformData = {
       EDU_NO: record.EDU_NO || '',
       SITE: record.SITE || '',
       EDU_HOUR: record.EDU_HOUR || '',
       LECT_EMP_NO: Number(record.LECT_EMP_NO) || '',
+      LECT_EMP_NM: record.LECT_EMP_NM || '',
       EDU_DT: record.EDU_DT || '',
       EDU_LOC: record.EDU_LOC || '',
       WORK_NO: record.WORK_NO || '',
       EDU_TARGET_GB: record.EDU_TARGET_GB || '',
       OUT_LECT_SSN: record.OUT_LECT_SSN || '',
       LECT_CMPNY_CD: record.LECT_CMPNY_CD || '',
+      LECT_CMPNY_NM: record.LECT_CMPNY_NM || '',
       OUT_LECT_NM: record.OUT_LECT_NM || '',
       LECT_HOST_GB: record.LECT_HOST_GB || '',
       EDU_YEAR: record.EDU_YEAR || '',
       WRK_CMPNY_CD: record.WRK_CMPNY_CD || '',
-      WORKER_LIST: [],
+      WORKER_LIST: record.WORKER_LIST || [],
     };
     setFormData(id, nextformData);
     this.setState(
@@ -378,7 +391,8 @@ class EduMgt extends Component {
           WRK_CMPNY_CD: record.WRK_CMPNY_CD,
         },
         safetyEduList: [],
-        workerList: [],
+        selectedWorkerList: (record.WORKER_LIST && record.WORKER_LIST.map((item, index) => index)) || [],
+        workerList: record.WORKER_LIST || [],
       },
       () => this.handleModalVisible('', false),
     );
@@ -425,6 +439,8 @@ class EduMgt extends Component {
       onChange: this.workerTableRowSelect,
     };
 
+    console.debug('폼데이터', formData);
+    console.debug('스텟', this.state);
     return (
       <Styled>
         <StyledSearchWrap>
@@ -501,7 +517,7 @@ class EduMgt extends Component {
                   value={selectedCmpny.WRK_CMPNY_NM || ''}
                   readOnly
                   onClick={() => {
-                    if (formData.EDU_NO === '') {
+                    if (formData.EDU_NO !== '') {
                       this.handleModalVisible('searchCmpny', true);
                     }
                   }}
@@ -512,12 +528,12 @@ class EduMgt extends Component {
               className="searchCmpnyBtn"
               tabIndex={0}
               onClick={() => {
-                if (formData.EDU_NO === '') {
+                if (formData.EDU_NO !== '') {
                   this.handleModalVisible('searchCmpny', true);
                 }
               }}
               onKeyPress={() => {
-                if (formData.EDU_NO === '') {
+                if (formData.EDU_NO !== '') {
                   this.handleModalVisible('searchCmpny', true);
                 }
               }} // esLint

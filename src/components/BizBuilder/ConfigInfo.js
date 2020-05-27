@@ -19,6 +19,7 @@ import NumberCompUnitConfig from 'components/BizBuilder/Field/NumberCompUnitConf
 import TreeSelectRootKeyCompConfig from 'components/BizBuilder/Field/TreeSelectRootKeyCompConfig';
 import SelectYearCompConfig from 'components/BizBuilder/Field/SelectYearCompConfig';
 import CustomValueSelectCompConfig from 'components/BizBuilder/Field/CustomValueSelectCompConfig';
+import CustomValueRadioCompConfig from 'components/BizBuilder/Field/CustomValueRadioCompConfig';
 import ViewUploadedFileCompConfig from 'components/BizBuilder/Field/ViewUploadedFileCompConfig';
 import CustomDataTableCompConfig from 'components/BizBuilder/Field/CustomDataTableCompConfig';
 import ModalTableCompConfig from 'components/BizBuilder/Field/ModalTableCompConfig';
@@ -38,13 +39,20 @@ import CustomSelectSearchConfig from 'components/BizBuilder/Field/CustomSelectSe
 import CustomSearchInputConfig from 'components/BizBuilder/Field/CustomSearchInputConfig';
 import LabelByNodeIdConfig from 'components/BizBuilder/Field/LabelByNodeIdConfig';
 import EshsQualCondConfig from 'components/BizBuilder/Field/EshsQualCondConfig';
+import ListButtonConfig from 'components/BizBuilder/Field/ListButtonConfig';
+import UserSelectConfig from 'components/BizBuilder/Field/UserSelectConfig';
+import MultiUserSelectConfig from 'components/BizBuilder/Field/MultiUserSelectConfig';
 import EshsQualHeaderConfig from 'components/BizBuilder/Field/EshsQualHeaderConfig';
 import DefaultValueConfig from 'components/BizBuilder/Field/DefaultValueConfig';
-import EshsCmpnyConfig from 'components/BizBuilder/Field/EshsCmpnyConfig';
 import TextDefaultValueConfig from 'components/BizBuilder/Field/TextDefaultValueConfig';
+import JsonTableConfig from 'components/BizBuilder/Field/JsonTableConfig';
+import TextareaCompConfig from 'components/BizBuilder/Field/TextareaCompConfig';
+import NumberCompFloatConfig from 'components/BizBuilder/Field/NumberCompFloatConfig';
+import ViewDateCompConfig from 'components/BizBuilder/Field/ViewDateCompConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
+  'components/BizBuilder/Field/ViewDateCompConfig': { renderer: property => <ViewDateCompConfig {...property} /> },
   'components/BizBuilder/Field/TreeSelectCompConfig': { renderer: property => <TreeSelectCompConfig {...property} /> },
   'components/BizBuilder/Field/SelectCompConfig': { renderer: property => <SelectCompConfig {...property} /> },
   'components/BizBuilder/Field/CheckboxCompConfig': { renderer: property => <CheckboxCompConfig {...property} /> },
@@ -63,6 +71,7 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/TreeSelectRootKeyCompConfig': { renderer: property => <TreeSelectRootKeyCompConfig {...property} /> },
   'components/BizBuilder/Field/SelectYearCompConfig': { renderer: property => <SelectYearCompConfig {...property} /> },
   'components/BizBuilder/Field/CustomValueSelectCompConfig': { renderer: property => <CustomValueSelectCompConfig {...property} /> },
+  'components/BizBuilder/Field/CustomValueRadioCompConfig': { renderer: property => <CustomValueRadioCompConfig {...property} /> },
   'components/BizBuilder/Field/ViewUploadedFileCompConfig': { renderer: property => <ViewUploadedFileCompConfig {...property} /> },
   'components/BizBuilder/Field/CustomDataTableCompConfig': { renderer: property => <CustomDataTableCompConfig {...property} /> },
   'components/BizBuilder/Field/ModalTableCompConfig': { renderer: property => <ModalTableCompConfig {...property} /> },
@@ -82,8 +91,13 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/CustomSearchInputConfig': { renderer: property => <CustomSearchInputConfig {...property} /> },
   'components/BizBuilder/Field/LabelByNodeIdConfig': { renderer: property => <LabelByNodeIdConfig {...property} /> },
   'components/BizBuilder/Field/EshsQualCondConfig': { renderer: property => <EshsQualCondConfig {...property} /> },
+  'components/BizBuilder/Field/ListButtonConfig': { renderer: property => <ListButtonConfig {...property} /> },
+  'components/BizBuilder/Field/UserSelectConfig': { renderer: property => <UserSelectConfig {...property} /> },
+  'components/BizBuilder/Field/MultiUserSelectConfig': { renderer: property => <MultiUserSelectConfig {...property} /> },
   'components/BizBuilder/Field/EshsQualHeaderConfig': { renderer: property => <EshsQualHeaderConfig {...property} /> },
   'components/BizBuilder/Field/DefaultValueConfig': { renderer: property => <DefaultValueConfig {...property} /> },
-  'components/BizBuilder/Field/EshsCmpnyConfig': { renderer: property => <EshsCmpnyConfig {...property} /> },
   'components/BizBuilder/Field/TextDefaultValueConfig': { renderer: property => <TextDefaultValueConfig {...property} /> },
+  'components/BizBuilder/Field/JsonTableConfig': { renderer: property => <JsonTableConfig {...property} /> },
+  'components/BizBuilder/Field/TextareaCompConfig': { renderer: property => <TextareaCompConfig {...property} /> },
+  'components/BizBuilder/Field/NumberCompFloatConfig': { renderer: property => <NumberCompFloatConfig {...property} /> },
 };

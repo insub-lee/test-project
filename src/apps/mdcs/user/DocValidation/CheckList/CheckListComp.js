@@ -85,14 +85,18 @@ class CheckListComp extends Component {
   };
 
   onValidateProcess = (vadildate, workProcess, workSeq, taskSeq, orginTaskSeq) => {
+    console.debug('onValidateProcess', workProcess);
     const { id, submitHandlerBySaga } = this.props;
     const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
     submitHandlerBySaga(id, 'POST', prefixUrl, workProcess, this.onCompleteProc);
   };
 
   onCompleteProc = () => {
-    message.success('결재완료');
+    const { getCustomDataBind } = this.props;
     this.onModalClose();
+    const rtnUrl = '/api/mdcs/v1/common/MdcsDocValidationListHandler';
+    getCustomDataBind('POST', rtnUrl, {});
+    message.success('유효성 결재 요청완료');
   };
 
   render() {

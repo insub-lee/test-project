@@ -16,6 +16,7 @@ import DragUploadPdfComp from 'components/BizBuilder/Field/DragUploadPdfComp';
 import TreeSelectComp from 'components/BizBuilder/Field/TreeSelectComp';
 import SelectComp from 'components/BizBuilder/Field/SelectComp';
 import CustomValueSelectComp from 'components/BizBuilder/Field/CustomValueSelectComp';
+import CustomValueRadioComp from 'components/BizBuilder/Field/CustomValueRadioComp';
 import ReadOnlyTextComp from 'components/BizBuilder/Field/ReadOnlyTextComp';
 import CheckboxComp from 'components/BizBuilder/Field/CheckboxComp';
 import RadioComp from 'components/BizBuilder/Field/RadioComp';
@@ -119,17 +120,27 @@ import LabelByNodeIdComp from 'components/BizBuilder/Field/LabelByNodeIdComp';
 import EshsQualCondComp from 'components/BizBuilder/Field/EshsQualCondComp';
 import NodeIdMultiViewComp from 'components/BizBuilder/Field/NodeIdMultiViewComp';
 import NodeNameByCodeComp from 'components/BizBuilder/Field/NodeNameByCodeComp';
+import SelectMonthComp from 'components/BizBuilder/Field/SelectMonthComp';
+import ListButtonComp from 'components/BizBuilder/Field/ListButtonComp';
+import MultiUserSelectComp from 'components/BizBuilder/Field/MultiUserSelectComp';
 import EshsQualHeaderComp from 'components/BizBuilder/Field/EshsQualHeaderComp';
 import MDCSTechScopeViewComp from 'components/BizBuilder/Field/MDCSTechScopeViewComp';
 import VaildationListComp from 'components/BizBuilder/Field/VaildationListComp';
 import EshsQualInterLockReviewComp from 'components/BizBuilder/Field/EshsQualInterLockReviewComp';
 import DefaultValueComp from 'components/BizBuilder/Field/DefaultValueComp';
 import TextDefaultValueComp from 'components/BizBuilder/Field/TextDefaultValueComp';
+import JsonTableComp from 'components/BizBuilder/Field/JsonTableComp';
+import EducationExamComp from 'components/BizBuilder/Field/EducationExamComp';
 import CustomTreeSelectSearchComp from 'components/BizBuilder/Field/CustomTreeSelectSearchComp';
+import NumberCompFloat from 'components/BizBuilder/Field/NumberCompFloat';
+import ViewDateComp from 'components/BizBuilder/Field/ViewDateComp';
+import MDCSDccViewComp from 'components/BizBuilder/Field/MDCSDccViewComp';
+import DragUploadViewComp from 'components/BizBuilder/Field/DragUploadViewComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/VaildationListComp': { renderer: property => <VaildationListComp {...property} /> },
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
+  'components/BizBuilder/Field/ViewDateComp': { renderer: property => <ViewDateComp {...property} /> },
   'components/BizBuilder/Field/CoverViewComp': { renderer: property => <CoverViewComp {...property} /> },
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
   'components/BizBuilder/Field/FmeaLabelComp': { renderer: property => <FmeaLabelComp {...property} /> },
@@ -147,6 +158,7 @@ export const CompInfo = {
   'components/BizBuilder/Field/TreeSelectComp': { renderer: property => <TreeSelectComp {...property} /> },
   'components/BizBuilder/Field/SelectComp': { renderer: property => <SelectComp {...property} /> },
   'components/BizBuilder/Field/CustomValueSelectComp': { renderer: property => <CustomValueSelectComp {...property} /> },
+  'components/BizBuilder/Field/CustomValueRadioComp': { renderer: property => <CustomValueRadioComp {...property} /> },
   'components/BizBuilder/Field/ReadOnlyTextComp': { renderer: property => <ReadOnlyTextComp {...property} /> },
   'components/BizBuilder/Field/CheckboxComp': { renderer: property => <CheckboxComp {...property} /> },
   'components/BizBuilder/Field/RadioComp': { renderer: property => <RadioComp {...property} /> },
@@ -248,10 +260,18 @@ export const CompInfo = {
   'components/BizBuilder/Field/EshsQualCondComp': { renderer: property => <EshsQualCondComp {...property} /> },
   'components/BizBuilder/Field/NodeIdMultiViewComp': { renderer: property => <NodeIdMultiViewComp {...property} /> },
   'components/BizBuilder/Field/NodeNameByCodeComp': { renderer: property => <NodeNameByCodeComp {...property} /> },
+  'components/BizBuilder/Field/SelectMonthComp': { renderer: property => <SelectMonthComp {...property} /> },
+  'components/BizBuilder/Field/ListButtonComp': { renderer: property => <ListButtonComp {...property} /> },
+  'components/BizBuilder/Field/MultiUserSelectComp': { renderer: property => <MultiUserSelectComp {...property} /> },
   'components/BizBuilder/Field/EshsQualHeaderComp': { renderer: property => <EshsQualHeaderComp {...property} /> },
   'components/BizBuilder/Field/MDCSTechScopeViewComp': { renderer: property => <MDCSTechScopeViewComp {...property} /> },
   'components/BizBuilder/Field/EshsQualInterLockReviewComp': { renderer: property => <EshsQualInterLockReviewComp {...property} /> },
   'components/BizBuilder/Field/DefaultValueComp': { renderer: property => <DefaultValueComp {...property} /> },
   'components/BizBuilder/Field/TextDefaultValueComp': { renderer: property => <TextDefaultValueComp {...property} /> },
+  'components/BizBuilder/Field/JsonTableComp': { renderer: property => <JsonTableComp {...property} /> },
+  'components/BizBuilder/Field/EducationExamComp': { renderer: property => <EducationExamComp {...property} /> },
   'components/BizBuilder/Field/CustomTreeSelectSearchComp': { renderer: property => <CustomTreeSelectSearchComp {...property} /> },
+  'components/BizBuilder/Field/NumberCompFloat': { renderer: property => <NumberCompFloat {...property} /> },
+  'components/BizBuilder/Field/MDCSDccViewComp': { renderer: property => <MDCSDccViewComp {...property} /> },
+  'components/BizBuilder/Field/DragUploadViewComp': { renderer: property => <DragUploadViewComp {...property} /> },
 };

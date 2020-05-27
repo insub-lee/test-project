@@ -456,7 +456,7 @@ class CompModal extends Component {
                   defaultValue={comp.CONFIG.property.compSelectDataParam}
                   placeholder="데이터 파라미터"
                   onChange={e => this.handleChangeViewConfig('compSelectDataParam', e.target.value, 'property')}
-                  rows={5}
+                  rows={3}
                 />
               )}
             </div>

@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
 export default function InfoModify(props) {
-  console.debug('### props: ', props);
-  const { sagaKey: id, onCloseModalHandler, viewPageData, changeViewPage, saveBeforeProcess, saveTask, reloadId, modifyTask } = props;
+  const { sagaKey: id, onCloseModalHandler, viewPageData, changeViewPage, saveBeforeProcess, saveTask, modifyTask, reloadId } = props;
 
   // useEffect(() => {
   //   viewPageData.viewType = 'MODIFY';
@@ -25,7 +24,7 @@ export default function InfoModify(props) {
     case 'VIEW': {
       return (
         <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
-          정보수정
+          정보수정/결과입력
         </StyledButton>
       );
     }

@@ -16,6 +16,7 @@ const StyledDefaultMdcs = styled(StyledViewDesigner)`
         height: auto;
       }
     }
+
     &.mdcsContentsCol {
       padding: 6px 9px;
       color: #666;
@@ -70,6 +71,7 @@ const StyledDefaultMdcs = styled(StyledViewDesigner)`
         }
       }
     }
+
     &.mdcsContentsSelectCol {
       position: relative;
       padding: 6px;
@@ -94,6 +96,7 @@ const StyledDefaultMdcs = styled(StyledViewDesigner)`
         }
       }
     }
+
     &.mdcsAttachedFileCol {
       ul li {
         margin-bottom: 5px;
@@ -110,6 +113,10 @@ const StyledDefaultMdcs = styled(StyledViewDesigner)`
           font-size: 16px !important;
         }
       }
+    }
+
+    &.mdcsAttachedFileCol {
+      cursor: pointer;
     }
   }
 `;
