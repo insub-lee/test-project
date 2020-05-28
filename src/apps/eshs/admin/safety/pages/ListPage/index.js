@@ -21,10 +21,11 @@ import ViewPage from '../ViewPage';
 
 const AntdTable = StyledAntdTable(Table);
 
-function ListPage(props) {
+const ListPage = props => {
   const [activateRegModal, setActivateRegModal] = useState(false);
   const [activateDetailModal, setActivateDetailModal] = useState(false);
   const [activateStatusModal, setActivateStatusModal] = useState(false);
+  const [activateUsageModal, setActivateUsageModal] = useState(false);
   const [selectedTaskSeq, setSelectedTaskSeq] = useState(0);
   const [viewType, setViewType] = useState('');
   const [isSearched, setIsSearched] = useState(props.isSearched);
@@ -101,14 +102,18 @@ function ListPage(props) {
     setSelectedTaskSeq(-1);
   }
 
+  function clickUsage() {
+    setActivateUsageModal(true);
+    setSelectedTaskSeq(-1);
+  }
+
   const openRegModal = (changedSagaKey, taskSeq) => {
     /* 
       changedSagaKey: modal쓰려고 바꾼 sagaKey, modal${id}
       taskSeq: 글 번호, INPUT 할 땐 -1, 나머지는 onRow{onClick}
       viewType: INPUT, MODIFY, VIEW
     */
-    const { workSeq, sagaKey, CustomButtons, loadingComplete } = props;
-    const { InputButtons } = CustomButtons;
+    const { workSeq, sagaKey, CustomButtons } = props;
 
     return [
       <BizBuilderBase
@@ -119,7 +124,7 @@ function ListPage(props) {
         taskSeq={taskSeq} // data binding
         onCloseModalHandler={() => setActivateRegModal(false)}
         baseSagaKey={sagaKey}
-        InputCustomButtons={InputButtons}
+        InputCustomButtons={CustomButtons?.InputButtons}
       />,
       <BizBuilderBase
         key={`${changedSagaKey}_MODAL_LIST`}
@@ -138,7 +143,7 @@ function ListPage(props) {
   };
 
   const openStatusModal = (changedSagaKey, taskSeq) => {
-    const { workSeq, sagaKey, CustomButtons, loadingComplete } = props;
+    const { workSeq, sagaKey, CustomButtons } = props;
     return (
       <BizBuilderBase
         key={`${changedSagaKey}_MODAL_DETAIL`}
@@ -154,9 +159,26 @@ function ListPage(props) {
       />
     );
   };
+  const openUsageModal = (changedSagaKey, taskSeq) => {
+    const { workSeq, sagaKey, CustomButtons } = props;
+    return (
+      <BizBuilderBase
+        key={`${changedSagaKey}_MODAL_DETAIL`}
+        sagaKey={`${changedSagaKey}_MODAL_DETAIL`}
+        workSeq={workSeq} // metadata binding
+        viewType={VIEW_TYPE.LIST}
+        taskSeq={taskSeq} // data binding
+        onCloseModalHandler={() => setActivateUsageModal(false)}
+        listMetaSeq={META_SEQ.LIST_USAGE_SEARCH}
+        baseSagaKey={sagaKey}
+        // ListCustomButtons={CustomButtons?.ViewHistory}
+        // CustomListPage={ListPage}
+      />
+    );
+  };
 
   const openDetailModal = (changedSagaKey, taskSeq) => {
-    const { workSeq, sagaKey, CustomButtons, loadingComplete } = props;
+    const { workSeq, sagaKey, CustomButtons } = props;
 
     return (
       <BizBuilderBase
@@ -343,22 +365,28 @@ function ListPage(props) {
               )
             );
           })}
-          {ViewButtons && <ViewButtons {...props} clickStatus={clickStatus} clickRegister={clickRegister} />}
-          <Modal destroyOnClose visible={activateRegModal} closable onCancel={() => setActivateRegModal(false)} width={900} footer={null}>
+          {ViewButtons && <ViewButtons {...props} clickStatus={clickStatus} clickUsage={clickUsage} clickRegister={clickRegister} />}
+
+          <Modal destroyOnClose visible={activateRegModal} closable onCancel={() => setActivateRegModal(false)} width footer={null}>
             <div>{activateRegModal && openRegModal(`modal${id}`, selectedTaskSeq)}</div>
           </Modal>
-          <Modal destroyOnClose visible={activateDetailModal} closable onCancel={() => setActivateDetailModal(false)} width={900} footer={null}>
+
+          <Modal destroyOnClose visible={activateDetailModal} closable onCancel={() => setActivateDetailModal(false)} width footer={null}>
             <div>{activateDetailModal && openDetailModal(`modal${id}`, selectedTaskSeq)}</div>
           </Modal>
 
-          <Modal destroyOnClose visible={activateStatusModal} closable onCancel={() => setActivateStatusModal(false)} width={900} footer={null}>
+          <Modal destroyOnClose visible={activateStatusModal} closable onCancel={() => setActivateStatusModal(false)} width footer={null}>
             <div>{activateStatusModal && openStatusModal(`modal${id}`, selectedTaskSeq)}</div>
+          </Modal>
+
+          <Modal destroyOnClose visible={activateUsageModal} closable onCancel={() => setActivateUsageModal(false)} width footer={null}>
+            <div>{activateUsageModal && openUsageModal(`modal${id}`, selectedTaskSeq)}</div>
           </Modal>
         </Sketch>
       </StyledViewDesigner>
     );
   }
-}
+};
 
 ListPage.propTypes = {};
 ListPage.defaultProps = {};
