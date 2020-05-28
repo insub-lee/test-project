@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import { Radio } from 'antd';
 import AntRadiobox from '../../../containers/store/components/uielements/radiobox.style';
 
-const init = { value: null, text: null };
 const RadioGroup = AntRadiobox(Radio.Group);
 
 const CustomValueRadioComp = props => {
-  const [values, setValues] = useState([]);
+  const [values, setValues] = useState([{ value: null, text: null }]);
   const [defaultValue, setDefaultValue] = useState('');
 
   const {
@@ -23,7 +22,13 @@ const CustomValueRadioComp = props => {
 
   useEffect(() => {
     const { VALUES } = props.CONFIG.property;
-    setValues(VALUES instanceof Array ? [...VALUES] : [{ ...init }]);
+    const { colData } = props;
+    if (VALUES instanceof Array) {
+      setValues([...VALUES]);
+    }
+    if (colData) {
+      setDefaultValue(colData || '');
+    }
   }, []);
 
   useEffect(() => {
@@ -31,7 +36,7 @@ const CustomValueRadioComp = props => {
   }, [defaultValue]);
 
   function onChangeHandler(value) {
-    console.debug('£££ onChangeHandler :', value instanceof String, value, isRequired, changeFormData);
+    // console.debug('£££ onChangeHandler :', value instanceof String, value, isRequired, changeFormData);
     if (typeof value === 'string') {
       if (isRequired) {
         // 기본값인지 체크
