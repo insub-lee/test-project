@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const StyledSearchWrapper = styled.div`
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   background: #f2f4f7;
   border-radius: 5px;
   border: 2px solid #b5bdcb;
@@ -41,6 +41,10 @@ const StyledSearchWrapper = styled.div`
     display: block;
     text-align: center;
     margin-top: 20px;
+  }
+
+  .row {
+    margin-bottom: 10px;
   }
 `;
 
