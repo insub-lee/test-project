@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
-import CustomInput from './Input';
-import CustomModify from './Modify';
 
 class Stack extends Component {
   componentDidMount() {}
@@ -21,9 +19,9 @@ class Stack extends Component {
         onReset={this.onReset}
         taskSeq={-1}
         viewType="INPUT"
-        CustomInputPage={CustomInput}
-        CustomModifyPage={CustomModify}
         loadingComplete={this.loadingComplete}
+        InputCustomButtons={() => null}
+        ModifyCustomButtons={() => null}
       />
     );
   }

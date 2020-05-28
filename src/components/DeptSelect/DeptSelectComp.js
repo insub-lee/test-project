@@ -35,9 +35,12 @@ const getTreeData = deptList =>
     : [];
 
 class DeptSelectComp extends Component {
-  state = {
-    rootDeptId: 0,
-    selectedDeptId: 0,
+  constructor(props) {
+    super(props);
+    this.state = {
+      rootDeptId: 0,
+      selectedDeptId: 0,
+    };
   }
 
   componentDidMount() {
@@ -47,17 +50,17 @@ class DeptSelectComp extends Component {
   // 최상위 부서조회(PRNT_ID === -1)
   getRootDeptList = () => {
     const { id, getCallDataHandlerReturnRes, defaultRootDeptId } = this.props;
-    const apiInfo = { 
+    const apiInfo = {
       key: 'companyList',
       url: '/api/common/v1/account/organizationList',
       type: 'GET',
-      params: {} 
+      params: {},
     };
 
     getCallDataHandlerReturnRes(id, apiInfo, (rId, res) => {
       if (res && res.list) {
         this.setState({ rootDeptId: res.list[0].DEPT_ID });
-        this.getDeptList(defaultRootDeptId ? defaultRootDeptId : res.list[0].DEPT_ID);
+        this.getDeptList(defaultRootDeptId || res.list[0].DEPT_ID);
       }
     });
   };
@@ -66,17 +69,17 @@ class DeptSelectComp extends Component {
   getDeptList = rootDeptId => {
     const { id, getCallDataHandler } = this.props;
     const apiAry = [
-      { 
+      {
         key: 'deptList',
         url: '/api/common/v1/account/deptSelectList',
         type: 'POST',
-        params: { PARAM: { ROOT_DEPT_ID: rootDeptId } } 
+        params: { PARAM: { ROOT_DEPT_ID: rootDeptId } },
       },
     ];
     getCallDataHandler(id, apiAry, () => {
       this.setState({ rootDeptId });
     });
-  }
+  };
 
   // Root부서 변경
   onChangeRootDept = val => {
@@ -92,7 +95,7 @@ class DeptSelectComp extends Component {
       this.setState({ selectedDeptId: Number(selectedKeys[0]) });
     } else {
       this.setState({ selectedDeptId: -1 });
-    } 
+    }
   };
 
   // 확인(선택된 부서 리턴)
@@ -114,30 +117,35 @@ class DeptSelectComp extends Component {
   render() {
     const { result, rootDeptChange, defaultRootDeptId } = this.props;
     const treeData = result && result.deptList && result.deptList.result ? result.deptList.result : [];
-    const rootDeptList = result && result.companyList && result.companyList.list ? (rootDeptChange ? result.companyList.list : result.companyList.list.filter(item => item.DEPT_ID === defaultRootDeptId ) ) : [];
+    const rootDeptList =
+      result && result.companyList && result.companyList.list
+        ? rootDeptChange
+          ? result.companyList.list
+          : result.companyList.list.filter(item => item.DEPT_ID === defaultRootDeptId)
+        : [];
 
     return (
       <TreeWrapper>
         <div className="tree-wrapper-inner">
           <Select value={this.state.rootDeptId} onChange={val => this.onChangeRootDept(val)}>
-            {rootDeptList && (
+            {rootDeptList &&
               rootDeptList.map((item, idx) => (
                 <Option value={item.DEPT_ID} key={idx}>
                   {item.NAME_KOR}
                 </Option>
-              ))
-            )}
+              ))}
           </Select>
           <div className="depth-tree">
-            <Tree
-              treeData={getTreeData(treeData)}
-              onSelect={this.onTreeSelect}
-            />
+            <Tree treeData={getTreeData(treeData)} onSelect={this.onTreeSelect} />
           </div>
         </div>
         <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-          <StyledButton className="btn-light mr5" onClick={this.onCancelPopup}>취소</StyledButton>
-          <StyledButton className="btn-primary" onClick={this.onCompletePopup}>확인</StyledButton>
+          <StyledButton className="btn-light mr5" onClick={this.onCancelPopup}>
+            취소
+          </StyledButton>
+          <StyledButton className="btn-primary" onClick={this.onCompletePopup}>
+            확인
+          </StyledButton>
         </StyledButtonWrapper>
       </TreeWrapper>
     );
@@ -145,7 +153,14 @@ class DeptSelectComp extends Component {
 }
 
 DeptSelectComp.propTypes = {
-
+  id: PropTypes.string,
+  rootDeptChange: PropTypes.bool,
+  defaultRootDeptId: PropTypes.any,
+  result: PropTypes.object,
+  getCallDataHandlerReturnRes: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
+  onComplete: PropTypes.func,
+  onCancel: PropTypes.func,
 };
 
 export default DeptSelectComp;

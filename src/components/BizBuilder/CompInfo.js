@@ -134,10 +134,13 @@ import EducationExamComp from 'components/BizBuilder/Field/EducationExamComp';
 import CustomTreeSelectSearchComp from 'components/BizBuilder/Field/CustomTreeSelectSearchComp';
 import NumberCompFloat from 'components/BizBuilder/Field/NumberCompFloat';
 import ViewDateComp from 'components/BizBuilder/Field/ViewDateComp';
+import DeptSelectComp from 'components/BizBuilder/Field/DeptSelectComp';
 import MDCSDccViewComp from 'components/BizBuilder/Field/MDCSDccViewComp';
 import DragUploadViewComp from 'components/BizBuilder/Field/DragUploadViewComp';
+import CategoryViewComp from 'components/BizBuilder/Field/CategoryViewComp';
 
 export const CompInfo = {
+  'components/BizBuilder/Field/CategoryViewComp': { renderer: property => <CategoryViewComp {...property} /> },
   'components/BizBuilder/Field/VaildationListComp': { renderer: property => <VaildationListComp {...property} /> },
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
   'components/BizBuilder/Field/ViewDateComp': { renderer: property => <ViewDateComp {...property} /> },
@@ -272,6 +275,7 @@ export const CompInfo = {
   'components/BizBuilder/Field/EducationExamComp': { renderer: property => <EducationExamComp {...property} /> },
   'components/BizBuilder/Field/CustomTreeSelectSearchComp': { renderer: property => <CustomTreeSelectSearchComp {...property} /> },
   'components/BizBuilder/Field/NumberCompFloat': { renderer: property => <NumberCompFloat {...property} /> },
+  'components/BizBuilder/Field/DeptSelectComp': { renderer: property => <DeptSelectComp {...property} /> },
   'components/BizBuilder/Field/MDCSDccViewComp': { renderer: property => <MDCSDccViewComp {...property} /> },
   'components/BizBuilder/Field/DragUploadViewComp': { renderer: property => <DragUploadViewComp {...property} /> },
 };

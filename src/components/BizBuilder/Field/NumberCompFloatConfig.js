@@ -29,7 +29,7 @@ class ComponentConfig extends Component {
         <div className="popoverItem popoverItemInput">
           <span className="spanLabel">소수점 자리수 설정</span>
           <InputNumber
-            defaultValue={(configInfo && configInfo.property && configInfo.property.unit) || ''}
+            defaultValue={(configInfo && configInfo.property && configInfo.property.decimal) || ''}
             min={1}
             max={16}
             onChange={value => this.handleChangeViewCompData('decimal', value)}

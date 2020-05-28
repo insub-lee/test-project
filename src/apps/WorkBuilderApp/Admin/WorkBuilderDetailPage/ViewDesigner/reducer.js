@@ -496,12 +496,15 @@ const reducer = (state = initialState, action) => {
           state = state.set('compData', compData);
         }
         return state
-          .setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp'], compItem)
+          .setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp', 'CONFIG', subKey, key], setValue)
           .setIn(['compData', compIdx], compItem);
       }
       let compItem = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp']);
       compItem = compItem.setIn(['CONFIG', subKey, key], setValue);
-      return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp'], compItem);
+      return state.setIn(
+        ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp', 'CONFIG', subKey, key],
+        setValue,
+      );
     }
     case actionTypes.CHANGE_VIEW_COMPDATA_REDUCER: {
       const { groupIndex, rowIndex, colIndex, key, value } = action;
