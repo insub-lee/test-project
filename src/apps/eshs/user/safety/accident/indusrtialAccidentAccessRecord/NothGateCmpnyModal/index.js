@@ -138,15 +138,15 @@ class NothGateCmpnyModal extends Component {
   };
 
   saveComplete = sagaKey => {
-    const { getCallDataHandler, apiAry, handleAppStart, formData, handleModalOpen } = this.props;
+    const { getCallDataHandler, apiAry, handleAppStart, formData, handleModalOpen, handleModalCancel } = this.props;
     getCallDataHandler(sagaKey, apiAry, handleAppStart);
     const actionType = (formData && formData.actionType) || '';
     if (actionType === 'INSERT') {
       message.success('등록되었습니다.');
-      handleModalOpen();
     } else if (actionType === 'UPDATE') message.success('수정되었습니다.');
     else if (actionType === 'DELETE') message.success('삭제되었습니다.');
     changeFormData(sagaKey, 'actionType', '');
+    handleModalCancel();
   };
 
   handleInputChange = e => {
@@ -225,7 +225,7 @@ class NothGateCmpnyModal extends Component {
 
   handleDeleteBtn = () => {
     const { id, submitHandlerBySaga, formData, changeFormData } = this.props;
-    const submitData = (formData && formData.modal && formData.modal.info && formData.modal.info) || { idx: -1 };
+    const submitData = (formData && formData.modal && formData.modal.info && formData.modal.info) || { ROWKEY: -1 };
     changeFormData(id, 'actionType', 'DELETE');
     submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsNothGateCmpny', submitData, this.saveComplete);
   };
@@ -299,6 +299,7 @@ class NothGateCmpnyModal extends Component {
     const VISITOR_IN_DATE = formData && formData.modal && formData.modal.info && formData.modal.info.VISITOR_IN_DATE;
     const VISITOR_OUT_DATE = formData && formData.modal && formData.modal.info && formData.modal.info.VISITOR_OUT_DATE;
     const BIZ_REG_NO = (formData && formData.modal && formData.modal.info && formData.modal.info.BIZ_REG_NO) || '';
+    console.debug('info', info);
     return (
       <div>
         <StyledHtmlTable>
@@ -327,7 +328,7 @@ class NothGateCmpnyModal extends Component {
                     className="ant-input-inline"
                     name="WRK_CMPNY_NM"
                     value={info.WRK_CMPNY_NM}
-                    style={{ width: '80%' }}
+                    style={{ width: '100%' }}
                     onChange={this.handleInputChange}
                     readOnly={BIZ_REG_NO !== '000-00-00000'}
                   />
@@ -337,7 +338,7 @@ class NothGateCmpnyModal extends Component {
                   <AntdInput
                     placeholder="사업자등록번호"
                     className="ant-input-inline"
-                    style={{ width: '80%' }}
+                    style={{ width: '100%' }}
                     name="BIZ_REG_NO"
                     value={info.BIZ_REG_NO}
                     onChange={this.handleBusinessInputChange}
@@ -350,7 +351,7 @@ class NothGateCmpnyModal extends Component {
                   <AntdInput
                     placeholder="방문자 성명"
                     className="ant-input-inline"
-                    style={{ width: '80%' }}
+                    style={{ width: '100%' }}
                     name="VISITOR_NAME"
                     value={info.VISITOR_NAME}
                     onChange={this.handleInputChange}
@@ -361,7 +362,7 @@ class NothGateCmpnyModal extends Component {
                   <AntdInput
                     placeholder="연락처"
                     className="ant-input-inline"
-                    style={{ width: '80%' }}
+                    style={{ width: '100%' }}
                     name="PHONE_NUMBER"
                     value={info.PHONE_NUMBER}
                     onChange={this.handleInputChange}
@@ -387,7 +388,7 @@ class NothGateCmpnyModal extends Component {
                   <DatePicker
                     disabledDate={this.disabledEndDate}
                     showTime
-                    style={{ width: '50%' }}
+                    style={{ width: '100%' }}
                     format="YYYY-MM-DD HH:mm:ss"
                     value={moment(VISITOR_OUT_DATE)}
                     placeholder="End"
