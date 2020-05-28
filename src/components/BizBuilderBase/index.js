@@ -23,7 +23,14 @@ import ExtraBuilder from './viewComponent/ExtraBuilder';
 class BizBuilderBase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isShowBuilderModal: false, builderModalViewType: 'INPUT', builderModalWorkSeq: -1, builderModalTaskSeq: -1, taskRowData: {} };
+    this.state = {
+      isShowBuilderModal: false,
+      builderModalViewType: 'INPUT',
+      builderModalWorkSeq: -1,
+      builderModalTaskSeq: -1,
+      taskRowData: {},
+      isLoading: true,
+    };
   }
 
   componentDidMount() {
@@ -47,11 +54,11 @@ class BizBuilderBase extends React.Component {
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
     const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq };
     if (taskSeq !== -1 && viewType === 'REVISION') {
-      revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps);
+      revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps, this.changeIsLoading);
     } else if (taskSeq !== -1) {
-      getDetailData(id, workSeq, taskSeq, retViewType, extraProps, changeWorkflowFormData);
+      getDetailData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, changeWorkflowFormData);
     } else if (workSeq !== -1) {
-      getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, conditional || '', changeWorkflowFormData);
+      getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, conditional || '', changeWorkflowFormData);
     }
   }
 
@@ -77,14 +84,14 @@ class BizBuilderBase extends React.Component {
     const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq };
     if (prevProps.sagaKey !== this.props.sagaKey || (prevProps.viewType && prevProps.viewType !== viewType)) {
       if (taskSeq !== -1 && viewType === 'REVISION') {
-        revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps);
+        revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps, this.changeIsLoading);
       } else if (taskSeq !== -1) {
-        getDetailData(id, workSeq, taskSeq, retViewType, extraProps, changeWorkflowFormData);
+        getDetailData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, changeWorkflowFormData);
       } else if (workSeq !== -1) {
-        getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, conditional || '', changeWorkflowFormData);
+        getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, conditional || '', changeWorkflowFormData);
       }
     } else if (conditional !== prevProps.conditional && retViewType === 'LIST' && workSeq !== -1) {
-      getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, conditional || '', changeWorkflowFormData);
+      getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, conditional || '', changeWorkflowFormData);
     }
   }
 
@@ -106,15 +113,17 @@ class BizBuilderBase extends React.Component {
       listMetaSeq,
       viewChangeSeq,
     } = this.props; // id: widget_id+@
-    const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
-    const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq };
-    if (taskSeq !== -1 && viewType === 'REVISION') {
-      revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps);
-    } else if (taskSeq !== -1) {
-      getDetailData(id, workSeq, taskSeq, retViewType, extraProps, changeWorkflowFormData);
-    } else if (workSeq !== -1) {
-      getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, conditional || '', changeWorkflowFormData);
-    }
+    this.setState({ isLoading: true }, () => {
+      const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
+      const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq };
+      if (taskSeq !== -1 && viewType === 'REVISION') {
+        revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps, this.changeIsLoading);
+      } else if (taskSeq !== -1) {
+        getDetailData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, changeWorkflowFormData);
+      } else if (workSeq !== -1) {
+        getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, conditional || '', changeWorkflowFormData);
+      }
+    });
   };
 
   changeFormData = (id, key, val) => {
@@ -125,6 +134,8 @@ class BizBuilderBase extends React.Component {
 
   changeBuilderModalState = (isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData) =>
     this.setState({ isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData });
+
+  changeIsLoading = flag => this.setState({ isLoading: flag });
 
   searchCompRenderer = props => <SearchComp {...props} />;
 
@@ -154,6 +165,7 @@ class BizBuilderBase extends React.Component {
         changeFormData: this.changeFormData,
         changeBuilderModalState: this.changeBuilderModalState,
         ExtraBuilder,
+        changeIsLoading: this.changeIsLoading,
       };
       switch (viewPageData.viewType.toUpperCase()) {
         case 'INPUT':
@@ -202,7 +214,6 @@ class BizBuilderBase extends React.Component {
   render() {
     const {
       sagaKey,
-      dataLoading,
       isBuilderModal,
       builderModalSetting,
       viewChangeSeqByModal,
@@ -212,11 +223,11 @@ class BizBuilderBase extends React.Component {
       compProps,
       conditional,
     } = this.props;
-    const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData } = this.state;
+    const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData, isLoading } = this.state;
 
     return (
       <div>
-        <Spin spinning={dataLoading}>{this.componentRenderer()}</Spin>
+        <Spin spinning={isLoading}>{this.componentRenderer()}</Spin>
         <Modal
           centered
           destroyOnClose
@@ -279,7 +290,7 @@ BizBuilderBase.propTypes = {
   changeValidationData: PropTypes.func.isRequired,
   getProcessRule: PropTypes.func,
   setProcessStep: PropTypes.func,
-  isLoading: PropTypes.bool,
+  // isLoading: PropTypes.bool,
   draftId: PropTypes.number,
   draftProcess: PropTypes.array,
   setProcessRule: PropTypes.func,
@@ -338,6 +349,7 @@ BizBuilderBase.defaultProps = {
   ViewCustomButtonsByModal: undefined,
   ListCustomButtonsByModal: undefined,
   getFileDownload: () => false,
+  // isLoading: true,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -348,7 +360,7 @@ const mapStateToProps = createStructuredSelector({
   formData: selectors.makeSelectFormData(),
   revisionHistory: selectors.makeSelectRevisionHistory(),
   processRule: selectors.makeSelectProcessRule(),
-  isLoading: selectors.makeSelectLoading(),
+  // isLoading: selectors.makeSelectLoading(),
   draftProcess: selectors.makeSelectDraftProcess(),
   listData: selectors.makeSelectList(),
   viewPageData: selectors.makeSelectViewPageData(),
@@ -405,7 +417,7 @@ const mapDispatchToProps = dispatch => ({
   destroyReducer: id => dispatch(actions.destroyReducerByReducer(id)),
   setListSelectRowKeys: (id, list) => dispatch(actions.setListSelectRowKeysByReducer(id, list)),
   removeMultiTask: (id, reloadId, callbackFunc) => dispatch(actions.removeMultiTaskBySaga(id, reloadId, callbackFunc)),
-  setIsLoading: (id, flag) => dispatch(actions.setIsLoadingByReducer(id, flag)),
+  // setIsLoading: (id, flag) => dispatch(actions.setIsLoadingByReducer(id, flag)),
   getFileDownload: (id, url, fileName) => dispatch(actions.getFileDownload(id, url, fileName)),
   setFormData: (id, formData) => dispatch(actions.setFormDataByReducer(id, formData)),
   setTaskFavorite: (id, workSeq, taskOriginSeq, flag) => dispatch(actions.setTaskFavoriteBySaga(id, workSeq, taskOriginSeq, flag)),

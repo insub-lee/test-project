@@ -1,12 +1,13 @@
 import * as actionTypes from './constants';
 
-export const getBuilderData = (id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData, detailData) => ({
+export const getBuilderData = (id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, conditional, changeWorkflowFormData, detailData) => ({
   type: `${actionTypes.GET_BUILDER_DATA}_${id}`,
   id,
   workSeq,
   taskSeq,
   viewType,
   extraProps,
+  changeIsLoading,
   conditional,
   changeWorkflowFormData,
   detailData,
@@ -71,13 +72,14 @@ export const setExtraApiData = (id, apiKey, response) => ({
   response,
 });
 
-export const getDetailData = (id, workSeq, taskSeq, viewType, extraProps, changeWorkflowFormData) => ({
+export const getDetailData = (id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, changeWorkflowFormData) => ({
   type: `${actionTypes.GET_DETAIL_DATA}_${id}`,
   id,
   workSeq,
   taskSeq,
   viewType,
   extraProps,
+  changeIsLoading,
   changeWorkflowFormData,
 });
 
@@ -228,7 +230,7 @@ export const addNotifyBuilder = (id, workSeq, taskSeq, titleKey, contentKey) => 
   contentKey,
 });
 
-export const revisionTask = (id, workSeq, taskSeq, viewType, revisionType, extraProps, callbackFunc) => ({
+export const revisionTask = (id, workSeq, taskSeq, viewType, revisionType, extraProps, changeIsLoading, callbackFunc) => ({
   type: `${actionTypes.REVISION_TASK}_${id}`,
   id,
   workSeq,
@@ -236,6 +238,7 @@ export const revisionTask = (id, workSeq, taskSeq, viewType, revisionType, extra
   viewType,
   extraProps,
   revisionType,
+  changeIsLoading,
   callbackFunc,
 });
 
