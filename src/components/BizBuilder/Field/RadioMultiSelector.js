@@ -23,32 +23,27 @@ class RadioMultiSelector extends Component {
   };
 
   componentDidMount() {
-    const {
-      getExtraApiData,
-      sagaKey: id,
-      COMP_FIELD,
-      CONFIG: {
-        property: { mapId },
-      },
-    } = this.props;
-
-    const apiArys = [{ key: `${COMP_FIELD}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
-    getExtraApiData(id, apiArys, this.initDataBind);
+    const { fieldSelectData, CONFIG, colData } = this.props;
+    if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
+      if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey].length > 0) {
+        const dataList = fieldSelectData[CONFIG.property.compSelectDataKey].filter(f => f.LVL !== 0 && f.USE_YN === 'Y');
+        this.initDataBind(dataList);
+      }
+    }
   }
 
-  initDataBind = sagaKey => {
+  initDataBind = dataList => {
     const { COMP_FIELD, extraApiData, colData } = this.props;
-    const { categoryMapList: dataList } = extraApiData[COMP_FIELD];
     const selectedValue = colData.split(',').map(val => Number(val));
     const selectedItem = dataList.filter(data => selectedValue.includes(data.NODE_ID)).map(item => ({ title: item.NAME_KOR, value: item.NODE_ID }));
     const isItem = selectedItem.length > 0;
-    dataSource = [
+    const dataSource = [
       {
         groupName: COMP_FIELD,
         groupKey: COMP_FIELD,
         selectedValue,
         selectedItem,
-        dataSet: dataList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0),
+        dataSet: dataList,
       },
     ];
     this.setState({ dataSource, isItem });
@@ -63,17 +58,18 @@ class RadioMultiSelector extends Component {
   };
 
   onChangeMultiSelector = (dataList, selectedValue) => {
-    console.debug('dataList', dataList, 'selectedValue', selectedValue);
     this.setState({ selectedCheckList: dataList, selectedCheckListValue: selectedValue });
   };
 
   onClickScope = () => {
     const { changeFormData, COMP_FIELD, sagaKey, colData, COMP_TAG, WORK_SEQ } = this.props;
     const { selectedCheckListValue } = this.state;
+    const isItem = selectedCheckListValue.length > 0;
     this.setState(
       prevState => ({
         dataSource: prevState.selectedCheckList,
         isShowModal: false,
+        isItem,
       }),
       () => {
         changeFormData(sagaKey, COMP_FIELD, selectedCheckListValue.join());
@@ -82,7 +78,7 @@ class RadioMultiSelector extends Component {
   };
 
   render() {
-    const { isItem } = this.state;
+    const { isItem, dataSource } = this.state;
     return (
       <>
         <StyledMultiSelector>
@@ -115,7 +111,7 @@ class RadioMultiSelector extends Component {
           ]}
           className="multiSelector-w200"
         >
-          <MultiSelector onChange={this.onChangeMultiSelector} dataSource={this.state.dataSource}></MultiSelector>
+          <MultiSelector onChange={this.onChangeMultiSelector} dataSource={dataSource}></MultiSelector>
         </AntdModal>
       </>
     );

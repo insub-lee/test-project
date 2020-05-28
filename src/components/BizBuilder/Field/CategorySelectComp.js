@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { Radio } from 'antd';
-import RadioGroup from 'components/RadioButton';
-
-class FmeaFlagRadioCharComp extends Component {
+import { Select } from 'antd';
+const { Option } = Select;
+class CategorySelectComp extends Component {
   constructor(props) {
     super(props);
     this.state = {
       options: undefined,
-      selectedValue: undefined,
     };
   }
 
@@ -15,8 +13,11 @@ class FmeaFlagRadioCharComp extends Component {
     const { fieldSelectData, CONFIG, colData } = this.props;
     if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
       if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey].length > 0) {
+        console.debug('field', fieldSelectData);
         this.setState({
-          options: fieldSelectData[CONFIG.property.compSelectDataKey].filter(f => f.LVL !== 0).map(item => ({ label: item.NAME_KOR, value: item.NODE_ID })),
+          options: fieldSelectData[CONFIG.property.compSelectDataKey]
+            .filter(f => f.LVL !== 0)
+            .map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>),
         });
       }
     }
@@ -33,13 +34,13 @@ class FmeaFlagRadioCharComp extends Component {
 
   render() {
     const { changeFormData, sagaKey, CONFIG, changeValidationData } = this.props;
-    const { options, selectedValue } = this.state;
+    const { options } = this.state;
     return (
-      <Radio.Group options={options} onChange={e => this.onChangeHandler(changeFormData, sagaKey, CONFIG, changeValidationData, e.target.value)}>
-        {' '}
-      </Radio.Group>
+      <Select style={{ width: '100%' }} onChange={value => this.onChangeHandler(changeFormData, sagaKey, CONFIG, changeValidationData, value)}>
+        {options}
+      </Select>
     );
   }
 }
 
-export default FmeaFlagRadioCharComp;
+export default CategorySelectComp;
