@@ -62,7 +62,9 @@ class List extends Component {
     const { sagaKey: id, getCallDataHandler, refStack } = this.props;
     const { dateStrings, rangeDateStrings, seq, stackCd } = this.state;
     const setDate = refStack
-      ? `START_DATE=${Moment(rangeDateStrings[0]).format('YYYY-MM-01')}&&END_DATE=${Moment(rangeDateStrings[1]).format('YYYY-MM-31')}&&STACK_CD=${stackCd}`
+      ? `START_DATE=${Moment(rangeDateStrings[0]).format('YYYY-MM-01')}&&END_DATE=${Moment(rangeDateStrings[1])
+          .endOf('month')
+          .format('YYYY-MM-DD')}&&STACK_CD=${stackCd}`
       : `START_DATE=${`${dateStrings}-01`}&&END_DATE=${`${dateStrings}-31`}`;
     const apiAry = [
       {
@@ -173,8 +175,8 @@ class List extends Component {
   dataSet = () => {
     const { refStack } = this.props;
     const { measureList, gasList } = this.state;
-    const hour = measureList && measureList.map(element => Number(element.HOUR_FLOW));
-    const minute = measureList && measureList.map(element => Number(element.MINUTE_FLOW));
+    const hour = measureList && measureList.map(element => Number(element.HOUR_FLOW).toFixed(3));
+    const minute = measureList && measureList.map(element => Number(element.MINUTE_FLOW).toFixed(3));
     const temp = this.densityList();
     const gasDensityList =
       gasList &&
@@ -299,7 +301,16 @@ class List extends Component {
           <StyledHtmlTable className="tableWrapper">
             <div style={{ overflowX: 'scroll' }}>
               <table>
-                <tbody>
+                <colgroup>
+                  <col width={100} />
+                  <col width={100} />
+                  <col width={100} />
+                  <col width={100} />
+                  <col width={100} />
+                  <col width={100} />
+                  {gasList && gasList.map(() => <col width={100} />)}
+                </colgroup>
+                <thead>
                   <tr>
                     <th>계통</th>
                     <th>STACK</th>
@@ -309,14 +320,16 @@ class List extends Component {
                     <th>시간당 배출량</th>
                     {gasList && gasList.map(item => <th>{item.GAS_CD}</th>)}
                   </tr>
+                </thead>
+                <tbody style={{ overflowY: 'scroll', height: 400 }}>
                   {measureList.map(item => (
                     <tr>
                       <td>{item.GUBUN_NAME}</td>
                       <td>{item.STACK_CD}</td>
                       <td>{item.IS_MEASURE}</td>
                       <td>{JSON.parse(item.GAS[0].value).MEASURE_DT}</td>
-                      <td>{JSON.parse(item.GAS[0].value).MINUTE_FLOW}</td>
-                      <td>{JSON.parse(item.GAS[0].value).HOUR_FLOW}</td>
+                      <td>{Number(JSON.parse(item.GAS[0].value).MINUTE_FLOW).toFixed(3)}</td>
+                      <td>{Number(JSON.parse(item.GAS[0].value).HOUR_FLOW).toFixed(3)}</td>
                       {selectGubun === 1
                         ? gasList &&
                           gasList.map(gasType => (
