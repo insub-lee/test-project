@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Radio } from 'antd';
-import AntRadiobox from '../../../containers/store/components/uielements/radiobox.style';
+// import { Radio } from 'antd';
+import moment from 'moment';
+// import AntRadiobox from '../../../containers/store/components/uielements/radiobox.style';
 
-const init = { value: null, text: null };
-const RadioGroup = AntRadiobox(Radio.Group);
+// const init = { value: null, text: null };
+// const RadioGroup = AntRadiobox(Radio.Group);
 
 const ViewDateComp = props => {
-  const [values, setValues] = useState([]);
-  const [defaultValue, setDefaultValue] = useState('');
+  const [timeFormat, setTimeFormat] = useState('YYYY-MM-DD');
+  const [time, setTime] = useState('');
+  const [targetColumn, setTargetColumn] = useState([{ column: null, value: null }]);
+  const [useFilter, setUseFilter] = useState(false);
 
   const {
     changeFormData,
@@ -19,19 +22,58 @@ const ViewDateComp = props => {
     COMP_FIELD,
     NAME_KOR,
     changeValidationData,
+    colData,
   } = props;
 
   useEffect(() => {
-    const { VALUES } = props.CONFIG.property;
-    setValues(VALUES instanceof Array ? [...VALUES] : [{ ...init }]);
+    const { TIME_FORMAT, TARGET_COLUMN } = props.CONFIG.property;
+    if (typeof TIME_FORMAT === 'string') {
+      setTimeFormat(TIME_FORMAT);
+    }
+    if (TARGET_COLUMN instanceof Array) {
+      if (TARGET_COLUMN.length > 0) {
+        TARGET_COLUMN.map(({ column, value }) => {
+          if (column && value) {
+            setUseFilter(true);
+          }
+        });
+      }
+    }
   }, []);
 
   useEffect(() => {
-    onChangeHandler(defaultValue);
-  }, [defaultValue]);
+    if (useFilter) {
+      const { TARGET_COLUMN } = props.CONFIG.property;
+      setTargetColumn(TARGET_COLUMN);
+    }
+  }, [useFilter]);
+
+  useEffect(() => {
+    if (colData && colData !== '') {
+      setTime(moment(colData).format(timeFormat));
+    } else {
+      setTime(moment().format(timeFormat));
+    }
+  }, [timeFormat]);
+
+  useEffect(() => {
+    onChangeHandler(time);
+  }, [time]);
+
+  const valueChcker = () => {
+    let result = false;
+    const { rowData } = props;
+    targetColumn.forEach(({ column, value }) => {
+      if (rowData[column] === value) {
+        result = true;
+      }
+    });
+    if (result) {
+      return time;
+    }
+  };
 
   function onChangeHandler(value) {
-    console.debug('£££ onChangeHandler :', value instanceof String, value, isRequired, changeFormData);
     if (typeof value === 'string') {
       if (isRequired) {
         // 기본값인지 체크
@@ -41,17 +83,7 @@ const ViewDateComp = props => {
     }
   }
 
-  return (
-    <div style={{ textAlign: 'center' }}>
-      <RadioGroup value={defaultValue} onChange={e => setDefaultValue(e.target.value)}>
-        {values.map(({ value, text }) => (
-          <Radio key={`${Math.random()}customValueRadioComp > Radio`} value={value}>
-            {text}
-          </Radio>
-        ))}
-      </RadioGroup>
-    </div>
-  );
+  return <div style={{ textAlign: 'center' }}>{useFilter ? valueChcker() : time}</div>;
 };
 
 ViewDateComp.propTypes = { CONFIG: PropTypes.objectOf(PropTypes.object), COMP_FIELD: PropTypes.string };

@@ -4,65 +4,81 @@ import { Select } from 'antd';
 
 const { Option } = Select;
 
-function SelectYearComp(props) {
+// const SelectYearComp = props => {
+const SelectYearComp = ({ CONFIG, changeFormData, sagaKey: id, COMP_FIELD, NAME_KOR, changeValidationData, changeSearchData, visible, colData, isSearch }) => {
   const [yearRange, setYearRange] = useState([]);
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
-    const { minYear, maxYear, setDefault, defaultYear } = props.CONFIG.property;
+    const { minYear, maxYear, setDefault, defaultYear } = CONFIG.property;
     const isReg = typeof setDefault === 'string' ? setDefault : 'N';
     if (isReg === 'Y') {
       onChangeHandler(defaultYear);
     }
 
     const years = [];
-    for (let i = parseInt(minYear !== '' ? minYear : currentYear, 10); i <= parseInt(maxYear !== '' ? maxYear : currentYear, 10); i++) {
+    for (let i = parseInt(minYear !== '' ? minYear : currentYear, 10); i <= parseInt(maxYear !== '' ? maxYear : currentYear, 10); i += 1) {
       years.push(String(i));
     }
     setYearRange(years);
   }, []);
 
   const onChangeHandler = value => {
-    const {
-      changeFormData,
-      sagaKey: id,
-      CONFIG: {
-        property: { isRequired },
-      },
-      COMP_FIELD,
-      NAME_KOR,
-      changeValidationData,
-    } = props;
-    if (isRequired) {
+    // const {
+    //   changeFormData,
+    //   sagaKey: id,
+    //   CONFIG: {
+    //     property: { isRequired },
+    //   },
+    //   COMP_FIELD,
+    //   NAME_KOR,
+    //   changeValidationData,
+    // } = props;
+    if (CONFIG.property.isRequired) {
       // 기본값인지 체크
       changeValidationData(id, COMP_FIELD, value.trim() !== '', value.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
     }
     changeFormData(id, COMP_FIELD, value);
   };
 
-  const { colData, visible, CONFIG } = props;
+  const onSearchHandler = value => {
+    // const { sagaKey: id, COMP_FIELD, changeSearchData } = props;
+    const searchYear = value ? `AND W.${COMP_FIELD} = ${value}::VARCHAR` : '';
+    changeSearchData(id, COMP_FIELD, searchYear);
+  };
+
+  // const { colData, visible, CONFIG, isSearch } = props;
 
   return visible ? (
     <Select
       defaultValue={colData !== '' ? colData : CONFIG.property.defaultYear}
-      onChange={value => onChangeHandler(value)}
+      onChange={isSearch ? onSearchHandler : onChangeHandler}
       style={{ width: '100%', marginRight: 10 }}
       className={CONFIG.property.className || ''}
     >
       {yearRange.map(year => (
         <Option key={year} value={year} style={{ height: 30 }}>
-          {year}
+          {`${year}년`}
         </Option>
       ))}
     </Select>
   ) : (
     ''
   );
-}
+};
 
 SelectYearComp.propTypes = {
-  defaultValueForSelectYearComp: PropTypes.bool,
   CONFIG: PropTypes.objectOf(PropTypes.object),
+  colData: PropTypes.string,
+  visible: PropTypes.bool,
+  isSearch: PropTypes.bool,
+  changeFormData: PropTypes.func,
+  sagaKey: PropTypes.string,
+  COMP_FIELD: PropTypes.string,
+  NAME_KOR: PropTypes.string,
+  changeValidationData: PropTypes.func,
+  changeSearchData: PropTypes.func,
+  // defaultValueForSelectYearComp: PropTypes.bool,
 };
 SelectYearComp.defaultProps = {
   colData: '',
@@ -80,6 +96,6 @@ SelectYearComp.defaultProps = {
       defaultYear: null,
     },
   },
-  defaultValueForSelectYearComp: false,
+  // defaultValueForSelectYearComp: false,
 };
 export default SelectYearComp;

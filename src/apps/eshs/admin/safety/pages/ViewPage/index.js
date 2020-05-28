@@ -12,7 +12,7 @@ import View from 'components/BizBuilder/PageComp/view';
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
-import { VIEW_TYPE } from 'apps/eshs/admin/safety/InspectionTarget/internal_constants';
+import { VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/internal_constants';
 import * as CustomButtons from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/Buttons';
 
 // import Loadable from 'components/Loadable';
@@ -68,8 +68,8 @@ class ViewPage extends Component {
     const { pageMetaSeq, viewType } = this.state;
     const { workSeq, sagaKey, taskSeq } = this.props;
 
-    switch (viewType) {
-      case VIEW_TYPE.VIEW: {
+    switch (pageMetaSeq) {
+      case META_SEQ.VIEW_INSPECTION_BY_CHIP: {
         return (
           <BizBuilderBase
             key={`${changedSagaKey}_MODAL`}
@@ -85,7 +85,23 @@ class ViewPage extends Component {
           />
         );
       }
-      case VIEW_TYPE.INPUT: {
+      case META_SEQ.VIEW_INSPECTION_BY_POSITON_NO: {
+        return (
+          <BizBuilderBase
+            key={`${changedSagaKey}_MODAL`}
+            sagaKey={`${changedSagaKey}_MODAL`}
+            workSeq={workSeq} // metadata binding
+            viewType={viewType}
+            taskSeq={taskSeq} // data binding
+            onCloseModalHandler={() => this.setState({ activateModal: false })}
+            viewMetaSeq={pageMetaSeq}
+            baseSagaKey={sagaKey}
+            ViewCustomButtons={CustomButtons.ViewHistory}
+            customViewPage={ViewPage}
+          />
+        );
+      }
+      case META_SEQ.INPUT_ISSUE_NOTE: {
         return (
           <BizBuilderBase
             key={`${changedSagaKey}_MODAL`}
@@ -98,6 +114,21 @@ class ViewPage extends Component {
             baseSagaKey={sagaKey}
             InputCustomButtons={CustomButtons.IssueAdd}
             customViewPage={ViewPage}
+          />
+        );
+      }
+      case META_SEQ.INPUT_INSPECTION: {
+        return (
+          <BizBuilderBase
+            key={`${changedSagaKey}_MODAL`}
+            sagaKey={`${changedSagaKey}_MODAL`}
+            workSeq={workSeq} // metadata binding
+            viewType={viewType}
+            taskSeq={taskSeq} // data binding
+            onCloseModalHandler={() => this.setState({ activateModal: false })}
+            inputMetaSeq={pageMetaSeq}
+            baseSagaKey={sagaKey}
+            InputCustomButtons={CustomButtons.RegInspection}
           />
         );
       }
