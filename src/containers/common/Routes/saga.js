@@ -88,18 +88,22 @@ function* afterLoginProcess(data, action) {
 
           // yield call(delay, 1000);
 
-          // getNotify 호출
-          yield put({
-            type: actionTypes.GET_ISNOTIFY,
-          });
           // getMyAppTree 호출
           yield put({
             type: actionTypes.GET_MYAPP_TREE_SAGA,
           });
+
+          // getNotify 호출
+          /*
+          yield put({
+            type: actionTypes.GET_ISNOTIFY,
+          });
+
           // getMyAppStoreTree 호출
           yield put({
             type: actionTypes.GET_MYAPP_STORE_TREE_SAGA,
           });
+          */
           // getCommonMenuTree 호출 추가 - 2019.07.10 -> GET_INITIAL_PORTALPAGE 에서 가져오도록 수정
           /*
           yield put({
@@ -285,7 +289,7 @@ export function* getInitialPortalPage(payload) {
     menuFixedYn: response.menuFixedYn,
   });  
   // REMOVE DOCK - DOCK에서 읽어오던 공통홈, 개인홈 페이지 ID 를 직접 받아옴
-  const { rootPageInfo, myHomePageId, commonMenuTree } = response;
+  const { rootPageInfo, myHomePageId, commonMenuTree, isNoti, myCategory } = response;
 
   yield put({
     type: actionTypes.SET_HOME_ROOT_PAGE,
@@ -302,6 +306,23 @@ export function* getInitialPortalPage(payload) {
   if (Object.keys(commonMenuTree).length > 0) {
     yield put(actions.setCommonMenuTree(commonMenuTree.children || []));
   }  
+
+  // getNotify
+  yield put({ 
+    type: actionTypes.SET_ISNOTIFY,
+    isNoti,
+  });
+
+  // getMyAppStoreTree
+  if (myCategory && myCategory.size > 0) {    
+    const result = fromJS(JSON.parse(`[${myCategory}]`))
+    const categoryData = result.get(0).get('children');
+    yield put({ type: actionTypes.SET_MYAPP_STORE_TREE, myAppStoreTreeData: categoryData });
+  } else {
+    yield put({
+      type: actionTypes.GET_MYAPP_STORE_TREE_SAGA,
+    });
+  }
 }
 
 export function* dockSetMyMenuData(payload) {
