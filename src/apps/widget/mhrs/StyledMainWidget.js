@@ -100,7 +100,7 @@ const StyledMainWidget = styled.div`
     border: 1px solid #dbe1e8;
     border-radius: 4px;
     display: inline-block;
-    height: 414px;
+    height: 543px;
     overflow: hidden;
 
     &.widget-left {
@@ -112,9 +112,9 @@ const StyledMainWidget = styled.div`
 
         .reservation-list-area {
           li {
-            height: 80px;
             padding: 20px;
             border-bottom: 1px solid #ededed;
+            cursor: pointer;
 
             &:hover {
               position: relative;
@@ -129,15 +129,43 @@ const StyledMainWidget = styled.div`
                 height: 100%;
                 background: #4491e0;
               }
+
+              div > p.txt1 {
+                color: #4491e0;
+              }
+            }
+
+            div {
+              > p.txt1 {
+                color: #333;
+                font-size: 15px;
+                margin-bottom: 6px;
+              }
+
+              > span {
+                font-size: 14px;
+                color: #999999;
+
+                &.txt2 {
+                  margin-right: 20px;
+                }
+              }
             }
           }
         }
 
         .more-btn-area {
-          text-align: cetner;
+          text-align: center;
+          padding: 12px 0;
 
           button {
             background: transparent;
+            font-size: 14px;
+            color: #999999;
+
+            &:hover {
+              color: #333;
+            }
           }
         }
       }
@@ -145,12 +173,42 @@ const StyledMainWidget = styled.div`
 
     &.widget-right {
       width: 66%;
+
+      .ant-fullcalendar-fullscreen {
+        .ant-fullcalendar-header {
+          padding: 0 0 10px;
+        }
+
+        .ant-fullcalendar {
+          font-size: 12px;
+
+          .ant-fullcalendar-calendar-body {
+            padding: 0;
+
+            .ant-fullcalendar-tbody {
+              tr td {
+                padding: 0;
+
+                .ant-fullcalendar-date {
+                  height: auto;
+                  margin: 0 2px;
+                  padding: 4px 8px;
+
+                  .ant-fullcalendar-content {
+                    height: 32px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
 
     &.widget-bottom {
       width: 100%;
       margin-top: 20px;
-      height: 165px;
+      height: auto;
     }
 
     .section-header {
