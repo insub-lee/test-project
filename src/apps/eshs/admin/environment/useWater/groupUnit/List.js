@@ -46,54 +46,47 @@ class List extends Component {
   }
 
   componentDidMount() {
-    this.selectCodeApi();
-  }
-
-  initData = () => {
-    const {
-      result: { UW, CM },
-    } = this.props;
-    const treatmentPlantSB = UW && UW.categoryMapList && UW.categoryMapList.filter(x => x.PARENT_NODE_ID === 363 && x.LVL === 3 && x.USE_YN === 'Y');
-    const filterPlantSB = UW && UW.categoryMapList && UW.categoryMapList.filter(x => x.PARENT_NODE_ID === 359 && x.LVL === 3 && x.USE_YN === 'Y');
-    const fabSB = CM && CM.categoryMapList && CM.categoryMapList.filter(x => x.PARENT_NODE_ID === 638 && x.LVL === 3 && x.USE_YN === 'Y');
-    const siteSB = CM && CM.categoryMapList && CM.categoryMapList.filter(x => x.PARENT_NODE_ID === 635 && x.LVL === 3 && x.USE_YN === 'Y');
-    this.setState({ treatmentPlantSB, filterPlantSB, fabSB, siteSB }, this.searchList);
-  };
-
-  searchList = () => {
-    const {
-      result: { eshsGroupUnit },
-    } = this.props;
-    const listData = eshsGroupUnit && eshsGroupUnit.list;
-    this.setState({ listData });
-  };
-
-  selectCodeApi() {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiAry = [
       {
-        key: 'CM',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=65',
-        type: 'GET',
+        key: 'treatmentPlant',
+        url: '/api/admin/v1/common/categoryMapList',
+        type: 'POST',
+        params: { PARAM: { NODE_ID: 363 } },
       },
       {
-        key: 'UW',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=47',
-        type: 'GET',
+        key: 'filterPlant',
+        url: '/api/admin/v1/common/categoryMapList',
+        type: 'POST',
+        params: { PARAM: { NODE_ID: 359 } },
       },
       {
-        key: 'modalData',
-        url: '/api/eshs/v1/common/eshsHstCompanyList',
-        type: 'GET',
+        key: 'fab',
+        url: '/api/admin/v1/common/categoryMapList',
+        type: 'POST',
+        params: { PARAM: { NODE_ID: 638 } },
       },
       {
-        key: 'eshsGroupUnit',
-        url: '/api/eshs/v1/common/eshsgroupunit',
-        type: 'GET',
+        key: 'site',
+        url: '/api/admin/v1/common/categoryMapList',
+        type: 'POST',
+        params: { PARAM: { NODE_ID: 635 } },
       },
     ];
     getCallDataHandler(id, apiAry, this.initData);
   }
+
+  initData = () => {
+    const {
+      result: { treatmentPlant, filterPlant, fab, site },
+    } = this.props;
+    const treatmentPlantSB =
+      treatmentPlant.categoryMapList && treatmentPlant.categoryMapList.filter(x => x.PARENT_NODE_ID === 363 && x.LVL === 3 && x.USE_YN === 'Y');
+    const filterPlantSB = filterPlant.categoryMapList && filterPlant.categoryMapList.filter(x => x.PARENT_NODE_ID === 359 && x.LVL === 3 && x.USE_YN === 'Y');
+    const fabSB = fab.categoryMapList && fab.categoryMapList.filter(x => x.PARENT_NODE_ID === 638 && x.LVL === 3 && x.USE_YN === 'Y');
+    const siteSB = site.categoryMapList && site.categoryMapList.filter(x => x.PARENT_NODE_ID === 635 && x.LVL === 3 && x.USE_YN === 'Y');
+    this.setState({ treatmentPlantSB, filterPlantSB, fabSB, siteSB }, this.listDataApi);
+  };
 
   listDataApi = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
@@ -111,8 +104,12 @@ class List extends Component {
     getCallDataHandler(id, apiAry, this.searchList);
   };
 
-  changeInputValue = e => {
-    this.setState({ [e.target.name]: e.target.value });
+  searchList = () => {
+    const {
+      result: { eshsGroupUnit },
+    } = this.props;
+    const listData = eshsGroupUnit && eshsGroupUnit.list;
+    this.setState({ listData });
   };
 
   onCancel = () => {
@@ -123,11 +120,7 @@ class List extends Component {
     });
   };
 
-  changeSelectValue = (value, option) => {
-    this.setState({
-      [option.key]: value,
-    });
-  };
+  changeState = (name, value) => this.setState({ [name]: value });
 
   selectOptionRender = codegubun => {
     const selectData =
@@ -187,7 +180,7 @@ class List extends Component {
         <StyledContentsWrapper>
           <StyledCustomSearch>
             <div className="search-input-area">
-              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.siteSBV}>
+              <AntdSelect className="select-sm mr5" onChange={value => this.changeState('siteSBV', value)} value={this.state.siteSBV}>
                 <Option value="0" key="siteSBV">
                   지역전체
                 </Option>
@@ -201,26 +194,26 @@ class List extends Component {
                 onClick={() => this.setState({ modalCompany: true })}
                 placeholder="여기를 클릭해주세요."
               />
-              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.filterPlantSBV}>
+              <AntdSelect className="select-sm mr5" onChange={value => this.changeState('filterPlantSBV', value)} value={this.state.filterPlantSBV}>
                 <Option value="0" key="filterPlantSBV">
                   정수장전체
                 </Option>
                 {this.selectOptionRender('filterPlantSB')}
               </AntdSelect>
-              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.fabSBV}>
+              <AntdSelect className="select-sm mr5" onChange={value => this.changeState('fabSBV', value)} value={this.state.fabSBV}>
                 <Option value="0" key="fabSBV">
                   FAB전체
                 </Option>
                 {this.selectOptionRender('fabSB')}
               </AntdSelect>
-              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.treatmentPlantSBV}>
+              <AntdSelect className="select-sm mr5" onChange={value => this.changeState('treatmentPlantSBV', value)} value={this.state.treatmentPlantSBV}>
                 <Option value="0" key="treatmentPlantSBV">
                   처리장전체
                 </Option>
                 {this.selectOptionRender('treatmentPlantSB')}
               </AntdSelect>
               <span className="text-label">DI 시설</span>
-              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.di}>
+              <AntdSelect className="select-sm mr5" onChange={value => this.changeState('di', value)} value={this.state.di}>
                 <Option value="total" key="di">
                   전체
                 </Option>
@@ -232,7 +225,7 @@ class List extends Component {
                 </Option>
               </AntdSelect>
               <span className="text-label">구분</span>
-              <AntdSelect className="select-sm mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.gubun}>
+              <AntdSelect className="select-sm mr5" onChange={value => this.changeState('gubun', value)} value={this.state.gubun}>
                 <Option value="0" key="gubun">
                   전체
                 </Option>
@@ -326,7 +319,7 @@ List.defaultProps = {
     },
     {
       title: '지역',
-      dataIndex: 'SITE',
+      dataIndex: 'SITE_NM',
       align: 'center',
     },
     {
@@ -354,11 +347,13 @@ List.defaultProps = {
       title: 'DI시설',
       dataIndex: 'IS_DI',
       align: 'center',
+      render: text => (text === '1' ? 'O' : 'X'),
     },
     {
       title: '사용',
       dataIndex: 'IS_DEL',
       align: 'center',
+      render: text => (text === '0' ? 'O' : 'X'),
     },
   ],
 };

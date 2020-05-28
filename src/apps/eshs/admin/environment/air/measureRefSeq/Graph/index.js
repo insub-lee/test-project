@@ -58,7 +58,7 @@ class Graph extends Component {
 
     return (
       <BarChart
-        width={1200}
+        width={1000}
         height={600}
         data={barData && barData.map(i => i.reduce((result, item) => ({ ...result, ...item }), {}))}
         margin={{

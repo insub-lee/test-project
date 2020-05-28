@@ -5,6 +5,8 @@ import { Input, Checkbox, InputNumber, Select, TreeSelect, Button, DatePicker as
 import { debounce } from 'lodash';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import { ConfigInfo } from 'components/BizBuilder/ConfigInfo';
 
 import Styled from './Styled';
@@ -44,6 +46,7 @@ class CompModal extends Component {
     super(props);
     this.state = {
       colGroupList: [],
+      columnSize: undefined,
     };
     this.handleChangeData = debounce(this.handleChangeData, 500);
     this.handleChangeHeaderName = debounce(this.handleChangeHeaderName, 500);
@@ -91,7 +94,8 @@ class CompModal extends Component {
         }
       }
     });
-    this.setState({ colGroupList: filterTreeData });
+    console.debug('columnSize', configProps);
+    this.setState({ colGroupList: filterTreeData, columnSize: comp.CONFIG.info.size });
   }
 
   handleChangeData = (key, value) => {
@@ -111,6 +115,27 @@ class CompModal extends Component {
     const { groupIndex, rowIndex, colIndex } = configProps;
     changeCompConfig(groupIndex, rowIndex, colIndex, configKey, key, value);
   };
+
+  // handleChangeCompConfigSize = (key, value, configKey) => {
+  //   const {
+  //     action: { changeCompConfig },
+  //     configProps,
+  //     groups,
+  //   } = this.props;
+  //   const { groupIndex, rowIndex, colIndex } = configProps;
+  //   let isSave = true;
+  //   const { columnSize } = this.state;
+  //   const { CONFIG } = groups[groupIndex].rows[rowIndex].cols[colIndex].comp;
+  //   if (columnSize > value) {
+  //     isSave = false;
+  //   }
+
+  //   if (isSave) {
+  //     changeCompConfig(groupIndex, rowIndex, colIndex, configKey, key, value);
+  //   } else {
+  //     message.warning(<MessageContent>사이즈는 설정된 값보다 작게 변경할 수 없습니다.</MessageContent>);
+  //   }
+  // };
 
   handleChangeViewConfig = (key, value, configKey) => {
     const {
@@ -179,6 +204,7 @@ class CompModal extends Component {
     const { viewType, groupType, groupIndex, rowIndex, colIndex } = configProps;
     const { comp, addonClassName } = groups[groupIndex].rows[rowIndex].cols[colIndex];
     const { submitHandlerBySaga } = action;
+    const { columnSize } = this.state;
     return (
       <Styled className="popoverWrapper">
         <div className="popoverInnerInput">
@@ -216,12 +242,24 @@ class CompModal extends Component {
                     <td>
                       <InputNumber
                         placeholder="사이즈"
-                        style={{ width: '100%' }}
-                        min={0}
+                        style={{ width: comp.CONFIG.info.type === 'NUMERIC' ? '50%' : '100%' }}
+                        min={configProps.configInfo.info.size || 0}
                         max={100000000000}
                         defaultValue={comp.CONFIG.info.size || 0}
                         onChange={value => this.handleChangeCompConfig('size', value, 'info')}
+                        disabled={comp.CONFIG.info.isClob || comp.CONFIG.info.type === 'TIMESTAMP' || comp.CONFIG.info.type.indexOf('DATE') > -1}
                       />
+                      {comp.CONFIG.info.type === 'NUMERIC' && (
+                        <InputNumber
+                          placeholder="사이즈"
+                          style={{ width: 'calc(50% - 4px)', marginLeft: '4px' }}
+                          min={configProps.configInfo.info.subSize || 0}
+                          max={100000000000}
+                          defaultValue={comp.CONFIG.info.subSize || 0}
+                          onChange={value => this.handleChangeCompConfig('subSize', value, 'info')}
+                          disabled={comp.CONFIG.info.isClob || comp.CONFIG.info.type === 'TIMESTAMP' || comp.CONFIG.info.type.indexOf('DATE') > -1}
+                        />
+                      )}
                     </td>
                     <td>
                       <Input

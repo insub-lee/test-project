@@ -1,8 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Modal, Select, Input, DatePicker, message } from 'antd';
-import { Table, Column, AutoSizer } from 'react-virtualized';
-import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
+import { Modal, Select, Input, DatePicker, message, Table, Tooltip } from 'antd';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import moment from 'moment';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
@@ -12,7 +10,11 @@ import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import AccCmpnyInputPage from 'apps/eshs/user/safety/accident/indusrtialAccidentCmpnyMgt';
 import NothGateCmpnyModal from '../NothGateCmpnyModal';
+
+const AntdLineTable = StyledAntdTable(Table);
 
 const { Option } = Select;
 const AntdInput = StyledInput(Input);
@@ -23,6 +25,7 @@ const AntdPicker = StyledPicker(DatePicker.RangePicker);
 const { RangePicker } = DatePicker;
 const format = 'YYYY-MM-DD HH:mm:ss';
 moment.locale('ko');
+
 class List extends Component {
   constructor(props) {
     super(props);
@@ -30,8 +33,91 @@ class List extends Component {
       recordList: [],
       nothGateModal: false,
       type: '',
+      accCmpnyInputPage: [],
+      accCmpnyModal: false,
+      columns: [
+        {
+          title: '지역',
+          width: '8%',
+          align: 'center',
+          dataIndex: 'WORK_AREA_CD',
+        },
+        {
+          title: '일자',
+          width: '12%',
+          align: 'center',
+          dataIndex: 'VISIT_DATE',
+        },
+        {
+          title: '업체명',
+          width: '17%',
+          align: 'center',
+          dataIndex: 'WRK_CMPNY_NM',
+        },
+        {
+          title: '사업자등록번호',
+          width: '15%',
+          align: 'center',
+          dataIndex: 'BIZ_REG_NO',
+        },
+        {
+          title: '이름',
+          width: '8%',
+          align: 'center',
+          dataIndex: 'VISITOR_NAME',
+          render: (text, record) => (
+            <Tooltip title={record.PHONE_NUMBER || ''}>
+              <span className="add-row">{text}</span>
+            </Tooltip>
+          ),
+        },
+        {
+          title: '출입시간',
+          width: '8%',
+          align: 'center',
+          dataIndex: 'VISITOR_IN_DATE',
+        },
+        {
+          title: '퇴장시간',
+          width: '8%',
+          align: 'center',
+          dataIndex: 'VISITOR_OUT_DATE',
+        },
+        {
+          title: '출입구분',
+          width: '8%',
+          align: 'center',
+          dataIndex: 'VISITOR_TYPE',
+        },
+        {
+          title: '업체등록여부',
+          width: '8%',
+          align: 'center',
+          dataIndex: 'WRK_REG',
+          render: (text, record) => {
+            if (text === '미등록')
+              return (
+                <span className="add-row" style={{ color: 'red' }} onClick={e => this.handleOpenAccCmpnyInputPage(record, e)}>
+                  {text}
+                </span>
+              );
+            return <span>{text}</span>;
+          },
+        },
+        {
+          title: '매그나칩 담당자',
+          width: '8%',
+          align: 'center',
+          dataIndex: 'EMP_NM',
+        },
+      ],
     };
   }
+
+  componentDidMount = () => {
+    const { id, getCallDataHandler, apiAry } = this.props;
+    getCallDataHandler(id, apiAry, this.handleAppStart);
+  };
 
   handleAppStart = () => {
     const { result, id, changeFormData } = this.props;
@@ -41,48 +127,22 @@ class List extends Component {
     });
   };
 
-  componentDidMount = () => {
-    const { id, getCallDataHandler, apiAry } = this.props;
-    getCallDataHandler(id, apiAry, this.handleAppStart);
-  };
-
-  onRowClick = e => {
+  onRowClick = record => {
     const { id, changeFormData } = this.props;
-    const { rowData } = e;
-    const VISIT_DATE = (rowData && rowData.VISIT_DATE) || null;
-    const VISITOR_IN_DATE = (rowData && rowData.VISITOR_IN_DATE) || null;
-    const VISITOR_OUT_DATE = (rowData && rowData.VISITOR_OUT_DATE) || null;
-    const WORK_AREA_CD = (rowData && rowData.WORK_AREA_CD) || '';
+    const VISIT_DATE = record.VISIT_DATE || null;
+    const VISITOR_IN_DATE = record.VISITOR_IN_DATE || null;
+    const VISITOR_OUT_DATE = record.VISITOR_OUT_DATE || null;
+    const WORK_AREA_CD = record.WORK_AREA_CD || '';
     changeFormData(id, 'modal', {
       type: 'UPDATE',
-      is_modal: true,
+      modalVisible: true,
       info: {
-        ...rowData,
+        ...record,
         WORK_AREA_CD: WORK_AREA_CD === '청주' ? 'CJ' : 'GM',
         VISITOR_OUT_DATE: moment(`${VISIT_DATE} ${VISITOR_OUT_DATE}`).format(format),
         VISITOR_IN_DATE: moment(`${VISIT_DATE} ${VISITOR_IN_DATE}`).format(format),
       },
     });
-  };
-
-  noRowsRenderer = () => <div className="noRows">결과없음</div>;
-
-  getColumns = () => [
-    { label: '지역', dataKey: 'WORK_AREA_CD', width: 120, ratio: 8 },
-    { label: '일자', dataKey: 'VISIT_DATE', width: 180, ratio: 12 },
-    { label: '업체명', dataKey: 'WRK_CMPNY_NM', width: 300, ratio: 20 },
-    { label: '사업자등록번호', dataKey: 'BIZ_REG_NO', width: 255, ratio: 17 },
-    { label: '이름', dataKey: 'VISITOR_NAME', width: 150, ratio: 10 },
-    { label: '출입시간', dataKey: 'VISITOR_IN_DATE', width: 120, ratio: 8 },
-    { label: '퇴장시간', dataKey: 'VISITOR_OUT_DATE', width: 120, ratio: 8 },
-    { label: '출입구분', dataKey: 'VISITOR_TYPE', width: 120, ratio: 8 },
-    { label: '업체등록여부', dataKey: 'WRK_REG', width: 135, ratio: 9 },
-  ];
-
-  getTablewidth = () => {
-    this.getColumns()
-      .map(({ width }) => width)
-      .reduce((a, b) => a + b);
   };
 
   handleModalOpen = () => {
@@ -92,20 +152,14 @@ class List extends Component {
 
     changeFormData(id, 'modal', {
       type: 'INSERT',
-      is_modal: true,
+      modalVisible: true,
       info: { WORK_AREA_CD: 'CJ', VISITOR_TYPE: 'N', VISITOR_IN_DATE: moment().format(format), VISITOR_OUT_DATE: moment(now2, format) },
     });
   };
 
   handleCancel = () => {
     const { id, changeFormData } = this.props;
-    changeFormData(id, 'modal', { type: '', is_modal: false, info: {} });
-  };
-
-  handleSiteOnChange = e => {
-    const { id, changeFormData, formData } = this.props;
-    const search = (formData && formData.search) || {};
-    changeFormData(id, 'search', { ...search, WORK_AREA_CD: e });
+    changeFormData(id, 'modal', { type: '', modalVisible: false, info: {} });
   };
 
   handleDateOnChange = (data, dateString) => {
@@ -114,16 +168,11 @@ class List extends Component {
     changeFormData(id, 'search', { ...search, FROM_DATE: dateString[0], TO_DATE: dateString[1] });
   };
 
-  handleInputOnChange = e => {
+  handleSearchOnChange = (target, value) => {
     const { id, changeFormData, formData } = this.props;
     const search = (formData && formData.search) || {};
-    changeFormData(id, 'search', { ...search, [e.target.name]: e.target.value });
-  };
 
-  handleRegOnChange = e => {
-    const { id, changeFormData, formData } = this.props;
-    const search = (formData && formData.search) || {};
-    changeFormData(id, 'search', { ...search, WRK_REG: e });
+    changeFormData(id, 'search', { ...search, [target]: value });
   };
 
   handleOnSearch = () => {
@@ -159,11 +208,42 @@ class List extends Component {
     message.warning('미구현');
   };
 
+  handleOpenAccCmpnyInputPage = (record, event) => {
+    if (typeof event === 'object') event.stopPropagation();
+    const { accCmpnyModal } = this.state;
+    //     AccCmpnyInputPage
+    //    accCmpnyInputPage
+    if (!accCmpnyModal) {
+      return this.setState({
+        accCmpnyInputPage: [
+          <AccCmpnyInputPage
+            inputMetaSeq={8921}
+            initFormData={record}
+            saveAfter={() =>
+              this.setState(
+                {
+                  accCmpnyInputPage: [],
+                  accCmpnyModal: false,
+                },
+                this.handleOnSearch,
+              )
+            }
+          />,
+        ],
+        accCmpnyModal: !accCmpnyModal,
+      });
+    }
+    return this.setState({
+      accCmpnyInputPage: [],
+      accCmpnyModal: !accCmpnyModal,
+    });
+  };
+
   render() {
-    const { recordList, nothGateModal } = this.state;
+    const { recordList, nothGateModal, columns, accCmpnyModal, accCmpnyInputPage } = this.state;
     const { formData } = this.props;
     const search = (formData && formData.search) || {};
-    const is_modal = (formData && formData.modal && formData.modal.is_modal) || false;
+    const modalVisible = (formData && formData.modal && formData.modal.modalVisible) || false;
     const modalType = (formData && formData.modal && formData.modal.type) || '';
 
     return (
@@ -181,7 +261,7 @@ class List extends Component {
                 <tr>
                   <th>지역</th>
                   <td colSpan={3}>
-                    <AntdSelect defaultValue="" onChange={this.handleSiteOnChange} style={{ width: '10%' }}>
+                    <AntdSelect defaultValue="" onChange={value => this.handleSearchOnChange('WORK_AREA_CD', value)} style={{ width: '10%' }}>
                       <Option value="">지역 전체</Option>
                       <Option value="청주">청주</Option>
                       <Option value="구미">구미</Option>
@@ -194,10 +274,10 @@ class List extends Component {
                     <AntdInput
                       placeholder="업체명"
                       className="ant-input-inline"
-                      style={{ width: '80%' }}
+                      style={{ width: '100%' }}
                       value={search.WRK_CMPNY_NM || ''}
                       name="WRK_CMPNY_NM"
-                      onChange={this.handleInputOnChange}
+                      onChange={e => this.handleSearchOnChange('WRK_CMPNY_NM', e.target.value)}
                     />
                   </td>
                   <th>사업자등록번호</th>
@@ -205,10 +285,10 @@ class List extends Component {
                     <AntdInput
                       placeholder="사업자 등록번호"
                       className="ant-input-inline"
-                      style={{ width: '80%' }}
+                      style={{ width: '100%' }}
                       value={search.BIZ_REG_NO || ''}
                       name="BIZ_REG_NO"
-                      onChange={this.handleInputOnChange}
+                      onChange={e => this.handleSearchOnChange('BIZ_REG_NO', e.target.value)}
                     />
                   </td>
                 </tr>
@@ -220,13 +300,13 @@ class List extends Component {
                       value={search.VISITOR_NAME || ''}
                       name="VISITOR_NAME"
                       className="ant-input-inline"
-                      style={{ width: '80%' }}
-                      onChange={this.handleInputOnChange}
+                      style={{ width: '100%' }}
+                      onChange={e => this.handleSearchOnChange('VISITOR_NAME', e.target.value)}
                     />
                   </td>
                   <th>출입구분</th>
                   <td>
-                    <AntdSelect defaultValue="" onChange={this.handleTypeOnChange} style={{ width: '80%' }}>
+                    <AntdSelect defaultValue="" onChange={value => this.handleSearchOnChange('VISITOR_TYPE', value)} style={{ width: '100%' }}>
                       <Option value="">전체</Option>
                       <Option value="일일">일일</Option>
                       <Option value="북/후문">북/후문</Option>
@@ -241,7 +321,7 @@ class List extends Component {
                   </td>
                   <th>업체등록여부</th>
                   <td>
-                    <AntdSelect defaultValue="" onChange={this.handleRegOnChange} style={{ width: '80%' }}>
+                    <AntdSelect defaultValue="" onChange={value => this.handleSearchOnChange('WRK_REG', value)} style={{ width: '100%' }}>
                       <Option value="">선택</Option>
                       <Option value="등록">등록</Option>
                       <Option value="미등록">미등록</Option>
@@ -268,35 +348,35 @@ class List extends Component {
               </StyledButton>
             </StyledButtonWrapper>
           </div>
-          <StyledVirtualizedTable>
-            <AutoSizer disableHeight>
-              {({ width }) => (
-                <Table
-                  width={width}
-                  height={500}
-                  headerHeight={40}
-                  rowHeight={53}
-                  rowCount={recordList.length}
-                  rowGetter={({ index }) => recordList[index]}
-                  noRowsRenderer={this.noRowsRenderer}
-                  onRowClick={this.onRowClick}
-                >
-                  {this.getColumns().map(({ label, dataKey, ratio }) => (
-                    <Column key={dataKey} label={label} dataKey={dataKey} width={(width / 100) * ratio} />
-                  ))}
-                </Table>
-              )}
-            </AutoSizer>
-          </StyledVirtualizedTable>
+          <AntdLineTable
+            key="recordTable"
+            className="tableWrapper"
+            rowKey="ROWKEY"
+            columns={columns}
+            dataSource={recordList || []}
+            bordered
+            scroll={{ y: 500 }}
+            pagination={false}
+            footer={() => <span>{`${recordList.length} 건`}</span>}
+            onRow={record => ({ onClick: () => this.onRowClick(record) })}
+          />
           <AntdModal
             title={modalType === 'INSERT' ? '북/후문 출입기록 등록' : '출입기록 수정'}
-            visible={is_modal}
+            visible={modalVisible}
             onCancel={this.handleCancel}
-            width={900}
-            height={600}
+            width={800}
+            height={450}
             footer={[null]}
           >
-            <NothGateCmpnyModal {...this.props} handleAppStart={this.handleAppStart} handleModalOpen={this.handleModalOpen} />
+            <NothGateCmpnyModal
+              {...this.props}
+              handleAppStart={this.handleAppStart}
+              handleModalOpen={this.handleModalOpen}
+              handleModalCancel={this.handleCancel}
+            />
+          </AntdModal>
+          <AntdModal title="업체 등록Page" visible={accCmpnyModal} onCancel={this.handleOpenAccCmpnyInputPage} width={900} height={550} footer={[null]}>
+            {accCmpnyInputPage}
           </AntdModal>
         </div>
       </ContentsWrapper>

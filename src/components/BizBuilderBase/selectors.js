@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 
 const selectorBizBuilderBase = state => state.get('apps.bizmicro.components.BizBuilderBase');
+const selectAuth = state => state.get('auth');
 
 const makeSelectWorkSeq = () =>
   createSelector(
@@ -237,6 +238,8 @@ const makeSelectIsTaskFavorite = () =>
     (state, id) => state.getIn(['bizBuilderBase', id, 'isTaskFavorite']) || false,
   );
 
+const makeSelectProfile = () => createSelector(selectAuth, authState => authState.get('profile'));
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -278,4 +281,5 @@ export {
   makeSelectDraftInfo,
   makeSelectFieldSelectData,
   makeSelectIsTaskFavorite,
+  makeSelectProfile,
 };

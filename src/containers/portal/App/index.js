@@ -132,8 +132,7 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { view } = this.props;
-
+    const { view, menuFixedYn } = this.props;
     if (view !== prevProps.view) {
       if (view === 'Mobile' || view === 'Tablet') {
         const styleSpinnerCopy = {
@@ -143,6 +142,11 @@ class App extends React.Component {
         };
         this.styleSpinner = styleSpinnerCopy;
       }
+    }
+    if (menuFixedYn !== prevProps.menuFixedYn) {
+      this.setState({
+        open: menuFixedYn === 'Y',
+      });
     }
   }
 
@@ -786,6 +790,7 @@ App.propTypes = {
   myHomePageId: PropTypes.number,
   menuLayoutCode: PropTypes.string,
   menuCompCode: PropTypes.string,
+  handleUpdateMenuFixedYn: PropTypes.func.isRequired,
 };
 
 App.defaultProps = {

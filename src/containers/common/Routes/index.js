@@ -65,14 +65,22 @@ class PublicRoutes extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { intl: prevIntl } = prevProps;
-    const { isLoggedIn, intl } = this.props;
-
+    const {
+      intl: prevIntl,
+      location: { pathname: prevPathname },
+    } = prevProps;
+    const {
+      isLoggedIn,
+      intl,
+      location: { pathname },
+    } = this.props;
     if (JSON.stringify(prevIntl) !== JSON.stringify(intl)) {
       intlObj.setIntl(intl);
     }
     if (isLoggedIn) {
-      this.loadData();
+      if (pathname === '/' || prevPathname !== pathname) {
+        this.loadData();
+      }
     }
   }
 

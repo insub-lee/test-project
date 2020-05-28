@@ -190,7 +190,6 @@ const StyledViewDesigner = styled.div`
       }
       td {
         width: auto;
-        background-color: #ffffff;
         color: #666;
         border-bottom: 1px solid #eee;
       }

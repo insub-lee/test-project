@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Input, Modal } from 'antd';
 import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
+import UserSelect from 'components/UserSelect';
 import HstCmpnyUserSelectComp from 'apps/eshs/user/safety/safetyWork/safetyEdu/HstCmpnyUserTable';
 import BizBuilderBase from 'components/BizBuilderBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
@@ -84,16 +85,10 @@ class SafetyWorkMain extends Component {
     const { sagaKey, getCallDataHandler, profile } = this.props;
     const apiArr = [
       {
-        /* 주관회사사원 : /api/eshs/v1/common/eshsHstCmpnyUser */
-        key: 'getHstCmpnyUser',
-        type: 'GET',
-        url: `/api/eshs/v1/common/eshsHstCmpnyUser`,
-      },
-      {
         /* 거래처전체리스트 : /api/eshs/v1/common/EshsCmpnyList/null/null */
         key: 'getEshsCmpnyList',
         type: 'GET',
-        url: `/api/eshs/v1/common/EshsCmpnyList/null/null`,
+        url: `/api/eshs/v1/common/EshsCmpnyList?gubun=SW`,
       },
       {
         /* SWTB_장비리스트 : /api/eshs/v1/common/eshsSwtbEquip */
@@ -144,8 +139,6 @@ class SafetyWorkMain extends Component {
   };
 
   getSafetyWorkCallback = (id, response) => {
-    // const { result } = this.props;
-    // const searchSafetyWork = (result && result.getSafetyWork && result.getSafetyWork.safetyWork) || {};
     const searchSafetyWork = (response && response.safetyWork) || {};
     if (!searchSafetyWork.WORK_NO) {
       message.error(<MessageContent>요청하신 작업정보를 찾을 수 없습니다.</MessageContent>);
@@ -604,15 +597,65 @@ class SafetyWorkMain extends Component {
     });
   };
 
+  // 테스트 유저
+  onSelectedComplete = selectedList => {
+    const userInfo = selectedList[0];
+    this.handleHstUserSelect(userInfo);
+  };
+
+  // 감독자 선택
+  handleHstUserSelect = record => {
+    const { modalType, formData } = this.state;
+    let field = '';
+    switch (modalType) {
+      case 'supervisor':
+        field = 'REQ_SUPERVISOR_EMP_NO';
+        this.setState({
+          modalType: '',
+          modalTitle: '',
+          modalVisible: false,
+          formData: {
+            ...formData,
+            [field]: record.EMP_NO,
+            [field.replace('NO', 'NM')]: record.NAME_KOR,
+          },
+        });
+        break;
+      case 'exm':
+        field = 'EXM_EMP_NO';
+        this.setState({
+          modalType: '',
+          modalTitle: '',
+          modalVisible: false,
+          formData: {
+            ...formData,
+            EXM_CMPNY_CD: 72761,
+            EXM_DEPT_CD: record.DEPT_ID,
+            [field]: record.EMP_NO,
+            [field.replace('NO', 'NM')]: record.NAME_KOR,
+          },
+        });
+        break;
+      default:
+        field = 'FINAL_OK_EMP_NO';
+        this.setState({
+          modalType: '',
+          modalTitle: '',
+          modalVisible: false,
+          formData: {
+            ...formData,
+            [field]: record.EMP_NO,
+            [field.replace('NO', 'NM')]: record.NAME_KOR,
+          },
+        });
+        break;
+    }
+  };
+
   render() {
     const { modalType, modalTitle, modalVisible, formData } = this.state;
     const { result } = this.props;
-    // getCallData
-    // const eshsCmpnyList = (result && result.getEshsCmpnyList && result.getEshsCmpnyList.list) || [];
-    const eshsHstCmpnyUserList = (result && result.getHstCmpnyUser && result.getHstCmpnyUser.list) || [];
     const eshsSwtbEquip = (result && result.getSwtbEquipList && result.getSwtbEquipList.list) || [];
-    console.debug('렌더링-state', this.state);
-    console.debug('렌더링-props', this.props);
     return (
       <Styled>
         <StyledSearchWrap>
@@ -734,7 +777,7 @@ class SafetyWorkMain extends Component {
           onCancel={() => this.handleModal('', false)}
         >
           {(modalType === 'supervisor' || modalType === 'exm' || modalType === 'final') && (
-            <HstCmpnyUserSelectComp eshsHstCmpnyUserList={eshsHstCmpnyUserList} rowOnclick={this.handleHstUserSelect} />
+            <UserSelect onUserSelectHandler={undefined} onUserSelectedComplete={this.onSelectedComplete} onCancel={undefined} />
           )}
           {(modalType === 'mainBfcheck' || modalType === 'subBfcheck') && <Bfcheck initFormData={formData} pageType={modalType} />}
           {modalType === 'cmpny' && (
@@ -745,7 +788,7 @@ class SafetyWorkMain extends Component {
               colData={formData.WRK_CMPNY_CD}
               directSearchTable
               visible
-              CONFIG={{ property: { isRequired: false } }}
+              CONFIG={{ property: { isRequired: false, GUBUN: 'SW' } }}
               changeFormData={() => false}
               COMP_FIELD="WRK_CMPNY_CD"
               eshsCmpnyCompResult={(cmpnyInfo, field) => this.handleCmpnySelect(cmpnyInfo, field)}

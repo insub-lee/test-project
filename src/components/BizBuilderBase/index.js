@@ -364,6 +364,7 @@ const mapStateToProps = createStructuredSelector({
   draftInfo: selectors.makeSelectDraftInfo(),
   fieldSelectData: selectors.makeSelectFieldSelectData(),
   isTaskFavorite: selectors.makeSelectIsTaskFavorite(),
+  profile: selectors.makeSelectProfile(),
 });
 
 const mapDispatchToProps = dispatch => ({

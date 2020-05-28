@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Icon } from 'antd';
 
 class MDCSDccViewComp extends Component {
   constructor(props) {
@@ -12,7 +13,12 @@ class MDCSDccViewComp extends Component {
     const { fieldSelectData, CONFIG, formData } = this.props;
     if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
       if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey].length > 0) {
-        const viewItem = fieldSelectData[CONFIG.property.compSelectDataKey].map(item => <span>{`[${item.DEPT_NAME}] ${item.DCC_NAME} ${item.TEL_NO}`}</span>);
+        const viewItem = fieldSelectData[CONFIG.property.compSelectDataKey].map(item => (
+          <span>
+            {`(${item.DEPT_NAME}) ${item.DCC_NAME} `} <Icon type="phone" />
+            {item.TEL_NO}
+          </span>
+        ));
         this.setState({ viewItem });
       }
     }
