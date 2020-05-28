@@ -57,7 +57,9 @@ class List extends Component {
   isSearch = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const { rangeDateStrings, gasCd } = this.state;
-    const setDate = `START_DATE=${Moment(rangeDateStrings[0]).format('YYYY-MM-01')}&END_DATE=${Moment(rangeDateStrings[1]).format('YYYY-MM-31')}`;
+    const setDate = `START_DATE=${Moment(rangeDateStrings[0]).format('YYYY-MM-01')}&END_DATE=${Moment(rangeDateStrings[1])
+      .endOf('month')
+      .format('YYYY-MM-DD')}`;
     const apiAry = [
       {
         key: 'measure',
