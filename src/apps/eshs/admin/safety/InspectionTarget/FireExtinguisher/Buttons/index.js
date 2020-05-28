@@ -2,7 +2,7 @@ import React from 'react';
 import ExcelDown from './ExcelDown';
 import Search from './Search';
 import NewReg from './NewReg';
-import UnusedReg from './UnusedReg';
+import UsageReg from './UsageReg';
 import Status from './Status';
 import Save from './Save';
 import Leave from './Leave';
@@ -17,10 +17,10 @@ import { VIEW_TYPE, META_SEQ } from '../../internal_constants';
 export function ViewButtons(props) {
   return (
     <div className="alignRight">
-      <Status {...props} viewType={VIEW_TYPE.VIEW} moveTo={META_SEQ.VIEW_STATUS} />
+      <Status {...props} />
       <NewReg {...props} />
       <ExcelDown {...props} />
-      <UnusedReg {...props} />
+      <UsageReg {...props} />
     </div>
   );
 }
