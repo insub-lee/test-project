@@ -50,19 +50,19 @@ class List extends Component {
         },
         {
           title: '업체명',
-          width: '20%',
+          width: '17%',
           align: 'center',
           dataIndex: 'WRK_CMPNY_NM',
         },
         {
           title: '사업자등록번호',
-          width: '17%',
+          width: '15%',
           align: 'center',
           dataIndex: 'BIZ_REG_NO',
         },
         {
           title: '이름',
-          width: '10%',
+          width: '8%',
           align: 'center',
           dataIndex: 'VISITOR_NAME',
           render: (text, record) => (
@@ -91,18 +91,24 @@ class List extends Component {
         },
         {
           title: '업체등록여부',
-          width: '9%',
+          width: '8%',
           align: 'center',
           dataIndex: 'WRK_REG',
           render: (text, record) => {
             if (text === '미등록')
               return (
-                <span className="add-row" onClick={e => this.handleOpenAccCmpnyInputPage(record, e)}>
+                <span className="add-row" style={{ color: 'red' }} onClick={e => this.handleOpenAccCmpnyInputPage(record, e)}>
                   {text}
                 </span>
               );
             return <span>{text}</span>;
           },
+        },
+        {
+          title: '매그나칩 담당자',
+          width: '8%',
+          align: 'center',
+          dataIndex: 'EMP_NM',
         },
       ],
     };
@@ -268,7 +274,7 @@ class List extends Component {
                     <AntdInput
                       placeholder="업체명"
                       className="ant-input-inline"
-                      style={{ width: '80%' }}
+                      style={{ width: '100%' }}
                       value={search.WRK_CMPNY_NM || ''}
                       name="WRK_CMPNY_NM"
                       onChange={e => this.handleSearchOnChange('WRK_CMPNY_NM', e.target.value)}
@@ -279,7 +285,7 @@ class List extends Component {
                     <AntdInput
                       placeholder="사업자 등록번호"
                       className="ant-input-inline"
-                      style={{ width: '80%' }}
+                      style={{ width: '100%' }}
                       value={search.BIZ_REG_NO || ''}
                       name="BIZ_REG_NO"
                       onChange={e => this.handleSearchOnChange('BIZ_REG_NO', e.target.value)}
@@ -294,13 +300,13 @@ class List extends Component {
                       value={search.VISITOR_NAME || ''}
                       name="VISITOR_NAME"
                       className="ant-input-inline"
-                      style={{ width: '80%' }}
+                      style={{ width: '100%' }}
                       onChange={e => this.handleSearchOnChange('VISITOR_NAME', e.target.value)}
                     />
                   </td>
                   <th>출입구분</th>
                   <td>
-                    <AntdSelect defaultValue="" onChange={value => this.handleSearchOnChange('VISITOR_TYPE', value)} style={{ width: '80%' }}>
+                    <AntdSelect defaultValue="" onChange={value => this.handleSearchOnChange('VISITOR_TYPE', value)} style={{ width: '100%' }}>
                       <Option value="">전체</Option>
                       <Option value="일일">일일</Option>
                       <Option value="북/후문">북/후문</Option>
@@ -315,7 +321,7 @@ class List extends Component {
                   </td>
                   <th>업체등록여부</th>
                   <td>
-                    <AntdSelect defaultValue="" onChange={value => this.handleSearchOnChange('WRK_REG', value)} style={{ width: '80%' }}>
+                    <AntdSelect defaultValue="" onChange={value => this.handleSearchOnChange('WRK_REG', value)} style={{ width: '100%' }}>
                       <Option value="">선택</Option>
                       <Option value="등록">등록</Option>
                       <Option value="미등록">미등록</Option>
@@ -345,7 +351,7 @@ class List extends Component {
           <AntdLineTable
             key="recordTable"
             className="tableWrapper"
-            rowKey="index"
+            rowKey="ROWKEY"
             columns={columns}
             dataSource={recordList || []}
             bordered
@@ -362,7 +368,12 @@ class List extends Component {
             height={450}
             footer={[null]}
           >
-            <NothGateCmpnyModal {...this.props} handleAppStart={this.handleAppStart} handleModalOpen={this.handleModalOpen} />
+            <NothGateCmpnyModal
+              {...this.props}
+              handleAppStart={this.handleAppStart}
+              handleModalOpen={this.handleModalOpen}
+              handleModalCancel={this.handleCancel}
+            />
           </AntdModal>
           <AntdModal title="업체 등록Page" visible={accCmpnyModal} onCancel={this.handleOpenAccCmpnyInputPage} width={900} height={550} footer={[null]}>
             {accCmpnyInputPage}
