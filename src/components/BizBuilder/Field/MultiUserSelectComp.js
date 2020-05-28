@@ -40,38 +40,28 @@ class MultiUserSelectComp extends React.Component {
     changeFormData(id, 'PARENT_TASK_SEQ', parentTaskSeq);
   }
 
+  onTreeSelect = selectedKey => {
+    const { sagaKey: id, getExtraApiData } = this.props;
+    const apiArr = [
+      {
+        key: 'userList',
+        type: 'GET',
+        url: `/api/eshs/v1/common/eduexamuser?DEPT_ID=${selectedKey}`,
+      },
+    ];
+
+    getExtraApiData(id, apiArr);
+  };
+
   onUserSelect = userList => {
     const { sagaKey: id, COMP_FIELD, COMP_TAG, changeFormData, colData, workSeq, parentWorkSeq, parentTaskSeq } = this.props;
+    const userIdList = [];
+    userList.map(user => userIdList.push(user.USER_ID));
     changeFormData(id, 'PARENT_SEQ', parentWorkSeq);
     changeFormData(id, 'PARENT_TASK_SEQ', parentTaskSeq);
-
     changeFormData(id, COMP_FIELD, setFormDataValue(userList, colData, COMP_FIELD, COMP_TAG, workSeq));
-  };
-
-  onSelectedComplete = result => {
-    const { CONFIG } = this.props;
-    if (result.length) {
-      const data = this.multipleCheck(CONFIG.property.isMultiple, result);
-      this.subBuilderCheck(data, this.props);
-    }
-  };
-
-  multipleCheck = (isMultiple, result) => {
-    if (isMultiple) {
-      return result;
-    }
-    return result[0];
-  };
-
-  subBuilderCheck = (data, { sagaKey: id, saveTask, changeFormData, COMP_FIELD, CONFIG, parentWorkSeq, parentTaskSeq }) => {
-    if (CONFIG.property.isSubComp) {
-      changeFormData(id, 'PARENT_SEQ', parentWorkSeq);
-      changeFormData(id, 'PARENT_TASK_SEQ', parentTaskSeq);
-      changeFormData(id, COMP_FIELD, data);
-      saveTask(id, id);
-    } else {
-      changeFormData(id, COMP_FIELD, data);
-    }
+    changeFormData(id, 'USER_ID_LIST', userList);
+    // changeFormData(id, COMP_FIELD, setFormDataValue(JSON.stringify(userList), colData, COMP_FIELD, COMP_TAG, workSeq));
   };
 
   onCancel = () => {
@@ -96,7 +86,8 @@ class MultiUserSelectComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, colData, isSearch, searchCompRenderer, formData, COMP_FIELD, readOnly, viewPageData } = this.props;
+    const { onTreeSelect } = this;
+    const { CONFIG, visible, colData, isSearch, searchCompRenderer, formData, COMP_FIELD, readOnly, viewPageData, extraApiData } = this.props;
     if (!visible) {
       return null;
     }
@@ -111,13 +102,19 @@ class MultiUserSelectComp extends React.Component {
     if (CONFIG.property.isSubComp) {
       return (
         <>
-          <CustomUserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onSelectedComplete} onCancel={this.onCancel} isWorkBuilder />
+          <CustomUserSelect
+            userDataList={extraApiData.userList && extraApiData.userList.result}
+            apiUrl="/api/eshs/v1/common/eduexamuser"
+            onTreeSelect={onTreeSelect}
+            onUserSelectHandler={this.onUserSelect}
+            onCancel={this.onCancel}
+            isWorkBuilder
+          />
         </>
       );
     }
 
     if (readOnly || viewPageData.viewType.toUpperCase() === 'LIST' || viewPageData.viewType.toUpperCase() === 'VIEW') {
-      console.debug(typeof colData, JSON.parse(colData));
       return <span>TEST</span>;
     }
 
@@ -132,7 +129,14 @@ class MultiUserSelectComp extends React.Component {
           className={CONFIG.property.className || ''}
         />
         <Modal visible={this.state.isOpenModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={null}>
-          <CustomUserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onSelectedComplete} onCancel={this.onCancel} isWorkBuilder />
+          <CustomUserSelect
+            userDataList={extraApiData.userList && extraApiData.userList.result}
+            apiUrl="/api/eshs/v1/common/eduexamuser"
+            onTreeSelect={onTreeSelect}
+            onUserSelectHandler={this.onUserSelect}
+            onCancel={this.onCancel}
+            isWorkBuilder
+          />
         </Modal>
       </>
     );
@@ -157,6 +161,7 @@ MultiUserSelectComp.propTypes = {
   COMP_TAG: PropTypes.string,
   parentWorkSeq: PropTypes.number,
   parentTaskSeq: PropTypes.number,
+  extraApiData: PropTypes.object,
 };
 
 export default MultiUserSelectComp;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, Select, Checkbox } from 'antd';
-import { debounce } from 'lodash';
+// import { debounce } from 'lodash';
 import request from 'utils/request';
 import StyledInput from '../styled/Form/StyledInput';
 import StyledSelect from '../styled/Form/StyledSelect';
@@ -16,7 +16,7 @@ class ListButtonConfig extends React.Component {
       metaList: [],
     };
 
-    this.handleChangeViewCompData = debounce(this.handleChangeViewCompData, 500);
+    // this.handleChangeViewCompData = debounce(this.handleChangeViewCompData, 500);
   }
 
   componentDidMount() {
@@ -102,13 +102,13 @@ class ListButtonConfig extends React.Component {
           </AntdSelect>
         </div>
         <div className="popoverItem popoverItemInput">
-          <span className="spanLabel">metaSeq 선택</span>
+          <span className="spanLabel">viewMetaSeq 선택</span>
           <AntdSelect
             className="select-sm"
-            defaultValue={configInfo.property.VIEW_TYPE || ''}
-            onChange={value => handleChangeViewCompData('VIEW_TYPE', value)}
+            defaultValue={configInfo.property.VIEW_META_SEQ || ''}
+            onChange={value => handleChangeViewCompData('VIEW_META_SEQ', value)}
             style={{ width: '100%' }}
-            disabled={!configInfo.property.VIEW_TYPE}
+            disabled={!configInfo.property.SELECTED_BUILDER}
           >
             {metaList.map(meta => (
               <Select.Option value={meta.META_SEQ}>{meta.NAME_KOR}</Select.Option>
@@ -117,7 +117,11 @@ class ListButtonConfig extends React.Component {
         </div>
         <div className="popoverItem popoverItemInput">
           <span className="spanLabel">빌더 버튼 삭제 여부</span>
-          <Checkbox defaultValue={configInfo.property.hasNoButtons} onChange={e => handleChangeViewCompData('hasNoButtons', e.target.checked)} />
+          <Checkbox
+            checked={configInfo.property.hasNoButtons}
+            defaultValue={configInfo.property.hasNoButtons}
+            onChange={e => handleChangeViewCompData('hasNoButtons', e.target.checked)}
+          />
         </div>
       </>
     );

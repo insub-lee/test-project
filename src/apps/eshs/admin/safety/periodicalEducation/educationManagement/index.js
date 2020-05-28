@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
+import UserListPage from './userListPage';
 
 class EducationManagement extends React.Component {
   render() {
@@ -10,12 +11,12 @@ class EducationManagement extends React.Component {
         sagaKey="EducationManagement"
         workSeq={6941}
         viewType="LIST"
-        listMetaSeq={authority[0] === 'V' ? 6956 : 8901} // 테스트용 권한 체크
-        // listMetaSeq={authority[0] !== 'V' ? 6956 : 8901}
         loadingComplete={this.loadingComplete}
         authority={authority}
-        // ListCustomButtons={authority[0] === 'V' ? null : () => null}
-        ListCustomButtons={authority[0] !== 'V' ? null : () => null}
+        // listMetaSeq={authority[0] === 'V' ? 6956 : 8901} // 관리자 페이지
+        // CustomListPage={authority[0] === 'V' ? null : UserListPage} // 커스텀 적용 X
+        listMetaSeq={authority[0] !== 'V' ? 6956 : 8901} // 사용자 페이지
+        CustomListPage={authority[0] !== 'V' ? null : UserListPage} // 커스텀 적용
       />
     );
   }

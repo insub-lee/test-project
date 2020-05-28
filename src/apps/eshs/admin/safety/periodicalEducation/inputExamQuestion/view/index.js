@@ -201,12 +201,10 @@ class ViewPage extends React.Component {
   };
 
   handleSaveClick = () => {
-    const { questions, answers, PARENT_WORK_SEQ, PARENT_TASK_SEQ } = this.state;
-    const { sagaKey: id, submitHandlerBySaga, handleModalClose, profile, result } = this.props;
+    const { questions, answers, PARENT_TASK_SEQ } = this.state;
+    const { sagaKey: id, submitHandlerBySaga, handleModalClose, profile, result, getDataSource } = this.props;
     const originAnswers = [questions[0].answer, questions[1].answer, questions[2].answer, questions[3].answer, questions[4].answer];
     const selectedAnswers = Object.values(answers);
-
-    console.debug(originAnswers, selectedAnswers);
 
     if (selectedAnswers.length < 5) {
       return message.error('답을 모두 선택하세요.');
@@ -223,10 +221,8 @@ class ViewPage extends React.Component {
       }
     }
 
-    console.debug(score);
     const apiArr = {
       PARAM: {
-        PARENT_WORK_SEQ,
         PARENT_TASK_SEQ,
         SCORE: score,
         USER_ID: profile.USER_ID,
@@ -234,7 +230,12 @@ class ViewPage extends React.Component {
       },
     };
 
-    return submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eduexamresult', apiArr, handleModalClose);
+    const afterSubmitFunc = async () => {
+      await getDataSource();
+      handleModalClose();
+    };
+
+    return submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eduexamresult', apiArr, afterSubmitFunc);
   };
 
   render() {
@@ -286,7 +287,7 @@ class ViewPage extends React.Component {
             </Card>
           </div>
         ))}
-        <div style={{ padding: '30px' }}>
+        <div style={{ padding: '30px', textAlign: 'center' }}>
           <StyledButton className="btn-primary mr5" onClick={handleSaveClick}>
             제출
           </StyledButton>
@@ -308,6 +309,7 @@ ViewPage.propTypes = {
   parentWorkSeq: PropTypes.number,
   profile: PropTypes.object,
   result: PropTypes.object,
+  getDataSource: PropTypes.func,
 };
 
 ViewPage.defaultProps = {
@@ -319,6 +321,7 @@ ViewPage.defaultProps = {
   parentWorkSeq: -1,
   profile: null,
   result: null,
+  getDataSource: () => {},
 };
 
 export default ViewPage;
