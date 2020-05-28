@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
 const StyledContentsWrapper = styled.div`
+  padding: 20px;
+
   .pageTitle {
     position: relative;
     background: #f4f4f4;

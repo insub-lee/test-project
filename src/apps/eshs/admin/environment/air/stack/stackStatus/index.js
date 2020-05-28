@@ -7,7 +7,6 @@ class StackStatus extends Component {
   componentDidMount() {}
 
   render() {
-    const { customOnRowClick } = this.props;
     return (
       <BizBuilderBase
         sagaKey="stackLookUp"
@@ -15,17 +14,15 @@ class StackStatus extends Component {
         taskSeq={-1}
         viewType="LIST"
         listMetaSeq={4461}
-        CustomListPage={CustomList} // 버튼 및 리스트 크기 이슈로  custom Page 사용
+        // CustomListPage={CustomList} // 버튼 및 리스트 크기 이슈로  custom Page 사용
         loadingComplete={this.loadingComplete}
-        customOnRowClick={customOnRowClick}
+        ViewCustomButtons={() => null}
       />
     );
   }
 }
 
-StackStatus.propTypes = {
-  customOnRowClick: PropTypes.func,
-};
+StackStatus.propTypes = {};
 
 StackStatus.defaultProps = {};
 

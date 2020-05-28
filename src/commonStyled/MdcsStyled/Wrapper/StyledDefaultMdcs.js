@@ -20,7 +20,7 @@ const StyledDefaultMdcs = styled(StyledViewDesigner)`
         }
 
         &.mdcsContentsCol {
-          padding: 6px 9px;
+          padding: 6px 8px;
           color: #666;
           .btnTypeUploader {
             text-align: right;
@@ -76,7 +76,7 @@ const StyledDefaultMdcs = styled(StyledViewDesigner)`
 
         &.mdcsContentsSelectCol {
           position: relative;
-          padding: 6px;
+          padding: 6px 8px;
           .ant-select {
             font-size: 12px;
             .ant-select-selection {

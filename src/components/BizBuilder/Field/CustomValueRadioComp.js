@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Radio } from 'antd';
+import request from 'utils/request';
+import { temp } from 'containers/guide/components/Article/Articles/Test/MasterPmBomTree/actions';
 import AntRadiobox from '../../../containers/store/components/uielements/radiobox.style';
 
-const init = { value: null, text: null };
 const RadioGroup = AntRadiobox(Radio.Group);
 
 const CustomValueRadioComp = props => {
-  const [values, setValues] = useState([]);
+  const [values, setValues] = useState([{ value: null, text: null }]);
   const [defaultValue, setDefaultValue] = useState('');
+  const [isChangeable, setIsChangeable] = useState('N');
+  const [targetUrl, setTargetUrl] = useState('');
 
   const {
     changeFormData,
@@ -22,16 +25,39 @@ const CustomValueRadioComp = props => {
   } = props;
 
   useEffect(() => {
-    const { VALUES } = props.CONFIG.property;
-    setValues(VALUES instanceof Array ? [...VALUES] : [{ ...init }]);
+    const { VALUES, IS_CHANGEABLE, URL } = props.CONFIG.property;
+    const { colData } = props;
+    if (VALUES instanceof Array) {
+      setValues([...VALUES]);
+    }
+    setDefaultValue(colData || '');
+    setIsChangeable(IS_CHANGEABLE || 'N');
+    setTargetUrl(URL || '');
   }, []);
 
   useEffect(() => {
     onChangeHandler(defaultValue);
   }, [defaultValue]);
 
-  function onChangeHandler(value) {
-    console.debug('£££ onChangeHandler :', value instanceof String, value, isRequired, changeFormData);
+  const usageHandler = value => {
+    const temp = { ...props?.rowData };
+    temp.changedValue = value;
+    request({
+      method: 'POST',
+      url: targetUrl,
+      // FIRE_CODE: FE (소화기)
+      data: temp,
+    }).then(({ response }) => {
+      // console.debug('### response of CustomDataTableComp: ', response);
+      if (response?.result === 1) {
+        // console.debug('£££ result 1 : ', response?.data instanceof Object, response?.data);
+        setDefaultValue(value);
+      }
+    });
+  };
+
+  const onChangeHandler = value => {
+    // console.debug('£££ onChangeHandler :', value instanceof String, value, isRequired, changeFormData);
     if (typeof value === 'string') {
       if (isRequired) {
         // 기본값인지 체크
@@ -39,11 +65,11 @@ const CustomValueRadioComp = props => {
       }
       changeFormData(id, COMP_FIELD, value);
     }
-  }
+  };
 
   return (
     <div style={{ textAlign: 'center' }}>
-      <RadioGroup value={defaultValue} onChange={e => setDefaultValue(e.target.value)}>
+      <RadioGroup value={defaultValue} onChange={e => (isChangeable === 'Y' ? usageHandler(e.target.value) : null)}>
         {values.map(({ value, text }) => (
           <Radio key={`${Math.random()}customValueRadioComp > Radio`} value={value}>
             {text}

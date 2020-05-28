@@ -10,7 +10,7 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledModalWrapper from 'components/BizBuilder/styled/Modal/StyledAntdModal';
-import StackStatus from 'apps/eshs/admin/environment/air/stack/stackStatus';
+import BizBuilderBase from 'components/BizBuilderBase';
 
 import Moment from 'moment';
 import Graph from './Graph';
@@ -62,7 +62,9 @@ class List extends Component {
     const { sagaKey: id, getCallDataHandler, refStack } = this.props;
     const { dateStrings, rangeDateStrings, seq, stackCd } = this.state;
     const setDate = refStack
-      ? `START_DATE=${`${rangeDateStrings[0]}-01`}&&END_DATE=${`${rangeDateStrings[1]}-31`}&&STACK_CD=${stackCd}`
+      ? `START_DATE=${Moment(rangeDateStrings[0]).format('YYYY-MM-01')}&&END_DATE=${Moment(rangeDateStrings[1])
+          .endOf('month')
+          .format('YYYY-MM-DD')}&&STACK_CD=${stackCd}`
       : `START_DATE=${`${dateStrings}-01`}&&END_DATE=${`${dateStrings}-31`}`;
     const apiAry = [
       {
@@ -173,8 +175,8 @@ class List extends Component {
   dataSet = () => {
     const { refStack } = this.props;
     const { measureList, gasList } = this.state;
-    const hour = measureList && measureList.map(element => Number(element.HOUR_FLOW));
-    const minute = measureList && measureList.map(element => Number(element.MINUTE_FLOW));
+    const hour = measureList && measureList.map(element => Number(element.HOUR_FLOW).toFixed(3));
+    const minute = measureList && measureList.map(element => Number(element.MINUTE_FLOW).toFixed(3));
     const temp = this.densityList();
     const gasDensityList =
       gasList &&
@@ -248,11 +250,24 @@ class List extends Component {
           </AntdSelect>
           <div style={{ margin: '0 5px', display: 'inline-block' }}>
             {refStack ? (
+              // mode 사용 시 open value 관리해야함
               <RangePicker
-                defaultValue={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
+                value={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
+                open={this.state.isopen}
                 mode={['month', 'month']}
                 format={['YYYY-MM', 'YYYY-MM']}
-                onChange={(date, dateStrings) => this.onChangeState('rangeDateStrings', dateStrings)}
+                onOpenChange={status => {
+                  this.setState({ isopen: status });
+                }}
+                onPanelChange={value => {
+                  if (value[0] < Moment().endOf('month') && value[1] < Moment().endOf('month')) {
+                    this.setState({
+                      rangeDateStrings: value,
+                    });
+                  } else {
+                    message.warning('날짜가 올바르지 않습니다.');
+                  }
+                }}
               />
             ) : (
               <MonthPicker
@@ -286,7 +301,16 @@ class List extends Component {
           <StyledHtmlTable className="tableWrapper">
             <div style={{ overflowX: 'scroll' }}>
               <table>
-                <tbody>
+                <colgroup>
+                  <col width={100} />
+                  <col width={100} />
+                  <col width={100} />
+                  <col width={100} />
+                  <col width={100} />
+                  <col width={100} />
+                  {gasList && gasList.map(() => <col width={100} />)}
+                </colgroup>
+                <thead>
                   <tr>
                     <th>계통</th>
                     <th>STACK</th>
@@ -296,14 +320,16 @@ class List extends Component {
                     <th>시간당 배출량</th>
                     {gasList && gasList.map(item => <th>{item.GAS_CD}</th>)}
                   </tr>
+                </thead>
+                <tbody style={{ overflowY: 'scroll', height: 400 }}>
                   {measureList.map(item => (
                     <tr>
                       <td>{item.GUBUN_NAME}</td>
                       <td>{item.STACK_CD}</td>
                       <td>{item.IS_MEASURE}</td>
                       <td>{JSON.parse(item.GAS[0].value).MEASURE_DT}</td>
-                      <td>{JSON.parse(item.GAS[0].value).MINUTE_FLOW}</td>
-                      <td>{JSON.parse(item.GAS[0].value).HOUR_FLOW}</td>
+                      <td>{Number(JSON.parse(item.GAS[0].value).MINUTE_FLOW).toFixed(3)}</td>
+                      <td>{Number(JSON.parse(item.GAS[0].value).HOUR_FLOW).toFixed(3)}</td>
                       {selectGubun === 1
                         ? gasList &&
                           gasList.map(gasType => (
@@ -412,7 +438,14 @@ class List extends Component {
         </StyledHtmlTable>
         {refStack ? (
           <AntdModal width={800} visible={this.state.isModal} title="Stack 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
-            <StackStatus customOnRowClick={this.customOnRowClick} />
+            <BizBuilderBase
+              sagaKey="stackModal"
+              workSeq={4401}
+              viewType="LIST"
+              listMetaSeq={4461}
+              customOnRowClick={this.customOnRowClick}
+              ViewCustomButtons={() => null}
+            />
           </AntdModal>
         ) : (
           ''

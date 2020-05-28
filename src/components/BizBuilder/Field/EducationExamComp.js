@@ -30,7 +30,7 @@ class EducationExamComp extends React.Component {
   render() {
     const { handleButtonClick, handleModalClose } = this;
     const { modalVisible } = this.state;
-    const { visible, rowData, WORK_SEQ } = this.props;
+    const { visible, rowData, WORK_SEQ, CONFIG, authority } = this.props;
 
     if (!visible) {
       return null;
@@ -39,7 +39,7 @@ class EducationExamComp extends React.Component {
     return (
       <>
         <StyledButton className="btn-primary btn-sm" onClick={handleButtonClick} style={{ width: '100%' }}>
-          평가문항 관리
+          {CONFIG.property.BTN_NAME || '이름을 등록하세요.'}
         </StyledButton>
         <AntdModal
           visible={modalVisible}
@@ -51,7 +51,7 @@ class EducationExamComp extends React.Component {
           title="평가문항 등록"
           destroyOnClose
         >
-          <InputExamQuestion parentWorkSeq={WORK_SEQ} parentTaskSeq={rowData.TASK_SEQ} handleModalClose={handleModalClose} />
+          <InputExamQuestion parentWorkSeq={WORK_SEQ} parentTaskSeq={rowData.TASK_SEQ} handleModalClose={handleModalClose} authority={authority} />
         </AntdModal>
       </>
     );
@@ -62,6 +62,7 @@ EducationExamComp.propTypes = {
   rowData: PropTypes.object,
   visible: PropTypes.bool,
   WORK_SEQ: PropTypes.number,
+  CONFIG: PropTypes.object,
 };
 
 EducationExamComp.defatulProps = {

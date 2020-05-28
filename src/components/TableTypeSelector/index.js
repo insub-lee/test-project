@@ -1,9 +1,11 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Table, Button, Modal, Icon, Input, message } from 'antd';
+import { Table, Modal, Icon, Input, message, Button } from 'antd';
 import Highlighter from 'react-highlight-words';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import TableTypeSelectorStyled from './TableTypeSelectorStyled';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 
 // Component Attribute 및 Event Method 정리
 // <TableTypeSelector
@@ -30,6 +32,8 @@ import TableTypeSelectorStyled from './TableTypeSelectorStyled';
 //   { dataIndex: 'CAS_NO', title: 'CAS-NO' },
 // ]
 //
+const AntdLineTable = StyledAntdTable(Table);
+const AntdModal = StyledContentsModal(Modal);
 
 class TableTypeSelector extends React.Component {
   constructor(props) {
@@ -202,64 +206,90 @@ class TableTypeSelector extends React.Component {
     };
     return (
       <>
-        <StyledButton className="btn-primary btn-sm" onClick={this.handleModalVisible}>
+        <StyledButton className="btn-primary btn-first" onClick={this.handleModalVisible}>
           {btnText}
         </StyledButton>
-        <Modal title={modalTitle} visible={modalVisivle} width={870} height={520} onCancel={this.handleModalVisible} onOk={this.handleModalOk} okText="적용">
-          <TableTypeSelectorStyled>
-            <div className="TableTypeSeletorStyled">
-              <table>
-                <thead></thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <Table
-                        size="small"
-                        rowSelection={leftrowSelection}
-                        columns={leftTableColumnsSearchVersion}
-                        dataSource={apiList}
-                        style={{ width: '480px' }}
-                        scroll={{ x: 'max-content', y: '240px' }}
-                        rowKey={`${rowKey}`}
-                        className="leftTable"
-                        locale={{ emptyText: this.props.noDataText }}
-                      ></Table>
-                    </td>
-                    <td style={{ padding: '0 10px' }}>
-                      <div style={{ marginBottom: '5px' }}>
-                        <Button size="small" onClick={this.onRightClick}>
-                          <span>
-                            <Icon type="right" />
-                          </span>
-                        </Button>
-                      </div>
-                      <div>
-                        <Button size="small" onClick={this.onLeftClick}>
-                          <span>
-                            <Icon type="left" />
-                          </span>
-                        </Button>
-                      </div>
-                      <div>&nbsp;</div>
-                    </td>
-                    <td style={{ width: 320 }}>
-                      <Table
-                        size="small"
-                        className="rightTable"
-                        rowSelection={rightrowSelection}
-                        columns={rightTableColumns}
-                        dataSource={applyList}
-                        style={{ width: '300px' }}
-                        scroll={{ x: 'max-content', y: '240px' }}
-                        rowKey={`${rowKey}`}
-                      ></Table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </TableTypeSelectorStyled>
-        </Modal>
+
+        <AntdModal
+          title={modalTitle}
+          visible={modalVisivle}
+          width={870}
+          height={520}
+          onCancel={this.handleModalVisible}
+          onOk={this.handleModalOk}
+          okText="적용"
+          footer={[null]}
+        >
+          <table>
+            <colgroup>
+              <col width="60%" />
+              <col width="7%" />
+              <col width="35%" />
+            </colgroup>
+            <thead></thead>
+            <tbody>
+              <tr>
+                <td>
+                  <AntdLineTable
+                    size="small"
+                    key="leftTable"
+                    className="tableWrapper"
+                    rowSelection={leftrowSelection}
+                    columns={leftTableColumnsSearchVersion}
+                    dataSource={apiList}
+                    // style={{ width: '100%' }}
+                    scroll={{ x: '400px', y: '240px' }}
+                    rowKey={`${rowKey}`}
+                    pagination={false}
+                    locale={{ emptyText: this.props.noDataText }}
+                  ></AntdLineTable>
+                </td>
+                <td style={{ padding: '0 10px' }}>
+                  <div style={{ marginBottom: '5px' }}>
+                    <Button size="small" onClick={this.onRightClick}>
+                      <span>
+                        <Icon type="right" />
+                      </span>
+                    </Button>
+                  </div>
+                  <div>
+                    <Button size="small" onClick={this.onLeftClick}>
+                      <span>
+                        <Icon type="left" />
+                      </span>
+                    </Button>
+                  </div>
+                  <div>&nbsp;</div>
+                </td>
+                <td>
+                  <AntdLineTable
+                    size="small"
+                    className="tableWrapper"
+                    rowSelection={rightrowSelection}
+                    columns={rightTableColumns}
+                    dataSource={applyList}
+                    pagination={false}
+                    // style={{ width: '100%' }}
+                    scroll={{ x: '100px', y: '240px' }}
+                    rowKey={`${rowKey}`}
+                  ></AntdLineTable>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={3}>
+                  <StyledButtonWrapper className="btn-wrap-center">
+                    <StyledButton className="btn-primary btn-first" onClick={this.handleModalVisible}>
+                      취소
+                    </StyledButton>
+                    <StyledButton className="btn-primary" onClick={this.handleModalOk}>
+                      적용
+                    </StyledButton>
+                  </StyledButtonWrapper>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </AntdModal>
       </>
     );
   }

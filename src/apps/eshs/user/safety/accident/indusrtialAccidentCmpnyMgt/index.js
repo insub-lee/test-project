@@ -4,8 +4,7 @@ import { Button, message, Popconfirm } from 'antd';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
-import CustomList from './pages/CustomList';
-
+import CustomList from 'apps/eshs/user/safety/accident/indusrtialAccidentCmpnyMgt/pages/CustomList';
 const StyledButton = StyledAntdButton(Button);
 
 class IndusrtialAccidentCmpnyMgt extends Component {
@@ -13,6 +12,7 @@ class IndusrtialAccidentCmpnyMgt extends Component {
     super(props);
     this.state = {
       isLoading: true,
+      setDefaultValueFlag: false,
     };
   }
 
@@ -36,15 +36,14 @@ class IndusrtialAccidentCmpnyMgt extends Component {
       formData,
     } = inputProps;
     const { saveAfter, initFormData } = this.props;
-
-    console.debug('saveAfter', saveAfter);
-    console.debug('setFormData', setFormData);
-    console.debug('formData', formData);
-    console.debug('initFormData', initFormData);
+    const { setDefaultValueFlag } = this.state;
     const bizRegNo = (formData && formData.BIZ_REG_NO) || '';
-    if (JSON.stringify(initFormData) !== '{}' && !bizRegNo) {
+
+    if (JSON.stringify(initFormData) !== '{}' && !bizRegNo && !setDefaultValueFlag) {
       setFormData(id, { ...formData, ...initFormData });
+      this.setState({ setDefaultValueFlag: true });
     }
+
     return (
       <div className={inputMetaSeq === 2227 ? 'alignRight' : 'alignCenter'}>
         <StyledButton

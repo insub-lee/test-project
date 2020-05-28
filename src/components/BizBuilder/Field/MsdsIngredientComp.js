@@ -10,13 +10,13 @@ class MsdsIngredientComp extends React.Component {
     this.state = {
       apiList: [],
       leftTableColumns: [
-        { dataIndex: 'MTRL_NM', title: '물질명', search: true, width: 150 },
-        { dataIndex: 'COMPONENT_ITEM_CD', title: 'MSDS코드', search: true, width: 90 },
-        { dataIndex: 'MOLECULAR_FORMULA', title: '분자식', search: true, width: 200 },
-        { dataIndex: 'CAS_NO', title: 'CAS-NO', search: true, width: 150 },
-        { dataIndex: 'UN_NO', title: 'UN-NO', search: true, width: 100 },
-        { dataIndex: 'ITEM_NM', title: '제품명', search: true, width: 200 },
-        { dataIndex: 'WRK_CMPNY_NM', title: 'Vendor', search: true, width: 150 },
+        { dataIndex: 'MTRL_NM', title: '물질명', search: true, width: 150, align: 'center' },
+        { dataIndex: 'COMPONENT_ITEM_CD', title: 'MSDS코드', search: true, width: 100, align: 'center' },
+        { dataIndex: 'MOLECULAR_FORMULA', title: '분자식', search: true, width: 150, align: 'center' },
+        { dataIndex: 'CAS_NO', title: 'CAS-NO', search: true, width: 150, align: 'center' },
+        { dataIndex: 'UN_NO', title: 'UN-NO', search: true, width: 100, align: 'center' },
+        { dataIndex: 'ITEM_NM', title: '제품명', search: true, width: 200, align: 'center' },
+        { dataIndex: 'WRK_CMPNY_NM', title: 'Vendor', search: true, width: 150, align: 'center' },
       ],
       rightTableColumns: [
         { dataIndex: 'ITEM_NM', title: 'ITEM', width: 150 },

@@ -140,11 +140,18 @@ class CustomUserSelectComp extends Component {
   };
 
   onTreeSelect = selectedKeys => {
-    const { onTreeSelect, sagaKey, getCallDataHandler } = this.props;
+    const { onTreeSelect, sagaKey, getCallDataHandler, apiUrl } = this.props;
     if (typeof onTreeSelect === 'function') {
       this.props.onTreeSelect(selectedKeys);
     } else if (selectedKeys.length > 0) {
-      const apiAry = [{ key: 'userList', url: `/api/common/v1/account/deptUser/${selectedKeys}`, type: 'POST', params: {} }];
+      const apiAry = [
+        {
+          key: 'userList',
+          url: apiUrl ? `${apiUrl}/DEPT_ID=${selectedKeys}` : `/api/common/v1/account/deptUser/${selectedKeys}`,
+          type: apiUrl ? 'GET' : 'POST',
+          params: {},
+        },
+      ];
       getCallDataHandler(sagaKey, apiAry);
     }
   };
@@ -249,8 +256,21 @@ class CustomUserSelectComp extends Component {
   }
 }
 CustomUserSelectComp.propTypes = {
+  sagaKey: PropTypes.string,
+  getCallDataHandler: PropTypes.func,
+  removeReduxState: PropTypes.func,
+  treeDataSource: PropTypes.array,
   initUserList: PropTypes.array,
   isWorkBuilder: PropTypes.bool,
+  userDataList: PropTypes.arrayOf('object'),
+  result: PropTypes.object,
+  onUserSelectHandler: PropTypes.func,
+  onUserDelete: PropTypes.func,
+  onTreeSelect: PropTypes.func,
+  onUserSelectedComplete: PropTypes.func,
+  onCancel: PropTypes.func,
+  removeResponseDataReduxStateByKey: PropTypes.func,
+  apiUrl: PropTypes.string,
 };
 
 CustomUserSelectComp.defaultProps = {
