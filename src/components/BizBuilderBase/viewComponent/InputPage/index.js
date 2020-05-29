@@ -233,11 +233,11 @@ class InputPage extends Component {
             ) : (
               <div className="alignRight">
                 <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
-                  Save
+                  저장
                 </StyledButton>
                 {!isBuilderModal && (
                   <StyledButton className="btn-light" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                    List
+                    목록
                   </StyledButton>
                 )}
               </div>
