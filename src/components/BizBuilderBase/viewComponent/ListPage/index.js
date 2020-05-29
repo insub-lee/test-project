@@ -172,7 +172,7 @@ class ListPage extends Component {
     if (typeof customOnRowClick === 'function' && isOnRowClick) {
       onRow = record => ({ onClick: () => customOnRowClick(record) });
     }
-    console.debug('확인해보자', this.state);
+    // console.debug('확인해보자', this.state);
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
