@@ -167,6 +167,8 @@ class InputPage extends Component {
       workInfo,
       redirectUrl,
       changeIsLoading,
+      reloadViewType,
+      reloadTaskSeq,
     } = this.props;
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler(id, redirectUrl);
@@ -182,7 +184,12 @@ class InputPage extends Component {
       }
     }
     if (isBuilderModal) {
-      changeViewPage(reloadId, workSeq, -1, 'LIST');
+      changeViewPage(
+        reloadId,
+        workSeq,
+        reloadId && reloadViewType && reloadTaskSeq ? reloadTaskSeq : -1,
+        reloadId && reloadViewType && reloadTaskSeq ? reloadViewType : 'LIST',
+      );
       if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
 
