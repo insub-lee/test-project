@@ -243,7 +243,16 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeIsLo
     formData = response.result;
     draftInfo = response.draftInfo;
   }
+
   if (formData) {
+    if (viewType === 'VIEW') {
+      yield call(
+        Axios.post,
+        '/api/builder/v1/work/taskLog',
+        { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, TASK_ORIGIN_SEQ: formData.TASK_ORIGIN_SEQ, LOG_TYPE: 'R' } },
+        { BUILDER: 'setTaskLog' },
+      );
+    }
     yield put(actions.setDetailData(id, formData, validationData, draftInfo));
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
     yield put(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, undefined, undefined, formData));
@@ -314,7 +323,7 @@ function* tempSaveTask({ id, callbackFunc }) {
   }
 }
 
-function* saveTask({ id, reloadId, callbackFunc }) {
+function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
   const workSeq = yield select(selectors.makeSelectWorkSeqById(id));
   const formData = yield select(selectors.makeSelectFormDataById(id));
   let taskSeq = yield select(selectors.makeSelectTaskSeqById(id));
@@ -341,6 +350,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
 
       if (!validFlag) {
         message.error(<MessageContent>{validMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
+        if (typeof changeIsLoading === 'function') changeIsLoading(false);
         return;
       }
     }
@@ -476,6 +486,13 @@ function* saveTask({ id, reloadId, callbackFunc }) {
     });
   }
 
+  yield call(
+    Axios.post,
+    '/api/builder/v1/work/taskLog',
+    { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, TASK_ORIGIN_SEQ: formData.TASK_ORIGIN_SEQ, LOG_TYPE: 'C' } },
+    { BUILDER: 'setTaskLog' },
+  );
+
   yield put(actions.successSaveTask(id));
 
   if (typeof callbackFunc === 'function') {
@@ -485,7 +502,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   }
 }
 
-function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
+function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc, changeIsLoading }) {
   const modifyWorkSeq = workSeq && workSeq > 0 ? workSeq : yield select(selectors.makeSelectWorkSeqById(id));
   const modifyTaskSeq = taskSeq && taskSeq > 0 ? taskSeq : yield select(selectors.makeSelectTaskSeqById(id));
   const formData = yield select(selectors.makeSelectFormDataById(id));
@@ -515,6 +532,7 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
 
       if (!validFlag) {
         message.error(<MessageContent>{validMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
+        if (typeof changeIsLoading === 'function') changeIsLoading(false);
         return;
       }
     }
@@ -630,6 +648,13 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
     });
   }
 
+  yield call(
+    Axios.post,
+    '/api/builder/v1/work/taskLog',
+    { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, TASK_ORIGIN_SEQ: formData.TASK_ORIGIN_SEQ, LOG_TYPE: 'U' } },
+    { BUILDER: 'setTaskLog' },
+  );
+
   yield put(actions.successSaveTask(id));
 
   if (typeof callbackFunc === 'function') {
@@ -641,15 +666,16 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
   }
 }
 
-function* modifyTask({ id, reloadId, callbackFunc }) {
+function* modifyTask({ id, reloadId, callbackFunc, changeIsLoading }) {
   const workSeq = yield select(selectors.makeSelectWorkSeqById(id));
   const taskSeq = yield select(selectors.makeSelectTaskSeqById(id));
-  yield put(actions.modifyTaskBySeq(id, reloadId, workSeq, taskSeq, callbackFunc));
+  yield put(actions.modifyTaskBySeq(id, reloadId, workSeq, taskSeq, callbackFunc, changeIsLoading));
 }
 
 function* deleteTask({ id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc }) {
   // 삭제도 saveTask처럼 reloadId 필요한지 확인
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
+
   const response = yield call(Axios.delete, `/api/builder/v1/work/contents/${workSeq}/${taskSeq}`, {}, { BUILDER: 'deleteTask' });
 
   // const apiArr = yield select(selectors.makeSelectApiArrById(id));
@@ -667,6 +693,10 @@ function* deleteTask({ id, reloadId, workSeq, taskSeq, changeViewPage, callbackF
       {},
       { BUILDER: 'deleteTotalData' },
     );
+  }
+
+  if (response) {
+    yield call(Axios.post, '/api/builder/v1/work/taskLog', { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, LOG_TYPE: 'D' } }, { BUILDER: 'setTaskLog' });
   }
 
   const conditional = yield select(selectors.makeSelectConditionalById(id));
@@ -787,6 +817,13 @@ function* removeMultiTask({ id, reloadId, callbackFunc }) {
     }
 
     if (response) {
+      yield call(
+        Axios.post,
+        '/api/builder/v1/work/taskLog',
+        { PARAM: { WORK_SEQ: workSeq, taskList: removeList, LOG_TYPE: 'D', isMulti: true } },
+        { BUILDER: 'setTaskLog' },
+      );
+
       if (typeof callbackFunc === 'function') {
         callbackFunc(id, workSeq, taskSeq);
       } else {

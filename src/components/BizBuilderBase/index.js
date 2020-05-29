@@ -227,7 +227,9 @@ class BizBuilderBase extends React.Component {
 
     return (
       <div>
-        <Spin spinning={isLoading}>{this.componentRenderer()}</Spin>
+        <Spin size="large" spinning={isLoading}>
+          {this.componentRenderer()}
+        </Spin>
         <Modal
           centered
           destroyOnClose
@@ -380,27 +382,28 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBuilderData: (id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData) =>
-    dispatch(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData)),
+  getBuilderData: (id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, conditional, changeWorkflowFormData, detailData) =>
+    dispatch(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, conditional, changeWorkflowFormData, detailData)),
   getExtraApiData: (id, apiArr, callback) => dispatch(actions.getExtraApiData(id, apiArr, callback)),
   submitExtraHandler: (id, httpMethod, apiUrl, submitData, callbackFunc, etcData) =>
     dispatch(actions.submitExtraHandler(id, httpMethod, apiUrl, submitData, callbackFunc, etcData)),
-  getDetailData: (id, workSeq, taskSeq, viewType, extraProps, changeWorkflowFormData) =>
-    dispatch(actions.getDetailData(id, workSeq, taskSeq, viewType, extraProps, changeWorkflowFormData)),
+  getDetailData: (id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, changeWorkflowFormData) =>
+    dispatch(actions.getDetailData(id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, changeWorkflowFormData)),
   getTaskSeq: (id, workSeq) => dispatch(actions.getTaskSeq(id, workSeq)),
   // saveTempContents: (id, detail, fieldName, compType, contSeq) => dispatch(actions.saveTempContents(id, detail, fieldName, compType, contSeq)),
   tempSaveTask: (id, callbackFunc) => dispatch(actions.tempSaveTask(id, callbackFunc)),
-  saveTask: (id, reloadId, callbackFunc) => dispatch(actions.saveTask(id, reloadId, callbackFunc)),
-  modifyTask: (id, reloadId, callbackFunc) => dispatch(actions.modifyTask(id, reloadId, callbackFunc)),
-  modifyTaskBySeq: (id, reloadId, workSeq, taskSeq, callbackFunc) => dispatch(actions.modifyTaskBySeq(id, reloadId, workSeq, taskSeq, callbackFunc)),
+  saveTask: (id, reloadId, callbackFunc, changeIsLoading) => dispatch(actions.saveTask(id, reloadId, callbackFunc, changeIsLoading)),
+  modifyTask: (id, reloadId, callbackFunc, changeIsLoading) => dispatch(actions.modifyTask(id, reloadId, callbackFunc, changeIsLoading)),
+  modifyTaskBySeq: (id, reloadId, workSeq, taskSeq, callbackFunc, changeIsLoading) =>
+    dispatch(actions.modifyTaskBySeq(id, reloadId, workSeq, taskSeq, callbackFunc, changeIsLoading)),
   deleteTask: (id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc) =>
     dispatch(actions.deleteTask(id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc)),
   deleteExtraTask: (id, url, params, apiArr) => dispatch(actions.deleteExtraTask(id, url, params, apiArr)),
   deleteFav: (id, apiArr, callbackFunc) => dispatch(actions.deleteFav(id, apiArr, callbackFunc)),
   changeFormData: (id, key, val) => dispatch(actions.changeFormData(id, key, val)),
   addNotifyBuilder: (id, workSeq, taskSeq, titleKey, contentKey) => dispatch(actions.addNotifyBuilder(id, workSeq, taskSeq, titleKey, contentKey)),
-  revisionTask: (id, workSeq, taskSeq, viewType, revisionType, extraProps, callbackFunc) =>
-    dispatch(actions.revisionTask(id, workSeq, taskSeq, viewType, revisionType, extraProps, callbackFunc)),
+  revisionTask: (id, workSeq, taskSeq, viewType, revisionType, extraProps, changeIsLoading, callbackFunc) =>
+    dispatch(actions.revisionTask(id, workSeq, taskSeq, viewType, revisionType, extraProps, changeIsLoading, callbackFunc)),
   getRevisionHistory: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.getRevisionHistory(id, workSeq, taskSeq, callbackFunc)),
   removeReduxState: id => dispatch(actions.removeReduxState(id)),
   changeValidationData: (id, key, flag, msg) => dispatch(actions.changeValidationDataByReducr(id, key, flag, msg)),
