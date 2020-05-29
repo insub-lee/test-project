@@ -146,8 +146,8 @@ class InputPage extends Component {
   };
 
   saveTask = (id, reloadId) => {
-    const { saveTask, saveTaskAfterCallbackFunc } = this.props;
-    saveTask(id, reloadId, typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.saveTaskAfter);
+    const { saveTask, saveTaskAfterCallbackFunc, changeIsLoading } = this.props;
+    saveTask(id, reloadId, typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.saveTaskAfter, changeIsLoading);
   };
 
   // state값 reset테스트
