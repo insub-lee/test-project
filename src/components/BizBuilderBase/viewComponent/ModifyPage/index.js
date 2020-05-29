@@ -146,8 +146,8 @@ class ModifyPage extends Component {
   };
 
   saveTask = (id, reloadId, callbackFunc) => {
-    const { modifyTask } = this.props;
-    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+    const { modifyTask, changeIsLoading } = this.props;
+    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter, changeIsLoading);
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
@@ -224,11 +224,11 @@ class ModifyPage extends Component {
             ) : (
               <div className="alignRight">
                 <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
-                  Save
+                  저장
                 </StyledButton>
                 {!isBuilderModal && (
                   <StyledButton className="btn-light" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                    List
+                    목록
                   </StyledButton>
                 )}
               </div>

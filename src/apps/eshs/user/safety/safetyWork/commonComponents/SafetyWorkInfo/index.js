@@ -65,6 +65,7 @@ class SafetyWorkInfo extends Component {
     const { handleModal, formData, handleChangeFormData, handleWorkCategory, handleUploadFileChange } = this.props;
     const fromTimes = ['09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'];
     const toTimes = ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'];
+    console.debug('폼데이터', formData);
     return (
       <EduInfoTableStyled>
         <ContentsWrapper>

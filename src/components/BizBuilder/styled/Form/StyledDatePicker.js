@@ -30,6 +30,10 @@ const StyledDatePicker = Component => styled(Component)`
       &:disabled {
         background: #f5f5f5;
       }
+
+      .ant-calendar-range-picker-input {
+        padding: 0;
+      }
     }
   }
   &.ant-picker-inline {
@@ -43,6 +47,7 @@ const StyledDatePicker = Component => styled(Component)`
     .ant-input {
       padding: 0.4rem 0.875rem;
       height: auto;
+      font-size: 0.75rem;
     }
   }
   &.ant-picker-sm {
