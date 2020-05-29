@@ -220,7 +220,7 @@ class TableTypeSelector extends React.Component {
           okText="적용"
           footer={[null]}
         >
-          <table>
+          <table style={{ width: '100%', tableLayout: 'fixed' }}>
             <colgroup>
               <col width="60%" />
               <col width="7%" />
