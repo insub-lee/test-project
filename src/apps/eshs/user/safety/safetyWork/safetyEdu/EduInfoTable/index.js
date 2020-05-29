@@ -62,12 +62,6 @@ class EduInfoTable extends Component {
     }
   };
 
-  rowOnclickForHstCmpnyUser = record => {
-    const { sagaKey: id, changeFormData } = this.props;
-    changeFormData(id, 'LECT_EMP_NO', record.SQ_SWTB_HST_CMPNY_EMP);
-    this.handleModalVisible('', false);
-  };
-
   // 내부강사 선택
   onSelectedComplete = result => {
     const { sagaKey: id, setFormData, formData } = this.props;
@@ -82,9 +76,9 @@ class EduInfoTable extends Component {
         () =>
           setFormData(id, {
             ...formData,
-            LECT_CMPNY_CD: '72761',
-            LECT_CMPNY_NM: 'MAGNACHIP반도체',
-            LECT_EMP_NO: userInfo.USER_ID,
+            LECT_CMPNY_CD: userInfo.COMP_CD.replace('COMP_', ''),
+            LECT_CMPNY_NM: userInfo.DEPT_NAME_KOR,
+            LECT_EMP_NO: userInfo.EMP_NO,
             LECT_EMP_NM: userInfo.NAME_KOR,
           }),
       );
