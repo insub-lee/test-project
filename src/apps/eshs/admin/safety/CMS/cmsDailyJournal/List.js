@@ -3,19 +3,21 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import { Table, Input, DatePicker, Select, Popover, Checkbox, message } from 'antd';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 
 const { TextArea } = Input;
 const { Option } = Select;
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
-const AntdLineTable = StyledLineTable(Table);
+const AntdLineTable = StyledAntdTable(Table);
+const AntdDatePicker = StyledDatePicker(DatePicker);
 
 moment.locale('ko');
 
@@ -24,6 +26,8 @@ class List extends Component {
     super(props);
     this.state = {
       journalDate: moment(),
+      otherArr: [],
+      planArr: [],
     };
   }
 
@@ -99,22 +103,32 @@ class List extends Component {
     getCallDataHandler(id, apiAry, this.initData);
   };
 
-  callBackApi = () => {
-    this.searchList();
-  };
-
   onChangeData = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { journalDate, workerStatus, vacationer, otherArr, planArr } = this.state;
-    const submitData = {
-      PARAM: {
-        JOURNAL_DATE: `${moment(journalDate || '').format()}`,
-        WORKER_STATUS: workerStatus,
-        VACATIONER: vacationer,
-        CONTANTS_ARRAY: [...otherArr, ...planArr],
-      },
-    };
-    submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsCMS', submitData, this.callBackApi);
+    if (Array.isArray(otherArr) && Array.isArray(planArr)) {
+      const submitData = {
+        PARAM: {
+          JOURNAL_DATE: `${moment(journalDate || '').format()}`,
+          WORKER_STATUS: workerStatus,
+          VACATIONER: vacationer,
+          CONTANTS_ARRAY: [...otherArr, ...planArr],
+        },
+      };
+      submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsCMS', submitData, this.callBackApi);
+    } else {
+      message.warning('입력정보가 옳바르지 않습니다.');
+    }
+  };
+
+  callBackApi = (id, response) => {
+    const { journalDate } = this.state;
+    if (response.result === 1) {
+      this.searchList();
+      message.success(`${moment(journalDate || '').format('YYYY-MM-DD')}일지가 저장되었습니다.`);
+    } else {
+      message.warning(`폐이지에 오류가 있습니다. 잠시 후 다시 시도해주세요`);
+    }
   };
 
   // 기타사항 및 업무계획 Array 추가
@@ -207,13 +221,15 @@ class List extends Component {
       },
     ];
     return (
-      <ContentsWrapper>
+      <StyledContentsWrapper>
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">날짜 선택</span>
-          {/* datePiker CSS 없음 대체용으로 사용 */}
-          <div style={{ margin: '0 5px', display: 'inline-block' }}>
-            <DatePicker defaultValue={this.state.journalDate} format="YYYY-MM-DD" onChange={date => this.onChangeValue('journalDate', date)} />
-          </div>
+          <AntdDatePicker
+            className="ant-picker-mid mr5"
+            defaultValue={this.state.journalDate}
+            format="YYYY-MM-DD"
+            onChange={date => this.onChangeValue('journalDate', date)}
+          />
           <span className="textLabel">고정조 구분</span>
           <AntdSelect
             style={{ width: '200px' }}
@@ -249,14 +265,14 @@ class List extends Component {
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">근무자 현황</span>
           <AntdInput
-            style={{ width: '600px' }}
+            style={{ width: '500px' }}
             className="ant-input-inline ant-input-mid mr5"
             value={this.state.workerStatus}
             onChange={e => this.onChangeValue('workerStatus', e.target.value)}
           />
           <span className="textLabel">휴가자</span>
           <AntdInput
-            style={{ width: '600px' }}
+            style={{ width: '500px' }}
             className="ant-input-inline ant-input-mid mr5"
             value={this.state.vacationer}
             onChange={e => this.onChangeValue('vacationer', e.target.value)}
@@ -292,7 +308,7 @@ class List extends Component {
           pagination={false}
           footer={null}
         />
-      </ContentsWrapper>
+      </StyledContentsWrapper>
     );
   }
 }
