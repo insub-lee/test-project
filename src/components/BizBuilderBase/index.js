@@ -23,7 +23,14 @@ import ExtraBuilder from './viewComponent/ExtraBuilder';
 class BizBuilderBase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isShowBuilderModal: false, builderModalViewType: 'INPUT', builderModalWorkSeq: -1, builderModalTaskSeq: -1, taskRowData: {} };
+    this.state = {
+      isShowBuilderModal: false,
+      builderModalViewType: 'INPUT',
+      builderModalWorkSeq: -1,
+      builderModalTaskSeq: -1,
+      taskRowData: {},
+      isLoading: true,
+    };
   }
 
   componentDidMount() {
@@ -47,11 +54,11 @@ class BizBuilderBase extends React.Component {
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
     const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq };
     if (taskSeq !== -1 && viewType === 'REVISION') {
-      revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps);
+      revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps, this.changeIsLoading);
     } else if (taskSeq !== -1) {
-      getDetailData(id, workSeq, taskSeq, retViewType, extraProps, changeWorkflowFormData);
+      getDetailData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, changeWorkflowFormData);
     } else if (workSeq !== -1) {
-      getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, conditional || '', changeWorkflowFormData);
+      getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, conditional || '', changeWorkflowFormData);
     }
   }
 
@@ -77,14 +84,14 @@ class BizBuilderBase extends React.Component {
     const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq };
     if (prevProps.sagaKey !== this.props.sagaKey || (prevProps.viewType && prevProps.viewType !== viewType)) {
       if (taskSeq !== -1 && viewType === 'REVISION') {
-        revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps);
+        revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps, this.changeIsLoading);
       } else if (taskSeq !== -1) {
-        getDetailData(id, workSeq, taskSeq, retViewType, extraProps, changeWorkflowFormData);
+        getDetailData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, changeWorkflowFormData);
       } else if (workSeq !== -1) {
-        getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, conditional || '', changeWorkflowFormData);
+        getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, conditional || '', changeWorkflowFormData);
       }
     } else if (conditional !== prevProps.conditional && retViewType === 'LIST' && workSeq !== -1) {
-      getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, conditional || '', changeWorkflowFormData);
+      getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, conditional || '', changeWorkflowFormData);
     }
   }
 
@@ -106,15 +113,17 @@ class BizBuilderBase extends React.Component {
       listMetaSeq,
       viewChangeSeq,
     } = this.props; // id: widget_id+@
-    const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
-    const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq };
-    if (taskSeq !== -1 && viewType === 'REVISION') {
-      revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps);
-    } else if (taskSeq !== -1) {
-      getDetailData(id, workSeq, taskSeq, retViewType, extraProps, changeWorkflowFormData);
-    } else if (workSeq !== -1) {
-      getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, conditional || '', changeWorkflowFormData);
-    }
+    this.setState({ isLoading: true }, () => {
+      const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
+      const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq };
+      if (taskSeq !== -1 && viewType === 'REVISION') {
+        revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps, this.changeIsLoading);
+      } else if (taskSeq !== -1) {
+        getDetailData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, changeWorkflowFormData);
+      } else if (workSeq !== -1) {
+        getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, this.changeIsLoading, conditional || '', changeWorkflowFormData);
+      }
+    });
   };
 
   changeFormData = (id, key, val) => {
@@ -125,6 +134,8 @@ class BizBuilderBase extends React.Component {
 
   changeBuilderModalState = (isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData) =>
     this.setState({ isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData });
+
+  changeIsLoading = flag => this.setState({ isLoading: flag });
 
   searchCompRenderer = props => <SearchComp {...props} />;
 
@@ -154,6 +165,7 @@ class BizBuilderBase extends React.Component {
         changeFormData: this.changeFormData,
         changeBuilderModalState: this.changeBuilderModalState,
         ExtraBuilder,
+        changeIsLoading: this.changeIsLoading,
       };
       switch (viewPageData.viewType.toUpperCase()) {
         case 'INPUT':
@@ -202,7 +214,6 @@ class BizBuilderBase extends React.Component {
   render() {
     const {
       sagaKey,
-      dataLoading,
       isBuilderModal,
       builderModalSetting,
       viewChangeSeqByModal,
@@ -212,11 +223,13 @@ class BizBuilderBase extends React.Component {
       compProps,
       conditional,
     } = this.props;
-    const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData } = this.state;
+    const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData, isLoading } = this.state;
 
     return (
       <div>
-        <Spin spinning={dataLoading}>{this.componentRenderer()}</Spin>
+        <Spin size="large" spinning={isLoading}>
+          {this.componentRenderer()}
+        </Spin>
         <Modal
           centered
           destroyOnClose
@@ -279,7 +292,7 @@ BizBuilderBase.propTypes = {
   changeValidationData: PropTypes.func.isRequired,
   getProcessRule: PropTypes.func,
   setProcessStep: PropTypes.func,
-  isLoading: PropTypes.bool,
+  // isLoading: PropTypes.bool,
   draftId: PropTypes.number,
   draftProcess: PropTypes.array,
   setProcessRule: PropTypes.func,
@@ -338,6 +351,7 @@ BizBuilderBase.defaultProps = {
   ViewCustomButtonsByModal: undefined,
   ListCustomButtonsByModal: undefined,
   getFileDownload: () => false,
+  // isLoading: true,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -348,7 +362,7 @@ const mapStateToProps = createStructuredSelector({
   formData: selectors.makeSelectFormData(),
   revisionHistory: selectors.makeSelectRevisionHistory(),
   processRule: selectors.makeSelectProcessRule(),
-  isLoading: selectors.makeSelectLoading(),
+  // isLoading: selectors.makeSelectLoading(),
   draftProcess: selectors.makeSelectDraftProcess(),
   listData: selectors.makeSelectList(),
   viewPageData: selectors.makeSelectViewPageData(),
@@ -368,27 +382,28 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBuilderData: (id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData) =>
-    dispatch(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData)),
+  getBuilderData: (id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, conditional, changeWorkflowFormData, detailData) =>
+    dispatch(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, conditional, changeWorkflowFormData, detailData)),
   getExtraApiData: (id, apiArr, callback) => dispatch(actions.getExtraApiData(id, apiArr, callback)),
   submitExtraHandler: (id, httpMethod, apiUrl, submitData, callbackFunc, etcData) =>
     dispatch(actions.submitExtraHandler(id, httpMethod, apiUrl, submitData, callbackFunc, etcData)),
-  getDetailData: (id, workSeq, taskSeq, viewType, extraProps, changeWorkflowFormData) =>
-    dispatch(actions.getDetailData(id, workSeq, taskSeq, viewType, extraProps, changeWorkflowFormData)),
+  getDetailData: (id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, changeWorkflowFormData) =>
+    dispatch(actions.getDetailData(id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, changeWorkflowFormData)),
   getTaskSeq: (id, workSeq) => dispatch(actions.getTaskSeq(id, workSeq)),
   // saveTempContents: (id, detail, fieldName, compType, contSeq) => dispatch(actions.saveTempContents(id, detail, fieldName, compType, contSeq)),
   tempSaveTask: (id, callbackFunc) => dispatch(actions.tempSaveTask(id, callbackFunc)),
-  saveTask: (id, reloadId, callbackFunc) => dispatch(actions.saveTask(id, reloadId, callbackFunc)),
-  modifyTask: (id, reloadId, callbackFunc) => dispatch(actions.modifyTask(id, reloadId, callbackFunc)),
-  modifyTaskBySeq: (id, reloadId, workSeq, taskSeq, callbackFunc) => dispatch(actions.modifyTaskBySeq(id, reloadId, workSeq, taskSeq, callbackFunc)),
+  saveTask: (id, reloadId, callbackFunc, changeIsLoading) => dispatch(actions.saveTask(id, reloadId, callbackFunc, changeIsLoading)),
+  modifyTask: (id, reloadId, callbackFunc, changeIsLoading) => dispatch(actions.modifyTask(id, reloadId, callbackFunc, changeIsLoading)),
+  modifyTaskBySeq: (id, reloadId, workSeq, taskSeq, callbackFunc, changeIsLoading) =>
+    dispatch(actions.modifyTaskBySeq(id, reloadId, workSeq, taskSeq, callbackFunc, changeIsLoading)),
   deleteTask: (id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc) =>
     dispatch(actions.deleteTask(id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc)),
   deleteExtraTask: (id, url, params, apiArr) => dispatch(actions.deleteExtraTask(id, url, params, apiArr)),
   deleteFav: (id, apiArr, callbackFunc) => dispatch(actions.deleteFav(id, apiArr, callbackFunc)),
   changeFormData: (id, key, val) => dispatch(actions.changeFormData(id, key, val)),
   addNotifyBuilder: (id, workSeq, taskSeq, titleKey, contentKey) => dispatch(actions.addNotifyBuilder(id, workSeq, taskSeq, titleKey, contentKey)),
-  revisionTask: (id, workSeq, taskSeq, viewType, revisionType, extraProps, callbackFunc) =>
-    dispatch(actions.revisionTask(id, workSeq, taskSeq, viewType, revisionType, extraProps, callbackFunc)),
+  revisionTask: (id, workSeq, taskSeq, viewType, revisionType, extraProps, changeIsLoading, callbackFunc) =>
+    dispatch(actions.revisionTask(id, workSeq, taskSeq, viewType, revisionType, extraProps, changeIsLoading, callbackFunc)),
   getRevisionHistory: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.getRevisionHistory(id, workSeq, taskSeq, callbackFunc)),
   removeReduxState: id => dispatch(actions.removeReduxState(id)),
   changeValidationData: (id, key, flag, msg) => dispatch(actions.changeValidationDataByReducr(id, key, flag, msg)),
@@ -405,7 +420,7 @@ const mapDispatchToProps = dispatch => ({
   destroyReducer: id => dispatch(actions.destroyReducerByReducer(id)),
   setListSelectRowKeys: (id, list) => dispatch(actions.setListSelectRowKeysByReducer(id, list)),
   removeMultiTask: (id, reloadId, callbackFunc) => dispatch(actions.removeMultiTaskBySaga(id, reloadId, callbackFunc)),
-  setIsLoading: (id, flag) => dispatch(actions.setIsLoadingByReducer(id, flag)),
+  // setIsLoading: (id, flag) => dispatch(actions.setIsLoadingByReducer(id, flag)),
   getFileDownload: (id, url, fileName) => dispatch(actions.getFileDownload(id, url, fileName)),
   setFormData: (id, formData) => dispatch(actions.setFormDataByReducer(id, formData)),
   setTaskFavorite: (id, workSeq, taskOriginSeq, flag) => dispatch(actions.setTaskFavoriteBySaga(id, workSeq, taskOriginSeq, flag)),

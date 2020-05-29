@@ -97,7 +97,10 @@ class InputPage extends Component {
   };
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
-    const { submitExtraHandler, formData, metaList, workInfo, processRule } = this.props;
+    const { submitExtraHandler, formData, metaList, workInfo, processRule, changeIsLoading } = this.props;
+
+    changeIsLoading(true);
+
     const { uploadFileList } = this.state;
     const { OPT_INFO } = workInfo;
     // workflow 결재 체크 하기
@@ -143,8 +146,8 @@ class InputPage extends Component {
   };
 
   saveTask = (id, reloadId) => {
-    const { saveTask, saveTaskAfterCallbackFunc } = this.props;
-    saveTask(id, reloadId, typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.saveTaskAfter);
+    const { saveTask, saveTaskAfterCallbackFunc, changeIsLoading } = this.props;
+    saveTask(id, reloadId, typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.saveTaskAfter, changeIsLoading);
   };
 
   // state값 reset테스트
@@ -163,6 +166,7 @@ class InputPage extends Component {
       changeBuilderModalStateByParent,
       workInfo,
       redirectUrl,
+      changeIsLoading,
     } = this.props;
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler(id, redirectUrl);
@@ -181,6 +185,8 @@ class InputPage extends Component {
       changeViewPage(reloadId, workSeq, -1, 'LIST');
       if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
+
+    changeIsLoading(false);
   };
 
   render = () => {
@@ -197,7 +203,6 @@ class InputPage extends Component {
       CustomWorkProcessModal,
       reloadId,
       isBuilderModal,
-      isLoading,
       InputCustomButtons,
     } = this.props;
 
@@ -227,7 +232,7 @@ class InputPage extends Component {
               <InputCustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
             ) : (
               <div className="alignRight">
-                <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
+                <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
                   Save
                 </StyledButton>
                 {!isBuilderModal && (
@@ -267,7 +272,6 @@ InputPage.defaultProps = {
     },
   },
   CustomWorkProcess: undefined,
-  isLoading: false,
 };
 
 export default InputPage;
