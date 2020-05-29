@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Radio } from 'antd';
 import request from 'utils/request';
-import { temp } from 'containers/guide/components/Article/Articles/Test/MasterPmBomTree/actions';
 import AntRadiobox from '../../../containers/store/components/uielements/radiobox.style';
 
 const RadioGroup = AntRadiobox(Radio.Group);
+/*
 
+*/
 const CustomValueRadioComp = props => {
   const [values, setValues] = useState([{ value: null, text: null }]);
   const [defaultValue, setDefaultValue] = useState('');
@@ -40,20 +41,21 @@ const CustomValueRadioComp = props => {
   }, [defaultValue]);
 
   const usageHandler = value => {
-    const temp = { ...props?.rowData };
-    temp.changedValue = value;
-    request({
-      method: 'POST',
-      url: targetUrl,
-      // FIRE_CODE: FE (소화기)
-      data: temp,
-    }).then(({ response }) => {
-      // console.debug('### response of CustomDataTableComp: ', response);
-      if (response?.result === 1) {
-        // console.debug('£££ result 1 : ', response?.data instanceof Object, response?.data);
-        setDefaultValue(value);
-      }
-    });
+    if (targetUrl !== '') {
+      const temp = { ...props?.rowData };
+      temp.CHANGED_VALUE = value;
+      request({
+        method: 'POST',
+        url: targetUrl,
+        data: temp,
+      }).then(({ response }) => {
+        // console.debug('### response of CustomDataTableComp: ', response);
+        if (response?.result === 1) {
+          // console.debug('£££ result 1 : ', response?.data instanceof Object, response?.data);
+          setDefaultValue(value);
+        }
+      });
+    }
   };
 
   const onChangeHandler = value => {
