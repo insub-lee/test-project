@@ -22,35 +22,39 @@ class LeadBallComp extends Component {
     selectedCheckList: [],
     selectedCheckListValue: {},
     selectedGroupKey: undefined,
+    isItem: false,
   };
 
   componentDidMount() {
-    const {
-      getExtraApiData,
-      sagaKey: id,
-      COMP_FIELD,
-      CONFIG: {
-        property: { mapId },
-      },
-    } = this.props;
-    const apiArys = [
-      { key: 'LeadFrame', url: `/api/admin/v1/common/categoryMapList?MAP_ID=21`, type: 'GET' },
-      { key: 'Ball', url: `/api/admin/v1/common/categoryMapList?MAP_ID=22`, type: 'GET' },
-    ];
-    getExtraApiData(id, apiArys, this.initDataBind);
+    const { fieldSelectData, CONFIG } = this.props;
+
+    if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
+      if (fieldSelectData[CONFIG.property.compSelectDataKey]) {
+        const mapList = fieldSelectData[CONFIG.property.compSelectDataKey];
+        this.initDataBind(mapList);
+      }
+    }
+    // const {
+    //   getExtraApiData,
+    //   sagaKey: id,
+    //   COMP_FIELD,
+    //   CONFIG: {
+    //     property: { mapId },
+    //   },
+    // } = this.props;
+    // const apiArys = [
+    //   { key: 'LeadFrame', url: `/api/admin/v1/common/categoryMapList?MAP_ID=21`, type: 'GET' },
+    //   { key: 'Ball', url: `/api/admin/v1/common/categoryMapList?MAP_ID=22`, type: 'GET' },
+    // ];
+    // getExtraApiData(id, apiArys, this.initDataBind);
   }
 
-  initDataBind = sagaKey => {
-    const {
-      extraApiData: {
-        LeadFrame: { categoryMapList: leadframeList },
-        Ball: { categoryMapList: ballList },
-      },
-      colData,
-      formData,
-    } = this.props;
-    const { LB_TYPE } = formData;
+  initDataBind = mapList => {
+    const { colData, formData } = this.props;
 
+    const { LeadFrame: leadframeList, Ball: ballList } = mapList;
+
+    const { LB_TYPE } = formData;
     const selectedValue = colData.split(',').map(val => Number(val));
     let selectedItem;
     if (LB_TYPE === 'L') {
@@ -75,7 +79,6 @@ class LeadBallComp extends Component {
         dataSet: ballList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0).map(item => ({ ...item, checked: true })),
       },
     ];
-    console.debug('dataSource', dataSource);
     this.setState({ dataSource });
   };
 
@@ -94,11 +97,12 @@ class LeadBallComp extends Component {
   onClickScope = () => {
     const { changeFormData, COMP_FIELD, sagaKey } = this.props;
     const { selectedCheckListValue, selectedGroupKey } = this.state;
-    console.debug('selectedGroupKey', selectedGroupKey);
+    const isItem = selectedCheckListValue.length > 0;
     this.setState(
       prevState => ({
         dataSource: prevState.selectedCheckList,
         isShowModal: false,
+        isItem,
       }),
       () => {
         changeFormData(sagaKey, COMP_FIELD, selectedCheckListValue.join());
@@ -108,10 +112,12 @@ class LeadBallComp extends Component {
   };
 
   render() {
+    const { readOnly } = this.props;
+    const { isItem } = this.state;
     return (
       <>
         <StyledMultiSelector>
-          <div className="wrapper">
+          <div className={isItem && !readOnly ? 'wrapper active' : 'wrapper'}>
             <div className="draftWrapper">
               {this.state.dataSource.map(grp =>
                 grp.selectedItem.map(item => (
