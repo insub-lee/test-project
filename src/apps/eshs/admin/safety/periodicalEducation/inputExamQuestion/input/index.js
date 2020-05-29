@@ -120,10 +120,15 @@ class InputPage extends React.Component {
 
     this.setState(prevState => ({
       questions:
-        (result.questions && result.questions.list.length && result.questions.list[0].QUESTIONS && { ...JSON.parse(result.questions.list[0].QUESTIONS) }) ||
+        (result.questions &&
+          result.questions.list &&
+          result.questions.list[0] &&
+          result.questions.list[0].QUESTIONS && { ...JSON.parse(result.questions.list[0].QUESTIONS) }) ||
         initQuestions,
-      PARENT_WORK_SEQ: (result.questions && result.questions.list.length && result.questions.list[0].PARENT_WORK_SEQ) || prevState.PARENT_WORK_SEQ,
-      PARENT_TASK_SEQ: (result.questions && result.questions.list.length && result.questions.list[0].PARENT_TASK_SEQ) || prevState.PARENT_TASK_SEQ,
+      PARENT_WORK_SEQ:
+        (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].PARENT_WORK_SEQ) || prevState.PARENT_WORK_SEQ,
+      PARENT_TASK_SEQ:
+        (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].PARENT_TASK_SEQ) || prevState.PARENT_TASK_SEQ,
     }));
   };
 
@@ -225,7 +230,7 @@ class InputPage extends React.Component {
         PARENT_TASK_SEQ,
         QUESTIONS: JSON.stringify(questionArr),
         REG_USER_ID: profile.USER_ID,
-        EXAM_ID: (result.questions && result.questions.list.length && result.questions.list[0].EXAM_ID) || '',
+        EXAM_ID: (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].EXAM_ID) || '',
       },
     };
 
@@ -241,7 +246,7 @@ class InputPage extends React.Component {
     const { questionsLenght } = this;
     const { questions, eduDate, selectedDate } = this.state;
     const { handleModalClose, result } = this.props;
-    const isModify = result.questions && result.questions.list && result.questions.list.length && result.questions.list[0].EXAM_ID;
+    const isModify = result.questions && result.questions.list && result.questions.list && result.questions.list[0] && result.questions.list[0].EXAM_ID;
     return (
       <>
         <ContentsWrapper>
