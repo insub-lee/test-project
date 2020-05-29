@@ -9,8 +9,8 @@ const InputExamQuestion = ({ parentTaskSeq, parentWorkSeq, handleModalClose, aut
     sagaKey="InputExamQuestion"
     parentTaskSeq={parentTaskSeq}
     parentWorkSeq={parentWorkSeq}
-    // component={authority[0] === 'V' ? InputPage : ViewPage} // 문제 제출 페이지
-    component={authority[0] !== 'V' ? InputPage : ViewPage} // 문제 풀이 페이지
+    component={authority[0] === 'V' ? InputPage : ViewPage} // 문제 제출 페이지
+    // component={authority[0] !== 'V' ? InputPage : ViewPage} // 문제 풀이 페이지
     handleModalClose={handleModalClose}
     authority={authority}
     getDataSource={getDataSource}
