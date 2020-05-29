@@ -4,23 +4,26 @@ import PropTypes from 'prop-types';
 import { DatePicker, Select, Input, Modal, message } from 'antd';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledModalWrapper from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import Moment from 'moment';
 import Graph from './Graph';
 
+const { Option } = Select;
+const { MonthPicker, RangePicker } = DatePicker;
+
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input);
 const AntdModal = StyledModalWrapper(Modal);
+const AntdMonthPicker = StyledDatePicker(MonthPicker);
+const AntdRangePicker = StyledDatePicker(RangePicker);
 
-const { Option } = Select;
-const { MonthPicker, RangePicker } = DatePicker;
 Moment.locale('ko');
 
 class List extends Component {
@@ -62,7 +65,9 @@ class List extends Component {
     const { sagaKey: id, getCallDataHandler, refStack } = this.props;
     const { dateStrings, rangeDateStrings, seq, stackCd } = this.state;
     const setDate = refStack
-      ? `START_DATE=${Moment(rangeDateStrings[0]).format('YYYY-MM-01')}&&END_DATE=${Moment(rangeDateStrings[1]).format('YYYY-MM-31')}&&STACK_CD=${stackCd}`
+      ? `START_DATE=${Moment(rangeDateStrings[0]).format('YYYY-MM-01')}&&END_DATE=${Moment(rangeDateStrings[1])
+          .endOf('month')
+          .format('YYYY-MM-DD')}&&STACK_CD=${stackCd}`
       : `START_DATE=${`${dateStrings}-01`}&&END_DATE=${`${dateStrings}-31`}`;
     const apiAry = [
       {
@@ -173,8 +178,8 @@ class List extends Component {
   dataSet = () => {
     const { refStack } = this.props;
     const { measureList, gasList } = this.state;
-    const hour = measureList && measureList.map(element => Number(element.HOUR_FLOW));
-    const minute = measureList && measureList.map(element => Number(element.MINUTE_FLOW));
+    const hour = measureList && measureList.map(element => Number(element.HOUR_FLOW).toFixed(3));
+    const minute = measureList && measureList.map(element => Number(element.MINUTE_FLOW).toFixed(3));
     const temp = this.densityList();
     const gasDensityList =
       gasList &&
@@ -238,7 +243,7 @@ class List extends Component {
       <StyledContentsWrapper>
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">조회구분</span>
-          <AntdSelect className="select-mid" onChange={value => this.onChangeState('selectGubun', value)} value={this.state.selectGubun}>
+          <AntdSelect className="select-mid mr5" onChange={value => this.onChangeState('selectGubun', value)} value={this.state.selectGubun}>
             <Option value={1} key="selectGubun">
               측정항목
             </Option>
@@ -246,10 +251,37 @@ class List extends Component {
               배출총량
             </Option>
           </AntdSelect>
-          <div style={{ margin: '0 5px', display: 'inline-block' }}>
-            {refStack ? (
-              // mode 사용 시 open value 관리해야함
-              <RangePicker
+          {refStack ? (
+            // mode 사용 시 open value 관리해야함
+            <AntdRangePicker
+              className="ant-picker-mid mr5"
+              value={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
+              open={this.state.isopen}
+              mode={['month', 'month']}
+              format={['YYYY-MM', 'YYYY-MM']}
+              onOpenChange={status => {
+                this.setState({ isopen: status });
+              }}
+              onPanelChange={value => {
+                if (value[0] < Moment().endOf('month') && value[1] < Moment().endOf('month')) {
+                  this.setState({
+                    rangeDateStrings: value,
+                  });
+                } else {
+                  message.warning('날짜가 올바르지 않습니다.');
+                }
+              }}
+            />
+          ) : (
+            <>
+              <AntdMonthPicker
+                className="ant-picker-mid mr5"
+                defaultValue={Moment(Moment(), 'YYYY-MM')}
+                format="YYYY-MM"
+                onChange={(date, dateStrings) => this.onChangeState('dateStrings', dateStrings)}
+              />
+              <AntdRangePicker
+                className="ant-picker-mid mr5"
                 value={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
                 open={this.state.isopen}
                 mode={['month', 'month']}
@@ -267,14 +299,8 @@ class List extends Component {
                   }
                 }}
               />
-            ) : (
-              <MonthPicker
-                defaultValue={Moment(Moment(), 'YYYY-MM')}
-                format="YYYY-MM"
-                onChange={(date, dateStrings) => this.onChangeState('dateStrings', dateStrings)}
-              />
-            )}
-          </div>
+            </>
+          )}
           <span className="textLabel">측정회차(월)</span>
           <AntdSelect style={{ width: 100 }} className="select-mid mr5" onChange={value => this.onChangeState('seq', value)} value={this.state.seq}>
             <Option value={1} key="seq">
@@ -290,7 +316,7 @@ class List extends Component {
             ''
           )}
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={() => this.isSearch()}>
+            <StyledButton className="btn-primary btn-sm" onClick={() => this.isSearch()}>
               검색
             </StyledButton>
           </StyledButtonWrapper>
@@ -299,7 +325,16 @@ class List extends Component {
           <StyledHtmlTable className="tableWrapper">
             <div style={{ overflowX: 'scroll' }}>
               <table>
-                <tbody>
+                <colgroup>
+                  <col width={100} />
+                  <col width={100} />
+                  <col width={100} />
+                  <col width={100} />
+                  <col width={100} />
+                  <col width={100} />
+                  {gasList && gasList.map(() => <col width={100} />)}
+                </colgroup>
+                <thead>
                   <tr>
                     <th>계통</th>
                     <th>STACK</th>
@@ -309,14 +344,16 @@ class List extends Component {
                     <th>시간당 배출량</th>
                     {gasList && gasList.map(item => <th>{item.GAS_CD}</th>)}
                   </tr>
+                </thead>
+                <tbody style={{ overflowY: 'scroll', height: 400 }}>
                   {measureList.map(item => (
                     <tr>
                       <td>{item.GUBUN_NAME}</td>
                       <td>{item.STACK_CD}</td>
                       <td>{item.IS_MEASURE}</td>
                       <td>{JSON.parse(item.GAS[0].value).MEASURE_DT}</td>
-                      <td>{JSON.parse(item.GAS[0].value).MINUTE_FLOW}</td>
-                      <td>{JSON.parse(item.GAS[0].value).HOUR_FLOW}</td>
+                      <td>{Number(JSON.parse(item.GAS[0].value).MINUTE_FLOW).toFixed(3)}</td>
+                      <td>{Number(JSON.parse(item.GAS[0].value).HOUR_FLOW).toFixed(3)}</td>
                       {selectGubun === 1
                         ? gasList &&
                           gasList.map(gasType => (

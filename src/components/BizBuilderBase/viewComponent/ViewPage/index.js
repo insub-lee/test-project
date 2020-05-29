@@ -85,7 +85,7 @@ class ViewPage extends Component {
                   </StyledButton>
                 )}
                 <StyledButton className="btn-primary btn-first" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
-                  Modify
+                  수정
                 </StyledButton>
                 <Popconfirm
                   title="Are you sure delete this task?"
@@ -95,14 +95,14 @@ class ViewPage extends Component {
                   okText="Yes"
                   cancelText="No"
                 >
-                  <StyledButton className="btn-light btn-first">Delete</StyledButton>
+                  <StyledButton className="btn-light btn-first">삭제</StyledButton>
                 </Popconfirm>
                 <StyledButton className="btn-light btn-first" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
-                  Revision
+                  새버전
                 </StyledButton>
                 {!isBuilderModal && (
                   <StyledButton className="btn-light btn-first" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                    List
+                    목록
                   </StyledButton>
                 )}
               </div>

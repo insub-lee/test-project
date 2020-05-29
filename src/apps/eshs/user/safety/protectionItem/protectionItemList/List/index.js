@@ -514,7 +514,7 @@ class List extends React.Component {
             </StyledButton>
           </div>
           <div style={{ width: '100%', height: '100%' }}>
-            <div className="ag-theme-balham tableWrapper" style={{ height: '540px' }}>
+            <div className="ag-theme-balham tableWrapper" style={{ height: '520px' }}>
               <AgGridReact
                 columnDefs={columnDefs}
                 rowData={rowData}
