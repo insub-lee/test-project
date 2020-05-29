@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import { Spin } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -14,11 +15,25 @@ import * as actions from './actions';
 import * as authSelectors from 'containers/common/Auth/selectors';
 
 class BizMicroDevBase extends React.Component {
+  state = {
+    spinning: false,
+  }
+
+  spinningOn = () => {
+    this.setState({ spinning: true });
+  };
+
+  spinningOff = () => {
+    this.setState({ spinning: false });
+  };
+
   render() {
     const { component: Component } = this.props;
     return (
       <div style={{ height: '100%' }}>
-        <Component {...this.props} />
+        <Spin spinning={this.state.spinning}>
+          <Component {...this.props} spinningOn={this.spinningOn} spinningOff={this.spinningOff} />
+        </Spin>
       </div>
     );
   }
