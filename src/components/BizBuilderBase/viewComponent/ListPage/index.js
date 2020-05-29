@@ -325,11 +325,11 @@ class ListPage extends Component {
                   isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
                 }
               >
-                Add
+                추가
               </StyledButton>
               {isMultiDelete && (
                 <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
-                  <StyledButton className="btn-light">Delete</StyledButton>
+                  <StyledButton className="btn-light">삭제</StyledButton>
                 </Popconfirm>
               )}
             </div>
