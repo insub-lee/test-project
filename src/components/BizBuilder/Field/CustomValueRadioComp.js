@@ -41,7 +41,7 @@ const CustomValueRadioComp = props => {
 
   const usageHandler = value => {
     const temp = { ...props?.rowData };
-    temp.changedValue = value;
+    temp.CHANGED_VALUE = value;
     request({
       method: 'POST',
       url: targetUrl,
