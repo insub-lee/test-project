@@ -43,7 +43,21 @@ class MdcsProcessListComp extends Component {
     };
   }
 
-  initData = (id, response) => {
+  componentDidMount() {
+    const { fieldSelectData, CONFIG } = this.props;
+
+    if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
+      if (fieldSelectData[CONFIG.property.compSelectDataKey]) {
+        const prcInfo = fieldSelectData[CONFIG.property.compSelectDataKey];
+        this.initDataBind(prcInfo);
+      }
+    }
+    // const { sagaKey, submitExtraHandler, formData } = this.props;
+    // const url = '/api/mdcs/v1/common/ProcessResultHandler';
+    // submitExtraHandler(sagaKey, 'POST', url, { PARAM: { WORK_SEQ: formData.WORK_SEQ, TASK_SEQ: formData.TASK_SEQ } }, this.initData);
+  }
+
+  initDataBind = response => {
     const { list, processList } = response;
     processList.forEach(item => {
       if (item.NODE_ID === 107 || item.NODE_ID === 106 || item.NODE_ID === 112) {
@@ -178,12 +192,6 @@ class MdcsProcessListComp extends Component {
     });
     this.setState({ draftNode, reviewerNode, mailReviewerNode });
   };
-
-  componentDidMount() {
-    const { sagaKey, submitExtraHandler, formData } = this.props;
-    const url = '/api/mdcs/v1/common/ProcessResultHandler';
-    submitExtraHandler(sagaKey, 'POST', url, { PARAM: { WORK_SEQ: formData.WORK_SEQ, TASK_SEQ: formData.TASK_SEQ } }, this.initData);
-  }
 
   render() {
     const { draftNode, reviewerNode, mailReviewerNode } = this.state;
