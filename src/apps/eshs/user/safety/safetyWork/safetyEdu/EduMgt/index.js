@@ -516,27 +516,15 @@ class EduMgt extends Component {
                   style={{ width: '200px', marginLeft: '5px', marginRight: '5px' }}
                   value={selectedCmpny.WRK_CMPNY_NM || ''}
                   readOnly
-                  onClick={() => {
-                    if (formData.EDU_NO !== '') {
-                      this.handleModalVisible('searchCmpny', true);
-                    }
-                  }}
+                  onClick={() => this.handleModalVisible('searchCmpny', true)}
                 />
               </label>
             </div>
             <div
               className="searchCmpnyBtn"
               tabIndex={0}
-              onClick={() => {
-                if (formData.EDU_NO !== '') {
-                  this.handleModalVisible('searchCmpny', true);
-                }
-              }}
-              onKeyPress={() => {
-                if (formData.EDU_NO !== '') {
-                  this.handleModalVisible('searchCmpny', true);
-                }
-              }} // esLint
+              onClick={() => this.handleModalVisible('searchCmpny', true)}
+              onKeyPress={() => this.handleModalVisible('searchCmpny', true)} // esLint
               role="button" // esLint
             >
               <CaretDownOutlined />

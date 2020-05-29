@@ -112,8 +112,8 @@ class SafetyWorkMain extends Component {
     this.setState({
       formData: {
         ...formData,
-        REQ_CMPNY_CD: myInfo.CMPNY_ID,
-        REQ_DEPT_CD: myInfo.DEPT_ID,
+        REQ_CMPNY_CD: myInfo.CMPNY_CD,
+        REQ_DEPT_CD: myInfo.DEPT_CD,
         REQ_EMP_NO: myInfo.EMP_NO,
         REQ_CMPNY_NM: myInfo.CMPNY_NM,
         REQ_DEPT_NM: myInfo.DEPT_NM,
@@ -263,55 +263,6 @@ class SafetyWorkMain extends Component {
       modalTitle: title,
       modalVisible: visible,
     });
-  };
-
-  // 감독자 선택
-  handleHstUserSelect = record => {
-    const { modalType, formData } = this.state;
-    let field = '';
-    switch (modalType) {
-      case 'supervisor':
-        field = 'REQ_SUPERVISOR_EMP_NO';
-        this.setState({
-          modalType: '',
-          modalTitle: '',
-          modalVisible: false,
-          formData: {
-            ...formData,
-            [field]: record.SQ_SWTB_HST_CMPNY_EMP,
-            [field.replace('NO', 'NM')]: record.EMP_NM,
-          },
-        });
-        break;
-      case 'exm':
-        field = 'EXM_EMP_NO';
-        this.setState({
-          modalType: '',
-          modalTitle: '',
-          modalVisible: false,
-          formData: {
-            ...formData,
-            EXM_CMPNY_CD: record.HST_CMPNY_CD,
-            EXM_DEPT_CD: record.DEPT_CD,
-            [field]: record.SQ_SWTB_HST_CMPNY_EMP,
-            [field.replace('NO', 'NM')]: record.EMP_NM,
-          },
-        });
-        break;
-      default:
-        field = 'FINAL_OK_EMP_NO';
-        this.setState({
-          modalType: '',
-          modalTitle: '',
-          modalVisible: false,
-          formData: {
-            ...formData,
-            [field]: record.SQ_SWTB_HST_CMPNY_EMP,
-            [field.replace('NO', 'NM')]: record.EMP_NM,
-          },
-        });
-        break;
-    }
   };
 
   // 거래처 선택
@@ -629,8 +580,8 @@ class SafetyWorkMain extends Component {
           modalVisible: false,
           formData: {
             ...formData,
-            EXM_CMPNY_CD: 72761,
-            EXM_DEPT_CD: record.DEPT_ID,
+            EXM_CMPNY_CD: record.COMP_CD.replace('COMP_', ''),
+            EXM_DEPT_CD: record.DEPT_CD,
             [field]: record.EMP_NO,
             [field.replace('NO', 'NM')]: record.NAME_KOR,
           },
@@ -777,7 +728,7 @@ class SafetyWorkMain extends Component {
           onCancel={() => this.handleModal('', false)}
         >
           {(modalType === 'supervisor' || modalType === 'exm' || modalType === 'final') && (
-            <UserSelect onUserSelectHandler={undefined} onUserSelectedComplete={this.onSelectedComplete} onCancel={undefined} />
+            <UserSelect onUserSelectHandler={undefined} onUserSelectedComplete={this.onSelectedComplete} onCancel={() => this.handleModal('', false)} />
           )}
           {(modalType === 'mainBfcheck' || modalType === 'subBfcheck') && <Bfcheck initFormData={formData} pageType={modalType} />}
           {modalType === 'cmpny' && (

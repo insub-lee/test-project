@@ -154,11 +154,12 @@ export const successTempSaveTask = id => ({
   id,
 });
 
-export const saveTask = (id, reloadId, callbackFunc) => ({
+export const saveTask = (id, reloadId, callbackFunc, changeIsLoading) => ({
   type: `${actionTypes.SAVE_TASK}_${id}`,
   id,
   reloadId,
   callbackFunc,
+  changeIsLoading,
 });
 
 export const successSaveTask = id => ({
@@ -166,20 +167,22 @@ export const successSaveTask = id => ({
   id,
 });
 
-export const modifyTask = (id, reloadId, callbackFunc) => ({
+export const modifyTask = (id, reloadId, callbackFunc, changeIsLoading) => ({
   type: `${actionTypes.MODIFY_TASK}_${id}`,
   id,
   reloadId,
   callbackFunc,
+  changeIsLoading,
 });
 
-export const modifyTaskBySeq = (id, reloadId, workSeq, taskSeq, callbackFunc) => ({
+export const modifyTaskBySeq = (id, reloadId, workSeq, taskSeq, callbackFunc, changeIsLoading) => ({
   type: `${actionTypes.MODIFY_TASK_BY_SEQ}_${id}`,
   id,
   reloadId,
   workSeq,
   taskSeq,
   callbackFunc,
+  changeIsLoading,
 });
 
 export const deleteTask = (id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc) => ({

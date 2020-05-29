@@ -146,8 +146,8 @@ class ModifyPage extends Component {
   };
 
   saveTask = (id, reloadId, callbackFunc) => {
-    const { modifyTask } = this.props;
-    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+    const { modifyTask, changeIsLoading } = this.props;
+    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter, changeIsLoading);
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
