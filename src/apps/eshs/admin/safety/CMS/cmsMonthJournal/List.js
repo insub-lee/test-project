@@ -7,16 +7,18 @@ import { Input, Select, Popover, message, DatePicker, Modal } from 'antd';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledModal from 'commonStyled/Modal/StyledModal';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledAntdModal from 'components/BizBuilder/styled//Modal/StyledAntdModal';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 
 const { TextArea } = Input;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const AntdSelect = StyledSelect(Select);
-const AntdModal = StyledModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
+const AntdRangePicker = StyledDatePicker(RangePicker);
 
 moment.locale('ko');
 
@@ -135,19 +137,17 @@ class List extends Component {
       rangeYn,
     } = this.props;
     return (
-      <ContentsWrapper>
+      <StyledContentsWrapper>
         <div className="selSaveWrapper alignLeft">
           {rangeYn ? (
             <>
               <span className="textLabel">날짜</span>
-              {/* datePiker CSS 없음 대체용으로 사용 */}
-              <div style={{ margin: '0 5px', display: 'inline-block', width: 300 }}>
-                <RangePicker
-                  defaultValue={rangeDate}
-                  format={['YYYY-MM-DD', 'YYYY-MM-DD']}
-                  onChange={(date, dateStrings) => this.onChangeValue('rangeDate', dateStrings)}
-                />
-              </div>
+              <AntdRangePicker
+                className="ant-picker-mid mr5"
+                defaultValue={rangeDate}
+                format={['YYYY-MM-DD', 'YYYY-MM-DD']}
+                onChange={(date, dateStrings) => this.onChangeValue('rangeDate', dateStrings)}
+              />
             </>
           ) : (
             <>
@@ -428,7 +428,7 @@ class List extends Component {
         <AntdModal width={1000} visible={isModal} title="이벤트 상세보기" onCancel={this.onModalChange} destroyOnClose footer={null}>
           {isModal && <BizBuilderBase sagaKey="cmsDetailJournal" workSeq={5781} taskSeq={taskSeq} viewType="MODIFY" onCloseModalHandler={this.onModalChange} />}
         </AntdModal>
-      </ContentsWrapper>
+      </StyledContentsWrapper>
     );
   }
 }

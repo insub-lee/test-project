@@ -177,6 +177,34 @@ const StyledMainWidget = styled.div`
       .ant-fullcalendar-fullscreen {
         .ant-fullcalendar-header {
           padding: 0 0 10px;
+
+          .ant-select {
+            font-size: 12px;
+
+            .ant-select-selection {
+              padding: 0.2rem 0.5rem;
+              font-size: 0.75rem;
+              line-height: 1.5;
+              height: auto;
+
+              .ant-select-selection__rendered {
+                line-height: 1.5;
+              }
+
+              &:hover,
+              &:focus {
+                color: #495057;
+                background-color: #fff;
+                border-color: #636a78;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem transparent;
+              }
+            }
+          }
+
+          .ant-radio-group {
+            display: none;
+          }
         }
 
         .ant-fullcalendar {
@@ -185,19 +213,32 @@ const StyledMainWidget = styled.div`
           .ant-fullcalendar-calendar-body {
             padding: 0;
 
-            .ant-fullcalendar-tbody {
-              tr td {
+            tr {
+              th.ant-fullcalendar-column-header {
+                background: #f8f8f8;
+                padding: 5px 12px 5px 0;
+                border-top: 1px solid #e8e8e8;
+                border-bottom: 1px solid #e8e8e8;
+              }
+
+              td {
                 padding: 0;
 
                 .ant-fullcalendar-date {
                   height: auto;
-                  margin: 0 2px;
+                  margin: 0;
                   padding: 4px 8px;
+                  border-bottom: 1px solid #e8e8e8;
+                  border-top: 0;
 
                   .ant-fullcalendar-content {
                     height: 32px;
                   }
                 }
+              }
+
+              &:last-child .ant-fullcalendar-date {
+                border-bottom: 0;
               }
             }
           }
