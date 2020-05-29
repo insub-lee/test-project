@@ -19,7 +19,6 @@ class FileManage extends Component {
   }
 
   componentDidMount() {
-    // this.props.getMenu('STORE');
     this.props.getSiteList();
   }
 
