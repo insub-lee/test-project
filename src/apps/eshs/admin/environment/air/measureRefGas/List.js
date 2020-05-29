@@ -11,17 +11,20 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledModalWrapper from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 
 import Moment from 'moment';
 import Graph from './Graph';
+
+const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input);
 const AntdModal = StyledModalWrapper(Modal);
 const AntdTable = StyledAntdTable(Table);
+const AntdRangePicker = StyledDatePicker(RangePicker);
 
-const { Option } = Select;
-const { RangePicker } = DatePicker;
 Moment.locale('ko');
 
 class List extends Component {
@@ -176,28 +179,25 @@ class List extends Component {
               배출총량
             </Option>
           </AntdSelect>
-          <div style={{ margin: '0 5px', display: 'inline-block' }}>
-            {/* mode 사용 시 open value 관리해야함 */}
-            <RangePicker
-              value={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
-              open={this.state.isopen}
-              mode={['month', 'month']}
-              format={['YYYY-MM', 'YYYY-MM']}
-              disabledDate={current => current && current < Moment().endOf('month')}
-              onOpenChange={status => {
-                this.setState({ isopen: status });
-              }}
-              onPanelChange={value => {
-                if (value[0] < Moment().endOf('month') && value[1] < Moment().endOf('month')) {
-                  this.setState({
-                    rangeDateStrings: value,
-                  });
-                } else {
-                  message.warning('날짜가 올바르지 않습니다.');
-                }
-              }}
-            />
-          </div>
+          <AntdRangePicker
+            value={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
+            open={this.state.isopen}
+            mode={['month', 'month']}
+            format={['YYYY-MM', 'YYYY-MM']}
+            disabledDate={current => current && current < Moment().endOf('month')}
+            onOpenChange={status => {
+              this.setState({ isopen: status });
+            }}
+            onPanelChange={value => {
+              if (value[0] < Moment().endOf('month') && value[1] < Moment().endOf('month')) {
+                this.setState({
+                  rangeDateStrings: value,
+                });
+              } else {
+                message.warning('날짜가 올바르지 않습니다.');
+              }
+            }}
+          />
           <AntdSearch style={{ width: 200 }} className="input-mid ant-input-inline mr5" value={this.state.gasCd} readOnly onClick={this.onChangeModal} />
           <StyledButtonWrapper className="btn-wrap-inline">
             <StyledButton className="btn-primary btn-first" onClick={() => this.isSearch()}>
