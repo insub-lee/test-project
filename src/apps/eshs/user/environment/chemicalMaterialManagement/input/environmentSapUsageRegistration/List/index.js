@@ -11,7 +11,7 @@ import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
-import { Table, Input, InputNumber, Select, Checkbox, Popconfirm } from 'antd';
+import { Table, Input, InputNumber, Select, Checkbox, Popconfirm, message } from 'antd';
 import moment from 'moment';
 import request from 'utils/request';
 
@@ -146,24 +146,23 @@ class List extends React.Component {
         const { selectedIndex } = this.state;
         if (index === 0) {
           return (
-            <Popconfirm disabled={this.isValid()} title="중복된 연도가 있습니다.">
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.isValid() ? this.handleInputClick : null}>
-                저장
-              </StyledButton>
-            </Popconfirm>
+            <StyledButton
+              className="btn-primary btn-first btn-sm"
+              onClick={this.isValid() ? this.handleInputClick : () => message.error('중복된 연도가 있습니다.')}
+            >
+              저장
+            </StyledButton>
           );
         }
         if (index === selectedIndex) {
           return (
             <>
-              <Popconfirm disabled={this.isValid()} title="중복된 연도가 있습니다.">
-                <StyledButton
-                  className="btn-primary btn-first btn-sm"
-                  onClick={this.isValid() || this.isModifyValid() ? () => this.updateSapUsage(record, index) : null}
-                >
-                  저장
-                </StyledButton>
-              </Popconfirm>
+              <StyledButton
+                className="btn-primary btn-first btn-sm"
+                onClick={this.isValid() || this.isModifyValid() ? () => this.updateSapUsage(record, index) : () => message.error('중복된 연도가 있습니다.')}
+              >
+                저장
+              </StyledButton>
               <StyledButton className="btn-primary btn-first btn-sm" onClick={this.handleCancelClick}>
                 취소
               </StyledButton>

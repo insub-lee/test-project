@@ -15,7 +15,7 @@ import * as selectors from './selectors';
 
 // BuilderBase 에서 API 호출시 HEADER 에 값을 추가하여 별도로 로그관리를 함 (필요할 경우 workSeq, taskSeq 추가)
 
-function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData, detailData }) {
+function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, conditional, changeWorkflowFormData, detailData }) {
   if (taskSeq === -1) yield put(actions.removeReduxState(id));
   const response = yield call(Axios.get, `/api/builder/v1/work/workBuilder/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
   const { work, metaList, formData, validationData, apiList, viewProcessList } = response;
@@ -178,6 +178,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, condition
   if (viewType === 'LIST') {
     yield put(actions.getListDataBySaga(id, workSeq, conditional));
   }
+  if (typeof changeIsLoading === 'function') changeIsLoading(false);
 }
 
 function* getExtraApiData({ id, apiArr, callback }) {
@@ -218,12 +219,13 @@ function* submitExtraHandler({ id, httpMethod, apiUrl, submitData, callbackFunc,
       break;
   }
   const response = yield call(httpMethodInfo, apiUrl, submitData);
+
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, response, etcData);
   }
 }
 
-function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeWorkflowFormData }) {
+function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, changeWorkflowFormData }) {
   /* Enable Data Loading */
   // yield put(actions.enableDataLoading());
   /* Redux Reset By Id */
@@ -244,7 +246,7 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeWork
   if (formData) {
     yield put(actions.setDetailData(id, formData, validationData, draftInfo));
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
-    yield put(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps, undefined, undefined, formData));
+    yield put(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, undefined, undefined, formData));
   }
   /* Disable Data Loading */
   // yield put(actions.disableDataLoading());
@@ -699,12 +701,12 @@ function* deleteExtraTask({ id, url, params, apiArr }) {
   yield put(actions.getExtraApiData(id, apiArr));
 }
 
-function* revisionTask({ id, workSeq, taskSeq, viewType, revisionType, extraProps, callbackFunc }) {
+function* revisionTask({ id, workSeq, taskSeq, viewType, revisionType, extraProps, changeIsLoading, callbackFunc }) {
   const response = yield call(Axios.post, `/api/builder/v1/work/revision/${workSeq}/${taskSeq}`, { PARAM: { revisionType } }, { BUILDER: 'revisionTask' });
   const newTaskSeq = response.data.TASK_SEQ;
   yield put(actions.setTaskSeq(id, newTaskSeq));
   yield put(actions.setDetailData(id, response.data, response.validationData));
-  yield put(actions.getBuilderData(id, workSeq, newTaskSeq, viewType, extraProps));
+  yield put(actions.getBuilderData(id, workSeq, newTaskSeq, viewType, extraProps, changeIsLoading));
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, workSeq, newTaskSeq, viewType, extraProps);
   }

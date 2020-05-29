@@ -152,7 +152,7 @@ class ListPage extends Component {
         onChange: this.onSelectChange,
       };
     }
-    if (typeof customOnRowClick === 'function' && isOnRowClick) {
+    if (typeof customOnRowClick === 'function') {
       onRow = record => ({ onClick: () => customOnRowClick(record) });
     }
 

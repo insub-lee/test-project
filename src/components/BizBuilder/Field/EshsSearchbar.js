@@ -2,7 +2,7 @@ import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, Modal } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
-import CustomList from 'apps/eshs/admin/environment/air/stack/List';
+import CustomList from 'apps/eshs/admin/environment/air/stack/List'; // list custom button 추가 시 변경
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';

@@ -99,7 +99,8 @@ class ModifyPage extends Component {
   };
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
-    const { submitExtraHandler, formData, metaList, workInfo, processRule } = this.props;
+    const { submitExtraHandler, formData, metaList, workInfo, processRule, changeIsLoading } = this.props;
+    changeIsLoading(true);
     const { uploadFileList } = this.state;
     const { OPT_INFO } = workInfo;
     // workflow 결재 체크 하기
@@ -150,7 +151,16 @@ class ModifyPage extends Component {
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { reloadId, onCloseModalHandler, changeViewPage, isBuilderModal, isSaveModalClose, changeBuilderModalStateByParent, workInfo } = this.props;
+    const {
+      reloadId,
+      onCloseModalHandler,
+      changeViewPage,
+      isBuilderModal,
+      isSaveModalClose,
+      changeBuilderModalStateByParent,
+      workInfo,
+      changeIsLoading,
+    } = this.props;
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler();
     }
@@ -168,6 +178,7 @@ class ModifyPage extends Component {
       changeViewPage(reloadId, workSeq, -1, 'LIST');
       if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
+    changeIsLoading(false);
   };
 
   render = () => {
@@ -181,7 +192,6 @@ class ModifyPage extends Component {
       changeViewPage,
       isBuilderModal,
       ModifyCustomButtons,
-      isLoading,
       workInfo,
       CustomWorkProcess,
       CustomWorkProcessModal,
@@ -213,7 +223,7 @@ class ModifyPage extends Component {
               <ModifyCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
             ) : (
               <div className="alignRight">
-                <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
+                <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
                   Save
                 </StyledButton>
                 {!isBuilderModal && (
