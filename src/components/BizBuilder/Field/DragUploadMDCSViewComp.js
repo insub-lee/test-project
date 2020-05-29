@@ -95,10 +95,8 @@ class DragUploadMDCSViewComp extends Component {
         <ul>
           {fileList.map(file => (
             <li className={`${file.fileExt} file-list`}>
-              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>
-                {file.icon}
-                {file.fileName}
-              </span>
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>{file.icon}</span>
+              <span style={{ display: 'inline-block', verticalAlign: 'middle' }}>{file.fileName}</span>
               {isOriginDownload ? (
                 <StyledButton className="btn-light btn-xxs ml5" onClick={() => this.onClickDownLoad(file.down, file.fileName, true)}>
                   원본파일
