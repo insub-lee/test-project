@@ -167,6 +167,8 @@ class InputPage extends Component {
       workInfo,
       redirectUrl,
       changeIsLoading,
+      reloadViewType,
+      reloadTaskSeq,
     } = this.props;
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler(id, redirectUrl);
@@ -182,7 +184,12 @@ class InputPage extends Component {
       }
     }
     if (isBuilderModal) {
-      changeViewPage(reloadId, workSeq, -1, 'LIST');
+      changeViewPage(
+        reloadId,
+        workSeq,
+        reloadId && reloadViewType && reloadTaskSeq ? reloadTaskSeq : -1,
+        reloadId && reloadViewType && reloadTaskSeq ? reloadViewType : 'LIST',
+      );
       if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
 
@@ -233,11 +240,11 @@ class InputPage extends Component {
             ) : (
               <div className="alignRight">
                 <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
-                  Save
+                  저장
                 </StyledButton>
                 {!isBuilderModal && (
                   <StyledButton className="btn-light" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                    List
+                    목록
                   </StyledButton>
                 )}
               </div>

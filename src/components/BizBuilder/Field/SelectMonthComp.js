@@ -29,7 +29,7 @@ class SelectMonthComp extends React.Component {
 
   handleOnSearch = value => {
     const { sagaKey: id, changeSearchData, COMP_FIELD } = this.props;
-    const searchMonth = `AND W.${COMP_FIELD} = ${value}::VARCHAR`;
+    const searchMonth = `AND W.${COMP_FIELD} ILIKE ${value}::VARCHAR`;
     changeSearchData(id, COMP_FIELD, searchMonth);
   };
 
@@ -48,6 +48,7 @@ class SelectMonthComp extends React.Component {
             {monthArr.map(item => (
               <Select.Option value={item.value || ''}>{item.name || ''}</Select.Option>
             ))}
+            <Select.Option value="">전체</Select.Option>
           </AntdSelect>
         </>
       );

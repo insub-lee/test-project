@@ -327,6 +327,10 @@ class MdcsAppvView extends Component {
             viewMetaSeq={coverView.viewMetaSeq}
             workPrcProps={workPrcProps}
             onCloseCoverView={this.onCloseCoverView}
+            onCloseModalHandler={this.onCloseCoverView}
+            reloadId="approveBase_approveView"
+            reloadViewType="VIEW"
+            reloadTaskSeq={selectedRow && selectedRow.TASK_SEQ}
             ViewCustomButtons={({ onCloseCoverView }) => (
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
                 <StyledButton className="btn-light" onClick={onCloseCoverView}>

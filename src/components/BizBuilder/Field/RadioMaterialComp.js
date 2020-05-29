@@ -23,8 +23,20 @@ class RadioMaterialComp extends Component {
   };
 
   componentDidMount() {
-    const { sagaKey, getExtraApiData, apiArys } = this.props;
-    getExtraApiData(sagaKey, apiArys, this.initDataBind);
+    // const { sagaKey, getExtraApiData, apiArys } = this.props;
+    // getExtraApiData(sagaKey, apiArys, this.initDataBind);
+    const { fieldSelectData, CONFIG, colData } = this.props;
+    if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
+      if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey].length > 0) {
+        const isMeterialView = colData === 'Y';
+        this.setState({
+          mList: fieldSelectData[CONFIG.property.compSelectDataKey]
+            .filter(f => f.LVL !== 0 && f.USE_YN === 'Y')
+            .map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>),
+          isMeterialView,
+        });
+      }
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -86,7 +98,7 @@ class RadioMaterialComp extends Component {
     return (
       <table>
         <tr>
-          <td>
+          <td style={{ width: '120px' }}>
             <Radio.Group name="radiogroup" value={colData} onChange={this.onChangeHandler}>
               <Radio value="Y">Yes</Radio>
               <Radio value="N">No</Radio>
