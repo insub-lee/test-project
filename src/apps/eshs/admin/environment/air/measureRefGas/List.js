@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { DatePicker, Select, Input, Modal, message, Table } from 'antd';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
@@ -20,7 +19,7 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 const AntdSelect = StyledSelect(Select);
-const AntdSearch = StyledSearchInput(Input);
+const AntdSearch = StyledSearchInput(Input.Search);
 const AntdModal = StyledModalWrapper(Modal);
 const AntdTable = StyledAntdTable(Table);
 const AntdRangePicker = StyledDatePicker(RangePicker);
@@ -171,7 +170,7 @@ class List extends Component {
       <StyledContentsWrapper>
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">조회구분</span>
-          <AntdSelect className="select-mid" onChange={value => this.onChangeState('selectGubun', value)} value={this.state.selectGubun}>
+          <AntdSelect className="select-mid mr5" onChange={value => this.onChangeState('selectGubun', value)} value={this.state.selectGubun}>
             <Option value={1} key="selectGubun">
               측정항목
             </Option>
@@ -180,6 +179,7 @@ class List extends Component {
             </Option>
           </AntdSelect>
           <AntdRangePicker
+            className="ant-picker-mid mr5"
             value={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
             open={this.state.isopen}
             mode={['month', 'month']}
@@ -198,9 +198,15 @@ class List extends Component {
               }
             }}
           />
-          <AntdSearch style={{ width: 200 }} className="input-mid ant-input-inline mr5" value={this.state.gasCd} readOnly onClick={this.onChangeModal} />
+          <AntdSearch
+            style={{ width: 200 }}
+            className="input-search-mid ant-search-inline mr5"
+            value={this.state.gasCd}
+            readOnly
+            onClick={this.onChangeModal}
+          />
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={() => this.isSearch()}>
+            <StyledButton className="btn-primary btn-sm" onClick={() => this.isSearch()}>
               검색
             </StyledButton>
           </StyledButtonWrapper>
