@@ -22,7 +22,7 @@ class List extends React.Component {
     super(props);
     this.state = {
       dataSource: [],
-      requestValue: {},
+      rowData: {},
       searchValue: {
         site: '',
         startDate: moment().format('YYYY-MM-DD'),
@@ -31,6 +31,7 @@ class List extends React.Component {
         deptId: '',
       },
       modalVisible: false,
+      isModified: false,
     };
     this.getSearchData = debounce(this.getSearchData, 300);
   }
@@ -116,13 +117,6 @@ class List extends React.Component {
     },
   ];
 
-  modalFooter = () => [
-    <>
-      <StyledButton className="btn-primary mr5">저장</StyledButton>
-      <StyledButton className="btn-primary">취소</StyledButton>
-    </>,
-  ];
-
   handleSearchChange = (key, value) => {
     const { getSearchData } = this;
     this.setState(
@@ -149,14 +143,19 @@ class List extends React.Component {
     });
   };
 
+  handleModalClose = () => {
+    this.setState({ modalVisible: false, isModified: false });
+  };
+
   getSearchData = () => {
     const { getDataSource } = this;
     getDataSource();
   };
 
   render() {
-    const { columns, modalFooter, handleSearchChange, handleModalVisible, handleSearchDateChange } = this;
-    const { dataSource, modalVisible, searchValue } = this.state;
+    const { columns, handleSearchChange, handleModalVisible, handleSearchDateChange, handleModalClose, getDataSource } = this;
+    const { dataSource, modalVisible, searchValue, rowData, isModified } = this.state;
+    const { sagaKey, changeFormData, formData, viewPageData, saveTask } = this.props;
     return (
       <>
         <ContentsWrapper>
@@ -195,10 +194,25 @@ class List extends React.Component {
               </StyledButton>
             </div>
           </StyledSearchWrap>
-          <AntdTable columns={columns} dataSource={dataSource} />
+          <AntdTable
+            columns={columns}
+            dataSource={dataSource}
+            onRow={record => ({ onClick: () => this.setState({ rowData: record, modalVisible: true, isModified: true }) })}
+          />
         </ContentsWrapper>
-        <AntdModal title="입고 등록" visible={modalVisible} footer={modalFooter} onCancel={() => this.setState({ modalVisible: false })}>
-          <ModalContents />
+        <AntdModal title="입고 등록" visible={modalVisible} footer={null} onCancel={handleModalClose} destroyOnClose>
+          <ModalContents
+            sagaKey={sagaKey}
+            changeFormData={changeFormData}
+            formData={formData}
+            viewPageData={viewPageData}
+            handleModalVisible={handleModalVisible}
+            handleModalClose={handleModalClose}
+            saveTask={saveTask}
+            getDataSource={getDataSource}
+            rowData={rowData}
+            isModified={isModified}
+          />
         </AntdModal>
       </>
     );
@@ -209,12 +223,17 @@ List.propTypes = {
   sagaKey: PropTypes.string,
   getExtraApiData: PropTypes.func,
   extraApiData: PropTypes.object,
+  changeFormData: PropTypes.func,
+  saveTask: PropTypes.func,
+  formData: PropTypes.object,
+  viewPageData: PropTypes.object,
 };
 
 List.defaultProps = {
   sagaKey: '',
   getExtraApiData: null,
   extraApiData: null,
+  changeFormData: null,
 };
 
 export default List;
