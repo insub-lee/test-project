@@ -14,7 +14,8 @@ const StyledHtmlTable = styled.div`
       text-align: center;
       color: #000;
       padding: 10px;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #e8e8e8;
+      border-right: 1px solid #e8e8e8;
       font-weight: 500;
     }
 
@@ -26,20 +27,19 @@ const StyledHtmlTable = styled.div`
           color: #000;
           font-size: 12px;
           padding: 6px 8px;
-          border-bottom: 1px solid #ddd;
+          border-bottom: 1px solid #e8e8e8;
           width: 130px;
           font-weight: 500;
-          border-right: 1px solid #ddd;
         }
 
         td {
-          border-bottom: 1px solid #ddd;
+          border-bottom: 1px solid #e8e8e8;
           padding: 6px 8px;
           font-size: 12px;
           width: auto;
           background-color: #ffffff;
           color: #666;
-          border-right: 1px solid #ddd;
+          border-right: 1px solid #e8e8e8;
           &:last-child {
             border-right: 0;
           }
@@ -68,7 +68,7 @@ const StyledHtmlTable = styled.div`
     tfoot {
       tr td {
         background: #fafafa;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid #e8e8e8;
         font-size: 12px;
         color: #666;
         text-align: center;
@@ -91,7 +91,7 @@ const StyledHtmlTable = styled.div`
       thead tr {
         th,
         td {
-          border: 1px solid #ddd;
+          border: 1px solid #e8e8e8;
           border-left: 0;
           &:last-child {
             border-right: 0;

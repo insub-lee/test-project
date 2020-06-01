@@ -15,6 +15,7 @@ const StyledInputNumber = Component => styled(Component)`
     border: 1px solid #e5e5e5;
     border-radius: 4px;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+
     &:hover,
     &:focus {
       color: #495057;
@@ -23,54 +24,64 @@ const StyledInputNumber = Component => styled(Component)`
       outline: 0;
       box-shadow: 0 0 0 0.2rem transparent;
     }
+
     &:disabled {
       background: #f5f5f5;
     }
   }
+
   &.ant-input-number-inline {
     display: inline-block;
     vertical-align: middle;
   }
+
   &.mr5 {
     margin-right: 5px;
   }
+
   &.ant-input-number-mid {
     padding: 0.4rem 0.875rem;
     height: auto;
+
     input {
       height: auto;
       padding: 0;
     }
   }
+
   &.ant-input-number-sm {
     padding: 0.313rem 0.844rem;
     font-size: 0.75rem;
-    line-height: 1.5;
     height: auto;
+
     input {
       height: auto;
       padding: 0;
     }
   }
+
   &.ant-input-number-xs {
     padding: 0.2rem 0.7rem;
     font-size: 0.75rem;
-    line-height: 1.5;
     height: auto;
     input {
       height: auto;
       padding: 0;
     }
   }
+
   &.ant-input-number-pointer {
     cursor: pointer;
   }
+
   &.ant-input-number-center {
     text-align: center;
   }
+
   &.ant-input-number-left {
     text-align: left;
   }
+
   &.ant-input-number-right {
     text-align: right;
   }

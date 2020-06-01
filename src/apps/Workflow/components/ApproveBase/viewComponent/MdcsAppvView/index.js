@@ -36,6 +36,8 @@ class MdcsAppvView extends Component {
     },
     isUserSelect: false,
     procResult: [],
+    holdHistoryList: [],
+    undefined,
     isMultiSelect: true,
     workPrcProps: undefined,
     isDcc: false,
@@ -44,7 +46,8 @@ class MdcsAppvView extends Component {
 
   componentDidMount() {
     const { id, selectedRow, setSelectedRow, APPV_STATUS, submitHandlerBySaga, profile } = this.props;
-    const { WORK_SEQ, TASK_SEQ, DRAFT_PRC_ID, STEP } = selectedRow;
+    const { WORK_SEQ, TASK_SEQ, DRAFT_PRC_ID, QUE_ID, STEP } = selectedRow;
+
     const appvStatus = selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS == 10 ? 20 : 2;
     const nSelectRow = { ...selectedRow, APPV_STATUS: appvStatus };
     setSelectedRow(nSelectRow);
@@ -60,14 +63,16 @@ class MdcsAppvView extends Component {
         WORK_SEQ,
         TASK_SEQ,
         PARENT_DRAFT_PRC_ID: DRAFT_PRC_ID,
+        QUE_ID,
+        STEP,
       },
     };
     submitHandlerBySaga(id, 'POST', prefixUrl, param, this.initDataDelegate);
   }
 
   initDataDelegate = (id, response) => {
-    const { procResult } = response;
-    this.setState({ procResult });
+    const { procResult, holdHistoryList } = response;
+    this.setState({ procResult, holdHistoryList });
   };
 
   onChange = e => {
@@ -79,11 +84,15 @@ class MdcsAppvView extends Component {
   };
 
   handleReqApprove = (e, appvStatus) => {
-    e.preventDefault();
     const { opinion } = this.state;
-    this.props.setOpinion(opinion);
-    this.props.reqApprove(appvStatus);
-    this.props.setOpinionVisible(false);
+    if (((appvStatus === 3 || appvStatus === 30) && !opinion) || opinion === '') {
+      message.warning('의견을 작성해주세요');
+    } else {
+      e.preventDefault();
+      this.props.setOpinion(opinion);
+      this.props.reqApprove(appvStatus);
+      this.props.setOpinionVisible(false);
+    }
   };
 
   onModalClose = () => {
@@ -103,7 +112,6 @@ class MdcsAppvView extends Component {
 
   onClickModify = () => {
     const { selectedRow } = this.props;
-    console.debug('modify', selectedRow);
     const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
     this.setState({ coverView });
   };
@@ -195,7 +203,7 @@ class MdcsAppvView extends Component {
   render() {
     const { selectedRow } = this.props;
     const { DRAFT_DATA } = selectedRow;
-    const { modalWidth, coverView, isUserSelect, nextApprover, procResult, userList, isMultiSelect, workPrcProps, isDCC } = this.state;
+    const { modalWidth, coverView, isUserSelect, nextApprover, procResult, holdHistoryList, userList, isMultiSelect, workPrcProps, isDCC } = this.state;
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -258,6 +266,35 @@ class MdcsAppvView extends Component {
                         <td style={{ textAlign: 'center' }}>{item.APPV_STATUS}</td>
                         <td>{item.OPINION}</td>
                         <td style={{ textAlign: 'center' }}>{moment(item.REG_DTTM).format('YYYY-MM-DD')}</td>
+                      </tr>
+                    ))}
+                  </table>
+                </td>
+              </tr>
+              <tr style={{ display: holdHistoryList.length > 0 ? 'table-row' : 'none' }}>
+                <td colSpan={2} style={{ padding: 0, border: 0 }}>
+                  <table style={{ width: '100%', borderTop: 0 }}>
+                    <colgroup>
+                      <col width="10%" />
+                      <col width="10%" />
+                      <col width="10%" />
+                      <col width="55%" />
+                      <col width="15%" />
+                    </colgroup>
+                    <tr>
+                      <th>이름</th>
+                      <th>직급</th>
+                      <th>부서</th>
+                      <th>홀드해제의견</th>
+                      <th style={{ borderRight: 0 }}>해제일</th>
+                    </tr>
+                    {holdHistoryList.map(item => (
+                      <tr>
+                        <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
+                        <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
+                        <td style={{ textAlign: 'center' }}>{item.APPV_DEPT_NAME}</td>
+                        <td>{item.OPINION}</td>
+                        <td style={{ textAlign: 'center' }}>{moment(item.APPV_DTTM).format('YYYY-MM-DD')}</td>
                       </tr>
                     ))}
                   </table>
