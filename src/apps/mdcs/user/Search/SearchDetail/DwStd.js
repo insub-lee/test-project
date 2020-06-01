@@ -15,30 +15,28 @@ class DwStd extends Component {
   };
 
   componentDidMount() {
-    const { sagaKey, getCallDataHandler, apiArys } = this.props;
-    getCallDataHandler(sagaKey, apiArys, this.initDataBind);
+    const { sagaKey, submitHandlerBySaga } = this.props;
+    submitHandlerBySaga(sagaKey, 'POST', '/api/admin/v1/common/categoryMapByMapIds', { PARAM: { mapIds: [11, 15, 16, 20, 21, 22] } }, this.initDataBind);
   }
 
-  initDataBind = sagaKey => {
-    const {
-      result: {
-        dwList: { categoryMapList: dwItems },
-        prdList: { categoryMapList: prdItems },
-        pkgList: { categoryMapList: pkgItems },
-        lineList: { categoryMapList: lineItems },
-        leadList: { categoryMapList: leadItems },
-        ballList: { categoryMapList: ballItems },
-      },
-    } = this.props;
+  initDataBind = (sagaKey, response) => {
+    if (response) {
+      const lineItems = response['11'];
+      const pkgItems = response['15'];
+      const prdItems = response['16'];
+      const dwItems = response['20'];
+      const leadItems = response['21'];
+      const ballItems = response['22'];
 
-    this.setState({
-      dwItems: dwItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
-      prdItems: prdItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
-      pkgItems: pkgItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
-      lineItems: lineItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
-      leadItems: leadItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
-      ballItems: ballItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
-    });
+      this.setState({
+        dwItems: dwItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
+        prdItems: prdItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
+        pkgItems: pkgItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
+        lineItems: lineItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
+        leadItems: leadItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
+        ballItems: ballItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
+      });
+    }
   };
 
   onChangeDwType = value => {
@@ -118,7 +116,7 @@ class DwStd extends Component {
               <th rowSpan="3">SCOPE</th>
               <th>도면 구분</th>
               <td>
-                <Select allowClear onChange={this.onChangeDwType} style={{ width: '300px' }}>
+                <Select allowClear onChange={this.onChangeDwType} style={{ width: '150px' }}>
                   {dwItems}
                 </Select>
               </td>
@@ -171,46 +169,8 @@ DwStd.propTypes = {
 
 DwStd.defaultProps = {
   result: {
-    dwList: {},
-    prdList: {},
-    pkgList: {},
-    lineList: {},
-    leadList: {},
-    ballList: {},
+    categoryList: {},
   },
-
-  apiArys: [
-    {
-      key: 'dwList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=20',
-      type: 'GET',
-    },
-    {
-      key: 'prdList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=16',
-      type: 'GET',
-    },
-    {
-      key: 'pkgList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=15',
-      type: 'GET',
-    },
-    {
-      key: 'lineList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=11',
-      type: 'GET',
-    },
-    {
-      key: 'leadList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=21',
-      type: 'GET',
-    },
-    {
-      key: 'ballList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=22',
-      type: 'GET',
-    },
-  ],
 };
 
 export default DwStd;

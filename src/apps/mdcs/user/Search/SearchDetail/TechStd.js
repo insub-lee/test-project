@@ -19,22 +19,25 @@ class TechStd extends Component {
   }
 
   initDataBind = sagaKey => {
+    console.debug('techSearch', this.props.result);
     const {
       result: {
         techSubCategory: { categoryMapList: techSubCategoryItems },
-        site: { categoryMapList: siteItems },
-        lineSite: { categoryMapList: lineItems },
-        teachList: { categoryMapList: techItems },
-        genList: { categoryMapList: genItems },
-        memoryList: { categoryMapList: memoryItems },
-        pkgList: { categoryMapList: pkgItems },
-        prdList: { categoryMapList: prdItems },
-        moduleList: { categoryMapList: moduleItems },
-        customList: { categoryMapList: customItems },
-        changeList: { categoryMapList: changeItems },
-        fmeaList: { categoryMapList: fmeaItems },
+        categoryList,
       },
     } = this.props;
+
+    const changeItems = categoryList['4'];
+    const siteItems = categoryList['10'];
+    const lineItems = categoryList['11'];
+    const techItems = categoryList['12'];
+    const genItems = categoryList['13'];
+    const memoryItems = categoryList['14'];
+    const pkgItems = categoryList['15'];
+    const prdItems = categoryList['16'];
+    const moduleItems = categoryList['17'];
+    const customItems = categoryList['18'];
+    const fmeaItems = categoryList['23'];
 
     this.setState({
       techSubCategoryItems: techSubCategoryItems.filter(x => x.LVL === 2).map(item => <Checkbox value={item.NODE_ID}>{item.NAME_KOR}</Checkbox>),
@@ -252,59 +255,10 @@ TechStd.defaultProps = {
       params: { PARAM: { NODE_ID: 6 } },
     },
     {
-      key: 'changeList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=4',
-      type: 'GET',
-    },
-    {
-      key: 'fmeaList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=23',
-      type: 'GET',
-    },
-    {
-      key: 'site',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=10',
-      type: 'GET',
-    },
-    {
-      key: 'lineSite',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=11',
-      type: 'GET',
-    },
-    {
-      key: 'teachList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=12',
-      type: 'GET',
-    },
-    {
-      key: 'genList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=13',
-      type: 'GET',
-    },
-    {
-      key: 'memoryList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=14',
-      type: 'GET',
-    },
-    {
-      key: 'pkgList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=15',
-      type: 'GET',
-    },
-    {
-      key: 'prdList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=16',
-      type: 'GET',
-    },
-    {
-      key: 'moduleList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=17',
-      type: 'GET',
-    },
-    {
-      key: 'customList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=18',
-      type: 'GET',
+      key: 'categoryList',
+      url: '/api/admin/v1/common/categoryMapByMapIds',
+      type: 'POST',
+      params: { PARAM: { mapIds: [4, 10, 11, 12, 13, 14, 15, 16, 17, 18, 23] } },
     },
   ],
 };
