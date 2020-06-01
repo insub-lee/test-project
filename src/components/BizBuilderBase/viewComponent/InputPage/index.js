@@ -97,7 +97,10 @@ class InputPage extends Component {
   };
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
-    const { submitExtraHandler, formData, metaList, workInfo, processRule } = this.props;
+    const { submitExtraHandler, formData, metaList, workInfo, processRule, changeIsLoading } = this.props;
+
+    changeIsLoading(true);
+
     const { uploadFileList } = this.state;
     const { OPT_INFO } = workInfo;
     // workflow 결재 체크 하기
@@ -143,8 +146,8 @@ class InputPage extends Component {
   };
 
   saveTask = (id, reloadId) => {
-    const { saveTask, saveTaskAfterCallbackFunc } = this.props;
-    saveTask(id, reloadId, typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.saveTaskAfter);
+    const { saveTask, saveTaskAfterCallbackFunc, changeIsLoading } = this.props;
+    saveTask(id, reloadId, typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.saveTaskAfter, changeIsLoading);
   };
 
   // state값 reset테스트
@@ -163,6 +166,9 @@ class InputPage extends Component {
       changeBuilderModalStateByParent,
       workInfo,
       redirectUrl,
+      changeIsLoading,
+      reloadViewType,
+      reloadTaskSeq,
     } = this.props;
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler(id, redirectUrl);
@@ -178,9 +184,16 @@ class InputPage extends Component {
       }
     }
     if (isBuilderModal) {
-      changeViewPage(reloadId, workSeq, -1, 'LIST');
+      changeViewPage(
+        reloadId,
+        workSeq,
+        reloadId && reloadViewType && reloadTaskSeq ? reloadTaskSeq : -1,
+        reloadId && reloadViewType && reloadTaskSeq ? reloadViewType : 'LIST',
+      );
       if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
+
+    changeIsLoading(false);
   };
 
   render = () => {
@@ -197,7 +210,6 @@ class InputPage extends Component {
       CustomWorkProcessModal,
       reloadId,
       isBuilderModal,
-      isLoading,
       InputCustomButtons,
     } = this.props;
 
@@ -227,12 +239,12 @@ class InputPage extends Component {
               <InputCustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
             ) : (
               <div className="alignRight">
-                <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
-                  Save
+                <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
+                  저장
                 </StyledButton>
                 {!isBuilderModal && (
                   <StyledButton className="btn-light" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                    List
+                    목록
                   </StyledButton>
                 )}
               </div>
@@ -267,7 +279,6 @@ InputPage.defaultProps = {
     },
   },
   CustomWorkProcess: undefined,
-  isLoading: false,
 };
 
 export default InputPage;

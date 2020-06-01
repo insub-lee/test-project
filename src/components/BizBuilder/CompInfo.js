@@ -138,8 +138,10 @@ import DeptSelectComp from 'components/BizBuilder/Field/DeptSelectComp';
 import MDCSDccViewComp from 'components/BizBuilder/Field/MDCSDccViewComp';
 import DragUploadViewComp from 'components/BizBuilder/Field/DragUploadViewComp';
 import CategoryViewComp from 'components/BizBuilder/Field/CategoryViewComp';
+import CategorySelectComp from 'components/BizBuilder/Field/CategorySelectComp';
 
 export const CompInfo = {
+  'components/BizBuilder/Field/CategorySelectComp': { renderer: property => <CategorySelectComp {...property} /> },
   'components/BizBuilder/Field/CategoryViewComp': { renderer: property => <CategoryViewComp {...property} /> },
   'components/BizBuilder/Field/VaildationListComp': { renderer: property => <VaildationListComp {...property} /> },
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },

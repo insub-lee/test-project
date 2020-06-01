@@ -129,7 +129,6 @@ class SafetyWorkSearch extends Component {
         </StyledSearchWrap>
         <ContentsWrapper>
           <AntdTable
-            pagination={false}
             columns={columns}
             dataSource={safetyWorkList}
             footer={() => <div style={{ textAlign: 'center' }}>{`총 ${safetyWorkList.length === 0 ? 0 : safetyWorkList.length} 건`}</div>}

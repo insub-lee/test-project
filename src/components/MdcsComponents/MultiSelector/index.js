@@ -16,7 +16,7 @@ class MultiSelector extends Component {
     const { dataSource } = this.props;
     const total = dataSource && dataSource.length > 0 ? dataSource.length : 1;
     const wid = 100 / total;
-
+    console.debug(dataSource);
     this.setState({ checkDataList: dataSource, wid });
   }
 

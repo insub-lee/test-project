@@ -318,6 +318,14 @@ const StyledViewDesigner = styled.div`
             }
           }
         }
+
+        li.file-list {
+          margin-bottom: 5px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
       }
     }
   }

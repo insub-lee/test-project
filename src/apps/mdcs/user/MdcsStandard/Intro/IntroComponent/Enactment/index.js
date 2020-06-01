@@ -43,7 +43,7 @@ class Enactment extends Component {
       categoryList,
       templateList,
       stepList01: categoryList
-        .filter(f => f.LVL === 1)
+        .filter(f => f.LVL === 1 && f.NODE_ID !== 2207 && f.NODE_ID !== 2208)
         .map(item => (
           <Option key={item.NODE_ID}>
             {item.NAME_KOR} [{item.CODE}]
@@ -67,7 +67,7 @@ class Enactment extends Component {
       selectedNodeIds[i] = undefined;
     }
     const stepList02 = categoryList
-      .filter(f => f.PARENT_NODE_ID.toString() === value)
+      .filter(f => f.PARENT_NODE_ID.toString() === value && f.NODE_ID !== 17)
       .map(item => (
         <Option key={item.NODE_ID}>
           {item.NAME_KOR} [{item.CODE}]
@@ -247,7 +247,7 @@ Enactment.defaultProps = {
   apiArys: [
     {
       key: 'categoryInfo',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=1',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=1&ORDBY=ORDER BY CODE',
       type: 'GET',
       params: {},
     },

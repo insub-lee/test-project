@@ -21,8 +21,8 @@ class QuestionnaireView extends Component {
     userInfo: {}
   };
 
-  componentDidMount() {
-    const { sagaKey, getCallDataHandler, profile } = this.props;
+  componentWillMount() {
+    const { sagaKey, getCallDataHandler } = this.props;
     const apiAry = [
       {
         key: 'questionnaire',
@@ -30,23 +30,17 @@ class QuestionnaireView extends Component {
         type: 'GET',
         params: {},
       },
-      {
-        key: 'userDetail',
-        url: `/api/common/v1/account/userDetail/${profile.USER_ID}`,
-        type: 'GET',
-        params: {},
-      }
     ];
     getCallDataHandler(sagaKey, apiAry, this.initState);
   }
 
   initState = () => {
-    const { result } = this.props;
+    const { result, userInfo } = this.props;
     this.setState({
       qData: result.questionnaire.detail ? JSON.parse(result.questionnaire.detail.ANSWER_JSON) : {},
       year: result.questionnaire.detail ? result.questionnaire.detail.YEAR : '',
       saveType: result.questionnaire.detail ? 'U' : 'I',
-      userInfo: result.userDetail.data ? result.userDetail.data : {},
+      userInfo,
     })
   };
 
@@ -2914,659 +2908,661 @@ class QuestionnaireView extends Component {
             {/* question-item */}
           </div>
           {/* examination-area */}
-          <div className="examination-area">
-            <p className="examinaion-title">특수 건강 검진 문진표</p>
-            <div className="question-item">
-              <p className="add-title">
-                ※ 표적 장기별 증상 관련 문항 - 최근 6개월 동안 있었던 <b>증상에 대해 표시해 주십시오.</b>
-              </p>
-              <table className="question-table">
-                <colgroup>
-                  <col style={{ width: '10%' }} />
-                  <col style={{ width: '60%' }} />
-                  <col style={{ width: '10%' }} />
-                  <col style={{ width: '10%' }} />
-                  <col style={{ width: '10%' }} />
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th rowSpan={2}>신체 부위</th>
-                    <th rowSpan={2}>증상 문항</th>
-                    <th colSpan={3}>증상</th>
-                  </tr>
-                  <tr>
-                    <th>심하다</th>
-                    <th>약간있다</th>
-                    <th>없다</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th rowSpan={3}>일반</th>
-                    <td className="td-left">식욕이 없고 체중이 줄었다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION1 ? qData.SPECIAL_CHK.QUESTION1 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION1', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">피로감을 많이 느낀다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION2 ? qData.SPECIAL_CHK.QUESTION2 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION2', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">몸의 어느 부위에서 덩어리가 만져진다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION3 ? qData.SPECIAL_CHK.QUESTION3 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION3', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th rowSpan={4}>피부</th>
-                    <td className="td-left">피부가 가렵거나 염증이 생긴다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION4 ? qData.SPECIAL_CHK.QUESTION4 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION4', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">피부에 반점이 생긴다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION5 ? qData.SPECIAL_CHK.QUESTION5 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION5', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">체모나 손톱, 발톱에 변화가 있다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION6 ? qData.SPECIAL_CHK.QUESTION6 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION6', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">피부가 거칠어지거나 갈라진다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION7 ? qData.SPECIAL_CHK.QUESTION7 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION7', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th rowSpan={3}>눈</th>
-                    <td className="td-left">눈이 시리거나 눈물이 잘 난다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION8 ? qData.SPECIAL_CHK.QUESTION8 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION8', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">시력이 전보다 나빠졌다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION9 ? qData.SPECIAL_CHK.QUESTION9 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION9', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">눈이 충혈되거나 아프다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION10 ? qData.SPECIAL_CHK.QUESTION10 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION10', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th rowSpan={2}>귀</th>
-                    <td className="td-left">말소리가 또렷하게 들리지 않는다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION11 ? qData.SPECIAL_CHK.QUESTION11 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION11', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">귀에서 소리가 난다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION12 ? qData.SPECIAL_CHK.QUESTION12 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION12', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th rowSpan={3}>코</th>
-                    <td className="td-left">코피가 자주난다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION13 ? qData.SPECIAL_CHK.QUESTION13 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION13', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">콧물이 나고 코가 답답하다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION14 ? qData.SPECIAL_CHK.QUESTION14 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION14', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">냄새를 잘 못 맡는다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION15 ? qData.SPECIAL_CHK.QUESTION15 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION15', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th rowSpan={2}>입</th>
-                    <td className="td-left">잇몸에서 피가 나거나 잇몸이 헌다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION16 ? qData.SPECIAL_CHK.QUESTION16 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION16', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">맛을 잘 못 느낀다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION17 ? qData.SPECIAL_CHK.QUESTION17 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION17', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th rowSpan={3}>소화기</th>
-                    <td className="td-left">배가 찌르듯이 아픈적이 있다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION18 ? qData.SPECIAL_CHK.QUESTION18 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION18', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">금속을 빠는 것 같은 입 맛이 난다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION19 ? qData.SPECIAL_CHK.QUESTION19 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION19', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">변비가 있다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION20 ? qData.SPECIAL_CHK.QUESTION20 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION20', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th rowSpan={5}>심혈관/호흡기</th>
-                    <td className="td-left">작업 중 가슴이 두근거린다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION21 ? qData.SPECIAL_CHK.QUESTION21 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION21', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">일을 할 때 기침이 나고, 숨이 차다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION22 ? qData.SPECIAL_CHK.QUESTION22 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION22', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">가슴이 답답하다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION23 ? qData.SPECIAL_CHK.QUESTION23 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION23', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">아침에 일어났을 때 가래가 나오거나 기침을 한다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION24 ? qData.SPECIAL_CHK.QUESTION24 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION24', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">쉬고 난 다음날 작업장에 나가면 기침을 한다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION25 ? qData.SPECIAL_CHK.QUESTION25 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION25', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th rowSpan={5}>척추/사지</th>
-                    <td className="td-left">팔, 다리, 어깨가 쑤시거나 아프다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION26 ? qData.SPECIAL_CHK.QUESTION26 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION26', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">손, 발이 떨리거나 힘이 없다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION27 ? qData.SPECIAL_CHK.QUESTION27 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION27', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">손이나 발의 감각이 둔해졌다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION28 ? qData.SPECIAL_CHK.QUESTION28 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION28', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">추우면 손가락이 하얗게 된다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION29 ? qData.SPECIAL_CHK.QUESTION29 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION29', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">허리가 아프다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION30 ? qData.SPECIAL_CHK.QUESTION30 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION30', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th rowSpan={6}>정신/신경</th>
-                    <td className="td-left">머리가 아프다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION31 ? qData.SPECIAL_CHK.QUESTION31 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION31', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">어지럽다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION32 ? qData.SPECIAL_CHK.QUESTION32 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION32', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">기억력이 나빠지거나 건망증이 심해졌다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION33 ? qData.SPECIAL_CHK.QUESTION33 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION33', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">불안하고 초조하다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION34 ? qData.SPECIAL_CHK.QUESTION34 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION34', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">정신이 멍해지거나 술취한 느낌이 든다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION35 ? qData.SPECIAL_CHK.QUESTION35 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION35', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">정신을 집중하기가 어렵다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION36 ? qData.SPECIAL_CHK.QUESTION36 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION36', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th rowSpan={5}>비뇨/생식</th>
-                    <td className="td-left">소변이 잘 안나온다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION37 ? qData.SPECIAL_CHK.QUESTION37 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION37', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">몸이 붓는다</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION38 ? qData.SPECIAL_CHK.QUESTION38 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION38', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">생리가 불규칙해졌다(여성)</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION39 ? qData.SPECIAL_CHK.QUESTION39 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION39', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">자연유산을 한 적이 있다(여성)</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION40 ? qData.SPECIAL_CHK.QUESTION40 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION40', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="td-left">현재 생리중이다(여성)</td>
-                    <td colSpan={3} className="radio-td">
-                      <Radio.Group
-                        buttonStyle="solid" className="w33"
-                        value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION41 ? qData.SPECIAL_CHK.QUESTION41 : ''}
-                        onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION41', e.target.value)}
-                      >
-                        <Radio.Button value="0">1</Radio.Button>
-                        <Radio.Button value="1">2</Radio.Button>
-                        <Radio.Button value="2">3</Radio.Button>
-                      </Radio.Group>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          {this.props.chkTypeCd === '003' && (
+            <div className="examination-area">
+              <p className="examinaion-title">특수 건강 검진 문진표</p>
               <div className="question-item">
-                <p className="question-txt pad-none">* 작업 중에 건강상의 문제(몸의 이상)를 느낀 적이 있습니까?</p>
-                <div className="question-article">
-                  <Radio.Group
-                    value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION42 ? qData.SPECIAL_CHK.QUESTION42 : ''}
-                    onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION42', e.target.value)}
-                  >
-                    <Radio value="Y">예</Radio>
-                    <Radio value="N">아니오</Radio>
-                  </Radio.Group>
+                <p className="add-title">
+                  ※ 표적 장기별 증상 관련 문항 - 최근 6개월 동안 있었던 <b>증상에 대해 표시해 주십시오.</b>
+                </p>
+                <table className="question-table">
+                  <colgroup>
+                    <col style={{ width: '10%' }} />
+                    <col style={{ width: '60%' }} />
+                    <col style={{ width: '10%' }} />
+                    <col style={{ width: '10%' }} />
+                    <col style={{ width: '10%' }} />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th rowSpan={2}>신체 부위</th>
+                      <th rowSpan={2}>증상 문항</th>
+                      <th colSpan={3}>증상</th>
+                    </tr>
+                    <tr>
+                      <th>심하다</th>
+                      <th>약간있다</th>
+                      <th>없다</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th rowSpan={3}>일반</th>
+                      <td className="td-left">식욕이 없고 체중이 줄었다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION1 ? qData.SPECIAL_CHK.QUESTION1 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION1', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">피로감을 많이 느낀다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION2 ? qData.SPECIAL_CHK.QUESTION2 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION2', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">몸의 어느 부위에서 덩어리가 만져진다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION3 ? qData.SPECIAL_CHK.QUESTION3 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION3', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th rowSpan={4}>피부</th>
+                      <td className="td-left">피부가 가렵거나 염증이 생긴다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION4 ? qData.SPECIAL_CHK.QUESTION4 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION4', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">피부에 반점이 생긴다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION5 ? qData.SPECIAL_CHK.QUESTION5 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION5', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">체모나 손톱, 발톱에 변화가 있다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION6 ? qData.SPECIAL_CHK.QUESTION6 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION6', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">피부가 거칠어지거나 갈라진다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION7 ? qData.SPECIAL_CHK.QUESTION7 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION7', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th rowSpan={3}>눈</th>
+                      <td className="td-left">눈이 시리거나 눈물이 잘 난다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION8 ? qData.SPECIAL_CHK.QUESTION8 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION8', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">시력이 전보다 나빠졌다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION9 ? qData.SPECIAL_CHK.QUESTION9 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION9', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">눈이 충혈되거나 아프다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION10 ? qData.SPECIAL_CHK.QUESTION10 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION10', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th rowSpan={2}>귀</th>
+                      <td className="td-left">말소리가 또렷하게 들리지 않는다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION11 ? qData.SPECIAL_CHK.QUESTION11 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION11', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">귀에서 소리가 난다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION12 ? qData.SPECIAL_CHK.QUESTION12 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION12', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th rowSpan={3}>코</th>
+                      <td className="td-left">코피가 자주난다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION13 ? qData.SPECIAL_CHK.QUESTION13 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION13', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">콧물이 나고 코가 답답하다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION14 ? qData.SPECIAL_CHK.QUESTION14 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION14', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">냄새를 잘 못 맡는다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION15 ? qData.SPECIAL_CHK.QUESTION15 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION15', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th rowSpan={2}>입</th>
+                      <td className="td-left">잇몸에서 피가 나거나 잇몸이 헌다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION16 ? qData.SPECIAL_CHK.QUESTION16 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION16', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">맛을 잘 못 느낀다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION17 ? qData.SPECIAL_CHK.QUESTION17 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION17', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th rowSpan={3}>소화기</th>
+                      <td className="td-left">배가 찌르듯이 아픈적이 있다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION18 ? qData.SPECIAL_CHK.QUESTION18 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION18', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">금속을 빠는 것 같은 입 맛이 난다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION19 ? qData.SPECIAL_CHK.QUESTION19 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION19', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">변비가 있다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION20 ? qData.SPECIAL_CHK.QUESTION20 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION20', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th rowSpan={5}>심혈관/호흡기</th>
+                      <td className="td-left">작업 중 가슴이 두근거린다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION21 ? qData.SPECIAL_CHK.QUESTION21 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION21', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">일을 할 때 기침이 나고, 숨이 차다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION22 ? qData.SPECIAL_CHK.QUESTION22 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION22', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">가슴이 답답하다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION23 ? qData.SPECIAL_CHK.QUESTION23 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION23', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">아침에 일어났을 때 가래가 나오거나 기침을 한다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION24 ? qData.SPECIAL_CHK.QUESTION24 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION24', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">쉬고 난 다음날 작업장에 나가면 기침을 한다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION25 ? qData.SPECIAL_CHK.QUESTION25 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION25', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th rowSpan={5}>척추/사지</th>
+                      <td className="td-left">팔, 다리, 어깨가 쑤시거나 아프다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION26 ? qData.SPECIAL_CHK.QUESTION26 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION26', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">손, 발이 떨리거나 힘이 없다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION27 ? qData.SPECIAL_CHK.QUESTION27 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION27', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">손이나 발의 감각이 둔해졌다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION28 ? qData.SPECIAL_CHK.QUESTION28 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION28', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">추우면 손가락이 하얗게 된다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION29 ? qData.SPECIAL_CHK.QUESTION29 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION29', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">허리가 아프다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION30 ? qData.SPECIAL_CHK.QUESTION30 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION30', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th rowSpan={6}>정신/신경</th>
+                      <td className="td-left">머리가 아프다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION31 ? qData.SPECIAL_CHK.QUESTION31 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION31', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">어지럽다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION32 ? qData.SPECIAL_CHK.QUESTION32 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION32', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">기억력이 나빠지거나 건망증이 심해졌다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION33 ? qData.SPECIAL_CHK.QUESTION33 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION33', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">불안하고 초조하다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION34 ? qData.SPECIAL_CHK.QUESTION34 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION34', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">정신이 멍해지거나 술취한 느낌이 든다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION35 ? qData.SPECIAL_CHK.QUESTION35 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION35', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">정신을 집중하기가 어렵다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION36 ? qData.SPECIAL_CHK.QUESTION36 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION36', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th rowSpan={5}>비뇨/생식</th>
+                      <td className="td-left">소변이 잘 안나온다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION37 ? qData.SPECIAL_CHK.QUESTION37 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION37', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">몸이 붓는다</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION38 ? qData.SPECIAL_CHK.QUESTION38 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION38', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">생리가 불규칙해졌다(여성)</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION39 ? qData.SPECIAL_CHK.QUESTION39 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION39', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">자연유산을 한 적이 있다(여성)</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION40 ? qData.SPECIAL_CHK.QUESTION40 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION40', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="td-left">현재 생리중이다(여성)</td>
+                      <td colSpan={3} className="radio-td">
+                        <Radio.Group
+                          buttonStyle="solid" className="w33"
+                          value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION41 ? qData.SPECIAL_CHK.QUESTION41 : ''}
+                          onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION41', e.target.value)}
+                        >
+                          <Radio.Button value="0">1</Radio.Button>
+                          <Radio.Button value="1">2</Radio.Button>
+                          <Radio.Button value="2">3</Radio.Button>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div className="question-item">
+                  <p className="question-txt pad-none">* 작업 중에 건강상의 문제(몸의 이상)를 느낀 적이 있습니까?</p>
+                  <div className="question-article">
+                    <Radio.Group
+                      value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION42 ? qData.SPECIAL_CHK.QUESTION42 : ''}
+                      onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION42', e.target.value)}
+                    >
+                      <Radio value="Y">예</Radio>
+                      <Radio value="N">아니오</Radio>
+                    </Radio.Group>
+                  </div>
                 </div>
-              </div>
-              {/* question-item */}
-              <div className="question-item">
-                <p className="question-txt pad-none">* 작업 중에 취급하는 물질로 인해 건강 문제가 생겼다고 생각합니까?</p>
-                <div className="question-article">
-                  <Radio.Group
-                    value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION43 ? qData.SPECIAL_CHK.QUESTION43 : ''}
-                    onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION43', e.target.value)}
-                  >
-                    <Radio value="Y">예</Radio>
-                    <Radio value="N">아니오</Radio>
-                  </Radio.Group>
+                {/* question-item */}
+                <div className="question-item">
+                  <p className="question-txt pad-none">* 작업 중에 취급하는 물질로 인해 건강 문제가 생겼다고 생각합니까?</p>
+                  <div className="question-article">
+                    <Radio.Group
+                      value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION43 ? qData.SPECIAL_CHK.QUESTION43 : ''}
+                      onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION43', e.target.value)}
+                    >
+                      <Radio value="Y">예</Radio>
+                      <Radio value="N">아니오</Radio>
+                    </Radio.Group>
+                  </div>
                 </div>
-              </div>
-              {/* question-item */}
-              <div className="question-item">
-                <p className="question-txt pad-none">* 그 외 다른 증상이 있는 경우, 아래의 칸에 기술해 주십시오.</p>
-                <div className="question-article">
-                  <AntTextarea
-                    value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION44 ? qData.SPECIAL_CHK.QUESTION44 : ''}
-                    onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION44', e.target.value)}
-                  />
+                {/* question-item */}
+                <div className="question-item">
+                  <p className="question-txt pad-none">* 그 외 다른 증상이 있는 경우, 아래의 칸에 기술해 주십시오.</p>
+                  <div className="question-article">
+                    <AntTextarea
+                      value={qData.SPECIAL_CHK && qData.SPECIAL_CHK.QUESTION44 ? qData.SPECIAL_CHK.QUESTION44 : ''}
+                      onChange={e => this.onChangeDataTowKey('SPECIAL_CHK', 'QUESTION44', e.target.value)}
+                    />
+                  </div>
                 </div>
+                {/* question-item */}
               </div>
               {/* question-item */}
             </div>
-            {/* question-item */}
-          </div>
+          )}
           {/* examination-area */}
         </StyledContentsWrapper>
         <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
