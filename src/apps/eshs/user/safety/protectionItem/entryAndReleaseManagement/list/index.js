@@ -155,7 +155,7 @@ class List extends React.Component {
   render() {
     const { columns, handleSearchChange, handleModalVisible, handleSearchDateChange, handleModalClose, getDataSource } = this;
     const { dataSource, modalVisible, searchValue, rowData, isModified } = this.state;
-    const { sagaKey, changeFormData, formData, viewPageData, saveTask } = this.props;
+    const { sagaKey, changeFormData, formData, viewPageData, saveTask, submitExtraHandler } = this.props;
     return (
       <>
         <ContentsWrapper>
@@ -212,6 +212,7 @@ class List extends React.Component {
             getDataSource={getDataSource}
             rowData={rowData}
             isModified={isModified}
+            submitExtraHandler={submitExtraHandler}
           />
         </AntdModal>
       </>
@@ -227,6 +228,7 @@ List.propTypes = {
   saveTask: PropTypes.func,
   formData: PropTypes.object,
   viewPageData: PropTypes.object,
+  submitExtraHandler: PropTypes.func,
 };
 
 List.defaultProps = {

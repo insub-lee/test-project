@@ -59,8 +59,8 @@ class ModalContents extends React.Component {
 
   handleDateChange = date => {
     const { sagaKey: id, changeFormData } = this.props;
-    const valueObj = { ENTRY_DATE: date };
-    changeFormData(id, 'ENTRY_DATE', date);
+    const valueObj = { POSTING_DT: date };
+    changeFormData(id, 'POSTING_DT', date);
     this.setRequestValue(valueObj);
   };
 
@@ -70,8 +70,30 @@ class ModalContents extends React.Component {
     handleModalClose();
   };
 
+  handleModifyClick = () => {
+    const { saveAfterFunc } = this;
+    const { requestValue } = this.state;
+    const { sagaKey: id, submitExtraHandler, rowData } = this.props;
+    submitExtraHandler(id, 'PUT', `/api/eshs/v1/common/protectionerm`, Object.assign(rowData, requestValue), saveAfterFunc);
+  };
+
+  handleDeleteClick = () => {
+    const { saveAfterFunc } = this;
+    const { sagaKey: id, submitExtraHandler, rowData } = this.props;
+    submitExtraHandler(id, 'PUT', `/api/eshs/v1/common/protectionerm`, rowData, saveAfterFunc);
+  };
+
   render() {
-    const { handleRowClick, handleInputChange, handleDateChange, handleSubModalVisible, handleSubModalClose, saveAfterFunc } = this;
+    const {
+      handleRowClick,
+      handleInputChange,
+      handleDateChange,
+      handleSubModalVisible,
+      handleSubModalClose,
+      saveAfterFunc,
+      handleModifyClick,
+      handleDeleteClick,
+    } = this;
     const { modalVisible, requestValue } = this.state;
     const { handleModalClose, saveTask, sagaKey: id, rowData, isModified } = this.props;
     return (
@@ -144,7 +166,12 @@ class ModalContents extends React.Component {
                 <tr>
                   <th>입고일</th>
                   <td>
-                    <AntdPicker className="ant-picker-sm" defaultValue={isModified ? rowData.ENTRY_DATE : moment()} onChange={date => handleDateChange(date)} />
+                    <AntdPicker
+                      className="ant-picker-sm"
+                      defaultValue={isModified ? moment(rowData.POSTING_DT) : moment()}
+                      onChange={(date, dateString) => handleDateChange(dateString)}
+                      style={{ width: '100%' }}
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -171,9 +198,14 @@ class ModalContents extends React.Component {
             </table>
           </StyledHtmlTable>
           <div style={{ textAlign: 'center', padding: '10px' }}>
-            <StyledButton className="btn-primary mr5" onClick={() => saveTask(id, id, saveAfterFunc)}>
-              저장
+            <StyledButton className="btn-primary mr5" onClick={isModified ? handleModifyClick : () => saveTask(id, id, saveAfterFunc)}>
+              {isModified ? '수정' : '저장'}
             </StyledButton>
+            {isModified ? (
+              <StyledButton className="btn-light mr5" onClick={handleDeleteClick}>
+                삭제
+              </StyledButton>
+            ) : null}
             <StyledButton className="btn-light" onClick={handleModalClose}>
               취소
             </StyledButton>
@@ -195,6 +227,7 @@ ModalContents.propTypes = {
   getDataSource: PropTypes.func,
   rowData: PropTypes.object,
   isModified: PropTypes.bool,
+  submitExtraHandler: PropTypes.func,
 };
 
 ModalContents.defatulProps = {
