@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Select, Row, Col, Table, Collapse, Modal } from 'antd';
+import { Input, Select, Row, Col, Table, Collapse, Modal, Checkbox } from 'antd';
 import { DoubleRightOutlined, PlusOutlined, MinusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
@@ -607,19 +607,20 @@ class ChkHospitalItemView extends Component {
                         header={
                           <div>
                             <div onClick={e => e.stopPropagation()} style={{ display: 'inline-block' }}>
-                              <AntdSelect className="select-sm mr5" value={group.GROUP} placeholder="그룹선택" style={{ width: 150 }} onChange={val => this.onChangeGroupInfo('GROUP', val, group)}>
+                              <AntdSelect className="select-sm mr5" value={group.GROUP} placeholder="그룹선택" style={{ width: 120 }} onChange={val => this.onChangeGroupInfo('GROUP', val, group)}>
                                 {this.state.codeList.map(item => (
                                   <AntdSelect.Option value={item.NODE_ID}>{item.NAME_KOR}</AntdSelect.Option>
                                 ))}
                               </AntdSelect>
-                              <AntdSelect className="select-sm mr5" defaultValue={group.ABLE_CNT} placeholder="선택갯수" style={{ width: 120 }} onChange={val => this.onChangeGroupInfo('ABLE_CNT', val, group)}>
+                              <AntdSelect className="select-sm mr5" defaultValue={group.ABLE_CNT} placeholder="선택갯수" style={{ width: 100 }} onChange={val => this.onChangeGroupInfo('ABLE_CNT', val, group)}>
                                 <AntdSelect.Option value="1">1개</AntdSelect.Option>
                                 <AntdSelect.Option value="2">2개</AntdSelect.Option>
                                 <AntdSelect.Option value="3">3개</AntdSelect.Option>
                                 <AntdSelect.Option value="4">4개</AntdSelect.Option>
                                 <AntdSelect.Option value="5">5개</AntdSelect.Option>
                               </AntdSelect>
-                              <StyledButton className="btn-gray btn-xs" onClick={e => this.deleteGroup(e, group)}>그룹삭제</StyledButton>
+                              <Checkbox checked={group.IS_REQUIRE && group.IS_REQUIRE === 'Y'} onChange={e => this.onChangeGroupInfo('IS_REQUIRE', (e.target.checked ? 'Y' : 'N'), group)} /> 필수
+                              <StyledButton className="btn-gray btn-xs ml5" onClick={e => this.deleteGroup(e, group)}>그룹삭제</StyledButton>
                             </div>
                           </div>
                         }

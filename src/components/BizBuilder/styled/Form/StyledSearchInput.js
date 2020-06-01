@@ -17,6 +17,7 @@ const StyledSearchInput = Component => styled(Component)`
       border-radius: 4px;
       transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
     }
+
     &.ant-input-affix-wrapper:hover,
     &.ant-input-affix-wrapper:focus {
       input {
@@ -28,19 +29,23 @@ const StyledSearchInput = Component => styled(Component)`
       }
     }
   }
+
   &.ant-search-inline {
     display: inline-block;
     vertical-align: middle;
   }
+
   &.mr5 {
     margin-right: 5px;
   }
+
   &.input-search-mid {
     input {
       padding: 0.4rem 0.875rem;
       height: auto;
     }
   }
+
   &.input-search-sm {
     input {
       padding: 0.313rem 0.844rem;
@@ -49,6 +54,7 @@ const StyledSearchInput = Component => styled(Component)`
       height: auto;
     }
   }
+
   &.input-search-xs {
     input {
       padding: 0.2rem 0.7rem;

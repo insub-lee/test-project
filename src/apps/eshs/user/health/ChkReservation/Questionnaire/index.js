@@ -4,8 +4,8 @@ import QuestionnaireView from './QuestionnaireView';
 
 class Questionnaire extends Component {
   render() {
-    const { onCancelPopup, profile } = this.props;
-    return <BizMicroDevBase sagaKey="questionnaireView" component={QuestionnaireView} onCancelPopup={onCancelPopup} profile={profile} />;
+    const { onCancelPopup, userInfo, chkTypeCd } = this.props;
+    return <BizMicroDevBase sagaKey="questionnaireView" component={QuestionnaireView} onCancelPopup={onCancelPopup} userInfo={userInfo} chkTypeCd={chkTypeCd} />;
   }
 }
 
