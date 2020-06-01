@@ -12,6 +12,8 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
 
+import View from './View';
+
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const AntdTable = StyledAntdTable(Table);
@@ -24,9 +26,9 @@ class List extends Component {
     workAreaList: [],
     deptList: [],
     searchInfo: {
-      CHK_TYPE_CD: '002',  //고정(종합검진)
+      CHK_TYPE_CD: '002',  //고정(종합검진-CODE:002)
       CHK_YEAR: '',
-      WORK_AREA_CD: '',
+      WORK_AREA_CD_NODE_ID: '',
       EMP_NO: '',
       USER_NAME: '',
     }
@@ -51,7 +53,7 @@ class List extends Component {
     const apiAry = [
       {
         key: 'workAreaList',
-        url: `/api/admin/v1/common/categoryMap?MAP_ID=29`,
+        url: `/api/admin/v1/common/categoryMap?MAP_ID=45`,
         type: 'GET',
         params: {},
       }
@@ -96,7 +98,7 @@ class List extends Component {
     const { sagaKey, submitHandlerBySaga } = this.props;
     const submitData = {
       PARAM: {
-        CHK_TYPE_CD: '002',
+        CHK_TYPE_CD: '002'  // 지식분류체계 (보건지킴이 코드관리 > 검지코드관리 > 검종 > 종합)
       }
     }
     Modal.confirm({
@@ -104,7 +106,6 @@ class List extends Component {
       icon: <ExclamationCircleOutlined />,
       onOk() {
         submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/healthChkTargetSelection', submitData, (id, res) => {
-          console.debug('res >> ', res);
           if (res && res.result > 0) {
             message.info(<MessageContent>대상자 목록을 생성하였습니다.</MessageContent>)
           } else {
@@ -187,12 +188,12 @@ class List extends Component {
               className="select-sm mr5"
               placeholder="지역선택"
               style={{ width: 120 }}
-              onChange={val => this.onChangeSearchInfo('WORK_AREA_CD', val)}
+              onChange={val => this.onChangeSearchInfo('WORK_AREA_CD_NODE_ID', val)}
             >
               <AntdSelect.Option value="">지역전체</AntdSelect.Option>
               {this.state.workAreaList.map(item => (
                 item.LVL !== 0 && (
-                  <AntdSelect.Option value={item.CODE}>{item.NAME_KOR}</AntdSelect.Option>
+                  <AntdSelect.Option value={item.NODE_ID}>{item.NAME_KOR}</AntdSelect.Option>
                 )
               ))}
             </AntdSelect>
