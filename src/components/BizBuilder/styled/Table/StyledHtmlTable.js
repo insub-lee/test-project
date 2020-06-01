@@ -30,7 +30,6 @@ const StyledHtmlTable = styled.div`
           border-bottom: 1px solid #e8e8e8;
           width: 130px;
           font-weight: 500;
-          border-right: 1px solid #e8e8e8;
         }
 
         td {
@@ -69,7 +68,7 @@ const StyledHtmlTable = styled.div`
     tfoot {
       tr td {
         background: #fafafa;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid #e8e8e8;
         font-size: 12px;
         color: #666;
         text-align: center;
@@ -92,7 +91,7 @@ const StyledHtmlTable = styled.div`
       thead tr {
         th,
         td {
-          border: 1px solid #ddd;
+          border: 1px solid #e8e8e8;
           border-left: 0;
           &:last-child {
             border-right: 0;
