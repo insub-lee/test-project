@@ -10,7 +10,6 @@ const StyledTreeSelect = Component => styled(Component)`
       .ant-select-selection {
         padding: 0.2rem 0.7rem;
         font-size: 0.75rem;
-        line-height: 1.5;
         height: auto;
       }
     }
@@ -18,7 +17,6 @@ const StyledTreeSelect = Component => styled(Component)`
       .ant-select-selection {
         padding: 0.313rem 0.844rem;
         font-size: 0.75rem;
-        line-height: 1.5;
         height: auto;
       }
     }

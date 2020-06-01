@@ -38,21 +38,18 @@ const StyledInput = Component => styled(Component)`
   &.ant-input-sm {
     padding: 0.313rem 0.613rem;
     font-size: 0.75rem;
-    line-height: 1.5;
     height: auto;
   }
 
   &.ant-input-xs {
     padding: 0.2rem 0.5rem;
     font-size: 0.75rem;
-    line-height: 1.5;
     height: auto;
   }
 
   &.ant-input-xxs {
     padding: 0.1rem 0.4rem;
     font-size: 0.75rem;
-    line-height: 1.5;
     height: auto;
   }
 
