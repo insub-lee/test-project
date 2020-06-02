@@ -52,8 +52,10 @@ class DragUploadComp extends Component {
   }
 
   changeFormDataHanlder = () => {
-    const { sagaKey, changeFormData, COMP_FIELD, WORK_SEQ } = this.props;
+    const { sagaKey, changeFormData, COMP_FIELD, WORK_SEQ, changeIsLoading } = this.props;
     const { fileInfo } = this.state;
+
+    changeIsLoading(false);
     changeFormData(sagaKey, COMP_FIELD, fileInfo);
   };
 
@@ -214,6 +216,8 @@ class DragUploadComp extends Component {
       message.error(`${name} 0 byte 파일은 업로드 할 수 없습니다 `);
       return false;
     }
+    const { changeIsLoading } = this.props;
+    changeIsLoading(true);
     return true;
   };
 

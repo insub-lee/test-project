@@ -59,6 +59,8 @@ class MdcsProcessListComp extends Component {
 
   initDataBind = response => {
     const { list, processList } = response;
+    const resultList = [...list];
+
     processList.forEach(item => {
       if (item.NODE_ID === 107 || item.NODE_ID === 106 || item.NODE_ID === 112) {
         const appvMemeber = JSON.parse(item.APPV_MEMBER);
@@ -66,7 +68,7 @@ class MdcsProcessListComp extends Component {
           appvMemeber.forEach(subNode => {
             const findIdx = list.findIndex(iNode => iNode.NODE_ID === item.NODE_ID && iNode.ORG_APPV_USER_ID === subNode.USER_ID);
             if (findIdx === -1)
-              list.push({
+              resultList.push({
                 NODE_ID: item.NODE_ID,
                 APPV_STATUS: 0,
                 APPV_DTTM: '',
@@ -78,10 +80,11 @@ class MdcsProcessListComp extends Component {
         }
       }
     });
-    const draftList = list.filter(fNode => fNode.NODE_ID === 101 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
-    const approveList = list.filter(fNode => fNode.NODE_ID === 107 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
-    const reviewerList = list.filter(fNode => fNode.NODE_ID === 106 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
-    const mailReviewerList = list.filter(fNode => fNode.NODE_ID === 112 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
+
+    const draftList = resultList.filter(fNode => fNode.NODE_ID === 101 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
+    const approveList = resultList.filter(fNode => fNode.NODE_ID === 107 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
+    const reviewerList = resultList.filter(fNode => fNode.NODE_ID === 106 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
+    const mailReviewerList = resultList.filter(fNode => fNode.NODE_ID === 112 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
 
     let draftNode = [];
     if (draftList && draftList.length > 0 && approveList && approveList.length > 0) {
