@@ -131,7 +131,7 @@ function CustomDataTableComp(props) {
       // key={`${group.key}_list`}
       className="view-designer-list"
       // columns={columns}
-      dataSource={isLoaded ? dataSource : null}
+      dataSource={isLoaded ? dataSource : []}
       // rowSelection={rowSelection}
       pagination={false}
       scroll={{ x: true }}

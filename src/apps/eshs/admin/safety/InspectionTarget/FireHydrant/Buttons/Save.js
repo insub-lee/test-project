@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import request from 'utils/request';
-import { address } from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/internal_constants';
+import { address } from 'apps/eshs/admin/safety/InspectionTarget/FireHydrant/internal_constants';
 
 String.prototype.rtrim = function() {
   return this.replace(/(\s*$)/, '');
@@ -15,10 +15,9 @@ export default function Save({ saveTask, saveBeforeProcess, onCloseModalHandler,
     request({
       method: 'POST',
       url: `${address.generatePositionNo}`,
-      // FIRE_CODE: FE (소화기)
-      data: { FIRE_CODE: 'FE', BUILDING_CODE, STAIR_NO, INSTALLED_LOCATION, CHIP_NO },
+      data: { FIRE_CODE: 'FH', BUILDING_CODE, STAIR_NO, INSTALLED_LOCATION, CHIP_NO },
     }).then(({ response }) => {
-      // console.debug('££ response : ', response);
+      console.debug('££ response : ', response);
       if (response?.result === 1) {
         const { data } = response || {};
         changeFormData(id, data.COMP_FIELD, data.POSITION_NO);
