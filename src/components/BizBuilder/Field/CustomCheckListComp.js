@@ -115,6 +115,7 @@ class CustomCheckListComp extends Component {
     ];
 
     // colData Read 후 selectedValue bind 하기
+    console.debug('checkList', colData);
     let isItem = false;
     if (colData && colData.length > 0) {
       const { DETAIL } = colData[0];
