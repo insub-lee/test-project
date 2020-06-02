@@ -10,7 +10,9 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+
 const AntdLineTable = StyledLineTable(Table);
 const AntdModal = StyledContentsModal(Modal);
 const { TextArea } = Input;
@@ -237,7 +239,7 @@ class DraftList extends Component {
           />
           {holdReqList && holdReqList.length > 0 && (
             <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
-              <table style={{ width: '100%', borderTop: 0 }}>
+              <table style={{ width: '100%' }}>
                 <colgroup>
                   <col width="10%" />
                   <col width="10%" />
@@ -245,22 +247,26 @@ class DraftList extends Component {
                   <col width="55%" />
                   <col width="15%" />
                 </colgroup>
-                <tr>
-                  <th>이름</th>
-                  <th>직급</th>
-                  <th>부서</th>
-                  <th>홀드의견</th>
-                  <th style={{ borderRight: 0 }}>요청일</th>
-                </tr>
-                {holdReqList.map(item => (
+                <thead>
                   <tr>
-                    <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
-                    <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
-                    <td style={{ textAlign: 'center' }}>{item.APPV_DEPT_NAME}</td>
-                    <td>{item.OPINION}</td>
-                    <td style={{ textAlign: 'center' }}>{moment(item.APPV_DTTM).format('YYYY-MM-DD')}</td>
+                    <th>이름</th>
+                    <th>직급</th>
+                    <th>부서</th>
+                    <th>홀드의견</th>
+                    <th style={{ borderRight: 0 }}>요청일</th>
                   </tr>
-                ))}
+                </thead>
+                <tbody>
+                  {holdReqList.map(item => (
+                    <tr>
+                      <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
+                      <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
+                      <td style={{ textAlign: 'center' }}>{item.APPV_DEPT_NAME}</td>
+                      <td>{item.OPINION}</td>
+                      <td style={{ textAlign: 'center' }}>{moment(item.APPV_DTTM).format('YYYY-MM-DD')}</td>
+                    </tr>
+                  ))}
+                </tbody>
               </table>
             </StyledHtmlTable>
           )}
