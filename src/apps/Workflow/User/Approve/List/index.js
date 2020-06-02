@@ -9,7 +9,6 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
 import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
-
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 
 // import ApproveView from '../ApproveView';
@@ -34,6 +33,7 @@ class ApproveList extends Component {
       isDcc: false,
       opinions: undefined,
       holdReqList: [],
+      currentStatus: undefined,
     };
   }
 
@@ -86,6 +86,14 @@ class ApproveList extends Component {
       align: 'center',
     },
     {
+      title: '진행상태',
+      dataIndex: 'PROC_STATUS',
+      key: 'PROC_STATUS',
+      width: '10%',
+      align: 'center',
+      render: (text, record) => (text === 3 ? '홀드' : text === 2 ? '완료' : '진행중'),
+    },
+    {
       title: '기안자',
       dataIndex: 'NAME_KOR',
       key: 'nameKor',
@@ -112,12 +120,13 @@ class ApproveList extends Component {
 
   onRowClick = (record, rowIndex, e) => {
     const { sagaKey, submitHandlerBySaga } = this.props;
-    const { WORK_SEQ, TASK_SEQ, STEP, PROC_STATUS } = record;
-    console.debug('record', record);
+    const { isDcc } = this.state;
+    const { WORK_SEQ, TASK_SEQ, STEP, PROC_STATUS, APPV_STATUS } = record;
+    this.setState({ currentStatus: APPV_STATUS });
     this.props.setSelectedRow(record);
     this.props.setViewVisible(true);
 
-    if (PROC_STATUS === 3 || PROC_STATUS === 30) {
+    if ((PROC_STATUS === 3 || PROC_STATUS === 30) && (APPV_STATUS === PROC_STATUS || (STEP === 2 && isDcc))) {
       const prefixUrl = '/api/workflow/v1/common/workprocess/draftHoldRequestList';
       const param = {
         PARAM: {
@@ -179,8 +188,7 @@ class ApproveList extends Component {
 
   render() {
     const { approveList, selectedRow, opinionVisible, setOpinionVisible } = this.props;
-    const { modalWidth, coverView, isDcc, holdReqList } = this.state;
-    console.debug('list', approveList);
+    const { modalWidth, coverView, isDcc, holdReqList, currentStatus } = this.state;
     return (
       <>
         <ContentsWrapper>
@@ -223,18 +231,17 @@ class ApproveList extends Component {
                 selectedRow={selectedRow}
                 ViewCustomButtons={({ closeBtnFunc, onClickModify }) => (
                   <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                    {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
-                      <>
-                        <StyledButton className="btn-primary btn-first" onClick={this.onHoldRelase}>
-                          홀드해제
-                        </StyledButton>
-                        {isDcc && (
+                    {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) &&
+                      (currentStatus === selectedRow.PROC_STATUS || (selectedRow.STEP === 2 && isDcc)) && (
+                        <>
+                          <StyledButton className="btn-primary btn-first" onClick={this.onHoldRelase}>
+                            홀드해제
+                          </StyledButton>
                           <StyledButton className="btn-primary btn-first" onClick={onClickModify}>
                             표지수정
                           </StyledButton>
-                        )}
-                      </>
-                    )}
+                        </>
+                      )}
                     <StyledButton className="btn-light" onClick={closeBtnFunc}>
                       닫기
                     </StyledButton>
