@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Table, Modal, message } from 'antd';
 import moment from 'moment';
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import BizBuilderBase from 'components/BizBuilderBase';
-const AntdLineTable = StyledLineTable(Table);
-const AntdModal = StyledContentsModal(Modal);
+
+const AntdTable = StyledAntdTable(Table);
+const AntdModal = StyledAntdModal(Modal);
+
 class ApproveListComp extends Component {
   constructor(props) {
     super(props);
@@ -107,58 +110,61 @@ class ApproveListComp extends Component {
   render() {
     const { list, workSeq, taskSeq, visible, coverView } = this.state;
     return (
-      <ContentsWrapper>
-        <div className="pageTitle">
-          <p>
-            <Icon type="form" /> 결재완료 LIST
-          </p>
-        </div>
-        <AntdLineTable
-          columns={this.getTableColumns()}
-          dataSource={list}
-          onRow={(record, rowIndex) => ({
-            onClick: e => this.onRowClick(record, rowIndex, e),
-          })}
-          bordered
-          className="tableWrapper"
-        />
-        <AntdModal title="유효성 점검" visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
-          <BizBuilderBase
-            sagaKey="approveReqView"
-            workSeq={workSeq}
-            taskSeq={taskSeq}
-            viewType="VIEW"
-            clickCoverView={this.clickCoverView}
-            ViewCustomButtons={() => false}
+      <>
+        <StyledHeaderWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 결재완료 LIST
+            </p>
+          </div>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
+          <AntdTable
+            columns={this.getTableColumns()}
+            dataSource={list}
+            onRow={(record, rowIndex) => ({
+              onClick: e => this.onRowClick(record, rowIndex, e),
+            })}
+            bordered
           />
-        </AntdModal>
-        <AntdModal
-          className="modalWrapper modalTechDoc modalCustom"
-          title="표지 보기"
-          width={800}
-          destroyOnClose
-          visible={coverView.visible}
-          onCancel={this.onCloseCoverView}
-          footer={[]}
-        >
-          <BizBuilderBase
-            sagaKey="CoverView"
-            viewType={coverView.viewType}
-            workSeq={coverView.workSeq}
-            taskSeq={coverView.taskSeq}
-            viewMetaSeq={coverView.viewMetaSeq}
-            onCloseCoverView={this.onCloseCoverView}
-            onCloseModalHandler={this.onClickModifyDoCoverView}
-            ViewCustomButtons={({ onCloseCoverView }) => (
-              <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                <StyledButton className="btn-primary" onClick={onCloseCoverView}>
-                  닫기
-                </StyledButton>
-              </div>
-            )}
-          />
-        </AntdModal>
-      </ContentsWrapper>
+          <AntdModal title="유효성 점검" visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+            <BizBuilderBase
+              sagaKey="approveReqView"
+              workSeq={workSeq}
+              taskSeq={taskSeq}
+              viewType="VIEW"
+              clickCoverView={this.clickCoverView}
+              ViewCustomButtons={() => false}
+            />
+          </AntdModal>
+          <AntdModal
+            className="modalWrapper modalTechDoc modalCustom"
+            title="표지 보기"
+            width={800}
+            destroyOnClose
+            visible={coverView.visible}
+            onCancel={this.onCloseCoverView}
+            footer={[]}
+          >
+            <BizBuilderBase
+              sagaKey="CoverView"
+              viewType={coverView.viewType}
+              workSeq={coverView.workSeq}
+              taskSeq={coverView.taskSeq}
+              viewMetaSeq={coverView.viewMetaSeq}
+              onCloseCoverView={this.onCloseCoverView}
+              onCloseModalHandler={this.onClickModifyDoCoverView}
+              ViewCustomButtons={({ onCloseCoverView }) => (
+                <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                  <StyledButton className="btn-primary" onClick={onCloseCoverView}>
+                    닫기
+                  </StyledButton>
+                </div>
+              )}
+            />
+          </AntdModal>
+        </StyledContentsWrapper>
+      </>
     );
   }
 }

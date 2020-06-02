@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Icon, Button, Modal } from 'antd';
 
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import DistributeCompany from './DistributeCompany';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 class ExternalDistributeMgntList extends Component {
   state = {
@@ -20,14 +21,14 @@ class ExternalDistributeMgntList extends Component {
   componentDidMount() {
     const { id, apiAry, getCallDataHandler } = this.props;
     getCallDataHandler(id, apiAry, () => {});
-  };
+  }
 
   onClickMail = () => {
     window.alert('개발중');
   };
 
   onClickNew = row => {
-    this.setState({ 
+    this.setState({
       isShow: true,
       selectedRow: {
         ...row,
@@ -38,14 +39,14 @@ class ExternalDistributeMgntList extends Component {
   };
 
   onClickDept = row => {
-    this.setState({ 
+    this.setState({
       isShow: true,
       selectedRow: row,
     });
   };
 
   onCancelPopup = () => {
-    this.setState({ 
+    this.setState({
       isShow: false,
       selectedRow: [],
     });
@@ -80,7 +81,11 @@ class ExternalDistributeMgntList extends Component {
       key: 'RECV_DEPT_NAME',
       width: '15%',
       ellipsis: true,
-      render: (text, record) => <Button type="link" onClick={() => this.onClickDept(record)}>{text}</Button>
+      render: (text, record) => (
+        <Button type="link" onClick={() => this.onClickDept(record)}>
+          {text}
+        </Button>
+      ),
     },
     {
       title: '수신자',
@@ -114,7 +119,11 @@ class ExternalDistributeMgntList extends Component {
       key: 'new',
       width: '6%',
       align: 'center',
-      render: (text, record) => <Button type="default" size="small" onClick={() => this.onClickNew(record)}>추가</Button>,
+      render: (text, record) => (
+        <Button type="default" size="small" onClick={() => this.onClickNew(record)}>
+          추가
+        </Button>
+      ),
     },
     {
       title: 'Mail',
@@ -124,10 +133,12 @@ class ExternalDistributeMgntList extends Component {
       align: 'center',
       render: (text, record) => <Icon type="mail" style={{ cursor: 'pointer' }} onClick={this.onClickMail} />,
     },
-  ]
+  ];
 
   render() {
-    const { result: { externalDistributeMgntList } } = this.props;
+    const {
+      result: { externalDistributeMgntList },
+    } = this.props;
     let list = [];
     if (externalDistributeMgntList && externalDistributeMgntList !== undefined) {
       if (externalDistributeMgntList.list !== undefined) {
@@ -137,22 +148,17 @@ class ExternalDistributeMgntList extends Component {
 
     return (
       <>
-        <ContentsWrapper>
+        <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 외부배포 관리
             </p>
           </div>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
           <AntdTable dataSource={list.map(item => ({ ...item, key: `${item.DOCNUMBER}_${item.RECV_DEPT_ID}` }))} columns={this.columns} />
-        </ContentsWrapper>
-        <AntdModal
-          width={700}
-          visible={this.state.isShow}
-          title="외부배포 회사"
-          onCancel={this.onCancelPopup}
-          destroyOnClose
-          footer={null}
-        >
+        </StyledContentsWrapper>
+        <AntdModal width={700} visible={this.state.isShow} title="외부배포 회사" onCancel={this.onCancelPopup} destroyOnClose footer={null}>
           <DistributeCompany selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
       </>

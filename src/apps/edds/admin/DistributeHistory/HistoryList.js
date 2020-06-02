@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { Table, Icon, Modal } from 'antd';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad'
+import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 
 import DocView from './DocView';
 
@@ -16,8 +17,8 @@ class HistoryList extends Component {
   state = {
     isShow: false,
     selectedRow: {},
-  }
-  
+  };
+
   componentDidMount() {
     const { id, apiAry, getCallDataHandler } = this.props;
     getCallDataHandler(id, apiAry, () => {});
@@ -89,12 +90,14 @@ class HistoryList extends Component {
       key: 'STATUS',
       width: '10%',
       align: 'center',
-      render: (text, record) => record.STATUS === 0 ? '  In progress' : 'Completed',
+      render: (text, record) => (record.STATUS === 0 ? '  In progress' : 'Completed'),
     },
-  ]
+  ];
 
   render() {
-    const { result: { distributeDocList } } = this.props;
+    const {
+      result: { distributeDocList },
+    } = this.props;
     let list = [];
     if (distributeDocList && distributeDocList !== undefined) {
       if (distributeDocList.list !== undefined) {
@@ -110,23 +113,29 @@ class HistoryList extends Component {
           title="배포문서 상세"
           onCancel={this.onCancelPopup}
           destroyOnClose
-          footer={[<StyledButton className="btn-light" onClick={this.onCancelPopup}>닫기</StyledButton>]}
+          footer={[
+            <StyledButton className="btn-light" onClick={this.onCancelPopup}>
+              닫기
+            </StyledButton>,
+          ]}
         >
           <DocView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
-        <StyledContentsWrapper>
+        <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 배포 이력
             </p>
           </div>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
           <AntdTable
             dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))}
             columns={this.columns}
             onRow={(record, rowIndex) => ({
               onClick: event => {
                 this.onClickRow(record, rowIndex);
-              }
+              },
             })}
           />
         </StyledContentsWrapper>

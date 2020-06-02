@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import { Input, Button, Table } from 'antd';
 import { ExclamationCircleFilled, CheckCircleFilled } from '@ant-design/icons';
 import moment from 'moment';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-const AntdLineTable = StyledLineTable(Table);
+
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+
+const AntdTable = StyledAntdTable(Table);
 
 class List extends Component {
   constructor(props) {
@@ -119,17 +121,16 @@ class List extends Component {
   render() {
     const { list } = this.state;
     return (
-      <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
-        <AntdLineTable
+      <StyledContentsWrapper>
+        <AntdTable
           columns={this.getTableColumns()}
           dataSource={list}
           // onRow={(record, rowIndex) => ({
           //   onClick: e => this.onRowClick(record, rowIndex, e),
           // })}
           bordered
-          className="tableWrapper"
         />
-      </StyledHtmlTable>
+      </StyledContentsWrapper>
     );
   }
 }
