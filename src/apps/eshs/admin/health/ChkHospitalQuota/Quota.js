@@ -3,7 +3,7 @@ import { Input, Select, DatePicker, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
@@ -306,8 +306,8 @@ class Quota extends Component {
     return (
       <>
         <StyledContentsWrapper>
-          <StyledSearchWrapper>
-            <div className="row">
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area mb10">
               <AntdSelect className="select-sm mr5" placeholder="검진기관 선택" style={{ width: 200 }} onChange={val => this.onChangeSearchInfo('HOSPITAL_CODE', val)}>
                 {hospitalList && hospitalList.map(item => (
                   <AntdSelect.Option value={item.HOSPITAL_CODE}>{item.HOSPITAL_NAME}</AntdSelect.Option>
@@ -324,7 +324,7 @@ class Quota extends Component {
               </AntdSelect>
               <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
             </div>
-            <div className="row">
+            <div className="search-input-area">
               <AntdRangeDatePicker className="ant-picker-sm mr5" format="YYYY-MM-DD" style={{ width: 325 }} onChange={(val1, val2) => this.onChangeRangeDatePicker(val1, val2)} />
               <StyledButton className="btn-gray btn-sm mr5" onClick={this.onCreatePeriod}>기간생성</StyledButton>
               <StyledButton className="btn-gray btn-sm mr5" onClick={this.onDeletePeriod}>기간삭제</StyledButton>
@@ -334,7 +334,7 @@ class Quota extends Component {
               />
               <StyledButton className="btn-gray btn-sm" onClick={this.handleBatchInit}>일괄입력</StyledButton>
             </div>
-          </StyledSearchWrapper>
+          </StyledCustomSearchWrapper>
           <StyledButtonWrapper className="btn-wrap-right" style={{ width: '60%', margin: '0 auto', marginBottom: 5 }}>
             <StyledButton className="btn-primary btn-sm" onClick={this.onSave}>저장</StyledButton>
           </StyledButtonWrapper>
