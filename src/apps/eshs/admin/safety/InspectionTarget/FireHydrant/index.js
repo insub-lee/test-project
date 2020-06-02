@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
-import ListPage from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/pages/ListPage';
+import ListPage from 'apps/eshs/admin/safety/InspectionTarget/FireHydrant/pages/ListPage';
 import * as CustomButtons from './Buttons';
 
 function FireExtinguisher(props) {
@@ -13,8 +13,8 @@ function FireExtinguisher(props) {
 
   return (
     <BizBuilderBase
-      sagaKey="FireExtinguisher"
-      workSeq={3667}
+      sagaKey="FireHydrant"
+      workSeq={9161}
       viewType="LIST"
       CustomListPage={ListPage}
       CustomButtons={CustomButtons}

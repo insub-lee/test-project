@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import request from 'utils/request';
-
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import { address } from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/internal_constants';
+import { address } from 'apps/eshs/admin/safety/InspectionTarget/FireHydrant/internal_constants';
 
 export default function RegisterInspection({
   sagaKey,
@@ -19,16 +18,15 @@ export default function RegisterInspection({
   shouldFire,
 }) {
   const shoudFireAPI = () => {
-    // viewMetaSeqHandler(META_SEQ.INPUT_INSPECTION, VIEW_TYPE.INPUT);
-    const { SAFEPIN_YN, PHARM_YN, FORM_YN, POSITION_YN } = formData;
-    if (SAFEPIN_YN && PHARM_YN && FORM_YN && POSITION_YN) {
+    // 커스텀버튼 : FH (소화전) 에 맞는 폼데이터로 변경
+    const { ENCLOSURE_YN, DOOR_YN, OBSTACLE_YN } = formData;
+    if (ENCLOSURE_YN && DOOR_YN && OBSTACLE_YN) {
       const { POSITION_NO, CHIP_NO, REG_USER_ID } = formData;
       request({
         method: 'POST',
         url: `${address.registerInspectionResult}`,
-        data: { SAFEPIN_YN, PHARM_YN, FORM_YN, POSITION_YN, POSITION_NO, CHIP_NO, REG_USER_ID },
+        data: { ENCLOSURE_YN, DOOR_YN, OBSTACLE_YN, POSITION_NO, CHIP_NO, REG_USER_ID },
       }).then(({ response }) => {
-        // console.debug('£££ RegisterInspection response : ', response);
         if (response?.result === 1) {
           modalHandler(true);
         } else {
@@ -38,10 +36,6 @@ export default function RegisterInspection({
     } else {
       alert('one of SAFEPIN_YN, PHARM_YN, FORM_YN, POSITION_YN are empty');
     }
-    // obj.put("SAFEPIN_YN", temp.get("safepin_yn"));
-    //					obj.put("PHARM_YN", temp.get("pharm_yn"));
-    //					obj.put("FORM_YN", temp.get("form_yn"));
-    //					obj.put("POSITION_YN", temp.get("position_yn"));
   };
 
   return (

@@ -16,7 +16,7 @@ import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Com
 import request from 'utils/request';
 import _ from 'lodash';
 
-import { address, VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/internal_constants';
+import { address, VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/internal_constants';
 import ViewPage from '../ViewPage';
 
 const AntdTable = StyledAntdTable(Table);
@@ -51,6 +51,7 @@ const ListPage = props => {
     if (listData instanceof Array) {
       if (listData.length > 0) {
         if (props?.shouldSearchAll) {
+          console.debug('All');
           const temp = listData.map(e => {
             const splitedDT = e?.REG_DTTM.split(' ');
             return { ...e, REG_DTTM: splitedDT[0] };
@@ -59,6 +60,7 @@ const ListPage = props => {
         } else {
           const { QUARTER, INSPECTION_YEAR, IS_INSPECTED } = formData;
           if (QUARTER && INSPECTION_YEAR && isSearched) {
+            console.debug('search');
             request({
               method: 'POST',
               url: address.search,
@@ -356,7 +358,7 @@ const ListPage = props => {
                             setIsSearched(true);
                           }}
                         >
-                          Search
+                          검색
                         </StyledButton>
                       </div>
                     )}
