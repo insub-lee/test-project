@@ -1,17 +1,28 @@
 import styled from 'styled-components';
 
 const StyledCustomSearchWrapper = styled.div`
-  padding: 20px 20px 0 20px;
+  padding: 15px;
+  margin-bottom: 30px;
+  background: #f2f4f7;
+  border-radius: 5px;
+  border: 2px solid #b5bdcb;
 
-  .text-label {
-    display: inline-block;
-    vertical-align: middle;
-    padding: 0 12px;
-    font-size: 12px;
+  .search-input-area {
+    .text-label {
+      display: inline-block;
+      vertical-align: middle;
+      padding: 0 12px;
+      font-size: 12px;
+    }
+
+    .ant-select {
+      vertical-align: middle;
+    }
   }
 
-  .ant-select {
-    vertical-align: middle;
+  .btn-area {
+    text-align: center;
+    margin-top: 15px;
   }
 
   &.search-wrapper-right {
@@ -20,6 +31,17 @@ const StyledCustomSearchWrapper = styled.div`
 
   &.search-wrapper-modal {
     padding: 0;
+  }
+
+  &.search-wrapper-inline {
+    .search-input-area,
+    .btn-area {
+      display: inline-block;
+    }
+
+    .btn-area {
+      margin-left: 10px;
+    }
   }
 `;
 

@@ -15,7 +15,7 @@ import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCusto
 import Edit from './Edit';
 import CompanyModal from './CompanyModal';
 
-const AntdLineTable = StyledAntdTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
 const AntdModalPad = StyledAntdModalPad(Modal);
@@ -244,16 +244,15 @@ class List extends Component {
               </AntdSelect>
             </div>
             <StyledButtonWrapper className="btn-area">
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.listDataApi()}>
+              <StyledButton className="btn-gray btn-first btn-sm" onClick={() => this.listDataApi()}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm" onClick={() => this.isOpenEdit()}>
+              <StyledButton className="btn-gray btn-sm" onClick={() => this.isOpenEdit()}>
                 추가
               </StyledButton>
             </StyledButtonWrapper>
           </StyledCustomSearch>
-          <AntdLineTable
-            className="tableWrapper"
+          <AntdTable
             rowKey={listData && listData.GROUP_UNIT_CD}
             columns={columns}
             dataSource={listData}
