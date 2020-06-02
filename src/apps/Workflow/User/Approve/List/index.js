@@ -250,7 +250,7 @@ class ApproveList extends Component {
               />
               {holdReqList && holdReqList.length > 0 && (
                 <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
-                  <table style={{ width: '100%' }}>
+                  <table className="table-border">
                     <colgroup>
                       <col width="10%" />
                       <col width="10%" />

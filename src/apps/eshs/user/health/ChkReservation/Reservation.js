@@ -24,18 +24,17 @@ class Reservation extends Component {
   state = {
     isQuestionnaireShow: false,
     isChkItemShow: false,
-    reservationInfo: {},
-    familyInfo: {},
-    hospitalList: [],
-    userInfo: {},
-    reservationInfo: {},
-    checkedVals: [],
-    famCheckedVals: [],
-    monthList: [],
-    dayList: [],
-    quotaList: [],
-    gubun: 1,
-    isDelFamilyInfo: false,
+    reservationInfo: {},    // 본인 검진예약 정보
+    familyInfo: {},         // 배우자 검진예약 정보
+    hospitalList: [],       // 검진기관 목록
+    userInfo: {},           // 본인 상세정보
+    checkedVals: [],        // 본인 검진항목 선택 코드값
+    famCheckedVals: [],     // 배우자 검진항목 선택 코드값
+    quotaList: [],          // 검진기관 검진예약가능일
+    gubun: 1,               // 데이터 변경시 구분값(1:본인 2:배우자)
+    isFamily: false,        // 배우자 존재여부
+    isDelFamilyInfo: false, // 배우자 검진정보 삭제여부(등록 후 삭제했을경우 DB삭제하기위한 값)
+    isRcv: true,            // 검진대상자 여부
   };
 
   componentWillMount() {
@@ -65,12 +64,14 @@ class Reservation extends Component {
   }
 
   initState = () => {
-    const { result, spinningOff } = this.props;
+    const { sagaKey, getCallDataHandlerReturnRes, result, spinningOff } = this.props;
     this.setState({
       hospitalList: result.hospitalList && result.hospitalList.list ? result.hospitalList.list : [],
       userInfo: result.userDetail && result.userDetail.data ? result.userDetail.data : {},
       reservationInfo: result.reservation && result.reservation.detail && result.reservation.detail.reservationInfo ? result.reservation.detail.reservationInfo : {},
       familyInfo: result.reservation && result.reservation.detail && result.reservation.detail.familyInfo ? result.reservation.detail.familyInfo : {},
+      isFamily: result.userDetail && result.userDetail.data && result.userDetail.data.FAM_NAME && result.userDetail.data.FAM_REGNO ? true : false,
+      isRcv: result.reservation && result.reservation.detail && result.reservation.detail.reservationInfo ? true : false,
     });
     spinningOff();
   };
@@ -177,10 +178,12 @@ class Reservation extends Component {
 
   onChangeReservationInfo = (key, val, gubun) => {
     this.setState(prevState => {
-      const { reservationInfo, familyInfo } = prevState;
+      const { reservationInfo, familyInfo, isFamily } = prevState;
       if (key === 'RCV_ADDR') {
         reservationInfo[key] = val;
-        familyInfo[key] = val;
+        if (isFamily) {
+          familyInfo[key] = val;
+        }
       } else {
         if (gubun === 1) {
           reservationInfo[key] = val;
@@ -238,9 +241,14 @@ class Reservation extends Component {
     const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
     const { reservationInfo, familyInfo, isDelFamilyInfo } = this.state;
 
+    // validation check 필요
+    // 검진기관, 검진예약일, 검진항목, 수령지, 전화번호
+
     Modal.confirm({
       title: '저장하시겠습니까?',
       icon: <ExclamationCircleOutlined />,
+      okText: '저장',
+      cancelText: '취소',
       onOk() {
         const submitData = {
           PARAM: {
@@ -251,8 +259,12 @@ class Reservation extends Component {
         };
         spinningOn();
         submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/healthChkReservation', submitData, (id, res) => {
-          if (res && res.result === 1) {
-            message.info(<MessageContent>저장하였습니다.</MessageContent>);
+          if (res) {
+            if (res.result === 1) {
+              message.info(<MessageContent>저장하였습니다.</MessageContent>);
+            } else if (res.result === -9) {
+              message.info(<MessageContent>현재 예약기간이 아닙니다.</MessageContent>);
+            }
           } else {
             message.error(<MessageContent>저장에 실패하였습니다.</MessageContent>);
           }
@@ -295,6 +307,7 @@ class Reservation extends Component {
         </AntdModal>
         <StyledContentsWrapper>
           <StyledHtmlTable>
+          {this.state.isRcv ? (
             <table>
               <colgroup>
                 <col width="10%" />
@@ -329,9 +342,9 @@ class Reservation extends Component {
                     />
                   </td>
                   <th>검진종류</th>
-                  <td>종합</td>
+                  <td>{reservationInfo.CHK_TYPE_CD_NAME}</td>
                   <th>검진차수</th>
-                  <td>1차</td>
+                  <td>{reservationInfo && reservationInfo.CHK_SEQ ? `${reservationInfo.CHK_SEQ}차` : ''}</td>
                 </tr>
                 <tr>
                   <th>검진기관</th>
@@ -376,7 +389,7 @@ class Reservation extends Component {
                     />
                   </td>
                 </tr>
-                {Object.keys(familyInfo).length > 0 && (
+                {this.state.isFamily && Object.keys(familyInfo).length > 0 && (
                   <>
                     <tr>
                       <th>배우자</th>
@@ -437,17 +450,40 @@ class Reservation extends Component {
                 </tr>
               </tbody>
             </table>
+          ) : (
+            <table>
+              <colgroup>
+                <col width="20%" />
+                <col width="80%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th>사번</th>
+                  <td>{userInfo.EMP_NO}</td>
+                </tr>
+                <tr>
+                  <th>이름</th>
+                  <td>{userInfo.NAME_KOR}</td>
+                </tr>
+                <tr className="tr-center">
+                  <td colSpan={2}>- 해당 검진사항이 없습니다. -</td>
+                </tr>
+              </tbody>
+            </table>
+          )}
           </StyledHtmlTable>
-          <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-            {/* {userInfo && userInfo.FAM_NAME && ( */}
-              {familyInfo && Object.keys(familyInfo).length > 0 ? (
-                <StyledButton className="btn-light btn-sm mr5" onClick={this.removeFamilyReservation}>배우자 검진 삭제</StyledButton>
-              ) : (
-                <StyledButton className="btn-light btn-sm mr5" onClick={this.addFamilyReservation}>배우자 검진 추가</StyledButton>
+          {this.state.isRcv && (
+            <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+              {userInfo && userInfo.FAM_NAME && (
+                familyInfo && Object.keys(familyInfo).length > 0 ? (
+                  <StyledButton className="btn-light btn-sm mr5" onClick={this.removeFamilyReservation}>배우자 검진 삭제</StyledButton>
+                ) : (
+                  <StyledButton className="btn-light btn-sm mr5" onClick={this.addFamilyReservation}>배우자 검진 추가</StyledButton>
+                )
               )}
-            {/* )} */}
-            <StyledButton className="btn-primary btn-sm" onClick={this.onSave}>저장</StyledButton>
-          </StyledButtonWrapper>
+              <StyledButton className="btn-primary btn-sm" onClick={this.onSave}>저장</StyledButton>
+            </StyledButtonWrapper>
+          )}
         </StyledContentsWrapper>
       </>
     );

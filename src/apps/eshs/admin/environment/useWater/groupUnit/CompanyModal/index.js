@@ -6,12 +6,12 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
-const AntdInput = StyledInput(Input);
+const AntdSearchInput = StyledSearchInput(Input.Search);
 
 const { Option } = Select;
 
@@ -30,16 +30,12 @@ class CompanyModal extends Component {
 
   selectCodeApi = search => {
     const { sagaKey: id, getCallDataHandler } = this.props;
-    let listUrl;
-    if (search) {
-      listUrl = `/api/eshs/v1/common/eshsHstCompanyList?SEARCH_TYPE=${this.state.modalSearchtype}&SEARCH=${this.state.modalSearch}`;
-    } else {
-      listUrl = '/api/eshs/v1/common/eshsHstCompanyList';
-    }
     const apiAry = [
       {
         key: 'modalData',
-        url: listUrl,
+        url: search
+          ? `/api/eshs/v1/common/eshsHstCompanyList?SEARCH_TYPE=${this.state.modalSearchtype}&SEARCH=${this.state.modalSearch}`
+          : '/api/eshs/v1/common/eshsHstCompanyList',
         type: 'GET',
       },
     ];
@@ -62,9 +58,9 @@ class CompanyModal extends Component {
             <Option value="HST_CMPNY_NM">회사명</Option>
           </AntdSelect>
           <span className="text-label">검색어</span>
-          <AntdInput
+          <AntdSearchInput
             style={{ width: '150px', margin: '5px' }}
-            className="ant-input-inline mr5 ant-input-sm"
+            className="input-search-inline mr5 input-search-sm"
             value={this.state.modalSearch}
             onChange={e => this.onChangetValue('modalSearch', e.target.value)}
             name="modalSearch"
@@ -74,7 +70,7 @@ class CompanyModal extends Component {
           </StyledButton>
         </StyledCustomSearch>
         <AntdTable
-          key={modalList.HST_CMPNY_CD}
+          key={modalList && modalList.HST_CMPNY_CD}
           columns={modalcolumns}
           dataSource={modalList}
           onRow={record => ({
@@ -82,7 +78,7 @@ class CompanyModal extends Component {
               selectedModalRecord(record);
             },
           })}
-          footer={() => <div style={{ textAlign: 'center' }}>{`${modalList.length} 건`}</div>}
+          footer={() => <div style={{ textAlign: 'center' }}>{`${modalList && modalList.length} 건`}</div>}
         />
       </StyledContentsWrapper>
     );
