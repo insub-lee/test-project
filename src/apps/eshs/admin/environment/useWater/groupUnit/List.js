@@ -8,7 +8,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
 import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 
@@ -17,7 +17,7 @@ import CompanyModal from './CompanyModal';
 
 const AntdLineTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
-const AntdInput = StyledInput(Input);
+const AntdSearchInput = StyledSearchInput(Input.Search);
 const AntdModalPad = StyledAntdModalPad(Modal);
 
 const { Option } = Select;
@@ -187,12 +187,11 @@ class List extends Component {
                 {this.selectOptionRender('siteSB')}
               </AntdSelect>
               <span className="text-label">회사</span>
-              <AntdInput
+              <AntdSearchInput
                 style={{ width: '200px' }}
-                className="ant-input-inline ant-input-sm input-pointer mr5"
+                className="input-search-inline input-search-sm input-pointer mr5"
                 value={this.state.companyName}
                 onClick={() => this.setState({ modalCompany: true })}
-                placeholder="여기를 클릭해주세요."
               />
               <AntdSelect className="select-sm mr5" onChange={value => this.changeState('filterPlantSBV', value)} value={this.state.filterPlantSBV}>
                 <Option value="0" key="filterPlantSBV">
