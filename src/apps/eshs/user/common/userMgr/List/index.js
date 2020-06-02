@@ -171,13 +171,13 @@ class List extends Component {
               <Option value="CP">청주</Option>
               <Option value="GP">구미</Option>
             </AntdSelect>
-            <AntdSelect defaultValue="본부 전체" className="mr5" onChange={this.handleHqChange}>
+            <AntdSelect defaultValue="본부 전체" className="mr5" onChange={this.handleHqChange} style={{ width: '250px' }}>
               <Option value={900}>본부 전체</Option>
               {hqList.map(item => (
                 <Option value={item.DEPT_ID}>{item.NAME_KOR}</Option>
               ))}
             </AntdSelect>
-            <AntdSelect defaultValue={selectedDept} className="mr5" disabled={!isHqSelect} onChange={this.handleDeptChange}>
+            <AntdSelect defaultValue={selectedDept} className="mr5" disabled={!isHqSelect} onChange={this.handleDeptChange} style={{ width: '250px' }}>
               <Option value="">팀 전체</Option>
               {deptList.map(item => (
                 <Option value={item.DEPT_CD}>{item.NAME_KOR}</Option>
