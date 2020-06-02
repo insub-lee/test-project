@@ -1,4 +1,5 @@
 import React from 'react';
+import { VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/internal_constants';
 import ExcelDown from './ExcelDown';
 import Search from './Search';
 import NewReg from './NewReg';
@@ -11,8 +12,6 @@ import Add from './Add';
 import History from './History';
 import InfoModify from './InfoModify';
 import RegisterInspection from './RegisterInspection';
-
-import { VIEW_TYPE, META_SEQ } from '../../internal_constants';
 
 export function ViewButtons(props) {
   return (

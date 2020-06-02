@@ -651,6 +651,24 @@ class App extends React.Component {
                                 </div>
                               )}
                             />
+                            <Route
+                              path={`/${basicPath.PAGE}/:PAGE_ID`}
+                              render={() => (
+                                <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID}>
+                                  <Page
+                                    columns={selectedApp}
+                                    setMyMenuData={setMyMenuData}
+                                    setIsSpinnerShow={this.setIsSpinnerShow}
+                                    isPreviewPage={isPreviewPage}
+                                    isUnreadCnt={isUnreadCnt}
+                                    execPage={this.execPage}
+                                    execMenu={this.execMenu}
+                                    show={this.show}
+                                    onReload={this.onReload}
+                                  />
+                                </div>
+                              )}
+                            />
                             <Route path={`/${basicPath.PORTAL}/filemanage`} render={() => <FileManage />} />
                           </Switch>
                         </Content>

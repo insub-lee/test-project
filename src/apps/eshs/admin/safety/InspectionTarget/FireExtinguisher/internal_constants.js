@@ -1,4 +1,4 @@
-const baseUrl = `/api/eshs/v1/common/safety/`;
+const baseUrl = `/api/eshs/v1/common/safety/fireExtinguisher/`;
 export const address = {
   selectAllData: `${baseUrl}fireInspection`,
   generatePositionNo: `${baseUrl}generatePositionNo`,

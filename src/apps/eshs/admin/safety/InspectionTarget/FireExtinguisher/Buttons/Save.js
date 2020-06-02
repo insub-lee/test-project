@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import request from 'utils/request';
-import { address } from 'apps/eshs/admin/safety/InspectionTarget/internal_constants';
+import { address } from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/internal_constants';
 
 String.prototype.rtrim = function() {
   return this.replace(/(\s*$)/, '');

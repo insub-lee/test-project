@@ -51,23 +51,27 @@ class CompanyModal extends Component {
     const modalList = result && result.modalData && result.modalData.eshsHstCmpnyList;
     return (
       <StyledContentsWrapper>
-        <StyledCustomSearch className="search-wrapper-modal">
-          <span className="text-label">검색구분</span>
-          <AntdSelect className="select-sm mr5" onChange={value => this.onChangetValue('modalSearchtype', value)} value={this.state.modalSearchtype}>
-            <Option value="HST_CMPNY_CD">코드</Option>
-            <Option value="HST_CMPNY_NM">회사명</Option>
-          </AntdSelect>
-          <span className="text-label">검색어</span>
-          <AntdSearchInput
-            style={{ width: '150px', margin: '5px' }}
-            className="input-search-inline mr5 input-search-sm"
-            value={this.state.modalSearch}
-            onChange={e => this.onChangetValue('modalSearch', e.target.value)}
-            name="modalSearch"
-          />
-          <StyledButton className="btn-primary btn-sm" onClick={() => this.selectCodeApi('search')}>
-            검색
-          </StyledButton>
+        <StyledCustomSearch className="search-wrapper-inline">
+          <div className="search-input-area">
+            <span className="text-label">검색구분</span>
+            <AntdSelect className="select-sm mr5" onChange={value => this.onChangetValue('modalSearchtype', value)} value={this.state.modalSearchtype}>
+              <Option value="HST_CMPNY_CD">코드</Option>
+              <Option value="HST_CMPNY_NM">회사명</Option>
+            </AntdSelect>
+            <span className="text-label">검색어</span>
+            <AntdSearchInput
+              style={{ width: '150px' }}
+              className="input-search-inline mr5 input-search-sm"
+              value={this.state.modalSearch}
+              onChange={e => this.onChangetValue('modalSearch', e.target.value)}
+              name="modalSearch"
+            />
+          </div>
+          <div className="btn-area">
+            <StyledButton className="btn-gray btn-sm" onClick={() => this.selectCodeApi('search')}>
+              검색
+            </StyledButton>
+          </div>
         </StyledCustomSearch>
         <AntdTable
           key={modalList && modalList.HST_CMPNY_CD}
