@@ -2,19 +2,20 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Icon, Modal, Button } from 'antd';
 
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import RequesterView from './RequesterView';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledContentsModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 class RequesterList extends Component {
   state = {
     isShow: false,
     selectedRow: {},
-  }
+  };
 
   componentDidMount() {
     this.initList();
@@ -23,7 +24,7 @@ class RequesterList extends Component {
   initList = () => {
     const { id, apiAry, getCallDataHandler } = this.props;
     getCallDataHandler(id, apiAry, () => {});
-  }
+  };
 
   onClickRow = (record, rowIndex) => {
     this.setState({
@@ -60,7 +61,7 @@ class RequesterList extends Component {
       align: 'center',
       width: '20%',
     },
-    
+
     {
       title: '부서명',
       dataIndex: 'DEPT_NAME',
@@ -91,7 +92,9 @@ class RequesterList extends Component {
   ];
 
   render() {
-    const { result: { requesterList } } = this.props;
+    const {
+      result: { requesterList },
+    } = this.props;
     let list = [];
     if (requesterList && requesterList !== undefined) {
       if (requesterList.list !== undefined) {
@@ -101,22 +104,24 @@ class RequesterList extends Component {
 
     return (
       <>
-        <ContentsWrapper>
+        <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 요청자 승인/삭제
             </p>
           </div>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
           <AntdTable
             dataSource={list.map(item => ({ ...item, key: `KEY_${item.REQUEST_ID}` }))}
             columns={this.columns}
             onRow={(record, rowIndex) => ({
               onClick: event => {
                 this.onClickRow(record, rowIndex);
-              }
+              },
             })}
           />
-        </ContentsWrapper>
+        </StyledContentsWrapper>
         <AntdModal
           width={700}
           visible={this.state.isShow}

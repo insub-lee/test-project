@@ -32,7 +32,7 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 //   { dataIndex: 'CAS_NO', title: 'CAS-NO' },
 // ]
 //
-const AntdLineTable = StyledAntdTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdModalPad = StyledAntdModalPad(Modal);
 
 class TableTypeSelector extends React.Component {
@@ -230,10 +230,10 @@ class TableTypeSelector extends React.Component {
             <tbody>
               <tr>
                 <td>
-                  <AntdLineTable
+                  <AntdTable
                     size="small"
                     key="leftTable"
-                    className="ant-table-no-pad"
+                    className="ant-table-checkbox"
                     rowSelection={leftrowSelection}
                     columns={leftTableColumnsSearchVersion}
                     dataSource={apiList}
@@ -242,7 +242,7 @@ class TableTypeSelector extends React.Component {
                     rowKey={`${rowKey}`}
                     pagination={false}
                     locale={{ emptyText: this.props.noDataText }}
-                  ></AntdLineTable>
+                  ></AntdTable>
                 </td>
                 <td style={{ padding: '0 10px' }}>
                   <div style={{ marginBottom: '5px' }}>
@@ -262,9 +262,9 @@ class TableTypeSelector extends React.Component {
                   <div>&nbsp;</div>
                 </td>
                 <td>
-                  <AntdLineTable
+                  <AntdTable
                     size="small"
-                    className="ant-table-no-pad"
+                    className="ant-table-checkbox"
                     rowSelection={rightrowSelection}
                     columns={rightTableColumns}
                     dataSource={applyList}
@@ -272,7 +272,7 @@ class TableTypeSelector extends React.Component {
                     // style={{ width: '100%' }}
                     scroll={{ x: '100px', y: '240px' }}
                     rowKey={`${rowKey}`}
-                  ></AntdLineTable>
+                  ></AntdTable>
                 </td>
               </tr>
               <tr>

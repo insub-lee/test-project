@@ -3,8 +3,6 @@ import styled from 'styled-components';
 const primaryColor = '#636a78';
 
 const StyledAntdTable = Component => styled(Component)`
-  padding: 10px;
-
   .ant-table .ant-table-content {
     .ant-table-body {
       border-top: 1px solid #bbb;
@@ -82,11 +80,6 @@ const StyledAntdTable = Component => styled(Component)`
   }
   /* table 끝 */
 
-  /* padding 없을 때 */
-  &.ant-table-no-pad {
-    padding: 0;
-  }
-
   /* bordered 옵션 시 */
   .ant-table-bordered .ant-table-body > table {
     border: 0;
@@ -100,7 +93,7 @@ const StyledAntdTable = Component => styled(Component)`
   }
 
   /* table fixed */
-  .ant-table-layout-fixed {
+  &.ant-table-checkbox .ant-table-layout-fixed {
     .ant-table-content {
       .ant-table-fixed-left {
         .ant-table-fixed .ant-table-thead tr th,

@@ -9,7 +9,7 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
-import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 
 import Edit from './Edit';
@@ -18,7 +18,7 @@ import CompanyModal from './CompanyModal';
 const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
 const AntdSearchInput = StyledSearchInput(Input.Search);
-const AntdModalPad = StyledAntdModalPad(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 const { Option } = Select;
 
@@ -263,7 +263,7 @@ class List extends Component {
             footer={() => <div style={{ textAlign: 'center' }}>{`${listData && listData.length} 건`}</div>}
           />
         </StyledContentsWrapper>
-        <AntdModalPad visible={this.state.modalEdit} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="관리 단위 등록/수정">
+        <AntdModal visible={this.state.modalEdit} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="관리 단위 등록/수정">
           <div>
             {this.state.modalEdit && (
               <Edit
@@ -280,14 +280,14 @@ class List extends Component {
               />
             )}
           </div>
-        </AntdModalPad>
-        <AntdModalPad visible={this.state.modalCompany} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="회사 선택">
+        </AntdModal>
+        <AntdModal visible={this.state.modalCompany} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="회사 선택">
           <div>
             {this.state.modalCompany && (
               <CompanyModal sagaKey={id} getCallDataHandler={getCallDataHandler} result={result} selectedModalRecord={this.selectedModalRecord} />
             )}
           </div>
-        </AntdModalPad>
+        </AntdModal>
       </>
     );
   }

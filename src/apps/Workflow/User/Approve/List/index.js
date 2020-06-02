@@ -4,20 +4,21 @@ import { Table, Modal, Icon, Input, message } from 'antd';
 import moment from 'moment';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 
 // import ApproveView from '../ApproveView';
 // import HoldView from '../MdcsAppvView/holdview';
 
 const { TextArea } = Input;
 
-const AntdLineTable = StyledLineTable(Table);
-const AntdModal = StyledContentsModal(Modal);
+const AntdTable = StyledAntdTable(Table);
+const AntdModal = StyledAntdModal(Modal);
 
 class ApproveList extends Component {
   constructor(props) {
@@ -191,22 +192,23 @@ class ApproveList extends Component {
     const { modalWidth, coverView, isDcc, holdReqList, currentStatus } = this.state;
     return (
       <>
-        <ContentsWrapper>
+        <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 기결함
             </p>
           </div>
-          <AntdLineTable
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
+          <AntdTable
             columns={this.getTableColumns()}
             dataSource={approveList.map(item => ({ ...item, key: `approveList_${item.RNUM}` }))}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
-            className="tableWrapper"
           />
-        </ContentsWrapper>
+        </StyledContentsWrapper>
         {selectedRow && selectedRow.REL_TYPE && selectedRow.REL_TYPE !== 999 ? (
           <div>
             <AntdModal
@@ -234,10 +236,10 @@ class ApproveList extends Component {
                     {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) &&
                       (currentStatus === selectedRow.PROC_STATUS || (selectedRow.STEP === 2 && isDcc)) && (
                         <>
-                          <StyledButton className="btn-primary btn-first" onClick={this.onHoldRelase}>
+                          <StyledButton className="btn-primary mr5" onClick={this.onHoldRelase}>
                             홀드해제
                           </StyledButton>
-                          <StyledButton className="btn-primary btn-first" onClick={onClickModify}>
+                          <StyledButton className="btn-primary mr5" onClick={onClickModify}>
                             표지수정
                           </StyledButton>
                         </>
@@ -304,7 +306,7 @@ class ApproveList extends Component {
                 </table>
               </StyledHtmlTable>
               <div style={{ width: '100%', textAlign: 'center', marginTop: '12px' }}>
-                <StyledButton className="btn-primary btn-first" onClick={this.handleReqApprove}>
+                <StyledButton className="btn-primary mr5" onClick={this.handleReqApprove}>
                   저장
                 </StyledButton>
                 <StyledButton className="btn-light" onClick={() => setOpinionVisible(false)}>
@@ -341,7 +343,7 @@ class ApproveList extends Component {
                 )}
                 ModifyCustomButtons={({ onCloseCoverView, saveBeforeProcess, sagaKey, reloadId }) => (
                   <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                    <StyledButton className="btn-primary btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                    <StyledButton className="btn-primary mr5" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
                       저장
                     </StyledButton>
                     <StyledButton className="btn-light" onClick={onCloseCoverView}>

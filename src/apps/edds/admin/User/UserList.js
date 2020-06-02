@@ -2,19 +2,20 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Icon, Modal, Button } from 'antd';
 
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import UserView from './UserView';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledContentsModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 class UserList extends Component {
   state = {
     isShow: false,
     selectedRow: {},
-  }
+  };
 
   componentDidMount() {
     this.initList();
@@ -59,7 +60,7 @@ class UserList extends Component {
       key: 'COMPANY_NAME',
       align: 'center',
     },
-    
+
     {
       title: '부서명',
       dataIndex: 'DEPT_NAME',
@@ -90,26 +91,28 @@ class UserList extends Component {
 
   render() {
     const { result } = this.props;
-    let list = result && result.userList && result.userList.list ? result.userList.list : [];
+    const list = result && result.userList && result.userList.list ? result.userList.list : [];
 
     return (
       <>
-        <ContentsWrapper>
+        <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 사용자 관리
             </p>
           </div>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
           <AntdTable
             dataSource={list.map(item => ({ ...item, key: `KEY_${item.USER_ID}` }))}
             columns={this.columns}
             onRow={(record, rowIndex) => ({
               onClick: event => {
                 this.onClickRow(record, rowIndex);
-              }
+              },
             })}
           />
-        </ContentsWrapper>
+        </StyledContentsWrapper>
         <AntdModal
           width={700}
           visible={this.state.isShow}
@@ -122,7 +125,7 @@ class UserList extends Component {
           <UserView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
       </>
-    )
+    );
   }
 }
 
