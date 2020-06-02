@@ -3,7 +3,7 @@ import { Input, Select, DatePicker, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
@@ -112,8 +112,8 @@ class PeriodSetting extends Component {
     const { result } = this.props;
     return (
       <StyledContentsWrapper>
-        <StyledSearchWrapper>
-          <div className="row">
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
             <AntdSelect
               value={this.state.WORK_AREA_CD_NODE_ID} className="select-sm mr5" placeholder="지역 선택" style={{ width: 120 }}
               onChange={val => { this.setState({ WORK_AREA_CD_NODE_ID: val })}}
@@ -124,10 +124,10 @@ class PeriodSetting extends Component {
                 ))
               )}
             </AntdSelect>
-            <StyledButton className="btn-light btn-sm mr5" onClick={this.onSearch}>검색</StyledButton>
+            <StyledButton className="btn-gray btn-sm mr5" onClick={this.onSearch}>검색</StyledButton>
             <StyledButton className="btn-primary btn-sm" onClick={this.onSave}>저장</StyledButton>
           </div>
-        </StyledSearchWrapper>
+        </StyledCustomSearchWrapper>
         <StyledHtmlTable>
           <table className="table-border">
             <colgroup>

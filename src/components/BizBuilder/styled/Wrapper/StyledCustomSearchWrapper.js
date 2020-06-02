@@ -47,6 +47,10 @@ const StyledCustomSearchWrapper = styled.div`
       margin-left: 5px;
     }
   }
+
+  &.mb10 {
+    margin-bottom: 10px;
+  }
 `;
 
 export default StyledCustomSearchWrapper;
