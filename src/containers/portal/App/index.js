@@ -52,6 +52,7 @@ const UserStore = Loadable({ loader: () => import('./UserStore') });
 const RodalPage = Loadable({ loader: () => import('../../../components/Rodal') });
 const Page = Loadable({ loader: () => import('../../../components/Page') });
 const AppsRouter = Loadable({ loader: () => import('../../../apps/appsRouter') });
+const FileManage = Loadable({ loader: () => import('./FileManage') });
 
 // import Fullscreen from 'components/Fullscreen';
 // import SideMenu from 'components/SideMenu';
@@ -668,6 +669,7 @@ class App extends React.Component {
                                 </div>
                               )}
                             />
+                            <Route path={`/${basicPath.PORTAL}/filemanage`} render={() => <FileManage />} />
                           </Switch>
                         </Content>
                       </div>

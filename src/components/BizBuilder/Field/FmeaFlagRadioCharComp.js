@@ -32,9 +32,13 @@ class FmeaFlagRadioCharComp extends Component {
   };
 
   render() {
+    const { changeFormData, sagaKey, CONFIG, changeValidationData } = this.props;
     const { options, selectedValue } = this.state;
-    console.debug('fema', options);
-    return <Radio.Group options={options}> </Radio.Group>;
+    return (
+      <Radio.Group options={options} onChange={e => this.onChangeHandler(changeFormData, sagaKey, CONFIG, changeValidationData, e.target.value)}>
+        {' '}
+      </Radio.Group>
+    );
   }
 }
 

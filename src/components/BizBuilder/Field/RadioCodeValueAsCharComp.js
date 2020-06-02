@@ -10,35 +10,17 @@ class RadioCodeValueAsCharComp extends Component {
   }
 
   componentDidMount() {
-    const {
-      // getExtraApiData,
-      sagaKey: id,
-      COMP_FIELD,
-      CONFIG: {
-        property: { mapId },
-      },
-      submitExtraHandler,
-    } = this.props;
-    // const apiArys = [{ key: `${COMP_FIELD}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
-    const url = `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`;
-    // getExtraApiData(id, apiArys, this.initDataBind);
-    submitExtraHandler(id, 'GET', url, {}, this.initData);
-  }
-
-  initDataBind = sagaKey => {
-    const { COMP_FIELD, extraApiData } = this.props;
-    const { categoryMapList: dataList } = extraApiData[COMP_FIELD];
-    const dataSource = dataList.filter(f => f.USE_YN === 'Y' && f.LVL > 0);
-    this.setState({ dataSource });
-  };
-
-  initData = (id, response) => {
-    const { categoryMapList } = response;
-    if (categoryMapList && categoryMapList.length > 0) {
-      const dataSource = categoryMapList.filter(f => f.USE_YN === 'Y' && f.LVL > 0);
-      this.setState({ dataSource });
+    const { fieldSelectData, CONFIG, colData } = this.props;
+    if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
+      if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey].length > 0) {
+        this.setState({
+          dataSource: fieldSelectData[CONFIG.property.compSelectDataKey]
+            .filter(f => f.LVL !== 0 && f.USE_YN === 'Y')
+            .map(item => ({ label: item.NAME_KOR, value: item.CODE })),
+        });
+      }
     }
-  };
+  }
 
   onChangeRadio = e => {
     const { sagaKey, COMP_FIELD, changeFormData } = this.props;
@@ -48,16 +30,7 @@ class RadioCodeValueAsCharComp extends Component {
   render() {
     const { colData, readOnly, CONFIG } = this.props;
     const { dataSource } = this.state;
-    return (
-      <Radio.Group onChange={this.onChangeRadio} value={colData} disabled={readOnly || CONFIG.property.readOnly}>
-        {dataSource &&
-          dataSource.map(rdo => (
-            <Radio key={`RadioCodeValueAsCharComp-rdo.CODE-${rdo.CODE}`} value={rdo.CODE}>
-              {rdo.NAME_KOR}
-            </Radio>
-          ))}
-      </Radio.Group>
-    );
+    return <Radio.Group onChange={this.onChangeRadio} options={dataSource} value={colData} disabled={readOnly || CONFIG.property.readOnly}></Radio.Group>;
   }
 }
 

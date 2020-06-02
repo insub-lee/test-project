@@ -10,17 +10,19 @@ import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 
 import Moment from 'moment';
 import BizBuilderBase from 'components/BizBuilderBase';
+
+const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 const AntdSelect = StyledSelect(Select);
 const AntdLineTable = StyledLineTable(Table);
 const AntdModal = StyledContentsModal(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
-
-const { Option } = Select;
-const { RangePicker } = DatePicker;
+const AntdRangePicker = StyledDatePicker(RangePicker);
 
 Moment.locale('ko');
 
@@ -116,20 +118,18 @@ class List extends Component {
         <ContentsWrapper>
           <div className="selSaveWrapper alignLeft">
             <AntdSearch
-              className="input-search-mid"
+              className="input-search-mid mr5"
               value={itemNm}
               style={{ width: '150px' }}
               onClick={this.handleItemModalVisible}
               onSearch={this.handleItemModalVisible}
             />
-            {/* datePiker CSS 없음 대체용으로 사용 */}
-            <div style={{ margin: '0 5px', display: 'inline-block' }}>
-              <RangePicker
-                defaultValue={this.state.dates}
-                format={['YYYY-MM-DD', 'YYYY-MM-DD']}
-                onChange={(date, dateStrings) => this.dateChange(dateStrings)}
-              />
-            </div>
+            <AntdRangePicker
+              className="ant-picker-mid mr5"
+              defaultValue={this.state.dates}
+              format={['YYYY-MM-DD', 'YYYY-MM-DD']}
+              onChange={(date, dateStrings) => this.dateChange(dateStrings)}
+            />
             <AntdSelect className="mr5" value={0}>
               <Option value={0}>결제 해결후 사용</Option>
             </AntdSelect>

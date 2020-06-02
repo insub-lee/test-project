@@ -2,26 +2,28 @@ import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 
 class SelectReadComp extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fullPathName: undefined,
+    };
+  }
+
   componentDidMount() {
-    const { getExtraApiData, sagaKey: id, colData } = this.props;
-    const apiValue = [
-      {
-        key: `label_${colData}`,
-        url: '/api/admin/v1/common/categoryFullPathNm',
-        params: { PARAM: { NODE_ID: Number(colData) } },
-        type: 'POST',
-      },
-    ];
-    if (colData && colData !== ' ') {
-      getExtraApiData(id, apiValue);
+    const { fieldSelectData, CONFIG } = this.props;
+    if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
+      if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey]) {
+        const fullPath = fieldSelectData[CONFIG.property.compSelectDataKey];
+        const { FULLPATH_NM } = fullPath;
+        this.setState({ fullPathName: FULLPATH_NM });
+      }
     }
   }
 
   render() {
-    const { extraApiData, colData, visible } = this.props;
-    const apiData = extraApiData[`label_${colData}`];
-
-    return visible && <label>{apiData ? apiData.fullPath_Nm && apiData.fullPath_Nm.FULLPATH_NM : ''}</label>;
+    const { fullPathName } = this.state;
+    const { visible } = this.props;
+    return visible && <label>{fullPathName}</label>;
   }
 }
 

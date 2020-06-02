@@ -52,7 +52,7 @@ class InputPage extends Component {
   }
 
   fileUploadComplete = (id, response, etcData) => {
-    const { formData, changeFormData } = this.props;
+    const { formData, changeFormData, changeIsLoading } = this.props;
     const { DETAIL, code } = response;
     const selectedAttach = formData[etcData];
     const { uploadFileList } = this.state;
@@ -86,6 +86,7 @@ class InputPage extends Component {
           this.saveTask(id, id, this.saveTaskAfter);
         } else {
           message.error('file upload 에러 발생 , 관리자에게 문의 바랍니다.!');
+          changeIsLoading(false);
         }
       }
     });
@@ -167,6 +168,8 @@ class InputPage extends Component {
       workInfo,
       redirectUrl,
       changeIsLoading,
+      reloadViewType,
+      reloadTaskSeq,
     } = this.props;
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler(id, redirectUrl);
@@ -182,7 +185,12 @@ class InputPage extends Component {
       }
     }
     if (isBuilderModal) {
-      changeViewPage(reloadId, workSeq, -1, 'LIST');
+      changeViewPage(
+        reloadId,
+        workSeq,
+        reloadId && reloadViewType && reloadTaskSeq ? reloadTaskSeq : -1,
+        reloadId && reloadViewType && reloadTaskSeq ? reloadViewType : 'LIST',
+      );
       if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
 

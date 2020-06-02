@@ -139,12 +139,12 @@ class List extends React.Component {
       content: (
         <AntdSelect
           name="SITE"
-          defaultValue="313"
+          defaultValue="317"
           width="300px"
           onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { SITE: e }) }))}
         >
-          <Option value="313">청주</Option>
-          <Option value="314">구미</Option>
+          <Option value="317">청주</Option>
+          <Option value="318">구미</Option>
         </AntdSelect>
       ),
     },
@@ -337,7 +337,7 @@ class List extends React.Component {
 
   getProtectionItemList = async () => {
     const data = await request({
-      url: `/api/eshs/v1/common/geteshsprotectionitems?SITE=${313}`,
+      url: `/api/eshs/v1/common/geteshsprotectionitems?SITE=${317}`,
       method: 'GET',
     });
     return data;
@@ -464,6 +464,9 @@ class List extends React.Component {
   };
 
   handleRowClick = rowData => {
+    if (this.props.handleRowClick) {
+      return this.props.handleRowClick(rowData);
+    }
     const { sagaKey: id, getCallDataHandler } = this.props;
     this.setState({ requestValue: rowData, visible: true, viewType: 'VIEW' });
     const apiArr = [
@@ -473,7 +476,7 @@ class List extends React.Component {
         url: `/api/eshs/v1/common/geteshsprotectionitemsattach?HITEM_CD=${rowData.HITEM_CD}`,
       },
     ];
-    getCallDataHandler(id, apiArr);
+    return getCallDataHandler(id, apiArr);
   };
 
   inputFooter = () => [
@@ -558,6 +561,11 @@ List.propTypes = {
   result: PropTypes.object,
   changeFormData: PropTypes.func,
   submitHandlerBySaga: PropTypes.func,
+  handleRowClick: PropTypes.func,
+};
+
+List.defatulProps = {
+  handleRowClick: null,
 };
 
 export default List;

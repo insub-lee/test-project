@@ -120,6 +120,11 @@ const StyledDefaultMdcs = styled(StyledViewDesigner)`
         &.mdcsAttachedFileCol {
           cursor: pointer;
         }
+        input:read-only,
+        textarea:read-only,
+        .ant-input:read-only {
+          background-color: #ffffff;
+        }
       }
     }
   }
