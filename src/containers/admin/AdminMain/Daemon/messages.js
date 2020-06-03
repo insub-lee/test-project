@@ -183,15 +183,15 @@ export default defineMessages({
   },
   startDaemonSuccess: {
     id: 'admin.AdminMain.Daemon.startDaemonSuccess',
-    defaultMessage: '실행 하였습니다.',
+    defaultMessage: '실행 요청을 하였습니다.',
   },
   startDaemonConfirm: {
     id: 'admin.AdminMain.Daemon.startDaemonConfirm',
-    defaultMessage: '실행 하시겠습니까?.',
+    defaultMessage: '실행 요청을 하시겠습니까?.',
   },
   startDaemonFail: {
     id: 'admin.AdminMain.Daemon.startDaemonFail',
-    defaultMessage: '실행에 실패 하였습니다.',
+    defaultMessage: '실행에 요청에 실패 하였습니다.',
   },
   startDaemonFail2: {
     id: 'admin.AdminMain.Daemon.startDaemonFail2',
