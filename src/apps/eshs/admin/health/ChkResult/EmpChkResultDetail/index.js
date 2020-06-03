@@ -10,12 +10,12 @@ class EmpChkResultDetail extends Component {
   }
 }
 
-View.propTypes = {
+EmpChkResultDetail.propTypes = {
   sagaKey: PropTypes.string,
   defaultUser: PropTypes.string,
   userSearch: PropTypes.bool,
 };
-View.defaultProps = {
+EmpChkResultDetail.defaultProps = {
   sagaKey: 'EmpChkResultDetail',
   defaultUser: '',
   // defaultUser: '78347', 박연희 수석
