@@ -96,7 +96,7 @@ class MsdsIngredientComp extends React.Component {
             </colgroup>
             <thead>
               {viewType === 'INPUT' || viewType === 'MODIFY' ? (
-                <tr align="left">
+                <tr textAlign="left">
                   <td colSpan={4}>
                     <TableTypeSelector
                       leftTableColumns={leftTableColumns}

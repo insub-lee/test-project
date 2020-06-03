@@ -5,13 +5,16 @@ import { Select, Input } from 'antd';
 import debounce from 'lodash/debounce';
 
 import StyledVirtualizedTable from 'components/BizBuilder/styled/Table/StyledVirtualizedTable';
-import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
 const { Option } = Select;
-const { Search } = Input;
 const InputGroup = Input.Group;
-
+const AntdInputSearch = StyledSearchInput(Input.Search);
+const AntdSelect = StyledSelect(Select);
 class List extends Component {
   constructor(props) {
     super(props);
@@ -160,52 +163,56 @@ class List extends Component {
   render() {
     const { isHqSelect, hqList, deptList, searchValue, userList, selectedDept } = this.state;
     return (
-      <div>
-        <StyledSearchWrapper>
-          <div className="search-group-layer">
-            <Select defaultValue="지역 전체" className="search-item input-width120" onChange={this.handleBaseareaChange}>
+      <>
+        <ContentsWrapper>
+          <StyledSearchWrap>
+            <AntdSelect defaultValue="지역 전체" className="mr5" onChange={this.handleBaseareaChange}>
               <Option value="">지역 전체</Option>
               <Option value="CP">청주</Option>
               <Option value="GP">구미</Option>
-            </Select>
-            <Select defaultValue="본부 전체" className="search-item input-width120" onChange={this.handleHqChange}>
+            </AntdSelect>
+            <AntdSelect defaultValue="본부 전체" className="mr5" onChange={this.handleHqChange} style={{ width: '250px' }}>
               <Option value={900}>본부 전체</Option>
               {hqList.map(item => (
                 <Option value={item.DEPT_ID}>{item.NAME_KOR}</Option>
               ))}
-            </Select>
-            <Select defaultValue={selectedDept} className="search-item input-width160" disabled={!isHqSelect} onChange={this.handleDeptChange}>
+            </AntdSelect>
+            <AntdSelect defaultValue={selectedDept} className="mr5" disabled={!isHqSelect} onChange={this.handleDeptChange} style={{ width: '250px' }}>
               <Option value="">팀 전체</Option>
               {deptList.map(item => (
                 <Option value={item.DEPT_CD}>{item.NAME_KOR}</Option>
               ))}
-            </Select>
-            <InputGroup className="search-item search-input-group" compact>
-              <Select defaultValue="이름" onChange={this.handleSearchTypeChange}>
+            </AntdSelect>
+            <InputGroup className="ant-input-inline mr5" compact style={{ display: 'inline-block', width: '30%' }}>
+              <AntdSelect defaultValue="이름" onChange={this.handleSearchTypeChange} style={{ display: 'inline-block', width: '25%' }}>
                 <Option value="name_kor">이름</Option>
                 <Option value="emp_no">사번</Option>
-              </Select>
-              <Search placeholder=" 검색어를 입력하세요" onChange={this.handleSearchValueChange} value={searchValue} />
+              </AntdSelect>
+              <AntdInputSearch
+                className="ant-input-inline mr5"
+                placeholder=" 검색어를 입력하세요"
+                onChange={this.handleSearchValueChange}
+                value={searchValue}
+                style={{ width: '70%' }}
+              />
             </InputGroup>
-          </div>
-        </StyledSearchWrapper>
-        <div className="alignRight">
-          <StyledButton className="btn-primary" onClick={this.handleListReset}>
-            검색 초기화
-          </StyledButton>
-        </div>
-        <StyledVirtualizedTable>
-          <AutoSizer disableHeight>
-            {({ width }) => (
-              <Table width={width} height={500} headerHeight={40} rowHeight={53} rowCount={userList.length} rowGetter={({ index }) => userList[index]}>
-                {this.getColumns().map(({ label, dataKey, ratio }) => (
-                  <Column key={dataKey} label={label} dataKey={dataKey} width={(width / 100) * ratio} />
-                ))}
-              </Table>
-            )}
-          </AutoSizer>
-        </StyledVirtualizedTable>
-      </div>
+            <StyledButton className="btn-primary" onClick={this.handleListReset}>
+              검색 초기화
+            </StyledButton>
+          </StyledSearchWrap>
+          <StyledVirtualizedTable>
+            <AutoSizer disableHeight>
+              {({ width }) => (
+                <Table width={width} height={500} headerHeight={40} rowHeight={53} rowCount={userList.length} rowGetter={({ index }) => userList[index]}>
+                  {this.getColumns().map(({ label, dataKey, ratio }) => (
+                    <Column key={dataKey} label={label} dataKey={dataKey} width={(width / 100) * ratio} />
+                  ))}
+                </Table>
+              )}
+            </AutoSizer>
+          </StyledVirtualizedTable>
+        </ContentsWrapper>
+      </>
     );
   }
 }
