@@ -121,11 +121,11 @@ class UserModal extends Component {
 
   render() {
     const { userSearch, result, formData } = this.props;
-    const { modalVisible, columns, searchType } = this.state;
+    const { modalVisible, columns, searchType, keyword } = this.state;
 
     const userList = (result && result.userList && result.userList.users) || [];
     const userInfo = (formData && formData.userInfo) || {};
-    if (!userSearch) return '';
+    if (!userSearch) return <b className="textLabel">{` ${userInfo.EMP_NO || ''} `}</b>;
     return (
       <>
         <AntdSearchInput
@@ -159,6 +159,7 @@ class UserModal extends Component {
             &nbsp;
             <AntdInput
               style={{ width: 150 }}
+              value={keyword}
               className="ant-input-sm ant-input-inline mr5"
               placeholder=" 검색어를 입력하세요"
               onChange={e => this.setState({ keyword: e.target.value })}
