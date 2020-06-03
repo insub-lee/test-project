@@ -15,7 +15,7 @@ import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import moment from 'moment';
 
-import View from './View';
+import View from '../ChkMst/View';
 
 const AntdTable = StyledAntdTable(Table)
 const AntdSelect = StyledSelect(Select);
@@ -28,8 +28,7 @@ class List extends Component {
     isShow: false,
     selectedRow: {},
     searchParam: {
-      DATE_GUBUN: 'APP_DT',
-      SEARCH_DATE: '',
+      CHK_YEAR: '',
       HOSPITAL_CODE: '',
       CHK_TYPE_CD_NODE_ID: 0,
       CHK_SEQ: '',
@@ -37,19 +36,21 @@ class List extends Component {
       EMP_NO: '',
     },
     list: [],
+    yearList: [],
   };
 
   componentWillMount() {
     const today = new Date();
-    const dd = today.getDate() < 10 ? `0${today.getDate()}` : today.getDate();
-    const mm= today.getMonth()+1 < 10 ? `0${today.getMonth()+1}` : today.getMonth()+1;
-    const yyyy = today.getFullYear();
+    const currYear = today.getFullYear();
+    const yearList = [];
+    for (let i=currYear; i>=1998; i--) {
+      yearList.push(i);
+    }
+    this.setState({ yearList });
 
-    this.onChangeSearchParam('SEARCH_DATE', `${yyyy}-${mm}-${dd}`);
+    this.onChangeSearchParam('CHK_YEAR', currYear);
     this.getInitData();
   };
-
-  componentDidMount() {};
 
   getInitData = () => {
     const { sagaKey, getCallDataHandler, spinningOn } = this.props;
@@ -76,14 +77,10 @@ class List extends Component {
 
   initDate = () => {
     const { result, spinningOff } = this.props;
-    if (result && result.hospitalList && result.hospitalList.list) {
-      this.onChangeSearchParam('HOSPITAL_CODE', result.hospitalList.list[0].HOSPITAL_CODE);
-    }
     spinningOff();
   };
 
   getList = () => {
-    console.debug('## ', this.state.searchParam);
     const { sagaKey, getCallDataHandlerReturnRes, spinningOn, spinningOff } = this.props;
     const apiInfo = {
       key: 'chkMstList',
@@ -128,7 +125,7 @@ class List extends Component {
       title: '소속',
       dataIndex: 'DEPT_NAME',
       key: 'DEPT_NAME',
-      width: '20%',
+      width: '15%',
     },
     {
       title: '사번',
@@ -156,7 +153,7 @@ class List extends Component {
       title: '차수',
       dataIndex: 'CHK_SEQ',
       key: 'CHK_SEQ',
-      width: '8%',
+      width: '7%',
       align: 'center',
       render: text => `${text}차`,
     },
@@ -164,25 +161,31 @@ class List extends Component {
       title: '배우자',
       dataIndex: 'FAM_NAME',
       key: 'FAM_NAME',
-      width: '10%',
+      width: '8%',
       align: 'center',
       render: (text, record) => record.IS_MATE === '1' ? text : ''
     },
     {
-      title: '검진일',
-      dataIndex: 'CHK_DT',
-      key: 'CHK_DT',
-      width: '15%',
-      align: 'center',
-      render: text => <AntdDatePicker value={text && text !== '' ? moment(text) : ''} className="ant-picker-sm" style={{ width: 110 }} />
-    },
-    {
-      title: '병원등록번호',
-      dataIndex: 'HOS_REGNO',
-      key: 'HOS_REGNO',
+      title: '검진기관',
+      dataIndex: 'HOSPITAL_NAME',
+      key: 'HOSPITAL_NAME',
       width: '12%',
       align: 'center',
-      render: text => <AntdInput value={text} className="ant-input-sm" />
+    },
+    {
+      title: '예약일',
+      dataIndex: 'APP_DT',
+      key: 'APP_DT',
+      width: '10%',
+      align: 'center',
+      render: text => text ? moment(text).format('YYYY-MM-DD') : ''
+    },
+    {
+      title: '검진항목',
+      dataIndex: 'CHK_ITEMS',
+      key: 'CHK_ITEMS',
+      align: 'left',
+      ellipsis: true,
     },
   ]
 
@@ -205,27 +208,21 @@ class List extends Component {
           <StyledCustomSearchWrapper>
             <div className="search-input-area">
               <AntdSelect
-                defaultValue={this.state.searchParam.DATE_GUBUN} className="select-sm mr5" style={{ width: 80 }}
-                onChange={val => this.onChangeSearchParam('DATE_GUBUN', val)}
+                value={this.state.searchParam.CHK_YEAR} className="select-sm mr5" style={{ width: 100 }}
+                onChange={val => this.onChangeSearchParam('CHK_YEAR', val)}
               >
-                <AntdSelect.Option value="APP_DT">예약일</AntdSelect.Option>
-                <AntdSelect.Option value="CHK_DT">검진일</AntdSelect.Option>
+              {this.state.yearList && this.state.yearList.map(year => (
+                <AntdSelect.Option value={year}>{`${year}년`}</AntdSelect.Option>
+              ))}
               </AntdSelect>
-              <AntdDatePicker
-                defaultValue={moment(this.state.searchParam.SEARCH_DATE)} className="ant-picker-sm mr5" style={{ width: 110 }}
-                onChange={(val1, val2) => this.onChangeSearchParam('SEARCH_DATE', val2)}
-              />
-              {result.hospitalList && result.hospitalList.list && (
-                <AntdSelect
-                  defaultValue={result.hospitalList.list[0].HOSPITAL_CODE} className="select-sm mr5" style={{ width: 200 }}
-                  onChange={val => this.onChangeSearchParam('HOSPITAL_CODE', val)}
-                  allowClear placeholder="검진기관"
-                >
-                  {result.hospitalList.list.map(item => (
-                    <AntdSelect.Option value={item.HOSPITAL_CODE}>{item.HOSPITAL_NAME}</AntdSelect.Option>
-                  ))}
-                </AntdSelect>
-              )}
+              <AntdSelect
+                className="select-sm mr5" style={{ width: 200 }} allowClear placeholder="검진기관"
+                onChange={val => this.onChangeSearchParam('HOSPITAL_CODE', val)}
+              >
+              {result.hospitalList && result.hospitalList.list && result.hospitalList.list.map(item => (
+                <AntdSelect.Option value={item.HOSPITAL_CODE}>{item.HOSPITAL_NAME}</AntdSelect.Option>
+              ))}
+              </AntdSelect>
               <AntdSelect
                 className="select-sm mr5" style={{ width: 100 }} allowClear placeholder="검종"
                 onChange={val => this.onChangeSearchParam('CHK_TYPE_CD_NODE_ID', val)}
