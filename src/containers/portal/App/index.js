@@ -52,6 +52,7 @@ const UserStore = Loadable({ loader: () => import('./UserStore') });
 const RodalPage = Loadable({ loader: () => import('../../../components/Rodal') });
 const Page = Loadable({ loader: () => import('../../../components/Page') });
 const AppsRouter = Loadable({ loader: () => import('../../../apps/appsRouter') });
+const FileManage = Loadable({ loader: () => import('./FileManage') });
 
 // import Fullscreen from 'components/Fullscreen';
 // import SideMenu from 'components/SideMenu';
@@ -132,8 +133,7 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { view } = this.props;
-
+    const { view, menuFixedYn } = this.props;
     if (view !== prevProps.view) {
       if (view === 'Mobile' || view === 'Tablet') {
         const styleSpinnerCopy = {
@@ -143,6 +143,11 @@ class App extends React.Component {
         };
         this.styleSpinner = styleSpinnerCopy;
       }
+    }
+    if (menuFixedYn !== prevProps.menuFixedYn) {
+      this.setState({
+        open: menuFixedYn === 'Y',
+      });
     }
   }
 
@@ -664,6 +669,7 @@ class App extends React.Component {
                                 </div>
                               )}
                             />
+                            <Route path={`/${basicPath.PORTAL}/filemanage`} render={() => <FileManage />} />
                           </Switch>
                         </Content>
                       </div>
@@ -786,6 +792,7 @@ App.propTypes = {
   myHomePageId: PropTypes.number,
   menuLayoutCode: PropTypes.string,
   menuCompCode: PropTypes.string,
+  handleUpdateMenuFixedYn: PropTypes.func.isRequired,
 };
 
 App.defaultProps = {

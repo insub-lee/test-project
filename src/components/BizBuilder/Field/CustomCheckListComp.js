@@ -29,7 +29,6 @@ class CustomCheckListComp extends Component {
     if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
       if (fieldSelectData[CONFIG.property.compSelectDataKey]) {
         const mapList = fieldSelectData[CONFIG.property.compSelectDataKey];
-        console.debug('maplist', mapList);
         this.initDataBind(mapList);
       }
     }
@@ -116,6 +115,7 @@ class CustomCheckListComp extends Component {
     ];
 
     // colData Read 후 selectedValue bind 하기
+    console.debug('checkList', colData);
     let isItem = false;
     if (colData && colData.length > 0) {
       const { DETAIL } = colData[0];

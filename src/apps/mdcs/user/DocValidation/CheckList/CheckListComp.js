@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { Icon, Table, Modal, message } from 'antd';
 import moment from 'moment';
 
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import ValidationView from './validationView';
 
-const AntdLineTable = StyledLineTable(Table);
-const AntdModal = StyledContentsModal(Modal);
+const AntdTable = StyledAntdTable(Table);
+const AntdModal = StyledAntdModal(Modal);
 class CheckListComp extends Component {
   constructor(props) {
     super(props);
@@ -103,33 +104,36 @@ class CheckListComp extends Component {
     const { visible, workSeq, taskSeq, taskOrginSeq, title } = this.state;
     const { customDataList } = this.props;
     return (
-      <ContentsWrapper>
-        <div className="pageTitle">
-          <p>
-            <Icon type="form" /> 유효성 점검리스트
-          </p>
-        </div>
-        <AntdLineTable
-          columns={this.getTableColumns()}
-          dataSource={customDataList}
-          onRow={(record, rowIndex) => ({
-            onClick: e => this.onRowClick(record, rowIndex, e),
-          })}
-          bordered
-          className="tableWrapper"
-        />
-        <AntdModal title="유효성 점검" visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
-          <ValidationView
-            {...this.props}
-            WORK_SEQ={workSeq}
-            TASK_SEQ={taskSeq}
-            TASK_ORIGIN_SEQ={taskOrginSeq}
-            TITLE={title}
-            onValidateProcess={this.onValidateProcess}
-            onModalClose={this.onModalClose}
+      <>
+        <StyledHeaderWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 유효성 점검리스트
+            </p>
+          </div>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
+          <AntdTable
+            columns={this.getTableColumns()}
+            dataSource={customDataList}
+            onRow={(record, rowIndex) => ({
+              onClick: e => this.onRowClick(record, rowIndex, e),
+            })}
+            bordered
           />
-        </AntdModal>
-      </ContentsWrapper>
+          <AntdModal title="유효성 점검" visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+            <ValidationView
+              {...this.props}
+              WORK_SEQ={workSeq}
+              TASK_SEQ={taskSeq}
+              TASK_ORIGIN_SEQ={taskOrginSeq}
+              TITLE={title}
+              onValidateProcess={this.onValidateProcess}
+              onModalClose={this.onModalClose}
+            />
+          </AntdModal>
+        </StyledContentsWrapper>
+      </>
     );
   }
 }

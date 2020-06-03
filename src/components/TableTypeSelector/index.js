@@ -3,9 +3,9 @@ import React from 'react';
 import { Table, Modal, Icon, Input, message, Button } from 'antd';
 import Highlighter from 'react-highlight-words';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
 // Component Attribute 및 Event Method 정리
 // <TableTypeSelector
@@ -32,8 +32,8 @@ import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 //   { dataIndex: 'CAS_NO', title: 'CAS-NO' },
 // ]
 //
-const AntdLineTable = StyledAntdTable(Table);
-const AntdModal = StyledContentsModal(Modal);
+const AntdTable = StyledAntdTable(Table);
+const AntdModalPad = StyledAntdModalPad(Modal);
 
 class TableTypeSelector extends React.Component {
   constructor(props) {
@@ -210,7 +210,7 @@ class TableTypeSelector extends React.Component {
           {btnText}
         </StyledButton>
 
-        <AntdModal
+        <AntdModalPad
           title={modalTitle}
           visible={modalVisivle}
           width={870}
@@ -220,7 +220,7 @@ class TableTypeSelector extends React.Component {
           okText="적용"
           footer={[null]}
         >
-          <table>
+          <table style={{ width: '100%', tableLayout: 'fixed' }}>
             <colgroup>
               <col width="60%" />
               <col width="7%" />
@@ -230,10 +230,10 @@ class TableTypeSelector extends React.Component {
             <tbody>
               <tr>
                 <td>
-                  <AntdLineTable
+                  <AntdTable
                     size="small"
                     key="leftTable"
-                    className="tableWrapper"
+                    className="ant-table-checkbox"
                     rowSelection={leftrowSelection}
                     columns={leftTableColumnsSearchVersion}
                     dataSource={apiList}
@@ -242,7 +242,7 @@ class TableTypeSelector extends React.Component {
                     rowKey={`${rowKey}`}
                     pagination={false}
                     locale={{ emptyText: this.props.noDataText }}
-                  ></AntdLineTable>
+                  ></AntdTable>
                 </td>
                 <td style={{ padding: '0 10px' }}>
                   <div style={{ marginBottom: '5px' }}>
@@ -262,9 +262,9 @@ class TableTypeSelector extends React.Component {
                   <div>&nbsp;</div>
                 </td>
                 <td>
-                  <AntdLineTable
+                  <AntdTable
                     size="small"
-                    className="tableWrapper"
+                    className="ant-table-checkbox"
                     rowSelection={rightrowSelection}
                     columns={rightTableColumns}
                     dataSource={applyList}
@@ -272,24 +272,24 @@ class TableTypeSelector extends React.Component {
                     // style={{ width: '100%' }}
                     scroll={{ x: '100px', y: '240px' }}
                     rowKey={`${rowKey}`}
-                  ></AntdLineTable>
+                  ></AntdTable>
                 </td>
               </tr>
               <tr>
                 <td colSpan={3}>
-                  <StyledButtonWrapper className="btn-wrap-center">
-                    <StyledButton className="btn-primary btn-first" onClick={this.handleModalVisible}>
-                      취소
-                    </StyledButton>
-                    <StyledButton className="btn-primary" onClick={this.handleModalOk}>
+                  <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+                    <StyledButton className="btn-primary mr5" onClick={this.handleModalOk}>
                       적용
+                    </StyledButton>
+                    <StyledButton className="btn-light" onClick={this.handleModalVisible}>
+                      취소
                     </StyledButton>
                   </StyledButtonWrapper>
                 </td>
               </tr>
             </tbody>
           </table>
-        </AntdModal>
+        </AntdModalPad>
       </>
     );
   }

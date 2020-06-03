@@ -1,24 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal, Icon, Input } from 'antd';
+import { Table, Modal, Icon, Input, message } from 'antd';
 import moment from 'moment';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
-
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 
 // import ApproveView from '../ApproveView';
 // import HoldView from '../MdcsAppvView/holdview';
 
 const { TextArea } = Input;
 
-const AntdLineTable = StyledLineTable(Table);
-const AntdModal = StyledContentsModal(Modal);
+const AntdTable = StyledAntdTable(Table);
+const AntdModal = StyledAntdModal(Modal);
 
 class ApproveList extends Component {
   constructor(props) {
@@ -32,6 +32,9 @@ class ApproveList extends Component {
         viewMetaSeq: undefined,
       },
       isDcc: false,
+      opinions: undefined,
+      holdReqList: [],
+      currentStatus: undefined,
     };
   }
 
@@ -84,6 +87,14 @@ class ApproveList extends Component {
       align: 'center',
     },
     {
+      title: '진행상태',
+      dataIndex: 'PROC_STATUS',
+      key: 'PROC_STATUS',
+      width: '10%',
+      align: 'center',
+      render: (text, record) => (text === 3 ? '홀드' : text === 2 ? '완료' : '진행중'),
+    },
+    {
       title: '기안자',
       dataIndex: 'NAME_KOR',
       key: 'nameKor',
@@ -109,8 +120,32 @@ class ApproveList extends Component {
   };
 
   onRowClick = (record, rowIndex, e) => {
+    const { sagaKey, submitHandlerBySaga } = this.props;
+    const { isDcc } = this.state;
+    const { WORK_SEQ, TASK_SEQ, STEP, PROC_STATUS, APPV_STATUS } = record;
+    this.setState({ currentStatus: APPV_STATUS });
     this.props.setSelectedRow(record);
     this.props.setViewVisible(true);
+
+    if ((PROC_STATUS === 3 || PROC_STATUS === 30) && (APPV_STATUS === PROC_STATUS || (STEP === 2 && isDcc))) {
+      const prefixUrl = '/api/workflow/v1/common/workprocess/draftHoldRequestList';
+      const param = {
+        PARAM: {
+          WORK_SEQ,
+          TASK_SEQ,
+          PROC_STATUS,
+          STEP,
+        },
+      };
+      submitHandlerBySaga(sagaKey, 'POST', prefixUrl, param, this.initDataDelegate);
+    } else {
+      this.setState({ holdReqList: [] });
+    }
+  };
+
+  initDataDelegate = (id, response) => {
+    const { holdReqList } = response;
+    this.setState({ holdReqList });
   };
 
   closeBtnFunc = () => {
@@ -135,37 +170,45 @@ class ApproveList extends Component {
   };
 
   handleReqApprove = e => {
-    const { reqApprove, setOpinionVisible } = this.props;
-    e.preventDefault();
-    reqApprove({});
-    setOpinionVisible(false);
+    const { opinions } = this.state;
+    const { reqApprove, setOpinionVisible, setOpinion } = this.props;
+
+    if (!opinions || opinions === '') {
+      message.warning('의견을 작성해주세요');
+    } else {
+      e.preventDefault();
+      setOpinion(opinions);
+      reqApprove({});
+      setOpinionVisible(false);
+    }
+  };
+
+  onChangeOpinion = e => {
+    this.setState({ opinions: e.target.value });
   };
 
   render() {
     const { approveList, selectedRow, opinionVisible, setOpinionVisible } = this.props;
-    const { modalWidth, coverView, isDcc } = this.state;
-    
+    const { modalWidth, coverView, isDcc, holdReqList, currentStatus } = this.state;
     return (
       <>
-        <ContentsWrapper>
+        <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 기결함
             </p>
           </div>
-          <AntdLineTable
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
+          <AntdTable
             columns={this.getTableColumns()}
             dataSource={approveList.map(item => ({ ...item, key: `approveList_${item.RNUM}` }))}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
-            className="tableWrapper"
           />
-        </ContentsWrapper>
-        {/* <ModalWrapper title="표준문서 기결함" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
-          <HoldView {...this.props} />
-        </ModalWrapper> */}
+        </StyledContentsWrapper>
         {selectedRow && selectedRow.REL_TYPE && selectedRow.REL_TYPE !== 999 ? (
           <div>
             <AntdModal
@@ -190,25 +233,56 @@ class ApproveList extends Component {
                 selectedRow={selectedRow}
                 ViewCustomButtons={({ closeBtnFunc, onClickModify }) => (
                   <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                    {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
-                      <>
-                        <StyledButton className="btn-primary btn-first" onClick={this.onHoldRelase}>
-                          홀드해제
-                        </StyledButton>
-                        {isDcc && (
-                          <StyledButton className="btn-primary btn-first" onClick={onClickModify}>
+                    {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) &&
+                      (currentStatus === selectedRow.PROC_STATUS || (selectedRow.STEP === 2 && isDcc)) && (
+                        <>
+                          <StyledButton className="btn-primary mr5" onClick={this.onHoldRelase}>
+                            홀드해제
+                          </StyledButton>
+                          <StyledButton className="btn-primary mr5" onClick={onClickModify}>
                             표지수정
                           </StyledButton>
-                        )}
-                      </>
-                    )}
+                        </>
+                      )}
                     <StyledButton className="btn-light" onClick={closeBtnFunc}>
                       닫기
                     </StyledButton>
                   </div>
                 )}
               />
-              {/* <HoldView {...this.props} onResizeModal={this.onResizeModal} /> */}
+              {holdReqList && holdReqList.length > 0 && (
+                <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
+                  <table className="table-border">
+                    <colgroup>
+                      <col width="10%" />
+                      <col width="10%" />
+                      <col width="10%" />
+                      <col width="55%" />
+                      <col width="15%" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>이름</th>
+                        <th>직급</th>
+                        <th>부서</th>
+                        <th>홀드의견</th>
+                        <th style={{ borderRight: 0 }}>요청일</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {holdReqList.map(item => (
+                        <tr>
+                          <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
+                          <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
+                          <td style={{ textAlign: 'center' }}>{item.APPV_DEPT_NAME}</td>
+                          <td>{item.OPINION}</td>
+                          <td style={{ textAlign: 'center' }}>{moment(item.APPV_DTTM).format('YYYY-MM-DD')}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </StyledHtmlTable>
+              )}
             </AntdModal>
             <AntdModal
               className="modalWrapper modalTechDoc modalCustom"
@@ -225,14 +299,14 @@ class ApproveList extends Component {
                     <tr>
                       <th>의견</th>
                       <td>
-                        <TextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} />
+                        <TextArea rows={4} onChange={this.onChangeOpinion} />
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </StyledHtmlTable>
               <div style={{ width: '100%', textAlign: 'center', marginTop: '12px' }}>
-                <StyledButton className="btn-primary btn-first" onClick={this.handleReqApprove}>
+                <StyledButton className="btn-primary mr5" onClick={this.handleReqApprove}>
                   저장
                 </StyledButton>
                 <StyledButton className="btn-light" onClick={() => setOpinionVisible(false)}>
@@ -256,7 +330,10 @@ class ApproveList extends Component {
                 taskSeq={coverView.taskSeq}
                 viewMetaSeq={coverView.viewMetaSeq}
                 onCloseCoverView={this.onCloseCoverView}
-                onCloseModalHandler={this.onClickModifyDoCoverView}
+                onCloseModalHandler={this.onCloseCoverView}
+                reloadId="approveBase_approveView"
+                reloadViewType="VIEW"
+                reloadTaskSeq={selectedRow && selectedRow.TASK_SEQ}
                 ViewCustomButtons={({ onCloseCoverView }) => (
                   <div style={{ textAlign: 'center', marginTop: '12px' }}>
                     <StyledButton className="btn-primary" onClick={onCloseCoverView}>
@@ -266,7 +343,7 @@ class ApproveList extends Component {
                 )}
                 ModifyCustomButtons={({ onCloseCoverView, saveBeforeProcess, sagaKey, reloadId }) => (
                   <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                    <StyledButton className="btn-primary btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                    <StyledButton className="btn-primary mr5" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
                       저장
                     </StyledButton>
                     <StyledButton className="btn-light" onClick={onCloseCoverView}>

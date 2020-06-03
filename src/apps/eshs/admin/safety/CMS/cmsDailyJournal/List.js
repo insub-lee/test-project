@@ -3,19 +3,21 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import { Table, Input, DatePicker, Select, Popover, Checkbox, message } from 'antd';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 
 const { TextArea } = Input;
 const { Option } = Select;
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
-const AntdLineTable = StyledLineTable(Table);
+const AntdLineTable = StyledAntdTable(Table);
+const AntdDatePicker = StyledDatePicker(DatePicker);
 
 moment.locale('ko');
 
@@ -24,6 +26,8 @@ class List extends Component {
     super(props);
     this.state = {
       journalDate: moment(),
+      otherArr: [{ CONTANTS: '', CONTANTS_TYPE: 1, UNIQUENESS: -1 }],
+      planArr: [{ CONTANTS: '', CONTANTS_TYPE: 2, UNIQUENESS: -1 }],
     };
   }
 
@@ -67,8 +71,14 @@ class List extends Component {
     const timedTeam = initData && initData.categoryMapList && initData.categoryMapList.filter(item => item.PARENT_NODE_ID === 2011);
     const workerStatus = (detailData && detailData.worker && detailData.worker.WORKER_STATUS) || '';
     const vacationer = (detailData && detailData.worker && detailData.worker.VACATIONER) || '';
-    const otherArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 1);
-    const planArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 2);
+    let otherArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 1);
+    let planArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 2);
+    if (otherArr.length < 1) {
+      otherArr = [{ CONTANTS: '', CONTANTS_TYPE: 1, UNIQUENESS: -1 }];
+    }
+    if (planArr.length < 1) {
+      planArr = [{ CONTANTS: '', CONTANTS_TYPE: 2, UNIQUENESS: -1 }];
+    }
     this.setState({ fixedTeam, timedTeam, listData: (listData && listData.list) || [], workerStatus, vacationer, otherArr, planArr });
   };
 
@@ -99,28 +109,38 @@ class List extends Component {
     getCallDataHandler(id, apiAry, this.initData);
   };
 
-  callBackApi = () => {
-    this.searchList();
-  };
-
   onChangeData = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { journalDate, workerStatus, vacationer, otherArr, planArr } = this.state;
-    const submitData = {
-      PARAM: {
-        JOURNAL_DATE: `${moment(journalDate || '').format()}`,
-        WORKER_STATUS: workerStatus,
-        VACATIONER: vacationer,
-        CONTANTS_ARRAY: [...otherArr, ...planArr],
-      },
-    };
-    submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsCMS', submitData, this.callBackApi);
+    if (Array.isArray(otherArr) && Array.isArray(planArr)) {
+      const submitData = {
+        PARAM: {
+          JOURNAL_DATE: `${moment(journalDate || '').format()}`,
+          WORKER_STATUS: workerStatus,
+          VACATIONER: vacationer,
+          CONTANTS_ARRAY: [...otherArr, ...planArr],
+        },
+      };
+      submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsCMS', submitData, this.callBackApi);
+    } else {
+      message.warning('입력정보가 옳바르지 않습니다.');
+    }
+  };
+
+  callBackApi = (id, response) => {
+    const { journalDate } = this.state;
+    if (response.result === 1) {
+      this.searchList();
+      message.success(`${moment(journalDate || '').format('YYYY-MM-DD')}일지가 저장되었습니다.`);
+    } else {
+      message.warning(`폐이지에 오류가 있습니다. 잠시 후 다시 시도해주세요`);
+    }
   };
 
   // 기타사항 및 업무계획 Array 추가
   handlePlusArr = type => {
     const { otherArr, planArr } = this.state;
-    const nOtherArr = { CONTANTS: '', CONTANTS_TYPE: type };
+    const nOtherArr = { CONTANTS: '', CONTANTS_TYPE: type, UNIQUENESS: -1 };
     if (type === 1) {
       this.setState({ otherArr: otherArr.concat(nOtherArr) });
     } else {
@@ -133,11 +153,11 @@ class List extends Component {
     const { otherArr, planArr } = this.state;
     if (record.CONTANTS_TYPE === 1) {
       const nOtherArr = otherArr;
-      otherArr.splice(index, 1, { CONTANTS: text, CONTANTS_TYPE: record.CONTANTS_TYPE });
+      otherArr.splice(index, 1, { CONTANTS: text, CONTANTS_TYPE: record.CONTANTS_TYPE, UNIQUENESS: record.UNIQUENESS });
       this.setState({ otherArr: nOtherArr });
     } else {
       const nPlanArr = planArr;
-      nPlanArr.splice(index, 1, { CONTANTS: text, CONTANTS_TYPE: record.CONTANTS_TYPE });
+      nPlanArr.splice(index, 1, { CONTANTS: text, CONTANTS_TYPE: record.CONTANTS_TYPE, UNIQUENESS: record.UNIQUENESS });
       this.setState({ planArr: nPlanArr });
     }
   };
@@ -207,13 +227,15 @@ class List extends Component {
       },
     ];
     return (
-      <ContentsWrapper>
+      <StyledContentsWrapper>
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">날짜 선택</span>
-          {/* datePiker CSS 없음 대체용으로 사용 */}
-          <div style={{ margin: '0 5px', display: 'inline-block' }}>
-            <DatePicker defaultValue={this.state.journalDate} format="YYYY-MM-DD" onChange={date => this.onChangeValue('journalDate', date)} />
-          </div>
+          <AntdDatePicker
+            className="ant-picker-mid mr5"
+            defaultValue={this.state.journalDate}
+            format="YYYY-MM-DD"
+            onChange={date => this.onChangeValue('journalDate', date)}
+          />
           <span className="textLabel">고정조 구분</span>
           <AntdSelect
             style={{ width: '200px' }}
@@ -249,14 +271,14 @@ class List extends Component {
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">근무자 현황</span>
           <AntdInput
-            style={{ width: '600px' }}
+            style={{ width: '500px' }}
             className="ant-input-inline ant-input-mid mr5"
             value={this.state.workerStatus}
             onChange={e => this.onChangeValue('workerStatus', e.target.value)}
           />
           <span className="textLabel">휴가자</span>
           <AntdInput
-            style={{ width: '600px' }}
+            style={{ width: '500px' }}
             className="ant-input-inline ant-input-mid mr5"
             value={this.state.vacationer}
             onChange={e => this.onChangeValue('vacationer', e.target.value)}
@@ -273,26 +295,14 @@ class List extends Component {
           <span>기타사항</span>
           <StyledButton onClick={() => this.handlePlusArr(1)}>[+1]</StyledButton>
         </div>
-        <AntdLineTable
-          className="tableWrapper"
-          columns={otherArrCol}
-          dataSource={otherArr && otherArr.length > 0 ? otherArr : [{ CONTANTS: '', CONTANTS_TYPE: 1 }]}
-          pagination={false}
-          footer={null}
-        />
+        <AntdLineTable className="tableWrapper" columns={otherArrCol} dataSource={otherArr} pagination={false} footer={null} />
 
         <div className="selSaveWrapper alignLeft">
           <span>업무계획</span>
           <StyledButton onClick={() => this.handlePlusArr(2)}>[+1]</StyledButton>
         </div>
-        <AntdLineTable
-          className="tableWrapper"
-          columns={planArrCol}
-          dataSource={planArr && planArr.length > 0 ? planArr : [{ CONTANTS: '', CONTANTS_TYPE: 2 }]}
-          pagination={false}
-          footer={null}
-        />
-      </ContentsWrapper>
+        <AntdLineTable className="tableWrapper" columns={planArrCol} dataSource={planArr} pagination={false} footer={null} />
+      </StyledContentsWrapper>
     );
   }
 }

@@ -11,8 +11,9 @@ import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSear
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import Contents from 'components/BizBuilder/Common/Contents';
-import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ, EXCEL_DOWNLOAD_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 
 // import Loadable from 'components/Loadable';
@@ -30,6 +31,12 @@ class ListPage extends Component {
       isOnRowClick: false,
       rowClickView: 'VIEW',
       StyledWrap: StyledViewDesigner,
+      isExcelDown: false,
+      btnText: '',
+      fileName: '',
+      sheetName: '',
+      columns: [],
+      fields: [],
     };
   }
 
@@ -39,6 +46,12 @@ class ListPage extends Component {
     let isRowNo = false;
     let isOnRowClick = false;
     let rowClickView = 'VIEW';
+    let isExcelDown = false;
+    let btnTex = '';
+    let fileName = '';
+    let sheetName = '';
+    let columns = [];
+    let fields = [];
 
     if (workInfo.BUILDER_STYLE_PATH) {
       // const StyledWrap = Loadable({
@@ -65,8 +78,20 @@ class ListPage extends Component {
             rowClickView = ObjOptVal.VIEW || 'VIEW';
           }
         }
+        if (opt.OPT_SEQ === EXCEL_DOWNLOAD_OPT_SEQ && opt.ISUSED === 'Y') {
+          isExcelDown = true;
+          if (isJSON(opt.OPT_VALUE)) {
+            const ObjOptVal = JSON.parse(opt.OPT_VALUE);
+            const { columnInfo } = ObjOptVal;
+            btnTex = ObjOptVal.btnTitle || '엑셀받기';
+            fileName = ObjOptVal.fileName || 'excel';
+            sheetName = ObjOptVal.sheetName || 'sheet1';
+            columns = columnInfo.columns || [];
+            fields = columnInfo.fields || [];
+          }
+        }
       });
-      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
+      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView, isExcelDown, btnTex, fileName, sheetName, columns, fields });
     }
   };
 
@@ -172,7 +197,6 @@ class ListPage extends Component {
     if (typeof customOnRowClick === 'function' && isOnRowClick) {
       onRow = record => ({ onClick: () => customOnRowClick(record) });
     }
-    console.debug('확인해보자', this.state);
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -206,8 +230,9 @@ class ListPage extends Component {
       removeMultiTask,
       isBuilderModal,
       changeBuilderModalState,
+      listData,
     } = this.props;
-    const { isMultiDelete, StyledWrap } = this.state;
+    const { isMultiDelete, StyledWrap, isExcelDown, btnTex, fileName, sheetName, columns, fields } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -274,6 +299,18 @@ class ListPage extends Component {
                           <StyledButton className="btn-gray" onClick={() => getListData(id, workSeq)}>
                             검색
                           </StyledButton>
+                          {isExcelDown && (
+                            <ExcelDownloadComp
+                              isBuilder={false}
+                              fileName={fileName || 'excel'}
+                              className="workerExcelBtn"
+                              btnText={btnTex || '엑셀받기'}
+                              sheetName={sheetName || 'sheet1'}
+                              columns={columns || []}
+                              fields={fields || []}
+                              listData={listData || []}
+                            />
+                          )}
                         </div>
                       )}
                     </Group>
@@ -288,11 +325,11 @@ class ListPage extends Component {
                   isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
                 }
               >
-                Add
+                추가
               </StyledButton>
               {isMultiDelete && (
                 <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
-                  <StyledButton className="btn-light">Delete</StyledButton>
+                  <StyledButton className="btn-light">삭제</StyledButton>
                 </Popconfirm>
               )}
             </div>
@@ -321,6 +358,7 @@ ListPage.propTypes = {
   changeBuilderModalState: PropTypes.func,
   changeViewPage: PropTypes.func,
   customOnRowClick: PropTypes.any,
+  listData: PropTypes.array,
 };
 
 ListPage.defaultProps = {

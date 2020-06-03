@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Input, Select, DatePicker, Modal, Spin } from 'antd';
+import { Input, Select, DatePicker, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
@@ -32,7 +32,6 @@ class Quota extends Component {
       END_DT: '',
     },
     batchQuota: '',
-    isSpinning: false,
   }
 
   componentWillMount() {
@@ -78,21 +77,21 @@ class Quota extends Component {
       return false;
     }
 
-    const { sagaKey, getCallDataHandlerReturnRes } = this.props;
+    const { sagaKey, getCallDataHandlerReturnRes, spinningOn, spinningOff } = this.props;
     const apiInfo = {
       key: 'quotaList',
       url: `/api/eshs/v1/common/health/healthChkHospitalQuota?HOSPITAL_CODE=${searchInfo.HOSPITAL_CODE}&CHK_YEAR=${searchInfo.CHK_YEAR}`,
       type: 'GET',
       params: {},
     };
-    this.setState({ isSpinning: true });
+    spinningOn();
     getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, response) => {
       if (response && response.list) {
         this.setState({
           quotaList: response.list,
-          isSpinning: false,
         });
         this.handleSetWeekTotal();
+        spinningOff();
       }
     });
   };
@@ -118,7 +117,7 @@ class Quota extends Component {
 
   onCreatePeriod = () => {
     const { searchInfo } = this.state;
-    const { sagaKey, getCallDataHandlerReturnRes } = this.props;
+    const { sagaKey, getCallDataHandlerReturnRes, spinningOn, spinningOff } = this.props;
 
     if (searchInfo.HOSPITAL_CODE === '') {
       message.info(<MessageContent>검진기관을 선택해 주세요.</MessageContent>);
@@ -137,14 +136,14 @@ class Quota extends Component {
         PARAM: { ...searchInfo },
       },
     }
-    this.setState({ isSpinning: true });
+    spinningOn();
     getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, res) => {
       if (res && res.list) {
         this.setState({ 
           quotaList: res.list.map(item => ({ ...item, HOSPITAL_CODE: searchInfo.HOSPITAL_CODE, CHK_YEAR: searchInfo.CHK_YEAR })),
-          isSpinning: false,
         });
         this.handleSetWeekTotal();
+        spinningOff();
       }
     });
   };
@@ -236,7 +235,7 @@ class Quota extends Component {
   };
 
   onSave = () => {
-    const { sagaKey, submitHandlerBySaga } = this.props;
+    const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
     const submitData = {
       PARAM: {
         quotaList: this.state.quotaList,
@@ -256,16 +255,15 @@ class Quota extends Component {
       return false;
     }
 
-    const that = this;
     Modal.confirm({
       title: '저장하시겠습니까?',
       icon: <ExclamationCircleOutlined />,
       onOk() {
-        that.setState({ isSpinning: true });
+        spinningOn();
         submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/healthChkHospitalQuota', submitData, (id, res) => {
           if (res && res.result > 0) {
             message.info(<MessageContent>저장하였습니다.</MessageContent>);
-            that.setState({ isSpinning: false });
+            spinningOff();
           }
         });
       }
@@ -306,10 +304,10 @@ class Quota extends Component {
     const { hospitalList, yearList, searchInfo, quotaList, isSpinning } = this.state;
 
     return (
-      <Spin spinning={isSpinning}>
+      <>
         <StyledContentsWrapper>
-          <StyledSearchWrapper>
-            <div className="row">
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area mb10">
               <AntdSelect className="select-sm mr5" placeholder="검진기관 선택" style={{ width: 200 }} onChange={val => this.onChangeSearchInfo('HOSPITAL_CODE', val)}>
                 {hospitalList && hospitalList.map(item => (
                   <AntdSelect.Option value={item.HOSPITAL_CODE}>{item.HOSPITAL_NAME}</AntdSelect.Option>
@@ -326,7 +324,7 @@ class Quota extends Component {
               </AntdSelect>
               <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
             </div>
-            <div className="row">
+            <div className="search-input-area">
               <AntdRangeDatePicker className="ant-picker-sm mr5" format="YYYY-MM-DD" style={{ width: 325 }} onChange={(val1, val2) => this.onChangeRangeDatePicker(val1, val2)} />
               <StyledButton className="btn-gray btn-sm mr5" onClick={this.onCreatePeriod}>기간생성</StyledButton>
               <StyledButton className="btn-gray btn-sm mr5" onClick={this.onDeletePeriod}>기간삭제</StyledButton>
@@ -336,7 +334,7 @@ class Quota extends Component {
               />
               <StyledButton className="btn-gray btn-sm" onClick={this.handleBatchInit}>일괄입력</StyledButton>
             </div>
-          </StyledSearchWrapper>
+          </StyledCustomSearchWrapper>
           <StyledButtonWrapper className="btn-wrap-right" style={{ width: '60%', margin: '0 auto', marginBottom: 5 }}>
             <StyledButton className="btn-primary btn-sm" onClick={this.onSave}>저장</StyledButton>
           </StyledButtonWrapper>
@@ -420,7 +418,7 @@ class Quota extends Component {
             </table>
           </StyledHtmlTable>
         </StyledContentsWrapper>
-      </Spin>
+      </>
     );
   }
 }

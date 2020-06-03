@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal, Icon, Button, Input } from 'antd';
+import { Table, Modal, Icon, Button, Input, message } from 'antd';
 import moment from 'moment';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-const AntdLineTable = StyledLineTable(Table);
-const AntdModal = StyledContentsModal(Modal);
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+
+const AntdTable = StyledAntdTable(Table);
+const AntdModal = StyledAntdModal(Modal);
 const { TextArea } = Input;
 class DraftList extends Component {
   constructor(props) {
@@ -27,11 +30,13 @@ class DraftList extends Component {
       },
       workPrcProps: undefined,
       opinion: undefined,
+      holdReqList: [],
     };
   }
 
   componentDidMount() {
-    this.props.getDraftList();
+    const { getDraftList } = this.props;
+    getDraftList();
   }
 
   getTableColumns = () => [
@@ -75,13 +80,33 @@ class DraftList extends Component {
   ];
 
   onRowClick = (record, rowIndex, e) => {
-    if (record.STATUS === 3) {
-      record.PROC_STATUS = 3;
-    }
+    const { sagaKey, submitHandlerBySaga } = this.props;
+    const { WORK_SEQ, TASK_SEQ, STEP, PROC_STATUS } = record;
+
     const { DRAFT_DATA } = record;
     this.setState({ workPrcProps: { ...DRAFT_DATA } });
     this.props.setSelectedRow(record);
     this.props.setViewVisible(true);
+
+    if (PROC_STATUS === 3 || PROC_STATUS === 30) {
+      const prefixUrl = '/api/workflow/v1/common/workprocess/draftHoldRequestList';
+      const param = {
+        PARAM: {
+          WORK_SEQ,
+          TASK_SEQ,
+          PROC_STATUS,
+          STEP,
+        },
+      };
+      submitHandlerBySaga(sagaKey, 'POST', prefixUrl, param, this.initDataDelegate);
+    } else {
+      this.setState({ holdReqList: [] });
+    }
+  };
+
+  initDataDelegate = (id, response) => {
+    const { holdReqList } = response;
+    this.setState({ holdReqList });
   };
 
   onResizeModal = modalWidth => {
@@ -114,10 +139,14 @@ class DraftList extends Component {
   handleReqApprove = e => {
     const { reqApprove, setOpinionVisible, setOpinion } = this.props;
     const { opinion } = this.state;
-    e.preventDefault();
-    setOpinion(opinion);
-    reqApprove({});
-    setOpinionVisible(false);
+    if (!opinion || opinion === '') {
+      message.warning('의견을 작성해주세요');
+    } else {
+      e.preventDefault();
+      setOpinion(opinion);
+      reqApprove({});
+      setOpinionVisible(false);
+    }
   };
 
   onClickModify = () => {
@@ -145,17 +174,19 @@ class DraftList extends Component {
   render() {
     // const { approveList } = this.props;
     const { draftList, selectedRow, opinionVisible, setOpinionVisible, profile } = this.props;
-    const { modalWidth, coverView, workPrcProps } = this.state;
+    const { modalWidth, coverView, workPrcProps, holdReqList } = this.state;
 
     return (
       <>
-        <ContentsWrapper>
+        <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 기안함
             </p>
           </div>
-          <AntdLineTable
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
+          <AntdTable
             columns={this.getTableColumns()}
             dataSource={draftList.map(item => ({
               ...item,
@@ -165,9 +196,8 @@ class DraftList extends Component {
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
-            className="tableWrapper"
           />
-        </ContentsWrapper>
+        </StyledContentsWrapper>
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"
           title="내용 보기"
@@ -192,11 +222,11 @@ class DraftList extends Component {
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
                 {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
                   <>
-                    <StyledButton className="btn-primary btn-first" onClick={this.onHoldRelase}>
+                    <StyledButton className="btn-primary mr5" onClick={this.onHoldRelase}>
                       홀드해제
                     </StyledButton>
                     {profile && profile.USER_ID === selectedRow.DRAFTER_ID && (
-                      <StyledButton className="btn-primary btn-first" onClick={onClickModify}>
+                      <StyledButton className="btn-primary mr5" onClick={onClickModify}>
                         표지수정
                       </StyledButton>
                     )}
@@ -209,7 +239,39 @@ class DraftList extends Component {
               </div>
             )}
           />
-          {/* <HoldView {...this.props} onResizeModal={this.onResizeModal} /> */}
+          {holdReqList && holdReqList.length > 0 && (
+            <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
+              <table style={{ width: '100%' }}>
+                <colgroup>
+                  <col width="10%" />
+                  <col width="10%" />
+                  <col width="10%" />
+                  <col width="55%" />
+                  <col width="15%" />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>이름</th>
+                    <th>직급</th>
+                    <th>부서</th>
+                    <th>홀드의견</th>
+                    <th style={{ borderRight: 0 }}>요청일</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {holdReqList.map(item => (
+                    <tr>
+                      <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
+                      <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
+                      <td style={{ textAlign: 'center' }}>{item.APPV_DEPT_NAME}</td>
+                      <td>{item.OPINION}</td>
+                      <td style={{ textAlign: 'center' }}>{moment(item.APPV_DTTM).format('YYYY-MM-DD')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </StyledHtmlTable>
+          )}
         </AntdModal>
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"
@@ -229,7 +291,10 @@ class DraftList extends Component {
             CustomWorkProcessModal={WorkProcessModal}
             workPrcProps={workPrcProps}
             onCloseCoverView={this.onCloseCoverView}
-            onCloseModalHandler={this.onClickModifyDoCoverView}
+            onCloseModalHandler={this.onCloseCoverView}
+            reloadId="approveBase_approveView"
+            reloadViewType="VIEW"
+            reloadTaskSeq={selectedRow && selectedRow.TASK_SEQ}
             ViewCustomButtons={({ onCloseCoverView }) => (
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
                 <StyledButton className="btn-primary" onClick={onCloseCoverView}>
@@ -239,7 +304,7 @@ class DraftList extends Component {
             )}
             ModifyCustomButtons={({ onCloseCoverView, saveBeforeProcess, sagaKey, reloadId }) => (
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                <StyledButton className="btn-primary btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                <StyledButton className="btn-primary mr5" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
                   저장
                 </StyledButton>
                 <StyledButton className="btn-light" onClick={onCloseCoverView}>
@@ -271,7 +336,7 @@ class DraftList extends Component {
             </table>
           </StyledHtmlTable>
           <div style={{ width: '100%', textAlign: 'center', marginTop: '12px' }}>
-            <StyledButton className="btn-primary btn-first" onClick={this.handleReqApprove}>
+            <StyledButton className="btn-primary mr5" onClick={this.handleReqApprove}>
               저장
             </StyledButton>
             <StyledButton className="btn-light" onClick={() => setOpinionVisible(false)}>

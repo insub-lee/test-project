@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Input, Select } from 'antd';
+import { Card, Input, Select, message } from 'antd';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -120,10 +120,15 @@ class InputPage extends React.Component {
 
     this.setState(prevState => ({
       questions:
-        (result.questions && result.questions.list.length && result.questions.list[0].QUESTIONS && { ...JSON.parse(result.questions.list[0].QUESTIONS) }) ||
+        (result.questions &&
+          result.questions.list &&
+          result.questions.list[0] &&
+          result.questions.list[0].QUESTIONS && { ...JSON.parse(result.questions.list[0].QUESTIONS) }) ||
         initQuestions,
-      PARENT_WORK_SEQ: (result.questions && result.questions.list.length && result.questions.list[0].PARENT_WORK_SEQ) || prevState.PARENT_WORK_SEQ,
-      PARENT_TASK_SEQ: (result.questions && result.questions.list.length && result.questions.list[0].PARENT_TASK_SEQ) || prevState.PARENT_TASK_SEQ,
+      PARENT_WORK_SEQ:
+        (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].PARENT_WORK_SEQ) || prevState.PARENT_WORK_SEQ,
+      PARENT_TASK_SEQ:
+        (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].PARENT_TASK_SEQ) || prevState.PARENT_TASK_SEQ,
     }));
   };
 
@@ -215,13 +220,17 @@ class InputPage extends React.Component {
     const { sagaKey: id, submitHandlerBySaga, handleModalClose, profile, result } = this.props;
     const questionArr = [questions[0], questions[1], questions[2], questions[3], questions[4]];
 
+    if (questionArr.filter(question => !question.answer).length) {
+      return message.error('정답을 모두 입력해주세요.');
+    }
+
     const apiArr = {
       PARAM: {
         PARENT_WORK_SEQ,
         PARENT_TASK_SEQ,
         QUESTIONS: JSON.stringify(questionArr),
         REG_USER_ID: profile.USER_ID,
-        EXAM_ID: (result.questions && result.questions.list.length && result.questions.list[0].EXAM_ID) || '',
+        EXAM_ID: (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].EXAM_ID) || '',
       },
     };
 
@@ -237,7 +246,7 @@ class InputPage extends React.Component {
     const { questionsLenght } = this;
     const { questions, eduDate, selectedDate } = this.state;
     const { handleModalClose, result } = this.props;
-    const isModify = result.questions && result.questions.list && result.questions.list.length && result.questions.list[0].EXAM_ID;
+    const isModify = result.questions && result.questions.list && result.questions.list && result.questions.list[0] && result.questions.list[0].EXAM_ID;
     return (
       <>
         <ContentsWrapper>

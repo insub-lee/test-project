@@ -9,23 +9,16 @@ class NodeIdMultiViewComp extends Component {
     };
   }
 
-  initData = (id, response) => {
-    const { categoryMapList } = response;
-    if (categoryMapList && categoryMapList.length > 0) {
-      const viewNodeNames = categoryMapList.map(node => node.NAME_KOR);
-      this.setState({ viewNodeNames: viewNodeNames.toString().replaceAll(',', ' ') });
-    }
-  };
-
   componentDidMount() {
-    const { sagaKey, submitExtraHandler, colData } = this.props;
-    if (colData && colData.toString().length > 0) {
-      const nodeIds = colData
-        .toString()
-        .split(',')
-        .map(node => Number(node));
-      const url = '/api/admin/v1/common/categoryMapListByNodeIds';
-      submitExtraHandler(sagaKey, 'POST', url, { PARAM: { NODE_IDS: nodeIds } }, this.initData);
+    const { fieldSelectData, CONFIG } = this.props;
+    if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
+      if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey].length > 0) {
+        const viewNodeNames = fieldSelectData[CONFIG.property.compSelectDataKey]
+          .map(item => item.NAME_KOR)
+          .toString()
+          .replaceAll(',', ' ');
+        this.setState({ viewNodeNames });
+      }
     }
   }
 

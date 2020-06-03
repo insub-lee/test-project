@@ -6,12 +6,12 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
-const AntdInput = StyledInput(Input);
+const AntdSearchInput = StyledSearchInput(Input.Search);
 
 const { Option } = Select;
 
@@ -30,16 +30,12 @@ class CompanyModal extends Component {
 
   selectCodeApi = search => {
     const { sagaKey: id, getCallDataHandler } = this.props;
-    let listUrl;
-    if (search) {
-      listUrl = `/api/eshs/v1/common/eshsHstCompanyList?SEARCH_TYPE=${this.state.modalSearchtype}&SEARCH=${this.state.modalSearch}`;
-    } else {
-      listUrl = '/api/eshs/v1/common/eshsHstCompanyList';
-    }
     const apiAry = [
       {
         key: 'modalData',
-        url: listUrl,
+        url: search
+          ? `/api/eshs/v1/common/eshsHstCompanyList?SEARCH_TYPE=${this.state.modalSearchtype}&SEARCH=${this.state.modalSearch}`
+          : '/api/eshs/v1/common/eshsHstCompanyList',
         type: 'GET',
       },
     ];
@@ -55,26 +51,30 @@ class CompanyModal extends Component {
     const modalList = result && result.modalData && result.modalData.eshsHstCmpnyList;
     return (
       <StyledContentsWrapper>
-        <StyledCustomSearch className="search-wrapper-modal">
-          <span className="text-label">검색구분</span>
-          <AntdSelect className="select-sm mr5" onChange={value => this.onChangetValue('modalSearchtype', value)} value={this.state.modalSearchtype}>
-            <Option value="HST_CMPNY_CD">코드</Option>
-            <Option value="HST_CMPNY_NM">회사명</Option>
-          </AntdSelect>
-          <span className="text-label">검색어</span>
-          <AntdInput
-            style={{ width: '150px', margin: '5px' }}
-            className="ant-input-inline mr5 ant-input-sm"
-            value={this.state.modalSearch}
-            onChange={e => this.onChangetValue('modalSearch', e.target.value)}
-            name="modalSearch"
-          />
-          <StyledButton className="btn-primary btn-sm" onClick={() => this.selectCodeApi('search')}>
-            검색
-          </StyledButton>
+        <StyledCustomSearch className="search-wrapper-inline">
+          <div className="search-input-area">
+            <span className="text-label">검색구분</span>
+            <AntdSelect className="select-sm mr5" onChange={value => this.onChangetValue('modalSearchtype', value)} value={this.state.modalSearchtype}>
+              <Option value="HST_CMPNY_CD">코드</Option>
+              <Option value="HST_CMPNY_NM">회사명</Option>
+            </AntdSelect>
+            <span className="text-label">검색어</span>
+            <AntdSearchInput
+              style={{ width: '150px' }}
+              className="input-search-inline mr5 input-search-sm"
+              value={this.state.modalSearch}
+              onChange={e => this.onChangetValue('modalSearch', e.target.value)}
+              name="modalSearch"
+            />
+          </div>
+          <div className="btn-area">
+            <StyledButton className="btn-gray btn-sm" onClick={() => this.selectCodeApi('search')}>
+              검색
+            </StyledButton>
+          </div>
         </StyledCustomSearch>
         <AntdTable
-          key={modalList.HST_CMPNY_CD}
+          key={modalList && modalList.HST_CMPNY_CD}
           columns={modalcolumns}
           dataSource={modalList}
           onRow={record => ({
@@ -82,7 +82,7 @@ class CompanyModal extends Component {
               selectedModalRecord(record);
             },
           })}
-          footer={() => <div style={{ textAlign: 'center' }}>{`${modalList.length} 건`}</div>}
+          footer={() => <div style={{ textAlign: 'center' }}>{`${modalList && modalList.length} 건`}</div>}
         />
       </StyledContentsWrapper>
     );

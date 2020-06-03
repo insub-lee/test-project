@@ -23,49 +23,50 @@ class Edit extends Component {
     };
   }
 
-  componentDidMount() {}
-
-  onUserSelect() {}
-
   onOfficerSelectedComplete = result => {
     const { sagaKey, changeFormData } = this.props;
-    if (result.length > 0) {
+    if (result.length > 0 && result.length <= 1) {
+      changeFormData(sagaKey, 'OFFICER_ID', result[0].USER_ID);
       changeFormData(sagaKey, 'OFFICER_NO', result[0].EMP_NO);
       changeFormData(sagaKey, 'OFFICER_NAME', result[0].NAME_KOR);
       changeFormData(sagaKey, 'OFFICER_DEPT_KOR', result[0].DEPT_NAME_KOR);
       this.setState({
         isOpenOModal: false,
       });
+    } else {
+      message.warning('한명만 선택해주세요');
     }
   };
 
   onKeeperSelectedComplete = result => {
     const { sagaKey, changeFormData } = this.props;
-    if (result.length > 0) {
+    if (result.length > 0 && result.length <= 1) {
+      changeFormData(sagaKey, 'KEEPER_ID', result[0].USER_ID);
       changeFormData(sagaKey, 'KEEPER_NO', result[0].EMP_NO);
       changeFormData(sagaKey, 'KEEPER_NAME', result[0].NAME_KOR);
       changeFormData(sagaKey, 'KEEPER_DEPT_KOR', result[0].DEPT_NAME_KOR);
       this.setState({
         isOpenKModal: false,
       });
+    } else {
+      message.warning('한명만 선택해주세요');
     }
   };
 
   onManagerSelectedComplete = result => {
     const { sagaKey, changeFormData } = this.props;
 
-    if (result.length > 0) {
+    if (result.length > 0 && result.length <= 1) {
+      changeFormData(sagaKey, 'MANAGER_ID', result[0].USER_ID);
       changeFormData(sagaKey, 'MANAGER_NO', result[0].EMP_NO);
       changeFormData(sagaKey, 'MANAGER_NAME', result[0].NAME_KOR);
       changeFormData(sagaKey, 'MANAGER_DEPT_KOR', result[0].DEPT_NAME_KOR);
       this.setState({
         isOpenMModal: false,
       });
+    } else {
+      message.warning('한명만 선택해주세요');
     }
-  };
-
-  warning = () => {
-    message.warning('값이 올바르지 않습니다');
   };
 
   onSave = () => {
@@ -82,7 +83,7 @@ class Edit extends Component {
       }
       changeFormData(sagaKey, 'actionType', 'I');
     } else {
-      this.warning();
+      message.warning('값이 올바르지 않습니다');
     }
   };
 
@@ -106,8 +107,16 @@ class Edit extends Component {
     this.setState({ isOpenOModal: false, isOpenKModal: false, isOpenMModal: false });
   };
 
+  onReset = () => {
+    const { removeStorageReduxState, sagaKey: id } = this.props;
+    removeStorageReduxState(id, 'formData');
+    this.onCancel();
+  };
+
   render() {
-    const { formData } = this.props;
+    const {
+      formData: { OFFICER_DEPT_KOR, OFFICER_NAME, KEEPER_NAME, MANAGER_NAME, actionType },
+    } = this.props;
     const { isOpenOModal, isOpenKModal, isOpenMModal } = this.state;
     return (
       <>
@@ -130,7 +139,7 @@ class Edit extends Component {
                 <th>
                   <span>부서명</span>
                 </th>
-                <td>{formData && formData.OFFICER_DEPT_KOR}</td>
+                <td>{OFFICER_DEPT_KOR}</td>
               </tr>
               <tr>
                 <th>안전책임자</th>
@@ -138,8 +147,7 @@ class Edit extends Component {
                   <AntdSearch
                     className="input-search-xs"
                     readOnly
-                    placeholder="select me"
-                    value={formData && formData.OFFICER_NAME}
+                    value={OFFICER_NAME}
                     onClick={() => this.setState({ isOpenOModal: true })}
                     onSearch={() => this.setState({ isOpenOModal: true })}
                   />
@@ -151,8 +159,7 @@ class Edit extends Component {
                   <AntdSearch
                     className="input-search-xs"
                     readOnly
-                    placeholder="select me"
-                    value={formData && formData.KEEPER_NAME}
+                    value={KEEPER_NAME}
                     onClick={() => this.setState({ isOpenKModal: true })}
                     onSearch={() => this.setState({ isOpenKModal: true })}
                   />
@@ -164,8 +171,7 @@ class Edit extends Component {
                   <AntdSearch
                     className="input-search-xs"
                     readOnly
-                    placeholder="select me"
-                    value={formData && formData.MANAGER_NAME}
+                    value={MANAGER_NAME}
                     onClick={() => this.setState({ isOpenMModal: true })}
                     onSearch={() => this.setState({ isOpenMModal: true })}
                   />
@@ -174,21 +180,21 @@ class Edit extends Component {
             </tbody>
           </table>
           <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-            {formData && formData.actionType === 'I' ? (
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onSave()}>
+            {actionType === 'I' ? (
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={this.onSave}>
                 저장
               </StyledButton>
             ) : (
               <>
-                <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onSave()}>
+                <StyledButton className="btn-primary btn-sm mr5" onClick={this.onSave}>
                   수정
                 </StyledButton>
-                <Popconfirm title="삭제하시겠습니끼?" onConfirm={() => this.onRemoveDo()}>
+                <Popconfirm title="삭제하시겠습니끼?" onConfirm={this.onRemoveDo}>
                   <StyledButton className="btn-primary btn-sm mr5">삭제</StyledButton>
                 </Popconfirm>
               </>
             )}
-            <StyledButton className="btn-light btn-sm" onClick={() => this.onCancel()}>
+            <StyledButton className="btn-light btn-sm" onClick={this.onReset}>
               RESET
             </StyledButton>
           </StyledButtonWrapper>
@@ -201,15 +207,9 @@ class Edit extends Component {
           destroyOnClose
           footer={null}
         >
-          {isOpenOModal && (
-            <UserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onOfficerSelectedComplete} onCancel={this.onCancel} />
-          )}
-          {isOpenKModal && (
-            <UserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onKeeperSelectedComplete} onCancel={this.onCancel} />
-          )}
-          {isOpenMModal && (
-            <UserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onManagerSelectedComplete} onCancel={this.onCancel} />
-          )}
+          {isOpenOModal && <UserSelect onUserSelectHandler={() => null} onUserSelectedComplete={this.onOfficerSelectedComplete} onCancel={this.onCancel} />}
+          {isOpenKModal && <UserSelect onUserSelectHandler={() => null} onUserSelectedComplete={this.onKeeperSelectedComplete} onCancel={this.onCancel} />}
+          {isOpenMModal && <UserSelect onUserSelectHandler={() => null} onUserSelectedComplete={this.onManagerSelectedComplete} onCancel={this.onCancel} />}
         </AntdModal>
       </>
     );

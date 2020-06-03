@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Table, Icon, Modal, Button } from 'antd';
 import { ExportOutlined } from '@ant-design/icons';
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -153,7 +155,7 @@ class PubCompleteDocList extends Component {
     };
     return (
       <>
-        <ContentsWrapper>
+        <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 접수/배포 완료함
@@ -164,21 +166,20 @@ class PubCompleteDocList extends Component {
               </StyledButton>
             </div>
           </div>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
           <AntdTable rowSelection={rowSelection} dataSource={this.state.pubDocList} columns={this.columns} />
-        </ContentsWrapper>
+        </StyledContentsWrapper>
 
         <AntdModal width={700} visible={this.state.isShow} onCancel={this.onCancel} destroyOnClose footer={[<Button onClick={this.onCancel}>취소</Button>]}>
           <ContentView workSeq={this.state.workSeq} taskSeq={this.state.taskSeq} pubDocInfo={this.state.pubDocInfo} />
         </AntdModal>
-        <AntdModal
-          width={1000}
-          visible={this.state.isExternalDistShow}
-          title="외부배포"
-          onCancel={this.onExternalDistCancel}
-          destroyOnClose
-          footer={null}
-        >
-          <ExternalDist docList={this.state.selectedPubDocList} onExternalDistComplete={this.onExternalDistComplete} onExternalDistCancel={this.onExternalDistCancel} />
+        <AntdModal width={1000} visible={this.state.isExternalDistShow} title="외부배포" onCancel={this.onExternalDistCancel} destroyOnClose footer={null}>
+          <ExternalDist
+            docList={this.state.selectedPubDocList}
+            onExternalDistComplete={this.onExternalDistComplete}
+            onExternalDistCancel={this.onExternalDistCancel}
+          />
         </AntdModal>
       </>
     );

@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
@@ -78,12 +79,14 @@ class UnApproveList extends Component {
     console.debug(unApproveList);
     return (
       <>
-        <StyledContentsWrapper>
+        <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 미결함
             </p>
           </div>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
           <AntdLineTable
             columns={this.getTableColumns()}
             dataSource={unApproveList.map(item => ({ ...item, key: `unApproveList_${item.RNUM}` }))}
@@ -91,7 +94,6 @@ class UnApproveList extends Component {
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
-            className="tableWrapper"
           />
         </StyledContentsWrapper>
         <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>

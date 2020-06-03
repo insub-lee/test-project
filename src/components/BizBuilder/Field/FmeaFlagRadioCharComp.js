@@ -13,6 +13,7 @@ class FmeaFlagRadioCharComp extends Component {
 
   componentDidMount() {
     const { fieldSelectData, CONFIG, colData } = this.props;
+    this.setState({ selectedValue: Number(colData) });
     if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
       if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey].length > 0) {
         this.setState({
@@ -32,9 +33,16 @@ class FmeaFlagRadioCharComp extends Component {
   };
 
   render() {
+    const { changeFormData, sagaKey, CONFIG, changeValidationData, colData } = this.props;
     const { options, selectedValue } = this.state;
-    console.debug('fema', options);
-    return <Radio.Group options={options}> </Radio.Group>;
+    console.debug('selectedValue', options, colData);
+    return (
+      <Radio.Group
+        options={options}
+        onChange={e => this.onChangeHandler(changeFormData, sagaKey, CONFIG, changeValidationData, e.target.value)}
+        defaultValue={Number(colData)}
+      ></Radio.Group>
+    );
   }
 }
 

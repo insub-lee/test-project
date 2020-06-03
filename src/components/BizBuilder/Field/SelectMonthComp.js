@@ -27,12 +27,31 @@ class SelectMonthComp extends React.Component {
     changeFormData(id, COMP_FIELD, value);
   };
 
+  handleOnSearch = value => {
+    const { sagaKey: id, changeSearchData, COMP_FIELD } = this.props;
+    const searchMonth = `AND W.${COMP_FIELD} ILIKE ${value}::VARCHAR`;
+    changeSearchData(id, COMP_FIELD, searchMonth);
+  };
+
   render() {
-    const { handleOnChange } = this;
+    const { handleOnChange, handleOnSearch } = this;
     const { monthArr } = this.state;
-    const { visible, viewPageData, colData, CONFIG } = this.props;
+    const { visible, viewPageData, colData, CONFIG, isSearch } = this.props;
     if (!visible) {
       return null;
+    }
+
+    if (isSearch) {
+      return (
+        <>
+          <AntdSelect style={{ width: '100%' }} onChange={handleOnSearch}>
+            {monthArr.map(item => (
+              <Select.Option value={item.value || ''}>{item.name || ''}</Select.Option>
+            ))}
+            <Select.Option value="">전체</Select.Option>
+          </AntdSelect>
+        </>
+      );
     }
 
     switch (viewPageData.viewType.toUpperCase()) {
@@ -78,6 +97,8 @@ SelectMonthComp.propTypes = {
   visible: PropTypes.bool,
   colData: PropTypes.string,
   CONFIG: PropTypes.object,
+  isSearch: PropTypes.bool,
+  changeSearchData: PropTypes.func,
 };
 
 export default SelectMonthComp;

@@ -3,12 +3,6 @@ import styled from 'styled-components';
 const primaryColor = '#636a78';
 
 const StyledAntdTable = Component => styled(Component)`
-  padding: 10px;
-
-  &.ant-table-no-pad {
-    padding: 0;
-  }
-
   .ant-table .ant-table-content {
     .ant-table-body {
       border-top: 1px solid #bbb;
@@ -95,6 +89,23 @@ const StyledAntdTable = Component => styled(Component)`
   .ant-table-bordered .ant-table-tbody > tr > td {
     &:last-child {
       border-right: 0;
+    }
+  }
+
+  /* table fixed */
+  &.ant-table-checkbox .ant-table-layout-fixed {
+    .ant-table-content {
+      .ant-table-fixed-left {
+        .ant-table-fixed .ant-table-thead tr th,
+        .ant-table-body-outer .ant-table-body-inner .ant-table-fixed .ant-table-tbody tr td {
+          padding: 6px 8px;
+        }
+      }
+
+      .ant-table-scroll .ant-table-header,
+      .ant-table-body {
+        border-top: 0;
+      }
     }
   }
 

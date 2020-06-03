@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Modal, Icon, Button, message } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import UserSelect from 'components/UserSelect';
 
-const AntdLineTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledSelectModal(Modal);
 
 class List extends Component {
@@ -152,37 +153,34 @@ class List extends Component {
 
     if (distDeptList !== undefined) {
       return (
-        <ContentsWrapper>
-          <div className="pageTitle">
-            <p>
-              <Icon type="form" /> 배포부서 담당자
-              <div className="btnPositonMid">
-                <StyledButton className="btn-gray btn-sm" onClick={this.onClickSave}>
-                  <SaveOutlined /> 필수 배포부서적용
-                </StyledButton>
-              </div>
-            </p>
-          </div>
-          <AntdModal title="부서담당자 선택" width="1000px" visible={this.state.isShow} onCancel={this.onCancel} destroyOnClose footer={[]}>
-            <UserSelect
-              initUserList={this.state.selectedUserList}
-              // treeDataSource={distDeptList}
-              userDataList={result.userList && result.userList.list}
-              onTreeSelect={this.onTreeSelect}
-              onUserSelectHandler={this.onUserSelect}
-              onUserSelectedComplete={this.onUserSelectedComplete}
-              onCancel={this.onCancel}
-            />
-          </AntdModal>
-          <AntdLineTable
-            rowSelection={rowSelection}
-            columns={this.getTableColumns()}
-            dataSource={distDeptList}
-            pagination={false}
-            bordered
-            className="tableWrapper"
-          />
-        </ContentsWrapper>
+        <>
+          <StyledHeaderWrapper>
+            <div className="pageTitle">
+              <p>
+                <Icon type="form" /> 배포부서 담당자
+                <div className="btnPositonMid">
+                  <StyledButton className="btn-gray btn-sm" onClick={this.onClickSave}>
+                    <SaveOutlined /> 필수 배포부서적용
+                  </StyledButton>
+                </div>
+              </p>
+            </div>
+          </StyledHeaderWrapper>
+          <StyledContentsWrapper>
+            <AntdModal title="부서담당자 선택" width="1000px" visible={this.state.isShow} onCancel={this.onCancel} destroyOnClose footer={[]}>
+              <UserSelect
+                initUserList={this.state.selectedUserList}
+                // treeDataSource={distDeptList}
+                userDataList={result.userList && result.userList.list}
+                onTreeSelect={this.onTreeSelect}
+                onUserSelectHandler={this.onUserSelect}
+                onUserSelectedComplete={this.onUserSelectedComplete}
+                onCancel={this.onCancel}
+              />
+            </AntdModal>
+            <AntdTable rowSelection={rowSelection} columns={this.getTableColumns()} dataSource={distDeptList} pagination={false} bordered />
+          </StyledContentsWrapper>
+        </>
       );
     }
 

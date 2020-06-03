@@ -51,15 +51,22 @@ class MdcsRevisionHistoryListComp extends Component {
     };
   }
 
-  initData = (id, response) => {
-    const { list } = response;
+  initDataBind = list => {
     this.setState({ list });
   };
 
   componentDidMount() {
-    const { sagaKey, submitExtraHandler, formData } = this.props;
-    const url = `/api/mdcs/v1/common/mdcsrevisionListHandler?WORK_SEQ=${formData.WORK_SEQ}&TASK_SEQ=${formData.TASK_SEQ}`;
-    submitExtraHandler(sagaKey, 'GET', url, {}, this.initData);
+    const { fieldSelectData, CONFIG } = this.props;
+
+    if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
+      if (fieldSelectData[CONFIG.property.compSelectDataKey]) {
+        const list = fieldSelectData[CONFIG.property.compSelectDataKey];
+        this.initDataBind(list);
+      }
+    }
+    // const { sagaKey, submitExtraHandler, formData } = this.props;
+    // const url = `/api/mdcs/v1/common/mdcsrevisionListHandler?WORK_SEQ=${formData.WORK_SEQ}&TASK_SEQ=${formData.TASK_SEQ}`;
+    // submitExtraHandler(sagaKey, 'GET', url, {}, this.initData);
   }
 
   render() {

@@ -23,8 +23,23 @@ class MdcsDistDeptListComp extends Component {
     };
   }
 
-  initData = (id, response) => {
-    const { dept } = response;
+  componentDidMount() {
+    const { fieldSelectData, CONFIG } = this.props;
+    if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
+      if (fieldSelectData[CONFIG.property.compSelectDataKey]) {
+        const disInfo = fieldSelectData[CONFIG.property.compSelectDataKey];
+        this.initDataBind(disInfo);
+      }
+    }
+
+    // const { sagaKey, submitExtraHandler, draftInfo } = this.props;
+    // if (draftInfo && draftInfo.DRAFT_ID && draftInfo.DRAFT_ID > 0) {
+    //   const url = `/api/mdcs/v1/common/distribute/distributeDeptByDraftIdHandler/${draftInfo.DRAFT_ID}`;
+    //   submitExtraHandler(sagaKey, 'GET', url, {}, this.initData);
+    // }
+  }
+
+  initDataBind = dept => {
     if (dept.APPV_MEMBER && dept.APPV_MEMBER.length > 0 && isJSON(dept.APPV_MEMBER)) {
       const deptArray = JSON.parse(dept.APPV_MEMBER);
       if (deptArray && deptArray.length > 0) {
@@ -33,14 +48,6 @@ class MdcsDistDeptListComp extends Component {
       }
     }
   };
-
-  componentDidMount() {
-    const { sagaKey, submitExtraHandler, draftInfo } = this.props;
-    if (draftInfo && draftInfo.DRAFT_ID && draftInfo.DRAFT_ID > 0) {
-      const url = `/api/mdcs/v1/common/distribute/distributeDeptByDraftIdHandler/${draftInfo.DRAFT_ID}`;
-      submitExtraHandler(sagaKey, 'GET', url, {}, this.initData);
-    }
-  }
 
   render() {
     const { distributeDept } = this.state;

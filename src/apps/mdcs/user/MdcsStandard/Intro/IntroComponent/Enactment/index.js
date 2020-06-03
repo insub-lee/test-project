@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Select } from 'antd';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import * as ModifyType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
 import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
 
@@ -43,7 +43,7 @@ class Enactment extends Component {
       categoryList,
       templateList,
       stepList01: categoryList
-        .filter(f => f.LVL === 1)
+        .filter(f => f.LVL === 1 && f.NODE_ID !== 2207 && f.NODE_ID !== 2208)
         .map(item => (
           <Option key={item.NODE_ID}>
             {item.NAME_KOR} [{item.CODE}]
@@ -67,7 +67,7 @@ class Enactment extends Component {
       selectedNodeIds[i] = undefined;
     }
     const stepList02 = categoryList
-      .filter(f => f.PARENT_NODE_ID.toString() === value)
+      .filter(f => f.PARENT_NODE_ID.toString() === value && f.NODE_ID !== 17)
       .map(item => (
         <Option key={item.NODE_ID}>
           {item.NAME_KOR} [{item.CODE}]
@@ -229,10 +229,10 @@ class Enactment extends Component {
           </Select>
         </li>
         <div className="btn-wrap">
-          <StyledButton className="btn-primary btn-first" onClick={this.onModalShow}>
+          <StyledButton className="btn-primary mr5 btn-radius" onClick={this.onModalShow}>
             선택완료
           </StyledButton>
-          <StyledButton className="btn-light">다시선택</StyledButton>
+          <StyledButton className="btn-light btn-radius">다시선택</StyledButton>
         </div>
       </>
     );
@@ -247,7 +247,7 @@ Enactment.defaultProps = {
   apiArys: [
     {
       key: 'categoryInfo',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=1',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=1&ORDBY=ORDER BY CODE',
       type: 'GET',
       params: {},
     },

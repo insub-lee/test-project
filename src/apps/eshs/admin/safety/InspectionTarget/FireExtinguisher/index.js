@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
-import ListPage from 'apps/eshs/admin/safety/pages/ListPage';
-import { BUTTON_CATEGORY } from 'apps/eshs/admin/safety/InspectionTarget/internal_constants';
+import ListPage from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/pages/ListPage';
 import * as CustomButtons from './Buttons';
 
 function FireExtinguisher(props) {

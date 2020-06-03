@@ -9,13 +9,13 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import CompanyModal from '../CompanyModal';
 
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
-const AntdModalPad = StyledAntdModalPad(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 const { Option } = Select;
 
@@ -302,23 +302,23 @@ class List extends Component {
                 <StyledButton className="btn-primary mr5 btn-sm" onClick={() => this.onChangeData('U')}>
                   수정
                 </StyledButton>
-                <StyledButton className="btn-primary mr5 btn-sm" onClick={() => this.onChangeData('D')}>
+                <StyledButton className="btn-light mr5 btn-sm" onClick={() => this.onChangeData('D')}>
                   삭제
                 </StyledButton>
               </>
             )}
-            <StyledButton className="btn-primary btn-sm" onClick={() => this.onReset()}>
+            <StyledButton className="btn-light btn-sm" onClick={() => this.onReset()}>
               Reset
             </StyledButton>
           </StyledButtonWrapper>
         </StyledContentsWrapper>
-        <AntdModalPad visible={this.state.modalCompany} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="회사 선택">
+        <AntdModal visible={this.state.modalCompany} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="회사 선택">
           <div>
             {this.state.modalCompany && (
               <CompanyModal sagaKey={id} getCallDataHandler={getCallDataHandler} result={result} selectedModalRecord={this.selectedModalRecord} />
             )}
           </div>
-        </AntdModalPad>
+        </AntdModal>
       </div>
     );
   }
