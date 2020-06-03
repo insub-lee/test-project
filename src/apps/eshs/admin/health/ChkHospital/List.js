@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import { Table, Input, Modal } from 'antd';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import View from './View';
 
 const AntdInput = StyledInput(Input);
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModalPad(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 class List extends Component {
   state = {
@@ -121,19 +121,18 @@ class List extends Component {
           <View selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} onSaveAfter={this.onSaveAfter} />
         </AntdModal>
         <StyledContentsWrapper>
-          <div className="selSaveWrapper alignLeft">
-            <span className="textLabel">검진기관명</span>
-            <AntdInput
-              className="ant-input-sm ant-input-inline mr5"
-              style={{ width: 200 }}
-              onChange={e => this.setState({ hospitalName: e.target.value })}
-              onPressEnter={this.getList}
-              allowClear
-            />
-            <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary btn-sm" onClick={this.getList}>검색</StyledButton>
-            </StyledButtonWrapper>
-          </div>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <AntdInput
+                className="ant-input-sm ant-input-inline mr5" style={{ width: 200 }}
+                onChange={e => this.setState({ hospitalName: e.target.value })}
+                onPressEnter={this.getList}
+                allowClear placeholder="검진기관명"
+              />
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>검색</StyledButton>
+              <StyledButton className="btn-primary btn-sm" onClick={this.onClickAdd}>등록</StyledButton>
+            </div>
+          </StyledCustomSearchWrapper>
           <AntdTable
             columns={this.columns}
             dataSource={this.state.list}
@@ -143,11 +142,8 @@ class List extends Component {
                 this.onClickRow(record, rowIndex);
               }
             })}
-            className="tableWrapper"
+            pagination={false}
           />
-          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mr-20">
-            <StyledButton className="btn-primary btn-sm" onClick={this.onClickAdd}>등록</StyledButton>
-          </StyledButtonWrapper>
         </StyledContentsWrapper>
       </>
     );
