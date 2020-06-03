@@ -115,51 +115,61 @@ class List extends React.Component {
       title: '품목',
       dataIndex: 'KIND',
       key: 'KIND',
+      width: '255px',
     },
     {
       title: '모델',
       dataIndex: 'MODEL',
       key: 'MODEL',
+      width: '220px',
     },
     {
       title: 'Size',
       dataIndex: 'SIZE1',
       key: 'SIZE1',
+      width: '110px',
     },
     {
       title: '업체',
       dataIndex: 'VENDOR_NM',
       key: 'VENDOR_NM',
+      width: '110px',
     },
     {
       title: '입출',
       dataIndex: 'TYPE',
       key: 'TYPE',
+      width: '85px',
     },
     {
       title: '단가',
       dataIndex: 'UNITPRICE',
       key: 'UNITPRICE',
+      width: '80px',
     },
     {
       title: '수량',
       dataIndex: 'QTY',
       key: 'QTY',
+      width: '50px',
     },
     {
       title: '금액',
       dataIndex: 'TOTAL_PRICE',
       key: 'TOTAL_PRICE',
+      width: '80px',
     },
     {
       title: '발생일',
       dataIndex: 'POSTING_DT',
       key: 'POSTING_DT',
+      width: '120px',
     },
     {
       title: '출고장소',
       dataIndex: 'DEPT_NAME_KOR',
       key: 'DEPT_NAME_KOR',
+      width: '150px',
     },
   ];
 
