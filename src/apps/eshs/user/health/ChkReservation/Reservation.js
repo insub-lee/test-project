@@ -38,6 +38,9 @@ class Reservation extends Component {
   };
 
   componentWillMount() {
+    const today = new Date();
+    const currYear = today.getFullYear();
+
     const { sagaKey, getCallDataHandler, profile, spinningOn } = this.props;
     const apiAry = [
       {
@@ -54,7 +57,7 @@ class Reservation extends Component {
       },
       {
         key: 'reservation',
-        url: `/api/eshs/v1/common/health/healthChkReservation`,
+        url: `/api/eshs/v1/common/health/healthChkReservation?CHK_YEAR=${currYear}`,
         type: 'GET',
         params: {},
       },

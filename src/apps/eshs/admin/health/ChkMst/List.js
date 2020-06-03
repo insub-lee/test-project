@@ -4,7 +4,6 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
