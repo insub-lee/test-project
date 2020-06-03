@@ -3,25 +3,31 @@ import { Table, Input, Select, DatePicker, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import moment from 'moment';
 
+import View from './View';
+
 const AntdTable = StyledAntdTable(Table)
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
 const AntdDatePicker= StyledDatePicker(DatePicker);
+const AntdModal = StyledAntdModal(Modal);
 
 class List extends Component {
   state = {
+    isShow: false,
+    selectedRow: {},
     searchParam: {
       DATE_GUBUN: 'APP_DT',
       SEARCH_DATE: '',
@@ -107,6 +113,17 @@ class List extends Component {
     });
   };
 
+  onShowPopup = row => {
+    this.setState({
+      selectedRow: row,
+      isShow: true,
+    });
+  }
+
+  onCancelPopup = () => {
+    this.setState({ isShow: false });
+  };
+
   columns = [
     {
       title: '소속',
@@ -120,6 +137,7 @@ class List extends Component {
       key: 'EMP_NO',
       width: '8%',
       align: 'center',
+      render: (text, record) => <StyledButton className="btn-link btn-sm" onClick={() => this.onShowPopup(record)}>{text}</StyledButton>
     },
     {
       title: '성명',
@@ -149,25 +167,21 @@ class List extends Component {
       key: 'FAM_NAME',
       width: '10%',
       align: 'center',
-      render: (text, record) => {
-        if (record.IS_MATE === '1') {
-          return text;
-        }
-      }
+      render: (text, record) => record.IS_MATE === '1' ? text : ''
     },
     {
       title: '검진일',
       dataIndex: 'CHK_DT',
       key: 'CHK_DT',
-      width: '10%',
+      width: '15%',
       align: 'center',
-      render: text => <AntdDatePicker value={text && text !== '' ? moment(text) : ''} className="ant-picker-sm" />
+      render: text => <AntdDatePicker value={text && text !== '' ? moment(text) : ''} className="ant-picker-sm" style={{ width: 110 }} />
     },
     {
       title: '병원등록번호',
       dataIndex: 'HOS_REGNO',
       key: 'HOS_REGNO',
-      width: '15%',
+      width: '12%',
       align: 'center',
       render: text => <AntdInput value={text} className="ant-input-sm" />
     },
@@ -177,58 +191,70 @@ class List extends Component {
     const { result } = this.props;
 
     return (
-      <StyledContentsWrapper>
-        <StyledSearchWrapper>
-          <div className="row">
-            <AntdSelect
-              defaultValue={this.state.searchParam.DATE_GUBUN} className="select-sm mr5" style={{ width: 80 }}
-              onChange={val => this.onChangeSearchParam('DATE_GUBUN', val)}
-            >
-              <AntdSelect.Option value="APP_DT">예약일</AntdSelect.Option>
-              <AntdSelect.Option value="CHK_DT">검진일</AntdSelect.Option>
-            </AntdSelect>
-            <AntdDatePicker
-              defaultValue={moment(this.state.searchParam.SEARCH_DATE)} className="ant-picker-sm mr5" style={{ width: 110 }}
-              onChange={(val1, val2) => this.onChangeSearchParam('SEARCH_DATE', val2)}
-            />
-            {result.hospitalList && result.hospitalList.list && (
+      <>
+        <AntdModal
+          width={850}
+          visible={this.state.isShow}
+          title="대상자 개인관리"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <View onCancelPopup={this.onCancelPopup} selectedRow={this.state.selectedRow} />
+        </AntdModal>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
               <AntdSelect
-                defaultValue={result.hospitalList.list[0].HOSPITAL_CODE} className="select-sm mr5" style={{ width: 200 }}
-                onChange={val => this.onChangeSearchParam('HOSPITAL_CODE', val)}
+                defaultValue={this.state.searchParam.DATE_GUBUN} className="select-sm mr5" style={{ width: 80 }}
+                onChange={val => this.onChangeSearchParam('DATE_GUBUN', val)}
               >
-                {result.hospitalList.list.map(item => (
-                  <AntdSelect.Option value={item.HOSPITAL_CODE}>{item.HOSPITAL_NAME}</AntdSelect.Option>
-                ))}
+                <AntdSelect.Option value="APP_DT">예약일</AntdSelect.Option>
+                <AntdSelect.Option value="CHK_DT">검진일</AntdSelect.Option>
               </AntdSelect>
-            )}
-            {result.chkTypeList && result.chkTypeList.categoryMapList && (
-              <AntdSelect defaultValue="" className="select-sm mr5" style={{ width: 100 }} onChange={val => this.onChangeSearchParam('CHK_TYPE_CD_NODE_ID', val)}>
-                <AntdSelect.Option value="">검종전체</AntdSelect.Option>
-                  {result.chkTypeList.categoryMapList.map(item => (
-                    <AntdSelect.Option value={item.NODE_ID}>{item.NAME_KOR}</AntdSelect.Option>
+              <AntdDatePicker
+                defaultValue={moment(this.state.searchParam.SEARCH_DATE)} className="ant-picker-sm mr5" style={{ width: 110 }}
+                onChange={(val1, val2) => this.onChangeSearchParam('SEARCH_DATE', val2)}
+              />
+              {result.hospitalList && result.hospitalList.list && (
+                <AntdSelect
+                  defaultValue={result.hospitalList.list[0].HOSPITAL_CODE} className="select-sm mr5" style={{ width: 200 }}
+                  onChange={val => this.onChangeSearchParam('HOSPITAL_CODE', val)}
+                >
+                  {result.hospitalList.list.map(item => (
+                    <AntdSelect.Option value={item.HOSPITAL_CODE}>{item.HOSPITAL_NAME}</AntdSelect.Option>
                   ))}
+                </AntdSelect>
+              )}
+              {result.chkTypeList && result.chkTypeList.categoryMapList && (
+                <AntdSelect defaultValue="" className="select-sm mr5" style={{ width: 100 }} onChange={val => this.onChangeSearchParam('CHK_TYPE_CD_NODE_ID', val)}>
+                  <AntdSelect.Option value="">검종전체</AntdSelect.Option>
+                    {result.chkTypeList.categoryMapList.map(item => (
+                      <AntdSelect.Option value={item.NODE_ID}>{item.NAME_KOR}</AntdSelect.Option>
+                    ))}
+                </AntdSelect>
+              )}
+              <AntdSelect defaultValue="" className="select-sm mr5" style={{ width: 120 }} onChange={val => this.onChangeSearchParam('CHK_SEQ', val)}>
+                <AntdSelect.Option value="">검진차수전체</AntdSelect.Option>
+                <AntdSelect.Option value="1">1차</AntdSelect.Option>
+                <AntdSelect.Option value="2">재검</AntdSelect.Option>
               </AntdSelect>
-            )}
-            <AntdSelect defaultValue="" className="select-sm mr5" style={{ width: 120 }} onChange={val => this.onChangeSearchParam('CHK_SEQ', val)}>
-              <AntdSelect.Option value="">검진차수전체</AntdSelect.Option>
-              <AntdSelect.Option value="1">1차</AntdSelect.Option>
-              <AntdSelect.Option value="2">재검</AntdSelect.Option>
-            </AntdSelect>
-            <AntdSelect defaultValue="" className="select-sm mr5" style={{ width: 110 }} onChange={val => this.onChangeSearchParam('IS_MATE', val)}>
-              <AntdSelect.Option value="">검진자전체</AntdSelect.Option>
-              <AntdSelect.Option value="0">본인</AntdSelect.Option>
-              <AntdSelect.Option value="1">배우자</AntdSelect.Option>
-            </AntdSelect>
-            <AntdInput placeholder="사번" className="ant-input-sm ant-input-inline mr5" style={{ width: 80 }} onChange={e => this.onChangeSearchParam('EMP_NO', e.target.value)} />
-            <StyledButton className="btn-light btn-sm" onClick={this.getList}>검색</StyledButton>
-          </div>
-        </StyledSearchWrapper>
-        <AntdTable
-          columns={this.columns}
-          dataSource={this.state.list}
-          bordered={true}
-        />
-      </StyledContentsWrapper>
+              <AntdSelect defaultValue="" className="select-sm mr5" style={{ width: 110 }} onChange={val => this.onChangeSearchParam('IS_MATE', val)}>
+                <AntdSelect.Option value="">검진자전체</AntdSelect.Option>
+                <AntdSelect.Option value="0">본인</AntdSelect.Option>
+                <AntdSelect.Option value="1">배우자</AntdSelect.Option>
+              </AntdSelect>
+              <AntdInput placeholder="사번" className="ant-input-sm ant-input-inline mr5" style={{ width: 80 }} onChange={e => this.onChangeSearchParam('EMP_NO', e.target.value)} />
+              <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
+            </div>
+          </StyledCustomSearchWrapper>
+          <AntdTable
+            columns={this.columns}
+            dataSource={this.state.list}
+            bordered={true}
+          />
+        </StyledContentsWrapper>
+      </>
     );
   }
 }
