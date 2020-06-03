@@ -2,8 +2,8 @@ import React from 'react';
 import { Table, Select } from 'antd';
 import PropTypes from 'prop-types';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import moment from 'moment';
@@ -227,8 +227,8 @@ class List extends React.Component {
     const isSelectTeam = searchValue.type.toUpperCase() === 'TEAM';
     return (
       <>
-        <ContentsWrapper>
-          <StyledSearchWrap>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
             <div style={{ display: 'inline-block', marginBottom: '10px', width: '40%' }}>
               <AntdSelect
                 defaultValue={searchValue.site}
@@ -296,7 +296,7 @@ class List extends React.Component {
                 엑셀받기
               </StyledButton>
             </div>
-          </StyledSearchWrap>
+          </StyledCustomSearchWrapper>
           <div style={{ padding: '10px' }}>
             <AntdTable
               columns={columns()}
@@ -305,7 +305,7 @@ class List extends React.Component {
               footer={() => <span>{`${(dataSource && dataSource.length) || 0} 건`}</span>}
             />
           </div>
-        </ContentsWrapper>
+        </StyledContentsWrapper>
       </>
     );
   }
