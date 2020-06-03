@@ -8,17 +8,17 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 
 import Edit from './Edit';
 import CompanyModal from './CompanyModal';
 
-const AntdLineTable = StyledAntdTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
-const AntdInput = StyledInput(Input);
-const AntdModalPad = StyledAntdModalPad(Modal);
+const AntdSearchInput = StyledSearchInput(Input.Search);
+const AntdModal = StyledAntdModal(Modal);
 
 const { Option } = Select;
 
@@ -187,12 +187,11 @@ class List extends Component {
                 {this.selectOptionRender('siteSB')}
               </AntdSelect>
               <span className="text-label">회사</span>
-              <AntdInput
+              <AntdSearchInput
                 style={{ width: '200px' }}
-                className="ant-input-inline ant-input-sm input-pointer mr5"
+                className="input-search-inline input-search-sm input-pointer mr5"
                 value={this.state.companyName}
                 onClick={() => this.setState({ modalCompany: true })}
-                placeholder="여기를 클릭해주세요."
               />
               <AntdSelect className="select-sm mr5" onChange={value => this.changeState('filterPlantSBV', value)} value={this.state.filterPlantSBV}>
                 <Option value="0" key="filterPlantSBV">
@@ -244,16 +243,15 @@ class List extends Component {
               </AntdSelect>
             </div>
             <StyledButtonWrapper className="btn-area">
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.listDataApi()}>
+              <StyledButton className="btn-gray btn-first btn-sm" onClick={() => this.listDataApi()}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm" onClick={() => this.isOpenEdit()}>
+              <StyledButton className="btn-gray btn-sm" onClick={() => this.isOpenEdit()}>
                 추가
               </StyledButton>
             </StyledButtonWrapper>
           </StyledCustomSearch>
-          <AntdLineTable
-            className="tableWrapper"
+          <AntdTable
             rowKey={listData && listData.GROUP_UNIT_CD}
             columns={columns}
             dataSource={listData}
@@ -265,7 +263,7 @@ class List extends Component {
             footer={() => <div style={{ textAlign: 'center' }}>{`${listData && listData.length} 건`}</div>}
           />
         </StyledContentsWrapper>
-        <AntdModalPad visible={this.state.modalEdit} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="관리 단위 등록/수정">
+        <AntdModal visible={this.state.modalEdit} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="관리 단위 등록/수정">
           <div>
             {this.state.modalEdit && (
               <Edit
@@ -282,14 +280,14 @@ class List extends Component {
               />
             )}
           </div>
-        </AntdModalPad>
-        <AntdModalPad visible={this.state.modalCompany} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="회사 선택">
+        </AntdModal>
+        <AntdModal visible={this.state.modalCompany} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="회사 선택">
           <div>
             {this.state.modalCompany && (
               <CompanyModal sagaKey={id} getCallDataHandler={getCallDataHandler} result={result} selectedModalRecord={this.selectedModalRecord} />
             )}
           </div>
-        </AntdModalPad>
+        </AntdModal>
       </>
     );
   }

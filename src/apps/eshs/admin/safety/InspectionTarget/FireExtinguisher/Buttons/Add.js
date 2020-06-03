@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import request from 'utils/request';
 
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import { address } from 'apps/eshs/admin/safety/InspectionTarget/internal_constants';
-import { VIEW_TYPE, META_SEQ } from '../../internal_constants';
+import { address } from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/internal_constants';
+import { VIEW_TYPE, META_SEQ } from '../internal_constants';
 
 export default function Add({ sagaKey, detail, title, viewMetaSeqHandler, onCloseModalHandler, modalHandler, formData, taskSeq, workSeq, viewPageData }) {
   const insertIssueNote = () => {

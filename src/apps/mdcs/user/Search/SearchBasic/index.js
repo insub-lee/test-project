@@ -253,7 +253,7 @@ class SearchBasic extends Component {
                         }}
                       >
                         <StyledRadio value={1}>현재 버전</StyledRadio>
-                        <StyledRadio value={2}>과거 Rev. 포함</StyledRadio>
+                        {/* <StyledRadio value={2}>과거 Rev. 포함</StyledRadio> */}
                         <StyledRadio value={3}>폐기</StyledRadio>
                       </Radio.Group>
                     </td>

@@ -3,16 +3,17 @@ import PropTypes from 'prop-types';
 import { Icon, Table, Modal, message } from 'antd';
 import { fromJS } from 'immutable';
 import moment from 'moment';
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import ApproveView from './approveView';
 
-const AntdLineTable = StyledLineTable(Table);
-const AntdModal = StyledContentsModal(Modal);
+const AntdTable = StyledAntdTable(Table);
+const AntdModal = StyledAntdModal(Modal);
+
 class ApproveReqListComp extends Component {
   constructor(props) {
     super(props);
@@ -96,25 +97,28 @@ class ApproveReqListComp extends Component {
     const { workSeq, taskSeq, visible, coverView } = this.state;
     const { customDataList } = this.props;
     return (
-      <ContentsWrapper>
-        <div className="pageTitle">
-          <p>
-            <Icon type="form" /> 결재요청 LIST
-          </p>
-        </div>
-        <AntdLineTable
-          columns={this.getTableColumns()}
-          dataSource={customDataList}
-          onRow={(record, rowIndex) => ({
-            onClick: e => this.onRowClick(record, rowIndex, e),
-          })}
-          bordered
-          className="tableWrapper"
-        />
-        <AntdModal title="유효성 점검" visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
-          <ApproveView {...this.props} WORK_SEQ={workSeq} TASK_SEQ={taskSeq} onValidateProcess={this.onValidateProcess} onModalClose={this.onModalClose} />
-        </AntdModal>
-      </ContentsWrapper>
+      <>
+        <StyledHeaderWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 결재요청 LIST
+            </p>
+          </div>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
+          <AntdTable
+            columns={this.getTableColumns()}
+            dataSource={customDataList}
+            onRow={(record, rowIndex) => ({
+              onClick: e => this.onRowClick(record, rowIndex, e),
+            })}
+            bordered
+          />
+          <AntdModal title="유효성 점검" visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+            <ApproveView {...this.props} WORK_SEQ={workSeq} TASK_SEQ={taskSeq} onValidateProcess={this.onValidateProcess} onModalClose={this.onModalClose} />
+          </AntdModal>
+        </StyledContentsWrapper>
+      </>
     );
   }
 }

@@ -12,8 +12,8 @@ import View from 'components/BizBuilder/PageComp/view';
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
-import { VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/internal_constants';
-import * as CustomButtons from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/Buttons';
+import { VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/FireHydrant/internal_constants';
+import * as CustomButtons from 'apps/eshs/admin/safety/InspectionTarget/FireHydrant/Buttons';
 
 // import Loadable from 'components/Loadable';
 // import Loading from 'components/BizBuilderBase/viewComponent/Common/Loading';
@@ -67,7 +67,6 @@ class ViewPage extends Component {
   openModal = changedSagaKey => {
     const { pageMetaSeq, viewType } = this.state;
     const { workSeq, sagaKey, taskSeq } = this.props;
-
     switch (pageMetaSeq) {
       case META_SEQ.VIEW_INSPECTION_BY_CHIP: {
         return (
@@ -132,6 +131,8 @@ class ViewPage extends Component {
           />
         );
       }
+      default:
+        return '';
     }
   };
 
@@ -153,7 +154,7 @@ class ViewPage extends Component {
             {ViewCustomButtons ? (
               <>
                 <ViewCustomButtons viewMetaSeqHandler={this.pageMetaSeqHandler} modalHandler={this.modalHandler} {...this.props} />
-                <Modal destroyOnClose visible={activateModal} closable onCancel={() => this.modalHandler(false)} width={900} footer={null}>
+                <Modal destroyOnClose visible={activateModal} closable onCancel={() => this.modalHandler(false)} width="80%" footer={null}>
                   <div>{activateModal && this.openModal(`modal${id}`)}</div>
                 </Modal>
               </>

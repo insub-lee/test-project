@@ -5,15 +5,16 @@ import { Table, Select, Input, message } from 'antd';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
-import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import ExcelDownloader from '../Excel';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
-const AntdLineTable = StyledAntdTable(Table);
+const AntdTable = StyledAntdTable(Table);
 
 const { Option } = Select;
 
@@ -246,23 +247,24 @@ class List extends Component {
       },
     ];
     return (
-      <ContentsWrapper>
-        <div className="selSaveWrapper alignLeft">
-          <AntdSelect className="select-sm mr5" style={{ width: 200 }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
-            <Option value="0" disabled>
-              선택
-            </Option>
-            {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
-          </AntdSelect>
-          <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.selectCode}>
+      <StyledContentsWrapper>
+        <StyledCustomSearch className="search-wrapper-inline">
+          <div className="search-input-area">
+            <AntdSelect className="select-sm" style={{ width: 200 }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
+              <Option value="0" disabled>
+                선택
+              </Option>
+              {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
+            </AntdSelect>
+          </div>
+          <div className="btn-area">
+            <StyledButton className="btn-gray mr5 btn-sm" onClick={this.selectCode}>
               검색
             </StyledButton>
             <ExcelDownloader dataList={excelData} excelNm={excelNm} />
-          </StyledButtonWrapper>
-        </div>
-        <AntdLineTable
-          className="tableWrapper"
+          </div>
+        </StyledCustomSearch>
+        <AntdTable
           rowKey={listData.NODE_ID}
           key={listData.NODE_ID}
           columns={columns}
@@ -275,7 +277,7 @@ class List extends Component {
           })}
           footer={() => <span>{`${listData && listData.length} 건`}</span>}
         />
-      </ContentsWrapper>
+      </StyledContentsWrapper>
     );
   }
 }

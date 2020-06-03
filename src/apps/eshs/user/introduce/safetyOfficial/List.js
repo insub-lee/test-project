@@ -142,7 +142,6 @@ class List extends Component {
               </StyledButton>
             </StyledButtonWrapper>
             <AntdTable
-              className="ant-table-no-pad"
               rowKey={() => totalData.SIPA_SEQ}
               pagination={false}
               dataSource={totalData}

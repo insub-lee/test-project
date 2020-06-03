@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Icon, Button, Input } from 'antd';
 
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -15,7 +16,7 @@ class ExternalDistributeList extends Component {
   componentDidMount() {
     const { id, apiAry, getCallDataHandler } = this.props;
     getCallDataHandler(id, apiAry, () => {});
-  };
+  }
 
   getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -116,12 +117,14 @@ class ExternalDistributeList extends Component {
       dataIndex: 'STATUS',
       key: 'STATUS',
       width: '10%',
-      render: (text, record) => record.STATUS === 0 ? '  In progress' : 'Completed',
+      render: (text, record) => (record.STATUS === 0 ? '  In progress' : 'Completed'),
     },
-  ]
+  ];
 
   render() {
-    const { result: { externalDistributeList } } = this.props;
+    const {
+      result: { externalDistributeList },
+    } = this.props;
     let list = [];
     if (externalDistributeList && externalDistributeList !== undefined) {
       if (externalDistributeList.list !== undefined) {
@@ -131,17 +134,16 @@ class ExternalDistributeList extends Component {
 
     return (
       <>
-        <ContentsWrapper>
+        <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 외부배포 현황
             </p>
           </div>
-          <AntdTable
-            dataSource={list.map(item => ({ ...item, key: `${item.TRANS_NO}_${item.RECV_USER_ID}` }))}
-            columns={this.columns}
-          />
-        </ContentsWrapper>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
+          <AntdTable dataSource={list.map(item => ({ ...item, key: `${item.TRANS_NO}_${item.RECV_USER_ID}` }))} columns={this.columns} />
+        </StyledContentsWrapper>
       </>
     );
   }

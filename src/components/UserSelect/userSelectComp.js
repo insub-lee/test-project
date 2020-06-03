@@ -2,12 +2,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { List, Tree, Row, Col, Checkbox, Icon, message } from 'antd';
+import { List, Tree, Row, Col, Checkbox, Icon, message, Input } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import UserSelectWrapper from 'components/BizBuilder/styled/Wrapper/UserSelectWrapper';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+
+const AntdSearchInput = StyledSearchInput(Input.Search);
 
 // Component Attribute 및 Event Method 정리
 // <UserSelect
@@ -174,6 +177,19 @@ class UserSelectComp extends Component {
     removeResponseDataReduxStateByKey(sagaKey, 'userList');
   };
 
+  onSearchUserByName = val => {
+    const { sagaKey, getCallDataHandlerReturnRes } = this.props;
+    const apiInfo = {
+      key: 'userList',
+      url: `/api/common/v1/account/userSearchList`,
+      type: 'POST',
+      params: {
+        PARAM: { USER_NAME: val }
+      }
+    };
+    getCallDataHandlerReturnRes(sagaKey, apiInfo, () => {});
+  }
+
   render() {
     const { treeDataSource, userDataList, result } = this.props;
     return (
@@ -203,14 +219,23 @@ class UserSelectComp extends Component {
             <div className="basicWrapper userListWrapper">
               <div className="userList">
                 <List
-                  header="사용자 선택"
+                  header={
+                    <>
+                      사용자 선택 
+                      <AntdSearchInput
+                        className="input-search-sm" style={{ width: 150, marginLeft: 10 }}
+                        onPressEnter={e => this.onSearchUserByName(e.target.value)}
+                        onSearch={val => this.onSearchUserByName(val)}
+                      />
+                    </>
+                  }
                   size="small"
                   dataSource={userDataList || (result && result.userList && result.userList.list)}
                   bordered
                   renderItem={item => (
                     <List.Item>
                       <Checkbox onChange={this.onCheckUser} checked={this.state.checkUserList.filter(x => item.USER_ID === x).length > 0} value={item.USER_ID}>
-                        {item.NAME_KOR} [ {item.PSTN_NAME_KOR} ]
+                        {item.NAME_KOR}/{item.DEPT_NAME_KOR}[{item.PSTN_NAME_KOR}]
                       </Checkbox>
                     </List.Item>
                   )}
