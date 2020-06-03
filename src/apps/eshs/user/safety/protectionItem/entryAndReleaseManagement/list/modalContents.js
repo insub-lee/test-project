@@ -8,6 +8,7 @@ import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledPicker from 'commonStyled/Form/StyledPicker';
 import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
+// import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -22,7 +23,6 @@ class ModalContents extends React.Component {
     super(props);
     this.state = {
       modalVisible: false,
-      requestValue: {},
     };
   }
 
@@ -40,28 +40,27 @@ class ModalContents extends React.Component {
     const keyList = Object.keys(rowData);
     const valueList = Object.values(rowData);
     keyList.map((key, index) => changeFormData(id, key, valueList[index]));
-
-    this.setState({ requestValue: rowData }, handleSubModalClose);
+    handleSubModalClose();
   };
 
-  setRequestValue = valueObj => {
-    this.setState(prevState => ({
-      requestValue: Object.assign(prevState.requestValue, valueObj),
-    }));
-  };
+  // setRequestValue = valueObj => {
+  //   this.setState(prevState => ({
+  //     requestValue: Object.assign(prevState.requestValue, valueObj),
+  //   }));
+  // };
 
   handleInputChange = (key, value) => {
     const { sagaKey: id, changeFormData } = this.props;
-    const valueObj = { [key]: value };
+    // const valueObj = { [key]: value };
     changeFormData(id, key, value);
-    this.setRequestValue(valueObj);
+    // this.setRequestValue(valueObj);
   };
 
   handleDateChange = date => {
     const { sagaKey: id, changeFormData } = this.props;
-    const valueObj = { POSTING_DT: date };
+    // const valueObj = { POSTING_DT: date };
     changeFormData(id, 'POSTING_DT', date);
-    this.setRequestValue(valueObj);
+    // this.setRequestValue(valueObj);
   };
 
   saveAfterFunc = () => {
@@ -94,8 +93,8 @@ class ModalContents extends React.Component {
       handleModifyClick,
       handleDeleteClick,
     } = this;
-    const { modalVisible, requestValue } = this.state;
-    const { handleModalClose, saveTask, sagaKey: id, rowData, isModified } = this.props;
+    const { modalVisible } = this.state;
+    const { handleModalClose, saveTask, sagaKey: id, rowData, isModified, formData } = this.props;
     return (
       <>
         <div className="tableWrapper">
@@ -112,7 +111,7 @@ class ModalContents extends React.Component {
                     <AntdSelect
                       className="select-sm"
                       // defaultValue={rowData.SITE || requestValue.SITE || '317'}
-                      defaultValue={isModified ? rowData.SITE : requestValue.SITE || ''}
+                      defaultValue={isModified ? rowData.SITE : '317'}
                       onChange={value => handleInputChange('SITE', value)}
                       style={{ width: '100%' }}
                     >
@@ -124,43 +123,56 @@ class ModalContents extends React.Component {
                 <tr>
                   <th>품목</th>
                   <td>
-                    <AntdInput className="ant-input-sm" defaultValue={isModified ? rowData.KIND : ''} onClick={handleSubModalVisible} />
+                    <AntdInput
+                      className="ant-input-sm"
+                      defaultValue={isModified ? rowData.KIND : ''}
+                      value={isModified ? rowData.KIND : formData.KIND}
+                      onClick={isModified ? null : handleSubModalVisible}
+                    />
                   </td>
                 </tr>
                 <tr>
                   <th>모델</th>
                   <td>
-                    <AntdInput className="ant-input-sm" defaultValue={isModified ? rowData.MODEL : ''} />
+                    <AntdInput className="ant-input-sm" defaultValue={isModified ? rowData.MODEL : ''} value={isModified ? rowData.MODEL : formData.MODEL} />
                   </td>
                 </tr>
                 <tr>
                   <th>사이즈</th>
                   <td>
-                    <AntdInput className="ant-input-sm" defaultValue={isModified ? rowData.SIZE1 : ''} />
+                    <AntdInput className="ant-input-sm" defaultValue={isModified ? rowData.SIZE1 : ''} value={isModified ? rowData.SIZE1 : formData.SIZE1} />
                   </td>
                 </tr>
                 <tr>
                   <th>검정번호</th>
                   <td>
-                    <AntdInput className="ant-input-sm" defaultValue={isModified ? rowData.APP_NO : ''} />
+                    <AntdInput className="ant-input-sm" defaultValue={isModified ? rowData.APP_NO : ''} value={isModified ? rowData.APP_NO : formData.APP_NO} />
                   </td>
                 </tr>
                 <tr>
                   <th>Vendor</th>
                   <td>
-                    <AntdInput className="ant-input-sm" defaultValue={isModified ? rowData.VENDOR_NM : ''} />
+                    <AntdInput
+                      className="ant-input-sm"
+                      defaultValue={isModified ? rowData.VENDOR_NM : ''}
+                      value={isModified ? rowData.VENDOR_NM : formData.VENDOR_NM}
+                    />
                   </td>
                 </tr>
                 <tr>
                   <th>Maker</th>
                   <td>
-                    <AntdInput className="ant-input-sm" defaultValue={isModified ? rowData.MAKER_NM : ''} />
+                    <AntdInput
+                      className="ant-input-sm"
+                      defaultValue={isModified ? rowData.MAKER_NM : ''}
+                      value={isModified ? rowData.MAKER_NM : formData.MAKER_NM}
+                    />
                   </td>
                 </tr>
                 <tr>
                   <th>단위</th>
                   <td>
-                    <AntdInput className="ant-input-sm" defaultValue={isModified ? rowData.UNIT : ''} />
+                    <AntdInput className="ant-input-sm" defaultValue={isModified ? rowData.UNIT : ''} value={isModified ? rowData.UNIT : formData.UNIT} />
                   </td>
                 </tr>
                 <tr>
@@ -228,6 +240,7 @@ ModalContents.propTypes = {
   rowData: PropTypes.object,
   isModified: PropTypes.bool,
   submitExtraHandler: PropTypes.func,
+  formData: PropTypes.object,
 };
 
 ModalContents.defatulProps = {
