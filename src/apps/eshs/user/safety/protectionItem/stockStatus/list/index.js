@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Select } from 'antd';
 import PropTypes from 'prop-types';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
@@ -9,7 +9,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import moment from 'moment';
 import { debounce } from 'lodash';
 
-const AntdTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
 class List extends React.Component {
   constructor(props) {
