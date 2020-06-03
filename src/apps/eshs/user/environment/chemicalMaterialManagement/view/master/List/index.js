@@ -87,7 +87,7 @@ class List extends React.Component {
         params: requestValue,
       },
     ];
-    getCallDataHandler(id, apiArr);
+    getCallDataHandler(id, apiArr, this.setRowData);
   };
 
   render() {
