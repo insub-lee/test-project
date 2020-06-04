@@ -271,19 +271,19 @@ class List extends React.Component {
       <>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
-            <div>
-              <span>평가년도</span>
+            <div className="search-input-area">
+              <span className="text-label">평가년도</span>
               <AntdSelect className="select-mid mr5 ml5" defaultValue={moment().format('YYYY')} style={{ width: '10%' }}>
                 {yearList.map(year => (
                   <Select.Option value={year}>{year}년</Select.Option>
                 ))}
               </AntdSelect>
-              <span>부서코드</span>
+              <span className="text-label">부서코드</span>
               <AntdSelect className="select-mid mr5 ml5" style={{ width: '15%' }}></AntdSelect>
             </div>
           </StyledCustomSearchWrapper>
           <div style={{ padding: '10px' }}>
-            <AntdTable columns={columns} dataSource={[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]} scroll={{ x: true }} />
+            <AntdTable bordered columns={columns} dataSource={[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]} scroll={{ x: true }} />
             <Table columns={columns} dataSource={[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]} scroll={{ x: true }} />
           </div>
         </StyledContentsWrapper>
