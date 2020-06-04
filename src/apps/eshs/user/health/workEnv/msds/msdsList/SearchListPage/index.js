@@ -106,9 +106,9 @@ class ListPage extends Component {
   };
 
   handleOnRow = record => {
-    const { handleModalVisible, changeFormData } = this.props;
-    changeFormData('MsdsListMgt', 'selectedRowItemCode', record.ITEM_CD);
-    changeFormData('MsdsListMgt', 'selectedRowTaskSeq', record.TASK_SEQ);
+    const { handleModalVisible, changeFormData, listSagaKey } = this.props;
+    changeFormData(listSagaKey, 'selectedRowItemCode', record.ITEM_CD);
+    changeFormData(listSagaKey, 'selectedRowTaskSeq', record.TASK_SEQ);
     handleModalVisible();
   };
 

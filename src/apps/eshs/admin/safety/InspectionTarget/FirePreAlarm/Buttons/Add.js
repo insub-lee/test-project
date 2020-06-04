@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import request from 'utils/request';
 import { Button } from 'antd';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
-import { address } from 'apps/eshs/admin/safety/InspectionTarget/FireHydrant/internal_constants';
-import { VIEW_TYPE, META_SEQ } from '../internal_constants';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+import { address, VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/FirePreAlarm/internal_constants';
 
 const StyledButton = StyledAntdButton(Button);
 export default function Add({ sagaKey, detail, title, viewMetaSeqHandler, onCloseModalHandler, modalHandler, formData, taskSeq, workSeq, viewPageData }) {
@@ -21,24 +22,25 @@ export default function Add({ sagaKey, detail, title, viewMetaSeqHandler, onClos
             data: { ISSUE_YN, POSITION_NO, REG_DATE, ISSUE_NOTE, REG_USER_ID, CHIP_NO },
           }).then(({ response }) => {
             if (response?.result === 1) {
+              message.success(<MessageContent>Issue Note를 등록 하였습니다.</MessageContent>);
               onCloseModalHandler();
             } else {
-              alert('failed to insert Issue_NOTE');
+              message.error(<MessageContent>Issue Note 등록에 실패하였습니다.</MessageContent>);
             }
           });
         } else {
-          alert('REG_DATE is not string type');
+          message.error(<MessageContent>REG_DATE is not string type</MessageContent>);
         }
       } else {
-        alert('insert ISSUE_NOTE value');
+        message.error(<MessageContent>Issue 내용을 입력해 주십시오.</MessageContent>);
       }
     } else {
-      alert('insert ISSUE_YN value');
+      message.error(<MessageContent>조치/미조치 여부를 선택해 주십시오.</MessageContent>);
     }
   };
 
-  const shoudFireAPI = title => {
-    if (title === '저장') {
+  const shoudFireAPI = titleText => {
+    if (titleText === '저장') {
       insertIssueNote();
     } else {
       viewMetaSeqHandler(META_SEQ.INPUT_ISSUE_NOTE, VIEW_TYPE.INPUT);
@@ -53,5 +55,13 @@ export default function Add({ sagaKey, detail, title, viewMetaSeqHandler, onClos
   );
 }
 
-Add.propTypes = {};
+Add.propTypes = {
+  sagaKey: PropTypes.string,
+  title: PropTypes.string,
+  formData: PropTypes.object,
+  viewMetaSeqHandler: PropTypes.func,
+  onCloseModalHandler: PropTypes.func,
+  modalHandler: PropTypes.func,
+};
+
 Add.defaultProps = {};

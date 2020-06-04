@@ -5,9 +5,7 @@ import request from 'utils/request';
 import AntRadiobox from '../../../containers/store/components/uielements/radiobox.style';
 
 const RadioGroup = AntRadiobox(Radio.Group);
-/*
 
-*/
 const CustomValueRadioComp = props => {
   const [values, setValues] = useState([{ value: null, text: null }]);
   const [defaultValue, setDefaultValue] = useState('');
@@ -23,11 +21,11 @@ const CustomValueRadioComp = props => {
     COMP_FIELD,
     NAME_KOR,
     changeValidationData,
+    colData,
   } = props;
 
   useEffect(() => {
     const { VALUES, IS_CHANGEABLE, URL } = props.CONFIG.property;
-    const { colData } = props;
     if (VALUES instanceof Array) {
       setValues([...VALUES]);
     }
@@ -37,7 +35,9 @@ const CustomValueRadioComp = props => {
   }, []);
 
   useEffect(() => {
-    onChangeHandler(defaultValue);
+    if (defaultValue !== '') {
+      onChangeHandler(defaultValue);
+    }
   }, [defaultValue]);
 
   const usageHandler = value => {
@@ -55,6 +55,8 @@ const CustomValueRadioComp = props => {
           setDefaultValue(value);
         }
       });
+    } else {
+      onChangeHandler(value);
     }
   };
 
@@ -66,9 +68,9 @@ const CustomValueRadioComp = props => {
         changeValidationData(id, COMP_FIELD, value.trim() !== '', value.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
       }
       changeFormData(id, COMP_FIELD, value);
+      setDefaultValue(value);
     }
   };
-
   return (
     <div style={{ textAlign: 'center' }}>
       <RadioGroup value={defaultValue} onChange={e => (isChangeable === 'Y' ? usageHandler(e.target.value) : null)}>
