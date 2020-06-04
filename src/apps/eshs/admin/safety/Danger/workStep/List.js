@@ -252,7 +252,7 @@ class List extends Component {
             title: (
               <AntdInput
                 className="ant-input-inline ant-input-sm input-left"
-                style={{ width: '300px' }}
+                style={{ width: 150 }}
                 value={name}
                 onChange={e => this.onChangeValue('name', e.target.value)}
               />
@@ -273,7 +273,7 @@ class List extends Component {
               <>
                 <AntdInput
                   className="ant-input-inline ant-input-sm input-left mr5"
-                  style={{ width: '300px' }}
+                  style={{ width: 150 }}
                   value={desciption}
                   onChange={e => this.onChangeValue('desciption', e.target.value)}
                 />
@@ -318,16 +318,15 @@ class List extends Component {
             <Option value="N">미사용</Option>
           </AntdSelect>
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={this.selectCode}>
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.selectCode}>
               검색
             </StyledButton>
-            {listData.length > 0 && <ExcelDownloader dataList={listData} excelNm="작업단계관리" />}
+            {listData && listData.length > 0 && <ExcelDownloader dataList={listData} excelNm="작업단계관리" />}
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
-          className="tableWrapper"
-          rowKey={listData.NODE_ID}
-          key={listData.NODE_ID}
+          rowKey="NODE_ID"
+          key="NODE_ID"
           columns={columns}
           dataSource={listData || []}
           bordered

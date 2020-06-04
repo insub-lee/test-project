@@ -250,7 +250,7 @@ class List extends Component {
             title: (
               <AntdInput
                 className="ant-input-inline ant-input-sm input-left"
-                style={{ width: '300px' }}
+                style={{ width: 100 }}
                 value={name}
                 onChange={e => this.onChangeValue('name', e.target.value)}
               />
@@ -271,7 +271,7 @@ class List extends Component {
               <>
                 <AntdInput
                   className="ant-input-inline ant-input-sm input-left mr5"
-                  style={{ width: '300px' }}
+                  style={{ width: 100 }}
                   value={desciption}
                   onChange={e => this.onChangeValue('desciption', e.target.value)}
                 />
@@ -311,7 +311,7 @@ class List extends Component {
             onChange={value => this.onChangeSelect(value)}
           />
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={this.selectCode}>
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.selectCode}>
               검색
             </StyledButton>
             <ExcelDownloader dataList={totalData} excelNm="CMS 코드관리" />

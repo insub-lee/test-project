@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Table, Select, Input, message } from 'antd';
+import { Table, Select, Input, message, Popconfirm } from 'antd';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
@@ -95,43 +95,69 @@ class List extends Component {
 
   onChangeData = value => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { shapeList, unitList, transFormList } = this.state;
 
-    const submitData = {
-      ITEM_CD: value === 'I' ? '' : this.state.itemCd,
-      ITEM_NM: this.state.itemNm,
-      SHAPE: this.state.shape,
-      UNIT: this.state.unit,
-      IS_TRANS_FORM: this.state.isTransForm,
-    };
-    if (this.state.itemNm) {
-      if (value === 'U' && this.state.itemCd) {
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsWMItem', submitData, this.searchDataApi);
-      } else if (value === 'D' && this.state.itemCd) {
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsWMItem', submitData, this.searchDataApi);
-      } else if (value === 'I') {
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsWMItem', submitData, this.searchDataApi);
-      } else if (!this.state.itemCd) {
-        message.warning('품목코드가 올바르지 않습니다.');
+    if (shapeList && unitList && transFormList) {
+      const submitData = {
+        ITEM_CD: value === 'I' ? '' : this.state.itemCd,
+        ITEM_NM: this.state.itemNm,
+        SHAPE: this.state.shape || shapeList[0].NODE_ID,
+        UNIT: this.state.unit || unitList[0].NODE_ID,
+        IS_TRANS_FORM: this.state.isTransForm || transFormList[0].NODE_ID,
+      };
+      if (this.state.itemNm) {
+        if (value === 'U' && this.state.itemCd) {
+          submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsWMItem', submitData, this.modifyCallback);
+        } else if (value === 'D' && this.state.itemCd) {
+          submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsWMItem', submitData, this.deleteCallback);
+        } else if (value === 'I') {
+          submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsWMItem', submitData, this.insertCallback);
+        } else if (!this.state.itemCd) {
+          message.warning('품목코드가 올바르지 않습니다.');
+        }
+      } else {
+        message.warning('품목명을 올바르게 입력하시오.');
       }
+      this.onReset();
     } else {
-      message.warning('품목명을 올바르게 입력하시오.');
+      message.warning('폐이지에 오류가 있습니다 잠시 후 다시 시도해주세요.');
     }
-    this.onReset();
+  };
+
+  insertCallback = (id, response) => {
+    if (response.result === 1) {
+      message.success('등록이 완료되었습니다.');
+      this.searchDataApi();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
+  modifyCallback = (id, response) => {
+    if (response.result === 1) {
+      message.success('수정이 완료되었습니다.');
+      this.searchDataApi();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
+  deleteCallback = (id, response) => {
+    if (response.result === 1) {
+      message.success('삭제가 완료되었습니다.');
+      this.searchDataApi();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
   };
 
   onChangeValue = (name, value) => {
     this.setState({ [name]: value });
   };
 
-  onReset() {
-    this.setState({
-      itemCd: '',
-      itemNm: '',
-      shape: '',
-      unit: '',
-      isTransForm: '',
-    });
-  }
+  onReset = () => {
+    this.setState({ itemCd: '', itemNm: '', shape: '', unit: '', isTransForm: '' });
+  };
 
   selectedRecord = record => {
     this.setState({
@@ -249,9 +275,9 @@ class List extends Component {
                   <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('U')}>
                     수정
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('D')}>
-                    삭제
-                  </StyledButton>
+                  <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.onChangeData('D')} okText="Yes" cancelText="No">
+                    <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
+                  </Popconfirm>
                   <StyledButton className="btn-primary btn-sm" onClick={this.onReset}>
                     Reset
                   </StyledButton>
@@ -286,7 +312,6 @@ class List extends Component {
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
-          className="tableWrapper"
           rowKey={itemList && itemList.ITEM_CD}
           columns={columns}
           dataSource={itemList || []}

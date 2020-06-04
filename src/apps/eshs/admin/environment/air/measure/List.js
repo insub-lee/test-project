@@ -116,7 +116,7 @@ class List extends Component {
       <StyledContentsWrapper>
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">조회구분</span>
-          <AntdSelect className="select-sm" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.selectGubun}>
+          <AntdSelect className="select-mid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.selectGubun}>
             <Option value={1} key="selectGubun">
               측정항목
             </Option>
@@ -128,7 +128,7 @@ class List extends Component {
             <MonthPicker defaultValue={Moment(Moment(), 'YYYY-MM')} format="YYYY-MM" onChange={(date, dateStrings) => this.dateChange(dateStrings)} />
           </div>
           <span className="textLabel">측정회차(월)</span>
-          <AntdSelect className="select-sm mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
+          <AntdSelect className="select-mid mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
             <Option value={1} key="seq">
               1
             </Option>
@@ -137,10 +137,10 @@ class List extends Component {
             </Option>
           </AntdSelect>
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={() => this.isSearch()}>
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.isSearch()}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => this.isExcelUpload()}>
+            <StyledButton className="btn-primary btn-sm" onClick={() => this.isExcelUpload()}>
               엑셀 올리기
             </StyledButton>
           </StyledButtonWrapper>
