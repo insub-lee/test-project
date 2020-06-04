@@ -26,8 +26,8 @@ class List extends Component {
     super(props);
     this.state = {
       journalDate: moment(),
-      otherArr: [],
-      planArr: [],
+      otherArr: [{ CONTANTS: '', CONTANTS_TYPE: 1, UNIQUENESS: -1 }],
+      planArr: [{ CONTANTS: '', CONTANTS_TYPE: 2, UNIQUENESS: -1 }],
     };
   }
 
@@ -71,8 +71,14 @@ class List extends Component {
     const timedTeam = initData && initData.categoryMapList && initData.categoryMapList.filter(item => item.PARENT_NODE_ID === 2011);
     const workerStatus = (detailData && detailData.worker && detailData.worker.WORKER_STATUS) || '';
     const vacationer = (detailData && detailData.worker && detailData.worker.VACATIONER) || '';
-    const otherArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 1);
-    const planArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 2);
+    let otherArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 1);
+    let planArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 2);
+    if (otherArr.length < 1) {
+      otherArr = [{ CONTANTS: '', CONTANTS_TYPE: 1, UNIQUENESS: -1 }];
+    }
+    if (planArr.length < 1) {
+      planArr = [{ CONTANTS: '', CONTANTS_TYPE: 2, UNIQUENESS: -1 }];
+    }
     this.setState({ fixedTeam, timedTeam, listData: (listData && listData.list) || [], workerStatus, vacationer, otherArr, planArr });
   };
 
@@ -134,7 +140,7 @@ class List extends Component {
   // 기타사항 및 업무계획 Array 추가
   handlePlusArr = type => {
     const { otherArr, planArr } = this.state;
-    const nOtherArr = { CONTANTS: '', CONTANTS_TYPE: type };
+    const nOtherArr = { CONTANTS: '', CONTANTS_TYPE: type, UNIQUENESS: -1 };
     if (type === 1) {
       this.setState({ otherArr: otherArr.concat(nOtherArr) });
     } else {
@@ -147,11 +153,11 @@ class List extends Component {
     const { otherArr, planArr } = this.state;
     if (record.CONTANTS_TYPE === 1) {
       const nOtherArr = otherArr;
-      otherArr.splice(index, 1, { CONTANTS: text, CONTANTS_TYPE: record.CONTANTS_TYPE });
+      otherArr.splice(index, 1, { CONTANTS: text, CONTANTS_TYPE: record.CONTANTS_TYPE, UNIQUENESS: record.UNIQUENESS });
       this.setState({ otherArr: nOtherArr });
     } else {
       const nPlanArr = planArr;
-      nPlanArr.splice(index, 1, { CONTANTS: text, CONTANTS_TYPE: record.CONTANTS_TYPE });
+      nPlanArr.splice(index, 1, { CONTANTS: text, CONTANTS_TYPE: record.CONTANTS_TYPE, UNIQUENESS: record.UNIQUENESS });
       this.setState({ planArr: nPlanArr });
     }
   };
@@ -289,25 +295,13 @@ class List extends Component {
           <span>기타사항</span>
           <StyledButton onClick={() => this.handlePlusArr(1)}>[+1]</StyledButton>
         </div>
-        <AntdLineTable
-          className="tableWrapper"
-          columns={otherArrCol}
-          dataSource={otherArr && otherArr.length > 0 ? otherArr : [{ CONTANTS: '', CONTANTS_TYPE: 1 }]}
-          pagination={false}
-          footer={null}
-        />
+        <AntdLineTable className="tableWrapper" columns={otherArrCol} dataSource={otherArr} pagination={false} footer={null} />
 
         <div className="selSaveWrapper alignLeft">
           <span>업무계획</span>
           <StyledButton onClick={() => this.handlePlusArr(2)}>[+1]</StyledButton>
         </div>
-        <AntdLineTable
-          className="tableWrapper"
-          columns={planArrCol}
-          dataSource={planArr && planArr.length > 0 ? planArr : [{ CONTANTS: '', CONTANTS_TYPE: 2 }]}
-          pagination={false}
-          footer={null}
-        />
+        <AntdLineTable className="tableWrapper" columns={planArrCol} dataSource={planArr} pagination={false} footer={null} />
       </StyledContentsWrapper>
     );
   }

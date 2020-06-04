@@ -11,7 +11,6 @@ const StyledButton = styled.button`
   border-radius: 3px;
   color: #212529;
   text-align: center;
-  vertical-align: middle;
   transition: all 0.2s ease-in-out;
 
   &:focus {
@@ -29,25 +28,21 @@ const StyledButton = styled.button`
   &.btn-lg {
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
-    line-height: 1.5;
   }
 
   &.btn-sm {
     padding: 0.313rem 0.844rem;
     font-size: 0.75rem;
-    line-height: 1.5;
   }
 
   &.btn-xs {
     padding: 0.2rem 0.7rem;
     font-size: 0.75rem;
-    line-height: 1.5;
   }
 
   &.btn-xxs {
     padding: 1px 0.75rem;
     font-size: 0.7rem;
-    line-height: 1.5;
   }
 
   &.btn-primary {
@@ -94,7 +89,7 @@ const StyledButton = styled.button`
   }
 
   &.btn-link {
-    color: rgba(0,0,0,.65);
+    color: rgba(0, 0, 0, 0.65);
     background-color: transparent;
     border: 0;
     cursor: pointer;

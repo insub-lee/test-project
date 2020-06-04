@@ -6,6 +6,9 @@ const StyledSelect = Component => styled(Component)`
     &.mr5 {
       margin-right: 5px;
     }
+    &.ml5 {
+      margin-left: 5px;
+    }
     &.select-xs {
       .ant-select-selection {
         padding: 0.2rem 0.7rem;

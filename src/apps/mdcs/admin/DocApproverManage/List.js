@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import { Table, Button, Icon, Popconfirm } from 'antd';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 
 import Edit from './Edit';
 
@@ -107,15 +109,19 @@ class List extends Component {
       });
 
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <div style={{ marginBottom: '10px' }}>
-          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
-            <Icon type="form" /> 표준문서 결재자 관리
-          </p>
-        </div>
-        <Edit {...this.props}></Edit>
-        <AntdTable pagination={false} dataSource={totalData} columns={this.getTableColumns()}></AntdTable>
-      </div>
+      <>
+        <StyledHeaderWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 표준문서 결재자 관리
+            </p>
+          </div>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
+          <Edit {...this.props}></Edit>
+          <AntdTable pagination={false} dataSource={totalData} columns={this.getTableColumns()}></AntdTable>
+        </StyledContentsWrapper>
+      </>
     );
   }
 }

@@ -6,15 +6,16 @@ import moment from 'moment';
 import BizBuilderBase from 'components/BizBuilderBase';
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
-const AntdLineTable = StyledLineTable(Table);
-const AntdModal = StyledContentsModal(Modal);
+const AntdTable = StyledAntdTable(Table);
+const AntdModal = StyledAntdModal(Modal);
 const { TextArea } = Input;
 class DraftList extends Component {
   constructor(props) {
@@ -177,13 +178,15 @@ class DraftList extends Component {
 
     return (
       <>
-        <ContentsWrapper>
+        <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 기안함
             </p>
           </div>
-          <AntdLineTable
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
+          <AntdTable
             columns={this.getTableColumns()}
             dataSource={draftList.map(item => ({
               ...item,
@@ -193,9 +196,8 @@ class DraftList extends Component {
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
-            className="tableWrapper"
           />
-        </ContentsWrapper>
+        </StyledContentsWrapper>
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"
           title="내용 보기"
@@ -220,11 +222,11 @@ class DraftList extends Component {
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
                 {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
                   <>
-                    <StyledButton className="btn-primary btn-first" onClick={this.onHoldRelase}>
+                    <StyledButton className="btn-primary mr5" onClick={this.onHoldRelase}>
                       홀드해제
                     </StyledButton>
                     {profile && profile.USER_ID === selectedRow.DRAFTER_ID && (
-                      <StyledButton className="btn-primary btn-first" onClick={onClickModify}>
+                      <StyledButton className="btn-primary mr5" onClick={onClickModify}>
                         표지수정
                       </StyledButton>
                     )}
@@ -302,7 +304,7 @@ class DraftList extends Component {
             )}
             ModifyCustomButtons={({ onCloseCoverView, saveBeforeProcess, sagaKey, reloadId }) => (
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                <StyledButton className="btn-primary btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                <StyledButton className="btn-primary mr5" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
                   저장
                 </StyledButton>
                 <StyledButton className="btn-light" onClick={onCloseCoverView}>
@@ -334,7 +336,7 @@ class DraftList extends Component {
             </table>
           </StyledHtmlTable>
           <div style={{ width: '100%', textAlign: 'center', marginTop: '12px' }}>
-            <StyledButton className="btn-primary btn-first" onClick={this.handleReqApprove}>
+            <StyledButton className="btn-primary mr5" onClick={this.handleReqApprove}>
               저장
             </StyledButton>
             <StyledButton className="btn-light" onClick={() => setOpinionVisible(false)}>

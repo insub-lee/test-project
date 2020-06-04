@@ -353,6 +353,15 @@ class CompModal extends Component {
                   </Select>
                 )}
               </div>
+              <div className="popoverItem popoverItemInput">
+                <span className="spanLabel">검색 PlaceHolder 설정</span>
+                <Input
+                  placeholder="검색 PlaceHolder"
+                  style={{ width: '100%' }}
+                  defaultValue={comp.CONFIG.property.searchPlaceHolder}
+                  onChange={e => this.handleChangeViewConfig('searchPlaceHolder', e.target.value, 'property')}
+                />
+              </div>
               {comp &&
                 comp.CONFIG &&
                 comp.CONFIG.property &&

@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Table, Icon, Modal, Button } from 'antd';
 
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import ContentView from './ContentView';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 class PubDocList extends Component {
   // eslint-disable-next-line react/state-in-constructor
@@ -98,14 +99,16 @@ class PubDocList extends Component {
   render() {
     return (
       <>
-        <ContentsWrapper>
+        <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
               <Icon type="form" /> 접수/배포 대기함
             </p>
           </div>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
           <AntdTable dataSource={this.state.pubDocList} columns={this.columns} />
-        </ContentsWrapper>
+        </StyledContentsWrapper>
 
         <AntdModal
           width={700}

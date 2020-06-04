@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 
 import { List, Table, Row, Col, Checkbox, Button, Icon } from 'antd';
 
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import TaskTransferWrapper from './TaskTransferWrapper';
+
+const AntdTable = StyledAntdTable(Table);
 
 // Component Attribute 및 Event Method 정리
 // <UserSelect
@@ -118,12 +121,11 @@ class TaskTransfer extends Component {
               <span>{sourceList.length}건</span>
             </div>
             <div className="taskTransferList">
-              <Table
+              <AntdTable
                 className="taskTransferTable"
                 bordered
                 columns={columns}
                 dataSource={sourceList}
-                size="small"
                 pagination={false}
                 rowKey={record => record.TASK_SEQ}
                 rowSelection={leftRowSelection}
@@ -159,12 +161,11 @@ class TaskTransfer extends Component {
               <span>{selectedList.length}건</span>
             </div>
             <div className="taskTransferList">
-              <Table
+              <AntdTable
                 className="taskTransferTable"
                 bordered
                 columns={columns}
                 dataSource={selectedList}
-                size="small"
                 pagination={false}
                 rowKey={record => record.TASK_SEQ}
                 rowSelection={rightRowSelection}

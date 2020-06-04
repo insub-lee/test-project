@@ -3,17 +3,18 @@ import PropTypes from 'prop-types';
 
 import { Table, Input, Modal } from 'antd';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import View from './View';
 
 const AntdInputSearch = StyledSearchInput(Input.Search);
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModalPad(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 class List extends Component {
   state = {
@@ -27,7 +28,7 @@ class List extends Component {
   }
 
   getHealthChkResultCodeList = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
     const apiAry = [
       {
         key: 'resultCodeList',
@@ -36,12 +37,14 @@ class List extends Component {
         params: {},
       },
     ];
+    spinningOn();
     getCallDataHandler(id, apiAry, this.initState);
   }
 
   initState = () => {
-    const { result: { resultCodeList } } = this.props;
+    const { result: { resultCodeList }, spinningOff } = this.props;
     this.setState({ codeList: resultCodeList && resultCodeList.list ? resultCodeList.list : [] });
+    spinningOff();
   };
 
   onClickRow = row => {
@@ -130,14 +133,22 @@ class List extends Component {
   render() {
     return (
       <>
+        <AntdModal
+          width={400}
+          visible={this.state.isShow}
+          title="검진결과 항목"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <View selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} onSaveAfter={this.onSaveAfter} />
+        </AntdModal>
         <StyledContentsWrapper>
-          <div className="selSaveWrapper alignLeft">
-            {/* <AntdInputSearch className="input-search-mid mr5" style={{ width: 200 }} /> */}
-            <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary" onClick={this.onClickAdd}>추가</StyledButton>
-              {/* <ExcelDownloader /> */}
-            </StyledButtonWrapper>
-          </div>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <StyledButton className="btn-primary btn-sm" onClick={this.onClickAdd}>추가</StyledButton>
+            </div>
+          </StyledCustomSearchWrapper>
           <AntdTable
             columns={this.columns}
             dataSource={this.state.codeList}
@@ -149,16 +160,6 @@ class List extends Component {
             })}
           />
         </StyledContentsWrapper>
-        <AntdModal
-          width={500}
-          visible={this.state.isShow}
-          title="검진결과 항목"
-          onCancel={this.onCancelPopup}
-          destroyOnClose
-          footer={null}
-        >
-          <View selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} onSaveAfter={this.onSaveAfter} />
-        </AntdModal>
       </>
     );
   }

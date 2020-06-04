@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { TreeSelect, Button, Table, Popconfirm, Icon, Input, message } from 'antd';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
-const AntdLineTable = StyledLineTable(Table);
+const AntdLineTable = StyledAntdTable(Table);
 class List extends Component {
   state = {
     searchText: '',
@@ -318,55 +319,63 @@ class List extends Component {
     }
     console.debug('docCategoryTempListExtra', docCategoryTempListExtra);
     return (
-      <ContentsWrapper>
-        <div className="pageTitle">
-          <p>
-            <Icon type="form" /> 표준문서 템플릿관리
-          </p>
-        </div>
-        <div className="selSaveWrapper">
-          <TreeSelect
-            name="code1"
-            style={{ width: 300, marginRight: 10 }}
-            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-            allowClear
-            placeholder="분류체계를 선택해주세요"
-            treeData={categoryData}
-            value={this.state.categoryNodeId}
-            treeExpandedKeys={this.state.categoryNodeFullPath}
-            onChange={this.onCategoryTreeChange}
-            onTreeExpand={this.onCategoryExpend}
-          />
-          <TreeSelect
-            name="code2"
-            style={{ width: 300, marginRight: 10 }}
-            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-            allowClear
-            placeholder="기안양식을 선택해주세요"
-            treeData={docData}
-            value={this.state.docTemplateNodeId}
-            treeExpandedKeys={this.state.docTemplateNodeFullPath}
-            onChange={this.onDocTemplateTreeChange}
-            onTreeExpand={this.onDocTemplateExpend}
-          />
-          <StyledButton
-            className="btn-primary btn-sm"
-            style={{ display: this.state.actionType === 'I' ? 'inline' : 'none', marginRight: 10 }}
-            onClick={this.onSave}
-          >
-            저장하기
-          </StyledButton>
+      <>
+        <StyledHeaderWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 표준문서 템플릿관리
+            </p>
+          </div>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
+          <div className="select-save-wrapper">
+            <TreeSelect
+              name="code1"
+              style={{ width: 300, marginRight: 10 }}
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              allowClear
+              placeholder="분류체계를 선택해주세요"
+              treeData={categoryData}
+              value={this.state.categoryNodeId}
+              treeExpandedKeys={this.state.categoryNodeFullPath}
+              onChange={this.onCategoryTreeChange}
+              onTreeExpand={this.onCategoryExpend}
+            />
+            <TreeSelect
+              name="code2"
+              style={{ width: 300, marginRight: 10 }}
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              allowClear
+              placeholder="기안양식을 선택해주세요"
+              treeData={docData}
+              value={this.state.docTemplateNodeId}
+              treeExpandedKeys={this.state.docTemplateNodeFullPath}
+              onChange={this.onDocTemplateTreeChange}
+              onTreeExpand={this.onDocTemplateExpend}
+            />
+            <StyledButton className="btn-primary btn-sm" style={{ display: this.state.actionType === 'I' ? 'inline' : 'none' }} onClick={this.onSave}>
+              저장하기
+            </StyledButton>
 
-          <Button style={{ display: this.state.actionType === 'I' ? 'none' : 'inline', marginRight: 10 }} onClick={this.onUpdate}>
-            수정
-          </Button>
-          <Button onClick={this.onCancel} style={{ display: this.state.actionType === 'I' ? 'none' : 'inline', marginRight: 10 }}>
-            취소
-          </Button>
-        </div>
+            <StyledButton
+              className="btn-primary btn-sm ml5"
+              style={{ display: this.state.actionType === 'I' ? 'none' : 'inline', marginRight: 10 }}
+              onClick={this.onUpdate}
+            >
+              수정
+            </StyledButton>
+            <StyledButton
+              className="btn-light btn-sm ml5"
+              onClick={this.onCancel}
+              style={{ display: this.state.actionType === 'I' ? 'none' : 'inline', marginRight: 10 }}
+            >
+              취소
+            </StyledButton>
+          </div>
 
-        <AntdLineTable rowKey="DT_IDX" pagination={false} columns={this.columns} dataSource={totalData} className="tableWrapper" />
-      </ContentsWrapper>
+          <AntdLineTable rowKey="DT_IDX" pagination={false} columns={this.columns} dataSource={totalData} />
+        </StyledContentsWrapper>
+      </>
     );
   }
 }

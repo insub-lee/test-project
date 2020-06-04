@@ -16,6 +16,7 @@ const StyledSearchInput = Component => styled(Component)`
       border: 1px solid #e5e5e5;
       border-radius: 4px;
       transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+      vertical-align: middle;
     }
 
     &.ant-input-affix-wrapper:hover,
@@ -50,7 +51,6 @@ const StyledSearchInput = Component => styled(Component)`
     input {
       padding: 0.313rem 0.844rem;
       font-size: 0.75rem;
-      line-height: 1.5;
       height: auto;
     }
   }
@@ -59,7 +59,6 @@ const StyledSearchInput = Component => styled(Component)`
     input {
       padding: 0.2rem 0.7rem;
       font-size: 0.75rem;
-      line-height: 1.5;
       height: auto;
     }
   }

@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
-import { Input, InputNumber } from 'antd';
+import { Input, Select } from 'antd';
 
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+
 const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
 
 class HealthChkResultCodeView extends Component {
   state = {
@@ -32,7 +38,8 @@ class HealthChkResultCodeView extends Component {
           BASE_HIGH: '',
           BASE_LOW: '',
           ORDER_SEQ: '',
-          UNIT: ''
+          UNIT: '',
+          USE_YN: '',
         }
       });
     }
@@ -47,7 +54,7 @@ class HealthChkResultCodeView extends Component {
   }
 
   onSaveCode = () => {
-    const { sagaKey, submitHandlerBySaga, onSaveAfter } = this.props;
+    const { sagaKey, submitHandlerBySaga, onSaveAfter, spinningOn, spinningOff } = this.props;
     const submitData = {
       PARAM: {
         ...this.state.detail,
@@ -55,8 +62,11 @@ class HealthChkResultCodeView extends Component {
       }
     };
     
-    submitHandlerBySaga(sagaKey, (this.state.saveType === 'I' ? 'POST' : 'PUT'), `/api/eshs/v1/common/health/healthChkResultCode/${this.state.codeInfo.CHK_RESULT_ITEM_CD}`, submitData, (id, response) => {
+    spinningOn();
+    submitHandlerBySaga(sagaKey, (this.state.saveType === 'I' ? 'POST' : 'PUT'), `/api/eshs/v1/common/health/healthChkResultCode/${this.state.detail.CHK_RESULT_ITEM_CD}`, submitData, (id, response) => {
       if (response && response.result === 1) {
+        message.info(<MessageContent>저장하였습니다.</MessageContent>);
+        spinningOff();
         onSaveAfter();
       }
     });
@@ -67,70 +77,79 @@ class HealthChkResultCodeView extends Component {
     const { onCancelPopup } = this.props;
 
     return (
-      <>
+      <StyledContentsWrapper>
         <StyledHtmlTable>
           <table>
             <colgroup>
-              <col width="30%" />
-              <col width="70%" />
+              <col width="40%" />
+              <col width="60%" />
             </colgroup>
             <tbody>
               <tr>
                 <th>순서</th>
                 <td>
-                  <AntdInput value={detail.ORDER_SEQ} onChange={e => this.onChangeDetail('ORDER_SEQ', e.target.value)} />
+                  <AntdInput value={detail.ORDER_SEQ} className="ant-input-sm" onChange={e => this.onChangeDetail('ORDER_SEQ', e.target.value)} />
                 </td>
               </tr>
               <tr>
                 <th>코드</th>
                 <td>
-                  <AntdInput value={detail.CHK_RESULT_ITEM_CD} onChange={e => this.onChangeDetail('CHK_RESULT_ITEM_CD', e.target.value)} readOnly={saveType === 'U'} />
+                  <AntdInput value={detail.CHK_RESULT_ITEM_CD} className="ant-input-sm" onChange={e => this.onChangeDetail('CHK_RESULT_ITEM_CD', e.target.value)} readOnly={saveType === 'U'} />
                 </td>
               </tr>
               <tr>
                 <th>검진결과항목구분</th>
                 <td>
-                  <AntdInput value={detail.CHK_RESULT_ITEM_NM} onChange={e => this.onChangeDetail('CHK_RESULT_ITEM_NM', e.target.value)} />
+                  <AntdInput value={detail.CHK_RESULT_ITEM_NM} className="ant-input-sm" onChange={e => this.onChangeDetail('CHK_RESULT_ITEM_NM', e.target.value)} />
                 </td>
               </tr>
               <tr>
                 <th>검진결과항목명</th>
                 <td>
-                  <AntdInput value={detail.CHK_RESULT_ITEM_DESC} onChange={e => this.onChangeDetail('CHK_RESULT_ITEM_DESC', e.target.value)} />
+                  <AntdInput value={detail.CHK_RESULT_ITEM_DESC} className="ant-input-sm" onChange={e => this.onChangeDetail('CHK_RESULT_ITEM_DESC', e.target.value)} />
                 </td>
               </tr>
               <tr>
                 <th>기준값</th>
                 <td>
-                  <AntdInput value={detail.BASE_RESULT} onChange={e => this.onChangeDetail('BASE_RESULT', e.target.value)} />
+                  <AntdInput value={detail.BASE_RESULT} className="ant-input-sm" onChange={e => this.onChangeDetail('BASE_RESULT', e.target.value)} />
                 </td>
               </tr>
               <tr>
                 <th>최소기준값</th>
                 <td>
-                  <AntdInput value={detail.BASE_LOW} onChange={e => this.onChangeDetail('BASE_LOW', e.target.value)} />
+                  <AntdInput value={detail.BASE_LOW} className="ant-input-sm" onChange={e => this.onChangeDetail('BASE_LOW', e.target.value)} />
                 </td>
               </tr>
               <tr>
                 <th>최대기준값</th>
                 <td>
-                  <AntdInput value={detail.BASE_HIGH} onChange={e => this.onChangeDetail('BASE_HIGH', e.target.value)} />
+                  <AntdInput value={detail.BASE_HIGH} className="ant-input-sm" onChange={e => this.onChangeDetail('BASE_HIGH', e.target.value)} />
                 </td>
               </tr>
               <tr>
                 <th>단위</th>
                 <td>
-                  <AntdInput value={detail.UNIT} onChange={e => this.onChangeDetail('UNIT', e.target.value)} />
+                  <AntdInput value={detail.UNIT} className="ant-input-sm" onChange={e => this.onChangeDetail('UNIT', e.target.value)} />
+                </td>
+              </tr>
+              <tr>
+                <th>사용여부</th>
+                <td>
+                  <AntdSelect value={detail.USE_YN} className="select-sm" onChange={val => this.onChangeDetail('USE_YN', val)} style={{ width: '100%' }}>
+                    <AntdSelect.Option value="1">사용</AntdSelect.Option>
+                    <AntdSelect.Option value="0">사용안함</AntdSelect.Option>
+                  </AntdSelect>
                 </td>
               </tr>
             </tbody>
           </table>
         </StyledHtmlTable>
         <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-          <StyledButton className="btn-light mr5" onClick={onCancelPopup}>닫기</StyledButton>
-          <StyledButton className="btn-primary" onClick={this.onSaveCode}>저장</StyledButton>
+          <StyledButton className="btn-light btn-sm mr5" onClick={onCancelPopup}>닫기</StyledButton>
+          <StyledButton className="btn-primary btn-sm" onClick={this.onSaveCode}>저장</StyledButton>
         </StyledButtonWrapper>
-      </>
+      </StyledContentsWrapper>
     );
   }
 }

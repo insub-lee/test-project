@@ -128,11 +128,17 @@ const StyleDataGrid = styled.div`
                 border-bottom-color: #dadbdb;
                 color: #404040;
                 text-align: center;
-
+                /* 
                 &:nth-child(2),
                 &:nth-child(3),
                 &:nth-child(4),
                 &:nth-child(5) {
+                  text-align: left;
+                  padding: 0 10px;
+                }
+                */
+                &:nth-child(2),
+                &:nth-child(3) {
                   text-align: left;
                   padding: 0 10px;
                 }
