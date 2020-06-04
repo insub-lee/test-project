@@ -241,7 +241,7 @@ class List extends React.Component {
   setDataSource = () => {
     const { extraApiData } = this.props;
     const detailIdList = (extraApiData.toolboxList && extraApiData.toolboxList.list && extraApiData.toolboxList.list.map(item => item.DETAIL_ID)) || [];
-    detailIdList.map(id => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { [id]: {} }) })));
+    // detailIdList.map(id => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { [id]: {} }) })));
     this.setState({
       dataSource: (extraApiData.toolboxList && extraApiData.toolboxList.list) || [],
     });
@@ -285,22 +285,16 @@ class List extends React.Component {
   };
 
   handleInputChange = (key, id, value) => {
+    const valueObj = { [id + key.substring(1)]: { DETAIL_ID: id, COLUMN: key, VALUE: value } };
     this.setState(prevState => {
-      const tempValue = prevState.requestValue;
-      Object.assign(tempValue[id], { DETAIL_ID: id, [key]: value });
-      // Object.assign(tempValue[id], { DETAIL_ID: id, [key]: key, [value]: value });
-      return { requestValue: tempValue };
+      return { requestValue: Object.assign(prevState.requestValue, valueObj) };
     });
   };
 
   handleOnSaveClick = () => {
     const { requestValue } = this.state;
     const { sagaKey: id, submitExtraHandler } = this.props;
-    const valueArr = Object.entries(requestValue).map(value => value[1]);
-    const requestArr = [];
-    valueArr.map(value => requestArr.push(Object.entries(value)));
-    console.debug(requestArr, { value: requestArr });
-    submitExtraHandler(id, 'PUT', `/api/eshs/v1/common/protectiontoolbox`, { value: requestArr }, () => message.success('수정되었습니다.'));
+    submitExtraHandler(id, 'PUT', `/api/eshs/v1/common/protectiontoolbox`, { requestValue: Object.values(requestValue) }, () => message.success('수정되었습니다.'));
   };
 
   render() {
