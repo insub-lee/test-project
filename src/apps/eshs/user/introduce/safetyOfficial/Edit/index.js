@@ -77,9 +77,9 @@ class Edit extends Component {
     };
     if (formData && formData.OFFICER_NO && formData.KEEPER_NO && formData.MANAGER_NO) {
       if (formData.actionType.trim() === 'U') {
-        submitHandlerBySaga(sagaKey, 'PUT', '/api/eshs/v1/common/eshsproposalofficer', submitData, this.onSaveComplete);
+        submitHandlerBySaga(sagaKey, 'PUT', '/api/eshs/v1/common/eshsproposalofficer', submitData, this.modifyCallback);
       } else {
-        submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/eshsproposalofficer', submitData, this.onSaveComplete);
+        submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/eshsproposalofficer', submitData, this.insertCallback);
       }
       changeFormData(sagaKey, 'actionType', 'I');
     } else {
@@ -87,10 +87,38 @@ class Edit extends Component {
     }
   };
 
+  insertCallback = (id, response) => {
+    if (response.result === 1) {
+      message.success('등록이 완료되었습니다.');
+      this.onSaveComplete();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
+  modifyCallback = (id, response) => {
+    if (response.result === 1) {
+      message.success('수정이 완료되었습니다.');
+      this.onSaveComplete();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
   onRemoveDo = () => {
-    const { sagaKey: id, submitHandlerBySaga, formData, onComplete } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, formData } = this.props;
     const param = { PARAM: { ...formData } };
-    submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsproposalofficer', param, onComplete);
+    submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsproposalofficer', param, this.deleteCallback);
+  };
+
+  deleteCallback = (id, response) => {
+    const { onComplete } = this.props;
+    if (response.result === 1) {
+      message.success('삭제가 완료되었습니다.');
+      onComplete();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
   };
 
   onSaveComplete = id => {
