@@ -109,7 +109,6 @@ View.defaultProps = {
   sagaKey: '',
   defaultUser: '',
   getCallDataHandler: () => {},
-  userSearch: false,
   changeFormData: () => {},
   setFormData: () => {},
   formData: {},

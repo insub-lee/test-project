@@ -5,7 +5,7 @@ import { Input, Select } from 'antd';
 
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import userSearchModal from 'apps/eshs/common/userSearchModal';
+import UserSearchModal from 'apps/eshs/common/userSearchModal';
 import moment from 'moment';
 
 const currentYear = moment(new Date()).format('YYYY');
@@ -61,19 +61,21 @@ class SearchBar extends Component {
   };
 
   render() {
-    const { formData } = this.props;
+    const { formData, userSearch, profile } = this.props;
     const { years } = this.state;
     const userInfo = (formData && formData.userInfo) || {};
-    const empNo = (formData && formData.userInfo && formData.userInfo.EMP_NO) || '';
-    console.debug('empNo ', empNo);
+    const empNo = (profile && profile.EMP_NO) || '';
     return (
       <>
         <div className="search-input-area">
-          <div style={{ display: 'inline-block' }}>
-            <userSearchModal visible colData={empNo} onClickRow={record => this.handleOnChangeSearchData('userId', record.USER_ID)} />
-          </div>
-          <b className="text-label">{` / ${userInfo.DEPT_NAME_KOR || ''} / `}</b>
-          <b className="text-label">{`${userInfo.NAME_KOR || ''} ${userInfo.PSTN_NAME_KOR || ''}`}</b>
+          {userSearch ? (
+            <div style={{ display: 'inline-block' }}>
+              <UserSearchModal visible colData={empNo} onClickRow={record => this.handleOnChangeSearchData('userId', record.USER_ID)} />
+            </div>
+          ) : (
+            <span className="text-label">{userInfo.EMP_NO || ''}</span>
+          )}
+          <span className="text-label">{`/ ${userInfo.DEPT_NAME_KOR || ''} / ${userInfo.NAME_KOR || ''} ${userInfo.PSTN_NAME_KOR || ''}`}</span>
           &nbsp; &nbsp;
           <span className="text-label">년도</span>
           &nbsp;
@@ -106,6 +108,8 @@ SearchBar.propTypes = {
   formData: PropTypes.object,
   viewStart: PropTypes.func,
   spinningOn: PropTypes.func,
+  userSearch: PropTypes.bool,
+  profile: PropTypes.object,
 };
 SearchBar.defaultProps = {
   sagaKey: '',
