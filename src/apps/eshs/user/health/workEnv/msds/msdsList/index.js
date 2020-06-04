@@ -32,10 +32,11 @@ class MsdsMgt extends Component {
 
   render() {
     const { searchListVisible } = this.state;
+    const { searchListSagaKey, sagaKey } = this.props;
     return (
       <>
         <BizBuilderBase
-          sagaKey="MsdsListMgt"
+          sagaKey={sagaKey}
           workSeq={3161}
           viewType="LIST"
           loadingComplete={this.loadingComplete}
@@ -44,7 +45,8 @@ class MsdsMgt extends Component {
         />
         <AntdModal title="MSDS 검색" visible={searchListVisible} width={1000} height={600} onCancel={this.handleModalVisible} footer={[null]}>
           <BizBuilderBase
-            sagaKey="MsdsListSearchList"
+            sagaKey={searchListSagaKey}
+            listSagaKey={sagaKey}
             workSeq={3161}
             viewType="LIST"
             loadingComplete={this.loadingComplete}
@@ -58,8 +60,14 @@ class MsdsMgt extends Component {
   }
 }
 
-MsdsMgt.propTypes = {};
+MsdsMgt.propTypes = {
+  searchListSagaKey: PropTypes.string,
+  sagaKey: PropTypes.string,
+};
 
-MsdsMgt.defaultProps = {};
+MsdsMgt.defaultProps = {
+  searchListSagaKey: 'MsdsListSearchList',
+  sagaKey: 'MsdsListMgt',
+};
 
 export default MsdsMgt;
