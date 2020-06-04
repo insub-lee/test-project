@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
-import { Table, Input, TreeSelect, Select, Modal, Popconfirm } from 'antd';
+import { Table, Input, TreeSelect, Select, Modal, Popconfirm, message } from 'antd';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
@@ -13,6 +13,9 @@ import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import { EXCEL_DOWNLOAD_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import { isJSON } from 'utils/helpers';
 
 import moment from 'moment';
 
@@ -46,11 +49,12 @@ class List extends Component {
     this.state = {
       isModal: false,
       searchType: 'NAME',
+      removeList: [],
     };
   }
 
   componentDidMount() {
-    const { sagaKey: id, getExtraApiData, changeSearchData, getListData, changeFormData } = this.props;
+    const { sagaKey: id, getExtraApiData, changeSearchData, getListData, changeFormData, workInfo } = this.props;
     const apiAry = [
       {
         key: 'treeSelectData',
@@ -70,6 +74,28 @@ class List extends Component {
       YearOptions.push(year);
     }
     this.setState({ YearOptions });
+    let btnTex = '';
+    let fileName = '';
+    let sheetName = '';
+    let excelColumns = [];
+    let fields = [];
+
+    if (workInfo && workInfo.OPT_INFO) {
+      workInfo.OPT_INFO.forEach(opt => {
+        if (opt.OPT_SEQ === EXCEL_DOWNLOAD_OPT_SEQ && opt.ISUSED === 'Y') {
+          if (isJSON(opt.OPT_VALUE)) {
+            const ObjOptVal = JSON.parse(opt.OPT_VALUE);
+            const { columnInfo } = ObjOptVal;
+            btnTex = ObjOptVal.btnTitle || '엑셀받기';
+            fileName = ObjOptVal.fileName || 'excel';
+            sheetName = ObjOptVal.sheetName || 'sheet1';
+            excelColumns = columnInfo.columns || [];
+            fields = columnInfo.fields || [];
+          }
+        }
+      });
+      this.setState({ btnTex, fileName, sheetName, excelColumns, fields });
+    }
   }
 
   onChange = (name, value) => {
@@ -118,7 +144,14 @@ class List extends Component {
         url: `/api/eshs/v1/common/AllEshsUsers?MODAL_SEARCH_TYPE=${searchType}&KEYWORD=${keyword}`,
       },
     ];
-    getExtraApiData(id, apiAry);
+    getExtraApiData(id, apiAry, this.modalDataSet);
+  };
+
+  modalDataSet = () => {
+    const {
+      extraApiData: { userModalData },
+    } = this.props;
+    this.setState({ userModalData: userModalData.users });
   };
 
   onSelectChange = selectedRowKeys => {
@@ -126,8 +159,23 @@ class List extends Component {
     setListSelectRowKeys(sagaKey, selectedRowKeys);
   };
 
+  removeMultiTask = () => {
+    const { sagaKey: id, getExtraApiData } = this.props;
+    const { removeList } = this.state;
+    const apiAry = [
+      {
+        key: 'userModalData',
+        type: 'POST',
+        url: `/api/builder/v1/work/taskContentsList/-1`,
+        params: { PARAM: { WORK_SEQ: 9201, taskList: removeList }, BUILDER: 'deleteMultiTask' },
+      },
+    ];
+    getExtraApiData(id, apiAry, this.modalDataSet);
+  };
+
   onReset = () => {
     const { changeFormData, sagaKey: id, changeSearchData } = this.props;
+    this.onCancel();
     changeFormData(id, 'DE_YEAR', null);
     changeFormData(id, 'EMP_NO', null);
     changeFormData(id, 'SELECED_TREE', null);
@@ -152,23 +200,71 @@ class List extends Component {
   };
 
   onCancel = () => {
-    this.setState({ isModal: false, isInsertModal: false });
+    this.setState({ isModal: false, isInsertModal: false, selectedRowKeys: [], userModalData: [] });
   };
 
-  // onInsertChange = record => {
-  //   console.debug('record : ', record);
-  // };
+  onInsertChange = (record, value) => {
+    const { userModalData } = this.state;
+    const {
+      extraApiData: { treeSelectData },
+    } = this.props;
+    const stepTree = treeSelectData && treeSelectData.categoryMapList;
+    const sdivNode = stepTree.find(item => item.NODE_ID === value);
+    const deptNode = stepTree.find(item => item.NODE_ID === sdivNode.NODE_ID);
+    const temp = {
+      SDIV_NODE_ID: value,
+      DEPT_NODE_ID: deptNode.NODE_ID,
+      TEL_NO: record.TEL,
+      JIKWI: record.PSTN,
+      DEPT_CD: deptNode.CODE,
+      DEPT_NM: deptNode.NAME_KOR,
+      SDIV_CD: sdivNode.CODE,
+      SDIV_NM: sdivNode.NAME_KOR,
+      EMP_ID: record.USER_ID,
+      EMP_NM: record.NAME,
+      EMP_NO: record.EMPLOYEE_NUM,
+    };
+    const nData = userModalData.map(item => (item.USER_ID === record.USER_ID ? { ...item, ...temp } : { ...item }));
+    return this.setState({ userModalData: nData });
+  };
 
-  // onSave = () =>{
-  //   const { saveTask } = this.props;
+  onSave = () => {
+    const { sagaKey: id, getExtraApiData, formData } = this.props;
+    const { userModalData, selectedRowKeys } = this.state;
+    const nUserData = selectedRowKeys.map(item => userModalData.find(element => item === element.USER_ID));
+    const apiAry = [
+      {
+        key: 'insertParticipant',
+        type: 'POST',
+        url: '/api/eshs/v1/common/paricipant',
+        params: { PARAM: { ...formData, PARICIPANT_ARRAY: nUserData } },
+      },
+    ];
+    getExtraApiData(id, apiAry, this.saveAfter);
+  };
 
-  // }
+  saveAfter = () => {
+    const { sagaKey: id, getListData } = this.props;
+    this.onReset();
+    getListData(id, 9201);
+  };
+
+  onSelectChangeModal = selectedRowKeys => {
+    const { userModalData } = this.state;
+    const effectiveness = userModalData.findIndex(item => !!item.SDIV_NODE_ID && item.USER_ID === selectedRowKeys[selectedRowKeys.length - 1]);
+    if (effectiveness !== -1) {
+      const nData = userModalData.map(item => (item.USER_ID === selectedRowKeys ? { ...item } : { ...item }));
+      this.setState({ selectedRowKeys, userModalData: nData });
+    } else {
+      message.warning('분류를 먼저 선택해주세요');
+    }
+  };
 
   render() {
-    const { YearOptions } = this.state;
+    const { YearOptions, userModalData, selectedRowKeys, fileName, btnTex, sheetName, fields, excelColumns } = this.state;
     const { listData, formData, listSelectRowKeys, removeMultiTask } = this.props;
     const {
-      extraApiData: { treeSelectData, userModalData },
+      extraApiData: { treeSelectData },
       getListData,
       sagaKey: id,
     } = this.props;
@@ -177,8 +273,17 @@ class List extends Component {
     const insertAsTree = categoryMapListAsTree && categoryMapListAsTree.map(item => ({ ...item, SDIV_NODE_ID: 1596 }));
     const treeData = (categoryMapListAsTree && getCategoryMapListAsTree(categoryMapListAsTree, 1831)) || [];
     const modalTree = (insertAsTree && getCategoryMapListAsTree(insertAsTree, 1596, 4)) || [];
-    console.debug('SDIV_NODE_ID : ', modalTree);
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectChangeModal,
+      // onChange: () => this.setState({ selectedRowKeys }),
+    };
     const columns = [
+      {
+        title: '',
+        align: 'center',
+        dataIndex: 'TASK_SEQ',
+      },
       {
         title: '년도',
         align: 'center',
@@ -294,7 +399,7 @@ class List extends Component {
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
             treeData={modalTree || []}
             placeholder="Please select"
-            onChange={() => this.onInsertChange(record)}
+            onChange={value => this.onInsertChange(record, value)}
           />
         ),
       },
@@ -340,12 +445,22 @@ class List extends Component {
               <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onReset}>
                 Reset
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm">엑셀받기</StyledButton>
+              <ExcelDownloadComp
+                isBuilder={false}
+                fileName={fileName || 'excel'}
+                className="workerExcelBtn"
+                btnText={btnTex || '엑셀받기'}
+                sheetName={sheetName || 'sheet1'}
+                columns={excelColumns || []}
+                fields={fields || []}
+                listData={listData || []}
+              />
             </StyledButtonWrapper>
           </div>
           <AntdTable
             className="tableWrapper"
-            rowKey={listData && `${listData.DE_YEAR}${listData.SDIV_CD}${listData.EMP_NO}`}
+            rowKey="TASK_SEQ"
+            key="TASK_SEQ"
             columns={columns}
             dataSource={listData || []}
             bordered
@@ -385,22 +500,30 @@ class List extends Component {
                     className="tableWrapper"
                     columns={userInsertCol}
                     bordered
-                    rowKey={userModalData && userModalData.users && `${userModalData.users.USER_ID}`}
-                    dataSource={(userModalData && userModalData.users) || []}
-                    footer={() => <span>{`${(userModalData && userModalData.users && userModalData.users.length) || 0} 건`}</span>}
+                    rowKey="USER_ID"
+                    dataSource={userModalData || []}
+                    footer={() => <span>{`${(userModalData && userModalData.length) || 0} 건`}</span>}
+                    rowSelection={rowSelection}
+                    scroll={{ y: 455 }}
+                    pagination={false}
                   />
-                  <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onSave}>
-                    추가
-                  </StyledButton>
+                  <StyledButtonWrapper className="btn-wrap-center">
+                    <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onSave}>
+                      저장
+                    </StyledButton>
+                    <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onReset}>
+                      취소
+                    </StyledButton>
+                  </StyledButtonWrapper>
                 </>
               ) : (
                 <AntdTable
                   className="tableWrapper"
                   columns={userColumns}
                   bordered
-                  rowKey={userModalData && userModalData.users && `${userModalData.users.USER_ID}`}
-                  dataSource={(userModalData && userModalData.users) || []}
-                  footer={() => <span>{`${(userModalData && userModalData.users && userModalData.users.length) || 0} 건`}</span>}
+                  rowKey="USER_ID"
+                  dataSource={userModalData || []}
+                  footer={() => <span>{`${(userModalData && userModalData.length) || 0} 건`}</span>}
                   onRow={record => ({
                     onClick: () => {
                       this.onRowModal(record);
@@ -419,6 +542,7 @@ class List extends Component {
 List.propTypes = {
   sagaKey: PropTypes.string,
   extraApiData: PropTypes.object,
+  workInfo: PropTypes.object,
   formData: PropTypes.object,
   getExtraApiData: PropTypes.func,
   changeSearchData: PropTypes.func,

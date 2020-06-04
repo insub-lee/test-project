@@ -23,10 +23,6 @@ export default function Status({
       className="btn-primary btn-first"
       onClick={() => {
         clickStatus();
-        // if (moveTo) {
-        // viewMetaSeqHandler(moveTo, viewType);
-        // modalHandler(true);
-        // }
       }}
     >
       현황

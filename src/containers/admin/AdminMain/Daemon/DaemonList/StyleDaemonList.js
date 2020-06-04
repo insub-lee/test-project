@@ -175,7 +175,7 @@ const StyleDaemonList = styled.div`
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    text-align: center;
+    /* text-align: center; */
   }
 
   // 링크 표시

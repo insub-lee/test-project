@@ -3,68 +3,75 @@ import styled from 'styled-components';
 const primaryColor = '#636a78';
 
 const StyledAntdTable = Component => styled(Component)`
-  .ant-table .ant-table-content {
-    .ant-table-body {
-      border-top: 1px solid #bbb;
-      border-bottom: 1px solid #eee;
-      table {
-        border: 0;
-        .ant-table-tbody > tr > td,
-        .ant-table-thead > tr > th {
+  /* default table style */
+  table {
+    border-radius: 0;
+    border-top: 1px solid #bbb;
+    border-bottom: 1px solid #eee;
+
+    .ant-table-thead {
+      tr {
+        th {
+          background-color: #fff;
+          color: #333;
+          border-bottom: 1px solid #e4e4e4;
+          padding: 8px 8px;
           border-radius: 0;
           font-size: 12px;
         }
-        .ant-table-thead > tr > th {
-          background-color: #fff;
-          color: #000;
+
+        &:not(:last-child) > th[colspan] {
           border-bottom: 1px solid #e4e4e4;
-          padding: 8px 8px;
         }
-        .ant-table-tbody > tr > td {
+
+        &:first-child > th:first-child {
+          border-radius: 0;
+        }
+      }
+    }
+
+    .ant-table-tbody {
+      tr {
+        td {
           padding: 6px 8px;
+          border-radius: 0;
+          font-size: 12px;
+          cursor: pointer;
+          border-bottom: 0;
         }
-        .ant-table-tbody > tr {
-          &.ant-table-row-selected {
-            td {
-              background: #fffbf1;
-            }
-          }
+
+        &:nth-child(even) > td {
+          background-color: #f6f8fa;
+        }
+
+        &.ant-table-row-selected {
           td {
-            cursor: pointer;
+            background-color: #fffbf1;
           }
         }
       }
     }
+  }
 
-    .ant-table-scroll .ant-table-header {
-      border-top: 1px solid #bbb;
-      .ant-table-thead > tr > th {
-        padding: 6px 8px;
-        border-radius: 0;
-        font-size: 12px;
-        border-right: 0;
-        background-color: #fff;
-        color: #000;
-        border-bottom: 1px solid #e4e4e4;
-        font-size: 0.85rem;
-      }
-    }
-
+  .ant-table {
     .ant-table-placeholder {
       border-radius: 0;
-      border: 0;
-      border-bottom: 1px solid #e8e8e8;
+      border-top: 0;
+
       &.ant-table-placeholder-none {
         display: none;
       }
     }
+
     .ant-table-footer {
-      border: 0;
+      border-radius: 0;
+      border-top: 0;
       border-bottom: 1px solid #e4e4e4;
       font-size: 12px;
       color: #666;
       text-align: center;
       padding: 5px;
+
       &:before {
         top: 0;
       }
@@ -78,53 +85,12 @@ const StyledAntdTable = Component => styled(Component)`
       }
     }
   }
-  /* table 끝 */
 
-  /* bordered 옵션 시 */
-  .ant-table-bordered .ant-table-body > table {
-    border: 0;
-  }
-
-  .ant-table-bordered .ant-table-thead > tr > th,
-  .ant-table-bordered .ant-table-tbody > tr > td {
-    &:last-child {
-      border-right: 0;
-    }
-  }
-
-  /* table fixed */
-  &.ant-table-checkbox .ant-table-layout-fixed {
-    .ant-table-content {
-      .ant-table-fixed-left {
-        .ant-table-fixed .ant-table-thead tr th,
-        .ant-table-body-outer .ant-table-body-inner .ant-table-fixed .ant-table-tbody tr td {
-          padding: 6px 8px;
-        }
-      }
-
-      .ant-table-scroll .ant-table-header,
-      .ant-table-body {
-        border-top: 0;
-      }
-    }
-  }
-
-  /* thead */
-  .ant-table-thead > tr:first-child > th:first-child {
-    border-top-left-radius: 0;
-  }
-
-  .ant-table-thead > tr:first-child > th:last-child {
-    border-top-right-radius: 0;
-  }
-
-  /* tbody */
-  .ant-table-tbody > tr {
-    &:nth-child(even) > td {
-      background-color: #f6f8fa;
-    }
-    > td {
-      border-bottom: 0;
+  /* bordered table style */
+  .ant-table-bordered {
+    table {
+      border-top: 1px solid #bbb;
+      border-bottom: 1px solid #eee;
     }
   }
 
