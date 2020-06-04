@@ -80,22 +80,14 @@ class List extends Component {
     const {
       result: { measure },
     } = this.props;
-    this.setState({ measureList: (measure && measure.list) || [], stackList: (measure && measure.stackList) || [] }, this.dataSet);
+    if (measure && measure.list && measure.list.length <= 0) {
+      message.warning('측정된 데이터가 없습니다.');
+    }
+    this.setState({ measureList: (measure && measure.list) || [], stackList: (measure && measure.stackList) || [] });
   };
 
   onChangeState = (name, value) => {
-    if (name === 'selectGubun') {
-      this.setState(
-        {
-          [name]: value,
-        },
-        this.dataSet,
-      );
-    } else {
-      this.setState({
-        [name]: value,
-      });
-    }
+    this.setState({ [name]: value });
   };
 
   onChangeModal = () => {

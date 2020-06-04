@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import Moment from 'moment';
 
 import { Table, Select, message } from 'antd';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import ExcelDownloader from './Excel';
 
 const AntdSelect = StyledSelect(Select);

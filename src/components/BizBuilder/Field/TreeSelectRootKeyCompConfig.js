@@ -10,7 +10,7 @@ const { Option } = Select;
 const getCategoryMapListAsTree = (flatData, flag) =>
   getTreeFromFlatData({
     flatData: flatData.map(item => ({
-      title: item.NAME_KOR,
+      title: `${item.NAME_KOR}(${item.NODE_ID})`,
       value: item.NODE_ID,
       key: item.NODE_ID,
       parentValue: item.PARENT_NODE_ID,
