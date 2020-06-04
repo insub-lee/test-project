@@ -67,7 +67,6 @@ class ChkItemResultTable extends Component {
     const list = (data && data.list) || [];
     const listLen = list.length;
     let currDesc = '';
-    console.debug('itemGroup ', itemGroup);
     return (
       <table className="table-border">
         <colgroup>
