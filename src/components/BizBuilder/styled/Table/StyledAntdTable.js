@@ -94,6 +94,8 @@ const StyledAntdTable = Component => styled(Component)`
     }
   }
 
+  /* scroll table style */
+
   /* checkbox */
   .ant-checkbox-indeterminate .ant-checkbox-inner:after {
     background-color: ${primaryColor};
