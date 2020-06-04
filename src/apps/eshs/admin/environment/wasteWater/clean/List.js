@@ -191,7 +191,7 @@ class List extends Component {
             </StyledButton>
           </StyledButtonWrapper>
         </div>
-        <StyledHtmlTable className="tableWrapper">
+        <StyledHtmlTable className="selSaveWrapper alignLeft">
           <ImageUploader
             accept="image/jpeg, image/png"
             action="/upload"
@@ -204,7 +204,6 @@ class List extends Component {
           />
         </StyledHtmlTable>
         <AntdLineTable
-          className="tableWrapper tableCodeWrapper"
           bordered
           rowKey={dataSource && dataSource.NODE_ID}
           columns={columns}
