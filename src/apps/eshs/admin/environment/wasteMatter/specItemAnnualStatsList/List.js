@@ -90,10 +90,6 @@ class List extends Component {
     });
   };
 
-  excel = () => {
-    message.info('개발중입니다.');
-  };
-
   render() {
     const { columns } = this.props;
     const { siteList, specItems, arrayYear } = this.state;
@@ -118,7 +114,7 @@ class List extends Component {
               ))}
           </AntdSelect>
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={() => this.searchData()}>
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.searchData()}>
               검색
             </StyledButton>
             <ExcelDownloader dataList={specItems} excelNm="지정폐기물 년간 현황" />

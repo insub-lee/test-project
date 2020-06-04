@@ -228,7 +228,7 @@ class List extends Component {
                     {useYN === 'Y' ? (
                       '사용'
                     ) : (
-                      <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('R')}>
+                      <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('R')}>
                         삭제 취소
                       </StyledButton>
                     )}
@@ -241,6 +241,7 @@ class List extends Component {
             dataIndex: 'USE_YN',
             className: 'th-form',
             align: 'center',
+            width: 50,
             render: item => <span>{item === 'Y' ? '사용' : '삭제'}</span>,
           },
         ],
@@ -358,13 +359,12 @@ class List extends Component {
               {dangerSelect && dangerSelect.map(itme => <Option value={itme.MAJOR_CD}>{itme.CD_NM}</Option>)}
             </AntdSelect>
           )}
-          <StyledButton className="btn-primary btn-first" onClick={this.searchData}>
+          <StyledButton className="btn-primary btn-first btn-sm" onClick={this.searchData}>
             검색
           </StyledButton>
           <ExcelDownloader dataList={dangerMainYN ? dangerList : excelList} excelNm={`위험성 코드(${dangerMainYN ? 'Main' : 'Sub'})관리`} />
         </div>
         <AntdLineTable
-          className="tableWrapper"
           rowKey={`${dangerList && dangerList.MAJOR_CD}_${dangerList && dangerList.MINOR_CD}`}
           columns={columns}
           dataSource={dangerList || []}

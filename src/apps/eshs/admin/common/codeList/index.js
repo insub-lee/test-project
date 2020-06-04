@@ -134,11 +134,11 @@ class List extends Component {
     };
     if (this.state.name && this.state.changeSelectValue) {
       if (value === 'U' && this.state.code) {
-        submitHandlerBySaga(id, 'PUT', '/api/admin/v1/common/categoryMap', submitData, this.callBackApi);
+        submitHandlerBySaga(id, 'PUT', '/api/admin/v1/common/categoryMap', submitData, this.modifyCallback);
       } else if (this.state.code && (value === 'D' || value === 'R')) {
-        submitHandlerBySaga(id, 'PUT', '/api/admin/v1/common/categoryMap', submitData, this.callBackApi);
+        submitHandlerBySaga(id, 'PUT', '/api/admin/v1/common/categoryMap', submitData, this.modifyCallback);
       } else if (value === 'I') {
-        submitHandlerBySaga(id, 'POST', '/api/admin/v1/common/categoryMap', submitData, this.callBackApi);
+        submitHandlerBySaga(id, 'POST', '/api/admin/v1/common/categoryMap', submitData, this.insertCallback);
       } else if (!this.state.code) {
         message.warning('코드가 올바르지 않습니다.');
       }
@@ -147,8 +147,25 @@ class List extends Component {
     } else if (!this.state.name) {
       message.warning('코드명을 올바르게 입력하시오.');
     }
-
     this.onReset();
+  };
+
+  insertCallback = (id, response) => {
+    if (response.code === 200) {
+      message.success('등록이 완료되었습니다.');
+      this.callBackApi();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
+  modifyCallback = (id, response) => {
+    if (response.code === 200) {
+      message.success('수정이 완료되었습니다.');
+      this.callBackApi();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
   };
 
   onReset = () => {

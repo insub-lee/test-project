@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Table, Input, message } from 'antd';
+import { Table, Input, message, Popconfirm } from 'antd';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 
@@ -214,9 +214,9 @@ class List extends Component {
               <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('U')}>
                 수정
               </StyledButton>
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('D')}>
-                삭제
-              </StyledButton>
+              <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.onChangeData('D')} okText="Yes" cancelText="No">
+                <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
+              </Popconfirm>
               <StyledButton className="btn-primary btn-sm" onClick={() => this.onReset()}>
                 Reset
               </StyledButton>
