@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 import { Modal, Table, DatePicker, Input, Select, message } from 'antd';
 
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 
 import Moment from 'moment';
@@ -118,29 +118,29 @@ class List extends Component {
         <ContentsWrapper>
           <div className="selSaveWrapper alignLeft">
             <AntdSearch
-              className="input-search-mid mr5"
+              className="input-search-sm mr5"
               value={itemNm}
               style={{ width: '150px' }}
               onClick={this.handleItemModalVisible}
               onSearch={this.handleItemModalVisible}
             />
             <AntdRangePicker
-              className="ant-picker-mid mr5"
+              className="ant-picker-sm mr5"
               defaultValue={this.state.dates}
               format={['YYYY-MM-DD', 'YYYY-MM-DD']}
               onChange={(date, dateStrings) => this.dateChange(dateStrings)}
             />
-            <AntdSelect className="mr5" value={0}>
+            <AntdSelect className="select-mid mr5" value={0}>
               <Option value={0}>결제 해결후 사용</Option>
             </AntdSelect>
-            <AntdSelect className="mr5" value={0}>
+            <AntdSelect className="select-mid mr5" value={0}>
               <Option value={0}>결제 해결후 사용</Option>
             </AntdSelect>
             <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary btn-first" onClick={this.searchData}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.searchData}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={this.print}>
+              <StyledButton className="btn-primary btn-sm" onClick={this.print}>
                 인쇄
               </StyledButton>
             </StyledButtonWrapper>

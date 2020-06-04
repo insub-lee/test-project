@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import { Input, Table } from 'antd';
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
 
-const AntdTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
+const AntdInput = StyledInput(Input);
 
 const columns = [
   {
@@ -146,7 +148,7 @@ class Amendment extends Component {
       <>
         <li>
           <div className="label-txt">문서번호검색</div>
-          <Input onPressEnter={this.onSearchRevisionData} onChange={this.onChangeSearchValue} />
+          <AntdInput className="ant-input-mid" onPressEnter={this.onSearchRevisionData} onChange={this.onChangeSearchValue} />
         </li>
         <div className="btn-wrap">
           <StyledButton className="btn-primary" onClick={this.onSearchRevisionData}>

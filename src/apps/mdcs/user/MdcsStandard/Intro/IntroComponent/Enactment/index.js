@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 
 import { Select } from 'antd';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+
 import * as ModifyType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
 import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
 
+const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
 class Enactment extends Component {
   constructor(props) {
@@ -206,27 +209,42 @@ class Enactment extends Component {
       <>
         <li>
           <div className="label-txt">대분류</div>
-          <Select placeholder="대분류(문서구분)" onChange={this.onChangeStep01} value={selectedNodeIds[0] && selectedNodeIds[0].toString()}>
+          <AntdSelect
+            className="select-mid"
+            placeholder="대분류(문서구분)"
+            onChange={this.onChangeStep01}
+            value={selectedNodeIds[0] && selectedNodeIds[0].toString()}
+          >
             {stepList01}
-          </Select>
+          </AntdSelect>
         </li>
         <li>
           <div className="label-txt">중분류</div>
-          <Select placeholder="중분류" onChange={this.onChangeStep02} value={selectedNodeIds[1] && selectedNodeIds[1].toString()}>
+          <AntdSelect className="select-mid" placeholder="중분류" onChange={this.onChangeStep02} value={selectedNodeIds[1] && selectedNodeIds[1].toString()}>
             {stepList02}
-          </Select>
+          </AntdSelect>
         </li>
         <li>
           <div className="label-txt">소분류</div>
-          <Select placeholder="소분류(업무기능)" onChange={this.onChangeStep03} value={selectedNodeIds[2] && selectedNodeIds[2].toString()}>
+          <AntdSelect
+            className="select-mid"
+            placeholder="소분류(업무기능)"
+            onChange={this.onChangeStep03}
+            value={selectedNodeIds[2] && selectedNodeIds[2].toString()}
+          >
             {stepList03}
-          </Select>
+          </AntdSelect>
         </li>
         <li>
           <div className="label-txt">문서LEVEL</div>
-          <Select placeholder="문서LEVEL/종류" onChange={this.onChangeStep04} value={selectedNodeIds[3] && selectedNodeIds[3].toString()}>
+          <AntdSelect
+            className="select-mid"
+            placeholder="문서LEVEL/종류"
+            onChange={this.onChangeStep04}
+            value={selectedNodeIds[3] && selectedNodeIds[3].toString()}
+          >
             {stepList04}
-          </Select>
+          </AntdSelect>
         </li>
         <div className="btn-wrap">
           <StyledButton className="btn-primary mr5 btn-radius" onClick={this.onModalShow}>

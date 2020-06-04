@@ -4,7 +4,6 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
@@ -220,27 +219,32 @@ class List extends Component {
                 <AntdSelect
                   defaultValue={result.hospitalList.list[0].HOSPITAL_CODE} className="select-sm mr5" style={{ width: 200 }}
                   onChange={val => this.onChangeSearchParam('HOSPITAL_CODE', val)}
+                  allowClear placeholder="검진기관"
                 >
                   {result.hospitalList.list.map(item => (
                     <AntdSelect.Option value={item.HOSPITAL_CODE}>{item.HOSPITAL_NAME}</AntdSelect.Option>
                   ))}
                 </AntdSelect>
               )}
-              {result.chkTypeList && result.chkTypeList.categoryMapList && (
-                <AntdSelect defaultValue="" className="select-sm mr5" style={{ width: 100 }} onChange={val => this.onChangeSearchParam('CHK_TYPE_CD_NODE_ID', val)}>
-                  <AntdSelect.Option value="">검종전체</AntdSelect.Option>
-                    {result.chkTypeList.categoryMapList.map(item => (
-                      <AntdSelect.Option value={item.NODE_ID}>{item.NAME_KOR}</AntdSelect.Option>
-                    ))}
-                </AntdSelect>
-              )}
-              <AntdSelect defaultValue="" className="select-sm mr5" style={{ width: 120 }} onChange={val => this.onChangeSearchParam('CHK_SEQ', val)}>
-                <AntdSelect.Option value="">검진차수전체</AntdSelect.Option>
+              <AntdSelect
+                className="select-sm mr5" style={{ width: 100 }} allowClear placeholder="검종"
+                onChange={val => this.onChangeSearchParam('CHK_TYPE_CD_NODE_ID', val)}
+              >
+              {result.chkTypeList && result.chkTypeList.categoryMapList && result.chkTypeList.categoryMapList.filter(item => item.LVL === 3).map(item => (
+                <AntdSelect.Option value={item.NODE_ID}>{item.NAME_KOR}</AntdSelect.Option>
+              ))}
+              </AntdSelect>
+              <AntdSelect
+                className="select-sm mr5" style={{ width: 120 }} allowClear placeholder="검진차수"
+                onChange={val => this.onChangeSearchParam('CHK_SEQ', val)}
+              >
                 <AntdSelect.Option value="1">1차</AntdSelect.Option>
                 <AntdSelect.Option value="2">재검</AntdSelect.Option>
               </AntdSelect>
-              <AntdSelect defaultValue="" className="select-sm mr5" style={{ width: 110 }} onChange={val => this.onChangeSearchParam('IS_MATE', val)}>
-                <AntdSelect.Option value="">검진자전체</AntdSelect.Option>
+              <AntdSelect
+                className="select-sm mr5" style={{ width: 110 }} allowClear placeholder="검진자"
+                onChange={val => this.onChangeSearchParam('IS_MATE', val)}
+              >
                 <AntdSelect.Option value="0">본인</AntdSelect.Option>
                 <AntdSelect.Option value="1">배우자</AntdSelect.Option>
               </AntdSelect>

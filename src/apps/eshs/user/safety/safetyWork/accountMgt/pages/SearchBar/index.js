@@ -100,6 +100,9 @@ class SearchBar extends Component {
       case 'DELETE':
         deleteTask(id, id, workSeq, taskSeq, changeViewPage, () => changeViewPage(id, workSeq, -1, 'INPUT'));
         break;
+      case 'RESET':
+        changeViewPage(id, workSeq, -1, 'INPUT');
+        break;
       default:
         break;
     }
@@ -109,6 +112,7 @@ class SearchBar extends Component {
     const {
       formData: { WRK_CMPNY_CD },
       viewPageData: { viewType },
+      gubun,
     } = this.props;
     const { SearchList, modalVisible } = this.state;
     return (
@@ -124,20 +128,27 @@ class SearchBar extends Component {
         />
         <StyledButtonWrapper className="btn-wrap-inline">
           {viewType !== 'MODIFY' ? (
-            <StyledButton className="btn-primary btn-first" onClick={() => this.handleSearchBarAction('INPUT')}>
-              추가
-            </StyledButton>
+            <>
+              <StyledButton className="btn-primary btn-first" onClick={() => this.handleSearchBarAction('INPUT')}>
+                추가
+              </StyledButton>
+              <StyledButton className="btn-primary btn-first" onClick={() => this.handleSearchBarAction('RESET')}>
+                Reset
+              </StyledButton>
+            </>
           ) : (
             <>
               <StyledButton className="btn-primary btn-first" onClick={() => this.handleSearchBarAction('REVISION')}>
                 신규등록
               </StyledButton>
               <StyledButton className="btn-primary btn-first" onClick={() => this.handleSearchBarAction('MODIFY')}>
-                저장
+                수정
               </StyledButton>
-              <Popconfirm title="Are you sure delete this task?" onConfirm={() => this.handleSearchBarAction('DELETE')} okText="Yes" cancelText="No">
-                <StyledButton className="btn-primary">삭제</StyledButton>
-              </Popconfirm>
+              {gubun === 'SW' && (
+                <Popconfirm title="Are you sure delete this task?" onConfirm={() => this.handleSearchBarAction('DELETE')} okText="Yes" cancelText="No">
+                  <StyledButton className="btn-primary">삭제</StyledButton>
+                </Popconfirm>
+              )}
             </>
           )}
         </StyledButtonWrapper>

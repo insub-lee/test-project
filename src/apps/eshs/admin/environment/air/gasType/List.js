@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Table, Modal, Input, InputNumber, message } from 'antd';
+import { Table, Modal, Input, InputNumber, message, Popconfirm } from 'antd';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import UnitType from 'components/BizBuilder/Field/UnitComp';
 
 const AntdModal = StyledContentsModal(Modal);
@@ -59,23 +59,44 @@ class List extends Component {
     };
     if (formData.GAS_NM) {
       if (value === 'U') {
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsgastype', submitData, this.onResponse);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsgastype', submitData, this.modifyCallback);
       } else if (value === 'D') {
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsgastype', submitData, this.onResponse);
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsgastype', submitData, this.deleteCallback);
       } else if (value === 'I') {
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsgastype', submitData, this.onResponse);
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsgastype', submitData, this.insertCallback);
       }
     } else {
       message.warning('가스종류명 올바르게 입력하시오.');
     }
   };
 
-  onResponse = (id, response) => {
-    if (response.result !== 1) {
-      message.warning('폐이지에 오류가 있습니다.');
-    } else {
+  insertCallback = (id, response) => {
+    if (response.result === 1) {
+      message.success('등록이 완료되었습니다.');
       this.onModalChange();
       this.listDataApi();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
+  modifyCallback = (id, response) => {
+    if (response.result === 1) {
+      message.success('수정이 완료되었습니다.');
+      this.onModalChange();
+      this.listDataApi();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
+  deleteCallback = (id, response) => {
+    if (response.result === 1) {
+      message.success('삭제가 완료되었습니다.');
+      this.onModalChange();
+      this.listDataApi();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
     }
   };
 
@@ -114,12 +135,11 @@ class List extends Component {
       <>
         <ContentsWrapper>
           <div className="selSaveWrapper">
-            <StyledButton className="btn-primary" onClick={this.onModalChange}>
+            <StyledButton className="btn-primary btn-sm" onClick={this.onModalChange}>
               추가
             </StyledButton>
           </div>
           <AntdLineTable
-            className="tableWrapper"
             rowKey={dataSource && dataSource.GAS_CD}
             columns={columns}
             dataSource={dataSource || []}
@@ -202,20 +222,20 @@ class List extends Component {
             </table>
             <StyledButtonWrapper className="btn-wrap-center">
               {!formData.GAS_CD ? (
-                <StyledButton className="btn-primary btn-first" onClick={this.overlab}>
+                <StyledButton className="btn-primary btn-first btn-sm" onClick={this.overlab}>
                   저장
                 </StyledButton>
               ) : (
                 <>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
+                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('U')}>
                     수정
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
-                    삭제
-                  </StyledButton>
+                  <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.onChangeData('D')} okText="Yes" cancelText="No">
+                    <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
+                  </Popconfirm>
                 </>
               )}
-              <StyledButton className="btn-primary" onClick={this.onModalChange}>
+              <StyledButton className="btn-primary btn-sm" onClick={this.onModalChange}>
                 취소
               </StyledButton>
             </StyledButtonWrapper>

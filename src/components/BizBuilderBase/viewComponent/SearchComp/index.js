@@ -100,7 +100,7 @@ class TextComp extends React.Component {
             <Input
               onChange={e => this.handleOnChangeSearch(e.target.value)}
               className={CONFIG.property.className || ''}
-              placeholder={CONFIG.property.placeholder}
+              placeholder={CONFIG.property.searchPlaceholder || CONFIG.property.placeholder}
             />
           );
         case 'SELECT':
@@ -112,6 +112,7 @@ class TextComp extends React.Component {
                 this.handleOnChangeSearch(value);
               }}
               className={CONFIG.property.className || ''}
+              placeholder={CONFIG.property.searchPlaceholder || CONFIG.property.placeholder}
             >
               {searchSelectData &&
                 searchSelectData.map(item => (
@@ -130,6 +131,7 @@ class TextComp extends React.Component {
               treeData={searchTreeData}
               onChange={value => this.handleOnChangeSearch(value)}
               className={CONFIG.property.className || ''}
+              placeholder={CONFIG.property.searchPlaceholder || CONFIG.property.placeholder}
             />
           );
         case 'RANGEDATE':

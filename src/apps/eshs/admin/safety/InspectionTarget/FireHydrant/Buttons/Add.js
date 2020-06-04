@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import request from 'utils/request';
-
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import { Button } from 'antd';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import { address } from 'apps/eshs/admin/safety/InspectionTarget/FireHydrant/internal_constants';
 import { VIEW_TYPE, META_SEQ } from '../internal_constants';
 
+const StyledButton = StyledAntdButton(Button);
 export default function Add({ sagaKey, detail, title, viewMetaSeqHandler, onCloseModalHandler, modalHandler, formData, taskSeq, workSeq, viewPageData }) {
   const insertIssueNote = () => {
     const { ISSUE_YN } = formData;
@@ -13,18 +14,12 @@ export default function Add({ sagaKey, detail, title, viewMetaSeqHandler, onClos
       const { ISSUE_NOTE } = formData;
       if (typeof ISSUE_NOTE === 'string' && ISSUE_NOTE !== '') {
         const { POSITION_NO, REG_DATE, REG_USER_ID, CHIP_NO } = formData;
-
         if (typeof REG_DATE === 'string') {
-          // const processedDate = REG_DATE.split('-').join('');
-
-          console.trace('£££ insertIssueNote');
-          // console.debug('£££ data : ', ISSUE_YN, POSITION_NO, REG_DATE, processedDate, ISSUE_NOTE, REG_USER_ID, CHIP_NO);
           request({
             method: 'POST',
             url: `${address.registerIssueNote}`,
             data: { ISSUE_YN, POSITION_NO, REG_DATE, ISSUE_NOTE, REG_USER_ID, CHIP_NO },
           }).then(({ response }) => {
-            console.debug('£££ response : ', response);
             if (response?.result === 1) {
               onCloseModalHandler();
             } else {
@@ -52,7 +47,7 @@ export default function Add({ sagaKey, detail, title, viewMetaSeqHandler, onClos
   };
 
   return (
-    <StyledButton className="btn-primary" onClick={() => shoudFireAPI(title)}>
+    <StyledButton className="btn-primary btn-first" onClick={() => shoudFireAPI(title)}>
       {title}
     </StyledButton>
   );

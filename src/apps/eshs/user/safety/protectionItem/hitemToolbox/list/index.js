@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, InputNumber, Select, Modal, Input, message } from 'antd';
+import { Table, InputNumber, Select, Modal, Input, message, Popconfirm } from 'antd';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
@@ -240,8 +240,6 @@ class List extends React.Component {
 
   setDataSource = () => {
     const { extraApiData } = this.props;
-    const detailIdList = (extraApiData.toolboxList && extraApiData.toolboxList.list && extraApiData.toolboxList.list.map(item => item.DETAIL_ID)) || [];
-    // detailIdList.map(id => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { [id]: {} }) })));
     this.setState({
       dataSource: (extraApiData.toolboxList && extraApiData.toolboxList.list) || [],
     });
@@ -286,15 +284,15 @@ class List extends React.Component {
 
   handleInputChange = (key, id, value) => {
     const valueObj = { [id + key.substring(1)]: { DETAIL_ID: id, COLUMN: key, VALUE: value } };
-    this.setState(prevState => {
-      return { requestValue: Object.assign(prevState.requestValue, valueObj) };
-    });
+    this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
   };
 
   handleOnSaveClick = () => {
     const { requestValue } = this.state;
     const { sagaKey: id, submitExtraHandler } = this.props;
-    submitExtraHandler(id, 'PUT', `/api/eshs/v1/common/protectiontoolbox`, { requestValue: Object.values(requestValue) }, () => message.success('수정되었습니다.'));
+    submitExtraHandler(id, 'PUT', `/api/eshs/v1/common/protectiontoolbox`, { requestValue: Object.values(requestValue) }, () =>
+      message.success('수정되었습니다.'),
+    );
   };
 
   render() {
@@ -304,8 +302,8 @@ class List extends React.Component {
       <>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
-            <div>
-              <span>평가년도</span>
+            <div className="search-input-area">
+              <span className="text-label">평가년도</span>
               <AntdSelect
                 className="select-mid mr5 ml5"
                 defaultValue={moment().format('YYYY')}
@@ -318,16 +316,15 @@ class List extends React.Component {
               </AntdSelect>
               <span>부서코드</span>
               <AntdSearch className="input-search-mid" style={{ width: '15%' }} onClick={handleModalVisible} />
-              <div style={{ textAlign: 'center' }}>
-                <StyledButton className="btn-primary" onClick={handleOnSaveClick}>
-                  저장
-                </StyledButton>
-              </div>
+            </div>
+            <div>
+              <Popconfirm okText="수정" cancelText="취소" onConfirm={handleOnSaveClick}>
+                <StyledButton className="btn-primary">수정</StyledButton>
+              </Popconfirm>
             </div>
           </StyledCustomSearchWrapper>
           <div style={{ padding: '10px' }}>
-            {/* <AntdTable columns={columns} dataSource={[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}]} scroll={{ x: true }} /> */}
-            <Table columns={columns()} dataSource={dataSource} scroll={{ x: true }} pagination={false} />
+            <AntdTable bordered columns={columns()} dataSource={dataSource} scroll={{ x: true }} pagination={false} />
           </div>
         </StyledContentsWrapper>
         <AntdModal visible={modalVisible} title="부서 선택" onCancel={handleModalClose} footer={null}>

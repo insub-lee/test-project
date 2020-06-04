@@ -13,8 +13,8 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import message from 'components/Feedback/message';
 import Group from 'components/BizBuilder/Sketch/Group';
+import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import SafetyWorkViewer from '../../safetyWorkView';
