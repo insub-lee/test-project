@@ -1,5 +1,5 @@
 import React from 'react';
-import { VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/FireHydrant/internal_constants';
+import { VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/FirePreAlarm/internal_constants';
 import ExcelDown from './ExcelDown';
 import Search from './Search';
 import NewReg from './NewReg';

@@ -16,7 +16,7 @@ import Contents from 'components/BizBuilder/Common/Contents';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, EXCEL_DOWNLOAD_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import request from 'utils/request';
-import { address, VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/FireHydrant/internal_constants';
+import { address, VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/FirePreAlarm/internal_constants';
 import ViewPage from '../ViewPage';
 
 const AntdModal = StyledModalWrapper(Modal);
@@ -316,9 +316,9 @@ const ListPage = props => {
   };
 
   const modalTitle = () => {
-    if (activateRegModal) return '소화전 신규등록';
-    if (activateDetailModal) return '소화전 점검';
-    if (activateUsageModal) return '소화전 사용/미사용 등록';
+    if (activateRegModal) return 'Pre Action & Alarm Valve 신규등록';
+    if (activateDetailModal) return 'Pre Action & Alarm Valve 점검';
+    if (activateUsageModal) return 'Pre Action & Alarm Valve 사용/미사용 등록';
     return '';
   };
 
@@ -442,6 +442,7 @@ const ListPage = props => {
       </StyledViewDesigner>
     );
   }
+  return '';
 };
 
 ListPage.propTypes = {
