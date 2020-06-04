@@ -16,6 +16,7 @@ const AntdModal = StyledContentsModal(Modal);
 class MsdsMgt extends Component {
   state = {
     isLoading: true,
+    searchListisLoading: true,
     customModal: {},
     searchListVisible: false,
   };
@@ -23,6 +24,12 @@ class MsdsMgt extends Component {
   loadingComplete = () => {
     this.setState({
       isLoading: false,
+    });
+  };
+
+  searchLoadingComplete = () => {
+    this.setState({
+      searchListisLoading: false,
     });
   };
 
@@ -53,7 +60,7 @@ class MsdsMgt extends Component {
             sagaKey="MsdsSearchList"
             workSeq={3161}
             viewType="LIST"
-            loadingComplete={this.loadingComplete}
+            loadingComplete={this.searchLoadingComplete}
             handleModalVisible={this.handleModalVisible}
             CustomListPage={SearchListPage}
             listMetaSeq={4141}

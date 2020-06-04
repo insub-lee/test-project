@@ -4,8 +4,8 @@ import moment from 'moment';
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import { Input, Select, Popover, message, DatePicker, Modal } from 'antd';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledAntdModal from 'components/BizBuilder/styled//Modal/StyledAntdModal';

@@ -358,8 +358,8 @@ class CompModal extends Component {
                 <Input
                   placeholder="검색 PlaceHolder"
                   style={{ width: '100%' }}
-                  defaultValue={comp.CONFIG.property.searchPlaceHolder}
-                  onChange={e => this.handleChangeViewConfig('searchPlaceHolder', e.target.value, 'property')}
+                  defaultValue={comp.CONFIG.property.searchPlaceholder}
+                  onChange={e => this.handleChangeViewConfig('searchPlaceholder', e.target.value, 'property')}
                 />
               </div>
               {comp &&

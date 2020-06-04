@@ -18,6 +18,7 @@ const StyledAntdTable = Component => styled(Component)`
           padding: 8px 8px;
           border-radius: 0;
           font-size: 12px;
+          text-align: center;
         }
 
         &:not(:last-child) > th[colspan] {
@@ -93,6 +94,8 @@ const StyledAntdTable = Component => styled(Component)`
       border-bottom: 1px solid #eee;
     }
   }
+
+  /* scroll table style */
 
   /* checkbox */
   .ant-checkbox-indeterminate .ant-checkbox-inner:after {

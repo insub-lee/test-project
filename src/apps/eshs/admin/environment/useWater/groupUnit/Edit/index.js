@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Input, message, Select, Modal, Radio } from 'antd';
+import { Input, message, Select, Modal, Radio, Popconfirm } from 'antd';
 
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -25,7 +25,7 @@ class List extends Component {
     this.state = {
       groupUnitCd: '', // 관리단위코드:주로 FAB기준이며,회사단위일 경우도 있슴.정수장
       groupUnitNm: '', // 관리단위명
-      siteSB: '청주', // 지역
+      siteSB: '', // 지역
       companyCd: '', // 회사코드:하이닉스,하이디스,LCD,
       companyName: '',
       gubun: '', // 관리단위구분:정수장,건물FAB,처리장,기타의 구분자 (코드테이블 gubun값, ETC)
@@ -86,25 +86,57 @@ class List extends Component {
         IS_DEL: this.state.del, // 삭제여부
       },
     };
-    if (this.state.groupUnitNm) {
+    if (this.state.groupUnitNm && this.state.siteSB) {
       if (value === 'U') {
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsgroupunit', submitData, onEditCancel);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsgroupunit', submitData, this.modifyCallback);
       } else if (value === 'D') {
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsgroupunit', submitData, onEditCancel);
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsgroupunit', submitData, this.deleteCallback);
       } else {
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsgroupunit', submitData, onEditCancel);
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsgroupunit', submitData, this.insertCallback);
       }
+    } else if (this.state.siteSB) {
+      message.warning('관리단위명을 올바르게 입력하세요.');
     } else {
-      message.warning('관리단위명을 올바르게 입력하시오.');
+      message.warning('지역을 선택하세요.');
     }
 
     this.onReset();
   };
 
+  insertCallback = (id, response) => {
+    const { onEditCancel } = this.props;
+    if (response.result === 1) {
+      message.success('등록이 완료되었습니다.');
+      onEditCancel();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
+  modifyCallback = (id, response) => {
+    const { onEditCancel } = this.props;
+    if (response.result === 1) {
+      message.success('수정이 완료되었습니다.');
+      onEditCancel();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
+  deleteCallback = (id, response) => {
+    const { onEditCancel } = this.props;
+    if (response.result === 1) {
+      message.success('삭제가 완료되었습니다.');
+      onEditCancel();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
   onReset() {
     this.setState({
       groupUnitNm: '',
-      siteSB: '청주',
+      siteSB: '',
       companyCd: '',
       companyName: '',
       gubun: '',
@@ -203,6 +235,9 @@ class List extends Component {
                         onChange={(value, option) => this.changeSelectValue(value, option)}
                         value={this.state.siteSB}
                       >
+                        <Option value="" disabled>
+                          선택
+                        </Option>
                         {this.selectOptionRender('siteSB')}
                       </AntdSelect>
                     </td>
@@ -302,9 +337,9 @@ class List extends Component {
                 <StyledButton className="btn-primary mr5 btn-sm" onClick={() => this.onChangeData('U')}>
                   수정
                 </StyledButton>
-                <StyledButton className="btn-light mr5 btn-sm" onClick={() => this.onChangeData('D')}>
-                  삭제
-                </StyledButton>
+                <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.onChangeData('D')} okText="Yes" cancelText="No">
+                  <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
+                </Popconfirm>
               </>
             )}
             <StyledButton className="btn-light btn-sm" onClick={() => this.onReset()}>

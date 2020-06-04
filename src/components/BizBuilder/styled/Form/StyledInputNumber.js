@@ -42,6 +42,7 @@ const StyledInputNumber = Component => styled(Component)`
   &.ant-input-number-mid {
     padding: 0.4rem 0.875rem;
     height: auto;
+    font-size: 0.75rem;
 
     input {
       height: auto;

@@ -27,7 +27,8 @@ class ChkItemResultTable extends Component {
       let itemGroup = {};
       let currDesc = '';
       let groupCnt = 0;
-      totalResult.forEach(t => {
+      const lastIdx = totalResult.lastIndex;
+      totalResult.forEach((t, idx) => {
         let row = { ...t };
         let isOk = false;
         list.forEach(l => {
@@ -48,6 +49,7 @@ class ChkItemResultTable extends Component {
           }
           groupCnt++;
         }
+        if (lastIdx === idx) itemGroup = { ...itemGroup, [currDesc]: groupCnt };
       });
 
       return { data: nextData, totalList, itemGroup };
@@ -65,7 +67,6 @@ class ChkItemResultTable extends Component {
     const list = (data && data.list) || [];
     const listLen = list.length;
     let currDesc = '';
-
     return (
       <table className="table-border">
         <colgroup>
