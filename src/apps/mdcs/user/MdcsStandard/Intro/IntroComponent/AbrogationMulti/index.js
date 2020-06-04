@@ -3,10 +3,14 @@ import PropTypes from 'prop-types';
 import { Input, Select } from 'antd';
 import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 
 import TaskTransfer from './TaskTransfer';
 
 const { Option } = Select;
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
 
 /* DESC: 폐기 기안 (일괄) */
 class AbrogationMulti extends Component {
@@ -93,18 +97,18 @@ class AbrogationMulti extends Component {
       <>
         <li>
           <div className="label-txt">문서종류</div>
-          <Select placeholder="문서종류" onChange={value => this.setState({ selectedWorkSeq: value })} defaultValue={901}>
+          <AntdSelect className="select-mid" placeholder="문서종류" onChange={value => this.setState({ selectedWorkSeq: value })} defaultValue={901}>
             <Option value={901}>업무표준</Option>
             <Option value={1921}>기술표준</Option>
             <Option value={1881}>도면</Option>
             <Option value={2941}>TDS</Option>
             <Option value={2975}>NPI</Option>
             <Option value={3013}>Work Process</Option>
-          </Select>
+          </AntdSelect>
         </li>
         <li>
           <div className="label-txt">문서번호검색</div>
-          <Input onPressEnter={this.onSearchRevisionData} onChange={this.onChangeSearchValue} />
+          <AntdInput className="ant-input-mid ant-input-inline" onPressEnter={this.onSearchRevisionData} onChange={this.onChangeSearchValue} />
         </li>
         <div className="btn-wrap">
           <StyledButton className="btn-primary" onClick={this.onSearchRevisionData}>

@@ -86,6 +86,7 @@ const StyledContents = styled.div`
         }
         .ant-select {
           width: 100%;
+          /* 
           .ant-select-selection--single {
             height: 40px;
           }
@@ -112,7 +113,7 @@ const StyledContents = styled.div`
             .ant-select-selection__placeholder {
               font-size: 12px;
             }
-          }
+          } */
         }
         span.ant-radio + * {
           font-size: 12px;
@@ -161,7 +162,7 @@ const StyledContents = styled.div`
     .btn-wrap {
       width: 100%;
       text-align: center;
-      margin: 25px 0;
+      margin: 20px 0 30px;
       .btn-first {
         margin-right: 10px;
       }
