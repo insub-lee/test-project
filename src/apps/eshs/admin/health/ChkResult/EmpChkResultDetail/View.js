@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
 import ChkEmpResultTable from 'apps/eshs/admin/health/ChkResult/EmpChkResultDetail/comp/ChkEmpResultTable';
@@ -24,8 +24,9 @@ class View extends Component {
       getCallDataHandler,
       profile: { USER_ID },
       defaultUser,
+      spinningOn,
     } = this.props;
-
+    spinningOn();
     const apiAry = [
       {
         key: 'RESULT',
@@ -42,18 +43,19 @@ class View extends Component {
   }
 
   appStart = () => {
-    const { sagaKey: id, result, changeFormData } = this.props;
+    const { sagaKey: id, result, spinningOff, setFormData, formData } = this.props;
     const userDetail = (result && result.userDetail && result.userDetail.data) || {};
-    changeFormData(id, 'userInfo', userDetail);
+    setFormData(id, { ...formData, userInfo: userDetail, empNo: userDetail.EMP_NO });
+    spinningOff();
   };
 
   render() {
-    const { result, userSearch, profile, sagaKey, getCallDataHandler, defaultUser, changeFormData, formData } = this.props;
+    const { result, userSearch, profile, sagaKey, getCallDataHandler, defaultUser, changeFormData, formData, spinningOn, spinningOff } = this.props;
     const data = (result && result.RESULT && result.RESULT.result) || {};
     const list = (data && data.list) || [];
     return (
       <StyledContentsWrapper>
-        <StyledSearchWrapper>
+        <StyledCustomSearchWrapper className="search-wrapper-inline">
           <SearchBar
             profile={profile}
             userSearch={userSearch}
@@ -64,9 +66,11 @@ class View extends Component {
             changeFormData={changeFormData}
             formData={formData}
             viewStart={this.appStart}
+            spinningOn={spinningOn}
+            spinningOff={spinningOff}
           />
-        </StyledSearchWrapper>
-        <StyledHtmlTable className="tableWrapper">
+        </StyledCustomSearchWrapper>
+        <StyledHtmlTable>
           {0 in list ? (
             list.map(c => <ChkEmpResultTable key={c.CHK_CD} chkCd={c.CHK_CD} empInfo={{ ...c, ...data[`DIS_${c.CHK_CD}`] }} />)
           ) : (
@@ -94,7 +98,10 @@ View.propTypes = {
   getCallDataHandler: PropTypes.func,
   userSearch: PropTypes.bool,
   changeFormData: PropTypes.func,
+  setFormData: PropTypes.func,
   formData: PropTypes.object,
+  spinningOn: PropTypes.func,
+  spinningOff: PropTypes.func,
 };
 View.defaultProps = {
   result: {},
@@ -104,7 +111,10 @@ View.defaultProps = {
   getCallDataHandler: () => {},
   userSearch: false,
   changeFormData: () => {},
+  setFormData: () => {},
   formData: {},
+  spinningOn: () => {},
+  spinningOff: () => {},
 };
 
 export default View;
