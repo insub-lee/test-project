@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import { Table, Input, message, TreeSelect, Select } from 'antd';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledTreeSelect from 'commonStyled/Form/StyledTreeSelect';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import ExcelDownloader from './Excel';
 
 const AntdInput = StyledInput(Input);

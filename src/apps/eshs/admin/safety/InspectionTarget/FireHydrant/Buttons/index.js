@@ -15,11 +15,10 @@ import RegisterInspection from './RegisterInspection';
 
 export function ViewButtons(props) {
   return (
-    <div className="alignRight">
+    <>
       <NewReg {...props} />
-      <ExcelDown {...props} />
       <UsageReg {...props} />
-    </div>
+    </>
   );
 }
 

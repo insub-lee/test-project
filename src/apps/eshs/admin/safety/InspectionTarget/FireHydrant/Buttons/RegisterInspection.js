@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import request from 'utils/request';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import { address } from 'apps/eshs/admin/safety/InspectionTarget/FireHydrant/internal_constants';
+import { Button } from 'antd';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+const StyledButton = StyledAntdButton(Button);
 
 export default function RegisterInspection({
   sagaKey,
@@ -28,18 +30,18 @@ export default function RegisterInspection({
         data: { ENCLOSURE_YN, DOOR_YN, OBSTACLE_YN, POSITION_NO, CHIP_NO, REG_USER_ID },
       }).then(({ response }) => {
         if (response?.result === 1) {
-          modalHandler(true);
+          onCloseModalHandler();
         } else {
           alert('error');
         }
       });
     } else {
-      alert('one of SAFEPIN_YN, PHARM_YN, FORM_YN, POSITION_YN are empty');
+      alert('one of ENCLOSURE_YN, DOOR_YN, OBSTACLE_YN are empty');
     }
   };
 
   return (
-    <StyledButton className="btn-primary" onClick={() => shoudFireAPI()}>
+    <StyledButton className="btn-primary btn-first" onClick={() => shoudFireAPI()}>
       {title}
     </StyledButton>
   );

@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 import { Table, Modal, Input, InputNumber, message } from 'antd';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import UnitType from 'components/BizBuilder/Field/UnitComp';
 
 const AntdModal = StyledContentsModal(Modal);

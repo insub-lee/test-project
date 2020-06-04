@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { Input, Row, Col, message } from 'antd';
 import GGEditor, { Flow } from 'gg-editor';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
+import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import FlowDetailPanel from './EditorDetailPanel';
 import EditorActionPanel from './EditorActionPanel';
 

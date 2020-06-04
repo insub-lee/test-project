@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 
 import { List, Table, Row, Col, Checkbox, Button, Icon } from 'antd';
 
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import TaskTransferWrapper from './TaskTransferWrapper';
+
+const AntdTable = StyledAntdTable(Table);
 
 // Component Attribute 및 Event Method 정리
 // <UserSelect
@@ -113,34 +116,35 @@ class TaskTransfer extends Component {
       <TaskTransferWrapper>
         <Row gutter={0}>
           <Col span={11}>
-            <div className="taskTransferTitle">
-              <span>폐기 대상 사내표</span>
-              <span>{sourceList.length}건</span>
-            </div>
-            <div className="taskTransferList">
-              <Table
-                className="taskTransferTable"
-                bordered
-                columns={columns}
-                dataSource={sourceList}
-                size="small"
-                pagination={false}
-                rowKey={record => record.TASK_SEQ}
-                rowSelection={leftRowSelection}
-                scroll={{ y: 250, x: 600 }}
-                onRow={row => ({
-                  onClick: () => {
-                    if (row.disabled) return;
-                    this.onLeftSelectRow(row);
-                  },
-                })}
-              />
+            <div className="table-area">
+              <div className="taskTransferTitle">
+                <span>폐기 대상 사내표</span>
+                <span className="count">{sourceList.length}건</span>
+              </div>
+              <div className="taskTransferList">
+                <AntdTable
+                  className="taskTransferTable"
+                  bordered
+                  columns={columns}
+                  dataSource={sourceList}
+                  pagination={false}
+                  rowKey={record => record.TASK_SEQ}
+                  rowSelection={leftRowSelection}
+                  scroll={{ y: 250, x: 600 }}
+                  onRow={row => ({
+                    onClick: () => {
+                      if (row.disabled) return;
+                      this.onLeftSelectRow(row);
+                    },
+                  })}
+                />
+              </div>
             </div>
           </Col>
           <Col span={2}>
             <div className="userAddWrapper">
               <div>
-                <div>
+                <div style={{ marginBottom: 10 }}>
                   <StyledButton className="btn-light btn-sm" onClick={this.onClickAddSelectRow}>
                     <Icon type="double-right" />
                   </StyledButton>
@@ -154,27 +158,28 @@ class TaskTransfer extends Component {
             </div>
           </Col>
           <Col span={11}>
-            <div className="taskTransferTitle">
-              <span>선택된 사내표준</span>
-              <span>{selectedList.length}건</span>
-            </div>
-            <div className="taskTransferList">
-              <Table
-                className="taskTransferTable"
-                bordered
-                columns={columns}
-                dataSource={selectedList}
-                size="small"
-                pagination={false}
-                rowKey={record => record.TASK_SEQ}
-                rowSelection={rightRowSelection}
-                scroll={{ y: 250, x: 600 }}
-                onRow={row => ({
-                  onClick: () => {
-                    this.onRightSelectRow(row);
-                  },
-                })}
-              />
+            <div className="table-area">
+              <div className="taskTransferTitle">
+                <span>선택된 사내표준</span>
+                <span className="count">{selectedList.length}건</span>
+              </div>
+              <div className="taskTransferList">
+                <AntdTable
+                  className="taskTransferTable"
+                  bordered
+                  columns={columns}
+                  dataSource={selectedList}
+                  pagination={false}
+                  rowKey={record => record.TASK_SEQ}
+                  rowSelection={rightRowSelection}
+                  scroll={{ y: 250, x: 600 }}
+                  onRow={row => ({
+                    onClick: () => {
+                      this.onRightSelectRow(row);
+                    },
+                  })}
+                />
+              </div>
             </div>
           </Col>
         </Row>
