@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Input, Select, Row, Col, Table, Collapse, Modal, Checkbox } from 'antd';
 import { DoubleRightOutlined, PlusOutlined, MinusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
@@ -487,7 +488,7 @@ class ChkHospitalItemView extends Component {
       key: 'DEL_ITEM',
       width: '10%',
       render: (text, record) => (
-        <StyledButton className="btn-light btn-xxs" onClick={() => this.removeItemInGroup(record)}><MinusOutlined /></StyledButton>
+        <StyledButton className="btn-light btn-xs" onClick={() => this.removeItemInGroup(record)}><MinusOutlined /></StyledButton>
       )
     },
     {
@@ -503,7 +504,7 @@ class ChkHospitalItemView extends Component {
       width: '20%',
       align: 'center',
       render: (text, record) => (
-        <AntdSelect className="select-sm" defaultValue={text} style={{ width: 100 }} onChange={val => this.onChangeGroupItemInfo('DAY_CHK_CNT', val, record)}>
+        <AntdSelect className="select-xs" defaultValue={text} style={{ width: 110 }} onChange={val => this.onChangeGroupItemInfo('DAY_CHK_CNT', val, record)}>
           <AntdSelect.Option value="0">제한없음</AntdSelect.Option>
           <AntdSelect.Option value="1">1명</AntdSelect.Option>
           <AntdSelect.Option value="2">2명</AntdSelect.Option>
@@ -518,7 +519,7 @@ class ChkHospitalItemView extends Component {
       dataIndex: 'ITEM_BIGO',
       key: 'ITEM_BIGO',
       render: (text, record) => (
-        <AntdInput className="ant-input-sm" defaultValue={text} onChange={e => this.onChangeGroupItemInfo('ITEM_BIGO', e.target.value, record)} />
+        <AntdInput className="ant-input-xs" defaultValue={text} onChange={e => this.onChangeGroupItemInfo('ITEM_BIGO', e.target.value, record)} />
       )
     },
   ];
@@ -531,7 +532,7 @@ class ChkHospitalItemView extends Component {
 
     if (this.state.itemList && this.state.hospitalList && this.state.codeList) {
       return (
-        <>
+        <StyledContentsWrapper>
           <StyledHtmlTable>
             <table>
               <colgroup>
@@ -548,7 +549,10 @@ class ChkHospitalItemView extends Component {
                 <tr>
                   <th>지역</th>
                   <td>
-                    <AntdSelect className="select-sm" defaultValue={this.state.detail.HOSPITAL_SITE} placeholder="지역선택" style={{ width: '100%' }} onChange={val => this.onChangeSite(val)}>
+                    <AntdSelect
+                      className="select-sm" defaultValue={this.state.detail.HOSPITAL_SITE} placeholder="지역" style={{ width: '100%' }}
+                      onChange={val => this.onChangeSite(val)}
+                    >
                       {this.state.siteList.map(item => (
                         <AntdSelect.Option key={`key_${item}`} value={item}>{item}</AntdSelect.Option>
                       ))}
@@ -556,7 +560,10 @@ class ChkHospitalItemView extends Component {
                   </td>
                   <th>검진기관</th>
                   <td>
-                    <AntdSelect className="select-sm" defaultValue={this.state.detail.HOSPITAL_CODE}  placeholder="검진기관선택" style={{ width: '100%' }} onChange={val => this.onChangeDetail('HOSPITAL_CODE', val)}>
+                    <AntdSelect
+                      className="select-sm" defaultValue={this.state.detail.HOSPITAL_CODE}  placeholder="검진기관" style={{ width: '100%' }}
+                      onChange={val => this.onChangeDetail('HOSPITAL_CODE', val)}
+                    >
                       {this.state.hospitalList.map(item => (
                         <AntdSelect.Option value={item.HOSPITAL_CODE}>{item.HOSPITAL_NAME}</AntdSelect.Option>
                       ))}
@@ -564,7 +571,10 @@ class ChkHospitalItemView extends Component {
                   </td>
                   <th>검진유형</th>
                   <td>
-                    <AntdSelect className="select-sm" defaultValue={this.state.detail.CHK_TYPE} placeholder="검진유형선택" style={{ width: '100%' }} onChange={val => this.onChangeDetail('CHK_TYPE', val)}>
+                    <AntdSelect
+                      className="select-sm" defaultValue={this.state.detail.CHK_TYPE} placeholder="검진유형선택" style={{ width: '100%' }}
+                      onChange={val => this.onChangeDetail('CHK_TYPE', val)}
+                    >
                       <AntdSelect.Option value="A">A형</AntdSelect.Option>
                       <AntdSelect.Option value="B">B형</AntdSelect.Option>
                       <AntdSelect.Option value="C">C형</AntdSelect.Option>
@@ -572,7 +582,9 @@ class ChkHospitalItemView extends Component {
                   </td>
                   <th>검진유형명</th>
                   <td>
-                    <AntdInput className="ant-input-sm" defaultValue={this.state.detail.CHK_TYPE_NAME} onChange={e => this.onChangeDetail('CHK_TYPE_NAME', e.target.value)} />
+                    <AntdInput
+                      className="ant-input-sm" defaultValue={this.state.detail.CHK_TYPE_NAME} placeholder="검진유형명"
+                      onChange={e => this.onChangeDetail('CHK_TYPE_NAME', e.target.value)} />
                   </td>
                 </tr>
               </tbody>
@@ -596,7 +608,7 @@ class ChkHospitalItemView extends Component {
               </Col>
               <Col span={14} className="right-wrapper">
                 <div className="btn-add-area">
-                  <StyledButton className="btn-light btn-sm" onClick={this.addGroup}><PlusOutlined /> 그룹추가</StyledButton>
+                  <StyledButton className="btn-primary btn-sm" onClick={this.addGroup}><PlusOutlined /> 그룹추가</StyledButton>
                 </div>
                 <div className="collapse-wrapper">
                   <Collapse activeKey={this.state.activeKeys} onChange={this.onChangeCollapse}>
@@ -607,20 +619,31 @@ class ChkHospitalItemView extends Component {
                         header={
                           <div>
                             <div onClick={e => e.stopPropagation()} style={{ display: 'inline-block' }}>
-                              <AntdSelect className="select-sm mr5" value={group.GROUP} placeholder="그룹선택" style={{ width: 120 }} onChange={val => this.onChangeGroupInfo('GROUP', val, group)}>
+                              <AntdSelect
+                                className="select-sm mr5" value={group.GROUP} placeholder="그룹선택" style={{ width: 120 }}
+                                onChange={val => this.onChangeGroupInfo('GROUP', val, group)}
+                              >
                                 {this.state.codeList.map(item => (
                                   <AntdSelect.Option value={item.NODE_ID}>{item.NAME_KOR}</AntdSelect.Option>
                                 ))}
                               </AntdSelect>
-                              <AntdSelect className="select-sm mr5" defaultValue={group.ABLE_CNT} placeholder="선택갯수" style={{ width: 100 }} onChange={val => this.onChangeGroupInfo('ABLE_CNT', val, group)}>
+                              <AntdSelect
+                                className="select-sm mr5" defaultValue={group.ABLE_CNT} placeholder="선택갯수" style={{ width: 100 }}
+                                onChange={val => this.onChangeGroupInfo('ABLE_CNT', val, group)}
+                              >
                                 <AntdSelect.Option value="1">1개</AntdSelect.Option>
                                 <AntdSelect.Option value="2">2개</AntdSelect.Option>
                                 <AntdSelect.Option value="3">3개</AntdSelect.Option>
                                 <AntdSelect.Option value="4">4개</AntdSelect.Option>
                                 <AntdSelect.Option value="5">5개</AntdSelect.Option>
                               </AntdSelect>
-                              <Checkbox checked={group.IS_REQUIRE && group.IS_REQUIRE === 'Y'} onChange={e => this.onChangeGroupInfo('IS_REQUIRE', (e.target.checked ? 'Y' : 'N'), group)} /> 필수
-                              <StyledButton className="btn-gray btn-xs ml5" onClick={e => this.deleteGroup(e, group)}>그룹삭제</StyledButton>
+                              <Checkbox
+                                checked={group.IS_REQUIRE && group.IS_REQUIRE === 'Y'}
+                                onChange={e => this.onChangeGroupInfo('IS_REQUIRE', (e.target.checked ? 'Y' : 'N'), group)}
+                              >
+                                필수
+                              </Checkbox>
+                              <StyledButton className="btn-gray btn-sm ml5" onClick={e => this.deleteGroup(e, group)}>그룹삭제</StyledButton>
                             </div>
                           </div>
                         }
@@ -639,10 +662,10 @@ class ChkHospitalItemView extends Component {
             </Row>
           </StyledChkHospitalItemView>
           <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-            <StyledButton className="btn-light mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
-            <StyledButton className="btn-primary" onClick={e => this.onSave(e)}>{this.state.saveType === 'I' ? '등록' : '저장'}</StyledButton>
+            <StyledButton className="btn-light btn-sm mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
+            <StyledButton className="btn-primary btn-sm" onClick={e => this.onSave(e)}>{this.state.saveType === 'I' ? '등록' : '저장'}</StyledButton>
           </StyledButtonWrapper>
-        </>
+        </StyledContentsWrapper>
       )
     }
     return '';

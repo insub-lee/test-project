@@ -11,9 +11,8 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
 import moment from 'moment';
+import UserSearchModal from 'apps/eshs/common/userSearchModal';
 
 import View from './View';
 
@@ -35,6 +34,7 @@ class List extends Component {
       CHK_SEQ: '',
       IS_MATE: '',
       EMP_NO: '',
+      SCH_USER_ID: '',
     },
     list: [],
   };
@@ -101,6 +101,13 @@ class List extends Component {
       }
       spinningOff();
     });
+  };
+
+  onUserSearchAfter = row => {
+    if (row) {
+      this.onChangeSearchParam('SCH_USER_ID', row.USER_ID);
+      this.onChangeSearchParam('EMP_NO', row.EMP_NO);
+    }
   };
 
   onChangeSearchParam = (key, val) => {
@@ -247,7 +254,7 @@ class List extends Component {
                 <AntdSelect.Option value="0">본인</AntdSelect.Option>
                 <AntdSelect.Option value="1">배우자</AntdSelect.Option>
               </AntdSelect>
-              <AntdInput placeholder="사번" className="ant-input-sm ant-input-inline mr5" style={{ width: 80 }} onChange={e => this.onChangeSearchParam('EMP_NO', e.target.value)} />
+              <UserSearchModal onClickRow={this.onUserSearchAfter} />
               <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
             </div>
           </StyledCustomSearchWrapper>
