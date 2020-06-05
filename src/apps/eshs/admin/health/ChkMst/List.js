@@ -83,7 +83,6 @@ class List extends Component {
   };
 
   getList = () => {
-    console.debug('## ', this.state.searchParam);
     const { sagaKey, getCallDataHandlerReturnRes, spinningOn, spinningOff } = this.props;
     const apiInfo = {
       key: 'chkMstList',
