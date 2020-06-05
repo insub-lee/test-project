@@ -25,13 +25,14 @@ class View extends Component {
       profile: { USER_ID },
       defaultUser,
       spinningOn,
+      chkYear,
     } = this.props;
     spinningOn();
     const apiAry = [
       {
         key: 'RESULT',
         type: 'GET',
-        url: `/api/eshs/v1/common/health/eshsHealthEmpChkResultDetail?user_id=${defaultUser || USER_ID}&CHK_YEAR=${currentYear}`,
+        url: `/api/eshs/v1/common/health/eshsHealthEmpChkResultDetail?user_id=${defaultUser || USER_ID}&CHK_YEAR=${chkYear || currentYear}`,
       },
       {
         key: 'userDetail',
@@ -50,7 +51,7 @@ class View extends Component {
   };
 
   render() {
-    const { result, userSearch, profile, sagaKey, getCallDataHandler, defaultUser, changeFormData, formData, spinningOn, spinningOff } = this.props;
+    const { result, userSearch, profile, sagaKey, getCallDataHandler, defaultUser, changeFormData, formData, spinningOn, spinningOff, chkYear } = this.props;
     const data = (result && result.RESULT && result.RESULT.result) || {};
     const list = (data && data.list) || [];
     return (
@@ -63,6 +64,7 @@ class View extends Component {
             getCallDataHandler={getCallDataHandler}
             result={result}
             defaultUser={defaultUser}
+            chkYear={chkYear}
             changeFormData={changeFormData}
             formData={formData}
             viewStart={this.appStart}
@@ -102,6 +104,7 @@ View.propTypes = {
   formData: PropTypes.object,
   spinningOn: PropTypes.func,
   spinningOff: PropTypes.func,
+  chkYear: PropTypes.string,
 };
 View.defaultProps = {
   result: {},

@@ -18,7 +18,7 @@ class SearchBar extends Component {
       years: [],
       searchData: {
         userId: (this.props && this.props.formData && this.props.formData.userInfo && this.props.formData.userInfo.USER_ID) || 0,
-        chkYear: String(currentYear),
+        chkYear: (this.props && this.props.chkYear) || String(currentYear),
       },
     };
   }
@@ -61,7 +61,7 @@ class SearchBar extends Component {
   };
 
   render() {
-    const { formData, userSearch, profile } = this.props;
+    const { formData, userSearch, profile, chkYear } = this.props;
     const { years } = this.state;
     const userInfo = (formData && formData.userInfo) || {};
     const empNo = (profile && profile.EMP_NO) || '';
@@ -81,7 +81,7 @@ class SearchBar extends Component {
           &nbsp;
           <AntdSelect
             className="select-sm mr5"
-            defaultValue={currentYear}
+            defaultValue={chkYear || currentYear}
             style={{ width: 120 }}
             onChange={value => this.handleOnChangeSearchData('chkYear', value)}
           >
@@ -110,6 +110,7 @@ SearchBar.propTypes = {
   spinningOn: PropTypes.func,
   userSearch: PropTypes.bool,
   profile: PropTypes.object,
+  chkYear: PropTypes.string,
 };
 SearchBar.defaultProps = {
   sagaKey: '',
