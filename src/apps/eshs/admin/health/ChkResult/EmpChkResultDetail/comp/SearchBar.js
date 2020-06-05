@@ -70,7 +70,7 @@ class SearchBar extends Component {
         <div className="search-input-area">
           {userSearch ? (
             <div style={{ display: 'inline-block' }}>
-              <UserSearchModal visible colData={empNo} onClickRow={record => this.handleOnChangeSearchData('userId', record.USER_ID)} />
+              <UserSearchModal colData={empNo} onClickRow={record => this.handleOnChangeSearchData('userId', record.USER_ID)} />
             </div>
           ) : (
             <span className="text-label">{userInfo.EMP_NO || ''}</span>
