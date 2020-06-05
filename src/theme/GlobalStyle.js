@@ -113,7 +113,7 @@ html {
 }
 
 .ant-checkbox {
-  top: -2px;
+  top: 0;
 }
 
 .ant-checkbox-checked:after {
