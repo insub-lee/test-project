@@ -110,112 +110,112 @@ class List extends React.Component {
     {
       title: '방독면',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T1)} onChange={value => this.handleInputChange('T1', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T1)} min={0} onChange={value => this.handleInputChange('T1', record.DETAIL_ID, value)} />,
     },
     {
       title: '카트리지',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T2)} onChange={value => this.handleInputChange('T2', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T2)} min={0} onChange={value => this.handleInputChange('T2', record.DETAIL_ID, value)} />,
     },
     {
       title: '보안경',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T3)} onChange={value => this.handleInputChange('T3', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T3)} min={0} onChange={value => this.handleInputChange('T3', record.DETAIL_ID, value)} />,
     },
     {
       title: '보안면',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T4)} onChange={value => this.handleInputChange('T4', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T4)} min={0} onChange={value => this.handleInputChange('T4', record.DETAIL_ID, value)} />,
     },
     {
       title: '내산장갑(대)',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T5)} onChange={value => this.handleInputChange('T5', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T5)} min={0} onChange={value => this.handleInputChange('T5', record.DETAIL_ID, value)} />,
     },
     {
       title: '내산장갑(소)',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T6)} onChange={value => this.handleInputChange('T6', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T6)} min={0} onChange={value => this.handleInputChange('T6', record.DETAIL_ID, value)} />,
     },
     {
       title: 'PH Paper',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T7)} onChange={value => this.handleInputChange('T7', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T7)} min={0} onChange={value => this.handleInputChange('T7', record.DETAIL_ID, value)} />,
     },
     {
       title: '(산)중화제600ml',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T8)} onChange={value => this.handleInputChange('T8', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T8)} min={0} onChange={value => this.handleInputChange('T8', record.DETAIL_ID, value)} />,
     },
     {
       title: '(산)중화제4l',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T9)} onChange={value => this.handleInputChange('T9', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T9)} min={0} onChange={value => this.handleInputChange('T9', record.DETAIL_ID, value)} />,
     },
     {
       title: '(산)중화제10l',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T10)} onChange={value => this.handleInputChange('T10', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T10)} min={0} onChange={value => this.handleInputChange('T10', record.DETAIL_ID, value)} />,
     },
     {
       title: '(알)중화제600ml',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T11)} onChange={value => this.handleInputChange('T11', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T11)} min={0} onChange={value => this.handleInputChange('T11', record.DETAIL_ID, value)} />,
     },
     {
       title: '(알)중화제4l',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T12)} onChange={value => this.handleInputChange('T12', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T12)} min={0} onChange={value => this.handleInputChange('T12', record.DETAIL_ID, value)} />,
     },
     {
       title: '(알)중화제10l',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T13)} onChange={value => this.handleInputChange('T13', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T13)} min={0} onChange={value => this.handleInputChange('T13', record.DETAIL_ID, value)} />,
     },
     {
       title: '흡착포원형',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T14)} onChange={value => this.handleInputChange('T14', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T14)} min={0} onChange={value => this.handleInputChange('T14', record.DETAIL_ID, value)} />,
     },
     {
       title: '흡착포사각',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T15)} onChange={value => this.handleInputChange('T15', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T15)} min={0} onChange={value => this.handleInputChange('T15', record.DETAIL_ID, value)} />,
     },
     {
       title: '앞치마',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T16)} onChange={value => this.handleInputChange('T16', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T16)} min={0} onChange={value => this.handleInputChange('T16', record.DETAIL_ID, value)} />,
     },
     {
       title: '토시',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T17)} onChange={value => this.handleInputChange('T17', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T17)} min={0} onChange={value => this.handleInputChange('T17', record.DETAIL_ID, value)} />,
     },
     {
       title: '화학복',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T18)} onChange={value => this.handleInputChange('T18', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T18)} min={0} onChange={value => this.handleInputChange('T18', record.DETAIL_ID, value)} />,
     },
     {
       title: '장화',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T19)} onChange={value => this.handleInputChange('T19', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T19)} min={0} onChange={value => this.handleInputChange('T19', record.DETAIL_ID, value)} />,
     },
     {
       title: '방열장갑',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T20)} onChange={value => this.handleInputChange('T20', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T20)} min={0} onChange={value => this.handleInputChange('T20', record.DETAIL_ID, value)} />,
     },
     {
       title: '귀마개',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T21)} onChange={value => this.handleInputChange('T21', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T21)} min={0} onChange={value => this.handleInputChange('T21', record.DETAIL_ID, value)} />,
     },
     {
       title: '비고',
       align: 'center',
-      render: record => <InputNumber defaultValue={Number(record.T22)} onChange={value => this.handleInputChange('T22', record.DETAIL_ID, value)} />,
+      render: record => <InputNumber defaultValue={Number(record.T22)} min={0} onChange={value => this.handleInputChange('T22', record.DETAIL_ID, value)} />,
     },
   ];
 
@@ -279,7 +279,12 @@ class List extends React.Component {
   };
 
   handleDeptSelect = dept => {
-    this.setState({ modalVisible: false }, this.handleSearchChange('deptCd', dept.DEPT_CD));
+    const deptInfo = { deptCd: dept.DEPT_CD, deptNm: dept.NAME_KOR };
+    this.setState(prevState => ({
+      searchValue: Object.assign(prevState.searchValue, deptInfo),
+      modalVisible: false,
+    }));
+    // this.setState({ modalVisible: false }, this.handleSearchChange('deptCd', dept.DEPT_CD));
   };
 
   handleInputChange = (key, id, value) => {
@@ -295,9 +300,26 @@ class List extends React.Component {
     );
   };
 
+  popConfirmContent = () => {
+    const { searchValue } = this.state;
+    return (
+      <>
+        <div>{searchValue.deptNm}</div>
+        <div>
+          <span>{searchValue.chkYear}년도 정보를</span>
+          <AntdSelect className="select-xs mr5 ml5" defaultValue={Number(searchValue.chkYear) + 1}>
+            <Select.Option value={Number(searchValue.chkYear) + 1}>{Number(searchValue.chkYear) + 1}</Select.Option>
+            <Select.Option value={Number(searchValue.chkYear) + 2}>{Number(searchValue.chkYear) + 2}</Select.Option>
+          </AntdSelect>
+          <span>년도로 복사합니다.</span>
+        </div>
+      </>
+    );
+  };
+
   render() {
-    const { columns, yearList, handleSearchChange, handleModalVisible, handleModalClose, handleDeptSelect, handleOnSaveClick } = this;
-    const { dataSource, modalVisible } = this.state;
+    const { columns, yearList, handleSearchChange, handleModalVisible, handleModalClose, handleDeptSelect, handleOnSaveClick, popConfirmContent } = this;
+    const { dataSource, modalVisible, searchValue } = this.state;
     return (
       <>
         <StyledContentsWrapper>
@@ -314,12 +336,15 @@ class List extends React.Component {
                   <Select.Option value={year}>{year}년</Select.Option>
                 ))}
               </AntdSelect>
-              <span>부서코드</span>
-              <AntdSearch className="input-search-mid" style={{ width: '15%' }} onClick={handleModalVisible} />
+              <span className="text-label">부서코드</span>
+              <AntdSearch className="input-search-mid" style={{ width: '15%' }} value={searchValue.deptCd} onClick={handleModalVisible} />
             </div>
-            <div>
-              <Popconfirm okText="수정" cancelText="취소" onConfirm={handleOnSaveClick}>
-                <StyledButton className="btn-primary">수정</StyledButton>
+            <div style={{ textAlign: 'center' }}>
+              <Popconfirm title={<span>수정하시겠습니까?</span>} okText="수정" cancelText="취소" onConfirm={handleOnSaveClick}>
+                <StyledButton className="btn-primary mr5">수정</StyledButton>
+              </Popconfirm>
+              <Popconfirm title={popConfirmContent()} okText="저장" cancelText="취소" onConfirm={() => console.debug('@@@@CONFIRM@@@@')}>
+                <StyledButton className="btn-primary">새로 저장하기</StyledButton>
               </Popconfirm>
             </div>
           </StyledCustomSearchWrapper>
