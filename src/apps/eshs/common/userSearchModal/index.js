@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Input, Modal } from 'antd';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import ModalContent from 'apps/eshs/common/userSearchModal/ModalContent';
 
@@ -16,6 +17,7 @@ const AntdModal = StyledAntdModal(Modal);
 //    onClickRow={record => ()}                             --  [필수] userList rowClick시 record를 리턴받는 함수
 //    className="input-search-sm ant-search-inline mr5"     -- AntdSearchInput className
 //    columns={[]}                                          -- AntdTable columns (default값 defaultProps 확인)
+//    modalOnCancel={() => ()}                              -- modal onCancel event (props 없을 경우 AntdSearchInput 값 비워주고 props 로 들어온 onClickRow({EMP_NO:'', USER_ID:''}) 호출 )
 // />
 
 class UserSearchModal extends Component {
@@ -58,7 +60,7 @@ class UserSearchModal extends Component {
   };
 
   render() {
-    const { className } = this.props;
+    const { className, modalOnCancel } = this.props;
     const { modalVisible, modalContent, colData } = this.state;
 
     return (
@@ -72,7 +74,25 @@ class UserSearchModal extends Component {
           onClick={this.handleModalVisible}
           onChange={this.handleModalVisible}
         />
-        <AntdModal width={900} visible={modalVisible} title="사원 검색" onCancel={this.handleModalVisible} destroyOnClose footer={null}>
+        <AntdModal
+          width={900}
+          visible={modalVisible}
+          title="사원 검색"
+          onCancel={() => {
+            typeof modalOnCancel === 'function' ? modalOnCancel() : this.onClickRow({ EMP_NO: '', USER_ID: '' });
+          }}
+          destroyOnClose
+          footer={[
+            <StyledButton
+              className="btn-light"
+              onClick={() => {
+                typeof modalOnCancel === 'function' ? modalOnCancel() : this.onClickRow({ EMP_NO: '', USER_ID: '' });
+              }}
+            >
+              닫기
+            </StyledButton>,
+          ]}
+        >
           {modalContent}
         </AntdModal>
       </>
@@ -82,6 +102,7 @@ class UserSearchModal extends Component {
 
 UserSearchModal.propTypes = {
   onClickRow: PropTypes.func,
+  modalOnCancel: PropTypes.func,
   columns: PropTypes.array,
   colData: PropTypes.string,
   className: PropTypes.string,
@@ -117,6 +138,7 @@ UserSearchModal.defaultProps = {
   ],
   colData: '',
   className: '',
+  modalOnCancel: undefined,
 };
 
 export default UserSearchModal;
