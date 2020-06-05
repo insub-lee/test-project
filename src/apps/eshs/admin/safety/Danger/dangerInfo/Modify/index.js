@@ -383,21 +383,31 @@ class Modify extends Component {
                 <th align="center">유해화학물질명</th>
                 <th align="center">등급</th>
               </tr>
-              {tagArray(this.onChangeData, formData).map(tag => (
+              {tagArray(this.onChangeData, formData).map((tag, index) => (
                 <tr>
                   <td align="center" colSpan="2">
-                    <AntdSelect className="select-sm" style={{ width: '100%' }}>
+                    <AntdSelect
+                      className="select-sm"
+                      style={{ width: '100%' }}
+                      value={formData[`M_CD${index + 1}`]}
+                      onChange={value => this.onChangeData(`M_CD${index + 1}`, value)}
+                    >
                       {selectData && selectData.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
                     </AntdSelect>
                   </td>
                   <td align="center">
-                    <AntdInputNumber className="ant-input-number-sm" style={{ width: 100 }} />
+                    <AntdInputNumber
+                      className="ant-input-number-sm"
+                      style={{ width: 100 }}
+                      value={formData[`M_QTY${index + 1}`]}
+                      onChange={value => this.onChangeData(`M_QTY${index + 1}`, value)}
+                    />
                   </td>
                   <td align="center">
-                    <AntdSearchInput className="input-search-sm" />
+                    <AntdSearchInput className="input-search-sm" value={formData[`C_NM${index + 1}`]} readOnly onClick={() => this.onChangeModal(index + 1)} />
                   </td>
                   <td align="center">
-                    <span>span</span>
+                    <span>{formData[`C_GR${index + 1}`] || ''}</span>
                   </td>
                   {tag}
                 </tr>
