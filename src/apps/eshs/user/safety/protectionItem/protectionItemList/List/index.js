@@ -12,7 +12,8 @@ import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsMod
 import request from 'utils/request';
 import { debounce } from 'lodash';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 import ImageUploader from 'components/FormStuff/Upload/ImageUploader';
@@ -505,19 +506,21 @@ class List extends React.Component {
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent, inputFooter, viewFooter } = this;
     return (
       <>
-        <ContentsWrapper>
-          <div className="selSaveWrapper alignLeft">
-            <AntdSelect defaultValue="청주" onChange={handleSelectChange} className="ant-select-mid">
-              <Option value="317">청주</Option>
-              <Option value="318">구미</Option>
-            </AntdSelect>
-            <AntdInput className="ant-input-inline mr5" onChange={handleInputChange} style={{ width: '300px' }} placeholder="품목을 입력하세요." />
-            <StyledButton className="btn-primary" onClick={() => this.setState({ visible: true, viewType: 'INPUT' })}>
-              등록
-            </StyledButton>
-          </div>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="selSaveWrapper alignLeft">
+              <AntdSelect defaultValue="청주" onChange={handleSelectChange} className="ant-select-mid mr5">
+                <Option value="317">청주</Option>
+                <Option value="318">구미</Option>
+              </AntdSelect>
+              <AntdInput className="ant-input-inline mr5" onChange={handleInputChange} style={{ width: '300px' }} placeholder="품목을 입력하세요." />
+              <StyledButton className="btn-primary" onClick={() => this.setState({ visible: true, viewType: 'INPUT' })}>
+                등록
+              </StyledButton>
+            </div>
+          </StyledCustomSearchWrapper>
           <div style={{ width: '100%', height: '100%' }}>
-            <div className="ag-theme-balham tableWrapper" style={{ height: '520px' }}>
+            <div className="ag-theme-balham" style={{ height: '420px' }}>
               <AgGridReact
                 columnDefs={columnDefs}
                 rowData={rowData}
@@ -531,7 +534,7 @@ class List extends React.Component {
               />
             </div>
           </div>
-        </ContentsWrapper>
+        </StyledContentsWrapper>
         <AntdModal
           className="modal-table-pad"
           visible={visible}
