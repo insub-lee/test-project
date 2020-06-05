@@ -274,6 +274,7 @@ class InputPage extends React.Component {
                 <>
                   <div className="ant-card-head-title">{`${i + 1}번 문제`}</div>
                   <AntdInput
+                    className="ant-input-block"
                     defaultValue={questions[i].title || ''}
                     value={questions[i].title || ''}
                     onChange={e => handleInputChange(i, 'title', e.target.value)}
