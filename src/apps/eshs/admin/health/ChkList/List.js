@@ -133,12 +133,13 @@ class List extends Component {
       dataIndex: 'DEPT_NAME',
       key: 'DEPT_NAME',
       width: '15%',
+      ellipsis: true,
     },
     {
       title: '사번',
       dataIndex: 'EMP_NO',
       key: 'EMP_NO',
-      width: '8%',
+      width: '10%',
       align: 'center',
       render: (text, record) => <StyledButton className="btn-link btn-sm" onClick={() => this.onShowPopup(record)}>{text}</StyledButton>
     },
@@ -153,7 +154,7 @@ class List extends Component {
       title: '검종',
       dataIndex: 'CHK_TYPE_CD_NAME',
       key: 'CHK_TYPE_CD_NAME',
-      width: '8%',
+      width: '7%',
       align: 'center',
     },
     {
@@ -176,8 +177,9 @@ class List extends Component {
       title: '검진기관',
       dataIndex: 'HOSPITAL_NAME',
       key: 'HOSPITAL_NAME',
-      width: '12%',
+      width: '13%',
       align: 'center',
+      ellipsis: true,
     },
     {
       title: '예약일',
@@ -191,7 +193,6 @@ class List extends Component {
       title: '검진항목',
       dataIndex: 'CHK_ITEMS',
       key: 'CHK_ITEMS',
-      align: 'left',
       ellipsis: true,
     },
   ]

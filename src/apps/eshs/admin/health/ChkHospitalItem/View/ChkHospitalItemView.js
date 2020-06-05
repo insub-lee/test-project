@@ -45,7 +45,7 @@ class ChkHospitalItemView extends Component {
   }
 
   componentWillMount() {
-    const { sagaKey: id, getCallDataHandler, selectedRow } = this.props;
+    const { sagaKey: id, getCallDataHandler, selectedRow, spinningOn } = this.props;
     const apiAry = [
       {
         key: 'itemList',
@@ -70,12 +70,13 @@ class ChkHospitalItemView extends Component {
         type: 'GET',
       })
     }
+    spinningOn();
     getCallDataHandler(id, apiAry, this.initState);
     this.setState({ saveType: selectedRow && selectedRow.HOSPITAL_CODE ? 'U' : 'I' });
   }
 
   initState = () => {
-    const { result, selectedRow } = this.props;
+    const { result, selectedRow, spinningOff } = this.props;
     // 상세
     if (selectedRow && selectedRow.HOSPITAL_CODE && selectedRow.CHK_TYPE && result && result.itemDetail && result.itemDetail.detail) {
       const groupList = JSON.parse(result.itemDetail.detail.ITEM_JSON);
@@ -126,6 +127,8 @@ class ChkHospitalItemView extends Component {
     if (result && result.codeList && result.codeList.categoryMapList) {
       this.setState({ codeList: result.codeList.categoryMapList.filter(item => item.PARENT_NODE_ID === 4512)});
     }
+
+    spinningOff();
   };
 
   // 검진항목 체크
@@ -378,7 +381,7 @@ class ChkHospitalItemView extends Component {
   onSave = e => {
     e.stopPropagation();
     const { detail, groupList, saveType } = this.state;
-    const { sagaKey, submitHandlerBySaga, onSaveAfter } = this.props;
+    const { sagaKey, submitHandlerBySaga, onSaveAfter, spinningOn, spinningOff } = this.props;
 
     // validation check
     if (!detail.HOSPITAL_CODE || detail.HOSPITAL_CODE === '') {
@@ -432,6 +435,7 @@ class ChkHospitalItemView extends Component {
             ITEM_JSON: groupList,
           }
         };
+        spinningOn();
         submitHandlerBySaga(sagaKey, (saveType === 'I' ? 'POST' : 'PUT'), '/api/eshs/v1/common/health/healthChkHospitalItem', submitData, (id, response) => {
           if (response) {
             if (response.result === -1) {
@@ -445,10 +449,10 @@ class ChkHospitalItemView extends Component {
           } else {
             message.error(<MessageContent>시스템 오류</MessageContent>);
           }
+          spinningOff();
         });
       }
-    })
-
+    });
   };
 
   columns = [
