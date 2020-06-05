@@ -96,7 +96,7 @@ class List extends Component {
     const apiAry = [
       {
         key: 'List',
-        url: `/api/eshs/v1/common/health/eshsHealthChkResultStmtList`,
+        url: `/api/eshs/v1/common/health/eshsHealthChkResultList`,
         type: 'POST',
         params: { PARAM: { ...searchParam } },
       },
@@ -464,7 +464,7 @@ class List extends Component {
   render() {
     const { result } = this.props;
     const { yearList, modalObj, selectColumn } = this.state;
-    const list = (result && result.List && result.List.result) || [];
+    const list = (result && result.List && result.List.list) || [];
     const hospitalList = (result && result.hospitalList && result.hospitalList.list) || [];
     const chkTypeList = (result && result.chkTypeList && result.chkTypeList.categoryMapList) || [];
     const workAreaList = (result && result.workAreaList && result.workAreaList.categoryMapList) || [];
