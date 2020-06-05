@@ -12,7 +12,7 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
 
-import View from './View';
+// import View from './View';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
