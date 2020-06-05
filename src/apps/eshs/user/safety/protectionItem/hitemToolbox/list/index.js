@@ -113,7 +113,7 @@ class List extends React.Component {
       align: 'center',
       render: (text, record, index) =>
         index !== this.state.dataSource.length - 1 ? (
-          <InputNumber value={Number(record.T1)} min={0} onChange={value => this.handleInputChange('T1', record.DETAIL_ID, value)} />
+          <InputNumber defaultValue={Number(record.T1)} min={0} onChange={value => this.handleInputChange('T1', record.DETAIL_ID, value)} />
         ) : (
           <span>{Number(record.T1)}</span>
         ),
