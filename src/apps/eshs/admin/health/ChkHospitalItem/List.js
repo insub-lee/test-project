@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { Input, Table, Modal, Tag } from 'antd';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledTagWrapper from 'components/BizBuilder/styled/Tag/StyledTagWrapper';
 import StyledTag from 'components/BizBuilder/styled/Tag/StyledTag';
 
@@ -14,7 +15,7 @@ import View from './View';
 
 const AntdInput = StyledInput(Input);
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModalPad(Modal);
+const AntdModal = StyledAntdModal(Modal);
 const AntdTag = StyledTag(Tag);
 
 class List extends Component {
@@ -138,24 +139,21 @@ class List extends Component {
           <View selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} onSaveAfter={this.onSaveAfter} />
         </AntdModal>
         <StyledContentsWrapper>
-          <div className="selSaveWrapper alignLeft">
-            <span className="textLabel">검진기관</span>
-            <AntdInput
-              className="ant-input-sm ant-input-inline mr5"
-              style={{ width: 200 }}
-              onChange={e => this.setState({ hospitalName: e.target.value })}
-              onPressEnter={this.getList}
-              allowClear
-            />
-            <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary btn-sm" onClick={this.getList}>검색</StyledButton>
-            </StyledButtonWrapper>
-          </div>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <AntdInput
+                className="ant-input-sm mr5" style={{ width: 200 }}
+                onChange={e => this.setState({ hospitalName: e.target.value })}
+                onPressEnter={this.getList}
+                allowClear placeholder="검진기관명"
+              />
+              <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
+            </div>
+          </StyledCustomSearchWrapper>
           <AntdTable
             columns={this.columns}
             dataSource={this.state.list.map(item => ({ ...item, key: item.HOSPITAL_CODE }))}
             bordered={true}
-            className="tableWrapper"
           />
           <StyledButtonWrapper className="btn-wrap-right btn-wrap-mr-20">
             <StyledButton className="btn-primary btn-sm" onClick={this.onClickAdd}>등록</StyledButton>

@@ -227,6 +227,17 @@
             proxy_set_header     host $http_host;
     }
 
+    location ~ ^(/api/wts/v1/common/) {
+            proxy_pass  http://wts-common;
+            #proxy_connect_timeout 1800;
+            proxy_read_timeout      1800; # default 60
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+
     location ~ ^/img/thumb/crop/(.*)/(.*)$ {
         proxy_pass http://thumbor/unsafe/$1/http://http://192.168.251.14:40033/down/thumb/$2;
         proxy_connect_timeout 60;
@@ -390,6 +401,9 @@ upstream portal-migration {
 }
 upstream portal-filemanage {
     server 192.168.251.14:10202;
+}
+upstream wts-common {
+    server 192.168.251.14:10801;
 }
 upstream thumbor {
     # hosts 파일에 등록 후 사용 192.168.251.14, 192.168.251.15, 192.168.251.16
