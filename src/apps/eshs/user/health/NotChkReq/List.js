@@ -10,8 +10,8 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
-import NotChkReg from './NotChkReg';
-import NotChkReason from './NotChkReason';
+import NotChkReg from 'apps/eshs/common/health/NotChkReg';
+import NotChkReason from 'apps/eshs/common/health/NotChkReason';
 
 const AntdTable = StyledAntdTable(Table)
 const AntdSelect = StyledSelect(Select);
@@ -72,6 +72,28 @@ class List extends Component {
     });
   };
 
+  onClickNChkReg = row => {
+    this.setState({
+      selectedRow: row,
+      isShow: true,
+    });
+  };
+
+  onClickReasonHistory = row => {
+    this.setState({
+      selectedRow: row,
+      isReasonShow: true,
+    });
+  };
+
+  onCancelPopup = () => {
+    this.setState({ isShow: false });
+  };
+
+  onCancelReasonPopup = () => {
+    this.setState({ isReasonShow: false });
+  };
+
   columns = [
     {
       title: '검진종류',
@@ -102,7 +124,7 @@ class List extends Component {
       key: 'N_CHK_REASON_NAME',
       width: '20%',
       align: 'center',
-      render: (text, record) => text ? text : <StyledButton className="btn-link btn-xs" onClick={() => this.onClickNChkReg(record)}>[미검진 신청]</StyledButton>,
+      render: (text, record) => text ? text : <StyledButton className="btn-primary btn-xxs" onClick={() => this.onClickNChkReg(record)}>미검진 신청</StyledButton>,
     },
     {
       title: '조회',
@@ -110,31 +132,9 @@ class List extends Component {
       key: 'USER_ID',
       width: '20%',
       align: 'center',
-      render: (text, record) => <StyledButton className="btn-gray btn-xs" onClick={() => this.onClickReasonHistory(record)}>미검진 신청이력</StyledButton>,
+      render: (text, record) => <StyledButton className="btn-gray btn-xxs" onClick={() => this.onClickReasonHistory(record)}>조회</StyledButton>,
     },
   ];
-
-  onClickNChkReg = row => {
-    this.setState({
-      selectedRow: row,
-      isShow: true,
-    });
-  };
-
-  onClickReasonHistory = row => {
-    this.setState({
-      selectedRow: row,
-      isReasonShow: true,
-    });
-  };
-
-  onCancelPopup = () => {
-    this.setState({ isShow: false });
-  };
-
-  onCancelReasonPopup = () => {
-    this.setState({ isReasonShow: false });
-  };
 
   render() {
     const { result, profile } = this.props;

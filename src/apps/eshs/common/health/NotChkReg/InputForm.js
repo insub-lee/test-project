@@ -22,12 +22,20 @@ class InputForm extends Component {
       N_CHK_REASON_CD_NODE_ID: '',
       REASON_DETAIL: '',
       REASON_GUBUN: 2,  // 고정(미검진신청)
+      REQUEST_EMP_NO: '',
+      REQUEST_USER_ID: ''
     }
   };
 
   componentWillMount() {
     const { selectedRow } = this.props;
-    this.onChangeData('CHK_CD', selectedRow.CHK_CD);
+    this.setState(prevState => {
+      const { data } = prevState;
+      data.CHK_CD = selectedRow.CHK_CD;
+      data.REQUEST_EMP_NO = selectedRow.EMP_NO;
+      data.REQUEST_USER_ID = selectedRow.USER_ID;
+      return { data }
+    });
   };
 
   componentDidMount() {
@@ -88,7 +96,7 @@ class InputForm extends Component {
   }
 
   render() {
-    const { result, profile } = this.props;
+    const { result, selectedRow } = this.props;
 
     return (
       <StyledContentsWrapper>
@@ -101,12 +109,12 @@ class InputForm extends Component {
             <tbody>
               <tr>
                 <th>이름</th>
-                <td>{profile.NAME_KOR}</td>
+                <td>{selectedRow.NAME_KOR}</td>
               </tr>
               <tr>
                 <th>미검진사유</th>
                 <td>
-                  <AntdSelect className="select-sm" style={{ width: 150 }} placeholder="미검진사유" onChange={val => this.onChangeData('N_CHK_REASON_CD_NODE_ID', val)}>
+                  <AntdSelect className="select-sm" style={{ width: 170 }} placeholder="미검진사유" onChange={val => this.onChangeData('N_CHK_REASON_CD_NODE_ID', val)}>
                   {result && result.nChkReasonList && result.nChkReasonList.categoryMapList && result.nChkReasonList.categoryMapList.filter(cate => cate.LVL === 3).map(cate => (
                     <AntdSelect.Option value={cate.NODE_ID}>{cate.NAME_KOR}</AntdSelect.Option>
                   ))}
