@@ -250,6 +250,7 @@ class List extends Component {
                 <AntdSelect.Option value="1">1차</AntdSelect.Option>
                 <AntdSelect.Option value="2">재검</AntdSelect.Option>
               </AntdSelect>
+              <UserSearchModal onClickRow={this.onUserSearchAfter} />
               <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
             </div>
           </StyledCustomSearchWrapper>
