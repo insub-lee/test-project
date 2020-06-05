@@ -159,20 +159,6 @@ class List extends Component {
     setListSelectRowKeys(sagaKey, selectedRowKeys);
   };
 
-  removeMultiTask = () => {
-    const { sagaKey: id, getExtraApiData } = this.props;
-    const { removeList } = this.state;
-    const apiAry = [
-      {
-        key: 'userModalData',
-        type: 'POST',
-        url: `/api/builder/v1/work/taskContentsList/-1`,
-        params: { PARAM: { WORK_SEQ: 9201, taskList: removeList }, BUILDER: 'deleteMultiTask' },
-      },
-    ];
-    getExtraApiData(id, apiAry, this.modalDataSet);
-  };
-
   onReset = () => {
     const { changeFormData, sagaKey: id, changeSearchData } = this.props;
     this.onCancel();
