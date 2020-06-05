@@ -1,25 +1,93 @@
 import React, { Component } from 'react';
-import BizMicroDevBase from 'components/BizMicroDevBase';
-import UserSearchModal from 'apps/eshs/common/userSearchModal/UserSearchModal';
 import PropTypes from 'prop-types';
 
-class EmpChkResultDetail extends Component {
+import { Input, Modal } from 'antd';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+
+import ModalContent from 'apps/eshs/common/userSearchModal/ModalContent';
+
+const AntdSearchInput = StyledSearchInput(Input.Search);
+const AntdModal = StyledAntdModal(Modal);
+
+// Component Attribute 및 Event Method 정리
+// <UserSearchModal
+//    colData={empNO}                                       --  InputSearch 초기값
+//    onClickRow={record => ()}                             --  [필수] userList rowClick시 record를 리턴받는 함수
+//    className="input-search-sm ant-search-inline mr5"     -- AntdSearchInput className
+//    columns={[]}                                          -- AntdTable columns (default값 defaultProps 확인)
+// />
+
+class UserSearchModal extends Component {
+  state = {
+    modalVisible: false,
+    modalContent: [],
+    colData: '',
+  };
+
+  componentDidMount() {
+    const { colData } = this.props;
+    this.setState({ colData });
+  }
+
+  handleModalVisible = () => {
+    const { modalVisible } = this.state;
+    const { columns } = this.props;
+    if (modalVisible) {
+      return this.setState({
+        modalVisible: !modalVisible,
+        modalContent: [],
+      });
+    }
+    return this.setState({
+      modalVisible: !modalVisible,
+      modalContent: [<ModalContent onClickRow={this.onClickRow} columns={columns} />],
+    });
+  };
+
+  onClickRow = record => {
+    const { onClickRow } = this.props;
+
+    this.setState(
+      {
+        colData: record.EMP_NO,
+      },
+      () => onClickRow(record),
+    );
+    this.handleModalVisible();
+  };
+
   render() {
-    const { sagaKey, visible, onClickRow, colData, columns } = this.props;
-    return <BizMicroDevBase sagaKey={sagaKey} component={UserSearchModal} visible={visible} onClickRow={onClickRow} colData={colData} columns={columns} />;
+    const { className } = this.props;
+    const { modalVisible, modalContent, colData } = this.state;
+
+    return (
+      <>
+        <AntdSearchInput
+          style={{ width: '150PX' }}
+          value={colData}
+          className={className || 'input-search-sm ant-search-inline mr5'}
+          allowClear
+          readOnly
+          onClick={this.handleModalVisible}
+          onChange={this.handleModalVisible}
+        />
+        <AntdModal width={900} visible={modalVisible} title="사원 검색" onCancel={this.handleModalVisible} destroyOnClose footer={null}>
+          {modalContent}
+        </AntdModal>
+      </>
+    );
   }
 }
 
-EmpChkResultDetail.propTypes = {
-  sagaKey: PropTypes.string,
-  visible: PropTypes.bool, // flase 시 colData값 라벨로 노출
-  onClickRow: PropTypes.func, // list rowClick시 record값을 반환받는 함수
-  columns: PropTypes.array, // antdTable columns
-  colData: PropTypes.string, // InputSearch 초기값  userList rowClick 이벤트시 해당 사원의 사번으로 변경됨
+UserSearchModal.propTypes = {
+  onClickRow: PropTypes.func,
+  columns: PropTypes.array,
+  colData: PropTypes.string,
+  className: PropTypes.string,
 };
-EmpChkResultDetail.defaultProps = {
-  sagaKey: 'userSearch',
-  visible: true,
+
+UserSearchModal.defaultProps = {
   onClickRow: () => {},
   columns: [
     {
@@ -48,5 +116,7 @@ EmpChkResultDetail.defaultProps = {
     },
   ],
   colData: '',
+  className: '',
 };
-export default EmpChkResultDetail;
+
+export default UserSearchModal;
