@@ -340,7 +340,7 @@ class Reservation extends Component {
                   <th>전화번호</th>
                   <td>
                     <AntdInput
-                      value={reservationInfo.RCV_PHONE || userInfo.MOBILE_TEL_NO} className="int-input-sm"
+                      value={reservationInfo.RCV_PHONE || userInfo.MOBILE_TEL_NO} className="ant-input-sm"
                       onChange={e => this.onChangeReservationInfo('RCV_PHONE', e.target.value, 1)}
                     />
                   </td>

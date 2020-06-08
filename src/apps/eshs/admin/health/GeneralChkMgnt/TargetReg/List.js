@@ -14,7 +14,6 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import UserSearchModal from 'apps/eshs/common/userSearchModal';
-import View from './View';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
@@ -28,8 +27,8 @@ class List extends Component {
     workAreaList: [],
     deptList: [],
     searchInfo: {
-      CHK_TYPE_CD: '002',         // 종합검진-CODE:001
-      CHK_TYPE_CD_NODE_ID: 2065,  // 종합검진-NODE_ID:2064
+      CHK_TYPE_CD: '001',         // 일반검진-CODE:001
+      CHK_TYPE_CD_NODE_ID: 2064,  // 일반검진-NODE_ID:2064
       CHK_YEAR: '',
       WORK_AREA_CD_NODE_ID: '',
       SCH_USER_ID: '',
@@ -108,7 +107,7 @@ class List extends Component {
       }
     };
     Modal.confirm({
-      title: `${this.state.searchInfo.CHK_YEAR}년도 종합검진 대상자 목록을 생성하시겠습니까?`,
+      title: `${this.state.searchInfo.CHK_YEAR}년도 일반검진 대상자 목록을 생성하시겠습니까?`,
       icon: <ExclamationCircleOutlined />,
       okText: '생성',
       cancelText: '취소',
