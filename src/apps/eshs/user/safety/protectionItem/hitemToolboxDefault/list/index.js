@@ -21,10 +21,10 @@ class List extends React.Component {
     this.state = {
       dataSource: [],
       searchValue: {
-        // chkYear: '',
-        // deptCd: '',
-        chkYear: '2015',
-        deptCd: 'MN3T',
+        chkYear: '',
+        deptCd: '',
+        // chkYear: '2015',
+        // deptCd: 'MN3T',
       },
       requestValue: {},
       modalVisible: false,
@@ -34,7 +34,7 @@ class List extends React.Component {
   columns = () => [
     {
       title: '관리부서',
-      dataIndex: 'DEPT_NAME_KOR',
+      dataIndex: 'NAME_KOR',
       align: 'center',
       fixed: 'left',
     },
@@ -325,9 +325,11 @@ class List extends React.Component {
 
   setDataSource = () => {
     const { result } = this.props;
+    const tempDataSource = [];
+    tempDataSource.push((result.toolboxList && result.toolboxList.list) || {});
     this.setState({
-      dataSource: (result.toolboxList && [result.toolboxList.list]) || [],
-      requestValue: (result.toolboxList && result.toolboxList.list) || [],
+      dataSource: tempDataSource,
+      requestValue: (result.toolboxList && result.toolboxList.list) || {},
     });
   };
 
@@ -386,7 +388,6 @@ class List extends React.Component {
   handleOnSaveClick = () => {
     const { requestValue, searchValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const params = Object.assign(requestValue, { CHK_YEAR: searchValue.chkYear, DEPT_CD: searchValue.deptCd });
     const submitCallback = () => {
       message.success('수정되었습니다.');
       this.getDataSource();
