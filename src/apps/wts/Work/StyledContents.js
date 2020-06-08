@@ -15,7 +15,7 @@ const StyledContents = styled.div`
 
     .sub_con {
       height: calc(100vh - 93px);
-      maring-bottom: 30px;
+      margin-bottom: 30px;
       padding-bottom: 100px !important;
       overflow: auto;
 

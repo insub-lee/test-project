@@ -147,7 +147,7 @@ const StyledCommonForm = styled.form`
 
   .survey_tit,
   .sub_form_tit {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 16px;
     margin-bottom: 15px;
   }
