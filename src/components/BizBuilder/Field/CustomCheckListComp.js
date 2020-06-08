@@ -115,7 +115,6 @@ class CustomCheckListComp extends Component {
     ];
 
     // colData Read 후 selectedValue bind 하기
-    console.debug('checkList', colData);
     let isItem = false;
     if (colData && colData.length > 0) {
       const { DETAIL } = colData[0];
@@ -193,7 +192,6 @@ class CustomCheckListComp extends Component {
   render() {
     const { readOnly } = this.props;
     const { isItem, dataSource } = this.state;
-    console.debug('datasource', dataSource);
     return (
       <>
         <StyledMultiSelector>
