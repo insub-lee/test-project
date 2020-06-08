@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
-import ListPage from 'apps/eshs/admin/safety/InspectionTarget/FireWhydrant/pages/ListPage';
+import ListPage from 'apps/eshs/admin/safety/InspectionTarget/FireWsocket/pages/ListPage';
 import * as CustomButtons from './Buttons';
 
-function FireWhydrant(props) {
+function FireWsocket(props) {
   const [isLoading, setIsLoading] = useState(true);
   const loadingComplete = () => {
     setIsLoading(false);
@@ -12,8 +12,8 @@ function FireWhydrant(props) {
 
   return (
     <BizBuilderBase
-      sagaKey="FireWhydrant"
-      workSeq={10101}
+      sagaKey="FireWsocket"
+      workSeq={10401}
       viewType="LIST"
       CustomListPage={ListPage}
       CustomButtons={CustomButtons}
@@ -23,7 +23,7 @@ function FireWhydrant(props) {
   );
 }
 
-FireWhydrant.propTypes = {};
-FireWhydrant.defaultProps = {};
+FireWsocket.propTypes = {};
+FireWsocket.defaultProps = {};
 
-export default FireWhydrant;
+export default FireWsocket;

@@ -18,6 +18,5 @@ export const META_SEQ = {
   LIST_USAGE_SEARCH: 9881, // 미사용 등록
 };
 export const VIEW_CHANGE_SEQ = {};
-export const BUTTON_CATEGORY = { FIRE_EXTINGUISHER_MAIN: '' };
 
 export default 'specify what you want to import.';

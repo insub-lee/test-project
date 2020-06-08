@@ -20,6 +20,5 @@ export const META_SEQ = {
   LIST_USAGE_SEARCH: 8961,
 };
 export const VIEW_CHANGE_SEQ = {};
-export const BUTTON_CATEGORY = { FIRE_EXTINGUISHER_MAIN: 'FIRE_EXTINGUISHER' };
 
 export default 'specify what you want to import.';
