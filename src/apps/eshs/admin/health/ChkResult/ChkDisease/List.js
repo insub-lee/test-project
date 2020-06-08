@@ -270,7 +270,7 @@ class List extends Component {
         </AntdModal>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper className="search-wrapper-inline">
-            <div className="search-input-area">
+            <div className="search-input-area mb10">
               <AntdSelect
                 defaultValue={currentYear}
                 className="select-sm mr5"
@@ -364,8 +364,11 @@ class List extends Component {
               </AntdSelect>
             </div>
             <div className="btn-area">
-              <StyledButton className="btn-gray btn-sm" onClick={this.getList}>
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>
                 검색
+              </StyledButton>
+              <StyledButton className="btn-gray btn-sm" onClick={() => message.info(<MessageContent>미구현</MessageContent>)}>
+                엑셀받기
               </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
