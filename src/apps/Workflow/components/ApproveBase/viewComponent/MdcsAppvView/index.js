@@ -6,7 +6,9 @@ import { Radio, Input, Button, Icon, Select, message, Modal, Table } from 'antd'
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import UserSelect from 'components/UserSelect';
+import AbrogationMultiModifyDraft from 'apps/Workflow/User/CommonView/abrogationMultiModifyDraft';
 
+import StyledInputView from 'apps/mdcs/components/BizBuilderBase/viewComponent/InputPage/Styled';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
@@ -23,26 +25,33 @@ const AntdLineTable = StyledAntdTable(Table);
 let timeout;
 
 class MdcsAppvView extends Component {
-  state = {
-    modalWidth: 800,
-    userInfo: [],
-    selectedUser: undefined,
-    nextApprover: [],
-    coverView: {
-      visible: false,
-      workSeq: undefined,
+  // eslint-disable-next-line react/state-in-constructor
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalWidth: 800,
+      userInfo: [],
+      selectedUser: undefined,
+      nextApprover: [],
+      coverView: {
+        visible: false,
+        workSeq: undefined,
+        taskSeq: undefined,
+        viewMetaSeq: undefined,
+      },
+      isUserSelect: false,
+      procResult: [],
+      holdHistoryList: [],
+      undefined,
+      isMultiSelect: true,
+      workPrcProps: undefined,
+      isDcc: false,
+      opinion: undefined,
+      isAbrogationMultiShow: false,
+      workseq: undefined,
       taskSeq: undefined,
-      viewMetaSeq: undefined,
-    },
-    isUserSelect: false,
-    procResult: [],
-    holdHistoryList: [],
-    undefined,
-    isMultiSelect: true,
-    workPrcProps: undefined,
-    isDcc: false,
-    opinion: undefined,
-  };
+    };
+  }
 
   componentDidMount() {
     const { id, selectedRow, setSelectedRow, APPV_STATUS, submitHandlerBySaga, profile } = this.props;
@@ -96,6 +105,8 @@ class MdcsAppvView extends Component {
   };
 
   onModalClose = () => {
+    const { getUnApproveList } = this.props;
+    getUnApproveList();
     this.props.setViewVisible(false);
   };
 
@@ -110,18 +121,12 @@ class MdcsAppvView extends Component {
     this.setState({ coverView: tempCoverView });
   };
 
-  onClickModify = () => {
-    const { selectedRow } = this.props;
-    const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
-    this.setState({ coverView });
-  };
-
   getTableColumns = () => [
     {
-      title: 'Title',
-      dataIndex: 'TITLE',
-      key: 'TITLE',
-      ellipsis: true,
+      title: '문서번호',
+      dataIndex: 'DOCNUMBER',
+      key: 'DOCNUMBER',
+      width: '13%',
     },
     {
       title: '개정번호',
@@ -131,21 +136,13 @@ class MdcsAppvView extends Component {
       align: 'center',
     },
     {
-      title: '작성자',
-      dataIndex: 'REG_USER_NAME',
-      key: 'REG_USER_NAME',
-      width: '12%',
-      align: 'center',
+      title: 'Title',
+      dataIndex: 'TITLE',
+      key: 'TITLE',
+      ellipsis: true,
     },
     {
-      title: '부서',
-      dataIndex: 'REG_DEPT_NAME',
-      key: 'REG_DEPT_NAME',
-      width: '17%',
-      align: 'center',
-    },
-    {
-      title: '기안일',
+      title: 'Effective Date',
       dataIndex: 'REG_DTTM',
       key: 'REG_DTTM',
       width: '15%',
@@ -187,23 +184,61 @@ class MdcsAppvView extends Component {
 
   onClickModify = () => {
     const { selectedRow } = this.props;
-    console.debug('modify', this.props);
-    const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
-    this.setState(prevState => {
-      const { workPrcProps } = prevState;
-      const nWorkPrcProps = { ...workPrcProps, draftMethod: 'modify', darft_id: selectedRow.DRAFT_ID };
-      return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
-    });
+    const { REL_TYPE } = selectedRow;
+    if (REL_TYPE === 999) {
+      //일괄폐기 수정화면
+      this.setState({ isAbrogationMultiShow: true, workPrcProps: { ...selectedRow, draftMethod: 'modify' } });
+    } else {
+      const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
+      this.setState(prevState => {
+        const { workPrcProps } = prevState;
+        const nWorkPrcProps = { ...workPrcProps, draftMethod: 'modify', darft_id: selectedRow.DRAFT_ID };
+        return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
+      });
+    }
   };
 
   onChangeOpinion = e => {
     this.setState({ opinion: e.target.value });
   };
 
+  onCloseAbrogationMultiModal = () => {
+    this.setState({ isAbrogationMultiShow: false });
+  };
+
+  onAbrogationMultiProcess = workPrcProps => {
+    const { id, submitHandlerBySaga } = this.props;
+    const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
+    submitHandlerBySaga(id, 'POST', prefixUrl, { DRAFT_PROCESS: workPrcProps }, this.onCompleteProc);
+  };
+
+  onCompleteProc = () => {
+    this.setState({
+      isAbrogationMultiShow: false,
+    });
+  };
+
+  onAbrogClick = (record, rowIndex, e) => {
+    console.debug(record, rowIndex, e);
+  };
+
   render() {
     const { selectedRow } = this.props;
     const { DRAFT_DATA } = selectedRow;
-    const { modalWidth, coverView, isUserSelect, nextApprover, procResult, holdHistoryList, userList, isMultiSelect, workPrcProps, isDCC } = this.state;
+    const {
+      modalWidth,
+      coverView,
+      isUserSelect,
+      nextApprover,
+      procResult,
+      holdHistoryList,
+      userList,
+      isMultiSelect,
+      workPrcProps,
+      isDCC,
+      isAbrogationMultiShow,
+    } = this.state;
+    console.debug('미결함 selectedRow', selectedRow, workPrcProps);
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -335,18 +370,37 @@ class MdcsAppvView extends Component {
             ViewCustomButtons={() => false}
           />
         ) : (
-          <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
-            <AntdLineTable
-              columns={this.getTableColumns()}
-              dataSource={DRAFT_DATA.abrogationList !== null ? DRAFT_DATA.abrogationList : []}
-              onRow={(record, rowIndex) => ({
-                onClick: e => this.onRowClick(record, rowIndex, e),
-              })}
-              bordered
-              className="tableWrapper"
-            />
-          </StyledHtmlTable>
+          <>
+            <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
+              <AntdLineTable
+                columns={this.getTableColumns()}
+                dataSource={DRAFT_DATA.abrogationList !== null ? DRAFT_DATA.abrogationList : []}
+                bordered
+                className="tableWrapper"
+              />
+            </StyledHtmlTable>
+            <AntdModal
+              destroyOnClose
+              style={{ top: '50px' }}
+              width={900}
+              visible={isAbrogationMultiShow}
+              onCancel={this.onCloseAbrogationMultiModal}
+              footer={null}
+              maskClosable={false}
+            >
+              <StyledInputView>
+                <div className="pop_tit">표준 일괄 폐기</div>
+                <AbrogationMultiModifyDraft
+                  workPrcProps={workPrcProps}
+                  {...this.props}
+                  onAbrogationMultiProcess={this.onAbrogationMultiProcess}
+                  onCloseAbrogationMultiModal={this.onCloseAbrogationMultiModal}
+                />
+              </StyledInputView>
+            </AntdModal>
+          </>
         )}
+
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"
           title="표지 보기"

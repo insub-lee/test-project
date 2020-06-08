@@ -10,7 +10,7 @@ import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 const AntdLineTable = StyledLineTable(Table);
 
 const { TextArea } = Input;
-class AbrogationMultiDraft extends Component {
+class abrogationMultiModifyDraft extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,13 +18,20 @@ class AbrogationMultiDraft extends Component {
       draftWorkProc: undefined,
       descOfChange: undefined,
       revHistory: undefined,
+      draftTitle: undefined,
     };
   }
 
   componentDidMount() {
     const { id, submitHandlerBySaga, workPrcProps } = this.props;
-    const url = '/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder';
-    submitHandlerBySaga(id, 'POST', url, { PARAM: { PRC_ID: 106, DRAFT_DATA: { ...workPrcProps, isMultiAbrogation: true } } }, this.initProcessData);
+    console.debug('this.props', this.props);
+    const {
+      DRAFT_TITLE,
+      DRAFT_DATA: { descOfChange, revHistory },
+    } = workPrcProps;
+    this.setState({ draftTitle: DRAFT_TITLE, descOfChange, revHistory });
+    const url = '/api/workflow/v1/common/workprocess/defaultPrcRuleModifyHanlder';
+    submitHandlerBySaga(id, 'POST', url, { PARAM: { PRC_ID: 106, DRAFT_INFO: { ...workPrcProps, isMultiAbrogation: true } } }, this.initProcessData);
   }
 
   initProcessData = (sagaKey, response) => {
@@ -103,7 +110,12 @@ class AbrogationMultiDraft extends Component {
   };
 
   render() {
+    const { workPrcProps } = this.props;
     const { workProcess } = this.state;
+    const {
+      DRAFT_TITLE,
+      DRAFT_DATA: { descOfChange, revHistory },
+    } = workPrcProps;
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -121,19 +133,19 @@ class AbrogationMultiDraft extends Component {
               <tr>
                 <th style={{ width: '300px' }}>제목 </th>
                 <td>
-                  <Input style={{ width: '100%' }} onChange={this.onChangeTitle}></Input>
+                  <Input style={{ width: '100%' }} defaultValue={DRAFT_TITLE} onChange={this.onChangeTitle}></Input>
                 </td>
               </tr>
               <tr>
                 <th style={{ width: '300px' }}>Description Of Change(From/To) </th>
                 <td>
-                  <TextArea style={{ width: '100%' }} onChange={this.onChangeDescription}></TextArea>
+                  <TextArea style={{ width: '100%' }} defaultValue={descOfChange} onChange={this.onChangeDescription}></TextArea>
                 </td>
               </tr>
               <tr>
                 <th style={{ width: '300px' }}>제개정 이력</th>
                 <td>
-                  <TextArea style={{ width: '100%' }} onChange={this.onChangeRevHistory}></TextArea>
+                  <TextArea style={{ width: '100%' }} defaultValue={revHistory} onChange={this.onChangeRevHistory}></TextArea>
                 </td>
               </tr>
             </tbody>
@@ -165,4 +177,4 @@ class AbrogationMultiDraft extends Component {
   }
 }
 
-export default AbrogationMultiDraft;
+export default abrogationMultiModifyDraft;
