@@ -5,19 +5,21 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
+import UserSearchModal from 'apps/eshs/common/userSearchModal';
 import View from './View';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModalPad(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 class List extends Component {
   state = {
@@ -26,9 +28,11 @@ class List extends Component {
     workAreaList: [],
     deptList: [],
     searchInfo: {
-      CHK_TYPE_CD: '002',  //고정(종합검진-CODE:002)
+      CHK_TYPE_CD: '002',         // 종합검진-CODE:001
+      CHK_TYPE_CD_NODE_ID: 2065,  // 종합검진-NODE_ID:2064
       CHK_YEAR: '',
       WORK_AREA_CD_NODE_ID: '',
+      SCH_USER_ID: '',
       EMP_NO: '',
       USER_NAME: '',
     }
@@ -43,7 +47,7 @@ class List extends Component {
     }
     this.setState(prevState => {
       let { searchInfo } = prevState;
-      searchInfo.CHK_YEAR = currYear;
+      searchInfo.CHK_YEAR = currYear.toString();
       return {
         yearList,
         searchInfo,
@@ -69,7 +73,7 @@ class List extends Component {
   };
 
   getList = () => {
-    const { sagaKey, getCallDataHandlerReturnRes } = this.props;
+    const { sagaKey, getCallDataHandlerReturnRes, spinningOn, spinningOff } = this.props;
     const apiInfo = {
       key: 'targetList002',
       url: `/api/eshs/v1/common/health/healthChkTargetList`,
@@ -80,6 +84,7 @@ class List extends Component {
         }
       },
     };
+    spinningOn();
     getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, res) => {
       if (res && res.list) {
         this.setState({
@@ -91,30 +96,35 @@ class List extends Component {
           }))
         });
       }
+      spinningOff();
     });
-  }
+  };
 
   onCreateTargetSelection = () => {
-    const { sagaKey, submitHandlerBySaga } = this.props;
+    const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
     const submitData = {
       PARAM: {
-        CHK_TYPE_CD: '002'  // 지식분류체계 (보건지킴이 코드관리 > 검지코드관리 > 검종 > 종합)
+        ...this.state.searchInfo
       }
-    }
+    };
     Modal.confirm({
-      title: `대상자 목록을 생성하시겠습니까?`,
+      title: `${this.state.searchInfo.CHK_YEAR}년도 종합검진 대상자 목록을 생성하시겠습니까?`,
       icon: <ExclamationCircleOutlined />,
+      okText: '생성',
+      cancelText: '취소',
       onOk() {
+        spinningOn();
         submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/healthChkTargetSelection', submitData, (id, res) => {
           if (res && res.result > 0) {
             message.info(<MessageContent>대상자 목록을 생성하였습니다.</MessageContent>)
           } else {
             message.info(<MessageContent>대상자 목록 생성에 실패하였습니다.</MessageContent>)
           }
+          spinningOff();
         });
       },
     })
-  }
+  };
 
   onChangeSearchInfo = (key, val) => {
     this.setState(prevState => {
@@ -126,6 +136,13 @@ class List extends Component {
 
   onClickRow = row => {
     console.debug('row > ', row);
+  };
+
+  onUserSearchAfter = row => {
+    if (row) {
+      this.onChangeSearchInfo('SCH_USER_ID', row.USER_ID);
+      this.onChangeSearchInfo('EMP_NO', row.EMP_NO);
+    }
   };
 
   columns = [
@@ -183,46 +200,28 @@ class List extends Component {
     return (
       <>
         <StyledContentsWrapper>
-          <div className="selSaveWrapper alignLeft">
-            <AntdSelect
-              className="select-sm mr5"
-              placeholder="지역선택"
-              style={{ width: 120 }}
-              onChange={val => this.onChangeSearchInfo('WORK_AREA_CD_NODE_ID', val)}
-            >
-              <AntdSelect.Option value="">지역전체</AntdSelect.Option>
-              {this.state.workAreaList.map(item => (
-                item.LVL !== 0 && (
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <AntdSelect
+                className="select-sm mr5"
+                placeholder="지역선택" allowClear
+                style={{ width: 120 }}
+                onChange={val => this.onChangeSearchInfo('WORK_AREA_CD_NODE_ID', val)}
+              >
+                {this.state.workAreaList.filter(item => item.LVL !== 0).map(item => (
                   <AntdSelect.Option value={item.NODE_ID}>{item.NAME_KOR}</AntdSelect.Option>
-                )
-              ))}
-            </AntdSelect>
-            <AntdSelect defaultValue={this.state.searchInfo.CHK_YEAR} className="select-sm mr5" placeholder="년도" style={{ width: 100 }}>
-              {this.state.yearList.map(year => (
-                <AntdSelect.Option value={year}>{`${year}년`}</AntdSelect.Option>
-              ))}
-            </AntdSelect>
-            <span className="textLabel">사번</span>
-            <AntdInput
-              className="ant-input-sm ant-input-inline mr5"
-              style={{ width: 150 }}
-              onChange={e => this.onChangeSearchInfo('EMP_NO', e.target.value)}
-              onPressEnter={this.getList}
-              allowClear
-            />
-            <span className="textLabel">이름</span>
-            <AntdInput
-              className="ant-input-sm ant-input-inline mr5"
-              style={{ width: 150 }}
-              onChange={e => this.onChangeSearchInfo('USER_NAME', e.target.value)}
-              onPressEnter={this.getList}
-              allowClear
-            />
-            <StyledButtonWrapper className="btn-wrap-inline">
+                ))}
+              </AntdSelect>
+              <AntdSelect defaultValue={this.state.searchInfo.CHK_YEAR} className="select-sm mr5" placeholder="년도" style={{ width: 100 }}>
+                {this.state.yearList.map(year => (
+                  <AntdSelect.Option value={year}>{`${year}년`}</AntdSelect.Option>
+                ))}
+              </AntdSelect>
+              <UserSearchModal onClickRow={this.onUserSearchAfter} />
               <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
-            </StyledButtonWrapper>
-          </div>
-          <StyledButtonWrapper className="btn-wrap-inline btn-wrap-mt-20 btn-wrap-ml-5">
+            </div>
+          </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-inline btn-wrap-mb-10">
             <StyledButton className="btn-primary btn-sm mr5">등록</StyledButton>
             <StyledButton className="btn-primary btn-sm" onClick={this.onCreateTargetSelection}>대상자 목록 생성</StyledButton>
           </StyledButtonWrapper>

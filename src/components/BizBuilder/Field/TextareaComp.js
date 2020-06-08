@@ -11,11 +11,11 @@ class TextareaComp extends React.Component {
     this.handleOnChange = debounce(this.handleOnChange, 300);
   }
 
-  componentDidUpdate() {
-    const { colData, sagaKey, COMP_FIELD } = this.props;
-    const textArea = document.querySelector(`#${sagaKey}_${COMP_FIELD}`);
-    if (textArea && colData !== textArea.value) textArea.value = colData;
-  }
+  // componentDidUpdate() {
+  //   const { colData, sagaKey, COMP_FIELD } = this.props;
+  //   const textArea = document.querySelector(`#${sagaKey}_${COMP_FIELD}`);
+  //   if (textArea && colData !== textArea.value) textArea.value = colData;
+  // }
 
   handleOnChange = value => {
     const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData } = this.props;

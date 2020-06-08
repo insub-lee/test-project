@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
 const StyledInput = Component => styled(Component)`
-  &.ant-input {
-    display: block;
+  &.ant-input,
+  &.ant-input-affix-wrapper input {
+    display: inline-block;
     width: 100%;
     height: calc(1.47em + 1rem + 2px);
     padding: 0.5rem 0.875rem;
@@ -15,6 +16,7 @@ const StyledInput = Component => styled(Component)`
     border: 1px solid #e5e5e5;
     border-radius: 4px;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    vertical-align: middle;
 
     &:hover,
     &:focus {
@@ -30,24 +32,29 @@ const StyledInput = Component => styled(Component)`
     }
   }
 
-  &.ant-input-mid {
+  &.ant-input.ant-input-mid,
+  &.ant-input-mid input {
     padding: 0.4rem 0.875rem;
+    font-size: 0.75rem;
     height: auto;
   }
 
-  &.ant-input-sm {
+  &.ant-input.ant-input-sm,
+  &.ant-input-sm input {
     padding: 0.313rem 0.613rem;
     font-size: 0.75rem;
     height: auto;
   }
 
-  &.ant-input-xs {
+  &.ant-input.ant-input-xs,
+  &.ant-input-xs input {
     padding: 0.2rem 0.5rem;
     font-size: 0.75rem;
     height: auto;
   }
 
-  &.ant-input-xxs {
+  &.ant-input.ant-input-xxs,
+  &.ant-input-xxs input {
     padding: 0.1rem 0.4rem;
     font-size: 0.75rem;
     height: auto;
@@ -58,6 +65,10 @@ const StyledInput = Component => styled(Component)`
     vertical-align: middle;
   }
 
+  &.ant-input-block {
+    display: block;
+  }
+
   &.ant-input-full {
     padding: 0;
     border: 0;
@@ -66,6 +77,7 @@ const StyledInput = Component => styled(Component)`
     border-radius: 0;
     line-height: normal;
     text-align: center;
+    display: block;
 
     &:hover,
     &:focus {
@@ -98,6 +110,8 @@ const StyledInput = Component => styled(Component)`
   }
 
   &.ant-input-affix-wrapper {
+    height: auto;
+
     .ant-input-suffix {
       right: 18px;
     }

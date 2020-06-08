@@ -18,6 +18,10 @@ const StyledCustomSearchWrapper = styled.div`
     .ant-select {
       vertical-align: middle;
     }
+
+    &.mb10 {
+      margin-bottom: 10px;
+    }
   }
 
   .btn-area {

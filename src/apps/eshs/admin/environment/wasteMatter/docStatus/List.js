@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Table, Input, message } from 'antd';
+import { Table, Input, message, Popconfirm } from 'antd';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 
 const AntdInput = StyledInput(Input);
-const AntdLineTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 
 class List extends Component {
   constructor(props) {
@@ -72,16 +72,43 @@ class List extends Component {
     };
     if (docGroupCd) {
       if (value === 'U') {
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsDocGroup', submitData, this.initDataApi);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsDocGroup', submitData, this.succeedModify);
       } else if (value === 'D') {
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsDocGroup', submitData, this.initDataApi);
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsDocGroup', submitData, this.succeedDelete);
       } else if (value === 'I') {
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsDocGroup', submitData, this.initDataApi);
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsDocGroup', submitData, this.succeedInsert);
       }
     } else if (!docGroupCd) {
       message.warning('문서종류코드를 올바르게 입력하시오.');
     }
     this.onReset();
+  };
+
+  succeedInsert = (id, response) => {
+    if (response.result === 1) {
+      message.success('등록이 완료되었습니다.');
+      this.initDataApi();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
+  succeedModify = (id, response) => {
+    if (response.result === 1) {
+      message.success('수정이 완료되었습니다.');
+      this.initDataApi();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
+  succeedDelete = (id, response) => {
+    if (response.result === 1) {
+      message.success('삭제가 완료되었습니다.');
+      this.initDataApi();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
   };
 
   onReset() {
@@ -113,12 +140,7 @@ class List extends Component {
         children: [
           {
             title: (
-              <AntdInput
-                className="ant-input-sm"
-                style={{ width: '200px' }}
-                value={docGroupCd}
-                onChange={e => this.onChangeValue('docGroupCd', e.target.value)}
-              />
+              <AntdInput className="ant-input-xs" style={{ width: 80 }} value={docGroupCd} onChange={e => this.onChangeValue('docGroupCd', e.target.value)} />
             ),
             align: 'center',
             dataIndex: 'DOC_GROUP_CD',
@@ -131,12 +153,7 @@ class List extends Component {
         children: [
           {
             title: (
-              <AntdInput
-                className="ant-input-sm"
-                style={{ width: '200px' }}
-                value={docGroupNm}
-                onChange={e => this.onChangeValue('docGroupNm', e.target.value)}
-              />
+              <AntdInput className="ant-input-xs" style={{ width: 100 }} value={docGroupNm} onChange={e => this.onChangeValue('docGroupNm', e.target.value)} />
             ),
             align: 'center',
             dataIndex: 'DOC_GROUP_NM',
@@ -149,12 +166,7 @@ class List extends Component {
         children: [
           {
             title: (
-              <AntdInput
-                className="ant-input-sm"
-                style={{ width: '200px' }}
-                value={occurPart}
-                onChange={e => this.onChangeValue('occurPart', e.target.value)}
-              />
+              <AntdInput className="ant-input-xs" style={{ width: 80 }} value={occurPart} onChange={e => this.onChangeValue('occurPart', e.target.value)} />
             ),
             align: 'center',
             dataIndex: 'OCCUR_PART',
@@ -168,8 +180,8 @@ class List extends Component {
           {
             title: (
               <AntdInput
-                className="ant-input-sm"
-                style={{ width: '200px' }}
+                className="ant-input-xs"
+                style={{ width: 80 }}
                 value={hynixDocGroup}
                 onChange={e => this.onChangeValue('hynixDocGroup', e.target.value)}
               />
@@ -184,9 +196,7 @@ class List extends Component {
         align: 'center',
         children: [
           {
-            title: (
-              <AntdInput className="ant-input-sm" style={{ width: '200px' }} value={tableNm} onChange={e => this.onChangeValue('tableNm', e.target.value)} />
-            ),
+            title: <AntdInput className="ant-input-xs" style={{ width: 160 }} value={tableNm} onChange={e => this.onChangeValue('tableNm', e.target.value)} />,
             align: 'center',
             dataIndex: 'TABLE_NM',
           },
@@ -195,24 +205,24 @@ class List extends Component {
     ];
     return (
       <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <ContentsWrapper>
+        <StyledContentsWrapper>
           <div className="selSaveWrapper alignLeft">
             <StyledButtonWrapper>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.insertOverlab()}>
                 추가
               </StyledButton>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('U')}>
                 수정
               </StyledButton>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
-                삭제
-              </StyledButton>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
+              <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.onChangeData('D')} okText="Yes" cancelText="No">
+                <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
+              </Popconfirm>
+              <StyledButton className="btn-primary btn-sm" onClick={() => this.onReset()}>
                 Reset
               </StyledButton>
             </StyledButtonWrapper>
           </div>
-          <AntdLineTable
+          <AntdTable
             rowKey={docList && docList.WAREHOUSE_CD}
             columns={columns}
             dataSource={docList || []}
@@ -223,7 +233,7 @@ class List extends Component {
             })}
             footer={() => <span>{`${(docList && docList.length) || 0} 건`}</span>}
           />
-        </ContentsWrapper>
+        </StyledContentsWrapper>
       </div>
     );
   }

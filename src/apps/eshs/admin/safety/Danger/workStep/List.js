@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import { Table, Input, message, TreeSelect, Select } from 'antd';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledTreeSelect from 'commonStyled/Form/StyledTreeSelect';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import ExcelDownloader from './Excel';
 
 const AntdInput = StyledInput(Input);
@@ -252,7 +252,7 @@ class List extends Component {
             title: (
               <AntdInput
                 className="ant-input-inline ant-input-sm input-left"
-                style={{ width: '300px' }}
+                style={{ width: 150 }}
                 value={name}
                 onChange={e => this.onChangeValue('name', e.target.value)}
               />
@@ -273,7 +273,7 @@ class List extends Component {
               <>
                 <AntdInput
                   className="ant-input-inline ant-input-sm input-left mr5"
-                  style={{ width: '300px' }}
+                  style={{ width: 150 }}
                   value={desciption}
                   onChange={e => this.onChangeValue('desciption', e.target.value)}
                 />
@@ -318,16 +318,15 @@ class List extends Component {
             <Option value="N">미사용</Option>
           </AntdSelect>
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={this.selectCode}>
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.selectCode}>
               검색
             </StyledButton>
-            {listData.length > 0 && <ExcelDownloader dataList={listData} excelNm="작업단계관리" />}
+            {listData && listData.length > 0 && <ExcelDownloader dataList={listData} excelNm="작업단계관리" />}
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
-          className="tableWrapper"
-          rowKey={listData.NODE_ID}
-          key={listData.NODE_ID}
+          rowKey="NODE_ID"
+          key="NODE_ID"
           columns={columns}
           dataSource={listData || []}
           bordered

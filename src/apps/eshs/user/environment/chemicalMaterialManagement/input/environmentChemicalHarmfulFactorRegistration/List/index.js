@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select, Popconfirm } from 'antd';
+import { Input, Select, Popconfirm, message } from 'antd';
 
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
@@ -82,16 +82,14 @@ class List extends React.Component {
   handleInputClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue, isModified } = this.state;
+
     if (isModified) {
       this.setState({
         isModified: false,
       });
       return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, this.getMaterialList);
     }
-    this.setState({
-      isModified: false,
-    });
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, this.getMaterialList);
+    return message.error('화학물을 먼저 선택하세요.');
   };
 
   handleDeleteClick = () => {

@@ -1,4 +1,5 @@
 import { Map } from 'immutable';
+import XLSX from 'xlsx';
 
 export function clearToken() {
   localStorage.removeItem('id_token');
@@ -176,4 +177,55 @@ export function isJSON(str) {
 
 export function cloneJSON(item) {
   return JSON.parse(JSON.stringify(item));
+}
+
+export const SheetJSFT = [
+  'xlsx',
+  'xlsb',
+  'xlsm',
+  'xls',
+  'xml',
+  'csv',
+  'txt',
+  'ods',
+  'fods',
+  'uos',
+  'sylk',
+  'dif',
+  'dbf',
+  'prn',
+  'qpw',
+  '123',
+  'wb*',
+  'wq*',
+  'html',
+  'htm',
+]
+  .map(x => `.${x}`)
+  .join(',');
+
+export function exportExcel(rows, filename = 'exported_excel.xlsx', sheetname = 'Sheet 1') {
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, sheetname);
+  XLSX.writeFile(wb, filename);
+}
+
+export function getVirtualizedMinHeight(headerHeight, bodyHeight, length = 0, limit = 0) {
+  let minHeight = headerHeight;
+  if (length < 2) {
+    minHeight += bodyHeight;
+  } else if (length > 20) {
+    minHeight = limit;
+  } else {
+    minHeight += length * bodyHeight;
+  }
+  return minHeight;
+}
+
+export function exportExcelWithAOA(rows, filename = 'exported_excel.xlsx', sheetname = 'Sheet 1') {
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, sheetname);
+  XLSX.writeFile(wb, filename);
 }

@@ -177,7 +177,7 @@ class TableTypeSelector extends React.Component {
   };
 
   render() {
-    const { rightTableColumns, apiList, btnText, modalTitle, rowKey } = this.props;
+    const { rightTableColumns, apiList, btnText, modalTitle, rowKey, customClassName } = this.props;
     const { modalVisivle, applyList, leftTableColumnsSearchVersion } = this.state;
     const leftrowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
@@ -206,7 +206,7 @@ class TableTypeSelector extends React.Component {
     };
     return (
       <>
-        <StyledButton className="btn-primary btn-first" onClick={this.handleModalVisible}>
+        <StyledButton className={`btn-primary btn-first ${customClassName}`} onClick={this.handleModalVisible}>
           {btnText}
         </StyledButton>
 
@@ -303,6 +303,7 @@ TableTypeSelector.propTypes = {
   handleApply: PropTypes.func,
   btnText: PropTypes.string,
   modalTitle: PropTypes.string,
+  customClassName: PropTypes.string,
 };
 
 export default TableTypeSelector;

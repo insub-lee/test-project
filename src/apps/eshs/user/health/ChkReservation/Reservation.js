@@ -38,6 +38,9 @@ class Reservation extends Component {
   };
 
   componentWillMount() {
+    const today = new Date();
+    const currYear = today.getFullYear();
+
     const { sagaKey, getCallDataHandler, profile, spinningOn } = this.props;
     const apiAry = [
       {
@@ -54,7 +57,7 @@ class Reservation extends Component {
       },
       {
         key: 'reservation',
-        url: `/api/eshs/v1/common/health/healthChkReservation`,
+        url: `/api/eshs/v1/common/health/healthChkReservation?CHK_YEAR=${currYear}`,
         type: 'GET',
         params: {},
       },
@@ -337,7 +340,7 @@ class Reservation extends Component {
                   <th>전화번호</th>
                   <td>
                     <AntdInput
-                      value={reservationInfo.RCV_PHONE || userInfo.MOBILE_TEL_NO} className="int-input-sm"
+                      value={reservationInfo.RCV_PHONE || userInfo.MOBILE_TEL_NO} className="ant-input-sm"
                       onChange={e => this.onChangeReservationInfo('RCV_PHONE', e.target.value, 1)}
                     />
                   </td>

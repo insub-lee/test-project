@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import request from 'utils/request';
 import { address } from 'apps/eshs/admin/safety/InspectionTarget/FireHydrant/internal_constants';
+import { Button } from 'antd';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+const StyledButton = StyledAntdButton(Button);
 
 String.prototype.rtrim = function() {
   return this.replace(/(\s*$)/, '');
@@ -17,7 +19,6 @@ export default function Save({ saveTask, saveBeforeProcess, onCloseModalHandler,
       url: `${address.generatePositionNo}`,
       data: { FIRE_CODE: 'FH', BUILDING_CODE, STAIR_NO, INSTALLED_LOCATION, CHIP_NO },
     }).then(({ response }) => {
-      console.debug('££ response : ', response);
       if (response?.result === 1) {
         const { data } = response || {};
         changeFormData(id, data.COMP_FIELD, data.POSITION_NO);
@@ -75,8 +76,6 @@ export default function Save({ saveTask, saveBeforeProcess, onCloseModalHandler,
 
     const { UPD_USER_ID } = formData;
 
-    console.debug('### SAVE : ', CHIP_NO, POSITION_NO, Blank_chip_no, Colon_chip_no, Semicolon_chip_no, UPD_USER_ID);
-
     request({
       method: 'POST',
       url: `${address.afterProcessing}`,
@@ -94,7 +93,7 @@ export default function Save({ saveTask, saveBeforeProcess, onCloseModalHandler,
 
   return (
     <StyledButton
-      className="btn-primary"
+      className="btn-primary btn-first"
       onClick={() => {
         position_no_generator(formData);
       }}
