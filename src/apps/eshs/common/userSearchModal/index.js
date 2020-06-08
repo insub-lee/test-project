@@ -68,6 +68,7 @@ class UserSearchModal extends Component {
         <AntdSearchInput
           style={{ width: '150PX' }}
           value={colData}
+          placeholder="사원검색"
           className={className || 'input-search-sm ant-search-inline mr5'}
           allowClear
           readOnly
