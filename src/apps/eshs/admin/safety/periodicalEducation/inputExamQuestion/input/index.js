@@ -218,7 +218,7 @@ class InputPage extends React.Component {
   handleSaveClick = isModify => {
     const { questions, PARENT_WORK_SEQ, PARENT_TASK_SEQ } = this.state;
     const { sagaKey: id, submitHandlerBySaga, handleModalClose, profile, result } = this.props;
-    const questionArr = [questions[0], questions[1], questions[2], questions[3], questions[4]];
+    const questionArr = [questions[0], questions[1], questions[2], questions[3], questions[4]]; // questions === object
 
     if (questionArr.filter(question => !question.answer).length) {
       return message.error('정답을 모두 입력해주세요.');
@@ -247,6 +247,7 @@ class InputPage extends React.Component {
     const { questions, eduDate, selectedDate } = this.state;
     const { handleModalClose, result } = this.props;
     const isModify = result.questions && result.questions.list && result.questions.list && result.questions.list[0] && result.questions.list[0].EXAM_ID;
+    console.debug(isModify);
     return (
       <>
         <ContentsWrapper>
@@ -255,6 +256,7 @@ class InputPage extends React.Component {
             <p style={{ display: 'inline-block' }}>{`${Number(eduDate.EDU_YEAR)}년 ${Number(eduDate.EDU_MONTH)}월 정기교육`}</p>
           </div>
           <div className="selSaveWrapper">
+            <p style={{ display: 'inline-block', width: '15%', textAlign: 'center' }}>이전 문제 가져오기</p>
             <AntdSelect className="mr5" value={selectedDate.EDU_YEAR} onChange={value => handleSelectChange('EDU_YEAR', value)} style={{ width: '15%' }}>
               {result.educationYears &&
                 result.educationYears.list &&
