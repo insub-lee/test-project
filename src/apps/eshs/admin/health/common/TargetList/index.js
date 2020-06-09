@@ -1,41 +1,27 @@
 import React, { Component } from 'react';
-import { Table, Input, Modal, Select } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Table, Modal, Select } from 'antd';
+import moment from 'moment';
 
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import UserSearchModal from 'apps/eshs/common/userSearchModal';
-import ChkMstInput from 'apps/eshs/admin/health/common/ChkMstInput';
 import ChkMstDetail from 'apps/eshs/admin/health/common/ChkMstDetail';
 
-const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
 
-/**
- * 대상자 등록 공통 페이지
- * props: {
- *   chkTypeCd: 검종
- * }
- */
-class TargetRegList extends Component {
+class TargetList extends Component {
   state = {
-    isChkMstInputShow: false,
     isChkMstDetailShow: false,
     list: [],
     yearList: [],
     workAreaList: [],
-    selectedRowKeys: [],
     selectedRow: {},
     searchInfo: {
       CHK_TYPE_CD: '',          // 검종코드값
@@ -138,68 +124,6 @@ class TargetRegList extends Component {
     });
   };
 
-  onCreateTargetSelection = () => {
-    const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
-    const { searchInfo } = this.state;
-    const submitData = {
-      PARAM: {
-        ...this.state.searchInfo
-      }
-    };
-    Modal.confirm({
-      title: `${searchInfo.CHK_YEAR}년도 ${searchInfo.CHK_TYPE_CD_NAME}검진 대상자 목록을 생성하시겠습니까?`,
-      icon: <ExclamationCircleOutlined />,
-      okText: '생성',
-      cancelText: '취소',
-      onOk() {
-        spinningOn();
-        submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/healthChkTargetSelection', submitData, (id, res) => {
-          if (res && res.result > 0) {
-            message.info(<MessageContent>대상자 목록을 생성하였습니다.</MessageContent>)
-          } else {
-            message.info(<MessageContent>대상자 목록 생성에 실패하였습니다.</MessageContent>)
-          }
-          spinningOff();
-        });
-      },
-    });
-  };
-
-  onDelete = () => {
-    const { selectedRowKeys } = this.state;
-    if (selectedRowKeys.length === 0) {
-      message.info(<MessageContent>삭제할 대상을 선택해주세요.</MessageContent>);
-      return false;
-    }
-
-    const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
-    const submitData = {
-      PARAM : {
-        CHK_CD_LIST: selectedRowKeys,
-      }
-    };
-
-    const that = this;
-    Modal.confirm({
-      title: `선택한 대상자를 삭제하시겠습니까?`,
-      icon: <ExclamationCircleOutlined />,
-      okText: '삭제',
-      cancelText: '취소',
-      onOk() {
-        spinningOn();
-        submitHandlerBySaga(sagaKey, 'DELETE', '/api/eshs/v1/common/health/healthChkTarget', submitData, (id, res) => {
-          if (res && res.result > 0) {
-            message.info(<MessageContent>대상자를 삭제하였습니다.</MessageContent>);
-          } else {
-            message.info(<MessageContent>대상자 삭제에 실패하였습니다.</MessageContent>);
-          }
-          spinningOff();
-          that.getList();
-        });
-      },
-    });
-  };
-
   onChangeSearchInfo = (key, val) => {
     this.setState(prevState => {
       const { searchInfo } = prevState;
@@ -215,10 +139,6 @@ class TargetRegList extends Component {
     }
   };
 
-  onChangeSelect = selectedRowKeys => {
-    this.setState({ selectedRowKeys });
-  };
-
   onChkMstDetailPopup = row => {
     this.setState({
       selectedRow: row,
@@ -228,19 +148,6 @@ class TargetRegList extends Component {
 
   onCancelChkMstDetailPopup = () => {
     this.setState({ isChkMstDetailShow: false });
-  };
-
-  onChkMstInputPopup = () => {
-    this.setState({ isChkMstInputShow: true });
-  };
-
-  onCancelChkMstInputPopup = () => {
-    this.setState({ isChkMstInputShow: false });
-  };
-
-  onSaveAfter = () => {
-    this.setState({ isChkMstInputShow: false });
-    this.getList();
   };
 
   columns = [
@@ -260,25 +167,31 @@ class TargetRegList extends Component {
       render: (text, record) => <StyledButton className="btn-link btn-sm" onClick={() => this.onChkMstDetailPopup(record)}>{text}</StyledButton>
     },
     {
+      title: '배우자검진',
+      dataIndex: 'FAM_NAME',
+      key: 'FAM_NAME',
+      align: 'center',
+      width: '10%',
+      render: (text, record) => record.IS_MATE === '1' ? text : '',
+    },
+    {
       title: '근무지',
       dataIndex: 'WORK_AREA_NAME',
       key: 'WORK_AREA_NAME',
-      width: '10%',
+      width: '8%',
       align: 'center',
     },
     {
       title: '부서',
       dataIndex: 'DEPT_NAME',
       key: 'DEPT_NAME',
-      align: 'center',
-      width: '20%',
     },
     {
       title: '검종',
       dataIndex: 'CHK_TYPE_CD_NAME',
       key: 'CHK_TYPE_CD_NAME',
       align: 'center',
-      width: '10%',
+      width: '8%',
     },
     {
       title: '검진차수',
@@ -289,36 +202,25 @@ class TargetRegList extends Component {
       render: text => `${text}차`,
     },
     {
-      title: '비고',
-      dataIndex: 'BIGO',
-      key: 'BIGO',
+      title: '검진일',
+      dataIndex: 'CHK_DT',
+      key: 'CHK_DT',
       align: 'center',
+      width: '10%',
+      render: text => text ? moment(text).format('YYYY-MM-DD') : '',
+    },
+    {
+      title: '미시행사유',
+      dataIndex: 'N_CHK_REASON_NAME',
+      key: 'N_CHK_REASON_NAME',
+      align: 'center',
+      width: '10%',
     },
   ];
 
   render() {
-    const rowSelection = {
-      selectedRowKeys: this.state.selectedRowKeys,
-      onChange: this.onChangeSelect,
-    };
-
     return (
       <>
-        <AntdModal
-          width={850}
-          visible={this.state.isChkMstInputShow}
-          title={`${this.state.searchInfo.CHK_TYPE_CD_NAME}검진 대상자 등록`}
-          onCancel={this.onCancelChkMstInputPopup}
-          destroyOnClose
-          footer={null}
-        >
-          <ChkMstInput
-            onCancelPopup={this.onCancelChkMstInputPopup}
-            onSaveAfter={this.onSaveAfter}
-            chkTypeCd={this.state.searchInfo.CHK_TYPE_CD}
-            chkTypeCdNodeId={this.state.searchInfo.CHK_TYPE_CD_NODE_ID}
-          />
-        </AntdModal>
         <AntdModal
           width={850}
           visible={this.state.isChkMstDetailShow}
@@ -354,16 +256,10 @@ class TargetRegList extends Component {
               <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
             </div>
           </StyledCustomSearchWrapper>
-          <StyledButtonWrapper className="btn-wrap-inline btn-wrap-mb-10">
-            <StyledButton className="btn-primary btn-sm mr5" onClick={this.onDelete}>삭제</StyledButton>
-            <StyledButton className="btn-primary btn-sm mr5" onClick={this.onChkMstInputPopup}>등록</StyledButton>
-            <StyledButton className="btn-primary btn-sm" onClick={this.onCreateTargetSelection}>대상자 목록 생성</StyledButton>
-          </StyledButtonWrapper>
           <AntdTable
             columns={this.columns}
             dataSource={this.state.list.map(item => ({ ...item, key: item.CHK_CD }))}
             bordered={true}
-            rowSelection={rowSelection}
           />
         </StyledContentsWrapper>
       </>
@@ -371,4 +267,4 @@ class TargetRegList extends Component {
   }
 }
 
-export default TargetRegList;
+export default TargetList;
