@@ -20,10 +20,10 @@ const TreeWrapper = styled.div`
   .searchWrapper {
     position: relative;
     display: inline-block;
-    width: 75%;
+    /* width: 75%; */
+    width: ${props => (props.visiblePersonalize ? '75%' : '90%')};
     margin-bottom: 10px;
     margin-left: 10px;
-
     & > span.ant-input-affix-wrapper > input.ant-input.ant-input-sm {
       position: relative;
       border: 1px solid #e5e5e5;

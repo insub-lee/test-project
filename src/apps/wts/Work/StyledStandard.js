@@ -7,8 +7,8 @@ const StyledStandard = styled.div`
     border-collapse: collapse;
     border-spacing: 0;
   }
-  
-  input,
+
+  input[type=text],
   select,
   textarea {
     border-radius: 0;
@@ -33,7 +33,7 @@ const StyledStandard = styled.div`
     display: none;
   }
 
-  input {
+  input.input {
     appearance: none;
     border: 0;
     border-radius: 0;

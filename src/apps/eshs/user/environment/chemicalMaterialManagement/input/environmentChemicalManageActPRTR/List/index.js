@@ -139,30 +139,37 @@ class List extends React.Component {
       dataIndex: 'CATEGORY',
       key: 'CATEGORY',
       align: 'center',
+      width: '10%',
     },
     {
       title: '그룹',
       dataIndex: 'GROUP_NAME',
       key: 'GROUP_NAME',
       align: 'center',
+      width: '5%',
     },
     {
       title: 'CAS_NO',
       dataIndex: 'CAS_NO',
       key: 'CAS_NO',
       align: 'center',
+      width: '15%',
     },
     {
       title: '물질명(국문)',
       dataIndex: 'NAME_KOR',
       key: 'NAME_KOR',
       align: 'center',
+      width: '30%',
+      ellipsis: true,
     },
     {
       title: '물질명(영문)',
       dataIndex: 'NAME_ENG',
       key: 'NAME_ENG',
       align: 'center',
+      width: '30%',
+      ellipsis: true,
     },
   ];
 

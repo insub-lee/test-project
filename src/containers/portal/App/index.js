@@ -469,6 +469,8 @@ class App extends React.Component {
 
     const { myHomePageId } = this.props;
     const isFullSize = selectedApp && selectedApp.length === 1 && selectedApp[0].size.toUpperCase() === 'FULLSIZE';
+    // 메뉴트리 개인업무, 개인앱 / 앱스토어 아이콘 노출 제외
+    const visiblePersonalize = false;
     return (
       <ThemeProvider theme={theme}>
         <Layout className="portalLayout">
@@ -492,6 +494,7 @@ class App extends React.Component {
             view={view}
             history={this.props.history}
             fixedMenu={menuFixedYn === 'Y'}
+            visiblePersonalize={visiblePersonalize}
           />
           {/* 
           <UserCategoryMenu
@@ -538,11 +541,13 @@ class App extends React.Component {
                 <Icon type="qrcode" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goHomeWidget(myHomePageId)} />
               </Tooltip>
             </div>
-            <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="App Store">
-                <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
-              </Tooltip>
-            </div>
+            {visiblePersonalize && (
+              <div className="iconPositon" style={{ marginTop: '20px' }}>
+                <Tooltip placement="right" title="App Store">
+                  <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
+                </Tooltip>
+              </div>
+            )}
             {/* SA BM 권한이 있을 경우에만 노출 되도록 (SA권한 OR BM권한 + 업무그룹담당자 일 경우 업무그룹수정가능) */}
             {(hasRoleAdmin || hasRoleBizMng || bizGrpMngCnt > 0) && (
               <div className="iconPositon" style={{ marginTop: '20px' }}>

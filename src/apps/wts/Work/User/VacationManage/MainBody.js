@@ -4,7 +4,6 @@ import moment from 'moment';
 
 import { jsonToQueryString } from 'utils/helpers';
 
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import Wrapper from './Wrapper';
 import service from '../../service';
 
