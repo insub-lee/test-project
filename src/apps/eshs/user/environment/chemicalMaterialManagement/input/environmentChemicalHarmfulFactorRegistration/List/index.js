@@ -159,24 +159,28 @@ class List extends React.Component {
       dataIndex: 'SAP_NO',
       key: 'SAP_NO',
       align: 'center',
+      width: '10%',
     },
     {
       title: '화학물질명_SAP',
       dataIndex: 'NAME_SAP',
       key: 'NAME_SAP',
       align: 'center',
+      width: '20%',
     },
     {
       title: '공급업체',
       dataIndex: 'VENDOR_NM',
       key: 'VENDOR_NM',
       align: 'center',
+      width: '20%',
     },
     {
       title: '위험물 분류',
       dataIndex: 'CATEGORY',
       key: 'CATEGORY',
       align: 'center',
+      width: '15%',
     },
   ];
 
