@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import history from 'utils/history';
+
 import { Table, Radio, Form, Modal, Input, Select, Checkbox } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
@@ -253,11 +255,14 @@ class SearchBasic extends Component {
     const { TITLE, WORK_SEQ, TASK_SEQ } = selectedRow;
     const draftTitle = `${TITLE} 다운로드신청`;
     const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
-    const draftData = { DRAFT_PROCESS: { ...DRAFT_PROCESS, DRAFT_TITLE: draftTitle, WORK_SEQ, TASK_SEQ, OPINION, REL_TYPE: 4, DRAFT_DATA: selectedDRM } };
+    const draftData = {
+      DRAFT_PROCESS: { ...DRAFT_PROCESS, DRAFT_TITLE: draftTitle, WORK_SEQ, TASK_SEQ, OPINION, REL_TYPE: 4, DRAFT_DATA: { ...selectedDRM, OPINION } },
+    };
     submitHandlerBySaga(sagaKey, 'POST', prefixUrl, draftData, this.onCompleteProc);
   };
 
   onCompleteProc = (id, response) => {
+    history.push('/apps/Workflow/User/DraftDocDown');
     this.setState({ isDownVisible: false });
   };
 

@@ -162,30 +162,36 @@ class List extends React.Component {
       dataIndex: 'CAS_NO',
       key: 'CAS_NO',
       align: 'center',
+      width: '15%',
     },
     {
       title: '화학물질명_국문',
       dataIndex: 'NAME_KOR',
       key: 'NAME_KOR',
       align: 'center',
+      width: '30%',
+      ellipsis: true,
     },
     {
       title: '해당여부',
       dataIndex: 'IS_APPLICATE',
       key: 'IS_APPLICATE',
       align: 'center',
+      width: '10%',
     },
     {
       title: '기준함량',
       dataIndex: 'CONTENT_STANDARD',
       key: 'CONTENT_STANDARD',
       align: 'center',
+      width: '10%',
     },
     {
       title: '규정량(kg)',
       dataIndex: 'CONTENT_DOSE',
       key: 'CONTENT_DOSE',
       align: 'center',
+      width: '10%',
     },
   ];
 

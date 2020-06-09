@@ -19,3 +19,4 @@ export const SET_USERINFO = `${prefix}/SET_USERINFO`;
 export const PUBLIC_ACTIONMETHOD_SAGA = `${prefix}/PUBLIC_ACTIONMETHOD_SAGA`;
 export const GET_CUSTOMER_DATABIND = `${prefix}/GET_CUSTOMER_DATABIND`;
 export const SET_CUSTOMER_DATABIND = `${prefix}/SET_CUSTOMER_DATABIND`;
+export const GET_FILE_DOWNLOAD = `${prefix}/GET_FILE_DOWNLOAD`;
