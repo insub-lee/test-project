@@ -42,7 +42,7 @@ function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
 }
 
 function* getUnApproveList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/unApproveList`, { PARAM: { relTypes: [1, 99, 999] } });
+  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/unApproveList`, { PARAM: { relTypes: [1, 4, 99, 999] } });
   if (response) {
     const { list } = response;
     yield put(actions.setUnApproveList(list));

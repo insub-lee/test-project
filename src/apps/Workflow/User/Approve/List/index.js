@@ -392,7 +392,6 @@ class ApproveList extends Component {
 
   onAbrogationMultiProcess = workPrcProps => {
     const { id, submitHandlerBySaga } = this.props;
-    console.debug('workproc', workPrcProps);
     const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
     submitHandlerBySaga(id, 'POST', prefixUrl, { DRAFT_PROCESS: workPrcProps }, this.onCompleteProc);
   };
