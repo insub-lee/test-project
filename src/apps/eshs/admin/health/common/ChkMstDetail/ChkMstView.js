@@ -24,18 +24,19 @@ class ChkMstView extends Component {
   };
 
   componentWillMount() {
+    const { sagaKey, getCallDataHandler, selectedRow, spinningOn } = this.props;
     const today = new Date();
     const currYear = today.getFullYear();
     const yearList = [];
     for (let i=currYear; i>=1998; i--) {
-      yearList.push(i);
+      yearList.push(i.toString());
     }
     this.setState({
       yearList,
-      CHK_YEAR: currYear,
+      CHK_YEAR: selectedRow.CHK_YEAR || currYear.toString(),
+      CHK_TYPE_CD_NODE_ID: selectedRow.CHK_TYPE_CD_NODE_ID,
     });
 
-    const { sagaKey, getCallDataHandler, selectedRow, spinningOn } = this.props;
     const apiAry = [
       {
         key: 'userDetail',
@@ -70,7 +71,7 @@ class ChkMstView extends Component {
         url: `/api/eshs/v1/common/health/healthChkReservationMstList`,
         type: 'POST',
         params: {
-          PARAM: { SCH_USER_ID: selectedRow.USER_ID, CHK_YEAR: currYear }
+          PARAM: { SCH_USER_ID: selectedRow.USER_ID, CHK_YEAR: selectedRow.CHK_YEAR || currYear }
         },
       },
     ];
@@ -83,7 +84,7 @@ class ChkMstView extends Component {
     this.setState({ 
       userInfo: result && result.userDetail && result.userDetail.data ? result.userDetail.data : {},
       list: result && result.chkMstList && result.chkMstList.list ? result.chkMstList.list : [],
-      CHK_TYPE_CD_NODE_ID: result && result.chkMstList && result.chkMstList.list ? result.chkMstList.list[0].CHK_TYPE_CD_NODE_ID : '',
+      // CHK_TYPE_CD_NODE_ID: result && result.chkMstList && result.chkMstList.list ? result.chkMstList.list[0].CHK_TYPE_CD_NODE_ID : '',
     });
     spinningOff();
   };

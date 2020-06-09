@@ -36,6 +36,7 @@ class TargetRegList extends Component {
     yearList: [],
     workAreaList: [],
     selectedRowKeys: [],
+    selectedRow: {},
     searchInfo: {
       CHK_TYPE_CD: '',          // 검종코드값
       CHK_TYPE_CD_NODE_ID: -1,  // 검종 NODE_ID값
@@ -53,7 +54,7 @@ class TargetRegList extends Component {
     const currYear = today.getFullYear();
     const yearList = [];
     for (let i=currYear; i>=1998; i--) {
-      yearList.push(i);
+      yearList.push(i.toString());
     }
     this.setState(prevState => {
       let { searchInfo } = prevState;
@@ -332,6 +333,14 @@ class TargetRegList extends Component {
           <StyledCustomSearchWrapper>
             <div className="search-input-area">
               <AntdSelect
+                defaultValue={this.state.searchInfo.CHK_YEAR} className="select-sm mr5" placeholder="년도" style={{ width: 100 }}
+                onChange={val => this.onChangeSearchInfo('CHK_YEAR', val)}
+              >
+                {this.state.yearList.map(year => (
+                  <AntdSelect.Option value={year}>{`${year}년`}</AntdSelect.Option>
+                ))}
+              </AntdSelect>
+              <AntdSelect
                 className="select-sm mr5"
                 placeholder="지역선택" allowClear
                 style={{ width: 120 }}
@@ -339,11 +348,6 @@ class TargetRegList extends Component {
               >
                 {this.state.workAreaList.filter(item => item.LVL !== 0).map(item => (
                   <AntdSelect.Option value={item.NODE_ID}>{item.NAME_KOR}</AntdSelect.Option>
-                ))}
-              </AntdSelect>
-              <AntdSelect defaultValue={this.state.searchInfo.CHK_YEAR} className="select-sm mr5" placeholder="년도" style={{ width: 100 }}>
-                {this.state.yearList.map(year => (
-                  <AntdSelect.Option value={year}>{`${year}년`}</AntdSelect.Option>
                 ))}
               </AntdSelect>
               <UserSearchModal onClickRow={this.onUserSearchAfter} />
