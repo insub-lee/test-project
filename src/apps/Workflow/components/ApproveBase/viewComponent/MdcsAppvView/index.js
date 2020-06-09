@@ -224,7 +224,7 @@ class MdcsAppvView extends Component {
 
   render() {
     const { selectedRow } = this.props;
-    const { DRAFT_DATA } = selectedRow;
+    const { DRAFT_DATA, REL_TYPE } = selectedRow;
     const {
       modalWidth,
       coverView,
@@ -238,114 +238,149 @@ class MdcsAppvView extends Component {
       isDCC,
       isAbrogationMultiShow,
     } = this.state;
-    console.debug('미결함 selectedRow', selectedRow, workPrcProps);
+    console.debug('미결함 selectedRow', selectedRow);
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
-          <table>
-            <tbody>
-              <tr>
-                <th style={{ width: '150px' }}>결재방법 </th>
-                <td>
-                  <Radio.Group onChange={this.onChange} defaultValue={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>
-                    <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
-                    <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 30 : 3}>Hold</Radio>
-                    {selectedRow.NODE_ID === 106 && <Radio value={5}>실무자 검토의뢰</Radio>}
-                    {selectedRow.NODE_ID === 106 && <Radio value={10}>실무자 결재 권한위임</Radio>}
-                  </Radio.Group>
-                </td>
-              </tr>
-              <tr
-                style={{
-                  display: (selectedRow && selectedRow.APPV_STATUS && selectedRow.APPV_STATUS === 5) || selectedRow.APPV_STATUS === 10 ? 'table-row' : 'none',
-                }}
-              >
-                <th style={{ width: '150px' }}>선택된 실무자 </th>
-                <td>
-                  <StyledButton onClick={this.onClickUserSelect} className="btn-gray btn-xs">
-                    <Icon type="search" style={{ marginRight: '5px' }} />
-                    실무자검색
-                  </StyledButton>
-                  <div>
-                    {nextApprover &&
-                      nextApprover.map(user => (
-                        <StyledTagDraft>
-                          <Icon type="user" />
-                          <span className="infoTxt">{`${user.NAME_KOR} (${user.DEPT_NAME_KOR})`}</span>
-                        </StyledTagDraft>
+          {REL_TYPE === 4 ? (
+            <table>
+              <tbody>
+                <tr>
+                  <th style={{ width: '150px' }}>요청종류 </th>
+                  <td colSpan={3}>{DRAFT_DATA && DRAFT_DATA.IDX === 2 ? '기안용 Download 권한신청 ' : 'Print 권한신청 '}</td>
+                </tr>
+                <tr>
+                  <th style={{ width: '150px' }}>요청자 </th>
+                  <td>{selectedRow && selectedRow.NAME_KOR}</td>
+                  <th style={{ width: '150px' }}>요청일 </th>
+                  <td>{selectedRow && moment(selectedRow.REG_DTTM).format('YYYY-MM-DD')}</td>
+                </tr>
+                <tr>
+                  <th style={{ width: '150px' }}>요청사용 </th>
+                  <td colSpan={3}>{DRAFT_DATA && DRAFT_DATA.OPINION}</td>
+                </tr>
+                <tr>
+                  <th style={{ width: '150px' }}>결재방법 </th>
+                  <td colSpan={3}>
+                    <Radio.Group defaultValue={2} onChange={this.onChange}>
+                      <Radio value={2}>Download 권한승인</Radio>
+                      <Radio value={9}>Download 권한거부 </Radio>
+                    </Radio.Group>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          ) : (
+            <table>
+              <tbody>
+                <tr>
+                  <th style={{ width: '150px' }}>결재방법 </th>
+                  <td colSpan={3}>
+                    <Radio.Group
+                      onChange={this.onChange}
+                      defaultValue={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}
+                    >
+                      <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
+                      <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 30 : 3}>Hold</Radio>
+                      {selectedRow.NODE_ID === 106 && <Radio value={5}>실무자 검토의뢰</Radio>}
+                      {selectedRow.NODE_ID === 106 && <Radio value={10}>실무자 결재 권한위임</Radio>}
+                    </Radio.Group>
+                  </td>
+                </tr>
+
+                <tr
+                  style={{
+                    display: (selectedRow && selectedRow.APPV_STATUS && selectedRow.APPV_STATUS === 5) || selectedRow.APPV_STATUS === 10 ? 'table-row' : 'none',
+                  }}
+                >
+                  <th style={{ width: '150px' }}>선택된 실무자 </th>
+                  <td colSpan={3}>
+                    <StyledButton onClick={this.onClickUserSelect} className="btn-gray btn-xs">
+                      <Icon type="search" style={{ marginRight: '5px' }} />
+                      실무자검색
+                    </StyledButton>
+                    <div>
+                      {nextApprover &&
+                        nextApprover.map(user => (
+                          <StyledTagDraft>
+                            <Icon type="user" />
+                            <span className="infoTxt">{`${user.NAME_KOR} (${user.DEPT_NAME_KOR})`}</span>
+                          </StyledTagDraft>
+                        ))}
+                    </div>
+                  </td>
+                </tr>
+                <tr style={{ display: procResult.length > 0 ? 'table-row' : 'none' }}>
+                  <td colSpan={2} style={{ padding: 0, border: 0 }}>
+                    <table style={{ width: '100%', borderTop: 0 }}>
+                      <colgroup>
+                        <col width="10%" />
+                        <col width="10%" />
+                        <col width="10%" />
+                        <col width="55%" />
+                        <col width="15%" />
+                      </colgroup>
+                      <tr>
+                        <th>실무자</th>
+                        <th>직급</th>
+                        <th>결과</th>
+                        <th>검토의견</th>
+                        <th style={{ borderRight: 0 }}>검토일</th>
+                      </tr>
+                      {procResult.map(item => (
+                        <tr>
+                          <td style={{ textAlign: 'center' }}>{item.DRAFT_USER_NAME}</td>
+                          <td style={{ textAlign: 'center' }}>{item.PSTN_NAME}</td>
+                          <td style={{ textAlign: 'center' }}>{item.APPV_STATUS}</td>
+                          <td>{item.OPINION}</td>
+                          <td style={{ textAlign: 'center' }}>{moment(item.REG_DTTM).format('YYYY-MM-DD')}</td>
+                        </tr>
                       ))}
-                  </div>
-                </td>
-              </tr>
-              <tr style={{ display: procResult.length > 0 ? 'table-row' : 'none' }}>
-                <td colSpan={2} style={{ padding: 0, border: 0 }}>
-                  <table style={{ width: '100%', borderTop: 0 }}>
-                    <colgroup>
-                      <col width="10%" />
-                      <col width="10%" />
-                      <col width="10%" />
-                      <col width="55%" />
-                      <col width="15%" />
-                    </colgroup>
-                    <tr>
-                      <th>실무자</th>
-                      <th>직급</th>
-                      <th>결과</th>
-                      <th>검토의견</th>
-                      <th style={{ borderRight: 0 }}>검토일</th>
-                    </tr>
-                    {procResult.map(item => (
+                    </table>
+                  </td>
+                </tr>
+                <tr style={{ display: holdHistoryList.length > 0 ? 'table-row' : 'none' }}>
+                  <td colSpan={2} style={{ padding: 0, border: 0 }}>
+                    <table style={{ width: '100%', borderTop: 0 }}>
+                      <colgroup>
+                        <col width="10%" />
+                        <col width="10%" />
+                        <col width="10%" />
+                        <col width="55%" />
+                        <col width="15%" />
+                      </colgroup>
                       <tr>
-                        <td style={{ textAlign: 'center' }}>{item.DRAFT_USER_NAME}</td>
-                        <td style={{ textAlign: 'center' }}>{item.PSTN_NAME}</td>
-                        <td style={{ textAlign: 'center' }}>{item.APPV_STATUS}</td>
-                        <td>{item.OPINION}</td>
-                        <td style={{ textAlign: 'center' }}>{moment(item.REG_DTTM).format('YYYY-MM-DD')}</td>
+                        <th>이름</th>
+                        <th>직급</th>
+                        <th>부서</th>
+                        <th>홀드해제의견</th>
+                        <th style={{ borderRight: 0 }}>해제일</th>
                       </tr>
-                    ))}
-                  </table>
-                </td>
-              </tr>
-              <tr style={{ display: holdHistoryList.length > 0 ? 'table-row' : 'none' }}>
-                <td colSpan={2} style={{ padding: 0, border: 0 }}>
-                  <table style={{ width: '100%', borderTop: 0 }}>
-                    <colgroup>
-                      <col width="10%" />
-                      <col width="10%" />
-                      <col width="10%" />
-                      <col width="55%" />
-                      <col width="15%" />
-                    </colgroup>
-                    <tr>
-                      <th>이름</th>
-                      <th>직급</th>
-                      <th>부서</th>
-                      <th>홀드해제의견</th>
-                      <th style={{ borderRight: 0 }}>해제일</th>
-                    </tr>
-                    {holdHistoryList.map(item => (
-                      <tr>
-                        <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
-                        <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
-                        <td style={{ textAlign: 'center' }}>{item.APPV_DEPT_NAME}</td>
-                        <td>{item.OPINION}</td>
-                        <td style={{ textAlign: 'center' }}>{moment(item.APPV_DTTM).format('YYYY-MM-DD')}</td>
-                      </tr>
-                    ))}
-                  </table>
-                </td>
-              </tr>
-              <tr>
-                <th>의견 </th>
-                <td>
-                  {/* <AntdTextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} /> */}
-                  <AntdTextArea rows={4} onChange={this.onChangeOpinion} />
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                      {holdHistoryList.map(item => (
+                        <tr>
+                          <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
+                          <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
+                          <td style={{ textAlign: 'center' }}>{item.APPV_DEPT_NAME}</td>
+                          <td>{item.OPINION}</td>
+                          <td style={{ textAlign: 'center' }}>{moment(item.APPV_DTTM).format('YYYY-MM-DD')}</td>
+                        </tr>
+                      ))}
+                    </table>
+                  </td>
+                </tr>
+                <tr style={{ display: REL_TYPE !== 4 ? 'table-row' : 'none' }}>
+                  <th>의견 </th>
+                  <td colSpan={3}>
+                    {/* <AntdTextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} /> */}
+                    <AntdTextArea rows={4} onChange={this.onChangeOpinion} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+
           <StyledButtonWrapper className="btn-wrap-center" style={{ marginTop: '10px' }}>
-            {isDCC && (
+            {REL_TYPE !== 4 && isDCC && (
               <StyledButton key="ok" className="btn-primary mr5 btn-sm" onClick={this.onClickModify}>
                 표지 수정
               </StyledButton>

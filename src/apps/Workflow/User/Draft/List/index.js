@@ -13,8 +13,8 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
-
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+
 const StyledWrap = styled.div`
   table.mdcsProcessList {
     width: 100%;
