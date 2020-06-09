@@ -33,7 +33,6 @@ class List extends Component {
       yearList: [],
       searchParam: {
         CHK_YEAR: currentYear,
-        SEARCH_LIST: 'STMT',
       },
       modalObj: {
         modalTitle: '',
