@@ -247,7 +247,7 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeIsLo
   if (formData) {
     if (viewType === 'VIEW') {
       yield call(
-        Axios.post,
+        Axios.postNoResponse,
         '/api/builder/v1/work/taskLog',
         { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, TASK_ORIGIN_SEQ: formData.TASK_ORIGIN_SEQ, LOG_TYPE: 'R' } },
         { BUILDER: 'setTaskLog' },
@@ -487,7 +487,7 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
   }
 
   yield call(
-    Axios.post,
+    Axios.postNoResponse,
     '/api/builder/v1/work/taskLog',
     { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, TASK_ORIGIN_SEQ: formData.TASK_ORIGIN_SEQ, LOG_TYPE: 'C' } },
     { BUILDER: 'setTaskLog' },
@@ -649,7 +649,7 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc, change
   }
 
   yield call(
-    Axios.post,
+    Axios.postNoResponse,
     '/api/builder/v1/work/taskLog',
     { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, TASK_ORIGIN_SEQ: formData.TASK_ORIGIN_SEQ, LOG_TYPE: 'U' } },
     { BUILDER: 'setTaskLog' },
@@ -696,7 +696,12 @@ function* deleteTask({ id, reloadId, workSeq, taskSeq, changeViewPage, callbackF
   }
 
   if (response) {
-    yield call(Axios.post, '/api/builder/v1/work/taskLog', { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, LOG_TYPE: 'D' } }, { BUILDER: 'setTaskLog' });
+    yield call(
+      Axios.postNoResponse,
+      '/api/builder/v1/work/taskLog',
+      { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, LOG_TYPE: 'D' } },
+      { BUILDER: 'setTaskLog' },
+    );
   }
 
   const conditional = yield select(selectors.makeSelectConditionalById(id));
@@ -818,7 +823,7 @@ function* removeMultiTask({ id, reloadId, callbackFunc }) {
 
     if (response) {
       yield call(
-        Axios.post,
+        Axios.postNoResponse,
         '/api/builder/v1/work/taskLog',
         { PARAM: { WORK_SEQ: workSeq, taskList: removeList, LOG_TYPE: 'D', isMulti: true } },
         { BUILDER: 'setTaskLog' },
