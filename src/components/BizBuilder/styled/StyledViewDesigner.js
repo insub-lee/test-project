@@ -197,9 +197,19 @@ const StyledViewDesigner = styled.div`
         padding: 4px 4px;
         border-right: 1px solid #eee;
         font-size: 12px;
+
         > div > span {
           display: block;
         }
+
+        &.verticalAlignColTop {
+          vertical-align: top;
+        }
+
+        &.textAlignColCenter {
+          text-align: center;
+        }
+
         .ant-radio-group {
           -webkit-box-sizing: border-box;
           box-sizing: border-box;

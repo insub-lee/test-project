@@ -2,12 +2,13 @@ import React from 'react';
 import moment from 'moment';
 import { AutoSizer, Column, Table } from 'react-virtualized';
 import { Icon, Spin } from 'antd';
+import 'rc-dialog/assets/index.css';
 
 import StyledVirtualized from 'apps/wts/components/CommonStyledElement/StyledVirtualized';
 import { getVirtualizedMinHeight, jsonToQueryString } from 'utils/helpers';
 import MonthlyPicker from 'apps/wts/components/MonthlyPicker';
-import Button from 'components/Button';
 
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import Wrapper from './Wrapper';
 import WorkerRecordWriterModal from '../../Modals/WorkerRecordWriterModal';
 import WorkerRecordModifyModal from '../../Modals/WorkerRecordModifyModal';
@@ -252,12 +253,12 @@ class MainBody extends React.Component {
               <span>금주 근무 현황</span>
             </div>
             <div className="btn_wrap">
-              <Button type="button" size="small" color="grayTwo" onClick={() => this.handleOpenModal(2)}>
+              <StyledButton className="btn-gray btn-sm mr5" onClick={() => this.handleOpenModal(2)}>
                 근무시간 시뮬레이터
-              </Button>
-              <Button type="button" size="small" color="gray" onClick={() => this.handleOpenModal(0)}>
+              </StyledButton>
+              <StyledButton className="btn-gray btn-sm" onClick={() => this.handleOpenModal(0)}>
                 근무 이력 등록
-              </Button>
+              </StyledButton>
             </div>
             <div className="tb_wrap">
               <table className="tb02">

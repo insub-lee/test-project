@@ -37,6 +37,7 @@ const StyledDatePicker = styled.div`
 
     input[type='text'] {
       width: calc(100% - 20px);
+      border: 0;
       border-bottom: 1px solid #d9e0e7;
       font-size: 15px;
       height: 45px;

@@ -13,12 +13,15 @@ import UserSearchModal from 'apps/eshs/common/userSearchModal';
 import NotChkReg from 'apps/eshs/common/health/NotChkReg';
 import NotChkReason from 'apps/eshs/common/health/NotChkReason';
 
+import ChkMstDetail from 'apps/eshs/admin/health/common/ChkMstDetail';
+
 const AntdTable = StyledAntdTable(Table)
 const AntdSelect = StyledSelect(Select);
 const AntdModal = StyledAntdModal(Modal);
 
 class List extends Component {
   state = {
+    isChkMstDetailShow: false,  // 사용자정보 및 검진내역 상세(수정) visible
     isShow: false,      // 미검진신청 Modal visible
     isReasonShow: false,// 미검진 신청이력 Modal visible
     selectedRow: {},
@@ -108,6 +111,17 @@ class List extends Component {
     }
   };
 
+  onChkMstDetailPopup = row => {
+    this.setState({
+      selectedRow: row,
+      isChkMstDetailShow: true,
+    });
+  }
+
+  onCancelChkMstDetailPopup = () => {
+    this.setState({ isChkMstDetailShow: false });
+  };
+
   onClickNChkReg = row => {
     this.setState({
       selectedRow: row,
@@ -141,7 +155,8 @@ class List extends Component {
       dataIndex: 'EMP_NO',
       key: 'EMP_NO',
       width: '10%',
-      align: 'center'
+      align: 'center',
+      render: (text, record) => <StyledButton className="btn-link btn-sm" onClick={() => this.onChkMstDetailPopup(record)}>{text}</StyledButton>
     },
     {
       title: '이름',
@@ -196,6 +211,16 @@ class List extends Component {
 
     return (
       <>
+        <AntdModal
+          width={850}
+          visible={this.state.isChkMstDetailShow}
+          title="대상자 개인관리"
+          onCancel={this.onCancelChkMstDetailPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <ChkMstDetail onCancelPopup={this.onCancelChkMstDetailPopup} selectedRow={this.state.selectedRow} />
+        </AntdModal>
         <AntdModal
           width={700}
           visible={this.state.isShow}

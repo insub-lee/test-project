@@ -20,6 +20,5 @@ export const META_SEQ = {
   // VIEW_STATUS: 8781, 현황없음
 };
 export const VIEW_CHANGE_SEQ = {};
-export const BUTTON_CATEGORY = { FIRE_EXTINGUISHER_MAIN: 'FIRE_HYDRANT' };
 
 export default 'specify what you want to import.';

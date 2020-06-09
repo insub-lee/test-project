@@ -5,26 +5,21 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import moment from 'moment';
 import UserSearchModal from 'apps/eshs/common/userSearchModal';
-
-import View from '../ChkMst/View';
+import ChkMstDetail from 'apps/eshs/admin/health/common/ChkMstDetail';
 
 const AntdTable = StyledAntdTable(Table)
 const AntdSelect = StyledSelect(Select);
-const AntdInput = StyledInput(Input);
-const AntdDatePicker= StyledDatePicker(DatePicker);
 const AntdModal = StyledAntdModal(Modal);
 
 class List extends Component {
   state = {
-    isShow: false,
+    isChkMstDetailShow: false,
     selectedRow: {},
     searchParam: {
       CHK_YEAR: '',
@@ -116,15 +111,15 @@ class List extends Component {
     });
   };
 
-  onShowPopup = row => {
+  onChkMstDetailPopup = row => {
     this.setState({
       selectedRow: row,
-      isShow: true,
+      isChkMstDetailShow: true,
     });
   }
 
-  onCancelPopup = () => {
-    this.setState({ isShow: false });
+  onCancelChkMstDetailPopup = () => {
+    this.setState({ isChkMstDetailShow: false });
   };
 
   columns = [
@@ -141,7 +136,7 @@ class List extends Component {
       key: 'EMP_NO',
       width: '10%',
       align: 'center',
-      render: (text, record) => <StyledButton className="btn-link btn-sm" onClick={() => this.onShowPopup(record)}>{text}</StyledButton>
+      render: (text, record) => <StyledButton className="btn-link btn-sm" onClick={() => this.onChkMstDetailPopup(record)}>{text}</StyledButton>
     },
     {
       title: '성명',
@@ -204,13 +199,13 @@ class List extends Component {
       <>
         <AntdModal
           width={850}
-          visible={this.state.isShow}
+          visible={this.state.isChkMstDetailShow}
           title="대상자 개인관리"
-          onCancel={this.onCancelPopup}
+          onCancel={this.onCancelChkMstDetailPopup}
           destroyOnClose
           footer={null}
         >
-          <View onCancelPopup={this.onCancelPopup} selectedRow={this.state.selectedRow} />
+          <ChkMstDetail onCancelPopup={this.onCancelChkMstDetailPopup} selectedRow={this.state.selectedRow} />
         </AntdModal>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
