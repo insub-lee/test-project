@@ -111,10 +111,25 @@ function* submitHandlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc
       httpMethodInfo = Axios.get;
       break;
   }
-  console.debug('submitHandler', submitData);
   const response = yield call(httpMethodInfo, apiUrl, submitData);
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, response);
+  }
+}
+
+function* getFileDownload({ url, fileName }) {
+  const blobResponse = yield call(Axios.getDown, url);
+
+  if (window.navigator && window.navigator.msSaveBlob) {
+    window.navigator.msSaveBlob(blobResponse, fileName);
+  } else {
+    const fileUrl = window.URL.createObjectURL(blobResponse);
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }
 
@@ -128,4 +143,5 @@ export default function* watcher() {
   yield takeEvery(actionTypes.FAIL_APPROVE, failApprove);
   yield takeLatest(actionTypes.GET_USERINFO, getUserInfo);
   yield takeEvery(actionTypes.GET_CUSTOMER_DATABIND, getCustomDataBind);
+  yield takeEvery(actionTypes.GET_FILE_DOWNLOAD, getFileDownload);
 }
