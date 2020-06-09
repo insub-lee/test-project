@@ -223,7 +223,7 @@ class List extends Component {
               </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
-          <AntdTable columns={columns} dataSource={list || []} bordered scroll={{ y: 554 }} pagination={false} />
+          <AntdTable columns={columns} dataSource={list || []} bordered pagination={false} />
         </StyledContentsWrapper>
       </>
     );
