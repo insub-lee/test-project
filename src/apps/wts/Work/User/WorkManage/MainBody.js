@@ -14,6 +14,7 @@ import WorkerRecordWriterModal from '../../Modals/WorkerRecordWriterModal';
 import WorkerRecordModifyModal from '../../Modals/WorkerRecordModifyModal';
 import WorkerTimeSimulatorModal from '../../Modals/WorkerTimeSimulatorModal';
 import service from '../../service';
+import StyledTable from '../../StyledTable';
 
 const descCompare = (a, b) => {
   const diff = a.workdt - b.workdt;
@@ -260,7 +261,7 @@ class MainBody extends React.Component {
                 근무 이력 등록
               </StyledButton>
             </div>
-            <div className="tb_wrap">
+            <StyledTable className="tb_wrap">
               <table className="tb02">
                 <colgroup>
                   <col width="15%" />
@@ -298,7 +299,7 @@ class MainBody extends React.Component {
                   </tr>
                 </tbody>
               </table>
-            </div>
+            </StyledTable>
             <hr
               style={{
                 border: '1px solid #eaecee',
