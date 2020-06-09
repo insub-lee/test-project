@@ -77,6 +77,8 @@ class UserCategoryLeftMenu extends Component {
       saveData,
       profile,
       fixedMenu,
+      visiblePersonalize,
+      myAppTreeDataWithOutPersonalize,
     } = this.props;
 
     return (
@@ -86,7 +88,7 @@ class UserCategoryLeftMenu extends Component {
         </div>
         <div className="category-menu-area">
           <Tree
-            treeData={myAppTreeData}
+            treeData={visiblePersonalize ? myAppTreeData : myAppTreeDataWithOutPersonalize}
             saveData={saveData}
             editMenu={this.onSetEditClick}
             onClick={this.onClickNode}
@@ -103,6 +105,7 @@ class UserCategoryLeftMenu extends Component {
             updateMymenuDisp={updateMymenuDisp}
             execApp={execApp}
             history={history}
+            visiblePersonalize={visiblePersonalize}
           />
         </div>
         {/* timeline 기획 확정 후 진행 - 2019.10.06 */}
@@ -150,6 +153,8 @@ UserCategoryLeftMenu.propTypes = {
   setOpen: PropTypes.func.isRequired,
   setFixedOpenMenu: PropTypes.func.isRequired,
   fixedMenu: PropTypes.bool.isRequired,
+  visiblePersonalize: PropTypes.bool,
+  myAppTreeDataWithOutPersonalize: PropTypes.array,
 };
 
 UserCategoryLeftMenu.defaultProps = {
@@ -163,6 +168,7 @@ UserCategoryLeftMenu.defaultProps = {
 
 const mapStateToProps = createStructuredSelector({
   myAppTreeData: routeSelectors.makeMyAppTree(),
+  myAppTreeDataWithOutPersonalize: routeSelectors.makeMyAppTreeWithOutPersonalize(),
   myAppStoreTreeData: routeSelectors.makeMyAppStoreTree(),
   profile: authSelectors.makeSelectProfile(),
 });
