@@ -7,6 +7,7 @@ import Scheduler, { SchedulerData, ViewTypes } from 'react-big-scheduler';
 import moment from 'moment';
 import { Icon, Spin } from 'antd';
 import { orderBy } from 'lodash';
+import 'react-big-scheduler/lib/css/style.css';
 
 import { jsonToQueryString } from 'utils/helpers';
 import StyledScheduler from './StyledScheduler';

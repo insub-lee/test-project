@@ -99,7 +99,7 @@ class InputModal extends React.Component {
     const { KEYWORD, CATEGORY_ID } = this.state;
     const { sagaKey, visible, tableColumns, getCallDataHandler, apiUrl, SearchComp, formData, changeFormData, result } = this.props;
     return (
-      <AntdModal visible={visible} closable onCancel={handleModalClose} title="화학물질 검색" width="70%" footer={null}>
+      <AntdModal visible={visible} closable onCancel={handleModalClose} title="화학물질 검색" width="70%" footer={null} destroyOnClose>
         <SearchComp
           apiUrl={apiUrl}
           sagaKey={sagaKey}

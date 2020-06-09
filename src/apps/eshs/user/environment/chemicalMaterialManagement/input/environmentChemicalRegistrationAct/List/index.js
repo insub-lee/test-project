@@ -126,18 +126,22 @@ class List extends React.Component {
       dataIndex: 'ORDER_NO',
       key: 'ORDER_NO',
       align: 'center',
-    },
-    {
-      title: '화학물질 명칭',
-      dataIndex: 'NAME',
-      key: 'NAME',
-      align: 'center',
+      width: '10%',
     },
     {
       title: 'CAS_NO',
       dataIndex: 'CAS_NO',
       key: 'CAS_NO',
       align: 'center',
+      width: '15%',
+    },
+    {
+      title: '화학물질 명칭',
+      dataIndex: 'NAME',
+      key: 'NAME',
+      align: 'center',
+      width: '30%',
+      ellipsis: true,
     },
     {
       title: '해당여부',
@@ -145,6 +149,7 @@ class List extends React.Component {
       key: 'IS_APPLICABLE',
       align: 'center',
       render: text => (text === 'Y' ? '해당' : '비해당'),
+      width: '10%',
     },
   ];
 
@@ -157,7 +162,6 @@ class List extends React.Component {
       handleModalClose,
       setRequestValue,
       handleInputChange,
-      handleInputNumberChange,
       handleDeleteClick,
       handleDeleteConfirm,
     } = this;

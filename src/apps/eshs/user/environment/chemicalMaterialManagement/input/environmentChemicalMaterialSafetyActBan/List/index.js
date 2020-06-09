@@ -152,18 +152,22 @@ class List extends React.Component {
       dataIndex: 'CAS_NO',
       key: 'CAS_NO',
       align: 'center',
+      width: '15%',
     },
     {
       title: '화학물질명_국문',
       dataIndex: 'NAME_KOR',
       key: 'NAME_KOR',
       align: 'center',
+      width: '30%',
+      ellipsis: true,
     },
     {
       title: '해당여부',
       dataIndex: 'IS_BAN',
       key: 'IS_BAN',
       align: 'center',
+      width: '10%',
     },
   ];
 
@@ -264,6 +268,7 @@ class List extends React.Component {
               </table>
             </StyledHtmlTable>
           </div>
+          <div className="div-comment div-comment-antd">β-나프틸아민, 4-니트로디페닐, 석면, 폴리클로리네이티드 터페닐을 함유한 중량비율 1% 이하 제외</div>
         </ContentsWrapper>
         <Modal
           sagaKey={sagaKey}
