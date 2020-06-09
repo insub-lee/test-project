@@ -4,6 +4,7 @@ import { DatePicker } from 'antd';
 import locale from 'antd/es/locale/ko_KR';
 import moment from 'moment';
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import Button from 'components/Button';
 import service from '../service';
 import { vacationTypes } from '../codes';
@@ -176,9 +177,9 @@ class SchedulerForm extends React.Component {
           </li>
         </ul>
         <div className="btn_wrap">
-          <Button type="submit" color="default" size="small">
+          <StyledButton type="submit" className="btn-primary btn-sm">
             신청하기
-          </Button>
+          </StyledButton>
         </div>
       </StyledCommonForm>
     );

@@ -18,6 +18,12 @@ const StyledScheduler = styled.div`
       transition: all 0.5s !important;
     }
   }
+
+  .area-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+  }
 `;
 
 export default StyledScheduler;
