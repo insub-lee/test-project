@@ -157,7 +157,7 @@ class ChkMstView extends Component {
                 </tr>
                 <tr>
                   <th>주소</th>
-                  <td colSpan={5}></td>
+                  <td colSpan={5}>{userInfo.ADDRESS}</td>
                   <th>본인</th>
                   <td></td>
                 </tr>
@@ -165,7 +165,7 @@ class ChkMstView extends Component {
                   <th>배우자명</th>
                   <td>{userInfo.FAM_NAME}</td>
                   <th>주민번호</th>
-                  <td colSpan={3}>{userInfo.FAM_REGNO ? `${userInfo.REGNO.substring(0, 6)}-${userInfo.REGNO.substring(6, 13)}` : ''}</td>
+                  <td colSpan={3}>{userInfo.FAM_REGNO ? `${userInfo.FAM_REGNO.substring(0, 6)}-${userInfo.FAM_REGNO.substring(6, 13)}` : ''}</td>
                   <th>배우자</th>
                   <td></td>
                 </tr>
@@ -180,10 +180,10 @@ class ChkMstView extends Component {
               ))}
               </AntdSelect>
               <StyledButton className="btn-gray btn-sm mr5" onClick={() => { alert('개발중입니다.'); }}>검색</StyledButton>
-              <StyledButton className="btn-primary btn-sm mr5" onClick={() => { alert('개발중입니다.'); }}>저장</StyledButton>
-              <StyledButton className="btn-primary btn-sm mr5" onClick={() => { alert('개발중입니다.'); }}>검진추가</StyledButton>
               <StyledButton className="btn-gray btn-sm mr5" onClick={() => { alert('개발중입니다.'); }}>문진표조회</StyledButton>
-              <StyledButton className="btn-gray btn-sm" onClick={() => { alert('개발중입니다.'); }}>검진결과조회</StyledButton>
+              <StyledButton className="btn-gray btn-sm mr5" onClick={() => { alert('개발중입니다.'); }}>검진결과조회</StyledButton>
+              <StyledButton className="btn-primary btn-sm mr5" onClick={() => { alert('개발중입니다.'); }}>검진추가</StyledButton>
+              <StyledButton className="btn-primary btn-sm" onClick={() => { alert('개발중입니다.'); }}>저장</StyledButton>
             </div> 
           </StyledCustomSearchWrapper>
           {list && list.length > 0 && (
