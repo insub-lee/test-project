@@ -7,7 +7,7 @@ const StyledStandard = styled.div`
     border-collapse: collapse;
     border-spacing: 0;
   }
-
+  
   input,
   select,
   textarea {
