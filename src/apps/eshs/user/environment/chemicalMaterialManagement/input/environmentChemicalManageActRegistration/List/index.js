@@ -8,7 +8,7 @@ import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
-import { Popconfirm, Input, InputNumber, Select } from 'antd';
+import { Popconfirm, Input, InputNumber, Select, message } from 'antd';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 
@@ -191,18 +191,23 @@ class List extends React.Component {
       dataIndex: 'CAS_NO',
       key: 'CAS_NO',
       align: 'center',
+      width: '20%',
     },
     {
       title: '화학물질명_국문',
       dataIndex: 'NAME_KOR',
       key: 'NAME_KOR',
       align: 'center',
+      ellipsis: true,
+      width: '30%',
     },
     {
       title: '화학물질명_영문',
       dataIndex: 'NAME_ENG',
       key: 'NAME_ENG',
       align: 'center',
+      ellipsis: true,
+      width: '30%',
     },
   ];
 
@@ -214,7 +219,6 @@ class List extends React.Component {
       handleDeleteClick,
       handleResetClick,
       handleInputChange,
-      handleInputNumberChange,
       handleModalClose,
       setRequestValue,
       handleModifyClick,
