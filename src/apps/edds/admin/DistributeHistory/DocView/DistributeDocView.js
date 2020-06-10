@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Input, Table } from 'antd';
 
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
@@ -56,68 +57,72 @@ class DistributeDocView extends Component {
     }
 
     return (
-      <div>
-        {Object.keys(detail).length > 0 && (
-          <>
-            <StyledHtmlTable>
-              <table>
-                <colgroup>
-                  <col width="100px" />
-                  <col width="" />
-                  <col width="100px" />
-                  <col width="200px" />
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <th>문서명</th>
-                    <td colSpan={3}>{detail.TITLE}</td>
-                  </tr>
-                  <tr>
-                    <th>발송번호</th>
-                    <td>{detail.TRANS_NO}</td>
-                    <th>발송자</th>
-                    <td>{detail.DIST_USER_NAME}</td>
-                  </tr>
-                  <tr>
-                    <th>발송일</th>
-                    <td>{moment(detail.REG_DTTM).format('YYYY-MM-DD')}</td>
-                    <th>발송자ID</th>
-                    <td>{detail.DIST_USER_ID}</td>
-                  </tr>
-                  <tr>
-                    <th>문서번호</th>
-                    <td>{detail.DOCNUMBER}</td>
-                    <th>개정번호</th>
-                    <td>{detail.VERSION}</td>
-                  </tr>
-                  {/* <tr>
-                    <th>관리유형</th>
-                    <td></td>
-                    <th>소스시스템</th>
-                    <td></td>
-                  </tr> */}
-                  <tr>
-                    <th>DRM 권한</th>
-                    <td colSpan={3}>
-                      <p>Print Option: <span style={{ color : 'red' }}>{detail.PR === '0' ? 'disable' : 'enable' }</span>, Effective days : <span style={{ color : 'red' }}>{detail.ED}</span></p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>전달사항</th>
-                    <td colSpan={3}>
-                      <AntdTextarea value={detail.DISTRIBUTE_REASON} readOnly />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </StyledHtmlTable>
-            <AntdTable
-              dataSource={detail.fileList.map(item => ({ ...item, key: item.SEQ }))}
-              columns={this.columns}
-            />
-          </>
-        )}
-      </div>
+      <StyledContentsWrapper>
+        <StyledHtmlTable>
+          <table>
+            <colgroup>
+              <col width="100px" />
+              <col width="" />
+              <col width="100px" />
+              <col width="200px" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>문서명</th>
+                <td colSpan={3}>{detail.TITLE}</td>
+              </tr>
+              <tr>
+                <th>발송번호</th>
+                <td>{detail.TRANS_NO}</td>
+                <th>발송자</th>
+                <td>{detail.DIST_USER_NAME}</td>
+              </tr>
+              <tr>
+                <th>발송일</th>
+                <td>{moment(detail.REG_DTTM).format('YYYY-MM-DD')}</td>
+                <th>발송자ID</th>
+                <td>{detail.DIST_USER_ID}</td>
+              </tr>
+              <tr>
+                <th>수신자ID</th>
+                <td>{detail.EMAIL}</td>
+                <th>수신자명</th>
+                <td>{detail.RECV_USER_NAME}</td>
+              </tr>
+              <tr>
+                <th>문서번호</th>
+                <td>{detail.DOCNUMBER}</td>
+                <th>개정번호</th>
+                <td>{detail.VERSION}</td>
+              </tr>
+              {/* <tr>
+                <th>관리유형</th>
+                <td></td>
+                <th>소스시스템</th>
+                <td></td>
+              </tr> */}
+              <tr>
+                <th>DRM 권한</th>
+                <td colSpan={3}>
+                  <p>Print Option: <span style={{ color : 'red' }}>{detail.PR === '0' ? 'disable' : 'enable' }</span>, Effective days : <span style={{ color : 'red' }}>{detail.ED}</span></p>
+                </td>
+              </tr>
+              <tr>
+                <th>전달사항</th>
+                <td colSpan={3}>
+                  <pre>{detail.DISTRIBUTE_REASON}</pre>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </StyledHtmlTable>
+        <AntdTable
+          dataSource={detail.fileList ? detail.fileList.map(item => ({ ...item, key: item.SEQ })) : []}
+          columns={this.columns}
+          bordered
+          style={{ marginTop: 10 }}
+        />
+      </StyledContentsWrapper>
     )
   }
 }

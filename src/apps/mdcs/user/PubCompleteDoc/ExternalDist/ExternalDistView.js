@@ -128,7 +128,6 @@ class ExternalDistView extends Component {
   ]
 
   render() {
-    console.debug('deptList >> ', this.state.deptList);
     const { formData } = this.props;
 
     return (
