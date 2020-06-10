@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import { Form, Checkbox, TreeSelect } from 'antd';
 import PropTypes from 'prop-types';
 
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
 import StyledCheckbox from 'components/FormStuff/Checkbox';
+
+const AntdTreeSelect = StyledTreeSelect(TreeSelect);
 
 const FormItem = Form.Item;
 
@@ -82,7 +85,13 @@ class BizStd extends Component {
               <th>SCOPE</th>
               <td>
                 {scopeTree && scopeTree.length > 0 && (
-                  <TreeSelect onChange={this.onChangeTree} placeholder="Scope를 선택해주세요" style={{ width: '300px' }} treeData={scopeTree}></TreeSelect>
+                  <AntdTreeSelect
+                    className="select-sm"
+                    onChange={this.onChangeTree}
+                    placeholder="Scope를 선택해주세요"
+                    style={{ width: '300px' }}
+                    treeData={scopeTree}
+                  ></AntdTreeSelect>
                 )}
               </td>
             </tr>

@@ -1,7 +1,8 @@
 import React from 'react';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
 const ModalView = ({ viewType, workSeq, taskSeq, closeBtnFunc, clickCoverView }) => (
   <BizBuilderBase
@@ -12,19 +13,19 @@ const ModalView = ({ viewType, workSeq, taskSeq, closeBtnFunc, clickCoverView })
     clickCoverView={clickCoverView}
     closeBtnFunc={closeBtnFunc}
     ViewCustomButtons={({ closeBtnFunc: onClickClose, isTaskFavorite, sagaKey, formData, setTaskFavorite }) => (
-      <div style={{ textAlign: 'center', marginTop: '12px' }}>
+      <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
         {isTaskFavorite && (
           <StyledButton
-            className="btn-light btn-first"
+            className="btn-primary mr5 btn-sm"
             onClick={() => setTaskFavorite(sagaKey, formData.WORK_SEQ, formData.TASK_ORIGIN_SEQ, formData.BUILDER_TASK_FAVORITE || 'N')}
           >
             {formData.BUILDER_TASK_FAVORITE === 'Y' ? '즐겨찾기 해제' : '즐겨찾기 추가'}
           </StyledButton>
         )}
-        <StyledButton className="btn-primary" onClick={onClickClose}>
+        <StyledButton className="btn-light btn-sm" onClick={onClickClose}>
           닫기
         </StyledButton>
-      </div>
+      </StyledButtonWrapper>
     )}
   />
 );

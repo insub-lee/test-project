@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 
-import { Radio, Form, Tree, Select, Modal, Input } from 'antd';
+import { Radio, Form, Tree, Select, Modal, Input, DatePicker } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
 import StyledRadio from 'components/FormStuff/Radio';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
-import StyledDatePicker from 'components/FormStuff/DatePicker';
-import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import SearchList from './SearchList';
@@ -17,7 +21,10 @@ import BizStd from './BizStd';
 import TechStd from './TechStd';
 import DwStd from './DwStd';
 
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledAntdModal(Modal);
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
+const AntdDatePicker = StyledDatePicker(DatePicker);
 
 const FormItem = Form.Item;
 const InputGroup = Input.Group;
@@ -135,10 +142,10 @@ class SearchDetail extends Component {
             <div style={{ position: 'relative' }}>
               <p className="searchTitle">{`${searchTitle} 검색`}</p>
               <div style={{ position: 'absolute', top: '50%', right: '20px', transform: 'translateY(-50%)' }}>
-                <StyledButton className="btn-primary btn-first" onClick={this.onSearch}>
+                <StyledButton className="btn-primary btn-sm mr5" onClick={this.onSearch}>
                   검색
                 </StyledButton>
-                <StyledButton className="btn-light" onClick={this.onClear}>
+                <StyledButton className="btn-light btn-sm" onClick={this.onClear}>
                   Clear
                 </StyledButton>
               </div>
@@ -152,8 +159,9 @@ class SearchDetail extends Component {
                   <tbody>
                     <tr>
                       <th>문서번호</th>
-                      <td>
-                        <Input
+                      <td style={{ width: 200 }}>
+                        <AntdInput
+                          className="ant-input-sm"
                           onChange={e => {
                             this.onChangeSearchValue('w.docnumber', ` and w.docnumber like '%${e.target.value}%'`, e.target.value);
                           }}
@@ -186,11 +194,12 @@ class SearchDetail extends Component {
                       <th>검색어</th>
                       <td colSpan={3}>
                         <InputGroup compact>
-                          <Select style={{ width: '120px' }} defaultValue="title">
+                          <AntdSelect className="select-sm" style={{ width: '120px' }} defaultValue="title">
                             <Option value="title">제목</Option>
                             <Option value="all">제목+요약내용</Option>
-                          </Select>
-                          <Input
+                          </AntdSelect>
+                          <AntdInput
+                            className="ant-input-sm"
                             style={{ width: '50%' }}
                             onChange={e => {
                               this.onChangeSearchValue('w.title', `and w.title like '%${e.target.value}%'`, e.target.value);
@@ -202,7 +211,8 @@ class SearchDetail extends Component {
                     <tr>
                       <th>기안자</th>
                       <td colSpan={3}>
-                        <Input
+                        <AntdInput
+                          className="ant-input-sm"
                           onChange={e => {
                             this.onChangeSearchValue('w.reg_user_name', ` and w.reg_user_name like '%${e.target.value}%'`, e.target.value);
                           }}
@@ -212,7 +222,8 @@ class SearchDetail extends Component {
                     <tr>
                       <th>기안부서</th>
                       <td colSpan={3}>
-                        <Input
+                        <AntdInput
+                          className="ant-input-sm"
                           onChange={e => {
                             this.onChangeSearchValue('w.reg_dept_name', ` and w.reg_dept_name like '%${e.target.value}%'`, e.target.value);
                           }}
@@ -222,12 +233,14 @@ class SearchDetail extends Component {
                     <tr>
                       <th>시행일자</th>
                       <td colSpan={3}>
-                        <StyledDatePicker
+                        <AntdDatePicker
+                          className="ant-picker-sm"
                           format="YYYY-MM-DD"
                           onChange={(date, dateStr) => this.onChangeSearchValue('w.end_dttm1', ` and w.end_dttm >= date'${dateStr}'`, dateStr)}
                         />
-                        ~{' '}
-                        <StyledDatePicker
+                        <span style={{ display: 'inline-block', margin: '0 5px', verticalAlign: 'middle' }}>~</span>{' '}
+                        <AntdDatePicker
+                          className="ant-picker-sm"
                           format="YYYY-MM-DD"
                           onChange={(date, dateStr) => this.onChangeSearchValue('w.end_dttm2', ` and w.end_dttm < date'${dateStr}'+integer'1'`, dateStr)}
                         />
@@ -241,7 +254,8 @@ class SearchDetail extends Component {
           </div>
         </div>
         <AntdModal
-          className="modalWrapper modalTechDoc modalCustom"
+          className="modalWrapper modalTechDoc"
+          title="검색 결과"
           visible={visible}
           footer={null}
           width={1080}
@@ -253,8 +267,7 @@ class SearchDetail extends Component {
           }}
           okButtonProps={null}
         >
-          <div className="pop_tit">검색 결과</div>
-          <div className="pop_con">
+          <StyledContentsWrapper>
             <BizBuilderBase
               sagaKey={`BizDoc_${workSeq}`}
               CustomListPage={SearchList}
@@ -262,7 +275,7 @@ class SearchDetail extends Component {
               conditional={this.state.whereStr}
               workSeq={workSeq}
             ></BizBuilderBase>
-          </div>
+          </StyledContentsWrapper>
         </AntdModal>
       </StyledSearch>
     );

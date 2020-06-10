@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import { Table, Modal, Button } from 'antd';
 import moment from 'moment';
 
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledModalWrapper from 'commonStyled/MdcsStyled/Modal/StyleModalWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import BizBuilderBase from 'components/BizBuilderBase';
 import CoverViewer from '../CoverViewer';
 
-const AntdModal = StyledModalWrapper(Modal);
-const AntdLineTable = StyledLineTable(Table);
+const AntdModal = StyledAntdModal(Modal);
+const AntdTable = StyledAntdTable(Table);
 const columns = [
   { title: 'No.', key: 'DOCNUMBER', width: '11%', dataIndex: 'DOCNUMBER' },
   { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION' },
@@ -85,7 +86,7 @@ class SearchList extends Component {
     const { SearchView, coverView } = this.state;
     return (
       <>
-        <AntdLineTable
+        <AntdTable
           columns={columns}
           size="middle"
           dataSource={listData}
@@ -97,7 +98,8 @@ class SearchList extends Component {
           })}
         />
         <AntdModal
-          className="modalWrapper modalTechDoc modalCustom"
+          className="modalWrapper modalTechDoc"
+          title="검색 내용 보기"
           visible={SearchView.visible}
           footer={null}
           width={800}
@@ -106,21 +108,19 @@ class SearchList extends Component {
           okButtonProps={null}
           destroyOnClose
         >
-          <div className="pop_tit">검색 내용 보기</div>
-          <div className="SearchContentLayer">
-            <BizBuilderBase
-              sagaKey="SearchView"
-              viewType="VIEW"
-              workSeq={SearchView.workSeq}
-              taskSeq={SearchView.taskSeq}
-              draftId={SearchView.draftId}
-              closeBtnFunc={this.closeBtnFunc}
-              clickCoverView={this.clickCoverView}
-            />
-          </div>
+          <BizBuilderBase
+            sagaKey="SearchView"
+            viewType="VIEW"
+            workSeq={SearchView.workSeq}
+            taskSeq={SearchView.taskSeq}
+            draftId={SearchView.draftId}
+            closeBtnFunc={this.closeBtnFunc}
+            clickCoverView={this.clickCoverView}
+          />
         </AntdModal>
         <AntdModal
-          className="modalWrapper modalTechDoc modalCustom"
+          className="modalWrapper modalTechDoc"
+          title="표지 보기"
           visible={coverView.visible}
           footer={null}
           width={800}
@@ -128,24 +128,21 @@ class SearchList extends Component {
           onCancel={this.onCloseCoverView}
           destroyOnClose
         >
-          <div className="pop_tit">표지보기</div>
-          <div className="SearchContentLayer">
-            <BizBuilderBase
-              sagaKey="CoverView"
-              viewType="VIEW"
-              workSeq={coverView.workSeq}
-              taskSeq={coverView.taskSeq}
-              viewMetaSeq={coverView.viewMetaSeq}
-              onCloseCoverView={this.onCloseCoverView}
-              ViewCustomButtons={({ onCloseCoverView }) => (
-                <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                  <StyledButton className="btn-primary" onClick={onCloseCoverView}>
-                    닫기
-                  </StyledButton>
-                </div>
-              )}
-            />
-          </div>
+          <BizBuilderBase
+            sagaKey="CoverView"
+            viewType="VIEW"
+            workSeq={coverView.workSeq}
+            taskSeq={coverView.taskSeq}
+            viewMetaSeq={coverView.viewMetaSeq}
+            onCloseCoverView={this.onCloseCoverView}
+            ViewCustomButtons={({ onCloseCoverView }) => (
+              <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+                <StyledButton className="btn-primary btn-sm" onClick={onCloseCoverView}>
+                  닫기
+                </StyledButton>
+              </StyledButtonWrapper>
+            )}
+          />
         </AntdModal>
       </>
     );

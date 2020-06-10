@@ -3,7 +3,10 @@ import { Form, Select } from 'antd';
 
 import PropTypes from 'prop-types';
 
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+
+const AntdSelect = StyledSelect(Select);
 const FormItem = Form.Item;
 const { Option } = Select;
 
@@ -116,43 +119,43 @@ class DwStd extends Component {
               <th rowSpan="3">SCOPE</th>
               <th>도면 구분</th>
               <td>
-                <Select allowClear onChange={this.onChangeDwType} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangeDwType} style={{ width: '150px' }}>
                   {dwItems}
-                </Select>
+                </AntdSelect>
               </td>
               <th>적용 Product</th>
               <td>
-                <Select allowClear onChange={this.onChangeProduct} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangeProduct} style={{ width: '150px' }}>
                   {prdItems}
-                </Select>
+                </AntdSelect>
               </td>
             </tr>
             <tr>
               <th>적용 Pkg</th>
               <td>
-                <Select allowClear onChange={this.onChangePkg} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangePkg} style={{ width: '150px' }}>
                   {pkgItems}
-                </Select>
+                </AntdSelect>
               </td>
               <th>적용 Line Site</th>
               <td>
-                <Select allowClear onChange={this.onChangeFab} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangeFab} style={{ width: '150px' }}>
                   {lineItems}
-                </Select>
+                </AntdSelect>
               </td>
             </tr>
             <tr>
               <th>적용 Lead</th>
               <td>
-                <Select allowClear onChange={this.onChangeLead} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangeLead} style={{ width: '150px' }}>
                   {leadItems}
-                </Select>
+                </AntdSelect>
               </td>
               <th>적용 Ball</th>
               <td>
-                <Select allowClear onChange={this.onChangeBall} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangeBall} style={{ width: '150px' }}>
                   {ballItems}
-                </Select>
+                </AntdSelect>
               </td>
             </tr>
           </tbody>
