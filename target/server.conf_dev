@@ -395,7 +395,7 @@ upstream portal-migration {
 upstream portal-filemanage {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10013;
 }
-upstream migration-common {
+upstream wts-common {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10801;
 }
 upstream thumbor {
