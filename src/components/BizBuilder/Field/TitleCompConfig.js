@@ -56,7 +56,7 @@ class ComponentConfig extends Component {
             style={{ width: '100%' }}
             defaultValue={(configInfo && configInfo.property && configInfo.property.dateFormat) || ''}
             onChange={value => this.handleChangeViewCompData('dateFormat', value)}
-            disabled={configInfo.property.dataViewType === 'STRING'}
+            disabled={configInfo.property.dataViewType !== 'DATE'}
           >
             <Option value="DT">YYYY-MM-DD</Option>
             <Option value="DTTM">YYYY-MM-DD HH:mm:ss</Option>
