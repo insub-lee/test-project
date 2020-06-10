@@ -8,15 +8,15 @@ import PostionSelect from 'components/PostionSelect';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
-import StyledTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
+import StyledTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 const AntdSelect = StyledSelect(Select);
-const AntdModal = StyledContentsModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
 const AntdInput = StyledInput(Input);
 const { Option } = Select;
 const { confirm } = Modal;
