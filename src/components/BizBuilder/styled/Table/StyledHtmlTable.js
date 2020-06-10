@@ -130,6 +130,12 @@ const StyledHtmlTable = styled.div`
       margin-top: 10px;
     }
   }
+
+  .table-title {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 5px;
+  }
 `;
 
 export default StyledHtmlTable;
