@@ -143,6 +143,8 @@ class InputPage extends Component {
           }
         });
       }
+    } else {
+      changeIsLoading(false);
     }
   };
 

@@ -17,7 +17,7 @@ class SearchBar extends Component {
     this.state = {
       years: [],
       searchData: {
-        userId: (this.props && this.props.formData && this.props.formData.userInfo && this.props.formData.userInfo.USER_ID) || 0,
+        userId: (this.props && this.props.defaultUser) || 0,
         chkYear: (this.props && this.props.chkYear) || String(currentYear),
       },
     };
@@ -39,11 +39,13 @@ class SearchBar extends Component {
   };
 
   handleOnSearch = () => {
-    const { sagaKey: id, getCallDataHandler, viewStart, spinningOn } = this.props;
+    const { sagaKey: id, getCallDataHandler, viewStart, spinningOn, customApi } = this.props;
     const {
       searchData: { chkYear, userId },
     } = this.state;
     spinningOn();
+    if (typeof customApi === 'function') return getCallDataHandler(id, customApi(userId, chkYear), viewStart);
+
     const apiAry = [
       {
         key: 'userDetail',
@@ -57,7 +59,7 @@ class SearchBar extends Component {
       },
     ];
 
-    getCallDataHandler(id, apiAry, viewStart);
+    return getCallDataHandler(id, apiAry, viewStart);
   };
 
   render() {
@@ -69,9 +71,7 @@ class SearchBar extends Component {
       <>
         <div className="search-input-area">
           {userSearch ? (
-            <div style={{ display: 'inline-block' }}>
-              <UserSearchModal colData={empNo} onClickRow={record => this.handleOnChangeSearchData('userId', record.USER_ID)} />
-            </div>
+            <UserSearchModal colData={empNo} onClickRow={record => this.handleOnChangeSearchData('userId', record.USER_ID)} />
           ) : (
             <span className="text-label">{userInfo.EMP_NO || ''}</span>
           )}
@@ -111,6 +111,8 @@ SearchBar.propTypes = {
   userSearch: PropTypes.bool,
   profile: PropTypes.object,
   chkYear: PropTypes.string,
+  customApi: PropTypes.any,
+  defaultUser: PropTypes.number,
 };
 SearchBar.defaultProps = {
   sagaKey: '',
@@ -118,6 +120,8 @@ SearchBar.defaultProps = {
   formData: {},
   viewStart: () => {},
   spinningOn: () => {},
+  customApi: undefined,
+  defaultUser: 0,
 };
 
 export default SearchBar;

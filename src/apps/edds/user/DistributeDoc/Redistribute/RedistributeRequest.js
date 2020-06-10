@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Input } from 'antd';
 
-import StyledTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledTextarea from 'commonStyled/Form/StyledTextarea';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 
 const AntdTextArea = StyledTextarea(Input.TextArea);
 
@@ -30,8 +31,8 @@ class RedistributeRequest extends Component {
 
   render() {
     return (
-      <>
-        <StyledTable>
+      <StyledContentsWrapper>
+        <StyledHtmlTable>
           <table>
             <colgroup>
               <col width="20%" />
@@ -45,19 +46,19 @@ class RedistributeRequest extends Component {
                 </td>
               </tr>
               <tr>
-                <th>reason</th>
+                <th>Reason</th>
                 <td>
                   <AntdTextArea rows={12} value={this.state.reason} onChange={e => this.onChangeReason(e.target.value)} />
                 </td>
               </tr>
             </tbody>
           </table>
-        </StyledTable>
-        <StyledButtonWrapper className="btn-wrap-center">
-          <StyledButton className="btn-light mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
-          <StyledButton className="btn-primary" onClick={this.onClickSendEmail}>전송</StyledButton>
+        </StyledHtmlTable>
+        <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+          <StyledButton className="btn-light btn-sm mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
+          <StyledButton className="btn-primary btn-sm" onClick={this.onClickSendEmail}>전송</StyledButton>
         </StyledButtonWrapper>
-      </>
+      </StyledContentsWrapper>
     );
   }
 }

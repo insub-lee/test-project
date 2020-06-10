@@ -5,7 +5,6 @@ import { Table, Icon, Modal, Button } from 'antd';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import RequesterView from './RequesterView';
 
 const AntdTable = StyledAntdTable(Table);
@@ -114,13 +113,6 @@ class RequesterList extends Component {
         >
           <RequesterView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
-        <StyledHeaderWrapper>
-          <div className="pageTitle">
-            <p>
-              <Icon type="form" /> 요청자 승인/삭제
-            </p>
-          </div>
-        </StyledHeaderWrapper>
         <StyledContentsWrapper>
           <AntdTable
             dataSource={list.map(item => ({ ...item, key: `KEY_${item.REQUEST_ID}` }))}
@@ -130,6 +122,7 @@ class RequesterList extends Component {
                 this.onClickRow(record, rowIndex);
               },
             })}
+            bordered
           />
         </StyledContentsWrapper>
       </>
