@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import 'rc-time-picker/assets/index.css';
+
 import searchBtn from 'apps/wts/images/searchBtn.png';
 import iconRadio from 'apps/wts/images/icon_radio.png';
 

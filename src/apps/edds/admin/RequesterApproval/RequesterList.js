@@ -104,6 +104,16 @@ class RequesterList extends Component {
 
     return (
       <>
+        <AntdModal
+          width={700}
+          visible={this.state.isShow}
+          title="요청 상세"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <RequesterView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
+        </AntdModal>
         <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
@@ -122,17 +132,6 @@ class RequesterList extends Component {
             })}
           />
         </StyledContentsWrapper>
-        <AntdModal
-          width={700}
-          visible={this.state.isShow}
-          title="요청 상세"
-          onCancel={this.onCancelPopup}
-          destroyOnClose
-          footer={null}
-          className="modal-table-pad"
-        >
-          <RequesterView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
-        </AntdModal>
       </>
     );
   }
