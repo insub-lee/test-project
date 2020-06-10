@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import BizMicroDevBase from 'components/BizMicroDevBase';
-import List from './List';
+import TargetRegList from 'apps/eshs/admin/health/common/TargetReg';
 
 class TargetReg extends Component {
   render() {
-    return <BizMicroDevBase sagaKey="generalChkTargetReg" component={List} />;
+    return <BizMicroDevBase sagaKey="generalChkTargetReg" component={TargetRegList} chkTypeCd='001' />;
   }
 }
 

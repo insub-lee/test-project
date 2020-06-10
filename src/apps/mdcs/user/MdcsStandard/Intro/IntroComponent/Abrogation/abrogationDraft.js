@@ -52,6 +52,11 @@ class AbrogationDraft extends Component {
     onAbrogationProcess(nDraftWorkProc);
   };
 
+  onCloseModal = () => {
+    const { onCloseAbrogationModal } = this.props;
+    onCloseAbrogationModal();
+  };
+
   render() {
     const { WORK_SEQ, TASK_SEQ } = this.props;
     const { workProcess } = this.state;

@@ -179,6 +179,27 @@ export function cloneJSON(item) {
   return JSON.parse(JSON.stringify(item));
 }
 
+export const shuffleArray = array => {
+  const nextArray = JSON.parse(JSON.stringify(array));
+  let currentIndex = nextArray.length;
+  let temporaryValue;
+  let randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = nextArray[currentIndex];
+    nextArray[currentIndex] = nextArray[randomIndex];
+    nextArray[randomIndex] = temporaryValue;
+  }
+
+  return nextArray;
+};
+
 export const SheetJSFT = [
   'xlsx',
   'xlsb',

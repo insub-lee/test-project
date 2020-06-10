@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import StyledContent from './StyledContent';
 
 const Wrapper = styled.div`
-  margin-bottom: 30px !important;
   table {
     border-collapse: collapse;
     border-spacing: 0;
@@ -183,7 +182,7 @@ class WorkerTimeSimulatorModal extends React.Component {
                 <div style={{ width: '100%' }}>
                   <table>
                     <colgroup>
-                      <col width={'30%'} />
+                      <col width="30%" />
                       <col width={`${70 / days.length}%`} />
                     </colgroup>
                     <tbody className="tb02 wb">
@@ -210,12 +209,22 @@ class WorkerTimeSimulatorModal extends React.Component {
                         ))}
                       </tr>
                       <tr className="bd">
-                          <th>전체 근무 시간</th>
-                          <td style={{ color: result.total > 52 ? '#ff7f29' : 'black', textAlign: 'right', fontSize: '20px', fontWeight: 800 }} colSpan={days.length}>{result.total}</td>
+                        <th>전체 근무 시간</th>
+                        <td
+                          style={{ color: result.total > 52 ? '#ff7f29' : 'black', textAlign: 'right', fontSize: '20px', fontWeight: 800 }}
+                          colSpan={days.length}
+                        >
+                          {result.total}
+                        </td>
                       </tr>
                       <tr className="bd">
-                          <th>야근 횟수</th>
-                          <td style={{ color: result.nightCnt > 2 ? '#ff7f29' : 'black', textAlign: 'right', fontSize: '20px', fontWeight: 800 }} colSpan={days.length}>{result.nightCnt}</td>
+                        <th>야근 횟수</th>
+                        <td
+                          style={{ color: result.nightCnt > 2 ? '#ff7f29' : 'black', textAlign: 'right', fontSize: '20px', fontWeight: 800 }}
+                          colSpan={days.length}
+                        >
+                          {result.nightCnt}
+                        </td>
                       </tr>
                     </tbody>
                   </table>

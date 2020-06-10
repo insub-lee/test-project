@@ -1,0 +1,32 @@
+export const sampleQuestion = [
+  { seq: 0, q_content: 'HOUSE KEEPING에 대하여 정의하고 10가지 이상 쓰시오', q_score: 20 },
+  { seq: 1, q_content: 'FAB내 청소의 정의에 대하여 쓰시오.', q_score: 10 },
+  { seq: 2, q_content: '청소 용구 종류을 나열하시오.', q_score: 10 },
+  { seq: 3, q_content: 'NO NOISE OPERATION 세가지를 쓰시오.', q_score: 10 },
+  { seq: 4, q_content: 'BOX종류 및 용도를 쓰시오.', q_score: 10 },
+  { seq: 5, q_content: 'WAFER상의 이물을 육안으로 확인하고자 할때 사용되는 치공구를 쓰시오.', q_score: 5 },
+  { seq: 6, q_content: '다음 용어에 대하여 정의하시오.(CELL, ALIGN, BACK SIDE, CLEAN ROOM)', q_score: 8 },
+  { seq: 7, q_content: 'LOG SHEET 기록의 목적을 쓰시오.', q_score: 10 },
+  { seq: 8, q_content: 'WAFER 취급시 주의 사항 6가지를 쓰시오', q_score: 7 },
+  { seq: 9, q_content: 'PARTICLE 관리 중요성에 대하여 쓰시오.', q_score: 10 },
+];
+
+export const sampleJobs = [
+  { seq: 0, q: 'WAFER HANDLING', isTheory: 'O', isPractice: 'O' },
+  { seq: 1, q: 'WAFER TRANSFER', isTheory: 'O', isPractice: 'O' },
+  { seq: 2, q: 'FLAT ALIGNER', isTheory: 'O', isPractice: 'O' },
+  { seq: 3, q: 'CARRIER & BOX 취급방법', isTheory: 'O', isPractice: 'O' },
+  { seq: 4, q: '투감기 검사 방법', isTheory: 'O', isPractice: 'O' },
+  { seq: 5, q: '공정 확인 속지 여부 (E-SHEET, 수량, 공정)', isTheory: 'O', isPractice: 'X' },
+  { seq: 6, q: '전산 처리 방법', isTheory: 'O', isPractice: 'X' },
+  { seq: 7, q: 'RUN 속지 여부', isTheory: 'O', isPractice: 'X' },
+  { seq: 8, q: 'LOG SHEET 기록 및 확인사항', isTheory: 'O', isPractice: 'O' },
+  { seq: 9, q: 'RUN 진행 전, 후 CHECK 사항', isTheory: 'O', isPractice: 'X' },
+  { seq: 10, q: '작업대기 / 완료 / WAFER 보관 규정', isTheory: 'O', isPractice: 'X' },
+  { seq: 11, q: '공정 / 장비 조작 방법', isTheory: 'O', isPractice: 'O' },
+  { seq: 12, q: 'TEST WAFER 관리 방법', isTheory: 'O', isPractice: 'X' },
+  { seq: 13, q: 'SPC RULE 이해 및 OCAP SHEET 처리 방법', isTheory: 'O', isPractice: 'O' },
+  { seq: 14, q: 'ERROR 처리 방법', isTheory: 'O', isPractice: 'O' },
+  { seq: 15, q: '장비 조작 방법', isTheory: 'O', isPractice: 'O' },
+  { seq: 16, q: '사내표준 사용 방법', isTheory: 'O', isPractice: 'X' },
+];

@@ -63,6 +63,7 @@ ApproveBase.defaultProps = {
   setBizFormData: () => {},
   formData: {},
   getUserInfo: () => {},
+  getFileDownload: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -92,6 +93,7 @@ const mapDispatchToProps = dispatch => ({
   setBizFormData: formData => dispatch(actions.setBizFormData(formData)),
   reqApprove: appvStatus => dispatch(actions.reqApprove(appvStatus)),
   getUserInfo: (userInfo, callBack) => dispatch(actions.getUserInfo(userInfo, callBack)),
+  getFileDownload: (url, fileName) => dispatch(actions.getFileDownload(url, fileName)),
 });
 
 const withReducer = injectReducer({

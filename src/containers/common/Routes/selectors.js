@@ -35,6 +35,13 @@ const makeUnreadCnt = () => createSelector(selectCommon, portalState => portalSt
 const makeSelectMyMenuData = () => createSelector(selectCommon, portalState => portalState.setMyMenuData);
 
 const makeMyAppTree = () => createSelector(selectCommon, portalState => portalState.get('myAppTreeData').toJS());
+const makeMyAppTreeWithOutPersonalize = () =>
+  createSelector(selectCommon, portalState =>
+    portalState
+      .get('myAppTreeData')
+      .toJS()
+      .filter(node => node.DEFAULT_YN === 'N'),
+  );
 
 const makeMyAppStoreTree = () => createSelector(selectCommon, portalState => portalState.get('myAppStoreTreeData').toJS());
 
@@ -69,6 +76,7 @@ export {
   makeSelectMyMenuData,
   // 7-1
   makeMyAppTree,
+  makeMyAppTreeWithOutPersonalize,
   makeUnreadCnt,
   makeMyAppStoreTree,
   // 9-1

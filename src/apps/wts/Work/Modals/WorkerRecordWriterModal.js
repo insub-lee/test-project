@@ -5,12 +5,14 @@ import Modal from 'rc-dialog';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
 // import 'rc-time-picker/assets/index.css';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
 import Button from 'components/Button';
 // import DatePicker from 'components/FormPreview/DatePicker';
 import Checkbox from 'apps/wts/components/CheckboxGroup/Checkbox';
 import service from '../service';
 import StyledContent from './StyledContent';
+import StyledStandard from '../StyledStandard';
 
 class WorkerRecordWriterModal extends React.Component {
   constructor(props) {
@@ -361,27 +363,28 @@ class WorkerRecordWriterModal extends React.Component {
       >
         <div>
           <StyledContent>
-            <div className="pop_tit">
-              일일 근무이력 작성(근무자)
-              <button type="button" className="icon icon_pclose" onClick={this.handleCloseModal} />
-            </div>
-            <div className="pop_con">
-              <StyledCommonForm onSubmit={this.submitData} autoComplete="off">
-                <input type="hidden" name="searchSite" value={site} />
-                <input type="hidden" name="empNo" value={empNo} />
-                <input type="hidden" name="usrNm" value={usrNm} />
-                <input type="hidden" name="working" value="O" />
-                <div className="sub_form_tit cr">기본정보</div>
-                <ul className="sub_form small2 has_margin">
-                  <li>
-                    <label htmlFor="date" className="title">
-                      기간
-                    </label>
-                    <select name="workDt" defaultValue={currentDate.format('YYYYMMDD')}>
-                      <option value={currentDate.format('YYYYMMDD')}>{currentDate.format('YYYY.MM.DD')}</option>
-                      <option value={yesterday.format('YYYYMMDD')}>{yesterday.format('YYYY.MM.DD')}</option>
-                    </select>
-                    {/*
+            <StyledStandard>
+              <div className="pop_tit">
+                일일 근무이력 작성(근무자)
+                <button type="button" className="icon icon_pclose" onClick={this.handleCloseModal} />
+              </div>
+              <div className="pop_con">
+                <StyledCommonForm onSubmit={this.submitData} autoComplete="off">
+                  <input type="hidden" name="searchSite" value={site} />
+                  <input type="hidden" name="empNo" value={empNo} />
+                  <input type="hidden" name="usrNm" value={usrNm} />
+                  <input type="hidden" name="working" value="O" />
+                  <div className="sub_form_tit cr">기본정보</div>
+                  <ul className="sub_form small2 has_margin">
+                    <li>
+                      <label htmlFor="date" className="title">
+                        기간
+                      </label>
+                      <select name="workDt" defaultValue={currentDate.format('YYYYMMDD')}>
+                        <option value={currentDate.format('YYYYMMDD')}>{currentDate.format('YYYY.MM.DD')}</option>
+                        <option value={yesterday.format('YYYYMMDD')}>{yesterday.format('YYYY.MM.DD')}</option>
+                      </select>
+                      {/*
                     <DatePicker
                       values={[
                         {
@@ -392,13 +395,13 @@ class WorkerRecordWriterModal extends React.Component {
                       single
                     />
                     */}
-                  </li>
-                  <li>
-                    <label htmlFor="select-workShift" className="title">
-                      근무조
-                    </label>
-                    <input type="text" name="workJo" className="input" readOnly value={workJo} />
-                    {/*
+                    </li>
+                    <li>
+                      <label htmlFor="select-workShift" className="title">
+                        근무조
+                      </label>
+                      <input type="text" name="workJo" className="input" readOnly value={workJo} />
+                      {/*
                     <select name="workJo" id="select-workShift">
                       {category.workShift.map(option => (
                         <option key={option.key} value={option.key}>
@@ -407,26 +410,26 @@ class WorkerRecordWriterModal extends React.Component {
                       ))}
                     </select>
                     */}
-                  </li>
-                  <li>
-                    <label htmlFor="select-workTime" className="title">
-                      구분
-                    </label>
-                    <select name="wAmpmnnoff" id="select-workTime" defaultValue="" onChange={this.handleChangeWorkTime}>
-                      <option value="" disabled>
-                        근무시간대를 선택해주세요.
-                      </option>
-                      {category.workTime.map(option => (
-                        <option key={option.key} value={option.key}>
-                          {option.label}
+                    </li>
+                    <li>
+                      <label htmlFor="select-workTime" className="title">
+                        구분
+                      </label>
+                      <select name="wAmpmnnoff" id="select-workTime" defaultValue="" onChange={this.handleChangeWorkTime}>
+                        <option value="" disabled>
+                          근무시간대를 선택해주세요.
                         </option>
-                      ))}
-                    </select>
-                  </li>
-                </ul>
-                <div className="sub_form_tit cr">일일근태</div>
-                <ul className="sub_form small2 has_margin">
-                  {/*
+                        {category.workTime.map(option => (
+                          <option key={option.key} value={option.key}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </li>
+                  </ul>
+                  <div className="sub_form_tit cr">일일근태</div>
+                  <ul className="sub_form small2 has_margin">
+                    {/*
                   <li>
                     <label htmlFor="select-workYn" className="title">
                       근태
@@ -440,123 +443,124 @@ class WorkerRecordWriterModal extends React.Component {
                     </select>
                   </li>
                   */}
-                  <li className="">
-                    <label htmlFor="time-1" className="title">
-                      출근시간
-                    </label>
-                    <div>
-                      <TimePicker
-                        showSecond={false}
-                        id="time-1"
-                        style={{
-                          marginTop: 10,
-                        }}
-                        name="wst"
-                        value={wstValue}
-                        // disabledHours={() => this.disabledHours('wst')}
-                        // disabledMinutes={h => this.disabledMinutes(h, 'wst')}
-                        onChange={value => this.handleChangeWorkTimeValue(value, 'wst')}
-                        focusOnOpen
-                      />
-                    </div>
-                  </li>
-                  <li className="">
-                    <label htmlFor="time-2" className="title">
-                      퇴근시간
-                    </label>
-                    <TimePicker
-                      showSecond={false}
-                      id="time-2"
-                      style={{
-                        marginTop: 10,
-                      }}
-                      name="wet"
-                      value={wetValue}
-                      // disabledHours={() => this.disabledHours('wet')}
-                      // disabledMinutes={h => this.disabledMinutes(h, 'wet')}
-                      onChange={value => this.handleChangeWorkTimeValue(value, 'wet')}
-                      focusOnOpen
-                    />
-                  </li>
-                </ul>
-                <div className="sub_form_tit cr">
-                  <div style={{ float: 'left' }}>연장근무</div>
-                  <div style={{ float: 'right' }}>
-                    <Checkbox id="use-yn" checked={writeOverWork} onChange={this.handleChangeWriteOverWork} labelText="작성" noPadding />
-                  </div>
-                  <div className="cr" />
-                </div>
-                {writeOverWork && (
-                  <ul className="sub_form small2 has_margin">
                     <li className="">
-                      <label htmlFor="time-3" className="title">
-                        시작시간
+                      <label htmlFor="time-1" className="title">
+                        출근시간
+                      </label>
+                      <div>
+                        <TimePicker
+                          showSecond={false}
+                          id="time-1"
+                          style={{
+                            marginTop: 10,
+                          }}
+                          name="wst"
+                          value={wstValue}
+                          // disabledHours={() => this.disabledHours('wst')}
+                          // disabledMinutes={h => this.disabledMinutes(h, 'wst')}
+                          onChange={value => this.handleChangeWorkTimeValue(value, 'wst')}
+                          focusOnOpen
+                        />
+                      </div>
+                    </li>
+                    <li className="">
+                      <label htmlFor="time-2" className="title">
+                        퇴근시간
                       </label>
                       <TimePicker
                         showSecond={false}
-                        id="time-3"
+                        id="time-2"
                         style={{
                           marginTop: 10,
                         }}
-                        onChange={value => this.handleChangeTemp(value, 0)}
-                        name="owst"
-                        // disabledHours={() => this.disabledHours('owst')}
-                        // disabledMinutes={h => this.disabledMinutes(h, 'owst')}
+                        name="wet"
+                        value={wetValue}
+                        // disabledHours={() => this.disabledHours('wet')}
+                        // disabledMinutes={h => this.disabledMinutes(h, 'wet')}
+                        onChange={value => this.handleChangeWorkTimeValue(value, 'wet')}
                         focusOnOpen
-                        minuteStep={30}
                       />
-                    </li>
-                    <li className="">
-                      <label htmlFor="time-4" className="title">
-                        종료시간
-                      </label>
-                      <TimePicker
-                        showSecond={false}
-                        id="time-4"
-                        style={{
-                          marginTop: 10,
-                        }}
-                        onChange={value => this.handleChangeTemp(value, 1)}
-                        name="owet"
-                        // disabledHours={() => this.disabledHours('owet')}
-                        // disabledMinutes={h => this.disabledMinutes(h, 'owet')}
-                        focusOnOpen
-                        minuteStep={30}
-                      />
-                    </li>
-                    <li>
-                      <label htmlFor="input_owcoment" className="title">
-                        내용
-                      </label>
-                      <textarea id="input_owcoment" className="input" name="owcoment" style={{ height: 100 }} />
-                    </li>
-                    <li className="">
-                      <label htmlFor="input_owt" className="title">
-                        총 시간
-                      </label>
-                      <input type="text" id="input_owt" className="input" name="owt" readOnly value={diffTime} />
-                    </li>
-                    <li>
-                      <label htmlFor="select-mealYn" className="title">
-                        식사
-                      </label>
-                      <select name="meal" id="select-mealYn" onChange={this.handleDiffTime}>
-                        {category.mealYn.map(option => (
-                          <option key={option.key} value={option.key}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
                     </li>
                   </ul>
-                )}
-                <div className="btn_wrap">
-                  <Button type="submit" size="small" color="primary">
-                    확인
-                  </Button>
-                </div>
-              </StyledCommonForm>
-            </div>
+                  <div className="sub_form_tit cr">
+                    <div style={{ float: 'left' }}>연장근무</div>
+                    <div style={{ float: 'right' }}>
+                      <Checkbox id="use-yn" checked={writeOverWork} onChange={this.handleChangeWriteOverWork} labelText="작성" noPadding />
+                    </div>
+                    <div className="cr" />
+                  </div>
+                  {writeOverWork && (
+                    <ul className="sub_form small2 has_margin">
+                      <li className="">
+                        <label htmlFor="time-3" className="title">
+                          시작시간
+                        </label>
+                        <TimePicker
+                          showSecond={false}
+                          id="time-3"
+                          style={{
+                            marginTop: 10,
+                          }}
+                          onChange={value => this.handleChangeTemp(value, 0)}
+                          name="owst"
+                          // disabledHours={() => this.disabledHours('owst')}
+                          // disabledMinutes={h => this.disabledMinutes(h, 'owst')}
+                          focusOnOpen
+                          minuteStep={30}
+                        />
+                      </li>
+                      <li className="">
+                        <label htmlFor="time-4" className="title">
+                          종료시간
+                        </label>
+                        <TimePicker
+                          showSecond={false}
+                          id="time-4"
+                          style={{
+                            marginTop: 10,
+                          }}
+                          onChange={value => this.handleChangeTemp(value, 1)}
+                          name="owet"
+                          // disabledHours={() => this.disabledHours('owet')}
+                          // disabledMinutes={h => this.disabledMinutes(h, 'owet')}
+                          focusOnOpen
+                          minuteStep={30}
+                        />
+                      </li>
+                      <li>
+                        <label htmlFor="input_owcoment" className="title">
+                          내용
+                        </label>
+                        <textarea id="input_owcoment" className="input" name="owcoment" style={{ height: 100 }} />
+                      </li>
+                      <li className="">
+                        <label htmlFor="input_owt" className="title">
+                          총 시간
+                        </label>
+                        <input type="text" id="input_owt" className="input" name="owt" readOnly value={diffTime} />
+                      </li>
+                      <li>
+                        <label htmlFor="select-mealYn" className="title">
+                          식사
+                        </label>
+                        <select name="meal" id="select-mealYn" onChange={this.handleDiffTime}>
+                          {category.mealYn.map(option => (
+                            <option key={option.key} value={option.key}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                      </li>
+                    </ul>
+                  )}
+                  <div className="btn_wrap">
+                    <StyledButton type="submit" className="btn-primary btn-sm">
+                      확인
+                    </StyledButton>
+                  </div>
+                </StyledCommonForm>
+              </div>
+            </StyledStandard>
           </StyledContent>
         </div>
       </Modal>
