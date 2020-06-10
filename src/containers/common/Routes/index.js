@@ -24,6 +24,7 @@ import * as authActions from '../Auth/actions';
 import SignIn from '../Auth/index';
 import RestrictedRoute from './RestrictedRoute';
 import routes from './routes';
+import SignUp from 'apps/edds/user/SignUp';
 
 // 포탈에서 앱을 실행했을 때 사용되는 경로
 // getLoaddata 함수가 실행되야함
@@ -56,7 +57,9 @@ class PublicRoutes extends Component {
     console.debug('@@@ location', this.props.location);
     // const url = locState ? locState.from.pathname : '/';
     // const search = locState ? locState.from.search : '';
-    boot(pathname + search, pathname);
+    if (pathname !== '/signup') {
+      boot(pathname + search, pathname);
+    }
   }
 
   componentDidMount() {
@@ -192,6 +195,7 @@ class PublicRoutes extends Component {
         */}
         <Switch>
           <Route path="/signin" component={SignIn} />
+          <Route path="/signup" component={SignUp} />
           {routes.map(route => (
             <RestrictedRoute {...route} isLoggedIn={isLoggedIn} profile={profile} />
           ))}
