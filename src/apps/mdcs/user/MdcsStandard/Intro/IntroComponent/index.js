@@ -103,7 +103,6 @@ class IntroComponent extends Component {
   };
 
   onShowAbrogationMulti = workPrcProps => {
-    console.debug('onShowAbrogationMulti', workPrcProps);
     this.setState({
       isAbrogationMultiShow: true,
       workPrcProps,
@@ -228,6 +227,7 @@ class IntroComponent extends Component {
                 workPrcProps={workPrcProps}
                 component={AbrogationMultiDraft}
                 onAbrogationMultiProcess={this.onAbrogationMultiProcess}
+                onCloseAbrogationMultiModal={this.onCloseAbrogationMultiModal}
               />
               ;
             </div>
@@ -254,6 +254,7 @@ class IntroComponent extends Component {
                 TITLE={title}
                 component={AbrogationDraft}
                 onAbrogationProcess={this.onAbrogationProcess}
+                onCloseAbrogationModal={this.onCloseAbrogationModal}
               />
               ;
             </div>

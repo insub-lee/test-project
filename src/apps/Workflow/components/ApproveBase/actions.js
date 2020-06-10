@@ -92,3 +92,9 @@ export const setUserInfo = userInfo => ({
   type: actionTypes.SET_USERINFO,
   userInfo,
 });
+
+export const getFileDownload = (url, fileName) => ({
+  type: actionTypes.GET_FILE_DOWNLOAD,
+  url,
+  fileName,
+});

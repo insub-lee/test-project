@@ -29,10 +29,9 @@ class AbrogationMultiDraft extends Component {
 
   initProcessData = (sagaKey, response) => {
     const { workPrcProps } = this.props;
-    console.debug('workPrcProps', workPrcProps);
     const { DRAFT_PROCESS } = response;
     const tProc = { ...DRAFT_PROCESS, REL_TYPE: 999 };
-    this.setState({ workProcess: { DRAFT_PROCESS: tProc }, draftWorkProc: { DRAFT_PROCESS: tProc } });
+    this.setState({ workProcess: { DRAFT_PROCESS: tProc }, draftWorkProc: tProc });
   };
 
   setProcessRule = (id, processRule) => {
@@ -97,6 +96,11 @@ class AbrogationMultiDraft extends Component {
       render: (text, record) => moment(text).format('YYYY-MM-DD'),
     },
   ];
+
+  onCloseModal = () => {
+    const { onCloseAbrogationMultiModal } = this.props;
+    onCloseAbrogationMultiModal();
+  };
 
   render() {
     const { workProcess } = this.state;

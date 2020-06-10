@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Input, Select, DatePicker, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
@@ -13,7 +14,6 @@ import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import moment from 'moment';
 
 const AntdSelect = StyledSelect(Select);
 const AntdRangeDatePicker= StyledDatePicker(DatePicker.RangePicker);

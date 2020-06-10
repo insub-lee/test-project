@@ -140,8 +140,10 @@ import DragUploadViewComp from 'components/BizBuilder/Field/DragUploadViewComp';
 import CategoryViewComp from 'components/BizBuilder/Field/CategoryViewComp';
 import CategorySelectComp from 'components/BizBuilder/Field/CategorySelectComp';
 import DangerHazardSubComp from 'components/BizBuilder/Field/DangerHazardSubComp';
+import VersionComp from 'components/BizBuilder/Field/VersionComp';
 
 export const CompInfo = {
+  'components/BizBuilder/Field/VersionComp': { renderer: property => <VersionComp {...property} /> },
   'components/BizBuilder/Field/CategorySelectComp': { renderer: property => <CategorySelectComp {...property} /> },
   'components/BizBuilder/Field/CategoryViewComp': { renderer: property => <CategoryViewComp {...property} /> },
   'components/BizBuilder/Field/VaildationListComp': { renderer: property => <VaildationListComp {...property} /> },

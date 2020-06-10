@@ -37,7 +37,7 @@ const StyledContent = styled.div`
     border-bottom-right-radius: 5px;
 
     form {
-      // margin-bottom: 20px;
+      /* margin-bottom: 20px; */
     }
 
     .select_search {
@@ -94,7 +94,7 @@ const StyledContent = styled.div`
 
       .tb01 {
         width: 100%;
-        //margin-bottom: 20px;
+        /* margin-bottom: 20px; */
 
         th,
         td {
@@ -150,8 +150,6 @@ const StyledContent = styled.div`
       font-size: 0;
       text-align: center;
       overflow: hidden;
-      //padding-bottom: 30px;
-      margin-top: 10px;
 
       &.search_btn_wrap {
         padding: 0px;

@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 const TreeWrapper = styled.div`
   width: 100%;
-  padding: 20px 20px 15px 20px;
 
   .tree-wrapper-inner {
     border: 1px solid #e8e8e8;

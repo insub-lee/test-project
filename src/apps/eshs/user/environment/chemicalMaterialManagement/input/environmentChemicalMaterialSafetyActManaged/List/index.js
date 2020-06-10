@@ -550,30 +550,37 @@ class List extends React.Component {
       dataIndex: 'CAS_NO',
       key: 'CAS_NO',
       align: 'center',
+      width: '15%',
     },
     {
       title: '화학물질명_국문',
       dataIndex: 'NAME_KOR',
       key: 'NAME_KOR',
       align: 'center',
+      width: '30%',
+      ellipsis: true,
     },
     {
       title: '화학물질명_영문',
       dataIndex: 'NAME_ENG',
       key: 'NAME_ENG',
       align: 'center',
+      width: '30%',
+      ellipsis: true,
     },
     {
       title: '관리대상여부',
       dataIndex: 'IS_MANAGED',
       key: 'IS_MANAGED',
       align: 'center',
+      width: '10%',
     },
     {
       title: '특별관리여부',
       dataIndex: 'IS_SPE_MANAGED',
       key: 'IS_SPE_MANAGED',
       align: 'center',
+      width: '10%',
     },
   ];
 

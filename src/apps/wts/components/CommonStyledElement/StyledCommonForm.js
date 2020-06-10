@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import 'rc-time-picker/assets/index.css';
+
 import searchBtn from 'apps/wts/images/searchBtn.png';
 import iconRadio from 'apps/wts/images/icon_radio.png';
 
@@ -147,7 +149,7 @@ const StyledCommonForm = styled.form`
 
   .survey_tit,
   .sub_form_tit {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 16px;
     margin-bottom: 15px;
   }
