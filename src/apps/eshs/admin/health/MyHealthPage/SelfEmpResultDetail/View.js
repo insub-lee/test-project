@@ -5,10 +5,9 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
-import ChkEmpResultTable from 'apps/eshs/admin/health/ChkResult/EmpChkResultDetail/comp/ChkEmpResultTable';
-import ChkItemResultTable from 'apps/eshs/admin/health/ChkResult/EmpChkResultDetail/comp/ChkItemResultTable';
 import SearchBar from 'apps/eshs/admin/health/ChkResult/EmpChkResultDetail/comp/SearchBar';
-
+import SelfCheckList from 'apps/eshs/admin/health/MyHealthPage/SelfEmpResultDetail/comp/SelfCheckList';
+import SelfDetailList from 'apps/eshs/admin/health/MyHealthPage/SelfEmpResultDetail/comp/SelfDetailList';
 import moment from 'moment';
 
 const currentYear = moment(new Date()).format('YYYY');
@@ -16,6 +15,7 @@ const currentYear = moment(new Date()).format('YYYY');
 class View extends Component {
   constructor(props) {
     super(props);
+    this.state = { text: '' };
   }
 
   componentDidMount() {
@@ -32,7 +32,7 @@ class View extends Component {
       {
         key: 'RESULT',
         type: 'GET',
-        url: `/api/eshs/v1/common/health/eshsHealthEmpChkResultDetail?user_id=${defaultUser || USER_ID}&CHK_YEAR=${chkYear || currentYear}`,
+        url: `/api/eshs/v1/common/health/eshsHealthSelfResultDetail?user_id=${defaultUser || USER_ID}&CHK_YEAR=${chkYear || currentYear}`,
       },
       {
         key: 'userDetail',
@@ -50,42 +50,47 @@ class View extends Component {
     spinningOff();
   };
 
+  apiAry = (userId, chkYear) => {
+    this.setState({ text: '' });
+    return [
+      {
+        key: 'userDetail',
+        type: 'GET',
+        url: `/api/common/v1/account/userDetail/${userId}`,
+      },
+      {
+        key: 'RESULT',
+        type: 'GET',
+        url: `/api/eshs/v1/common/health/eshsHealthSelfResultDetail?user_id=${userId}&CHK_YEAR=${chkYear}`,
+      },
+    ];
+  };
+
   render() {
-    const { result, userSearch, profile, sagaKey, getCallDataHandler, defaultUser, changeFormData, formData, spinningOn, spinningOff, chkYear } = this.props;
-    const data = (result && result.RESULT && result.RESULT.result) || {};
-    const list = (data && data.list) || [];
+    const { result, userSearch, profile, sagaKey, getCallDataHandler, formData, spinningOn, spinningOff, chkYear, defaultUser } = this.props;
+    const list = (result && result.RESULT && result.RESULT.list) || [];
     return (
       <StyledContentsWrapper>
         <StyledCustomSearchWrapper className="search-wrapper-inline">
           <SearchBar
             profile={profile}
             userSearch={userSearch}
+            defaultUser={defaultUser || profile.USER_ID}
             sagaKey={sagaKey}
             getCallDataHandler={getCallDataHandler}
             result={result}
-            defaultUser={defaultUser || profile.USER_ID}
             chkYear={chkYear}
-            changeFormData={changeFormData}
             formData={formData}
             viewStart={this.appStart}
             spinningOn={spinningOn}
             spinningOff={spinningOff}
+            customApi={this.apiAry}
           />
         </StyledCustomSearchWrapper>
         <StyledHtmlTable>
-          {0 in list ? (
-            list.map(c => <ChkEmpResultTable key={c.CHK_CD} chkCd={c.CHK_CD} empInfo={{ ...c, ...data[`DIS_${c.CHK_CD}`] }} />)
-          ) : (
-            <ChkEmpResultTable noData />
-          )}
+          <SelfDetailList list={list} rowClick={text => this.setState({ text })} text={this.state.text} />
           <br />
-          <font color="#666666">
-            ※ <b>검진일자</b>를 클릭하시면 검진 결과통보서를 출력하실 수 있습니다.
-            <br />※ <b>검사종목</b>을 클릭하시면 추이를 보실 수 있습니다.
-            <br />
-          </font>
-          <br />
-          <ChkItemResultTable data={data} />
+          <SelfCheckList list={list} />
         </StyledHtmlTable>
       </StyledContentsWrapper>
     );
