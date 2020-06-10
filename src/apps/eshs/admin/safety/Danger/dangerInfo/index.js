@@ -7,7 +7,7 @@ class DangerInfo extends Component {
   componentDidMount() {}
 
   render() {
-    return <BizBuilderBase sagaKey="dangerInfo" workSeq={10341} viewType="MODIFY" CustomModifyPage={ModifyPage} />;
+    return <BizBuilderBase sagaKey="dangerInfo" workSeq={10341} viewType="INPUT" CustomInputPage={ModifyPage} />;
   }
 }
 

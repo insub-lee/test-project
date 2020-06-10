@@ -1,255 +1,283 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, message } from 'antd';
 
-import { isJSON } from 'utils/helpers';
-import WorkProcess from 'apps/Workflow/WorkProcess';
-import Sketch from 'components/BizBuilder/Sketch';
-import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
+import debounce from 'lodash/debounce';
+import { getTreeFromFlatData } from 'react-sortable-tree';
+import { TreeSelect, Select, message } from 'antd';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+
+import moment from 'moment';
 import View from './View';
+import MeterialModal from './MeterialModal';
 
-// import Loadable from 'components/Loadable';
-// import Loading from '../Common/Loading';
+moment.locale('ko');
+const AntdTreeSelect = StyledTreeSelect(TreeSelect);
+const AntdSelect = StyledSelect(Select);
 
-const StyledButton = StyledAntdButton(Button);
+const getCategoryMapListAsTree = (flatData, rootkey, selectable) =>
+  getTreeFromFlatData({
+    flatData: flatData.map(item => ({
+      title: item.NAME_KOR,
+      value: item.NODE_ID,
+      key: item.NODE_ID,
+      parentValue: item.PARENT_NODE_ID,
+      selectable: selectable ? item.LVL > selectable : true,
+    })),
+    getKey: node => node.key,
+    getParentKey: node => node.parentValue,
+    rootKey: rootkey || 0,
+  });
+
+const { Option } = Select;
 
 class ModifyPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      uploadFileList: [],
-      StyledWrap: StyledViewDesigner,
+      conTent: [],
     };
+    this.onChangeData = debounce(this.onChangeData, 500);
   }
 
   componentDidMount() {
-    const { sagaKey: id, getProcessRuleByModify, workInfo, workPrcProps, draftInfo } = this.props;
-    const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
-    const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
-    const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
-
-    if (workInfo.BUILDER_STYLE_PATH) {
-      // const StyledWrap = Loadable({
-      //   loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
-      //   loading: Loading,
-      // });
-      const StyledWrap = DefaultStyleInfo(workInfo.BUILDER_STYLE_PATH);
-      this.setState({ StyledWrap });
+    const { sagaKey: id, getExtraApiData, changeFormData, getListData, changeSearchData } = this.props;
+    const apiAry = [
+      {
+        key: 'treeSelectData',
+        type: 'POST',
+        url: '/api/admin/v1/common/categoryMapList',
+        params: { PARAM: { NODE_ID: 1831 } },
+      },
+    ];
+    changeSearchData(id, 'INFO_YEAR', `AND W.INFO_YEAR = '${moment().format('YYYY')}'`);
+    changeFormData(id, 'INFO_YEAR', moment().format('YYYY'));
+    getExtraApiData(id, apiAry, this.initData);
+    getListData(id, 10341);
+    const endYear = Number(moment().format('YYYY')) + 1;
+    const YearOptions = [];
+    for (let year = 2006; year <= endYear; year += 1) {
+      YearOptions.push(year);
     }
-
-    if (isWorkflowUsed && prcId !== -1) {
-      const payload = {
-        PRC_ID: Number(prcId),
-        DRAFT_INFO: draftInfo,
-        DRAFT_DATA: {
-          ...workPrcProps,
-        },
-      };
-      getProcessRuleByModify(id, payload);
-    }
+    this.setState({ YearOptions });
   }
 
-  fileUploadComplete = (id, response, etcData) => {
-    const { formData, changeFormData } = this.props;
-    const { DETAIL, code } = response;
-    const selectedAttach = formData[etcData];
-    const { uploadFileList } = this.state;
-    const tmpAttach = { ...selectedAttach, DETAIL };
-    changeFormData(id, etcData, tmpAttach);
-    const tmpFileList = uploadFileList.map(file =>
-      file.COMP_FIELD === etcData ? { ...file, isComplete: code === 200 || code === 300, isAttempted: true } : file,
-    );
-    this.setState({ uploadFileList: tmpFileList }, () => {
-      const { uploadFileList } = this.state;
+  initData = () => {
+    const {
+      extraApiData: { treeSelectData },
+    } = this.props;
+    const treeData = treeSelectData && treeSelectData.categoryMapList && treeSelectData.categoryMapList.filter(f => f.USE_YN === 'Y' && f.LVL < 7);
+    this.setState({ treeData });
+  };
 
-      let AttemptionCount = 0; // API 찌른 횟수
-      let isCompleteCount = 0; // API 성공 횟수
-      const limit = uploadFileList.length || 0; // 총 파일 갯수
+  onChangeData = (name, value) => {
+    const { sagaKey: id, changeFormData, changeSearchData } = this.props;
+    changeFormData(id, name, value);
+    if (name === 'PROCESS_ID') {
+      this.selectTreeData(value);
+    } else if (name === 'INFO_YEAR') {
+      changeSearchData(id, 'INFO_YEAR', `AND W.INFO_YEAR = '${moment().format('YYYY')}'`);
+    }
+  };
 
-      uploadFileList.forEach(e => {
-        if (e.isAttempted === true) {
-          // API 찌른 경우
-          AttemptionCount++;
-        }
-        if (e.isComplete === true) {
-          // API 성공 횟수
-          isCompleteCount++;
-        }
-      });
+  onChangeDetailData = (name, value) => {
+    const { sagaKey: id, changeFormData, formData } = this.props;
+    changeFormData(id, 'INFO_DATA', { ...formData.INFO_DATA, [name]: value });
+  };
 
-      if (AttemptionCount === limit) {
-        // 총 파일 갯수만큼 API를 찔렀는지
-        if (isCompleteCount === limit) {
-          // 총 파일 갯수만큼 API 정상 작동했는지
-          this.saveTask(id, id, this.saveTaskAfter);
-        } else {
-          message.error('file upload 에러 발생 , 관리자에게 문의 바랍니다.!');
-        }
-      }
+  selectTreeData = value => {
+    const {
+      sagaKey: id,
+      changeFormData,
+      listData,
+      setFormData,
+      formData,
+      profile,
+      extraApiData: { treeSelectData },
+    } = this.props;
+    const { treeData } = this.state;
+
+    const overlab = listData.find(f => f.PROCESS_ID === value);
+    if (overlab && overlab.length !== 0) {
+      setFormData(id, overlab);
+      changeFormData(id, 'TASK_ORIGIN_SEQ', overlab.TASK_ORIGIN_SEQ);
+      changeFormData(id, 'TASK_SEQ', overlab.TASK_SEQ);
+      changeFormData(id, 'INFO_DATA', JSON.parse(overlab.INFO_DATA));
+      changeFormData(id, 'UPD_USER_ID', profile.USER_ID);
+      changeFormData(id, 'UPD_USER_NAME', profile.NAME_KOR);
+    } else {
+      changeFormData(id, 'INFO_DATA', {});
+      changeFormData(id, 'TASK_ORIGIN_SEQ', -1);
+      changeFormData(id, 'TASK_SEQ', -1);
+    }
+    const selectData =
+      treeSelectData &&
+      treeSelectData.categoryMapList &&
+      treeSelectData.categoryMapList.filter(f => f.USE_YN === 'Y' && f.PARENT_NODE_ID === formData.PROCESS_ID);
+
+    const processId = treeData.find(f => f.NODE_ID === value);
+    const placeId = treeData.find(f => f.NODE_ID === processId.PARENT_NODE_ID);
+    const divId = treeData.find(f => f.NODE_ID === placeId.PARENT_NODE_ID);
+    const sdivId = treeData.find(f => f.NODE_ID === divId.PARENT_NODE_ID);
+    changeFormData(id, 'PROCESS_CD', processId.CODE);
+    changeFormData(id, 'PLACE_CD', placeId.CODE);
+    changeFormData(id, 'DIV_CD', divId.CODE);
+    changeFormData(id, 'SDIV_CD', sdivId.CODE);
+    changeFormData(id, 'PLACE_ID', placeId.NODE_ID);
+    changeFormData(id, 'DIV_ID', divId.NODE_ID);
+    changeFormData(id, 'SDIV_ID', sdivId.NODE_ID);
+    this.setState({
+      processNm: processId.NAME_KOR,
+      placeNm: placeId.NAME_KOR,
+      divNm: divId.NAME_KOR,
+      sdivNm: sdivId.NAME_KOR,
+      selectData,
     });
   };
 
-  filterAttach = field => {
-    const config = JSON.parse(field.CONFIG);
-    return config.info && config.info.isAttach;
+  onChangeModal = () => {
+    const { isModal } = this.state;
+    this.setState({ isModal: !isModal }, this.mySearch);
   };
 
-  saveBeforeProcess = (id, reloadId, callBackFunc) => {
-    const { submitExtraHandler, formData, metaList, workInfo, processRule, changeIsLoading } = this.props;
-    changeIsLoading(true);
-    const { uploadFileList } = this.state;
-    const { OPT_INFO } = workInfo;
-    // workflow 결재 체크 하기
-    const IsWorkProcess = OPT_INFO.filter(f => f.OPT_SEQ === WORKFLOW_OPT_SEQ);
-    let isByPass = true;
-    // eslint-disable-next-line no-unused-expressions
-    IsWorkProcess &&
-      IsWorkProcess.forEach(opt => {
-        if (opt.ISUSED === 'Y') {
-          // workProces validation check
-          const { DRAFT_PROCESS_STEP } = processRule;
-          const ruleCheckList = DRAFT_PROCESS_STEP.filter(rule => rule.ISREQUIRED === 1);
-          ruleCheckList.forEach(rule => {
-            if (rule.APPV_MEMBER.length === 0) {
-              isByPass = false;
-              message.error(`${rule.NODE_NAME_KOR} 단계의 결재를 선택해 주세요`);
-            }
-          });
-        }
-      });
-    if (isByPass) {
-      const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
-      // 첨부파일이 없는 경우 체크
-      const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
-      if (isUploadByPass && isUploadByPass.length === 0) {
-        this.saveTask(id, reloadId, this.saveTaskAfter);
-      } else {
-        attachList.map(attachItem => {
-          const { COMP_FIELD } = attachItem;
-          const attachInfo = formData[COMP_FIELD];
-          if (attachInfo) {
-            const { DETAIL, MOVEFILEAPI } = attachInfo;
-            uploadFileList.push({ COMP_FIELD, isComplete: false, isAttempted: false });
-            this.setState({ uploadFileList }, () => {
-              const param = { PARAM: { DETAIL } };
-              const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
-              submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
-            });
-          }
-        });
-      }
+  saveBeforeProcess = () => {
+    const { formData, sagaKey: id, changeFormData, saveTask } = this.props;
+    if (formData.PROCESS_ID) {
+      changeFormData(id, 'INFO_DATA', formData.INFO_DATA && JSON.stringify(formData.INFO_DATA));
+      saveTask(id, id, this.callbackHandle);
+    } else {
+      message.warning('분류를 먼저 선택해주세요');
     }
   };
 
-  saveTask = (id, reloadId, callbackFunc) => {
-    const { modifyTask, changeIsLoading, reloadViewType } = this.props;
-    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter, changeIsLoading, reloadViewType);
+  modifyBeforeProcess = () => {
+    const { sagaKey: id, getExtraApiData, formData } = this.props;
+    const temp = typeof formData.INFO_DATA !== 'string' ? JSON.stringify(formData.INFO_DATA) : formData.INFO_DATA;
+    const apiAry = [
+      {
+        key: 'modify',
+        type: 'POST',
+        url: '/api/eshs/v1/common/dangerInfo',
+        params: { PARAM: { ...formData, INFO_DATA: temp } },
+      },
+    ];
+    getExtraApiData(id, apiAry, this.callbackHandle);
   };
 
-  saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const {
-      reloadId,
-      onCloseModalHandler,
-      changeViewPage,
-      isBuilderModal,
-      isSaveModalClose,
-      changeBuilderModalStateByParent,
-      workInfo,
-      changeIsLoading,
-      reloadViewType,
-      reloadTaskSeq,
-    } = this.props;
-    if (typeof onCloseModalHandler === 'function') {
-      onCloseModalHandler();
-    }
-    if (typeof changeViewPage === 'function') {
-      const changeViewOptIdx = workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === CHANGE_VIEW_OPT_SEQ);
-      if (changeViewOptIdx !== -1) {
-        const changeViewOpt = workInfo.OPT_INFO[changeViewOptIdx];
-        const optValue = JSON.parse(changeViewOpt.OPT_VALUE);
-        changeViewPage(id, workSeq, taskSeq, optValue.MODIFY);
-      } else {
-        changeViewPage(id, workSeq, taskSeq, 'VIEW');
-      }
-    }
-    if (isBuilderModal) {
-      changeViewPage(
-        reloadId,
-        workSeq,
-        reloadId && reloadViewType && reloadTaskSeq ? reloadTaskSeq : -1,
-        reloadId && reloadViewType && reloadTaskSeq ? reloadViewType : 'LIST',
-      );
-      if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
-    }
-    changeIsLoading(false);
+  callbackHandle = (id, modifyWorkSeq, taskSeq, formData) => {
+    const { setFormData, getListData } = this.props;
+    // setFormData(id, formData);
+    getListData(id, 10341);
+    message.success('완료되었습니다.');
   };
 
-  changeFormData = (id, field, value, func) => {
-    const { changeFormData } = this.props;
-    changeFormData(id, field, value);
-    if (typeof func === 'function') {
-      func();
-      console.debug('function');
-    }
+  mySearch = () => {
+    const { processNm, placeNm, divNm, sdivNm, selectData } = this.state;
+    const { formData, listData } = this.props;
+    this.setState(
+      {
+        conTent: [],
+      },
+      () =>
+        this.setState({
+          conTent: [
+            <View
+              processNm={processNm}
+              placeNm={placeNm}
+              divNm={divNm}
+              sdivNm={sdivNm}
+              selectData={selectData}
+              formData={formData}
+              listData={listData}
+              onChangeData={this.onChangeDetailData}
+              onChangeModal={this.onChangeModal}
+            />,
+          ],
+        }),
+    );
   };
 
-  render = () => {
-    const {
-      sagaKey: id,
-      viewLayer,
-      workFlowConfig,
-      processRule,
-      setProcessRule,
-      viewPageData,
-      changeViewPage,
-      isBuilderModal,
-      ModifyCustomButtons,
-      workInfo,
-      CustomWorkProcess,
-      CustomWorkProcessModal,
-      reloadId,
-    } = this.props;
-
-    const { StyledWrap } = this.state;
-
-    const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
-    if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
-      const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
-      const { bodyStyle } = viewLayerData;
-      const { PRC_ID } = processRule;
-      return (
-        <StyledWrap className={viewPageData.viewType}>
-          <Sketch {...bodyStyle}>
-            {isWorkflowUsed && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
-              <WorkProcess
-                id={id}
-                CustomWorkProcess={CustomWorkProcess}
-                CustomWorkProcessModal={CustomWorkProcessModal}
-                PRC_ID={PRC_ID}
-                processRule={processRule}
-                setProcessRule={setProcessRule}
-              />
-            )}
-            <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-          </Sketch>
-        </StyledWrap>
-      );
-    }
-    return '';
-  };
+  render() {
+    const { YearOptions, treeData, conTent } = this.state;
+    const { formData, sagaKey: id, extraApiData, changeFormData, getExtraApiData } = this.props;
+    const nTreeData = (treeData && getCategoryMapListAsTree(treeData, 1831, 5)) || {};
+    return (
+      <StyledContentsWrapper>
+        <StyledCustomSearchWrapper className="search-wrapper-inline">
+          <div className="search-input-area">
+            <span className="text-label">참여년도</span>
+            <AntdSelect
+              className="select-sm mr5"
+              value={formData.INFO_YEAR}
+              style={{ width: '100px' }}
+              onChange={value => this.onChangeData('INFO_YEAR', value)}
+            >
+              {YearOptions && YearOptions.map(YYYY => <Option value={`${YYYY}`}>{YYYY}</Option>)}
+            </AntdSelect>
+            <span className="text-label">분류</span>
+            <AntdTreeSelect
+              style={{ width: '300px' }}
+              className="mr5 select-sm"
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              treeData={nTreeData || []}
+              placeholder="분류를 선택해주세요"
+              onChange={value => this.onChangeData('PROCESS_ID', value)}
+            />
+          </div>
+          <div className="btn-area">
+            <StyledButtonWrapper className="btn-wrap-inline">
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.mySearch()}>
+                검색
+              </StyledButton>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => message.info('개발 중입니다.')}>
+                엑셀받기
+              </StyledButton>
+              {formData.TASK_SEQ !== -1 ? (
+                <StyledButton className="btn-primary btn-first btn-sm" onClick={this.modifyBeforeProcess}>
+                  수정
+                </StyledButton>
+              ) : (
+                <StyledButton className="btn-primary btn-first btn-sm" onClick={this.saveBeforeProcess}>
+                  저장
+                </StyledButton>
+              )}
+            </StyledButtonWrapper>
+          </div>
+        </StyledCustomSearchWrapper>
+        {conTent}
+        <MeterialModal
+          sagaKey={id}
+          getExtraApiData={getExtraApiData}
+          extraApiData={extraApiData}
+          changeFormData={changeFormData}
+          onChangeModal={this.onChangeModal}
+          isModal={this.state.isModal}
+          formData={formData}
+        />
+      </StyledContentsWrapper>
+    );
+  }
 }
 
 ModifyPage.propTypes = {
-  isLoading: PropTypes.bool,
-  // loadingComplete: PropTypes.func,
+  sagaKey: PropTypes.string,
+  extraApiData: PropTypes.object,
+  formData: PropTypes.object,
+  listData: PropTypes.object,
+  profile: PropTypes.object,
+  getExtraApiData: PropTypes.func,
+  changeFormData: PropTypes.func,
+  saveTask: PropTypes.func,
+  getListData: PropTypes.func,
+  changeSearchData: PropTypes.func,
+  setFormData: PropTypes.func,
 };
 
-ModifyPage.defaultProps = {
-  isLoading: false,
-  // loadingComplete: () => {},
-};
+ModifyPage.defaultProps = {};
 
 export default ModifyPage;
