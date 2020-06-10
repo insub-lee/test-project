@@ -218,6 +218,7 @@ function* submitExtraHandler({ id, httpMethod, apiUrl, submitData, callbackFunc,
       httpMethodInfo = Axios.get;
       break;
   }
+
   const response = yield call(httpMethodInfo, apiUrl, submitData);
 
   if (typeof callbackFunc === 'function') {
