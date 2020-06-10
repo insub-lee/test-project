@@ -20,7 +20,7 @@ const TitleComp = ({ colData, sagaKey: id, rowData, changeViewPage, visible, CON
       style={{ cursor: 'pointer' }}
       className={CONFIG.property.className || ''}
     >
-      {CONFIG.property.dataViewType === 'STRING' ? colData : moment(colData).format(CONFIG.property.dateFormat === 'DT' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss')}
+      {CONFIG.property.dataViewType === 'DATE' ? moment(colData).format(CONFIG.property.dateFormat === 'DT' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss') : colData}
     </span>
   ) : (
     ''

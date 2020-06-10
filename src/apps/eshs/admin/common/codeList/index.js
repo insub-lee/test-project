@@ -50,12 +50,13 @@ class List extends Component {
   };
 
   selectDataApi() {
-    const { sagaKey: id, getCallDataHandler, MAP_ID } = this.props;
+    const { sagaKey: id, getCallDataHandler, INIT_NODE_ID } = this.props;
     const apiAry = [
       {
         key: 'apiData',
-        url: `/api/admin/v1/common/categoryMapList?MAP_ID=${MAP_ID}`,
-        type: 'GET',
+        url: `/api/admin/v1/common/categoryMapList`,
+        type: 'POST',
+        params: { PARAM: { NODE_ID: INIT_NODE_ID } },
       },
     ];
     getCallDataHandler(id, apiAry, this.initData);
