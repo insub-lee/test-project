@@ -348,13 +348,6 @@ class SelfCheck extends Component {
                   기타 문의 사항은 박연희 간호사(청주)4234로 문의바랍니다.
                 </th>
               </tr>
-              {/* {formData.BIGO && (
-                <tr>
-                  <td colSpan={8}>
-                    <div dangerouslySetInnerHTML={{ __html: formData.BIGO }} />
-                  </td>
-                </tr>
-              )} */}
             </tbody>
           </table>
         </StyledHtmlTable>
