@@ -139,6 +139,7 @@ import MDCSDccViewComp from 'components/BizBuilder/Field/MDCSDccViewComp';
 import DragUploadViewComp from 'components/BizBuilder/Field/DragUploadViewComp';
 import CategoryViewComp from 'components/BizBuilder/Field/CategoryViewComp';
 import CategorySelectComp from 'components/BizBuilder/Field/CategorySelectComp';
+import DangerHazardSubComp from 'components/BizBuilder/Field/DangerHazardSubComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/CategorySelectComp': { renderer: property => <CategorySelectComp {...property} /> },
@@ -280,4 +281,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/DeptSelectComp': { renderer: property => <DeptSelectComp {...property} /> },
   'components/BizBuilder/Field/MDCSDccViewComp': { renderer: property => <MDCSDccViewComp {...property} /> },
   'components/BizBuilder/Field/DragUploadViewComp': { renderer: property => <DragUploadViewComp {...property} /> },
+  'components/BizBuilder/Field/DangerHazardSubComp': { renderer: property => <DangerHazardSubComp {...property} /> },
 };
