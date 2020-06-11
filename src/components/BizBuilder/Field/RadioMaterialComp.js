@@ -23,9 +23,7 @@ class RadioMaterialComp extends Component {
   }
 
   componentDidMount() {
-    // const { sagaKey, getExtraApiData, apiArys } = this.props;
-    // getExtraApiData(sagaKey, apiArys, this.initDataBind);
-    const { fieldSelectData, CONFIG, colData } = this.props;
+    const { fieldSelectData, CONFIG, colData, changeValidationData, COMP_FIELD, sagaKey } = this.props;
     if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
       if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey].length > 0) {
         const isMeterialView = colData === 'Y';
@@ -37,6 +35,7 @@ class RadioMaterialComp extends Component {
         });
       }
     }
+    changeValidationData(sagaKey, COMP_FIELD, false, '코드를 입력해주세요');
   }
 
   componentDidUpdate(prevProps) {
@@ -110,7 +109,6 @@ class RadioMaterialComp extends Component {
   onCallBack = (id, response) => {
     const { changeValidationData, COMP_FIELD } = this.props;
     const { matrnList } = response;
-    console.debug('matrnList', matrnList);
     const isCheckList = matrnList.filter(f => f.CHECK !== 'Y');
 
     const errorCodeList = isCheckList.length > 0 ? isCheckList.map(item => item.MATNR) : [];
@@ -120,6 +118,17 @@ class RadioMaterialComp extends Component {
     this.setState({ errorCodeList });
   };
 
+  onIsMeterialCheck = value => {
+    const { changeValidationData, COMP_FIELD, sagaKey } = this.props;
+    console.debug('code', value);
+    if (value === 'N') {
+      changeValidationData(sagaKey, COMP_FIELD, true, '');
+    } else {
+      changeValidationData(sagaKey, COMP_FIELD, false, '코드를 입력해주세요');
+      this.setState({ meterialType: undefined, meterialText: undefined });
+    }
+  };
+
   render() {
     const { formData, colData, processRule } = this.props;
     const { errorCodeList } = this.state;
@@ -127,7 +136,7 @@ class RadioMaterialComp extends Component {
       <table>
         <tr>
           <td style={{ width: '120px' }}>
-            <Radio.Group name="radiogroup" value={colData} onChange={this.onChangeHandler}>
+            <Radio.Group name="radiogroup" value={colData} onChange={this.onIsMeterialCheck}>
               <Radio value="Y">Yes</Radio>
               <Radio value="N">No</Radio>
             </Radio.Group>
