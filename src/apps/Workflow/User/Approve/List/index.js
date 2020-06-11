@@ -345,7 +345,7 @@ class ApproveList extends Component {
     getApproveList();
   };
 
-  clic kCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+  clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
     const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'VIEW' };
     this.setState({ coverView });
   };
@@ -563,111 +563,111 @@ class ApproveList extends Component {
                   <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
                     <StyledButton className="btn-light btn-sm" onClick={onCloseCoverView}>
                       닫기
-                      </StyledButton>
-                    </StyledButtonWrapper>
-                )}  
-                Modi  fyCustomButtons={({ onCloseCoverView, saveBeforeProcess, sagaKey, reloadId }) => (
-                  <Sty  ledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
-                    <Sty  ledButton className="btn-primary mr5 btn-sm" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
-                      저장  
-                      </StyledButton>
-                    <Style  dButton className="btn-light btn-sm" onClick={onCloseCoverView}>
-                      닫기  
-                    </Styl  edButton>
-                    </StyledButtonWrapper>
-                )}  
-                />
-            </AntdModal>  
-            </div>
-        ) : (  
-          <div>  
-              <AntdModal
-              className="m  odalWrapper modalTechDoc"
-              title="내용   보기"
-                width={modalWidth}
-              visible={thi  s.props.viewVisible}
-                destroyOnClose
-                onCancel={this.closeBtnFunc}
-              footer={  null}
-              >
-              <Sty  ledContentsWrapper>
-                  <StyledHtmlTable>
-                    <>
+                    </StyledButton>
+                  </StyledButtonWrapper>
+                )}
+                ModifyCustomButtons={({ onCloseCoverView, saveBeforeProcess, sagaKey, reloadId }) => (
+                  <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+                    <StyledButton className="btn-primary mr5 btn-sm" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                      저장
+                    </StyledButton>
+                    <StyledButton className="btn-light btn-sm" onClick={onCloseCoverView}>
+                      닫기
+                    </StyledButton>
+                  </StyledButtonWrapper>
+                )}
+              />
+            </AntdModal>
+          </div>
+        ) : (
+          <div>
+            <AntdModal
+              className="modalWrapper modalTechDoc"
+              title="내용 보기"
+              width={modalWidth}
+              visible={this.props.viewVisible}
+              destroyOnClose
+              onCancel={this.closeBtnFunc}
+              footer={null}
+            >
+              <StyledContentsWrapper>
+                <StyledHtmlTable>
+                  <>
                     {workPrcProps && (
                       <table style={{ marginBottom: 20 }}>
                         <tbody>
                           <tr>
                             <th>일괄폐기번호</th>
                             <td>{workPrcProps.DRAFT_ID}</td>
-                              <th>기안자</th>
-                              <td>{workPrcProps.NAME_KOR}</td>
-                              <th>기안일자</th>
-                              <td>{moment(workPrcProps.REG_DTTM).format('YYYY-MM-DD')}</td>
+                            <th>기안자</th>
+                            <td>{workPrcProps.NAME_KOR}</td>
+                            <th>기안일자</th>
+                            <td>{moment(workPrcProps.REG_DTTM).format('YYYY-MM-DD')}</td>
+                          </tr>
+                          <tr>
+                            <th>제목</th>
+                            <td colSpan={5}>{workPrcProps.DRAFT_TITLE}</td>
+                          </tr>
+                          <tr>
+                            <th>Description of Change</th>
+                            <td colSpan={5}>{workPrcProps.DRAFT_DATA && workPrcProps.DRAFT_DATA.descOfChange}</td>
+                          </tr>
+                          <tr>
+                            <th>Rev. History</th>
+                            <td colSpan={5}>{workPrcProps.DRAFT_DATA && workPrcProps.DRAFT_DATA.revHistory}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    )}
+                    <div className="table-title">폐기대상 문서</div>
+                    <table style={{ marginBottom: 20 }}>
+                      <colgroup>
+                        <col style={{ width: '15%' }} />
+                        <col style={{ width: '10%' }} />
+                        <col style={{ width: '60%' }} />
+                        <col style={{ width: '15%' }} />
+                      </colgroup>
+                      <tbody>
+                        <tr>
+                          <th>문서번호</th>
+                          <th>개정번호</th>
+                          <th>제목</th>
+                          <th>Effect Date</th>
+                        </tr>
+                        {abrogationList &&
+                          abrogationList.map(item => (
+                            <tr className="tr-center">
+                              <td>{item.DOCNUMBER}</td>
+                              <td>{item.VERSION}</td>
+                              <td style={{ textAlign: 'left' }}>{item.TITLE}</td>
+                              <td>{moment(item.END_DTTM).format('YYYY-MM-DD')}</td>
                             </tr>
-                            <tr>
-                              <th>제목</th>
-                              <td colSpan={5}>{workPrcProps.DRAFT_TITLE}</td>
+                          ))}
+                      </tbody>
+                    </table>
+                    <div className="table-title">결재정보</div>
+                    <StyledWrap>
+                      {draftNode && draftNode.length > 0 && (
+                        <table className="mdcsProcessList">
+                          <thead>
+                            <tr className="mdcsProcessRow">
+                              <th>Preparer</th>
+                              <th>Approver</th>
                             </tr>
-                            <tr>
-                              <th>Description of Change</th>
-                              <td colSpan={5}>{workPrcProps.DRAFT_DATA && workPrcProps.DRAFT_DATA.descOfChange}</td>
-                          </  tr>
-                          <t  r>
-                              <th>Rev. History</th>
-                              <td colSpan={5}>{workPrcProps.DRAFT_DATA && workPrcProps.DRAFT_DATA.revHistory}</td>
-                            </tr>
-                          </tbody>
+                          </thead>
+                          <tbody>{draftNode}</tbody>
                         </table>
                       )}
-                      <div className="table-title">폐기대상 문서</div>
-                    <t  able style={{ marginBottom: 20 }}>
-                        <colgroup>
-                        <c  ol style={{ width: '15%' }} />
-                        <col   style={{ width: '10%' }} />
-                          <col style={{ width: '60%' }} />
-                        <c  ol style={{ width: '15%' }} />
-                        </colgroup>
-                        <tbody>
-                          <tr>
-                            <th>문서번호</th>
-                            <th>개정번호</th>
-                            <th>제목</th>
-                            <th>Effect Date</th>
-                        </  tr>
-                        {abr  ogationList &&
-                            abrogationList.map(item => (
-                              <tr className="tr-center">
-                                <td>{item.DOCNUMBER}</td>
-                                <td>{item.VERSION}</td>
-                                <td style={{ textAlign: 'left' }}>{item.TITLE}</td>
-                                <td>{moment(item.END_DTTM).format('YYYY-MM-DD')}</td>
-                              </tr>
-                            ))}
-                      </tb  ody>
-                      </table>
-                    <div c  lassName="table-title">결재정보</div>
-                      <StyledWrap>
-                      {d  raftNode && draftNode.length > 0 && (
-                          <table className="mdcsProcessList">
-                            <thead>
-                              <tr className="mdcsProcessRow">
-                                <th>Preparer</th>
-                                <th>Approver</th>
-                              </tr>
-                            </thead>
-                            <tbody>{draftNode}</tbody>
-                          </table>
-                        )}
-                      {rev  iewerNode && reviewerNode.length > 0 && (
-                          <table className="mdcsProcessList">
-                            <thead>
-                              <tr className="mdcsProcessRow">
-                                <th colSpan="2">필수심의권자</th>
-                              </tr>
-                            </thead>
-                            <tbody>{reviewerNode}</tbody>
-                          </table>
-                        )}
+                      {reviewerNode && reviewerNode.length > 0 && (
+                        <table className="mdcsProcessList">
+                          <thead>
+                            <tr className="mdcsProcessRow">
+                              <th colSpan="2">필수심의권자</th>
+                            </tr>
+                          </thead>
+                          <tbody>{reviewerNode}</tbody>
+                        </table>
+                      )}
                       {mailReviewerNode && mailReviewerNode.length > 0 && (
                         <table className="mdcsProcessList">
                           <thead>
