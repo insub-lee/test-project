@@ -3,19 +3,18 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import ProtectionItemList from 'apps/eshs/user/safety/protectionItem/protectionItemList';
 
-import { Select, Input, DatePicker, InputNumber, Modal, Table } from 'antd';
+import { Input, DatePicker, InputNumber, Modal, Table } from 'antd';
 import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledPicker from 'commonStyled/Form/StyledPicker';
-import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
-// import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
+// import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
+import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 
 const AntdModal = StyledContentsModal(Modal);
-const AntdSelect = StyledSelect(Select);
 const AntdPicker = StyledPicker(DatePicker);
 const AntdInput = StyledInput(Input);
 const AntdInputNumber = StyledInputNumber(InputNumber);
@@ -25,8 +24,41 @@ class ModalContents extends React.Component {
     super(props);
     this.state = {
       modalVisible: false,
+      requestValue: [],
     };
   }
+
+  componentDidMount() {
+    this.getLastReqCd();
+    this.setFormData();
+    // this.getDataSource();
+  }
+
+  setFormData = () => {
+    const { sagaKey, changeFormData, profile } = this.props;
+    changeFormData(sagaKey, 'COMPANY_CD', profile.COMP_CD);
+    changeFormData(sagaKey, 'REQ_EMPNO', profile.USER_ID);
+    changeFormData(sagaKey, 'REQ_DT', moment());
+    changeFormData(sagaKey, 'DEPT_ID', profile.DEPT_ID);
+  };
+
+  getLastReqCd = () => {
+    const { sagaKey: id, getExtraApiData } = this.props;
+    const apiArr = [
+      {
+        key: 'lastReqCd',
+        type: 'GET',
+        url: `/api/eshs/v1/common/protection-reqcd`,
+      },
+    ];
+
+    getExtraApiData(id, apiArr, this.setReqCd);
+  };
+
+  setReqCd = () => {
+    const { extraApiData, sagaKey, changeFormData } = this.props;
+    changeFormData(sagaKey, 'REQ_CD', (extraApiData.lastReqCd && extraApiData.lastReqCd.list && extraApiData.lastReqCd.list.REQ_CD) || '');
+  };
 
   handleSubModalVisible = () => {
     this.setState({ modalVisible: true });
@@ -38,152 +70,257 @@ class ModalContents extends React.Component {
 
   handleRowClick = rowData => {
     const { handleSubModalClose } = this;
-    const { sagaKey: id, changeFormData } = this.props;
-    const keyList = Object.keys(rowData);
-    const valueList = Object.values(rowData);
-    keyList.map((key, index) => changeFormData(id, key, valueList[index]));
+
+    this.setState(prevState => {
+      const tempData = prevState.requestValue;
+      if (tempData[prevState.selectedIndex]) {
+        tempData[prevState.selectedIndex] = rowData;
+      } else {
+        tempData.push(rowData);
+      }
+      return { requestValue: tempData };
+    });
+
     handleSubModalClose();
   };
 
-  // setRequestValue = valueObj => {
-  //   this.setState(prevState => ({
-  //     requestValue: Object.assign(prevState.requestValue, valueObj),
-  //   }));
-  // };
-
   handleInputChange = (key, value) => {
     const { sagaKey: id, changeFormData } = this.props;
-    // const valueObj = { [key]: value };
     changeFormData(id, key, value);
-    // this.setRequestValue(valueObj);
   };
 
   handleDateChange = date => {
     const { sagaKey: id, changeFormData } = this.props;
-    // const valueObj = { POSTING_DT: date };
-    changeFormData(id, 'POSTING_DT', date);
-    // this.setRequestValue(valueObj);
+    changeFormData(id, 'TARGET_DT', date);
   };
 
   saveAfterFunc = () => {
-    const { getDataSource, handleModalClose } = this.props;
-    getDataSource();
-    handleModalClose();
-  };
-
-  handleModifyClick = () => {
-    const { saveAfterFunc } = this;
     const { requestValue } = this.state;
-    const { sagaKey: id, submitExtraHandler, rowData } = this.props;
-    submitExtraHandler(id, 'PUT', `/api/eshs/v1/common/protectionerm`, Object.assign(rowData, requestValue), saveAfterFunc);
+    const { sagaKey, getDataSource, handleModalClose, submitExtraHandler, extraApiData } = this.props;
+    const REQ_CD = (extraApiData.lastReqCd && extraApiData.lastReqCd.list && extraApiData.lastReqCd.list.REQ_CD) || '';
+    const param = requestValue.map(item => Object.assign(item, { REQ_CD }));
+    const submitCallbackFunc = () => {
+      getDataSource();
+      handleModalClose();
+    };
+
+    submitExtraHandler(sagaKey, 'POST', '/api/eshs/v1/common/protection-req-detail', { PARAM: { list: param } }, submitCallbackFunc);
   };
 
-  handleDeleteClick = () => {
-    const { saveAfterFunc } = this;
-    const { sagaKey: id, submitExtraHandler, rowData } = this.props;
-    submitExtraHandler(id, 'PUT', `/api/eshs/v1/common/protectionerm`, rowData, saveAfterFunc);
+  handleListAddClick = () => {
+    this.setState(prevState => ({
+      requestValue: prevState.requestValue.concat({}),
+    }));
+  };
+
+  handleListDeleteClick = (index, reqCd) => {
+    this.setState(prevState => {
+      const tempData = prevState.requestValue.filter((data, i) => data.REQ_CD !== reqCd || i !== index);
+      return { requestValue: tempData };
+    });
+  };
+
+  handleRequestChange = (key, value, index) => {
+    const valueObj = { [key]: value };
+    this.setState(prevState => {
+      const tempData = prevState.requestValue;
+      tempData[index] = Object.assign(tempData[index], valueObj);
+      return { requestValue: tempData };
+    });
   };
 
   columns = [
     {
       title: '품명',
       align: 'center',
-      render: () => <AntdInput className="ant-input-sm" />,
+      width: '15%',
+      render: (text, record, index) =>
+        this.props.isModified ? (
+          <span>{record.KIND}</span>
+        ) : (
+          <AntdInput
+            className="ant-input-sm"
+            value={(this.state.requestValue[index] && this.state.requestValue[index].KIND) || ''}
+            onClick={() => this.setState({ modalVisible: true, selectedIndex: index })}
+          />
+        ),
     },
     {
       title: '모델',
       align: 'center',
-      render: () => <AntdInput className="ant-input-sm" />,
+      width: '15%',
+      render: (text, record, index) =>
+        this.props.isModified ? (
+          <span>{record.MODEL}</span>
+        ) : (
+          <AntdInput className="ant-input-sm" value={(this.state.requestValue[index] && this.state.requestValue[index].MODEL) || ''} />
+        ),
     },
     {
       title: '사이즈',
       align: 'center',
-      render: () => <AntdInput className="ant-input-sm" />,
+      width: '10%',
+      render: (text, record, index) =>
+        this.props.isModified ? (
+          <span>{record.SIZE1}</span>
+        ) : (
+          <AntdInput className="ant-input-sm" value={(this.state.requestValue[index] && this.state.requestValue[index].SIZE1) || ''} />
+        ),
     },
     {
       title: '신청수량',
       align: 'center',
-      render: () => <AntdInput className="ant-input-sm" />,
+      width: '10%',
+      render: (text, record, index) =>
+        this.props.isModified ? (
+          <span>{record.QTY}</span>
+        ) : (
+          <AntdInputNumber
+            className="input-number-sm"
+            min={0}
+            value={this.state.requestValue[index] && this.state.requestValue[index].QTY}
+            onChange={this.props.isModified ? null : value => this.handleRequestChange('QTY', value, index)}
+          />
+        ),
     },
     {
       title: '신청사유',
       align: 'center',
-      render: () => <AntdInput className="ant-input-sm" />,
+      width: '20%',
+      render: (text, record, index) =>
+        this.props.isModified ? (
+          <span>{record.REQ_COMMENTS}</span>
+        ) : (
+          <AntdInput
+            className="ant-input-sm"
+            maxLength={500}
+            value={this.state.requestValue[index] && this.state.requestValue[index].REQ_COMMENTS}
+            onChange={e => this.handleRequestChange('REQ_COMMENTS', e.target.value, index)}
+          />
+        ),
     },
     {
       title: '사용장소',
       align: 'center',
-      render: () => <AntdInput className="ant-input-sm" />,
+      width: '20%',
+      render: (text, record, index) =>
+        this.props.isModified ? (
+          <span>{record.PLACE}</span>
+        ) : (
+          <AntdInput
+            className="ant-input-sm"
+            maxLength={500}
+            value={this.state.requestValue[index] && this.state.requestValue[index].PLACE}
+            onChange={e => this.handleRequestChange('PLACE', e.target.value, index)}
+          />
+        ),
     },
+    this.props.isModified
+      ? {
+          title: '출고수량',
+          dataIndex: '',
+          align: 'center',
+        }
+      : {
+          width: 0,
+        },
+    this.props.isModified
+      ? {
+          title: '출고일',
+          dataIndex: '',
+          align: 'center',
+        }
+      : {
+          width: 0,
+        },
+    this.props.isModified
+      ? {
+          title: '상태',
+          dataIndex: 'CONF_STATUS',
+          align: 'center',
+        }
+      : {
+          width: 0,
+        },
+    this.props.isModified
+      ? {
+          title: 'Comment',
+          dataIndex: 'CONF_COMMENTS',
+          align: 'center',
+        }
+      : {
+          title: '',
+          width: '10%',
+          render: (text, record, index) => (
+            <StyledButton className="btn-light" onClick={() => this.handleListDeleteClick(index, record.REQ_CD)}>
+              삭제
+            </StyledButton>
+          ),
+        },
   ];
 
   render() {
-    const {
-      handleRowClick,
-      handleInputChange,
-      handleDateChange,
-      handleSubModalVisible,
-      handleSubModalClose,
-      saveAfterFunc,
-      handleModifyClick,
-      handleDeleteClick,
-    } = this;
-    const { modalVisible } = this.state;
-    const { handleModalClose, saveTask, sagaKey: id, rowData, isModified, formData } = this.props;
+    const { handleRowClick, handleSubModalClose, saveAfterFunc, handleListAddClick, handleDateChange } = this;
+    const { modalVisible, requestValue } = this.state;
+    const { handleModalClose, saveTask, sagaKey: id, isModified, profile, modalDataSource, rowData } = this.props;
     return (
       <>
-        <div className="tableWrapper">
-          <StyledHtmlTable>
-            <div style={{ padding: '10px' }}>
-              <table>
-                <colgroup>
-                  <col width="20%" />
-                  <col width="20%" />
-                  <col width="20%" />
-                  <col width="20%" />
-                  <col width="20%" />
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <th>신청일</th>
-                    <th>신청팀</th>
-                    <th>신청자</th>
-                    <th>결재자</th>
-                    <th>지급요청일</th>
-                  </tr>
-                  <tr>
-                    <td>{moment().format('YYYY-MM-DD')}</td>
-                    <td>관리자</td>
-                    <td>ADMIN</td>
-                    <td></td>
-                    <td>
-                      <DatePicker />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </StyledHtmlTable>
-        </div>
-        <div style={{ padding: '10px' }}>
-          <AntdTable columns={this.columns} dataSource={[{}, {}, {}]} pagination={false} />
-        </div>
-        <div style={{ textAlign: 'center', padding: '10px' }}>
-          <StyledButton className="btn-primary mr5" onClick={isModified ? handleModifyClick : () => saveTask(id, id, saveAfterFunc)}>
-            {isModified ? '수정' : '저장'}
-          </StyledButton>
-          {isModified ? (
-            <StyledButton className="btn-light mr5" onClick={handleDeleteClick}>
-              삭제
+        <ContentsWrapper>
+          <div className="tableWrapper">
+            <StyledHtmlTable>
+              <div style={{ padding: '10px' }}>
+                <table>
+                  <colgroup>
+                    <col width="20%" />
+                    <col width="20%" />
+                    <col width="20%" />
+                    <col width="20%" />
+                    <col width="20%" />
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <th>신청일</th>
+                      <th>신청팀</th>
+                      <th>신청자</th>
+                      <th>결재자</th>
+                      <th>지급요청일</th>
+                    </tr>
+                    <tr>
+                      <td style={{ textAlign: 'center' }}>{isModified ? rowData.REQ_DT : moment().format('YYYY-MM-DD')}</td>
+                      <td style={{ textAlign: 'center' }}>{isModified ? rowData.DEPT_NAME_KOR : profile.DEPT_NAME_KOR}</td>
+                      <td style={{ textAlign: 'center' }}>{isModified ? rowData.NAME_KOR : profile.NAME_KOR}</td>
+                      <td style={{ textAlign: 'center' }}></td>
+                      <td style={{ textAlign: 'center' }}>
+                        {isModified ? rowData.TARGET_DT : <AntdPicker className="ant-picker-sm" defaultValue={moment()} onChange={handleDateChange} />}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </StyledHtmlTable>
+          </div>
+          <div style={{ padding: '10px' }}>
+            {isModified ? null : (
+              <div style={{ textAlign: 'right', marginRight: '10px' }}>
+                <StyledButton className="btn-light" onClick={handleListAddClick}>
+                  추가
+                </StyledButton>
+              </div>
+            )}
+            <AntdTable columns={this.columns} dataSource={isModified ? modalDataSource : requestValue} pagination={false} />
+          </div>
+          <div style={{ textAlign: 'center', padding: '10px' }}>
+            <StyledButton className="btn-primary mr5" onClick={isModified ? () => console.debug('@@@@@@PRINT@@@@@@@') : () => saveTask(id, id, saveAfterFunc)}>
+              {isModified ? '인쇄' : '저장'}
             </StyledButton>
-          ) : null}
-          <StyledButton className="btn-light" onClick={handleModalClose}>
-            취소
-          </StyledButton>
-        </div>
-        <AntdModal visible={modalVisible} title="보호구 목록" onCancel={handleSubModalClose} footer={null} width="80%">
-          <ProtectionItemList handleRowClick={handleRowClick} />
-        </AntdModal>
+            <StyledButton className="btn-light" onClick={handleModalClose}>
+              취소
+            </StyledButton>
+          </div>
+          <AntdModal visible={modalVisible} title="보호구 목록" onCancel={handleSubModalClose} footer={null} width="80%">
+            <ProtectionItemList handleRowClick={handleRowClick} />
+          </AntdModal>
+        </ContentsWrapper>
       </>
     );
   }
@@ -198,7 +335,10 @@ ModalContents.propTypes = {
   rowData: PropTypes.object,
   isModified: PropTypes.bool,
   submitExtraHandler: PropTypes.func,
-  formData: PropTypes.object,
+  extraApiData: PropTypes.object,
+  getExtraApiData: PropTypes.func,
+  profile: PropTypes.object,
+  modalDataSource: PropTypes.arrayOf('object'),
 };
 
 ModalContents.defatulProps = {

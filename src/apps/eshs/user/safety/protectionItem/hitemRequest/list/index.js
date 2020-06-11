@@ -190,7 +190,7 @@ class List extends React.Component {
   };
 
   handleModalClose = () => {
-    this.setState({ modalVisible: false, isModified: false });
+    this.setState({ modalVisible: false, isModified: false, modalDataSource: null });
   };
 
   getSearchData = () => {
@@ -198,10 +198,33 @@ class List extends React.Component {
     getDataSource();
   };
 
+  handleRowClick = record => {
+    const { sagaKey, getExtraApiData } = this.props;
+    const apiArr = [
+      {
+        key: 'reqDetails',
+        url: `/api/eshs/v1/common/protection-req-detail?REQ_CD=${record.REQ_CD}`,
+        type: 'GET',
+      },
+    ];
+
+    getExtraApiData(sagaKey, apiArr, () => this.setModalDataSource(record));
+  };
+
+  setModalDataSource = record => {
+    const { extraApiData } = this.props;
+    this.setState({
+      rowData: record,
+      modalVisible: true,
+      isModified: true,
+      modalDataSource: (extraApiData.reqDetails && extraApiData.reqDetails.list) || [],
+    });
+  };
+
   render() {
     const { columns, handleSearchChange, handleModalVisible, handleSearchDateChange, handleModalClose, getDataSource, handleHqChange } = this;
-    const { dataSource, modalVisible, searchValue, rowData, isModified, headquarterList, departmentList, isHeadquarterSelect } = this.state;
-    const { sagaKey, changeFormData, formData, viewPageData, saveTask, submitExtraHandler } = this.props;
+    const { dataSource, modalVisible, searchValue, rowData, isModified, headquarterList, departmentList, isHeadquarterSelect, modalDataSource } = this.state;
+    const { sagaKey, changeFormData, formData, viewPageData, saveTask, getExtraApiData, submitExtraHandler, extraApiData, profile } = this.props;
     return (
       <>
         <ContentsWrapper>
@@ -249,7 +272,8 @@ class List extends React.Component {
             <AntdTable
               columns={columns}
               dataSource={dataSource}
-              onRow={record => ({ onClick: () => this.setState({ rowData: record, modalVisible: true, isModified: true }) })}
+              // onRow={record => ({ onClick: () => this.setState({ rowData: record, modalVisible: true, isModified: true }) })}
+              onRow={record => ({ onClick: () => this.handleRowClick(record) })}
               footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
             />
           </div>
@@ -266,7 +290,11 @@ class List extends React.Component {
             getDataSource={getDataSource}
             rowData={rowData}
             isModified={isModified}
+            getExtraApiData={getExtraApiData}
             submitExtraHandler={submitExtraHandler}
+            extraApiData={extraApiData}
+            profile={profile}
+            modalDataSource={modalDataSource}
           />
         </AntdModal>
       </>
@@ -283,6 +311,7 @@ List.propTypes = {
   formData: PropTypes.object,
   viewPageData: PropTypes.object,
   submitExtraHandler: PropTypes.func,
+  profile: PropTypes.object,
 };
 
 List.defaultProps = {
