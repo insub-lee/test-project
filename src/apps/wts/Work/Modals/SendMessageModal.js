@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Modal from 'rc-dialog';
 
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContent from './StyledContent';
 import service from '../service';
 
@@ -106,9 +106,9 @@ class SendMessageModal extends React.Component {
                   </li>
                 </ul>
                 <div className="btn_wrap">
-                  <Button type="submit" size="small" color="primary">
+                  <StyledButton type="submit" className="btn-primary btn-sm">
                     확인
-                  </Button>
+                  </StyledButton>
                 </div>
               </StyledCommonForm>
             </div>
