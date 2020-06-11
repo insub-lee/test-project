@@ -63,7 +63,7 @@ class View extends Component {
             sagaKey={sagaKey}
             getCallDataHandler={getCallDataHandler}
             result={result}
-            defaultUser={defaultUser}
+            defaultUser={defaultUser || profile.USER_ID}
             chkYear={chkYear}
             changeFormData={changeFormData}
             formData={formData}

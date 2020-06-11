@@ -7,6 +7,7 @@ import SignLine from 'apps/Workflow/SignLine';
 import ApproveHistory from 'apps/Workflow/ApproveHistory';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
@@ -75,16 +76,16 @@ class ViewPage extends Component {
             {ViewCustomButtons ? (
               <ViewCustomButtons {...this.props} />
             ) : (
-              <div className="alignRight">
+              <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
                 {isTaskFavorite && (
                   <StyledButton
-                    className="btn-light btn-first"
+                    className="btn-primary mr5 btn-sm"
                     onClick={() => setTaskFavorite(id, formData.WORK_SEQ, formData.TASK_ORIGIN_SEQ, formData.BUILDER_TASK_FAVORITE || 'N')}
                   >
                     {formData.BUILDER_TASK_FAVORITE === 'Y' ? '즐겨찾기 해제' : '즐겨찾기 추가'}
                   </StyledButton>
                 )}
-                <StyledButton className="btn-primary btn-first" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
+                <StyledButton className="btn-primary mr5 btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
                   수정
                 </StyledButton>
                 <Popconfirm
@@ -95,17 +96,17 @@ class ViewPage extends Component {
                   okText="Yes"
                   cancelText="No"
                 >
-                  <StyledButton className="btn-light btn-first">삭제</StyledButton>
+                  <StyledButton className="btn-light mr5 btn-sm">삭제</StyledButton>
                 </Popconfirm>
-                <StyledButton className="btn-light btn-first" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
+                <StyledButton className="btn-light mr5 btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
                   새버전
                 </StyledButton>
                 {!isBuilderModal && (
-                  <StyledButton className="btn-light btn-first" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                  <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
                     목록
                   </StyledButton>
                 )}
-              </div>
+              </StyledButtonWrapper>
             )}
           </Sketch>
         </StyledWrap>

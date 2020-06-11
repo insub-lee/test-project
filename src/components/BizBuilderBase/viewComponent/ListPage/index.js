@@ -298,7 +298,7 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray" onClick={() => getListData(id, workSeq)}>
+                          <StyledButton className="btn-gray btn-sm" onClick={() => getListData(id, workSeq)}>
                             검색
                           </StyledButton>
                           {useExcelDownload && isExcelDown && (
@@ -335,7 +335,7 @@ class ListPage extends Component {
               )}
               {isMultiDelete && (
                 <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
-                  <StyledButton className="btn-light">삭제</StyledButton>
+                  <StyledButton className="btn-light btn-sm">삭제</StyledButton>
                 </Popconfirm>
               )}
             </div>

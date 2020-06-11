@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Row, Col, Tree, Table, Button, Icon } from 'antd';
 import { CloseCircleOutlined, AuditOutlined, WarningOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledWorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal/StyledWorkProcessModal';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
@@ -111,10 +111,10 @@ class SelectApprovePage extends Component {
         width="70%"
         style={{ top: 50, height: '500px' }}
         footer={[
-          <StyledButton key="close" onClick={this.handleCloseModal}>
+          <StyledButton key="close" className="btn-light btn-sm" onClick={this.handleCloseModal}>
             취소
           </StyledButton>,
-          <StyledButton key="ok" className="btn-primary" onClick={this.handleComplete}>
+          <StyledButton key="ok" className="btn-primary btn-sm" onClick={this.handleComplete}>
             확인
           </StyledButton>,
         ]}

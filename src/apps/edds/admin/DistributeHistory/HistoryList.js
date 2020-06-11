@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, Modal } from 'antd';
+import { Table, Modal } from 'antd';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 
 import DocView from './DocView';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModalPad(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 class HistoryList extends Component {
   state = {
@@ -113,21 +112,10 @@ class HistoryList extends Component {
           title="배포문서 상세"
           onCancel={this.onCancelPopup}
           destroyOnClose
-          footer={[
-            <StyledButton className="btn-light" onClick={this.onCancelPopup}>
-              닫기
-            </StyledButton>,
-          ]}
+          footer={[<StyledButton className="btn-light btn-sm" onClick={this.onCancelPopup}>닫기</StyledButton>]}
         >
           <DocView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
-        <StyledHeaderWrapper>
-          <div className="pageTitle">
-            <p>
-              <Icon type="form" /> 배포 이력
-            </p>
-          </div>
-        </StyledHeaderWrapper>
         <StyledContentsWrapper>
           <AntdTable
             dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))}
@@ -137,6 +125,7 @@ class HistoryList extends Component {
                 this.onClickRow(record, rowIndex);
               },
             })}
+            bordered
           />
         </StyledContentsWrapper>
       </>

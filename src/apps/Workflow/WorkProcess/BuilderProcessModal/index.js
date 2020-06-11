@@ -286,7 +286,7 @@ class BuilderProcessModal extends Component {
           </Col>
         </Row>
         <div className="applyButtonWrapper">
-          <StyledButton className="btn-primary" onClick={this.handleComplete}>
+          <StyledButton className="btn-primary btn-sm" onClick={this.handleComplete}>
             적용
           </StyledButton>
         </div>

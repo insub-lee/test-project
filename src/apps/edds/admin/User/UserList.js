@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, Modal, Button } from 'antd';
+import { Table, Modal } from 'antd';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
@@ -40,13 +40,13 @@ class UserList extends Component {
   };
 
   columns = [
-    {
-      title: '사용자ID',
-      dataIndex: 'EMP_NO',
-      key: 'EMP_NO',
-      align: 'center',
-      width: '12%',
-    },
+    // {
+    //   title: '사용자ID',
+    //   dataIndex: 'EMP_NO',
+    //   key: 'EMP_NO',
+    //   align: 'center',
+    //   width: '12%',
+    // },
     {
       title: '사용자명',
       dataIndex: 'NAME_KOR',
@@ -55,16 +55,15 @@ class UserList extends Component {
       width: '10%',
     },
     {
-      title: '회사명',
+      title: '회사',
       dataIndex: 'COMPANY_NAME',
       key: 'COMPANY_NAME',
       align: 'center',
     },
-
     {
-      title: '부서명',
-      dataIndex: 'DEPT_NAME',
-      key: 'DEPT_NAME',
+      title: '직위',
+      dataIndex: 'PSTN_NAME',
+      key: 'PSTN_NAME',
       align: 'center',
       width: '15%',
     },
@@ -95,13 +94,16 @@ class UserList extends Component {
 
     return (
       <>
-        <StyledHeaderWrapper>
-          <div className="pageTitle">
-            <p>
-              <Icon type="form" /> 사용자 관리
-            </p>
-          </div>
-        </StyledHeaderWrapper>
+        <AntdModal
+          width={700}
+          visible={this.state.isShow}
+          title="사용자 상세"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <UserView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
+        </AntdModal>
         <StyledContentsWrapper>
           <AntdTable
             dataSource={list.map(item => ({ ...item, key: `KEY_${item.USER_ID}` }))}
@@ -111,19 +113,9 @@ class UserList extends Component {
                 this.onClickRow(record, rowIndex);
               },
             })}
+            bordered
           />
         </StyledContentsWrapper>
-        <AntdModal
-          width={700}
-          visible={this.state.isShow}
-          title="사용자 상세"
-          onCancel={this.onCancelPopup}
-          destroyOnClose
-          footer={null}
-          className="modal-table-pad"
-        >
-          <UserView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
-        </AntdModal>
       </>
     );
   }
