@@ -41,7 +41,7 @@ const StyledButton = styled.button`
   }
 
   &.btn-xxs {
-    padding: 1px 0.75rem;
+    padding: 2px 0.5rem;
     font-size: 0.7rem;
   }
 

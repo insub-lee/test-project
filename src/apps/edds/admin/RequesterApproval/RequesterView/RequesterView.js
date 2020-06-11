@@ -35,7 +35,7 @@ class RequesterView extends Component {
   };
 
   componentDidMount() {
-    const { id, getCallDataHandler, selectedRow } = this.props;
+    const { sagaKey, getCallDataHandler, selectedRow } = this.props;
     const arrApi = [
       {
         key: 'requesterView',
@@ -43,7 +43,7 @@ class RequesterView extends Component {
         type: 'GET',
       },
     ];
-    getCallDataHandler(id, arrApi);
+    getCallDataHandler(sagaKey, arrApi);
   }
 
   onChangeEmpCode = val => {
@@ -51,7 +51,7 @@ class RequesterView extends Component {
   };
 
   onClickApproval = () => {
-    const { id, result: { requesterView: { detail } }, submitHandlerBySaga, onCancelPopup } = this.props;
+    const { sagaKey, result: { requesterView: { detail } }, submitHandlerBySaga, onCancelPopup, selectedRow, spinningOn, spinningOff } = this.props;
     if (this.state.userInfo.deptId !== 0 &&  this.state.userInfo.pstnId !== 0) {
       const userInfo = {
         ...this.state.userInfo,
@@ -60,14 +60,30 @@ class RequesterView extends Component {
         nameKor: detail.REQUESTER_NAME,
         email: detail.EMAIL,
         mobileTel: detail.PHONE,
+        passwd: detail.PASSWORD,
       };
-      const saveAfterFunc = this.onClickDelete;
+
       confirm({
         title: '승인하시겠습니까?',
         icon: <ExclamationCircleOutlined />,
+        okText: '승인',
+        cancelText: '취소',
         onOk() {
-          submitHandlerBySaga(id, 'POST', '/api/admin/v1/common/registUser', userInfo, () => {
-            saveAfterFunc();
+          spinningOn();
+          submitHandlerBySaga(sagaKey, 'POST', '/api/admin/v1/common/registUser', userInfo, (id, res) => {
+            if (res && res.code === 200) {
+              // 승인메일발송
+              submitHandlerBySaga(sagaKey, 'POST', `/api/edds/v1/common/requesterApproveEmail`, { PARAM: { ...selectedRow }}, () => {});
+              // 승인 후 요청내역 삭제
+              submitHandlerBySaga(sagaKey, 'DELETE', `/api/edds/v1/common/eddsRequest/${selectedRow.REQUEST_ID}`, {}, () => {
+                spinningOff();
+                message.info(<MessageContent>승인하였습니다.</MessageContent>);
+                onCancelPopup();
+              });
+            } else {
+              spinningOff();
+              message.info(<MessageContent>승인에 실패하였습니다.</MessageContent>);
+            }
           });
         }
       });
@@ -77,9 +93,24 @@ class RequesterView extends Component {
   };
 
   onClickDelete = () => {
-    const { id, submitHandlerBySaga, selectedRow, onCancelPopup } = this.props;
-    submitHandlerBySaga(id, 'DELETE', `/api/edds/v1/common/eddsRequest/${selectedRow.REQUEST_ID}`, {}, () => {
-      onCancelPopup();
+    const { sagaKey, submitHandlerBySaga, selectedRow, onCancelPopup, spinningOn, spinningOff } = this.props;
+    confirm({
+      title: '삭제하시겠습니까?',
+      icon: <ExclamationCircleOutlined />,
+      okText: '삭제',
+      cancelText: '취소',
+      onOk() {
+        spinningOn();
+        submitHandlerBySaga(sagaKey, 'DELETE', `/api/edds/v1/common/eddsRequest/${selectedRow.REQUEST_ID}`, {}, (id, res) => {
+          spinningOff();
+          if (res && res.result === 1) {
+            message.info(<MessageContent>삭제하였습니다.</MessageContent>);
+            onCancelPopup();
+          } else {
+            message.info(<MessageContent>삭제에 실패하였습니다.</MessageContent>);
+          }
+        });
+      }
     });
   };
 
@@ -191,7 +222,7 @@ class RequesterView extends Component {
                   <td>{detail.COMPANY_NAME}</td>
                   <th>선택회사</th>
                   <td>
-                    <AntdInput value={this.state.userInfo.deptName} className="ant-input-sm" placeholder="회사선택" onClick={this.onClickCompany}  readOnly/>
+                    <AntdInput value={this.state.userInfo.deptName} className="ant-input-sm" placeholder="회사선택" onClick={this.onClickCompany} readOnly/>
                   </td>
                 </tr>
                 <tr>
@@ -203,7 +234,7 @@ class RequesterView extends Component {
                   <td>{detail.PSTN_NAME}</td>
                   <th>선택직위</th>
                   <td>
-                    <AntdInput value={this.state.userInfo.pstnName} className="ant-input-sm" placeholder="직위선택" onClick={this.onClickPostion}  readOnly/>
+                    <AntdInput value={this.state.userInfo.pstnName} className="ant-input-sm" placeholder="직위선택" onClick={this.onClickPostion} readOnly/>
                   </td>
                 </tr>
                 <tr>

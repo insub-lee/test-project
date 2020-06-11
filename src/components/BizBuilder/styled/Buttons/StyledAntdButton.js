@@ -29,25 +29,21 @@ const StyledButton = component => styled(component)`
   &.btn-lg {
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
-    line-height: 1.5;
   }
 
   &.btn-sm {
     padding: 0.313rem 0.844rem;
     font-size: 0.75rem;
-    line-height: 1.5;
   }
 
   &.btn-xs {
     padding: 0.2rem 0.7rem;
     font-size: 0.75rem;
-    line-height: 1.5;
   }
 
   &.btn-xxs {
-    padding: 1px 0.844rem;
+    padding: 2px 0.5rem;
     font-size: 0.7rem;
-    line-height: 1.5;
   }
 
   &.btn-primary {

@@ -1,13 +1,63 @@
 import React, { Component } from 'react';
-import { Radio, Select, Button } from 'antd';
+import { Radio, Select, Button, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
 import message from 'components/Feedback/message';
-import StyledSelect from 'commonStyled/MdcsStyled/Select/StyledSelect';
+import styled from 'styled-components';
+
+import StyledDropdown from 'components/BizBuilder/styled/Form/StyledDropdown';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import LabelComp from './LabelComp';
 
 const { Option } = Select;
+const AntdSelect = StyledSelect(Select);
+const AntdInput = StyledInput(Input);
+const StyledWrap = styled.div`
+  .validity-check-input {
+    input,
+    select {
+      width: 150px;
+    }
+
+    button {
+      vertical-align: middle;
+    }
+  }
+
+  .unregistered-code {
+    border: 1px solid #eee;
+    margin-top: 5px;
+    display: table;
+    width: 100%;
+
+    .title {
+      display: table-cell;
+      width: 20%;
+      text-align: center;
+      color: #000;
+      background: #f7f7f7;
+      vertical-align: middle;
+      font-size: 12px;
+    }
+
+    .code-list {
+      padding: 5px;
+      display: table-cell;
+      width: auto;
+
+      div {
+        margin-bottom: 5px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+`;
 
 class RadioMaterialComp extends Component {
   constructor(props) {
@@ -151,63 +201,53 @@ class RadioMaterialComp extends Component {
 
     const { errorCodeList } = this.state;
     return (
-      <table>
-        <tr>
-          <td style={{ width: '120px' }}>
-            <Radio.Group name="radiogroup" value={colData} onChange={this.onIsMeterialCheck}>
-              <Radio value="Y">Yes</Radio>
-              <Radio value="N">No</Radio>
-            </Radio.Group>
-          </td>
-          <td>
-            <div style={{ width: '30%' }}>
-              {this.state.isMeterialView && (
-                <Select
-                  value={formData.MATERIAL_TYPE}
-                  onChange={this.onSelectChange}
-                  placeholder="자재코드 선택"
-                  className="mdcsSelect"
-                  style={{ width: '180px' }}
-                  dropdownRender={menu => <StyledSelect>{menu}</StyledSelect>}
-                >
-                  {this.state.mList}
-                </Select>
-              )}
-            </div>
-          </td>
-          <td>
-            {this.state.isMeterialView && (
-              <input
-                className="ant-input"
-                defaultValue={formData.MATERIAL_TEXT}
-                onChange={e => {
-                  const reg = /[^0-9,]/gi;
-                  if (reg.test(e.target.value)) {
-                    message.success('숫자 ,(comma) 만 사용가능');
-                    e.target.value = e.target.value.replace(/[^0-9,]/gi, '');
-                  }
-                  const vals = e.target.value;
-                  this.onChangeHandlerText(vals);
-                }}
-              />
-            )}{' '}
-          </td>
-          <td>
-            {this.state.isMeterialView && (
-              <Button type="primary" onClick={this.onClickVaildate}>
-                <SearchOutlined />
-                유효성체크
-              </Button>
-            )}
-          </td>
-        </tr>
+      <StyledWrap>
+        <div className="validity-check-input">
+          <Radio.Group name="radiogroup" value={colData} onChange={this.onIsMeterialCheck}>
+            <Radio value="Y">Yes</Radio>
+            <Radio value="N">No</Radio>
+          </Radio.Group>
+          {this.state.isMeterialView && (
+            <AntdSelect
+              value={formData.MATERIAL_TYPE}
+              onChange={this.onSelectChange}
+              placeholder="자재코드 선택"
+              className="mr5"
+              style={{ width: '180px' }}
+              dropdownRender={menu => <StyledDropdown>{menu}</StyledDropdown>}
+            >
+              {this.state.mList}
+            </AntdSelect>
+          )}
+          {this.state.isMeterialView && (
+            <AntdInput
+              className="mr5"
+              defaultValue={formData.MATERIAL_TEXT}
+              onChange={e => {
+                const reg = /[^0-9,]/gi;
+                if (reg.test(e.target.value)) {
+                  message.success('숫자 ,(comma) 만 사용가능');
+                  e.target.value = e.target.value.replace(/[^0-9,]/gi, '');
+                }
+                const vals = e.target.value;
+                this.onChangeHandlerText(vals);
+              }}
+            />
+          )}{' '}
+          {this.state.isMeterialView && (
+            <StyledButton className="btn-xs btn-light" onClick={this.onClickVaildate}>
+              <SearchOutlined />
+              유효성체크
+            </StyledButton>
+          )}
+        </div>
         {errorCodeList && errorCodeList.length > 0 && (
-          <tr>
-            <th>미등록 코드</th>
-            <td colSpan={3}>{errorCodeList && errorCodeList.map(item => <div>{item}</div>)}</td>
-          </tr>
+          <div className="unregistered-code">
+            <div className="title">미등록 코드</div>
+            <div className="code-list">{errorCodeList && errorCodeList.map(item => <div>{item}</div>)}</div>
+          </div>
         )}
-      </table>
+      </StyledWrap>
     );
   }
 }

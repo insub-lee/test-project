@@ -7,7 +7,6 @@ import TimePicker from 'rc-time-picker';
 // import 'rc-time-picker/assets/index.css';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
-import Button from 'components/Button';
 // import DatePicker from 'components/FormPreview/DatePicker';
 import Checkbox from 'apps/wts/components/CheckboxGroup/Checkbox';
 import service from '../service';

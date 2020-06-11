@@ -7,6 +7,7 @@ import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
@@ -320,12 +321,12 @@ class ListPage extends Component {
                 )
               );
             })}
-            <div className="alignRight">
+            <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
               {ListCustomButtons ? (
                 <ListCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
               ) : (
                 <StyledButton
-                  className="btn-primary btn-first"
+                  className="btn-primary btn-sm mr5"
                   onClick={() =>
                     isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
                   }
@@ -338,7 +339,7 @@ class ListPage extends Component {
                   <StyledButton className="btn-light btn-sm">삭제</StyledButton>
                 </Popconfirm>
               )}
-            </div>
+            </StyledButtonWrapper>
           </Sketch>
         </StyledWrap>
       );
