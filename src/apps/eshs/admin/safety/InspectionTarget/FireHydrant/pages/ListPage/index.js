@@ -65,6 +65,7 @@ const ListPage = props => {
             return { ...e, REG_DTTM: splitedDT[0] };
           });
           setProcessedList(temp);
+          setIsSearched(false);
         } else {
           const { QUARTER, INSPECTION_YEAR, IS_INSPECTED } = formData;
           if (QUARTER && INSPECTION_YEAR && isSearched) {
@@ -78,12 +79,15 @@ const ListPage = props => {
                 const { result, data } = response.response || {};
                 if (result === 1) {
                   setProcessedList(data);
+                  setIsSearched(false);
                 }
               }
-              setIsSearched(false);
             });
           }
         }
+      } else {
+        setProcessedList([]);
+        setIsSearched(false);
       }
     }
   }, [props.listData]);
