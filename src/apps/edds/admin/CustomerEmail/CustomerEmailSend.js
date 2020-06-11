@@ -23,12 +23,12 @@ const AntdModal = StyledAntdModal(Modal);
 const AntdTag = StyledTag(Tag);
 
 const defaultContent =
-  'Dear All,\n' +
-  'This is EDDS Admin of MAGNACHIP.\n\n' +
-  'I am writing to let you know that our external document distribution system EDDS(http://edds.magnachip.com) needs to check your actual user account.\n' +
-  'Please let me know whether the owners are changed. Such as name, e-mail address of the external document owner.\n\n' +
-  '※ If you do not answer within a week, I will delete an user account of EDDS considering it useless.\n\n' +
-  'If you have questions or clarifications just send your e-mail or contact me.\n' +
+  'Dear All,\n\r' +
+  'This is EDDS Admin of MAGNACHIP.\n\r\n\r' +
+  'I am writing to let you know that our external document distribution system EDDS(http://edds.magnachip.com) needs to check your actual user account.\n\r' +
+  'Please let me know whether the owners are changed. Such as name, e-mail address of the external document owner.\n\r\n\r' +
+  '※ If you do not answer within a week, I will delete an user account of EDDS considering it useless.\n\r\n\r' +
+  'If you have questions or clarifications just send your e-mail or contact me.\n\r' +
   'Thank you.';
 
 class CustomerEmailSend extends Component {
@@ -42,8 +42,8 @@ class CustomerEmailSend extends Component {
   };
 
   componentDidMount() {
-    const { id, apiAry, getCallDataHandler, profile } = this.props;
-    getCallDataHandler(id, apiAry, () => {});
+    const { sagaKey, apiAry, getCallDataHandler, profile } = this.props;
+    getCallDataHandler(sagaKey, apiAry, () => {});
     this.setState({
       fromId: profile.USER_ID,
       fromEmail: profile.EMAIL,
@@ -196,7 +196,7 @@ class CustomerEmailSend extends Component {
 }
 
 CustomerEmailSend.propTypes = {
-  id: PropTypes.string,
+  sagaKey: PropTypes.string,
   apiAry: PropTypes.array,
   result: PropTypes.object,
   getCallDataHandler: PropTypes.func,
