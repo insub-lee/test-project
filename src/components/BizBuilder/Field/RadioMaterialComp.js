@@ -131,6 +131,7 @@ class RadioMaterialComp extends Component {
 
   render() {
     const { formData, colData, processRule } = this.props;
+
     const { errorCodeList } = this.state;
     return (
       <table>
