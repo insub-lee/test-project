@@ -80,6 +80,7 @@ const ListPage = props => {
                   setProcessedList(data);
                 }
               }
+              setIsSearched(false);
             });
           }
         }
@@ -191,8 +192,8 @@ const ListPage = props => {
         onCloseModalHandler={() => setActivateUsageModal(false)}
         listMetaSeq={META_SEQ.LIST_USAGE_SEARCH}
         baseSagaKey={sagaKey}
-        // ListCustomButtons={CustomButtons?.ViewHistory}
-        // CustomListPage={ListPage}
+        ListCustomButtons={CustomButtons?.ViewHistory}
+        useExcelDownload={false}
       />
     );
   };
@@ -273,29 +274,25 @@ const ListPage = props => {
   };
 
   const renderList = (group, groupIndex) => {
-    if (isSearched) {
-      // const { listData, sagaKey: id, changeFormData, COMP_FIELD } = props;
-      const columns = setColumns(group.rows[0].cols);
-      return (
-        <div key={group.key}>
-          {group.useTitle && <GroupTitle title={group.title} />}
-          <Group key={group.key} className={`view-designer-group group  -${groupIndex}`}>
-            <AntdTable
-              rowKey="TASK_SEQ"
-              key={`${group.key}_list`}
-              className="view-designer-list"
-              columns={columns}
-              dataSource={processedList}
-              // LOCATION_DESC
-              onRow={record => ({
-                onClick: () => (rowClickable ? handleRowClick(record.TASK_SEQ) : null),
-              })}
-            />
-          </Group>
-        </div>
-      );
-    }
-    return null;
+    const columns = setColumns(group.rows[0].cols);
+    return (
+      <div key={group.key}>
+        {group.useTitle && <GroupTitle title={group.title} />}
+        <Group key={group.key} className={`view-designer-group group  -${groupIndex}`}>
+          <AntdTable
+            rowKey="TASK_SEQ"
+            key={`${group.key}_list`}
+            className="view-designer-list"
+            columns={columns}
+            dataSource={processedList || []}
+            // LOCATION_DESC
+            onRow={record => ({
+              onClick: () => (rowClickable ? handleRowClick(record.TASK_SEQ) : null),
+            })}
+          />
+        </Group>
+      </div>
+    );
   };
 
   const modalTitle = () => {

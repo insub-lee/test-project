@@ -24,30 +24,31 @@ const SelectYearComp = ({ CONFIG, changeFormData, sagaKey: id, COMP_FIELD, NAME_
   }, []);
 
   const onChangeHandler = value => {
-    // const {
-    //   changeFormData,
-    //   sagaKey: id,
-    //   CONFIG: {
-    //     property: { isRequired },
-    //   },
-    //   COMP_FIELD,
-    //   NAME_KOR,
-    //   changeValidationData,
-    // } = props;
     if (CONFIG.property.isRequired) {
-      // 기본값인지 체크
       changeValidationData(id, COMP_FIELD, value.trim() !== '', value.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
     }
     changeFormData(id, COMP_FIELD, value);
   };
 
   const onSearchHandler = value => {
-    // const { sagaKey: id, COMP_FIELD, changeSearchData } = props;
-    const searchYear = value ? `AND W.${COMP_FIELD} = ${value}::VARCHAR` : '';
-    changeSearchData(id, COMP_FIELD, searchYear);
+    const { customFuncKey } = CONFIG.property;
+    switch (customFuncKey) {
+      case 'FireInspection': {
+        customOnSearchForFireInspection(value);
+        break;
+      }
+      default: {
+        const searchYear = value ? `AND W.${COMP_FIELD} = ${value}::VARCHAR` : '';
+        changeSearchData(id, COMP_FIELD, searchYear);
+        break;
+      }
+    }
   };
 
-  // const { colData, visible, CONFIG, isSearch } = props;
+  // 소방점검 - 점검대상 검색전용 Custom Func
+  const customOnSearchForFireInspection = value => {
+    changeFormData(id, COMP_FIELD, value);
+  };
 
   return visible ? (
     <Select

@@ -47,7 +47,7 @@ class BaseComp extends React.Component {
     const { profile } = this.props;
     return manInfo ? (
       <>
-        <MainBody profile={profile} canUseThisPage={canUseThisPage} manInfo={manInfo} />}
+        <MainBody profile={profile} canUseThisPage={canUseThisPage} manInfo={manInfo} />
         <SubBody profile={profile} canUseThisPage={canUseThisPage} manInfo={manInfo} />
       </>
     ) : (
