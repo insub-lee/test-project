@@ -262,6 +262,7 @@ const View = viewData => (
                 className="input-search-sm"
                 defaultValue={
                   (viewData &&
+                    viewData.modalData &&
                     viewData.modalData.find(
                       item => item.MINOR_CD === viewData.formData && viewData.formData.INFO_DATA && viewData.formData.INFO_DATA[`C_NAME${index + 1}`],
                     )) ||
