@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import { Button } from 'antd';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+const StyledButton = StyledAntdButton(Button);
 
 // VIEW_STATUS
 export default function Status({
@@ -18,13 +20,9 @@ export default function Status({
 }) {
   return (
     <StyledButton
-      className="btn-primary"
+      className="btn-primary btn-first"
       onClick={() => {
         clickStatus();
-        // if (moveTo) {
-        // viewMetaSeqHandler(moveTo, viewType);
-        // modalHandler(true);
-        // }
       }}
     >
       현황
