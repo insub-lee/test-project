@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Icon, Button, Modal } from 'antd';
 
-import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad'
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal'
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import DocView from './DocView';
 import Redistribute from './Redistribute';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModalPad(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 class DistributeDocList extends Component {
   state = {
@@ -126,7 +126,7 @@ class DistributeDocList extends Component {
           title="배포문서 다운로드"
           onCancel={this.onCancelPopup}
           destroyOnClose
-          footer={[<StyledButton className="btn-light" onClick={this.onCancelPopup}>닫기</StyledButton>]}
+          footer={[<StyledButton className="btn-light btn-sm" onClick={this.onCancelPopup}>닫기</StyledButton>]}
         >
           <DocView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
@@ -141,11 +141,6 @@ class DistributeDocList extends Component {
           <Redistribute selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
         <StyledContentsWrapper>
-          {/* <div className="pageTitle">
-            <p>
-              <Icon type="form" /> 배포문서 목록
-            </p>
-          </div> */}
           <AntdTable dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))} columns={this.columns} />
         </StyledContentsWrapper>
       </>

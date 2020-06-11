@@ -12,6 +12,7 @@ const StyledDrmInstall = styled.div`
       width: 100%;
       padding: 30px 0px;
       overflow: hidden;
+      text-align: center;
 
       &.drm_con01 {
         padding-bottom: 60px;
@@ -22,42 +23,23 @@ const StyledDrmInstall = styled.div`
       .drm_box {
         display: inline-block;
         vertical-align: middle;
-        text-align: center;
+        margin-right: 20px;
 
         .drm_img {
           display: inline-block;
           vertical-align: middle;
-          
-          &.drm_img01 {
-            width: 300px;
+          padding: 0 20px;
 
-            img {
-              vertical-align: top;
-              border-width: 0px;
-              border-style: initial;
-              border-color: initial;
-              border-image: initial;
-              outline: none;
-            }
-          }
-
-          &.drm_img02 {
-            text-align: left;
-            width: 200px;
-
-            img {
-              vertical-align: top;
-              border-width: 0px;
-              border-style: initial;
-              border-color: initial;
-              border-image: initial;
-              outline: none;
-            }
+          img {
+            vertical-align: top;
+            border: 0;
+            outline: none;
           }
         }
 
         &.drm_text {
           text-align: left;
+          width: 530px;
 
           a {
             color: #1890ff;

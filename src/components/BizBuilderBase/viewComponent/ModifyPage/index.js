@@ -6,6 +6,7 @@ import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
@@ -27,7 +28,6 @@ class ModifyPage extends Component {
 
   componentDidMount() {
     const { sagaKey: id, getProcessRuleByModify, workInfo, workPrcProps, draftInfo } = this.props;
-    console.debug('modify', workPrcProps, this.props);
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
@@ -142,6 +142,8 @@ class ModifyPage extends Component {
           }
         });
       }
+    } else {
+      changeIsLoading(false);
     }
   };
 
@@ -229,16 +231,16 @@ class ModifyPage extends Component {
             {ModifyCustomButtons ? (
               <ModifyCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
             ) : (
-              <div className="alignRight">
-                <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
+              <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+                <StyledButton className="btn-primary mr5 btn-sm" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
                   저장
                 </StyledButton>
                 {!isBuilderModal && (
-                  <StyledButton className="btn-light" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                  <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
                     목록
                   </StyledButton>
                 )}
-              </div>
+              </StyledButtonWrapper>
             )}
           </Sketch>
         </StyledWrap>

@@ -34,6 +34,7 @@ const StyledHtmlTable = styled.div`
           border-bottom: 1px solid #e8e8e8;
           width: 130px;
           font-weight: 500;
+          border-right: 1px solid #e8e8e8;
         }
 
         td {
@@ -129,6 +130,12 @@ const StyledHtmlTable = styled.div`
       text-align: center;
       margin-top: 10px;
     }
+  }
+
+  .table-title {
+    font-size: 14px;
+    color: #000;
+    margin-bottom: 5px;
   }
 `;
 
