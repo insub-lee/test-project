@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Popconfirm, Modal } from 'antd';
-
 import { isJSON } from 'utils/helpers';
 import SignLine from 'apps/Workflow/SignLine';
 import ApproveHistory from 'apps/Workflow/ApproveHistory';
@@ -10,14 +9,12 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import BizBuilderBase from 'components/BizBuilderBase';
-
+import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 import { VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/internal_constants';
 import * as CustomButtons from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/Buttons';
 
-// import Loadable from 'components/Loadable';
-// import Loading from 'components/BizBuilderBase/viewComponent/Common/Loading';
-
+const AntdModal = StyledModalWrapper(Modal);
 class ViewPage extends Component {
   constructor(props) {
     super(props);
@@ -33,10 +30,6 @@ class ViewPage extends Component {
     const { sagaKey: id, draftId, workInfo } = this.props;
 
     if (workInfo.BUILDER_STYLE_PATH) {
-      // const StyledWrap = Loadable({
-      //   loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
-      //   loading: Loading,
-      // });
       const StyledWrap = DefaultStyleInfo(workInfo.BUILDER_STYLE_PATH);
       this.setState({ StyledWrap });
     }
@@ -62,6 +55,16 @@ class ViewPage extends Component {
       pageMetaSeq,
       viewType,
     });
+  };
+
+  onCloseModalAfterRefresh = () => {
+    const { workSeq, getDetailData, sagaKey: id, taskSeq } = this.props;
+    this.setState(
+      {
+        activateModal: false,
+      },
+      () => getDetailData(id, workSeq, taskSeq, 'VIEW'),
+    );
   };
 
   openModal = changedSagaKey => {
@@ -109,7 +112,7 @@ class ViewPage extends Component {
             workSeq={workSeq} // metadata binding
             viewType={viewType}
             taskSeq={taskSeq} // data binding
-            onCloseModalHandler={() => this.setState({ activateModal: false })}
+            onCloseModalHandler={this.onCloseModalAfterRefresh}
             inputMetaSeq={pageMetaSeq}
             baseSagaKey={sagaKey}
             InputCustomButtons={CustomButtons.IssueAdd}
@@ -125,13 +128,31 @@ class ViewPage extends Component {
             workSeq={workSeq} // metadata binding
             viewType={viewType}
             taskSeq={taskSeq} // data binding
-            onCloseModalHandler={() => this.setState({ activateModal: false })}
+            onCloseModalHandler={this.onCloseModalAfterRefresh}
             inputMetaSeq={pageMetaSeq}
             baseSagaKey={sagaKey}
             InputCustomButtons={CustomButtons.RegInspection}
           />
         );
       }
+      default:
+        return '';
+    }
+  };
+
+  modalTitle = () => {
+    const { pageMetaSeq } = this.state;
+    switch (pageMetaSeq) {
+      case META_SEQ.VIEW_INSPECTION_BY_CHIP:
+        return '소화기 점검 History';
+      case META_SEQ.VIEW_INSPECTION_BY_POSITON_NO:
+        return '소화기 점검 History';
+      case META_SEQ.INPUT_ISSUE_NOTE:
+        return 'Issue 등록';
+      case META_SEQ.INPUT_INSPECTION:
+        return '점검결과 입력';
+      case META_SEQ.VIEW_STATUS:
+        return '소화기 현황';
       default:
         return '';
     }
@@ -155,9 +176,9 @@ class ViewPage extends Component {
             {ViewCustomButtons ? (
               <>
                 <ViewCustomButtons viewMetaSeqHandler={this.pageMetaSeqHandler} modalHandler={this.modalHandler} {...this.props} />
-                <Modal destroyOnClose visible={activateModal} closable onCancel={() => this.modalHandler(false)} width={900} footer={null}>
-                  <div>{activateModal && this.openModal(`modal${id}`)}</div>
-                </Modal>
+                <AntdModal title={this.modalTitle()} width="80%" visible={activateModal} footer={null} destroyOnClose onCancel={() => this.modalHandler(false)}>
+                  {activateModal && this.openModal(`modal${id}`)}
+                </AntdModal>
               </>
             ) : (
               <div className="alignRight">

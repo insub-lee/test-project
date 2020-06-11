@@ -6,6 +6,7 @@ import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
@@ -230,7 +231,7 @@ class ModifyPage extends Component {
             {ModifyCustomButtons ? (
               <ModifyCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
             ) : (
-              <div className="alignRight">
+              <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
                 <StyledButton className="btn-primary mr5 btn-sm" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
                   저장
                 </StyledButton>
@@ -239,7 +240,7 @@ class ModifyPage extends Component {
                     목록
                   </StyledButton>
                 )}
-              </div>
+              </StyledButtonWrapper>
             )}
           </Sketch>
         </StyledWrap>

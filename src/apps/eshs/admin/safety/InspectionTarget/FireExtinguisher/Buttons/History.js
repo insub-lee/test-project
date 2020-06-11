@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import { Button } from 'antd';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+const StyledButton = StyledAntdButton(Button);
 
 export default function History({ viewType, moveTo, sagaKey, detail, viewMetaSeqHandler, onCloseModalHandler, modalHandler, taskSeq, workSeq, viewPageData }) {
   // console.debug('£££ History : ', viewMetaSeqHandler, modalHandler);
 
   return (
     <StyledButton
-      className="btn-primary"
+      className="btn-primary btn-first"
       onClick={() => {
         if (moveTo) {
           viewMetaSeqHandler(moveTo, viewType);

@@ -54,8 +54,9 @@ class DistributeDocView extends Component {
         docInfo: { 
           TRANS_NO: row.TRANS_NO, 
           RECV_USER_ID: row.RECV_USER_ID, 
-          FILE_DOWN_CNT: row.FILE_DOWN_CNT 
-        } 
+          FILE_DOWN_CNT: row.FILE_DOWN_CNT,
+          FILE_ORDER: row.FILE_ORDER,
+        }
       }));
       const url = `/down/eddsfile/${row.FILE_SEQ}/${acl}`;
       spinningOn();
@@ -69,8 +70,8 @@ class DistributeDocView extends Component {
   columns = [
     {
       title: 'No',
-      dataIndex: 'RNUM',
-      key: 'RNUM',
+      dataIndex: 'IDX',
+      key: 'IDX',
       align: 'center',
       width: '8%',
     },
@@ -78,7 +79,7 @@ class DistributeDocView extends Component {
       title: '파일명',
       dataIndex: 'FILE_NAME',
       key: 'FILE_NAME',
-      render: (text, record) => <li style={{ cursor: 'pointer' }} onClick={() => this.onClickDownload(record)}>{text}</li>
+      render: (text, record) => <li style={{ cursor: 'pointer' }} onClick={() => this.onClickDownload(record)}>{`${record.DOCNUMBER}_${record.VERSION}_${record.FILE_ORDER}_.${record.EXT}`}</li>
     },
     {
       title: '다운가능횟수',
@@ -162,7 +163,7 @@ class DistributeDocView extends Component {
           </table>
         </StyledHtmlTable>
         <AntdTable
-          dataSource={detail.fileList ? detail.fileList.map(item => ({ ...item, key: item.SEQ })) : []}
+          dataSource={detail.fileList ? detail.fileList.map((item, idx) => ({ ...item, key: item.SEQ, IDX: idx+1 })) : []}
           columns={this.columns}
           pagination={false}
           style={{ marginTop: 10 }}
