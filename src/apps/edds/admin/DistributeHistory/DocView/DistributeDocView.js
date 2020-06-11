@@ -34,8 +34,9 @@ class DistributeDocView extends Component {
     },
     {
       title: '파일명',
-      dataIndex: 'FILE_NAME',
-      key: 'FILE_NAME',
+      dataIndex: 'DOCNUMBER',
+      key: 'DOCNUMBER',
+      render: (text, record) => `${record.DOCNUMBER}_${record.VERSION}_${record.FILE_ORDER}_.${record.EXT}`,
     },
     {
       title: '다운로드 일자',
@@ -81,11 +82,11 @@ class DistributeDocView extends Component {
                 <th>발송일</th>
                 <td>{moment(detail.REG_DTTM).format('YYYY-MM-DD')}</td>
                 <th>발송자ID</th>
-                <td>{detail.DIST_USER_ID}</td>
+                <td>{detail.DIST_EMAIL}</td>
               </tr>
               <tr>
                 <th>수신자ID</th>
-                <td>{detail.EMAIL}</td>
+                <td>{detail.RECV_EMAIL}</td>
                 <th>수신자명</th>
                 <td>{detail.RECV_USER_NAME}</td>
               </tr>
