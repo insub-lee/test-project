@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import debounce from 'lodash/debounce';
 import { getTreeFromFlatData } from 'react-sortable-tree';
-import { TreeSelect, Select, message } from 'antd';
+import { TreeSelect, Select, message, Modal } from 'antd';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
@@ -11,10 +11,12 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import moment from 'moment';
 import View from './View';
 import MeterialModal from './MeterialModal';
+const AntdModal = StyledAntdModal(Modal);
 
 moment.locale('ko');
 const AntdTreeSelect = StyledTreeSelect(TreeSelect);
@@ -53,6 +55,16 @@ class ModifyPage extends Component {
         type: 'POST',
         url: '/api/admin/v1/common/categoryMapList',
         params: { PARAM: { NODE_ID: 1831 } },
+      },
+      {
+        key: 'modalData',
+        type: 'GET',
+        url: '/api/eshs/v1/common/eshsDanger',
+      },
+      {
+        key: 'modalSelectData',
+        type: 'GET',
+        url: '/api/admin/v1/common/categoryMapList?MAP_ID=45',
       },
     ];
     changeSearchData(id, 'INFO_YEAR', `AND W.INFO_YEAR = '${moment().format('YYYY')}'`);
@@ -171,8 +183,7 @@ class ModifyPage extends Component {
   };
 
   callbackHandle = (id, modifyWorkSeq, taskSeq, formData) => {
-    const { setFormData, getListData } = this.props;
-    // setFormData(id, formData);
+    const { getListData } = this.props;
     getListData(id, 10341);
     message.success('완료되었습니다.');
   };
@@ -185,6 +196,7 @@ class ModifyPage extends Component {
       extraApiData: { modalData },
     } = this.props;
 
+    console.debug('modalData : ', modalData);
     this.setState(
       {
         conTent: [],
@@ -257,15 +269,19 @@ class ModifyPage extends Component {
           </div>
         </StyledCustomSearchWrapper>
         {conTent}
-        <MeterialModal
-          sagaKey={id}
-          getExtraApiData={getExtraApiData}
-          extraApiData={extraApiData}
-          changeFormData={changeFormData}
-          onChangeModal={this.onChangeModal}
-          isModal={this.state.isModal}
-          formData={formData}
-        />
+        <AntdModal width={900} visible={this.state.isModal} title="" onCancel={this.onChangeModal} destroyOnClose footer={null} className="modal-table-pad">
+          {this.state.isModal && (
+            <MeterialModal
+              sagaKey={id}
+              getExtraApiData={getExtraApiData}
+              extraApiData={extraApiData}
+              changeFormData={changeFormData}
+              onChangeModal={this.onChangeModal}
+              isModal={this.state.isModal}
+              formData={formData}
+            />
+          )}
+        </AntdModal>
       </StyledContentsWrapper>
     );
   }
