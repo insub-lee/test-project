@@ -114,7 +114,6 @@ class MeterialModal extends Component {
           },
         };
       }
-      console.debug('element : ', element);
       changeFormData(id, 'INFO_DATA', { ...formData.INFO_DATA, ...element });
       onChangeModal();
     } else {
