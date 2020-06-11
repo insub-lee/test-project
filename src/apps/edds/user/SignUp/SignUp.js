@@ -92,10 +92,11 @@ class EddsSignUp extends Component {
         spinningOn();
         submitHandlerBySaga(sagaKey, 'POST', `/api/edds/v1/common/eddsRequest/${signUpData.EMAIL}`, submitData, (id, res) => {
           if (res && res.result > 0) {
-            window.alert('등록하였습니다.');
-            // message.info(<MessageContent>등록하였습니다.</MessageContent>);
             if (window.opener) {
+              window.alert('등록하였습니다.');
               window.close();
+            } else {
+              message.info(<MessageContent>등록하였습니다.</MessageContent>);
             }
           } else {
             message.info(<MessageContent>등록에 실패하였습니다.</MessageContent>);
