@@ -6,7 +6,7 @@ import moment from 'moment';
 import TimePicker from 'rc-time-picker';
 // import 'rc-time-picker/assets/index.css';
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import DatePicker from 'apps/wts/components/DatePicker';
 import Checkbox from 'apps/wts/components/CheckboxGroup/Checkbox';
 import { jsonToQueryString } from 'utils/helpers';
@@ -614,9 +614,9 @@ class ChiefWorkerRecordWriterModal extends React.Component {
                   </ul>
                 )}
                 <div className="btn_wrap">
-                  <Button type="submit" size="small" color="primary">
+                  <StyledButton type="submit" className="btn-primary btn-sm">
                     확인
-                  </Button>
+                  </StyledButton>
                 </div>
               </StyledCommonForm>
             </div>
