@@ -243,7 +243,7 @@ const View = viewData => (
               <AntdSelect
                 className="select-sm"
                 style={{ width: '100%' }}
-                defaultValue={viewData && viewData.formData && viewData.formData.INFO_DATA && viewData.formData.INFO_DATA[`M_CD${index + 1}`]}
+                defaultValue={(viewData && viewData.formData && viewData.formData.INFO_DATA && viewData.formData.INFO_DATA[`M_CD${index + 1}`]) || ''}
                 onChange={value => viewData && viewData.onChangeData(`M_CD${index + 1}`, value)}
               >
                 {viewData && viewData.selectData && viewData && viewData.selectData.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
@@ -253,14 +253,20 @@ const View = viewData => (
               <AntdInputNumber
                 className="ant-input-number-sm"
                 style={{ width: 100 }}
-                defaultValue={viewData && viewData.formData && viewData.formData.INFO_DATA && viewData.formData.INFO_DATA[`M_QTY${index + 1}`]}
+                defaultValue={(viewData && viewData.formData && viewData.formData.INFO_DATA && viewData.formData.INFO_DATA[`M_QTY${index + 1}`]) || ''}
                 onChange={value => viewData && viewData.onChangeData(`M_QTY${index + 1}`, value)}
               />
             </td>
             <td align="center">
               <AntdSearchInput
                 className="input-search-sm"
-                defaultValue={viewData && viewData.formData && viewData.formData.INFO_DATA && viewData.formData.INFO_DATA[`C_NAME${index + 1}`]}
+                defaultValue={
+                  (viewData &&
+                    viewData.modalData.find(
+                      item => item.MINOR_CD === viewData.formData && viewData.formData.INFO_DATA && viewData.formData.INFO_DATA[`C_NAME${index + 1}`],
+                    )) ||
+                  ''
+                }
                 readOnly
                 onClick={viewData && viewData.onChangeModal}
               />
