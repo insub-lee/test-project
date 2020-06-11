@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import request from 'utils/request';
-
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import { address } from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/internal_constants';
+import { Button } from 'antd';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+const StyledButton = StyledAntdButton(Button);
 
 export default function RegisterInspection({
   sagaKey,
@@ -28,20 +31,16 @@ export default function RegisterInspection({
         url: `${address.registerInspectionResult}`,
         data: { SAFEPIN_YN, PHARM_YN, FORM_YN, POSITION_YN, POSITION_NO, CHIP_NO, REG_USER_ID },
       }).then(({ response }) => {
-        // console.debug('£££ RegisterInspection response : ', response);
         if (response?.result === 1) {
-          modalHandler(true);
+          message.success(<MessageContent>점검결과를 등록 하였습니다.</MessageContent>);
+          onCloseModalHandler();
         } else {
-          alert('error');
+          message.error(<MessageContent>점검결과 등록에 실패하였습니다.</MessageContent>);
         }
       });
     } else {
-      alert('one of SAFEPIN_YN, PHARM_YN, FORM_YN, POSITION_YN are empty');
+      message.error(<MessageContent>점검항목중 누락된 내용이 있습니다.</MessageContent>);
     }
-    // obj.put("SAFEPIN_YN", temp.get("safepin_yn"));
-    //					obj.put("PHARM_YN", temp.get("pharm_yn"));
-    //					obj.put("FORM_YN", temp.get("form_yn"));
-    //					obj.put("POSITION_YN", temp.get("position_yn"));
   };
 
   return (

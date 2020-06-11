@@ -76,12 +76,13 @@ class ModifyPage extends Component {
   };
 
   onChangeData = (name, value) => {
-    const { sagaKey: id, changeFormData, changeSearchData } = this.props;
+    const { sagaKey: id, changeFormData, changeSearchData, getListData } = this.props;
     changeFormData(id, name, value);
     if (name === 'PROCESS_ID') {
       this.selectTreeData(value);
     } else if (name === 'INFO_YEAR') {
-      changeSearchData(id, 'INFO_YEAR', `AND W.INFO_YEAR = '${moment().format('YYYY')}'`);
+      changeSearchData(id, 'INFO_YEAR', `AND W.INFO_YEAR = '${value}'`);
+      getListData(id, 10341);
     }
   };
 
@@ -178,7 +179,12 @@ class ModifyPage extends Component {
 
   mySearch = () => {
     const { processNm, placeNm, divNm, sdivNm, selectData } = this.state;
-    const { formData, listData } = this.props;
+    const {
+      formData,
+      listData,
+      extraApiData: { modalData },
+    } = this.props;
+
     this.setState(
       {
         conTent: [],
@@ -194,6 +200,7 @@ class ModifyPage extends Component {
               selectData={selectData}
               formData={formData}
               listData={listData}
+              modalData={modalData.list}
               onChangeData={this.onChangeDetailData}
               onChangeModal={this.onChangeModal}
             />,

@@ -48,6 +48,18 @@ class List extends Component {
     getCallDataHandler(id, apiAry, this.initData);
   }
 
+  searchData = () => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiAry = [
+      {
+        key: 'dangerList',
+        url: `/api/eshs/v1/common/eshsDanger`,
+        type: 'GET',
+      },
+    ];
+    getCallDataHandler(id, apiAry, this.initData);
+  };
+
   initData = () => {
     const {
       result: { dangerList, selectData },

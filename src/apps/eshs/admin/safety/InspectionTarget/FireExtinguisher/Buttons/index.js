@@ -1,13 +1,11 @@
 import React from 'react';
 import { VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/internal_constants';
 import ExcelDown from './ExcelDown';
-import Search from './Search';
 import NewReg from './NewReg';
 import UsageReg from './UsageReg';
 import Status from './Status';
 import Save from './Save';
 import Leave from './Leave';
-import ResultInput from './ResultInput';
 import Add from './Add';
 import History from './History';
 import InfoModify from './InfoModify';
@@ -15,12 +13,12 @@ import RegisterInspection from './RegisterInspection';
 
 export function ViewButtons(props) {
   return (
-    <div className="alignRight">
+    <>
       <Status {...props} />
       <NewReg {...props} />
       <ExcelDown {...props} />
       <UsageReg {...props} />
-    </div>
+    </>
   );
 }
 
