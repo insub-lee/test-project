@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select } from 'antd';
+import { Input, Select, message } from 'antd';
 import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
@@ -84,11 +84,15 @@ class AbrogationMulti extends Component {
   submitTask = () => {
     const { onShowAbrogationMulti } = this.props;
     const { selectedList } = this.state;
-    const workPrcProps = {
-      draftType: DraftType.ABROGATION,
-      abrogationList: selectedList,
-    };
-    onShowAbrogationMulti(workPrcProps);
+    if (selectedList.length > 1) {
+      const workPrcProps = {
+        draftType: DraftType.ABROGATION,
+        abrogationList: selectedList,
+      };
+      onShowAbrogationMulti(workPrcProps);
+    } else {
+      message.error('폐기할 표준을 하나이상 선택해 주세요');
+    }
   };
 
   render() {
