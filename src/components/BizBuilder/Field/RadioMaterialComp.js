@@ -95,15 +95,19 @@ class RadioMaterialComp extends Component {
   };
 
   onClickVaildate = () => {
-    console.debug('this.props', this.props);
+    console.debug('this.state', this.state);
     const { sagaKey, submitExtraHandler, COMP_FIELD, fieldSelectData, CONFIG } = this.props;
     const codeList = fieldSelectData[CONFIG.property.compSelectDataKey];
     const { meterialType, meterialText } = this.state;
     const prefixUrl = '/api/mdcs/v1/common/SAPCallByMeterialCodeHandler';
     const sfidx = codeList.findIndex(f => f.NODE_ID === meterialType);
     const code = codeList[sfidx] && codeList[sfidx].CODE;
-    const param = { MATERIAL_TYPE: code, MATERIAL_TEXT: meterialText };
-    submitExtraHandler(sagaKey, 'POST', prefixUrl, param, this.onCallBack, COMP_FIELD);
+    if (meterialText && code && meterialText !== '' && code !== '') {
+      const param = { MATERIAL_TYPE: code, MATERIAL_TEXT: meterialText };
+      submitExtraHandler(sagaKey, 'POST', prefixUrl, param, this.onCallBack, COMP_FIELD);
+    } else {
+      message.error('자재코드를 입력해주세요');
+    }
   };
 
   onCallBack = (id, response) => {
@@ -118,14 +122,14 @@ class RadioMaterialComp extends Component {
     this.setState({ errorCodeList });
   };
 
-  onIsMeterialCheck = value => {
-    const { changeValidationData, COMP_FIELD, sagaKey } = this.props;
-    console.debug('code', value);
-    if (value === 'N') {
+  onIsMeterialCheck = e => {
+    const { changeFormData, changeValidationData, COMP_FIELD, sagaKey } = this.props;
+    changeFormData(sagaKey, COMP_FIELD, e.target.value);
+    if (e.target.value === 'N') {
       changeValidationData(sagaKey, COMP_FIELD, true, '');
+      this.setState({ meterialType: undefined, meterialText: undefined });
     } else {
       changeValidationData(sagaKey, COMP_FIELD, false, '코드를 입력해주세요');
-      this.setState({ meterialType: undefined, meterialText: undefined });
     }
   };
 
