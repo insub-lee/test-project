@@ -85,7 +85,7 @@ class CustomerEmailSend extends Component {
   };
 
   onClickSendMail = e => {
-    const { id, submitHandlerBySaga } = this.props;
+    const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
 
     if (!this.state.bccList || this.state.bccList.length === 0) {
       message.info(<MessageContent>BCC를 선택해 주세요.</MessageContent>);
