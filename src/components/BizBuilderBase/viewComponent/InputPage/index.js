@@ -242,11 +242,11 @@ class InputPage extends Component {
               <InputCustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
             ) : (
               <div className="alignRight">
-                <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
+                <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
                   저장
                 </StyledButton>
                 {!isBuilderModal && (
-                  <StyledButton className="btn-light" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                  <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
                     목록
                   </StyledButton>
                 )}
