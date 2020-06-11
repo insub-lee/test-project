@@ -7,7 +7,7 @@ import { isJSON } from 'utils/helpers';
 import SingleGroupChoice from 'components/MdcsComponents/SingleGroupChoice';
 import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
 import StyledMultiSelector from 'apps/mdcs/styled/StyledMultiSelector';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
@@ -128,7 +128,7 @@ class LeadBallComp extends Component {
                 )),
               )}
             </div>
-            <StyledButton className="btn-xs btn-primary" onClick={this.onClickSelectedWin}>
+            <StyledButton className="btn-xxs btn-gray btn-radius" onClick={this.onClickSelectedWin}>
               <Icon type="select" /> 선택
             </StyledButton>
           </div>
