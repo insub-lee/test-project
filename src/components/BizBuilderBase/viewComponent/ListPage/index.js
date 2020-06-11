@@ -231,6 +231,8 @@ class ListPage extends Component {
       isBuilderModal,
       changeBuilderModalState,
       listData,
+      ListCustomButtons,
+      useExcelDownload,
     } = this.props;
     const { isMultiDelete, StyledWrap, isExcelDown, btnTex, fileName, sheetName, columns, fields } = this.state;
 
@@ -299,7 +301,7 @@ class ListPage extends Component {
                           <StyledButton className="btn-gray" onClick={() => getListData(id, workSeq)}>
                             검색
                           </StyledButton>
-                          {isExcelDown && (
+                          {useExcelDownload && isExcelDown && (
                             <ExcelDownloadComp
                               isBuilder={false}
                               fileName={fileName || 'excel'}
@@ -319,14 +321,18 @@ class ListPage extends Component {
               );
             })}
             <div className="alignRight">
-              <StyledButton
-                className="btn-primary btn-first"
-                onClick={() =>
-                  isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
-                }
-              >
-                추가
-              </StyledButton>
+              {ListCustomButtons ? (
+                <ListCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
+              ) : (
+                <StyledButton
+                  className="btn-primary btn-first"
+                  onClick={() =>
+                    isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
+                  }
+                >
+                  추가
+                </StyledButton>
+              )}
               {isMultiDelete && (
                 <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
                   <StyledButton className="btn-light">삭제</StyledButton>
@@ -359,6 +365,7 @@ ListPage.propTypes = {
   changeViewPage: PropTypes.func,
   customOnRowClick: PropTypes.any,
   listData: PropTypes.array,
+  useExcelDownload: PropTypes.bool,
 };
 
 ListPage.defaultProps = {
@@ -368,6 +375,7 @@ ListPage.defaultProps = {
     },
   },
   customOnRowClick: undefined,
+  useExcelDownload: true,
 };
 
 export default ListPage;

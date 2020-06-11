@@ -58,7 +58,7 @@ function SelectYearCompConfig(props) {
     colIndex,
     configInfo,
   } = props;
-  const { minYear, maxYear, defaultYear } = configInfo.property;
+  const { minYear, maxYear, defaultYear, customFuncKey } = configInfo.property;
 
   return (
     <div>
@@ -149,6 +149,19 @@ function SelectYearCompConfig(props) {
                 );
               })}
             </Select>
+          </Col>
+        </div>
+      </Row>
+      <Row>
+        <div>
+          <Col span={6}>Custom Search Func Key</Col>
+          <Col span={16} push={2}>
+            <Input
+              value={customFuncKey || ''}
+              onChange={e => {
+                debouncedHandleChangeViewCompData('customFuncKey', e.target.value);
+              }}
+            />
           </Col>
         </div>
       </Row>

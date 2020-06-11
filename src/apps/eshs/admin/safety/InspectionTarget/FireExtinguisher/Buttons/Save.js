@@ -1,8 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import request from 'utils/request';
 import { address } from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/internal_constants';
+import { Button } from 'antd';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+const StyledButton = StyledAntdButton(Button);
 
 String.prototype.rtrim = function() {
   return this.replace(/(\s*$)/, '');
@@ -15,16 +19,15 @@ export default function Save({ saveTask, saveBeforeProcess, onCloseModalHandler,
     request({
       method: 'POST',
       url: `${address.generatePositionNo}`,
-      // FIRE_CODE: FE (소화기)
       data: { FIRE_CODE: 'FE', BUILDING_CODE, STAIR_NO, INSTALLED_LOCATION, CHIP_NO },
     }).then(({ response }) => {
-      // console.debug('££ response : ', response);
       if (response?.result === 1) {
         const { data } = response || {};
         changeFormData(id, data.COMP_FIELD, data.POSITION_NO);
         saveBeforeProcess(id, reloadId || id, afterProcessing(formData, data.POSITION_NO));
       } else {
-        alert('ERROR : ', response?.data?.comment);
+        message.error(<MessageContent>등록정보 저장에 실패하였습니다.</MessageContent>);
+        console.debug('ERROR : ', response?.data?.comment);
       }
     });
   }
@@ -90,12 +93,15 @@ export default function Save({ saveTask, saveBeforeProcess, onCloseModalHandler,
         Semicolon_chip_no,
         CREATE_EMPNO: UPD_USER_ID,
       },
-    }).then(({ response }) => console.debug('### response : ', response));
+    }).then(({ response }) => {
+      message.success(<MessageContent>등록정보 저장을 성공하였습니다.</MessageContent>);
+      console.debug('### response : ', response);
+    });
   }
 
   return (
     <StyledButton
-      className="btn-primary"
+      className="btn-primary btn-first"
       onClick={() => {
         position_no_generator(formData);
       }}

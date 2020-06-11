@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal, Tooltip } from 'antd';
-
+import { Table, Modal, Button, Tooltip } from 'antd';
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
+import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
-import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, EXCEL_DOWNLOAD_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import request from 'utils/request';
-import _ from 'lodash';
-
 import { address, VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/internal_constants';
 import ViewPage from '../ViewPage';
 
+const AntdModal = StyledModalWrapper(Modal);
 const AntdTable = StyledAntdTable(Table);
+const StyledButton = StyledAntdButton(Button);
 
 const ListPage = props => {
   const [activateRegModal, setActivateRegModal] = useState(false);
@@ -33,6 +35,13 @@ const ListPage = props => {
   const [isRowNo, setIsRowNo] = useState(false);
   const [rowClickable, setRowClickable] = useState(true);
   const [processedList, setProcessedList] = useState([]);
+  // 엑셀다운로드 관련 state
+  const [isExcelDown, setIsExcelDown] = useState(false);
+  const [btnText, setExcelBtnText] = useState('');
+  const [fileName, setExcelFileName] = useState('');
+  const [sheetName, setExcelSheetName] = useState('');
+  const [columns, setExcelColumns] = useState([]);
+  const [fields, setExcelFields] = useState([]);
 
   useEffect(() => {
     const { viewSeq } = props;
@@ -51,7 +60,6 @@ const ListPage = props => {
     if (listData instanceof Array) {
       if (listData.length > 0) {
         if (props?.shouldSearchAll) {
-          console.debug('All');
           const temp = listData.map(e => {
             const splitedDT = e?.REG_DTTM.split(' ');
             return { ...e, REG_DTTM: splitedDT[0] };
@@ -60,7 +68,6 @@ const ListPage = props => {
         } else {
           const { QUARTER, INSPECTION_YEAR, IS_INSPECTED } = formData;
           if (QUARTER && INSPECTION_YEAR && isSearched) {
-            console.debug('search');
             request({
               method: 'POST',
               url: address.search,
@@ -73,6 +80,7 @@ const ListPage = props => {
                   setProcessedList(data);
                 }
               }
+              setIsSearched(false);
             });
           }
         }
@@ -80,17 +88,45 @@ const ListPage = props => {
     }
   }, [props.listData]);
 
+  // Builder OPT 설정적용 부분
   useEffect(() => {
     const { workInfo } = props;
     let isMultiDeleteTemp = false;
     let isRowNoTemp = false;
+    // 엑셀 관련 Temps
+    let isExcelDownTemp = false;
+    let btnTextTemp = '';
+    let fileNameTemp = '';
+    let sheetNameTemp = '';
+    let columnsTemp = [];
+    let fieldsTemp = [];
+
+    // Builder OPT forEach - 확인
     if (workInfo && workInfo.OPT_INFO) {
       workInfo.OPT_INFO.forEach(opt => {
         if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDeleteTemp = true;
         if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNoTemp = true;
+        if (opt.OPT_SEQ === EXCEL_DOWNLOAD_OPT_SEQ && opt.ISUSED === 'Y') {
+          isExcelDownTemp = true;
+          if (isJSON(opt.OPT_VALUE)) {
+            const ObjOptVal = JSON.parse(opt.OPT_VALUE);
+            const { columnInfo } = ObjOptVal;
+            btnTextTemp = ObjOptVal.btnTitle || '엑셀받기';
+            fileNameTemp = ObjOptVal.fileName || 'excel';
+            sheetNameTemp = ObjOptVal.sheetName || 'sheet1';
+            columnsTemp = columnInfo.columns || [];
+            fieldsTemp = columnInfo.fields || [];
+          }
+        }
       });
       setIsMultiDelete(isMultiDeleteTemp);
       setIsRowNo(isRowNoTemp);
+      setIsExcelDown(isExcelDownTemp);
+      setExcelBtnText(btnTextTemp);
+      setExcelFileName(fileNameTemp);
+      setExcelSheetName(sheetNameTemp);
+      setExcelColumns(columnsTemp);
+      setExcelFields(fieldsTemp);
     }
   }, []);
 
@@ -173,8 +209,8 @@ const ListPage = props => {
         onCloseModalHandler={() => setActivateUsageModal(false)}
         listMetaSeq={META_SEQ.LIST_USAGE_SEARCH}
         baseSagaKey={sagaKey}
-        // ListCustomButtons={CustomButtons?.ViewHistory}
-        // CustomListPage={ListPage}
+        ListCustomButtons={CustomButtons?.ViewHistory}
+        useExcelDownload={false}
       />
     );
   };
@@ -255,29 +291,32 @@ const ListPage = props => {
   };
 
   const renderList = (group, groupIndex) => {
-    if (isSearched) {
-      // const { listData, sagaKey: id, changeFormData, COMP_FIELD } = props;
-      const columns = setColumns(group.rows[0].cols);
-      return (
-        <div key={group.key}>
-          {group.useTitle && <GroupTitle title={group.title} />}
-          <Group key={group.key} className={`view-designer-group group  -${groupIndex}`}>
-            <AntdTable
-              rowKey="TASK_SEQ"
-              key={`${group.key}_list`}
-              className="view-designer-list"
-              columns={columns}
-              dataSource={processedList}
-              // LOCATION_DESC
-              onRow={record => ({
-                onClick: () => (rowClickable ? handleRowClick(record.TASK_SEQ) : null),
-              })}
-            />
-          </Group>
-        </div>
-      );
-    }
-    return null;
+    const columns = setColumns(group.rows[0].cols);
+    return (
+      <div key={group.key}>
+        {group.useTitle && <GroupTitle title={group.title} />}
+        <Group key={group.key} className={`view-designer-group group  -${groupIndex}`}>
+          <AntdTable
+            rowKey="TASK_SEQ"
+            key={`${group.key}_list`}
+            className="view-designer-list"
+            columns={columns}
+            dataSource={processedList || []}
+            // LOCATION_DESC
+            onRow={record => ({
+              onClick: () => (rowClickable ? handleRowClick(record.TASK_SEQ) : null),
+            })}
+          />
+        </Group>
+      </div>
+    );
+  };
+
+  const modalTitle = () => {
+    if (activateRegModal) return '소화기 신규등록';
+    if (activateDetailModal) return '소화기 점검';
+    if (activateUsageModal) return '소화기 사용/미사용 등록';
+    return '';
   };
 
   const {
@@ -314,7 +353,7 @@ const ListPage = props => {
             }
             return (
               (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
-                <div key={group.key}>
+                <StyledSearchWrapper key={group.key}>
                   {group.useTitle && <GroupTitle title={group.title} />}
                   <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
                     <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
@@ -352,7 +391,7 @@ const ListPage = props => {
                     {group.type === 'searchGroup' && group.useSearch && (
                       <div className="view-designer-group-search-btn-wrap">
                         <StyledButton
-                          className="btn-gray"
+                          className="btn-gray btn-first"
                           onClick={() => {
                             getListData(id, workSeq);
                             setIsSearched(true);
@@ -360,37 +399,53 @@ const ListPage = props => {
                         >
                           검색
                         </StyledButton>
+                        {ViewButtons && <ViewButtons {...props} clickStatus={clickStatus} clickUsage={clickUsage} clickRegister={clickRegister} />}
+                        {processedList && processedList.length > 0 && isExcelDown && (
+                          <ExcelDownloadComp
+                            isBuilder={false}
+                            fileName={fileName || 'excel'}
+                            className="workerExcelBtn"
+                            btnText={btnText || '엑셀받기'}
+                            sheetName={sheetName || 'sheet1'}
+                            columns={columns || []}
+                            fields={fields || []}
+                            listData={processedList || []}
+                          />
+                        )}
                       </div>
                     )}
                   </Group>
-                </div>
+                </StyledSearchWrapper>
               )
             );
           })}
-          {ViewButtons && <ViewButtons {...props} clickStatus={clickStatus} clickUsage={clickUsage} clickRegister={clickRegister} />}
-
-          <Modal destroyOnClose visible={activateRegModal} closable onCancel={() => setActivateRegModal(false)} width footer={null}>
-            <div>{activateRegModal && openRegModal(`modal${id}`, selectedTaskSeq)}</div>
-          </Modal>
-
-          <Modal destroyOnClose visible={activateDetailModal} closable onCancel={() => setActivateDetailModal(false)} width footer={null}>
-            <div>{activateDetailModal && openDetailModal(`modal${id}`, selectedTaskSeq)}</div>
-          </Modal>
-
-          <Modal destroyOnClose visible={activateStatusModal} closable onCancel={() => setActivateStatusModal(false)} width footer={null}>
-            <div>{activateStatusModal && openStatusModal(`modal${id}`, selectedTaskSeq)}</div>
-          </Modal>
-
-          <Modal destroyOnClose visible={activateUsageModal} closable onCancel={() => setActivateUsageModal(false)} width footer={null}>
-            <div>{activateUsageModal && openUsageModal(`modal${id}`, selectedTaskSeq)}</div>
-          </Modal>
+          <AntdModal
+            title={modalTitle()}
+            width="80%"
+            visible={activateRegModal || activateDetailModal || activateStatusModal || activateUsageModal}
+            footer={null}
+            destroyOnClose
+            onCancel={() => {
+              if (activateRegModal) setActivateRegModal(false);
+              if (activateDetailModal) setActivateDetailModal(false);
+              if (activateUsageModal) setActivateUsageModal(false);
+              if (activateStatusModal) setActivateStatusModal(false);
+            }}
+          >
+            {activateRegModal && openRegModal(`modal${id}`, selectedTaskSeq)}
+            {activateDetailModal && openDetailModal(`modal${id}`, selectedTaskSeq)}
+            {activateStatusModal && openStatusModal(`modal${id}`, selectedTaskSeq)}
+            {activateUsageModal && openUsageModal(`modal${id}`, selectedTaskSeq)}
+          </AntdModal>
         </Sketch>
       </StyledViewDesigner>
     );
   }
 };
 
-ListPage.propTypes = {};
+ListPage.propTypes = {
+  listData: PropTypes.array,
+};
 ListPage.defaultProps = {};
 
 export default ListPage;
