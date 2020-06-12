@@ -44,7 +44,6 @@ class ValidationView extends Component {
   onClickEvent = () => {
     const { onValidateProcess, WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ } = this.props;
     const { selectedValue, workProcess } = this.state;
-    console.debug('workProcess', workProcess);
     onValidateProcess(selectedValue, workProcess, WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ);
   };
 
@@ -69,13 +68,13 @@ class ValidationView extends Component {
   };
 
   render() {
-    const { WORK_SEQ, TASK_SEQ, onModalClose } = this.props;
+    const { WORK_SEQ, TASK_SEQ, onModalClose, onShowProces } = this.props;
     const { selectedValue, coverView, workProcess } = this.state;
 
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
-          {workProcess && workProcess.DRAFT_PROCESS && (
+          {selectedValue === 1 && workProcess && workProcess.DRAFT_PROCESS && (
             <WorkProcess
               id="work"
               CustomWorkProcessModal={BuilderProcessModal}
