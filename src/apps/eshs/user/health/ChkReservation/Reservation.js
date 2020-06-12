@@ -6,7 +6,7 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 
@@ -16,7 +16,7 @@ import MessageContent from 'components/Feedback/message.style2';
 import Questionnaire from './Questionnaire';
 import HospitalItem from './HospitalItem';
 
-const AntdModal = StyledAntdModalPad(Modal);
+const AntdModal = StyledAntdModal(Modal);
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 
@@ -67,7 +67,7 @@ class Reservation extends Component {
   }
 
   initState = () => {
-    const { sagaKey, getCallDataHandlerReturnRes, result, spinningOff } = this.props;
+    const { result, spinningOff } = this.props;
     this.setState({
       hospitalList: result.hospitalList && result.hospitalList.list ? result.hospitalList.list : [],
       userInfo: result.userDetail && result.userDetail.data ? result.userDetail.data : {},
@@ -87,8 +87,9 @@ class Reservation extends Component {
     this.setState({ isQuestionnaireShow: false });
   };
 
+  // 추가검진항목 클릭 - 검진항목선택 팝업
   onClickChkItem = gubun => {
-    const { reservationInfo, familyInfo } = this.state;
+    const { reservationInfo, familyInfo, hospitalList } = this.state;
     let target = reservationInfo;
     if (gubun === 2) {
       target = familyInfo;
@@ -101,13 +102,18 @@ class Reservation extends Component {
       message.info(<MessageContent>예약일을 선택해주세요.</MessageContent>);
       return false;
     }
-    this.setState({ isChkItemShow: true, gubun });
+
+    this.setState({
+      isChkItemShow: true,
+      gubun,
+    });
   };
 
   onCancelChkItem = () => {
     this.setState({ isChkItemShow: false });
   };
 
+  // 추가검진항목 팝업에서 선택버튼 클릭시
   onOkChkItem = (chkType, selectedItems, vals) => {
     this.setState(prevState => {
       const { reservationInfo, familyInfo, gubun, checkedVals, famCheckedVals } = prevState;
@@ -140,7 +146,7 @@ class Reservation extends Component {
     });
   }
 
-  // 검진기관 변경시 선택항목 초기화
+  // 검진기관 변경시 추가검진항목 초기화
   onChangeHospital = (val, gubun) => {
     this.setState(prevState => {
       const { reservationInfo, familyInfo, checkedVals, famCheckedVals, hospitalList } = prevState;
@@ -179,6 +185,7 @@ class Reservation extends Component {
     });
   };
 
+  // 예약정보 state변경
   onChangeReservationInfo = (key, val, gubun) => {
     this.setState(prevState => {
       const { reservationInfo, familyInfo, isFamily } = prevState;
@@ -201,6 +208,7 @@ class Reservation extends Component {
     });
   };
 
+  // 배우자검진 추가
   addFamilyReservation = () => {
     const { sagaKey, getCallDataHandlerReturnRes } = this.props;
     const apiInfo = {
@@ -236,10 +244,12 @@ class Reservation extends Component {
     });
   };
 
+  // 배우자 검진 삭제(화면에서만 삭제) - 저장시 DB에서 삭제
   removeFamilyReservation = () => {
     this.setState({ familyInfo: {}, isDelFamilyInfo: true });
   }
 
+  // 저장
   onSave = () => {
     const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
     const { reservationInfo, familyInfo, isDelFamilyInfo } = this.state;
@@ -384,7 +394,7 @@ class Reservation extends Component {
                   </td>
                 </tr>
                 <tr>
-                  <th>선택항목</th>
+                  <th>추가검진항목</th>
                   <td colSpan={7}>
                     <AntdInput
                       value={reservationInfo.CHK_ITEMS} className="ant-input-sm" style={{ width: '100%', cursor: 'pointer' }} readOnly
@@ -432,7 +442,7 @@ class Reservation extends Component {
                       </td>
                     </tr>
                     <tr>
-                      <th>선택항목</th>
+                      <th>추가검진항목</th>
                       <td colSpan={7}>
                         <AntdInput
                           value={familyInfo.CHK_ITEMS} className="ant-input-sm" style={{ width: '100%', cursor: 'pointer' }} readOnly
@@ -446,7 +456,7 @@ class Reservation extends Component {
                   <th>수령지</th>
                   <td colSpan={7}>
                     <AntdInput
-                      value={reservationInfo.RCV_ADDR} className="ant-input-sm" style={{ width: '100%' }}
+                      value={reservationInfo.RCV_ADDR || userInfo.ADDRESS} className="ant-input-sm" style={{ width: '100%' }}
                       onChange={e => this.onChangeReservationInfo('RCV_ADDR', e.target.value, 1)}
                     />
                   </td>
