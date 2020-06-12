@@ -12,13 +12,13 @@ class SelfEmpResultDetail extends Component {
 
 SelfEmpResultDetail.propTypes = {
   sagaKey: PropTypes.string,
-  defaultUser: PropTypes.string,
+  defaultUser: PropTypes.number,
   userSearch: PropTypes.bool,
   chkYear: PropTypes.string,
 };
 SelfEmpResultDetail.defaultProps = {
   sagaKey: 'SelfEmpResultDetail',
-  defaultUser: '',
+  defaultUser: null,
   // defaultUser: '78347', 박연희 수석
   userSearch: true,
   chkYear: '',
