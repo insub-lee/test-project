@@ -44,11 +44,8 @@ class Comp extends Component {
     if (msg) return this.showMessage(msg);
 
     spinningOn();
-    if (content) {
-      console.debug(`content [ ${content.replace(/\n/gi, '<br>').replace(/ /gi, '&nbsp;')} ]`);
-    }
 
-    submitHandlerBySaga(
+    return submitHandlerBySaga(
       sagaKey,
       'PUT',
       '/api/eshs/v1/common/health/eshsRealTimeSelfList',
@@ -99,10 +96,10 @@ class Comp extends Component {
                   {list.map((item, index) => {
                     if (!(index % 8) && index)
                       return (
-                        <>
-                          <br key={`br_${index}`} />
-                          <span key={`span_${index}`}>{`${item.EMP_NO}(${item.NAME_KOR}) `}</span>
-                        </>
+                        <span key={`span_${index}`}>
+                          <br />
+                          {`${item.EMP_NO}(${item.NAME_KOR}) `}
+                        </span>
                       );
                     return <span key={`span_${index}`}>{`${item.EMP_NO}(${item.NAME_KOR}) `}</span>;
                   })}

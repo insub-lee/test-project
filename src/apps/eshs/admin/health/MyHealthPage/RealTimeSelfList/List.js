@@ -114,7 +114,7 @@ class List extends Component {
             {
               modalObj: {
                 modalTitle: '개인진단현황',
-                modalContent: [<SelfEmpResultDetail userSearch={false} defaultUser={record.USER_ID} chkYear={record.CHK_YEAR} />],
+                modalContent: [<SelfEmpResultDetail key="SelfEmpResultDetail" userSearch={false} defaultUser={record.USER_ID} chkYear={record.CHK_YEAR} />],
               },
             },
             this.modalVisible,
@@ -292,7 +292,9 @@ class List extends Component {
                         {
                           modalObj: {
                             modalTitle: '메일작성',
-                            modalContent: [<ConsultingForm list={selectedRows} modalVisible={this.modalVisible} saveAfter={this.getList} />],
+                            modalContent: [
+                              <ConsultingForm key="ConsultingForm" list={selectedRows} modalVisible={this.modalVisible} saveAfter={this.getList} />,
+                            ],
                           },
                         },
                         this.modalVisible,
