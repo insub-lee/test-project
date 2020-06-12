@@ -86,10 +86,31 @@ class CheckListComp extends Component {
   };
 
   onValidateProcess = (vadildate, workProcess, workSeq, taskSeq, orginTaskSeq) => {
-    console.debug('onValidateProcess', workProcess);
+    console.debug('onValidateProcess', workProcess, vadildate);
     const { id, submitHandlerBySaga } = this.props;
-    const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
-    submitHandlerBySaga(id, 'POST', prefixUrl, workProcess, this.onCompleteProc);
+    let isByPass = true;
+    const { DRAFT_PROCESS } = workProcess;
+    const { DRAFT_PROCESS_STEP } = DRAFT_PROCESS;
+
+    if (vadildate === 1) {
+      const ruleCheckList = DRAFT_PROCESS_STEP.filter(rule => rule.ISREQUIRED === 1);
+      if (ruleCheckList.length > 0) {
+        ruleCheckList.forEach(rule => {
+          if (rule.APPV_MEMBER.length === 0) {
+            isByPass = false;
+            message.error(`${rule.NODE_NAME_KOR} 단계의 결재를 선택해 주세요`);
+          }
+        });
+      }
+    }
+
+    const DARFT_DATA = { validateType: vadildate };
+    const nWorkProcess = { ...DRAFT_PROCESS, DARFT_DATA };
+
+    if (isByPass) {
+      const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
+      submitHandlerBySaga(id, 'POST', prefixUrl, nWorkProcess, this.onCompleteProc);
+    }
   };
 
   onCompleteProc = () => {
@@ -101,7 +122,7 @@ class CheckListComp extends Component {
   };
 
   render() {
-    const { visible, workSeq, taskSeq, taskOrginSeq, title } = this.state;
+    const { visible, workSeq, taskSeq, taskOrginSeq, title, isShowProcess } = this.state;
     const { customDataList } = this.props;
     return (
       <>
@@ -128,6 +149,7 @@ class CheckListComp extends Component {
               TASK_SEQ={taskSeq}
               TASK_ORIGIN_SEQ={taskOrginSeq}
               TITLE={title}
+              onShowProces={isShowProcess}
               onValidateProcess={this.onValidateProcess}
               onModalClose={this.onModalClose}
             />
