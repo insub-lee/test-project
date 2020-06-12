@@ -1,6 +1,6 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Modal, Table, message, Input, TreeSelect, Select } from 'antd';
+import { Modal, Table, message, Input, TreeSelect, Select, Popover } from 'antd';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
@@ -13,6 +13,8 @@ import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import System from 'apps/eshs/admin/safety/Danger/hazard/image/System.JPG';
+// import System from '../../../apps/eshs/admin/safety/Danger/hazard/image/System.JPG';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdTextarea = StyledTextarea(Input.TextArea);
@@ -36,6 +38,8 @@ const getCategoryMapListAsTree = (flatData, rootkey) =>
     getParentKey: node => node.parentValue,
     rootKey: rootkey || 0,
   });
+
+// const aocText = () => <image src="components/apps/eshs/admin/safety/danger/imgae" alt="사고의 발생원인" />;
 class DangerHazardSubComp extends React.Component {
   constructor(props) {
     super(props);
@@ -110,41 +114,52 @@ class DangerHazardSubComp extends React.Component {
       extraApiData: { treeData },
     } = this.props;
     const { hazardData } = this.state;
-    const nTreeData = treeData && treeData.categoryMapList;
-    const equpeId = nTreeData.find(f => f.NODE_ID === value);
-    const processId = nTreeData.find(f => f.NODE_ID === equpeId.PARENT_NODE_ID);
-    const placeId = nTreeData.find(f => f.NODE_ID === processId.PARENT_NODE_ID);
-    const divId = nTreeData.find(f => f.NODE_ID === placeId.PARENT_NODE_ID);
-    const sdivId = nTreeData.find(f => f.NODE_ID === divId.PARENT_NODE_ID);
-    this.setState({
-      hazardData: {
-        ...hazardData,
-        [name]: value,
-        PROCESS_ID: processId.NODE_ID,
-        PLACE_ID: placeId.NODE_ID,
-        DIV_ID: divId.NODE_ID,
-        SDIV_ID: sdivId.NODE_ID,
-      },
-    });
+    if (value) {
+      const nTreeData = treeData && treeData.categoryMapList;
+      const equpeId = nTreeData.find(f => f.NODE_ID === value);
+      const processId = nTreeData.find(f => f.NODE_ID === equpeId.PARENT_NODE_ID);
+      const placeId = nTreeData.find(f => f.NODE_ID === processId.PARENT_NODE_ID);
+      const divId = nTreeData.find(f => f.NODE_ID === placeId.PARENT_NODE_ID);
+      const sdivId = nTreeData.find(f => f.NODE_ID === divId.PARENT_NODE_ID);
+      this.setState({
+        hazardData: {
+          ...hazardData,
+          [name]: value,
+          PROCESS_ID: processId.NODE_ID,
+          PLACE_ID: placeId.NODE_ID,
+          DIV_ID: divId.NODE_ID,
+          SDIV_ID: sdivId.NODE_ID,
+        },
+      });
+    } else {
+      this.setState({
+        hazardData: {
+          ...hazardData,
+          [name]: null,
+          PROCESS_ID: null,
+          PLACE_ID: null,
+          DIV_ID: null,
+          SDIV_ID: null,
+        },
+      });
+    }
   };
 
   onChangeData = (name, value) => {
-    const { hazardData, aotList } = this.state;
-    console.debug(name, ' : ', value);
-    if (name === 'AOT_ID') {
-      const aotName = aotList.find(item => item.NODE_ID === value);
-      this.setState({ hazardData: { ...hazardData, [name]: value, AOT_NAME: aotName.NAME_KOR } });
-    } else {
-      this.setState({ hazardData: { ...hazardData, [name]: value } });
-    }
+    const { hazardData } = this.state;
+    this.setState({ hazardData: { ...hazardData, [name]: value } });
   };
 
   modalInsert = () => {
     const { hazardData, hazardList } = this.state;
-    const { sagaKey: id, changeFormData } = this.props;
-    changeFormData(id, 'HAZARD_LIST', hazardList.concat(hazardData));
-    this.setState({ hazardData: { AOC_ID: [], RA: 'Y' } });
-    this.onChangeModal();
+    if (hazardData.EQUIP_ID) {
+      const { sagaKey: id, changeFormData } = this.props;
+      changeFormData(id, 'HAZARD_LIST', hazardList.concat(hazardData));
+      this.setState({ hazardData: { AOC_ID: [], RA: 'Y' } });
+      this.onChangeModal();
+    } else {
+      message.warning('징비(설비)를 선택해주세요');
+    }
   };
 
   modalSelected = record => {
@@ -158,8 +173,7 @@ class DangerHazardSubComp extends React.Component {
     this.setState({ selectedRowKeys, selectedMeterial: nData });
   };
 
-  modalRender = (nTreeData, filteredOptions, aotList, formData, hazardData) => (
-    // modalRender = (nTreeData, filteredOptions, aotList, formData, EQUIP_ID, WORK_NM, AOC_ID, OTHER_CASE, AOT_ID, RA) => (
+  modalRender = (nTreeData, aocList, aotList, formData, hazardData) => (
     <StyledHtmlTable>
       <table>
         <tbody>
@@ -167,20 +181,21 @@ class DangerHazardSubComp extends React.Component {
             <td>분류</td>
             <td>
               <AntdTreeSelect
-                style={{ width: 300 }}
+                style={{ width: '100%' }}
                 className="mr5 select-sm"
                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                 placeholder="장비(설비)를 선택해주세요"
                 defaultValue={hazardData.EQUIP_ID}
                 treeData={nTreeData || []}
                 onChange={value => this.onChangeTreeData('EQUIP_ID', value)}
+                allowClear
               />
             </td>
           </tr>
           <tr>
             <td>위험요인</td>
             <td>
-              <AntdTextarea style={{ width: 300 }} defaultValue={hazardData.WORK_NM} onChange={e => this.onChangeData('WORK_NM', e.target.value)} />
+              <AntdTextarea defaultValue={hazardData.WORK_NM} onChange={e => this.onChangeData('WORK_NM', e.target.value)} />
             </td>
           </tr>
           <tr>
@@ -193,7 +208,7 @@ class DangerHazardSubComp extends React.Component {
                 onChange={value => this.onChangeData('AOC_ID', value)}
                 style={{ width: '100%' }}
               >
-                {filteredOptions && filteredOptions.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
+                {aocList && aocList.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
               </AntdSelect>
             </td>
           </tr>
@@ -202,18 +217,17 @@ class DangerHazardSubComp extends React.Component {
             <td>
               <AntdSelect
                 className="select-sm mr5"
-                style={{ width: 300 }}
+                style={{ width: '100%' }}
                 defaultValue={hazardData.AOT_ID}
                 onChange={value => this.onChangeData('AOT_ID', value)}
               >
                 {aotList && aotList.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
               </AntdSelect>
-              {formData.AOT_ID === 30450 ? (
+              {hazardData.AOT_ID === 30450 ? (
                 <AntdInput
                   className="ant-input-sm ant-input-inline"
-                  style={{ width: 80 }}
                   defaultValue={hazardData.OTHER_CASE}
-                  onChange={value => this.onChangeData('OTHER_CASE', value)}
+                  onChange={e => this.onChangeData('OTHER_CASE', e.target.value)}
                 />
               ) : (
                 ''
@@ -249,7 +263,6 @@ class DangerHazardSubComp extends React.Component {
       extraApiData: { treeData },
     } = this.props;
     const { aotList, aocList, nTreeData, hazardData, selectedRowKeys } = this.state;
-    const filteredOptions = aocList && aocList.filter(o => !hazardData.AOC_ID.includes(o.NODE_ID));
     const tableFindList = treeData && treeData.categoryMapList;
     const rowSelection = {
       selectedRowKeys,
@@ -263,30 +276,22 @@ class DangerHazardSubComp extends React.Component {
           {
             title: '부서',
             dataIndex: 'SDIV_ID',
-            render: text => (
-              <span>{tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR}</span>
-            ),
+            render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '공정(장소)',
             dataIndex: 'PLACE_ID',
-            render: text => (
-              <span>{tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR}</span>
-            ),
+            render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '세부공정',
             dataIndex: 'PROCESS_ID',
-            render: text => (
-              <span>{tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR}</span>
-            ),
+            render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '장비(설비)',
             dataIndex: 'EQUIP_ID',
-            render: text => (
-              <span>{tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR}</span>
-            ),
+            render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '위험요인',
@@ -296,17 +301,27 @@ class DangerHazardSubComp extends React.Component {
         ],
       },
       {
-        title: '사고의 발생원인',
+        title: (
+          <Popover
+            placement="topLeft"
+            title="사고의 발생원인"
+            content={<img src={System} alt="사고의 발생원인" width="800px" height="400px" />}
+            trigger="hover"
+          >
+            사고의 발생원인
+          </Popover>
+        ),
         align: 'center',
         dataIndex: 'AOC_ID',
-        render: text => (
-          <span>{text && text.map(item => aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR).toString()}</span>
-        ),
+        render: text => text && text.map(item => aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR).toString(),
       },
       {
         title: '사고의 발생유형',
         dataIndex: 'AOT_ID',
-        render: (text, record) => <span>{text === '기타' ? `${text}(${record.OTHER_CASE})` : text}</span>,
+        render: (text, record) =>
+          text === 30450
+            ? `${aotList.find(i => i.NODE_ID === text) && aotList.find(i => i.NODE_ID === text).NAME_KOR}(${record.OTHER_CASE})`
+            : aotList.find(i => i.NODE_ID === text) && aotList.find(i => i.NODE_ID === text).NAME_KOR,
       },
       {
         title: 'R/A 실시여부',
@@ -340,12 +355,11 @@ class DangerHazardSubComp extends React.Component {
           title="위험요인 LIST"
           visible={this.state.modal}
           width={800}
-          onCancel={this.handleModalVisible}
+          onCancel={this.onChangeModal}
           footer={null}
           destroyOnClose
         >
-          {this.state.modal && this.modalRender(nTreeData, filteredOptions, aotList, formData, hazardData)}
-          {/* {this.state.modal && this.modalRender(nTreeData, filteredOptions, aotList, formData, EQUIP_ID, WORK_NM, AOC_ID, OTHER_CASE, AOT_ID, RA)} */}
+          {this.state.modal && this.modalRender(nTreeData, aocList, aotList, formData, hazardData)}
         </AntdModal>
       </>
     ) : (

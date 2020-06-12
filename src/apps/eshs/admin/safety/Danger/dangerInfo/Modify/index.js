@@ -229,7 +229,7 @@ class ModifyPage extends Component {
       <StyledContentsWrapper>
         <StyledCustomSearchWrapper className="search-wrapper-inline">
           <div className="search-input-area">
-            <span className="text-label">참여년도</span>
+            <span className="text-label">참여 연도</span>
             <AntdSelect
               className="select-sm mr5"
               value={formData.INFO_YEAR}

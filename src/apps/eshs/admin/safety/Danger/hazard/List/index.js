@@ -271,7 +271,7 @@ class List extends Component {
         dataIndex: 'TASK_SEQ',
       },
       {
-        title: '년도',
+        title: '연도',
         align: 'center',
         dataIndex: 'DE_YEAR',
       },
