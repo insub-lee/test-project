@@ -41,6 +41,7 @@ class Comp extends Component {
     const { formData } = this.state;
     const content = formData.CONTENT || '';
     const msg = this.saveBefore();
+    const lIdx = list.length;
     if (msg) return this.showMessage(msg);
 
     spinningOn();
@@ -51,7 +52,7 @@ class Comp extends Component {
       '/api/eshs/v1/common/health/eshsRealTimeSelfList',
       { PARAM: { ...formData, profile, CONTENT: content ? content.replace(/\n/gi, '<br>').replace(/ /gi, '&nbsp;') : '', list } },
       (id, res) => {
-        if (res && res.result > 0) {
+        if (res && res.result === lIdx) {
           this.showMessage('저장하였습니다.');
           spinningOff();
           saveAfter();
