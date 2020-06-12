@@ -13,7 +13,7 @@ import { jsonToQueryString } from 'utils/helpers';
 import StyledScheduler from './StyledScheduler';
 import service from '../service';
 import SchedulerForm from './SchedulerForm';
-import StyledStandard from '../StyledStandard';
+import StyledStandard from '../../StyledStandard';
 
 const popoverButtonStyle = {
   fontSize: 14,
@@ -312,7 +312,12 @@ class SchedulerView extends React.Component {
           </div>
           <div style={{ margin: '10px 0', position: 'relative', height: 40 }}>
             <div style={{ display: 'inline-block' }}>
-              <select value={currentBay} onChange={this.handleChangeBay} style={{ width: 200, height: 40, lineHeight: '40px' }} placeholder="BAY를 선택해주세요.">
+              <select
+                value={currentBay}
+                onChange={this.handleChangeBay}
+                style={{ width: 200, height: 40, lineHeight: '40px' }}
+                placeholder="BAY를 선택해주세요."
+              >
                 {/* <option value="">전체 BAY</option> */}
                 {bays.map(bay => (
                   <option key={bay} value={bay}>

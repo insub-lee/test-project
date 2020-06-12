@@ -11,7 +11,7 @@ import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledComm
 import Checkbox from 'apps/wts/components/CheckboxGroup/Checkbox';
 import service from '../service';
 import StyledContent from './StyledContent';
-import StyledStandard from '../StyledStandard';
+import StyledStandard from '../../StyledStandard';
 
 class WorkerRecordWriterModal extends React.Component {
   constructor(props) {
