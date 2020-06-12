@@ -123,11 +123,11 @@ class List extends Component {
       changeSearchData(id, 'DEPT_PARENT_NODE_ID', `AND M1.PARENT_NODE_ID = ${value}`);
       changeSearchData(id, 'DEPT_NODE_ID', null);
       changeSearchData(id, 'SDIV_NODE_ID', null);
-    } else if (level.LVL === 4) {
+    } else if (level && level.LVL === 4) {
       changeSearchData(id, 'DEPT_PARENT_NODE_ID', null);
       changeSearchData(id, 'DEPT_NODE_ID', `AND W.DEPT_NODE_ID = ${value}`);
       changeSearchData(id, 'SDIV_NODE_ID', null);
-    } else if (level.LVL === 5) {
+    } else if (level && level.LVL === 5) {
       changeSearchData(id, 'DEPT_PARENT_NODE_ID', null);
       changeSearchData(id, 'DEPT_NODE_ID', null);
       changeSearchData(id, 'SDIV_NODE_ID', `AND W.SDIV_NODE_ID = ${value}`);
@@ -266,13 +266,13 @@ class List extends Component {
       // onChange: () => this.setState({ selectedRowKeys }),
     };
     const columns = [
+      // {
+      //   title: '',
+      //   align: 'center',
+      //   dataIndex: 'TASK_SEQ',
+      // },
       {
-        title: '',
-        align: 'center',
-        dataIndex: 'TASK_SEQ',
-      },
-      {
-        title: '년도',
+        title: '연도',
         align: 'center',
         dataIndex: 'DE_YEAR',
       },

@@ -61,7 +61,7 @@ class OnlyView extends Component {
                 <td>{detailData && detailData.MASTER_LAW_NO}</td>
               </tr>
               <tr>
-                <th>년도</th>
+                <th>연도</th>
                 <td colSpan={3}>{YEAR}</td>
               </tr>
               <tr>
