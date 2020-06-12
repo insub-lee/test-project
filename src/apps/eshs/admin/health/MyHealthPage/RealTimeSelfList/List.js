@@ -42,7 +42,7 @@ class List extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, spinningOn } = this.props;
+    const { sagaKey: id, spinningOn, spinningOff } = this.props;
 
     spinningOn();
 
@@ -50,26 +50,8 @@ class List extends Component {
     for (let i = currentYear; i >= 1998; i--) {
       yearList.push(i);
     }
-    this.setState({ yearList });
-
-    this.getInitData();
+    this.setState({ yearList }, spinningOff);
   }
-
-  getInitData = () => {
-    const { sagaKey, getCallDataHandler, spinningOff } = this.props;
-    const apiAry = [
-      {
-        key: 'workAreaList',
-        url: '/api/admin/v1/common/categoryMapList',
-        type: 'POST',
-        params: {
-          PARAM: { NODE_ID: 316 },
-        },
-      },
-    ];
-
-    getCallDataHandler(sagaKey, apiAry, spinningOff);
-  };
 
   getList = () => {
     const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff } = this.props;
@@ -236,21 +218,20 @@ class List extends Component {
                 onChange={val => this.onChangeSearchParam('CHK_YEAR', val)}
               >
                 {yearList.map(year => (
-                  <AntdSelect.Option value={year}>{`${year}년`}</AntdSelect.Option>
+                  <AntdSelect.Option key={year} value={year}>{`${year}년`}</AntdSelect.Option>
                 ))}
               </AntdSelect>
               <AntdSelect
                 className="select-sm mr5"
                 style={{ width: 100 }}
                 allowClear
-                placeholder="지역"
-                onChange={val => this.onChangeSearchParam('WORK_AREA_CD', val)}
+                placeholder="지역전체"
+                onChange={val => this.onChangeSearchParam('WORK_AREA', val)}
               >
-                {workAreaList
-                  .filter(item => item.LVL === 1)
-                  .map(item => (
-                    <AntdSelect.Option value={item.NODE_ID}>{item.NAME_KOR}</AntdSelect.Option>
-                  ))}
+                <AntdSelect.Option value="CP">청주</AntdSelect.Option>
+                <AntdSelect.Option value="GP">구미</AntdSelect.Option>
+                <AntdSelect.Option value="AA">영동</AntdSelect.Option>
+                <AntdSelect.Option value="GLOBAL">해외</AntdSelect.Option>
               </AntdSelect>
               <UserSearchModal visible onClickRow={record => this.onChangeSearchParam('userId', record.USER_ID)} />
               <AntdSelect
@@ -325,7 +306,7 @@ class List extends Component {
               </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
-          <AntdTable rowSelection={rowSelection} rowKey="ROWKEY" columns={this.columns} dataSource={list || []} bordered />
+          <AntdTable rowSelection={rowSelection} rowKey="ROWNUM" columns={this.columns} dataSource={list || []} bordered />
         </StyledContentsWrapper>
       </>
     );
