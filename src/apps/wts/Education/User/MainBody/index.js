@@ -1,8 +1,10 @@
 import React from 'react';
 import moment from 'moment';
+import 'rc-dialog/assets/index.css';
 
 import { jsonToQueryString } from 'utils/helpers';
 import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import Wrapper from './Wrapper';
 import service from '../../service';
 import UserEduManageModal from '../../Modals/UserEduManageModal';
@@ -10,6 +12,7 @@ import CleanEduViewer from '../../Modals/CleanEduViewer';
 import CommonReportModal from '../../Modals/CommonReportModal';
 import EduManageModal from '../../Modals/EduManageModal';
 import JobProcEduViewer from '../../Modals/JobProcEduViewer';
+import StyledTable from '../../../StyledTable';
 
 const eduButtonStyle = { padding: 5, border: '1px solid black', borderRadius: 5, width: '80%', fontSize: '12px' };
 
@@ -230,11 +233,11 @@ class MainBody extends React.Component {
             <div className="title">
               <span>기본 정보</span>
             </div>
-            <div className="tb_wrap0">
+            <StyledTable className="tb_wrap">
               <div className="btn_wrap" style={{ textAlign: 'right' }}>
-                <Button type="button" size="small" color="primary" onClick={() => this.handleEduManageModal(info.empno)}>
+                <StyledButton type="button" className="btn-sm btn-primary" onClick={() => this.handleEduManageModal(info.empno)}>
                   신입/전배 사원 교육
-                </Button>
+                </StyledButton>
               </div>
               <table className="tb02">
                 <colgroup>
@@ -261,7 +264,7 @@ class MainBody extends React.Component {
                   </tr>
                 </tbody>
               </table>
-            </div>
+            </StyledTable>
             <hr
               style={{
                 border: '1px solid #eaecee',
@@ -291,7 +294,7 @@ class MainBody extends React.Component {
                 <span className="cateTxt">집체교육수료</span>
               </li>
             </ul>
-            <div className="tb_wrap">
+            <StyledTable className="tb_wrap">
               <table className="tb02 tbCateTable">
                 <colgroup>
                   <col width={`${100 / 7}%`} />
@@ -323,7 +326,7 @@ class MainBody extends React.Component {
                   </tr>
                 </tbody>
               </table>
-            </div>
+            </StyledTable>
             {eduMentoList && eduMentoList.length > 0 && (
               <>
                 <hr
@@ -336,7 +339,7 @@ class MainBody extends React.Component {
                 <div className="title">
                   <span>신입/전배 사원 교육</span>
                 </div>
-                <div className="tb_wrap">
+                <StyledTable className="tb_wrap">
                   <table className="tb02">
                     <colgroup>
                       <col width="20%" />
@@ -370,7 +373,7 @@ class MainBody extends React.Component {
                         ))}
                     </tbody>
                   </table>
-                </div>
+                </StyledTable>
               </>
             )}
             <EduManageModal ref={this.eduManageModal} site={info.site} />
