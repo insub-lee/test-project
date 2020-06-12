@@ -7,7 +7,7 @@ import { isJSON } from 'utils/helpers';
 import MultiSelector from 'components/MdcsComponents/MultiSelector';
 import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
 import StyledMultiSelector from 'apps/mdcs/styled/StyledMultiSelector';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const AntdModal = StyledSelectModal(Modal);
 
@@ -93,7 +93,7 @@ class RadioMultiSelector extends Component {
                 )),
               )}
             </div>
-            <StyledButton className="btn-xs btn-primary" onClick={this.onClickSelectedWin}>
+            <StyledButton className="btn-xxs btn-gray btn-radius" onClick={this.onClickSelectedWin}>
               <Icon type="select" /> 선택
             </StyledButton>
           </div>

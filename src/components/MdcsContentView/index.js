@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Button, Modal, Icon } from 'antd';
 import { FileSearchOutlined, ExclamationCircleOutlined, FileProtectOutlined } from '@ant-design/icons';
 import BizBuilderBase from 'components/BizBuilderBase';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledModalWrapper from 'components/CommonStyled/StyledModalWrapper';
 import ContentView from './ContentView';
@@ -120,7 +120,7 @@ class MdcsContentView extends Component {
               <tr>
                 <th style={{ width: '100px' }}>표지보기</th>
                 <td style={{ width: '200px' }}>
-                  <StyledButton className="btn-primary btn-sm" onClick={this.onDocCoverClick}>
+                  <StyledButton className="btn-gray btn-xxs btn-radius" onClick={this.onDocCoverClick}>
                     <FileSearchOutlined /> 표지보기
                   </StyledButton>
                 </td>

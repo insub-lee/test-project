@@ -141,6 +141,7 @@ import CategoryViewComp from 'components/BizBuilder/Field/CategoryViewComp';
 import CategorySelectComp from 'components/BizBuilder/Field/CategorySelectComp';
 import DangerHazardSubComp from 'components/BizBuilder/Field/DangerHazardSubComp';
 import VersionComp from 'components/BizBuilder/Field/VersionComp';
+import TextJoinFieldComp from 'components/BizBuilder/Field/TextJoinFieldComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/VersionComp': { renderer: property => <VersionComp {...property} /> },
@@ -284,4 +285,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/MDCSDccViewComp': { renderer: property => <MDCSDccViewComp {...property} /> },
   'components/BizBuilder/Field/DragUploadViewComp': { renderer: property => <DragUploadViewComp {...property} /> },
   'components/BizBuilder/Field/DangerHazardSubComp': { renderer: property => <DangerHazardSubComp {...property} /> },
+  'components/BizBuilder/Field/TextJoinFieldComp': { renderer: property => <TextJoinFieldComp {...property} /> },
 };

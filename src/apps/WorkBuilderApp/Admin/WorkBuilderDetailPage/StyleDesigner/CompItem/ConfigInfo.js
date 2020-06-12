@@ -15,6 +15,7 @@ import RadioCharCompConfig from 'components/BizBuilder/Field/RadioCharCompConfig
 import JoinReadCompConfig from 'components/BizBuilder/Field/JoinReadCompConfig';
 import DragUploadCompConfig from 'components/BizBuilder/Field/DragUploadCompConfig';
 import TextareaCompConfig from 'components/BizBuilder/Field/TextareaCompConfig';
+import TextJoinFieldCompConfig from 'components/BizBuilder/Field/TextJoinFieldCompConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -32,4 +33,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/JoinReadCompConfig': { renderer: property => <JoinReadCompConfig {...property} /> },
   'components/BizBuilder/Field/DragUploadCompConfig': { renderer: property => <DragUploadCompConfig {...property} /> },
   'components/BizBuilder/Field/TextareaCompConfig': { renderer: property => <TextareaCompConfig {...property} /> },
+  'components/BizBuilder/Field/TextJoinFieldCompConfig': { renderer: property => <TextJoinFieldCompConfig {...property} /> },
 };

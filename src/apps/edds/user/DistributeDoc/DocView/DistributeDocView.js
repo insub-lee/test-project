@@ -19,23 +19,24 @@ class DistributeDocView extends Component {
   }
 
   getFileList = () => {
-    const { id, getCallDataHandler, selectedRow } = this.props;
+    const { sagaKey, getCallDataHandler, selectedRow } = this.props;
     const apiAry = [{
       key: 'distributeDocView',
       url: '/api/edds/v1/common/distributeDoc',
       type: 'POST',
       params: { PARAM: { ...selectedRow } },
     }];
-    getCallDataHandler(id, apiAry, () => {});
+    getCallDataHandler(sagaKey, apiAry, () => {});
   };
 
   onClickDownload = row => {
     const {
-      id,
+      sagaKey,
       getFileDownload,
       result: {
         distributeDocView: { detail },
       },
+      submitHandlerBySaga,
       spinningOn,
       spinningOff,
     } = this.props;
@@ -60,7 +61,9 @@ class DistributeDocView extends Component {
       }));
       const url = `/down/eddsfile/${row.FILE_SEQ}/${acl}`;
       spinningOn();
-      getFileDownload(id, url, row.FILE_NAME, () => {
+      getFileDownload(sagaKey, url, row.FILE_NAME, () => {
+        // 첨부파일 열람 메일발송 to-do
+        submitHandlerBySaga(sagaKey, 'POST', '/api/edds/v1/common/distributeDocOpenEmail', { PARAM: { ...detail, ...row }});
         this.getFileList();
         spinningOff();
       });
@@ -174,7 +177,7 @@ class DistributeDocView extends Component {
 }
 
 DistributeDocView.propTypes = {
-  id: PropTypes.string,
+  sagaKey: PropTypes.string,
   apiAry: PropTypes.array,
   result: PropTypes.object,
   getCallDataHandler: PropTypes.func,
@@ -182,7 +185,7 @@ DistributeDocView.propTypes = {
 };
 
 DistributeDocView.defaultProps = {
-  id: 'distributeDocView',
+  sagaKey: 'distributeDocView',
   apiAry: [],
   result: {
     distributeDocView: {

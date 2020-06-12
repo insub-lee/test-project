@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import request from 'utils/request';
 import { address } from 'apps/eshs/admin/safety/InspectionTarget/FireHydrant/internal_constants';
 import { Button } from 'antd';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 const StyledButton = StyledAntdButton(Button);
 
@@ -30,13 +32,14 @@ export default function RegisterInspection({
         data: { ENCLOSURE_YN, DOOR_YN, OBSTACLE_YN, POSITION_NO, CHIP_NO, REG_USER_ID },
       }).then(({ response }) => {
         if (response?.result === 1) {
+          message.success(<MessageContent>점검결과를 등록 하였습니다.</MessageContent>);
           onCloseModalHandler();
         } else {
-          alert('error');
+          message.error(<MessageContent>점검결과 등록에 실패하였습니다.</MessageContent>);
         }
       });
     } else {
-      alert('one of ENCLOSURE_YN, DOOR_YN, OBSTACLE_YN are empty');
+      message.error(<MessageContent>점검항목중 누락된 내용이 있습니다.</MessageContent>);
     }
   };
 

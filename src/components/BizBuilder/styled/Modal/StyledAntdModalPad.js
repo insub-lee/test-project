@@ -29,7 +29,7 @@ const StyledAntdModalPad = Component => styled(Component)`
     }
     .ant-modal-footer {
       border-top: 0;
-      padding: 0px 15px 10px;
+      padding: 0px 20px 20px;
       text-align: center;
     }
   }
