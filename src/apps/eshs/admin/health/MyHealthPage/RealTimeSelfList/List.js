@@ -191,16 +191,12 @@ class List extends Component {
     const { result } = this.props;
     const { yearList, modalObj, selectedRows, selectedRowKeys } = this.state;
     const list = (result && result.List && result.List.list) || [];
-    const workAreaList = (result && result.workAreaList && result.workAreaList.categoryMapList) || [];
 
     const rowSelection = {
       selectedRowKeys,
-      onChange: (rowKeys, rows) => {
-        console.debug('selectedRows ', selectedRows);
-        return this.setState({ selectedRowKeys: rowKeys, selectedRows: rows });
-      },
+      onChange: (rowKeys, rows) => this.setState({ selectedRowKeys: rowKeys, selectedRows: rows }),
       onSelectAll: () => {
-        this.setState({ selectedRowKeys: list.lastIndex === selectedRowKeys.lastIndex ? [] : list.map(i => i.ROWKEY), selectedRows: list });
+        this.setState({ selectedRowKeys: list.lastIndex === selectedRowKeys.lastIndex ? [] : list.map(i => i.rowKey), selectedRows: list });
       },
     };
     return (
@@ -291,22 +287,24 @@ class List extends Component {
               <StyledButton
                 className="btn-primary btn-sm"
                 onClick={() =>
-                  this.setState(
-                    {
-                      modalObj: {
-                        modalTitle: '메일작성',
-                        modalContent: [<ConsultingForm list={selectedRows} modalVisible={this.modalVisible} saveAfter={this.getList} />],
-                      },
-                    },
-                    this.modalVisible,
-                  )
+                  0 in selectedRows
+                    ? this.setState(
+                        {
+                          modalObj: {
+                            modalTitle: '메일작성',
+                            modalContent: [<ConsultingForm list={selectedRows} modalVisible={this.modalVisible} saveAfter={this.getList} />],
+                          },
+                        },
+                        this.modalVisible,
+                      )
+                    : message.info(<MessageContent>선택된 사람이 없습니다.</MessageContent>)
                 }
               >
                 메일 및 상담내용작성
               </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
-          <AntdTable rowSelection={rowSelection} rowKey="ROWNUM" columns={this.columns} dataSource={list || []} bordered />
+          <AntdTable rowSelection={rowSelection} rowKey="rowKey" columns={this.columns} dataSource={list || []} bordered />
         </StyledContentsWrapper>
       </>
     );
