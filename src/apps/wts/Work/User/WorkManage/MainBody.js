@@ -14,7 +14,7 @@ import WorkerRecordWriterModal from '../../Modals/WorkerRecordWriterModal';
 import WorkerRecordModifyModal from '../../Modals/WorkerRecordModifyModal';
 import WorkerTimeSimulatorModal from '../../Modals/WorkerTimeSimulatorModal';
 import service from '../../service';
-import StyledTable from '../../StyledTable';
+import StyledTable from '../../../StyledTable';
 
 const descCompare = (a, b) => {
   const diff = a.workdt - b.workdt;
