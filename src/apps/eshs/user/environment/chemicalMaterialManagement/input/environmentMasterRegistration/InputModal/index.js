@@ -25,7 +25,10 @@ class InputModal extends React.Component {
   }
 
   getMaterialList = () => {
-    const { sagaKey: id, getCallDataHandler, apiUrl } = this.props;
+    const { sagaKey: id, getCallDataHandler, apiUrl, getMaterialList } = this.props;
+    if (getMaterialList) {
+      return getMaterialList();
+    }
     const apiArr = [
       {
         key: 'materialList',
@@ -33,7 +36,7 @@ class InputModal extends React.Component {
         url: apiUrl,
       },
     ];
-    getCallDataHandler(id, apiArr, this.setDataSource);
+    return getCallDataHandler(id, apiArr, this.setDataSource);
   };
 
   setDataSource = () => {
@@ -138,6 +141,7 @@ InputModal.propTypes = {
   SearchComp: PropTypes.any, // React component
   formData: PropTypes.object,
   changeFormData: PropTypes.func,
+  getMaterialList: PropTypes.func,
   // isSearch: PropTypes.bool,
 };
 
@@ -152,6 +156,7 @@ InputModal.defaultProps = {
   tableColumns: [],
   formData: {},
   changeFormData: () => {},
+  getMaterialList: null,
   // isSearch: false,
 };
 

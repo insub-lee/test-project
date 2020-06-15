@@ -470,7 +470,7 @@ class List extends React.Component {
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
             <div className="search-input-area">
-              <span className="text-label">평가년도</span>
+              <span className="text-label">평가 연도</span>
               <AntdSelect
                 className="select-mid mr5 ml5"
                 defaultValue={moment().format('YYYY')}
