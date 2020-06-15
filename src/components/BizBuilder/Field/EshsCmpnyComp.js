@@ -29,7 +29,6 @@ class EshsCmpnyComp extends React.Component {
       listType: 'init',
       cursor: {},
     };
-    // this.handleOnChange = debounce(this.handleOnChange, 300);
   }
 
   componentDidMount() {
@@ -148,10 +147,12 @@ class EshsCmpnyComp extends React.Component {
     });
 
     const {
+      formData,
+      setFormData,
       changeFormData,
       sagaKey: id,
       CONFIG: {
-        property: { isRequired },
+        property: { isRequired, ADD_FORMDATA, PRSDNT_NM_FIELD, ADDRESS_FIELD, TEL_FIELD },
       },
       COMP_FIELD,
       NAME_KOR,
@@ -162,7 +163,22 @@ class EshsCmpnyComp extends React.Component {
       // 기본값인지 체크
       changeValidationData(id, COMP_FIELD, rowData.WRK_CMPNY_CD.trim() !== '', rowData.WRK_CMPNY_CD.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
     }
-    changeFormData(id, COMP_FIELD, rowData.WRK_CMPNY_CD);
+    // 추가 폼데이터 옵션을 사용할시
+    if (ADD_FORMDATA && ADD_FORMDATA === 'Y') {
+      const pnf = PRSDNT_NM_FIELD && PRSDNT_NM_FIELD === '' ? 'PRSDNT_NM' : PRSDNT_NM_FIELD;
+      const af = ADDRESS_FIELD && ADDRESS_FIELD === '' ? 'ADDRESS' : ADDRESS_FIELD;
+      const tf = TEL_FIELD && TEL_FIELD === '' ? 'TEL' : TEL_FIELD;
+      const nextFormData = {
+        ...formData,
+        [COMP_FIELD]: rowData.WRK_CMPNY_CD,
+        [pnf]: rowData.PRSDNT_NM,
+        [af]: rowData.ADDRESS,
+        [tf]: rowData.TEL,
+      };
+      setFormData(id, nextFormData);
+    } else {
+      changeFormData(id, COMP_FIELD, rowData.WRK_CMPNY_CD);
+    }
     if (eshsCmpnyCompResult) {
       eshsCmpnyCompResult(rowData, COMP_FIELD);
     }
@@ -346,6 +362,7 @@ EshsCmpnyComp.propTypes = {
   CONFIG: PropTypes.object,
   colData: PropTypes.string,
   changeFormData: PropTypes.func,
+  setFormData: PropTypes.func,
   sagaKey: PropTypes.string,
   changeValidationData: PropTypes.func,
   readOnly: PropTypes.bool,
