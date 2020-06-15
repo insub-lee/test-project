@@ -62,7 +62,7 @@ class DistributeDocView extends Component {
       const url = `/down/eddsfile/${row.FILE_SEQ}/${acl}`;
       spinningOn();
       getFileDownload(sagaKey, url, row.FILE_NAME, () => {
-        // 첨부파일 열람 메일발송 to-do
+        // 첨부파일 열람 메일발송
         submitHandlerBySaga(sagaKey, 'POST', '/api/edds/v1/common/distributeDocOpenEmail', { PARAM: { ...detail, ...row }});
         this.getFileList();
         spinningOff();
