@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Col, Input, Row, Button, Radio } from 'antd';
+import { Input, Button, Radio } from 'antd';
 import _, { debounce } from 'lodash';
 import AntRadiobox from '../../../containers/store/components/uielements/radiobox.style';
 const RadioGroup = AntRadiobox(Radio.Group);
@@ -14,25 +14,34 @@ const cont = {
   VALUES_: 'VALUES',
   IS_CHANGEABLE_: 'IS_CHANGEABLE',
   URL_: 'URL',
+  IS_MESSAGE_: 'IS_MESSAGE',
+  SUCCESS_M_: 'SUCCESS_M',
+  FAIL_M_: 'FAIL_M',
 };
 /**
  * @author LOGAN LEE
  */
 function CustomValueRadioCompConfig(props) {
-  const { ADD_, RESET_, REMOVE_, VALUES_, TEXT_, IS_CHANGEABLE_, URL_ } = cont;
+  const { ADD_, RESET_, REMOVE_, VALUES_, TEXT_, IS_CHANGEABLE_, URL_, IS_MESSAGE_, SUCCESS_M_, FAIL_M_ } = cont;
   const [values, setValues] = useState([]);
   const [isChangeable, setIsChangeable] = useState('N');
   const [url, setUrl] = useState('');
+  const [isMessage, setIsMessage] = useState('N'); // API 메세지 사용여부
+  const [successM, setSuccessM] = useState(''); // API 성공시 띄울 메세제 내용
+  const [failM, setFailM] = useState(''); // API 실패시 띄울 메세지 내용
 
   /*
  기존 설정되어있는 값을 바인딩하기위한 함수이며,
  componentDidMount와 같은 역할을 한다.
   */
   useEffect(() => {
-    const { VALUES, IS_CHANGEABLE, URL_ } = props.configInfo.property || {};
+    const { VALUES, IS_CHANGEABLE, URL, IS_MESSAGE, SUCCESS_M, FAIL_M } = props.configInfo.property || {};
     setValues(VALUES || []);
     setIsChangeable(IS_CHANGEABLE || 'N');
-    setUrl(URL_ || '');
+    setUrl(URL || '');
+    setIsMessage(IS_MESSAGE || 'N');
+    setSuccessM(SUCCESS_M || '');
+    setFailM(FAIL_M || '');
   }, []);
 
   // 사용자가 values,url,isChangeable의 값을 바꿀 때 마다,
@@ -50,6 +59,18 @@ function CustomValueRadioCompConfig(props) {
   useEffect(() => {
     debouncedHandleChangeViewCompData(IS_CHANGEABLE_, isChangeable);
   }, [isChangeable]);
+
+  useEffect(() => {
+    debouncedHandleChangeViewCompData(IS_MESSAGE_, isMessage);
+  }, [isMessage]);
+
+  useEffect(() => {
+    debouncedHandleChangeViewCompData(SUCCESS_M_, successM);
+  }, [successM]);
+
+  useEffect(() => {
+    debouncedHandleChangeViewCompData(FAIL_M_, failM);
+  }, [failM]);
 
   const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = props;
 
@@ -101,16 +122,46 @@ function CustomValueRadioCompConfig(props) {
 
   return (
     <>
-      {/* API의 주소를 입력한다.
-    추후에 해당 주소로 rowData에 추가된 값을 넣어 API를 호출한다.
-    */}
+      {/* 
+        API의 주소를 입력한다.
+        추후에 해당 주소로 rowData에 추가된 값을 넣어 API를 호출한다.
+      */}
       <div className="popoverItem popoverItemInput">
         <span className="spanLabel">API URL</span>
         <span style={{ display: 'block', textAlign: 'center' }}>
           <Input placeholder="API URL" value={url} onChange={e => setUrl(e.target.value)} />
         </span>
       </div>
-
+      {/* API 주소가 있을 시, 적용되는 옵션 - API URL이 ''이 아닐경우 생성되는 옵션 */}
+      {url !== '' && (
+        <>
+          <div className="popoverItem popoverItemInput">
+            <span className="spanLabel">API 성공/실패 메세지 사용</span>
+            <span style={{ display: 'block', textAlign: 'center' }}>
+              <RadioGroup value={isMessage} onChange={e => setIsMessage(e.target.value)}>
+                <Radio value="Y">Y</Radio>
+                <Radio value="N">N</Radio>
+              </RadioGroup>
+            </span>
+          </div>
+          {isMessage === 'Y' && (
+            <>
+              <div className="popoverItem popoverItemInput">
+                <span className="spanLabel">API 성공시 메세지</span>
+                <span style={{ display: 'block', textAlign: 'center' }}>
+                  <Input placeholder="API Success Message" value={successM} onChange={e => setSuccessM(e.target.value)} />
+                </span>
+              </div>
+              <div className="popoverItem popoverItemInput">
+                <span className="spanLabel">API 실패시 메세지</span>
+                <span style={{ display: 'block', textAlign: 'center' }}>
+                  <Input placeholder="API Failed Message" value={failM} onChange={e => setFailM(e.target.value)} />
+                </span>
+              </div>
+            </>
+          )}
+        </>
+      )}
       {/* onChange 가용 여부를 결정한다. */}
       <div className="popoverItem popoverItemInput">
         <span className="spanLabel">Radio onChange여부</span>

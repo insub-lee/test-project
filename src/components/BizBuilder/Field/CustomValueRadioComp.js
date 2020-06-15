@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Radio } from 'antd';
 import request from 'utils/request';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import AntRadiobox from '../../../containers/store/components/uielements/radiobox.style';
 
 const RadioGroup = AntRadiobox(Radio.Group);
@@ -11,6 +13,9 @@ const CustomValueRadioComp = props => {
   const [defaultValue, setDefaultValue] = useState('');
   const [isChangeable, setIsChangeable] = useState('N');
   const [targetUrl, setTargetUrl] = useState('');
+  const [isMessage, setIsMessage] = useState('N');
+  const [successM, setSuccessM] = useState('');
+  const [failM, setFailM] = useState('');
 
   const {
     changeFormData,
@@ -25,13 +30,16 @@ const CustomValueRadioComp = props => {
   } = props;
 
   useEffect(() => {
-    const { VALUES, IS_CHANGEABLE, URL } = props.CONFIG.property;
+    const { VALUES, IS_CHANGEABLE, URL, SUCCESS_M, FAIL_M, IS_MESSAGE } = props.CONFIG.property;
     if (VALUES instanceof Array) {
       setValues([...VALUES]);
     }
     setDefaultValue(colData || '');
     setIsChangeable(IS_CHANGEABLE || 'N');
     setTargetUrl(URL || '');
+    setIsMessage(IS_MESSAGE || 'N');
+    setSuccessM(SUCCESS_M || '');
+    setFailM(FAIL_M || '');
   }, []);
 
   useEffect(() => {
@@ -49,10 +57,11 @@ const CustomValueRadioComp = props => {
         url: targetUrl,
         data: temp,
       }).then(({ response }) => {
-        // console.debug('### response of CustomDataTableComp: ', response);
         if (response?.result === 1) {
-          // console.debug('£££ result 1 : ', response?.data instanceof Object, response?.data);
+          if (isMessage === 'Y') message.success(<MessageContent>{successM}</MessageContent>);
           setDefaultValue(value);
+        } else if (isMessage === 'Y') {
+          message.error(<MessageContent>{failM}</MessageContent>);
         }
       });
     } else {
