@@ -8,6 +8,20 @@ const StyledCommonForm = styled.form`
   .sel {
     text-align-last: center;
   }
+  input.input {
+    appearance: none;
+    border: 0;
+    border-radius: 0;
+    background: 0;
+    width: 100%;
+    background: #e7e7e7;
+    padding: 0 10px;
+    font-size: 15px;
+    height: 45px;
+    line-height: 45px;
+    color: #555;
+    vertical-align: middle;
+  }
   .inputform {
     border: 0;
     border-radius: 0;

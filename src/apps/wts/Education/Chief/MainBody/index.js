@@ -3,15 +3,16 @@ import moment from 'moment';
 
 import { Icon, Spin } from 'antd';
 import { exportExcel, jsonToQueryString } from 'utils/helpers';
-import Button from 'components/Button';
 import Checkbox from 'apps/wts/components/CheckboxGroup/Checkbox';
 // import alertMessage from 'apps/wts/components/Notification/Alert';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import SendEduMail from '../../Modals/SendEduMail';
 import service from '../../service';
 import Wrapper from './Wrapper';
 import JobEvaluationModal from '../../Modals/JobEvaluation';
 import NewEmployeeTraining from './NewEmployeeTraining';
 import EduAcceptModal from '../../Modals/EduAcceptModal';
+import StyledTable from '../../../StyledTable';
 
 class MainBody extends React.Component {
   constructor(props) {
@@ -404,9 +405,9 @@ class MainBody extends React.Component {
               </li>
             </ul>
             <div className="btn_wrap" style={{ position: 'absolute', bottom: '0px', right: '0px', textAlign: 'right' }}>
-              <Button type="button" color="grayTwo" size="small" onClick={this.reloadData}>
+              <StyledButton type="button" className="btn-sm btn-gray mr5" onClick={this.reloadData}>
                 재호출
-              </Button>
+              </StyledButton>
               {/*
               <Button type="button" color="default" size="small" onClick={this.downloadExcel}>
                 <i className="far fa-file-excel" /> Excel
@@ -420,16 +421,16 @@ class MainBody extends React.Component {
                 <i className="fas fa-pen-square" /> 전체대상 교육 신청
               </Button>
               */}
-              <Button type="button" size="small" color="gray" onClick={() => this.handleOpenSendMail('selected')}>
+              <StyledButton type="button" className="btn-sm btn-gray mr5" onClick={() => this.handleOpenSendMail('selected')}>
                 선택대상 교육 메일
-              </Button>
-              <Button type="button" size="small" color="primary" onClick={() => this.handleOpenSendMail('all')}>
+              </StyledButton>
+              <StyledButton type="button" className="btn-sm btn-primary" onClick={() => this.handleOpenSendMail('all')}>
                 전체 교육 메일
-              </Button>
+              </StyledButton>
             </div>
           </div>
           <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-            <div className="tb_wrap">
+            <StyledTable className="tb_wrap">
               <table className="tb02 tbCateTable">
                 <colgroup>
                   <col width="4%" />
@@ -496,7 +497,7 @@ class MainBody extends React.Component {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </StyledTable>
           </Spin>
         </div>
         <hr

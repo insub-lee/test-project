@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
+  padding: 20px 30px;
+
   .title {
     padding: 10px 0;
     font-size: 20px;
     font-weight: 600;
+    color: #333;
   }
 
   .btn_wrap {
@@ -28,6 +31,12 @@ const Wrapper = styled.div`
       line-height: 55px;
       background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAYCAYAAAAPtVbGAAAAu0lEQVRIie2WsQ3CMBBFn1EqhqDPBlRAi2+IjIIY6lxDxwa0iIKKmjY0FxRFTmQLufNvrC+f79lXfNk9Xu+ewmpsdQUZ/apg858qpELKqZnbCKob4G7We5FrpGYPBLOtF3nGes2+xA60Qz9rmA1YhIxAMgLtIoDjEgDAWXYtxkpQPQBq9gSch3vExjhRnwSZgNbAJxEAOdnlRS5AZ7ZLBACJ4xorqG69yC21npxx/aEa9RVSUEMKF/0WfQG+mErmooDh3gAAAABJRU5ErkJggg==)
         no-repeat right 10px center;
+      border: 0;
+      appearance: none;
+      border-radius: 0;
+      &::-ms-expand {
+        display: none; /* 화살표 없애기 for IE10, 11*/
+      }
     }
   }
 
