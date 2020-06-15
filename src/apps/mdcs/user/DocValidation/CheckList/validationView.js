@@ -31,7 +31,6 @@ class ValidationView extends Component {
   initProcessData = (sagaKey, response) => {
     const { WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ, TITLE } = this.props;
     const draftData = { WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ };
-    console.debug('valiation', response);
     const { DRAFT_PROCESS } = response;
     const tProc = { ...DRAFT_PROCESS, DRAFT_DATA: draftData, REL_TYPE: 2, WORK_SEQ, TASK_SEQ, DRAFT_TITLE: TITLE };
     this.setState({ workProcess: { DRAFT_PROCESS: tProc } });

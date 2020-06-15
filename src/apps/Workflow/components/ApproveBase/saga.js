@@ -9,8 +9,8 @@ import * as actionTypes from './constants';
 import * as actions from './actions';
 import * as selectors from './selectors';
 
-function* getApproveList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/approveList`, { PARAM: { relTypes: [1, 99, 999] } });
+function* getApproveList({ customUrl }) {
+  const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/approveList`, { PARAM: { relTypes: [1, 99, 999] } });
   if (response) {
     const { list } = response;
     yield put(actions.setApproveList(list));
@@ -41,8 +41,9 @@ function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
   }
 }
 
-function* getUnApproveList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/unApproveList`, { PARAM: { relTypes: [1, 4, 99, 999] } });
+function* getUnApproveList({ customUrl }) {
+  console.debug('customUrl', customUrl);
+  const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/unApproveList`, { PARAM: { relTypes: [1, 4, 99, 999] } });
   if (response) {
     const { list } = response;
     yield put(actions.setUnApproveList(list));
@@ -50,8 +51,8 @@ function* getUnApproveList() {
   }
 }
 
-function* getDraftList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/draftList`, { PARAM: { relTypes: [1, 99, 999] } });
+function* getDraftList({ customUrl }) {
+  const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/draftList`, { PARAM: { relTypes: [1, 99, 999] } });
   if (response) {
     const { list } = response;
     yield put(actions.setDraftList(list));
@@ -82,11 +83,11 @@ function* getUserInfo({ userInfo, callBack }) {
   typeof callBack === 'function' && callBack(JSON.parse(list));
 }
 
-function* successApprove({ message: msg }) {
+function* successApprove({ message: msg, customUrl }) {
   message.success(msg, 3);
-  yield put(actions.getApproveList());
-  yield put(actions.getUnApproveList());
-  yield put(actions.getDraftList());
+  yield put(actions.getApproveList(customUrl));
+  yield put(actions.getUnApproveList(customUrl));
+  yield put(actions.getDraftList(customUrl));
 }
 
 function* failApprove({ errMsg }) {

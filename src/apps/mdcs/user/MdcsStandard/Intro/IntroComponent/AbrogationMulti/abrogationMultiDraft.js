@@ -59,7 +59,7 @@ class AbrogationMultiDraft extends Component {
       const nDraftWorkProc = { ...draftWorkProc, DRAFT_TITLE: draftTitle, DRAFT_DATA: nDraftData };
       onAbrogationMultiProcess(nDraftWorkProc);
     } else {
-      message.error('폐기내용(*제목, Description , 제개정) 항목은 필수 입력항목입니다.');
+      message.error('폐기내용 [제목, Description , 제개정] 항목은 필수 입력항목입니다.');
     }
   };
 

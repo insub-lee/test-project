@@ -106,7 +106,8 @@ class MdcsAppvView extends Component {
 
   onModalClose = () => {
     const { getUnApproveList } = this.props;
-    getUnApproveList();
+    const prefixUrl = '/api/workflow/v1/common/approve/UnApproveListMDCSHandler';
+    getUnApproveList(prefixUrl);
     this.props.setViewVisible(false);
   };
 
@@ -238,7 +239,6 @@ class MdcsAppvView extends Component {
       isDCC,
       isAbrogationMultiShow,
     } = this.state;
-    console.debug('미결함 selectedRow', selectedRow);
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -311,7 +311,7 @@ class MdcsAppvView extends Component {
                   </td>
                 </tr>
                 <tr style={{ display: procResult.length > 0 ? 'table-row' : 'none' }}>
-                  <td colSpan={2} style={{ padding: 0, border: 0 }}>
+                  <td colSpan={4} style={{ padding: 0, border: 0 }}>
                     <table style={{ width: '100%', borderTop: 0 }}>
                       <colgroup>
                         <col width="10%" />
@@ -340,13 +340,13 @@ class MdcsAppvView extends Component {
                   </td>
                 </tr>
                 <tr style={{ display: holdHistoryList.length > 0 ? 'table-row' : 'none' }}>
-                  <td colSpan={2} style={{ padding: 0, border: 0 }}>
+                  <td colSpan={4} style={{ padding: 0, border: 0 }}>
                     <table style={{ width: '100%', borderTop: 0 }}>
                       <colgroup>
                         <col width="10%" />
                         <col width="10%" />
-                        <col width="10%" />
-                        <col width="55%" />
+                        <col width="20%" />
+                        <col width="45%" />
                         <col width="15%" />
                       </colgroup>
                       <tr>
@@ -406,12 +406,13 @@ class MdcsAppvView extends Component {
           />
         ) : (
           <>
-            <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
+            <StyledHtmlTable style={{ padding: '20px 20px 20px' }}>
               <AntdLineTable
                 columns={this.getTableColumns()}
                 dataSource={DRAFT_DATA.abrogationList !== null ? DRAFT_DATA.abrogationList : []}
                 bordered
                 className="tableWrapper"
+                pagination={false}
               />
             </StyledHtmlTable>
             <AntdModal
