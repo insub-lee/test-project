@@ -29,30 +29,35 @@ const StyledWrap = styled.div`
     border-right: solid 2px #333;
   }
   .flexible-modal-drag-area {
-    background: rgba(68, 145, 224, 1);
     height: 50px;
     position: absolute;
     right: 0;
     top: 0;
     cursor: move;
   }
+  .flexible-title {
+    background: rgba(68, 145, 224, 1);
+    height: 50px;
+    color: #fff;
+    top: 0;
+    left: 0;
+    font-size: 20px;
+    width: 100%;
+    line-height: 50px;
+    padding: 0 20px;
+  }
 `;
 class DraggableModal extends Component {
   constructor(props) {
     super(props);
-
-    this.closeModal = this.closeModal.bind(this);
   }
 
-  closeModal() {
-    console.debug('dkdkdkdk');
-  }
   render() {
     const { children, visible } = this.props;
     return (
       <StyledWrap>
-        <ReactModal style={{ paddingTop: '50px' }} isOpen={visible} initHeight="auto" onRequestClose={this.closeModal}>
-          <div style={{ height: '50px' }}>dkdkdkdkdkdk</div>
+        <ReactModal style={{ paddingTop: '50px' }} isOpen={visible} initHeight="auto">
+          <div className="flexible-title">dkdkdkdkdkdk</div>
           {children}
         </ReactModal>
       </StyledWrap>
