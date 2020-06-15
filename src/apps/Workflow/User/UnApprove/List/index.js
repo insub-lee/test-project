@@ -79,7 +79,6 @@ class UnApproveList extends Component {
 
   render() {
     const { unApproveList, viewVisible } = this.props;
-    console.debug(viewVisible, this.props);
     return (
       <>
         <StyledHeaderWrapper>
