@@ -7,7 +7,7 @@ import locale from 'antd/es/locale/ko_KR';
 
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
 import Checkbox from 'apps/wts/components/CheckboxGroup/Checkbox';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContent from './StyledContent';
 import service from '../../service';
 
@@ -302,12 +302,12 @@ class EduProgramFormModal extends React.Component {
                   </li>
                 </ul>
                 <div className="btn_wrap">
-                  <Button type="submit" size="small" color="primary">
+                  <StyledButton type="submit" className="btn-primary btn-sm">
                     확인
-                  </Button>
-                  <Button type="button" size="small" color="default" onClick={this.handleCloseModal}>
+                  </StyledButton>
+                  <StyledButton type="button" className="btn-light btn-sm" onClick={this.handleCloseModal}>
                     취소
-                  </Button>
+                  </StyledButton>
                 </div>
               </StyledCommonForm>
             </div>
