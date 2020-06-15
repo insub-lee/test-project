@@ -7,13 +7,13 @@ import { jsonToQueryString } from 'utils/helpers';
 
 import Checkbox from 'apps/wts/components/CheckboxGroup/Checkbox';
 import Scrollbars from 'react-custom-scrollbars';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import moment from 'moment';
 import service from '../service';
 import StyledContent from './StyledContent';
 
 const tabTitleStyle = {
-  margin: '5px',
+  padding: '6px',
   textAlign: 'center',
   fontSize: '15px',
   borderBottom: '1px solid #dadada',
@@ -293,7 +293,7 @@ class EduPlanModal extends React.Component {
                     <div className="transfer-from">
                       <div style={tabTitleStyle}>교육대상</div>
                       {noBayUsers.length > 0 && (
-                        <Scrollbars style={{ height: 'calc(100% - 45px)', marginTop: 15, background: 'transparent' }} autoHide>
+                        <Scrollbars style={{ height: 'calc(100% - 35px)', background: 'transparent' }} autoHide>
                           {noBayUsers.map(user => (
                             <div key={user.empno} style={{ padding: 5 }}>
                               <Checkbox
@@ -312,10 +312,11 @@ class EduPlanModal extends React.Component {
                     <div className="transfer-to">
                       <div style={tabTitleStyle}>멘토</div>
                       {mentorUsers.length > 0 && (
-                        <Scrollbars style={{ height: 'calc(100% - 45px)', marginTop: 15, background: 'transparent' }} autoHide>
+                        <Scrollbars style={{ height: 'calc(100% - 35px)', background: 'transparent' }} autoHide>
                           {mentorUsers.map(user => (
                             <div key={user.empno} style={{ padding: 5 }}>
                               <Checkbox
+                                className="checkbox"
                                 labelText={`${user.usrnm}(${user.empno})`}
                                 id={user.empno}
                                 noPadding
@@ -330,10 +331,10 @@ class EduPlanModal extends React.Component {
                   </div>
                 </div>
               </Spin>
-              <div className="btn_wrap">
-                <Button type="button" size="small" color="primary" onClick={this.handleAccept}>
+              <div className="btn_wrap" style={{ marginTop: 20 }}>
+                <StyledButton type="button" className="btn-primary btn-sm" onClick={this.handleAccept}>
                   확인
-                </Button>
+                </StyledButton>
               </div>
             </div>
           </StyledContent>
