@@ -2,7 +2,6 @@ import React from 'react';
 import moment from 'moment';
 import { AutoSizer, Column, Table } from 'react-virtualized';
 import { Icon, Spin } from 'antd';
-import 'rc-dialog/assets/index.css';
 
 import StyledVirtualized from 'apps/wts/components/CommonStyledElement/StyledVirtualized';
 import { getVirtualizedMinHeight, jsonToQueryString } from 'utils/helpers';

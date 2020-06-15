@@ -3,6 +3,7 @@ import 'antd/dist/antd.min.css';
 import 'xeicon/xeicon.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 import 'rodal/lib/rodal.css';
+import 'rc-dialog/assets/index.css';
 
 window.jQuery = $;
 window.$ = $;
