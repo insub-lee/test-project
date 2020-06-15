@@ -7,6 +7,7 @@ const Wrapper = styled.div`
     padding: 10px 0;
     font-size: 20px;
     font-weight: 600;
+    color: #333;
   }
 
   .btn_wrap {
