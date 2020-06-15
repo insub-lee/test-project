@@ -9,7 +9,6 @@ const StyledWrap = styled.div`
     z-index: 1;
     border: 1px solid #ccc;
     background: white;
-    padding-top: '50px';
   }
   .flexible-modal-mask {
     position: fixed;
@@ -41,14 +40,19 @@ const StyledWrap = styled.div`
 class DraggableModal extends Component {
   constructor(props) {
     super(props);
+
+    this.closeModal = this.closeModal.bind(this);
   }
 
+  closeModal() {
+    console.debug('dkdkdkdk');
+  }
   render() {
     const { children, visible } = this.props;
     return (
       <StyledWrap>
-        <ReactModal style={{ paddingTop: '50px' }} isOpen={visible} initHeight="auto">
-          <div>dkdkdkdkdkdk</div>
+        <ReactModal style={{ paddingTop: '50px' }} isOpen={visible} initHeight="auto" onRequestClose={this.closeModal}>
+          <div style={{ height: '50px' }}>dkdkdkdkdkdk</div>
           {children}
         </ReactModal>
       </StyledWrap>
