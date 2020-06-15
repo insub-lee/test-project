@@ -309,7 +309,7 @@ class AllWorkSchedulerModal extends React.Component {
           return (
             <div key={key} style={{ ...style, ...cellStyle }}>
               <button type="button" onClick={() => this.handleChangeSortOption(0)} style={buttonStyle}>
-                AREA <i className={`fas fa-caret-${sortOption[0] === 'ASC' ? 'up' : 'down'}`} />
+                AREA <i className={`fa fa-caret-${sortOption[0] === 'ASC' ? 'up' : 'down'}`} />
               </button>
             </div>
           );
@@ -317,7 +317,7 @@ class AllWorkSchedulerModal extends React.Component {
           // return (
           //   <div key={key} style={{ ...style, ...cellStyle }}>
           //     <button type="button" onClick={() => this.handleChangeSortOption(1)} style={buttonStyle}>
-          //       BAY <i className={`fas fa-caret-${sortOption[1] === 'ASC' ? 'up' : 'down'}`} />
+          //       BAY <i className={`fa fa-caret-${sortOption[1] === 'ASC' ? 'up' : 'down'}`} />
           //     </button>
           //   </div>
           // );
@@ -330,7 +330,7 @@ class AllWorkSchedulerModal extends React.Component {
           return (
             <div key={key} style={{ ...style, ...cellStyle }}>
               <button type="button" onClick={() => this.handleChangeSortOption(2)} style={buttonStyle}>
-                근무조 <i className={`fas fa-caret-${sortOption[2] === 'ASC' ? 'up' : 'down'}`} />
+                근무조 <i className={`fa fa-caret-${sortOption[2] === 'ASC' ? 'up' : 'down'}`} />
               </button>
             </div>
           );

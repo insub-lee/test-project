@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
 
 class CategorySelector extends Component {
@@ -132,9 +132,9 @@ class CategorySelector extends Component {
           </ul>
           <div className="cr" />
           <div className="btn_wrap">
-            <Button type="submit" size="big" color="primary">
+            <StyledButton type="submit" className="btn-primary btn-lg">
               검색
-            </Button>
+            </StyledButton>
           </div>
         </StyledCommonForm>
       </>

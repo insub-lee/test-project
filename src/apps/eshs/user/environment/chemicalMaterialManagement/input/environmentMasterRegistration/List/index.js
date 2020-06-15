@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Popconfirm } from 'antd';
+import { Input, InputNumber, Select, Popconfirm, Table } from 'antd';
 
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
@@ -8,11 +8,11 @@ import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 
-import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import Modal from '../InputModal';
 import SearchComp from '../InputModal/SearchComp';
 
@@ -20,57 +20,39 @@ const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdInputNumber = StyledInputNumber(InputNumber);
+const AntdTable = StyledAntdTable(Table);
 class List extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       visible: false,
       requestValue: {
+        SAP_ID: '',
         SAP_NO: '',
-        CAS_NO: '',
-        NAME_KOR: '',
-        NAME_ENG: '',
         NAME_SAP: '',
-        NAME_ETC: '',
-        IS_IMPORT: 'N',
-        VENDOR_CD: '',
-        CONTENT_EXP: '',
-        CONTENT_DOSE: 0,
-        MASTER_ID: '',
-        IS_INFLAMMABILITY_GAS: '',
-        IS_INFLAMMABILITY_LIQUID: '',
-        SITE: props.profile.BAREA_CD,
+        UNIT: '',
+        CONVERT_COEFFICIENT: '',
       },
       isModified: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
-      categories: [],
+      dataSource: [],
     };
   }
 
   componentDidMount() {
-    this.getCategoryList();
+    this.getMaterialList();
   }
 
-  getCategoryList = () => {
+  getMaterialList = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiArr = [
       {
-        key: 'codeCategory',
-        type: 'POST',
-        url: `/api/admin/v1/common/categoryMapList`,
-        params: { PARAM: { NODE_ID: 1721 } },
+        key: 'materialList',
+        type: 'GET',
+        url: '/api/eshs/v1/common/eshschemicalmaterialsap',
       },
     ];
-
-    getCallDataHandler(id, apiArr, this.setCategory);
-  };
-
-  setCategory = () => {
-    const { result } = this.props;
-    const category = result.codeCategory.categoryMapList.filter(item => item.PARENT_NODE_ID === 1721);
-    this.setState({
-      categories: category,
-    });
+    getCallDataHandler(id, apiArr);
   };
 
   handleSearchClick = () => {
@@ -95,32 +77,18 @@ class List extends React.Component {
     }
   };
 
-  handleInputNumberChange = (value, name) => {
-    if (typeof value !== 'number') {
-      const valueObj = { [name]: '' };
-      this.setState(prevState => ({
-        requestValue: Object.assign(prevState.requestValue, valueObj),
-      }));
-    }
-    const valueObj = { [name]: value };
-    this.setState(prevState => ({
-      requestValue: Object.assign(prevState.requestValue, valueObj),
-    }));
-  };
-
   handleInputClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const { requestValue, isModified } = this.state;
-    if (isModified) {
-      this.setState({
-        isModified: false,
-      });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialMaster`, requestValue, this.getMaterialList);
-    }
-    this.setState({
-      isModified: false,
-    });
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialMaster`, requestValue, this.getMaterialList);
+    const { dataSource, requestValue } = this.state;
+    const param = dataSource.map(data => Object.assign(data, { SAP_ID: requestValue.SAP_ID }));
+
+    return submitHandlerBySaga(
+      id,
+      'POST',
+      `/api/eshs/v1/common/eshschemicalmaterialMaster`,
+      { dataSource: param, SAP_ID: requestValue.SAP_ID },
+      this.getMaterialList,
+    );
   };
 
   handleDeleteClick = () => {
@@ -141,46 +109,18 @@ class List extends React.Component {
     return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialMaster`, requestValue, this.getMaterialList);
   };
 
-  getMaterialList = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    const apiArr = [
-      {
-        key: 'materialList',
-        type: 'GET',
-        url: '/api/eshs/v1/common/eshschemicalmaterialMaster',
-      },
-    ];
-    getCallDataHandler(id, apiArr, this.handleResetClick);
-  };
-
   handleResetClick = () => {
     const { profile } = this.props;
     this.setState({
       requestValue: {
+        SAP_ID: '',
         SAP_NO: '',
-        CAS_NO: '',
-        NAME_KOR: '',
-        NAME_ENG: '',
         NAME_SAP: '',
-        NAME_ETC: '',
-        IS_IMPORT: 'N',
-        VENDOR_CD: '',
-        CONTENT_EXP: '',
-        CONTENT_DOSE: 0,
         UNIT: '',
-        FIR_UNIT_EXCHANGE: 0,
-        SEC_UNIT_EXCHANGE: 0,
-        IS_INFLAMMABILITY_GAS: '',
-        IS_INFLAMMABILITY_LIQUID: '',
-        SITE: profile.BAREA_CD,
+        CONVERT_COEFFICIENT: '',
       },
       isModified: false,
     });
-  };
-
-  handleEshsCmpnyCompChange = data => {
-    const valueObj = { VENDOR_CD: data.WRK_CMPNY_CD }; // 키값 바꾸기
-    this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
   };
 
   handleModalClose = () => {
@@ -190,11 +130,35 @@ class List extends React.Component {
   };
 
   setRequestValue = record => {
-    this.setState(prevState => ({
-      requestValue: Object.assign(prevState.requestValue, record),
-      visible: false,
-      isModified: true,
-    }));
+    this.setState(
+      prevState => ({
+        requestValue: Object.assign(prevState.requestValue, record),
+        visible: false,
+        isModified: true,
+      }),
+      () => this.getSubMaterialList(record.SAP_ID),
+    );
+  };
+
+  getSubMaterialList = sapId => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'subMaterial',
+        type: 'GET',
+        url: `/api/eshs/v1/common/eshschemicalmaterialMaster?SAP_ID=${sapId}`,
+      },
+    ];
+    this.setState({ dataSource: [] });
+
+    getCallDataHandler(id, apiArr, this.setDataSource);
+    // getCallDataHandler(id, apiArr);
+  };
+
+  setDataSource = () => {
+    const { result } = this.props;
+
+    this.setState(prevState => ({ dataSource: prevState.dataSource.concat((result.subMaterial && result.subMaterial.list) || []) }));
   };
 
   columns = [
@@ -203,54 +167,212 @@ class List extends React.Component {
       dataIndex: 'SAP_NO',
       key: 'SAP_NO',
       align: 'center',
+      width: '20%',
     },
     {
-      title: 'CAS_NO',
-      dataIndex: 'CAS_NO',
-      key: 'CAS_NO',
-      align: 'center',
-    },
-    {
-      title: '화학물질명_국문',
-      dataIndex: 'NAME_KOR',
-      key: 'NAME_KOR',
-      align: 'center',
-    },
-    {
-      title: '화학물질명_영문',
-      dataIndex: 'NAME_ENG',
-      key: 'NAME_ENG',
-      align: 'center',
-    },
-    {
-      title: '화학물질명_SAP',
+      title: 'NAME_SAP',
       dataIndex: 'NAME_SAP',
       key: 'NAME_SAP',
       align: 'center',
+      width: '40%',
+    },
+    {
+      title: '단위',
+      dataIndex: 'UNIT',
+      key: 'UNIT',
+      align: 'center',
+      width: '20%',
+    },
+    {
+      title: '환산계수',
+      dataIndex: 'CONVERT_COEFFICIENT',
+      key: 'CONVERT_COEFFICIENT',
+      align: 'center',
+      width: '20%',
+    },
+  ];
+
+  tableColumns = [
+    {
+      title: 'CAS_NO',
+      render: (text, record, index) => (
+        <AntdInput
+          className="ant-input-sm"
+          name="CAS_NO"
+          value={this.state.dataSource[index].CAS_NO}
+          onChange={e => this.handleRequestChange('CAS_NO', e.target.value, index)}
+        />
+      ),
+      align: 'center',
+      width: '12%',
+    },
+    {
+      title: '화학물질명_국문',
+      render: (text, record, index) => (
+        <AntdInput
+          className="ant-input-sm"
+          name="NAME_KOR"
+          value={this.state.dataSource[index].NAME_KOR}
+          onChange={e => this.handleRequestChange('NAME_KOR', e.target.value, index)}
+        />
+      ),
+      align: 'center',
+      width: '12%',
+    },
+    {
+      title: '화학물질명_영문',
+      render: (text, record, index) => (
+        <AntdInput
+          className="ant-input-sm"
+          name="NAME_ENG"
+          value={this.state.dataSource[index].NAME_ENG}
+          onChange={e => this.handleRequestChange('NAME_ENG', e.target.value, index)}
+        />
+      ),
+      align: 'center',
+      width: '12%',
     },
     {
       title: '관용명 및 이명',
-      dataIndex: 'NAME_ETC',
-      key: 'NAME_ETC',
+      render: (text, record, index) => (
+        <AntdInput
+          className="ant-input-sm"
+          name="NAME_ETC"
+          value={this.state.dataSource[index].NAME_ETC}
+          onChange={e => this.handleRequestChange('NAME_ETC', e.target.value, index)}
+        />
+      ),
       align: 'center',
+      width: '12%',
+    },
+    {
+      title: 'MSDS 함량',
+      render: (text, record, index) => (
+        <AntdInput
+          name="CONTENT_EXP"
+          value={this.state.dataSource[index].CONTENT_EXP}
+          onChange={e => this.handleRequestChange('CONTENT_EXP', e.target.value, index)}
+          className="col-input-number ant-input-sm"
+        />
+      ),
+      align: 'center',
+      width: '8%',
+    },
+    {
+      title: '함유량',
+      render: (text, record, index) => (
+        <AntdInputNumber
+          value={this.state.dataSource[index].CONTENT_DOSE}
+          onChange={value => this.handleRequestChange('CONTENT_DOSE', value, index)}
+          className="input-number-sm"
+          style={{ width: '100%' }}
+        />
+      ),
+      align: 'center',
+      width: '8%',
+    },
+    {
+      title: '인화성가스 구분',
+      render: (text, record, index) => (
+        <AntdSelect
+          className="select-sm"
+          defaultValue={-1}
+          onChange={value => this.handleRequestChange('IS_INFLAMMABILITY_GAS', value, index)}
+          value={this.state.dataSource[index].IS_INFLAMMABILITY_GAS}
+          style={{ width: '100%' }}
+        >
+          <Select.Option value={1}>1</Select.Option>
+          <Select.Option value={2}>2</Select.Option>
+          <Select.Option value={3}>3</Select.Option>
+          <Select.Option value={4}>4</Select.Option>
+          <Select.Option value={-1}>해당 없음</Select.Option>
+        </AntdSelect>
+      ),
+      align: 'center',
+      width: '10%',
+    },
+    {
+      title: '인화성액체 구분',
+      render: (text, record, index) => (
+        <AntdSelect
+          className="select-sm"
+          defaultValue={-1}
+          onChange={value => this.handleRequestChange('IS_INFLAMMABILITY_LIQUID', value, index)}
+          value={this.state.dataSource[index].IS_INFLAMMABILITY_LIQUID}
+          style={{ width: '100%' }}
+        >
+          <Select.Option value={1}>1</Select.Option>
+          <Select.Option value={2}>2</Select.Option>
+          <Select.Option value={3}>3</Select.Option>
+          <Select.Option value={4}>4</Select.Option>
+          <Select.Option value={-1}>해당 없음</Select.Option>
+        </AntdSelect>
+      ),
+      align: 'center',
+      width: '10%',
+    },
+    {
+      title: '수입구분',
+      render: (text, record, index) => (
+        <AntdSelect
+          className="select-sm"
+          defaultValue="N"
+          onChange={value => this.handleRequestChange('IS_IMPORT', value, index)}
+          value={this.state.dataSource[index].IS_IMPORT}
+          style={{ width: '100%' }}
+        >
+          <Select.Option value="N">내수</Select.Option>
+          <Select.Option value="Y">수입</Select.Option>
+        </AntdSelect>
+      ),
+      align: 'center',
+      width: '8%',
+    },
+    {
+      title: '',
+      render: (text, record, index) => (
+        <StyledButton className="btn-primary btn-sm" onClick={() => this.handleSubMaterialDelete(index)}>
+          삭제
+        </StyledButton>
+      ),
     },
   ];
+
+  handleRequestChange = (key, value, index) => {
+    const valueObj = { [key]: value };
+    this.setState(prevState => {
+      const tempData = prevState.dataSource;
+      tempData[index] = Object.assign(tempData[index], valueObj);
+      return { dataSource: tempData };
+    });
+  };
+
+  handleSubMateiralAdd = () => {
+    this.setState(prevState => ({ dataSource: prevState.dataSource.concat({}) }));
+  };
+
+  handleSubMaterialDelete = index => {
+    this.setState(prevState => {
+      const tempData = prevState.dataSource.filter((value, i) => i !== index);
+      return { dataSource: tempData };
+    });
+  };
 
   render() {
     const {
       handleSearchClick,
-      handleInputChange,
-      handleInputNumberChange,
       handleInputClick,
       handleModalClose,
       setRequestValue,
       handleResetClick,
       handleDeleteConfirm,
       handleDeleteClick,
+      getMaterialList,
+      handleSubMateiralAdd,
     } = this;
     const { columns } = this;
-    const { requestValue, visible, deleteConfirmMessage, categories } = this.state;
-    const { sagaKey, getCallDataHandler, result, changeFormData, formData, profile } = this.props;
+    const { requestValue, visible, deleteConfirmMessage, dataSource, isModified } = this.state;
+    const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
         <ContentsWrapper>
@@ -281,145 +403,63 @@ class List extends React.Component {
           </StyledSearchWrap>
           <div className="tableWrapper">
             <StyledHtmlTable>
-              <table>
+              <table style={{ marginBottom: '10px' }}>
                 <colgroup>
-                  <col width="12%" />
-                  <col width="13%" />
-                  <col width="12%" />
-                  <col width="13%" />
-                  <col width="12%" />
-                  <col width="13%" />
-                  <col width="12%" />
-                  <col width="13%" />
+                  <col width="10%" />
+                  <col width="15%" />
+                  <col width="10%" />
+                  <col width="15%" />
+                  <col width="10%" />
+                  <col width="15%" />
+                  <col width="10%" />
+                  <col width="15%" />
                 </colgroup>
                 <tbody>
                   <tr>
-                    <th colSpan={1}>SAP NO.</th>
-                    <td colSpan={3}>
-                      <AntdInput className="ant-input-sm" name="SAP_NO" value={requestValue.SAP_NO} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
-                    <th colSpan={1}>CAS NO.</th>
-                    <td colSpan={3}>
-                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>화학물질명_국문</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
-                    <th>화학물질명_영문</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
+                    <th>SAP NO.</th>
+                    <td>{requestValue.SAP_NO}</td>
                     <th>화학물질명_SAP</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="NAME_SAP" value={requestValue.NAME_SAP} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
-                    <th>관용명 및 이명</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="NAME_ETC" value={requestValue.NAME_ETC} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>공급업체</th>
-                    <td colSpan={3}>
-                      <EshsCmpnyComp
-                        searchWidth="146px"
-                        sagaKey={sagaKey}
-                        getExtraApiData={getCallDataHandler}
-                        extraApiData={result}
-                        colData={requestValue.VENDOR_CD}
-                        visible
-                        CONFIG={{ property: { isRequired: false, className: 'ant-input-search input-search-sm' } }}
-                        changeFormData={changeFormData}
-                        COMP_FIELD="VENDOR_CD"
-                        eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-                      />
-                    </td>
-                    <th>MSDS 함량</th>
-                    <td>
-                      <AntdInput
-                        name="CONTENT_EXP"
-                        value={requestValue.CONTENT_EXP}
-                        onChange={e => handleInputChange(e, 'INPUT')}
-                        className="col-input-number ant-input-sm"
-                      />
-                    </td>
-                    <th>함유량</th>
-                    <td>
-                      <AntdInputNumber
-                        value={requestValue.CONTENT_DOSE}
-                        onChange={value => handleInputNumberChange(value, 'CONTENT_DOSE')}
-                        className="input-number-sm"
-                        style={{ width: '100%' }}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>수입구분</th>
-                    <td>
-                      <AntdSelect
-                        className="select-sm"
-                        defaultValue="N"
-                        onChange={e => handleInputChange(e, 'SELECT', 'IS_IMPORT')}
-                        value={requestValue.IS_IMPORT}
-                        style={{ width: '100%' }}
-                      >
-                        <Select.Option value="N">내수</Select.Option>
-                        <Select.Option value="Y">수입</Select.Option>
-                      </AntdSelect>
-                    </td>
-                    <th>지역</th>
-                    <td>
-                      {(categories.find(item => item.CODE === profile.BAREA_CD) && categories.find(item => item.CODE === profile.BAREA_CD).NAME_KOR) || ''}
-                    </td>
-                    <th>인화성가스 구분</th>
-                    <td>
-                      <AntdSelect
-                        className="select-sm"
-                        defaultValue={-1}
-                        onChange={e => handleInputChange(e, 'SELECT', 'IS_INFLAMMABILITY_GAS')}
-                        value={requestValue.IS_INFLAMMABILITY_GAS}
-                        style={{ width: '100%' }}
-                      >
-                        <Select.Option value={1}>1</Select.Option>
-                        <Select.Option value={2}>2</Select.Option>
-                        <Select.Option value={3}>3</Select.Option>
-                        <Select.Option value={4}>4</Select.Option>
-                        <Select.Option value={-1}>해당 없음</Select.Option>
-                      </AntdSelect>
-                    </td>
-                    <th>인화성액체 구분</th>
-                    <td colSpan={3}>
-                      <AntdSelect
-                        className="select-sm"
-                        defaultValue={-1}
-                        onChange={e => handleInputChange(e, 'SELECT', 'IS_INFLAMMABILITY_LIQUID')}
-                        value={requestValue.IS_INFLAMMABILITY_LIQUID}
-                        style={{ width: '145px' }}
-                      >
-                        <Select.Option value={1}>1</Select.Option>
-                        <Select.Option value={2}>2</Select.Option>
-                        <Select.Option value={3}>3</Select.Option>
-                        <Select.Option value={4}>4</Select.Option>
-                        <Select.Option value={-1}>해당 없음</Select.Option>
-                      </AntdSelect>
-                    </td>
+                    <td>{requestValue.NAME_SAP}</td>
+                    <th>단위</th>
+                    <td>{requestValue.UNIT}</td>
+                    <th>kg환산계수</th>
+                    <td>{requestValue.CONVERT_COEFFICIENT} </td>
                   </tr>
                 </tbody>
               </table>
             </StyledHtmlTable>
+            {isModified ? (
+              <>
+                <div style={{ padding: '10px' }}>혼합물 정보 입력</div>
+                <AntdTable
+                  columns={this.tableColumns}
+                  dataSource={dataSource}
+                  pagination={false}
+                  onRow={(record, index) => ({
+                    // onClick: () => this.setState(prevState => ({ subRequestValue: Object.assign(prevState.subRequestValue, record), isSubModified: true })),
+                  })}
+                />
+              </>
+            ) : null}
+            <div className="selSaveWrapper" style={{ marginBottom: '10px' }}>
+              <StyledButton className="btn-primary btn-sm mr5" onClick={handleSubMateiralAdd}>
+                추가
+              </StyledButton>
+              <StyledButton className="btn-primary btn-light btn-sm" onClick={() => console.debug('삭제')}>
+                삭제
+              </StyledButton>
+            </div>
           </div>
         </ContentsWrapper>
         <Modal
+          getMaterialList={getMaterialList}
           sagaKey={sagaKey}
           visible={visible}
           modalClose={handleModalClose}
           getCallDataHandler={getCallDataHandler}
           result={result}
           setRequestValue={setRequestValue}
-          apiUrl="/api/eshs/v1/common/eshschemicalmaterialMaster"
+          apiUrl="/api/eshs/v1/common/eshschemicalmaterialsap"
           tableColumns={columns}
           SearchComp={SearchComp}
           changeFormData={changeFormData}

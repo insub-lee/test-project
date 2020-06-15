@@ -275,7 +275,7 @@ class ChiefSchedulerView extends React.Component {
                 data-tip
                 data-for={`${eventItem.id}-accept`}
               >
-                <i className="fas fa-check-circle" />
+                <i className="fa fa-check-circle" />
               </button>
               <ReactTooltip id={`${eventItem.id}-accept`} type="dark">
                 <span>승인</span>
@@ -291,7 +291,7 @@ class ChiefSchedulerView extends React.Component {
                 data-tip
                 data-for={`${eventItem.id}-ban`}
               >
-                <i className="fas fa-ban" />
+                <i className="fa fa-ban" />
               </button>
               <ReactTooltip id={`${eventItem.id}-ban`} type="dark">
                 <span>반려</span>
@@ -306,7 +306,7 @@ class ChiefSchedulerView extends React.Component {
             data-tip
             data-for={`${eventItem.id}-cancel`}
           >
-            <i className="fas fa-times-circle" />
+            <i className="fa fa-times-circle" />
           </button>
           <ReactTooltip id={`${eventItem.id}-cancel`} type="dark">
             <span>취소</span>

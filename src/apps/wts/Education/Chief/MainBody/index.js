@@ -415,10 +415,10 @@ class MainBody extends React.Component {
               */}
               {/*
               <Button type="button" size="small" color="default" onClick={() => this.handleOpenAcceptEdu('selected')}>
-                <i className="fas fa-pen-square" /> 선택대상 교육 신청
+                <i className="fa fa-pen-square" /> 선택대상 교육 신청
               </Button>
               <Button type="button" size="small" color="default" onClick={() => this.handleOpenAcceptEdu('all')}>
-                <i className="fas fa-pen-square" /> 전체대상 교육 신청
+                <i className="fa fa-pen-square" /> 전체대상 교육 신청
               </Button>
               */}
               <StyledButton type="button" className="btn-sm btn-gray mr5" onClick={() => this.handleOpenSendMail('selected')}>

@@ -26,6 +26,15 @@ class ModalContents extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.createFormData();
+  }
+
+  createFormData = () => {
+    const { sagaKey, changeFormData, profile } = this.props;
+    changeFormData(sagaKey, 'CREATE_EMP_NO', profile.EMP_NO);
+  };
+
   handleSubModalVisible = () => {
     this.setState({ modalVisible: true });
   };
@@ -241,6 +250,7 @@ ModalContents.propTypes = {
   isModified: PropTypes.bool,
   submitExtraHandler: PropTypes.func,
   formData: PropTypes.object,
+  profile: PropTypes.object,
 };
 
 ModalContents.defatulProps = {

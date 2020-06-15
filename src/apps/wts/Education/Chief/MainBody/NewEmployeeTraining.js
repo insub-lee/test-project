@@ -117,7 +117,7 @@ class NewEmployeeTraining extends React.Component {
         </div>
         <div style={{ padding: '5px 0', textAlign: 'right' }}>
           <StyledButton type="button" className="btn-sm btn-light" onClick={this.handleOpenEduPlanModal}>
-            <i className="fas fa-pen-square" /> 멘토 지정
+            <i className="fa fa-pen-square" /> 멘토 지정
           </StyledButton>
         </div>
         <StyledVirtualized minHeight={getVirtualizedMinHeight(39, 39, data.length, 500)} headerHeight={39} disableDefaultHover>

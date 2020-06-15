@@ -213,7 +213,7 @@ class EduManageModal extends React.Component {
   mentorConfirmRenderer(reportAuth, row) {
     return reportAuth === 'mentor' ? (
       <Button type="button" size="small" color="default" onClick={() => this.handleMentorConfirm(row)}>
-        <i className="fas fa-signature" /> 멘토확인
+        <i className="fa fa-signature" /> 멘토확인
       </Button>
     ) : (
       '미확인'
@@ -236,7 +236,7 @@ class EduManageModal extends React.Component {
                     style={{ margin: '10px 0' }}
                     onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_common', eduPlanInfo.area)}
                   >
-                    <i className="fas fa-check" /> {getEduTitle(step, 'job_common')}
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
                   </button>
                   <br />
                   <button
@@ -244,7 +244,7 @@ class EduManageModal extends React.Component {
                     style={{ margin: '10px 0' }}
                     onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_meter', eduPlanInfo.area)}
                   >
-                    <i className="fas fa-check" /> {getEduTitle(step, 'job_meter')}
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_meter')}
                   </button>
                   <br />
                   <button
@@ -252,12 +252,12 @@ class EduManageModal extends React.Component {
                     style={{ margin: '10px 0' }}
                     onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_mask', eduPlanInfo.area)}
                   >
-                    <i className="fas fa-check" /> {getEduTitle(step, 'job_mask')}
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_mask')}
                   </button>
                 </>
               ) : (
                 <button type="button" style={{ margin: '10px 0' }} onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site)}>
-                  <i className="fas fa-check" /> {getEduTitle(step, 'job_common')}
+                  <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
                 </button>
               )}
             </td>
@@ -293,7 +293,7 @@ class EduManageModal extends React.Component {
                     style={{ margin: '10px 0' }}
                     onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_common', eduPlanInfo.area)}
                   >
-                    <i className="fas fa-check" /> {getEduTitle(step, 'job_common')}
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
                   </button>
                   <br />
                   <button
@@ -301,7 +301,7 @@ class EduManageModal extends React.Component {
                     style={{ margin: '10px 0' }}
                     onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_meter', eduPlanInfo.area)}
                   >
-                    <i className="fas fa-check" /> {getEduTitle(step, 'job_meter')}
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_meter')}
                   </button>
                   <br />
                   <button
@@ -309,12 +309,12 @@ class EduManageModal extends React.Component {
                     style={{ margin: '10px 0' }}
                     onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_mask', eduPlanInfo.area)}
                   >
-                    <i className="fas fa-check" /> {getEduTitle(step, 'job_mask')}
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_mask')}
                   </button>
                 </>
               ) : (
                 <button type="button" style={{ margin: '10px 0' }} onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site)}>
-                  <i className="fas fa-check" /> {getEduTitle(step, 'job_common')}
+                  <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
                 </button>
               )}
             </td>
@@ -347,7 +347,7 @@ class EduManageModal extends React.Component {
                     style={{ margin: '10px 0' }}
                     onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_common', eduPlanInfo.area)}
                   >
-                    <i className="fas fa-check" /> {getEduTitle(step, 'job_common')}
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
                   </button>
                   <br />
                   <button
@@ -355,7 +355,7 @@ class EduManageModal extends React.Component {
                     style={{ margin: '10px 0' }}
                     onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_meter', eduPlanInfo.area)}
                   >
-                    <i className="fas fa-check" /> {getEduTitle(step, 'job_meter')}
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_meter')}
                   </button>
                   <br />
                   <button
@@ -363,12 +363,12 @@ class EduManageModal extends React.Component {
                     style={{ margin: '10px 0' }}
                     onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_mask', eduPlanInfo.area)}
                   >
-                    <i className="fas fa-check" /> {getEduTitle(step, 'job_mask')}
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_mask')}
                   </button>
                 </>
               ) : (
                 <button type="button" style={{ margin: '10px 0' }} onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site)}>
-                  <i className="fas fa-check" /> {getEduTitle(step, 'job_common')}
+                  <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
                 </button>
               )}
             </td>
@@ -492,7 +492,7 @@ class EduManageModal extends React.Component {
           <td colSpan={3}>
             {reportAuth === 'user' ? (
               <Button type="button" size="small" color="default" onClick={() => this.handleEduReportModal(step)}>
-                <i className="fas fa-pen" /> 레포트 작성
+                <i className="fa fa-pen" /> 레포트 작성
               </Button>
             ) : (
               '작성된 레포트가 없습니다.'
@@ -553,10 +553,10 @@ class EduManageModal extends React.Component {
         <td>{moment(row.edudt, 'YYYYMMDD').format('YYYY.MM.DD')}</td>
         <td>
           <Button type="button" size="small" color="default" onClick={() => this.handleReviewEduReportModal(row)} style={curriculumButtonStyle}>
-            <i className="fas fa-pen" /> {row.curriculum}
+            <i className="fa fa-pen" /> {row.curriculum}
           </Button>
         </td>
-        <td>{row.confirm === 'O' ? <i className="fas fa-signature" /> : this.mentorConfirmRenderer(reportAuth, row)}</td>
+        <td>{row.confirm === 'O' ? <i className="fa fa-signature" /> : this.mentorConfirmRenderer(reportAuth, row)}</td>
         {index === 0 && !notReady && this.mentorAcceptTestRenderer(reportAuth, eduPlanInfo, row, report[step].length, confirmed, step, planResult)}
         {index === 0 && notReady && (
           <td rowSpan={report[step].length + 1} colSpan={2}>
@@ -580,7 +580,7 @@ class EduManageModal extends React.Component {
                   )
                 }
               >
-                {reportAuth === 'mentor' || reportAuth === 'admin' ? <i className="fas fa-pen" /> : '내용'}
+                {reportAuth === 'mentor' || reportAuth === 'admin' ? <i className="fa fa-pen" /> : '내용'}
               </Button>
             </td>
             <td rowSpan={report[step].length}>
@@ -590,7 +590,7 @@ class EduManageModal extends React.Component {
                 color="default"
                 onClick={() => this.handleAdminOpinionModal(row.plan_seq, row.empno, step, eduPlanStep[checkIndex].chief_opinion, reportAuth === 'admin')}
               >
-                {reportAuth === 'admin' ? <i className="fas fa-pen" /> : '내용'}
+                {reportAuth === 'admin' ? <i className="fa fa-pen" /> : '내용'}
               </Button>
             </td>
           </>
@@ -608,7 +608,7 @@ class EduManageModal extends React.Component {
         <tr className="bd" key={-1}>
           <td colSpan={3}>
             <Button type="button" size="small" color="default" onClick={() => this.handleEduReportModal(step)}>
-              <i className="fas fa-pen" /> 레포트 작성
+              <i className="fa fa-pen" /> 레포트 작성
             </Button>
           </td>
         </tr>,
