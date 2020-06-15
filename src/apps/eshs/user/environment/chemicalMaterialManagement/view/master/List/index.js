@@ -54,15 +54,30 @@ class List extends React.Component {
 
   setRowData = () => {
     const { result } = this.props;
-    this.setState({
-      rowData: (result.chemicalMaterials && result.chemicalMaterials.list) || [],
-    });
+    const { isMasterColumns } = this.state;
+    return isMasterColumns
+      ? this.setState({
+          rowData: (result.chemicalMaterials && result.chemicalMaterials.list) || [],
+        })
+      : this.setState({
+          rowData: (result.sapUsage && result.sapUsage.list) || [],
+        });
   };
 
   handleSelectChange = () => {
-    this.setState(prevState => ({
-      isMasterColumns: !prevState.isMasterColumns,
-    }));
+    const { requestValue } = this.state;
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'sapUsage',
+        url: `/api/eshs/v1/common/chemicalmaterial-sap-usage`,
+        type: 'GET',
+      },
+    ];
+
+    getCallDataHandler(id, apiArr, () =>
+      this.setState(prevState => ({ isMasterColumns: !prevState.isMasterColumns, requestValue: { CAS_NO: '', SAP_NO: '', KEYWORD: '' } }), this.setRowData),
+    );
   };
 
   handleInputChange = (value, name) => {
@@ -72,14 +87,14 @@ class List extends React.Component {
       prevState => ({
         requestValue: Object.assign(prevState.requestValue, valueObj),
       }),
-      getSearchData(),
+      getSearchData,
     );
   };
 
   getSearchData = () => {
-    const { requestValue } = this.state;
+    const { requestValue, isMasterColumns } = this.state;
     const { sagaKey: id, getCallDataHandler } = this.props;
-    const apiArr = [
+    const postApiArr = [
       {
         key: 'chemicalMaterials',
         type: 'POST',
@@ -87,13 +102,22 @@ class List extends React.Component {
         params: requestValue,
       },
     ];
-    getCallDataHandler(id, apiArr, this.setRowData);
+
+    const getApiArr = [
+      {
+        key: 'sapUsage',
+        url: `/api/eshs/v1/common/chemicalmaterial-sap-usage?SAP_NO=${requestValue.SAP_NO}&CAS_NO=${requestValue.CAS_NO}&KEYWORD=${requestValue.KEYWORD}`,
+        type: 'GET',
+      },
+    ];
+
+    return isMasterColumns ? getCallDataHandler(id, postApiArr, this.setRowData) : getCallDataHandler(id, getApiArr, this.setRowData);
   };
 
   render() {
     const { defaultColDef } = this;
     const { handleSelectChange, handleInputChange } = this;
-    const { rowData, isMasterColumns } = this.state;
+    const { rowData, isMasterColumns, requestValue } = this.state;
     return (
       <>
         <ContentsWrapper>
@@ -107,6 +131,7 @@ class List extends React.Component {
             <AntdInput
               className="ant-input-inline ant-input-mid mr5"
               onChange={e => handleInputChange(e.target.value, 'SAP_NO')}
+              value={requestValue.SAP_NO}
               style={{ width: '150px' }}
               placeholder="SAP_NO."
             />
@@ -114,12 +139,14 @@ class List extends React.Component {
             <AntdInput
               className="ant-input-inline ant-input-mid mr5"
               onChange={e => handleInputChange(e.target.value, 'CAS_NO')}
+              value={requestValue.CAS_NO}
               style={{ width: '150px' }}
               placeholder="CAS_NO."
             />
             <AntdInput
               className="ant-input-inline ant-input-mid mr5"
               onChange={e => handleInputChange(e.target.value, 'KEYWORD')}
+              value={requestValue.KEYWORD}
               style={{ width: '300px' }}
               placeholder="화학물질명을 입력하세요."
             />
