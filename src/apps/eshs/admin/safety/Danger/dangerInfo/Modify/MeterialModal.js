@@ -9,14 +9,12 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import moment from 'moment';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 
 moment.locale('ko');
 const AntdSelect = StyledSelect(Select);
-const AntdModal = StyledAntdModal(Modal);
 const AntdTable = StyledAntdTable(Table);
 
 const modalColumns = [
@@ -51,31 +49,17 @@ class MeterialModal extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getExtraApiData } = this.props;
-    const apiAry = [
-      {
-        key: 'modalSelectData',
-        type: 'GET',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=45',
-      },
-      {
-        key: 'modalData',
-        type: 'GET',
-        url: '/api/eshs/v1/common/eshsDanger/false?SELECTED_CODE=C003',
-      },
-    ];
-    getExtraApiData(id, apiAry, this.initData);
-  }
-
-  initData = () => {
     const {
       extraApiData: { modalData, modalSelectData },
     } = this.props;
+    console.debug('extraApiData : ', modalData, modalSelectData);
     const nModalSelectData = modalSelectData && modalSelectData.categoryMapList && modalSelectData.categoryMapList.filter(f => f.LVL !== 0);
     const nModalData = modalData && modalData.list;
+    console.debug('nModalSelectData : ', nModalSelectData);
+    console.debug('nModalData : ', nModalData);
 
     this.setState({ modalData: nModalData, modalSelectData: nModalSelectData });
-  };
+  }
 
   onChangeData = (name, value) => {
     const { sagaKey: id, changeFormData } = this.props;
@@ -114,7 +98,6 @@ class MeterialModal extends Component {
           },
         };
       }
-      console.debug('element : ', element);
       changeFormData(id, 'INFO_DATA', { ...formData.INFO_DATA, ...element });
       onChangeModal();
     } else {
@@ -123,61 +106,61 @@ class MeterialModal extends Component {
   };
 
   render() {
-    const { modalData, modalSelectData, selectedRowKeys } = this.state;
-    const { onChangeModal, isModal } = this.props;
+    const { modalData, selectedRowKeys, modalSelectData } = this.state;
+    const { onChangeModal } = this.props;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChangeModal,
     };
 
     return (
-      <AntdModal width={900} visible={isModal} title="" onCancel={onChangeModal} destroyOnClose footer={null} className="modal-table-pad">
-        <StyledContentsWrapper>
-          <StyledCustomSearchWrapper className="search-wrapper-inline">
-            <div className="search-input-area">
-              <span className="text-label">지역</span>
-              <AntdSelect
-                className="mr5 select-sm"
-                style={{ width: 80 }}
-                defaultValue={this.state.ref01}
-                onChange={value => this.setState({ ref01: String(value) }, this.filterSelect)}
-              >
-                <Option value="">지역전체</Option>
-                {modalSelectData && modalSelectData.map(item => <Option value={String(item.NODE_ID)}>{item.NAME_KOR}</Option>)}
-              </AntdSelect>
-              <span className="text-label">물질구분</span>
-              <AntdSelect
-                className="mr5 select-sm"
-                style={{ width: 150 }}
-                defaultValue={this.state.searchType}
-                value={this.state.ref02}
-                onChange={value => this.setState({ ref02: value }, this.filterSelect)}
-              >
-                <Option value="">물질전체</Option>
-                <Option value="CHEMICAL">CHEMICAL</Option>
-                <Option value="GAS">GAS</Option>
-              </AntdSelect>
-            </div>
-          </StyledCustomSearchWrapper>
-          <AntdTable
-            columns={modalColumns}
-            bordered
-            rowKey="MINOR_CD"
-            dataSource={modalData || []}
-            rowSelection={rowSelection}
-            pagination={20}
-            footer={() => <span>{`${(modalData && modalData.length) || 0} 건`}</span>}
-          />
-          <StyledButtonWrapper className="btn-wrap-center">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.modalInsert}>
-              저장
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={onChangeModal}>
-              취소
-            </StyledButton>
-          </StyledButtonWrapper>
-        </StyledContentsWrapper>
-      </AntdModal>
+      <StyledContentsWrapper>
+        <StyledCustomSearchWrapper className="search-wrapper-inline">
+          <div className="search-input-area">
+            <span className="text-label">지역</span>
+            <AntdSelect
+              className="mr5 select-sm"
+              style={{ width: 150 }}
+              defaultValue={this.state.ref01}
+              onChange={value => this.setState({ ref01: String(value) }, this.filterSelect)}
+              placeholder="지역전체"
+              allowClear
+            >
+              {modalSelectData && modalSelectData.map(item => <Option value={String(item.NODE_ID)}>{item.NAME_KOR}</Option>)}
+            </AntdSelect>
+            <span className="text-label">물질구분</span>
+            <AntdSelect
+              className="mr5 select-sm"
+              style={{ width: 150 }}
+              defaultValue={this.state.searchType}
+              value={this.state.ref02}
+              onChange={value => this.setState({ ref02: value }, this.filterSelect)}
+              placeholder="물질전체"
+              allowClear
+            >
+              <Option value="CHEMICAL">CHEMICAL</Option>
+              <Option value="GAS">GAS</Option>
+            </AntdSelect>
+          </div>
+        </StyledCustomSearchWrapper>
+        <AntdTable
+          columns={modalColumns}
+          bordered
+          rowKey="MINOR_CD"
+          dataSource={modalData || []}
+          rowSelection={rowSelection}
+          pagination={20}
+          footer={() => <span>{`${(modalData && modalData.length) || 0} 건`}</span>}
+        />
+        <StyledButtonWrapper className="btn-wrap-center">
+          <StyledButton className="btn-primary btn-first btn-sm" onClick={this.modalInsert}>
+            저장
+          </StyledButton>
+          <StyledButton className="btn-primary btn-first btn-sm" onClick={onChangeModal}>
+            취소
+          </StyledButton>
+        </StyledButtonWrapper>
+      </StyledContentsWrapper>
     );
   }
 }

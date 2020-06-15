@@ -7,6 +7,7 @@ import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
@@ -231,6 +232,8 @@ class ListPage extends Component {
       isBuilderModal,
       changeBuilderModalState,
       listData,
+      ListCustomButtons,
+      useExcelDownload,
     } = this.props;
     const { isMultiDelete, StyledWrap, isExcelDown, btnTex, fileName, sheetName, columns, fields } = this.state;
 
@@ -299,7 +302,7 @@ class ListPage extends Component {
                           <StyledButton className="btn-gray btn-sm" onClick={() => getListData(id, workSeq)}>
                             검색
                           </StyledButton>
-                          {isExcelDown && (
+                          {useExcelDownload && isExcelDown && (
                             <ExcelDownloadComp
                               isBuilder={false}
                               fileName={fileName || 'excel'}
@@ -318,21 +321,25 @@ class ListPage extends Component {
                 )
               );
             })}
-            <div className="alignRight">
-              <StyledButton
-                className="btn-primary btn-sm mr5"
-                onClick={() =>
-                  isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
-                }
-              >
-                추가
-              </StyledButton>
+            <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+              {ListCustomButtons ? (
+                <ListCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
+              ) : (
+                <StyledButton
+                  className="btn-primary btn-sm mr5"
+                  onClick={() =>
+                    isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
+                  }
+                >
+                  추가
+                </StyledButton>
+              )}
               {isMultiDelete && (
                 <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
                   <StyledButton className="btn-light btn-sm">삭제</StyledButton>
                 </Popconfirm>
               )}
-            </div>
+            </StyledButtonWrapper>
           </Sketch>
         </StyledWrap>
       );
@@ -359,6 +366,7 @@ ListPage.propTypes = {
   changeViewPage: PropTypes.func,
   customOnRowClick: PropTypes.any,
   listData: PropTypes.array,
+  useExcelDownload: PropTypes.bool,
 };
 
 ListPage.defaultProps = {
@@ -368,6 +376,7 @@ ListPage.defaultProps = {
     },
   },
   customOnRowClick: undefined,
+  useExcelDownload: true,
 };
 
 export default ListPage;

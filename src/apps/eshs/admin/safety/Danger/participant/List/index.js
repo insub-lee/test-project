@@ -7,6 +7,7 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
@@ -118,19 +119,24 @@ class List extends Component {
     } = this.props;
     const treeData = treeSelectData && treeSelectData.categoryMapList;
     const level = treeData && treeData.find(f => f.NODE_ID === value);
-    if (level.LVL === 3) {
+    if (level && level.LVL === 3) {
       changeSearchData(id, 'DEPT_PARENT_NODE_ID', `AND M1.PARENT_NODE_ID = ${value}`);
       changeSearchData(id, 'DEPT_NODE_ID', null);
       changeSearchData(id, 'SDIV_NODE_ID', null);
-    } else if (level.LVL === 4) {
+    } else if (level && level.LVL === 4) {
       changeSearchData(id, 'DEPT_PARENT_NODE_ID', null);
       changeSearchData(id, 'DEPT_NODE_ID', `AND W.DEPT_NODE_ID = ${value}`);
       changeSearchData(id, 'SDIV_NODE_ID', null);
-    } else if (level.LVL === 5) {
+    } else if (level && level.LVL === 5) {
       changeSearchData(id, 'DEPT_PARENT_NODE_ID', null);
       changeSearchData(id, 'DEPT_NODE_ID', null);
       changeSearchData(id, 'SDIV_NODE_ID', `AND W.SDIV_NODE_ID = ${value}`);
+    } else {
+      changeSearchData(id, 'DEPT_PARENT_NODE_ID', null);
+      changeSearchData(id, 'DEPT_NODE_ID', null);
+      changeSearchData(id, 'SDIV_NODE_ID', null);
     }
+
     changeFormData(id, 'SELECED_TREE', value);
   };
 
@@ -162,19 +168,14 @@ class List extends Component {
   onReset = () => {
     const { changeFormData, sagaKey: id, changeSearchData } = this.props;
     this.onCancel();
-    changeFormData(id, 'DE_YEAR', null);
+    changeFormData(id, 'DE_YEAR', moment().format('YYYY'));
     changeFormData(id, 'EMP_NO', null);
-    changeFormData(id, 'SELECED_TREE', null);
-    changeSearchData(id, 'DE_YEAR', null);
+    changeFormData(id, 'SELECED_TREE', 1596);
+    changeSearchData(id, 'DE_YEAR', `AND W.DE_YEAR = '${moment().format('YYYY')}'`);
     changeSearchData(id, 'EMP_NO', null);
     changeSearchData(id, 'DEPT_PARENT_NODE_ID', null);
     changeSearchData(id, 'DEPT_NODE_ID', null);
     changeSearchData(id, 'SDIV_NODE_ID', null);
-  };
-
-  onChangeSelect = (name, value) => {
-    const { sagaKey: id, changeFormData } = this.props;
-    changeFormData(id, name, value);
   };
 
   onChangeModal = () => {
@@ -265,13 +266,13 @@ class List extends Component {
       // onChange: () => this.setState({ selectedRowKeys }),
     };
     const columns = [
+      // {
+      //   title: '',
+      //   align: 'center',
+      //   dataIndex: 'TASK_SEQ',
+      // },
       {
-        title: '',
-        align: 'center',
-        dataIndex: 'TASK_SEQ',
-      },
-      {
-        title: '년도',
+        title: '연도',
         align: 'center',
         dataIndex: 'DE_YEAR',
       },
@@ -394,31 +395,34 @@ class List extends Component {
     return (
       <>
         <StyledContentsWrapper>
-          <div className="selSaveWrapper alignLeft">
-            <span className="textLabel">참여년도</span>
-            <AntdSelect className="select-sm mr5" style={{ width: '100px' }} value={formData.DE_YEAR} onChange={value => this.onChange('DE_YEAR', value)}>
-              {YearOptions && YearOptions.map(YYYY => <Option value={`${YYYY}`}>{YYYY}</Option>)}
-            </AntdSelect>
-            <span className="textLabel">분류</span>
-            <AntdTreeSelect
-              style={{ width: '300px' }}
-              className="mr5 select-sm"
-              value={formData.SELECED_TREE}
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-              treeData={treeData || []}
-              placeholder="Please select"
-              onChange={value => this.onChangeSelect(value)}
-            />
-            <span className="textLabel">사번</span>
-            <AntdSearchInput
-              style={{ width: '300px' }}
-              value={formData.EMP_NO}
-              className="input-search-sm ant-search-inline mr5"
-              readOnly
-              onClick={this.onChangeModal}
-              onChange={this.onChangeModal}
-            />
-            <StyledButtonWrapper className="btn-wrap-inline">
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <span className="text-label">참여 연도</span>
+              <AntdSelect className="select-sm mr5" style={{ width: '100px' }} value={formData.DE_YEAR} onChange={value => this.onChange('DE_YEAR', value)}>
+                {YearOptions && YearOptions.map(YYYY => <Option value={`${YYYY}`}>{YYYY}</Option>)}
+              </AntdSelect>
+              <span className="text-label">분류</span>
+              <AntdTreeSelect
+                style={{ width: '300px' }}
+                className="mr5 select-sm"
+                value={formData.SELECED_TREE}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                treeData={treeData || []}
+                placeholder="Please select"
+                onChange={value => this.onChangeSelect(value)}
+                allowClear
+              />
+              <span className="text-label">사번</span>
+              <AntdSearchInput
+                style={{ width: '300px' }}
+                value={formData.EMP_NO}
+                className="input-search-sm ant-search-inline mr5"
+                readOnly
+                onClick={this.onChangeModal}
+                onChange={this.onChangeModal}
+              />
+            </div>
+            <div className="btn-area">
               <StyledButton className="btn-primary btn-first btn-sm" onClick={() => getListData(id, 9201)}>
                 검색
               </StyledButton>
@@ -441,8 +445,8 @@ class List extends Component {
                 fields={fields || []}
                 listData={listData || []}
               />
-            </StyledButtonWrapper>
-          </div>
+            </div>
+          </StyledCustomSearchWrapper>
           <AntdTable
             className="tableWrapper"
             rowKey="TASK_SEQ"
@@ -504,7 +508,6 @@ class List extends Component {
                 </>
               ) : (
                 <AntdTable
-                  className="tableWrapper"
                   columns={userColumns}
                   bordered
                   rowKey="USER_ID"

@@ -621,6 +621,12 @@ class ApproveList extends Component {
                     )}
                     <div className="table-title">폐기대상 문서</div>
                     <table style={{ marginBottom: 20 }}>
+                      <colgroup>
+                        <col style={{ width: '15%' }} />
+                        <col style={{ width: '10%' }} />
+                        <col style={{ width: '60%' }} />
+                        <col style={{ width: '15%' }} />
+                      </colgroup>
                       <tbody>
                         <tr>
                           <th>문서번호</th>
@@ -630,10 +636,10 @@ class ApproveList extends Component {
                         </tr>
                         {abrogationList &&
                           abrogationList.map(item => (
-                            <tr>
+                            <tr className="tr-center">
                               <td>{item.DOCNUMBER}</td>
                               <td>{item.VERSION}</td>
-                              <td>{item.TITLE}</td>
+                              <td style={{ textAlign: 'left' }}>{item.TITLE}</td>
                               <td>{moment(item.END_DTTM).format('YYYY-MM-DD')}</td>
                             </tr>
                           ))}
@@ -732,14 +738,14 @@ class ApproveList extends Component {
               </tbody>
             </table>
           </StyledHtmlTable>
-          <div style={{ width: '100%', textAlign: 'center', marginTop: '12px' }}>
-            <StyledButton className="btn-primary mr5" onClick={this.handleReqApprove}>
+          <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+            <StyledButton className="btn-primary btn-sm mr5" onClick={this.handleReqApprove}>
               저장
             </StyledButton>
-            <StyledButton className="btn-light" onClick={() => setOpinionVisible(false)}>
+            <StyledButton className="btn-light btn-sm" onClick={() => setOpinionVisible(false)}>
               닫기
             </StyledButton>
-          </div>
+          </StyledButtonWrapper>
         </AntdModal>
       </>
     );

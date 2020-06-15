@@ -5,7 +5,7 @@ import RequesterView from './RequesterView';
 class View extends Component {
   render() {
     const { selectedRow, onCancelPopup } = this.props;
-    return <BizMicroDevBase id="requesterView" component={RequesterView} selectedRow={selectedRow} onCancelPopup={onCancelPopup} />
+    return <BizMicroDevBase sagaKey="requesterView" component={RequesterView} selectedRow={selectedRow} onCancelPopup={onCancelPopup} />
   }
 }
 

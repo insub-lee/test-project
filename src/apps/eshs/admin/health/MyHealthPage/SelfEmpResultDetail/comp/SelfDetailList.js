@@ -77,7 +77,11 @@ const SelfDetailList = ({ rowClick, list, text }) => (
     )}
     <tbody>
       {list.map(item => (
-        <tr key={`TR_${item.SE_NO}`} className="tr-pointer" onClick={() => rowClick(`${item.BIGO} <H3>*상담내용*</H3> <br>${item.CONSULT || ''}`)}>
+        <tr
+          key={`TR_${item.SE_NO}`}
+          className="tr-pointer"
+          onClick={() => rowClick(`${item.BIGO || ''} <H3>*상담내용*</H3> <br>${(item.CONSULT && item.CONSULT.replace(/align="left"/gi, '')) || ''}`)}
+        >
           {columns.map(col => (
             <td align={col.align} key={`TH_${item.SE_NO}_${col.dataIndex}`}>
               {item[col.dataIndex]}

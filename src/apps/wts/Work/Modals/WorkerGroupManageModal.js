@@ -374,7 +374,7 @@ class WorkerGroupManageModal extends React.Component {
                             disabled={selectedFromTargets.length === 0 || !selectedFromKey || !selectedToKey || selectedFromKey === '' || selectedToKey === ''}
                             onClick={() => this.sendData(true)}
                           >
-                            <i className="fas fa-arrow-circle-right fa-2x" />
+                            <i className="fa fa-arrow-circle-right fa-2x" />
                           </button>
                         </li>
                         <li style={{ textAlign: 'center' }} className={selectedToTargets.length > 0 && selectedFromKey !== '' ? 'active' : ''}>
@@ -384,7 +384,7 @@ class WorkerGroupManageModal extends React.Component {
                             disabled={selectedToTargets.length === 0 || !selectedFromKey || !selectedToKey || selectedFromKey === '' || selectedToKey === ''}
                             onClick={() => this.sendData(false)}
                           >
-                            <i className="fas fa-arrow-circle-left fa-2x" />
+                            <i className="fa fa-arrow-circle-left fa-2x" />
                           </button>
                         </li>
                       </ul>

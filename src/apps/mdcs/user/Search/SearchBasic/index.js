@@ -492,7 +492,7 @@ class SearchBasic extends Component {
             destroyOnClose
           >
             <StyledContentsWrapper>
-              <div style={{ fontSize: 12, color: '#666', marginBottom: 10 }}>
+              <div style={{ fontSize: 12, color: 'rgb(255, 36, 36)', marginBottom: 10, textAlign: 'center' }}>
                 ※ 이 문서 및 도면은 MagnaChip 반도체의 자산이므로 불법 유출 시,관계법과 MagnaChip 회사 규정에 의해 처벌함.
               </div>
               <StyledHtmlTable>

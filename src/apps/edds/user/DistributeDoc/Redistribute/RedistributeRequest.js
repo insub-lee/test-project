@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Input } from 'antd';
+import { Input, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
@@ -19,13 +20,26 @@ class RedistributeRequest extends Component {
   };
 
   onClickSendEmail = () => {
-    const {id, selectedRow, submitHandlerBySaga, onCancelPopup } = this.props;
+    const {id, selectedRow, submitHandlerBySaga, onCancelPopup, spinningOn, spinningOff } = this.props;
     const submitData = {
-      ...selectedRow,
-      REASON: this.state.reason,
+      PARAM: {
+        ...selectedRow,
+        REASON: this.state.reason,
+      }
     };
-    submitHandlerBySaga(id, 'PUT', '/api/edds/v1/common/distributeDoc', submitData, () => {
-      onCancelPopup();
+
+    Modal.confirm({
+      title: '재배포 요청 메일을 발송하시겠습니까?',
+      icon: <ExclamationCircleOutlined />,
+      okText: '발송',
+      cancelText: '취소',
+      onOk() {
+        spinningOn();
+        submitHandlerBySaga(id, 'PUT', '/api/edds/v1/common/distributeDoc', submitData, () => {
+          spinningOff();
+          onCancelPopup();
+        });
+      }
     });
   };
 

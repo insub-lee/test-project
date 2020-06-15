@@ -611,7 +611,7 @@ class configer extends Component {
                 컬럼설정
                 {modalType === 'insert' ? (
                   <Button type="primary" onClick={this.handleSaveColumnInfo}>
-                    svae
+                    Save
                   </Button>
                 ) : (
                   <>

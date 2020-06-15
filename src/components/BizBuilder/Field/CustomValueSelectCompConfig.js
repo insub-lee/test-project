@@ -14,12 +14,14 @@ const cont = {
   REMOVE: 'REMOVE',
   definedValue: 'definedValue',
   customValues: 'customValues',
+  customSearchKey: 'customSearchKey',
 };
 
 function CustomValueSelectCompConfig(props) {
   const [rows, setRows] = useState([]);
   const [definedValue, setDefinedValue] = useState({});
   const [shouldRegsiter, setShouldRegister] = useState('');
+  const [searchFuncKey, setSearchFuncKey] = useState('');
 
   const handleChangeViewCompData = (key, value) => {
     const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = props;
@@ -28,10 +30,11 @@ function CustomValueSelectCompConfig(props) {
   };
 
   useEffect(() => {
-    const { customValues, definedValue, setDefault } = props.configInfo.property;
+    const { customValues, definedValue, setDefault, customSearchKey } = props.configInfo.property;
     setRows(customValues instanceof Array ? [...customValues] : [{ value: null, text: null }]);
     setDefinedValue(definedValue instanceof Object ? { ...definedValue } : { value: null, text: null });
     setShouldRegister(typeof setDefault === 'string' ? setDefault : 'N');
+    setSearchFuncKey(customSearchKey || '');
   }, []);
 
   const debouncedHandleChangeViewCompData = debounce(handleChangeViewCompData, 250);
@@ -97,6 +100,23 @@ function CustomValueSelectCompConfig(props) {
   }
   return (
     <div>
+      <Row>
+        <div>
+          <Col span={6}>
+            <p>Custom Search Func Key</p>
+          </Col>
+          <Col span={16} push={2}>
+            <Input
+              value={searchFuncKey}
+              onChange={e => {
+                const { value } = e.target;
+                setSearchFuncKey(value);
+                debouncedHandleChangeViewCompData(cont.customSearchKey, value);
+              }}
+            />
+          </Col>
+        </div>
+      </Row>
       <Row>
         <div>
           <Col span={6}>

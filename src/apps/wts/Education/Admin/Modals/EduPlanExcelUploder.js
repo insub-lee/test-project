@@ -183,7 +183,7 @@ class EduPlanExcelUploder extends React.Component {
                     margin: 10,
                   }}
                 >
-                  <i className="fas fa-paperclip" />
+                  <i className="fa fa-paperclip" />
                   {` Sample 양식`}
                 </a>
               </div>

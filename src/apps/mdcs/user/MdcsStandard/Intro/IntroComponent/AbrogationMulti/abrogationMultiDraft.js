@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Button, Table } from 'antd';
+import { Input, Button, Table, message } from 'antd';
 import moment from 'moment';
 
 import WorkProcess from 'apps/Workflow/WorkProcess';
@@ -53,10 +53,14 @@ class AbrogationMultiDraft extends Component {
   onClickEvent = () => {
     const { onAbrogationMultiProcess } = this.props;
     const { draftWorkProc, descOfChange, revHistory, draftTitle } = this.state;
-    const DRAFT_DATA = draftWorkProc.DRAFT_DATA ? draftWorkProc.DRAFT_DATA : {};
-    const nDraftData = { ...DRAFT_DATA, descOfChange, revHistory };
-    const nDraftWorkProc = { ...draftWorkProc, DRAFT_TITLE: draftTitle, DRAFT_DATA: nDraftData };
-    onAbrogationMultiProcess(nDraftWorkProc);
+    if (draftTitle && descOfChange && revHistory && draftTitle !== '' && descOfChange !== '' && revHistory !== '') {
+      const DRAFT_DATA = draftWorkProc.DRAFT_DATA ? draftWorkProc.DRAFT_DATA : {};
+      const nDraftData = { ...DRAFT_DATA, descOfChange, revHistory };
+      const nDraftWorkProc = { ...draftWorkProc, DRAFT_TITLE: draftTitle, DRAFT_DATA: nDraftData };
+      onAbrogationMultiProcess(nDraftWorkProc);
+    } else {
+      message.error('폐기내용(*제목, Description , 제개정) 항목은 필수 입력항목입니다.');
+    }
   };
 
   getTableColumns = () => [

@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Modal, Icon } from 'antd';
+
 import moment from 'moment';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
-import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+
+import DraggableModal from 'components/DraggableModal';
+import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
 
 const AntdLineTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
@@ -75,7 +78,7 @@ class UnApproveList extends Component {
   };
 
   render() {
-    const { unApproveList } = this.props;
+    const { unApproveList, viewVisible } = this.props;
     return (
       <>
         <StyledHeaderWrapper>
@@ -95,9 +98,13 @@ class UnApproveList extends Component {
             bordered
           />
         </StyledContentsWrapper>
-        <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+
+        <DraggableModal visible={viewVisible}>
           <MdcsAppvView {...this.props} />
-        </AntdModal>
+          {/* <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+              <MdcsAppvView {...this.props} />
+            </AntdModal> */}
+        </DraggableModal>
       </>
     );
   }

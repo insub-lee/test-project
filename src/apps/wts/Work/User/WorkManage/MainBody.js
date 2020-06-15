@@ -2,7 +2,6 @@ import React from 'react';
 import moment from 'moment';
 import { AutoSizer, Column, Table } from 'react-virtualized';
 import { Icon, Spin } from 'antd';
-import 'rc-dialog/assets/index.css';
 
 import StyledVirtualized from 'apps/wts/components/CommonStyledElement/StyledVirtualized';
 import { getVirtualizedMinHeight, jsonToQueryString } from 'utils/helpers';
@@ -14,7 +13,7 @@ import WorkerRecordWriterModal from '../../Modals/WorkerRecordWriterModal';
 import WorkerRecordModifyModal from '../../Modals/WorkerRecordModifyModal';
 import WorkerTimeSimulatorModal from '../../Modals/WorkerTimeSimulatorModal';
 import service from '../../service';
-import StyledTable from '../../StyledTable';
+import StyledTable from '../../../StyledTable';
 
 const descCompare = (a, b) => {
   const diff = a.workdt - b.workdt;
