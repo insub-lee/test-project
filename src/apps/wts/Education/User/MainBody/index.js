@@ -1,9 +1,7 @@
 import React from 'react';
 import moment from 'moment';
-import 'rc-dialog/assets/index.css';
 
 import { jsonToQueryString } from 'utils/helpers';
-import Button from 'components/Button';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import Wrapper from './Wrapper';
 import service from '../../service';

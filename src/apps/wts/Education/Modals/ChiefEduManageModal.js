@@ -251,32 +251,32 @@ class ChiefEduManageModal extends React.Component {
                           <td>1조</td>
                           <td>
                             <Button type="button" size="small" color="default" onClick={() => this.handleCommonModal('eduReportModal')}>
-                              <i className="fas fa-pen" /> 레포트
+                              <i className="fa fa-pen" /> 레포트
                             </Button>
                           </td>
                           <td>
                             <Button type="button" size="small" color="default" onClick={() => this.handleCommonModal('mentorConfirmModal')}>
-                              <i className="fas fa-signature" /> 멘토확인
+                              <i className="fa fa-signature" /> 멘토확인
                             </Button>
                           </td>
                           <td>
                             <button type="button" onClick={() => this.handleCommonModal('evaluationFormModal')}>
-                              <i className="fas fa-pen-square" />
+                              <i className="fa fa-pen-square" />
                             </button>
                           </td>
                           <td>
                             <button type="button" onClick={() => this.handleCommonModal('eduReportModal')}>
-                              <i className="fas fa-check" />
+                              <i className="fa fa-check" />
                             </button>
                           </td>
                           <td rowSpan={3}>
                             <Button type="button" size="small" color="default" onClick={() => this.handleCommonModal('mentorOpinionModal')}>
-                              <i className="fas fa-pen" /> 멘토의견
+                              <i className="fa fa-pen" /> 멘토의견
                             </Button>
                           </td>
                           <td rowSpan={3}>
                             <Button type="button" size="small" color="default" onClick={() => this.handleCommonModal('chiefOpinionModal')}>
-                              <i className="fas fa-pen" /> 반장의견
+                              <i className="fa fa-pen" /> 반장의견
                             </Button>
                           </td>
                         </tr>
@@ -285,22 +285,22 @@ class ChiefEduManageModal extends React.Component {
                           <td>1조</td>
                           <td>
                             <Button type="button" size="small" color="default">
-                              <i className="fas fa-pen" /> 레포트
+                              <i className="fa fa-pen" /> 레포트
                             </Button>
                           </td>
                           <td>
                             <Button type="button" size="small" color="default">
-                              <i className="fas fa-signature" /> 멘토확인
+                              <i className="fa fa-signature" /> 멘토확인
                             </Button>
                           </td>
                           <td>
                             <button type="button">
-                              <i className="fas fa-pen-square" />
+                              <i className="fa fa-pen-square" />
                             </button>
                           </td>
                           <td>
                             <button type="button">
-                              <i className="fas fa-check" />
+                              <i className="fa fa-check" />
                             </button>
                           </td>
                         </tr>
@@ -309,22 +309,22 @@ class ChiefEduManageModal extends React.Component {
                           <td>1조</td>
                           <td>
                             <Button type="button" size="small" color="default">
-                              <i className="fas fa-pen" /> 레포트
+                              <i className="fa fa-pen" /> 레포트
                             </Button>
                           </td>
                           <td>
                             <Button type="button" size="small" color="default">
-                              <i className="fas fa-signature" /> 멘토확인
+                              <i className="fa fa-signature" /> 멘토확인
                             </Button>
                           </td>
                           <td>
                             <button type="button">
-                              <i className="fas fa-pen-square" />
+                              <i className="fa fa-pen-square" />
                             </button>
                           </td>
                           <td>
                             <button type="button">
-                              <i className="fas fa-check" />
+                              <i className="fa fa-check" />
                             </button>
                           </td>
                         </tr>

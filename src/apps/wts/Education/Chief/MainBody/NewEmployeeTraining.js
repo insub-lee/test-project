@@ -1,9 +1,10 @@
 import React from 'react';
 import { AutoSizer, Column, Table } from 'react-virtualized';
+import 'rc-dialog/assets/index.css';
 
 import StyledVirtualized from 'apps/wts/components/CommonStyledElement/StyledVirtualized';
 import { getVirtualizedMinHeight, jsonToQueryString } from 'utils/helpers';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import service from '../../service';
 import EduManageModal from '../../Modals/EduManageModal';
 import EduPlanModal from '../../Modals/EduPlanModal';
@@ -115,9 +116,9 @@ class NewEmployeeTraining extends React.Component {
           <span>신입/전배 사원 교육</span>
         </div>
         <div style={{ padding: '5px 0', textAlign: 'right' }}>
-          <Button type="button" size="small" color="default" onClick={this.handleOpenEduPlanModal}>
-            <i className="fas fa-pen-square" /> 멘토 지정
-          </Button>
+          <StyledButton type="button" className="btn-sm btn-light" onClick={this.handleOpenEduPlanModal}>
+            <i className="fa fa-pen-square" /> 멘토 지정
+          </StyledButton>
         </div>
         <StyledVirtualized minHeight={getVirtualizedMinHeight(39, 39, data.length, 500)} headerHeight={39} disableDefaultHover>
           <AutoSizer>

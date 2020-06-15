@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Select, DatePicker, Modal } from 'antd';
+import { Input, Table, Select, DatePicker, Modal } from 'antd';
 import moment from 'moment';
 import { debounce } from 'lodash';
 
@@ -8,8 +8,8 @@ import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledPicker from 'commonStyled/Form/StyledPicker';
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import ModalContents from './modalContents';
 
@@ -17,6 +17,7 @@ const AntdModal = StyledContentsModal(Modal);
 const AntdSelect = StyledSelect(Select);
 const AntdTable = StyledLineTable(Table);
 const AntdPicker = StyledPicker(DatePicker.RangePicker);
+const AntdInput = StyledInput(Input);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +26,9 @@ class List extends React.Component {
       rowData: {},
       searchValue: {
         site: '',
-        startDate: moment().format('YYYY-MM-DD'),
+        startDate: moment()
+          .startOf('month')
+          .format('YYYY-MM-DD'),
         endDate: moment().format('YYYY-MM-DD'),
         type: '',
         deptId: '',
@@ -47,19 +50,18 @@ class List extends React.Component {
 
   getDataSource = () => {
     const { setDataSource } = this;
-    const { site, startDate, endDate, type, deptId } = this.state.searchValue;
-    const { sagaKey: id, getExtraApiData } = this.props;
-    const params = `?SITE=${site}&START_DATE=${startDate}&END_DATE=${endDate}&TYPE=${type}&DEPT_ID=${deptId}`;
-    console.debug(params);
+    const { startDate, endDate, type, deptId } = this.state.searchValue;
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const params = `?&START_DATE=${startDate}&END_DATE=${endDate}&TYPE=${type}&DEPT_ID=${deptId}`;
     const apiArr = [
       {
         key: 'dataSource',
-        url: `/api/eshs/v1/common/protectionerm${params}`,
+        url: `/api/eshs/v1/common/protection-req${params}`,
         type: 'GET',
       },
     ];
 
-    getExtraApiData(id, apiArr, setDataSource);
+    getCallDataHandler(id, apiArr, setDataSource);
   };
 
   setDataSource = () => {
@@ -71,7 +73,7 @@ class List extends React.Component {
 
   getDepartmentList = () => {
     const { setDeraptmentList } = this;
-    const { sagaKey: id, getExtraApiData } = this.props;
+    const { sagaKey: id, getCallDataHandler } = this.props;
     const headquarterId = 72761;
     const apiArr = [
       {
@@ -81,7 +83,7 @@ class List extends React.Component {
       },
     ];
 
-    getExtraApiData(id, apiArr, () => setDeraptmentList(headquarterId));
+    getCallDataHandler(id, apiArr, () => setDeraptmentList(headquarterId));
   };
 
   setDeraptmentList = headquarterId => {
@@ -92,15 +94,12 @@ class List extends React.Component {
   };
 
   handleHqChange = headquarterId => {
-    const { sagaKey: id, getExtraApiData } = this.props;
+    const { sagaKey: id, getCallDataHandler } = this.props;
     if (!headquarterId) {
-      return this.setState(
-        prevState => ({
-          isHeadquarterSelect: false,
-          searchValue: Object.assign(prevState.searchValue, { deptId: '' }),
-        }),
-        this.getDataSource,
-      );
+      return this.setState(prevState => ({
+        isHeadquarterSelect: false,
+        searchValue: Object.assign(prevState.searchValue, { deptId: '' }),
+      }));
     }
     this.setState({ isHeadquarterSelect: true });
     const apiArr = [
@@ -110,7 +109,7 @@ class List extends React.Component {
         url: `/api/eshs/v1/common/EshsHqAndDeptList?DEPT_ID=${headquarterId}`,
       },
     ];
-    return getExtraApiData(id, apiArr, this.setDeptList);
+    return getCallDataHandler(id, apiArr, this.setDeptList);
   };
 
   setDeptList = () => {
@@ -123,64 +122,64 @@ class List extends React.Component {
 
   columns = [
     {
+      title: '신청팀',
+      dataIndex: 'DEPT_NAME_KOR',
+      key: 'DEPT_NAME_KOR',
+      width: '10%',
+    },
+    {
       title: '품목',
       dataIndex: 'KIND',
       key: 'KIND',
-      width: '255px',
+      width: '10%',
     },
     {
       title: '모델',
       dataIndex: 'MODEL',
       key: 'MODEL',
-      width: '220px',
+      width: '10%',
     },
     {
-      title: 'Size',
+      title: '사이즈',
       dataIndex: 'SIZE1',
       key: 'SIZE1',
-      width: '110px',
+      width: '10%',
     },
     {
-      title: '업체',
-      dataIndex: 'VENDOR_NM',
-      key: 'VENDOR_NM',
-      width: '110px',
-    },
-    {
-      title: '입출',
-      dataIndex: 'TYPE',
-      key: 'TYPE',
-      width: '85px',
-    },
-    {
-      title: '단가',
-      dataIndex: 'UNITPRICE',
-      key: 'UNITPRICE',
-      width: '80px',
-    },
-    {
-      title: '수량',
+      title: '신청수량',
       dataIndex: 'QTY',
       key: 'QTY',
-      width: '50px',
+      width: '10%',
     },
     {
-      title: '금액',
-      dataIndex: 'TOTAL_PRICE',
-      key: 'TOTAL_PRICE',
-      width: '80px',
+      title: '지급요청일',
+      dataIndex: 'TARGET_DT',
+      key: 'TARGET_DT',
+      width: '10%',
     },
     {
-      title: '발생일',
-      dataIndex: 'POSTING_DT',
-      key: 'POSTING_DT',
-      width: '120px',
+      title: '지급수량',
+      dataIndex: '',
+      key: '',
+      width: '10%',
     },
     {
-      title: '출고장소',
-      dataIndex: 'DEPT_NAME_KOR',
-      key: 'DEPT_NAME_KOR',
-      width: '150px',
+      title: '지급일',
+      dataIndex: '',
+      key: '',
+      width: '10%',
+    },
+    {
+      title: '지급상태',
+      dataIndex: 'CONF_STATUS',
+      key: 'CONF_STATUS',
+      width: '10%',
+    },
+    {
+      title: '신청사유',
+      dataIndex: 'REQ_COMMENTS',
+      key: 'REQ_COMMENTS',
+      width: '10%',
     },
   ];
 
@@ -211,7 +210,7 @@ class List extends React.Component {
   };
 
   handleModalClose = () => {
-    this.setState({ modalVisible: false, isModified: false });
+    this.setState({ modalVisible: false, isModified: false, modalDataSource: null });
   };
 
   getSearchData = () => {
@@ -219,10 +218,33 @@ class List extends React.Component {
     getDataSource();
   };
 
+  handleRowClick = record => {
+    const { sagaKey, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'reqDetails',
+        url: `/api/eshs/v1/common/protection-req-detail?REQ_CD=${record.REQ_CD}`,
+        type: 'GET',
+      },
+    ];
+
+    getCallDataHandler(sagaKey, apiArr, () => this.setModalDataSource(record));
+  };
+
+  setModalDataSource = record => {
+    const { extraApiData } = this.props;
+    this.setState({
+      rowData: record,
+      modalVisible: true,
+      isModified: true,
+      modalDataSource: (extraApiData.reqDetails && extraApiData.reqDetails.list) || [],
+    });
+  };
+
   render() {
     const { columns, handleSearchChange, handleModalVisible, handleSearchDateChange, handleModalClose, getDataSource, handleHqChange } = this;
-    const { dataSource, modalVisible, searchValue, rowData, isModified, headquarterList, departmentList, isHeadquarterSelect } = this.state;
-    const { sagaKey, changeFormData, formData, viewPageData, saveTask, submitExtraHandler, profile } = this.props;
+    const { dataSource, modalVisible, searchValue, rowData, isModified, headquarterList, departmentList, isHeadquarterSelect, modalDataSource } = this.state;
+    const { sagaKey, changeFormData, formData, viewPageData, saveTask, getCallDataHandler, submitHandlerBySaga, extraApiData, profile } = this.props;
     return (
       <>
         <ContentsWrapper>
@@ -239,11 +261,6 @@ class List extends React.Component {
               />
             </div>
             <div>
-              <AntdSelect defaultValue="" className="select-mid mr5" onChange={value => handleSearchChange('type', value)} style={{ width: '10%' }}>
-                <Select.Option value="E">입고</Select.Option>
-                <Select.Option value="R">출고</Select.Option>
-                <Select.Option value="">전체</Select.Option>
-              </AntdSelect>
               <AntdSelect defaultValue="" className="select-mid mr5" onChange={handleHqChange} style={{ width: '20%' }}>
                 <Select.Option value="">본부 전체</Select.Option>
                 {headquarterList.map(headquarter => (
@@ -263,21 +280,26 @@ class List extends React.Component {
                   <Select.Option value={department.DEPT_ID}>{department.NAME_KOR}</Select.Option>
                 ))}
               </AntdSelect>
-              <StyledButton className="btn-primary mr5" onClick={handleModalVisible}>
-                입고등록
-              </StyledButton>
+              <AntdSelect defaultValue="" className="select-mid mr5" onChange={value => handleSearchChange('type', value)} style={{ width: '10%' }}>
+                <Select.Option value="1">접수</Select.Option>
+                <Select.Option value="2">진행</Select.Option>
+                <Select.Option value="3">완료</Select.Option>
+                <Select.Option value="">상태전체</Select.Option>
+              </AntdSelect>
+              <AntdInput className="ant-input-mid ant-input-inline" placeholder="품목명" style={{ width: '15%' }} />
             </div>
           </StyledSearchWrap>
           <div style={{ padding: '10px' }}>
             <AntdTable
               columns={columns}
               dataSource={dataSource}
-              onRow={record => ({ onClick: () => this.setState({ rowData: record, modalVisible: true, isModified: true }) })}
+              // onRow={record => ({ onClick: () => this.setState({ rowData: record, modalVisible: true, isModified: true }) })}
+              onRow={record => ({ onClick: () => this.handleRowClick(record) })}
               footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
             />
           </div>
         </ContentsWrapper>
-        <AntdModal title="입고 등록" visible={modalVisible} footer={null} onCancel={handleModalClose} destroyOnClose>
+        <AntdModal title="입고 등록" visible={modalVisible} footer={null} onCancel={handleModalClose} width="80%" destroyOnClose>
           <ModalContents
             sagaKey={sagaKey}
             changeFormData={changeFormData}
@@ -289,8 +311,11 @@ class List extends React.Component {
             getDataSource={getDataSource}
             rowData={rowData}
             isModified={isModified}
-            submitExtraHandler={submitExtraHandler}
+            getCallDataHandler={getCallDataHandler}
+            submitHandlerBySaga={submitHandlerBySaga}
+            extraApiData={extraApiData}
             profile={profile}
+            modalDataSource={modalDataSource}
           />
         </AntdModal>
       </>
@@ -300,19 +325,19 @@ class List extends React.Component {
 
 List.propTypes = {
   sagaKey: PropTypes.string,
-  getExtraApiData: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   extraApiData: PropTypes.object,
   changeFormData: PropTypes.func,
   saveTask: PropTypes.func,
   formData: PropTypes.object,
   viewPageData: PropTypes.object,
-  submitExtraHandler: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
   profile: PropTypes.object,
 };
 
 List.defaultProps = {
   sagaKey: '',
-  getExtraApiData: null,
+  getCallDataHandler: null,
   extraApiData: null,
   changeFormData: null,
 };

@@ -5,46 +5,57 @@ export const masterColumnDefs = [
       {
         headerName: 'SAP_NO',
         field: 'SAP_NO',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: 'CAS_NO',
         field: 'CAS_NO',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '화학물질명_국문',
         field: 'NAME_KOR',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '화학물질명_영문',
         field: 'NAME_ENG',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '화학물질명_SAP',
         field: 'NAME_SAP',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '관용명 및 이명',
         field: 'NAME_ETC',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '지역',
         field: 'SITE',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '수입구분',
         field: 'IS_IMPORT',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '공급업체',
         field: 'WRK_CMPNY_NM',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: 'MSDS 함량',
         field: 'CONTENT_EXP',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '함량 %',
         field: 'CONTENT_DOSE',
+        filter: 'agTextColumnFilter',
       },
     ],
   },
@@ -54,10 +65,12 @@ export const masterColumnDefs = [
       {
         headerName: '인화성가스 구분',
         field: 'IS_INFLAMMABILITY_GAS',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '인화성 액체 구분',
         field: 'IS_INFLAMMABILITY_LIQUID',
+        filter: 'agTextColumnFilter',
       },
     ],
   },
@@ -67,26 +80,32 @@ export const masterColumnDefs = [
       {
         headerName: '유독물질',
         field: 'TOXIC_EXPRESSION',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '사고대비물질',
         field: 'ACCIDENT_EXPRESSION',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '허가물질',
         field: 'ALLOW_EXPRESSION',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '제한물질',
         field: 'RESTRICT_CONTENT_FACTOR',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '금지물질',
         field: 'BAN_CONTENT_FACTOR',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: 'PRTR 대상물질',
         field: 'IS_PRTR',
+        filter: 'agTextColumnFilter',
       },
     ],
   },
@@ -96,10 +115,12 @@ export const masterColumnDefs = [
       {
         headerName: 'CMR 등록 대상물질',
         field: 'IS_REGISRATION_ACT_APPLICATE',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '수입화학물질여부',
         field: 'REGISTRATION_ACT_IS_IMPORT',
+        filter: 'agTextColumnFilter',
       },
     ],
   },
@@ -109,6 +130,7 @@ export const masterColumnDefs = [
       {
         headerName: '위험물(제품기준분류)',
         field: 'HARMFUL_CATEGORY',
+        filter: 'agTextColumnFilter',
       },
     ],
   },
@@ -118,54 +140,67 @@ export const masterColumnDefs = [
       {
         headerName: '노출기준설정물질(산안법 39조)',
         field: 'IS_EXPOSURE',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '허용기준설정물질(산안법 39조2)',
         field: 'IS_PERMISSION',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '허가대상물질(산안법 38조)',
         field: 'IS_ALLOW',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '금지물질(산안법 117조)',
         field: 'IS_BAN',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '작업환경측정물질(함량 1%이상)',
         field: 'IS_WORKSPACE_MATERIAL',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '관리대상물질(보건기준 420조)',
         field: 'IS_MANAGED',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '특별관리대상물질(보건기준 440조)',
         field: 'IS_SPE_MANAGED',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '특수건강검진대상(산안법 201조)',
         field: 'IS_APPLICATE',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: 'PSM(PSM대상물질 51종)',
         field: 'IS_PSM',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '도급승인대상물질',
         field: 'IS_CONTRACT',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '발암성(C)',
         field: 'CARCINOGENICITY',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '변이독성(M)',
         field: 'MUTAGENICITY',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '생식독성(R)',
         field: 'REPRODUCTIVE_TOXICIT',
+        filter: 'agTextColumnFilter',
       },
     ],
   },
@@ -178,59 +213,34 @@ export const sapUsageColumn = [
       {
         headerName: 'SAP_NO',
         field: 'SAP_NO',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: 'CAS_NO',
         field: 'CAS_NO',
+        filter: 'agTextColumnFilter',
       },
       {
         headerName: '화학물질명_국문',
         field: 'NAME_KOR',
-      },
-      {
-        headerName: '화학물질명_영문',
-        field: 'NAME_ENG',
+        filter: 'agTextColumnFilter',
+        width: 140,
       },
       {
         headerName: '화학물질명_SAP',
         field: 'NAME_SAP',
-      },
-      {
-        headerName: '관용명 및 이명',
-        field: 'NAME_ETC',
+        filter: 'agTextColumnFilter',
+        width: 140,
       },
       {
         headerName: '지역',
         field: 'SITE',
+        filter: 'agTextColumnFilter',
       },
       {
-        headerName: '수입구분',
-        field: 'IS_IMPORT',
-      },
-      {
-        headerName: '공급업체',
-        field: 'WRK_CMPNY_NM',
-      },
-      {
-        headerName: 'MSDS 함량',
-        field: 'CONTENT_EXP',
-      },
-      {
-        headerName: '함량 %',
-        field: 'CONTENT_DOSE',
-      },
-    ],
-  },
-  {
-    headerName: 'MSDS 정보(제품기준)',
-    children: [
-      {
-        headerName: '인화성가스 구분',
-        field: 'IS_INFLAMMABILITY_GAS',
-      },
-      {
-        headerName: '인화성 액체 구분',
-        field: 'IS_INFLAMMABILITY_LIQUID',
+        headerName: '환산계수',
+        field: 'CONVERT_COEFFICIENT',
+        filter: 'agTextColumnFilter',
       },
     ],
   },
@@ -238,44 +248,22 @@ export const sapUsageColumn = [
     headerName: '사용량',
     children: [
       {
-        headerName: '2016년 - 제품',
-        field: '2016_USAGE',
-      },
-      {
-        headerName: '2016년 - 물질',
-        field: '2016_USAGE_MATERIAL',
-      },
-      {
-        headerName: '2017년 - 제품',
-        field: '2017_USAGE',
-      },
-      {
-        headerName: '2017년 - 물질',
-        field: '2017_USAGE_MATERIAL',
-      },
-      {
-        headerName: '2018년 - 제품',
+        headerName: '2018년',
         field: '2018_USAGE',
+        filter: 'agTextColumnFilter',
+        sortable: true,
       },
       {
-        headerName: '2018년 - 물질',
-        field: '2018_USAGE_MATERIAL',
-      },
-      {
-        headerName: '2019년 - 제품',
+        headerName: '2019년',
         field: '2019_USAGE',
+        filter: 'agTextColumnFilter',
+        sortable: true,
       },
       {
-        headerName: '2019년 - 물질',
-        field: '2019_USAGE_MATERIAL',
-      },
-      {
-        headerName: '2020년 - 제품',
+        headerName: '2020년',
         field: '2020_USAGE',
-      },
-      {
-        headerName: '2020년 - 물질',
-        field: '2020_USAGE_MATERIAL',
+        filter: 'agTextColumnFilter',
+        sortable: true,
       },
     ],
   },

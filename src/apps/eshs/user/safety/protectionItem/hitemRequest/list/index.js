@@ -94,6 +94,12 @@ class List extends React.Component {
 
   handleHqChange = headquarterId => {
     const { sagaKey: id, getExtraApiData } = this.props;
+    if (!headquarterId) {
+      return this.setState(prevState => ({
+        isHeadquarterSelect: false,
+        searchValue: Object.assign(prevState.searchValue, { deptId: '' }),
+      }));
+    }
     this.setState({ isHeadquarterSelect: true });
     const apiArr = [
       {
@@ -102,14 +108,15 @@ class List extends React.Component {
         url: `/api/eshs/v1/common/EshsHqAndDeptList?DEPT_ID=${headquarterId}`,
       },
     ];
-    getExtraApiData(id, apiArr, this.setDeptList);
+    return getExtraApiData(id, apiArr, this.setDeptList);
   };
 
   setDeptList = () => {
     const { extraApiData } = this.props;
-    this.setState({
+    this.setState(prevState => ({
       departmentList: (extraApiData.deptListUnderHq && extraApiData.deptListUnderHq.dept) || [],
-    });
+      searchValue: Object.assign(prevState.searchValue, { deptId: '' }),
+    }));
   };
 
   columns = [
@@ -241,11 +248,6 @@ class List extends React.Component {
               />
             </div>
             <div>
-              <AntdSelect defaultValue="" className="select-mid mr5" onChange={value => handleSearchChange('type', value)} style={{ width: '10%' }}>
-                <Select.Option value="E">입고</Select.Option>
-                <Select.Option value="R">출고</Select.Option>
-                <Select.Option value="">전체</Select.Option>
-              </AntdSelect>
               <AntdSelect defaultValue="" className="select-mid mr5" onChange={handleHqChange} style={{ width: '20%' }}>
                 <Select.Option value="">본부 전체</Select.Option>
                 {headquarterList.map(headquarter => (
@@ -255,10 +257,12 @@ class List extends React.Component {
               <AntdSelect
                 disabled={!isHeadquarterSelect}
                 defaultValue=""
+                value={searchValue.deptId}
                 className="select-mid mr5"
                 onChange={value => handleSearchChange('deptId', value)}
                 style={{ width: '20%' }}
               >
+                <Select.Option value="">팀 전체</Select.Option>
                 {departmentList.map(department => (
                   <Select.Option value={department.DEPT_ID}>{department.NAME_KOR}</Select.Option>
                 ))}

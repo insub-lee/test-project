@@ -331,7 +331,7 @@ class ListPage extends Component {
                     isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
                   }
                 >
-                  추가
+                  추가dd
                 </StyledButton>
               )}
               {isMultiDelete && (
