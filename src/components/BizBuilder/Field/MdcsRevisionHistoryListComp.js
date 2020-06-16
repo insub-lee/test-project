@@ -16,6 +16,8 @@ const StyledPre = styled.pre`
   margin-bottom: 0px;
   overflow: hidden;
   white-space: pre-wrap;
+  font-size: inherit;
+  font-family: inherit;
 `;
 
 const AntdTable = StyledCustomTable(StyledAntdTable(Table));
@@ -25,20 +27,20 @@ const columns = [
     title: 'Rev.',
     dataIndex: 'VERSION',
     key: 'TASK_SEQ',
-    width: '30px',
+    width: '10%',
     align: 'center',
   },
   {
     title: 'Date.',
     dataIndex: 'END_DTTM',
-    width: '60px',
+    width: '20%',
     align: 'center',
     // render: text => (text ? text.split(' ')[0] : ''),
   },
   {
     title: 'Short Description(Including the Para./clause)',
     dataIndex: 'COPY_REMARK',
-    width: '550px',
+    width: '70%',
     render: text => <StyledPre>{text}</StyledPre>,
   },
 ];
