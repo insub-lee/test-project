@@ -97,7 +97,7 @@ class CustomThemeNodeContentRenderer extends Component {
     } = this.props;
     const nodeTitle = title || node.title;
     const nodeSubtitle = subtitle || node.subtitle;
-
+    console.debug('nodeinof', node);
     const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node);
     const isLandingPadActive = !didDrop && isDragging;
     const nodeContent = connectDragPreview(
@@ -106,11 +106,11 @@ class CustomThemeNodeContentRenderer extends Component {
           isLandingPadActive && !canDrop ? ` ${styles.rowCancelPad} rstcustom__rowCancelPad` : ''
         } ${isSearchMatch ? ` ${styles.rowSearchMatch} rstcustom__rowSearchMatch` : ''} ${
           isSearchFocus ? ` ${styles.rowSearchFocus} rstcustom__rowSearchFocus` : ''
-        } ${className ? ` ${className}` : ''} essh_tree_depth${node.LVL}`}
+        } ${className ? ` ${className}` : ''} eshs_tree_depth${node.LVL} eshs_tree_type${node.APP_YN}`}
         style={{
           opacity: isDraggedDescendant ? 0.5 : 1,
           ...style,
-          paddingLeft: 10 * node.LVL,
+          paddingLeft: node.APP_YN === 'F' ? 10 * (node.LVL <= 2 ? 1 : node.LVL - 1) : 10 * (node.LVL <= 2 ? 1 : node.LVL - 1),
         }}
       >
         <div className={styles.rowContents + (!canDrag ? ` ${styles.rowContentsDragDisabled} rstcustom__rowContentsDragDisabled` : '')}>
@@ -146,10 +146,10 @@ class CustomThemeNodeContentRenderer extends Component {
                   : nodeSubtitle}
               </span>
             )}
-
+            {/* 
             <button type="button" className="btn-page-move">
               <IconCollection className="icon-page-move" />
-            </button>
+            </button> */}
           </div>
 
           <div className={`${styles.rowToolbar} rstcustom__rowToolbar`}>

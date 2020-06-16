@@ -6,8 +6,9 @@ import moment from 'moment';
 import { getVirtualizedMinHeight, jsonToQueryString } from 'utils/helpers';
 import { AutoSizer, Column, Table, SortDirection, SortIndicator } from 'react-virtualized';
 import StyledVirtualized from 'apps/wts/components/CommonStyledElement/StyledVirtualized';
-import Button from 'components/Button';
 
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import EduProgramFormModal from '../Modals/EduProgramFormModal';
 import EduProgramManageEvaluationModal from '../Modals/EduProgramManageEvaluation';
 import GroupManageModal from '../Modals/GroupManageModal';
@@ -15,10 +16,19 @@ import EduPlanQuestionsModal from '../Modals/EduPlanQuestionsModal';
 import EduMembersModal from '../Modals/EduMembersModal';
 import EduTargetManageModal from '../Modals/EduTargetManageModal';
 import service from '../../service';
+import StyledStandard from '../../../StyledStandard';
 
 import Wrapper from './Wrapper';
 
-const eduButtonStyle = { padding: '7px 15px', margin: '0 5px', border: '1px solid black', borderRadius: 30, fontSize: '13px' };
+const eduButtonStyle = {
+  padding: '2px 10px',
+  margin: '0 5px',
+  border: '1px solid black',
+  borderRadius: 30,
+  fontSize: '13px',
+  lineHeight: '1.5',
+  background: 'transparent',
+};
 
 const colorSelector = (startDate, endDate) => {
   const currentTime = new Date().valueOf();
@@ -464,102 +474,104 @@ class EduPrograms extends React.Component {
     const filteredData = this.getFilterData();
     return (
       <Wrapper>
-        <div className="title">년도별 교육목록</div>
-        <div className="btn_wrap" style={{ position: 'relative', padding: '10px 0' }}>
-          <div style={{ position: 'absolute', width: 100, top: 0, left: 0 }}>
-            <select name="" value={moment(searchDate).format('YYYY')} onChange={this.handleChangeSearchDate}>
-              {this.dateOptionRenderer()}
-            </select>
+        <StyledStandard>
+          <div className="title">년도별 교육목록</div>
+          <StyledButtonWrapper className="btn-wrap-right" style={{ position: 'relative', marginBottom: 30 }}>
+            <div style={{ position: 'absolute', width: 100, top: 0, left: 0 }}>
+              <select name="" value={moment(searchDate).format('YYYY')} onChange={this.handleChangeSearchDate}>
+                {this.dateOptionRenderer()}
+              </select>
+            </div>
+            <StyledButton type="button" className="btn-gray btn-sm mr5" onClick={this.handleOpenEduPlanQuestionsModal}>
+              신입/전배 교육 문항 관리
+            </StyledButton>
+            <StyledButton type="button" className="btn-gray btn-sm mr5" onClick={this.handleOpenEduProgramManageEvaluationModal}>
+              교육 평가 문항 관리
+            </StyledButton>
+            <StyledButton type="button" className="btn-primary btn-sm" onClick={this.handleOpenEduProgramFormModal}>
+              교육 추가하기
+            </StyledButton>
+          </StyledButtonWrapper>
+          <div>
+            <div style={{ marginBottom: '10px' }}>
+              <div style={{ display: 'inline-block', marginRight: '10px' }}>
+                <select name="currentEdu" value={currentEdu} onChange={this.handleChangeFilter} style={{ width: 150, height: 46 }}>
+                  <option value="">전체 교육</option>
+                  {edus.map(value => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div style={{ display: 'inline-block', marginRight: '10px' }}>
+                <select name="currentType" value={currentType} onChange={this.handleChangeFilter} style={{ width: 150, height: 46 }}>
+                  <option value="">전체 구분</option>
+                  {types.map(value => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div style={{ display: 'inline-block', marginRight: '10px' }}>
+                <select name="currentTime" value={currentTime} onChange={this.handleChangeFilter} style={{ width: 150, height: 46 }}>
+                  <option value="">전체 회차</option>
+                  {times.map(value => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
+              <StyledVirtualized minHeight={getVirtualizedMinHeight(48, 48, filteredData.size, 500)} headerHeight={48} disableDefaultHover>
+                <AutoSizer>
+                  {({ height, width }) => (
+                    <Table
+                      width={width}
+                      height={height}
+                      headerHeight={48}
+                      rowHeight={48}
+                      rowCount={filteredData.size}
+                      rowGetter={({ index }) => filteredData.get(index)}
+                      headerClassName="virtualized_header"
+                      gridClassName="virtualized_grid"
+                      rowClassName="virtualized_row"
+                      noRowsRenderer={() => (
+                        <div className="virtualized_noData">
+                          <span>{isLoading ? 'Loading...' : 'No Data'}</span>
+                        </div>
+                      )}
+                      sort={this.sort}
+                      sortBy={sortBy}
+                      sortDirection={sortDirection}
+                    >
+                      {this.columnsRenderer().map(column => (
+                        <Column
+                          key={column.dataKey}
+                          {...column}
+                          width={(width * column.percentWidth) / 100}
+                          style={{
+                            ...column.style,
+                            lineHeight: '48px',
+                          }}
+                        />
+                      ))}
+                    </Table>
+                  )}
+                </AutoSizer>
+              </StyledVirtualized>
+            </Spin>
           </div>
-          <Button type="button" size="default" color="grayTwo" onClick={this.handleOpenEduPlanQuestionsModal}>
-            신입/전배 교육 문항 관리
-          </Button>
-          <Button type="button" size="default" color="gray" onClick={this.handleOpenEduProgramManageEvaluationModal}>
-            교육 평가 문항 관리
-          </Button>
-          <Button type="button" size="default" color="primary" onClick={this.handleOpenEduProgramFormModal}>
-            교육 추가하기
-          </Button>
-        </div>
-        <div>
-          <div style={{ marginBottom: '10px' }}>
-            <div style={{ display: 'inline-block', marginRight: '10px' }}>
-              <select name="currentEdu" value={currentEdu} onChange={this.handleChangeFilter} style={{ width: 150, height: 46 }}>
-                <option value="">전체 교육</option>
-                {edus.map(value => (
-                  <option key={value} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div style={{ display: 'inline-block', marginRight: '10px' }}>
-              <select name="currentType" value={currentType} onChange={this.handleChangeFilter} style={{ width: 150, height: 46 }}>
-                <option value="">전체 구분</option>
-                {types.map(value => (
-                  <option key={value} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div style={{ display: 'inline-block', marginRight: '10px' }}>
-              <select name="currentTime" value={currentTime} onChange={this.handleChangeFilter} style={{ width: 150, height: 46 }}>
-                <option value="">전체 회차</option>
-                {times.map(value => (
-                  <option key={value} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-            <StyledVirtualized minHeight={getVirtualizedMinHeight(48, 48, filteredData.size, 500)} headerHeight={48} disableDefaultHover>
-              <AutoSizer>
-                {({ height, width }) => (
-                  <Table
-                    width={width}
-                    height={height}
-                    headerHeight={48}
-                    rowHeight={48}
-                    rowCount={filteredData.size}
-                    rowGetter={({ index }) => filteredData.get(index)}
-                    headerClassName="virtualized_header"
-                    gridClassName="virtualized_grid"
-                    rowClassName="virtualized_row"
-                    noRowsRenderer={() => (
-                      <div className="virtualized_noData">
-                        <span>{isLoading ? 'Loading...' : 'No Data'}</span>
-                      </div>
-                    )}
-                    sort={this.sort}
-                    sortBy={sortBy}
-                    sortDirection={sortDirection}
-                  >
-                    {this.columnsRenderer().map(column => (
-                      <Column
-                        key={column.dataKey}
-                        {...column}
-                        width={(width * column.percentWidth) / 100}
-                        style={{
-                          ...column.style,
-                          lineHeight: '48px',
-                        }}
-                      />
-                    ))}
-                  </Table>
-                )}
-              </AutoSizer>
-            </StyledVirtualized>
-          </Spin>
-        </div>
-        <EduMembersModal ref={this.eduMembers} site={manInfo.site} />
-        <EduTargetManageModal ref={this.eduTargetManageModal} site={manInfo.site} />
-        <GroupManageModal ref={this.groupManageModal} site={manInfo.site} />
-        <EduProgramFormModal ref={this.eduProgramFormModalRef} site={manInfo.site} callbackHandler={this.initData} />
-        <EduProgramManageEvaluationModal ref={this.eduProgramManageEvaluationModal} site={manInfo.site} empno={manInfo.empno} />
-        <EduPlanQuestionsModal ref={this.eduPlanQuestionsModal} site={manInfo.site} empno={manInfo.empno} />
+          <EduMembersModal ref={this.eduMembers} site={manInfo.site} />
+          <EduTargetManageModal ref={this.eduTargetManageModal} site={manInfo.site} />
+          <GroupManageModal ref={this.groupManageModal} site={manInfo.site} />
+          <EduProgramFormModal ref={this.eduProgramFormModalRef} site={manInfo.site} callbackHandler={this.initData} />
+          <EduProgramManageEvaluationModal ref={this.eduProgramManageEvaluationModal} site={manInfo.site} empno={manInfo.empno} />
+          <EduPlanQuestionsModal ref={this.eduPlanQuestionsModal} site={manInfo.site} empno={manInfo.empno} />
+        </StyledStandard>
       </Wrapper>
     );
   }
