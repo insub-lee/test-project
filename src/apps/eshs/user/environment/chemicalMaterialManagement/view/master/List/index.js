@@ -140,7 +140,7 @@ class List extends React.Component {
                 className="ant-input-inline ant-input-mid mr5"
                 onChange={e => handleInputChange(e.target.value, 'SAP_NO')}
                 value={requestValue.SAP_NO}
-                style={{ width: '150px' }}
+                style={{ width: '15%' }}
                 placeholder="SAP_NO."
               />
               <div className="textLabel">CAS_NO.</div>
@@ -148,14 +148,14 @@ class List extends React.Component {
                 className="ant-input-inline ant-input-mid mr5"
                 onChange={e => handleInputChange(e.target.value, 'CAS_NO')}
                 value={requestValue.CAS_NO}
-                style={{ width: '150px' }}
+                style={{ width: '15%' }}
                 placeholder="CAS_NO."
               />
               <AntdInput
                 className="ant-input-inline ant-input-mid mr5"
                 onChange={e => handleInputChange(e.target.value, 'KEYWORD')}
                 value={requestValue.KEYWORD}
-                style={{ width: '300px' }}
+                style={{ width: '20%' }}
                 placeholder="화학물질명을 입력하세요."
               />
               <ExcelDownloadComp
@@ -170,8 +170,8 @@ class List extends React.Component {
                 columns={createExcelData(masterColumnDefs, 'COLUMNS', 'headerName')}
               />
             </div>
-            <div className="ag-theme-balham tableWrapper" style={{ padding: '0px 20px', height: 'calc(100% - 25px)' }}>
-              <div style={{ width: '100%', height: '500px' }}>
+            <div style={{ width: '100%', height: '500px' }}>
+              <div className="ag-theme-balham tableWrapper" style={{ padding: '0px 20px', height: 'calc(100% - 25px)' }}>
                 <AgGridReact
                   defaultColDef={defaultColDef}
                   columnDefs={isMasterColumns ? masterColumnDefs : sapUsageColumn}
