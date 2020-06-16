@@ -136,8 +136,10 @@ class List extends Component {
     if (this.state.name && this.state.changeSelectValue) {
       if (value === 'U' && this.state.code) {
         submitHandlerBySaga(id, 'PUT', '/api/admin/v1/common/categoryMap', submitData, this.modifyCallback);
-      } else if (this.state.code && (value === 'D' || value === 'R')) {
-        submitHandlerBySaga(id, 'PUT', '/api/admin/v1/common/categoryMap', submitData, this.modifyCallback);
+      } else if (this.state.code && value === 'D') {
+        submitHandlerBySaga(id, 'PUT', '/api/admin/v1/common/categoryMap', submitData, this.deleteCallback);
+      } else if (this.state.code && value === 'R') {
+        submitHandlerBySaga(id, 'PUT', '/api/admin/v1/common/categoryMap', submitData, this.recoverCallback);
       } else if (value === 'I') {
         submitHandlerBySaga(id, 'POST', '/api/admin/v1/common/categoryMap', submitData, this.insertCallback);
       } else if (!this.state.code) {
@@ -163,6 +165,24 @@ class List extends Component {
   modifyCallback = (id, response) => {
     if (response.code === 200) {
       message.success('수정이 완료되었습니다.');
+      this.callBackApi();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
+  deleteCallback = (id, response) => {
+    if (response.code === 200) {
+      message.success('삭제가 완료되었습니다.');
+      this.callBackApi();
+    } else {
+      message.warning('서버의 문제가 발생했습니다.');
+    }
+  };
+
+  recoverCallback = (id, response) => {
+    if (response.code === 200) {
+      message.success('삭제 취소가 완료되었습니다.');
       this.callBackApi();
     } else {
       message.warning('서버의 문제가 발생했습니다.');
