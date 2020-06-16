@@ -112,6 +112,16 @@ class Tree extends Component {
     const { selectedIndex } = this.props;
     const nodeData = { ...node, active: node.key === selectedIndex };
     let menuIconClassName = ''; 
+    if(node.APP_YN === 'F'){
+      if(node.LVL === 1 ){
+        menuIconClassName = 'fa fa-lg fa-building'; 
+      } else {
+        menuIconClassName = 'icon-folder-close'; 
+      }
+    } else {
+      menuIconClassName = 'icon-bullet';
+    }
+    /*
     if(node.LVL === 1){
       menuIconClassName = 'fa fa-lg fa-building'; 
     } else if(node.LVL === 2){
@@ -119,6 +129,7 @@ class Tree extends Component {
     }else if(node.LVL === 3){
       menuIconClassName = 'icon-hyphen'
     }
+    */
 
     /*
     let menuIconClassName = 'icon-workCard';
@@ -234,7 +245,7 @@ class Tree extends Component {
                       // }}
                       isVirtualized={false}
                       generateNodeProps={this.generateNodeProps}
-                      rowHeight={35}
+                      rowHeight={28}
                       scaffoldBlockPxWidth={10}
                       className="sortableTreeWrapper sidebar CustomSCRB"
                       ref={ref => {

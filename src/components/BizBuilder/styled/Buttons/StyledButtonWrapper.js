@@ -43,6 +43,12 @@ const StyledButtonWrapper = styled.div`
     margin-left: 5px;
   }
 
+  &.btn-wrap-absolute {
+    position: absolute;
+    bottom: 25px;
+    right: 20px;
+  }
+
   .btn-comment {
     font-size: 12px;
     color: #ff5f5f;
