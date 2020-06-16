@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import moment from 'moment';
+
 import { Table, Input, Popconfirm, TreeSelect } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
@@ -31,6 +34,18 @@ class List extends Component {
     };
   }
 
+  columnDefs = [
+    { title: '코드', width: { wpx: 100 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '', bold: true } } },
+    { title: '코드명', width: { wpx: 100 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '', bold: true } } },
+    { title: '상태', width: { wpx: 100 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '', bold: true } } },
+  ];
+
+  fields = [
+    { field: 'CODE_ID', style: { font: { sz: '12' } } },
+    { field: 'NAME_KOR', style: { font: { sz: '12' } } },
+    { field: 'IS_DELETE', style: { font: { sz: '12' } } },
+  ];
+
   columns = [
     {
       title: '상태',
@@ -51,8 +66,9 @@ class List extends Component {
       dataIndex: 'NAME_KOR',
       key: 'NAME_KOR',
       render: (text, record, index) => {
+        const { columnDefs, fields } = this;
         const { handleInputChange, handleAddClick, handleModifyClick, handleDeleteClick, handleResetClick } = this;
-        const { inputCode, isModified } = this.state;
+        const { inputCode, isModified, dataSource } = this.state;
         if (index === 0) {
           return (
             <div>
@@ -70,9 +86,17 @@ class List extends Component {
                 <StyledButton className="btn-primary btn-first btn-sm btn-light" onClick={handleResetClick}>
                   Reset
                 </StyledButton>
-                <StyledButton className="btn-primary btn-sm btn-light" onClick={() => console.debug('@@@@EXCEL DOWNLOAD@@@@')}>
-                  엑셀받기
-                </StyledButton>
+                <ExcelDownloadComp
+                  isBuilder={false}
+                  fileName={`${moment().format('YYYYMMDD')}_화학물질 코드`}
+                  className="testClassName"
+                  btnText="엑셀 다운로드"
+                  sheetName="화관법(유해)"
+                  listData={dataSource}
+                  btnSize="btn-sm"
+                  fields={fields}
+                  columns={columnDefs}
+                />
               </StyledButtonWrapper>
             </div>
           );
@@ -83,9 +107,30 @@ class List extends Component {
   ];
 
   componentDidMount() {
+    this.getAllCodeList();
     this.getListData();
     this.getCategoryList();
   }
+
+  getAllCodeList = () => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'allList',
+        url: '/api/eshs/v1/common/eshschemicalmaterialcodeall',
+        type: 'GET',
+      },
+    ];
+
+    getCallDataHandler(id, apiArr, this.setAllCodeList);
+  };
+
+  setAllCodeList = () => {
+    const { result } = this.props;
+    const codeList = (result.allList && result.allList.list) || [];
+    const categoryList = (result.codeCategory && result.codeCategory.categoryMapList) || [];
+    console.debug(codeList, categoryList);
+  };
 
   getCategoryList = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
@@ -235,6 +280,7 @@ class List extends Component {
     const dataLength = dataSource.length - 1;
     return (
       <ContentsWrapper>
+        <span className="selSaveWrapper alignLeft">코드 분류</span>
         <AntdTreeSelect
           treeData={selectTree}
           value={this.state.selectedCategory}
