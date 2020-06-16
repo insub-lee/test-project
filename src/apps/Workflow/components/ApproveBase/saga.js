@@ -68,8 +68,7 @@ function* reqApprove({ appvStatus }) {
     ISFORMDATA: false,
     QUE_ID: reqRow.QUE_ID,
     APPV_STATUS: reqRow.APPV_STATUS,
-    OPINION: opinion,
-    QUE_DATA: reqRow,
+    QUE_DATA: { ...reqRow, OPINION: opinion },
     FORM_DATA: formData,
   };
 

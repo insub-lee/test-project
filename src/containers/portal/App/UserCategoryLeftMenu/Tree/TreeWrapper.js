@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import iconSearch from 'images/common/icon-search2.png';
 import iconArrBtm from 'images/portal/icon-arrow-bt.png';
 import iconArrTop from 'images/portal/icon-arrow-top.png';
+import iconFolderOpen from 'images/portal/icon-folder-open.png';
 
 const TreeWrapper = styled.div`
   display: flex;
@@ -109,7 +110,7 @@ const TreeWrapper = styled.div`
     }
   }
   .sortableTreeWrapper.sidebar .rst__nodeContent.tree_open {
-    .essh_tree_depth1 {
+    .eshs_tree_depth1 {
       background: #4491e0;
       .rstcustom__rowTitle button {
         opacity: 1;
@@ -118,23 +119,23 @@ const TreeWrapper = styled.div`
   }
 
   .sortableTreeWrapper.sidebar .rst__nodeContent:hover {
-    .essh_tree_depth1 {
+    .eshs_tree_depth1 {
       background: #4491e0;
       .rstcustom__rowTitle button {
         opacity: 1;
       }
     }
-    .essh_tree_depth2 {
+    .eshs_tree_depth2 {
       .rstcustom__rowTitle button {
         opacity: 1;
       }
     }
-    .essh_tree_depth3 {
+    .eshs_tree_depth3 {
       .rstcustom__rowTitle button {
         opacity: 1;
       }
     }
-    .essh_tree_depth4 {
+    .eshs_tree_depth4 {
       .rstcustom__rowTitle button {
         opacity: 1;
       }
@@ -142,21 +143,20 @@ const TreeWrapper = styled.div`
   }
 
   .sortableTreeWrapper.sidebar .rst__nodeContent {
-    .essh_tree_depth1 {
+    .eshs_tree_depth1 {
       .rstcustom__rowTitle button {
         &.active {
           opacity: 1;
         }
         i {
-          margin-right: 10px;
           &:before {
-            font-size: 15px;
+            font-size: 14px;
           }
         }
       }
     }
 
-    .essh_tree_depth2 {
+    .eshs_tree_depth2 {
       .rstcustom__rowTitle button {
         opacity: 0.5;
         &.active {
@@ -166,7 +166,7 @@ const TreeWrapper = styled.div`
       }
     }
 
-    .essh_tree_depth3 {
+    .eshs_tree_depth3 {
       .rstcustom__rowTitle button {
         opacity: 0.5;
         &.active {
@@ -176,14 +176,13 @@ const TreeWrapper = styled.div`
       }
     }
 
-    .essh_tree_depth4 {
+    .eshs_tree_depth4 {
       .rstcustom__rowTitle button {
         opacity: 0.5;
         &.active {
           opacity: 1;
           text-decoration: underline;
         }
-        padding-left: 10px;
       }
     }
   }
@@ -198,12 +197,18 @@ const TreeWrapper = styled.div`
     text-align: left;
     color: #fff;
     & > i {
-      margin-right: 5px;
-      height: 10px;
-      margin-top: 0;
+      margin-right: 10px;
+      width: 12px;
+      height: 12px;
       vertical-align: baseline;
     }
   }
+
+  .sortableTreeWrapper.sidebar .rst__nodeContent.tree_open .eshs_tree_typeF .rstcustom__rowTitle button i {
+    background: url(${iconFolderOpen}) no-repeat center;
+    background-size: 100%;
+  }
+
   .sortableTreeWrapper.sidebar .rst__nodeContent .inTree.ant-badge .ant-badge-count {
     width: 28px;
     height: 17px;
@@ -255,10 +260,12 @@ const TreeWrapper = styled.div`
   .sortableTreeWrapper .rstcustom__expandButton {
     background-image: url(${iconArrBtm});
     background-size: 12px;
+    display: none;
   }
   .sortableTreeWrapper .rstcustom__collapseButton {
     background-image: url(${iconArrTop});
     background-size: 12px;
+    display: none;
   }
 `;
 

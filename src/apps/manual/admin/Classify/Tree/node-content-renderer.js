@@ -64,10 +64,10 @@ class CustomThemeNodeContentRenderer extends Component {
             <span className={`${styles.rowTitle} rstcustom__rowTitle${node.subtitle ? ` ${styles.rowTitleWithSubtitle} rstcustom__rowTitleWithSubtitle` : ''}`}>
               {typeof nodeTitle === 'function'
                 ? nodeTitle({
-                  node,
-                  path,
-                  treeIndex,
-                })
+                    node,
+                    path,
+                    treeIndex,
+                  })
                 : nodeTitle}
             </span>
 
@@ -75,10 +75,10 @@ class CustomThemeNodeContentRenderer extends Component {
               <span className={`${styles.rowSubtitle} rstcustom__rowSubtitle`}>
                 {typeof nodeSubtitle === 'function'
                   ? nodeSubtitle({
-                    node,
-                    path,
-                    treeIndex,
-                  })
+                      node,
+                      path,
+                      treeIndex,
+                    })
                   : nodeSubtitle}
               </span>
             )}
