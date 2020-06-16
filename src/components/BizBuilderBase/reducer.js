@@ -218,8 +218,8 @@ const reducer = (state = initialState, action) => {
       return state.set('dataLoading', false);
     }
     case actionTypes.SET_LIST_DATA_REDUCER: {
-      const { id, listData } = action;
-      return state.setIn(['bizBuilderBase', id, 'listData'], fromJS(listData));
+      const { id, listData, listTotalCnt } = action;
+      return state.setIn(['bizBuilderBase', id, 'listData'], fromJS(listData)).setIn(['bizBuilderBase', id, 'listTotalCnt'], listTotalCnt);
     }
     case actionTypes.CHANGE_SEARCH_DATA_REDUCER: {
       const { id, key, val } = action;

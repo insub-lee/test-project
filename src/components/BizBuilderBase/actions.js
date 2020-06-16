@@ -306,10 +306,11 @@ export const disableDataLoading = () => ({
   type: actionTypes.DISABLE_DATA_LOADING,
 });
 
-export const setListDataByReducer = (id, listData) => ({
+export const setListDataByReducer = (id, listData, listTotalCnt) => ({
   type: actionTypes.SET_LIST_DATA_REDUCER,
   id,
   listData,
+  listTotalCnt,
 });
 
 export const changeSearchDataByReducer = (id, key, val) => ({
@@ -319,11 +320,13 @@ export const changeSearchDataByReducer = (id, key, val) => ({
   val,
 });
 
-export const getListDataBySaga = (id, workSeq, conditional) => ({
+export const getListDataBySaga = (id, workSeq, conditional, pageIdx, pageCnt) => ({
   type: `${actionTypes.GET_LIST_DATA_SAGA}_${id}`,
   id,
   workSeq,
   conditional,
+  pageIdx,
+  pageCnt,
 });
 
 export const redirectUrl = (id, url) => ({
