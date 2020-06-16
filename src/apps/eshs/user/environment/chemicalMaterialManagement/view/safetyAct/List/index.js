@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import moment from 'moment';
 
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -8,7 +11,6 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { Input } from 'antd';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
 import { debounce } from 'lodash';
 import { columnDefs } from './columnDefs';
 
@@ -98,9 +100,17 @@ class List extends React.Component {
               style={{ width: '300px' }}
               placeholder="화학물질명을 입력하세요."
             />
-            <StyledButton className="btn-primary" onClick={() => console.debug('@@EXCEL DOWNLOAD@@')}>
-              엑셀 받기
-            </StyledButton>
+            <ExcelDownloadComp
+              isBuilder={false}
+              fileName={`${moment().format('YYYYMMDD')}_산안법(DB)`}
+              className="testClassName"
+              btnText="엑셀 다운로드"
+              sheetName="DB"
+              listData={rowData}
+              btnSize="btn-sm"
+              fields={createExcelData(columnDefs, 'FIELD', 'field')}
+              columns={createExcelData(columnDefs, 'COLUMNS', 'headerName')}
+            />
           </div>
           <div style={{ width: '100%', height: '100%' }}>
             <div className="ag-theme-balham tableWrapper" style={{ padding: '0px 20px', height: '500px' }}>

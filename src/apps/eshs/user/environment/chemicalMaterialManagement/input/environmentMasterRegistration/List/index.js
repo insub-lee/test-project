@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Popconfirm, Table } from 'antd';
+import { Input, InputNumber, Select, Popconfirm, Table, message } from 'antd';
 
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
@@ -81,6 +81,10 @@ class List extends React.Component {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { dataSource, requestValue } = this.state;
     const param = dataSource.map(data => Object.assign(data, { SAP_ID: requestValue.SAP_ID }));
+
+    if (!requestValue.SAP_ID) {
+      return message.error('화학물질을 선택해주세요.');
+    }
 
     return submitHandlerBySaga(
       id,
