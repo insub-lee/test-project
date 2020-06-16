@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Button, Icon, Modal } from 'antd';
+import { Input, Icon, Modal } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 
 import UserSelect from 'components/UserSelect';
-import StyledTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
-import StyledModal from 'commonStyled/Modal/StyledModal';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
-const AntdModal = StyledModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
+const AntdInput = StyledInput(Input);
+const AntdTextarea = StyledTextarea(Input.TextArea);
 const { TextArea } = Input;
 
 class DistributeCompanyView extends Component {
@@ -185,8 +191,8 @@ class DistributeCompanyView extends Component {
     }
 
     return (
-      <div>
-        <StyledTable>
+      <StyledContentsWrapper>
+        <StyledHtmlTable>
           <table>
             <colgroup>
               <col width="20%" />
@@ -209,7 +215,7 @@ class DistributeCompanyView extends Component {
                 <th>회사</th>
                 <td>
                   {selectedRow.RECV_DEPT_ID === -1 ? (
-                    <Input value={formData.RECV_DEPT_NAME} style={{ width: '90%' }} readOnly />
+                    <AntdInput value={formData.RECV_DEPT_NAME} className="ant-input-xs" style={{ width: '90%' }} readOnly />
                   ) : (
                     formData.RECV_DEPT_NAME
                   )}
@@ -218,13 +224,14 @@ class DistributeCompanyView extends Component {
               <tr>
                 <th>수신자(Supplier)1</th>
                 <td>
-                  <Input
+                  <AntdInput
                     value={formData.RECV_USER_ID1 && `${formData.RECV_USER_NAME1}(${formData.RECV_USER_EMAIL1})`}
+                    className="ant-input-xs"
                     style={{ width: '90%' }}
                     readOnly
                     addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('RECV_USER', '1')} />} 
                   />
-                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-first btn-sm" onClick={() => this.onClickSelectUsers('RECV_USER', '1', 1)}>
+                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('RECV_USER', '1', 1)}>
                     <Icon type="edit" />
                   </StyledButton>
                 </td>
@@ -232,13 +239,14 @@ class DistributeCompanyView extends Component {
               <tr>
                 <th>수신자(Supplier)2</th>
                 <td>
-                  <Input
+                  <AntdInput
                     value={formData.RECV_USER_ID2 && `${formData.RECV_USER_NAME2}(${formData.RECV_USER_EMAIL2})`}
+                    className="ant-input-xs"
                     style={{ width: '90%' }}
                     readOnly
                     addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('RECV_USER', '2')} />} 
                   />
-                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-first btn-sm" onClick={() => this.onClickSelectUsers('RECV_USER', '2', 1)}>
+                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('RECV_USER', '2', 1)}>
                     <Icon type="edit" />
                   </StyledButton>
                 </td>
@@ -246,25 +254,36 @@ class DistributeCompanyView extends Component {
               <tr>
                 <th>업체 참조자1</th>
                 <td>
-                  <Input value={formData.REFERRER_EMAIL1} style={{ width: '90%' }} onChange={e => changeFormData(id, 'REFERRER_EMAIL1', e.target.value)} />
+                  <AntdInput
+                    value={formData.REFERRER_EMAIL1}
+                    className="ant-input-xs"
+                    style={{ width: '90%' }}
+                    onChange={e => changeFormData(id, 'REFERRER_EMAIL1', e.target.value)}
+                  />
                 </td>
               </tr>
               <tr>
                 <th>업체 참조자2</th>
                 <td>
-                  <Input value={formData.REFERRER_EMAIL2} style={{ width: '90%' }} onChange={e => changeFormData(id, 'REFERRER_EMAIL2', e.target.value)} />
+                  <AntdInput
+                    value={formData.REFERRER_EMAIL2}
+                    className="ant-input-xs"
+                    style={{ width: '90%' }}
+                    onChange={e => changeFormData(id, 'REFERRER_EMAIL2', e.target.value)}
+                  />
                 </td>
               </tr>
               <tr>
                 <th>구매 담당자1</th>
                 <td>
-                  <Input
+                  <AntdInput
                     value={formData.PURCHASE_USER_ID1 && `${formData.PURCHASE_USER_NAME1}(${formData.PURCHASE_USER_EMAIL1})`}
+                    className="ant-input-xs"
                     style={{ width: '90%' }}
                     readOnly
                     addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('PURCHASE_USER', '1')} />} 
                   />
-                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-first btn-sm" onClick={() => this.onClickSelectUsers('PURCHASE_USER', '1', 2)}>
+                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('PURCHASE_USER', '1', 2)}>
                     <Icon type="edit" />
                   </StyledButton>
                 </td>
@@ -272,13 +291,14 @@ class DistributeCompanyView extends Component {
               <tr>
                 <th>구매 담당자2</th>
                 <td>
-                  <Input
+                  <AntdInput
                     value={formData.PURCHASE_USER_ID2 && `${formData.PURCHASE_USER_NAME2}(${formData.PURCHASE_USER_EMAIL2})`}
+                    className="ant-input-xs"
                     style={{ width: '90%' }}
                     readOnly
                     addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('PURCHASE_USER', '2')} />} 
                   />
-                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-first btn-sm" onClick={() => this.onClickSelectUsers('PURCHASE_USER', '2', 2)}>
+                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('PURCHASE_USER', '2', 2)}>
                     <Icon type="edit" />
                   </StyledButton>
                 </td>
@@ -286,13 +306,14 @@ class DistributeCompanyView extends Component {
               <tr>
                 <th>IQC 담당자1</th>
                 <td>
-                  <Input
+                  <AntdInput
                     value={formData.IQC_USER_ID1 && `${formData.IQC_USER_NAME1}(${formData.IQC_USER_EMAIL1})`}
+                    className="ant-input-xs"
                     style={{ width: '90%' }}
                     readOnly
                     addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('IQC_USER', '1')} />} 
                   />
-                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-first btn-sm" onClick={() => this.onClickSelectUsers('IQC_USER', '1', 2)}>
+                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('IQC_USER', '1', 2)}>
                     <Icon type="edit" />
                   </StyledButton>
                 </td>
@@ -300,13 +321,14 @@ class DistributeCompanyView extends Component {
               <tr>
                 <th>IQC 담당자2</th>
                 <td>
-                  <Input
+                  <AntdInput
                     value={formData.IQC_USER_ID2 && `${formData.IQC_USER_NAME2}(${formData.IQC_USER_EMAIL2})`}
+                    className="ant-input-xs"
                     style={{ width: '90%' }}
                     readOnly
                     addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('IQC_USER', '2')} />} 
                   />
-                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-first btn-sm" onClick={() => this.onClickSelectUsers('IQC_USER', '2', 2)}>
+                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('IQC_USER', '2', 2)}>
                     <Icon type="edit" />
                   </StyledButton>
                 </td>
@@ -314,13 +336,14 @@ class DistributeCompanyView extends Component {
               <tr>
                 <th>IQC 담당자3</th>
                 <td>
-                  <Input
+                  <AntdInput
                     value={formData.IQC_USER_ID3 && `${formData.IQC_USER_NAME3}(${formData.IQC_USER_EMAIL3})`}
+                    className="ant-input-xs"
                     style={{ width: '90%' }}
                     readOnly
                     addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('IQC_USER', '3')} />} 
                   />
-                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-first btn-sm" onClick={() => this.onClickSelectUsers('IQC_USER', '3', 2)}>
+                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('IQC_USER', '3', 2)}>
                     <Icon type="edit" />
                   </StyledButton>
                 </td>
@@ -328,13 +351,14 @@ class DistributeCompanyView extends Component {
               <tr>
                 <th>IQC 담당자4</th>
                 <td>
-                  <Input
+                  <AntdInput
                     value={formData.IQC_USER_ID4 && `${formData.IQC_USER_NAME4}(${formData.IQC_USER_EMAIL4})`}
+                    className="ant-input-xs"
                     style={{ width: '90%' }}
                     readOnly
                     addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('IQC_USER', '4')} />} 
                   />
-                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-first btn-sm" onClick={() => this.onClickSelectUsers('IQC_USER', '4', 2)}>
+                  <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('IQC_USER', '4', 2)}>
                     <Icon type="edit" />
                   </StyledButton>
                 </td>
@@ -342,23 +366,23 @@ class DistributeCompanyView extends Component {
               <tr>
                 <th>Comment</th>
                 <td>
-                  <TextArea value={formData.COMMENT} onChange={e => changeFormData(id, 'COMMENT', e.target.value)} />
+                  <AntdTextarea value={formData.COMMENT} rows={6} onChange={e => changeFormData(id, 'COMMENT', e.target.value)} />
                 </td>
               </tr>
             </tbody>
           </table>
-          <div style={{ padding: '10px 16px', textAlign: 'center', borderTop: '1px solid #e8e8e8', borderRadius: '0 0 4px 4px' }}>
-            {selectedRow.RECV_DEPT_ID === -1 ? (
-              <Button type="primary" onClick={() => this.onClickSave('POST')}>등록</Button>
-            ) : (
-              <React.Fragment>
-                <Button type="primary" onClick={() => this.onClickSave('PUT')}>수정</Button>
-                <Button type="primary" onClick={this.onClickDelete} style={{ marginLeft: '8px' }}>삭제</Button>
-              </React.Fragment>
-            )}
-            <Button type="default" onClick={onCancelPopup} style={{ marginLeft: '8px' }}>취소</Button>
-          </div>
-        </StyledTable>
+        </StyledHtmlTable>
+        <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+          <StyledButton className="btn-light btn-sm mr5" onClick={onCancelPopup} style={{ marginLeft: '8px' }}>취소</StyledButton>
+          {selectedRow.RECV_DEPT_ID === -1 ? (
+            <StyledButton className="btn-primary btn-sm" onClick={() => this.onClickSave('POST')}>등록</StyledButton>
+          ) : (
+            <>
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.onClickDelete}>삭제</StyledButton>
+              <StyledButton className="btn-primary btn-sm" onClick={() => this.onClickSave('PUT')}>수정</StyledButton>
+            </>
+          )}
+        </StyledButtonWrapper>
         {list !== undefined && (
           <AntdModal title="담당자 선택" width="1000px" visible={this.state.isShow} onCancel={this.onCancelUserSelect} destroyOnClose footer={[]}>
             <UserSelect
@@ -370,7 +394,7 @@ class DistributeCompanyView extends Component {
             />
           </AntdModal>
         )}
-      </div>
+      </StyledContentsWrapper>
     )
   }
 }
