@@ -38,6 +38,8 @@ class ListPage extends Component {
       sheetName: '',
       columns: [],
       fields: [],
+      paginationIdx: 1,
+      pageSize: 10,
     };
   }
 
@@ -91,6 +93,7 @@ class ListPage extends Component {
             fields = columnInfo.fields || [];
           }
         }
+        // todo page size option
       });
       this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView, isExcelDown, btnTex, fileName, sheetName, columns, fields });
     }
@@ -101,6 +104,13 @@ class ListPage extends Component {
   //   const { removeReduxState, id } = this.props;
   //   removeReduxState(id);
   // }
+
+  setPaginationIdx = paginationIdx =>
+    this.setState({ paginationIdx }, () => {
+      const { sagaKey, workSeq, conditional, getListData } = this.props;
+      const { pageSize } = this.state;
+      getListData(sagaKey, workSeq, conditional, paginationIdx, pageSize);
+    });
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -181,8 +191,8 @@ class ListPage extends Component {
   };
 
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
-    const { isMultiDelete, isOnRowClick } = this.state;
+    const { listData, listSelectRowKeys, workInfo, customOnRowClick, listTotalCnt } = this.props;
+    const { isMultiDelete, isOnRowClick, paginationIdx } = this.state;
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
@@ -212,6 +222,8 @@ class ListPage extends Component {
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
+            pagination={{ current: paginationIdx, total: listTotalCnt }}
+            onChange={pagination => this.setPaginationIdx(pagination.current)}
           />
         </Group>
       </div>
@@ -234,8 +246,9 @@ class ListPage extends Component {
       listData,
       ListCustomButtons,
       useExcelDownload,
+      conditional,
     } = this.props;
-    const { isMultiDelete, StyledWrap, isExcelDown, btnTex, fileName, sheetName, columns, fields } = this.state;
+    const { isMultiDelete, StyledWrap, isExcelDown, btnTex, fileName, sheetName, columns, fields, pageSize } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -299,7 +312,7 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray btn-sm" onClick={() => getListData(id, workSeq)}>
+                          <StyledButton className="btn-gray btn-sm" onClick={() => this.setPaginationIdx(1)}>
                             검색
                           </StyledButton>
                           {useExcelDownload && isExcelDown && (
