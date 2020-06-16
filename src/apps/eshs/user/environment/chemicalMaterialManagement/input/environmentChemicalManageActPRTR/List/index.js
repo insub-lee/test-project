@@ -2,23 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Input, InputNumber, Popconfirm, Select } from 'antd';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 
 const AntdInput = StyledInput(Input);
-const AntdSearch = StyledSearchInput(Input.Search);
 const AntdInputNumber = StyledInputNumber(InputNumber);
 const AntdSelect = StyledSelect(Select);
+const AntdSearch = StyledSearchInput(Input.Search);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -75,12 +74,6 @@ class List extends React.Component {
       },
     ];
     getCallDataHandler(id, apiArr, this.handleResetClick);
-  };
-
-  handleSearchClick = () => {
-    this.setState({
-      visible: true,
-    });
   };
 
   handleModalClose = () => {
@@ -173,11 +166,16 @@ class List extends React.Component {
     },
   ];
 
+  handleSearchClick = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
   render() {
     const { columns } = this;
     const {
       handleInputClick,
-      handleSearchClick,
       handleResetClick,
       handleModalClose,
       setRequestValue,
@@ -186,18 +184,25 @@ class List extends React.Component {
       handleDeleteClick,
       handleDeleteConfirm,
       handleSelectChange,
+      handleSearchClick,
     } = this;
     const { visible, requestValue, deleteConfirmMessage, isModified } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
 
     return (
       <>
-        <ContentsWrapper>
-          <StyledSearchWrap>
-            <span className="input-label">화학물 추가</span>
-            <AntdSearch className="ant-search-inline input-search-mid mr5" placeHolder="검색" onClick={handleSearchClick} value="" style={{ width: '200px' }} />
-            <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary btn-first" onClick={handleInputClick} style={{ width: '91px' }}>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <span className="text-label">화학물 추가</span>
+              <AntdSearch
+                className="ant-search-inline input-search-mid mr5"
+                placeHolder="검색"
+                onClick={handleSearchClick}
+                value=""
+                style={{ width: '200px' }}
+              />
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
                 저장/수정
               </StyledButton>
               <Popconfirm
@@ -206,94 +211,87 @@ class List extends React.Component {
                 okText={isModified ? '삭제' : '확인'}
                 cancelText="취소"
               >
-                <StyledButton className="btn-light btn-first" onClick={handleDeleteClick} style={{ width: '91px' }}>
+                <StyledButton className="btn-light mr5 btn-sm" onClick={handleDeleteClick}>
                   삭제
                 </StyledButton>
               </Popconfirm>
-              <StyledButton className="btn-light" onClick={handleResetClick} style={{ width: '91px' }}>
+              <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
                 초기화
               </StyledButton>
-            </StyledButtonWrapper>
-          </StyledSearchWrap>
-          <div className="tableWrapper">
-            <StyledHtmlTable>
-              <table>
-                <colgroup>
-                  <col width="16.6%" />
-                  <col width="16.6%" />
-                  <col width="16.6%" />
-                  <col width="16.6%" />
-                  <col width="16.6%" />
-                  <col width="16.6%" />
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <th>CAS_NO.</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={handleInputChange} />
-                    </td>
-                    <th>화학물질명_국문</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={handleInputChange} />
-                    </td>
-                    <th>화학물질명_영문</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={handleInputChange} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>그룹</th>
-                    <td>
-                      {/* <AntdInput className="ant-input-sm" name="GROUP_NAME" value={requestValue.GROUP_NAME} onChange={handleInputChange} /> */}
-                      <AntdSelect
-                        className="select-sm"
-                        defaultValue="I"
-                        value={requestValue.GROUP_NAME}
-                        onChange={e => handleSelectChange(e, 'GROUP_NAME')}
-                        style={{ width: '100%' }}
-                      >
-                        <Select.Option value="I">I</Select.Option>
-                        <Select.Option value="II">II</Select.Option>
-                      </AntdSelect>
-                    </td>
-                    <th>취급량(kg/년)</th>
-                    <td>
-                      <AntdInputNumber
-                        className="ant-input-number input-number-sm"
-                        value={requestValue.HANDLE_AMOUNT}
-                        onChange={value => handleInputNumberChange(value, 'HANDLE_AMOUNT')}
-                      />
-                    </td>
-                    <th>조사대상범위(무게함유율%)</th>
-                    <td>
-                      <AntdInputNumber
-                        className="ant-input-number input-number-sm"
-                        value={requestValue.INVESTIGATION_TARGET_RANGE}
-                        onChange={value => handleInputNumberChange(value, 'INVESTIGATION_TARGET_RANGE')}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th colSpan={1}>호</th>
-                    <td colSpan={5}>
-                      <AntdInput
-                        className="ant-input-sm"
-                        name="CATEGORY"
-                        value={requestValue.CATEGORY}
-                        onChange={handleInputChange}
-                        style={{ width: '191.85px' }}
-                      />
-                    </td>
-                    {/* <th colSpan={1}>하위 호</th>
-                    <td colSpan={2}>
-                      <AntdInput className="ant-input-sm" name="SUB_CATEGORY" value={requestValue.SUB_CATEGORY} onChange={handleInputChange} />
-                    </td> */}
-                  </tr>
-                </tbody>
-              </table>
-            </StyledHtmlTable>
-          </div>
-        </ContentsWrapper>
+            </div>
+          </StyledCustomSearchWrapper>
+          <StyledHtmlTable>
+            <table>
+              <colgroup>
+                <col width="16.6%" />
+                <col width="16.6%" />
+                <col width="16.6%" />
+                <col width="16.6%" />
+                <col width="16.6%" />
+                <col width="16.6%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th>CAS_NO.</th>
+                  <td>
+                    <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={handleInputChange} />
+                  </td>
+                  <th>화학물질명_국문</th>
+                  <td>
+                    <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={handleInputChange} />
+                  </td>
+                  <th>화학물질명_영문</th>
+                  <td>
+                    <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={handleInputChange} />
+                  </td>
+                </tr>
+                <tr>
+                  <th>그룹</th>
+                  <td>
+                    <AntdSelect
+                      className="select-sm"
+                      defaultValue="I"
+                      value={requestValue.GROUP_NAME}
+                      onChange={e => handleSelectChange(e, 'GROUP_NAME')}
+                      style={{ width: '100%' }}
+                    >
+                      <Select.Option value="I">I</Select.Option>
+                      <Select.Option value="II">II</Select.Option>
+                    </AntdSelect>
+                  </td>
+                  <th>취급량(kg/년)</th>
+                  <td>
+                    <AntdInputNumber
+                      className="ant-input-number input-number-sm"
+                      value={requestValue.HANDLE_AMOUNT}
+                      onChange={value => handleInputNumberChange(value, 'HANDLE_AMOUNT')}
+                    />
+                  </td>
+                  <th>조사대상범위(무게함유율%)</th>
+                  <td>
+                    <AntdInputNumber
+                      className="ant-input-number input-number-sm"
+                      value={requestValue.INVESTIGATION_TARGET_RANGE}
+                      onChange={value => handleInputNumberChange(value, 'INVESTIGATION_TARGET_RANGE')}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th colSpan={1}>호</th>
+                  <td colSpan={5}>
+                    <AntdInput
+                      className="ant-input-sm"
+                      name="CATEGORY"
+                      value={requestValue.CATEGORY}
+                      onChange={handleInputChange}
+                      style={{ width: '191.85px' }}
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </StyledHtmlTable>
+        </StyledContentsWrapper>
         <Modal
           sagaKey={sagaKey}
           visible={visible}

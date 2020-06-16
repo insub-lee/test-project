@@ -2,13 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, Select, Popconfirm, message } from 'antd';
 
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
@@ -200,10 +199,10 @@ class List extends React.Component {
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
-        <ContentsWrapper>
-          <StyledSearchWrap>
-            <div className="search-inner">
-              <span className="input-label">화학물 추가</span>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <span className="text-label">화학물 추가</span>
               <AntdSearch
                 className="ant-search-inline input-search-mid mr5"
                 placeHolder="검색"
@@ -211,90 +210,86 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <StyledButtonWrapper className="btn-wrap-inline">
-                <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
-                  저장/수정
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
+                저장/수정
+              </StyledButton>
+              <Popconfirm
+                title={deleteConfirmMessage}
+                onConfirm={isModified ? handleDeleteConfirm : null}
+                okText={isModified ? '삭제' : '확인'}
+                cancelText="취소"
+              >
+                <StyledButton className="btn-light mr5 btn-sm" onClick={handleDeleteClick}>
+                  삭제
                 </StyledButton>
-                <Popconfirm
-                  title={deleteConfirmMessage}
-                  onConfirm={isModified ? handleDeleteConfirm : null}
-                  okText={isModified ? '삭제' : '확인'}
-                  cancelText="취소"
-                >
-                  <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
-                    삭제
-                  </StyledButton>
-                </Popconfirm>
-                <StyledButton className="btn-light" onClick={handleResetClick}>
-                  초기화
-                </StyledButton>
-              </StyledButtonWrapper>
+              </Popconfirm>
+              <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
+                초기화
+              </StyledButton>
             </div>
-          </StyledSearchWrap>
-          <div className="tableWrapper">
-            <StyledHtmlTable>
-              <table>
-                <colgroup>
-                  <col width="15%" />
-                  <col width="35%" />
-                  <col width="15%" />
-                  <col width="35%" />
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <th>SAP NO.</th>
-                    <td>{requestValue.SAP_NO}</td>
-                    <th>화학물질명_SAP</th>
-                    <td>{requestValue.NAME_SAP}</td>
-                  </tr>
-                  <tr>
-                    <th>공급업체</th>
-                    <td>
-                      <EshsCmpnyComp
-                        searchWidth="50%"
-                        sagaKey={sagaKey}
-                        getExtraApiData={getCallDataHandler}
-                        extraApiData={result}
-                        colData={requestValue.VENDOR_CD}
-                        visible
-                        CONFIG={{ property: { isRequired: false, className: 'ant-input-search input-search-sm' } }}
-                        changeFormData={changeFormData}
-                        COMP_FIELD="VENDOR_CD"
-                        eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-                      />
-                    </td>
-                    <th>위험물 분류</th>
-                    <td>
-                      <AntdSelect
-                        className="select-sm"
-                        onChange={e => handleInputChange(e, 'SELECT', 'CATEGORY')}
-                        value={requestValue.CATEGORY}
-                        style={{ width: '100%' }}
-                      >
-                        {categorys.map(item => (
-                          <Select.Option value={item.CODE_ID}>{item.NAME_KOR}</Select.Option>
-                        ))}
-                      </AntdSelect>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </StyledHtmlTable>
-          </div>
-        </ContentsWrapper>
-        <Modal
-          sagaKey={sagaKey}
-          visible={visible}
-          modalClose={handleModalClose}
-          getCallDataHandler={getCallDataHandler}
-          result={result}
-          setRequestValue={setRequestValue}
-          apiUrl="/api/eshs/v1/common/eshschemicalmaterialharmfulfactor"
-          tableColumns={columns}
-          SearchComp={SearchComp}
-          changeFormData={changeFormData}
-          formData={formData}
-        />
+          </StyledCustomSearchWrapper>
+          <StyledHtmlTable>
+            <table>
+              <colgroup>
+                <col width="15%" />
+                <col width="35%" />
+                <col width="15%" />
+                <col width="35%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th>SAP NO.</th>
+                  <td>{requestValue.SAP_NO}</td>
+                  <th>화학물질명_SAP</th>
+                  <td>{requestValue.NAME_SAP}</td>
+                </tr>
+                <tr>
+                  <th>공급업체</th>
+                  <td>
+                    <EshsCmpnyComp
+                      searchWidth="50%"
+                      sagaKey={sagaKey}
+                      getExtraApiData={getCallDataHandler}
+                      extraApiData={result}
+                      colData={requestValue.VENDOR_CD}
+                      visible
+                      CONFIG={{ property: { isRequired: false, className: 'ant-input-search input-search-sm' } }}
+                      changeFormData={changeFormData}
+                      COMP_FIELD="VENDOR_CD"
+                      eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+                    />
+                  </td>
+                  <th>위험물 분류</th>
+                  <td>
+                    <AntdSelect
+                      className="select-sm"
+                      onChange={e => handleInputChange(e, 'SELECT', 'CATEGORY')}
+                      value={requestValue.CATEGORY}
+                      style={{ width: '100%' }}
+                    >
+                      {categorys.map(item => (
+                        <Select.Option value={item.CODE_ID}>{item.NAME_KOR}</Select.Option>
+                      ))}
+                    </AntdSelect>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </StyledHtmlTable>
+          <Modal
+            sagaKey={sagaKey}
+            visible={visible}
+            modalClose={handleModalClose}
+            getCallDataHandler={getCallDataHandler}
+            result={result}
+            setRequestValue={setRequestValue}
+            apiUrl="/api/eshs/v1/common/eshschemicalmaterialharmfulfactor"
+            tableColumns={columns}
+            SearchComp={SearchComp}
+            changeFormData={changeFormData}
+            formData={formData}
+          />
+        </StyledContentsWrapper>
       </>
     );
   }

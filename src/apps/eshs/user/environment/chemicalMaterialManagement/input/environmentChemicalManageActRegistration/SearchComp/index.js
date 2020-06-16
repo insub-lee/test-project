@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Select, Input } from 'antd';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -46,32 +47,33 @@ class SearchComp extends React.Component {
   };
 
   render() {
-    // const { handleSearchChange } = this;
     const { category } = this.state;
     const { KEYWORD, CATEGORY_ID, handleSearchChange } = this.props;
     return (
       <>
-        <StyledSearchWrap>
-          <AntdSelect
-            className="select-mid"
-            defaultValue="전체 보기"
-            value={CATEGORY_ID}
-            onChange={value => handleSearchChange(value, 'SELECT')}
-            style={{ width: '15%' }}
-          >
-            {category.map(item => (
-              <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
-            ))}
-            <Select.Option value="">전체 보기</Select.Option>
-          </AntdSelect>
-          <AntdSearch
-            value={KEYWORD}
-            onChange={e => handleSearchChange(e, 'INPUT')}
-            className="input-search-mid ant-input-inline"
-            placeholder="검색"
-            style={{ width: '20%' }}
-          />
-        </StyledSearchWrap>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <AntdSelect
+              className="select-mid"
+              defaultValue="전체 보기"
+              value={CATEGORY_ID}
+              onChange={value => handleSearchChange(value, 'SELECT')}
+              style={{ width: '15%' }}
+            >
+              {category.map(item => (
+                <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
+              ))}
+              <Select.Option value="">전체 보기</Select.Option>
+            </AntdSelect>
+            <AntdSearch
+              value={KEYWORD}
+              onChange={e => handleSearchChange(e, 'INPUT')}
+              className="input-search-mid ant-input-inline"
+              placeholder="검색"
+              style={{ width: '20%' }}
+            />
+          </StyledCustomSearchWrapper>
+        </StyledContentsWrapper>
       </>
     );
   }

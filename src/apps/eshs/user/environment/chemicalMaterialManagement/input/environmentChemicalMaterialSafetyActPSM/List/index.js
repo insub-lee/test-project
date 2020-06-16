@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, InputNumber, Select, Popconfirm, Checkbox } from 'antd';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
+
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
@@ -36,7 +36,7 @@ class List extends React.Component {
       },
       visible: false,
       isModified: false,
-      isSameValue: false,
+      hasSameValue: false,
     };
   }
 
@@ -47,7 +47,7 @@ class List extends React.Component {
   };
 
   handleInputChange = (event, type, name) => {
-    const { isSameValue } = this.state;
+    const { hasSameValue } = this.state;
 
     if (type.toUpperCase() === 'INPUT') {
       const valueObj = { [event.target.name.toUpperCase()]: event.target.value };
@@ -64,7 +64,7 @@ class List extends React.Component {
     }
 
     if (type.toUpperCase() === 'NUMBER') {
-      if (isSameValue && name.toUpperCase() === 'PRODUCTION_STOCK') {
+      if (hasSameValue && name.toUpperCase() === 'PRODUCTION_STOCK') {
         const valueObj = { PRODUCTION_STOCK: event, USAGE_STOCK: event, STORAGE_STOCK: event };
         return this.setState(prevState => ({
           requestValue: Object.assign(prevState.requestValue, valueObj),
@@ -155,17 +155,17 @@ class List extends React.Component {
   };
 
   handleSameValueCheck = () => {
-    const { isSameValue, requestValue } = this.state;
-    if (!isSameValue) {
+    const { hasSameValue, requestValue } = this.state;
+    if (!hasSameValue) {
       const valueObj = { USAGE_STOCK: requestValue.PRODUCTION_STOCK, STORAGE_STOCK: requestValue.PRODUCTION_STOCK };
       this.setState(prevState => ({
-        isSameValue: !prevState.isSameValue,
+        hasSameValue: !prevState.hasSameValue,
         requestValue: Object.assign(prevState.requestValue, valueObj),
       }));
     } else {
       const valueObj = { USAGE_STOCK: '', STORAGE_STOCK: '' };
       this.setState(prevState => ({
-        isSameValue: !prevState.isSameValue,
+        hasSameValue: !prevState.hasSameValue,
         requestValue: Object.assign(prevState.requestValue, valueObj),
       }));
     }
@@ -216,15 +216,15 @@ class List extends React.Component {
       handleSameValueCheck,
     } = this;
     const { modalColumns } = this;
-    const { requestValue, visible, deleteConfirmMessage, isModified, isSameValue } = this.state;
+    const { requestValue, visible, deleteConfirmMessage, isModified, hasSameValue } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
 
     return (
       <>
-        <ContentsWrapper>
-          <StyledSearchWrap>
-            <div className="search-inner">
-              <span className="input-label">화학물 추가</span>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <span className="text-label">화학물 추가</span>
               <AntdSearch
                 className="ant-search-inline input-search-mid mr5"
                 placeHolder="검색"
@@ -232,123 +232,111 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <StyledButtonWrapper className="btn-wrap-inline">
-                <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
-                  저장/수정
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={handleInputClick}>
+                저장/수정
+              </StyledButton>
+              <Popconfirm
+                title={deleteConfirmMessage}
+                onConfirm={isModified ? handleDeleteConfirm : null}
+                okText={isModified ? '삭제' : '확인'}
+                cancelText="취소"
+              >
+                <StyledButton className="btn-light btn-sm mr5" onClick={handleDeleteClick}>
+                  삭제
                 </StyledButton>
-                <Popconfirm
-                  title={deleteConfirmMessage}
-                  onConfirm={isModified ? handleDeleteConfirm : null}
-                  okText={isModified ? '삭제' : '확인'}
-                  cancelText="취소"
-                >
-                  <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
-                    삭제
-                  </StyledButton>
-                </Popconfirm>
-                <StyledButton className="btn-light" onClick={handleResetClick}>
-                  초기화
-                </StyledButton>
-              </StyledButtonWrapper>
+              </Popconfirm>
+              <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
+                초기화
+              </StyledButton>
             </div>
-          </StyledSearchWrap>
-          <div className="tableWrapper">
-            <StyledHtmlTable>
-              <table>
-                <colgroup>
-                  <col width="16.6%" />
-                  <col width="16.6%" />
-                  <col width="16.6%" />
-                  <col width="16.6%" />
-                  <col width="16.6%" />
-                  <col width="16.6%" />
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <th>연번</th>
-                    <td>
-                      {/* <AntdInputNumber
-                        className="ant-input-number input-number-sm"
-                        value={requestValue.SERIAL_NO}
-                        onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
-                        disabled={isModified}
-                      /> */}
-                      {requestValue.SERIAL_NO}
-                    </td>
-                    <th>화학물질명_국문</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
-                    <th>CAS NO.</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>해당여부</th>
-                    <td>
-                      <AntdSelect
-                        className="select-sm"
-                        defaultValue="Y"
-                        onChange={e => handleInputChange(e, 'SELECT', 'IS_APPLICATE')}
-                        value={requestValue.IS_APPLICATE}
-                        style={{ width: '100%' }}
-                      >
-                        <Select.Option value="Y">해당</Select.Option>
-                        <Select.Option value="N">비해당</Select.Option>
-                      </AntdSelect>
-                    </td>
-                    <th>기준함량</th>
-                    <td>
-                      <AntdInputNumber
-                        className="ant-input-number input-number-sm"
-                        value={requestValue.CONTENT_STANDARD}
-                        onChange={e => handleInputChange(e, 'NUMBER', 'CONTENT_STANDARD')}
-                      />
-                    </td>
-                    <th>제출량 (제조, 취급, 저장 동일여부)</th>
-                    <td style={{ textAlign: 'center' }}>
-                      <Checkbox onChange={handleSameValueCheck} checked={isSameValue} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>{isSameValue ? '제조, 취급, 저장' : '제조'}</th>
-                    <td colSpan={isSameValue ? 5 : 1}>
-                      <AntdInputNumber
-                        className="ant-input-number input-number-sm"
-                        value={requestValue.PRODUCTION_STOCK}
-                        onChange={e => handleInputChange(e, 'NUMBER', 'PRODUCTION_STOCK')}
-                        style={{ width: isSameValue ? '191.8px' : '100%' }}
-                      />
-                    </td>
-                    {isSameValue ? null : (
-                      <>
-                        <th>취급</th>
-                        <td>
-                          <AntdInputNumber
-                            className="ant-input-number input-number-sm"
-                            defaultValue={0}
-                            value={requestValue.USAGE_STOCK}
-                            onChange={e => handleInputChange(e, 'NUMBER', 'USAGE_STOCK')}
-                          />
-                        </td>
-                        <th>저장</th>
-                        <td>
-                          <AntdInputNumber
-                            className="ant-input-number input-number-sm"
-                            defaultValue={0}
-                            value={requestValue.STORAGE_STOCK}
-                            onChange={e => handleInputChange(e, 'NUMBER', 'STORAGE_STOCK')}
-                          />
-                        </td>
-                      </>
-                    )}
-                  </tr>
-                </tbody>
-              </table>
-            </StyledHtmlTable>
-          </div>
-        </ContentsWrapper>
+          </StyledCustomSearchWrapper>
+          <StyledHtmlTable>
+            <table>
+              <colgroup>
+                <col width="16.6%" />
+                <col width="16.6%" />
+                <col width="16.6%" />
+                <col width="16.6%" />
+                <col width="16.6%" />
+                <col width="16.6%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th>연번</th>
+                  <td>{requestValue.SERIAL_NO}</td>
+                  <th>화학물질명_국문</th>
+                  <td>
+                    <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
+                  </td>
+                  <th>CAS NO.</th>
+                  <td>
+                    <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
+                  </td>
+                </tr>
+                <tr>
+                  <th>해당여부</th>
+                  <td>
+                    <AntdSelect
+                      className="select-sm"
+                      defaultValue="Y"
+                      onChange={e => handleInputChange(e, 'SELECT', 'IS_APPLICATE')}
+                      value={requestValue.IS_APPLICATE}
+                      style={{ width: '100%' }}
+                    >
+                      <Select.Option value="Y">해당</Select.Option>
+                      <Select.Option value="N">비해당</Select.Option>
+                    </AntdSelect>
+                  </td>
+                  <th>기준함량</th>
+                  <td>
+                    <AntdInputNumber
+                      className="ant-input-number ant-input-number-sm"
+                      value={requestValue.CONTENT_STANDARD}
+                      onChange={e => handleInputChange(e, 'NUMBER', 'CONTENT_STANDARD')}
+                    />
+                  </td>
+                  <th>제출량 (제조, 취급, 저장 동일여부)</th>
+                  <td style={{ textAlign: 'center' }}>
+                    <Checkbox onChange={handleSameValueCheck} checked={hasSameValue} />
+                  </td>
+                </tr>
+                <tr>
+                  <th>{hasSameValue ? '제조, 취급, 저장' : '제조'}</th>
+                  <td colSpan={hasSameValue ? 5 : 1}>
+                    <AntdInputNumber
+                      className="ant-input-number ant-input-number-sm"
+                      value={requestValue.PRODUCTION_STOCK}
+                      onChange={e => handleInputChange(e, 'NUMBER', 'PRODUCTION_STOCK')}
+                      style={{ width: hasSameValue ? '191.8px' : '100%' }}
+                    />
+                  </td>
+                  {hasSameValue ? null : (
+                    <>
+                      <th>취급</th>
+                      <td>
+                        <AntdInputNumber
+                          className="ant-input-number ant-input-number-sm"
+                          defaultValue={0}
+                          value={requestValue.USAGE_STOCK}
+                          onChange={e => handleInputChange(e, 'NUMBER', 'USAGE_STOCK')}
+                        />
+                      </td>
+                      <th>저장</th>
+                      <td>
+                        <AntdInputNumber
+                          className="ant-input-number ant-input-number-sm"
+                          defaultValue={0}
+                          value={requestValue.STORAGE_STOCK}
+                          onChange={e => handleInputChange(e, 'NUMBER', 'STORAGE_STOCK')}
+                        />
+                      </td>
+                    </>
+                  )}
+                </tr>
+              </tbody>
+            </table>
+          </StyledHtmlTable>
+        </StyledContentsWrapper>
         <Modal
           sagaKey={sagaKey}
           visible={visible}
