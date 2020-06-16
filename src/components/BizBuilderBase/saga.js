@@ -772,7 +772,7 @@ function* getDraftProcess({ id, draftId }) {
   yield put(actions.setDraftProcess(id, draftProcess));
 }
 
-function* getListData({ id, workSeq, conditional }) {
+function* getListData({ id, workSeq, conditional, pageIdx, pageCnt }) {
   const searchData = yield select(selectors.makeSelectSearchDataById(id));
   const whereString = [];
   const keySet = Object.keys(searchData);
@@ -782,10 +782,25 @@ function* getListData({ id, workSeq, conditional }) {
 
   if (conditional && conditional.length > 0) whereString.push(conditional);
 
-  const responseList = yield call(Axios.post, `/api/builder/v1/work/taskList/${workSeq}`, { PARAM: { whereString } }, { BUILDER: 'getTaskList' });
+  let PAGE = 1;
+  let PAGE_CNT = 10;
+  if (pageIdx && pageIdx > 0) {
+    PAGE = pageIdx;
+  }
+
+  if (pageCnt && pageCnt > 0) {
+    PAGE_CNT = pageCnt;
+  }
+
+  const responseList = yield call(
+    Axios.post,
+    `/api/builder/v1/work/taskList/${workSeq}`,
+    { PARAM: { whereString, PAGE, PAGE_CNT } },
+    { BUILDER: 'getTaskList' },
+  );
   if (responseList) {
-    const { list } = responseList;
-    yield put(actions.setListDataByReducer(id, list));
+    const { list, listTotalCnt } = responseList;
+    yield put(actions.setListDataByReducer(id, list, listTotalCnt));
   }
 }
 

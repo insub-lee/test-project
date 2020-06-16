@@ -24,7 +24,6 @@ class abrogationMultiModifyDraft extends Component {
 
   componentDidMount() {
     const { id, submitHandlerBySaga, workPrcProps } = this.props;
-    console.debug('this.props', this.props);
     const {
       DRAFT_TITLE,
       DRAFT_DATA: { descOfChange, revHistory },
@@ -170,6 +169,7 @@ class abrogationMultiModifyDraft extends Component {
             })}
             bordered
             className="tableWrapper"
+            pagination={false}
           />
         </StyledHtmlTable>
       </>

@@ -1,6 +1,6 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Modal, Table, message, Input, TreeSelect, Select, Popover } from 'antd';
+import { Modal, Table, message, Input, TreeSelect, Select, Popover, Popconfirm } from 'antd';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
@@ -14,7 +14,6 @@ import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import System from 'apps/eshs/admin/safety/Danger/hazard/image/System.JPG';
-// import System from '../../../apps/eshs/admin/safety/Danger/hazard/image/System.JPG';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdTextarea = StyledTextarea(Input.TextArea);
@@ -39,18 +38,17 @@ const getCategoryMapListAsTree = (flatData, rootkey) =>
     rootKey: rootkey || 0,
   });
 
-// const aocText = () => <image src="components/apps/eshs/admin/safety/danger/imgae" alt="사고의 발생원인" />;
 class DangerHazardSubComp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
-      hazardData: { AOC_ID: [], RA: 'Y' },
+      hazardData: { AOC_ID: [], RA_YN: 'Y' },
     };
   }
 
   componentDidMount() {
-    const { getExtraApiData, sagaKey: id, viewType, formData } = this.props;
+    const { getExtraApiData, sagaKey: id, viewPageData, viewType } = this.props;
     const apiArray = [
       {
         key: 'codeData',
@@ -64,23 +62,27 @@ class DangerHazardSubComp extends React.Component {
         type: 'POST',
         params: { PARAM: { NODE_ID: 1831 } },
       },
+      viewPageData.viewType === 'MODIFY' && {
+        key: 'hazardSubList',
+        url: `/api/eshs/v1/common/dangerHazard?TASK_SEQ=${viewPageData.taskSeq}`,
+        type: 'GET',
+      },
     ];
-    if (viewType !== 'VIEW') getExtraApiData(id, apiArray, this.initData);
-
-    this.setState({ hazardList: formData.HAZARD_LIST || [] });
+    if (viewType !== 'VIEW' || viewType !== 'LIST') getExtraApiData(id, apiArray, this.initData);
   }
 
   initData = () => {
     const {
-      extraApiData: { codeData, treeData },
+      extraApiData: { codeData, treeData, hazardSubList },
+      changeFormData,
+      sagaKey: id,
     } = this.props;
     const aotList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30432);
     const aocList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30433);
     const tempTree =
       treeData &&
-      treeData.categoryMapList
-        .filter(f => f.USE_YN === 'Y')
-        .map(item => {
+      treeData.categoryMapList.map(item => {
+        if (item.USE_YN === 'Y') {
           switch (item.LVL) {
             case 3:
               return { ...item, NAME_KOR: `${item.NAME_KOR}(분류)` };
@@ -95,9 +97,12 @@ class DangerHazardSubComp extends React.Component {
             default:
               return { ...item };
           }
-        });
+        }
+        return '';
+      });
     const nTreeData = (tempTree && getCategoryMapListAsTree(tempTree, 1831)) || [];
-    this.setState({ aotList, nTreeData, aocList });
+    changeFormData(id, 'HAZARD_LIST', hazardSubList && hazardSubList.list);
+    this.setState({ aotList, aocList, nTreeData });
   };
 
   onChangeModal = () => {
@@ -152,25 +157,32 @@ class DangerHazardSubComp extends React.Component {
 
   modalInsert = () => {
     const { hazardData, hazardList } = this.state;
+    const { sagaKey: id, changeFormData } = this.props;
     if (hazardData.EQUIP_ID) {
-      const { sagaKey: id, changeFormData } = this.props;
       changeFormData(id, 'HAZARD_LIST', hazardList.concat(hazardData));
-      this.setState({ hazardData: { AOC_ID: [], RA: 'Y' } });
+      this.setState({ hazardData: { AOC_ID: [], RA_YN: 'Y' }, selectedRowKeys: [], listOfDeleteExclusion: [] });
       this.onChangeModal();
     } else {
       message.warning('징비(설비)를 선택해주세요');
     }
   };
 
-  modalSelected = record => {
-    this.setState({ hazardData: { ...record } });
-    this.onChangeModal();
+  onSelectChangeModal = selectedRowKeys => {
+    const { formData } = this.props;
+    const nData = formData.HAZARD_LIST && formData.HAZARD_LIST.filter((item, index) => selectedRowKeys.findIndex(i => i === index) === -1);
+    this.setState({ selectedRowKeys, listOfDeleteExclusion: nData });
   };
 
-  onSelectChangeModal = selectedRowKeys => {
-    const { modalData } = this.state;
-    const nData = modalData.filter(item => selectedRowKeys.findIndex(i => i === item.MINOR_CD) !== -1);
-    this.setState({ selectedRowKeys, selectedMeterial: nData });
+  deleteList = () => {
+    const { sagaKey: id, changeFormData } = this.props;
+    const { listOfDeleteExclusion } = this.state;
+    changeFormData(id, 'HAZARD_LIST', listOfDeleteExclusion);
+    this.setState({ selectedRowKeys: [], listOfDeleteExclusion: [] });
+  };
+
+  modalSelected = record => {
+    this.setState({ hazardData: { ...record, AOC_ID: JSON.parse(record.AOC_ID) } });
+    this.onChangeModal();
   };
 
   modalRender = (nTreeData, aocList, aotList, formData, hazardData) => (
@@ -237,7 +249,12 @@ class DangerHazardSubComp extends React.Component {
           <tr>
             <td>R/A 실시여부</td>
             <td>
-              <AntdSelect className="select-sm mr5" defaultValue={hazardData.RA} onChange={value => this.onChangeData('RA', value)} style={{ width: '100%' }}>
+              <AntdSelect
+                className="select-sm mr5"
+                defaultValue={hazardData.RA_YN}
+                onChange={value => this.onChangeData('RA', value)}
+                style={{ width: '100%' }}
+              >
                 <Option value="Y">Y</Option>
                 <Option value="N">N</Option>
               </AntdSelect>
@@ -313,19 +330,24 @@ class DangerHazardSubComp extends React.Component {
         ),
         align: 'center',
         dataIndex: 'AOC_ID',
-        render: text => text && text.map(item => aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR).toString(),
+        render: text =>
+          text &&
+          JSON.parse(text) &&
+          JSON.parse(text)
+            .map(item => aocList && aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR)
+            .toString(),
       },
       {
         title: '사고의 발생유형',
         dataIndex: 'AOT_ID',
         render: (text, record) =>
           text === 30450
-            ? `${aotList.find(i => i.NODE_ID === text) && aotList.find(i => i.NODE_ID === text).NAME_KOR}(${record.OTHER_CASE})`
-            : aotList.find(i => i.NODE_ID === text) && aotList.find(i => i.NODE_ID === text).NAME_KOR,
+            ? `${aotList && aotList.find(i => i.NODE_ID === text) && aotList.find(i => i.NODE_ID === text).NAME_KOR}(${record.OTHER_CASE})`
+            : aotList && aotList.find(i => i.NODE_ID === text) && aotList.find(i => i.NODE_ID === text).NAME_KOR,
       },
       {
         title: 'R/A 실시여부',
-        dataIndex: 'RA',
+        dataIndex: 'RA_YN',
       },
     ];
 
@@ -335,9 +357,9 @@ class DangerHazardSubComp extends React.Component {
           <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onChangeModal}>
             추가
           </StyledButton>
-          <StyledButton className="btn-primary btn-first btn-sm" onClick={() => message.info('개발 중입니다.')}>
-            삭제
-          </StyledButton>
+          <Popconfirm title="정말로 삭제하시겠습니까?" onConfirm={this.deleteList} okText="Yes" cancelText="No">
+            <StyledButton className="btn-primary btn-first btn-sm">삭제</StyledButton>
+          </Popconfirm>
         </StyledButtonWrapper>
         <AntdTable
           rowKey="INDEX"
@@ -373,6 +395,7 @@ DangerHazardSubComp.propTypes = {
   viewType: PropTypes.string,
   extraApiData: PropTypes.object,
   formData: PropTypes.object,
+  viewPageData: PropTypes.object,
   getExtraApiData: PropTypes.func,
   visible: PropTypes.bool,
   changeFormData: PropTypes.func,

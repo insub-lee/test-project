@@ -4,6 +4,9 @@ import 'xeicon/xeicon.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 import 'rodal/lib/rodal.css';
 import 'rc-dialog/assets/index.css';
+import 'moment/locale/ko';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
 window.jQuery = $;
 window.$ = $;

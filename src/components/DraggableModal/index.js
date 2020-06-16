@@ -50,14 +50,17 @@ const StyledWrap = styled.div`
 class DraggableModal extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      leftPosition: undefined,
+    };
   }
 
   render() {
-    const { children, visible } = this.props;
+    const { children, visible, title } = this.props;
     return (
       <StyledWrap>
-        <ReactModal style={{ paddingTop: '50px' }} isOpen={visible} initHeight="auto">
-          <div className="flexible-title">dkdkdkdkdkdk</div>
+        <ReactModal style={{ paddingTop: '50px' }} isOpen={visible} initHeight="auto" top={50} left="25%">
+          <div className="flexible-title">{title}</div>
           {children}
         </ReactModal>
       </StyledWrap>

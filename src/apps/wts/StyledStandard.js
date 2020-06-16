@@ -8,7 +8,7 @@ const StyledStandard = styled.div`
     border-spacing: 0;
   }
 
-  input[type=text],
+  input[type='text'],
   select,
   textarea {
     border-radius: 0;
