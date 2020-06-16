@@ -160,14 +160,14 @@ class List extends React.Component {
               />
               <ExcelDownloadComp
                 isBuilder={false}
-                fileName={`${moment().format('YYYYMMDD')}_화학물질관리 마스터`}
+                fileName={isMasterColumns ? `${moment().format('YYYYMMDD')}_화학물질관리 마스터` : `${moment().format('YYYYMMDD')}_화학물질관리 SAP 사용량`}
                 className="testClassName"
                 btnText="엑셀 다운로드"
-                sheetName="MASTER"
+                sheetName={isMasterColumns ? 'MASTER' : 'SAP사용량'}
                 listData={rowData}
                 btnSize="btn-sm"
-                fields={createExcelData(masterColumnDefs, 'FIELD', 'field')}
-                columns={createExcelData(masterColumnDefs, 'COLUMNS', 'headerName')}
+                fields={createExcelData(isMasterColumns ? masterColumnDefs : sapUsageColumn, 'FIELD', 'field')}
+                columns={createExcelData(isMasterColumns ? masterColumnDefs : sapUsageColumn, 'COLUMNS', 'headerName')}
               />
             </div>
             <div style={{ width: '100%', height: '500px' }}>
