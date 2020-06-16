@@ -110,6 +110,7 @@ class CheckListComp extends Component {
     } else {
       const checkType = validate === 2 ? 'R' : 'O';
       const param = { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, TASK_ORIGIN_SEQ: orginTaskSeq, DRAFT_ID: 0, CHECKTYPE: checkType, STATUS: 0 } };
+
       const fixUrl = '/api/mdcs/v1/common/ValidationHandler';
       submitHandlerBySaga(id, 'POST', fixUrl, param, this.onCompleteProc);
     }
