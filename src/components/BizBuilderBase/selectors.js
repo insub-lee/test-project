@@ -238,6 +238,14 @@ const makeSelectIsTaskFavorite = () =>
     (state, id) => state.getIn(['bizBuilderBase', id, 'isTaskFavorite']) || false,
   );
 
+const makeSelectListTotalCnt = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
+    (state, id) => state.getIn(['bizBuilderBase', id, 'listTotalCnt']) || 0,
+  );
+
+// auth
 const makeSelectProfile = () => createSelector(selectAuth, authState => authState.get('profile'));
 
 export {
@@ -282,4 +290,5 @@ export {
   makeSelectFieldSelectData,
   makeSelectIsTaskFavorite,
   makeSelectProfile,
+  makeSelectListTotalCnt,
 };
