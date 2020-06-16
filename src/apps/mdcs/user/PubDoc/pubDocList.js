@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Table, Icon, Modal, Button } from 'antd';
+import { Table, Icon, Modal } from 'antd';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import DragAntdModal from 'components/DragAntdModal';
 import ContentView from './ContentView';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModal(Modal);
 
 class PubDocList extends Component {
   // eslint-disable-next-line react/state-in-constructor
@@ -99,6 +99,19 @@ class PubDocList extends Component {
   render() {
     return (
       <>
+        <DragAntdModal
+          width={700}
+          // title="문서상세"
+          visible={this.state.isShow}
+          onCancel={this.onCancel}
+          destroyOnClose
+          footer={[
+            <StyledButton className="btn-light btn-sm" onClick={this.onCancel}>취소</StyledButton>,
+            <StyledButton className="btn-primary btn-sm" onClick={this.onRecept}>접수완료</StyledButton>,
+          ]}
+        >
+          <ContentView workSeq={this.state.workSeq} taskSeq={this.state.taskSeq} pubDocInfo={this.state.pubDocInfo} />
+        </DragAntdModal>
         <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
@@ -109,21 +122,6 @@ class PubDocList extends Component {
         <StyledContentsWrapper>
           <AntdTable dataSource={this.state.pubDocList} columns={this.columns} />
         </StyledContentsWrapper>
-
-        <AntdModal
-          width={700}
-          visible={this.state.isShow}
-          onCancel={this.onCancel}
-          destroyOnClose
-          footer={[
-            <Button type="primary" onClick={this.onRecept}>
-              접수완료
-            </Button>,
-            <Button onClick={this.onCancel}>취소</Button>,
-          ]}
-        >
-          <ContentView workSeq={this.state.workSeq} taskSeq={this.state.taskSeq} pubDocInfo={this.state.pubDocInfo} />
-        </AntdModal>
       </>
     );
   }
