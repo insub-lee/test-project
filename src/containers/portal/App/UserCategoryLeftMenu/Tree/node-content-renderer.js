@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Tooltip } from 'antd';
 import IconCollection from 'components/IconCollection';
 import styles from './node-content-renderer.module.scss';
 
@@ -125,14 +126,25 @@ class CustomThemeNodeContentRenderer extends Component {
                 })
               }
             >
-              {' '}
-              {typeof nodeTitle === 'function'
-                ? nodeTitle({
-                    node,
-                    path,
-                    treeIndex,
-                  })
-                : nodeTitle}
+              {node.APP_YN !== 'F' ? (
+                <Tooltip title={node.title} color={['#f5f5f5']} placement="right">
+                  {typeof nodeTitle === 'function'
+                    ? nodeTitle({
+                        node,
+                        path,
+                        treeIndex,
+                      })
+                    : nodeTitle}
+                </Tooltip>
+              ) : typeof nodeTitle === 'function' ? (
+                nodeTitle({
+                  node,
+                  path,
+                  treeIndex,
+                })
+              ) : (
+                nodeTitle
+              )}
             </span>
 
             {nodeSubtitle && (
