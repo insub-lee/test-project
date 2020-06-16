@@ -2,16 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Input, InputNumber, Select, Popconfirm, Table } from 'antd';
 
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from '../SearchComp';
@@ -20,7 +19,7 @@ const AntdInput = StyledInput(Input);
 const AntdInputNumber = StyledInputNumber(InputNumber);
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
-const AntdTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -372,7 +371,7 @@ class List extends React.Component {
         if (index === 0) {
           return (
             <AntdInputNumber
-              className="ant-input-number input-number-sm"
+              className="ant-input-number ant-input-number-sm"
               value={subRequestValue.MANAGED_CONT}
               onChange={e => handleSubInputChange(e, 'NUMBER', 'MANAGED_CONT')}
             />
@@ -419,7 +418,7 @@ class List extends React.Component {
         if (index === 0) {
           return (
             <AntdInputNumber
-              className="ant-input-number input-number-sm"
+              className="ant-input-number ant-input-number-sm"
               value={subRequestValue.SPE_MANAGED_CONT}
               onChange={e => handleSubInputChange(e, 'NUMBER', 'SPE_MANAGED_CONT')}
             />
@@ -602,10 +601,10 @@ class List extends React.Component {
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
-        <ContentsWrapper>
-          <StyledSearchWrap>
-            <div className="search-inner">
-              <span className="input-label">화학물 추가</span>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <span className="text-label">화학물 추가</span>
               <AntdSearch
                 className="ant-search-inline input-search-mid mr5"
                 placeHolder="검색"
@@ -613,156 +612,144 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <StyledButtonWrapper className="btn-wrap-inline">
-                <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
-                  저장/수정
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
+                저장/수정
+              </StyledButton>
+              <Popconfirm
+                title={deleteConfirmMessage}
+                onConfirm={isModified ? handleDeleteConfirm : null}
+                okText={isModified ? '삭제' : '확인'}
+                cancelText="취소"
+              >
+                <StyledButton className="btn-light btn-first btn-sm" onClick={handleDeleteClick}>
+                  삭제
                 </StyledButton>
-                <Popconfirm
-                  title={deleteConfirmMessage}
-                  onConfirm={isModified ? handleDeleteConfirm : null}
-                  okText={isModified ? '삭제' : '확인'}
-                  cancelText="취소"
+              </Popconfirm>
+              <StyledButton className="btn-light btn-first btn-sm" onClick={handleResetClick}>
+                초기화
+              </StyledButton>
+              <Popconfirm disabled={requestValue.CATEGORY && requestValue.NAME_KOR} title="기준물질 정보를 먼저 입력하세요.">
+                <StyledButton
+                  className="btn-light btn-sm"
+                  onClick={() => {
+                    if (subTableVisible) {
+                      return this.setState({ subTableVisible: false, dataSource: [{}] });
+                    }
+
+                    if (requestValue.CATEGORY && requestValue.NAME_KOR) {
+                      return handleSubMaterialAddClick();
+                    }
+
+                    return null;
+                  }}
                 >
-                  <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
-                    삭제
-                  </StyledButton>
-                </Popconfirm>
-                <StyledButton className="btn-light btn-first" onClick={handleResetClick}>
-                  초기화
+                  {subTableVisible ? '화합물 삭제' : '화합물 추가'}
                 </StyledButton>
-                <Popconfirm disabled={requestValue.CATEGORY && requestValue.NAME_KOR} title="기준물질 정보를 먼저 입력하세요.">
-                  <StyledButton
-                    className="btn-light"
-                    onClick={() => {
-                      if (subTableVisible) {
-                        return this.setState({ subTableVisible: false, dataSource: [{}] });
-                      }
-
-                      if (requestValue.CATEGORY && requestValue.NAME_KOR) {
-                        return handleSubMaterialAddClick();
-                      }
-
-                      return null;
-                    }}
-                  >
-                    {subTableVisible ? '화합물 삭제' : '화합물 추가'}
-                  </StyledButton>
-                </Popconfirm>
-              </StyledButtonWrapper>
+              </Popconfirm>
             </div>
-          </StyledSearchWrap>
-          <div className="tableWrapper">
-            <StyledHtmlTable>
-              <table>
-                <colgroup>
-                  <col width="12%" />
-                  <col width="13%" />
-                  <col width="12%" />
-                  <col width="13%" />
-                  <col width="12%" />
-                  <col width="13%" />
-                  <col width="12%" />
-                  <col width="13%" />
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <th>분류</th>
-                    <td colSpan={7}>
-                      <AntdSelect
-                        className="select-sm"
-                        onChange={e => handleInputChange(e, 'SELECT', 'CATEGORY')}
-                        value={requestValue.CATEGORY ? Number(requestValue.CATEGORY) : ''}
-                        style={{ width: '146.3px' }}
-                      >
-                        {categories.map(item => (
-                          <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
-                        ))}
-                      </AntdSelect>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>연번</th>
-                    <td>
-                      {/* <AntdInputNumber
-                        className="ant-input-number input-number-sm"
-                        value={requestValue.SERIAL_NO}
-                        onChange={e => handleInputChange(e, 'NUMBER', 'SERIAL_NO')}
-                        disabled={isModified}
-                      /> */}
-                      {requestValue.SERIAL_NO}
-                    </td>
-                    <th>화학물질명_국문</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
-                    <th>화학물질명_영문</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
-                    <th>CAS NO.</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>관리대상유해물질여부</th>
-                    <td>
-                      <AntdSelect
-                        className="select-sm"
-                        defaultValue="Y"
-                        onChange={e => handleInputChange(e, 'SELECT', 'IS_MANAGED')}
-                        value={requestValue.IS_MANAGED}
-                        style={{ width: '100%' }}
-                      >
-                        <Select.Option value="Y">해당</Select.Option>
-                        <Select.Option value="N">비해당</Select.Option>
-                      </AntdSelect>
-                    </td>
-                    <th>관리대상물질 함량기준</th>
-                    <td>
-                      <AntdInputNumber
-                        className="ant-input-number input-number-sm"
-                        value={requestValue.MANAGED_CONT}
-                        onChange={e => handleInputChange(e, 'NUMBER', 'MANAGED_CONT')}
-                      />
-                    </td>
-                    <th>특별관리대상물질여부</th>
-                    <td>
-                      <AntdSelect
-                        className="select-sm"
-                        defaultValue="Y"
-                        onChange={e => handleInputChange(e, 'SELECT', 'IS_SPE_MANAGED')}
-                        value={requestValue.IS_SPE_MANAGED}
-                        style={{ width: '100%' }}
-                      >
-                        <Select.Option value="Y">해당</Select.Option>
-                        <Select.Option value="N">비해당</Select.Option>
-                      </AntdSelect>
-                    </td>
-                    <th>특별관리대상물질 함량기준</th>
-                    <td>
-                      <AntdInputNumber
-                        className="ant-input-number input-number-sm"
-                        value={requestValue.SPE_MANAGED_CONT}
-                        onChange={e => handleInputChange(e, 'NUMBER', 'SPE_MANAGED_CONT')}
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </StyledHtmlTable>
-            {subTableVisible ? (
-              <AntdTable
-                columns={columns}
-                dataSource={dataSource}
-                pagination={false}
-                onRow={(record, index) => ({
-                  onClick: () => handleSubMaterialRowClick(record, index),
-                })}
-              />
-            ) : null}
-          </div>
-        </ContentsWrapper>
+          </StyledCustomSearchWrapper>
+          <StyledHtmlTable>
+            <table>
+              <colgroup>
+                <col width="13%" />
+                <col width="12%" />
+                <col width="13%" />
+                <col width="12%" />
+                <col width="13%" />
+                <col width="12%" />
+                <col width="13%" />
+                <col width="12%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th>분류</th>
+                  <td colSpan={7}>
+                    <AntdSelect
+                      className="select-sm"
+                      onChange={e => handleInputChange(e, 'SELECT', 'CATEGORY')}
+                      value={requestValue.CATEGORY ? Number(requestValue.CATEGORY) : ''}
+                      style={{ width: '133.4px' }}
+                    >
+                      {categories.map(item => (
+                        <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
+                      ))}
+                    </AntdSelect>
+                  </td>
+                </tr>
+                <tr>
+                  <th>연번</th>
+                  <td>{requestValue.SERIAL_NO}</td>
+                  <th>화학물질명_국문</th>
+                  <td>
+                    <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={e => handleInputChange(e, 'INPUT')} />
+                  </td>
+                  <th>화학물질명_영문</th>
+                  <td>
+                    <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={e => handleInputChange(e, 'INPUT')} />
+                  </td>
+                  <th>CAS NO.</th>
+                  <td>
+                    <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={e => handleInputChange(e, 'INPUT')} />
+                  </td>
+                </tr>
+                <tr>
+                  <th>관리대상유해물질여부</th>
+                  <td>
+                    <AntdSelect
+                      className="select-sm"
+                      defaultValue="Y"
+                      onChange={e => handleInputChange(e, 'SELECT', 'IS_MANAGED')}
+                      value={requestValue.IS_MANAGED}
+                      style={{ width: '100%' }}
+                    >
+                      <Select.Option value="Y">해당</Select.Option>
+                      <Select.Option value="N">비해당</Select.Option>
+                    </AntdSelect>
+                  </td>
+                  <th>관리대상물질 함량기준</th>
+                  <td>
+                    <AntdInputNumber
+                      className="ant-input-number ant-input-number-sm"
+                      value={requestValue.MANAGED_CONT}
+                      onChange={e => handleInputChange(e, 'NUMBER', 'MANAGED_CONT')}
+                    />
+                  </td>
+                  <th>특별관리대상물질여부</th>
+                  <td>
+                    <AntdSelect
+                      className="select-sm"
+                      defaultValue="Y"
+                      onChange={e => handleInputChange(e, 'SELECT', 'IS_SPE_MANAGED')}
+                      value={requestValue.IS_SPE_MANAGED}
+                      style={{ width: '100%' }}
+                    >
+                      <Select.Option value="Y">해당</Select.Option>
+                      <Select.Option value="N">비해당</Select.Option>
+                    </AntdSelect>
+                  </td>
+                  <th>특별관리대상물질 함량기준</th>
+                  <td>
+                    <AntdInputNumber
+                      className="ant-input-number ant-input-number-sm"
+                      value={requestValue.SPE_MANAGED_CONT}
+                      onChange={e => handleInputChange(e, 'NUMBER', 'SPE_MANAGED_CONT')}
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </StyledHtmlTable>
+          {subTableVisible ? (
+            <AntdTable
+              columns={columns}
+              dataSource={dataSource}
+              pagination={false}
+              onRow={(record, index) => ({
+                onClick: () => handleSubMaterialRowClick(record, index),
+              })}
+            />
+          ) : null}
+        </StyledContentsWrapper>
         <Modal
           sagaKey={sagaKey}
           visible={visible}
