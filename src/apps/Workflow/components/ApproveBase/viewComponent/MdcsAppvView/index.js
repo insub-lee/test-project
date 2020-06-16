@@ -97,7 +97,6 @@ class MdcsAppvView extends Component {
     if (((appvStatus === 3 || appvStatus === 30) && !opinion) || opinion === '') {
       message.warning('의견을 작성해주세요');
     } else {
-      e.preventDefault();
       this.props.setOpinion(opinion);
       this.props.reqApprove(appvStatus);
       this.props.setOpinionVisible(false);
