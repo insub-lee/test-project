@@ -85,14 +85,13 @@ class CheckListComp extends Component {
     this.setState({ visible: false });
   };
 
-  onValidateProcess = (vadildate, workProcess, workSeq, taskSeq, orginTaskSeq) => {
-    console.debug('onValidateProcess', workProcess, vadildate);
+  onValidateProcess = (validate, workProcess, workSeq, taskSeq, orginTaskSeq) => {
     const { id, submitHandlerBySaga } = this.props;
     let isByPass = true;
     const { DRAFT_PROCESS } = workProcess;
     const { DRAFT_PROCESS_STEP } = DRAFT_PROCESS;
 
-    if (vadildate === 1) {
+    if (validate === 1) {
       const ruleCheckList = DRAFT_PROCESS_STEP.filter(rule => rule.ISREQUIRED === 1);
       if (ruleCheckList.length > 0) {
         ruleCheckList.forEach(rule => {
@@ -102,14 +101,17 @@ class CheckListComp extends Component {
           }
         });
       }
-    }
-
-    const DARFT_DATA = { validateType: vadildate };
-    const nWorkProcess = { ...DRAFT_PROCESS, DARFT_DATA };
-
-    if (isByPass) {
-      const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
-      submitHandlerBySaga(id, 'POST', prefixUrl, nWorkProcess, this.onCompleteProc);
+      const DARFT_DATA = { validateType: validate };
+      const nWorkProcess = { ...DRAFT_PROCESS, DARFT_DATA };
+      if (isByPass) {
+        const fixUrl = '/api/workflow/v1/common/workprocess/draft';
+        submitHandlerBySaga(id, 'POST', fixUrl, { DRAFT_PROCESS: nWorkProcess }, this.onCompleteProc);
+      }
+    } else {
+      const checkType = validate === 2 ? 'R' : 'O';
+      const param = { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, TASK_ORIGIN_SEQ: orginTaskSeq, DRAFT_ID: 0, CHECKTYPE: checkType, STATUS: 0 } };
+      const fixUrl = '/api/mdcs/v1/common/ValidationHandler';
+      submitHandlerBySaga(id, 'POST', fixUrl, param, this.onCompleteProc);
     }
   };
 
