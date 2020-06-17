@@ -152,6 +152,7 @@ class List extends React.Component {
               <AgGridReact defaultColDef={defaultColDef} columnDefs={columnDefs} rowData={rowData} suppressRowTransform />
             </div>
           </div>
+          <div className="div-comment div-comment-antd">{`총 ${rowData.length}건`}</div>
         </StyledContentsWrapper>
       </>
     );

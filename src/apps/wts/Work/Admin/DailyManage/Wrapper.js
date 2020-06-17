@@ -1,29 +1,33 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  .title {
-    padding: 10px 0;
-    font-size: 20px;
-    font-weight: 600;
-  }
+  .sub_con {
+    padding: 20px 30px;
 
-  .btn_wrap {
-    margin-bottom: 5px;
-    text-align: right;
-  }
-
-  .search_div {
-    margin-bottom: 10px;
-
-    li {
-      float: left;
-      list-style-type: none;
-      vertical-align: bottom;
-      margin: 0 30px 10px 0;
+    .title {
+      padding: 10px 0;
+      font-size: 20px;
+      font-weight: 600;
     }
 
-    input {
-      text-align: center;
+    .btn_wrap {
+      margin-bottom: 5px;
+      text-align: right;
+    }
+
+    .search_div {
+      margin-bottom: 10px;
+
+      li {
+        float: left;
+        list-style-type: none;
+        vertical-align: bottom;
+        margin: 0 30px 10px 0;
+      }
+
+      input {
+        text-align: center;
+      }
     }
   }
 `;

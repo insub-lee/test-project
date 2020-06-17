@@ -6,7 +6,8 @@ import { List, AutoSizer } from 'react-virtualized';
 import StyledModalContent from 'apps/wts/components/CommonStyledElement/StyledModalContent';
 import StyledVirtualizedList from 'apps/wts/components/CommonStyledElement/StyledVirtualizedList';
 
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import service from '../service';
 
 class WorkJoSelectorModal extends React.Component {
@@ -141,14 +142,14 @@ class WorkJoSelectorModal extends React.Component {
                   )}
                 </AutoSizer>
               </StyledVirtualizedList>
-              <div className="btn_wrap">
-                <Button type="button" size="small" color="gray" onClick={this.handleCloseModal}>
-                  취소
-                </Button>
-                <Button type="button" size="small" color="primary" onClick={this.handleSetWorkJo}>
+              <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+                <StyledButton type="button" className="btn-primary btn-sm mr5" onClick={this.handleSetWorkJo}>
                   확인
-                </Button>
-              </div>
+                </StyledButton>
+                <StyledButton type="button" className="btn-light btn-sm" onClick={this.handleCloseModal}>
+                  취소
+                </StyledButton>
+              </StyledButtonWrapper>
             </div>
           </StyledModalContent>
         </div>

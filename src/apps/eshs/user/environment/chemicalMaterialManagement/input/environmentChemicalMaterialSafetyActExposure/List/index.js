@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Popconfirm } from 'antd';
+import { Input, Select, Popconfirm } from 'antd';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
@@ -9,13 +9,12 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 
 const AntdInput = StyledInput(Input);
-const AntdInputNumber = StyledInputNumber(InputNumber);
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
 
@@ -81,12 +80,16 @@ class List extends React.Component {
       this.setState({
         isModified: false,
       });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetyexposure`, requestValue, this.getMaterialList);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetyexposure`, requestValue, (key, response) =>
+        callBackAfterPut(key, response, this.getMaterialList),
+      );
     }
     this.setState({
       isModified: false,
     });
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalsafetyexposure`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalsafetyexposure`, requestValue, (key, response) =>
+      callBackAfterPost(key, response, this.getMaterialList),
+    );
   };
 
   handleDeleteClick = () => {
@@ -104,7 +107,15 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetyexposure`, requestValue, this.getMaterialList);
+
+    const submitCallbackFunc = () => {
+      this.getMaterialList();
+      this.handleResetClick();
+    };
+
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetyexposure`, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, submitCallbackFunc),
+    );
   };
 
   getMaterialList = () => {

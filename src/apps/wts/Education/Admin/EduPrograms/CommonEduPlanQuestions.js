@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Spin } from 'antd';
+
 import Wrapper from './Wrapper';
+import StyledTable from '../../../StyledTable';
 
 const CommonEduPlanQuestions = ({ data, isLoading }) => (
   <Wrapper>
     <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-      <div className="ta_wrap">
+      <StyledTable className="ta_wrap">
         <table className="tb02">
           <colgroup>
             <col width="60%" />
@@ -46,7 +48,7 @@ const CommonEduPlanQuestions = ({ data, isLoading }) => (
             ))}
           </tbody>
         </table>
-      </div>
+      </StyledTable>
     </Spin>
   </Wrapper>
 );

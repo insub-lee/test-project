@@ -12,6 +12,7 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
+import { callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -86,7 +87,9 @@ class List extends React.Component {
       this.setState({
         isModified: false,
       });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, this.getMaterialList);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, requestValue, (key, response) =>
+        callBackAfterPut(key, response, this.getMaterialList),
+      );
     }
     return message.error('화학물을 먼저 선택하세요.');
   };
@@ -106,7 +109,14 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, this.getMaterialList);
+    const submitCallbackFunc = () => {
+      this.getMaterialList();
+      this.handleResetClick();
+    };
+
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, submitCallbackFunc),
+    );
   };
 
   getMaterialList = () => {
