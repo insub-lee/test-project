@@ -75,6 +75,13 @@ class ListPage extends Component {
   //   removeReduxState(id);
   // }
 
+  setPaginationIdx = paginationIdx =>
+    this.setState({ paginationIdx }, () => {
+      const { sagaKey, workSeq, conditional, getListData } = this.props;
+      const { pageSize } = this.state;
+      getListData(sagaKey, workSeq, conditional, paginationIdx, pageSize);
+    });
+
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
       return CompInfo[comp.CONFIG.property.COMP_SRC].renderer({
@@ -141,8 +148,8 @@ class ListPage extends Component {
   */
 
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
-    const { isMultiDelete, isOnRowClick } = this.state;
+    const { listData, listSelectRowKeys, workInfo, customOnRowClick, listTotalCnt } = this.props;
+    const { isMultiDelete, isOnRowClick, paginationIdx } = this.state;
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
@@ -170,6 +177,8 @@ class ListPage extends Component {
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
+            pagination={{ current: paginationIdx, total: listTotalCnt }}
+            onChange={pagination => this.setPaginationIdx(pagination.current)}
           />
         </Group>
       </div>
