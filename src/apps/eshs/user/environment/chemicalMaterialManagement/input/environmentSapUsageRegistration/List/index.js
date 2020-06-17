@@ -164,14 +164,12 @@ class List extends React.Component {
           <StyledHtmlTable>
             <table>
               <colgroup>
-                <col width="10%" />
                 <col width="15%" />
-                <col width="10%" />
+                <col width="18%" />
                 <col width="15%" />
-                <col width="10%" />
+                <col width="18%" />
                 <col width="15%" />
-                <col width="10%" />
-                <col width="15%" />
+                <col width="18%" />
               </colgroup>
               <tbody>
                 <tr>
@@ -181,6 +179,26 @@ class List extends React.Component {
                   <td>{requestValue.NAME_SAP}</td>
                   <th>단위</th>
                   <td>{requestValue.UNIT}</td>
+                </tr>
+                <tr>
+                  <th>단위환산(용기)</th>
+                  <td>
+                    <InputNumber
+                      value={requestValue.VESSEL_COEFFICIENT}
+                      onChange={value => handleInputNumberChange(value, 'VESSEL_COEFFICIENT')}
+                      className="col-input-number ant-input-number-sm"
+                      style={{ width: '100%', visibility: !isSelectSapMaterial() ? 'hidden' : 'visible' }}
+                    />
+                  </td>
+                  <th>단위환산(밀도)</th>
+                  <td>
+                    <InputNumber
+                      value={requestValue.DENSITY_COEFFICIENT}
+                      onChange={value => handleInputNumberChange(value, 'DENSITY_COEFFICIENT')}
+                      className="col-input-number ant-input-number-sm"
+                      style={{ width: '100%', visibility: !isSelectSapMaterial() ? 'hidden' : 'visible' }}
+                    />
+                  </td>
                   <th>kg환산계수</th>
                   <td>
                     <InputNumber
@@ -194,6 +212,7 @@ class List extends React.Component {
               </tbody>
             </table>
           </StyledHtmlTable>
+          <div className="div-comment div-comment-antd">kg환산계수: 단위환산(용기) * 단위환산(밀도)</div>
         </StyledContentsWrapper>
         <Modal
           getMaterialList={getMaterialList}
