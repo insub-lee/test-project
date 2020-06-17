@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { Icon, Spin } from 'antd';
 import ReactTooltip from 'react-tooltip';
 import { orderBy } from 'lodash';
+import 'react-big-scheduler/lib/css/style.css';
 
 import { jsonToQueryString } from 'utils/helpers';
 import AcceptModal from './AcceptModal';
