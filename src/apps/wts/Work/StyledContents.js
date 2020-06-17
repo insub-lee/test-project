@@ -3,8 +3,6 @@ import iconBig from 'apps/wts/images/icon_arr_big.png';
 import iconSmall from 'apps/wts/images/icon_arr_small.png';
 
 const StyledContents = styled.div`
-  padding: 20px 30px;
-
   &.expanded {
     position: fixed;
     width: 100%;
