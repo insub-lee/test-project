@@ -10,9 +10,10 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
 import { Input, Select } from 'antd';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import { masterColumnDefs, sapUsageColumn } from './columnDefs';
 
 const AntdInput = StyledInput(Input);
@@ -128,50 +129,52 @@ class List extends React.Component {
     return (
       <>
         <div style={{ width: '100%', height: '100%' }}>
-          <ContentsWrapper>
-            <div className="selSaveWrapper alignLeft" style={{ paddingBottom: '10px' }}>
-              <div className="textLabel">분류</div>
-              <AntdSelect defaultValue="Y" onChange={handleSelectChange} className="select-mid mr5" style={{ width: '130px' }}>
-                <AntdSelect.Option value="Y">전체</AntdSelect.Option>
-                <AntdSelect.Option value="N">SAP(사용량)</AntdSelect.Option>
-              </AntdSelect>
-              <div className="textLabel">SAP_NO.</div>
-              <AntdInput
-                className="ant-input-inline ant-input-mid mr5"
-                onChange={e => handleInputChange(e.target.value, 'SAP_NO')}
-                value={requestValue.SAP_NO}
-                style={{ width: '15%' }}
-                placeholder="SAP_NO."
-              />
-              <div className="textLabel">CAS_NO.</div>
-              <AntdInput
-                className="ant-input-inline ant-input-mid mr5"
-                onChange={e => handleInputChange(e.target.value, 'CAS_NO')}
-                value={requestValue.CAS_NO}
-                style={{ width: '15%' }}
-                placeholder="CAS_NO."
-              />
-              <AntdInput
-                className="ant-input-inline ant-input-mid mr5"
-                onChange={e => handleInputChange(e.target.value, 'KEYWORD')}
-                value={requestValue.KEYWORD}
-                style={{ width: '20%' }}
-                placeholder="화학물질명을 입력하세요."
-              />
-              <ExcelDownloadComp
-                isBuilder={false}
-                fileName={isMasterColumns ? `${moment().format('YYYYMMDD')}_화학물질관리 마스터` : `${moment().format('YYYYMMDD')}_화학물질관리 SAP 사용량`}
-                className="testClassName"
-                btnText="엑셀 다운로드"
-                sheetName={isMasterColumns ? 'MASTER' : 'SAP사용량'}
-                listData={rowData}
-                btnSize="btn-sm"
-                fields={createExcelData(isMasterColumns ? masterColumnDefs : sapUsageColumn, 'FIELD', 'field')}
-                columns={createExcelData(isMasterColumns ? masterColumnDefs : sapUsageColumn, 'COLUMNS', 'headerName')}
-              />
-            </div>
-            <div style={{ width: '100%', height: '500px' }}>
-              <div className="ag-theme-balham tableWrapper" style={{ padding: '0px 20px', height: 'calc(100% - 25px)' }}>
+          <StyledContentsWrapper>
+            <StyledCustomSearchWrapper>
+              <div className="search-input-area">
+                <div className="text-label">분류</div>
+                <AntdSelect defaultValue="Y" onChange={handleSelectChange} className="select-mid mr5" style={{ width: '130px' }}>
+                  <AntdSelect.Option value="Y">MASTER</AntdSelect.Option>
+                  <AntdSelect.Option value="N">SAP(사용량)</AntdSelect.Option>
+                </AntdSelect>
+                <div className="text-label">SAP_NO.</div>
+                <AntdInput
+                  className="ant-input-inline ant-input-mid mr5"
+                  onChange={e => handleInputChange(e.target.value, 'SAP_NO')}
+                  value={requestValue.SAP_NO}
+                  style={{ width: '15%' }}
+                  placeholder="SAP_NO."
+                />
+                <div className="text-label">CAS_NO.</div>
+                <AntdInput
+                  className="ant-input-inline ant-input-mid mr5"
+                  onChange={e => handleInputChange(e.target.value, 'CAS_NO')}
+                  value={requestValue.CAS_NO}
+                  style={{ width: '15%' }}
+                  placeholder="CAS_NO."
+                />
+                <AntdInput
+                  className="ant-input-inline ant-input-mid mr5"
+                  onChange={e => handleInputChange(e.target.value, 'KEYWORD')}
+                  value={requestValue.KEYWORD}
+                  style={{ width: '20%' }}
+                  placeholder="화학물질명을 입력하세요."
+                />
+                <ExcelDownloadComp
+                  isBuilder={false}
+                  fileName={isMasterColumns ? `${moment().format('YYYYMMDD')}_화학물질관리 마스터` : `${moment().format('YYYYMMDD')}_화학물질관리 SAP 사용량`}
+                  className="testClassName"
+                  btnText="엑셀 다운로드"
+                  sheetName={isMasterColumns ? 'MASTER' : 'SAP사용량'}
+                  listData={rowData}
+                  btnSize="btn-sm"
+                  fields={createExcelData(isMasterColumns ? masterColumnDefs : sapUsageColumn, 'FIELD', 'field')}
+                  columns={createExcelData(isMasterColumns ? masterColumnDefs : sapUsageColumn, 'COLUMNS', 'headerName')}
+                />
+              </div>
+            </StyledCustomSearchWrapper>
+            <div style={{ width: '100%', height: '450px' }}>
+              <div className="ag-theme-balham" style={{ width: '100%', height: 'calc(100% - 25px)' }}>
                 <AgGridReact
                   defaultColDef={defaultColDef}
                   columnDefs={isMasterColumns ? masterColumnDefs : sapUsageColumn}
@@ -181,7 +184,7 @@ class List extends React.Component {
                 />
               </div>
             </div>
-          </ContentsWrapper>
+          </StyledContentsWrapper>
         </div>
       </>
     );
