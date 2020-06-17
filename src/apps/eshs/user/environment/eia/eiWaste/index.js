@@ -4,7 +4,7 @@ import MainPage from './MainPage';
 
 class eiWaste extends Component {
   render() {
-    return <BizMicroDevBase component={MainPage} sagaKey="eiWaste" tbName="WASTE" />;
+    return <BizMicroDevBase component={MainPage} sagaKey="eiWaste" tbName="WASTE_ITEM" />;
   }
 }
 
