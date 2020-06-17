@@ -46,6 +46,7 @@ class List extends React.Component {
   onGridReady = params => {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
+    // this.gridOptions = params.options;
     this.gridApi.setDomLayout('normal');
   };
 
@@ -184,6 +185,7 @@ class List extends React.Component {
                 />
               </div>
             </div>
+            <div className="div-comment div-comment-antd">{`총 ${rowData.length}건`}</div>
           </StyledContentsWrapper>
         </div>
       </>
