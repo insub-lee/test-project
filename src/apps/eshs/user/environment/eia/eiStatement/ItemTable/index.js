@@ -260,7 +260,7 @@ class ItemTable extends Component {
                 <span>단위</span>
               </th>
               <th className="th-pointer">
-                <Popover content={<img src={popoverContent.Eee1} alt="영향크기(B)" style={{ width: 760, height: 500 }} />} title={null}>
+                <Popover content={<img src={popoverContent.Eee1} alt="영향크기(B)" />} title={null}>
                   <span className="popoverTitle">영향크기(B)</span>
                 </Popover>
               </th>
@@ -272,22 +272,22 @@ class ItemTable extends Component {
                 </span>
               </th>
               <th className="th-pointer">
-                <Popover content={<img src={popoverContent.Eee2} alt="투입배출관리(D)" style={{ width: 526, height: 162 }} />} title={null}>
+                <Popover content={<img src={popoverContent.Eee2} alt="투입배출관리(D)" />} title={null}>
                   <span className="popoverTitle">투입배출관리(D)</span>
                 </Popover>
               </th>
               <th className="th-pointer">
-                <Popover content={<img src={popoverContent.Eee3} alt="개선계획서(E)" style={{ width: 473, height: 106 }} />} title={null}>
+                <Popover content={<img src={popoverContent.Eee3} alt="개선계획서(E)" />} title={null}>
                   <span className="popoverTitle">개선계획서(E)</span>
                 </Popover>
               </th>
               <th className="th-pointer">
-                <Popover content={<img src={popoverContent.Eee4} alt="문서화(F)" style={{ width: 585, height: 138 }} />} title={null}>
+                <Popover content={<img src={popoverContent.Eee4} alt="문서화(F)" />} title={null}>
                   <span className="popoverTitle">문서화(F)</span>
                 </Popover>
               </th>
               <th className="th-pointer">
-                <Popover content={<img src={popoverContent.Eee5} alt="발생주기(G)" style={{ width: 254, height: 107 }} />} title={null}>
+                <Popover content={<img src={popoverContent.Eee5} alt="발생주기(G)" />} title={null}>
                   <span className="popoverTitle">발생주기(G)</span>
                 </Popover>
               </th>

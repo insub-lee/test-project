@@ -1,6 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Input, Select, Checkbox, Popconfirm, InputNumber } from 'antd';
+import { Input, Select, Checkbox, Popconfirm, InputNumber, Popover } from 'antd';
 import Upload from 'components/Upload';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
@@ -12,6 +12,7 @@ import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumb
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import * as popoverContent from './PopoverContent';
 
 const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
@@ -277,7 +278,7 @@ class ItemTable extends Component {
               <th>
                 <AntdSelect
                   className="select-sm"
-                  defaultValue={itemData.VALUATION_RESULT}
+                  value={itemData.VALUATION_RESULT}
                   style={{ width: '100%' }}
                   onChange={value => this.onChangeFormData('VALUATION_RESULT', value)}
                 >
@@ -312,22 +313,42 @@ class ItemTable extends Component {
                 평가(A)
               </th>
               <th colSpan={6}>피해정도 평가</th>
-              <th rowSpan={2}>
-                평가결과
-                <br />
-                (관리범위/주체)
+              <th rowSpan={2} className="th-pointer">
+                <Popover content={<img src={popoverContent.Eme1} alt="영향크기(B)" style={{ width: 760, height: 500 }} />} trigger="hover" title={null}>
+                  평가결과
+                  <br />
+                  (관리범위/주체)
+                </Popover>
               </th>
-              <th rowSpan={2}>
-                비상사태
-                <br />
-                (조치계획서)
+              <th rowSpan={2} className="th-pointer">
+                <Popover content={<img src={popoverContent.Eme6} alt="영향크기(B)" style={{ width: 760, height: 500 }} />} trigger="hover" title={null}>
+                  비상사태
+                  <br />
+                  (조치계획서)
+                </Popover>
               </th>
             </tr>
             <tr>
-              <th>B</th>
-              <th>C</th>
-              <th>D</th>
-              <th>E</th>
+              <th className="th-pointer">
+                <Popover content={<img src={popoverContent.Eme2} alt="영향크기(B)" style={{ width: 760, height: 500 }} />} trigger="hover" title={null}>
+                  B
+                </Popover>
+              </th>
+              <th className="th-pointer">
+                <Popover content={<img src={popoverContent.Eme3} alt="영향크기(B)" style={{ width: 760, height: 500 }} />} trigger="hover" title={null}>
+                  C
+                </Popover>
+              </th>
+              <th className="th-pointer">
+                <Popover content={<img src={popoverContent.Eme4} alt="영향크기(B)" style={{ width: 760, height: 500 }} />} trigger="hover" title={null}>
+                  D
+                </Popover>
+              </th>
+              <th className="th-pointer">
+                <Popover content={<img src={popoverContent.Eme5} alt="영향크기(B)" style={{ width: 760, height: 500 }} />} trigger="hover" title={null}>
+                  E
+                </Popover>
+              </th>
               <th>
                 계<br />
                 (F)

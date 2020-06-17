@@ -37,15 +37,14 @@ class MainPage extends Component {
     return (
       <StyledContentsWrapper>
         <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
-        <div>
-          Note) 총점 15점 이상은 관리범위(주체)를 결정하고, 아래 Action Item을 수행함.(15점 미만은 일상운영관리 실시
-          <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. 관리 주체 : 부서, 사업장
-          <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. 관리지침 : 1)상 발생억제 및 오염약화를 위한 시설/도구 비치,
-          <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2) 대응절차/조직
-          설정(비상사태조치계획 등), 대시사항의 주기적인 test(모의훈련/대비 도구 시험가동등)
+        <div className="select-save-wrapper alignLeft">
+          <p>Note) 총점 15점 이상은 관리범위(주체)를 결정하고, 아래 Action Item을 수행함.(15점 미만은 일상운영관리 실시</p>
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. 관리 주체 : 부서, 사업장</p>
+          <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. 관리지침 : 1)상 발생억제 및 오염약화를 위한 시설/도구 비치,</p>
+          <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) 대응절차/조직
+            설정(비상사태조치계획 등), 대시사항의 주기적인 test(모의훈련/대비 도구 시험가동등)
+          </p>
         </div>
         <div>
           <ItemTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
