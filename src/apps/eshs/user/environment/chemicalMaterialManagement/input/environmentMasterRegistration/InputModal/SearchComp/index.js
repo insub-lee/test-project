@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import { debounce } from 'lodash';
-import StyledInput from 'commonStyled/Form/StyledInput';
 import { Input } from 'antd';
 
-const AntdInput = StyledInput(Input);
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class SearchComp extends React.Component {
   constructor(props) {
@@ -36,10 +37,20 @@ class SearchComp extends React.Component {
     const { KEYWORD, handleSearchChange } = this.props;
     return (
       <>
-        <StyledSearchWrap>
-          <span className="input-label">화학물질 검색</span>
-          <AntdInput.Search className="search-item input-width160" placeholder="검색" onChange={e => handleSearchChange(e, 'INPUT')} value={KEYWORD} />
-        </StyledSearchWrap>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <span className="text-label">화학물질 검색</span>
+              <AntdSearch
+                className="ant-search-inline input-search-mid mr5"
+                placeholder="검색"
+                onChange={e => handleSearchChange(e, 'INPUT')}
+                value={KEYWORD}
+                style={{ width: '200px' }}
+              />
+            </div>
+          </StyledCustomSearchWrapper>
+        </StyledContentsWrapper>
       </>
     );
   }

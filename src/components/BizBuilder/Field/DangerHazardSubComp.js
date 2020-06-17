@@ -76,6 +76,7 @@ class DangerHazardSubComp extends React.Component {
       extraApiData: { codeData, treeData, hazardSubList },
       changeFormData,
       sagaKey: id,
+      viewPageData,
     } = this.props;
     const aotList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30432);
     const aocList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30433);
@@ -101,7 +102,7 @@ class DangerHazardSubComp extends React.Component {
         return '';
       });
     const nTreeData = (tempTree && getCategoryMapListAsTree(tempTree, 1831)) || [];
-    changeFormData(id, 'HAZARD_LIST', hazardSubList && hazardSubList.list);
+    changeFormData(id, 'HAZARD_LIST', viewPageData.viewType === 'MODIFY' ? hazardSubList && hazardSubList.list : []);
     this.setState({ aotList, aocList, nTreeData });
   };
 
@@ -331,11 +332,12 @@ class DangerHazardSubComp extends React.Component {
         align: 'center',
         dataIndex: 'AOC_ID',
         render: text =>
-          text &&
-          JSON.parse(text) &&
-          JSON.parse(text)
-            .map(item => aocList && aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR)
-            .toString(),
+          Array.isArray(text)
+            ? text.map(item => aocList && aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR).toString()
+            : JSON.parse(text) &&
+              JSON.parse(text)
+                .map(item => aocList && aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR)
+                .toString(),
       },
       {
         title: '사고의 발생유형',

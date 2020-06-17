@@ -136,24 +136,24 @@ class MsdsIngredientComp extends React.Component {
                 <tbody>
                   {applyList.map((a, index) => (
                     <tr key={index}>
-                      <td>{a.GAS_CD}</td>
+                      <td style={{ width: '25%' }}>{a.GAS_CD}</td>
                       {viewType === 'INPUT' || viewType === 'MODIFY' ? (
                         <>
-                          <td>
-                            <InputNumber value={a.TREAT_DENSITY || 0} min={0} max={100} onChange={e => this.handleDENChange(e, a)} />
-                            {a.UNIT || ''}
+                          <td style={{ textAlign: 'Left', width: '200px' }}>
+                            <InputNumber style={{ width: '80%' }} value={a.TREAT_DENSITY || 0} min={0} max={100} onChange={e => this.handleDENChange(e, a)} />
+                            <span style={{ marginLeft: 5, width: 50 }}>{a.UNIT || ''}</span>
                           </td>
                           <td>
-                            <InputNumber value={a.TREAT_EFF || 0} min={0} max={100} onChange={e => this.handleEFFChange(e, a)} />
+                            <InputNumber style={{ width: '100%' }} value={a.TREAT_EFF || 0} min={0} max={100} onChange={e => this.handleEFFChange(e, a)} />
                           </td>
                           <td>
-                            <Input style={{ width: '150px' }} onChange={e => this.handleInputOnChange(e, a)} value={a.CHEMICAL_NM || ''} />
+                            <Input onChange={e => this.handleInputOnChange(e, a)} value={a.CHEMICAL_NM || ''} />
                           </td>
                         </>
                       ) : (
                         <>
-                          <td>
-                            {a.TREAT_DENSITY || 0}
+                          <td style={{ textAlign: 'Left' }}>
+                            <span style={{ marginRight: 5 }}>{a.TREAT_DENSITY || 0}</span>
                             {a.UNIT || ''}
                           </td>
                           <td>{a.TREAT_EFF || 0}</td>
