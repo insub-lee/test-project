@@ -6,8 +6,9 @@ import moment from 'moment';
 import { Icon, Spin } from 'antd';
 import { exportExcel, jsonToQueryString } from 'utils/helpers';
 import Wrapper from 'apps/wts/Education/Admin/EduPrograms/Wrapper';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContent from './StyledContent';
+import StyledStandard from '../../../StyledStandard';
 import service from '../../service';
 import EduPlanExcelUploder from './EduPlanExcelUploder';
 import CommonEduPlanQuestions from '../EduPrograms/CommonEduPlanQuestions';
@@ -134,47 +135,49 @@ class EduPlanQuestionsModal extends React.Component {
         closable={false}
         destroyOnClose
       >
-        <div>
-          <StyledContent>
-            <div className="pop_tit">
-              신입/전배 문항 관리
-              <button type="button" className="icon icon_pclose" onClick={this.handleCloseModal} />
-            </div>
-            <div className="pop_con">
-              <Wrapper>
-                <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-                  <div style={{ position: 'relative', padding: '15px 0', textAlign: 'right' }}>
-                    <div style={{ position: 'absolute', top: 0, left: 0 }}>
-                      <select defaultValue={currentStep} style={{ display: 'inline-block', width: 100 }} onChange={this.handleChangeStep}>
-                        <option value="1">1단계</option>
-                        <option value="2">2단계</option>
-                        <option value="3">3단계</option>
-                      </select>
-                      {Number(currentStep) === 3 && (
-                        <select
-                          defaultValue={currentJobType}
-                          style={{ display: 'inline-block', width: 100, marginLeft: 20 }}
-                          onChange={this.handleChangeJobType}
-                        >
-                          <option value="job_common">일반</option>
-                          <option value="job_meter">계측기</option>
-                          <option value="job_mask">MASK</option>
+        <StyledStandard>
+          <div>
+            <StyledContent>
+              <div className="pop_tit">
+                신입/전배 문항 관리
+                <button type="button" className="icon icon_pclose" onClick={this.handleCloseModal} />
+              </div>
+              <div className="pop_con">
+                <Wrapper>
+                  <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
+                    <div style={{ position: 'relative', padding: '15px 0', textAlign: 'right' }}>
+                      <div style={{ position: 'absolute', top: 0, left: 0 }}>
+                        <select defaultValue={currentStep} style={{ display: 'inline-block', width: 100 }} onChange={this.handleChangeStep}>
+                          <option value="1">1단계</option>
+                          <option value="2">2단계</option>
+                          <option value="3">3단계</option>
                         </select>
-                      )}
+                        {Number(currentStep) === 3 && (
+                          <select
+                            defaultValue={currentJobType}
+                            style={{ display: 'inline-block', width: 100, marginLeft: 20 }}
+                            onChange={this.handleChangeJobType}
+                          >
+                            <option value="job_common">일반</option>
+                            <option value="job_meter">계측기</option>
+                            <option value="job_mask">MASK</option>
+                          </select>
+                        )}
+                      </div>
+                      <StyledButton type="button" className="btn-gray btn-sm mr5" onClick={this.downloadExcel} style={{ marginRight: 10 }}>
+                        Excel 다운로드
+                      </StyledButton>
+                      <StyledButton type="button" className="btn-primary btn-sm" onClick={this.openUploadModal}>
+                        Excel 업로드
+                      </StyledButton>
                     </div>
-                    <Button type="button" color="gray" size="small" onClick={this.downloadExcel} style={{ marginRight: 10 }}>
-                      Excel 다운로드
-                    </Button>
-                    <Button type="button" color="primary" size="small" onClick={this.openUploadModal}>
-                      Excel 업로드
-                    </Button>
-                  </div>
-                  <CommonEduPlanQuestions data={data} isLoading={isLoading} />
-                </Spin>
-              </Wrapper>
-            </div>
-          </StyledContent>
-        </div>
+                    <CommonEduPlanQuestions data={data} isLoading={isLoading} />
+                  </Spin>
+                </Wrapper>
+              </div>
+            </StyledContent>
+          </div>
+        </StyledStandard>
         <EduPlanExcelUploder
           ref={this.excelUploaderModal}
           empno={empno}

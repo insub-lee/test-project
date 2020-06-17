@@ -213,6 +213,7 @@ class EduProgramFormModal extends React.Component {
                         <Checkbox
                           id="groupStudy"
                           name="groupStudy"
+                          className="checkbox"
                           labelText=""
                           value=""
                           noPadding
@@ -302,7 +303,7 @@ class EduProgramFormModal extends React.Component {
                   </li>
                 </ul>
                 <div className="btn_wrap">
-                  <StyledButton type="submit" className="btn-primary btn-sm">
+                  <StyledButton type="submit" className="btn-primary btn-sm mr5">
                     확인
                   </StyledButton>
                   <StyledButton type="button" className="btn-light btn-sm" onClick={this.handleCloseModal}>

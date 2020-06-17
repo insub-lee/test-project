@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Popconfirm } from 'antd';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 class CustomButtons extends Component {
   constructor(props) {

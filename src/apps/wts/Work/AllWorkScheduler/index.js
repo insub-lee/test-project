@@ -4,12 +4,13 @@ import { debounce, orderBy } from 'lodash';
 import moment from 'moment';
 import { Icon, Spin } from 'antd';
 import { AgGridReact } from 'ag-grid-react';
+import { admin } from 'apps/wts/Work/Admin/config';
 
 import { jsonToQueryString, exportExcelWithAOA } from 'utils/helpers';
 import MonthlyPicker from 'apps/wts/components/MonthlyPicker';
-import Button from 'components/Button';
 import StyledAgGrid from 'apps/wts/components/CommonStyledElement/StyledAgGrid';
-import { admin } from 'apps/wts/Work/Admin/config';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledStandard from '../../StyledStandard';
 
 import service from '../service';
 
@@ -304,15 +305,15 @@ class AllWorkScheduler extends React.Component {
   render() {
     const { searchDate, isLoading, area, currentArea, currentJo } = this.state;
     return (
-      <div>
+      <StyledStandard style={{ padding: '20px 30px' }}>
         <div className="search_div" style={{ position: 'relative' }}>
           <div style={{ width: 100, marginBottom: 10 }}>
             <MonthlyPicker name="date" value={searchDate} onChange={this.handleChangeDate} />
           </div>
           <div style={{ position: 'absolute', top: '16px', right: 0 }}>
-            <Button type="button" size="small" color="default" onClick={this.downloadExcel}>
+            <StyledButton type="button" className="btn-light btn-sm" onClick={this.downloadExcel}>
               <i className="far fa-file-excel" /> Excel
-            </Button>
+            </StyledButton>
           </div>
         </div>
         <ul className="search_div">
@@ -353,7 +354,7 @@ class AllWorkScheduler extends React.Component {
             <AgGridReact columnDefs={this.getColumnDef()} rowData={this.getFilterData()} suppressCellSelection />
           </StyledAgGrid>
         </Spin>
-      </div>
+      </StyledStandard>
     );
   }
 }
