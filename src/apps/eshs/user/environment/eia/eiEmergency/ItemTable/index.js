@@ -55,7 +55,14 @@ class ItemTable extends Component {
           message.warning('삭제 하실 항목을 한개라도 선택하세요.');
           break;
         }
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/EshsEiItem', { rowSelections, tbName }, this.handleFormReset);
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/EshsEiItem', { rowSelections, tbName }, (afterId, res) => {
+          if (res && res.code === 200) {
+            message.info(<MessageContent>삭제되었습니다.</MessageContent>);
+            this.handleFormReset();
+          } else {
+            message.info(<MessageContent>삭제에 실패하였습니다.</MessageContent>);
+          }
+        });
         break;
       default:
         break;
@@ -108,7 +115,14 @@ class ItemTable extends Component {
     const { id, formData, submitHandlerBySaga } = this.props;
     const file = (formData && formData.itemData && formData.itemData.file) || {};
     if (JSON.stringify(file) === '{}')
-      return submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiEmergency', { PARAM: submitData }, this.handleFormReset);
+      return submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiEmergency', { PARAM: submitData }, (id2, res2) => {
+        if (res2 && res2.code === 200) {
+          this.handleFormReset();
+          this.showMessage('저장되었습니다.');
+        } else {
+          this.showMessage('저장에 실패하였습니다.');
+        }
+      });
 
     return submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', { PARAM: { DETAIL: [file] } }, (afterId, res) => {
       if (res && res.message === 'success') {
@@ -117,10 +131,17 @@ class ItemTable extends Component {
           'POST',
           '/api/eshs/v1/common/eshsEiEmergency',
           { PARAM: { ...submitData, VALUATION_FILE: res.DETAIL[0].seq } },
-          this.handleFormReset,
+          (id2, res2) => {
+            if (res2 && res2.code === 200) {
+              this.handleFormReset();
+              this.showMessage('저장되었습니다.');
+            } else {
+              this.showMessage('저장에 실패하였습니다.');
+            }
+          },
         );
       }
-      return this.showMessage('저장에 실패하였습니다.');
+      return this.showMessage('파일저장에 실패하였습니다.');
     });
   };
 
@@ -182,9 +203,9 @@ class ItemTable extends Component {
         <table className="table-border">
           <colgroup>
             <col width="5%" />
-            <col width="10%" />
-            <col width="10%" />
-            <col width="5%" />
+            <col width="9%" />
+            <col width="9%" />
+            <col width="7%" />
             <col width="5%" />
             <col width="5%" />
             <col width="5%" />
@@ -298,8 +319,10 @@ class ItemTable extends Component {
                   serviceEnv="dev"
                   serviceKey="KEY"
                 >
-                  <span>Upload</span>
-                  <div style={{ width: '100%', height: '100%', textAlign: 'center' }}>{itemData.file && itemData.file.fileName}</div>
+                  <div style={{ width: '100%', height: '100%', textAlign: 'center' }}>
+                    <p>Upload</p>
+                    {itemData.file && itemData.file.fileName}
+                  </div>
                 </Upload>
               </th>
             </tr>
