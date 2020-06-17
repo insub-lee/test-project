@@ -15,7 +15,8 @@ export function* getUserList(payload) {
   yield put({ type: actionTypes.SET_USER_LIST, payload: userList });
 }
 
-export function* getDeptComboData() {
+export function* getDeptComboData(payload) {
+  const { ROOT_ID } = payload;
   yield put({
     type: actionTypes.IS_LOADING,
     isLoading: true,
@@ -25,7 +26,7 @@ export function* getDeptComboData() {
   if (data === undefined || data.size === 0) {
     data = fromJS([]);
   }
-  const DEPT_ID = fromJS(response.list[0].DEPT_ID);
+  const DEPT_ID = ROOT_ID && ROOT_ID !== 0 ? ROOT_ID : fromJS(response.list[0].DEPT_ID);
   yield put({
     type: actionTypes.SET_DEPT_COMBO_LIST,
     deptComboData: fromJS(response.list),
@@ -50,7 +51,8 @@ export function* getChangeDeptTreeData(payload) {
   });
 }
 
-export function* getDutyComboData() {
+export function* getDutyComboData(payload) {
+  const { ROOT_ID } = payload;
   yield put({
     type: actionTypes.IS_LOADING,
     isLoading: true,
@@ -60,7 +62,7 @@ export function* getDutyComboData() {
   if (data === undefined || data.size === 0) {
     data = fromJS([]);
   }
-  const DUTY_ID = fromJS(response.list[0].DUTY_ID);
+  const DUTY_ID = ROOT_ID && ROOT_ID !== 0 ? ROOT_ID : fromJS(response.list[0].DUTY_ID);
   yield put({
     type: actionTypes.SET_DUTY_COMBO_LIST,
     dutyComboData: fromJS(response.list),
@@ -85,7 +87,8 @@ export function* getChangeDutyTreeData(payload) {
   });
 }
 
-export function* getPstnComboData() {
+export function* getPstnComboData(payload) {
+  const { ROOT_ID } = payload;
   yield put({
     type: actionTypes.IS_LOADING,
     isLoading: true,
@@ -95,7 +98,7 @@ export function* getPstnComboData() {
   if (data === undefined || data.size === 0) {
     data = fromJS([]);
   }
-  const PSTN_ID = fromJS(response.list[0].PSTN_ID);
+  const PSTN_ID = ROOT_ID && ROOT_ID !== 0 ? ROOT_ID : fromJS(response.list[0].PSTN_ID);
   yield put({
     type: actionTypes.SET_PSTN_COMBO_LIST,
     pstnComboData: fromJS(response.list),
@@ -120,7 +123,8 @@ export function* getChangePstnTreeData(payload) {
   });
 }
 
-export function* getRankComboData() {
+export function* getRankComboData(payload) {
+  const { ROOT_ID } = payload;
   yield put({
     type: actionTypes.IS_LOADING,
     isLoading: true,
@@ -130,7 +134,7 @@ export function* getRankComboData() {
   if (data === undefined || data.size === 0) {
     data = fromJS([]);
   }
-  const RANK_ID = fromJS(response.list[0].RANK_ID);
+  const RANK_ID = ROOT_ID && ROOT_ID !== 0 ? ROOT_ID : fromJS(response.list[0].RANK_ID);
   yield put({
     type: actionTypes.SET_RANK_COMBO_LIST,
     rankComboData: fromJS(response.list),

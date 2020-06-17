@@ -9,15 +9,16 @@ class UserRegTree extends Component {
   constructor(prop) {
     super(prop);
     this.state = {
-      selectedIndex: -1,
-      selectedDept: '',
+      selectedIndex: prop.selectedKey,
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.treeData.length > 0) {
+  componentDidUpdate(prevProps) {
+    const { selectedKey: prevSelectedKey } = prevProps;
+    const { selectedKey } = this.props;
+    if (prevSelectedKey !== selectedKey) {
       this.setState({
-        selectedDept: nextProps.treeData[0].key,
+        selectedIndex: selectedKey,
       });
     }
   }
@@ -31,10 +32,7 @@ class UserRegTree extends Component {
   };
 
   render() {
-    const { selectedIndex } = this.state;
-
-    const { getSelectDept, treeType, comboData, isLoading } = this.props;
-
+    const { treeType, comboData, isLoading, treeData, selectedDept, getSelectDept } = this.props;
     return (
       <div
         style={{
@@ -64,7 +62,7 @@ class UserRegTree extends Component {
               // maxHeight: 400,
             }}
           >
-            <Select value={this.state.selectedDept} onChange={e => getSelectDept(e)}>
+            <Select defaultValue={selectedDept > 0 ? selectedDept : treeData[0].key} onChange={e => getSelectDept(e)}>
               {comboData.map((item, idx) => (
                 <Option value={item[`${treeType.toUpperCase()}_ID`]} key={idx}>
                   {item.NAME_KOR}
@@ -77,9 +75,9 @@ class UserRegTree extends Component {
                 height: 320,
                 overflowY: 'scroll',
               }}
-              treeData={this.props.treeData} // 트리데이터
+              treeData={treeData} // 트리데이터
               handleOnClick={this.handleOnClick} // onClick 이벤트
-              selectedIndex={selectedIndex} // 선택한 트리노드 KEY
+              selectedIndex={this.state.selectedIndex} // 선택한 트리노드 KEY
             />
           </div>
         )}
@@ -95,6 +93,8 @@ UserRegTree.propTypes = {
   treeData: PropTypes.array, //eslint-disable-line
   treeType: PropTypes.string, //eslint-disable-line
   isLoading: PropTypes.bool, //eslint-disable-line
+  selectedDept: PropTypes.number, //eslint-disable-line
+  selectedKey: PropTypes.number, //eslint-disable-line
 };
 
 export default UserRegTree;
