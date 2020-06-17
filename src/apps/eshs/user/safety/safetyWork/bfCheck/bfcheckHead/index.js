@@ -20,7 +20,7 @@ class BfcheckHead extends Component {
     this.state = {
       modalType: '',
       modalTitle: '',
-      modalVisible: '',
+      modalVisible: false,
     };
   }
 
@@ -32,6 +32,7 @@ class BfcheckHead extends Component {
         title = '점검자 선택';
         break;
       default:
+        title = '';
         break;
     }
     this.setState({
@@ -55,9 +56,9 @@ class BfcheckHead extends Component {
         () =>
           allChangeFormData('BFCHECK_HEAD', {
             ...formData,
-            CHECK_CMPNY_CD: '72761',
+            CHECK_CMPNY_CD: 'M000',
             CHECK_CMPNY_NM: 'MAGNACHIP반도체',
-            CHECK_EMP_NO: userInfo.USER_ID,
+            CHECK_EMP_NO: userInfo.EMP_NO,
             CHECK_EMP_NM: userInfo.NAME_KOR,
           }),
       );
@@ -178,11 +179,11 @@ class BfcheckHead extends Component {
         </StyledHtmlTable>
         <AntdModal
           title={modalTitle}
-          width="70%"
+          width="80%"
           visible={modalVisible}
           footer={null}
-          onOk={() => this.handleModalVisible('', false)}
-          onCancel={() => this.handleModalVisible('', false)}
+          onOk={() => this.handleModal('', false)}
+          onCancel={() => this.handleModal('', false)}
         >
           {modalType === 'userSelect' && <UserSelect onUserSelectHandler={undefined} onUserSelectedComplete={this.onSelectedComplete} onCancel={undefined} />}
         </AntdModal>

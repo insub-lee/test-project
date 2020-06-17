@@ -25,7 +25,7 @@ class SafetyWorker extends Component {
         align: 'center',
         render: (value, record, index) => (
           <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => workerRemove(index)}>
-            작업자 제외
+            삭제
           </StyledButton>
         ),
       },

@@ -268,7 +268,9 @@ class EduInfoTable extends Component {
           onOk={() => this.handleModalVisible('', false)}
           onCancel={() => this.handleModalVisible('', false)}
         >
-          {modalType === 'userSelect' && <UserSelect onUserSelectHandler={undefined} onUserSelectedComplete={this.onSelectedComplete} onCancel={undefined} />}
+          {modalType === 'userSelect' && (
+            <UserSelect onUserSelectHandler={undefined} onUserSelectedComplete={this.onSelectedComplete} onCancel={() => this.handleModalVisible('', false)} />
+          )}
           {modalType === 'safetyWork' && <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />}
         </AntdModal>
       </EduInfoTableStyled>

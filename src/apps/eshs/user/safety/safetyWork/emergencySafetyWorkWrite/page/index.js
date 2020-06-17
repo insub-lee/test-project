@@ -15,6 +15,7 @@ import SafetyEquipTable from '../../commonComponents/SafetyEquip';
 import SafetyEquipSelect from '../../commonComponents/SafetyEquip/EquipSelect';
 import SafetyWorkInfo from '../../commonComponents/SafetyEmergencyWorkInfo';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
+import Bfcheck from '../../bfCheck';
 import Styled from './Styled';
 
 const AntdModal = StyledModalWrapper(Modal);
@@ -98,8 +99,8 @@ class emergencyWorkWrite extends Component {
     this.setState({
       formData: {
         ...formData,
-        REQ_CMPNY_CD: myInfo.CMPNY_ID,
-        REQ_DEPT_CD: myInfo.DEPT_ID,
+        REQ_CMPNY_CD: myInfo.CMPNY_CD,
+        REQ_DEPT_CD: myInfo.DEPT_CD,
         REQ_EMP_NO: myInfo.EMP_NO,
         REQ_CMPNY_NM: myInfo.CMPNY_NM,
         REQ_DEPT_NM: myInfo.DEPT_NM,
@@ -377,7 +378,6 @@ class emergencyWorkWrite extends Component {
     const { modalType, modalTitle, modalVisible, formData } = this.state;
     const { result, viewType } = this.props;
     const eshsSwtbEquip = (result && result.getSwtbEquipList && result.getSwtbEquipList.list) || [];
-    console.debug('렌더링-state', this.state);
     return (
       <Styled>
         <StyledSearchWrap>
@@ -419,7 +419,7 @@ class emergencyWorkWrite extends Component {
                 </StyledButton>
               </>
             )}
-            {viewType !== 'modal' && (
+            {viewType !== 'modal' && false && (
               <StyledButton className="btn-primary btn-xs btn-first" onClick={() => alert('준비중')} style={{ marginBottom: '5px' }}>
                 일반작업으로 변경
               </StyledButton>
@@ -463,6 +463,7 @@ class emergencyWorkWrite extends Component {
           onOk={() => this.handleModal('', false)}
           onCancel={() => this.handleModal('', false)}
         >
+          {(modalType === 'mainBfcheck' || modalType === 'subBfcheck') && <Bfcheck initFormData={formData} pageType={modalType} />}
           {modalType === 'cmpny' && (
             <EshsCmpnyComp
               sagaKey={this.props.sagaKey}
