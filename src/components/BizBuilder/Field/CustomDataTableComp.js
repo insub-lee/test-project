@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes, { instanceOf } from 'prop-types';
 import { Col, Input, Row, Button, Table, Radio } from 'antd';
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+//import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import AntRadiobox from 'containers/portal/components/uielements/radiobox.style';
 
 import request from 'utils/request';
@@ -37,14 +38,10 @@ function CustomDataTableComp(props) {
       request({
         method: 'POST',
         url: URL,
-        // FIRE_CODE: FE (소화기)
         data: formData,
       }).then(({ response }) => {
-        // console.debug('### response of CustomDataTableComp: ', response);
         if (response?.result === 1) {
-          // console.debug('£££ result 1 : ', response?.data instanceof Object, response?.data);
           if (response?.data instanceof Array) {
-            // console.debug('£££ result 2 : ', response?.data instanceof Array, response?.data);
             setDataSource(response?.data);
             setIsLoaded(true);
           }
@@ -53,7 +50,6 @@ function CustomDataTableComp(props) {
     }
 
     const { COLUMNS, GROUPS } = props.CONFIG.property || {};
-    // console.debug('£££ customDataTable :', COLUMNS, GROUPS);
     if (COLUMNS instanceof Array) {
       const tempArray = [];
       COLUMNS.forEach(header => {
@@ -68,13 +64,6 @@ function CustomDataTableComp(props) {
       setColumns(tempArray);
     }
     if (GROUPS instanceof Array) {
-      // const tempArray = [];
-      // GROUPS.forEach(group => {
-      // 	const tempObj = {};
-      // 	tempObj.title = group.name;
-      // 	tempObj.order = group.order;
-      // 	tempArray.push(tempObj);
-      // });
       setGroups(GROUPS);
     }
   }, []);
@@ -92,7 +81,6 @@ function CustomDataTableComp(props) {
         );
       }
     }
-    // console.debug('£££ colRenderer: ', result);
     return <div style={{ textAlign: 'center' }}>{result}</div>;
   };
 
@@ -126,16 +114,7 @@ function CustomDataTableComp(props) {
   };
 
   return (
-    <AntdTable
-      rowKey="TASK_SEQ"
-      // key={`${group.key}_list`}
-      className="view-designer-list"
-      // columns={columns}
-      dataSource={isLoaded ? dataSource : []}
-      // rowSelection={rowSelection}
-      pagination={false}
-      scroll={{ x: true }}
-    >
+    <AntdTable rowKey="TASK_SEQ" className="view-designer-list" dataSource={isLoaded ? dataSource : []} pagination={false}>
       {columnRenderer()}
     </AntdTable>
   );
