@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { DatePicker, Select, Input, Modal, message } from 'antd';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
@@ -19,7 +19,7 @@ const { Option } = Select;
 const { MonthPicker, RangePicker } = DatePicker;
 
 const AntdSelect = StyledSelect(Select);
-const AntdSearch = StyledSearchInput(Input);
+const AntdSearch = StyledSearchInput(Input.Search);
 const AntdModal = StyledModalWrapper(Modal);
 const AntdMonthPicker = StyledDatePicker(MonthPicker);
 const AntdRangePicker = StyledDatePicker(RangePicker);
@@ -241,48 +241,23 @@ class List extends Component {
     const { refStack } = this.props;
     return (
       <StyledContentsWrapper>
-        <div className="selSaveWrapper alignLeft">
-          <span className="textLabel">조회구분</span>
-          <AntdSelect className="select-mid mr5" onChange={value => this.onChangeState('selectGubun', value)} value={this.state.selectGubun}>
-            <Option value={1} key="selectGubun">
-              측정항목
-            </Option>
-            <Option value={2} key="selectGubun">
-              배출총량
-            </Option>
-          </AntdSelect>
-          {refStack ? (
-            // mode 사용 시 open value 관리해야함
-            <AntdRangePicker
-              className="ant-picker-mid mr5"
-              value={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
-              open={this.state.isopen}
-              mode={['month', 'month']}
-              format={['YYYY-MM', 'YYYY-MM']}
-              onOpenChange={status => {
-                this.setState({ isopen: status });
-              }}
-              onPanelChange={value => {
-                if (value[0] < Moment().endOf('month') && value[1] < Moment().endOf('month')) {
-                  this.setState({
-                    rangeDateStrings: value,
-                  });
-                } else {
-                  message.warning('날짜가 올바르지 않습니다.');
-                }
-              }}
-            />
-          ) : (
-            <>
-              <AntdMonthPicker
-                className="ant-picker-mid mr5"
-                defaultValue={Moment(Moment(), 'YYYY-MM')}
-                format="YYYY-MM"
-                onChange={(date, dateStrings) => this.onChangeState('dateStrings', dateStrings)}
-              />
+        <StyledCustomSearch className="search-wrapper-inline">
+          <div className="search-input-area">
+            <span className="text-label">조회구분</span>
+            <AntdSelect className="select-mid mr5" onChange={value => this.onChangeState('selectGubun', value)} value={this.state.selectGubun}>
+              <Option value={1} key="selectGubun">
+                측정항목
+              </Option>
+              <Option value={2} key="selectGubun">
+                배출총량
+              </Option>
+            </AntdSelect>
+            {refStack ? (
+              // mode 사용 시 open value 관리해야함
               <AntdRangePicker
                 className="ant-picker-mid mr5"
                 value={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
+                style={{ width: 300 }}
                 open={this.state.isopen}
                 mode={['month', 'month']}
                 format={['YYYY-MM', 'YYYY-MM']}
@@ -299,30 +274,43 @@ class List extends Component {
                   }
                 }}
               />
-            </>
-          )}
-          <span className="textLabel">측정회차(월)</span>
-          <AntdSelect style={{ width: 100 }} className="select-mid mr5" onChange={value => this.onChangeState('seq', value)} value={this.state.seq}>
-            <Option value={1} key="seq">
-              1 회차
-            </Option>
-            <Option value={2} key="seq">
-              2 회차
-            </Option>
-          </AntdSelect>
-          {refStack ? (
-            <AntdSearch style={{ width: 200 }} className="input-mid ant-input-inline mr5" value={this.state.stackCd} readOnly onClick={this.onChangeModal} />
-          ) : (
-            ''
-          )}
-          <StyledButtonWrapper className="btn-wrap-inline">
+            ) : (
+              <AntdMonthPicker
+                className="ant-picker-mid mr5"
+                defaultValue={Moment(Moment(), 'YYYY-MM')}
+                format="YYYY-MM"
+                onChange={(date, dateStrings) => this.onChangeState('dateStrings', dateStrings)}
+              />
+            )}
+            <span className="text-label">측정회차(월)</span>
+            <AntdSelect style={{ width: 100 }} className="select-mid mr5" onChange={value => this.onChangeState('seq', value)} value={this.state.seq}>
+              <Option value={1} key="seq">
+                1 회차
+              </Option>
+              <Option value={2} key="seq">
+                2 회차
+              </Option>
+            </AntdSelect>
+            {refStack ? (
+              <AntdSearch
+                style={{ width: 200 }}
+                className="input-search-mid ant-search-inline mr5"
+                value={this.state.stackCd}
+                readOnly
+                onClick={this.onChangeModal}
+              />
+            ) : (
+              ''
+            )}
+          </div>
+          <div className="btn-area">
             <StyledButton className="btn-primary btn-sm" onClick={() => this.isSearch()}>
               검색
             </StyledButton>
-          </StyledButtonWrapper>
-        </div>
+          </div>
+        </StyledCustomSearch>
         {measureList.length > 0 ? (
-          <StyledHtmlTable className="tableWrapper">
+          <StyledHtmlTable>
             <div style={{ overflowX: 'scroll' }}>
               <table>
                 <colgroup>
@@ -345,7 +333,7 @@ class List extends Component {
                     {gasList && gasList.map(item => <th>{item.GAS_CD}</th>)}
                   </tr>
                 </thead>
-                <tbody style={{ overflowY: 'scroll', height: 400 }}>
+                <tbody>
                   {measureList.map(item => (
                     <tr>
                       <td>{item.GUBUN_NAME}</td>
@@ -457,7 +445,7 @@ class List extends Component {
         ) : (
           ''
         )}
-        <StyledHtmlTable className="tableWrapper">
+        <StyledHtmlTable>
           <Graph graphData={measureList} gasList={gasList} selectGubun={selectGubun} refStack={refStack} />
         </StyledHtmlTable>
         {refStack ? (

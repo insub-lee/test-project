@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { DatePicker, Select, Input, Modal, message, Table } from 'antd';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
@@ -160,51 +160,53 @@ class List extends Component {
     const { measureList, stackList, gasList, selectGubun, rangeDateStrings, gasWeight, gasCd } = this.state;
     return (
       <StyledContentsWrapper>
-        <div className="selSaveWrapper alignLeft">
-          <span className="textLabel">조회구분</span>
-          <AntdSelect className="select-mid mr5" onChange={value => this.onChangeState('selectGubun', value)} value={this.state.selectGubun}>
-            <Option value={1} key="selectGubun">
-              측정항목
-            </Option>
-            <Option value={2} key="selectGubun">
-              배출총량
-            </Option>
-          </AntdSelect>
-          <AntdRangePicker
-            className="ant-picker-mid mr5"
-            value={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
-            open={this.state.isopen}
-            mode={['month', 'month']}
-            format={['YYYY-MM', 'YYYY-MM']}
-            disabledDate={current => current && current < Moment().endOf('month')}
-            onOpenChange={status => {
-              this.setState({ isopen: status });
-            }}
-            onPanelChange={value => {
-              if (value[0] < Moment().endOf('month') && value[1] < Moment().endOf('month')) {
-                this.setState({
-                  rangeDateStrings: value,
-                });
-              } else {
-                message.warning('날짜가 올바르지 않습니다.');
-              }
-            }}
-          />
-          <AntdSearch
-            style={{ width: 200 }}
-            className="input-search-mid ant-search-inline mr5"
-            value={this.state.gasCd}
-            readOnly
-            onClick={this.onChangeModal}
-          />
-          <StyledButtonWrapper className="btn-wrap-inline">
+        <StyledCustomSearch className="search-wrapper-inline">
+          <div className="search-input-area">
+            <span className="text-label">조회구분</span>
+            <AntdSelect className="select-mid mr5" onChange={value => this.onChangeState('selectGubun', value)} value={this.state.selectGubun}>
+              <Option value={1} key="selectGubun">
+                측정항목
+              </Option>
+              <Option value={2} key="selectGubun">
+                배출총량
+              </Option>
+            </AntdSelect>
+            <AntdRangePicker
+              className="ant-picker-mid mr5"
+              value={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
+              open={this.state.isopen}
+              mode={['month', 'month']}
+              format={['YYYY-MM', 'YYYY-MM']}
+              disabledDate={current => current && current < Moment().endOf('month')}
+              onOpenChange={status => {
+                this.setState({ isopen: status });
+              }}
+              onPanelChange={value => {
+                if (value[0] < Moment().endOf('month') && value[1] < Moment().endOf('month')) {
+                  this.setState({
+                    rangeDateStrings: value,
+                  });
+                } else {
+                  message.warning('날짜가 올바르지 않습니다.');
+                }
+              }}
+            />
+            <AntdSearch
+              style={{ width: 200 }}
+              className="input-search-mid ant-search-inline mr5"
+              value={this.state.gasCd}
+              readOnly
+              onClick={this.onChangeModal}
+            />
+          </div>
+          <div className="btn-area">
             <StyledButton className="btn-primary btn-sm" onClick={() => this.isSearch()}>
               검색
             </StyledButton>
-          </StyledButtonWrapper>
-        </div>
+          </div>
+        </StyledCustomSearch>
         {measureList.length > 0 ? (
-          <StyledHtmlTable className="tableWrapper">
+          <StyledHtmlTable>
             <div style={{ overflowX: 'scroll' }}>
               <table>
                 <colgroup>
@@ -259,7 +261,7 @@ class List extends Component {
         ) : (
           ''
         )}
-        <StyledHtmlTable className="tableWrapper">
+        <StyledHtmlTable>
           {measureList.length > 0 ? <Graph graphData={measureList} stackList={stackList} selectGubun={selectGubun} gasCd={gasCd} gasWeight={gasWeight} /> : ''}
         </StyledHtmlTable>
         <AntdModal width={800} visible={this.state.isModal} title="Gas 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
