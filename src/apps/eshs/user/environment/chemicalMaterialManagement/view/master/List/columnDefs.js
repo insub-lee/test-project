@@ -16,21 +16,25 @@ export const masterColumnDefs = [
         headerName: '화학물질명_국문',
         field: 'NAME_KOR',
         filter: 'agTextColumnFilter',
+        width: 125,
       },
       {
         headerName: '화학물질명_영문',
         field: 'NAME_ENG',
         filter: 'agTextColumnFilter',
+        width: 125,
       },
       {
         headerName: '화학물질명_SAP',
         field: 'NAME_SAP',
         filter: 'agTextColumnFilter',
+        width: 125,
       },
       {
         headerName: '관용명 및 이명',
         field: 'NAME_ETC',
         filter: 'agTextColumnFilter',
+        width: 125,
       },
       {
         headerName: '지역',

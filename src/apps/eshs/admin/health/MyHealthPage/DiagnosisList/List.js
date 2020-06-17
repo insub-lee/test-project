@@ -29,6 +29,7 @@ const ConsultStyle = styled.div`
 
     &:nth-of-type(1) {
       width: 100%;
+      height: 31px;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap;
