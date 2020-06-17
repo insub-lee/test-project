@@ -721,7 +721,7 @@ class SafetyWorkMain extends Component {
         </ContentsWrapper>
         <AntdModal
           title={modalTitle}
-          width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '70%'}
+          width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '80%'}
           visible={modalVisible}
           footer={null}
           onOk={() => this.handleModal('', false)}

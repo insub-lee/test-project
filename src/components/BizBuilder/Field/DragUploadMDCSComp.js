@@ -17,12 +17,14 @@ class DragUploadMDCSComp extends Component {
         FIELD_NM: undefined,
         TYPE: undefined,
         DETAIL: [],
+        isUserPDF: undefined,
       },
     };
   }
 
   componentDidMount() {
-    const { WORK_SEQ, COMP_FIELD, COMP_TAG, colData } = this.props;
+    const { WORK_SEQ, COMP_FIELD, COMP_TAG, CONFIG, colData } = this.props;
+    console.debug('config', CONFIG);
     const initfiles = {
       WORK_SEQ,
       TASK_SEQ: (colData && colData.TASK_SEQ) || -1,
@@ -79,7 +81,6 @@ class DragUploadMDCSComp extends Component {
     }
     const tmpDetail = fileList.map(fl => (fl.uid === file.uid ? { ...fl, ...response, type: doctype, down } : fl));
     const tmpFileInfo = { ...fileInfo, DETAIL: tmpDetail };
-    console.debug('tmpFileInfo', tmpFileInfo);
     this.setState({ fileInfo: tmpFileInfo }, () => this.changeFormDataHanlder());
   };
 

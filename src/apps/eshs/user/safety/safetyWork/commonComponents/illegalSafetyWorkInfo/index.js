@@ -138,10 +138,12 @@ class SafetyWorkInfo extends Component {
                       <Radio value="공통">공통</Radio>
                       <Radio value="화기작업">
                         화기작업
-                        <span style={{ color: '#ff6666', marginLeft: '27px' }}>※ 화기작업 : 화염, 스파크 등을 발생이키는 작업</span>
+                        <br />
+                        <span style={{ color: '#ff6666', marginLeft: '5px' }}>※ 화기작업 : 화염, 스파크 등을 발생이키는 작업</span>
                       </Radio>
                       <Radio value="일반위험작업">
                         일반위험작업
+                        <br />
                         <span style={{ color: '#ff6666', marginLeft: '5px' }}>※ 일반위험작업 : 화기작업 이외의 작업 </span>
                       </Radio>
                     </Radio.Group>

@@ -25,7 +25,7 @@ class List extends React.Component {
         CAS_NO: '',
         NAME: '',
         ORDER_NO: '',
-        IS_APPLICABLE: 'Y',
+        IS_APPLICATE: 'Y',
       },
       isModified: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
@@ -90,7 +90,7 @@ class List extends React.Component {
         CAS_NO: '',
         NAME: '',
         ORDER_NO: '',
-        IS_APPLICABLE: 'Y',
+        IS_APPLICATE: 'Y',
       },
     });
   };
@@ -142,8 +142,8 @@ class List extends React.Component {
     },
     {
       title: '해당여부',
-      dataIndex: 'IS_APPLICABLE',
-      key: 'IS_APPLICABLE',
+      dataIndex: 'IS_APPLICATE',
+      key: 'IS_APPLICATE',
       align: 'center',
       render: text => (text === 'Y' ? '해당' : '비해당'),
       width: '10%',
@@ -224,8 +224,8 @@ class List extends React.Component {
                     <AntdSelect
                       className="select-sm"
                       defaultValue="Y"
-                      value={requestValue.IS_APPLICABLE}
-                      onChange={value => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { IS_APPLICABLE: value }) }))}
+                      value={requestValue.IS_APPLICATE}
+                      onChange={value => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { IS_APPLICATE: value }) }))}
                       style={{ width: '100%' }}
                     >
                       <Select.Option value="Y">해당</Select.Option>

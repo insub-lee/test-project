@@ -16,7 +16,6 @@ export function ViewButtons(props) {
     <>
       <Status {...props} />
       <NewReg {...props} />
-      <ExcelDown {...props} />
       <UsageReg {...props} />
     </>
   );
@@ -42,8 +41,8 @@ export function ModifyButtons(props) {
 export function DetailButtons(props) {
   return (
     <div className="alignRight">
-      <History {...props} detail="History(관리)" viewType={VIEW_TYPE.VEIW} moveTo={META_SEQ.VIEW_INSPECTION_BY_POSITON_NO} />
-      <History {...props} detail="History(Chip)" viewType={VIEW_TYPE.VEIW} moveTo={META_SEQ.VIEW_INSPECTION_BY_CHIP} />
+      <History {...props} detail="History(관리)" viewType="VIEW" moveTo={META_SEQ.VIEW_INSPECTION_BY_POSITON_NO} />
+      <History {...props} detail="History(Chip)" viewType="VIEW" moveTo={META_SEQ.VIEW_INSPECTION_BY_CHIP} />
       <History {...props} detail="점검결과 등록" viewType={VIEW_TYPE.INPUT} moveTo={META_SEQ.INPUT_INSPECTION} />
       <Add {...props} title="ISSUE 추가" />
       <InfoModify {...props} />
