@@ -6,6 +6,8 @@ import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';

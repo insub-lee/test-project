@@ -7,9 +7,10 @@ import moment from 'moment';
 import StyledVirtualized from 'apps/wts/components/CommonStyledElement/StyledVirtualized';
 import { exportExcel, getVirtualizedMinHeight, jsonToQueryString } from 'utils/helpers';
 import { AutoSizer, Column, SortDirection, SortIndicator, Table } from 'react-virtualized';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import { debounce } from 'lodash';
 import EduManageModal from '../../Modals/EduManageModal';
+import StyledStandard from '../../../StyledStandard';
 import service from '../../service';
 import StyledContent from '../../Modals/StyledContent';
 import JobEvaluationReadOnly from '../../Modals/JobEvaluationReadOnly';
@@ -290,95 +291,97 @@ class EduMembersModal extends React.Component {
         closable={false}
         destroyOnClose
       >
-        <div>
-          <StyledContent>
-            <div className="pop_tit">
-              {`${title} 인원`}
-              <button type="button" className="icon icon_pclose" onClick={this.handleCloseModal} />
-            </div>
-            <div className="pop_con">
-              <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-                <div className="" style={{ marginBottom: '10px', position: 'relative' }}>
-                  <div style={{ display: 'inline-block', marginRight: '10px' }}>
-                    <select name="" id="" value={currentArea} onChange={this.handleChangeArea} style={{ width: 200, height: 46 }}>
-                      <option value="">전체 AREA</option>
-                      {Object.keys(area).map(key => (
-                        <option key={key} value={key}>
-                          {key}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div style={{ display: 'inline-block', marginRight: '10px' }}>
-                    <select name="workjoSelector" id="workjoSelector" value={currentJo} style={{ width: 100, height: 46 }} onChange={this.handleChangeWorkjo}>
-                      <option value="">전체 조</option>
-                      {area[currentArea] &&
-                        area[currentArea].map(workjo => (
-                          <option key={workjo} value={workjo}>
-                            {workjo}
+        <StyledStandard>
+          <div>
+            <StyledContent>
+              <div className="pop_tit">
+                {`${title} 인원`}
+                <button type="button" className="icon icon_pclose" onClick={this.handleCloseModal} />
+              </div>
+              <div className="pop_con">
+                <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
+                  <div className="" style={{ marginBottom: '10px', position: 'relative' }}>
+                    <div style={{ display: 'inline-block', marginRight: '10px' }}>
+                      <select name="" id="" value={currentArea} onChange={this.handleChangeArea} style={{ width: 200, height: 46 }}>
+                        <option value="">전체 AREA</option>
+                        {Object.keys(area).map(key => (
+                          <option key={key} value={key}>
+                            {key}
                           </option>
                         ))}
-                    </select>
-                  </div>
-                  <div style={{ display: 'inline-block', marginRight: '10px' }}>
-                    <input
-                      type="text"
-                      className="input"
-                      placeholder="성명 혹은 사번으로 조회"
-                      style={{ textAlign: 'left' }}
-                      onChange={e => this.handleFilter(e.target.value)}
-                    />
-                  </div>
-                  <div style={{ position: 'absolute', padding: '15px 0', textAlign: 'right', top: 0, right: 0 }}>
-                    <Button type="button" color="gray" size="small" onClick={this.downloadExcel} style={{ marginRight: 10 }}>
-                      Excel 다운로드
-                    </Button>
-                  </div>
-                </div>
-                <div style={{ overflowX: 'auto' }}>
-                  <StyledVirtualized minHeight={getVirtualizedMinHeight(39, 39, filteredData.length, 500)} headerHeight={39}>
-                    <AutoSizer>
-                      {({ height, width }) => (
-                        <Table
-                          width={width}
-                          height={height}
-                          headerHeight={39}
-                          rowHeight={39}
-                          rowCount={filteredData.length}
-                          rowGetter={({ index }) => filteredData[index]}
-                          headerClassName="virtualized_header"
-                          gridClassName="virtualized_grid"
-                          rowClassName="virtualized_row"
-                          noRowsRenderer={() => (
-                            <div className="virtualized_noData">
-                              <span>{isLoading ? 'Loading...' : 'No Data'}</span>
-                            </div>
-                          )}
-                          sort={this.sort}
-                          sortBy={sortBy}
-                          sortDirection={sortDirection}
-                          onRowClick={({ rowData }) => this.onRowClick(rowData)}
-                        >
-                          {columns.map(column => (
-                            <Column
-                              key={column.dataKey}
-                              {...column}
-                              width={(width * column.percentWidth) / 100}
-                              style={{
-                                ...column.style,
-                                lineHeight: '39px',
-                              }}
-                            />
+                      </select>
+                    </div>
+                    <div style={{ display: 'inline-block', marginRight: '10px' }}>
+                      <select name="workjoSelector" id="workjoSelector" value={currentJo} style={{ width: 100, height: 46 }} onChange={this.handleChangeWorkjo}>
+                        <option value="">전체 조</option>
+                        {area[currentArea] &&
+                          area[currentArea].map(workjo => (
+                            <option key={workjo} value={workjo}>
+                              {workjo}
+                            </option>
                           ))}
-                        </Table>
-                      )}
-                    </AutoSizer>
-                  </StyledVirtualized>
-                </div>
-              </Spin>
-            </div>
-          </StyledContent>
-        </div>
+                      </select>
+                    </div>
+                    <div style={{ display: 'inline-block', marginRight: '10px' }}>
+                      <input
+                        type="text"
+                        className="input"
+                        placeholder="성명 혹은 사번으로 조회"
+                        style={{ textAlign: 'left' }}
+                        onChange={e => this.handleFilter(e.target.value)}
+                      />
+                    </div>
+                    <div style={{ position: 'absolute', padding: '15px 0', textAlign: 'right', top: 0, right: 0 }}>
+                      <StyledButton type="button" className="btn-gray btn-sm" onClick={this.downloadExcel} style={{ marginRight: 10 }}>
+                        Excel 다운로드
+                      </StyledButton>
+                    </div>
+                  </div>
+                  <div style={{ overflowX: 'auto' }}>
+                    <StyledVirtualized minHeight={getVirtualizedMinHeight(39, 39, filteredData.length, 500)} headerHeight={39}>
+                      <AutoSizer>
+                        {({ height, width }) => (
+                          <Table
+                            width={width}
+                            height={height}
+                            headerHeight={39}
+                            rowHeight={39}
+                            rowCount={filteredData.length}
+                            rowGetter={({ index }) => filteredData[index]}
+                            headerClassName="virtualized_header"
+                            gridClassName="virtualized_grid"
+                            rowClassName="virtualized_row"
+                            noRowsRenderer={() => (
+                              <div className="virtualized_noData">
+                                <span>{isLoading ? 'Loading...' : 'No Data'}</span>
+                              </div>
+                            )}
+                            sort={this.sort}
+                            sortBy={sortBy}
+                            sortDirection={sortDirection}
+                            onRowClick={({ rowData }) => this.onRowClick(rowData)}
+                          >
+                            {columns.map(column => (
+                              <Column
+                                key={column.dataKey}
+                                {...column}
+                                width={(width * column.percentWidth) / 100}
+                                style={{
+                                  ...column.style,
+                                  lineHeight: '39px',
+                                }}
+                              />
+                            ))}
+                          </Table>
+                        )}
+                      </AutoSizer>
+                    </StyledVirtualized>
+                  </div>
+                </Spin>
+              </div>
+            </StyledContent>
+          </div>
+        </StyledStandard>
         <JobEvaluationReadOnly ref={this.jobEvaluationReadOnlyRef} />
         <EduManageModal ref={this.eduManageModalRef} site={this.props.site} />
       </Modal>

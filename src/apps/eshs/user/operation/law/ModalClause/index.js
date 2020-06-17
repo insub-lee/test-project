@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 

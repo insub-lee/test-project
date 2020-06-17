@@ -9,7 +9,7 @@ import { Input, Row, Col, Select, Switch, Icon, Button } from 'antd';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import reducer from './reducer';

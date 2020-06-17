@@ -7,7 +7,7 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 
 const AntdTable = StyledAntdTable(Table);
