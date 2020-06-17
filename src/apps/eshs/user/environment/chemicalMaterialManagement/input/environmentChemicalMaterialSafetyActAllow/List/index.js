@@ -109,13 +109,8 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    const submitCallbackFunc = () => {
-      this.getMaterialList();
-      this.handleResetClick();
-    };
-
     return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetyallow`, requestValue, (key, response) =>
-      callBackAfterDelete(key, response, submitCallbackFunc),
+      callBackAfterDelete(key, response, this.getMaterialList),
     );
   };
 
@@ -264,7 +259,7 @@ class List extends React.Component {
                   <th>함유량 기준</th>
                   <td>
                     <AntdInputNumber
-                      className="ant-input-number input-number-sm"
+                      className="ant-input-number ant-input-number-sm"
                       value={requestValue.CONTENT_STANDARD}
                       onChange={e => handleInputChange(e, 'NUMBER', 'CONTENT_STANDARD')}
                     />

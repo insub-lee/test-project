@@ -43,6 +43,10 @@ class InputModal extends React.Component {
   setDataSource = () => {
     const { result, sagaKey: id, changeFormData } = this.props;
     changeFormData(id, 'dataSource', (result.materialList && result.materialList.list) || []);
+    this.setState({
+      CATEGORY_ID: '',
+      KEYWORD: '',
+    });
   };
 
   handleModalClose = () => {
