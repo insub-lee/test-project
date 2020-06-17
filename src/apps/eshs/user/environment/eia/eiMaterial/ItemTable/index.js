@@ -6,7 +6,6 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 
@@ -33,6 +32,7 @@ class ItemTable extends Component {
     const CHK_YEAR = (formData && formData.CHK_YEAR) || '';
     const materialCnt = (formData && formData.materialCnt) || '';
     const DEPT_CD = (formData && formData.searchRow && formData.searchRow.DEPT_CD) || (formData && formData.myDept && formData.myDept.DEPT_CD) || '';
+    const DEPT_ID = (formData && formData.searchRow && formData.searchRow.DEPT_ID) || (formData && formData.myDept && formData.myDept.DEPT_ID) || '';
     const msg = this.validationCheck(itemData);
     switch (type) {
       case 'SAVE':
@@ -45,7 +45,13 @@ class ItemTable extends Component {
             message.warning('상단의 내용을 먼저 입력해주세요.');
             break;
           }
-          submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiMaterialItem', { ...itemData, STATUS, CHK_YEAR, DEPT_CD, REQ_NO }, this.handleFormReset);
+          submitHandlerBySaga(
+            id,
+            'POST',
+            '/api/eshs/v1/common/eshsEiMaterialItem',
+            { ...itemData, STATUS, CHK_YEAR, DEPT_CD, REQ_NO, DEPT_ID },
+            this.handleFormReset,
+          );
           break;
         }
         message.warning('이미 동일한 Data가 존재합니다.');
@@ -159,205 +165,198 @@ class ItemTable extends Component {
     const itemData = (formData && formData.itemData) || {};
     const btnOk = itemList.length >= 1;
     return (
-      <ContentsWrapper>
-        <StyledHtmlTable className="tableWrapper">
-          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
-              Excel Download
-            </StyledButton>
-            {!searchFlag && (
-              <>
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
-                  Excel Upload
-                </StyledButton>
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
-                  추가
-                </StyledButton>
-                {btnOk && (
-                  <>
-                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('UPDATE')}>
-                      수정
-                    </StyledButton>
-                    <Popconfirm
-                      title="선택하신 내용을(를) 정말로 삭제하시겠습니끼?"
-                      onConfirm={() => this.handleAction('DELETE')}
-                      okText="확인"
-                      cancelText="취소"
-                    >
-                      <StyledButton className="btn-primary btn-sm btn-first">삭제</StyledButton>
-                    </Popconfirm>
-                    <StyledButton className="btn-primary btn-sm " onClick={() => this.handleAction('RESET')}>
-                      Reset
-                    </StyledButton>
-                  </>
-                )}
-              </>
-            )}
-          </StyledButtonWrapper>
-          <table className="table-border">
-            <colgroup>
-              <col width="4%" />
-              <col width="4%" />
-              <col width="6%" />
-              <col width="8%" />
-              <col width="16%" />
-              <col width="16%" />
-              <col width="9%" />
-              <col width="9%" />
-              <col width="9%" />
-              <col width="9%" />
-              <col width="14%" />
-            </colgroup>
-            <thead>
-              <tr>
-                <td></td>
-                <td></td>
+      <StyledHtmlTable>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
+            Excel Download
+          </StyledButton>
+          {!searchFlag && (
+            <>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
+                Excel Upload
+              </StyledButton>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
+                추가
+              </StyledButton>
+              {btnOk && (
+                <>
+                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('UPDATE')}>
+                    수정
+                  </StyledButton>
+                  <Popconfirm
+                    title="선택하신 내용을(를) 정말로 삭제하시겠습니끼?"
+                    onConfirm={() => this.handleAction('DELETE')}
+                    okText="확인"
+                    cancelText="취소"
+                  >
+                    <StyledButton className="btn-primary btn-sm btn-first">삭제</StyledButton>
+                  </Popconfirm>
+                  <StyledButton className="btn-primary btn-sm " onClick={() => this.handleAction('RESET')}>
+                    Reset
+                  </StyledButton>
+                </>
+              )}
+            </>
+          )}
+        </StyledButtonWrapper>
+        <table className="table-border">
+          <colgroup>
+            <col width="4%" />
+            <col width="4%" />
+            <col width="6%" />
+            <col width="8%" />
+            <col width="16%" />
+            <col width="16%" />
+            <col width="9%" />
+            <col width="9%" />
+            <col width="9%" />
+            <col width="9%" />
+            <col width="14%" />
+          </colgroup>
+          <thead>
+            <tr>
+              <td></td>
+              <td></td>
+              <td>
+                <AntdInput name="GUBUN" value={itemData.GUBUN || ''} className="ant-input-inline ant-input-sm input-left" onChange={this.handleInputOnChange} />
+              </td>
+              <td>
+                <AntdSelect className="select-sm" value={itemData.STATUS || '정상'} onChange={this.handleStatusOnChange}>
+                  <Option value="정상">정상</Option>
+                  <Option value="비정상">비정상</Option>
+                </AntdSelect>{' '}
+              </td>
+              <td>
+                <AntdInput
+                  name="MATTER"
+                  value={itemData.MATTER || ''}
+                  className="ant-input-inline ant-input-sm input-left"
+                  onChange={this.handleInputOnChange}
+                />
+              </td>
+              <td>
+                <AntdInput
+                  name="INGREDIENT"
+                  value={itemData.INGREDIENT || ''}
+                  className="ant-input-inline ant-input-sm input-left"
+                  onChange={this.handleInputOnChange}
+                />
+              </td>
+              <td>
+                <AntdInputNumber
+                  name="VOLUME"
+                  value={itemData.VOLUME || ''}
+                  className="ant-input-inline ant-input-number-sm input-left"
+                  onChange={this.handleVolumeOnChange}
+                />
+              </td>
+              <td>
+                <AntdInput name="UNIT" value={itemData.UNIT || ''} className="ant-input-inline ant-input-sm input-left" onChange={this.handleInputOnChange} />
+              </td>
+              <td>
+                <AntdInput
+                  name="INPUT_TYPE"
+                  value={itemData.INPUT_TYPE || ''}
+                  className="ant-input-inline ant-input-sm input-left"
+                  onChange={this.handleInputOnChange}
+                />
+              </td>
+              <td>
+                <AntdInput
+                  name="OUTPUT_TYPE"
+                  value={itemData.OUTPUT_TYPE || ''}
+                  className="ant-input-inline ant-input-sm input-left"
+                  onChange={this.handleInputOnChange}
+                />
+              </td>
+              <td>
+                <AntdInput
+                  name="DISCHRGE"
+                  value={itemData.DISCHRGE || ''}
+                  className="ant-input-inline ant-input-sm input-left"
+                  onChange={this.handleInputOnChange}
+                />
+              </td>
+            </tr>
+            <tr>
+              <th rowSpan={2}>
+                <span>삭제</span>
+              </th>
+              <th rowSpan={2}>
+                <span>Seq</span>
+              </th>
+              <th rowSpan={2}>
+                <span>구분</span>
+              </th>
+              <th rowSpan={2}>
+                <span>
+                  영향구분
+                  <br />
+                  (정상/비정상)
+                </span>
+              </th>
+              <th colSpan={5}>
+                <span>IN-PUT</span>
+              </th>
+              <th colSpan={2}>
+                <span>OUT-PUT</span>
+              </th>
+            </tr>
+            <tr>
+              <th>
+                <span>물질명</span>
+              </th>
+              <th>
+                <span>구성성분</span>
+              </th>
+              <th>
+                <span>사용량</span>
+              </th>
+              <th>
+                <span>단위</span>
+              </th>
+              <th>
+                <span>투입형태</span>
+              </th>
+              <th>
+                <span>배출형태</span>
+              </th>
+              <th>
+                <span>배출처</span>
+              </th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <td colSpan={11}>{itemList.length} 건</td>
+            </tr>
+          </tfoot>
+          <tbody>
+            {itemList.map(m => (
+              <tr key={m.SEQ} className="tr-center tr-pointer" onClick={() => this.handleRowClick(m)}>
                 <td>
-                  <AntdInput
-                    name="GUBUN"
-                    value={itemData.GUBUN || ''}
-                    className="ant-input-inline ant-input-sm input-left"
-                    onChange={this.handleInputOnChange}
+                  <Checkbox
+                    className="ant-checkbox-wrapper"
+                    defaultChecked={false}
+                    checked={rowSelections.indexOf(m.SEQ) > -1}
+                    onChange={() => this.handleRowSelection(m.SEQ)}
                   />
                 </td>
-                <td>
-                  <AntdSelect className="select-sm" value={itemData.STATUS || '정상'} onChange={this.handleStatusOnChange}>
-                    <Option value="정상">정상</Option>
-                    <Option value="비정상">비정상</Option>
-                  </AntdSelect>{' '}
-                </td>
-                <td>
-                  <AntdInput
-                    name="MATTER"
-                    value={itemData.MATTER || ''}
-                    className="ant-input-inline ant-input-sm input-left"
-                    onChange={this.handleInputOnChange}
-                  />
-                </td>
-                <td>
-                  <AntdInput
-                    name="INGREDIENT"
-                    value={itemData.INGREDIENT || ''}
-                    className="ant-input-inline ant-input-sm input-left"
-                    onChange={this.handleInputOnChange}
-                  />
-                </td>
-                <td>
-                  <AntdInputNumber
-                    name="VOLUME"
-                    value={itemData.VOLUME || ''}
-                    className="ant-input-inline ant-input-number-sm input-left"
-                    onChange={this.handleVolumeOnChange}
-                  />
-                </td>
-                <td>
-                  <AntdInput name="UNIT" value={itemData.UNIT || ''} className="ant-input-inline ant-input-sm input-left" onChange={this.handleInputOnChange} />
-                </td>
-                <td>
-                  <AntdInput
-                    name="INPUT_TYPE"
-                    value={itemData.INPUT_TYPE || ''}
-                    className="ant-input-inline ant-input-sm input-left"
-                    onChange={this.handleInputOnChange}
-                  />
-                </td>
-                <td>
-                  <AntdInput
-                    name="OUTPUT_TYPE"
-                    value={itemData.OUTPUT_TYPE || ''}
-                    className="ant-input-inline ant-input-sm input-left"
-                    onChange={this.handleInputOnChange}
-                  />
-                </td>
-                <td>
-                  <AntdInput
-                    name="DISCHRGE"
-                    value={itemData.DISCHRGE || ''}
-                    className="ant-input-inline ant-input-sm input-left"
-                    onChange={this.handleInputOnChange}
-                  />
-                </td>
+                <td>{m.SEQ}</td>
+                <td>{m.GUBUN}</td>
+                <td>{m.STATUS}</td>
+                <td>{m.MATTER}</td>
+                <td>{m.INGREDIENT}</td>
+                <td>{m.VOLUME.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
+                <td>{m.UNIT}</td>
+                <td>{m.INPUT_TYPE}</td>
+                <td>{m.OUTPUT_TYPE}</td>
+                <td>{m.DISCHRGE}</td>
               </tr>
-              <tr>
-                <th rowSpan={2}>
-                  <span>삭제</span>
-                </th>
-                <th rowSpan={2}>
-                  <span>Seq</span>
-                </th>
-                <th rowSpan={2}>
-                  <span>구분</span>
-                </th>
-                <th rowSpan={2}>
-                  <span>
-                    영향구분
-                    <br />
-                    (정상/비정상)
-                  </span>
-                </th>
-                <th colSpan={5}>
-                  <span>IN-PUT</span>
-                </th>
-                <th colSpan={2}>
-                  <span>OUT-PUT</span>
-                </th>
-              </tr>
-              <tr>
-                <th>
-                  <span>물질명</span>
-                </th>
-                <th>
-                  <span>구성성분</span>
-                </th>
-                <th>
-                  <span>사용량</span>
-                </th>
-                <th>
-                  <span>단위</span>
-                </th>
-                <th>
-                  <span>투입형태</span>
-                </th>
-                <th>
-                  <span>배출형태</span>
-                </th>
-                <th>
-                  <span>배출처</span>
-                </th>
-              </tr>
-            </thead>
-            <tfoot>
-              <tr>
-                <td colSpan={11}>{itemList.length} 건</td>
-              </tr>
-            </tfoot>
-            <tbody>
-              {itemList.map(m => (
-                <tr key={m.SEQ} className="tr-center tr-pointer" onClick={() => this.handleRowClick(m)}>
-                  <td>
-                    <Checkbox
-                      className="ant-checkbox-wrapper"
-                      defaultChecked={false}
-                      checked={rowSelections.indexOf(m.SEQ) > -1}
-                      onChange={() => this.handleRowSelection(m.SEQ)}
-                    />
-                  </td>
-                  <td>{m.SEQ}</td>
-                  <td>{m.GUBUN}</td>
-                  <td>{m.STATUS}</td>
-                  <td>{m.MATTER}</td>
-                  <td>{m.INGREDIENT}</td>
-                  <td>{m.VOLUME.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
-                  <td>{m.UNIT}</td>
-                  <td>{m.INPUT_TYPE}</td>
-                  <td>{m.OUTPUT_TYPE}</td>
-                  <td>{m.DISCHRGE}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </StyledHtmlTable>
-      </ContentsWrapper>
+            ))}
+          </tbody>
+        </table>
+      </StyledHtmlTable>
     );
   }
 }
