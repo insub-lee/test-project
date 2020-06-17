@@ -214,6 +214,10 @@
             proxy_set_header     user_agent $http_user_agent;
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
+            
+			#Headers for client browser NOCACHE
+            add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+            expires off;
     }
 
     location ~ ^(/api/migration/v1/common/) {

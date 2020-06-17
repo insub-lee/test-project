@@ -149,7 +149,7 @@ class List extends Component {
                 this.selectedRecord(record);
               },
             })}
-            footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
+            footer={() => <span>{`${(dataSource && dataSource.length) || 0} 건`}</span>}
           />
         </ContentsWrapper>
         <AntdModal
