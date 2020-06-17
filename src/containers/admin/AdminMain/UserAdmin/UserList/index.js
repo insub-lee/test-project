@@ -111,9 +111,11 @@ class UserList extends React.Component {
     ];
 
     let dtKeyword = '';
-    const dtKeywordType = 'userNameKor';
+    let dtKeywordType = 'userNameKor';
     let dtSortColumn = '';
     let dtSortDirection = '';
+    let dtDeptRootId = 0;
+    let dtPstnRootId = 0;
     let dtDeptId = 0;
     let dtPstnId = 0;
     let dtDeptName = '';
@@ -126,8 +128,11 @@ class UserList extends React.Component {
 
       dtStatusCode = location.statusCode;
       dtKeyword = location.keyword;
+      dtKeywordType = location.keywordType;
       dtSortColumn = location.sortColumn;
       dtSortDirection = location.sortDirection;
+      dtDeptRootId = location.deptRootId;
+      dtPstnRootId = location.pstnRootId;
       dtDeptId = location.deptId;
       dtPstnId = location.pstnId;
       dtDeptName = location.deptName;
@@ -140,10 +145,14 @@ class UserList extends React.Component {
       keyword: dtKeyword,
       sortColumnParam: dtSortColumn,
       sortDirectionParam: dtSortDirection,
+      deptRootId: dtDeptRootId,
+      pstnRootId: dtPstnRootId,
       deptId: dtDeptId,
       pstnId: dtPstnId,
       deptName: dtDeptName,
       pstnName: dtPstnName,
+      selectedDept: 0,
+      selectedKey: 0,
     };
 
     this.props.getUserList(
@@ -169,6 +178,8 @@ class UserList extends React.Component {
       statusCode: this.state.statusCode,
       keywordType: this.state.keywordType,
       keyword: this.state.keyword,
+      deptRootId: this.state.deptRootId,
+      pstnRootId: this.state.pstnRootId,
       deptId: this.state.deptId,
       pstnId: this.state.pstnId,
       deptName: this.state.deptName,
@@ -222,22 +233,7 @@ class UserList extends React.Component {
   };
 
   handleStatusSelect = e => {
-    this.setState({ statusCode: e }, () => {
-      pageSNum = 1;
-      pageENum = pageIndex;
-      this.props.getUserList(
-        pageSNum,
-        pageENum,
-        [],
-        this.state.sortColumnParam,
-        this.state.sortDirectionParam,
-        this.state.statusCode,
-        this.state.keywordType,
-        this.state.keyword,
-        this.state.deptId,
-        this.state.pstnId,
-      );
-    });
+    this.setState({ statusCode: e }, () => this.handleClick());
   };
 
   // 검색아이콘 클릭 시(조회)
@@ -283,7 +279,6 @@ class UserList extends React.Component {
   };
 
   // 트리 선택 화면
-
   getSelectNode = node => {
     this.setState({
       selectedNode: node,
@@ -291,7 +286,8 @@ class UserList extends React.Component {
   };
 
   getSelectDept = id => {
-    switch (this.state.modalType) {
+    const { modalType } = this.state;
+    switch (modalType) {
       case 'dept':
         this.props.getChangeDeptTreeData(id);
         break;
@@ -307,55 +303,58 @@ class UserList extends React.Component {
       default:
         break;
     }
+    this.setState({ [`${modalType}RootId`]: id });
   };
 
   showModal = (title, type) => {
-    switch (type) {
-      case 'dept':
-        this.props.getDeptComboData();
-        break;
-      case 'duty':
-        this.props.getDutyComboData();
-        break;
-      case 'pstn':
-        this.props.getPSTNComboData();
-        break;
-      case 'rank':
-        this.props.getRANKComboData();
-        break;
-      default:
-        break;
+    const selectedDept = this.state[`${type}RootId`];
+    const selectedKey = this.state[`${type}Id`];
+    if (type !== this.state.modalType) {
+      switch (type) {
+        case 'dept':
+          this.props.getDeptComboData(selectedDept);
+          break;
+        case 'duty':
+          this.props.getDutyComboData();
+          break;
+        case 'pstn':
+          this.props.getPSTNComboData(selectedDept);
+          break;
+        case 'rank':
+          this.props.getRANKComboData();
+          break;
+        default:
+          break;
+      }
+      this.setState({
+        modalTitle: title,
+        modalType: type,
+        selectedNode: {},
+      });
     }
     this.setState({
+      selectedDept,
+      selectedKey,
       visible: true,
-      modalTitle: title,
-      modalType: type,
     });
   };
 
   handleOk = () => {
+    const { modalType } = this.state;
+
+    const {
+      selectedNode: { key, NAME_KOR },
+      [`${modalType}Id`]: id,
+      [`${modalType}Name`]: name,
+    } = this.state;
+
     this.setState(
       {
         visible: false,
-        [`${this.state.modalType}Name`]: this.state.selectedNode.NAME_KOR,
-        [`${this.state.modalType}Id`]: this.state.selectedNode.key,
+        [`${modalType}Name`]: NAME_KOR || name,
+        [`${modalType}Id`]: key || id,
       },
-      () => {
-        pageSNum = 1;
-        pageENum = pageIndex;
-        this.props.getUserList(
-          pageSNum,
-          pageENum,
-          [],
-          this.state.sortColumnParam,
-          this.state.sortDirectionParam,
-          this.state.statusCode,
-          this.state.keywordType,
-          this.state.keyword,
-          this.state.deptId,
-          this.state.pstnId,
-        );
-      },
+      () => this.handleClick(),
     );
   };
 
@@ -363,57 +362,72 @@ class UserList extends React.Component {
     this.setState({
       visible: false,
       selectedNode: {},
-      modalType: '',
+      selectedKey: 0,
+      // modalType: '',
       // eslint-disable-next-line react/no-unused-state
-      treeData: [],
+      // treeData: [],
     });
   };
 
   initSearch = () => {
-    this.setState({
-      statusCode: 'C',
-      keyword: '',
-      keywordType: 'userNameKor',
-      sortColumnParam: '',
-      sortDirectionParam: '',
-      deptId: 0,
-      pstnId: 0,
-      deptName: '',
-      pstnName: '',
-    });
+    this.setState(
+      {
+        statusCode: 'C',
+        keyword: '',
+        keywordType: 'userNameKor',
+        sortColumnParam: '',
+        sortDirectionParam: '',
+        deptId: 0,
+        pstnId: 0,
+        deptName: '',
+        pstnName: '',
+      },
+      () => this.handleClick(),
+    );
   };
 
   render() {
-    const { userList, history } = this.props;
+    const { userList, history, treeData, comboData, isLoading } = this.props;
+    const {
+      visible,
+      modalTitle,
+      modalType,
+      selectedDept,
+      selectedKey,
+      sortColumnParam,
+      sortDirectionParam,
+      statusCode,
+      keywordType,
+      keyword,
+      deptId,
+      pstnId,
+      deptName,
+      pstnName,
+    } = this.state;
     const initGrid = {
       USER_ID: null,
-      sortColumnParam: this.state.sortColumnParam,
-      sortDirectionParam: this.state.sortDirectionParam,
-      statusCode: this.state.statusCode,
-      keywordType: this.state.keywordType,
-      keyword: this.state.keyword,
-      deptId: this.state.deptId,
-      pstnId: this.state.pstnId,
-      deptName: this.state.deptName,
-      pstnName: this.state.pstnName,
+      sortColumnParam,
+      sortDirectionParam,
+      statusCode,
+      keywordType,
+      keyword,
+      deptId,
+      pstnId,
+      deptName,
+      pstnName,
     };
     return (
       <div>
-        <Modal
-          title={this.state.modalTitle}
-          visible={this.state.visible}
-          onOk={this.handleOk}
-          onCancel={this.handleCancel}
-          width={400}
-          bodyStyle={{ maxHeight: 400 }}
-        >
+        <Modal title={modalTitle} visible={visible} onOk={this.handleOk} onCancel={this.handleCancel} width={400} bodyStyle={{ maxHeight: 400 }}>
           <UserRegTree
-            treeType={this.state.modalType}
-            treeData={this.props.treeData}
-            comboData={this.props.comboData}
+            treeType={modalType}
+            treeData={treeData}
+            comboData={comboData}
             getSelectNode={this.getSelectNode}
             getSelectDept={this.getSelectDept}
-            isLoading={this.props.isLoading}
+            isLoading={isLoading}
+            selectedDept={selectedDept}
+            selectedKey={selectedKey}
           />
         </Modal>
         <StyleUserList>
@@ -517,13 +531,13 @@ const mapDispatchToProps = dispatch => ({
     dispatch(actionTypes.getUserList(sNum, eNum, userList, sortColumn, sortDirection, statusCode, keywordType, keyword, deptId, pstnId)),
 
   getChangeDeptTreeData: DEPT_ID => dispatch(actionTypes.getChangeDeptTreeData(DEPT_ID)),
-  getDeptComboData: () => dispatch(actionTypes.getDeptComboData()),
+  getDeptComboData: ROOT_ID => dispatch(actionTypes.getDeptComboData(ROOT_ID)),
   getChangeDutyTreeData: DUTY_ID => dispatch(actionTypes.getChangeDutyTreeData(DUTY_ID)),
-  getDutyComboData: () => dispatch(actionTypes.getDutyComboData()),
+  getDutyComboData: ROOT_ID => dispatch(actionTypes.getDutyComboData(ROOT_ID)),
   getChangePSTNTreeData: PSTN_ID => dispatch(actionTypes.getChangePSTNTreeData(PSTN_ID)),
-  getPSTNComboData: () => dispatch(actionTypes.getPSTNComboData()),
+  getPSTNComboData: ROOT_ID => dispatch(actionTypes.getPSTNComboData(ROOT_ID)),
   getChangeRANKTreeData: RANK_ID => dispatch(actionTypes.getChangeRANKTreeData(RANK_ID)),
-  getRANKComboData: () => dispatch(actionTypes.getRANKComboData()),
+  getRANKComboData: ROOT_ID => dispatch(actionTypes.getRANKComboData(ROOT_ID)),
 });
 
 const mapStateToProps = createStructuredSelector({
