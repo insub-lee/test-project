@@ -38,7 +38,7 @@ class Excel extends Component {
         columns={columns}
         fields={fields}
         listData={dataList}
-        btnSize="btn-xs"
+        btnSize="btn-sm"
       />
     );
   }

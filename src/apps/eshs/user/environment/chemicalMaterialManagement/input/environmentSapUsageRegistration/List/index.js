@@ -33,7 +33,7 @@ class List extends React.Component {
         url: `/api/eshs/v1/common/eshschemicalmaterialsap`,
       },
     ];
-    getCallDataHandler(id, apiArr, this.setDataSource);
+    getCallDataHandler(id, apiArr, this.handleResetClick);
   };
 
   handleSearchClick = () => {
@@ -83,13 +83,8 @@ class List extends React.Component {
     const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
 
-    const submitCallbackFunc = () => {
-      this.getMaterialList();
-      message.success('변경되었습니다.');
-    };
-
     return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue, (key, response) =>
-      callBackAfterPut(key, response, submitCallbackFunc),
+      callBackAfterPut(key, response, this.getMaterialList()),
     );
   };
 

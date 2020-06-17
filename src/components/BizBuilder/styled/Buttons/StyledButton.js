@@ -12,6 +12,7 @@ const StyledButton = styled.button`
   color: #212529;
   text-align: center;
   transition: all 0.2s ease-in-out;
+  vertical-align: middle;
 
   &:focus {
     border: 1px solid transparent;

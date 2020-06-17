@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Spin } from 'antd';
 import { AutoSizer, Column, Table } from 'react-virtualized';
-
-import StyledVirtualized from 'apps/wts/components/CommonStyledElement/StyledVirtualized';
-import Button from 'components/Button';
 import { jsonToQueryString } from 'utils/helpers';
 
+import StyledVirtualized from 'apps/wts/components/CommonStyledElement/StyledVirtualized';
+
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledStandard from '../../../StyledStandard';
 import Wrapper from './Wrapper';
 import WorkerModifyCommentModal from '../../Modals/WorkerModifyCommentModal';
 import ChiefScheduleManageModal from '../../Modals/ChiefScheduleManageModal';
@@ -186,64 +187,66 @@ class MainBody extends React.Component {
     ];
     return (
       <Wrapper>
-        {canUseThisPage ? (
-          <>
-            <div className="title">
-              <span>현재 담당 근무자</span>
+        <StyledStandard>
+          {canUseThisPage ? (
+            <div className="sub_con">
+              <div className="title">
+                <span>현재 담당 근무자</span>
+              </div>
+              <div className="btn_wrap" style={{ position: 'relative' }}>
+                <StyledButton type="button" className="btn-gray btn-sm mr5" onClick={this.openGroupManageModal}>
+                  BAY 설정
+                </StyledButton>
+                <StyledButton type="button" className="btn-gray btn-sm" onClick={this.openSchedulerModal}>
+                  근무이력조회
+                </StyledButton>
+              </div>
+              <div style={{ overflowX: 'auto' }}>
+                <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
+                  <StyledVirtualized minHeight={300} headerHeight={78} style={{ minWidth: 800 }}>
+                    <AutoSizer>
+                      {({ height, width }) => (
+                        <Table
+                          width={width}
+                          height={height}
+                          headerHeight={78}
+                          rowHeight={39}
+                          rowCount={manWorkJoList.length}
+                          rowGetter={({ index }) => manWorkJoList[index]}
+                          headerClassName="virtualized_header"
+                          gridClassName="virtualized_grid"
+                          rowClassName="virtualized_row"
+                          noRowsRenderer={() => (
+                            <div className="virtualized_noData">
+                              <span>{isLoading ? 'Loading...' : 'No Data'}</span>
+                            </div>
+                          )}
+                        >
+                          {columns.map(column => (
+                            <Column
+                              key={column.dataKey}
+                              {...column}
+                              width={(width * column.percentWidth) / 100}
+                              style={{
+                                ...column.style,
+                                lineHeight: '39px',
+                              }}
+                            />
+                          ))}
+                        </Table>
+                      )}
+                    </AutoSizer>
+                  </StyledVirtualized>
+                </Spin>
+              </div>
+              <WorkerModifyCommentModal ref={this.workerModifyCommentModal} />
+              <ChiefScheduleManageModal ref={this.chiefScheduleManageModal} empNo={profile.EMP_NO} manInfo={manInfo} />
+              <WorkerGroupManageModal ref={this.workerGroupManageModal} callbackHandler={this.refreshData} />
             </div>
-            <div className="btn_wrap" style={{ position: 'relative', height: 45 }}>
-              <Button type="button" size="small" color="default" onClick={this.openGroupManageModal}>
-                BAY 설정
-              </Button>
-              <Button type="button" size="small" color="default" onClick={this.openSchedulerModal}>
-                근무이력조회
-              </Button>
-            </div>
-            <div style={{ overflowX: 'auto' }}>
-              <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-                <StyledVirtualized minHeight={300} headerHeight={78} style={{ minWidth: 800 }}>
-                  <AutoSizer>
-                    {({ height, width }) => (
-                      <Table
-                        width={width}
-                        height={height}
-                        headerHeight={78}
-                        rowHeight={39}
-                        rowCount={manWorkJoList.length}
-                        rowGetter={({ index }) => manWorkJoList[index]}
-                        headerClassName="virtualized_header"
-                        gridClassName="virtualized_grid"
-                        rowClassName="virtualized_row"
-                        noRowsRenderer={() => (
-                          <div className="virtualized_noData">
-                            <span>{isLoading ? 'Loading...' : 'No Data'}</span>
-                          </div>
-                        )}
-                      >
-                        {columns.map(column => (
-                          <Column
-                            key={column.dataKey}
-                            {...column}
-                            width={(width * column.percentWidth) / 100}
-                            style={{
-                              ...column.style,
-                              lineHeight: '39px',
-                            }}
-                          />
-                        ))}
-                      </Table>
-                    )}
-                  </AutoSizer>
-                </StyledVirtualized>
-              </Spin>
-            </div>
-            <WorkerModifyCommentModal ref={this.workerModifyCommentModal} />
-            <ChiefScheduleManageModal ref={this.chiefScheduleManageModal} empNo={profile.EMP_NO} manInfo={manInfo} />
-            <WorkerGroupManageModal ref={this.workerGroupManageModal} callbackHandler={this.refreshData} />
-          </>
-        ) : (
-          <div>현재 사용자는 사용 불가능한 페이지입니다.</div>
-        )}
+          ) : (
+            <div>현재 사용자는 사용 불가능한 페이지입니다.</div>
+          )}
+        </StyledStandard>
       </Wrapper>
     );
   }

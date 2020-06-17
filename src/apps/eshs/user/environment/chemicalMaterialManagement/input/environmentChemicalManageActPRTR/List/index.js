@@ -66,13 +66,8 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    const submitCallbackFunc = () => {
-      this.getMaterialList();
-      this.handleResetClick();
-    };
-
     return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialmanageactregistration`, requestValue, (key, response) =>
-      callBackAfterDelete(key, response, submitCallbackFunc),
+      callBackAfterDelete(key, response, this.getMaterialList),
     );
   };
 
@@ -274,7 +269,7 @@ class List extends React.Component {
                   <th>취급량(kg/년)</th>
                   <td>
                     <AntdInputNumber
-                      className="ant-input-number input-number-sm"
+                      className="ant-input-number ant-input-number-sm"
                       value={requestValue.HANDLE_AMOUNT}
                       onChange={value => handleInputNumberChange(value, 'HANDLE_AMOUNT')}
                     />
@@ -282,7 +277,7 @@ class List extends React.Component {
                   <th>조사대상범위(무게함유율%)</th>
                   <td>
                     <AntdInputNumber
-                      className="ant-input-number input-number-sm"
+                      className="ant-input-number ant-input-number-sm"
                       value={requestValue.INVESTIGATION_TARGET_RANGE}
                       onChange={value => handleInputNumberChange(value, 'INVESTIGATION_TARGET_RANGE')}
                     />

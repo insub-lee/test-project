@@ -545,7 +545,7 @@ class ChiefWorkerRecordWriterModal extends React.Component {
                 <div className="sub_form_tit cr">
                   <div style={{ float: 'left' }}>연장근무</div>
                   <div style={{ float: 'right' }}>
-                    <Checkbox id="use-yn" checked={writeOverWork} onChange={this.handleChangeWriteOverWork} labelText="작성" noPadding />
+                    <Checkbox className="checkbox" id="use-yn" checked={writeOverWork} onChange={this.handleChangeWriteOverWork} labelText="작성" noPadding />
                   </div>
                   <div className="cr" />
                 </div>
