@@ -345,7 +345,7 @@ class ListPage extends Component {
                 )
               );
             })}
-            <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+            <StyledButtonWrapper className="btn-wrap-right">
               {ListCustomButtons ? (
                 <ListCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
               ) : (
@@ -355,7 +355,7 @@ class ListPage extends Component {
                     isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
                   }
                 >
-                  추가dd
+                  추가
                 </StyledButton>
               )}
               {isMultiDelete && (

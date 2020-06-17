@@ -4,13 +4,14 @@ import { debounce } from 'lodash';
 import StyledVirtualized from 'apps/wts/components/CommonStyledElement/StyledVirtualized';
 import { getVirtualizedMinHeight, jsonToQueryString } from 'utils/helpers';
 import Checkbox from 'apps/wts/components/CheckboxGroup/Checkbox';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import { Icon, Spin } from 'antd';
 import service from '../../service';
+import { admin } from '../config';
 import Wrapper from './Wrapper';
 import WorkJoSelectorModal from '../../Modals/WorkJoSelectorModal';
 import AdminWorkerGroupManageModal from '../../Modals/AdminWorkerGroupManageModal';
-import { admin } from '../config';
+import StyledStandard from '../../../StyledStandard';
 
 const reorderData = (data, emrno) => {
   if (admin[emrno]) {
@@ -429,65 +430,67 @@ class MainBody extends React.Component {
       filterWord.trim().length > 0 ? currentList.filter(worker => worker.usrnm.includes(filterWord) || worker.empno.includes(filterWord)) : currentList;
     return (
       <Wrapper>
-        <div className="title">
-          <span>새로운 근무자</span>
-        </div>
-        <div className="btn_wrap" style={{ height: 36 }}>
-          {checkedList.length > 0 && (
-            <Button type="button" size="small" color="default" onClick={this.openWorkJoSelectorModal}>
-              근무조 지정하기
-            </Button>
-          )}
-        </div>
-        <div>
-          <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-            <StyledVirtualized minHeight={getVirtualizedMinHeight(39, 39, newManList.length, 500)} headerHeight={39}>
-              <AutoSizer>
-                {({ height, width }) => (
-                  <Table
-                    width={width}
-                    height={height}
-                    headerHeight={39}
-                    rowHeight={39}
-                    rowCount={newManList.length}
-                    rowGetter={({ index }) => newManList[index]}
-                    headerClassName="virtualized_header"
-                    gridClassName="virtualized_grid"
-                    rowClassName="virtualized_row"
-                    noRowsRenderer={() => (
-                      <div className="virtualized_noData">
-                        <span>{isLoading ? 'Loading...' : 'No Data'}</span>
-                      </div>
+        <StyledStandard>
+          <div className="sub_con">
+            <div className="title">
+              <span>새로운 근무자</span>
+            </div>
+            <div className="btn_wrap" style={{ height: 36 }}>
+              {checkedList.length > 0 && (
+                <StyledButton type="button" className="btn-sm btn-primary" onClick={this.openWorkJoSelectorModal}>
+                  근무조 지정하기
+                </StyledButton>
+              )}
+            </div>
+            <div>
+              <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
+                <StyledVirtualized minHeight={getVirtualizedMinHeight(39, 39, newManList.length, 500)} headerHeight={39}>
+                  <AutoSizer>
+                    {({ height, width }) => (
+                      <Table
+                        width={width}
+                        height={height}
+                        headerHeight={39}
+                        rowHeight={39}
+                        rowCount={newManList.length}
+                        rowGetter={({ index }) => newManList[index]}
+                        headerClassName="virtualized_header"
+                        gridClassName="virtualized_grid"
+                        rowClassName="virtualized_row"
+                        noRowsRenderer={() => (
+                          <div className="virtualized_noData">
+                            <span>{isLoading ? 'Loading...' : 'No Data'}</span>
+                          </div>
+                        )}
+                      >
+                        {columns.map(column => (
+                          <Column
+                            key={column.dataKey}
+                            {...column}
+                            width={(width * column.percentWidth) / 100}
+                            style={{
+                              ...column.style,
+                              lineHeight: '39px',
+                            }}
+                          />
+                        ))}
+                      </Table>
                     )}
-                  >
-                    {columns.map(column => (
-                      <Column
-                        key={column.dataKey}
-                        {...column}
-                        width={(width * column.percentWidth) / 100}
-                        style={{
-                          ...column.style,
-                          lineHeight: '39px',
-                        }}
-                      />
-                    ))}
-                  </Table>
-                )}
-              </AutoSizer>
-            </StyledVirtualized>
-          </Spin>
-        </div>
-        <hr
-          style={{
-            border: '1px solid #eaecee',
-            marginTop: 40,
-            marginBottom: 40,
-          }}
-        />
-        <div className="title">
-          <span>전체 근무자 리스트</span>
-        </div>
-        {/* <div className="search_div" style={{ textAlign: 'right', position: 'relative', height: 50 }}>
+                  </AutoSizer>
+                </StyledVirtualized>
+              </Spin>
+            </div>
+            <hr
+              style={{
+                border: '1px solid #eaecee',
+                marginTop: 40,
+                marginBottom: 40,
+              }}
+            />
+            <div className="title">
+              <span>전체 근무자 리스트</span>
+            </div>
+            {/* <div className="search_div" style={{ textAlign: 'right', position: 'relative', height: 50 }}>
           <div style={{ position: 'absolute', width: 300, left: '0', top: '-10px', textAlign: 'left' }}>
             <input
               type="text"
@@ -498,87 +501,89 @@ class MainBody extends React.Component {
             />
           </div>
         </div> */}
-        <ul className="search_div">
-          <li>
-            <select name="" id="" value={currentManBanArea} onChange={this.handleChangeManBanArea} style={{ width: 200, height: 46 }}>
-              <option value="">전체 AREA</option>
-              {Object.keys(manBanArea).map(key => (
-                <option key={key} value={key}>
-                  {key}
-                </option>
-              ))}
-            </select>
-          </li>
-          <li>
-            <select name="" id="" value={currentManBanJo} style={{ width: 100, height: 46 }} onChange={this.handleChangeManBanWorkjo}>
-              <option value="">전체 조</option>
-              {manBanArea[currentManBanArea] &&
-                manBanArea[currentManBanArea].map(workjo => (
-                  <option key={workjo} value={workjo}>
-                    {workjo}
-                  </option>
-                ))}
-            </select>
-          </li>
-          <li>
-            <input
-              type="text"
-              className="input"
-              placeholder="성명 혹은 사번으로 조회"
-              style={{ textAlign: 'left' }}
-              onChange={e => this.handleFilter(e.target.value)}
-            />
-          </li>
-        </ul>
-        <div className="cr" />
-        <div style={{ overflowX: 'auto' }}>
-          <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-            <StyledVirtualized minHeight={getVirtualizedMinHeight(39, 39, currentList.length, 500)} headerHeight={39} style={{ minWidth: 1000 }}>
-              <AutoSizer>
-                {({ height, width }) => (
-                  <Table
-                    width={width}
-                    height={height}
-                    headerHeight={39}
-                    rowHeight={39}
-                    rowCount={currentList.length}
-                    rowGetter={({ index }) => currentList[index]}
-                    headerClassName="virtualized_header"
-                    gridClassName="virtualized_grid"
-                    rowClassName="virtualized_row"
-                    noRowsRenderer={() => (
-                      <div className="virtualized_noData">
-                        <span>{isLoading ? 'Loading...' : 'No Data'}</span>
-                      </div>
-                    )}
-                  >
-                    {workColumns.map(column => (
-                      <Column
-                        key={column.dataKey}
-                        {...column}
-                        width={(width * column.percentWidth) / 100}
-                        style={{
-                          ...column.style,
-                          lineHeight: '39px',
-                        }}
-                      />
+            <ul className="search_div">
+              <li>
+                <select name="" id="" value={currentManBanArea} onChange={this.handleChangeManBanArea} style={{ width: 200, height: 46 }}>
+                  <option value="">전체 AREA</option>
+                  {Object.keys(manBanArea).map(key => (
+                    <option key={key} value={key}>
+                      {key}
+                    </option>
+                  ))}
+                </select>
+              </li>
+              <li>
+                <select name="" id="" value={currentManBanJo} style={{ width: 100, height: 46 }} onChange={this.handleChangeManBanWorkjo}>
+                  <option value="">전체 조</option>
+                  {manBanArea[currentManBanArea] &&
+                    manBanArea[currentManBanArea].map(workjo => (
+                      <option key={workjo} value={workjo}>
+                        {workjo}
+                      </option>
                     ))}
-                  </Table>
-                )}
-              </AutoSizer>
-            </StyledVirtualized>
-          </Spin>
-        </div>
-        <WorkJoSelectorModal
-          ref={this.workJoSelectorModalRef}
-          list={manJoList}
-          title="근무조 지정하기"
-          callbackHandler={() => {
-            this.refreshNewWorkersData();
-            this.refreshWorkersData();
-          }}
-        />
-        <AdminWorkerGroupManageModal ref={this.adminWorkerGroupManageModalRef} tree={tree} callbackHandler={this.refreshWorkersData} />
+                </select>
+              </li>
+              <li>
+                <input
+                  type="text"
+                  className="input"
+                  placeholder="성명 혹은 사번으로 조회"
+                  style={{ textAlign: 'left' }}
+                  onChange={e => this.handleFilter(e.target.value)}
+                />
+              </li>
+            </ul>
+            <div className="cr" />
+            <div style={{ overflowX: 'auto' }}>
+              <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
+                <StyledVirtualized minHeight={getVirtualizedMinHeight(39, 39, currentList.length, 500)} headerHeight={39} style={{ minWidth: 1000 }}>
+                  <AutoSizer>
+                    {({ height, width }) => (
+                      <Table
+                        width={width}
+                        height={height}
+                        headerHeight={39}
+                        rowHeight={39}
+                        rowCount={currentList.length}
+                        rowGetter={({ index }) => currentList[index]}
+                        headerClassName="virtualized_header"
+                        gridClassName="virtualized_grid"
+                        rowClassName="virtualized_row"
+                        noRowsRenderer={() => (
+                          <div className="virtualized_noData">
+                            <span>{isLoading ? 'Loading...' : 'No Data'}</span>
+                          </div>
+                        )}
+                      >
+                        {workColumns.map(column => (
+                          <Column
+                            key={column.dataKey}
+                            {...column}
+                            width={(width * column.percentWidth) / 100}
+                            style={{
+                              ...column.style,
+                              lineHeight: '39px',
+                            }}
+                          />
+                        ))}
+                      </Table>
+                    )}
+                  </AutoSizer>
+                </StyledVirtualized>
+              </Spin>
+            </div>
+            <WorkJoSelectorModal
+              ref={this.workJoSelectorModalRef}
+              list={manJoList}
+              title="근무조 지정하기"
+              callbackHandler={() => {
+                this.refreshNewWorkersData();
+                this.refreshWorkersData();
+              }}
+            />
+            <AdminWorkerGroupManageModal ref={this.adminWorkerGroupManageModalRef} tree={tree} callbackHandler={this.refreshWorkersData} />
+          </div>
+        </StyledStandard>
       </Wrapper>
     );
   }

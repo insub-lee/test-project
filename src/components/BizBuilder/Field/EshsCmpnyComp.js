@@ -7,7 +7,7 @@ import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const AntdModal = StyledContentsModal(Modal);
 

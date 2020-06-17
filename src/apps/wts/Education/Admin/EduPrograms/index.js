@@ -475,95 +475,97 @@ class EduPrograms extends React.Component {
     return (
       <Wrapper>
         <StyledStandard>
-          <div className="title">년도별 교육목록</div>
-          <StyledButtonWrapper className="btn-wrap-right" style={{ position: 'relative', marginBottom: 30 }}>
-            <div style={{ position: 'absolute', width: 100, top: 0, left: 0 }}>
-              <select name="" value={moment(searchDate).format('YYYY')} onChange={this.handleChangeSearchDate}>
-                {this.dateOptionRenderer()}
-              </select>
+          <div className="sub_con">
+            <div className="title">년도별 교육목록</div>
+            <StyledButtonWrapper className="btn-wrap-right" style={{ position: 'relative', marginBottom: 30 }}>
+              <div style={{ position: 'absolute', width: 100, top: 0, left: 0 }}>
+                <select name="" value={moment(searchDate).format('YYYY')} onChange={this.handleChangeSearchDate}>
+                  {this.dateOptionRenderer()}
+                </select>
+              </div>
+              <StyledButton type="button" className="btn-gray btn-sm mr5" onClick={this.handleOpenEduPlanQuestionsModal}>
+                신입/전배 교육 문항 관리
+              </StyledButton>
+              <StyledButton type="button" className="btn-gray btn-sm mr5" onClick={this.handleOpenEduProgramManageEvaluationModal}>
+                교육 평가 문항 관리
+              </StyledButton>
+              <StyledButton type="button" className="btn-primary btn-sm" onClick={this.handleOpenEduProgramFormModal}>
+                교육 추가하기
+              </StyledButton>
+            </StyledButtonWrapper>
+            <div>
+              <div style={{ marginBottom: '10px' }}>
+                <div style={{ display: 'inline-block', marginRight: '10px' }}>
+                  <select name="currentEdu" value={currentEdu} onChange={this.handleChangeFilter} style={{ width: 150, height: 46 }}>
+                    <option value="">전체 교육</option>
+                    {edus.map(value => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div style={{ display: 'inline-block', marginRight: '10px' }}>
+                  <select name="currentType" value={currentType} onChange={this.handleChangeFilter} style={{ width: 150, height: 46 }}>
+                    <option value="">전체 구분</option>
+                    {types.map(value => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div style={{ display: 'inline-block', marginRight: '10px' }}>
+                  <select name="currentTime" value={currentTime} onChange={this.handleChangeFilter} style={{ width: 150, height: 46 }}>
+                    <option value="">전체 회차</option>
+                    {times.map(value => (
+                      <option key={value} value={value}>
+                        {value}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
+                <StyledVirtualized minHeight={getVirtualizedMinHeight(48, 48, filteredData.size, 500)} headerHeight={48} disableDefaultHover>
+                  <AutoSizer>
+                    {({ height, width }) => (
+                      <Table
+                        width={width}
+                        height={height}
+                        headerHeight={48}
+                        rowHeight={48}
+                        rowCount={filteredData.size}
+                        rowGetter={({ index }) => filteredData.get(index)}
+                        headerClassName="virtualized_header"
+                        gridClassName="virtualized_grid"
+                        rowClassName="virtualized_row"
+                        noRowsRenderer={() => (
+                          <div className="virtualized_noData">
+                            <span>{isLoading ? 'Loading...' : 'No Data'}</span>
+                          </div>
+                        )}
+                        sort={this.sort}
+                        sortBy={sortBy}
+                        sortDirection={sortDirection}
+                      >
+                        {this.columnsRenderer().map(column => (
+                          <Column
+                            key={column.dataKey}
+                            {...column}
+                            width={(width * column.percentWidth) / 100}
+                            style={{
+                              ...column.style,
+                              lineHeight: '48px',
+                            }}
+                          />
+                        ))}
+                      </Table>
+                    )}
+                  </AutoSizer>
+                </StyledVirtualized>
+              </Spin>
             </div>
-            <StyledButton type="button" className="btn-gray btn-sm mr5" onClick={this.handleOpenEduPlanQuestionsModal}>
-              신입/전배 교육 문항 관리
-            </StyledButton>
-            <StyledButton type="button" className="btn-gray btn-sm mr5" onClick={this.handleOpenEduProgramManageEvaluationModal}>
-              교육 평가 문항 관리
-            </StyledButton>
-            <StyledButton type="button" className="btn-primary btn-sm" onClick={this.handleOpenEduProgramFormModal}>
-              교육 추가하기
-            </StyledButton>
-          </StyledButtonWrapper>
-          <div>
-            <div style={{ marginBottom: '10px' }}>
-              <div style={{ display: 'inline-block', marginRight: '10px' }}>
-                <select name="currentEdu" value={currentEdu} onChange={this.handleChangeFilter} style={{ width: 150, height: 46 }}>
-                  <option value="">전체 교육</option>
-                  {edus.map(value => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div style={{ display: 'inline-block', marginRight: '10px' }}>
-                <select name="currentType" value={currentType} onChange={this.handleChangeFilter} style={{ width: 150, height: 46 }}>
-                  <option value="">전체 구분</option>
-                  {types.map(value => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div style={{ display: 'inline-block', marginRight: '10px' }}>
-                <select name="currentTime" value={currentTime} onChange={this.handleChangeFilter} style={{ width: 150, height: 46 }}>
-                  <option value="">전체 회차</option>
-                  {times.map(value => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-              <StyledVirtualized minHeight={getVirtualizedMinHeight(48, 48, filteredData.size, 500)} headerHeight={48} disableDefaultHover>
-                <AutoSizer>
-                  {({ height, width }) => (
-                    <Table
-                      width={width}
-                      height={height}
-                      headerHeight={48}
-                      rowHeight={48}
-                      rowCount={filteredData.size}
-                      rowGetter={({ index }) => filteredData.get(index)}
-                      headerClassName="virtualized_header"
-                      gridClassName="virtualized_grid"
-                      rowClassName="virtualized_row"
-                      noRowsRenderer={() => (
-                        <div className="virtualized_noData">
-                          <span>{isLoading ? 'Loading...' : 'No Data'}</span>
-                        </div>
-                      )}
-                      sort={this.sort}
-                      sortBy={sortBy}
-                      sortDirection={sortDirection}
-                    >
-                      {this.columnsRenderer().map(column => (
-                        <Column
-                          key={column.dataKey}
-                          {...column}
-                          width={(width * column.percentWidth) / 100}
-                          style={{
-                            ...column.style,
-                            lineHeight: '48px',
-                          }}
-                        />
-                      ))}
-                    </Table>
-                  )}
-                </AutoSizer>
-              </StyledVirtualized>
-            </Spin>
           </div>
           <EduMembersModal ref={this.eduMembers} site={manInfo.site} />
           <EduTargetManageModal ref={this.eduTargetManageModal} site={manInfo.site} />

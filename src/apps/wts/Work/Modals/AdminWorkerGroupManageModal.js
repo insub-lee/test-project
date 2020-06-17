@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import Modal from 'rc-dialog';
 
 import { Tree, Spin, Icon } from 'antd';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledContent from './StyledContent';
 import service from '../service';
 
@@ -129,13 +130,13 @@ class AdminWorkerGroupManageModal extends React.Component {
                 <div style={{ height: 500, overflowY: 'auto', border: '1px solid #eaecee' }}>
                   <Tree onSelect={this.selectKey}>{this.handleTreeNodeRenderer(tree)}</Tree>
                 </div>
-                <div className="btn_wrap">
+                <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
                   {selectedKey.length > 0 && (
-                    <Button type="button" color="default" size="small" onClick={this.handleClickUpdateBtn}>
+                    <StyledButton type="button" className="btn-primary btn-sm" onClick={this.handleClickUpdateBtn}>
                       확인
-                    </Button>
+                    </StyledButton>
                   )}
-                </div>
+                </StyledButtonWrapper>
               </Spin>
             </div>
           </StyledContent>

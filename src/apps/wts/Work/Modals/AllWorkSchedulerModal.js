@@ -5,14 +5,15 @@ import { fromJS } from 'immutable';
 import moment from 'moment';
 import { MultiGrid, AutoSizer } from 'react-virtualized';
 import { debounce } from 'lodash';
+import { Icon, Spin } from 'antd';
 
 import StyledModalContent from 'apps/wts/components/CommonStyledElement/StyledModalContent';
 import { jsonToQueryString, exportExcelWithAOA } from 'utils/helpers';
 import MonthlyPicker from 'apps/wts/components/MonthlyPicker';
-import { Icon, Spin } from 'antd';
-import Button from 'components/Button';
-import service from '../service';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledStandard from '../../StyledStandard';
 import { admin } from '../Admin/config';
+import service from '../service';
 
 const reorderData = (data, emrno) => {
   if (admin[emrno]) {
@@ -427,85 +428,87 @@ class AllWorkSchedulerModal extends React.Component {
         closable={false}
         destroyOnClose
       >
-        <div>
-          <StyledModalContent>
-            <div className="pop_tit">
-              {`${site} 월별 전체 근무 스케쥴`}
-              <button type="button" className="icon icon_pclose" onClick={this.handleCloseModal} />
-            </div>
-            <div className="pop_con">
-              <div className="search_div" style={{ position: 'relative' }}>
-                <div style={{ width: 100, marginBottom: 10 }}>
-                  <MonthlyPicker name="date" value={searchDate} onChange={this.handleChangeDate} />
-                </div>
-                <div style={{ position: 'absolute', top: '16px', right: 0 }}>
-                  <Button type="button" size="small" color="default" onClick={this.downloadExcel}>
-                    <i className="far fa-file-excel" /> Excel
-                  </Button>
-                </div>
+        <StyledStandard>
+          <div>
+            <StyledModalContent>
+              <div className="pop_tit">
+                {`${site} 월별 전체 근무 스케쥴`}
+                <button type="button" className="icon icon_pclose" onClick={this.handleCloseModal} />
               </div>
-              <ul className="search_div">
-                <li>
-                  <select name="" id="" value={currentArea} onChange={this.handleChangeArea} style={{ width: 200, height: 46 }}>
-                    <option value="">전체 AREA</option>
-                    {Object.keys(area).map(key => (
-                      <option key={key} value={key}>
-                        {key}
-                      </option>
-                    ))}
-                  </select>
-                </li>
-                <li>
-                  <select name="workjoSelector" id="workjoSelector" value={currentJo} style={{ width: 100, height: 46 }} onChange={this.handleChangeWorkjo}>
-                    <option value="">전체 조</option>
-                    {area[currentArea] &&
-                      area[currentArea].map(workjo => (
-                        <option key={workjo} value={workjo}>
-                          {workjo}
+              <div className="pop_con">
+                <div className="search_div" style={{ position: 'relative' }}>
+                  <div style={{ width: 100, marginBottom: 10 }}>
+                    <MonthlyPicker name="date" value={searchDate} onChange={this.handleChangeDate} />
+                  </div>
+                  <div style={{ position: 'absolute', top: '16px', right: 0 }}>
+                    <StyledButton type="button" className="btn-sm btn-light" onClick={this.downloadExcel}>
+                      <i className="far fa-file-excel" /> Excel
+                    </StyledButton>
+                  </div>
+                </div>
+                <ul className="search_div">
+                  <li>
+                    <select name="" id="" value={currentArea} onChange={this.handleChangeArea} style={{ width: 200, height: 46 }}>
+                      <option value="">전체 AREA</option>
+                      {Object.keys(area).map(key => (
+                        <option key={key} value={key}>
+                          {key}
                         </option>
                       ))}
-                  </select>
-                </li>
-                <li>
-                  <input
-                    type="text"
-                    className="input"
-                    placeholder="성명 혹은 사번으로 조회"
-                    style={{ textAlign: 'left' }}
-                    onChange={e => this.handleFilter(e.target.value)}
-                  />
-                </li>
-              </ul>
-              <div className="cr" />
-              <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-                <AutoSizer disableHeight>
-                  {({ width }) => (
-                    <MultiGrid
-                      ref={this.multiGrid}
-                      fixedColumnCount={5}
-                      fixedRowCount={1}
-                      cellRenderer={this.cellRenderer}
-                      columnWidth={75}
-                      columnCount={firstRow.size}
-                      enableFixedColumnScroll
-                      enableFixedRowScroll
-                      height={600}
-                      rowHeight={30}
-                      rowCount={firstRow.size + filteredData.size}
-                      style={STYLE}
-                      styleBottomLeftGrid={STYLE_BOTTOM_LEFT_GRID}
-                      styleTopLeftGrid={STYLE_TOP_LEFT_GRID}
-                      styleTopRightGrid={STYLE_TOP_RIGHT_GRID}
-                      width={width}
-                      hideTopRightGridScrollbar
-                      hideBottomLeftGridScrollbar
+                    </select>
+                  </li>
+                  <li>
+                    <select name="workjoSelector" id="workjoSelector" value={currentJo} style={{ width: 100, height: 46 }} onChange={this.handleChangeWorkjo}>
+                      <option value="">전체 조</option>
+                      {area[currentArea] &&
+                        area[currentArea].map(workjo => (
+                          <option key={workjo} value={workjo}>
+                            {workjo}
+                          </option>
+                        ))}
+                    </select>
+                  </li>
+                  <li>
+                    <input
+                      type="text"
+                      className="input"
+                      placeholder="성명 혹은 사번으로 조회"
+                      style={{ textAlign: 'left' }}
+                      onChange={e => this.handleFilter(e.target.value)}
                     />
-                  )}
-                </AutoSizer>
-              </Spin>
-            </div>
-          </StyledModalContent>
-        </div>
+                  </li>
+                </ul>
+                <div className="cr" />
+                <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
+                  <AutoSizer disableHeight>
+                    {({ width }) => (
+                      <MultiGrid
+                        ref={this.multiGrid}
+                        fixedColumnCount={5}
+                        fixedRowCount={1}
+                        cellRenderer={this.cellRenderer}
+                        columnWidth={75}
+                        columnCount={firstRow.size}
+                        enableFixedColumnScroll
+                        enableFixedRowScroll
+                        height={600}
+                        rowHeight={30}
+                        rowCount={firstRow.size + filteredData.size}
+                        style={STYLE}
+                        styleBottomLeftGrid={STYLE_BOTTOM_LEFT_GRID}
+                        styleTopLeftGrid={STYLE_TOP_LEFT_GRID}
+                        styleTopRightGrid={STYLE_TOP_RIGHT_GRID}
+                        width={width}
+                        hideTopRightGridScrollbar
+                        hideBottomLeftGridScrollbar
+                      />
+                    )}
+                  </AutoSizer>
+                </Spin>
+              </div>
+            </StyledModalContent>
+          </div>
+        </StyledStandard>
       </Modal>
     );
   }
