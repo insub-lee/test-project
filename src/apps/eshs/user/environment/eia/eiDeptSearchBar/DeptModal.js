@@ -1,16 +1,19 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Input, Select, Table } from 'antd';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import PropTypes from 'prop-types';
 
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import { Input, Select, Table } from 'antd';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 
 const { Option } = Select;
-const AntdLineTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 
@@ -110,10 +113,10 @@ class DeptModal extends Component {
       list = deptList;
     }
     return (
-      <ContentsWrapper>
-        <div className="selSaveWrapper alignLeft">
+      <StyledContentsWrapper>
+        <StyledCustomSearchWrapper>
           <span className="textLabel">검색구분</span>
-          <AntdSelect className="selectMid mr5" value={searchType} style={{ width: 130 }} onChange={this.handleSearchType}>
+          <AntdSelect className="mr5 select-sm" value={searchType} style={{ width: 130 }} onChange={this.handleSearchType}>
             <Option key="NAME_KOR" value="NAME_KOR">
               부서명
             </Option>
@@ -123,37 +126,45 @@ class DeptModal extends Component {
           </AntdSelect>
           <span className="textLabel">검색어</span>
           <AntdInput
-            className="ant-input-inline mr5"
+            className="ant-input-sm ant-input-inline mr5"
             value={searchText}
             style={{ width: 150 }}
             onChange={e => this.handleSearchInput(e.target.value)}
             placeholder="검색어"
+            onPressEnter={this.handleSearch}
           />
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={this.handleSearch}>
+            <StyledButton className="btn-primary btn-sm mr5" onClick={this.handleSearch}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary" onClick={this.handleReset}>
+            <StyledButton className="btn-primary btn-sm" onClick={this.handleReset}>
               Reset
             </StyledButton>
           </StyledButtonWrapper>
-        </div>
-        <AntdLineTable
-          className="tableWrapper"
+        </StyledCustomSearchWrapper>
+        <AntdTable
           columns={columns}
           dataSource={list}
           pagination={{ pageSize: 15 }}
-          rowKey="DEPT_CD"
+          rowKey="DEPT_ID"
           onRow={(record, rowIndex) => ({
             onClick: () => this.handleRowClick(record),
           })}
           footer={() => <div style={{ textAlign: 'center' }}>{`${list.length} 건`}</div>}
         />
-      </ContentsWrapper>
+      </StyledContentsWrapper>
     );
   }
 }
+
+DeptModal.propTypes = {
+  handleModalRowClick: PropTypes.func,
+  handleModal: PropTypes.func,
+  deptList: PropTypes.array,
+};
 DeptModal.defaultProps = {
   deptList: [],
+  handleModal: () => {},
+  handleModalRowClick: () => {},
 };
 export default DeptModal;

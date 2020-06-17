@@ -1,6 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Input, Checkbox, Popconfirm, message } from 'antd';
+import { Input, Checkbox, Popconfirm, message, Popover } from 'antd';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
@@ -25,6 +25,7 @@ class ItemTable extends Component {
     const itemData = (formData && formData.itemData) || {};
     const CHK_YEAR = (formData && formData.CHK_YEAR) || '';
     const DEPT_CD = (formData && formData.searchRow && formData.searchRow.DEPT_CD) || (formData && formData.myDept && formData.myDept.DEPT_CD) || '';
+    const DEPT_ID = (formData && formData.searchRow && formData.searchRow.DEPT_ID) || (formData && formData.myDept && formData.myDept.DEPT_ID) || '';
     const msg = this.validationCheck(itemData);
     switch (type) {
       case 'SAVE':
@@ -33,7 +34,13 @@ class ItemTable extends Component {
             message.warning(msg);
             break;
           }
-          submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/EshsEiItem', { itemData: { ...itemData, CHK_YEAR, DEPT_CD }, tbName }, this.handleFormReset);
+          submitHandlerBySaga(
+            id,
+            'POST',
+            '/api/eshs/v1/common/EshsEiItem',
+            { itemData: { ...itemData, CHK_YEAR, DEPT_CD, DEPT_ID }, tbName },
+            this.handleFormReset,
+          );
           break;
         }
         message.warning('이미 동일한 Data가 존재합니다');
@@ -134,168 +141,180 @@ class ItemTable extends Component {
     const itemData = (formData && formData.itemData) || {};
     const btnOk = itemList.length >= 1;
     return (
-      <ContentsWrapper>
-        <StyledHtmlTable className="tableWrapper">
-          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
-              Excel Download
-            </StyledButton>
-            {!searchFlag && (
-              <>
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
-                  Excel Upload
-                </StyledButton>
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
-                  추가
-                </StyledButton>
-                {btnOk && (
-                  <>
-                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('UPDATE')}>
-                      수정
-                    </StyledButton>
-                    <Popconfirm
-                      title="선택하신 내용을(를) 정말로 삭제하시겠습니끼?"
-                      onConfirm={() => this.handleAction('DELETE')}
-                      okText="확인"
-                      cancelText="취소"
-                    >
-                      <StyledButton className="btn-primary btn-sm btn-first">삭제</StyledButton>
-                    </Popconfirm>
-                    <StyledButton className="btn-primary btn-sm" onClick={() => this.handleAction('RESET')}>
-                      Reset
-                    </StyledButton>
-                  </>
-                )}
-              </>
-            )}
-          </StyledButtonWrapper>
+      <StyledHtmlTable>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
+            Excel Download
+          </StyledButton>
+          {!searchFlag && (
+            <>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
+                Excel Upload
+              </StyledButton>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
+                추가
+              </StyledButton>
+              {btnOk && (
+                <>
+                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('UPDATE')}>
+                    수정
+                  </StyledButton>
+                  <Popconfirm
+                    title="선택하신 내용을(를) 정말로 삭제하시겠습니끼?"
+                    onConfirm={() => this.handleAction('DELETE')}
+                    okText="확인"
+                    cancelText="취소"
+                  >
+                    <StyledButton className="btn-primary btn-sm btn-first">삭제</StyledButton>
+                  </Popconfirm>
+                  <StyledButton className="btn-primary btn-sm" onClick={() => this.handleAction('RESET')}>
+                    Reset
+                  </StyledButton>
+                </>
+              )}
+            </>
+          )}
+        </StyledButtonWrapper>
 
-          <table className="table-border">
-            <colgroup>
-              <col width="3%" />
-              <col width="8%" />
-              <col width="11%" />
-              <col width="13%" />
-              <col width="13%" />
-              <col width="16%" />
-              <col width="16%" />
-              <col width="8%" />
-              <col width="12%" />
-            </colgroup>
-            <thead>
-              <tr>
-                <td></td>
-                <td>
+        <table className="table-border">
+          <colgroup>
+            <col width="3%" />
+            <col width="8%" />
+            <col width="11%" />
+            <col width="13%" />
+            <col width="13%" />
+            <col width="16%" />
+            <col width="16%" />
+            <col width="8%" />
+            <col width="12%" />
+          </colgroup>
+          <thead>
+            <tr>
+              <td></td>
+              <td>
+                <Popover content={itemData.FIRST_DEPTH} trigger="focus">
                   <AntdInput
                     className="ant-input-inline ant-input-sm input-left"
                     name="FIRST_DEPTH"
                     value={itemData.FIRST_DEPTH || ''}
                     onChange={this.handleInputOnChange}
                   />
-                </td>
-                <td>
+                </Popover>
+              </td>
+              <td>
+                <Popover content={itemData.SECOND_DEPTH} trigger="focus">
                   <AntdInput
                     className="ant-input-inline ant-input-sm input-left"
                     name="SECOND_DEPTH"
                     value={itemData.SECOND_DEPTH || ''}
                     onChange={this.handleInputOnChange}
                   />
-                </td>
-                <td>
+                </Popover>
+              </td>
+              <td>
+                <Popover content={itemData.PROCESS_METHOD} trigger="focus">
                   <AntdInput
                     className="ant-input-inline ant-input-sm input-left"
                     name="PROCESS_METHOD"
                     value={itemData.PROCESS_METHOD || ''}
                     onChange={this.handleInputOnChange}
                   />
-                </td>
-                <td>
+                </Popover>
+              </td>
+              <td>
+                <Popover content={itemData.OUTPUT_TYPE} trigger="focus">
                   <AntdInput
                     className="ant-input-inline ant-input-sm input-left"
                     name="OUTPUT_TYPE"
                     value={itemData.OUTPUT_TYPE || ''}
                     onChange={this.handleInputOnChange}
                   />
-                </td>
-                <td>
+                </Popover>
+              </td>
+              <td>
+                <Popover content={itemData.OUTPUT_AREA} trigger="focus">
                   <AntdInput
                     className="ant-input-inline ant-input-sm input-left"
                     name="OUTPUT_AREA"
                     value={itemData.OUTPUT_AREA || ''}
                     onChange={this.handleInputOnChange}
                   />
-                </td>
-                <td>
+                </Popover>
+              </td>
+              <td>
+                <Popover content={itemData.LAST_YEAR} trigger="focus">
                   <AntdInput
                     className="ant-input-inline ant-input-sm input-left"
                     name="LAST_YEAR"
                     value={itemData.LAST_YEAR || ''}
                     onChange={this.handleInputOnChange}
                   />
-                </td>
-                <td>
+                </Popover>
+              </td>
+              <td>
+                <Popover content={itemData.THIS_YEAR} trigger="focus">
                   <AntdInput
                     className="ant-input-inline ant-input-sm input-left"
                     name="THIS_YEAR"
                     value={itemData.THIS_YEAR || ''}
                     onChange={this.handleInputOnChange}
                   />
+                </Popover>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <th rowSpan={2}> </th>
+              <th rowSpan={2}>구분</th>
+              <th rowSpan={2}>소분류</th>
+              <th rowSpan={2}>처리방법</th>
+              <th rowSpan={2}>배출형태</th>
+              <th rowSpan={2}>
+                배출처
+                <br />
+                (공정/Area)
+              </th>
+              <th colSpan={2}>배출량</th>
+              <th rowSpan={2}>
+                증감율
+                <br />
+                (전년대비 %)
+              </th>
+            </tr>
+            <tr>
+              <th>전년발생량</th>
+              <th>발생량</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <td colSpan={15}>{itemList.length} 건</td>
+            </tr>
+          </tfoot>
+          <tbody>
+            {itemList.map(i => (
+              <tr key={i.REQ_NO} onClick={() => this.handleRowClick(i)} className="tr-center tr-pointer">
+                <td>
+                  <Checkbox
+                    className="ant-checkbox-wrapper"
+                    checked={rowSelections.indexOf(i.REQ_NO) > -1}
+                    defaultChecked={false}
+                    onChange={() => this.handleRowSelection(i.REQ_NO)}
+                  />
                 </td>
-                <td></td>
+                <td>{i.FIRST_DEPTH}</td>
+                <td>{i.SECOND_DEPTH}</td>
+                <td>{i.PROCESS_METHOD}</td>
+                <td>{i.OUTPUT_TYPE}</td>
+                <td>{i.OUTPUT_AREA}</td>
+                <td>{i.LAST_YEAR}</td>
+                <td>{i.THIS_YEAR}</td>
+                <td>{i.CALC_YOY}%</td>
               </tr>
-              <tr>
-                <th rowSpan={2}> </th>
-                <th rowSpan={2}>구분</th>
-                <th rowSpan={2}>소분류</th>
-                <th rowSpan={2}>처리방법</th>
-                <th rowSpan={2}>배출형태</th>
-                <th rowSpan={2}>
-                  배출처
-                  <br />
-                  (공정/Area)
-                </th>
-                <th colSpan={2}>배출량</th>
-                <th rowSpan={2}>
-                  증감율
-                  <br />
-                  (전년대비 %)
-                </th>
-              </tr>
-              <tr>
-                <th>전년발생량</th>
-                <th>발생량</th>
-              </tr>
-            </thead>
-            <tfoot>
-              <tr>
-                <td colSpan={15}>{itemList.length} 건</td>
-              </tr>
-            </tfoot>
-            <tbody>
-              {itemList.map(i => (
-                <tr key={i.REQ_NO} onClick={() => this.handleRowClick(i)} className="tr-center tr-pointer">
-                  <td>
-                    <Checkbox
-                      className="ant-checkbox-wrapper"
-                      checked={rowSelections.indexOf(i.REQ_NO) > -1}
-                      defaultChecked={false}
-                      onChange={() => this.handleRowSelection(i.REQ_NO)}
-                    />
-                  </td>
-                  <td>{i.FIRST_DEPTH}</td>
-                  <td>{i.SECOND_DEPTH}</td>
-                  <td>{i.PROCESS_METHOD}</td>
-                  <td>{i.OUTPUT_TYPE}</td>
-                  <td>{i.OUTPUT_AREA}</td>
-                  <td>{i.LAST_YEAR}</td>
-                  <td>{i.THIS_YEAR}</td>
-                  <td>{i.CALC_YOY}%</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </StyledHtmlTable>
-      </ContentsWrapper>
+            ))}
+          </tbody>
+        </table>
+      </StyledHtmlTable>
     );
   }
 }

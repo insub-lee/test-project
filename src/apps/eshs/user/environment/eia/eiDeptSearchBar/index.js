@@ -1,12 +1,14 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Modal, Input, Select, Popconfirm, message } from 'antd';
+import { Modal, Input, Select, Popconfirm } from 'antd';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 import DeptModal from './DeptModal';
 
@@ -37,7 +39,7 @@ class DeptSearchBar extends Component {
       {
         key: 'deptList',
         type: 'GET',
-        url: '/api/common/v1/account/getDeptList',
+        url: '/api/eshs/v1/common/eshsDeptList?COMP_CD=COMP_M000',
       },
     ];
     this.setState({ years });
@@ -87,23 +89,34 @@ class DeptSearchBar extends Component {
     const materialData = (formData && formData.materialData) || '';
     const REQ_NO = (formData && formData.materialData && formData.materialData.REQ_NO) || '';
     const CHK_YEAR = (formData && formData.materialData && formData.materialData.CHK_YEAR) || '';
-    const DEPT_CD = (formData && formData.materialData && formData.materialData.FROM_DEPT_CD) || '';
+    const DEPT_ID = (formData && formData.materialData && formData.materialData.FROM_DEPT_ID) || '';
     const materialCnt = (formData && formData.materialCnt) || 0;
     const itemList = (formData && formData.itemList) || [];
 
     if (id === 'eiMaterial') {
       if (!materialCnt || !itemList.length) {
-        message.warning('저장된 자료가 없습니다.');
-        return;
+        return message.info(<MessageContent>저장된 자료가 없습니다.</MessageContent>);
       }
-      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiUpdateComplete', { REQ_NO });
+      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiUpdateComplete', { REQ_NO }, (id1, res) => {
+        if (res && res.code === 200) return message.info(<MessageContent>완료 되었습니다</MessageContent>);
+        return message.info(<MessageContent>다시 시도해주십시오.</MessageContent>);
+      });
     } else if (id === 'eiStatement') {
       const validationCheck = itemList.filter(item => !item.ENV_IMPACT_SIZE && item);
       if (validationCheck.length) {
-        message.warning('모든 내용을 입력하셔야 합니다.');
-        return;
+        return message.info(<MessageContent>모든 내용을 입력하셔야 합니다.</MessageContent>);
       }
-      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiStatementComplete', { REQ_NO, CHK_YEAR, DEPT_CD });
+      submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiUpdateComplete', { ...materialData, itemList }, (id1, res) => {
+        if (res && res.code === 200) {
+          return submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiStatementComplete', { REQ_NO, CHK_YEAR, DEPT_ID }, (id2, res2) => {
+            if (res2 && res2.code === 200) {
+              return message.info(<MessageContent>완료 되었습니다</MessageContent>);
+            }
+            return message.info(<MessageContent>다시 시도해주십시오.</MessageContent>);
+          });
+        }
+        return message.info(<MessageContent>다시 시도해주십시오.</MessageContent>);
+      });
     } else if (id === 'eiImportantAssesment') {
       const { saveBeforeProcess } = this.props;
       // 완료시 ImportantAssesment 입력후 저장이 안된경우 저장후 완료처리
@@ -124,10 +137,10 @@ class DeptSearchBar extends Component {
     const searchFlag = (formData && formData.searchFlag) || false;
     const itemList = (formData && formData.itemList) || [];
     return (
-      <>
-        <div className="selSaveWrapper alignLeft">
+      <StyledCustomSearchWrapper className="search-wrapper-inline">
+        <div className="search-input-area">
           <span className="textLabel">평가년도</span>
-          <AntdSelect className="selectMid mr5" value={formData.CHK_YEAR} style={{ width: 130 }} onChange={this.handleYearChange}>
+          <AntdSelect className="select-sm mr5" value={formData.CHK_YEAR} style={{ width: 130 }} onChange={this.handleYearChange}>
             {years.map(y => (
               <Option key={y} value={y}>
                 {y}
@@ -136,7 +149,7 @@ class DeptSearchBar extends Component {
           </AntdSelect>
           <span className="textLabel">부서코드</span>
           <AntdSearch
-            className="ant-input-inline mr5"
+            className="input-search-sm ant-search-inline mr5"
             name="DEPT_CD"
             value={searchRow.DEPT_CD ? searchRow.DEPT_CD : myDept.DEPT_CD}
             style={{ width: 150 }}
@@ -145,22 +158,27 @@ class DeptSearchBar extends Component {
             onClick={this.handleModal}
             onSearch={this.handleModal}
           />
-          <AntdModal title="주관회사 부서 검색" visible={this.state.modalVisible} onCancel={this.handleModal} width={900} height={600} footer={[null]}>
-            <DeptModal deptList={deptList || []} handleModalRowClick={this.handleModalRowClick} handleModal={this.handleModal}></DeptModal>
-          </AntdModal>
-          <AntdInput className="ant-input-inline inputMid" value={searchRow.NAME_KOR ? searchRow.NAME_KOR : myDept.NAME_KOR} style={{ width: 150 }} readOnly />
-          <StyledButtonWrapper className="btn-wrap-inline btn-wrap-ml-5">
-            <StyledButton className="btn-primary btn-first" onClick={this.handleDeptSearch}>
-              검색
-            </StyledButton>
-            {eiMaterialCnt > 0 && itemList.length > 0 && !searchFlag && (
-              <Popconfirm title="완료하시겠습니까?" onConfirm={this.handleFinsh} okText="확인" cancelText="취소">
-                <StyledButton className="btn-primary">완료</StyledButton>
-              </Popconfirm>
-            )}
-          </StyledButtonWrapper>
+          <AntdInput
+            className="ant-input-sm ant-input-inline mr5"
+            value={searchRow.NAME_KOR ? searchRow.NAME_KOR : myDept.NAME_KOR}
+            style={{ width: 150 }}
+            readOnly
+          />
         </div>
-      </>
+        <div className="btn-area">
+          <StyledButton className="btn-gray btn-sm mr5" onClick={this.handleDeptSearch}>
+            검색
+          </StyledButton>
+          {eiMaterialCnt > 0 && itemList.length > 0 && !searchFlag && (
+            <Popconfirm title="완료하시겠습니까?" onConfirm={this.handleFinsh} okText="확인" cancelText="취소">
+              <StyledButton className="btn-primary btn-sm">완료</StyledButton>
+            </Popconfirm>
+          )}
+        </div>
+        <AntdModal title="주관회사 부서 검색" visible={this.state.modalVisible} onCancel={this.handleModal} width={900} height={600} footer={[null]}>
+          <DeptModal deptList={deptList || []} handleModalRowClick={this.handleModalRowClick} handleModal={this.handleModal}></DeptModal>
+        </AntdModal>
+      </StyledCustomSearchWrapper>
     );
   }
 }
