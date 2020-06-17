@@ -117,12 +117,8 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    const submitCallbackFunc = () => {
-      this.getMaterialList();
-      this.handleResetClick();
-    };
     return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetycontract`, requestValue, (key, response) =>
-      callBackAfterDelete(key, response, submitCallbackFunc),
+      callBackAfterDelete(key, response, this.getMaterialList),
     );
   };
 
