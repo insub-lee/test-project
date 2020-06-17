@@ -10,6 +10,7 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 
 const AntdSearch = StyledSearchInput(Input.Search);
 class List extends React.Component {
@@ -87,7 +88,9 @@ class List extends React.Component {
       message.success('변경되었습니다.');
     };
 
-    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue, submitCallbackFunc);
+    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue, (key, response) =>
+      callBackAfterPut(key, response, submitCallbackFunc),
+    );
   };
 
   isSelectSapMaterial = () => {
