@@ -98,7 +98,6 @@ class CustomThemeNodeContentRenderer extends Component {
     } = this.props;
     const nodeTitle = title || node.title;
     const nodeSubtitle = subtitle || node.subtitle;
-    console.debug('nodeinof', node);
     const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node);
     const isLandingPadActive = !didDrop && isDragging;
     const nodeContent = connectDragPreview(

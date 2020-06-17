@@ -6,10 +6,23 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+
+import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
+import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import moment from 'moment';
 
 const AntdInput = StyledInput(Input);
-
+const excelColumn = [
+  { title: '구분', width: { wpx: 150 }, field: 'FIRST_DEPTH', filter: 'agTextColumnFilter' },
+  { title: '소분류', width: { wpx: 150 }, field: 'SECOND_DEPTH', filter: 'agTextColumnFilter' },
+  { title: '처리방법', width: { wpx: 150 }, field: 'PROCESS_METHOD', filter: 'agTextColumnFilter' },
+  { title: '배출형태', width: { wpx: 150 }, field: 'OUTPUT_TYPE', filter: 'agTextColumnFilter' },
+  { title: '배출처(공정/Area)', width: { wpx: 150 }, field: 'OUTPUT_AREA', filter: 'agTextColumnFilter' },
+  { title: '전년발생량', width: { wpx: 150 }, field: 'LAST_YEAR', filter: 'agTextColumnFilter' },
+  { title: '발생량', width: { wpx: 150 }, field: 'THIS_YEAR', filter: 'agTextColumnFilter' },
+  { title: '증감율(전년대비 %)', width: { wpx: 150 }, field: 'CALC_YOY', filter: 'agTextColumnFilter' },
+];
 class ItemTable extends Component {
   constructor(props) {
     super(props);
@@ -143,9 +156,17 @@ class ItemTable extends Component {
     return (
       <StyledHtmlTable>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
-            Excel Download
-          </StyledButton>
+          <ExcelDownloadComp
+            isBuilder={false}
+            fileName={`Waste_${moment().format('YYYYMMDD')}`}
+            className="testClassName"
+            btnText="Excel Download"
+            sheetName={`Waste_${moment().format('YYYYMMDD')}`}
+            listData={itemList}
+            btnSize="btn-sm btn-first"
+            fields={createExcelData(excelColumn, 'FIELD', 'field')}
+            columns={excelColumn.map(item => ({ ...item, ...excelStyle }))}
+          />
           {!searchFlag && (
             <>
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>

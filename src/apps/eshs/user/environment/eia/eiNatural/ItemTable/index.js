@@ -7,8 +7,20 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
 
+import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
+import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import moment from 'moment';
 const AntdInput = StyledInput(Input);
 
+const excelColumn = [
+  { title: '대분류', width: { wpx: 150 }, field: 'FIRST_DEPTH', filter: 'agTextColumnFilter' },
+  { title: '소분류', width: { wpx: 150 }, field: 'SECOND_DEPTH', filter: 'agTextColumnFilter' },
+  { title: '사용처', width: { wpx: 150 }, field: 'USE_LOCATION', filter: 'agTextColumnFilter' },
+  { title: '부하율', width: { wpx: 150 }, field: 'LOAD_FACTOR', filter: 'agTextColumnFilter' },
+  { title: '사용량', width: { wpx: 150 }, field: 'USE_PERCENT', filter: 'agTextColumnFilter' },
+  { title: '단위', width: { wpx: 150 }, field: 'UNIT', filter: 'agTextColumnFilter' },
+];
 class ItemTable extends Component {
   constructor(props) {
     super(props);
@@ -139,9 +151,17 @@ class ItemTable extends Component {
     return (
       <StyledHtmlTable>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
-            Excel Download
-          </StyledButton>
+          <ExcelDownloadComp
+            isBuilder={false}
+            fileName={`Natural_${moment().format('YYYYMMDD')}`}
+            className="testClassName"
+            btnText="Excel Download"
+            sheetName={`Natural_${moment().format('YYYYMMDD')}`}
+            listData={itemList}
+            btnSize="btn-sm btn-first"
+            fields={createExcelData(excelColumn, 'FIELD', 'field')}
+            columns={excelColumn.map(item => ({ ...item, ...excelStyle }))}
+          />
           {!searchFlag && (
             <>
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>

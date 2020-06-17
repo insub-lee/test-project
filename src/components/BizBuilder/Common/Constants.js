@@ -11,3 +11,4 @@ export const CHANGE_VIEW_OPT_SEQ = 12;
 export const ON_ROW_CLICK_OPT_SEQ = 13;
 export const EXCEL_DOWNLOAD_OPT_SEQ = 14;
 export const TASK_FAVORITE_OPT_CODE = 'TFO';
+export const PAGINATION_OPT_CODE = 'PDO';

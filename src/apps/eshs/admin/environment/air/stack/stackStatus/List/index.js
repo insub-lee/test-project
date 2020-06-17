@@ -6,14 +6,26 @@ import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
+<<<<<<< HEAD
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
+>>>>>>> origin/magnachip
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import Contents from 'components/BizBuilder/Common/Contents';
-import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ, EXCEL_DOWNLOAD_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
+
+// import Loadable from 'components/Loadable';
+// import Loading from '../Common/Loading';
 
 const AntdTable = StyledAntdTable(Table);
+const StyledButton = StyledAntdButton(Button);
 
 class ListPage extends Component {
   constructor(props) {
@@ -23,15 +35,40 @@ class ListPage extends Component {
       isRowNo: false,
       isOnRowClick: false,
       rowClickView: 'VIEW',
+      StyledWrap: StyledViewDesigner,
+      isExcelDown: false,
+      btnText: '',
+      fileName: '',
+      sheetName: '',
+      columns: [],
+      fields: [],
+      paginationIdx: 1,
+      pageSize: 10,
     };
   }
 
   componentDidMount = () => {
-    const { workInfo, listMetaSeq } = this.props;
+    const { workInfo, listMetaSeq, viewSeq } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
     let isOnRowClick = false;
     let rowClickView = 'VIEW';
+    let isExcelDown = false;
+    let btnTex = '';
+    let fileName = '';
+    let sheetName = '';
+    let columns = [];
+    let fields = [];
+
+    if (workInfo.BUILDER_STYLE_PATH) {
+      // const StyledWrap = Loadable({
+      //   loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
+      //   loading: Loading,
+      // });
+      const StyledWrap = DefaultStyleInfo(workInfo.BUILDER_STYLE_PATH);
+      this.setState({ StyledWrap });
+    }
+
     if (workInfo && workInfo.OPT_INFO) {
       workInfo.OPT_INFO.forEach(opt => {
         if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
@@ -43,12 +80,26 @@ class ListPage extends Component {
           } else {
             const ObjOptVal = JSON.parse(opt.OPT_VALUE);
             const optMetalist = ObjOptVal.LIST || [];
-            isOnRowClick = optMetalist.includes(listMetaSeq.toString());
+            const targetViewSeq = listMetaSeq === -1 ? viewSeq : listMetaSeq;
+            isOnRowClick = optMetalist.includes(targetViewSeq.toString());
             rowClickView = ObjOptVal.VIEW || 'VIEW';
           }
         }
+        if (opt.OPT_SEQ === EXCEL_DOWNLOAD_OPT_SEQ && opt.ISUSED === 'Y') {
+          isExcelDown = true;
+          if (isJSON(opt.OPT_VALUE)) {
+            const ObjOptVal = JSON.parse(opt.OPT_VALUE);
+            const { columnInfo } = ObjOptVal;
+            btnTex = ObjOptVal.btnTitle || '엑셀받기';
+            fileName = ObjOptVal.fileName || 'excel';
+            sheetName = ObjOptVal.sheetName || 'sheet1';
+            columns = columnInfo.columns || [];
+            fields = columnInfo.fields || [];
+          }
+        }
+        // todo page size option
       });
-      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
+      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView, isExcelDown, btnTex, fileName, sheetName, columns, fields });
     }
   };
 
@@ -57,6 +108,13 @@ class ListPage extends Component {
   //   const { removeReduxState, id } = this.props;
   //   removeReduxState(id);
   // }
+
+  setPaginationIdx = paginationIdx =>
+    this.setState({ paginationIdx }, () => {
+      const { sagaKey, workSeq, conditional, getListData } = this.props;
+      const { pageSize } = this.state;
+      getListData(sagaKey, workSeq, conditional, paginationIdx, pageSize);
+    });
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -86,7 +144,7 @@ class ListPage extends Component {
     return <div />;
   };
 
-  setColumns = cols => {
+  setColumns = (cols, widths) => {
     const { isRowNo } = this.state;
     const columns = [];
     if (isRowNo) {
@@ -95,14 +153,16 @@ class ListPage extends Component {
         title: 'No.',
       });
     }
-    cols.forEach(node => {
+    cols.forEach((node, idx) => {
       if (node.comp && node.comp.COMP_FIELD) {
         columns.push({
           dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
           title: node.comp.CONFIG.property.HEADER_NAME_KOR,
-          width: '150px', // builder style 안정화시 수정할것
           // width: (node.style && node.style.width) || undefined,
+          width: (widths && widths[idx] && `${widths[idx]}%`) || undefined,
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
+          className: node.addonClassName && node.addonClassName.length > 0 ? `${node.addonClassName.toString().replaceAll(',', ' ')}` : '',
+          align: (node.style && node.style.textAlign) || undefined,
         });
       }
     });
@@ -135,9 +195,9 @@ class ListPage extends Component {
   };
 
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
-    const { isMultiDelete, isOnRowClick } = this.state;
-    const columns = this.setColumns(group.rows[0].cols);
+    const { listData, listSelectRowKeys, workInfo, customOnRowClick, listTotalCnt } = this.props;
+    const { isMultiDelete, isOnRowClick, paginationIdx } = this.state;
+    const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
     if (isMultiDelete) {
@@ -157,6 +217,7 @@ class ListPage extends Component {
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
           <AntdTable
+            bordered
             rowKey="TASK_SEQ"
             key={`${group.key}_list`}
             className="view-designer-list"
@@ -165,6 +226,8 @@ class ListPage extends Component {
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
+            pagination={{ current: paginationIdx, total: listTotalCnt }}
+            onChange={pagination => this.setPaginationIdx(pagination.current)}
           />
         </Group>
       </div>
@@ -184,8 +247,12 @@ class ListPage extends Component {
       removeMultiTask,
       isBuilderModal,
       changeBuilderModalState,
+      listData,
+      ListCustomButtons,
+      useExcelDownload,
+      conditional,
     } = this.props;
-    const { isMultiDelete } = this.state;
+    const { isMultiDelete, StyledWrap, isExcelDown, btnTex, fileName, sheetName, columns, fields, pageSize } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -198,7 +265,7 @@ class ListPage extends Component {
       } = workFlowConfig;
 
       return (
-        <StyledViewDesigner>
+        <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
             {groups.map((group, groupIndex) => {
               if (group.type === 'listGroup') {
@@ -206,7 +273,7 @@ class ListPage extends Component {
               }
               return (
                 (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
-                  <div key={group.key}>
+                  <StyledSearchWrapper key={group.key}>
                     {group.useTitle && <GroupTitle title={group.title} />}
                     <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
                       <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
@@ -222,7 +289,9 @@ class ListPage extends Component {
                                         {...col}
                                         comp=""
                                         colSpan={col.span}
-                                        className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
+                                        className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}${
+                                          col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName.toString().replaceAll(',', ' ')}` : ''
+                                        }`}
                                       >
                                         <Contents>
                                           {col.comp &&
@@ -247,18 +316,30 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <Button type="primary" className="btn-primary" onClick={() => getListData(id, workSeq)}>
-                            Search
-                          </Button>
+                          <StyledButton className="btn-gray btn-sm" onClick={() => this.setPaginationIdx(1)}>
+                            검색
+                          </StyledButton>
+                          {useExcelDownload && isExcelDown && (
+                            <ExcelDownloadComp
+                              isBuilder={false}
+                              fileName={fileName || 'excel'}
+                              className="workerExcelBtn"
+                              btnText={btnTex || '엑셀받기'}
+                              sheetName={sheetName || 'sheet1'}
+                              columns={columns || []}
+                              fields={fields || []}
+                              listData={listData || []}
+                            />
+                          )}
                         </div>
                       )}
                     </Group>
-                  </div>
+                  </StyledSearchWrapper>
                 )
               );
             })}
           </Sketch>
-        </StyledViewDesigner>
+        </StyledWrap>
       );
     }
     return '';
@@ -282,6 +363,8 @@ ListPage.propTypes = {
   changeBuilderModalState: PropTypes.func,
   changeViewPage: PropTypes.func,
   customOnRowClick: PropTypes.any,
+  listData: PropTypes.array,
+  useExcelDownload: PropTypes.bool,
 };
 
 ListPage.defaultProps = {
@@ -291,6 +374,7 @@ ListPage.defaultProps = {
     },
   },
   customOnRowClick: undefined,
+  useExcelDownload: true,
 };
 
 export default ListPage;

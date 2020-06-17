@@ -8,6 +8,11 @@ import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import moment from 'moment';
+import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
+import { materialItemColumnDefs } from './columnDefs';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
@@ -167,9 +172,17 @@ class ItemTable extends Component {
     return (
       <StyledHtmlTable>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
-            Excel Download
-          </StyledButton>
+          <ExcelDownloadComp
+            isBuilder={false}
+            fileName={`Material_${moment().format('YYYYMMDD')}`}
+            className="testClassName"
+            btnText="Excel Download"
+            sheetName={`Material_${moment().format('YYYYMMDD')}`}
+            listData={itemList}
+            btnSize="btn-sm btn-first"
+            fields={createExcelData(materialItemColumnDefs, 'FIELD', 'field')}
+            columns={materialItemColumnDefs.map(item => ({ ...item, ...excelStyle }))}
+          />
           {!searchFlag && (
             <>
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
@@ -224,7 +237,7 @@ class ItemTable extends Component {
                 <AntdSelect className="select-sm" value={itemData.STATUS || '정상'} onChange={this.handleStatusOnChange}>
                   <Option value="정상">정상</Option>
                   <Option value="비정상">비정상</Option>
-                </AntdSelect>{' '}
+                </AntdSelect>
               </td>
               <td>
                 <AntdInput
