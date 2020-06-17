@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
 import { Modal, Select, Input } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-
-import moment from 'moment';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import UserSearchModal from 'apps/eshs/common/userSearchModal';
+
 import Questionnaire from './Questionnaire';
 import HospitalItem from './HospitalItem';
 
-const AntdModal = StyledAntdModalPad(Modal);
+const AntdModal = StyledAntdModal(Modal);
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 
@@ -35,6 +37,9 @@ class Reservation extends Component {
     isFamily: false,        // 배우자 존재여부
     isDelFamilyInfo: false, // 배우자 검진정보 삭제여부(등록 후 삭제했을경우 DB삭제하기위한 값)
     isRcv: true,            // 검진대상자 여부
+    CHK_YEAR: '',
+    SCH_USER_ID: 0,         // 검진내역 검색할 사용자 ID(매니저만 검색 가능)
+    EMP_NO: '',
   };
 
   componentWillMount() {
@@ -62,12 +67,17 @@ class Reservation extends Component {
         params: {},
       },
     ];
+    this.setState({
+      CHK_YEAR: currYear.toString(),
+      SCH_USER_ID: profile.USER_ID,
+      EMP_NO: profile.EMP_NO,
+    });
     spinningOn();
     getCallDataHandler(sagaKey, apiAry, this.initState);
   }
 
   initState = () => {
-    const { sagaKey, getCallDataHandlerReturnRes, result, spinningOff } = this.props;
+    const { result, spinningOff, sagaKey, getCallDataHandlerReturnRes } = this.props;
     this.setState({
       hospitalList: result.hospitalList && result.hospitalList.list ? result.hospitalList.list : [],
       userInfo: result.userDetail && result.userDetail.data ? result.userDetail.data : {},
@@ -76,6 +86,22 @@ class Reservation extends Component {
       isFamily: result.userDetail && result.userDetail.data && result.userDetail.data.FAM_NAME && result.userDetail.data.FAM_REGNO ? true : false,
       isRcv: result.reservation && result.reservation.detail && result.reservation.detail.reservationInfo ? true : false,
     });
+
+    if (result.reservation && result.reservation.detail && result.reservation.detail.reservationInfo) {
+      const apiInfo = {
+        key: 'quotaList',
+        url: `/api/eshs/v1/common/health/healthChkHospitalQuota?HOSPITAL_CODE=${result.reservation.detail.reservationInfo.HOSPITAL_CODE}`,
+        type: 'GET',
+        params: {},
+      }
+      getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, res) => {
+        if (res && res.list) {
+          this.setState({
+            quotaList: res.list,
+          });
+        }
+      });
+    }
     spinningOff();
   };
 
@@ -87,8 +113,9 @@ class Reservation extends Component {
     this.setState({ isQuestionnaireShow: false });
   };
 
+  // 추가검진항목 클릭 - 검진항목선택 팝업
   onClickChkItem = gubun => {
-    const { reservationInfo, familyInfo } = this.state;
+    const { reservationInfo, familyInfo, hospitalList } = this.state;
     let target = reservationInfo;
     if (gubun === 2) {
       target = familyInfo;
@@ -101,13 +128,18 @@ class Reservation extends Component {
       message.info(<MessageContent>예약일을 선택해주세요.</MessageContent>);
       return false;
     }
-    this.setState({ isChkItemShow: true, gubun });
+
+    this.setState({
+      isChkItemShow: true,
+      gubun,
+    });
   };
 
   onCancelChkItem = () => {
     this.setState({ isChkItemShow: false });
   };
 
+  // 추가검진항목 팝업에서 선택버튼 클릭시
   onOkChkItem = (chkType, selectedItems, vals) => {
     this.setState(prevState => {
       const { reservationInfo, familyInfo, gubun, checkedVals, famCheckedVals } = prevState;
@@ -140,7 +172,7 @@ class Reservation extends Component {
     });
   }
 
-  // 검진기관 변경시 선택항목 초기화
+  // 검진기관 변경시 추가검진항목 초기화
   onChangeHospital = (val, gubun) => {
     this.setState(prevState => {
       const { reservationInfo, familyInfo, checkedVals, famCheckedVals, hospitalList } = prevState;
@@ -179,6 +211,7 @@ class Reservation extends Component {
     });
   };
 
+  // 예약정보 state변경
   onChangeReservationInfo = (key, val, gubun) => {
     this.setState(prevState => {
       const { reservationInfo, familyInfo, isFamily } = prevState;
@@ -201,6 +234,7 @@ class Reservation extends Component {
     });
   };
 
+  // 배우자검진 추가
   addFamilyReservation = () => {
     const { sagaKey, getCallDataHandlerReturnRes } = this.props;
     const apiInfo = {
@@ -236,10 +270,12 @@ class Reservation extends Component {
     });
   };
 
+  // 배우자 검진 삭제(화면에서만 삭제) - 저장시 DB에서 삭제
   removeFamilyReservation = () => {
     this.setState({ familyInfo: {}, isDelFamilyInfo: true });
   }
 
+  // 저장
   onSave = () => {
     const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
     const { reservationInfo, familyInfo, isDelFamilyInfo } = this.state;
@@ -275,7 +311,34 @@ class Reservation extends Component {
         });
       }
     });
-  }
+  };
+
+  onUserSearchAfter = row => {
+    if (row) {
+      this.setState({
+        SCH_USER_ID: row.USER_ID,
+        EMP_NO: row.EMP_NO,
+      });
+    }
+  };
+
+  onSearchUserHealthChkReservation = () => {
+    const { sagaKey, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    const apiAry = [
+      {
+        key: 'reservation',
+        url: `/api/eshs/v1/common/health/healthChkReservation?CHK_YEAR=${this.state.CHK_YEAR}&SCH_USER_ID=${this.state.SCH_USER_ID}`,
+        type: 'GET',
+      },
+      {
+        key: 'userDetail',
+        url: `/api/common/v1/account/userDetail/${this.state.SCH_USER_ID}`,
+        type: 'GET',
+      },
+    ];
+    spinningOn();
+    getCallDataHandler(sagaKey, apiAry, this.initState);
+  };
 
   render() {
     const { hospitalList, userInfo, reservationInfo, familyInfo, checkedVals, famCheckedVals, quotaList, gubun } = this.state;
@@ -309,6 +372,14 @@ class Reservation extends Component {
           />
         </AntdModal>
         <StyledContentsWrapper>
+          {this.props.isManager && (
+            <StyledCustomSearchWrapper>
+              <div className="search-input-area">
+                <UserSearchModal colData={this.state.EMP_NO} onClickRow={this.onUserSearchAfter} />
+                <StyledButton className="btn-gray btn-sm" onClick={this.onSearchUserHealthChkReservation}>검색</StyledButton>
+              </div>
+            </StyledCustomSearchWrapper>
+          )}
           <StyledHtmlTable>
           {this.state.isRcv ? (
             <table>
@@ -340,7 +411,7 @@ class Reservation extends Component {
                   <th>전화번호</th>
                   <td>
                     <AntdInput
-                      value={reservationInfo.RCV_PHONE || userInfo.MOBILE_TEL_NO} className="int-input-sm"
+                      value={reservationInfo.RCV_PHONE || userInfo.MOBILE_TEL_NO} className="ant-input-sm"
                       onChange={e => this.onChangeReservationInfo('RCV_PHONE', e.target.value, 1)}
                     />
                   </td>
@@ -365,7 +436,6 @@ class Reservation extends Component {
                   <td>{reservationInfo.CHK_TYPE && (`${reservationInfo.CHK_TYPE}형(${reservationInfo.CHK_TYPE_NAME})`)}</td>
                   <th>검진예약일</th>
                   <td colSpan={3}>
-                    {/* <AntdSelect placeholder="월 선택" className="select-sm mr5" style={{ width: '28%' }} /> */}
                     <AntdSelect
                       value={reservationInfo.APP_DT}
                       placeholder="검진일 선택" className="select-sm" style={{ width: '50%' }}
@@ -384,7 +454,7 @@ class Reservation extends Component {
                   </td>
                 </tr>
                 <tr>
-                  <th>선택항목</th>
+                  <th>추가검진항목</th>
                   <td colSpan={7}>
                     <AntdInput
                       value={reservationInfo.CHK_ITEMS} className="ant-input-sm" style={{ width: '100%', cursor: 'pointer' }} readOnly
@@ -432,7 +502,7 @@ class Reservation extends Component {
                       </td>
                     </tr>
                     <tr>
-                      <th>선택항목</th>
+                      <th>추가검진항목</th>
                       <td colSpan={7}>
                         <AntdInput
                           value={familyInfo.CHK_ITEMS} className="ant-input-sm" style={{ width: '100%', cursor: 'pointer' }} readOnly
@@ -446,7 +516,7 @@ class Reservation extends Component {
                   <th>수령지</th>
                   <td colSpan={7}>
                     <AntdInput
-                      value={reservationInfo.RCV_ADDR} className="ant-input-sm" style={{ width: '100%' }}
+                      value={reservationInfo.RCV_ADDR || userInfo.ADDRESS} className="ant-input-sm" style={{ width: '100%' }}
                       onChange={e => this.onChangeReservationInfo('RCV_ADDR', e.target.value, 1)}
                     />
                   </td>

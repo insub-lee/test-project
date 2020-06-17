@@ -235,7 +235,7 @@ class List extends Component {
 
   handleDeleteWorker = row => {
     const { sagaKey: id, changeFormData } = this.props;
-    changeFormData(id, 'WORKER_SEQ', row.workerSeq);
+    changeFormData(id, 'WORKER_SEQ', row.WORKER_SEQ);
   };
 
   // render Input Tag

@@ -218,6 +218,7 @@ function* submitExtraHandler({ id, httpMethod, apiUrl, submitData, callbackFunc,
       httpMethodInfo = Axios.get;
       break;
   }
+
   const response = yield call(httpMethodInfo, apiUrl, submitData);
 
   if (typeof callbackFunc === 'function') {
@@ -247,7 +248,7 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeIsLo
   if (formData) {
     if (viewType === 'VIEW') {
       yield call(
-        Axios.post,
+        Axios.postNoResponse,
         '/api/builder/v1/work/taskLog',
         { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, TASK_ORIGIN_SEQ: formData.TASK_ORIGIN_SEQ, LOG_TYPE: 'R' } },
         { BUILDER: 'setTaskLog' },
@@ -487,7 +488,7 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
   }
 
   yield call(
-    Axios.post,
+    Axios.postNoResponse,
     '/api/builder/v1/work/taskLog',
     { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, TASK_ORIGIN_SEQ: formData.TASK_ORIGIN_SEQ, LOG_TYPE: 'C' } },
     { BUILDER: 'setTaskLog' },
@@ -649,7 +650,7 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc, change
   }
 
   yield call(
-    Axios.post,
+    Axios.postNoResponse,
     '/api/builder/v1/work/taskLog',
     { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, TASK_ORIGIN_SEQ: formData.TASK_ORIGIN_SEQ, LOG_TYPE: 'U' } },
     { BUILDER: 'setTaskLog' },
@@ -696,7 +697,12 @@ function* deleteTask({ id, reloadId, workSeq, taskSeq, changeViewPage, callbackF
   }
 
   if (response) {
-    yield call(Axios.post, '/api/builder/v1/work/taskLog', { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, LOG_TYPE: 'D' } }, { BUILDER: 'setTaskLog' });
+    yield call(
+      Axios.postNoResponse,
+      '/api/builder/v1/work/taskLog',
+      { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, LOG_TYPE: 'D' } },
+      { BUILDER: 'setTaskLog' },
+    );
   }
 
   const conditional = yield select(selectors.makeSelectConditionalById(id));
@@ -766,7 +772,7 @@ function* getDraftProcess({ id, draftId }) {
   yield put(actions.setDraftProcess(id, draftProcess));
 }
 
-function* getListData({ id, workSeq, conditional }) {
+function* getListData({ id, workSeq, conditional, pageIdx, pageCnt }) {
   const searchData = yield select(selectors.makeSelectSearchDataById(id));
   const whereString = [];
   const keySet = Object.keys(searchData);
@@ -776,10 +782,25 @@ function* getListData({ id, workSeq, conditional }) {
 
   if (conditional && conditional.length > 0) whereString.push(conditional);
 
-  const responseList = yield call(Axios.post, `/api/builder/v1/work/taskList/${workSeq}`, { PARAM: { whereString } }, { BUILDER: 'getTaskList' });
+  let PAGE = 1;
+  let PAGE_CNT = 10;
+  if (pageIdx && pageIdx > 0) {
+    PAGE = pageIdx;
+  }
+
+  if (pageCnt && pageCnt > 0) {
+    PAGE_CNT = pageCnt;
+  }
+
+  const responseList = yield call(
+    Axios.post,
+    `/api/builder/v1/work/taskList/${workSeq}`,
+    { PARAM: { whereString, PAGE, PAGE_CNT } },
+    { BUILDER: 'getTaskList' },
+  );
   if (responseList) {
-    const { list } = responseList;
-    yield put(actions.setListDataByReducer(id, list));
+    const { list, listTotalCnt } = responseList;
+    yield put(actions.setListDataByReducer(id, list, listTotalCnt));
   }
 }
 
@@ -818,7 +839,7 @@ function* removeMultiTask({ id, reloadId, callbackFunc }) {
 
     if (response) {
       yield call(
-        Axios.post,
+        Axios.postNoResponse,
         '/api/builder/v1/work/taskLog',
         { PARAM: { WORK_SEQ: workSeq, taskList: removeList, LOG_TYPE: 'D', isMulti: true } },
         { BUILDER: 'setTaskLog' },

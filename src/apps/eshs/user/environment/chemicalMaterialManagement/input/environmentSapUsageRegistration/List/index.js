@@ -1,27 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Input, InputNumber, message } from 'antd';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-
-import { Table, Input, InputNumber, Select, Checkbox, Popconfirm, message } from 'antd';
-import moment from 'moment';
-import request from 'utils/request';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
 
-const { Option } = Select;
-const AntdTable = StyledLineTable(Table);
-const AntdInput = StyledInput(Input);
-const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
 class List extends React.Component {
   constructor(props) {
@@ -29,230 +18,21 @@ class List extends React.Component {
     this.state = {
       visible: false,
       requestValue: {
-        UNIT: '',
         CONVERT_COEFFICIENT: '',
-        SHIPMENT: 0,
-        YEAR: moment()
-          .year()
-          .toString(),
-        USAGE: 0,
       },
-      dataSource: [],
-      checkedIndex: -1,
-      selectedIndex: -1,
-      isModified: false,
     };
   }
 
-  columns = [
-    {
-      title: '',
-      align: 'center',
-      render: (text, record, index) =>
-        index !== 0 ? (
-          <Checkbox onChange={e => this.handleCheckboxChange(e, index, record)} checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index} />
-        ) : (
-          ''
-        ),
-    },
-    {
-      title: '연도',
-      dataIndex: 'YEAR',
-      key: 'YEAR',
-      align: 'center',
-      render: (text, record, index) => {
-        if (index === 0) {
-          return (
-            <AntdSelect
-              className="select-sm"
-              defaultValue={moment()
-                .year()
-                .toString()}
-              onChange={this.handleYearChange}
-              style={{ width: '50%' }}
-              disabled={this.state.isModified && !index}
-            >
-              {this.createYearRange().map(item => (
-                <Option value={item.toString()}>{item.toString()}</Option>
-              ))}
-            </AntdSelect>
-          );
-        }
-        if (index === this.state.selectedIndex) {
-          return (
-            <AntdSelect defaultValue={record.YEAR} onChange={this.handleYearChange} style={{ width: '50%' }} disabled={this.state.isModified && !index}>
-              {this.createYearRange().map(item => (
-                <Option value={item.toString()}>{item.toString()}</Option>
-              ))}
-            </AntdSelect>
-          );
-        }
-        return <div>{text}</div>;
+  getMaterialList = () => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'materialList',
+        type: 'GET',
+        url: `/api/eshs/v1/common/eshschemicalmaterialsap`,
       },
-    },
-    {
-      title: '출고량',
-      dataIndex: 'SHIPMENT',
-      key: 'SHIPMENT',
-      align: 'center',
-      render: (text, record, index) => {
-        const { requestValue, isModified, selectedIndex } = this.state;
-        if (index === 0) {
-          return (
-            <InputNumber
-              placeholder="출고량을 입력하세요."
-              style={{ width: '70%' }}
-              onChange={this.handleShipmentChange}
-              value={isModified ? '' : requestValue.SHIPMENT}
-              disabled={isModified && !index}
-            />
-          );
-        }
-        if (index === selectedIndex) {
-          return (
-            <InputNumber
-              placeholder="출고량을 입력하세요."
-              defaultValue={record.SHIPMENT}
-              style={{ width: '70%' }}
-              onChange={this.handleShipmentChange}
-              disabled={isModified && !index}
-            />
-          );
-        }
-        return <div>{text}</div>;
-      },
-    },
-    {
-      title: '제품 사용량',
-      dataIndex: 'USAGE',
-      key: 'USAGE',
-      align: 'center',
-      render: (text, record, index) => {
-        const { requestValue, selectedIndex, isModified } = this.state;
-        if (index === 0) {
-          return <div>{Math.floor(isModified ? 0 : requestValue.SHIPMENT * requestValue.CONVERT_COEFFICIENT * 100) / 100 || 0}</div>;
-        }
-        if (index === selectedIndex) {
-          return <div>{Math.floor(!isModified ? 0 : requestValue.SHIPMENT * requestValue.CONVERT_COEFFICIENT * 100) / 100 || 0}</div>;
-        }
-        return <div>{text}</div>;
-      },
-    },
-    {
-      title: '',
-      align: 'center',
-      width: '20%',
-      render: (text, record, index) => {
-        const { selectedIndex } = this.state;
-        if (index === 0) {
-          return (
-            <StyledButton
-              className="btn-primary btn-first btn-sm"
-              onClick={this.isValid() ? this.handleInputClick : () => message.error('중복된 연도가 있습니다.')}
-            >
-              저장
-            </StyledButton>
-          );
-        }
-        if (index === selectedIndex) {
-          return (
-            <>
-              <StyledButton
-                className="btn-primary btn-first btn-sm"
-                onClick={this.isValid() || this.isModifyValid() ? () => this.updateSapUsage(record, index) : () => message.error('중복된 연도가 있습니다.')}
-              >
-                저장
-              </StyledButton>
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.handleCancelClick}>
-                취소
-              </StyledButton>
-            </>
-          );
-        }
-        return (
-          <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.handleModifyClick(record, index)}>
-            수정
-          </StyledButton>
-        );
-      },
-    },
-  ];
-
-  handleInputClick = () => {
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const { requestValue } = this.state;
-    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue);
-    submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, requestValue, () => this.getSapUsage(requestValue));
-    this.setState(prevState => ({
-      requestValue: Object.assign(prevState.requestValue, { SHIPMENT: 0, USAGE: 0, YEAR: moment().year() }),
-    }));
-  };
-
-  handleModifyClick = (record, index) => {
-    this.setState(prevState => ({
-      isModified: true,
-      selectedIndex: index,
-      requestValue: Object.assign(prevState.requestValue, record),
-    }));
-  };
-
-  updateSapUsage = () => {
-    const { requestValue } = this.state;
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
-
-    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue);
-    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, requestValue, () => this.getSapUsage(requestValue));
-    this.setState(prevState => ({
-      isModified: false,
-      selectedIndex: -1,
-      requestValue: Object.assign(prevState.requestValue, { YEAR: moment().year(), SHIPMENT: 0 }),
-    }));
-  };
-
-  isValid = () => {
-    const { requestValue, dataSource } = this.state;
-    return dataSource.findIndex(item => item.YEAR === requestValue.YEAR.toString()) === -1;
-  };
-
-  isModifyValid = () => {
-    const { requestValue, dataSource, selectedIndex } = this.state;
-    return dataSource[selectedIndex].YEAR === requestValue.YEAR;
-  };
-
-  handleSapDeleteClick = () => {
-    const { requestValue, selectedRecord } = this.state;
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const params = { USAGE_ID: selectedRecord.USAGE_ID };
-    submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, params, () => this.getSapUsage(requestValue));
-    this.setState({
-      checkedIndex: -1,
-      selectedRecord: {},
-      selectedIndex: -1,
-      isModified: false,
-    });
-  };
-
-  handleCancelClick = () => {
-    this.setState(prevState => ({
-      isModified: false,
-      selectedIndex: -1,
-      requestValue: Object.assign(prevState.requestValue, { SHIPMENT: 0 }),
-    }));
-  };
-
-  createYearRange = () => {
-    const yearRange = [];
-    const maxYear = moment()
-      .add(5, 'year')
-      .year();
-    let minYear = moment()
-      .subtract(4, 'year')
-      .year();
-    while (minYear !== maxYear) {
-      yearRange.push(minYear);
-      minYear += 1;
-    }
-    return yearRange;
+    ];
+    getCallDataHandler(id, apiArr, this.setDataSource);
   };
 
   handleSearchClick = () => {
@@ -271,47 +51,6 @@ class List extends React.Component {
     this.setState(prevState => ({
       requestValue: Object.assign(prevState.requestValue, record),
       visible: false,
-      isModified: false,
-      selectedIndex: -1,
-      checkedIndex: -1,
-    }));
-    this.getSapUsage(record);
-  };
-
-  getSapUsage = ({ SAP_NO }) => {
-    const getSapUsage = request({
-      method: 'GET',
-      url: `/api/eshs/v1/common/eshschemicalmaterialsapusage?SAP_NO=${SAP_NO}`,
-    });
-    this.setDataSource(getSapUsage);
-  };
-
-  setDataSource = data => {
-    data.then(res => this.setState({ dataSource: [{}, ...(res.response && res.response.list)] }));
-  };
-
-  handleShipmentChange = value => {
-    const { requestValue } = this.state;
-    const valueObj = {
-      SHIPMENT: value,
-      USAGE: Math.floor(value * requestValue.CONVERT_COEFFICIENT * 100) / 100 || 0,
-    };
-
-    this.setState(prevState => ({
-      requestValue: Object.assign(prevState.requestValue, valueObj),
-    }));
-  };
-
-  handleInputChange = e => {
-    let valueObj = {};
-    if (!!e && typeof e === 'object') {
-      valueObj = { [e.target.name]: e.target.value };
-    }
-    if (typeof e === 'string') {
-      valueObj = { IS_IMPORT: e };
-    }
-    return this.setState(prevState => ({
-      requestValue: Object.assign(prevState.requestValue, valueObj),
     }));
   };
 
@@ -336,36 +75,19 @@ class List extends React.Component {
         NAME_SAP: '',
         UNIT: '',
       },
-      dataSource: [],
-      isModified: false,
-      selectedIndex: -1,
     });
-  };
-
-  handleYearChange = YEAR => {
-    this.setState(prevState => ({
-      requestValue: Object.assign(prevState.requestValue, { YEAR }),
-    }));
   };
 
   handleMasterModifyClick = () => {
     const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue);
-  };
 
-  handleCheckboxChange = (e, index, record) => {
-    if (e.target.checked) {
-      this.setState({
-        checkedIndex: index,
-        selectedRecord: record,
-      });
-    } else {
-      this.setState({
-        checkedIndex: -1,
-        selectedRecord: '',
-      });
-    }
+    const submitCallbackFunc = () => {
+      this.getMaterialList();
+      message.success('변경되었습니다.');
+    };
+
+    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue, submitCallbackFunc);
   };
 
   isSelectSapMaterial = () => {
@@ -379,37 +101,51 @@ class List extends React.Component {
       dataIndex: 'SAP_NO',
       key: 'SAP_NO',
       align: 'center',
+      width: '20%',
     },
     {
       title: 'NAME_SAP',
       dataIndex: 'NAME_SAP',
       key: 'NAME_SAP',
       align: 'center',
+      width: '40%',
+    },
+    {
+      title: '단위',
+      dataIndex: 'UNIT',
+      key: 'UNIT',
+      align: 'center',
+      width: '20%',
+    },
+    {
+      title: '환산계수',
+      dataIndex: 'CONVERT_COEFFICIENT',
+      key: 'CONVERT_COEFFICIENT',
+      align: 'center',
+      width: '20%',
     },
   ];
 
   render() {
     const {
-      columns,
       ModalColumns,
-      handleInputChange,
       handleInputNumberChange,
       handleModalClose,
       setRequestValue,
       handleSearchClick,
       handleResetClick,
       handleMasterModifyClick,
-      handleSapDeleteClick,
       isSelectSapMaterial,
+      getMaterialList,
     } = this;
-    const { requestValue, visible, dataSource, checkedIndex } = this.state;
+    const { requestValue, visible } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
-        <ContentsWrapper>
-          <StyledSearchWrap>
-            <div className="search-inner">
-              <span className="input-label">화학물 추가</span>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <span className="text-label">화학물 추가</span>
               <AntdSearch
                 className="ant-search-inline input-search-mid mr5"
                 placeHolder="검색"
@@ -417,76 +153,50 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <StyledButtonWrapper className="btn-wrap-inline">
-                <StyledButton className="btn-primary btn-first" onClick={handleMasterModifyClick}>
-                  수정
-                </StyledButton>
-                <StyledButton className="btn-light" onClick={handleResetClick}>
-                  초기화
-                </StyledButton>
-              </StyledButtonWrapper>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={handleMasterModifyClick}>
+                수정
+              </StyledButton>
+              <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
+                초기화
+              </StyledButton>
             </div>
-          </StyledSearchWrap>
-          <div className="tableWrapper">
-            <StyledHtmlTable>
-              <table>
-                <colgroup>
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <th>SAP NO.</th>
-                    <td>{requestValue.SAP_NO}</td>
-                    <th>화학물질명_SAP</th>
-                    <td>{requestValue.NAME_SAP}</td>
-                    <th>단위</th>
-                    <td>
-                      <AntdInput
-                        className="ant-input-sm"
-                        name="UNIT"
-                        value={requestValue.UNIT}
-                        onChange={handleInputChange}
-                        style={{ width: '100%', visibility: !isSelectSapMaterial() ? 'hidden' : 'visible' }}
-                      />
-                    </td>
-                    <th>kg환산계수</th>
-                    <td>
-                      <InputNumber
-                        value={requestValue.CONVERT_COEFFICIENT}
-                        onChange={value => handleInputNumberChange(value, 'CONVERT_COEFFICIENT')}
-                        className="col-input-number"
-                        style={{ width: '100%', visibility: !isSelectSapMaterial() ? 'hidden' : 'visible' }}
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </StyledHtmlTable>
-          </div>
-          {!isSelectSapMaterial() ? null : (
-            <>
-              <div className="selSaveWrapper">
-                <Popconfirm
-                  placement="leftTop"
-                  title={checkedIndex === -1 ? '삭제할 항목을 선택하세요.' : '삭제하시겠습니까?'}
-                  onConfirm={checkedIndex === -1 ? null : handleSapDeleteClick}
-                >
-                  <StyledButton className="btn-light">선택 삭제</StyledButton>
-                </Popconfirm>
-              </div>
-              <AntdTable columns={columns} dataSource={dataSource} pagination={false} />
-              <div className="div-comment div-comment-antd">제품사용량: 당해출고량 * kg환산계수</div>
-            </>
-          )}
-        </ContentsWrapper>
+          </StyledCustomSearchWrapper>
+          <StyledHtmlTable>
+            <table>
+              <colgroup>
+                <col width="10%" />
+                <col width="15%" />
+                <col width="10%" />
+                <col width="15%" />
+                <col width="10%" />
+                <col width="15%" />
+                <col width="10%" />
+                <col width="15%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th>SAP NO.</th>
+                  <td>{requestValue.SAP_NO}</td>
+                  <th>화학물질명_SAP</th>
+                  <td>{requestValue.NAME_SAP}</td>
+                  <th>단위</th>
+                  <td>{requestValue.UNIT}</td>
+                  <th>kg환산계수</th>
+                  <td>
+                    <InputNumber
+                      value={requestValue.CONVERT_COEFFICIENT}
+                      onChange={value => handleInputNumberChange(value, 'CONVERT_COEFFICIENT')}
+                      className="col-input-number ant-input-number-sm"
+                      style={{ width: '100%', visibility: !isSelectSapMaterial() ? 'hidden' : 'visible' }}
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </StyledHtmlTable>
+        </StyledContentsWrapper>
         <Modal
+          getMaterialList={getMaterialList}
           SearchComp={SearchComp}
           sagaKey={sagaKey}
           visible={visible}

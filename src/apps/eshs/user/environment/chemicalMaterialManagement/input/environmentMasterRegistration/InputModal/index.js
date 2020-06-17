@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Table } from 'antd';
 
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import { debounce } from 'lodash';
 
-const AntdModal = StyledContentsModal(Modal);
-const AntdTable = StyledLineTable(Table);
+const AntdModal = StyledAntdModal(Modal);
+const AntdTable = StyledAntdTable(Table);
 
 class InputModal extends React.Component {
   constructor(props) {
@@ -25,7 +26,10 @@ class InputModal extends React.Component {
   }
 
   getMaterialList = () => {
-    const { sagaKey: id, getCallDataHandler, apiUrl } = this.props;
+    const { sagaKey: id, getCallDataHandler, apiUrl, getMaterialList } = this.props;
+    if (getMaterialList) {
+      return getMaterialList();
+    }
     const apiArr = [
       {
         key: 'materialList',
@@ -33,7 +37,7 @@ class InputModal extends React.Component {
         url: apiUrl,
       },
     ];
-    getCallDataHandler(id, apiArr, this.setDataSource);
+    return getCallDataHandler(id, apiArr, this.setDataSource);
   };
 
   setDataSource = () => {
@@ -99,29 +103,33 @@ class InputModal extends React.Component {
     const { KEYWORD, CATEGORY_ID } = this.state;
     const { sagaKey, visible, tableColumns, getCallDataHandler, apiUrl, SearchComp, formData, changeFormData, result } = this.props;
     return (
-      <AntdModal visible={visible} closable onCancel={handleModalClose} title="화학물질 검색" width="70%" footer={null}>
-        <SearchComp
-          apiUrl={apiUrl}
-          sagaKey={sagaKey}
-          getCallDataHandler={getCallDataHandler}
-          changeFormData={changeFormData}
-          formData={formData}
-          result={result}
-          onCancel={handleModalClose}
-          KEYWORD={KEYWORD}
-          CATEGORY_ID={CATEGORY_ID}
-          handleSearchChange={handleSearchChange}
-        />
-        <AntdTable
-          columns={tableColumns}
-          // dataSource={formData.dataSource}
-          dataSource={(result.materialList && result.materialList.list) || []}
-          pagination={{ pageSize: 10 }}
-          onRow={record => ({
-            onClick: () => handleRowClick(record),
-          })}
-        />
-      </AntdModal>
+      <StyledContentsWrapper>
+        <AntdModal visible={visible} closable onCancel={handleModalClose} title="화학물질 검색" width="70%" footer={null} destroyOnClose>
+          <SearchComp
+            apiUrl={apiUrl}
+            sagaKey={sagaKey}
+            getCallDataHandler={getCallDataHandler}
+            changeFormData={changeFormData}
+            formData={formData}
+            result={result}
+            onCancel={handleModalClose}
+            KEYWORD={KEYWORD}
+            CATEGORY_ID={CATEGORY_ID}
+            handleSearchChange={handleSearchChange}
+          />
+          <div style={{ padding: '20px' }}>
+            <AntdTable
+              columns={tableColumns}
+              // dataSource={formData.dataSource}
+              dataSource={(result.materialList && result.materialList.list) || []}
+              pagination={{ pageSize: 10 }}
+              onRow={record => ({
+                onClick: () => handleRowClick(record),
+              })}
+            />
+          </div>
+        </AntdModal>
+      </StyledContentsWrapper>
     );
   }
 }
@@ -138,6 +146,7 @@ InputModal.propTypes = {
   SearchComp: PropTypes.any, // React component
   formData: PropTypes.object,
   changeFormData: PropTypes.func,
+  getMaterialList: PropTypes.func,
   // isSearch: PropTypes.bool,
 };
 
@@ -152,6 +161,7 @@ InputModal.defaultProps = {
   tableColumns: [],
   formData: {},
   changeFormData: () => {},
+  getMaterialList: null,
   // isSearch: false,
 };
 

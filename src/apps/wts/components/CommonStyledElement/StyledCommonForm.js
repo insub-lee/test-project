@@ -1,10 +1,41 @@
 import styled from 'styled-components';
+import 'rc-time-picker/assets/index.css';
+
 import searchBtn from 'apps/wts/images/searchBtn.png';
 import iconRadio from 'apps/wts/images/icon_radio.png';
+import iconSelect from 'images/icon/icon_select.png';
 
 const StyledCommonForm = styled.form`
   .sel {
     text-align-last: center;
+  }
+  input.input {
+    appearance: none;
+    border: 0;
+    border-radius: 0;
+    background: 0;
+    width: 100%;
+    background: #e7e7e7;
+    padding: 0 10px;
+    font-size: 15px;
+    height: 45px;
+    line-height: 45px;
+    color: #555;
+    vertical-align: middle;
+  }
+  select {
+    appearance: none;
+    border: 0;
+    border-radius: 0;
+    width: 100%;
+    color: #555;
+    vertical-align: middle;
+    border-bottom: 0px solid #d9e0e7;
+    font-size: 15px;
+    height: 48px;
+    line-height: 48px;
+    background: #e7e7e7 url(${iconSelect}) no-repeat right 10px center;
+    padding-left: 10px;
   }
   .inputform {
     border: 0;
@@ -147,7 +178,7 @@ const StyledCommonForm = styled.form`
 
   .survey_tit,
   .sub_form_tit {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 16px;
     margin-bottom: 15px;
   }

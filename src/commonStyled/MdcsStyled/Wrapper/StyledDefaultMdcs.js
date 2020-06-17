@@ -12,7 +12,6 @@ const StyledDefaultMdcs = styled(StyledViewDesigner)`
           background-color: #f7f7f7;
           background-clip: padding-box;
           padding: 6px 8px;
-          border-right: 1px solid #ddd;
           color: rgb(0, 0, 0);
           > div {
             height: auto;

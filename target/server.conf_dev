@@ -220,6 +220,17 @@
             proxy_set_header     host $http_host;
     }
 
+    location ~ ^(/api/wts/v1/common/) {
+            proxy_pass  http://wts-common;
+            #proxy_connect_timeout 1800;
+            proxy_read_timeout      1800; # default 60
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+
     location ~ ^/img/thumb/crop/(.*)/(.*)$ {
         proxy_pass http://thumbor/unsafe/$1/http://dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:40033/down/thumb/$2;
         proxy_connect_timeout 60;
@@ -383,6 +394,9 @@ upstream portal-migration {
 }
 upstream portal-filemanage {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10013;
+}
+upstream wts-common {
+    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10801;
 }
 upstream thumbor {
     server dev-biz-thumbor.marathon.l4lb.thisdcos.directory:8000;

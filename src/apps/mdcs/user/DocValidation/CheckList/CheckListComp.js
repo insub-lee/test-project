@@ -85,11 +85,28 @@ class CheckListComp extends Component {
     this.setState({ visible: false });
   };
 
-  onValidateProcess = (vadildate, workProcess, workSeq, taskSeq, orginTaskSeq) => {
-    console.debug('onValidateProcess', workProcess);
+  onValidateProcess = (validate, workProcess, workSeq, taskSeq, orginTaskSeq) => {
     const { id, submitHandlerBySaga } = this.props;
-    const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
-    submitHandlerBySaga(id, 'POST', prefixUrl, workProcess, this.onCompleteProc);
+    let isByPass = true;
+    const { DRAFT_PROCESS } = workProcess;
+    const { DRAFT_PROCESS_STEP } = DRAFT_PROCESS;
+
+    const ruleCheckList = DRAFT_PROCESS_STEP.filter(rule => rule.ISREQUIRED === 1);
+    if (validate === 1 && ruleCheckList.length > 0) {
+      ruleCheckList.forEach(rule => {
+        if (rule.APPV_MEMBER.length === 0) {
+          isByPass = false;
+          message.error(`${rule.NODE_NAME_KOR} 단계의 결재를 선택해 주세요`);
+        }
+      });
+    }
+    const { DRAFT_DATA } = DRAFT_PROCESS;
+    const nDraftData = { ...DRAFT_DATA, validateType: validate };
+    const nWorkProcess = { ...DRAFT_PROCESS, DRAFT_DATA: nDraftData };
+    if (isByPass) {
+      const fixUrl = '/api/workflow/v1/common/workprocess/draft';
+      submitHandlerBySaga(id, 'POST', fixUrl, { DRAFT_PROCESS: nWorkProcess }, this.onCompleteProc);
+    }
   };
 
   onCompleteProc = () => {
@@ -101,7 +118,7 @@ class CheckListComp extends Component {
   };
 
   render() {
-    const { visible, workSeq, taskSeq, taskOrginSeq, title } = this.state;
+    const { visible, workSeq, taskSeq, taskOrginSeq, title, isShowProcess } = this.state;
     const { customDataList } = this.props;
     return (
       <>
@@ -128,6 +145,7 @@ class CheckListComp extends Component {
               TASK_SEQ={taskSeq}
               TASK_ORIGIN_SEQ={taskOrginSeq}
               TITLE={title}
+              onShowProces={isShowProcess}
               onValidateProcess={this.onValidateProcess}
               onModalClose={this.onModalClose}
             />

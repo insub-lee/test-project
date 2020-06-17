@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import { Checkbox, Select } from 'antd';
 import StyledCheckbox from 'components/FormStuff/Checkbox';
 
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+
+const AntdSelect = StyledSelect(Select);
 
 const { Option } = Select;
 
@@ -162,65 +165,65 @@ class TechStd extends Component {
               <th rowSpan={5}>SCOPE</th>
               <th>지역</th>
               <td>
-                <Select allowClear onChange={this.onChangeRegion} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangeRegion} style={{ width: '150px' }}>
                   {siteItems}
-                </Select>
+                </AntdSelect>
               </td>
               <th>적용 Line/Site</th>
               <td>
-                <Select allowClear onChange={this.onChangeSite} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangeSite} style={{ width: '150px' }}>
                   {lineItems}
-                </Select>
+                </AntdSelect>
               </td>
             </tr>
             <tr>
               <th>Tech</th>
               <td>
-                <Select allowClear onChange={this.onChangeTech} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangeTech} style={{ width: '150px' }}>
                   {techItems}
-                </Select>
+                </AntdSelect>
               </td>
               <th>Gen</th>
               <td>
-                <Select allowClear onChange={this.onChangeGen} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangeGen} style={{ width: '150px' }}>
                   {genItems}
-                </Select>
+                </AntdSelect>
               </td>
             </tr>
             <tr>
               <th>Memory Density</th>
               <td>
-                <Select allowClear onChange={this.onChangeMemory} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangeMemory} style={{ width: '150px' }}>
                   {memoryItems}
-                </Select>
+                </AntdSelect>
               </td>
               <th>Pkg</th>
               <td>
-                <Select allowClear onChange={this.onChangePkg} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangePkg} style={{ width: '150px' }}>
                   {pkgItems}
-                </Select>
+                </AntdSelect>
               </td>
             </tr>
             <tr>
               <th>Product</th>
               <td>
-                <Select allowClear onChange={this.onChangeProduct} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangeProduct} style={{ width: '150px' }}>
                   {prdItems}
-                </Select>
+                </AntdSelect>
               </td>
               <th>Module</th>
               <td>
-                <Select allowClear onChange={this.onChangeModule} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangeModule} style={{ width: '150px' }}>
                   {moduleItems}
-                </Select>
+                </AntdSelect>
               </td>
             </tr>
             <tr>
               <th>Customer</th>
               <td colSpan={3}>
-                <Select allowClear onChange={this.onChangeCustomer} style={{ width: '150px' }}>
+                <AntdSelect className="select-sm" allowClear onChange={this.onChangeCustomer} style={{ width: '150px' }}>
                   {customItems}
-                </Select>
+                </AntdSelect>
               </td>
             </tr>
             <tr>

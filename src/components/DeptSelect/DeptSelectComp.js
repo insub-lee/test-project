@@ -5,9 +5,10 @@ import { Select, Tree } from 'antd';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import TreeWrapper from 'commonStyled/Wrapper/TreeWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import TreeWrapper from 'components/BizBuilder/styled/Wrapper/TreeWrapper';
 
 // Component Attribute 및 Event Method 정리
 // <DeptSelect
@@ -125,29 +126,27 @@ class DeptSelectComp extends Component {
         : [];
 
     return (
-      <TreeWrapper>
-        <div className="tree-wrapper-inner">
-          <Select value={this.state.rootDeptId} onChange={val => this.onChangeRootDept(val)}>
-            {rootDeptList &&
-              rootDeptList.map((item, idx) => (
-                <Option value={item.DEPT_ID} key={idx}>
-                  {item.NAME_KOR}
-                </Option>
-              ))}
-          </Select>
-          <div className="depth-tree">
-            <Tree treeData={getTreeData(treeData)} onSelect={this.onTreeSelect} />
+      <StyledContentsWrapper>
+        <TreeWrapper>
+          <div className="tree-wrapper-inner">
+            <Select value={this.state.rootDeptId} className="select-sm" onChange={val => this.onChangeRootDept(val)}>
+              {rootDeptList &&
+                rootDeptList.map((item, idx) => (
+                  <Option value={item.DEPT_ID} key={idx}>
+                    {item.NAME_KOR}
+                  </Option>
+                ))}
+            </Select>
+            <div className="depth-tree">
+              <Tree treeData={getTreeData(treeData)} onSelect={this.onTreeSelect} />
+            </div>
           </div>
-        </div>
+        </TreeWrapper>
         <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-          <StyledButton className="btn-light mr5" onClick={this.onCancelPopup}>
-            취소
-          </StyledButton>
-          <StyledButton className="btn-primary" onClick={this.onCompletePopup}>
-            확인
-          </StyledButton>
+          <StyledButton className="btn-light btn-sm mr5" onClick={this.onCancelPopup}>취소</StyledButton>
+          <StyledButton className="btn-primary btn-sm" onClick={this.onCompletePopup}>확인</StyledButton>
         </StyledButtonWrapper>
-      </TreeWrapper>
+      </StyledContentsWrapper>
     );
   }
 }

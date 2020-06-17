@@ -33,12 +33,12 @@ class Excel extends Component {
       <ExcelDownloadComp
         isBuilder={false}
         fileName={`${excelNm}_${Moment().format('YYYY_MM_DD')}`}
-        className="testClassName"
         btnText="엑셀받기"
         sheetName={excelNm}
         columns={columns}
         fields={fields}
         listData={dataList}
+        btnSize="btn-sm"
       />
     );
   }

@@ -139,8 +139,12 @@ import MDCSDccViewComp from 'components/BizBuilder/Field/MDCSDccViewComp';
 import DragUploadViewComp from 'components/BizBuilder/Field/DragUploadViewComp';
 import CategoryViewComp from 'components/BizBuilder/Field/CategoryViewComp';
 import CategorySelectComp from 'components/BizBuilder/Field/CategorySelectComp';
+import DangerHazardSubComp from 'components/BizBuilder/Field/DangerHazardSubComp';
+import VersionComp from 'components/BizBuilder/Field/VersionComp';
+import TextJoinFieldComp from 'components/BizBuilder/Field/TextJoinFieldComp';
 
 export const CompInfo = {
+  'components/BizBuilder/Field/VersionComp': { renderer: property => <VersionComp {...property} /> },
   'components/BizBuilder/Field/CategorySelectComp': { renderer: property => <CategorySelectComp {...property} /> },
   'components/BizBuilder/Field/CategoryViewComp': { renderer: property => <CategoryViewComp {...property} /> },
   'components/BizBuilder/Field/VaildationListComp': { renderer: property => <VaildationListComp {...property} /> },
@@ -280,4 +284,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/DeptSelectComp': { renderer: property => <DeptSelectComp {...property} /> },
   'components/BizBuilder/Field/MDCSDccViewComp': { renderer: property => <MDCSDccViewComp {...property} /> },
   'components/BizBuilder/Field/DragUploadViewComp': { renderer: property => <DragUploadViewComp {...property} /> },
+  'components/BizBuilder/Field/DangerHazardSubComp': { renderer: property => <DangerHazardSubComp {...property} /> },
+  'components/BizBuilder/Field/TextJoinFieldComp': { renderer: property => <TextJoinFieldComp {...property} /> },
 };

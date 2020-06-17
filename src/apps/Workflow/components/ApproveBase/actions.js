@@ -12,8 +12,9 @@ export const setCustomDataBind = list => ({
   list,
 });
 
-export const getApproveList = () => ({
+export const getApproveList = customUrl => ({
   type: actionTypes.GET_APPROVE_LIST,
+  customUrl,
 });
 
 export const setApproveList = list => ({
@@ -21,8 +22,9 @@ export const setApproveList = list => ({
   list,
 });
 
-export const getUnApproveList = () => ({
+export const getUnApproveList = customUrl => ({
   type: actionTypes.GET_UNAPPROVE_LIST,
+  customUrl,
 });
 
 export const setUnApproveList = list => ({
@@ -30,8 +32,9 @@ export const setUnApproveList = list => ({
   list,
 });
 
-export const getDraftList = () => ({
+export const getDraftList = customUrl => ({
   type: actionTypes.GET_DRAFT_LIST,
+  customUrl,
 });
 
 export const setDraftList = list => ({
@@ -91,4 +94,10 @@ export const getUserInfo = (userInfo, callBack) => ({
 export const setUserInfo = userInfo => ({
   type: actionTypes.SET_USERINFO,
   userInfo,
+});
+
+export const getFileDownload = (url, fileName) => ({
+  type: actionTypes.GET_FILE_DOWNLOAD,
+  url,
+  fileName,
 });

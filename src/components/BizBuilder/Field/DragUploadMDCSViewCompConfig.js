@@ -99,7 +99,6 @@ class DragUploadMDCSViewCompConfig extends Component {
       optList,
     } = this.state;
     const { configInfo } = this.props;
-    console.debug('this.state', this.state);
     return (
       <StyledHtmlTable>
         <table>

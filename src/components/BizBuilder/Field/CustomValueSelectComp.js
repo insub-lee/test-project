@@ -23,8 +23,17 @@ function CustomValueSelectComp(props) {
 
   function valueHandler(set, idx) {
     const { value } = set[idx];
-    if (isSearch) onChangeSearchDataHandler(value);
-    else onChangeHandler(value);
+    if (isSearch) {
+      const { customSearchKey } = CONFIG.property;
+      switch (customSearchKey) {
+        case 'FireInspection':
+          onChangeHandler(value);
+          break;
+        default:
+          onChangeSearchDataHandler(value);
+          break;
+      }
+    } else onChangeHandler(value);
     setDefaultValue(set[idx]);
   }
 
@@ -56,7 +65,7 @@ function CustomValueSelectComp(props) {
       },
     } = props;
 
-    const searchText = value ? `AND ${COMP_FIELD} ${searchCondition} '${value}'` : '';
+    const searchText = value ? `AND W.${COMP_FIELD} ${searchCondition} '${value}'` : '';
     changeSearchData(id, COMP_FIELD, searchText);
   }
 

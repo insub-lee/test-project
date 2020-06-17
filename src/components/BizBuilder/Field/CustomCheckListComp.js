@@ -7,7 +7,7 @@ import { isJSON } from 'utils/helpers';
 import MultiSelector from 'components/MdcsComponents/MultiSelector';
 import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
 import StyledMultiSelector from 'apps/mdcs/styled/StyledMultiSelector';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
@@ -115,7 +115,6 @@ class CustomCheckListComp extends Component {
     ];
 
     // colData Read 후 selectedValue bind 하기
-    console.debug('checkList', colData);
     let isItem = false;
     if (colData && colData.length > 0) {
       const { DETAIL } = colData[0];
@@ -193,7 +192,6 @@ class CustomCheckListComp extends Component {
   render() {
     const { readOnly } = this.props;
     const { isItem, dataSource } = this.state;
-    console.debug('datasource', dataSource);
     return (
       <>
         <StyledMultiSelector>
@@ -212,7 +210,7 @@ class CustomCheckListComp extends Component {
                 )}
             </div>
             {!readOnly && (
-              <StyledButton className="btn-xs btn-primary" onClick={this.onClickSelectedWin}>
+              <StyledButton className="btn-xxs btn-gray btn-radius" onClick={this.onClickSelectedWin}>
                 <Icon type="select" /> 선택
               </StyledButton>
             )}

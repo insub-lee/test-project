@@ -51,6 +51,7 @@ import NumberCompFloatConfig from 'components/BizBuilder/Field/NumberCompFloatCo
 import ViewDateCompConfig from 'components/BizBuilder/Field/ViewDateCompConfig';
 import EducationExamConfig from 'components/BizBuilder/Field/EducationExamConfig';
 import EshsCmpnyConfig from 'components/BizBuilder/Field/EshsCmpnyConfig';
+import TextJoinFieldCompConfig from 'components/BizBuilder/Field/TextJoinFieldCompConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -104,4 +105,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/NumberCompFloatConfig': { renderer: property => <NumberCompFloatConfig {...property} /> },
   'components/BizBuilder/Field/EducationExamConfig': { renderer: property => <EducationExamConfig {...property} /> },
   'components/BizBuilder/Field/EshsCmpnyConfig': { renderer: property => <EshsCmpnyConfig {...property} /> },
+  'components/BizBuilder/Field/TextJoinFieldCompConfig': { renderer: property => <TextJoinFieldCompConfig {...property} /> },
 };

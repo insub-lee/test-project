@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'antd';
 import { FileSearchOutlined } from '@ant-design/icons';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const CoverViewComp = ({ CONFIG, colData, formData, clickCoverView }) => {
   const {
@@ -21,7 +21,7 @@ const CoverViewComp = ({ CONFIG, colData, formData, clickCoverView }) => {
   }
 
   return (
-    <StyledButton className="btn-light btn-xs btn-radius" onClick={() => clickCoverView(WORK_SEQ, TASK_SEQ, viewSeq)}>
+    <StyledButton className="btn-gray btn-xxs btn-radius" onClick={() => clickCoverView(WORK_SEQ, TASK_SEQ, viewSeq)}>
       <FileSearchOutlined /> 표지보기
     </StyledButton>
   );

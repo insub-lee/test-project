@@ -31,7 +31,6 @@ class ValidationView extends Component {
   initProcessData = (sagaKey, response) => {
     const { WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ, TITLE } = this.props;
     const draftData = { WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ };
-    console.debug('valiation', response);
     const { DRAFT_PROCESS } = response;
     const tProc = { ...DRAFT_PROCESS, DRAFT_DATA: draftData, REL_TYPE: 2, WORK_SEQ, TASK_SEQ, DRAFT_TITLE: TITLE };
     this.setState({ workProcess: { DRAFT_PROCESS: tProc } });
@@ -44,7 +43,6 @@ class ValidationView extends Component {
   onClickEvent = () => {
     const { onValidateProcess, WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ } = this.props;
     const { selectedValue, workProcess } = this.state;
-    console.debug('workProcess', workProcess);
     onValidateProcess(selectedValue, workProcess, WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ);
   };
 
@@ -69,13 +67,13 @@ class ValidationView extends Component {
   };
 
   render() {
-    const { WORK_SEQ, TASK_SEQ, onModalClose } = this.props;
+    const { WORK_SEQ, TASK_SEQ, onModalClose, onShowProces } = this.props;
     const { selectedValue, coverView, workProcess } = this.state;
 
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
-          {workProcess && workProcess.DRAFT_PROCESS && (
+          {selectedValue === 1 && workProcess && workProcess.DRAFT_PROCESS && (
             <WorkProcess
               id="work"
               CustomWorkProcessModal={BuilderProcessModal}

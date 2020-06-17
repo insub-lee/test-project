@@ -11,11 +11,10 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
 import moment from 'moment';
+import UserSearchModal from 'apps/eshs/common/userSearchModal';
 
-import View from './View';
+import ChkMstDetail from 'apps/eshs/admin/health/common/ChkMstDetail';
 
 const AntdTable = StyledAntdTable(Table)
 const AntdSelect = StyledSelect(Select);
@@ -25,7 +24,7 @@ const AntdModal = StyledAntdModal(Modal);
 
 class List extends Component {
   state = {
-    isShow: false,
+    isChkMstDetailShow: false,
     selectedRow: {},
     searchParam: {
       DATE_GUBUN: 'APP_DT',
@@ -35,6 +34,7 @@ class List extends Component {
       CHK_SEQ: '',
       IS_MATE: '',
       EMP_NO: '',
+      SCH_USER_ID: '',
     },
     list: [],
   };
@@ -103,6 +103,13 @@ class List extends Component {
     });
   };
 
+  onUserSearchAfter = row => {
+    if (row) {
+      this.onChangeSearchParam('SCH_USER_ID', row.USER_ID);
+      this.onChangeSearchParam('EMP_NO', row.EMP_NO);
+    }
+  };
+
   onChangeSearchParam = (key, val) => {
     this.setState(prevState => {
       const { searchParam } = prevState;
@@ -111,15 +118,15 @@ class List extends Component {
     });
   };
 
-  onShowPopup = row => {
+  onChkMstDetailPopup = row => {
     this.setState({
       selectedRow: row,
-      isShow: true,
+      isChkMstDetailShow: true,
     });
   }
 
-  onCancelPopup = () => {
-    this.setState({ isShow: false });
+  onCancelChkMstDetailPopup = () => {
+    this.setState({ isChkMstDetailShow: false });
   };
 
   columns = [
@@ -135,7 +142,7 @@ class List extends Component {
       key: 'EMP_NO',
       width: '8%',
       align: 'center',
-      render: (text, record) => <StyledButton className="btn-link btn-sm" onClick={() => this.onShowPopup(record)}>{text}</StyledButton>
+      render: (text, record) => <StyledButton className="btn-link btn-sm" onClick={() => this.onChkMstDetailPopup(record)}>{text}</StyledButton>
     },
     {
       title: '성명',
@@ -192,13 +199,13 @@ class List extends Component {
       <>
         <AntdModal
           width={850}
-          visible={this.state.isShow}
+          visible={this.state.isChkMstDetailShow}
           title="대상자 개인관리"
-          onCancel={this.onCancelPopup}
+          onCancel={this.onCancelChkMstDetailPopup}
           destroyOnClose
           footer={null}
         >
-          <View onCancelPopup={this.onCancelPopup} selectedRow={this.state.selectedRow} />
+          <ChkMstDetail onCancelPopup={this.onCancelChkMstDetailPopup} selectedRow={this.state.selectedRow} />
         </AntdModal>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
@@ -247,7 +254,7 @@ class List extends Component {
                 <AntdSelect.Option value="0">본인</AntdSelect.Option>
                 <AntdSelect.Option value="1">배우자</AntdSelect.Option>
               </AntdSelect>
-              <AntdInput placeholder="사번" className="ant-input-sm ant-input-inline mr5" style={{ width: 80 }} onChange={e => this.onChangeSearchParam('EMP_NO', e.target.value)} />
+              <UserSearchModal onClickRow={this.onUserSearchAfter} />
               <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
             </div>
           </StyledCustomSearchWrapper>

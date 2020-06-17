@@ -16,15 +16,15 @@ const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_APPROVE_LIST: {
       const { list } = action;
-      return state.set('approveList', fromJS(list));
+      return state.set('approveList', fromJS(list)).set('viewVisible', false);
     }
     case actionTypes.SET_UNAPPROVE_LIST: {
       const { list } = action;
-      return state.set('unApproveList', fromJS(list));
+      return state.set('unApproveList', fromJS(list).set('viewVisible', false));
     }
     case actionTypes.SET_DRAFT_LIST: {
       const { list } = action;
-      return state.set('draftList', fromJS(list));
+      return state.set('draftList', fromJS(list).set('viewVisible', false));
     }
     case actionTypes.SET_PARTIAL_INIT: {
       return state

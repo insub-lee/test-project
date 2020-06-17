@@ -6,7 +6,9 @@ import { Radio, Input, Button, Icon, Select, message, Modal, Table } from 'antd'
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import UserSelect from 'components/UserSelect';
+import AbrogationMultiModifyDraft from 'apps/Workflow/User/CommonView/abrogationMultiModifyDraft';
 
+import StyledInputView from 'apps/mdcs/components/BizBuilderBase/viewComponent/InputPage/Styled';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
@@ -23,26 +25,33 @@ const AntdLineTable = StyledAntdTable(Table);
 let timeout;
 
 class MdcsAppvView extends Component {
-  state = {
-    modalWidth: 800,
-    userInfo: [],
-    selectedUser: undefined,
-    nextApprover: [],
-    coverView: {
-      visible: false,
-      workSeq: undefined,
+  // eslint-disable-next-line react/state-in-constructor
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalWidth: 800,
+      userInfo: [],
+      selectedUser: undefined,
+      nextApprover: [],
+      coverView: {
+        visible: false,
+        workSeq: undefined,
+        taskSeq: undefined,
+        viewMetaSeq: undefined,
+      },
+      isUserSelect: false,
+      procResult: [],
+      holdHistoryList: [],
+      undefined,
+      isMultiSelect: true,
+      workPrcProps: undefined,
+      isDcc: false,
+      opinion: undefined,
+      isAbrogationMultiShow: false,
+      workseq: undefined,
       taskSeq: undefined,
-      viewMetaSeq: undefined,
-    },
-    isUserSelect: false,
-    procResult: [],
-    holdHistoryList: [],
-    undefined,
-    isMultiSelect: true,
-    workPrcProps: undefined,
-    isDcc: false,
-    opinion: undefined,
-  };
+    };
+  }
 
   componentDidMount() {
     const { id, selectedRow, setSelectedRow, APPV_STATUS, submitHandlerBySaga, profile } = this.props;
@@ -88,7 +97,6 @@ class MdcsAppvView extends Component {
     if (((appvStatus === 3 || appvStatus === 30) && !opinion) || opinion === '') {
       message.warning('의견을 작성해주세요');
     } else {
-      e.preventDefault();
       this.props.setOpinion(opinion);
       this.props.reqApprove(appvStatus);
       this.props.setOpinionVisible(false);
@@ -96,6 +104,9 @@ class MdcsAppvView extends Component {
   };
 
   onModalClose = () => {
+    const { getUnApproveList } = this.props;
+    const prefixUrl = '/api/workflow/v1/common/approve/UnApproveListMDCSHandler';
+    getUnApproveList(prefixUrl);
     this.props.setViewVisible(false);
   };
 
@@ -110,18 +121,12 @@ class MdcsAppvView extends Component {
     this.setState({ coverView: tempCoverView });
   };
 
-  onClickModify = () => {
-    const { selectedRow } = this.props;
-    const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
-    this.setState({ coverView });
-  };
-
   getTableColumns = () => [
     {
-      title: 'Title',
-      dataIndex: 'TITLE',
-      key: 'TITLE',
-      ellipsis: true,
+      title: '문서번호',
+      dataIndex: 'DOCNUMBER',
+      key: 'DOCNUMBER',
+      width: '13%',
     },
     {
       title: '개정번호',
@@ -131,21 +136,13 @@ class MdcsAppvView extends Component {
       align: 'center',
     },
     {
-      title: '작성자',
-      dataIndex: 'REG_USER_NAME',
-      key: 'REG_USER_NAME',
-      width: '12%',
-      align: 'center',
+      title: 'Title',
+      dataIndex: 'TITLE',
+      key: 'TITLE',
+      ellipsis: true,
     },
     {
-      title: '부서',
-      dataIndex: 'REG_DEPT_NAME',
-      key: 'REG_DEPT_NAME',
-      width: '17%',
-      align: 'center',
-    },
-    {
-      title: '기안일',
+      title: 'Effective Date',
       dataIndex: 'REG_DTTM',
       key: 'REG_DTTM',
       width: '15%',
@@ -187,130 +184,202 @@ class MdcsAppvView extends Component {
 
   onClickModify = () => {
     const { selectedRow } = this.props;
-    console.debug('modify', this.props);
-    const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
-    this.setState(prevState => {
-      const { workPrcProps } = prevState;
-      const nWorkPrcProps = { ...workPrcProps, draftMethod: 'modify', darft_id: selectedRow.DRAFT_ID };
-      return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
-    });
+    const { REL_TYPE } = selectedRow;
+    if (REL_TYPE === 999) {
+      //일괄폐기 수정화면
+      this.setState({ isAbrogationMultiShow: true, workPrcProps: { ...selectedRow, draftMethod: 'modify' } });
+    } else {
+      const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
+      this.setState(prevState => {
+        const { workPrcProps } = prevState;
+        const nWorkPrcProps = { ...workPrcProps, draftMethod: 'modify', darft_id: selectedRow.DRAFT_ID };
+        return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
+      });
+    }
   };
 
   onChangeOpinion = e => {
     this.setState({ opinion: e.target.value });
   };
 
+  onCloseAbrogationMultiModal = () => {
+    this.setState({ isAbrogationMultiShow: false });
+  };
+
+  onAbrogationMultiProcess = workPrcProps => {
+    const { id, submitHandlerBySaga } = this.props;
+    const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
+    submitHandlerBySaga(id, 'POST', prefixUrl, { DRAFT_PROCESS: workPrcProps }, this.onCompleteProc);
+  };
+
+  onCompleteProc = () => {
+    this.setState({
+      isAbrogationMultiShow: false,
+    });
+  };
+
+  onAbrogClick = (record, rowIndex, e) => {
+    console.debug(record, rowIndex, e);
+  };
+
   render() {
     const { selectedRow } = this.props;
-    const { DRAFT_DATA } = selectedRow;
-    const { modalWidth, coverView, isUserSelect, nextApprover, procResult, holdHistoryList, userList, isMultiSelect, workPrcProps, isDCC } = this.state;
+    const { DRAFT_DATA, REL_TYPE } = selectedRow;
+    const {
+      modalWidth,
+      coverView,
+      isUserSelect,
+      nextApprover,
+      procResult,
+      holdHistoryList,
+      userList,
+      isMultiSelect,
+      workPrcProps,
+      isDCC,
+      isAbrogationMultiShow,
+    } = this.state;
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
-          <table>
-            <tbody>
-              <tr>
-                <th style={{ width: '150px' }}>결재방법 </th>
-                <td>
-                  <Radio.Group onChange={this.onChange} defaultValue={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>
-                    <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
-                    <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 30 : 3}>Hold</Radio>
-                    {selectedRow.NODE_ID === 106 && <Radio value={5}>실무자 검토의뢰</Radio>}
-                    {selectedRow.NODE_ID === 106 && <Radio value={10}>실무자 결재 권한위임</Radio>}
-                  </Radio.Group>
-                </td>
-              </tr>
-              <tr
-                style={{
-                  display: (selectedRow && selectedRow.APPV_STATUS && selectedRow.APPV_STATUS === 5) || selectedRow.APPV_STATUS === 10 ? 'table-row' : 'none',
-                }}
-              >
-                <th style={{ width: '150px' }}>선택된 실무자 </th>
-                <td>
-                  <StyledButton onClick={this.onClickUserSelect} className="btn-gray btn-xs">
-                    <Icon type="search" style={{ marginRight: '5px' }} />
-                    실무자검색
-                  </StyledButton>
-                  <div>
-                    {nextApprover &&
-                      nextApprover.map(user => (
-                        <StyledTagDraft>
-                          <Icon type="user" />
-                          <span className="infoTxt">{`${user.NAME_KOR} (${user.DEPT_NAME_KOR})`}</span>
-                        </StyledTagDraft>
+          {REL_TYPE === 4 ? (
+            <table>
+              <tbody>
+                <tr>
+                  <th style={{ width: '150px' }}>요청종류 </th>
+                  <td colSpan={3}>{DRAFT_DATA && DRAFT_DATA.IDX === 2 ? '기안용 Download 권한신청 ' : 'Print 권한신청 '}</td>
+                </tr>
+                <tr>
+                  <th style={{ width: '150px' }}>요청자 </th>
+                  <td>{selectedRow && selectedRow.NAME_KOR}</td>
+                  <th style={{ width: '150px' }}>요청일 </th>
+                  <td>{selectedRow && moment(selectedRow.REG_DTTM).format('YYYY-MM-DD')}</td>
+                </tr>
+                <tr>
+                  <th style={{ width: '150px' }}>요청사용 </th>
+                  <td colSpan={3}>{DRAFT_DATA && DRAFT_DATA.OPINION}</td>
+                </tr>
+                <tr>
+                  <th style={{ width: '150px' }}>결재방법 </th>
+                  <td colSpan={3}>
+                    <Radio.Group defaultValue={2} onChange={this.onChange}>
+                      <Radio value={2}>Download 권한승인</Radio>
+                      <Radio value={9}>Download 권한거부 </Radio>
+                    </Radio.Group>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          ) : (
+            <table>
+              <tbody>
+                <tr>
+                  <th style={{ width: '150px' }}>결재방법 </th>
+                  <td colSpan={3}>
+                    <Radio.Group
+                      onChange={this.onChange}
+                      defaultValue={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}
+                    >
+                      <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
+                      <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 30 : 3}>Hold</Radio>
+                      {selectedRow.NODE_ID === 106 && <Radio value={5}>실무자 검토의뢰</Radio>}
+                      {selectedRow.NODE_ID === 106 && <Radio value={10}>실무자 결재 권한위임</Radio>}
+                    </Radio.Group>
+                  </td>
+                </tr>
+
+                <tr
+                  style={{
+                    display: (selectedRow && selectedRow.APPV_STATUS && selectedRow.APPV_STATUS === 5) || selectedRow.APPV_STATUS === 10 ? 'table-row' : 'none',
+                  }}
+                >
+                  <th style={{ width: '150px' }}>선택된 실무자 </th>
+                  <td colSpan={3}>
+                    <StyledButton onClick={this.onClickUserSelect} className="btn-gray btn-xs">
+                      <Icon type="search" style={{ marginRight: '5px' }} />
+                      실무자검색
+                    </StyledButton>
+                    <div>
+                      {nextApprover &&
+                        nextApprover.map(user => (
+                          <StyledTagDraft>
+                            <Icon type="user" />
+                            <span className="infoTxt">{`${user.NAME_KOR} (${user.DEPT_NAME_KOR})`}</span>
+                          </StyledTagDraft>
+                        ))}
+                    </div>
+                  </td>
+                </tr>
+                <tr style={{ display: procResult.length > 0 ? 'table-row' : 'none' }}>
+                  <td colSpan={4} style={{ padding: 0, border: 0 }}>
+                    <table style={{ width: '100%', borderTop: 0 }}>
+                      <colgroup>
+                        <col width="10%" />
+                        <col width="10%" />
+                        <col width="10%" />
+                        <col width="55%" />
+                        <col width="15%" />
+                      </colgroup>
+                      <tr>
+                        <th>실무자</th>
+                        <th>직급</th>
+                        <th>결과</th>
+                        <th>검토의견</th>
+                        <th style={{ borderRight: 0 }}>검토일</th>
+                      </tr>
+                      {procResult.map(item => (
+                        <tr>
+                          <td style={{ textAlign: 'center' }}>{item.DRAFT_USER_NAME}</td>
+                          <td style={{ textAlign: 'center' }}>{item.PSTN_NAME}</td>
+                          <td style={{ textAlign: 'center' }}>{item.APPV_STATUS}</td>
+                          <td>{item.OPINION}</td>
+                          <td style={{ textAlign: 'center' }}>{moment(item.REG_DTTM).format('YYYY-MM-DD')}</td>
+                        </tr>
                       ))}
-                  </div>
-                </td>
-              </tr>
-              <tr style={{ display: procResult.length > 0 ? 'table-row' : 'none' }}>
-                <td colSpan={2} style={{ padding: 0, border: 0 }}>
-                  <table style={{ width: '100%', borderTop: 0 }}>
-                    <colgroup>
-                      <col width="10%" />
-                      <col width="10%" />
-                      <col width="10%" />
-                      <col width="55%" />
-                      <col width="15%" />
-                    </colgroup>
-                    <tr>
-                      <th>실무자</th>
-                      <th>직급</th>
-                      <th>결과</th>
-                      <th>검토의견</th>
-                      <th style={{ borderRight: 0 }}>검토일</th>
-                    </tr>
-                    {procResult.map(item => (
+                    </table>
+                  </td>
+                </tr>
+                <tr style={{ display: holdHistoryList.length > 0 ? 'table-row' : 'none' }}>
+                  <td colSpan={4} style={{ padding: 0, border: 0 }}>
+                    <table style={{ width: '100%', borderTop: 0 }}>
+                      <colgroup>
+                        <col width="10%" />
+                        <col width="10%" />
+                        <col width="20%" />
+                        <col width="45%" />
+                        <col width="15%" />
+                      </colgroup>
                       <tr>
-                        <td style={{ textAlign: 'center' }}>{item.DRAFT_USER_NAME}</td>
-                        <td style={{ textAlign: 'center' }}>{item.PSTN_NAME}</td>
-                        <td style={{ textAlign: 'center' }}>{item.APPV_STATUS}</td>
-                        <td>{item.OPINION}</td>
-                        <td style={{ textAlign: 'center' }}>{moment(item.REG_DTTM).format('YYYY-MM-DD')}</td>
+                        <th>이름</th>
+                        <th>직급</th>
+                        <th>부서</th>
+                        <th>홀드해제의견</th>
+                        <th style={{ borderRight: 0 }}>해제일</th>
                       </tr>
-                    ))}
-                  </table>
-                </td>
-              </tr>
-              <tr style={{ display: holdHistoryList.length > 0 ? 'table-row' : 'none' }}>
-                <td colSpan={2} style={{ padding: 0, border: 0 }}>
-                  <table style={{ width: '100%', borderTop: 0 }}>
-                    <colgroup>
-                      <col width="10%" />
-                      <col width="10%" />
-                      <col width="10%" />
-                      <col width="55%" />
-                      <col width="15%" />
-                    </colgroup>
-                    <tr>
-                      <th>이름</th>
-                      <th>직급</th>
-                      <th>부서</th>
-                      <th>홀드해제의견</th>
-                      <th style={{ borderRight: 0 }}>해제일</th>
-                    </tr>
-                    {holdHistoryList.map(item => (
-                      <tr>
-                        <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
-                        <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
-                        <td style={{ textAlign: 'center' }}>{item.APPV_DEPT_NAME}</td>
-                        <td>{item.OPINION}</td>
-                        <td style={{ textAlign: 'center' }}>{moment(item.APPV_DTTM).format('YYYY-MM-DD')}</td>
-                      </tr>
-                    ))}
-                  </table>
-                </td>
-              </tr>
-              <tr>
-                <th>의견 </th>
-                <td>
-                  {/* <AntdTextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} /> */}
-                  <AntdTextArea rows={4} onChange={this.onChangeOpinion} />
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                      {holdHistoryList.map(item => (
+                        <tr>
+                          <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
+                          <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
+                          <td style={{ textAlign: 'center' }}>{item.APPV_DEPT_NAME}</td>
+                          <td>{item.OPINION}</td>
+                          <td style={{ textAlign: 'center' }}>{moment(item.APPV_DTTM).format('YYYY-MM-DD')}</td>
+                        </tr>
+                      ))}
+                    </table>
+                  </td>
+                </tr>
+                <tr style={{ display: REL_TYPE !== 4 ? 'table-row' : 'none' }}>
+                  <th>의견 </th>
+                  <td colSpan={3}>
+                    {/* <AntdTextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} /> */}
+                    <AntdTextArea rows={4} onChange={this.onChangeOpinion} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+
           <StyledButtonWrapper className="btn-wrap-center" style={{ marginTop: '10px' }}>
-            {isDCC && (
+            {REL_TYPE !== 4 && isDCC && (
               <StyledButton key="ok" className="btn-primary mr5 btn-sm" onClick={this.onClickModify}>
                 표지 수정
               </StyledButton>
@@ -335,18 +404,38 @@ class MdcsAppvView extends Component {
             ViewCustomButtons={() => false}
           />
         ) : (
-          <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
-            <AntdLineTable
-              columns={this.getTableColumns()}
-              dataSource={DRAFT_DATA.abrogationList !== null ? DRAFT_DATA.abrogationList : []}
-              onRow={(record, rowIndex) => ({
-                onClick: e => this.onRowClick(record, rowIndex, e),
-              })}
-              bordered
-              className="tableWrapper"
-            />
-          </StyledHtmlTable>
+          <>
+            <StyledHtmlTable style={{ padding: '20px 20px 20px' }}>
+              <AntdLineTable
+                columns={this.getTableColumns()}
+                dataSource={DRAFT_DATA.abrogationList !== null ? DRAFT_DATA.abrogationList : []}
+                bordered
+                className="tableWrapper"
+                pagination={false}
+              />
+            </StyledHtmlTable>
+            <AntdModal
+              destroyOnClose
+              style={{ top: '50px' }}
+              width={900}
+              visible={isAbrogationMultiShow}
+              onCancel={this.onCloseAbrogationMultiModal}
+              footer={null}
+              maskClosable={false}
+            >
+              <StyledInputView>
+                <div className="pop_tit">표준 일괄 폐기</div>
+                <AbrogationMultiModifyDraft
+                  workPrcProps={workPrcProps}
+                  {...this.props}
+                  onAbrogationMultiProcess={this.onAbrogationMultiProcess}
+                  onCloseAbrogationMultiModal={this.onCloseAbrogationMultiModal}
+                />
+              </StyledInputView>
+            </AntdModal>
+          </>
         )}
+
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"
           title="표지 보기"

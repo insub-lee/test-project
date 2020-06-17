@@ -4,7 +4,7 @@ import CustomerEmailSend from './CustomerEmailSend';
 
 class CustomerEmail extends Component {
   render() {
-    return <BizMicroDevBase id="customerEmail" component={CustomerEmailSend} />;
+    return <BizMicroDevBase sagaKey="customerEmail" component={CustomerEmailSend} />;
   }
 }
 

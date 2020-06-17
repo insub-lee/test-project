@@ -1,24 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select, Modal } from 'antd';
+import { Input, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import DeptSelect from 'components/DeptSelect';
 import PostionSelect from 'components/PostionSelect';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
-import StyledTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
-
-const AntdSelect = StyledSelect(Select);
-const AntdModal = StyledContentsModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
 const AntdInput = StyledInput(Input);
-const { Option } = Select;
 const { confirm } = Modal;
 
 class RequesterView extends Component {
@@ -38,7 +35,7 @@ class RequesterView extends Component {
   };
 
   componentDidMount() {
-    const { id, getCallDataHandler, selectedRow } = this.props;
+    const { sagaKey, getCallDataHandler, selectedRow } = this.props;
     const arrApi = [
       {
         key: 'requesterView',
@@ -46,7 +43,7 @@ class RequesterView extends Component {
         type: 'GET',
       },
     ];
-    getCallDataHandler(id, arrApi);
+    getCallDataHandler(sagaKey, arrApi);
   }
 
   onChangeEmpCode = val => {
@@ -54,8 +51,8 @@ class RequesterView extends Component {
   };
 
   onClickApproval = () => {
-    const { id, result: { requesterView: { detail } }, submitHandlerBySaga, onCancelPopup } = this.props;
-    if (this.state.userInfo.deptId !== -1 &&  this.state.userInfo.pstnId !== -1) {
+    const { sagaKey, result: { requesterView: { detail } }, submitHandlerBySaga, onCancelPopup, selectedRow, spinningOn, spinningOff } = this.props;
+    if (this.state.userInfo.deptId !== 0 &&  this.state.userInfo.pstnId !== 0) {
       const userInfo = {
         ...this.state.userInfo,
         deptName: detail.DEPT_NAME,
@@ -63,14 +60,30 @@ class RequesterView extends Component {
         nameKor: detail.REQUESTER_NAME,
         email: detail.EMAIL,
         mobileTel: detail.PHONE,
+        passwd: detail.PASSWORD,
       };
-      const saveAfterFunc = this.onClickDelete;
+
       confirm({
         title: '승인하시겠습니까?',
         icon: <ExclamationCircleOutlined />,
+        okText: '승인',
+        cancelText: '취소',
         onOk() {
-          submitHandlerBySaga(id, 'POST', '/api/admin/v1/common/registUser', userInfo, () => {
-            saveAfterFunc();
+          spinningOn();
+          submitHandlerBySaga(sagaKey, 'POST', '/api/admin/v1/common/registUser', userInfo, (id, res) => {
+            if (res && res.code === 200) {
+              // 승인메일발송
+              submitHandlerBySaga(sagaKey, 'POST', `/api/edds/v1/common/requesterApproveEmail`, { PARAM: { ...selectedRow }}, () => {});
+              // 승인 후 요청내역 삭제
+              submitHandlerBySaga(sagaKey, 'DELETE', `/api/edds/v1/common/eddsRequest/${selectedRow.REQUEST_ID}`, {}, () => {
+                spinningOff();
+                message.info(<MessageContent>승인하였습니다.</MessageContent>);
+                onCancelPopup();
+              });
+            } else {
+              spinningOff();
+              message.info(<MessageContent>승인에 실패하였습니다.</MessageContent>);
+            }
           });
         }
       });
@@ -80,9 +93,24 @@ class RequesterView extends Component {
   };
 
   onClickDelete = () => {
-    const { id, submitHandlerBySaga, selectedRow, onCancelPopup } = this.props;
-    submitHandlerBySaga(id, 'DELETE', `/api/edds/v1/common/eddsRequest/${selectedRow.REQUEST_ID}`, {}, () => {
-      onCancelPopup();
+    const { sagaKey, submitHandlerBySaga, selectedRow, onCancelPopup, spinningOn, spinningOff } = this.props;
+    confirm({
+      title: '삭제하시겠습니까?',
+      icon: <ExclamationCircleOutlined />,
+      okText: '삭제',
+      cancelText: '취소',
+      onOk() {
+        spinningOn();
+        submitHandlerBySaga(sagaKey, 'DELETE', `/api/edds/v1/common/eddsRequest/${selectedRow.REQUEST_ID}`, {}, (id, res) => {
+          spinningOff();
+          if (res && res.result === 1) {
+            message.info(<MessageContent>삭제하였습니다.</MessageContent>);
+            onCancelPopup();
+          } else {
+            message.info(<MessageContent>삭제에 실패하였습니다.</MessageContent>);
+          }
+        });
+      }
     });
   };
 
@@ -142,91 +170,92 @@ class RequesterView extends Component {
     }
 
     return (
-      <div>
-        {Object.keys(detail).length > 0 && (
-          <>
-            <StyledTable>
-              <table>
-                <colgroup>
-                  <col width="20%" />
-                  <col width="40%" />
-                  <col width="40%" />
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <th>요청 ID</th>
-                    <td colSpan="2">{detail.REQUEST_ID}</td>
-                  </tr>
-                  <tr>
-                    <th>요청자명</th>
-                    <td colSpan="2">{detail.REQUESTER_NAME}</td>
-                  </tr>
-                  <tr>
-                    <th>회사명</th>
-                    <td>{detail.COMPANY_NAME}</td>
-                    <td>
-                      <AntdInput value={this.state.userInfo.deptName} className="input-mid" placeholder="회사선택" onClick={this.onClickCompany}  readOnly/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>부서명</th>
-                    <td colSpan="2">{detail.DEPT_NAME}</td>
-                  </tr>
-                  <tr>
-                    <th>직위명</th>
-                    <td>{detail.PSTN_NAME}</td>
-                    <td>
-                      <AntdInput value={this.state.userInfo.pstnName} className="input-mid" placeholder="직위선택" onClick={this.onClickPostion}  readOnly/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>전화번호</th>
-                    <td colSpan="2">{detail.PHONE}</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <th>이메일</th>
-                    <td colSpan="2">{detail.EMAIL}</td>
-                  </tr>
-                </tbody>  
-              </table>
-            </StyledTable>
-            <StyledButtonWrapper className="btn-wrap-center">
-              <StyledButton className="btn-gray mr5" onClick={this.onClickDelete}>삭제</StyledButton>
-              <StyledButton className="btn-light mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
-              <StyledButton className="btn-primary" onClick={this.onClickApproval}>승인</StyledButton>
-            </StyledButtonWrapper>
-            <AntdModal
-              width={300}
-              visible={this.state.isDeptShow}
-              title="회사 검색"
-              onCancel={this.onCancelDeptPopup}
-              destroyOnClose
-              footer={null}
-            >
-              <DeptSelect
-                rootDeptChange={false}
-                defaultRootDeptId={1461}  // EDDS 외부업체
-                onComplete={this.onCompleteDeptPopup}
-                onCancel={this.onCancelDeptPopup}
-              />
-            </AntdModal>
-            <AntdModal
-              width={300}
-              visible={this.state.isPstnShow}
-              title="직위 검색"
-              onCancel={this.onCancelPstnPopup}
-              destroyOnClose
-              footer={null}
-            >
-              <PostionSelect
-                onComplete={this.onCompletePstnPopup}
-                onCancel={this.onCancelPstnPopup}
-              />
-            </AntdModal>
-          </>
-        )}
-      </div>
+      <>
+        <AntdModal
+          width={300}
+          visible={this.state.isPstnShow}
+          title="직위 검색"
+          onCancel={this.onCancelPstnPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <PostionSelect
+            onComplete={this.onCompletePstnPopup}
+            onCancel={this.onCancelPstnPopup}
+          />
+        </AntdModal>
+        <AntdModal
+          width={300}
+          visible={this.state.isDeptShow}
+          title="회사 검색"
+          onCancel={this.onCancelDeptPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <DeptSelect
+            rootDeptChange={false}
+            defaultRootDeptId={1461}  // EDDS 외부업체
+            onComplete={this.onCompleteDeptPopup}
+            onCancel={this.onCancelDeptPopup}
+          />
+        </AntdModal>
+        <StyledContentsWrapper>
+          <StyledHtmlTable>
+            <table>
+              <colgroup>
+                <col width="15%" />
+                <col width="35%" />
+                <col width="15%" />
+                <col width="35%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th>요청 ID</th>
+                  <td colSpan="3">{detail.REQUEST_ID}</td>
+                </tr>
+                <tr>
+                  <th>요청자명</th>
+                  <td colSpan="3">{detail.REQUESTER_NAME}</td>
+                </tr>
+                <tr>
+                  <th>회사명</th>
+                  <td>{detail.COMPANY_NAME}</td>
+                  <th>선택회사</th>
+                  <td>
+                    <AntdInput value={this.state.userInfo.deptName} className="ant-input-sm" placeholder="회사선택" onClick={this.onClickCompany} readOnly/>
+                  </td>
+                </tr>
+                <tr>
+                  <th>부서명</th>
+                  <td colSpan="3">{detail.DEPT_NAME}</td>
+                </tr>
+                <tr>
+                  <th>직위명</th>
+                  <td>{detail.PSTN_NAME}</td>
+                  <th>선택직위</th>
+                  <td>
+                    <AntdInput value={this.state.userInfo.pstnName} className="ant-input-sm" placeholder="직위선택" onClick={this.onClickPostion} readOnly/>
+                  </td>
+                </tr>
+                <tr>
+                  <th>전화번호</th>
+                  <td colSpan="3">{detail.PHONE}</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th>이메일</th>
+                  <td colSpan="3">{detail.EMAIL}</td>
+                </tr>
+              </tbody>  
+            </table>
+          </StyledHtmlTable>
+          <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+            <StyledButton className="btn-light btn-sm mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
+            <StyledButton className="btn-gray btn-sm mr5" onClick={this.onClickDelete}>삭제</StyledButton>
+            <StyledButton className="btn-primary btn-sm" onClick={this.onClickApproval}>승인</StyledButton>
+          </StyledButtonWrapper>
+        </StyledContentsWrapper>
+      </>
     );
   }
 }

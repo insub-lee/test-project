@@ -6,7 +6,7 @@ import moment from 'moment';
 import TimePicker from 'rc-time-picker';
 // import 'rc-time-picker/assets/index.css';
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import Checkbox from 'apps/wts/components/CheckboxGroup/Checkbox';
 import service from '../service';
 import StyledContent from './StyledContent';
@@ -637,12 +637,12 @@ class WorkerRecordModifyModal extends React.Component {
                 )}
                 {!readmode && (
                   <div className="btn_wrap">
-                    <Button type="submit" size="small" color="primary">
+                    <StyledButton type="submit" className="btn-light btn-xs">
                       수정
-                    </Button>
-                    <Button type="button" size="small" color="default" onClick={this.handleCloseModal}>
+                    </StyledButton>
+                    <StyledButton type="button" className="btn-light btn-xs" onClick={this.handleCloseModal}>
                       취소
-                    </Button>
+                    </StyledButton>
                   </div>
                 )}
               </StyledCommonForm>

@@ -1,19 +1,29 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Radio, Form, Modal, Input, Select, Checkbox } from 'antd';
+import history from 'utils/history';
+
+import { Table, Radio, Form, Modal, Input, Select, Checkbox, DatePicker } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
 import StyledRadio from 'components/FormStuff/Radio';
 
-import StyledInput from 'components/FormStuff/Input';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledDatePicker from 'components/FormStuff/DatePicker';
-import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
-const AntdModal = StyledModalWrapper(Modal);
-const AntdLineTable = StyledLineTable(Table);
+const AntdModal = StyledAntdModal(Modal);
+const AntdTable = StyledAntdTable(Table);
+const AntdTextArea = StyledTextarea(Input.TextArea);
+const AntdInput = StyledInput(Input);
+const AntdDatePicker = StyledDatePicker(DatePicker);
+const AntdSelect = StyledSelect(Select);
 const FormItem = Form.Item;
 
 const columns = [
@@ -77,6 +87,15 @@ const initState = {
   },
   isLastVer: 'Y',
   workSeqList: [],
+  isDownVisible: false,
+  selectedRow: undefined,
+  DRAFT_PROCESS: undefined,
+  OPINION: undefined,
+  appvMember: undefined,
+  drmByDraft: undefined,
+  drmByPrint: undefined,
+  selectedDRM: undefined,
+  downType: undefined,
 };
 
 const InputGroup = Input.Group;
@@ -84,6 +103,19 @@ const { Option } = Select;
 
 class SearchBasic extends Component {
   state = initState;
+
+  componentDidMount() {
+    const { sagaKey, submitHandlerBySaga } = this.props;
+    const prefixUrl = '/api/mdcs/v1/common/drmAclHandler';
+    submitHandlerBySaga(sagaKey, 'GET', prefixUrl, {}, this.initAclData);
+  }
+
+  initAclData = (id, response) => {
+    const { aclList } = response;
+    const drmByDarft = aclList.filter(x => x.IDX === 2).length > 0 ? aclList.filter(x => x.IDX === 2)[0] : undefined;
+    const drmByPrint = aclList.filter(x => x.IDX === 3).length > 0 ? aclList.filter(x => x.IDX === 3)[0] : undefined;
+    this.setState({ downType: 1, selectedDRM: drmByDarft, drmByDarft, drmByPrint });
+  };
 
   callApi = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
@@ -192,13 +224,78 @@ class SearchBasic extends Component {
   };
 
   onChangeDocType = workSeqList => {
-    console.debug(typeof workSeqList);
-    console.debug(workSeqList);
     this.setState({ workSeqList });
   };
 
+  onClickDownLoad = formData => {
+    const { sagaKey, submitHandlerBySaga } = this.props;
+    const url = '/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder';
+    submitHandlerBySaga(sagaKey, 'POST', url, { PARAM: { PRC_ID: 107 } }, this.initProcessData);
+    this.setState({ isDownVisible: true, selectedRow: { ...formData } });
+  };
+
+  onCloseDownLoad = () => {
+    this.setState({ isDownVisible: false });
+  };
+
+  initProcessData = (id, response) => {
+    const { DRAFT_PROCESS } = response;
+    const { DRAFT_PROCESS_STEP } = DRAFT_PROCESS;
+    const appvMember =
+      DRAFT_PROCESS_STEP.filter(item => item.NODE_ID === 133).length > 0 ? DRAFT_PROCESS_STEP.filter(item => item.NODE_ID === 133)[0].APPV_MEMBER : [];
+    this.setState({ DRAFT_PROCESS, appvMember });
+  };
+
+  onChangeDRMRadio = e => {
+    const { drmByDraft, drmByPrint } = this.state;
+    if (e.target.value === 2) {
+      this.setState({ downType: 2, selectedDRM: drmByPrint });
+    } else {
+      this.setState({ downType: 1, selectedDRM: drmByDraft });
+    }
+  };
+
+  onDraftDownLoad = () => {
+    const { selectedDRM, DRAFT_PROCESS, selectedRow, OPINION } = this.state;
+    const { sagaKey, submitHandlerBySaga } = this.props;
+    const { TITLE, WORK_SEQ, TASK_SEQ } = selectedRow;
+    const draftTitle = `${TITLE} 다운로드신청`;
+    const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
+    const draftData = {
+      DRAFT_PROCESS: { ...DRAFT_PROCESS, DRAFT_TITLE: draftTitle, WORK_SEQ, TASK_SEQ, OPINION, REL_TYPE: 4, DRAFT_DATA: { ...selectedDRM, OPINION } },
+    };
+    submitHandlerBySaga(sagaKey, 'POST', prefixUrl, draftData, this.onCompleteProc);
+  };
+
+  onCompleteProc = (id, response) => {
+    history.push('/apps/Workflow/User/DraftDocDown');
+    this.setState({ isDownVisible: false });
+  };
+
+  onChangeOpinion = e => {
+    this.setState({ OPINION: e.target.value });
+  };
+
   render() {
-    const { nodeIdList, status, docNo, keyword, type, drafter, draftDept, startDateTemp, endDateTemp, visible, SearchView, coverView, gubun } = this.state;
+    const {
+      nodeIdList,
+      status,
+      docNo,
+      keyword,
+      type,
+      drafter,
+      draftDept,
+      startDateTemp,
+      endDateTemp,
+      visible,
+      SearchView,
+      coverView,
+      gubun,
+      isDownVisible,
+      selectedRow,
+      DRAFT_PROCESS,
+      appvMember,
+    } = this.state;
     const { result } = this.props;
     const { listData = {} } = result;
     const listDataArr = listData.arr || [];
@@ -210,10 +307,10 @@ class SearchBasic extends Component {
             <div style={{ position: 'relative' }}>
               <p className="searchTitle">기본 검색</p>
               <div style={{ position: 'absolute', top: '50%', right: '20px', transform: 'translateY(-50%)' }}>
-                <StyledButton className="btn-primary btn-first" onClick={this.onSearch}>
+                <StyledButton className="btn-primary mr5 btn-sm" onClick={this.onSearch}>
                   검색
                 </StyledButton>
-                <StyledButton className="btn-light" onClick={this.onClear}>
+                <StyledButton className="btn-light btn-sm" onClick={this.onClear}>
                   Clear
                 </StyledButton>
               </div>
@@ -237,7 +334,8 @@ class SearchBasic extends Component {
                   <tr>
                     <th>문서번호</th>
                     <td>
-                      <Input
+                      <AntdInput
+                        className="ant-input-sm"
                         onChange={e => {
                           this.onChangeInput('docNo', e.target.value);
                         }}
@@ -262,11 +360,12 @@ class SearchBasic extends Component {
                     <th>검색어</th>
                     <td colSpan={3}>
                       <InputGroup compact>
-                        <Select style={{ width: '120px' }} defaultValue="title">
+                        <AntdSelect className="select-sm" style={{ width: '120px' }} defaultValue="title">
                           <Option value="title">제목</Option>
                           <Option value="all">제목+요약내용</Option>
-                        </Select>
-                        <Input
+                        </AntdSelect>
+                        <AntdInput
+                          className="ant-input-sm"
                           style={{ width: '60%' }}
                           onChange={e => {
                             this.onChangeInput('keyword', e.target.value);
@@ -278,7 +377,8 @@ class SearchBasic extends Component {
                   <tr>
                     <th>기안자</th>
                     <td colSpan={3}>
-                      <StyledInput
+                      <AntdInput
+                        className="ant-input-sm"
                         onChange={e => {
                           this.onChangeInput('drafter', e.target.value);
                         }}
@@ -288,7 +388,8 @@ class SearchBasic extends Component {
                   <tr>
                     <th>기안부서</th>
                     <td colSpan={3}>
-                      <StyledInput
+                      <AntdInput
+                        className="ant-input-sm"
                         onChange={e => {
                           this.onChangeInput('draftDept', e.target.value);
                         }}
@@ -298,9 +399,9 @@ class SearchBasic extends Component {
                   <tr>
                     <th>시행일</th>
                     <td colSpan={3}>
-                      <StyledDatePicker format="YYYY-MM-DD" onChange={(date, dateStr) => this.onChangeDate(dateStr, 'startDate')} />
-                      ~
-                      <StyledDatePicker format="YYYY-MM-DD" onChange={(date, dateStr) => this.onChangeDate(dateStr, 'endDate')} />
+                      <AntdDatePicker className="ant-picker-sm" format="YYYY-MM-DD" onChange={(date, dateStr) => this.onChangeDate(dateStr, 'startDate')} />
+                      <span style={{ display: 'inline-block', margin: '0 5px', verticalAlign: 'middle' }}>~</span>
+                      <AntdDatePicker className="ant-picker-sm" format="YYYY-MM-DD" onChange={(date, dateStr) => this.onChangeDate(dateStr, 'endDate')} />
                     </td>
                   </tr>
                 </tbody>
@@ -308,7 +409,8 @@ class SearchBasic extends Component {
             </StyledHtmlTable>
           </div>
           <AntdModal
-            className="modalWrapper modalTechDoc modalCustom"
+            className="modalWrapper modalTechDoc"
+            title="검색 결과"
             visible={visible}
             footer={null}
             width={1080}
@@ -321,9 +423,8 @@ class SearchBasic extends Component {
             okButtonProps={null}
           >
             <>
-              <div className="pop_tit">검색 결과</div>
-              <div className="pop_con">
-                <AntdLineTable
+              <StyledContentsWrapper>
+                <AntdTable
                   columns={columns}
                   size="middle"
                   dataSource={listDataArr}
@@ -334,11 +435,12 @@ class SearchBasic extends Component {
                     },
                   })}
                 />
-              </div>
+              </StyledContentsWrapper>
             </>
           </AntdModal>
           <AntdModal
-            className="modalWrapper modalTechDoc modalCustom"
+            className="modalWrapper modalTechDoc"
+            title="검색 내용 보기"
             visible={SearchView.visible}
             footer={null}
             width={800}
@@ -348,7 +450,6 @@ class SearchBasic extends Component {
             destroyOnClose
           >
             <>
-              <div className="pop_tit">검색 내용 보기</div>
               <div className="SearchContentLayer">
                 <BizBuilderBase
                   sagaKey="SearchView"
@@ -358,26 +459,94 @@ class SearchBasic extends Component {
                   closeBtnFunc={this.closeBtnFunc}
                   clickCoverView={this.clickCoverView}
                   ViewCustomButtons={({ closeBtnFunc, isTaskFavorite, sagaKey, formData, setTaskFavorite }) => (
-                    <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                    <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
                       {isTaskFavorite && (
                         <StyledButton
-                          className="btn-light btn-first"
+                          className="btn-primary btn-sm mr5"
                           onClick={() => setTaskFavorite(sagaKey, formData.WORK_SEQ, formData.TASK_ORIGIN_SEQ, formData.BUILDER_TASK_FAVORITE || 'N')}
                         >
                           {formData.BUILDER_TASK_FAVORITE === 'Y' ? '즐겨찾기 해제' : '즐겨찾기 추가'}
                         </StyledButton>
                       )}
-                      <StyledButton className="btn-primary" onClick={closeBtnFunc}>
+                      <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onClickDownLoad(formData)}>
+                        다운로드 신청
+                      </StyledButton>
+                      <StyledButton className="btn-light btn-sm" onClick={closeBtnFunc}>
                         닫기
                       </StyledButton>
-                    </div>
+                    </StyledButtonWrapper>
                   )}
                 />
               </div>
             </>
           </AntdModal>
           <AntdModal
-            className="modalWrapper modalTechDoc modalCustom"
+            className="modalWrapper modalTechDoc"
+            title="파일 다운 신청"
+            visible={isDownVisible}
+            footer={null}
+            width={800}
+            onCancel={this.onCloseDownLoad}
+            onOk={this.closeBtnFunc}
+            okButtonProps={null}
+            destroyOnClose
+          >
+            <StyledContentsWrapper>
+              <div style={{ fontSize: 12, color: 'rgb(255, 36, 36)', marginBottom: 10, textAlign: 'center' }}>
+                ※ 이 문서 및 도면은 MagnaChip 반도체의 자산이므로 불법 유출 시,관계법과 MagnaChip 회사 규정에 의해 처벌함.
+              </div>
+              <StyledHtmlTable>
+                {selectedRow && (
+                  <>
+                    <table>
+                      <tbody>
+                        <tr>
+                          <th>문서종류</th>
+                          <td colSpan={3}>{selectedRow.NODE_FULLNAME}</td>
+                        </tr>
+                        <tr>
+                          <th>문서번호</th>
+                          <td>{selectedRow.DOCNUMBER}</td>
+                          <th>개정번호</th>
+                          <td>{selectedRow.VERSION}</td>
+                        </tr>
+                        <tr>
+                          <th>결재자</th>
+                          <td colSpan={3}>{appvMember && appvMember.map(item => `${item.NAME_KOR} ( ${item.PSTN_NAME_KOR} ) `)}</td>
+                        </tr>
+                        <tr>
+                          <th>요청종류</th>
+                          <td colSpan={3}>
+                            <Radio.Group onChange={this.onChangeDRMRadio} defaultValue={1}>
+                              <Radio value={1}>기안용 Download 권한신청 </Radio>
+                              <Radio value={2}>Print 권한신청</Radio>
+                            </Radio.Group>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>요청사유</th>
+                          <td colSpan={3}>
+                            <AntdTextArea rows={4} onChange={this.onChangeOpinion} />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+                      <StyledButton className="btn-primary btn-sm mr5" onClick={this.onDraftDownLoad}>
+                        신청
+                      </StyledButton>
+                      <StyledButton className="btn-light btn-sm" onClick={this.onCloseDownLoad}>
+                        닫기
+                      </StyledButton>
+                    </StyledButtonWrapper>
+                  </>
+                )}
+              </StyledHtmlTable>
+            </StyledContentsWrapper>
+          </AntdModal>
+          <AntdModal
+            className="modalWrapper modalTechDoc"
+            title="표지 보기"
             visible={coverView.visible}
             footer={null}
             width={800}
@@ -385,7 +554,6 @@ class SearchBasic extends Component {
             onCancel={this.onCloseCoverView}
             destroyOnClose
           >
-            <div className="pop_tit">표지 보기</div>
             <div className="SearchContentLayer">
               <BizBuilderBase
                 sagaKey="CoverView"
@@ -395,11 +563,11 @@ class SearchBasic extends Component {
                 viewMetaSeq={coverView.viewMetaSeq}
                 onCloseCoverView={this.onCloseCoverView}
                 ViewCustomButtons={({ onCloseCoverView }) => (
-                  <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                    <StyledButton className="btn-primary" onClick={onCloseCoverView}>
+                  <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+                    <StyledButton className="btn-light btn-sm" onClick={onCloseCoverView}>
                       닫기
                     </StyledButton>
-                  </div>
+                  </StyledButtonWrapper>
                 )}
               />
             </div>

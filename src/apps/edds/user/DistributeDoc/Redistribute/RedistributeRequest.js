@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Input } from 'antd';
+import { Input, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
-import StyledTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledTextarea from 'commonStyled/Form/StyledTextarea';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 
 const AntdTextArea = StyledTextarea(Input.TextArea);
 
@@ -18,20 +20,33 @@ class RedistributeRequest extends Component {
   };
 
   onClickSendEmail = () => {
-    const {id, selectedRow, submitHandlerBySaga, onCancelPopup } = this.props;
+    const {id, selectedRow, submitHandlerBySaga, onCancelPopup, spinningOn, spinningOff } = this.props;
     const submitData = {
-      ...selectedRow,
-      REASON: this.state.reason,
+      PARAM: {
+        ...selectedRow,
+        REASON: this.state.reason,
+      }
     };
-    submitHandlerBySaga(id, 'PUT', '/api/edds/v1/common/distributeDoc', submitData, () => {
-      onCancelPopup();
+
+    Modal.confirm({
+      title: '재배포 요청 메일을 발송하시겠습니까?',
+      icon: <ExclamationCircleOutlined />,
+      okText: '발송',
+      cancelText: '취소',
+      onOk() {
+        spinningOn();
+        submitHandlerBySaga(id, 'PUT', '/api/edds/v1/common/distributeDoc', submitData, () => {
+          spinningOff();
+          onCancelPopup();
+        });
+      }
     });
   };
 
   render() {
     return (
-      <>
-        <StyledTable>
+      <StyledContentsWrapper>
+        <StyledHtmlTable>
           <table>
             <colgroup>
               <col width="20%" />
@@ -45,19 +60,19 @@ class RedistributeRequest extends Component {
                 </td>
               </tr>
               <tr>
-                <th>reason</th>
+                <th>Reason</th>
                 <td>
                   <AntdTextArea rows={12} value={this.state.reason} onChange={e => this.onChangeReason(e.target.value)} />
                 </td>
               </tr>
             </tbody>
           </table>
-        </StyledTable>
-        <StyledButtonWrapper className="btn-wrap-center">
-          <StyledButton className="btn-light mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
-          <StyledButton className="btn-primary" onClick={this.onClickSendEmail}>전송</StyledButton>
+        </StyledHtmlTable>
+        <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+          <StyledButton className="btn-light btn-sm mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
+          <StyledButton className="btn-primary btn-sm" onClick={this.onClickSendEmail}>전송</StyledButton>
         </StyledButtonWrapper>
-      </>
+      </StyledContentsWrapper>
     );
   }
 }

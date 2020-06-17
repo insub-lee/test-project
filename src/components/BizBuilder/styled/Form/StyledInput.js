@@ -3,8 +3,8 @@ import styled from 'styled-components';
 const StyledInput = Component => styled(Component)`
   &.ant-input,
   &.ant-input-affix-wrapper input {
-    /* display: block;
-    width: 100%; */
+    display: inline-block;
+    width: 100%;
     height: calc(1.47em + 1rem + 2px);
     padding: 0.5rem 0.875rem;
     font-size: 0.8125rem;
@@ -63,6 +63,10 @@ const StyledInput = Component => styled(Component)`
   &.ant-input-inline {
     display: inline-block;
     vertical-align: middle;
+  }
+
+  &.ant-input-block {
+    display: block;
   }
 
   &.ant-input-full {

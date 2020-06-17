@@ -119,12 +119,26 @@ function* getFileDownAxios(fullUrl, payload, headers) {
   return {};
 }
 
+function* postNoResponseAxios(fullUrl, payload, headers) {
+  try {
+    axios({
+      method: 'post',
+      url: fullUrl,
+      data: { ...payload },
+      headers: { ...headers, META: yield makeRequestHeader() },
+    });
+  } catch (error) {
+    errorAxiosProcess(error);
+  }
+}
+
 export const Axios = {
   get: (fullUrl, payload, headers) => getAxios(fullUrl, payload, headers),
   post: (fullUrl, payload, headers) => postAxios(fullUrl, payload, headers),
   put: (fullUrl, payload, headers) => putAxios(fullUrl, payload, headers),
   delete: (fullUrl, payload, headers) => deleteAxios(fullUrl, payload, headers),
   getDown: (fullUrl, payload, headers) => getFileDownAxios(fullUrl, payload, headers),
+  postNoResponse: (fullUrl, payload, headers) => postNoResponseAxios(fullUrl, payload, headers),
 };
 
 export default Axios;

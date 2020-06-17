@@ -7,11 +7,13 @@ import Scheduler, { SchedulerData, ViewTypes } from 'react-big-scheduler';
 import moment from 'moment';
 import { Icon, Spin } from 'antd';
 import { orderBy } from 'lodash';
+import 'react-big-scheduler/lib/css/style.css';
 
 import { jsonToQueryString } from 'utils/helpers';
 import StyledScheduler from './StyledScheduler';
 import service from '../service';
 import SchedulerForm from './SchedulerForm';
+import StyledStandard from '../../StyledStandard';
 
 const popoverButtonStyle = {
   fontSize: 14,
@@ -300,59 +302,66 @@ class SchedulerView extends React.Component {
     const { empNo, usrNm, banjangId, site } = this.props;
     return (
       <StyledScheduler>
-        <div style={{ marginBottom: 10 }}>
-          <span style={{ fontSize: 17 }}>휴가 등록</span>
-        </div>
-        <SchedulerForm empNo={empNo} usrNm={usrNm} banjangId={banjangId} callbackHandler={this.reloadSchedule} site={site} workjo={myWorkJo} />
-        <div style={{ marginTop: 30 }}>
-          <span style={{ fontSize: 17 }}>휴가 목록</span>
-        </div>
-        <div style={{ margin: '10px 0', position: 'relative', height: 40 }}>
-          <div style={{ display: 'inline-block' }}>
-            <select value={currentBay} onChange={this.handleChangeBay} style={{ width: 200, height: 40, lineHeight: '40px' }} placeholder="BAY를 선택해주세요.">
-              {/* <option value="">전체 BAY</option> */}
-              {bays.map(bay => (
-                <option key={bay} value={bay}>
-                  {bay}
-                </option>
-              ))}
-            </select>
+        <StyledStandard>
+          <div style={{ marginBottom: 10 }}>
+            <span className="area-title">휴가 등록</span>
           </div>
-          <div style={{ display: 'inline-block', position: 'absolute', right: 0, top: 10 }}>
-            <div className="status-dot" style={{ display: 'inline-block', backgroundColor: '#3D5AFE', verticalAlign: 'middle' }} />
-            <span className="header2-text" style={{ marginLeft: 5, marginRight: 5 }}>
-              휴가신청
-            </span>
-            <div className="status-dot" style={{ display: 'inline-block', backgroundColor: '#78909C', verticalAlign: 'middle' }} />
-            <span className="header2-text" style={{ marginLeft: 5, marginRight: 5 }}>
-              반차신청
-            </span>
-            <div className="status-dot" style={{ display: 'inline-block', backgroundColor: '#009688', verticalAlign: 'middle' }} />
-            <span className="header2-text" style={{ marginLeft: 5, marginRight: 5 }}>
-              승인
-            </span>
-            <div className="status-dot" style={{ display: 'inline-block', backgroundColor: '#B00020', verticalAlign: 'middle' }} />
-            <span className="header2-text" style={{ marginLeft: 5, marginRight: 5 }}>
-              반려
-            </span>
+          <SchedulerForm empNo={empNo} usrNm={usrNm} banjangId={banjangId} callbackHandler={this.reloadSchedule} site={site} workjo={myWorkJo} />
+          <div style={{ marginTop: 30 }}>
+            <span className="area-title">휴가 목록</span>
           </div>
-        </div>
-        <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-          <div style={{ height: 800 }}>
-            <AutoSizer>
-              {({ height, width }) => (
-                <Scheduler
-                  schedulerData={this.getSchedulerData(width, height)}
-                  prevClick={this.prevClick}
-                  nextClick={this.nextClick}
-                  onSelectDate={this.onSelectDate}
-                  eventItemPopoverTemplateResolver={this.eventItemPopoverTemplateResolver}
-                  onViewChange={() => false}
-                />
-              )}
-            </AutoSizer>
+          <div style={{ margin: '10px 0', position: 'relative', height: 40 }}>
+            <div style={{ display: 'inline-block' }}>
+              <select
+                value={currentBay}
+                onChange={this.handleChangeBay}
+                style={{ width: 200, height: 40, lineHeight: '40px' }}
+                placeholder="BAY를 선택해주세요."
+              >
+                {/* <option value="">전체 BAY</option> */}
+                {bays.map(bay => (
+                  <option key={bay} value={bay}>
+                    {bay}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div style={{ display: 'inline-block', position: 'absolute', right: 0, top: 10 }}>
+              <div className="status-dot" style={{ display: 'inline-block', backgroundColor: '#3D5AFE', verticalAlign: 'middle' }} />
+              <span className="header2-text" style={{ marginLeft: 5, marginRight: 5 }}>
+                휴가신청
+              </span>
+              <div className="status-dot" style={{ display: 'inline-block', backgroundColor: '#78909C', verticalAlign: 'middle' }} />
+              <span className="header2-text" style={{ marginLeft: 5, marginRight: 5 }}>
+                반차신청
+              </span>
+              <div className="status-dot" style={{ display: 'inline-block', backgroundColor: '#009688', verticalAlign: 'middle' }} />
+              <span className="header2-text" style={{ marginLeft: 5, marginRight: 5 }}>
+                승인
+              </span>
+              <div className="status-dot" style={{ display: 'inline-block', backgroundColor: '#B00020', verticalAlign: 'middle' }} />
+              <span className="header2-text" style={{ marginLeft: 5, marginRight: 5 }}>
+                반려
+              </span>
+            </div>
           </div>
-        </Spin>
+          <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
+            <div style={{ height: 800 }}>
+              <AutoSizer>
+                {({ height, width }) => (
+                  <Scheduler
+                    schedulerData={this.getSchedulerData(width, height)}
+                    prevClick={this.prevClick}
+                    nextClick={this.nextClick}
+                    onSelectDate={this.onSelectDate}
+                    eventItemPopoverTemplateResolver={this.eventItemPopoverTemplateResolver}
+                    onViewChange={() => false}
+                  />
+                )}
+              </AutoSizer>
+            </div>
+          </Spin>
+        </StyledStandard>
       </StyledScheduler>
     );
   }

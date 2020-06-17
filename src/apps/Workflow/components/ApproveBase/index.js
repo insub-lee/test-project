@@ -63,6 +63,7 @@ ApproveBase.defaultProps = {
   setBizFormData: () => {},
   formData: {},
   getUserInfo: () => {},
+  getFileDownload: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -79,9 +80,9 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getApproveList: () => dispatch(actions.getApproveList()),
-  getUnApproveList: () => dispatch(actions.getUnApproveList()),
-  getDraftList: () => dispatch(actions.getDraftList()),
+  getApproveList: customUrl => dispatch(actions.getApproveList(customUrl)),
+  getUnApproveList: customUrl => dispatch(actions.getUnApproveList(customUrl)),
+  getDraftList: customUrl => dispatch(actions.getDraftList(customUrl)),
   getCustomDataBind: (httpMethod, rtnUrl, param) => dispatch(actions.getCustomDataBind(httpMethod, rtnUrl, param)),
   submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
     dispatch(actions.submitHandlerBySaga(id, httpMethod, apiUrl, submitData, callbackFunc)),
@@ -92,6 +93,7 @@ const mapDispatchToProps = dispatch => ({
   setBizFormData: formData => dispatch(actions.setBizFormData(formData)),
   reqApprove: appvStatus => dispatch(actions.reqApprove(appvStatus)),
   getUserInfo: (userInfo, callBack) => dispatch(actions.getUserInfo(userInfo, callBack)),
+  getFileDownload: (url, fileName) => dispatch(actions.getFileDownload(url, fileName)),
 });
 
 const withReducer = injectReducer({

@@ -42,6 +42,11 @@ class List extends Component {
         url: `/api/eshs/v1/common/eshsDanger/${dangerMainYN}`,
         type: 'GET',
       },
+      {
+        key: 'selectData',
+        url: `/api/admin/v1/common/categoryMapList?MAP_ID=45`,
+        type: 'GET',
+      },
       !dangerMainYN
         ? {
             key: 'subExcelList',
@@ -58,6 +63,7 @@ class List extends Component {
     this.setState({
       dangerList: result && result.dangerList && result.dangerList.list,
       dangerSelect: result && result.dangerSelect && result.dangerSelect.list,
+      selectData: result && result.selectData && result.selectData.categoryMapList && result.selectData.categoryMapList.filter(f => f.LVL !== 0),
     });
   };
 
@@ -87,9 +93,7 @@ class List extends Component {
   };
 
   changeValue = (name, value) => {
-    this.setState({
-      [name]: value,
-    });
+    this.setState({ [name]: value });
     if (name === 'selectedMajor') {
       this.changeSelectedData(value);
     }
@@ -183,6 +187,7 @@ class List extends Component {
   };
 
   selectedRecord = record => {
+    const { selectedMajor } = this.state;
     this.setState({
       majorCd: record.MAJOR_CD,
       minorCd: record.MINOR_CD,
@@ -190,7 +195,7 @@ class List extends Component {
       useYN: record.USE_YN,
       sysYN: record.SYS_YN,
       remark: record.REMARK,
-      ref01: record.REF01,
+      ref01: selectedMajor === 'C003' ? Number(record.REF01) : record.REF01,
       ref02: record.REF02,
       readType: true,
     });
@@ -201,7 +206,7 @@ class List extends Component {
       dangerMainYN,
       result: { subExcelList },
     } = this.props;
-    const { dangerSelect, selectedMajor, dangerList, majorCd, minorCd, cdNm, useYN, sysYN, remark, ref01, ref02, readType } = this.state;
+    const { dangerSelect, selectedMajor, dangerList, majorCd, minorCd, cdNm, useYN, sysYN, remark, ref01, ref02, readType, selectData } = this.state;
     const excelList = subExcelList && subExcelList.list;
     const columns = [
       {
@@ -228,7 +233,7 @@ class List extends Component {
                     {useYN === 'Y' ? (
                       '사용'
                     ) : (
-                      <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('R')}>
+                      <StyledButton style={{ width: 80 }} className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('R')}>
                         삭제 취소
                       </StyledButton>
                     )}
@@ -282,10 +287,17 @@ class List extends Component {
         align: 'center',
         children: [
           {
-            title: <AntdInput className="ant-input-sm" value={ref01} onChange={e => this.changeValue('ref01', e.target.value)} />,
+            title:
+              selectedMajor === 'C003' ? (
+                <AntdSelect style={{ width: 80 }} onChange={value => this.changeValue('ref01', value)} value={ref01}>
+                  {selectData && selectData.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
+                </AntdSelect>
+              ) : (
+                <AntdInput className="ant-input-sm" value={ref01} onChange={e => this.changeValue('ref01', e.target.value)} />
+              ),
             className: 'th-form',
             align: 'center',
-            dataIndex: 'REF01',
+            dataIndex: selectedMajor === 'C003' ? 'REF01_NAME' : 'REF01',
           },
         ],
       },

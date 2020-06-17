@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactExport from 'react-data-export';
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import { Button } from 'antd';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import { FileExcelOutlined } from '@ant-design/icons';
 
 const { ExcelFile } = ReactExport;
 const { ExcelSheet } = ReactExport.ExcelFile;
-
+const StyledButton = StyledAntdButton(Button);
 /*
     엑셀 다운로드 컴포넌트
     개발목적 : builderBase ListPage 내에서 사용되는 엑셀다운로드 버튼 컴포넌트 / DevBase(SI개발) 대응
@@ -67,12 +68,10 @@ class ExcelDownloadComp extends Component {
         <ExcelFile
           filename={CONFIG.property.fileName || workInfo.NAME_KOR}
           element={
-            <span className={CONFIG.property.className || ''}>
-              <StyledButton className="btn-gray btn-sm">
-                <FileExcelOutlined />
-                &nbsp;{CONFIG.property.btnText || '엑셀 다운로드'}
-              </StyledButton>
-            </span>
+            <StyledButton className="btn-gray">
+              <FileExcelOutlined />
+              &nbsp;{CONFIG.property.btnText || '엑셀 다운로드'}
+            </StyledButton>
           }
         >
           <ExcelSheet dataSet={dataSet} name={(CONFIG.property.sheetName && CONFIG.property.sheetName) || 'Sheet1'} />
@@ -88,7 +87,7 @@ class ExcelDownloadComp extends Component {
         filename={this.props.fileName}
         element={
           <span className={this.props.className}>
-            <StyledButton className={`btn-gray btn-sm ${btnSize}`}>
+            <StyledButton className={`btn-gray ${btnSize}`}>
               <FileExcelOutlined />
               &nbsp;{this.props.btnText}
             </StyledButton>

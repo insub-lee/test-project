@@ -6,6 +6,7 @@ import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
@@ -143,6 +144,8 @@ class InputPage extends Component {
           }
         });
       }
+    } else {
+      changeIsLoading(false);
     }
   };
 
@@ -239,16 +242,16 @@ class InputPage extends Component {
             {InputCustomButtons ? (
               <InputCustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
             ) : (
-              <div className="alignRight">
-                <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
+              <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+                <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
                   저장
                 </StyledButton>
                 {!isBuilderModal && (
-                  <StyledButton className="btn-light" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                  <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
                     목록
                   </StyledButton>
                 )}
-              </div>
+              </StyledButtonWrapper>
             )}
           </Sketch>
         </StyledWrap>

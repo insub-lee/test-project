@@ -1,20 +1,25 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Modal, Icon } from 'antd';
+
 import moment from 'moment';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
-import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+
+import DraggableModal from 'components/DraggableModal';
+import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
 
 const AntdLineTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
 
 class UnApproveList extends Component {
   componentDidMount() {
-    this.props.getUnApproveList();
+    const { getUnApproveList } = this.props;
+    const prefixUrl = '/api/workflow/v1/common/approve/UnApproveListMDCSHandler';
+    getUnApproveList(prefixUrl);
   }
 
   getTableColumns = () => [
@@ -40,6 +45,24 @@ class UnApproveList extends Component {
       width: '10%',
       align: 'center',
       render: (text, record) => (record.APPV_USER_ID === record.ORG_APPV_USER_ID ? text : `${text}(위임결재)`),
+    },
+    {
+      title: '문서번호',
+      dataIndex: 'DOCNUMBER',
+      key: 'DOCNUMBER',
+      width: '10%',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? record.DRAFT_ID : text),
+    },
+    {
+      title: 'Rev',
+      dataIndex: 'VERSION',
+      key: 'VERSION',
+      width: '5%',
+      align: 'center',
+      ellipsis: true,
+      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? 1 : Number(text)),
     },
     {
       title: 'Title',
@@ -75,8 +98,7 @@ class UnApproveList extends Component {
   };
 
   render() {
-    const { unApproveList } = this.props;
-    console.debug(unApproveList);
+    const { unApproveList, viewVisible } = this.props;
     return (
       <>
         <StyledHeaderWrapper>
@@ -96,9 +118,15 @@ class UnApproveList extends Component {
             bordered
           />
         </StyledContentsWrapper>
-        <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
-          <MdcsAppvView {...this.props} />
-        </AntdModal>
+
+        {viewVisible && (
+          <DraggableModal key="upApproveListKeys" title="표준문서 결재" visible={viewVisible}>
+            <MdcsAppvView {...this.props} />
+            {/* <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+              <MdcsAppvView {...this.props} />
+            </AntdModal> */}
+          </DraggableModal>
+        )}
       </>
     );
   }

@@ -9,8 +9,8 @@ import * as actionTypes from './constants';
 import * as actions from './actions';
 import * as selectors from './selectors';
 
-function* getApproveList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/approveList`, { PARAM: { relTypes: [1, 99, 999] } });
+function* getApproveList({ customUrl }) {
+  const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/approveList`, { PARAM: { relTypes: [1, 99, 999] } });
   if (response) {
     const { list } = response;
     yield put(actions.setApproveList(list));
@@ -41,8 +41,9 @@ function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
   }
 }
 
-function* getUnApproveList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/unApproveList`, { PARAM: { relTypes: [1, 99, 999] } });
+function* getUnApproveList({ customUrl }) {
+  console.debug('customUrl', customUrl);
+  const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/unApproveList`, { PARAM: { relTypes: [1, 4, 99, 999] } });
   if (response) {
     const { list } = response;
     yield put(actions.setUnApproveList(list));
@@ -50,8 +51,8 @@ function* getUnApproveList() {
   }
 }
 
-function* getDraftList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/draftList`, { PARAM: { relTypes: [1, 99, 999] } });
+function* getDraftList({ customUrl }) {
+  const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/draftList`, { PARAM: { relTypes: [1, 99, 999] } });
   if (response) {
     const { list } = response;
     yield put(actions.setDraftList(list));
@@ -67,8 +68,7 @@ function* reqApprove({ appvStatus }) {
     ISFORMDATA: false,
     QUE_ID: reqRow.QUE_ID,
     APPV_STATUS: reqRow.APPV_STATUS,
-    OPINION: opinion,
-    QUE_DATA: reqRow,
+    QUE_DATA: { ...reqRow, OPINION: opinion },
     FORM_DATA: formData,
   };
 
@@ -82,11 +82,11 @@ function* getUserInfo({ userInfo, callBack }) {
   typeof callBack === 'function' && callBack(JSON.parse(list));
 }
 
-function* successApprove({ message: msg }) {
+function* successApprove({ message: msg, customUrl }) {
   message.success(msg, 3);
-  yield put(actions.getApproveList());
-  yield put(actions.getUnApproveList());
-  yield put(actions.getDraftList());
+  yield put(actions.getApproveList(customUrl));
+  yield put(actions.getUnApproveList(customUrl));
+  yield put(actions.getDraftList(customUrl));
 }
 
 function* failApprove({ errMsg }) {
@@ -111,10 +111,25 @@ function* submitHandlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc
       httpMethodInfo = Axios.get;
       break;
   }
-  console.debug('submitHandler', submitData);
   const response = yield call(httpMethodInfo, apiUrl, submitData);
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, response);
+  }
+}
+
+function* getFileDownload({ url, fileName }) {
+  const blobResponse = yield call(Axios.getDown, url);
+
+  if (window.navigator && window.navigator.msSaveBlob) {
+    window.navigator.msSaveBlob(blobResponse, fileName);
+  } else {
+    const fileUrl = window.URL.createObjectURL(blobResponse);
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }
 
@@ -128,4 +143,5 @@ export default function* watcher() {
   yield takeEvery(actionTypes.FAIL_APPROVE, failApprove);
   yield takeLatest(actionTypes.GET_USERINFO, getUserInfo);
   yield takeEvery(actionTypes.GET_CUSTOMER_DATABIND, getCustomDataBind);
+  yield takeEvery(actionTypes.GET_FILE_DOWNLOAD, getFileDownload);
 }

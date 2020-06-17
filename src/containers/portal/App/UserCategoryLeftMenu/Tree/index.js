@@ -112,6 +112,16 @@ class Tree extends Component {
     const { selectedIndex } = this.props;
     const nodeData = { ...node, active: node.key === selectedIndex };
     let menuIconClassName = ''; 
+    if(node.APP_YN === 'F'){
+      if(node.LVL === 1 ){
+        menuIconClassName = 'fa fa-lg fa-building'; 
+      } else {
+        menuIconClassName = 'icon-folder-close'; 
+      }
+    } else {
+      menuIconClassName = 'icon-bullet';
+    }
+    /*
     if(node.LVL === 1){
       menuIconClassName = 'fa fa-lg fa-building'; 
     } else if(node.LVL === 2){
@@ -119,6 +129,7 @@ class Tree extends Component {
     }else if(node.LVL === 3){
       menuIconClassName = 'icon-hyphen'
     }
+    */
 
     /*
     let menuIconClassName = 'icon-workCard';
@@ -162,7 +173,7 @@ class Tree extends Component {
 
   render() {
     const { searchFocusIndex, searchString, editTree, editMenuMode } = this.state;
-    const { treeData, showNoti, history } = this.props;
+    const { treeData, showNoti, history, visiblePersonalize } = this.props;
     return (
       <TreeWrapper>
         <div className={`tree-contents ${showNoti ? 'show-noti' : ''}`}>
@@ -180,19 +191,27 @@ class Tree extends Component {
                 autoComplete="off"
               />
             </div>
+            {visiblePersonalize && (
             <div className="myMenuEdit">
               <button type="button" onClick={this.onSetEditClick} title="메뉴수정">
                 <i blackThema className={`${editMenuMode ? 'fa fa-unlock' : 'fa fa-lock'}`} />
               </button>
             </div>
+            )}
           </div>
           <div className="searchResult" style={{ display: searchString.trim().length === 0 ? 'none' : 'block' }}>
             {this.tree && !editTree && (
               <div className="searchResultMessage" style={{ display: this.tree && this.tree.state.searchMatches.length !== 0 ? 'none' : 'block' }}>
-                <span>해당 내용 검색결과가 없습니다. Biz Store로 이동하시겠습니까?</span>
-                <Link to={`/portal/store/appMain/bizStore/app/search/${searchString}`} className="storeLink" title="스토어 홈 바로가기" target="_blank">
-                  <img src={IconGo} style={{ paddingLeft: '7px', marginTop: '-2px' }} className="nextIcon" alt="스토어 홈 바로가기" />
-                </Link>
+                 {visiblePersonalize ? 
+                  (<>
+                    <span>해당 내용 검색결과가 없습니다. Biz Store로 이동하시겠습니까?</span>
+                    <Link to={`/portal/store/appMain/bizStore/app/search/${searchString}`} className="storeLink" title="스토어 홈 바로가기" target="_blank">
+                      <img src={IconGo} style={{ paddingLeft: '7px', marginTop: '-2px' }} className="nextIcon" alt="스토어 홈 바로가기" />
+                    </Link>
+                  </>)
+                  :
+                  (<span>해당 내용 검색결과가 없습니다.</span>) 
+                }
               </div>
             )}
           </div>
@@ -226,7 +245,7 @@ class Tree extends Component {
                       // }}
                       isVirtualized={false}
                       generateNodeProps={this.generateNodeProps}
-                      rowHeight={35}
+                      rowHeight={28}
                       scaffoldBlockPxWidth={10}
                       className="sortableTreeWrapper sidebar CustomSCRB"
                       ref={ref => {
@@ -253,6 +272,7 @@ Tree.propTypes = {
   execPage: PropTypes.func.isRequired,
   saveData: PropTypes.func.isRequired,
   showNoti: PropTypes.bool.isRequired,
+  visiblePersonalize: PropTypes.bool,
 };
 
 Tree.defaultProps = {

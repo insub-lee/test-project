@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Input, Select } from 'antd';
 
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
@@ -76,7 +77,7 @@ class HealthChkItemView extends Component {
   render() {
     const { detail, saveType } = this.state;
     return (
-      <>
+      <StyledContentsWrapper>
         <StyledHtmlTable>
           <table>
             <colgroup>
@@ -87,31 +88,31 @@ class HealthChkItemView extends Component {
               <tr>
                 <th>검진항목코드</th>
                 <td>
-                  <AntdInput value={detail.ITEM_CODE} onChange={e => this.onChangeDetail('ITEM_CODE', e.target.value)} readOnly={saveType === 'U'} />
+                  <AntdInput value={detail.ITEM_CODE} className="ant-input-xs" onChange={e => this.onChangeDetail('ITEM_CODE', e.target.value)} readOnly={saveType === 'U'} />
                 </td>
               </tr>
               <tr>
                 <th>검진항목명</th>
                 <td>
-                  <AntdInput value={detail.ITEM_NAME} onChange={e => this.onChangeDetail('ITEM_NAME', e.target.value)} />
+                  <AntdInput value={detail.ITEM_NAME} className="ant-input-xs" onChange={e => this.onChangeDetail('ITEM_NAME', e.target.value)} />
                 </td>
               </tr>
               <tr>
                 <th>검진항목분류</th>
                 <td>
-                  <AntdInput value={detail.ITEM_CLASS} onChange={e => this.onChangeDetail('ITEM_CLASS', e.target.value)} />
+                  <AntdInput value={detail.ITEM_CLASS} className="ant-input-xs" onChange={e => this.onChangeDetail('ITEM_CLASS', e.target.value)} />
                 </td>
               </tr>
               <tr>
                 <th>임상적의의</th>
                 <td>
-                  <AntdTextarea value={detail.ITEM_DESC} onChange={e => this.onChangeDetail('ITEM_DESC', e.target.value)} />
+                  <AntdTextarea value={detail.ITEM_DESC} rows={4} onChange={e => this.onChangeDetail('ITEM_DESC', e.target.value)} />
                 </td>
               </tr>
               <tr>
                 <th>검진 성별</th>
                 <td>
-                  <AntdSelect value={detail.ITEM_GENDER} onChange={val => this.onChangeDetail('ITEM_GENDER', val)}>
+                  <AntdSelect value={detail.ITEM_GENDER} className="select-xs" onChange={val => this.onChangeDetail('ITEM_GENDER', val)} style={{ wid: 100 }}>
                     <AntdSelect.Option value="C">공통</AntdSelect.Option>
                     <AntdSelect.Option value="M">남자만</AntdSelect.Option>
                     <AntdSelect.Option value="F">여자만</AntdSelect.Option>
@@ -121,7 +122,7 @@ class HealthChkItemView extends Component {
               <tr>
                 <th>필수검진여부</th>
                 <td>
-                  <AntdSelect value={detail.ITEM_REQUIRE} onChange={val => this.onChangeDetail('ITEM_REQUIRE', val)}>
+                  <AntdSelect value={detail.ITEM_REQUIRE} className="select-xs" onChange={val => this.onChangeDetail('ITEM_REQUIRE', val)} style={{ width: 150 }}>
                     <AntdSelect.Option value="Y">필수검진</AntdSelect.Option>
                     <AntdSelect.Option value="N">추가검진</AntdSelect.Option>
                   </AntdSelect>
@@ -131,10 +132,10 @@ class HealthChkItemView extends Component {
           </table>
         </StyledHtmlTable>
         <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-          <StyledButton className="btn-light mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
-          <StyledButton className="btn-primary" onClick={this.onSaveCode}>저장</StyledButton>
+          <StyledButton className="btn-light btn-sm mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
+          <StyledButton className="btn-primary btn-sm" onClick={this.onSaveCode}>저장</StyledButton>
         </StyledButtonWrapper>
-      </>
+      </StyledContentsWrapper>
     );
   }
 }

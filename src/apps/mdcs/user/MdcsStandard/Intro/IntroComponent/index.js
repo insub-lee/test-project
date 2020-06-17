@@ -103,7 +103,6 @@ class IntroComponent extends Component {
   };
 
   onShowAbrogationMulti = workPrcProps => {
-    console.debug('onShowAbrogationMulti', workPrcProps);
     this.setState({
       isAbrogationMultiShow: true,
       workPrcProps,
@@ -150,8 +149,22 @@ class IntroComponent extends Component {
 
   onAbrogationMultiProcess = workPrcProps => {
     const { sagaKey, submitHandlerBySaga } = this.props;
-    const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
-    submitHandlerBySaga(sagaKey, 'POST', prefixUrl, { DRAFT_PROCESS: workPrcProps }, this.onCompleteProc);
+    const { DRAFT_PROCESS_STEP } = workPrcProps;
+
+    let isByPass = true;
+    const ruleCheckList = DRAFT_PROCESS_STEP.filter(rule => rule.ISREQUIRED === 1);
+    if (ruleCheckList.length > 0) {
+      ruleCheckList.forEach(rule => {
+        if (rule.APPV_MEMBER.length === 0) {
+          isByPass = false;
+          message.error(`${rule.NODE_NAME_KOR} 단계의 결재를 선택해 주세요`);
+        }
+      });
+    }
+    if (isByPass) {
+      const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
+      submitHandlerBySaga(sagaKey, 'POST', prefixUrl, { DRAFT_PROCESS: workPrcProps }, this.onCompleteProc);
+    }
   };
 
   render() {
@@ -228,6 +241,7 @@ class IntroComponent extends Component {
                 workPrcProps={workPrcProps}
                 component={AbrogationMultiDraft}
                 onAbrogationMultiProcess={this.onAbrogationMultiProcess}
+                onCloseAbrogationMultiModal={this.onCloseAbrogationMultiModal}
               />
               ;
             </div>
@@ -254,6 +268,7 @@ class IntroComponent extends Component {
                 TITLE={title}
                 component={AbrogationDraft}
                 onAbrogationProcess={this.onAbrogationProcess}
+                onCloseAbrogationModal={this.onCloseAbrogationModal}
               />
               ;
             </div>
