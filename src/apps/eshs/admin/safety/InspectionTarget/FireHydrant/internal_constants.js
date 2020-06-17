@@ -16,8 +16,6 @@ export const META_SEQ = {
   INPUT_ISSUE_NOTE: 9504, // 이슈등록 페이지
   INPUT_INSPECTION: 9481, // 점검결과 등록
   LIST_USAGE_SEARCH: 9541, // 미사용 등록
-  // MODIFY_INSPECTION: 5122,
-  // VIEW_STATUS: 8781, 현황없음
 };
 export const VIEW_CHANGE_SEQ = {};
 
