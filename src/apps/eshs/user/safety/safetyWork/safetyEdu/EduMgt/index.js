@@ -438,9 +438,6 @@ class EduMgt extends Component {
       selectedRowKeys: selectedWorkerList,
       onChange: this.workerTableRowSelect,
     };
-
-    console.debug('폼데이터', formData);
-    console.debug('스텟', this.state);
     return (
       <Styled>
         <StyledSearchWrap>

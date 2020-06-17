@@ -8,6 +8,8 @@ import StyledInput from 'commonStyled/Form/StyledInput';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 const { Option } = Select;
 const AntdInput = StyledInput(Input);
@@ -42,6 +44,15 @@ class SafetyWorkInfo extends Component {
     super(props);
     this.state = {};
   }
+
+  onClickBfcheckBtn = type => {
+    const { handleModal, formData } = this.props;
+    if (!formData.WORK_NO || formData.WORK_NO === '') {
+      message.error(<MessageContent>작업번호가 없습니다.</MessageContent>);
+      return;
+    }
+    handleModal(type, true);
+  };
 
   render() {
     const { handleModal, formData, handleChangeFormData, handleWorkCategory, handleUploadFileChange } = this.props;
@@ -96,14 +107,14 @@ class SafetyWorkInfo extends Component {
                     <span>* 발주회사</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdInput className="ant-input-xs ant-input-inline" value={formData.REQ_CMPNY_CD} readOnly style={{ width: '200px' }} />
+                    <AntdInput className="ant-input-xs ant-input-inline" value={formData.REQ_CMPNY_CD} readOnly style={{ width: '100px' }} />
                     <span style={{ color: '#495057', marginLeft: '5px' }}>{formData.REQ_CMPNY_NM}</span>
                   </td>
                   <th colSpan={2}>
                     <span>* 주관팀</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdInput className="ant-input-xs ant-input-inline" value={formData.REQ_DEPT_CD} readOnly style={{ width: '200px' }} />
+                    <AntdInput className="ant-input-xs ant-input-inline" value={formData.REQ_DEPT_CD} readOnly style={{ width: '100px' }} />
                     <span style={{ color: '#495057', marginLeft: '5px' }}>{formData.REQ_DEPT_NM}</span>
                   </td>
                 </tr>
@@ -112,7 +123,7 @@ class SafetyWorkInfo extends Component {
                     <span>* 담당자</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdInput className="ant-input-xs ant-input-inline" value={formData.REQ_EMP_NO} readOnly style={{ width: '200px' }} />
+                    <AntdInput className="ant-input-xs ant-input-inline" value={formData.REQ_EMP_NO} readOnly style={{ width: '100px' }} />
                     <span style={{ color: '#495057', marginLeft: '5px' }}>{formData.REQ_EMP_NM}</span>
                   </td>
                   <th colSpan={2}>
@@ -121,7 +132,7 @@ class SafetyWorkInfo extends Component {
                   <td colSpan={3}>
                     <AntdSearch
                       className="input-search-xs"
-                      style={{ width: '200px' }}
+                      style={{ width: '100px' }}
                       value={formData.WRK_CMPNY_CD}
                       disable
                       onClick={() => handleModal('cmpny', true)}
@@ -136,7 +147,7 @@ class SafetyWorkInfo extends Component {
                   </th>
                   <td colSpan={3}>
                     <div className="tableInBtnWrap">
-                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => console.debug('작업전 점검 등록 버튼')}>
+                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.onClickBfcheckBtn('mainBfcheck')}>
                         작업전 점검 등록
                       </StyledButton>
                     </div>
@@ -144,7 +155,8 @@ class SafetyWorkInfo extends Component {
                       <Radio value="공통">공통</Radio>
                       <Radio value="화기작업">
                         화기작업
-                        <span style={{ color: '#ff6666', marginLeft: '27px' }}>※ 화기작업 : 화염, 스파크 등을 발생이키는 작업</span>
+                        <br />
+                        <span style={{ color: '#ff6666', marginLeft: '5px' }}>※ 화기작업 : 화염, 스파크 등을 발생이키는 작업</span>
                         {formData.WCATEGORY === '화기작업' && (
                           <>
                             <br />
@@ -160,6 +172,7 @@ class SafetyWorkInfo extends Component {
                       </Radio>
                       <Radio value="일반위험작업">
                         일반위험작업
+                        <br />
                         <span style={{ color: '#ff6666', marginLeft: '5px' }}>※ 일반위험작업 : 화기작업 이외의 작업 </span>
                       </Radio>
                     </Radio.Group>
@@ -169,7 +182,7 @@ class SafetyWorkInfo extends Component {
                   </th>
                   <td colSpan={3}>
                     <div className="tableInBtnWrap">
-                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => console.debug('작업전 점검 등록 버튼')}>
+                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.onClickBfcheckBtn('subBfcheck')}>
                         작업전 점검 등록
                       </StyledButton>
                     </div>
@@ -193,7 +206,7 @@ class SafetyWorkInfo extends Component {
                   <td colSpan={8}>
                     <AntdInput
                       className="ant-input-xs"
-                      style={{ width: '200px' }}
+                      style={{ width: '500px' }}
                       value={formData.TITLE}
                       onChange={e => handleChangeFormData('TITLE', e.target.value)}
                     />
@@ -206,7 +219,7 @@ class SafetyWorkInfo extends Component {
                   <td colSpan={8}>
                     <AntdInput
                       className="ant-input-xs ant-input-inline"
-                      style={{ width: '200px' }}
+                      style={{ width: '500px' }}
                       value={formData.WLOC}
                       onChange={e => handleChangeFormData('WLOC', e.target.value)}
                     />
