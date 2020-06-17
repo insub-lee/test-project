@@ -14,7 +14,7 @@ export const columnDefs = [
   },
   {
     headerName: '해당여부',
-    field: 'IS_APPLICABLE',
+    field: 'IS_APPLICATE',
     width: 80,
   },
 ];
