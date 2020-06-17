@@ -3,7 +3,7 @@ import iconBig from 'apps/wts/images/icon_arr_big.png';
 import iconSmall from 'apps/wts/images/icon_arr_small.png';
 
 const StyledContents = styled.div`
-  padding: 20px 0;
+  padding: 20px 30px;
 
   &.expanded {
     position: fixed;
@@ -79,6 +79,7 @@ const StyledContents = styled.div`
         line-height: 32px;
         font-weight: 500;
         margin-right: 10px;
+        color: #333;
       }
     }
 

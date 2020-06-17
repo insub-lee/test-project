@@ -11,8 +11,9 @@ const StyledButton = component => styled(component)`
   border-radius: 3px;
   color: #212529;
   text-align: center;
-  vertical-align: middle;
   transition: all 0.2s ease-in-out;
+  height: auto;
+  vertical-align: middle;
 
   &:focus {
     border: 1px solid transparent;
