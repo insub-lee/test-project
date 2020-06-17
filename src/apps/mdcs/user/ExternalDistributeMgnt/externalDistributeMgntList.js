@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, Button, Modal } from 'antd';
+import { Table, Icon } from 'antd';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
-import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import DragAntdModal from 'components/DragAntdModal';
 
 import DistributeCompany from './DistributeCompany';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModal(Modal);
 
 class ExternalDistributeMgntList extends Component {
   state = {
@@ -23,7 +23,7 @@ class ExternalDistributeMgntList extends Component {
     getCallDataHandler(id, apiAry, () => {});
   }
 
-  onClickMail = () => {
+  onClickMail = record => {
     window.alert('개발중');
   };
 
@@ -60,7 +60,7 @@ class ExternalDistributeMgntList extends Component {
       dataIndex: 'DOCNUMBER',
       key: 'DOCNUMBER',
       align: 'center',
-      width: '8%',
+      width: '10%',
     },
     {
       title: 'Rev',
@@ -82,22 +82,25 @@ class ExternalDistributeMgntList extends Component {
       width: '15%',
       ellipsis: true,
       render: (text, record) => (
-        <Button type="link" onClick={() => this.onClickDept(record)}>
+        <StyledButton className="btn-link btn-xs" onClick={() => this.onClickDept(record)}>
           {text}
-        </Button>
+        </StyledButton>
       ),
     },
     {
       title: '수신자',
       dataIndex: 'RECV_USER_NAME',
       key: 'RECV_USER_NAME',
-      width: '15%',
+      width: '10%',
+      align: 'center',
+      ellipsis: true,
     },
     {
       title: '배포자',
       dataIndex: 'DIST_USER_NAME',
       key: 'DIST_USER_NAME',
-      width: '8%',
+      width: '7%',
+      align: 'center',
     },
     {
       title: '배포일(횟수)',
@@ -111,27 +114,32 @@ class ExternalDistributeMgntList extends Component {
       dataIndex: 'PURCHASE_USER_NAME',
       key: 'PURCHASE_USER_NAME',
       width: '10%',
+      align: 'center',
       ellipsis: true,
     },
     {
       title: 'New',
       dataIndex: 'DOCNUMBER',
       key: 'new',
-      width: '6%',
+      width: '7%',
       align: 'center',
       render: (text, record) => (
-        <Button type="default" size="small" onClick={() => this.onClickNew(record)}>
+        <StyledButton className="btn-primary btn-xs" onClick={() => this.onClickNew(record)}>
           추가
-        </Button>
+        </StyledButton>
       ),
     },
     {
       title: 'Mail',
       dataIndex: 'DOCNUMBER',
       key: 'mail',
-      width: '6%',
+      width: '4%',
       align: 'center',
-      render: (text, record) => <Icon type="mail" style={{ cursor: 'pointer' }} onClick={this.onClickMail} />,
+      render: (text, record) => (
+        <StyledButton className="btn-link btn-xs" onClick={() => this.onClickMail(record)}>
+          <Icon type="mail" />
+        </StyledButton>
+      ),
     },
   ];
 
@@ -156,11 +164,21 @@ class ExternalDistributeMgntList extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
-          <AntdTable dataSource={list.map(item => ({ ...item, key: `${item.DOCNUMBER}_${item.RECV_DEPT_ID}` }))} columns={this.columns} />
+          <AntdTable
+            dataSource={list.map(item => ({ ...item, key: `${item.DOCNUMBER}_${item.RECV_DEPT_ID}` }))}
+            columns={this.columns}
+          />
         </StyledContentsWrapper>
-        <AntdModal width={700} visible={this.state.isShow} title="외부배포 회사" onCancel={this.onCancelPopup} destroyOnClose footer={null}>
+        <DragAntdModal
+          width={700}
+          visible={this.state.isShow}
+          title="외부배포 회사"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={null}
+        >
           <DistributeCompany selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
-        </AntdModal>
+        </DragAntdModal>
       </>
     );
   }

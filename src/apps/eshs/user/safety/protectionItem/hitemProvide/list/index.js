@@ -4,18 +4,18 @@ import { Input, Table, Select, DatePicker, Modal } from 'antd';
 import moment from 'moment';
 import { debounce } from 'lodash';
 
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledPicker from 'commonStyled/Form/StyledPicker';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import ModalContents from './modalContents';
 
-const AntdModal = StyledContentsModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
 const AntdSelect = StyledSelect(Select);
-const AntdTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdPicker = StyledPicker(DatePicker.RangePicker);
 const AntdInput = StyledInput(Input);
 class List extends React.Component {
@@ -247,8 +247,8 @@ class List extends React.Component {
     const { sagaKey, changeFormData, formData, viewPageData, saveTask, getCallDataHandler, submitHandlerBySaga, extraApiData, profile } = this.props;
     return (
       <>
-        <ContentsWrapper>
-          <StyledSearchWrap>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
             <div style={{ marginBottom: '10px' }}>
               <AntdSelect defaultValue="CP" className="select-mid mr5" onChange={value => handleSearchChange('site', value)} style={{ width: '10%' }}>
                 <Select.Option value="CP">청주</Select.Option>
@@ -288,7 +288,7 @@ class List extends React.Component {
               </AntdSelect>
               <AntdInput className="ant-input-mid ant-input-inline" placeholder="품목명" style={{ width: '15%' }} />
             </div>
-          </StyledSearchWrap>
+          </StyledCustomSearchWrapper>
           <div style={{ padding: '10px' }}>
             <AntdTable
               columns={columns}
@@ -298,7 +298,7 @@ class List extends React.Component {
               footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
             />
           </div>
-        </ContentsWrapper>
+        </StyledContentsWrapper>
         <AntdModal title="입고 등록" visible={modalVisible} footer={null} onCancel={handleModalClose} width="80%" destroyOnClose>
           <ModalContents
             sagaKey={sagaKey}

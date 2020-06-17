@@ -1,12 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Select, Input } from 'antd';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
+const AntdSearch = StyledSearchInput(Input.Search);
 class SearchComp extends React.Component {
   constructor(props) {
     super(props);
@@ -79,38 +82,40 @@ class SearchComp extends React.Component {
     const { KEYWORD, CATEGORY_ID, SUB_CATEGORY_ID, handleSearchChange } = this.props;
     return (
       <>
-        <StyledSearchWrap>
-          <AntdSelect
-            className="select-mid"
-            defaultValue="전체 보기"
-            value={CATEGORY_ID}
-            onChange={value => handleCategoryChange(value, 'SELECT', false)}
-            style={{ width: '15%' }}
-          >
-            {categories.map(item => (
-              <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
-            ))}
-            <Select.Option value="">전체 보기</Select.Option>
-          </AntdSelect>
-          <AntdSelect
-            className="select-mid"
-            value={CATEGORY_ID ? SUB_CATEGORY_ID : null}
-            onChange={value => handleCategoryChange(value, 'SELECT', true)}
-            style={{ width: '15%' }}
-            disabled={!CATEGORY_ID}
-          >
-            {subCategories.map(item => (
-              <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
-            ))}
-          </AntdSelect>
-          <AntdInput.Search
-            value={KEYWORD}
-            onChange={e => handleSearchChange(e, 'INPUT')}
-            className="ant-input-mid ant-input-inline search-item input-width160"
-            placeholder="검색"
-            style={{ width: '20%' }}
-          />
-        </StyledSearchWrap>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <AntdSelect
+              className="select-mid"
+              defaultValue="전체 보기"
+              value={CATEGORY_ID}
+              onChange={value => handleCategoryChange(value, 'SELECT', false)}
+              style={{ width: '15%' }}
+            >
+              {categories.map(item => (
+                <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
+              ))}
+              <Select.Option value="">전체 보기</Select.Option>
+            </AntdSelect>
+            <AntdSelect
+              className="select-mid"
+              value={CATEGORY_ID ? SUB_CATEGORY_ID : null}
+              onChange={value => handleCategoryChange(value, 'SELECT', true)}
+              style={{ width: '15%' }}
+              disabled={!CATEGORY_ID}
+            >
+              {subCategories.map(item => (
+                <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
+              ))}
+            </AntdSelect>
+            <AntdSearch
+              value={KEYWORD}
+              onChange={e => handleSearchChange(e, 'INPUT')}
+              className="ant-search-inline input-search-mid mr5"
+              placeholder="검색"
+              style={{ width: '20%' }}
+            />
+          </StyledCustomSearchWrapper>
+        </StyledContentsWrapper>
       </>
     );
   }

@@ -4,18 +4,18 @@ import { Table, Select, DatePicker, Modal } from 'antd';
 import moment from 'moment';
 import { debounce } from 'lodash';
 
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledPicker from 'commonStyled/Form/StyledPicker';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import ModalContents from './modalContents';
 
-const AntdModal = StyledContentsModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
 const AntdSelect = StyledSelect(Select);
-const AntdTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdPicker = StyledPicker(DatePicker.RangePicker);
 class List extends React.Component {
   constructor(props) {
@@ -31,6 +31,7 @@ class List extends React.Component {
         endDate: moment().format('YYYY-MM-DD'),
         type: '',
         deptId: '',
+        hqId: '',
       },
       modalVisible: false,
       isModified: false,
@@ -49,9 +50,9 @@ class List extends React.Component {
 
   getDataSource = () => {
     const { setDataSource } = this;
-    const { startDate, endDate, type, deptId } = this.state.searchValue;
+    const { startDate, endDate, type, deptId, hqId } = this.state.searchValue;
     const { sagaKey: id, getExtraApiData } = this.props;
-    const params = `?&START_DATE=${startDate}&END_DATE=${endDate}&TYPE=${type}&DEPT_ID=${deptId}`;
+    const params = `?&START_DATE=${startDate}&END_DATE=${endDate}&TYPE=${type}&HQ_ID=${hqId}&DEPT_ID=${deptId}`;
     const apiArr = [
       {
         key: 'dataSource',
@@ -95,10 +96,13 @@ class List extends React.Component {
   handleHqChange = headquarterId => {
     const { sagaKey: id, getExtraApiData } = this.props;
     if (!headquarterId) {
-      return this.setState(prevState => ({
-        isHeadquarterSelect: false,
-        searchValue: Object.assign(prevState.searchValue, { deptId: '' }),
-      }));
+      return this.setState(
+        prevState => ({
+          isHeadquarterSelect: false,
+          searchValue: Object.assign(prevState.searchValue, { deptId: '' }, { hqId: headquarterId }),
+        }),
+        this.getDataSource,
+      );
     }
     this.setState({ isHeadquarterSelect: true });
     const apiArr = [
@@ -108,7 +112,13 @@ class List extends React.Component {
         url: `/api/eshs/v1/common/EshsHqAndDeptList?DEPT_ID=${headquarterId}`,
       },
     ];
-    return getExtraApiData(id, apiArr, this.setDeptList);
+
+    const selectHqCallback = () => {
+      this.getDataSource();
+      this.setDeptList();
+    };
+
+    return getExtraApiData(id, apiArr, selectHqCallback);
   };
 
   setDeptList = () => {
@@ -234,8 +244,8 @@ class List extends React.Component {
     const { sagaKey, changeFormData, formData, viewPageData, saveTask, getExtraApiData, submitExtraHandler, extraApiData, profile } = this.props;
     return (
       <>
-        <ContentsWrapper>
-          <StyledSearchWrap>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
             <div style={{ marginBottom: '10px' }}>
               <AntdSelect defaultValue="CP" className="select-mid mr5" onChange={value => handleSearchChange('site', value)} style={{ width: '10%' }}>
                 <Select.Option value="CP">청주</Select.Option>
@@ -267,11 +277,11 @@ class List extends React.Component {
                   <Select.Option value={department.DEPT_ID}>{department.NAME_KOR}</Select.Option>
                 ))}
               </AntdSelect>
-              <StyledButton className="btn-primary mr5" onClick={handleModalVisible}>
+              <StyledButton className="btn-primary btn-sm mr5" onClick={handleModalVisible}>
                 등록
               </StyledButton>
             </div>
-          </StyledSearchWrap>
+          </StyledCustomSearchWrapper>
           <div style={{ padding: '10px' }}>
             <AntdTable
               columns={columns}
@@ -281,7 +291,7 @@ class List extends React.Component {
               footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
             />
           </div>
-        </ContentsWrapper>
+        </StyledContentsWrapper>
         <AntdModal title="입고 등록" visible={modalVisible} footer={null} onCancel={handleModalClose} width="80%" destroyOnClose>
           <ModalContents
             sagaKey={sagaKey}

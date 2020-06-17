@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-
 import { Input, InputNumber, message } from 'antd';
+
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
@@ -144,10 +142,10 @@ class List extends React.Component {
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
-        <ContentsWrapper>
-          <StyledSearchWrap>
-            <div className="search-inner">
-              <span className="input-label">화학물 추가</span>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <span className="text-label">화학물 추가</span>
               <AntdSearch
                 className="ant-search-inline input-search-mid mr5"
                 placeHolder="검색"
@@ -155,52 +153,48 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <StyledButtonWrapper className="btn-wrap-inline">
-                <StyledButton className="btn-primary btn-first" onClick={handleMasterModifyClick}>
-                  수정
-                </StyledButton>
-                <StyledButton className="btn-light" onClick={handleResetClick}>
-                  초기화
-                </StyledButton>
-              </StyledButtonWrapper>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={handleMasterModifyClick}>
+                수정
+              </StyledButton>
+              <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
+                초기화
+              </StyledButton>
             </div>
-          </StyledSearchWrap>
-          <div className="tableWrapper">
-            <StyledHtmlTable>
-              <table>
-                <colgroup>
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <th>SAP NO.</th>
-                    <td>{requestValue.SAP_NO}</td>
-                    <th>화학물질명_SAP</th>
-                    <td>{requestValue.NAME_SAP}</td>
-                    <th>단위</th>
-                    <td>{requestValue.UNIT}</td>
-                    <th>kg환산계수</th>
-                    <td>
-                      <InputNumber
-                        value={requestValue.CONVERT_COEFFICIENT}
-                        onChange={value => handleInputNumberChange(value, 'CONVERT_COEFFICIENT')}
-                        className="col-input-number"
-                        style={{ width: '100%', visibility: !isSelectSapMaterial() ? 'hidden' : 'visible' }}
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </StyledHtmlTable>
-          </div>
-        </ContentsWrapper>
+          </StyledCustomSearchWrapper>
+          <StyledHtmlTable>
+            <table>
+              <colgroup>
+                <col width="10%" />
+                <col width="15%" />
+                <col width="10%" />
+                <col width="15%" />
+                <col width="10%" />
+                <col width="15%" />
+                <col width="10%" />
+                <col width="15%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th>SAP NO.</th>
+                  <td>{requestValue.SAP_NO}</td>
+                  <th>화학물질명_SAP</th>
+                  <td>{requestValue.NAME_SAP}</td>
+                  <th>단위</th>
+                  <td>{requestValue.UNIT}</td>
+                  <th>kg환산계수</th>
+                  <td>
+                    <InputNumber
+                      value={requestValue.CONVERT_COEFFICIENT}
+                      onChange={value => handleInputNumberChange(value, 'CONVERT_COEFFICIENT')}
+                      className="col-input-number ant-input-number-sm"
+                      style={{ width: '100%', visibility: !isSelectSapMaterial() ? 'hidden' : 'visible' }}
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </StyledHtmlTable>
+        </StyledContentsWrapper>
         <Modal
           getMaterialList={getMaterialList}
           SearchComp={SearchComp}

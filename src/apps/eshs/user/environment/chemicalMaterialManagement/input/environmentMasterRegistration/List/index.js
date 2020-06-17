@@ -1,17 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Popconfirm, Table } from 'antd';
+import { Input, InputNumber, Select, Popconfirm, Table, message } from 'antd';
 
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 
 import Modal from '../InputModal';
 import SearchComp from '../InputModal/SearchComp';
@@ -82,6 +81,10 @@ class List extends React.Component {
     const { dataSource, requestValue } = this.state;
     const param = dataSource.map(data => Object.assign(data, { SAP_ID: requestValue.SAP_ID }));
 
+    if (!requestValue.SAP_ID) {
+      return message.error('화학물질을 선택해주세요.');
+    }
+
     return submitHandlerBySaga(
       id,
       'POST',
@@ -110,7 +113,6 @@ class List extends React.Component {
   };
 
   handleResetClick = () => {
-    const { profile } = this.props;
     this.setState({
       requestValue: {
         SAP_ID: '',
@@ -264,7 +266,7 @@ class List extends React.Component {
         <AntdInputNumber
           value={this.state.dataSource[index].CONTENT_DOSE}
           onChange={value => this.handleRequestChange('CONTENT_DOSE', value, index)}
-          className="input-number-sm"
+          className="ant-input-number-sm"
           style={{ width: '100%' }}
         />
       ),
@@ -375,10 +377,10 @@ class List extends React.Component {
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
-        <ContentsWrapper>
-          <StyledSearchWrap>
-            <div className="search-inner">
-              <span className="input-label">화학물 추가</span>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <span className="text-label">화학물 추가</span>
               <AntdSearch
                 className="ant-search-inline input-search-mid mr5"
                 placeHolder="검색"
@@ -386,71 +388,57 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <StyledButtonWrapper className="btn-wrap-inline">
-                <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
-                  저장/수정
-                </StyledButton>
-                <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
-                  <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
-                    삭제
-                  </StyledButton>
-                </Popconfirm>
-                <StyledButton className="btn-light" onClick={handleResetClick}>
-                  초기화
-                </StyledButton>
-              </StyledButtonWrapper>
-            </div>
-          </StyledSearchWrap>
-          <div className="tableWrapper">
-            <StyledHtmlTable>
-              <table style={{ marginBottom: '10px' }}>
-                <colgroup>
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <th>SAP NO.</th>
-                    <td>{requestValue.SAP_NO}</td>
-                    <th>화학물질명_SAP</th>
-                    <td>{requestValue.NAME_SAP}</td>
-                    <th>단위</th>
-                    <td>{requestValue.UNIT}</td>
-                    <th>kg환산계수</th>
-                    <td>{requestValue.CONVERT_COEFFICIENT} </td>
-                  </tr>
-                </tbody>
-              </table>
-            </StyledHtmlTable>
-            {isModified ? (
-              <>
-                <div style={{ padding: '10px' }}>혼합물 정보 입력</div>
-                <AntdTable
-                  columns={this.tableColumns}
-                  dataSource={dataSource}
-                  pagination={false}
-                  onRow={(record, index) => ({
-                    // onClick: () => this.setState(prevState => ({ subRequestValue: Object.assign(prevState.subRequestValue, record), isSubModified: true })),
-                  })}
-                />
-              </>
-            ) : null}
-            <div className="selSaveWrapper" style={{ marginBottom: '10px' }}>
-              <StyledButton className="btn-primary btn-sm mr5" onClick={handleSubMateiralAdd}>
-                추가
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
+                저장/수정
               </StyledButton>
-              <StyledButton className="btn-primary btn-light btn-sm" onClick={() => console.debug('삭제')}>
-                삭제
+              <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
+                <StyledButton className="btn-light btn-first btn-sm" onClick={handleDeleteClick}>
+                  삭제
+                </StyledButton>
+              </Popconfirm>
+              <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
+                초기화
               </StyledButton>
             </div>
-          </div>
-        </ContentsWrapper>
+          </StyledCustomSearchWrapper>
+          <StyledHtmlTable>
+            <table style={{ marginBottom: '10px' }}>
+              <colgroup>
+                <col width="10%" />
+                <col width="15%" />
+                <col width="10%" />
+                <col width="15%" />
+                <col width="10%" />
+                <col width="15%" />
+                <col width="10%" />
+                <col width="15%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th>SAP NO.</th>
+                  <td>{requestValue.SAP_NO}</td>
+                  <th>화학물질명_SAP</th>
+                  <td>{requestValue.NAME_SAP}</td>
+                  <th>단위</th>
+                  <td>{requestValue.UNIT}</td>
+                  <th>kg환산계수</th>
+                  <td>{requestValue.CONVERT_COEFFICIENT} </td>
+                </tr>
+              </tbody>
+            </table>
+          </StyledHtmlTable>
+          {isModified ? (
+            <>
+              <div style={{ padding: '10px' }}>혼합물 정보 입력</div>
+              <AntdTable columns={this.tableColumns} dataSource={dataSource} pagination={false} />
+              <div className="selSaveWrapper" style={{ marginBottom: '10px', marginTop: '10px' }}>
+                <StyledButton className="btn-primary btn-sm" onClick={handleSubMateiralAdd}>
+                  추가
+                </StyledButton>
+              </div>
+            </>
+          ) : null}
+        </StyledContentsWrapper>
         <Modal
           getMaterialList={getMaterialList}
           sagaKey={sagaKey}
@@ -477,7 +465,6 @@ List.propTypes = {
   changeFormData: PropTypes.func,
   submitHandlerBySaga: PropTypes.func,
   formData: PropTypes.object,
-  profile: PropTypes.object,
 };
 
 List.defaultProps = {

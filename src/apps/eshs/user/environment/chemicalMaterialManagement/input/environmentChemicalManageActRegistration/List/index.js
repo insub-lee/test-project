@@ -1,16 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import { Popconfirm, Input, InputNumber, Select, message } from 'antd';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import { Popconfirm, Input, Select } from 'antd';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from '../SearchComp';
@@ -18,7 +16,6 @@ import SearchComp from '../SearchComp';
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
-const AntdInputNumber = StyledInputNumber(InputNumber);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -228,15 +225,21 @@ class List extends React.Component {
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
-        <ContentsWrapper>
-          <StyledSearchWrap>
-            <span className="input-label">화학물 추가</span>
-            <AntdSearch className="ant-search-inline input-search-mid mr5" placeholder="검색" onClick={handleSearchClick} value="" style={{ width: '200px' }} />
-            <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <span className="text-label">화학물 추가</span>
+              <AntdSearch
+                className="ant-search-inline input-search-mid mr5"
+                placeholder="검색"
+                onClick={handleSearchClick}
+                value=""
+                style={{ width: '200px' }}
+              />
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
                 신규등록
               </StyledButton>
-              <StyledButton className="btn-primary btn-first" onClick={handleModifyClick}>
+              <StyledButton className="btn-primary mr5 btn-sm" onClick={handleModifyClick}>
                 수정
               </StyledButton>
               <Popconfirm
@@ -245,129 +248,127 @@ class List extends React.Component {
                 okText={isModified ? '삭제' : '확인'}
                 cancelText="취소"
               >
-                <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
+                <StyledButton className="btn-light mr5 btn-sm" onClick={handleDeleteClick}>
                   삭제
                 </StyledButton>
               </Popconfirm>
-              <StyledButton className="btn-light" onClick={handleResetClick}>
+              <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
                 초기화
               </StyledButton>
-            </StyledButtonWrapper>
-          </StyledSearchWrap>
-          <div className="tableWrapper">
-            <StyledHtmlTable>
-              <table>
-                <colgroup>
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                  <col width="10%" />
-                  <col width="15%" />
-                </colgroup>
-                <tbody>
-                  <tr>
-                    <th colSpan={1}>분류</th>
-                    <td colSpan={3}>
-                      <AntdSelect
-                        className="select-sm"
-                        defaultValue={1977}
-                        value={Number(requestValue.CATEGORY_ID)}
-                        onChange={value => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { CATEGORY_ID: value }) }))}
-                        style={{ width: '40%' }}
-                      >
-                        {getCategorys.map(item => (
-                          <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
-                        ))}
-                      </AntdSelect>
-                    </td>
-                    <th colSpan={1}>CAS_NO.</th>
-                    <td colSpan={3}>
-                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={handleInputChange} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th colSpan={1}>화학물질명_국문</th>
-                    <td colSpan={3}>
-                      <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={handleInputChange} />
-                    </td>
-                    <th colSpan={1}>화학물질명_영문</th>
-                    <td colSpan={3}>
-                      <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={handleInputChange} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th rowSpan={5}>고유번호</th>
-                    <th>기존화학물질</th>
-                    <td colSpan={2}>
-                      <AntdInput className="ant-input-sm" name="EXISTING_MATERIAL" value={requestValue.EXISTING_MATERIAL} onChange={handleInputChange} />
-                    </td>
-                    <th rowSpan={3}>제한내용</th>
-                    <td rowSpan={3}>
-                      <Input.TextArea
-                        name="RESTRICT_DETAIL"
-                        value={requestValue.RESTRICT_DETAIL}
-                        onChange={handleInputChange}
-                        autoSize={{ minRows: 4, maxRows: 4 }}
-                      />
-                    </td>
-                    <th rowSpan={3}>함량정보</th>
-                    <td rowSpan={3}>
-                      <Input.TextArea
-                        name="CONTENT_FACTOR"
-                        value={requestValue.CONTENT_FACTOR}
-                        onChange={handleInputChange}
-                        autoSize={{ minRows: 4, maxRows: 4 }}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>유해화학물질</th>
-                    <td colSpan={2}>
-                      <AntdInput className="ant-input-sm" name="HARMFUL_MATERIAL" value={requestValue.HARMFUL_MATERIAL} onChange={handleInputChange} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>중점관리물질</th>
-                    <td colSpan={2}>
-                      <AntdInput className="ant-input-sm" name="EMPHASIS_MANAGE" value={requestValue.EMPHASIS_MANAGE} onChange={handleInputChange} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>암, 돌연변이성물질</th>
-                    <td colSpan={2}>
-                      <AntdInput className="ant-input-sm" name="CANCER_MATERIAL" value={requestValue.CANCER_MATERIAL} onChange={handleInputChange} />
-                    </td>
-                    <th rowSpan={1}>비고</th>
-                    <td rowSpan={1}>
-                      <AntdInput className="ant-input-sm" name="ETC" value={requestValue.ETC} onChange={handleInputChange} />
-                    </td>
-                    <th rowSpan={1}>수식</th>
-                    <td rowSpan={1}>
-                      <AntdInput className="ant-input-sm" name="EXPRESSION" value={requestValue.EXPRESSION} onChange={handleInputChange} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>사고대비물질</th>
-                    <td colSpan={2}>
-                      <AntdInput className="ant-input-sm" name="ACCIDENT_MATERIAL" value={requestValue.ACCIDENT_MATERIAL} onChange={handleInputChange} />
-                    </td>
-                    <th>제한물질 NO.</th>
-                    <td>
-                      <AntdInput name="RESTRICT_NO" value={requestValue.RESTRICT_NO} onChange={handleInputChange} className="ant-input-sm" />
-                    </td>
-                    <th>금지물질 NO.</th>
-                    <td>
-                      <AntdInput name="PROHIBITION_NO" value={requestValue.PROHIBITION_NO} onChange={handleInputChange} className="ant-input-sm" />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </StyledHtmlTable>
-          </div>
-        </ContentsWrapper>
+            </div>
+          </StyledCustomSearchWrapper>
+          <StyledHtmlTable>
+            <table>
+              <colgroup>
+                <col width="10%" />
+                <col width="15%" />
+                <col width="10%" />
+                <col width="15%" />
+                <col width="10%" />
+                <col width="15%" />
+                <col width="10%" />
+                <col width="15%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th colSpan={1}>분류</th>
+                  <td colSpan={3}>
+                    <AntdSelect
+                      className="select-sm"
+                      defaultValue={1977}
+                      value={Number(requestValue.CATEGORY_ID)}
+                      onChange={value => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { CATEGORY_ID: value }) }))}
+                      style={{ width: '40%' }}
+                    >
+                      {getCategorys.map(item => (
+                        <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
+                      ))}
+                    </AntdSelect>
+                  </td>
+                  <th colSpan={1}>CAS_NO.</th>
+                  <td colSpan={3}>
+                    <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={handleInputChange} />
+                  </td>
+                </tr>
+                <tr>
+                  <th colSpan={1}>화학물질명_국문</th>
+                  <td colSpan={3}>
+                    <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={handleInputChange} />
+                  </td>
+                  <th colSpan={1}>화학물질명_영문</th>
+                  <td colSpan={3}>
+                    <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={handleInputChange} />
+                  </td>
+                </tr>
+                <tr>
+                  <th rowSpan={5}>고유번호</th>
+                  <th>기존화학물질</th>
+                  <td colSpan={2}>
+                    <AntdInput className="ant-input-sm" name="EXISTING_MATERIAL" value={requestValue.EXISTING_MATERIAL} onChange={handleInputChange} />
+                  </td>
+                  <th rowSpan={3}>제한내용</th>
+                  <td rowSpan={3}>
+                    <Input.TextArea
+                      name="RESTRICT_DETAIL"
+                      value={requestValue.RESTRICT_DETAIL}
+                      onChange={handleInputChange}
+                      autoSize={{ minRows: 4, maxRows: 4 }}
+                    />
+                  </td>
+                  <th rowSpan={3}>함량정보</th>
+                  <td rowSpan={3}>
+                    <Input.TextArea
+                      name="CONTENT_FACTOR"
+                      value={requestValue.CONTENT_FACTOR}
+                      onChange={handleInputChange}
+                      autoSize={{ minRows: 4, maxRows: 4 }}
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <th>유해화학물질</th>
+                  <td colSpan={2}>
+                    <AntdInput className="ant-input-sm" name="HARMFUL_MATERIAL" value={requestValue.HARMFUL_MATERIAL} onChange={handleInputChange} />
+                  </td>
+                </tr>
+                <tr>
+                  <th>중점관리물질</th>
+                  <td colSpan={2}>
+                    <AntdInput className="ant-input-sm" name="EMPHASIS_MANAGE" value={requestValue.EMPHASIS_MANAGE} onChange={handleInputChange} />
+                  </td>
+                </tr>
+                <tr>
+                  <th>암, 돌연변이성물질</th>
+                  <td colSpan={2}>
+                    <AntdInput className="ant-input-sm" name="CANCER_MATERIAL" value={requestValue.CANCER_MATERIAL} onChange={handleInputChange} />
+                  </td>
+                  <th rowSpan={1}>비고</th>
+                  <td rowSpan={1}>
+                    <AntdInput className="ant-input-sm" name="ETC" value={requestValue.ETC} onChange={handleInputChange} />
+                  </td>
+                  <th rowSpan={1}>수식</th>
+                  <td rowSpan={1}>
+                    <AntdInput className="ant-input-sm" name="EXPRESSION" value={requestValue.EXPRESSION} onChange={handleInputChange} />
+                  </td>
+                </tr>
+                <tr>
+                  <th>사고대비물질</th>
+                  <td colSpan={2}>
+                    <AntdInput className="ant-input-sm" name="ACCIDENT_MATERIAL" value={requestValue.ACCIDENT_MATERIAL} onChange={handleInputChange} />
+                  </td>
+                  <th>제한물질 NO.</th>
+                  <td>
+                    <AntdInput name="RESTRICT_NO" value={requestValue.RESTRICT_NO} onChange={handleInputChange} className="ant-input-sm" />
+                  </td>
+                  <th>금지물질 NO.</th>
+                  <td>
+                    <AntdInput name="PROHIBITION_NO" value={requestValue.PROHIBITION_NO} onChange={handleInputChange} className="ant-input-sm" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </StyledHtmlTable>
+        </StyledContentsWrapper>
         <Modal
           sagaKey={sagaKey}
           visible={visible}

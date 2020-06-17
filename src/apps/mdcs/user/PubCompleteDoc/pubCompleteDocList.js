@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Table, Icon, Modal, Button } from 'antd';
+import { Table, Icon } from 'antd';
 import { ExportOutlined } from '@ant-design/icons';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import DragAntdModal from 'components/DragAntdModal';
 
 import ContentView from './ContentView';
 import ExternalDist from './ExternalDist';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModalPad(Modal);
 
 class PubCompleteDocList extends Component {
   // eslint-disable-next-line react/state-in-constructor
@@ -155,6 +154,29 @@ class PubCompleteDocList extends Component {
     };
     return (
       <>
+        <DragAntdModal
+          width={700}
+          visible={this.state.isShow}
+          onCancel={this.onCancel}
+          destroyOnClose
+          footer={[<StyledButton className="btn-light btn-sm" onClick={this.onCancel}>취소</StyledButton>]}
+        >
+          <ContentView workSeq={this.state.workSeq} taskSeq={this.state.taskSeq} pubDocInfo={this.state.pubDocInfo} />
+        </DragAntdModal>
+        <DragAntdModal
+          width={1000}
+          visible={this.state.isExternalDistShow}
+          title="외부배포"
+          onCancel={this.onExternalDistCancel}
+          destroyOnClose
+          footer={null}
+        >
+          <ExternalDist
+            docList={this.state.selectedPubDocList}
+            onExternalDistComplete={this.onExternalDistComplete}
+            onExternalDistCancel={this.onExternalDistCancel}
+          />
+        </DragAntdModal>
         <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
@@ -170,17 +192,6 @@ class PubCompleteDocList extends Component {
         <StyledContentsWrapper>
           <AntdTable rowSelection={rowSelection} dataSource={this.state.pubDocList} columns={this.columns} />
         </StyledContentsWrapper>
-
-        <AntdModal width={700} visible={this.state.isShow} onCancel={this.onCancel} destroyOnClose footer={[<Button onClick={this.onCancel}>취소</Button>]}>
-          <ContentView workSeq={this.state.workSeq} taskSeq={this.state.taskSeq} pubDocInfo={this.state.pubDocInfo} />
-        </AntdModal>
-        <AntdModal width={1000} visible={this.state.isExternalDistShow} title="외부배포" onCancel={this.onExternalDistCancel} destroyOnClose footer={null}>
-          <ExternalDist
-            docList={this.state.selectedPubDocList}
-            onExternalDistComplete={this.onExternalDistComplete}
-            onExternalDistCancel={this.onExternalDistCancel}
-          />
-        </AntdModal>
       </>
     );
   }
