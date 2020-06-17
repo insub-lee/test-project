@@ -5,9 +5,30 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+
+import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
+import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import moment from 'moment';
 
 const AntdInput = StyledInput(Input);
+
+const excelColumn = [
+  { title: 'SYSTEM M (Area)', width: { wpx: 150 }, field: 'EI_SYSTEM', filter: 'agTextColumnFilter' },
+  { title: '발생량(TON/월 평균)', width: { wpx: 150 }, field: 'INCOM_TON', filter: 'agTextColumnFilter' },
+  { title: '오염물질', width: { wpx: 150 }, field: 'INCOM_POLLUTION', filter: 'agTextColumnFilter' },
+  { title: 'SPEC(ppm)', width: { wpx: 150 }, field: 'INCOM_SPEC', filter: 'agTextColumnFilter' },
+  { title: 'AV.', width: { wpx: 150 }, field: 'INCOM_AV', filter: 'agTextColumnFilter' },
+  { title: 'HUNTING', width: { wpx: 150 }, field: 'INCOM_HUNTING', filter: 'agTextColumnFilter' },
+  { title: '배출구', width: { wpx: 150 }, field: 'DISCHARGE', filter: 'agTextColumnFilter' },
+  { title: '배출량(Ton/Day)', width: { wpx: 150 }, field: 'DISCHARGE_TON', filter: 'agTextColumnFilter' },
+  { title: '오염물질', width: { wpx: 150 }, field: 'DISCHARGE_POLLUTION', filter: 'agTextColumnFilter' },
+  { title: 'WARNING', width: { wpx: 150 }, field: 'DISCHARGE_WARNING', filter: 'agTextColumnFilter' },
+  { title: 'SHOTDOWN', width: { wpx: 150 }, field: 'DISCHARGE_SHOTDOWN', filter: 'agTextColumnFilter' },
+  { title: 'AV.', width: { wpx: 150 }, field: 'DISCHARGE_AV', filter: 'agTextColumnFilter' },
+  { title: 'HUNTING', width: { wpx: 150 }, field: 'DISCHARGE_HUNTING', filter: 'agTextColumnFilter' },
+  { title: '오염물질총량(t)', width: { wpx: 150 }, field: 'DISCHARGE_TOTAL', filter: 'agTextColumnFilter' },
+];
 class ItemTable extends Component {
   constructor(props) {
     super(props);
@@ -149,9 +170,17 @@ class ItemTable extends Component {
     return (
       <StyledHtmlTable>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
-            Excel Download
-          </StyledButton>
+          <ExcelDownloadComp
+            isBuilder={false}
+            fileName={`Water_${moment().format('YYYYMMDD')}`}
+            className="testClassName"
+            btnText="Excel Download"
+            sheetName={`Water_${moment().format('YYYYMMDD')}`}
+            listData={itemList}
+            btnSize="btn-sm btn-first"
+            fields={createExcelData(excelColumn, 'FIELD', 'field')}
+            columns={excelColumn.map(item => ({ ...item, ...excelStyle }))}
+          />
           {!searchFlag && (
             <>
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>

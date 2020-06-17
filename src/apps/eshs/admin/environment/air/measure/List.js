@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { DatePicker, Select, message } from 'antd';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 
@@ -43,10 +43,7 @@ class List extends Component {
   initData = () => {
     const { result } = this.props;
     const gasList = result && result.gasType && result.gasType.list;
-    const gasColor = gasList
-      .map(item => ({ [item.GAS_CD]: `#${Math.floor(Math.random() * 16777215).toString(16)}` }))
-      .reduce((resultColor, item) => ({ ...resultColor, ...item }), {});
-    this.setState({ gasList, gasColor });
+    this.setState({ gasList });
   };
 
   isSearch = () => {
@@ -110,41 +107,48 @@ class List extends Component {
   };
 
   render() {
-    const { measureList, gasList, selectGubun, gasColor } = this.state;
+    const { measureList, gasList, selectGubun } = this.state;
 
     return (
       <StyledContentsWrapper>
-        <div className="selSaveWrapper alignLeft">
-          <span className="textLabel">조회구분</span>
-          <AntdSelect className="select-mid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.selectGubun}>
-            <Option value={1} key="selectGubun">
-              측정항목
-            </Option>
-            <Option value={2} key="selectGubun">
-              배출총량
-            </Option>
-          </AntdSelect>
-          <div style={{ margin: '0 5px', display: 'inline-block' }}>
-            <MonthPicker defaultValue={Moment(Moment(), 'YYYY-MM')} format="YYYY-MM" onChange={(date, dateStrings) => this.dateChange(dateStrings)} />
+        <StyledCustomSearch className="search-wrapper-inline">
+          <div className="search-input-area">
+            <span className="text-label">조회구분</span>
+            <AntdSelect className="select-mid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.selectGubun}>
+              <Option value={1} key="selectGubun">
+                측정항목
+              </Option>
+              <Option value={2} key="selectGubun">
+                배출총량
+              </Option>
+            </AntdSelect>
+            <div style={{ margin: '0 5px', display: 'inline-block' }}>
+              <MonthPicker
+                className="ant-picker-mid mr5"
+                defaultValue={Moment(Moment(), 'YYYY-MM')}
+                format="YYYY-MM"
+                onChange={(date, dateStrings) => this.dateChange(dateStrings)}
+              />
+            </div>
+            <span className="text-label">측정회차(월)</span>
+            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
+              <Option value={1} key="seq">
+                1
+              </Option>
+              <Option value={2} key="seq">
+                2
+              </Option>
+            </AntdSelect>
           </div>
-          <span className="textLabel">측정회차(월)</span>
-          <AntdSelect className="select-mid mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
-            <Option value={1} key="seq">
-              1
-            </Option>
-            <Option value={2} key="seq">
-              2
-            </Option>
-          </AntdSelect>
-          <StyledButtonWrapper className="btn-wrap-inline">
+          <div className="btn-area">
             <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.isSearch()}>
               검색
             </StyledButton>
             <StyledButton className="btn-primary btn-sm" onClick={() => this.isExcelUpload()}>
               엑셀 올리기
             </StyledButton>
-          </StyledButtonWrapper>
-        </div>
+          </div>
+        </StyledCustomSearch>
         {measureList ? (
           <StyledHtmlTable className="tableWrapper">
             <div style={{ overflowX: 'scroll' }}>

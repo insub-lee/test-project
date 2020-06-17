@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Table, Select, Input } from 'antd';
-
+import { Table, Select, Input, Button } from 'antd';
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
+import Contents from 'components/BizBuilder/Common/Contents';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
@@ -23,7 +23,7 @@ const { Option } = Select;
 const AntdTable = StyledAntdTable(Table);
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
-
+const StyledButton = StyledAntdButton(Button);
 class ListPage extends Component {
   constructor(props) {
     super(props);
@@ -148,17 +148,31 @@ class ListPage extends Component {
 
   /*
       검색버튼 클릭시 State 변경
+      <Option value="PLEDGE_NO">서약서번호</Option>
+      <Option value="CREATE_DT">서약일</Option>
+      <Option value="WRK_CMPNY_CD">업체코드</Option>
+      <Option value="WRK_CMPNY_NM">업체명</Option>
   */
   onClickSearchBtn = listData => {
     const { searchType, searchYear, searchValue } = this.state;
     if (searchValue === '') {
       this.setState({
-        searchListData: listData.filter(data => data.YEAR === searchYear),
+        searchListData: listData.filter(data => data.PLEDGE_NO.substr(2, 4) === searchYear),
       });
     } else {
-      this.setState({
-        searchListData: listData.filter(data => data.YEAR === searchYear && data[searchType] === searchValue),
-      });
+      const regex = new RegExp(`${searchValue}`);
+      switch (searchType) {
+        case 'CREATE_DT':
+          this.setState({
+            searchListData: listData.filter(data => data.PLEDGE_NO.substr(2, 4) === searchYear && regex.test(moment(data[searchType]).format('YYYYMMDD'))),
+          });
+          break;
+        default:
+          this.setState({
+            searchListData: listData.filter(data => data.PLEDGE_NO.substr(2, 4) === searchYear && regex.test(data[searchType])),
+          });
+          break;
+      }
     }
   };
 
@@ -230,8 +244,10 @@ class ListPage extends Component {
       changeBuilderModalState,
       listData,
     } = this.props;
-    const { isMultiDelete, StyledWrap, searchValue, searchType, searchListData } = this.state;
-    console.debug('확인해', searchListData);
+    const { StyledWrap, searchType, searchListData } = this.state;
+
+    console.debug('확인해봐', this.state);
+    console.debug('확인해봐', searchListData);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const {
@@ -249,30 +265,36 @@ class ListPage extends Component {
               <StyledSearchWrapper style={{ marginBottom: '5px' }}>
                 <Group className="view-designer-group group-0">
                   <div className="view-designer-group-search-wrap">
-                    <table className="view-designer-table table-0" style={{ border: '1px solid white' }}>
+                    <table className="view-designer-table table-0">
                       <tbody>
-                        <tr classNmae="view-designer-row row-0">
-                          <td classsName="view-designer-col" tyle={{ height: '35px' }}>
-                            <span style={{ fontSize: '0.8rem', margin: '0px 10px 0px 10px', verticalAlign: 'middle' }}>검색구분</span>
-                            <AntdSelect className="select-xs mr5" style={{ width: 150 }} value={searchType} onChange={e => this.setState({ searchType: e })}>
-                              <Option value="PLEDGE_NO">서약서번호</Option>
-                              <Option value="CREATE_DT">서약일</Option>
-                              <Option value="WRK_CMPNY_CD">업체코드</Option>
-                              <Option value="WRK_CMPNY_NM">업체명</Option>
-                            </AntdSelect>
-                            {this.renderYearSelect()}
-                            <AntdInput
-                              className="ant-input-xs ant-input-inline"
-                              style={{ width: '200px' }}
-                              onChange={e => this.setState({ searchValue: e.target.value })}
-                            />
-                            <StyledButton
-                              className="btn-primary btn-xs btn-first"
-                              onClick={() => this.onClickSearchBtn(listData)}
-                              style={{ marginLeft: '10px' }}
-                            >
-                              검색
-                            </StyledButton>
+                        <tr classNmae="view-designer-row row-0" colSpan={1}>
+                          <td classsName="view-designer-col col-0 view-designer-label" style={{ height: '35px' }}>
+                            <Contents>
+                              <span style={{ fontSize: '0.8rem', margin: '0px 10px 0px 10px', verticalAlign: 'middle' }}>검색구분</span>
+                            </Contents>
+                          </td>
+                          <td className="view-designer-col col-1" colSpan={9} style={{ height: '35px' }}>
+                            <Contents>
+                              <AntdSelect className="select-xs mr5" style={{ width: 150 }} value={searchType} onChange={e => this.setState({ searchType: e })}>
+                                <Option value="PLEDGE_NO">서약서번호</Option>
+                                <Option value="CREATE_DT">서약일</Option>
+                                <Option value="WRK_CMPNY_CD">업체코드</Option>
+                                <Option value="WRK_CMPNY_NM">업체명</Option>
+                              </AntdSelect>
+                              {this.renderYearSelect()}
+                              <AntdInput
+                                className="ant-input-xs ant-input-inline"
+                                style={{ width: '200px' }}
+                                onChange={e => this.setState({ searchValue: e.target.value })}
+                              />
+                              <StyledButton
+                                className="btn-gray btn-xs btn-first"
+                                onClick={() => this.onClickSearchBtn(listData)}
+                                style={{ marginLeft: '10px' }}
+                              >
+                                검색
+                              </StyledButton>
+                            </Contents>
                           </td>
                         </tr>
                       </tbody>

@@ -52,8 +52,10 @@ import ViewDateCompConfig from 'components/BizBuilder/Field/ViewDateCompConfig';
 import EducationExamConfig from 'components/BizBuilder/Field/EducationExamConfig';
 import EshsCmpnyConfig from 'components/BizBuilder/Field/EshsCmpnyConfig';
 import TextJoinFieldCompConfig from 'components/BizBuilder/Field/TextJoinFieldCompConfig';
+import DragUploadMDCSCompConfig from 'components/BizBuilder/Field/DragUploadMDCSCompConfig';
 
 export const ConfigInfo = {
+  'components/BizBuilder/Field/DragUploadMDCSCompConfig': { renderer: property => <DragUploadMDCSCompConfig {...property} /> },
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
   'components/BizBuilder/Field/ViewDateCompConfig': { renderer: property => <ViewDateCompConfig {...property} /> },
   'components/BizBuilder/Field/TreeSelectCompConfig': { renderer: property => <TreeSelectCompConfig {...property} /> },
