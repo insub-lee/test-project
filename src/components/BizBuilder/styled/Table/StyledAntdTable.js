@@ -96,6 +96,9 @@ const StyledAntdTable = Component => styled(Component)`
   }
 
   /* scroll table style */
+  .ant-table-scroll > .ant-table-body {
+    -ms-overflow-style: scrollbar;
+  }
 
   /* checkbox */
   .ant-checkbox-indeterminate .ant-checkbox-inner:after {
