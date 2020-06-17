@@ -259,7 +259,7 @@ class List extends React.Component {
                   <th>함유량 기준</th>
                   <td>
                     <AntdInputNumber
-                      className="ant-input-number input-number-sm"
+                      className="ant-input-number ant-input-number-sm"
                       value={requestValue.CONTENT_STANDARD}
                       onChange={e => handleInputChange(e, 'NUMBER', 'CONTENT_STANDARD')}
                     />

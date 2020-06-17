@@ -95,7 +95,7 @@ class List extends React.Component {
 
   handleDeleteClick = () => {
     const { requestValue } = this.state;
-    if (!requestValue.FACTOR_ID) {
+    if (!requestValue.SAP_NO || !requestValue.NAME_SAP) {
       return this.setState({
         deleteConfirmMessage: '선택된 항목이 없습니다.',
       });
