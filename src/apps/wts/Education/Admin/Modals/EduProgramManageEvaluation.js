@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import Modal from 'rc-dialog';
 
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
-import Button from 'components/Button';
 import { exportExcel, jsonToQueryString } from 'utils/helpers';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContent from './StyledContent';
 import CommonEvaluationList from '../EduPrograms/CommonEvaluationList';
 import service from '../../service';
@@ -283,15 +283,15 @@ class EduProgramManageEvaluation extends React.Component {
                       (currentEduType === 'job_proc' && currentArea !== '' && currentTestType !== '')) && (
                       <div style={{ paddingTop: 5 }}>
                         <div className="btn_wrap" style={{ textAlign: 'right' }}>
-                          <Button type="button" color="grayTwo" size="small" onClick={this.reloadData} disabled={isLoading}>
+                          <StyledButton type="button" className="btn-gray btn-sm mr5" onClick={this.reloadData} disabled={isLoading}>
                             재호출
-                          </Button>
-                          <Button type="button" color="gray" size="small" onClick={this.downloadExcel}>
+                          </StyledButton>
+                          <StyledButton type="button" className="btn-gray btn-sm mr5" onClick={this.downloadExcel}>
                             Excel 다운로드
-                          </Button>
-                          <Button type="button" color="primary" size="small" onClick={this.openUploadModal}>
+                          </StyledButton>
+                          <StyledButton type="button" className="btn-primary btn-sm" onClick={this.openUploadModal}>
                             Excel 업로드
-                          </Button>
+                          </StyledButton>
                         </div>
                         <CommonEvaluationList type={currentEduType} isLoading={isLoading} data={data} />
                       </div>

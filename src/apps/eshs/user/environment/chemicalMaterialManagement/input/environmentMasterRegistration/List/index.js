@@ -12,6 +12,7 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 import Modal from '../InputModal';
 import SearchComp from '../InputModal/SearchComp';
 
@@ -90,7 +91,7 @@ class List extends React.Component {
       'POST',
       `/api/eshs/v1/common/eshschemicalmaterialMaster`,
       { dataSource: param, SAP_ID: requestValue.SAP_ID },
-      this.getMaterialList,
+      (key, response) => callBackAfterPost(key, response, this.getMaterialList),
     );
   };
 
@@ -109,7 +110,14 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialMaster`, requestValue, this.getMaterialList);
+    const submitCallbackFunc = () => {
+      this.getMaterialList();
+      this.handleResetClick();
+    };
+
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialMaster`, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, submitCallbackFunc),
+    );
   };
 
   handleResetClick = () => {

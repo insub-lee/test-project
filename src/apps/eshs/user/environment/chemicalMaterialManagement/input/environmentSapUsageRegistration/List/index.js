@@ -10,6 +10,7 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 
 const AntdSearch = StyledSearchInput(Input.Search);
 class List extends React.Component {
@@ -87,7 +88,9 @@ class List extends React.Component {
       message.success('변경되었습니다.');
     };
 
-    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue, submitCallbackFunc);
+    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue, (key, response) =>
+      callBackAfterPut(key, response, submitCallbackFunc),
+    );
   };
 
   isSelectSapMaterial = () => {
@@ -164,14 +167,12 @@ class List extends React.Component {
           <StyledHtmlTable>
             <table>
               <colgroup>
-                <col width="10%" />
                 <col width="15%" />
-                <col width="10%" />
+                <col width="18%" />
                 <col width="15%" />
-                <col width="10%" />
+                <col width="18%" />
                 <col width="15%" />
-                <col width="10%" />
-                <col width="15%" />
+                <col width="18%" />
               </colgroup>
               <tbody>
                 <tr>
@@ -181,6 +182,26 @@ class List extends React.Component {
                   <td>{requestValue.NAME_SAP}</td>
                   <th>단위</th>
                   <td>{requestValue.UNIT}</td>
+                </tr>
+                <tr>
+                  <th>단위환산(용기)</th>
+                  <td>
+                    <InputNumber
+                      value={requestValue.VESSEL_COEFFICIENT}
+                      onChange={value => handleInputNumberChange(value, 'VESSEL_COEFFICIENT')}
+                      className="col-input-number ant-input-number-sm"
+                      style={{ width: '100%', visibility: !isSelectSapMaterial() ? 'hidden' : 'visible' }}
+                    />
+                  </td>
+                  <th>단위환산(밀도)</th>
+                  <td>
+                    <InputNumber
+                      value={requestValue.DENSITY_COEFFICIENT}
+                      onChange={value => handleInputNumberChange(value, 'DENSITY_COEFFICIENT')}
+                      className="col-input-number ant-input-number-sm"
+                      style={{ width: '100%', visibility: !isSelectSapMaterial() ? 'hidden' : 'visible' }}
+                    />
+                  </td>
                   <th>kg환산계수</th>
                   <td>
                     <InputNumber
@@ -194,6 +215,7 @@ class List extends React.Component {
               </tbody>
             </table>
           </StyledHtmlTable>
+          <div className="div-comment div-comment-antd">kg환산계수: 단위환산(용기) * 단위환산(밀도)</div>
         </StyledContentsWrapper>
         <Modal
           getMaterialList={getMaterialList}

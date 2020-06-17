@@ -8,10 +8,11 @@ import { Icon, Spin } from 'antd';
 import StyledVirtualized from 'apps/wts/components/CommonStyledElement/StyledVirtualized';
 import { getVirtualizedMinHeight, jsonToQueryString } from 'utils/helpers';
 import DatePicker from 'apps/wts/components/DatePicker';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import Wrapper from './SubWrapper';
 import WorkerModifyCommentModal from '../../Modals/WorkerModifyCommentModal';
+import StyledStandard from '../../../StyledStandard';
 import StyledContents from '../../StyledContents';
 import service from '../../service';
 import NightWorkAcceptModal from '../../Modals/NightWorkAcceptModal';
@@ -352,126 +353,129 @@ class SubBody extends React.Component {
     ];
     return (
       <StyledContents className={`${isExpanded ? 'expanded' : ''}`}>
-        <div className="sub_wrap">
-          <div className="sub_tit2">
-            <span className="small">담당 근무자 일일근무 이력</span>
-            <div className="btn_wrap">
-              <button type="button" className={`icon icon_arr_big ${isExpanded ? 'on' : ''}`} onClick={this.toggleExpanded}>
-                축소/확대
-              </button>
+        <StyledStandard>
+          <div className="sub_wrap">
+            <div className="sub_tit2">
+              <span className="small">담당 근무자 일일근무 이력</span>
+            </div>
+            <div className="sub_con">
+              <Wrapper>
+                {canUseThisPage && manInfo !== undefined ? (
+                  <>
+                    <ul className="search_div">
+                      <li>
+                        <select
+                          name="workjoSelector"
+                          id="workjoSelector"
+                          value={currentJo}
+                          style={{ width: 100, height: 46 }}
+                          onChange={this.handleChangeWorkjo}
+                        >
+                          <option value="" disabled>
+                            조 선택
+                          </option>
+                          {manSameAreaWorkJoList.map(obj => (
+                            <option key={obj.workjo} value={obj.workjo}>
+                              {obj.workjo}
+                            </option>
+                          ))}
+                        </select>
+                      </li>
+                      <li>
+                        <DatePicker
+                          values={[
+                            {
+                              name: 'searchDt',
+                              value: moment(new Date())
+                                .subtract(7, 'hours')
+                                .format('YYYYMMDD'),
+                            },
+                          ]}
+                          cbChangeDate={date => this.handleChangeDate(date)}
+                          single
+                          style={{ display: 'inline-block' }}
+                        />
+                      </li>
+                      {/* <MonthlyPicker name="date" value={new Date()} onChange={this.handleChangeDate} /> */}
+                    </ul>
+
+                    <div className="btn_wrap" style={{ float: 'right', marginTop: 10 }}>
+                      <StyledButton type="button" className="btn-primary btn-sm" onClick={this.openRecordWriter}>
+                        근무 이력 등록
+                      </StyledButton>
+                      {manWorkHisInfoList.length > 0 && (
+                        <>
+                          <StyledButton type="button" className="btn-gray btn-sm mr5" onClick={this.downloadExcel}>
+                            엑셀로 받기
+                          </StyledButton>
+                          <StyledButton type="button" className="btn-primary btn-sm mr5" onClick={this.openNightWorkAllAcceptModal}>
+                            전체 승인
+                          </StyledButton>
+                          <StyledButton type="button" className="btn-gray btn-sm" onClick={this.openNightWorkAllCancelModal}>
+                            전체 취소
+                          </StyledButton>
+                        </>
+                      )}
+                    </div>
+                    <div className="cr" />
+                    <div style={{ overflowX: 'auto' }}>
+                      <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
+                        <StyledVirtualized
+                          minHeight={getVirtualizedMinHeight(78, 39, manWorkHisInfoList.length, 500)}
+                          headerHeight={78}
+                          style={{ minWidth: 1000 }}
+                        >
+                          <AutoSizer>
+                            {({ height, width }) => (
+                              <Table
+                                width={width}
+                                height={height}
+                                headerHeight={78}
+                                rowHeight={39}
+                                rowCount={manWorkHisInfoList.length}
+                                rowGetter={({ index }) => manWorkHisInfoList[index]}
+                                headerClassName="virtualized_header"
+                                gridClassName="virtualized_grid"
+                                rowClassName="virtualized_row"
+                                noRowsRenderer={() => (
+                                  <div className="virtualized_noData">
+                                    <span>{isLoading ? 'Loading...' : 'No Data'}</span>
+                                  </div>
+                                )}
+                                onRowClick={({ rowData }) => this.handleOpenWorkerRecordModifyModal(rowData)}
+                              >
+                                {workColumns.map(column => (
+                                  <Column
+                                    key={column.dataKey}
+                                    {...column}
+                                    width={(width * column.percentWidth) / 100}
+                                    style={{
+                                      ...column.style,
+                                      lineHeight: '39px',
+                                    }}
+                                  />
+                                ))}
+                              </Table>
+                            )}
+                          </AutoSizer>
+                        </StyledVirtualized>
+                      </Spin>
+                    </div>
+                    <ChiefWorkerRecordWriterModal ref={this.workerRecordWriterModal} callbackHandler={this.refreshData} site={manInfo.site} />
+                    <WorkerModifyCommentModal ref={this.workerModifyCommentModal} callbackHandler={this.refreshData} />
+                    <NightWorkAcceptModal ref={this.nightWorkAcceptModal} callbackHandler={this.refreshData} />
+                    <NightWorkCanselModal ref={this.nightWorkCanselModal} callbackHandler={this.refreshData} />
+                    <NightWorkAllAcceptModal ref={this.nightWorkAllAcceptModal} callbackHandler={this.refreshData} />
+                    <NightWorkAllCancelModal ref={this.nightWorkAllCancelModal} callbackHandler={this.refreshData} />
+                    <WorkerRecordModifyModal ref={this.workerRecordModifyModal} onClose={this.refreshData} apiType={1} editable />
+                  </>
+                ) : (
+                  <div>현재 사용자는 사용 불가능한 페이지입니다.</div>
+                )}
+              </Wrapper>
             </div>
           </div>
-          <div className="sub_con">
-            <Wrapper>
-              {canUseThisPage && manInfo !== undefined ? (
-                <>
-                  <ul className="search_div">
-                    <li>
-                      <select name="workjoSelector" id="workjoSelector" value={currentJo} style={{ width: 100, height: 46 }} onChange={this.handleChangeWorkjo}>
-                        <option value="" disabled>
-                          조 선택
-                        </option>
-                        {manSameAreaWorkJoList.map(obj => (
-                          <option key={obj.workjo} value={obj.workjo}>
-                            {obj.workjo}
-                          </option>
-                        ))}
-                      </select>
-                    </li>
-                    <li>
-                      <DatePicker
-                        values={[
-                          {
-                            name: 'searchDt',
-                            value: moment(new Date())
-                              .subtract(7, 'hours')
-                              .format('YYYYMMDD'),
-                          },
-                        ]}
-                        cbChangeDate={date => this.handleChangeDate(date)}
-                        single
-                        style={{ display: 'inline-block' }}
-                      />
-                    </li>
-                    {/* <MonthlyPicker name="date" value={new Date()} onChange={this.handleChangeDate} /> */}
-                  </ul>
-
-                  <div className="btn_wrap" style={{ float: 'right', marginTop: 10 }}>
-                    <Button type="button" size="small" color="default" onClick={this.openRecordWriter}>
-                      근무 이력 등록
-                    </Button>
-                    {manWorkHisInfoList.length > 0 && (
-                      <>
-                        <Button type="button" size="small" color="default" style={{ marginRight: 6 }} onClick={this.downloadExcel}>
-                          엑셀로 받기
-                        </Button>
-                        <Button type="button" size="small" color="primary" onClick={this.openNightWorkAllAcceptModal}>
-                          전체 승인
-                        </Button>
-                        <Button type="button" size="small" color="gray" onClick={this.openNightWorkAllCancelModal}>
-                          전체 취소
-                        </Button>
-                      </>
-                    )}
-                  </div>
-                  <div className="cr" />
-                  <div style={{ overflowX: 'auto' }}>
-                    <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-                      <StyledVirtualized
-                        minHeight={getVirtualizedMinHeight(78, 39, manWorkHisInfoList.length, 500)}
-                        headerHeight={78}
-                        style={{ minWidth: 1000 }}
-                      >
-                        <AutoSizer>
-                          {({ height, width }) => (
-                            <Table
-                              width={width}
-                              height={height}
-                              headerHeight={78}
-                              rowHeight={39}
-                              rowCount={manWorkHisInfoList.length}
-                              rowGetter={({ index }) => manWorkHisInfoList[index]}
-                              headerClassName="virtualized_header"
-                              gridClassName="virtualized_grid"
-                              rowClassName="virtualized_row"
-                              noRowsRenderer={() => (
-                                <div className="virtualized_noData">
-                                  <span>{isLoading ? 'Loading...' : 'No Data'}</span>
-                                </div>
-                              )}
-                              onRowClick={({ rowData }) => this.handleOpenWorkerRecordModifyModal(rowData)}
-                            >
-                              {workColumns.map(column => (
-                                <Column
-                                  key={column.dataKey}
-                                  {...column}
-                                  width={(width * column.percentWidth) / 100}
-                                  style={{
-                                    ...column.style,
-                                    lineHeight: '39px',
-                                  }}
-                                />
-                              ))}
-                            </Table>
-                          )}
-                        </AutoSizer>
-                      </StyledVirtualized>
-                    </Spin>
-                  </div>
-                  <ChiefWorkerRecordWriterModal ref={this.workerRecordWriterModal} callbackHandler={this.refreshData} site={manInfo.site} />
-                  <WorkerModifyCommentModal ref={this.workerModifyCommentModal} callbackHandler={this.refreshData} />
-                  <NightWorkAcceptModal ref={this.nightWorkAcceptModal} callbackHandler={this.refreshData} />
-                  <NightWorkCanselModal ref={this.nightWorkCanselModal} callbackHandler={this.refreshData} />
-                  <NightWorkAllAcceptModal ref={this.nightWorkAllAcceptModal} callbackHandler={this.refreshData} />
-                  <NightWorkAllCancelModal ref={this.nightWorkAllCancelModal} callbackHandler={this.refreshData} />
-                  <WorkerRecordModifyModal ref={this.workerRecordModifyModal} onClose={this.refreshData} apiType={1} editable />
-                </>
-              ) : (
-                <div>현재 사용자는 사용 불가능한 페이지입니다.</div>
-              )}
-            </Wrapper>
-          </div>
-        </div>
+        </StyledStandard>
       </StyledContents>
     );
   }
