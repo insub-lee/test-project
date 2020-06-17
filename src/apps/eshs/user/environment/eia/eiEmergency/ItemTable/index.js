@@ -308,44 +308,44 @@ class ItemTable extends Component {
               <th rowSpan={2}>영역</th>
               <th rowSpan={2}>비상사태 현</th>
               <th rowSpan={2}>
-                발생 가능성
-                <br />
-                평가(A)
+                <Popover content={<img src={popoverContent.Eme1} alt="발생 가능성 평가" />} trigger="hover" title={null}>
+                  발생 가능성
+                  <br />
+                  평가(A)
+                </Popover>
               </th>
               <th colSpan={6}>피해정도 평가</th>
               <th rowSpan={2} className="th-pointer">
-                <Popover content={<img src={popoverContent.Eme1} alt="영향크기(B)" style={{ width: 760, height: 500 }} />} trigger="hover" title={null}>
+                <Popover content={<img src={popoverContent.Eme6} alt="평가결과" />} trigger="hover" title={null}>
                   평가결과
                   <br />
                   (관리범위/주체)
                 </Popover>
               </th>
               <th rowSpan={2} className="th-pointer">
-                <Popover content={<img src={popoverContent.Eme6} alt="영향크기(B)" style={{ width: 760, height: 500 }} />} trigger="hover" title={null}>
-                  비상사태
-                  <br />
-                  (조치계획서)
-                </Popover>
+                비상사태
+                <br />
+                (조치계획서)
               </th>
             </tr>
             <tr>
               <th className="th-pointer">
-                <Popover content={<img src={popoverContent.Eme2} alt="영향크기(B)" style={{ width: 760, height: 500 }} />} trigger="hover" title={null}>
+                <Popover content={<img src={popoverContent.Eme2} alt="(B)" />} trigger="hover" title={null}>
                   B
                 </Popover>
               </th>
               <th className="th-pointer">
-                <Popover content={<img src={popoverContent.Eme3} alt="영향크기(B)" style={{ width: 760, height: 500 }} />} trigger="hover" title={null}>
+                <Popover content={<img src={popoverContent.Eme3} alt="(C)" />} trigger="hover" title={null}>
                   C
                 </Popover>
               </th>
               <th className="th-pointer">
-                <Popover content={<img src={popoverContent.Eme4} alt="영향크기(B)" style={{ width: 760, height: 500 }} />} trigger="hover" title={null}>
+                <Popover content={<img src={popoverContent.Eme4} alt="(D)" />} trigger="hover" title={null}>
                   D
                 </Popover>
               </th>
               <th className="th-pointer">
-                <Popover content={<img src={popoverContent.Eme5} alt="영향크기(B)" style={{ width: 760, height: 500 }} />} trigger="hover" title={null}>
+                <Popover content={<img src={popoverContent.Eme5} alt="(E)" />} trigger="hover" title={null}>
                   E
                 </Popover>
               </th>
