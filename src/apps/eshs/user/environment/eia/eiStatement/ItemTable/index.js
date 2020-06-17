@@ -8,12 +8,31 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
+import moment from 'moment';
 
+import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
+import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import * as popoverContent from './PopoverContent';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
+
+const excelColumn = [
+  { title: '환경영향평가대상', width: { wpx: 200 }, field: 'MATTER', filter: 'agTextColumnFilter' },
+  { title: '투입량(배출)(A)', width: { wpx: 100 }, field: 'VOLUME', filter: 'agTextColumnFilter' },
+  { title: '단위', field: 'MATTER', filter: 'agTextColumnFilter' },
+  { title: '영향크기(B)', field: 'IMPACT_SIZE', width: { wpx: 100 }, filter: 'agTextColumnFilter' },
+  { title: '유해성평가(C=A*B)', width: { wpx: 150 }, field: 'MALEFICENCE_ASSESSMENT', filter: 'agTextColumnFilter' },
+  { title: '투입배출관리(D)', width: { wpx: 150 }, field: 'MANAGE_INPUT_OUPUT', filter: 'agTextColumnFilter' },
+  { title: '개선계획서(E)', width: { wpx: 150 }, field: 'IMPROVEMENT_PLAN_REPORT', filter: 'agTextColumnFilter' },
+  { title: '문서화(F)', field: 'DOCUMENTATION', filter: 'agTextColumnFilter' },
+  { title: '발생주기(G)', field: 'HAPPEN_PULSE', filter: 'agTextColumnFilter' },
+  { title: '관리평가(H=(D+E+F)*G)', width: { wpx: 200 }, field: 'MANAGE_ASSESSMENT', filter: 'agTextColumnFilter' },
+  { title: '환경영향크기(I=C*H)', field: 'ENV_IMPACT_SIZE', width: { wpx: 200 }, filter: 'agTextColumnFilter' },
+  { title: '중대환경영향선정', field: 'IMPORTANT_ENV_IMPACT_SELECTION', width: { wpx: 200 }, filter: 'agTextColumnFilter' },
+];
 class ItemTable extends Component {
   constructor(props) {
     super(props);
@@ -134,13 +153,42 @@ class ItemTable extends Component {
     const { formData } = this.props;
     const searchFlag = (formData && formData.searchFlag) || false;
     const itemList = (formData && formData.itemList) || [];
-    const btnOk = itemList.length >= 1;
+    let btnOk = itemList.length >= 1;
+    const approvalStatus = (formData && formData.materialData && formData.materialData.STATUS) || '';
+    let statusMsg = '';
+    switch (approvalStatus) {
+      case 'REVIEWING':
+        statusMsg = '현재 결재중입니다. 검토자만 수정할 수 있습니다.';
+        btnOk = true; // 검토자만 권한 추가시 수정
+        break;
+      case 'DOING':
+        statusMsg = '현재 결재중입니다. 수정할 수 없습니다.';
+        btnOk = false;
+        break;
+      case 'COMPLETE':
+        statusMsg = '결재가 완료되었습니다. 조회만 할 수 있습니다.';
+        btnOk = false;
+        break;
+      case 'NOTHING':
+        break;
+      default:
+        break;
+    }
     return (
       <StyledHtmlTable>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
-            Excel Download
-          </StyledButton>
+          {statusMsg && <span className="btn-comment btn-wrap-mr-5">{statusMsg}</span>}
+          <ExcelDownloadComp
+            isBuilder={false}
+            fileName={`environment_${moment().format('YYYYMMDD')}`}
+            className="testClassName"
+            btnText="Excel Download"
+            sheetName={`environment_${moment().format('YYYYMMDD')}`}
+            listData={itemList}
+            btnSize="btn-sm btn-first"
+            fields={createExcelData(excelColumn, 'FIELD', 'field')}
+            columns={excelColumn.map(item => ({ ...item, ...excelStyle }))}
+          />
           {!searchFlag && (
             <>
               {btnOk && (

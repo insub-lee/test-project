@@ -7,8 +7,24 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
 
+import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
+import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import moment from 'moment';
+
 const AntdInput = StyledInput(Input);
 
+const excelColumn = [
+  { title: 'AREA', field: 'EI_AREA', filter: 'agTextColumnFilter' },
+  { title: '방지시설', width: { wpx: 400 }, field: 'PREVENTION_EQUIP', filter: 'agTextColumnFilter' },
+  { title: '오염물질 유입Area', width: { wpx: 150 }, field: 'INFLOW_AREA', filter: 'agTextColumnFilter' },
+  { title: '배출물질명', width: { wpx: 100 }, field: 'DISCHARGE_MATTER', filter: 'agTextColumnFilter' },
+  { title: '자체기준(Warning)', width: { wpx: 150 }, field: 'PPM_WARNING', filter: 'agTextColumnFilter' },
+  { title: '법적기준(Shot Down)', width: { wpx: 150 }, field: 'PPM_SHOTDOWN', filter: 'agTextColumnFilter' },
+  { title: '배출농도(ppm/년평균)', width: { wpx: 150 }, field: 'PPM_YEAR_AVERAGE', filter: 'agTextColumnFilter' },
+  { title: 'W1', field: 'W1', filter: 'agTextColumnFilter' },
+  { title: '법규', field: 'LEGISLATION', filter: 'agTextColumnFilter' },
+];
 class ItemTable extends Component {
   constructor(props) {
     super(props);
@@ -139,9 +155,17 @@ class ItemTable extends Component {
     return (
       <StyledHtmlTable>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
-            Excel Download
-          </StyledButton>
+          <ExcelDownloadComp
+            isBuilder={false}
+            fileName={`Air_${moment().format('YYYYMMDD')}`}
+            className="testClassName"
+            btnText="Excel Download"
+            sheetName={`Air_${moment().format('YYYYMMDD')}`}
+            listData={itemList}
+            btnSize="btn-sm btn-first"
+            fields={createExcelData(excelColumn, 'FIELD', 'field')}
+            columns={excelColumn.map(item => ({ ...item, ...excelStyle }))}
+          />
           {!searchFlag && (
             <>
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
