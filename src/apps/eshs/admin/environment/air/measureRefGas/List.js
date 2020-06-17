@@ -207,7 +207,7 @@ class List extends Component {
         </StyledCustomSearch>
         {measureList.length > 0 ? (
           <StyledHtmlTable>
-            <div style={{ overflowX: 'scroll' }}>
+            <div style={{ height: measureList.length > 10 && 400, overflow: 'scroll', msOverflowStyle: 'scrollbar' }}>
               <table>
                 <colgroup>
                   <col width="150px" />

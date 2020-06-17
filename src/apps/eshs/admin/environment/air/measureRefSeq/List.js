@@ -311,7 +311,7 @@ class List extends Component {
         </StyledCustomSearch>
         {measureList.length > 0 ? (
           <StyledHtmlTable>
-            <div style={{ overflowX: 'scroll' }}>
+            <div style={{ height: measureList.length > 10 && 400, overflow: 'scroll', msOverflowStyle: 'scrollbar' }}>
               <table>
                 <colgroup>
                   <col width={100} />
@@ -324,13 +324,13 @@ class List extends Component {
                 </colgroup>
                 <thead>
                   <tr>
-                    <th>계통</th>
-                    <th>STACK</th>
-                    <th>측정여부(Y/N)</th>
-                    <th>측정일자</th>
-                    <th>분당 배출량</th>
-                    <th>시간당 배출량</th>
-                    {gasList && gasList.map(item => <th>{item.GAS_CD}</th>)}
+                    <th style={{ position: 'sticky', top: 0 }}>계통</th>
+                    <th style={{ position: 'sticky', top: 0 }}>STACK</th>
+                    <th style={{ position: 'sticky', top: 0 }}>측정여부(Y/N)</th>
+                    <th style={{ position: 'sticky', top: 0 }}>측정일자</th>
+                    <th style={{ position: 'sticky', top: 0 }}>분당 배출량</th>
+                    <th style={{ position: 'sticky', top: 0 }}>시간당 배출량</th>
+                    {gasList && gasList.map(item => <th style={{ position: 'sticky', top: 0 }}>{item.GAS_CD}</th>)}
                   </tr>
                 </thead>
                 <tbody>
