@@ -11,6 +11,7 @@ import { Popconfirm, Input, Select } from 'antd';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 import SearchComp from '../SearchComp';
 
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -79,19 +80,30 @@ class List extends React.Component {
   handleInputClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialmanageactharmful`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialmanageactharmful`, requestValue, (key, response) =>
+      callBackAfterPost(key, response, this.getMaterialList),
+    );
   };
 
   handleModifyClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialmanageactharmful`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialmanageactharmful`, requestValue, (key, response) =>
+      callBackAfterPut(key, response, this.getMaterialList),
+    );
   };
 
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialmanageactharmful`, requestValue, this.getMaterialList);
+    const submitCallbackFunc = () => {
+      this.getMaterialList();
+      this.handleResetClick();
+    };
+
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialmanageactharmful`, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, submitCallbackFunc),
+    );
   };
 
   getMaterialList = () => {

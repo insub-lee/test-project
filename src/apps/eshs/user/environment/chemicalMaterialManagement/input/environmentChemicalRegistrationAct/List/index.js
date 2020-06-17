@@ -12,6 +12,7 @@ import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
@@ -36,9 +37,13 @@ class List extends React.Component {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue, isModified } = this.state;
     if (isModified) {
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialregistrationact`, requestValue, this.getMaterialList);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialregistrationact`, requestValue, (key, response) =>
+        callBackAfterPut(key, response, this.getMaterialList),
+      );
     }
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialregistrationact`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialregistrationact`, requestValue, (key, response) =>
+      callBackAfterPost(key, response, this.getMaterialList),
+    );
   };
 
   handleDeleteClick = () => {
@@ -56,7 +61,14 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialregistrationact`, requestValue, this.getMaterialList);
+    const submitCallbackFunc = () => {
+      this.getMaterialList();
+      this.handleResetClick();
+    };
+
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialregistrationact`, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, submitCallbackFunc),
+    );
   };
 
   getMaterialList = () => {
