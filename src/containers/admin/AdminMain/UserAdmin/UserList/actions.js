@@ -16,8 +16,9 @@ export const getUserList = (sNum, eNum, userList, sortColumn, sortDirection, sta
   },
 });
 
-export const getDeptComboData = () => ({
+export const getDeptComboData = ROOT_ID => ({
   type: actionTypes.GET_DEPT_COMBO_LIST,
+  ROOT_ID,
 });
 
 export const getChangeDeptTreeData = DEPT_ID => ({
@@ -25,8 +26,9 @@ export const getChangeDeptTreeData = DEPT_ID => ({
   DEPT_ID,
 });
 
-export const getDutyComboData = () => ({
+export const getDutyComboData = ROOT_ID => ({
   type: actionTypes.GET_DUTY_COMBO_LIST,
+  ROOT_ID,
 });
 
 export const getChangeDutyTreeData = DUTY_ID => ({
@@ -34,8 +36,9 @@ export const getChangeDutyTreeData = DUTY_ID => ({
   DUTY_ID,
 });
 
-export const getPSTNComboData = () => ({
+export const getPSTNComboData = ROOT_ID => ({
   type: actionTypes.GET_PSTN_COMBO_LIST,
+  ROOT_ID,
 });
 
 export const getChangePSTNTreeData = PSTN_ID => ({
@@ -43,8 +46,9 @@ export const getChangePSTNTreeData = PSTN_ID => ({
   PSTN_ID,
 });
 
-export const getRANKComboData = () => ({
+export const getRANKComboData = ROOT_ID => ({
   type: actionTypes.GET_RANK_COMBO_LIST,
+  ROOT_ID,
 });
 
 export const getChangeRANKTreeData = RANK_ID => ({

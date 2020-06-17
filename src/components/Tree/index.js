@@ -14,12 +14,12 @@ class Tree extends Component {
     super(props);
 
     let treeData = [];
-
+    const { selectedIndex } = props;
     if (props.treeData && props.treeData.length > 0) {
-      if (props.selectedIndex !== -1) {
+      if (selectedIndex !== -1) {
         treeData = toggleExpandedForSelected({
           treeData: props.treeData,
-          selectedIndex: props.selectedIndex,
+          selectedIndex,
         });
       } else {
         const { treeData: treeData2 } = props;
@@ -29,7 +29,7 @@ class Tree extends Component {
 
     this.state = {
       searchFocusIndex: -1,
-      selectedIndex: -1,
+      selectedIndex,
       treeData,
     };
 

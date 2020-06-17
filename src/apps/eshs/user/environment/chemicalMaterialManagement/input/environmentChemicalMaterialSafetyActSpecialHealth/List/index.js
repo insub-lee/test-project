@@ -13,6 +13,7 @@ import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 import SearchComp from '../SearchComp';
 
 const AntdInput = StyledInput(Input);
@@ -147,7 +148,7 @@ class List extends React.Component {
         'PUT',
         `/api/eshs/v1/common/eshschemicalsafetyspecialhealth`,
         { requestValue, SUB_MATERIALS: dataSource.slice(1) },
-        this.getMaterialList,
+        (key, response) => callBackAfterPut(key, response, this.getMaterialList),
       );
     }
     this.setState({
@@ -158,7 +159,7 @@ class List extends React.Component {
       'POST',
       `/api/eshs/v1/common/eshschemicalsafetyspecialhealth`,
       { requestValue, SUB_MATERIALS: dataSource.slice(1) },
-      this.getMaterialList,
+      (key, response) => callBackAfterPost(key, response, this.getMaterialList),
     );
   };
 
@@ -177,7 +178,15 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetyspecialhealth`, requestValue, this.getMaterialList);
+
+    const submitCallbackFunc = () => {
+      this.getMaterialList();
+      this.handleResetClick();
+    };
+
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetyspecialhealth`, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, submitCallbackFunc),
+    );
   };
 
   getMaterialList = () => {
