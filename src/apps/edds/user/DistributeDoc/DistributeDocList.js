@@ -1,23 +1,42 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, Button, Modal } from 'antd';
+import { Table, Icon, Modal, Input, DatePicker } from 'antd';
+import moment from 'moment';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal'
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 
 import DocView from './DocView';
 import Redistribute from './Redistribute';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
+const AntdInput = StyledInput(Input);
+const AntdRangePicker = StyledDatePicker(DatePicker.RangePicker);
 
 class DistributeDocList extends Component {
   state = {
     isShow: false,
     isRedistShow: false,
     selectedRow: {},
+    searchInfo: {},
+  };
+
+  componentWillMount() {
+    const today = new Date();
+    
+    this.setState(prevState => {
+      const { searchInfo } = prevState;
+      searchInfo.TO_DT = moment(today).format('YYYY-MM-DD');
+      today.setMonth(today.getMonth() - 1);
+      searchInfo.FROM_DT = moment(today).format('YYYY-MM-DD');
+      return { searchInfo }
+    });
   };
   
   componentDidMount() {
@@ -25,9 +44,22 @@ class DistributeDocList extends Component {
   };
 
   getList = () => {
-    const { id, apiAry, getCallDataHandler } = this.props;
-    getCallDataHandler(id, apiAry, () => {});
-  }
+    const { id, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    const apiAry = [
+      {
+        key: 'distributeDocList',
+        url: '/api/edds/v1/common/distributeDocList',
+        type: 'POST',
+        params: {
+          PARAM: { ...this.state.searchInfo },
+        },
+      },
+    ];
+    spinningOn();
+    getCallDataHandler(id, apiAry, () => {
+      spinningOff();
+    });
+  };
 
   onClickRow = row => {
     this.setState({
@@ -74,29 +106,32 @@ class DistributeDocList extends Component {
       width: '5%',
     },
     {
-      title: 'Title',
+      title: '문서제목',
       dataIndex: 'TITLE',
       key: 'TITLE',
       ellipsis: true,
       render: (text, record) => <StyledButton className="btn-link" onClick={() => this.onClickRow(record)}>{text}</StyledButton>
     },
     {
-      title: '배포자',
+      title: '발송자',
       dataIndex: 'DIST_USER_NAME',
       key: 'DIST_USER_NAME',
       width: '10%',
+      align: 'center',
     },
     {
-      title: '배포일',
+      title: '발송일',
       dataIndex: 'TRANS_DATE',
       key: 'TRANS_DATE',
       width: '10%',
+      align: 'center',
     },
     {
       title: '다운로드',
       dataIndex: 'STATUS',
       key: 'STATUS',
       width: '10%',
+      align: 'center',
       render: (text, record) => record.STATUS === 0 ? '  In progress' : 'Completed',
     },
     {
@@ -141,7 +176,31 @@ class DistributeDocList extends Component {
           <Redistribute selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
         <StyledContentsWrapper>
-          <AntdTable dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))} columns={this.columns} />
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <AntdInput
+                className="ant-input-sm mr5" allowClear placeholder="문서제목" style={{ width: 150 }}
+                onChange={e => this.setState({ searchInfo: { ...this.state.searchInfo, TITLE: e.target.value } })}
+                onPressEnter={this.getList}
+              />
+              <AntdInput
+                className="ant-input-sm mr5" allowClear placeholder="발송자" style={{ width: 100 }}
+                onChange={e => this.setState({ searchInfo: { ...this.state.searchInfo, DIST_USER_NAME: e.target.value } })}
+                onPressEnter={this.getList}
+              />
+              <span className="text-label">발송기간</span>
+              <AntdRangePicker
+                defaultValue={[moment(this.state.searchInfo.FROM_DT), moment(this.state.searchInfo.TO_DT)]}
+                className="ant-picker-sm mr5" style={{ width: 220 }} format="YYYY-MM-DD" allowClear={false}
+                onChange={(val1, val2) => this.setState({ searchInfo: { ...this.state.searchInfo, FROM_DT: val2[0], TO_DT: val2[1] } })}
+              />
+              <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
+            </div>
+          </StyledCustomSearchWrapper>
+          <AntdTable
+            dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))}
+            columns={this.columns}
+          />
         </StyledContentsWrapper>
       </>
     );
@@ -156,14 +215,6 @@ DistributeDocList.propTypes = {
 
 DistributeDocList.defaultProps = {
   id: 'distributeDoc',
-  apiAry: [
-    {
-      key: 'distributeDocList',
-      url: '/api/edds/v1/common/distributeDocList',
-      type: 'POST',
-      params: {},
-    },
-  ],
   result: {
     distributeDoc: {
       list: [],

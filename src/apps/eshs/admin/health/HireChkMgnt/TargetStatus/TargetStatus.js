@@ -190,7 +190,7 @@ class TargetStatus extends Component {
             </AntdSelect>
             <AntdRangePicker
               defaultValue={[moment(this.state.searchInfo.FROM_DT), moment(this.state.searchInfo.TO_DT)]}
-              className="ant-picker-sm mr5" style={{ width: 220 }} format="YYYY-MM-DD"
+              className="ant-picker-sm mr5" style={{ width: 220 }} format="YYYY-MM-DD" allowClear={false}
               onChange={(val1, val2) => this.setState({ searchInfo: { ...this.state.searchInfo, FROM_DT: val2[0], TO_DT: val2[1] } })}
             />
             <AntdSelect
