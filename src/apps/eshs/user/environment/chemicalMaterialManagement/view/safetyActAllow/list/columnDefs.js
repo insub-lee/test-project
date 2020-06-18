@@ -14,9 +14,12 @@ export const columnDefs = [
   {
     headerName: '허가물질',
     field: 'IS_ALLOW',
+    filter: 'agTextColumnFilter',
+    sortable: true,
   },
   {
     headerName: '함유량기준',
     field: 'CONTENT_STANDARD',
+    sortable: true,
   },
 ];

@@ -22,17 +22,23 @@ export const columnDefs = [
   {
     headerName: '관리대상유해물질 여부',
     field: 'IS_MANAGED',
+    filter: 'agTextColumnFilter',
+    sortable: true,
   },
   {
     headerName: '관리대상물질 함량기준',
     field: 'MANAGED_CONT',
+    sortable: true,
   },
   {
     headerName: '특별관리대상물질 여부',
     field: 'IS_SPE_MANAGED',
+    filter: 'agTextColumnFilter',
+    sortable: true,
   },
   {
     headerName: '특별관리대상물질 함량기준',
     field: 'SPE_MANAGED_CONT',
+    sortable: true,
   },
 ];

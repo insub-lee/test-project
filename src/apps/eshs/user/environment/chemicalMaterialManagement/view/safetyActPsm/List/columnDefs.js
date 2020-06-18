@@ -26,14 +26,17 @@ export const columnDefs = [
       {
         headerName: '제조',
         field: 'PRODUCTION_STOCK',
+        sortable: true,
       },
       {
         headerName: '취급',
         field: 'USAGE_STOCK',
+        sortable: true,
       },
       {
         headerName: '저장',
         field: 'STORAGE_STOCK',
+        sortable: true,
       },
     ],
   },
