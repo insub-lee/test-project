@@ -123,6 +123,14 @@ class ListPage extends Component {
       }
     });
 
+  handleClickSearch = () => {
+    this.setState({ paginationIdx: 1 }, () => {
+      const { pageSize, isPagingData } = this.state;
+      const { sagaKey, workSeq, conditional, getListData } = this.props;
+      getListData(sagaKey, workSeq, conditional, 1, pageSize);
+    });
+  };
+
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
       return CompInfo[comp.CONFIG.property.COMP_SRC].renderer({
@@ -259,7 +267,7 @@ class ListPage extends Component {
       useExcelDownload,
       conditional,
     } = this.props;
-    const { isMultiDelete, StyledWrap, isExcelDown, btnTex, fileName, sheetName, columns, fields, pageSize } = this.state;
+    const { isMultiDelete, StyledWrap, isExcelDown, btnTex, fileName, sheetName, columns, fields, pageSize, isPagingData } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -323,7 +331,7 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray btn-sm" onClick={() => this.setPaginationIdx(1)}>
+                          <StyledButton className="btn-gray btn-sm" onClick={this.handleClickSearch}>
                             검색
                           </StyledButton>
                           {useExcelDownload && isExcelDown && (
