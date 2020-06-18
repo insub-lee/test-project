@@ -1,7 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { Modal, Select, Input, DatePicker, message, Table, Tooltip } from 'antd';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import moment from 'moment';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledSelect from 'commonStyled/Form/StyledSelect';

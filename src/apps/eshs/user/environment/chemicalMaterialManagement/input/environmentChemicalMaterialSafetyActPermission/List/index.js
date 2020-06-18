@@ -12,6 +12,7 @@ import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
@@ -79,12 +80,16 @@ class List extends React.Component {
       this.setState({
         isModified: false,
       });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetypermission`, requestValue, this.getMaterialList);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetypermission`, requestValue, (key, response) =>
+        callBackAfterPut(key, response, this.getMaterialList),
+      );
     }
     this.setState({
       isModified: false,
     });
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalsafetypermission`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalsafetypermission`, requestValue, (key, response) =>
+      callBackAfterPost(key, response, this.getMaterialList),
+    );
   };
 
   handleDeleteClick = () => {
@@ -102,7 +107,10 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetypermission`, requestValue, this.getMaterialList);
+
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetypermission`, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, this.getMaterialList),
+    );
   };
 
   getMaterialList = () => {
@@ -206,22 +214,24 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={handleInputClick}>
-                저장/수정
-              </StyledButton>
-              <Popconfirm
-                title={deleteConfirmMessage}
-                onConfirm={isModified ? handleDeleteConfirm : null}
-                okText={isModified ? '삭제' : '확인'}
-                cancelText="취소"
-              >
-                <StyledButton className="btn-light btn-sm mr5" onClick={handleDeleteClick}>
-                  삭제
+              <div className="btn-area">
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={handleInputClick}>
+                  저장/수정
                 </StyledButton>
-              </Popconfirm>
-              <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
-                초기화
-              </StyledButton>
+                <Popconfirm
+                  title={deleteConfirmMessage}
+                  onConfirm={isModified ? handleDeleteConfirm : null}
+                  okText={isModified ? '삭제' : '확인'}
+                  cancelText="취소"
+                >
+                  <StyledButton className="btn-light btn-sm mr5" onClick={handleDeleteClick}>
+                    삭제
+                  </StyledButton>
+                </Popconfirm>
+                <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
+                  초기화
+                </StyledButton>
+              </div>
             </div>
           </StyledCustomSearchWrapper>
           <StyledHtmlTable>

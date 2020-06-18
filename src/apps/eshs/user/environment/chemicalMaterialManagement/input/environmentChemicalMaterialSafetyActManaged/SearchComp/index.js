@@ -4,10 +4,10 @@ import { Select, Input } from 'antd';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 
-const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
+const AntdSearch = StyledSearchInput(Input.Search);
 class SearchComp extends React.Component {
   constructor(props) {
     super(props);
@@ -67,10 +67,10 @@ class SearchComp extends React.Component {
               ))}
               <Select.Option value="">전체 보기</Select.Option>
             </AntdSelect>
-            <AntdInput.Search
+            <AntdSearch
               value={KEYWORD}
               onChange={e => handleSearchChange(e, 'INPUT')}
-              className="ant-input-mid ant-input-inline search-item input-width160"
+              className="input-search-mid ant-search-inline"
               placeholder="검색"
               style={{ width: '20%' }}
             />

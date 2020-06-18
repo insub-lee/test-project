@@ -12,6 +12,7 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 import Modal from '../InputModal';
 import SearchComp from '../InputModal/SearchComp';
 
@@ -181,7 +182,7 @@ class List extends React.Component {
         'PUT',
         `/api/eshs/v1/common/eshschemicalsafetyworkplace`,
         { requestValue, SUB_MATERIALS: dataSource.slice(1) },
-        this.getMaterialList,
+        (key, response) => callBackAfterPut(key, response, this.getMaterialList),
       );
     }
     this.setState({
@@ -192,7 +193,7 @@ class List extends React.Component {
       'POST',
       `/api/eshs/v1/common/eshschemicalsafetyworkplace`,
       { requestValue, SUB_MATERIALS: dataSource.slice(1) },
-      this.getMaterialList,
+      (key, response) => callBackAfterPost(key, response, this.getMaterialList),
     );
   };
 
@@ -211,7 +212,9 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetyworkplace`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetyworkplace`, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, this.getMaterialList),
+    );
   };
 
   getMaterialList = () => {
@@ -593,40 +596,42 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
-                저장/수정
-              </StyledButton>
-              <Popconfirm
-                title={deleteConfirmMessage}
-                onConfirm={isModified ? handleDeleteConfirm : null}
-                okText={isModified ? '삭제' : '확인'}
-                cancelText="취소"
-              >
-                <StyledButton className="btn-light btn-first btn-sm" onClick={handleDeleteClick}>
-                  삭제
+              <div className="btn-area">
+                <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
+                  저장/수정
                 </StyledButton>
-              </Popconfirm>
-              <StyledButton className="btn-light btn-first btn-sm" onClick={handleResetClick}>
-                초기화
-              </StyledButton>
-              <Popconfirm disabled={requestValue.CATEGORY && requestValue.NAME_KOR} title="상위물질 정보를 먼저 입력하세요.">
-                <StyledButton
-                  className="btn-light btn-sm"
-                  onClick={() => {
-                    if (subTableVisible) {
-                      return this.setState({ subTableVisible: false, dataSource: [{}] });
-                    }
-
-                    if (requestValue.CATEGORY && requestValue.NAME_KOR) {
-                      return handleSubMaterialAddClick();
-                    }
-
-                    return null;
-                  }}
+                <Popconfirm
+                  title={deleteConfirmMessage}
+                  onConfirm={isModified ? handleDeleteConfirm : null}
+                  okText={isModified ? '삭제' : '확인'}
+                  cancelText="취소"
                 >
-                  {subTableVisible ? '하위물질 삭제' : '하위물질 추가'}
+                  <StyledButton className="btn-light btn-first btn-sm" onClick={handleDeleteClick}>
+                    삭제
+                  </StyledButton>
+                </Popconfirm>
+                <StyledButton className="btn-light btn-first btn-sm" onClick={handleResetClick}>
+                  초기화
                 </StyledButton>
-              </Popconfirm>
+                <Popconfirm disabled={requestValue.CATEGORY && requestValue.NAME_KOR} title="상위물질 정보를 먼저 입력하세요.">
+                  <StyledButton
+                    className="btn-light btn-sm"
+                    onClick={() => {
+                      if (subTableVisible) {
+                        return this.setState({ subTableVisible: false, dataSource: [{}] });
+                      }
+
+                      if (requestValue.CATEGORY && requestValue.NAME_KOR) {
+                        return handleSubMaterialAddClick();
+                      }
+
+                      return null;
+                    }}
+                  >
+                    {subTableVisible ? '하위물질 삭제' : '하위물질 추가'}
+                  </StyledButton>
+                </Popconfirm>
+              </div>
             </div>
           </StyledCustomSearchWrapper>
           <StyledHtmlTable>

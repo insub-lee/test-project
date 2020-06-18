@@ -8,6 +8,7 @@ import { AutoSizer, Column, Table } from 'react-virtualized';
 import StyledVirtualized from 'apps/wts/components/CommonStyledElement/StyledVirtualized';
 import { jsonToQueryString } from 'utils/helpers';
 
+import StyledStandard from '../../StyledStandard';
 import StyledContent from './StyledContent';
 import SchedulerView from './ChiefSchedulerView';
 // import { getVirtualizedMinHeight } from 'utils/helpers';
@@ -188,7 +189,7 @@ class ChiefScheduleManageModal extends React.Component {
         closable={false}
         destroyOnClose
       >
-        <div>
+        <StyledStandard>
           <StyledContent>
             <div className="pop_tit">
               근무이력조회
@@ -238,7 +239,7 @@ class ChiefScheduleManageModal extends React.Component {
               {isOpen && <SchedulerView empNo={empNo} manInfo={manInfo} />}
             </div>
           </StyledContent>
-        </div>
+        </StyledStandard>
       </Modal>
     );
   }

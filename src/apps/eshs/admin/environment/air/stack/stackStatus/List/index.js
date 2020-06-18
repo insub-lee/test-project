@@ -14,7 +14,13 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import Contents from 'components/BizBuilder/Common/Contents';
-import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ, EXCEL_DOWNLOAD_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import {
+  MULTI_DELETE_OPT_SEQ,
+  LIST_NO_OPT_SEQ,
+  ON_ROW_CLICK_OPT_SEQ,
+  EXCEL_DOWNLOAD_OPT_SEQ,
+  PAGINATION_OPT_CODE,
+} from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 
 // import Loadable from 'components/Loadable';
@@ -40,6 +46,7 @@ class ListPage extends Component {
       fields: [],
       paginationIdx: 1,
       pageSize: 10,
+      isPagingData: false,
     };
   }
 
@@ -55,6 +62,7 @@ class ListPage extends Component {
     let sheetName = '';
     let columns = [];
     let fields = [];
+    let isPagingData = false;
 
     if (workInfo.BUILDER_STYLE_PATH) {
       // const StyledWrap = Loadable({
@@ -93,9 +101,10 @@ class ListPage extends Component {
             fields = columnInfo.fields || [];
           }
         }
+        if (opt.OPT_CODE === PAGINATION_OPT_CODE && opt.ISUSED === 'Y') isPagingData = true;
         // todo page size option
       });
-      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView, isExcelDown, btnTex, fileName, sheetName, columns, fields });
+      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView, isExcelDown, btnTex, fileName, sheetName, columns, fields, isPagingData });
     }
   };
 
@@ -107,9 +116,9 @@ class ListPage extends Component {
 
   setPaginationIdx = paginationIdx =>
     this.setState({ paginationIdx }, () => {
+      const { pageSize, isPagingData } = this.state;
       const { sagaKey, workSeq, conditional, getListData } = this.props;
-      const { pageSize } = this.state;
-      getListData(sagaKey, workSeq, conditional, paginationIdx, pageSize);
+      getListData(sagaKey, workSeq, conditional);
     });
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {

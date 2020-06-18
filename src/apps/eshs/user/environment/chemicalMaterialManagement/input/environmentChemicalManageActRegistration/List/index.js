@@ -11,6 +11,7 @@ import { Popconfirm, Input, Select } from 'antd';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 import SearchComp from '../SearchComp';
 
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -79,19 +80,25 @@ class List extends React.Component {
   handleInputClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialmanageactharmful`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialmanageactharmful`, requestValue, (key, response) =>
+      callBackAfterPost(key, response, this.getMaterialList),
+    );
   };
 
   handleModifyClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialmanageactharmful`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialmanageactharmful`, requestValue, (key, response) =>
+      callBackAfterPut(key, response, this.getMaterialList),
+    );
   };
 
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialmanageactharmful`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialmanageactharmful`, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, this.getMaterialList),
+    );
   };
 
   getMaterialList = () => {
@@ -236,25 +243,27 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
-                신규등록
-              </StyledButton>
-              <StyledButton className="btn-primary mr5 btn-sm" onClick={handleModifyClick}>
-                수정
-              </StyledButton>
-              <Popconfirm
-                title={deleteConfirmMessage}
-                onConfirm={isModified ? handleDeleteConfirm : null}
-                okText={isModified ? '삭제' : '확인'}
-                cancelText="취소"
-              >
-                <StyledButton className="btn-light mr5 btn-sm" onClick={handleDeleteClick}>
-                  삭제
+              <div className="btn-area">
+                <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
+                  신규등록
                 </StyledButton>
-              </Popconfirm>
-              <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
-                초기화
-              </StyledButton>
+                <StyledButton className="btn-primary mr5 btn-sm" onClick={handleModifyClick}>
+                  수정
+                </StyledButton>
+                <Popconfirm
+                  title={deleteConfirmMessage}
+                  onConfirm={isModified ? handleDeleteConfirm : null}
+                  okText={isModified ? '삭제' : '확인'}
+                  cancelText="취소"
+                >
+                  <StyledButton className="btn-light mr5 btn-sm" onClick={handleDeleteClick}>
+                    삭제
+                  </StyledButton>
+                </Popconfirm>
+                <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
+                  초기화
+                </StyledButton>
+              </div>
             </div>
           </StyledCustomSearchWrapper>
           <StyledHtmlTable>

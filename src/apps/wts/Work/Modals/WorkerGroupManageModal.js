@@ -7,6 +7,7 @@ import Scrollbars from 'react-custom-scrollbars';
 import Checkbox from 'apps/wts/components/CheckboxGroup/Checkbox';
 import { jsonToQueryString } from 'utils/helpers';
 import StyledContent from './StyledContent';
+import StyledStandard from '../../StyledStandard';
 // import { areas } from '../sampleData';
 import service from '../service';
 
@@ -324,7 +325,7 @@ class WorkerGroupManageModal extends React.Component {
         closable={false}
         destroyOnClose
       >
-        <div>
+        <StyledStandard>
           <StyledContent>
             <div className="pop_tit">
               BAY 설정
@@ -354,6 +355,7 @@ class WorkerGroupManageModal extends React.Component {
                           {listFrom.map(user => (
                             <div key={user.id} style={{ padding: 5 }}>
                               <Checkbox
+                                className="checkbox"
                                 labelText={user.title}
                                 id={user.id}
                                 noPadding
@@ -406,6 +408,7 @@ class WorkerGroupManageModal extends React.Component {
                           {listTo.map(user => (
                             <div key={user.id} style={{ padding: 5 }}>
                               <Checkbox
+                                className="checkbox"
                                 labelText={user.title}
                                 id={user.id}
                                 noPadding
@@ -427,7 +430,7 @@ class WorkerGroupManageModal extends React.Component {
               </Spin>
             </div>
           </StyledContent>
-        </div>
+        </StyledStandard>
       </Modal>
     );
   }

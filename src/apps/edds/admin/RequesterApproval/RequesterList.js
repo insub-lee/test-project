@@ -1,28 +1,62 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, Modal, Button } from 'antd';
+import { Table, Modal, Input, DatePicker } from 'antd';
+import moment from 'moment';
 
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
-import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+
 import RequesterView from './RequesterView';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
+const AntdInput = StyledInput(Input);
+const AntdRangePicker = StyledDatePicker(DatePicker.RangePicker);
 
 class RequesterList extends Component {
   state = {
     isShow: false,
     selectedRow: {},
+    searchInfo: {},
+  };
+
+  componentWillMount() {
+    const today = new Date();
+    
+    this.setState(prevState => {
+      const { searchInfo } = prevState;
+      searchInfo.TO_DT = moment(today).format('YYYY-MM-DD');
+      today.setMonth(today.getMonth() - 1);
+      searchInfo.FROM_DT = moment(today).format('YYYY-MM-DD');
+      return { searchInfo }
+    });
   };
 
   componentDidMount() {
-    this.initList();
+    this.getList();
   }
 
-  initList = () => {
-    const { id, apiAry, getCallDataHandler } = this.props;
-    getCallDataHandler(id, apiAry, () => {});
+  getList = () => {
+    const { id, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    const apiAry = [
+      {
+        key: 'requesterList',
+        url: '/api/edds/v1/common/requesterList',
+        type: 'POST',
+        params: {
+          PARAM: { ...this.state.searchInfo }
+        },
+      },
+    ];
+    spinningOn();
+    getCallDataHandler(id, apiAry, () => {
+      spinningOff();
+    });
   };
 
   onClickRow = (record, rowIndex) => {
@@ -34,7 +68,7 @@ class RequesterList extends Component {
 
   onCancelPopup = () => {
     this.setState({ isShow: false }, () => {
-      this.initList();
+      this.getList();
     });
   };
 
@@ -44,7 +78,7 @@ class RequesterList extends Component {
       dataIndex: 'REQUEST_ID',
       key: 'REQUEST_ID',
       align: 'center',
-      width: '12%',
+      width: '15%',
     },
     {
       title: '요청자명',
@@ -54,7 +88,7 @@ class RequesterList extends Component {
       width: '10%',
     },
     {
-      title: '회사명',
+      title: '업체명',
       dataIndex: 'COMPANY_NAME',
       key: 'COMPANY_NAME',
       align: 'center',
@@ -114,6 +148,27 @@ class RequesterList extends Component {
           <RequesterView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
         <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <AntdInput
+                className="ant-input-sm mr5" allowClear placeholder="업체명" style={{ width: 120 }}
+                onChange={e => this.setState({ searchInfo: { ...this.state.searchInfo, COMPANY_NAME: e.target.value } })}
+                onPressEnter={this.getList}
+              />
+              <AntdInput
+                className="ant-input-sm mr5" allowClear placeholder="요청자명" style={{ width: 100 }}
+                onChange={e => this.setState({ searchInfo: { ...this.state.searchInfo, REQUESTER_NAME: e.target.value } })}
+                onPressEnter={this.getList}
+              />
+              <span className="text-label">요청기간</span>
+              <AntdRangePicker
+                defaultValue={[moment(this.state.searchInfo.FROM_DT), moment(this.state.searchInfo.TO_DT)]}
+                className="ant-picker-sm mr5" style={{ width: 220 }} format="YYYY-MM-DD" allowClear={false}
+                onChange={(val1, val2) => this.setState({ searchInfo: { ...this.state.searchInfo, FROM_DT: val2[0], TO_DT: val2[1] } })}
+              />
+              <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
+            </div>
+          </StyledCustomSearchWrapper>
           <AntdTable
             dataSource={list.map(item => ({ ...item, key: `KEY_${item.REQUEST_ID}` }))}
             columns={this.columns}
@@ -132,21 +187,12 @@ class RequesterList extends Component {
 
 RequesterList.propTypes = {
   id: PropTypes.string,
-  apiAry: PropTypes.array,
   result: PropTypes.object,
   getCallDataHandler: PropTypes.func,
 };
 
 RequesterList.defaultProps = {
   id: 'requesterList',
-  apiAry: [
-    {
-      key: 'requesterList',
-      url: '/api/edds/v1/common/requesterList',
-      type: 'POST',
-      params: {},
-    },
-  ],
   result: {
     requesterList: {
       list: [],

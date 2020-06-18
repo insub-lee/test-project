@@ -13,6 +13,7 @@ import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumb
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 
 const AntdInput = StyledInput(Input);
 const AntdInputNumber = StyledInputNumber(InputNumber);
@@ -81,12 +82,16 @@ class List extends React.Component {
       this.setState({
         isModified: false,
       });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetyallow`, requestValue, this.getMaterialList);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalsafetyallow`, requestValue, (key, response) =>
+        callBackAfterPut(key, response, this.getMaterialList),
+      );
     }
     this.setState({
       isModified: false,
     });
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalsafetyallow`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalsafetyallow`, requestValue, (key, response) =>
+      callBackAfterPost(key, response, this.getMaterialList),
+    );
   };
 
   handleDeleteClick = () => {
@@ -104,7 +109,9 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetyallow`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalsafetyallow`, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, this.getMaterialList),
+    );
   };
 
   getMaterialList = () => {
@@ -207,22 +214,24 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
-                저장/수정
-              </StyledButton>
-              <Popconfirm
-                title={deleteConfirmMessage}
-                onConfirm={isModified ? handleDeleteConfirm : null}
-                okText={isModified ? '삭제' : '확인'}
-                cancelText="취소"
-              >
-                <StyledButton className="btn-light mr5 btn-sm" onClick={handleDeleteClick}>
-                  삭제
+              <div className="btn-area">
+                <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
+                  저장/수정
                 </StyledButton>
-              </Popconfirm>
-              <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
-                초기화
-              </StyledButton>
+                <Popconfirm
+                  title={deleteConfirmMessage}
+                  onConfirm={isModified ? handleDeleteConfirm : null}
+                  okText={isModified ? '삭제' : '확인'}
+                  cancelText="취소"
+                >
+                  <StyledButton className="btn-light mr5 btn-sm" onClick={handleDeleteClick}>
+                    삭제
+                  </StyledButton>
+                </Popconfirm>
+                <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
+                  초기화
+                </StyledButton>
+              </div>
             </div>
           </StyledCustomSearchWrapper>
           <StyledHtmlTable>
@@ -252,7 +261,7 @@ class List extends React.Component {
                   <th>함유량 기준</th>
                   <td>
                     <AntdInputNumber
-                      className="ant-input-number input-number-sm"
+                      className="ant-input-number ant-input-number-sm"
                       value={requestValue.CONTENT_STANDARD}
                       onChange={e => handleInputChange(e, 'NUMBER', 'CONTENT_STANDARD')}
                     />

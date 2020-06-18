@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import { Select, Modal, Table, message } from 'antd';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';

@@ -6,7 +6,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
 import SearchListPage from 'apps/eshs/user/safety/eshsQual/qualSqtb/sqConfirmRequest/pages/SearchList';

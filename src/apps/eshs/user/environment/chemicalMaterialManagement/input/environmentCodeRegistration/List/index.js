@@ -11,6 +11,7 @@ import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledTreeSelect from 'commonStyled/Form/StyledTreeSelect';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 
 const AntdTable = StyledLineTable(Table);
 const AntdInput = StyledInput(Input);
@@ -170,16 +171,10 @@ class List extends Component {
     });
 
   commonDataHandler = (key, type, param) => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    const apiArr = [
-      {
-        key,
-        type: type.toUpperCase(),
-        url: `/api/eshs/v1/common/eshschemicalmaterialcode`,
-        params: { PARAM: param },
-      },
-    ];
-    getCallDataHandler(id, apiArr, this.getListData);
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    submitHandlerBySaga(id, type.toUpperCase(), `/api/eshs/v1/common/eshschemicalmaterialcode`, { PARAM: param }, (apiKey, response) =>
+      callBackAfterPost(apiKey, response, this.getListData),
+    );
   };
 
   getListData = () => {
@@ -305,6 +300,7 @@ List.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
   result: PropTypes.object,
+  submitHandlerBySaga: PropTypes.func,
 };
 
 List.defaultProps = {

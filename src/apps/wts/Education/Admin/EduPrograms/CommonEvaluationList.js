@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Spin } from 'antd';
+
 import Wrapper from './Wrapper';
+import StyledTable from '../../../StyledTable';
 
 const CommonEvaluationList = ({ type, data, isLoading }) => (
   <Wrapper>
     <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-      <div className="ta_wrap">
+      <StyledTable className="ta_wrap">
         {type !== 'job_proc' && (
           <table className="tb02">
             <colgroup>
@@ -79,7 +81,7 @@ const CommonEvaluationList = ({ type, data, isLoading }) => (
             </tbody>
           </table>
         )}
-      </div>
+      </StyledTable>
     </Spin>
   </Wrapper>
 );
