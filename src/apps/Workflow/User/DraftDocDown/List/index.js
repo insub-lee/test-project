@@ -114,7 +114,6 @@ class DraftDocDown extends Component {
     const drmInfo = { [uuid()]: 1, drmInfo: { bk: BK, ed: ED, pr: PR, uc: UC } };
     const acl = base64.encode(JSON.stringify(drmInfo));
     const url = `${down}/${acl}`;
-    console.debug('url', url, fileName, this.props);
     this.setState({ showProgress: true, percentCompleted: 0 });
 
     getFileDownloadProgress(url, fileName, this.onProgress, this.onComplete);
