@@ -11,7 +11,8 @@ import View from 'components/BizBuilder/PageComp/view';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
-import { VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/FireWsocket/internal_constants';
+import { VIEW_TYPE, META_SEQ, FIRE_CODE } from 'apps/eshs/admin/safety/InspectionTarget/FireWsocket/internal_constants';
+import IssueNote from 'apps/eshs/admin/safety/InspectionTarget/IssueNote';
 import * as CustomButtons from 'apps/eshs/admin/safety/InspectionTarget/FireWsocket/Buttons';
 
 const AntdModal = StyledModalWrapper(Modal);
@@ -70,7 +71,7 @@ class ViewPage extends Component {
 
   openModal = changedSagaKey => {
     const { pageMetaSeq, viewType } = this.state;
-    const { workSeq, sagaKey, taskSeq } = this.props;
+    const { workSeq, sagaKey, taskSeq, formData } = this.props;
     switch (pageMetaSeq) {
       case META_SEQ.VIEW_INSPECTION_BY_CHIP: {
         return (
@@ -135,6 +136,9 @@ class ViewPage extends Component {
           />
         );
       }
+      case META_SEQ.ISSUE_NOTE: {
+        return <IssueNote fireCode={FIRE_CODE} positionNo={formData.POSITION_NO} />;
+      }
       default:
         return '';
     }
@@ -151,6 +155,8 @@ class ViewPage extends Component {
         return 'Issue 등록';
       case META_SEQ.INPUT_INSPECTION:
         return '점검결과 입력';
+      case META_SEQ.ISSUE_NOTE:
+        return 'Issue Note';
       default:
         return '';
     }

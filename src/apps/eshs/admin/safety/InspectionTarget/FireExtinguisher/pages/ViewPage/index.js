@@ -11,7 +11,8 @@ import View from 'components/BizBuilder/PageComp/view';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
-import { VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/internal_constants';
+import { VIEW_TYPE, META_SEQ, FIRE_CODE } from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/internal_constants';
+import IssueNote from 'apps/eshs/admin/safety/InspectionTarget/IssueNote';
 import * as CustomButtons from 'apps/eshs/admin/safety/InspectionTarget/FireExtinguisher/Buttons';
 
 const AntdModal = StyledModalWrapper(Modal);
@@ -69,7 +70,7 @@ class ViewPage extends Component {
 
   openModal = changedSagaKey => {
     const { pageMetaSeq, viewType } = this.state;
-    const { workSeq, sagaKey, taskSeq } = this.props;
+    const { workSeq, sagaKey, taskSeq, formData } = this.props;
 
     switch (pageMetaSeq) {
       case META_SEQ.VIEW_INSPECTION_BY_CHIP: {
@@ -135,6 +136,9 @@ class ViewPage extends Component {
           />
         );
       }
+      case META_SEQ.ISSUE_NOTE: {
+        return <IssueNote fireCode={FIRE_CODE} positionNo={formData.POSITION_NO} />;
+      }
       default:
         return '';
     }
@@ -153,6 +157,8 @@ class ViewPage extends Component {
         return '점검결과 입력';
       case META_SEQ.VIEW_STATUS:
         return '소화기 현황';
+      case META_SEQ.ISSUE_NOTE:
+        return 'Issue Note';
       default:
         return '';
     }
@@ -162,11 +168,9 @@ class ViewPage extends Component {
     const { sagaKey: id, reloadId, viewLayer, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal, ViewCustomButtons } = this.props;
 
     const { StyledWrap, activateModal } = this.state;
-
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
-
       return (
         <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
