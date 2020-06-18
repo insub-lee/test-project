@@ -384,7 +384,7 @@ class WorkProcessModal extends Component {
                       pagination={false}
                       size="small"
                       scroll={{ y: 395 }}
-                      className="non-top-border"
+                      className="non-top-border page-custom"
                       onRow={(record, rowIndex) => ({
                         onDoubleClick: e => this.onDeptDoubleClick(record, rowIndex, e),
                       })}
