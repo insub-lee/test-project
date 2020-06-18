@@ -1,31 +1,25 @@
 export const columnDefs = [
   {
-    headerName: '번호',
+    headerName: 'NO',
     field: 'SERIAL_NO',
   },
   {
-    headerName: '유해 · 위험물질',
+    headerName: '물질명',
     field: 'NAME_KOR',
-    width: 160,
   },
   {
     headerName: 'CAS_NO',
     field: 'CAS_NO',
   },
   {
-    headerName: '해당 여부',
-    field: 'IS_APPLICATE,',
+    headerName: '허가물질',
+    field: 'IS_ALLOW',
     filter: 'agTextColumnFilter',
     sortable: true,
   },
   {
-    headerName: '기준함량',
+    headerName: '함유량기준',
     field: 'CONTENT_STANDARD',
-    sortable: true,
-  },
-  {
-    headerName: '규정량',
-    field: 'CONTENT_DOSE',
     sortable: true,
   },
 ];
