@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import { Table, Input, DatePicker, Select, Popover, Checkbox, message } from 'antd';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
@@ -192,14 +192,14 @@ class List extends Component {
         title: `삭제`,
         align: 'center',
         dataIndex: 'CONTANTS',
-        width: '5%',
+        width: '10%',
         render: (text, record, index) => <StyledButton onClick={() => this.onDeleteArr(record, index)}>[-]</StyledButton>,
       },
       {
         title: `내용`,
         dataIndex: 'CONTANTS',
         align: 'center',
-        width: '85%',
+        width: '80%',
         render: (text, record, index) => <TextArea value={text} onChange={e => this.onChangeContants(e.target.value, record, index)} />,
       },
       {
@@ -215,77 +215,80 @@ class List extends Component {
         title: `삭제`,
         align: 'center',
         dataIndex: 'CONTANTS',
-        width: '5%',
+        width: '10%',
         render: (text, record, index) => <StyledButton onClick={() => this.onDeleteArr(record, index)}>[-]</StyledButton>,
       },
       {
         title: `내용`,
         dataIndex: 'CONTANTS',
-        width: '95%',
+        width: '90%',
         align: 'center',
         render: (text, record, index) => <TextArea value={text} onChange={e => this.onChangeContants(e.target.value, record, index)} />,
       },
     ];
     return (
       <StyledContentsWrapper>
-        <div className="selSaveWrapper alignLeft">
-          <span className="textLabel">날짜 선택</span>
-          <AntdDatePicker
-            className="ant-picker-mid mr5"
-            defaultValue={this.state.journalDate}
-            format="YYYY-MM-DD"
-            onChange={date => this.onChangeValue('journalDate', date)}
-          />
-          <span className="textLabel">고정조 구분</span>
-          <AntdSelect
-            style={{ width: '200px' }}
-            className="select-mid mr5"
-            onChange={value => this.onChangeValue('fixedTeamSelected', value)}
-            value={fixedTeamSelected}
-          >
-            <Option value="">전체</Option>
-            {fixedTeam && fixedTeam.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
-          </AntdSelect>
-          <span className="textLabel">시간조 구분</span>
-          <AntdSelect
-            style={{ width: '200px' }}
-            className="select-mid mr5"
-            onChange={value => this.onChangeValue('timedTeamSelected', value)}
-            value={timedTeamSelected}
-          >
-            <Option value="">전체</Option>
-            {timedTeam && timedTeam.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
-          </AntdSelect>
-          <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={this.searchList}>
+        <StyledCustomSearch>
+          <div className="search-input-area">
+            <span className="text-label">날짜 선택</span>
+            <AntdDatePicker
+              className="ant-picker-sm mr5"
+              defaultValue={this.state.journalDate}
+              format="YYYY-MM-DD"
+              onChange={date => this.onChangeValue('journalDate', date)}
+            />
+            <span className="text-label">고정조 구분</span>
+            <AntdSelect
+              style={{ width: '200px' }}
+              className="select-sm mr5"
+              onChange={value => this.onChangeValue('fixedTeamSelected', value)}
+              value={fixedTeamSelected}
+              allowClear
+              placeholder="전체"
+            >
+              {fixedTeam && fixedTeam.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
+            </AntdSelect>
+            <span className="text-label">시간조 구분</span>
+            <AntdSelect
+              style={{ width: '200px' }}
+              className="select-sm mr5"
+              onChange={value => this.onChangeValue('timedTeamSelected', value)}
+              value={timedTeamSelected}
+              allowClear
+              placeholder="전체"
+            >
+              {timedTeam && timedTeam.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
+            </AntdSelect>
+          </div>
+          <div className="btn-area">
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.searchList}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={this.onChangeData}>
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onChangeData}>
               저장
             </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => message.warning('개발중입니다.')}>
+            <StyledButton className="btn-primary btn-sm" onClick={() => message.warning('개발중입니다.')}>
               출력
             </StyledButton>
-          </StyledButtonWrapper>
-        </div>
+          </div>
+        </StyledCustomSearch>
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">근무자 현황</span>
           <AntdInput
-            style={{ width: '500px' }}
-            className="ant-input-inline ant-input-mid mr5"
+            style={{ width: '30%' }}
+            className="ant-input-inline ant-input-sm mr5"
             value={this.state.workerStatus}
             onChange={e => this.onChangeValue('workerStatus', e.target.value)}
           />
           <span className="textLabel">휴가자</span>
           <AntdInput
-            style={{ width: '500px' }}
-            className="ant-input-inline ant-input-mid mr5"
+            style={{ width: '30%' }}
+            className="ant-input-inline ant-input-sm mr5"
             value={this.state.vacationer}
             onChange={e => this.onChangeValue('vacationer', e.target.value)}
           />
         </div>
         <AntdLineTable
-          className="tableWrapper"
           rowKey={listData && listData.TASK_SEQ}
           columns={journalCol}
           dataSource={listData}
@@ -295,13 +298,13 @@ class List extends Component {
           <span>기타사항</span>
           <StyledButton onClick={() => this.handlePlusArr(1)}>[+1]</StyledButton>
         </div>
-        <AntdLineTable className="tableWrapper" columns={otherArrCol} dataSource={otherArr} pagination={false} footer={null} />
+        <AntdLineTable columns={otherArrCol} dataSource={otherArr} pagination={false} footer={null} />
 
         <div className="selSaveWrapper alignLeft">
           <span>업무계획</span>
           <StyledButton onClick={() => this.handlePlusArr(2)}>[+1]</StyledButton>
         </div>
-        <AntdLineTable className="tableWrapper" columns={planArrCol} dataSource={planArr} pagination={false} footer={null} />
+        <AntdLineTable columns={planArrCol} dataSource={planArr} pagination={false} footer={null} />
       </StyledContentsWrapper>
     );
   }
@@ -335,8 +338,9 @@ List.defaultProps = {
     },
     {
       title: `조`,
-      dataIndex: 'TIME_TEAM_NAME',
+      dataIndex: 'FIXED_TEAM_NAME',
       align: 'center',
+      render: (text, record) => <span>{`${text}(${record.TIME_TEAM_NAME})`}</span>,
     },
     {
       title: `AREA`,
