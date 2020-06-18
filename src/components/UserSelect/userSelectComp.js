@@ -184,14 +184,25 @@ class UserSelectComp extends Component {
       url: `/api/common/v1/account/userSearchList`,
       type: 'POST',
       params: {
-        PARAM: { USER_NAME: val }
-      }
+        PARAM: { USER_NAME: val },
+      },
     };
     getCallDataHandlerReturnRes(sagaKey, apiInfo, () => {});
-  }
+  };
+
+  onCheckUserAll = e => {
+    let checkUserList = [];
+    if (e.target.checked) {
+      const { userDataList, result } = this.props;
+      const list = userDataList || (result && result.userList && result.userList.list) || [];
+      checkUserList = list.map(item => item.USER_ID);
+    }
+    this.setState({ checkUserList });
+  };
 
   render() {
     const { treeDataSource, userDataList, result } = this.props;
+    const { isMulti } = this.state;
     return (
       <UserSelectWrapper>
         <Row gutter={0}>
@@ -221,9 +232,21 @@ class UserSelectComp extends Component {
                 <List
                   header={
                     <>
-                      사용자 선택 
+                      {isMulti && (
+                        <Checkbox
+                          style={{ marginRight: 4 }}
+                          onChange={this.onCheckUserAll}
+                          checked={
+                            this.state.checkUserList &&
+                            this.state.checkUserList.length > 0 &&
+                            (this.state.checkUserList || []).length === (userDataList || (result && result.userList && result.userList.list) || []).length
+                          }
+                        />
+                      )}
+                      사용자 선택
                       <AntdSearchInput
-                        className="input-search-sm" style={{ width: 150, marginLeft: 10 }}
+                        className="input-search-sm"
+                        style={{ width: 146, marginLeft: 4 }}
                         onPressEnter={e => this.onSearchUserByName(e.target.value)}
                         onSearch={val => this.onSearchUserByName(val)}
                       />
