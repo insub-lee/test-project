@@ -93,11 +93,11 @@ class CommonSearchbar extends React.Component {
     switch (viewPageData && viewPageData.viewType.toUpperCase()) {
       case 'INPUT':
         buttonGruop = (
-          <StyledButtonWrapper className="btn-wrap-inline btn-wrap-ml-5">
-            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('S')}>
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('S')}>
               등록
             </StyledButton>
-            <StyledButton className="btn-primary btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            <StyledButton className="btn-primary btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
           </StyledButtonWrapper>
@@ -105,17 +105,17 @@ class CommonSearchbar extends React.Component {
         break;
       case 'MODIFY':
         buttonGruop = (
-          <StyledButtonWrapper className="btn-wrap-inline btn-wrap-ml-5">
-            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('M')}>
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('M')}>
               저장
             </StyledButton>
-            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('D')}>
+            <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('D')}>
               삭제
             </StyledButton>
-            <StyledButton className="btn-primary btn-sm mr5" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
+            <StyledButton className="btn-primary btn-first btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
               신규등록
             </StyledButton>
-            <StyledButton className="btn-primary btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            <StyledButton className="btn-primary btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
           </StyledButtonWrapper>
@@ -134,8 +134,8 @@ class CommonSearchbar extends React.Component {
       <div>
         <AntdSearch
           value={colData}
+          className={`input-search-mid ant-search-inline mr5 ${CONFIG.property.className || ''}`}
           readOnly
-          className={CONFIG.property.className || ''}
           style={{ width: 150 }}
           onClick={this.handleModalVisible}
           onSearch={this.handleModalVisible}
@@ -150,7 +150,7 @@ class CommonSearchbar extends React.Component {
             visible={this.state.modal}
             width={800}
             onCancel={this.handleModalVisible}
-            footer={[null]}
+            footer={null}
           >
             <div>{this.state.modal && this.BizbuilderbaseRender()}</div>
           </AntdModal>
