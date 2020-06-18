@@ -117,10 +117,8 @@ class ListPage extends Component {
   setPaginationIdx = paginationIdx =>
     this.setState({ paginationIdx }, () => {
       const { pageSize, isPagingData } = this.state;
-      if (isPagingData) {
-        const { sagaKey, workSeq, conditional, getListData } = this.props;
-        getListData(sagaKey, workSeq, conditional, paginationIdx, pageSize);
-      }
+      const { sagaKey, workSeq, conditional, getListData } = this.props;
+      getListData(sagaKey, workSeq, conditional);
     });
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
