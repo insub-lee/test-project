@@ -1,6 +1,7 @@
 import { message } from 'antd';
 
-export const callBackAfterPost = (id, { isInsert }, afterFunc) => {
+export const callBackAfterPost = (id, response, afterFunc) => {
+  const isInsert = Object.values(response)[0];
   if (isInsert) {
     message.success('저장되었습니다.');
     return typeof afterFunc === 'function' ? afterFunc() : null;
@@ -9,7 +10,8 @@ export const callBackAfterPost = (id, { isInsert }, afterFunc) => {
   return typeof afterFunc === 'function' ? afterFunc() : null;
 };
 
-export const callBackAfterPut = (id, { isUpdate }, afterFunc) => {
+export const callBackAfterPut = (id, response, afterFunc) => {
+  const isUpdate = Object.values(response)[0];
   if (isUpdate) {
     message.success('수정되었습니다.');
     return typeof afterFunc === 'function' ? afterFunc() : null;
@@ -18,7 +20,8 @@ export const callBackAfterPut = (id, { isUpdate }, afterFunc) => {
   return typeof afterFunc === 'function' ? afterFunc() : null;
 };
 
-export const callBackAfterDelete = (id, { isDelete }, afterFunc) => {
+export const callBackAfterDelete = (id, response, afterFunc) => {
+  const isDelete = Object.values(response)[0];
   if (isDelete) {
     message.success('삭제되었습니다.');
     return typeof afterFunc === 'function' ? afterFunc() : null;
