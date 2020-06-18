@@ -23,6 +23,7 @@ class DragUploadMDCSCompConfig extends Component {
     const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
     const { value } = e.target;
     // changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
+    const {} = configInfo;
     configInfo.property.isUsePDF = value;
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
   };

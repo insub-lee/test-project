@@ -423,6 +423,7 @@ const mapDispatchToProps = dispatch => ({
   removeMultiTask: (id, reloadId, callbackFunc) => dispatch(actions.removeMultiTaskBySaga(id, reloadId, callbackFunc)),
   // setIsLoading: (id, flag) => dispatch(actions.setIsLoadingByReducer(id, flag)),
   getFileDownload: (id, url, fileName) => dispatch(actions.getFileDownload(id, url, fileName)),
+  getFileDownloadProgress: (id, url, fileName, onProgress, callback) => dispatch(actions.getFileDownloadProgress(id, url, fileName, onProgress, callback)),
   setFormData: (id, formData) => dispatch(actions.setFormDataByReducer(id, formData)),
   setTaskFavorite: (id, workSeq, taskOriginSeq, flag) => dispatch(actions.setTaskFavoriteBySaga(id, workSeq, taskOriginSeq, flag)),
 });

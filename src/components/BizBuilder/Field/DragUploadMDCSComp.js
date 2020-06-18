@@ -17,14 +17,14 @@ class DragUploadMDCSComp extends Component {
         FIELD_NM: undefined,
         TYPE: undefined,
         DETAIL: [],
-        isUserPDF: undefined,
+        isUsePDF: undefined,
       },
     };
   }
 
   componentDidMount() {
     const { WORK_SEQ, COMP_FIELD, COMP_TAG, CONFIG, colData } = this.props;
-    console.debug('config', CONFIG);
+    console.debug('did', CONFIG.property.isUsePDF);
     const initfiles = {
       WORK_SEQ,
       TASK_SEQ: (colData && colData.TASK_SEQ) || -1,
@@ -32,6 +32,7 @@ class DragUploadMDCSComp extends Component {
       FIELD_NM: COMP_FIELD,
       TYPE: COMP_TAG,
       DETAIL: colData && colData.DETAIL ? colData.DETAIL : [],
+      isUsePDF: CONFIG && CONFIG.property && CONFIG.property.isUsePDF,
     };
     this.setState({ fileInfo: initfiles });
   }
@@ -47,6 +48,7 @@ class DragUploadMDCSComp extends Component {
     const { fileInfo } = this.state;
     const { DETAIL: fileList } = fileInfo;
     const { fileExt, down } = response;
+    console.debug('complete', response, this.state, fileInfo);
     let doctype = 'file-unknown';
     switch (fileExt) {
       case 'pdf':
@@ -87,8 +89,19 @@ class DragUploadMDCSComp extends Component {
   customRequest = ({ action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials }) => {
     const { fileInfo } = this.state;
     const { DETAIL: fileList } = fileInfo;
-
-    const fileItem = { uid: file.uid, seq: 0, fileName: file.name, fileType: 1, size: file.size, fileExt: '', down: '', percent: 0, type: 'LoadingOutlined' };
+    console.debug('file', fileInfo);
+    const fileItem = {
+      isUsePDF: fileInfo.isUsePDF,
+      uid: file.uid,
+      seq: 0,
+      fileName: file.name,
+      fileType: 1,
+      size: file.size,
+      fileExt: '',
+      down: '',
+      percent: 0,
+      type: 'LoadingOutlined',
+    };
     fileList.push(fileItem);
     const tmpFileInfo = { ...fileInfo, DETAIL: fileList };
     this.setState({ fileInfo: tmpFileInfo });

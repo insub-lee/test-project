@@ -294,27 +294,32 @@ class DangerHazardSubComp extends React.Component {
           {
             title: '부서',
             dataIndex: 'SDIV_ID',
+            width: '80px',
             render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '공정(장소)',
             dataIndex: 'PLACE_ID',
+            width: '80px',
             render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '세부공정',
             dataIndex: 'PROCESS_ID',
+            width: '80px',
             render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '장비(설비)',
             dataIndex: 'EQUIP_ID',
+            width: '80px',
             render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '위험요인',
             dataIndex: 'WORK_NM',
-            render: text => <AntdTextarea value={text} readOnly />,
+            width: '200px',
+            render: text => <AntdTextarea value={text} readOnly style={{ width: 200 }} />,
           },
         ],
       },
@@ -331,6 +336,7 @@ class DangerHazardSubComp extends React.Component {
         ),
         align: 'center',
         dataIndex: 'AOC_ID',
+        width: '100px',
         render: text =>
           Array.isArray(text)
             ? text.map(item => aocList && aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR).toString()
@@ -342,6 +348,7 @@ class DangerHazardSubComp extends React.Component {
       {
         title: '사고의 발생유형',
         dataIndex: 'AOT_ID',
+        width: '100px',
         render: (text, record) =>
           text === 30450
             ? `${aotList && aotList.find(i => i.NODE_ID === text) && aotList.find(i => i.NODE_ID === text).NAME_KOR}(${record.OTHER_CASE})`
@@ -350,6 +357,7 @@ class DangerHazardSubComp extends React.Component {
       {
         title: 'R/A 실시여부',
         dataIndex: 'RA_YN',
+        width: '50px',
       },
     ];
 
@@ -364,10 +372,12 @@ class DangerHazardSubComp extends React.Component {
           </Popconfirm>
         </StyledButtonWrapper>
         <AntdTable
-          rowKey="INDEX"
+          rowKey={formData.HAZARD_LIST && `${formData.HAZARD_LIST.REG_NO}_${formData.HAZARD_LIST.SEQ}`}
+          key={formData.HAZARD_LIST && `${formData.HAZARD_LIST.REG_NO}_${formData.HAZARD_LIST.SEQ}`}
           columns={columns}
           dataSource={formData.HAZARD_LIST || []}
           rowSelection={rowSelection}
+          scroll={{ x: 1300 }}
           onRow={record => ({
             onClick: () => {
               this.modalSelected(record);

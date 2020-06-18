@@ -221,7 +221,7 @@ class List extends Component {
                 {useYN === 'Y' ? (
                   <span className="span-item">사용</span>
                 ) : (
-                  <StyledButton className="btn-gray btn-xs" onClick={() => this.onChangeData('R')}>
+                  <StyledButton className="btn-light btn-xs" onClick={() => this.onChangeData('R')}>
                     삭제 취소
                   </StyledButton>
                 )}
@@ -268,10 +268,10 @@ class List extends Component {
                   <StyledButton className="btn-gray btn-xs btn-first" onClick={() => this.onChangeData('U')}>
                     수정
                   </StyledButton>
-                  <StyledButton className="btn-gray btn-xs btn-first" onClick={() => this.onChangeData('D')}>
+                  <StyledButton className="btn-light btn-xs btn-first" onClick={() => this.onChangeData('D')}>
                     삭제
                   </StyledButton>
-                  <StyledButton className="btn-gray btn-xs" onClick={this.onReset}>
+                  <StyledButton className="btn-light btn-xs" onClick={this.onReset}>
                     Reset
                   </StyledButton>
                 </StyledButtonWrapper>

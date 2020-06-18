@@ -216,7 +216,7 @@ class EduManageModal extends React.Component {
   mentorConfirmRenderer(reportAuth, row) {
     return reportAuth === 'mentor' ? (
       <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleMentorConfirm(row)}>
-        <i className="fa fa-signature" /> 멘토확인
+        <i className="fas fa-check" /> 멘토확인
       </StyledButton>
     ) : (
       '미확인'
@@ -495,7 +495,7 @@ class EduManageModal extends React.Component {
           <td colSpan={3}>
             {reportAuth === 'user' ? (
               <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleEduReportModal(step)}>
-                <i className="fas fa-edit" /> 레포트 작성
+                <i className="fa fa-edit" /> 레포트 작성
               </StyledButton>
             ) : (
               '작성된 레포트가 없습니다.'
@@ -556,10 +556,10 @@ class EduManageModal extends React.Component {
         <td>{moment(row.edudt, 'YYYYMMDD').format('YYYY.MM.DD')}</td>
         <td>
           <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleReviewEduReportModal(row)} style={curriculumButtonStyle}>
-            <i className="fas fa-edit" /> {row.curriculum}
+            <i className="fa fa-edit" /> {row.curriculum}
           </StyledButton>
         </td>
-        <td>{row.confirm === 'O' ? <i className="fa fa-signature" /> : this.mentorConfirmRenderer(reportAuth, row)}</td>
+        <td>{row.confirm === 'O' ? <i className="fa fa-check" /> : this.mentorConfirmRenderer(reportAuth, row)}</td>
         {index === 0 && !notReady && this.mentorAcceptTestRenderer(reportAuth, eduPlanInfo, row, report[step].length, confirmed, step, planResult)}
         {index === 0 && notReady && (
           <td rowSpan={report[step].length + 1} colSpan={2}>
@@ -582,7 +582,7 @@ class EduManageModal extends React.Component {
                   )
                 }
               >
-                {reportAuth === 'mentor' || reportAuth === 'admin' ? <i className="fas fa-edit" /> : '내용'}
+                {reportAuth === 'mentor' || reportAuth === 'admin' ? <i className="fa fa-edit" /> : '내용'}
               </StyledButton>
             </td>
             <td rowSpan={report[step].length}>
@@ -591,7 +591,7 @@ class EduManageModal extends React.Component {
                 className="btn-light btn-sm"
                 onClick={() => this.handleAdminOpinionModal(row.plan_seq, row.empno, step, eduPlanStep[checkIndex].chief_opinion, reportAuth === 'admin')}
               >
-                {reportAuth === 'admin' ? <i className="fas fa-edit" /> : '내용'}
+                {reportAuth === 'admin' ? <i className="fa fa-edit" /> : '내용'}
               </StyledButton>
             </td>
           </>
@@ -609,7 +609,7 @@ class EduManageModal extends React.Component {
         <tr className="bd" key={-1}>
           <td colSpan={3}>
             <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleEduReportModal(step)}>
-              <i className="fas fa-edit" /> 레포트 작성
+              <i className="fa fa-edit" /> 레포트 작성
             </StyledButton>
           </td>
         </tr>,

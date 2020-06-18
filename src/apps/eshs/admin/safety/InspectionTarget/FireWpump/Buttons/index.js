@@ -42,6 +42,7 @@ export function DetailButtons(props) {
       <History {...props} detail="History(Chip)" viewType="VIEW" moveTo={META_SEQ.VIEW_INSPECTION_BY_CHIP} />
       <History {...props} detail="점검결과 등록" viewType={VIEW_TYPE.INPUT} moveTo={META_SEQ.INPUT_INSPECTION} />
       <Add {...props} title="ISSUE 추가" />
+      <History {...props} detail="ISSUE 처리" viewType="LIST" moveTo={META_SEQ.ISSUE_NOTE} />
       <InfoModify {...props} />
     </div>
   );

@@ -8,7 +8,7 @@ import moment from 'moment';
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
 import { jsonToQueryString } from 'utils/helpers';
 import DatePicker from 'apps/wts/components/DatePicker';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import service from '../service';
 import StyledContent from './StyledContent';
 
@@ -228,12 +228,12 @@ class EduReportModal extends React.Component {
                   </ul>
                   {!readOnly && (
                     <div className="btn_wrap">
-                      <Button type="submit" color="primary" size="small">
+                      <StyledButton type="submit" className="btn-primary btn-xs">
                         확인
-                      </Button>
-                      <Button type="button" color="gray" size="small" onClick={this.handleCloseModal}>
+                      </StyledButton>
+                      <StyledButton type="button" className="btn-light btn-xs" onClick={this.handleCloseModal}>
                         취소
-                      </Button>
+                      </StyledButton>
                     </div>
                   )}
                 </StyledCommonForm>

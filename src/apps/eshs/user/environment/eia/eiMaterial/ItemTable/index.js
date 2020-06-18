@@ -200,10 +200,33 @@ class ItemTable extends Component {
     const searchFlag = (formData && formData.searchFlag) || false;
     const itemList = (formData && formData.itemList) || [];
     const itemData = (formData && formData.itemData) || {};
-    const btnOk = itemList.length >= 1;
+    let btnOk = itemList.length >= 1;
+    const approvalStatus = (formData && formData.materialData && formData.materialData.STATUS) || '';
+    let statusMsg = '';
+
+    switch (approvalStatus) {
+      case 'REVIEWING':
+        statusMsg = '현재 결재중입니다. 검토자만 수정할 수 있습니다.';
+        btnOk = true; // 검토자만 권한 추가시 수정
+        break;
+      case 'DOING':
+        statusMsg = '현재 결재중입니다. 수정할 수 없습니다.';
+        btnOk = false;
+        break;
+      case 'COMPLETE':
+        statusMsg = '결재가 완료되었습니다. 조회만 할 수 있습니다.';
+        btnOk = false;
+        break;
+      case 'NOTHING':
+        break;
+      default:
+        break;
+    }
     return (
       <StyledHtmlTable>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          {statusMsg && <span className="btn-comment btn-wrap-mr-5">{statusMsg}</span>}
+
           <ExcelDownloadComp
             isBuilder={false}
             fileName={`Material_${moment().format('YYYYMMDD')}`}

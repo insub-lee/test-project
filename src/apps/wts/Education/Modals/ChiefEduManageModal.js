@@ -291,7 +291,7 @@ class ChiefEduManageModal extends React.Component {
                           </td>
                           <td>
                             <StyledButton type="button" className="btn-light btn-sm">
-                              <i className="fa fa-signature" /> 멘토확인
+                              <i className="fa fa-pen" /> 멘토확인
                             </StyledButton>
                           </td>
                           <td>
@@ -315,7 +315,7 @@ class ChiefEduManageModal extends React.Component {
                           </td>
                           <td>
                             <StyledButton type="button" className="btn-light btn-sm">
-                              <i className="fa fa-signature" /> 멘토확인
+                              <i className="fa fa-pen" /> 멘토확인
                             </StyledButton>
                           </td>
                           <td>

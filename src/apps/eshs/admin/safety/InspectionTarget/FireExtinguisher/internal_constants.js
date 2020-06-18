@@ -7,6 +7,7 @@ export const address = {
   registerIssueNote: `${baseUrl}registerIssueNote`,
   registerInspectionResult: `${baseUrl}registerInspectionResult`,
 };
+export const FIRE_CODE = 'fireExtinguisher';
 export const VIEW_TYPE = { INPUT: 'INPUT', VIEW: 'VIEW', MODIFY: 'MODIFY', LIST: 'LIST' };
 export const META_SEQ = {
   MODAL_LIST: 3901,
@@ -17,6 +18,7 @@ export const META_SEQ = {
   INPUT_INSPECTION: 8765,
   VIEW_STATUS: 8781,
   LIST_USAGE_SEARCH: 8961,
+  ISSUE_NOTE: 9999,
 };
 export const VIEW_CHANGE_SEQ = {};
 
