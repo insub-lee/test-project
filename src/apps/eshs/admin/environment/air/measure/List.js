@@ -7,13 +7,17 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 
 import Moment from 'moment';
 
-const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
+
+const AntdSelect = StyledSelect(Select);
+const AntdMonthPicker = StyledDatePicker(MonthPicker);
+
 Moment.locale('ko');
 
 class List extends Component {
@@ -123,7 +127,7 @@ class List extends Component {
               </Option>
             </AntdSelect>
             <div style={{ margin: '0 5px', display: 'inline-block' }}>
-              <MonthPicker
+              <AntdMonthPicker
                 className="ant-picker-mid mr5"
                 defaultValue={Moment(Moment(), 'YYYY-MM')}
                 format="YYYY-MM"
@@ -150,67 +154,65 @@ class List extends Component {
           </div>
         </StyledCustomSearch>
         {measureList ? (
-          <StyledHtmlTable className="tableWrapper">
-            <div style={{ overflowX: 'scroll' }}>
-              <table>
-                <tbody>
+          <StyledHtmlTable style={{ height: measureList.length > 10 && 400, overflow: 'scroll', msOverflowStyle: 'scrollbar' }}>
+            <table>
+              <tbody>
+                <tr>
+                  <th style={{ position: 'sticky', top: 0 }}>계통</th>
+                  <th style={{ position: 'sticky', top: 0 }}>STACK</th>
+                  <th style={{ position: 'sticky', top: 0 }}>측정여부(Y/N)</th>
+                  <th style={{ position: 'sticky', top: 0 }}>측정일자</th>
+                  <th style={{ position: 'sticky', top: 0 }}>분당 배출량</th>
+                  <th style={{ position: 'sticky', top: 0 }}>시간당 배출량</th>
+                  {gasList && gasList.map(item => <th style={{ position: 'sticky', top: 0 }}>{item.GAS_CD}</th>)}
+                </tr>
+                {measureList.map(item => (
                   <tr>
-                    <th>계통</th>
-                    <th>STACK</th>
-                    <th>측정여부(Y/N)</th>
-                    <th>측정일자</th>
-                    <th>분당 배출량</th>
-                    <th>시간당 배출량</th>
-                    {gasList && gasList.map(item => <th>{item.GAS_CD}</th>)}
+                    <td>{item.GUBUN_NAME}</td>
+                    <td>{item.STACK_CD}</td>
+                    <td>{item.IS_MEASURE}</td>
+                    <td>{item.MEASURE_DT}</td>
+                    <td>{item.MINUTE_FLOW}</td>
+                    <td>{item.HOUR_FLOW}</td>
+                    <>
+                      {selectGubun === 1 ? (
+                        <>
+                          {gasList &&
+                            gasList.map(gasType => (
+                              <td>
+                                {item.GAS.map(gasItem => (
+                                  <>{gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD ? JSON.parse(gasItem.value).DENSITY : undefined}</>
+                                ))}
+                              </td>
+                            ))}
+                        </>
+                      ) : (
+                        <>
+                          {gasList &&
+                            gasList.map(gasType => (
+                              <td>
+                                {item.GAS.map(gasItem => (
+                                  <>
+                                    {gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD
+                                      ? this.calculate(
+                                          gasType.GAS_CD,
+                                          item.HOUR_FLOW,
+                                          JSON.parse(gasItem.value).DENSITY,
+                                          item.WORK_DAY,
+                                          JSON.parse(gasItem.value).GAS_WEIGHT,
+                                        )
+                                      : undefined}
+                                  </>
+                                ))}
+                              </td>
+                            ))}
+                        </>
+                      )}
+                    </>
                   </tr>
-                  {measureList.map(item => (
-                    <tr>
-                      <td>{item.GUBUN_NAME}</td>
-                      <td>{item.STACK_CD}</td>
-                      <td>{item.IS_MEASURE}</td>
-                      <td>{item.MEASURE_DT}</td>
-                      <td>{item.MINUTE_FLOW}</td>
-                      <td>{item.HOUR_FLOW}</td>
-                      <>
-                        {selectGubun === 1 ? (
-                          <>
-                            {gasList &&
-                              gasList.map(gasType => (
-                                <td>
-                                  {item.GAS.map(gasItem => (
-                                    <>{gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD ? JSON.parse(gasItem.value).DENSITY : undefined}</>
-                                  ))}
-                                </td>
-                              ))}
-                          </>
-                        ) : (
-                          <>
-                            {gasList &&
-                              gasList.map(gasType => (
-                                <td>
-                                  {item.GAS.map(gasItem => (
-                                    <>
-                                      {gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD
-                                        ? this.calculate(
-                                            gasType.GAS_CD,
-                                            item.HOUR_FLOW,
-                                            JSON.parse(gasItem.value).DENSITY,
-                                            item.WORK_DAY,
-                                            JSON.parse(gasItem.value).GAS_WEIGHT,
-                                          )
-                                        : undefined}
-                                    </>
-                                  ))}
-                                </td>
-                              ))}
-                          </>
-                        )}
-                      </>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </StyledHtmlTable>
         ) : (
           ''

@@ -237,7 +237,7 @@ class List extends Component {
                   </Popconfirm>
                 </>
               )}
-              <StyledButton className="btn-primary btn-sm" onClick={this.onModalChange}>
+              <StyledButton className="btn-light btn-sm" onClick={this.onModalChange}>
                 취소
               </StyledButton>
             </StyledButtonWrapper>
