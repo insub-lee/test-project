@@ -116,7 +116,7 @@ class MentorOpinion extends React.Component {
                   </ul>
                   {writeAble && (
                     <div className="btn_wrap">
-                      <StyledButton type="submit" className="btn-light btn-sm">
+                      <StyledButton type="submit" className="btn-primary btn-sm">
                         확인
                       </StyledButton>
                     </div>
