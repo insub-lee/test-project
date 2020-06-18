@@ -216,7 +216,7 @@ class List extends Component {
                 {useYN === 'Y' ? (
                   <span className="span-item">사용</span>
                 ) : (
-                  <StyledButton className="btn-primary btn-sm" onClick={() => this.onChangeData('R')}>
+                  <StyledButton className="btn-light btn-xs" onClick={() => this.onChangeData('R')}>
                     삭제 취소
                   </StyledButton>
                 )}
@@ -249,7 +249,7 @@ class List extends Component {
           {
             title: (
               <AntdInput
-                className="ant-input-inline ant-input-sm input-left"
+                className="ant-input-inline ant-input-xs input-left"
                 style={{ width: 100 }}
                 value={name}
                 onChange={e => this.onChangeValue('name', e.target.value)}
@@ -270,22 +270,22 @@ class List extends Component {
             title: (
               <>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm input-left mr5"
+                  className="ant-input-inline ant-input-xs input-left mr5"
                   style={{ width: 100 }}
                   value={desciption}
                   onChange={e => this.onChangeValue('desciption', e.target.value)}
                 />
                 <StyledButtonWrapper className="btn-wrap-inline">
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={this.createCode}>
+                  <StyledButton className="btn-gray btn-xs btn-first" onClick={this.createCode}>
                     추가
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('U')}>
+                  <StyledButton className="btn-gray btn-xs btn-first" onClick={() => this.onChangeData('U')}>
                     수정
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('D')}>
+                  <StyledButton className="btn-light btn-xs btn-first" onClick={() => this.onChangeData('D')}>
                     삭제
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-sm" onClick={this.onReset}>
+                  <StyledButton className="btn-light btn-xs" onClick={this.onReset}>
                     Reset
                   </StyledButton>
                 </StyledButtonWrapper>
@@ -303,7 +303,7 @@ class List extends Component {
         <div className="selSaveWrapper alignLeft">
           <AntdTreeSelect
             style={{ width: '300px' }}
-            className="mr5 select-mid"
+            className="mr5 select-sm"
             defultValue={this.state.changeSelectValue}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
             treeData={nData || []}
@@ -311,14 +311,13 @@ class List extends Component {
             onChange={value => this.onChangeSelect(value)}
           />
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.selectCode}>
+            <StyledButton className="btn-gray btn-first btn-sm" onClick={this.selectCode}>
               검색
             </StyledButton>
             <ExcelDownloader dataList={totalData} excelNm="CMS 코드관리" />
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
-          className="tableWrapper"
           rowKey={listData.NODE_ID}
           columns={columns}
           dataSource={listData || []}
