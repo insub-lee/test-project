@@ -7,6 +7,9 @@ import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+
 const AntdInput = StyledInput(Input);
 
 class MaterialTable extends Component {
@@ -21,10 +24,24 @@ class MaterialTable extends Component {
     const CHK_YEAR = (formData && formData.CHK_YEAR) || '';
     if (!materialCnt) {
       // SAVE
-      submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiMaterial', { ...materialData, CHK_YEAR }, handleSearchOnClick);
+      submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiMaterial', { ...materialData, CHK_YEAR }, (afterId, res) => {
+        if (res && res.code === 200) {
+          message.info(<MessageContent>저장되었습니다.</MessageContent>);
+          handleSearchOnClick();
+        } else {
+          message.info(<MessageContent>저장에 실패하였습니다.</MessageContent>);
+        }
+      });
     } else {
       // UPDATE
-      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiMaterial', { ...materialData }, handleSearchOnClick);
+      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiMaterial', { ...materialData }, (afterId, res) => {
+        if (res && res.code === 200) {
+          message.info(<MessageContent>수정되었습니다.</MessageContent>);
+          handleSearchOnClick();
+        } else {
+          message.info(<MessageContent>수정에 실패하였습니다.</MessageContent>);
+        }
+      });
     }
   };
 

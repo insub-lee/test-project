@@ -1,6 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Input, Checkbox, message, Select, Popover } from 'antd';
+import { Input, Checkbox, Select, Popover } from 'antd';
 import { debounce } from 'lodash';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
@@ -13,6 +13,8 @@ import moment from 'moment';
 import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
 import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import * as popoverContent from './PopoverContent';
 
 const AntdInput = StyledInput(Input);
@@ -47,18 +49,20 @@ class ItemTable extends Component {
     const itemList = (formData && formData.itemList) || [];
     switch (type) {
       case 'UPDATE':
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiUpdateComplete', { ...materialData, itemList }, this.updateComplete);
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiUpdateComplete', { ...materialData, itemList }, (afterId, res) => {
+          if (res && res.code === 200) {
+            message.info(<MessageContent>저장되었습니다.</MessageContent>);
+          } else {
+            message.info(<MessageContent>저장에 실패하였습니다.</MessageContent>);
+          }
+        });
         break;
       case 'EXCEL_DOWNLOAD':
-        message.warning('미구현');
+        message.info(<MessageContent>미구현</MessageContent>);
         break;
       default:
         break;
     }
-  };
-
-  updateComplete = () => {
-    message.success('저장되었습니다.');
   };
 
   handleInputOnchange = (e, SEQ) => {
