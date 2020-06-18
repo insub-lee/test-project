@@ -39,7 +39,7 @@ export default defineMessages({
   },
   statusWork: {
     id: 'admin.AdminMain.Daemon.statusWork',
-    defaultMessage: '동작',
+    defaultMessage: '작동',
   },
   lblAll: {
     id: 'admin.AdminMain.Daemon.lblAll',
