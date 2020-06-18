@@ -1,27 +1,66 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal } from 'antd';
+import { Table, Modal, Input, DatePicker } from 'antd';
+import moment from 'moment';
 
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
-import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 
 import DocView from './DocView';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
+const AntdInput = StyledInput(Input);
+const AntdRangePicker = StyledDatePicker(DatePicker.RangePicker);
 
 class HistoryList extends Component {
   state = {
     isShow: false,
     selectedRow: {},
+    searchInfo: {},
+  };
+
+  componentWillMount() {
+    const today = new Date();
+    
+    this.setState(prevState => {
+      const { searchInfo } = prevState;
+      searchInfo.TO_DT = moment(today).format('YYYY-MM-DD');
+      today.setMonth(today.getMonth() - 1);
+      searchInfo.FROM_DT = moment(today).format('YYYY-MM-DD');
+      return { searchInfo }
+    });
   };
 
   componentDidMount() {
-    const { id, apiAry, getCallDataHandler } = this.props;
-    getCallDataHandler(id, apiAry, () => {});
-  }
+    this.getList();
+  };
+
+  getList = () => {
+    const { id, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    const apiAry = [
+      {
+        key: 'distributeDocList',
+        url: '/api/edds/v1/common/distributeDocList',
+        type: 'POST',
+        params: {
+          PARAM: {
+            ...this.state.searchInfo,
+            isAdmin: 'Y',
+          }
+        },
+      },
+    ];
+    spinningOn();
+    getCallDataHandler(id, apiAry, () => {
+      spinningOff();
+    });
+  };
 
   onClickRow = (row, rowIndex) => {
     this.setState({
@@ -117,6 +156,27 @@ class HistoryList extends Component {
           <DocView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
         <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <AntdInput
+                className="ant-input-sm mr5" allowClear placeholder="문서제목" style={{ width: 150 }}
+                onChange={e => this.setState({ searchInfo: { ...this.state.searchInfo, TITLE: e.target.value } })}
+                onPressEnter={this.getList}
+              />
+              <AntdInput
+                className="ant-input-sm mr5" allowClear placeholder="발송자" style={{ width: 100 }}
+                onChange={e => this.setState({ searchInfo: { ...this.state.searchInfo, DIST_USER_NAME: e.target.value } })}
+                onPressEnter={this.getList}
+              />
+              <span className="text-label">발송기간</span>
+              <AntdRangePicker
+                defaultValue={[moment(this.state.searchInfo.FROM_DT), moment(this.state.searchInfo.TO_DT)]}
+                className="ant-picker-sm mr5" style={{ width: 220 }} format="YYYY-MM-DD" allowClear={false}
+                onChange={(val1, val2) => this.setState({ searchInfo: { ...this.state.searchInfo, FROM_DT: val2[0], TO_DT: val2[1] } })}
+              />
+              <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
+            </div>
+          </StyledCustomSearchWrapper>
           <AntdTable
             dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))}
             columns={this.columns}
@@ -141,14 +201,6 @@ HistoryList.propTypes = {
 
 HistoryList.defaultProps = {
   id: 'distributeHistory',
-  apiAry: [
-    {
-      key: 'distributeDocList',
-      url: '/api/edds/v1/common/distributeDocList',
-      type: 'GET',
-      params: {},
-    },
-  ],
   result: {
     distributeDoc: {
       list: [],
