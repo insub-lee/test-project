@@ -134,17 +134,19 @@ class List extends React.Component {
                 style={{ width: '300px' }}
                 placeholder="화학물질명을 입력하세요."
               />
-              <ExcelDownloadComp
-                isBuilder={false}
-                fileName={`${moment().format('YYYYMMDD')}_화관법(유해)`}
-                className="testClassName"
-                btnText="엑셀 다운로드"
-                sheetName="화관법(유해)"
-                listData={rowData}
-                btnSize="btn-sm"
-                fields={createExcelData(columnDefs, 'FIELD', 'field')}
-                columns={createExcelData(columnDefs, 'COLUMNS', 'headerName')}
-              />
+              <div className="btn-area">
+                <ExcelDownloadComp
+                  isBuilder={false}
+                  fileName={`${moment().format('YYYYMMDD')}_화관법(유해)`}
+                  className="testClassName"
+                  btnText="엑셀 다운로드"
+                  sheetName="화관법(유해)"
+                  listData={rowData}
+                  btnSize="btn-sm"
+                  fields={createExcelData(columnDefs, 'FIELD', 'field')}
+                  columns={createExcelData(columnDefs, 'COLUMNS', 'headerName')}
+                />
+              </div>
             </div>
           </StyledCustomSearchWrapper>
           <div style={{ width: '100%', height: '100%' }}>
@@ -152,6 +154,7 @@ class List extends React.Component {
               <AgGridReact defaultColDef={defaultColDef} columnDefs={columnDefs} rowData={rowData} suppressRowTransform />
             </div>
           </div>
+          <div className="div-comment div-comment-antd">{`총 ${rowData.length}건`}</div>
         </StyledContentsWrapper>
       </>
     );

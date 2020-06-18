@@ -1,6 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Input, Checkbox, Popconfirm, message, Select, InputNumber } from 'antd';
+import { Input, Checkbox, Popconfirm, Select, InputNumber } from 'antd';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
@@ -8,6 +8,14 @@ import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import moment from 'moment';
+import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
+
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+import { materialItemColumnDefs } from './columnDefs';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
@@ -42,7 +50,8 @@ class ItemTable extends Component {
             break;
           }
           if (!materialCnt) {
-            message.warning('상단의 내용을 먼저 입력해주세요.');
+            message.info(<MessageContent>상단의 내용을 먼저 입력해주세요.</MessageContent>);
+
             break;
           }
           submitHandlerBySaga(
@@ -50,34 +59,62 @@ class ItemTable extends Component {
             'POST',
             '/api/eshs/v1/common/eshsEiMaterialItem',
             { ...itemData, STATUS, CHK_YEAR, DEPT_CD, REQ_NO, DEPT_ID },
-            this.handleFormReset,
+            (afterId, res) => {
+              if (res && res.code === 200) {
+                this.handleFormReset();
+                message.info(<MessageContent>저장되었습니다.</MessageContent>);
+                this.handleFormReset();
+              } else {
+                message.info(<MessageContent>저장에 실패하였습니다.</MessageContent>);
+              }
+            },
           );
           break;
         }
-        message.warning('이미 동일한 Data가 존재합니다.');
+        message.info(<MessageContent>이미 동일한 Data가 존재합니다.</MessageContent>);
+
         break;
       case 'UPDATE':
         if (msg) {
-          message.warning(msg);
+          message.info(<MessageContent>{msg}</MessageContent>);
+
           break;
         }
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiMaterialItem', { ...itemData, CHK_YEAR, DEPT_CD }, this.handleFormReset);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiMaterialItem', { ...itemData, CHK_YEAR, DEPT_CD }, (afterId, res) => {
+          if (res && res.code === 200) {
+            this.handleFormReset();
+            message.info(<MessageContent>수정되었습니다.</MessageContent>);
+            this.handleFormReset();
+          } else {
+            message.info(<MessageContent>수정에 실패하였습니다.</MessageContent>);
+          }
+        });
         break;
       case 'DELETE':
         if (!rowSelections.length) {
-          message.warning('삭제 하실 항목을 한개라도 선택하세요.');
+          message.info(<MessageContent>삭제 하실 항목을 한개라도 선택하세요.</MessageContent>);
+
           break;
         }
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsEiMaterialItem', { rowSelections, REQ_NO }, this.handleFormReset);
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsEiMaterialItem', { rowSelections, REQ_NO }, (afterId, res) => {
+          if (res && res.code === 200) {
+            this.handleFormReset();
+            message.info(<MessageContent>삭제되었습니다.</MessageContent>);
+            this.handleFormReset();
+          } else {
+            message.info(<MessageContent>삭제에 실패하였습니다.</MessageContent>);
+          }
+        });
         break;
       case 'RESET':
         this.handleFormReset();
         break;
       case 'EXCEL_DOWNLOAD':
-        message.warning('미구현');
+        message.info(<MessageContent>미구현</MessageContent>);
+
         break;
       case 'EXCEL_UPLOAD':
-        message.warning('미구현');
+        message.info(<MessageContent>미구현</MessageContent>);
         break;
       default:
         break;
@@ -163,13 +200,44 @@ class ItemTable extends Component {
     const searchFlag = (formData && formData.searchFlag) || false;
     const itemList = (formData && formData.itemList) || [];
     const itemData = (formData && formData.itemData) || {};
-    const btnOk = itemList.length >= 1;
+    let btnOk = itemList.length >= 1;
+    const approvalStatus = (formData && formData.materialData && formData.materialData.STATUS) || '';
+    let statusMsg = '';
+
+    switch (approvalStatus) {
+      case 'REVIEWING':
+        statusMsg = '현재 결재중입니다. 검토자만 수정할 수 있습니다.';
+        btnOk = true; // 검토자만 권한 추가시 수정
+        break;
+      case 'DOING':
+        statusMsg = '현재 결재중입니다. 수정할 수 없습니다.';
+        btnOk = false;
+        break;
+      case 'COMPLETE':
+        statusMsg = '결재가 완료되었습니다. 조회만 할 수 있습니다.';
+        btnOk = false;
+        break;
+      case 'NOTHING':
+        break;
+      default:
+        break;
+    }
     return (
       <StyledHtmlTable>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
-            Excel Download
-          </StyledButton>
+          {statusMsg && <span className="btn-comment btn-wrap-mr-5">{statusMsg}</span>}
+
+          <ExcelDownloadComp
+            isBuilder={false}
+            fileName={`Material_${moment().format('YYYYMMDD')}`}
+            className="testClassName"
+            btnText="Excel Download"
+            sheetName={`Material_${moment().format('YYYYMMDD')}`}
+            listData={itemList}
+            btnSize="btn-sm btn-first"
+            fields={createExcelData(materialItemColumnDefs, 'FIELD', 'field')}
+            columns={materialItemColumnDefs.map(item => ({ ...item, ...excelStyle }))}
+          />
           {!searchFlag && (
             <>
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
@@ -224,7 +292,7 @@ class ItemTable extends Component {
                 <AntdSelect className="select-sm" value={itemData.STATUS || '정상'} onChange={this.handleStatusOnChange}>
                   <Option value="정상">정상</Option>
                   <Option value="비정상">비정상</Option>
-                </AntdSelect>{' '}
+                </AntdSelect>
               </td>
               <td>
                 <AntdInput
@@ -332,7 +400,7 @@ class ItemTable extends Component {
             </tr>
           </tfoot>
           <tbody>
-            {itemList.map(m => (
+            {itemList.map((m, index) => (
               <tr key={m.SEQ} className="tr-center tr-pointer" onClick={() => this.handleRowClick(m)}>
                 <td>
                   <Checkbox
@@ -342,7 +410,7 @@ class ItemTable extends Component {
                     onChange={() => this.handleRowSelection(m.SEQ)}
                   />
                 </td>
-                <td>{m.SEQ}</td>
+                <td>{index + 1}</td>
                 <td>{m.GUBUN}</td>
                 <td>{m.STATUS}</td>
                 <td>{m.MATTER}</td>

@@ -14,7 +14,13 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import Contents from 'components/BizBuilder/Common/Contents';
-import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ, EXCEL_DOWNLOAD_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import {
+  MULTI_DELETE_OPT_SEQ,
+  LIST_NO_OPT_SEQ,
+  ON_ROW_CLICK_OPT_SEQ,
+  EXCEL_DOWNLOAD_OPT_SEQ,
+  PAGINATION_OPT_CODE,
+} from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 
 // import Loadable from 'components/Loadable';
@@ -40,6 +46,7 @@ class ListPage extends Component {
       fields: [],
       paginationIdx: 1,
       pageSize: 10,
+      isPagingData: false,
     };
   }
 
@@ -55,6 +62,7 @@ class ListPage extends Component {
     let sheetName = '';
     let columns = [];
     let fields = [];
+    let isPagingData = false;
 
     if (workInfo.BUILDER_STYLE_PATH) {
       // const StyledWrap = Loadable({
@@ -93,9 +101,10 @@ class ListPage extends Component {
             fields = columnInfo.fields || [];
           }
         }
+        if (opt.OPT_CODE === PAGINATION_OPT_CODE && opt.ISUSED === 'Y') isPagingData = true;
         // todo page size option
       });
-      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView, isExcelDown, btnTex, fileName, sheetName, columns, fields });
+      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView, isExcelDown, btnTex, fileName, sheetName, columns, fields, isPagingData });
     }
   };
 
@@ -107,10 +116,20 @@ class ListPage extends Component {
 
   setPaginationIdx = paginationIdx =>
     this.setState({ paginationIdx }, () => {
-      const { sagaKey, workSeq, conditional, getListData } = this.props;
-      const { pageSize } = this.state;
-      getListData(sagaKey, workSeq, conditional, paginationIdx, pageSize);
+      const { pageSize, isPagingData } = this.state;
+      if (isPagingData) {
+        const { sagaKey, workSeq, conditional, getListData } = this.props;
+        getListData(sagaKey, workSeq, conditional, paginationIdx, pageSize);
+      }
     });
+
+  handleClickSearch = () => {
+    this.setState({ paginationIdx: 1 }, () => {
+      const { pageSize, isPagingData } = this.state;
+      const { sagaKey, workSeq, conditional, getListData } = this.props;
+      getListData(sagaKey, workSeq, conditional, 1, pageSize);
+    });
+  };
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -248,7 +267,7 @@ class ListPage extends Component {
       useExcelDownload,
       conditional,
     } = this.props;
-    const { isMultiDelete, StyledWrap, isExcelDown, btnTex, fileName, sheetName, columns, fields, pageSize } = this.state;
+    const { isMultiDelete, StyledWrap, isExcelDown, btnTex, fileName, sheetName, columns, fields, pageSize, isPagingData } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -312,7 +331,7 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray btn-sm" onClick={() => this.setPaginationIdx(1)}>
+                          <StyledButton className="btn-gray btn-sm" onClick={this.handleClickSearch}>
                             검색
                           </StyledButton>
                           {useExcelDownload && isExcelDown && (
@@ -334,7 +353,7 @@ class ListPage extends Component {
                 )
               );
             })}
-            <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+            <StyledButtonWrapper className="btn-wrap-right">
               {ListCustomButtons ? (
                 <ListCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
               ) : (
@@ -344,7 +363,7 @@ class ListPage extends Component {
                     isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
                   }
                 >
-                  추가dd
+                  추가
                 </StyledButton>
               )}
               {isMultiDelete && (

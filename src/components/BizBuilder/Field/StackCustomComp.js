@@ -140,8 +140,14 @@ class MsdsIngredientComp extends React.Component {
                       {viewType === 'INPUT' || viewType === 'MODIFY' ? (
                         <>
                           <td style={{ textAlign: 'Left', width: '200px' }}>
-                            <InputNumber style={{ width: '80%' }} value={a.TREAT_DENSITY || 0} min={0} max={100} onChange={e => this.handleDENChange(e, a)} />
-                            <span style={{ marginLeft: 5, width: 50 }}>{a.UNIT || ''}</span>
+                            <InputNumber
+                              style={{ width: '75%', marginRight: 5 }}
+                              value={a.TREAT_DENSITY || 0}
+                              min={0}
+                              max={100}
+                              onChange={e => this.handleDENChange(e, a)}
+                            />
+                            <span>{a.UNIT || ''}</span>
                           </td>
                           <td>
                             <InputNumber style={{ width: '100%' }} value={a.TREAT_EFF || 0} min={0} max={100} onChange={e => this.handleEFFChange(e, a)} />

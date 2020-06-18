@@ -1,15 +1,31 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Input, Checkbox, Popconfirm, message, Popover } from 'antd';
+import { Input, Checkbox, Popconfirm, Popover } from 'antd';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+
+import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
+import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import moment from 'moment';
+
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 const AntdInput = StyledInput(Input);
-
+const excelColumn = [
+  { title: '구분', width: { wpx: 150 }, field: 'FIRST_DEPTH', filter: 'agTextColumnFilter' },
+  { title: '소분류', width: { wpx: 150 }, field: 'SECOND_DEPTH', filter: 'agTextColumnFilter' },
+  { title: '처리방법', width: { wpx: 150 }, field: 'PROCESS_METHOD', filter: 'agTextColumnFilter' },
+  { title: '배출형태', width: { wpx: 150 }, field: 'OUTPUT_TYPE', filter: 'agTextColumnFilter' },
+  { title: '배출처(공정/Area)', width: { wpx: 150 }, field: 'OUTPUT_AREA', filter: 'agTextColumnFilter' },
+  { title: '전년발생량', width: { wpx: 150 }, field: 'LAST_YEAR', filter: 'agTextColumnFilter' },
+  { title: '발생량', width: { wpx: 150 }, field: 'THIS_YEAR', filter: 'agTextColumnFilter' },
+  { title: '증감율(전년대비 %)', width: { wpx: 150 }, field: 'CALC_YOY', filter: 'agTextColumnFilter' },
+];
 class ItemTable extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +47,8 @@ class ItemTable extends Component {
       case 'SAVE':
         if (this.handleItemOverlapCheck(itemList, { ...itemData, CHK_YEAR, DEPT_CD })) {
           if (msg) {
-            message.warning(msg);
+            message.info(<MessageContent>{msg}</MessageContent>);
+
             break;
           }
           submitHandlerBySaga(
@@ -39,34 +56,56 @@ class ItemTable extends Component {
             'POST',
             '/api/eshs/v1/common/EshsEiItem',
             { itemData: { ...itemData, CHK_YEAR, DEPT_CD, DEPT_ID }, tbName },
-            this.handleFormReset,
+            (afterId, res) => {
+              if (res && res.code === 200) {
+                message.info(<MessageContent>저장되었습니다.</MessageContent>);
+                this.handleFormReset();
+              } else {
+                message.info(<MessageContent>저장에 실패하였습니다.</MessageContent>);
+              }
+            },
           );
           break;
         }
-        message.warning('이미 동일한 Data가 존재합니다');
+        message.info(<MessageContent>이미 동일한 Data가 존재합니다.</MessageContent>);
+
         break;
       case 'UPDATE':
         if (msg) {
           message.warning(msg);
           break;
         }
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/EshsEiItem', { itemData, tbName }, this.handleFormReset);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/EshsEiItem', { itemData, tbName }, (afterId, res) => {
+          if (res && res.code === 200) {
+            message.info(<MessageContent>수정되었습니다.</MessageContent>);
+            this.handleFormReset();
+          } else {
+            message.info(<MessageContent>수정에 실패하였습니다.</MessageContent>);
+          }
+        });
         break;
       case 'DELETE':
         if (!rowSelections.length) {
           message.warning('삭제 하실 항목을 한개라도 선택하세요.');
           break;
         }
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/EshsEiItem', { rowSelections, tbName }, this.handleFormReset);
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/EshsEiItem', { rowSelections, tbName }, (afterId, res) => {
+          if (res && res.code === 200) {
+            message.info(<MessageContent>삭제되었습니다.</MessageContent>);
+            this.handleFormReset();
+          } else {
+            message.info(<MessageContent>삭제에 실패하였습니다.</MessageContent>);
+          }
+        });
         break;
       case 'RESET':
         this.handleFormReset();
         break;
       case 'EXCEL_DOWNLOAD':
-        message.warning('미구현');
+        message.info(<MessageContent>미구현</MessageContent>);
         break;
       case 'EXCEL_UPLOAD':
-        message.warning('미구현');
+        message.info(<MessageContent>미구현</MessageContent>);
         break;
       default:
         break;
@@ -143,9 +182,17 @@ class ItemTable extends Component {
     return (
       <StyledHtmlTable>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
-            Excel Download
-          </StyledButton>
+          <ExcelDownloadComp
+            isBuilder={false}
+            fileName={`Waste_${moment().format('YYYYMMDD')}`}
+            className="testClassName"
+            btnText="Excel Download"
+            sheetName={`Waste_${moment().format('YYYYMMDD')}`}
+            listData={itemList}
+            btnSize="btn-sm btn-first"
+            fields={createExcelData(excelColumn, 'FIELD', 'field')}
+            columns={excelColumn.map(item => ({ ...item, ...excelStyle }))}
+          />
           {!searchFlag && (
             <>
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>

@@ -3,18 +3,21 @@ import PropTypes from 'prop-types';
 import Modal from 'rc-dialog';
 import moment from 'moment';
 
-import { Icon, Spin } from 'antd';
+import { Icon, Spin, Button } from 'antd';
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
-import Button from 'components/Button';
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import { jsonToQueryString } from 'utils/helpers';
 import service from '../service';
 import StyledContent from './StyledContent';
+import StyledTable from '../../StyledTable';
 
 import EvaluationFormModal from './EvaluationFormModal';
 import EvaluationFormCheckModal from './EvaluationFormCheckModal';
 import EduReportModal from './EduReportModal';
 import MentorOpinionModal from './MentorOpinion';
 import ChiefOpinionModal from './ChiefOpinion';
+
+const StyledButton = StyledAntdButton(Button);
 
 const curriculumButtonStyle = {
   maxWidth: 200,
@@ -212,9 +215,9 @@ class EduManageModal extends React.Component {
 
   mentorConfirmRenderer(reportAuth, row) {
     return reportAuth === 'mentor' ? (
-      <Button type="button" size="small" color="default" onClick={() => this.handleMentorConfirm(row)}>
-        <i className="fa fa-signature" /> 멘토확인
-      </Button>
+      <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleMentorConfirm(row)}>
+        <i className="fas fa-check" /> 멘토확인
+      </StyledButton>
     ) : (
       '미확인'
     );
@@ -275,9 +278,9 @@ class EduManageModal extends React.Component {
           </>
         ) : (
           <td colSpan={2} rowSpan={length + 1}>
-            <Button type="button" color="default" size="small" onClick={() => this.handleReadyExamConfirm(row.plan_seq, row.empno, step)}>
+            <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleReadyExamConfirm(row.plan_seq, row.empno, step)}>
               평가 시작
-            </Button>
+            </StyledButton>
           </td>
         );
       }
@@ -386,9 +389,9 @@ class EduManageModal extends React.Component {
           </>
         ) : (
           <td colSpan={2} rowSpan={length + 1}>
-            <Button type="button" color="default" size="small" onClick={() => this.handleReadyExamConfirm(row.plan_seq, row.empno, step)}>
+            <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleReadyExamConfirm(row.plan_seq, row.empno, step)}>
               평가 시작
-            </Button>
+            </StyledButton>
           </td>
         );
       }
@@ -491,9 +494,9 @@ class EduManageModal extends React.Component {
           <td rowSpan={3}>{`${step}단계`}</td>
           <td colSpan={3}>
             {reportAuth === 'user' ? (
-              <Button type="button" size="small" color="default" onClick={() => this.handleEduReportModal(step)}>
-                <i className="fa fa-pen" /> 레포트 작성
-              </Button>
+              <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleEduReportModal(step)}>
+                <i className="fa fa-edit" /> 레포트 작성
+              </StyledButton>
             ) : (
               '작성된 레포트가 없습니다.'
             )}
@@ -552,11 +555,11 @@ class EduManageModal extends React.Component {
         )}
         <td>{moment(row.edudt, 'YYYYMMDD').format('YYYY.MM.DD')}</td>
         <td>
-          <Button type="button" size="small" color="default" onClick={() => this.handleReviewEduReportModal(row)} style={curriculumButtonStyle}>
-            <i className="fa fa-pen" /> {row.curriculum}
-          </Button>
+          <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleReviewEduReportModal(row)} style={curriculumButtonStyle}>
+            <i className="fa fa-edit" /> {row.curriculum}
+          </StyledButton>
         </td>
-        <td>{row.confirm === 'O' ? <i className="fa fa-signature" /> : this.mentorConfirmRenderer(reportAuth, row)}</td>
+        <td>{row.confirm === 'O' ? <i className="fa fa-check" /> : this.mentorConfirmRenderer(reportAuth, row)}</td>
         {index === 0 && !notReady && this.mentorAcceptTestRenderer(reportAuth, eduPlanInfo, row, report[step].length, confirmed, step, planResult)}
         {index === 0 && notReady && (
           <td rowSpan={report[step].length + 1} colSpan={2}>
@@ -566,10 +569,9 @@ class EduManageModal extends React.Component {
         {index === 0 && !notReady && planResult === 'O' && confirmed && (
           <>
             <td rowSpan={report[step].length}>
-              <Button
+              <StyledButton
                 type="button"
-                size="small"
-                color="default"
+                className="btn-light btn-sm"
                 onClick={() =>
                   this.handleMentorOpinionModal(
                     row.plan_seq,
@@ -580,18 +582,17 @@ class EduManageModal extends React.Component {
                   )
                 }
               >
-                {reportAuth === 'mentor' || reportAuth === 'admin' ? <i className="fa fa-pen" /> : '내용'}
-              </Button>
+                {reportAuth === 'mentor' || reportAuth === 'admin' ? <i className="fa fa-edit" /> : '내용'}
+              </StyledButton>
             </td>
             <td rowSpan={report[step].length}>
-              <Button
+              <StyledButton
                 type="button"
-                size="small"
-                color="default"
+                className="btn-light btn-sm"
                 onClick={() => this.handleAdminOpinionModal(row.plan_seq, row.empno, step, eduPlanStep[checkIndex].chief_opinion, reportAuth === 'admin')}
               >
-                {reportAuth === 'admin' ? <i className="fa fa-pen" /> : '내용'}
-              </Button>
+                {reportAuth === 'admin' ? <i className="fa fa-edit" /> : '내용'}
+              </StyledButton>
             </td>
           </>
         )}
@@ -607,9 +608,9 @@ class EduManageModal extends React.Component {
       children.push(
         <tr className="bd" key={-1}>
           <td colSpan={3}>
-            <Button type="button" size="small" color="default" onClick={() => this.handleEduReportModal(step)}>
-              <i className="fa fa-pen" /> 레포트 작성
-            </Button>
+            <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleEduReportModal(step)}>
+              <i className="fa fa-edit" /> 레포트 작성
+            </StyledButton>
           </td>
         </tr>,
       );
@@ -646,7 +647,7 @@ class EduManageModal extends React.Component {
               <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={false}>
                 <StyledCommonForm onSubmit={e => e.preventDefault()} autoComplete="off">
                   <div className="sub_form_tit cr">신 상 INFORMATION</div>
-                  <div className="ta_wrap">
+                  <StyledTable className="ta_wrap">
                     <table className="tb02">
                       <colgroup>
                         <col width="20%" />
@@ -683,10 +684,10 @@ class EduManageModal extends React.Component {
                         </tr>
                       </tbody>
                     </table>
-                  </div>
+                  </StyledTable>
                   <br />
                   <div className="sub_form_tit cr">교 육 정 보</div>
-                  <div className="ta_wrap">
+                  <StyledTable className="ta_wrap">
                     <table className="tb02">
                       <colgroup>
                         <col width="20%" />
@@ -727,10 +728,10 @@ class EduManageModal extends React.Component {
                         </tr>
                       </tbody>
                     </table>
-                  </div>
+                  </StyledTable>
                   <br />
                   <div className="sub_form_tit cr">단계별 교육 일정 및 일일레포트</div>
-                  <div className="ta_wrap">
+                  <StyledTable className="ta_wrap">
                     <table className="tb02">
                       {/* <colgroup> */}
                       {/*  <col width="10%" /> */}
@@ -773,7 +774,7 @@ class EduManageModal extends React.Component {
                         {this.reportTableRowRenderer(3, eduPlanInfo.step_level, !!eduPlanInfo.step3_edusdt)}
                       </tbody>
                     </table>
-                  </div>
+                  </StyledTable>
                 </StyledCommonForm>
               </Spin>
             </div>

@@ -9,9 +9,9 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
-import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
+import { callBackAfterPost, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -86,14 +86,16 @@ class List extends React.Component {
       this.setState({
         isModified: false,
       });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, this.getMaterialList);
+      return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, (key, response) =>
+        callBackAfterPost(key, response, this.getMaterialList),
+      );
     }
     return message.error('화학물을 먼저 선택하세요.');
   };
 
   handleDeleteClick = () => {
     const { requestValue } = this.state;
-    if (!requestValue.FACTOR_ID) {
+    if (!requestValue.SAP_NO || !requestValue.NAME_SAP) {
       return this.setState({
         deleteConfirmMessage: '선택된 항목이 없습니다.',
       });
@@ -106,7 +108,9 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialharmfulfactor`, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, this.getMaterialList),
+    );
   };
 
   getMaterialList = () => {
@@ -169,15 +173,15 @@ class List extends React.Component {
     },
     {
       title: '공급업체',
-      dataIndex: 'VENDOR_NM',
-      key: 'VENDOR_NM',
+      dataIndex: 'WRK_CMPNY_NM',
+      key: 'WRK_CMPNY_NM',
       align: 'center',
       width: '20%',
     },
     {
       title: '위험물 분류',
-      dataIndex: 'CATEGORY',
-      key: 'CATEGORY',
+      dataIndex: 'NAME_KOR',
+      key: 'NAME_KOR',
       align: 'center',
       width: '15%',
     },
@@ -210,22 +214,24 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
-                저장/수정
-              </StyledButton>
-              <Popconfirm
-                title={deleteConfirmMessage}
-                onConfirm={isModified ? handleDeleteConfirm : null}
-                okText={isModified ? '삭제' : '확인'}
-                cancelText="취소"
-              >
-                <StyledButton className="btn-light mr5 btn-sm" onClick={handleDeleteClick}>
-                  삭제
+              <div className="btn-area">
+                <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
+                  저장/수정
                 </StyledButton>
-              </Popconfirm>
-              <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
-                초기화
-              </StyledButton>
+                <Popconfirm
+                  title={deleteConfirmMessage}
+                  onConfirm={isModified ? handleDeleteConfirm : null}
+                  okText={isModified ? '삭제' : '확인'}
+                  cancelText="취소"
+                >
+                  <StyledButton className="btn-light mr5 btn-sm" onClick={handleDeleteClick}>
+                    삭제
+                  </StyledButton>
+                </Popconfirm>
+                <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
+                  초기화
+                </StyledButton>
+              </div>
             </div>
           </StyledCustomSearchWrapper>
           <StyledHtmlTable>
@@ -245,20 +251,7 @@ class List extends React.Component {
                 </tr>
                 <tr>
                   <th>공급업체</th>
-                  <td>
-                    <EshsCmpnyComp
-                      searchWidth="50%"
-                      sagaKey={sagaKey}
-                      getExtraApiData={getCallDataHandler}
-                      extraApiData={result}
-                      colData={requestValue.VENDOR_CD}
-                      visible
-                      CONFIG={{ property: { isRequired: false, className: 'ant-input-search input-search-sm' } }}
-                      changeFormData={changeFormData}
-                      COMP_FIELD="VENDOR_CD"
-                      eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-                    />
-                  </td>
+                  <td>{requestValue.WRK_CMPNY_NM} </td>
                   <th>위험물 분류</th>
                   <td>
                     <AntdSelect

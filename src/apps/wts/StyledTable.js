@@ -37,6 +37,10 @@ const StyledTable = styled.div`
       }
     }
   }
+
+  &.ta_wrap {
+    margin-top: 15px;
+  }
 `;
 
 export default StyledTable;

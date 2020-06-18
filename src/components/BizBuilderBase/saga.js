@@ -5,7 +5,13 @@ import React from 'react';
 import { Axios } from 'utils/AxiosFunc';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import { TOTAL_DATA_OPT_SEQ, BUILDER_MODAL_OPT_SEQ, CHANGE_VIEW_OPT_SEQ, TASK_FAVORITE_OPT_CODE } from 'components/BizBuilder/Common/Constants';
+import {
+  TOTAL_DATA_OPT_SEQ,
+  BUILDER_MODAL_OPT_SEQ,
+  CHANGE_VIEW_OPT_SEQ,
+  TASK_FAVORITE_OPT_CODE,
+  PAGINATION_OPT_CODE,
+} from 'components/BizBuilder/Common/Constants';
 import history from 'utils/history';
 import { isJSON } from 'utils/helpers';
 
@@ -774,6 +780,7 @@ function* getDraftProcess({ id, draftId }) {
 
 function* getListData({ id, workSeq, conditional, pageIdx, pageCnt }) {
   const searchData = yield select(selectors.makeSelectSearchDataById(id));
+  const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
   const whereString = [];
   const keySet = Object.keys(searchData);
   keySet.forEach(key => {
@@ -782,14 +789,24 @@ function* getListData({ id, workSeq, conditional, pageIdx, pageCnt }) {
 
   if (conditional && conditional.length > 0) whereString.push(conditional);
 
-  let PAGE = 1;
-  let PAGE_CNT = 10;
-  if (pageIdx && pageIdx > 0) {
-    PAGE = pageIdx;
-  }
+  let PAGE;
+  let PAGE_CNT;
+  if (workInfo && workInfo.OPT_INFO) {
+    workInfo.OPT_INFO.forEach(opt => {
+      if (opt.OPT_CODE === PAGINATION_OPT_CODE && opt.ISUSED === 'Y') {
+        if (pageIdx && pageIdx > 0) {
+          PAGE = pageIdx;
+        } else {
+          PAGE = 1;
+        }
 
-  if (pageCnt && pageCnt > 0) {
-    PAGE_CNT = pageCnt;
+        if (pageCnt && pageCnt > 0) {
+          PAGE_CNT = pageCnt;
+        } else {
+          PAGE_CNT = 10;
+        }
+      }
+    });
   }
 
   const responseList = yield call(

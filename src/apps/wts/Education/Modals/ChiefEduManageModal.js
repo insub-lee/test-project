@@ -4,11 +4,12 @@ import Modal from 'rc-dialog';
 
 import { Icon, Spin } from 'antd';
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import { jsonToQueryString } from 'utils/helpers';
 import moment from 'moment';
 import service from '../service';
 import StyledContent from './StyledContent';
+import StyledTable from '../../StyledTable';
 
 import EvaluationFormModal from './EvaluationFormModal';
 import EduReportModal from './EduReportModal';
@@ -144,7 +145,7 @@ class ChiefEduManageModal extends React.Component {
               <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
                 <StyledCommonForm onSubmit={e => e.preventDefault()} autoComplete="off">
                   <div className="sub_form_tit cr">신 상 INFORMATION</div>
-                  <div className="ta_wrap">
+                  <StyledTable className="ta_wrap">
                     <table className="tb02">
                       <colgroup>
                         <col width="20%" />
@@ -181,10 +182,10 @@ class ChiefEduManageModal extends React.Component {
                         </tr>
                       </tbody>
                     </table>
-                  </div>
+                  </StyledTable>
                   <br />
                   <div className="sub_form_tit cr">교 육 정 보</div>
-                  <div className="ta_wrap">
+                  <StyledTable className="ta_wrap">
                     <table className="tb02">
                       <colgroup>
                         <col width="20%" />
@@ -223,10 +224,10 @@ class ChiefEduManageModal extends React.Component {
                         </tr>
                       </tbody>
                     </table>
-                  </div>
+                  </StyledTable>
                   <br />
                   <div className="sub_form_tit cr">단계별 교육 일정 및 일일레포트</div>
-                  <div className="ta_wrap">
+                  <StyledTable className="ta_wrap">
                     <table className="tb02">
                       <tbody>
                         <tr className="bd">
@@ -250,14 +251,14 @@ class ChiefEduManageModal extends React.Component {
                           <td>YYYY.MM.DD</td>
                           <td>1조</td>
                           <td>
-                            <Button type="button" size="small" color="default" onClick={() => this.handleCommonModal('eduReportModal')}>
+                            <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleCommonModal('eduReportModal')}>
                               <i className="fa fa-pen" /> 레포트
-                            </Button>
+                            </StyledButton>
                           </td>
                           <td>
-                            <Button type="button" size="small" color="default" onClick={() => this.handleCommonModal('mentorConfirmModal')}>
+                            <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleCommonModal('mentorConfirmModal')}>
                               <i className="fa fa-signature" /> 멘토확인
-                            </Button>
+                            </StyledButton>
                           </td>
                           <td>
                             <button type="button" onClick={() => this.handleCommonModal('evaluationFormModal')}>
@@ -270,28 +271,28 @@ class ChiefEduManageModal extends React.Component {
                             </button>
                           </td>
                           <td rowSpan={3}>
-                            <Button type="button" size="small" color="default" onClick={() => this.handleCommonModal('mentorOpinionModal')}>
+                            <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleCommonModal('mentorOpinionModal')}>
                               <i className="fa fa-pen" /> 멘토의견
-                            </Button>
+                            </StyledButton>
                           </td>
                           <td rowSpan={3}>
-                            <Button type="button" size="small" color="default" onClick={() => this.handleCommonModal('chiefOpinionModal')}>
+                            <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleCommonModal('chiefOpinionModal')}>
                               <i className="fa fa-pen" /> 반장의견
-                            </Button>
+                            </StyledButton>
                           </td>
                         </tr>
                         <tr className="bd">
                           <td>YYYY.MM.DD</td>
                           <td>1조</td>
                           <td>
-                            <Button type="button" size="small" color="default">
+                            <StyledButton type="button" className="btn-light btn-sm">
                               <i className="fa fa-pen" /> 레포트
-                            </Button>
+                            </StyledButton>
                           </td>
                           <td>
-                            <Button type="button" size="small" color="default">
-                              <i className="fa fa-signature" /> 멘토확인
-                            </Button>
+                            <StyledButton type="button" className="btn-light btn-sm">
+                              <i className="fa fa-pen" /> 멘토확인
+                            </StyledButton>
                           </td>
                           <td>
                             <button type="button">
@@ -308,14 +309,14 @@ class ChiefEduManageModal extends React.Component {
                           <td>YYYY.MM.DD</td>
                           <td>1조</td>
                           <td>
-                            <Button type="button" size="small" color="default">
+                            <StyledButton type="button" className="btn-light btn-sm">
                               <i className="fa fa-pen" /> 레포트
-                            </Button>
+                            </StyledButton>
                           </td>
                           <td>
-                            <Button type="button" size="small" color="default">
-                              <i className="fa fa-signature" /> 멘토확인
-                            </Button>
+                            <StyledButton type="button" className="btn-light btn-sm">
+                              <i className="fa fa-pen" /> 멘토확인
+                            </StyledButton>
                           </td>
                           <td>
                             <button type="button">
@@ -330,7 +331,7 @@ class ChiefEduManageModal extends React.Component {
                         </tr>
                       </tbody>
                     </table>
-                  </div>
+                  </StyledTable>
                 </StyledCommonForm>
               </Spin>
             </div>

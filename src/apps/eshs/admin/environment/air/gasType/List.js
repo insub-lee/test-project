@@ -194,6 +194,7 @@ class List extends Component {
                     <InputNumber
                       style={{ width: '100%' }}
                       value={formData && formData.GAS_WEIGHT}
+                      max={100}
                       onChange={value => this.onChangeValue('GAS_WEIGHT', value)}
                       name="gasWeight"
                     />
@@ -206,6 +207,7 @@ class List extends Component {
                     <InputNumber
                       style={{ width: '100%' }}
                       value={formData && formData.PERMISSION_DENSITY}
+                      max={1000}
                       onChange={value => this.onChangeValue('PERMISSION_DENSITY', value)}
                       name="permissionDensity"
                     />
@@ -235,7 +237,7 @@ class List extends Component {
                   </Popconfirm>
                 </>
               )}
-              <StyledButton className="btn-primary btn-sm" onClick={this.onModalChange}>
+              <StyledButton className="btn-light btn-sm" onClick={this.onModalChange}>
                 취소
               </StyledButton>
             </StyledButtonWrapper>

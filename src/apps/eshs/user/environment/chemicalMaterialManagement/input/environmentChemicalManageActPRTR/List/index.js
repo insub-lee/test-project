@@ -13,6 +13,7 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 
 const AntdInput = StyledInput(Input);
 const AntdInputNumber = StyledInputNumber(InputNumber);
@@ -41,9 +42,13 @@ class List extends React.Component {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue, isModified } = this.state;
     if (isModified) {
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialmanageactregistration`, requestValue, this.getMaterialList);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialmanageactregistration`, requestValue, (key, response) =>
+        callBackAfterPut(key, response, this.getMaterialList),
+      );
     }
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialmanageactregistration`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialmanageactregistration`, requestValue, (key, response) =>
+      callBackAfterPost(key, response, this.getMaterialList),
+    );
   };
 
   handleDeleteClick = () => {
@@ -61,7 +66,9 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialmanageactregistration`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialmanageactregistration`, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, this.getMaterialList),
+    );
   };
 
   getMaterialList = () => {
@@ -202,22 +209,24 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
-                저장/수정
-              </StyledButton>
-              <Popconfirm
-                title={deleteConfirmMessage}
-                onConfirm={isModified ? handleDeleteConfirm : null}
-                okText={isModified ? '삭제' : '확인'}
-                cancelText="취소"
-              >
-                <StyledButton className="btn-light mr5 btn-sm" onClick={handleDeleteClick}>
-                  삭제
+              <div className="btn-area">
+                <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
+                  저장/수정
                 </StyledButton>
-              </Popconfirm>
-              <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
-                초기화
-              </StyledButton>
+                <Popconfirm
+                  title={deleteConfirmMessage}
+                  onConfirm={isModified ? handleDeleteConfirm : null}
+                  okText={isModified ? '삭제' : '확인'}
+                  cancelText="취소"
+                >
+                  <StyledButton className="btn-light mr5 btn-sm" onClick={handleDeleteClick}>
+                    삭제
+                  </StyledButton>
+                </Popconfirm>
+                <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
+                  초기화
+                </StyledButton>
+              </div>
             </div>
           </StyledCustomSearchWrapper>
           <StyledHtmlTable>
@@ -262,7 +271,7 @@ class List extends React.Component {
                   <th>취급량(kg/년)</th>
                   <td>
                     <AntdInputNumber
-                      className="ant-input-number input-number-sm"
+                      className="ant-input-number ant-input-number-sm"
                       value={requestValue.HANDLE_AMOUNT}
                       onChange={value => handleInputNumberChange(value, 'HANDLE_AMOUNT')}
                     />
@@ -270,7 +279,7 @@ class List extends React.Component {
                   <th>조사대상범위(무게함유율%)</th>
                   <td>
                     <AntdInputNumber
-                      className="ant-input-number input-number-sm"
+                      className="ant-input-number ant-input-number-sm"
                       value={requestValue.INVESTIGATION_TARGET_RANGE}
                       onChange={value => handleInputNumberChange(value, 'INVESTIGATION_TARGET_RANGE')}
                     />

@@ -41,7 +41,7 @@ class DistributeDocView extends Component {
       spinningOff,
     } = this.props;
 
-    if (row.FINE_DOWN_CNT <= 0) {
+    if (row.FINE_DOWN_CNT <= 0 || row.PASSES_PERIOD > 0) {
       message.info(<MessageContent>다운로드가 불가능합니다.<br /><br />다운로드를 원하시면 재배포 요청하시기 바랍니다.</MessageContent>);
     } else {
       const drmInfo = {
@@ -61,7 +61,7 @@ class DistributeDocView extends Component {
       }));
       const url = `/down/eddsfile/${row.FILE_SEQ}/${acl}`;
       spinningOn();
-      getFileDownload(sagaKey, url, row.FILE_NAME, () => {
+      getFileDownload(sagaKey, url, `${row.DOCNUMBER}_${row.VERSION}_${row.FILE_ORDER}.${row.EXT}`, () => {
         // 첨부파일 열람 메일발송
         submitHandlerBySaga(sagaKey, 'POST', '/api/edds/v1/common/distributeDocOpenEmail', { PARAM: { ...detail, ...row }});
         this.getFileList();
@@ -82,7 +82,7 @@ class DistributeDocView extends Component {
       title: '파일명',
       dataIndex: 'FILE_NAME',
       key: 'FILE_NAME',
-      render: (text, record) => <li style={{ cursor: 'pointer' }} onClick={() => this.onClickDownload(record)}>{`${record.DOCNUMBER}_${record.VERSION}_${record.FILE_ORDER}_.${record.EXT}`}</li>
+      render: (text, record) => <li style={{ cursor: 'pointer' }} onClick={() => this.onClickDownload(record)}>{`${record.DOCNUMBER}_${record.VERSION}_${record.FILE_ORDER}.${record.EXT}`}</li>
     },
     {
       title: '다운가능횟수',

@@ -1,23 +1,27 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  .title {
-    padding: 10px 0;
-    font-size: 20px;
-    font-weight: 600;
-  }
+  .sub_con {
+    padding: 20px 30px;
 
-  .btn_wrap {
-    margin-bottom: 5px;
-    text-align: right;
-  }
+    .title {
+      padding: 10px 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
 
-  .search_div {
-    padding: 5px 0;
-    width: 270px;
+    .btn_wrap {
+      margin-bottom: 5px;
+      text-align: right;
+    }
 
-    input {
-      text-align: center;
+    .search_div {
+      padding: 5px 0;
+      width: 270px;
+
+      input {
+        text-align: center;
+      }
     }
   }
 `;

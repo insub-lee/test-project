@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import * as selectors from 'containers/common/Auth/selectors';
 
 import DeptSearchBar from '../../eiDeptSearchBar';
@@ -40,12 +40,12 @@ class MainPage extends Component {
   render() {
     const { columns } = this.state;
     return (
-      <ContentsWrapper>
+      <StyledContentsWrapper>
         <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
         <div>
           <ItemTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
         </div>
-      </ContentsWrapper>
+      </StyledContentsWrapper>
     );
   }
 }

@@ -12,6 +12,7 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 import Modal from '../InputModal';
 import SearchComp from '../InputModal/SearchComp';
 
@@ -51,7 +52,7 @@ class List extends React.Component {
         url: '/api/eshs/v1/common/eshschemicalmaterialsap',
       },
     ];
-    getCallDataHandler(id, apiArr);
+    getCallDataHandler(id, apiArr, this.handleResetClick);
   };
 
   handleSearchClick = () => {
@@ -90,7 +91,7 @@ class List extends React.Component {
       'POST',
       `/api/eshs/v1/common/eshschemicalmaterialMaster`,
       { dataSource: param, SAP_ID: requestValue.SAP_ID },
-      this.getMaterialList,
+      (key, response) => callBackAfterPost(key, response, this.getMaterialList),
     );
   };
 
@@ -109,7 +110,9 @@ class List extends React.Component {
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialMaster`, requestValue, this.getMaterialList);
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialMaster`, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, this.getMaterialList),
+    );
   };
 
   handleResetClick = () => {
@@ -388,17 +391,19 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
-                저장/수정
-              </StyledButton>
-              <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
-                <StyledButton className="btn-light btn-first btn-sm" onClick={handleDeleteClick}>
-                  삭제
+              <div className="btn-area">
+                <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
+                  저장/수정
                 </StyledButton>
-              </Popconfirm>
-              <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
-                초기화
-              </StyledButton>
+                <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
+                  <StyledButton className="btn-light btn-first btn-sm" onClick={handleDeleteClick}>
+                    삭제
+                  </StyledButton>
+                </Popconfirm>
+                <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
+                  초기화
+                </StyledButton>
+              </div>
             </div>
           </StyledCustomSearchWrapper>
           <StyledHtmlTable>
