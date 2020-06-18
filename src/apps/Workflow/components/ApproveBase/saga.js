@@ -133,6 +133,28 @@ function* getFileDownload({ url, fileName }) {
   }
 }
 
+function* getFileDownloadProgress({ url, fileName, onProgress, callback }) {
+  const blobResponse = yield call(Axios.getDownProgress, url, {}, {}, onProgress);
+  const { size } = blobResponse;
+  if (size > 0) {
+    if (window.navigator && window.navigator.msSaveBlob) {
+      window.navigator.msSaveBlob(blobResponse, fileName);
+    } else {
+      const fileUrl = window.URL.createObjectURL(blobResponse);
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+
+  if (typeof callback === 'function') {
+    callback(blobResponse, url, fileName);
+  }
+}
+
 export default function* watcher() {
   yield takeEvery(actionTypes.PUBLIC_ACTIONMETHOD_SAGA, submitHandlerBySaga);
   yield takeEvery(actionTypes.GET_APPROVE_LIST, getApproveList);
@@ -144,4 +166,6 @@ export default function* watcher() {
   yield takeLatest(actionTypes.GET_USERINFO, getUserInfo);
   yield takeEvery(actionTypes.GET_CUSTOMER_DATABIND, getCustomDataBind);
   yield takeEvery(actionTypes.GET_FILE_DOWNLOAD, getFileDownload);
+  yield takeEvery(actionTypes.GET_FILE_DOWNLOAD, getFileDownload);
+  yield takeLatest(actionTypes.GET_FILE_DOWNLOAD_PROGRESS, getFileDownloadProgress);
 }

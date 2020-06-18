@@ -132,12 +132,39 @@ function* postNoResponseAxios(fullUrl, payload, headers) {
   }
 }
 
+function* getFileDownProgressAxios(fullUrl, payload, headers, onProgress) {
+  try {
+    const response = yield Promise.resolve(
+      axios({
+        method: 'get',
+        url: fullUrl,
+        param: { ...payload },
+        headers: { ...headers, META: yield makeRequestHeader() },
+        responseType: 'blob',
+        onDownloadProgress: progressEvent => {
+          var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          onProgress(percentCompleted);
+        },
+      }),
+    );
+
+    if (response.statusText !== 'OK') {
+      return Promise.reject(response.data);
+    }
+    return response.data;
+  } catch (error) {
+    errorAxiosProcess(error);
+  }
+  return {};
+}
+
 export const Axios = {
   get: (fullUrl, payload, headers) => getAxios(fullUrl, payload, headers),
   post: (fullUrl, payload, headers) => postAxios(fullUrl, payload, headers),
   put: (fullUrl, payload, headers) => putAxios(fullUrl, payload, headers),
   delete: (fullUrl, payload, headers) => deleteAxios(fullUrl, payload, headers),
   getDown: (fullUrl, payload, headers) => getFileDownAxios(fullUrl, payload, headers),
+  getDownProgress: (fullUrl, payload, headers, onProgress) => getFileDownProgressAxios(fullUrl, payload, headers, onProgress),
   postNoResponse: (fullUrl, payload, headers) => postNoResponseAxios(fullUrl, payload, headers),
 };
 
