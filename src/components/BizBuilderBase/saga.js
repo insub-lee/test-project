@@ -872,6 +872,28 @@ function* getFileDownload({ url, fileName }) {
   }
 }
 
+function* getFileDownloadProgress({ url, fileName, onProgress, callback }) {
+  const blobResponse = yield call(Axios.getDownProgress, url, {}, {}, onProgress);
+  const { size } = blobResponse;
+  if (size > 0) {
+    if (window.navigator && window.navigator.msSaveBlob) {
+      window.navigator.msSaveBlob(blobResponse, fileName);
+    } else {
+      const fileUrl = window.URL.createObjectURL(blobResponse);
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+
+  if (typeof callback === 'function') {
+    callback(blobResponse, url, fileName);
+  }
+}
+
 function* setTaskFavorite({ id, workSeq, taskOriginSeq, flag }) {
   const response = yield call(Axios.post, '/api/builder/v1/work/TaskFavorite', {
     PARAM: { WORK_SEQ: workSeq, TASK_ORIGIN_SEQ: taskOriginSeq, PREV_FAVORITE_FLAG: flag },
@@ -909,6 +931,7 @@ export default function* watcher(arg) {
   yield takeLatest(`${actionTypes.REMOVE_MULTI_TASK_SAGA}_${arg.sagaKey}`, removeMultiTask);
   yield takeEvery(`${actionTypes.GET_FILE_DOWNLOAD}_${arg.sagaKey || arg.id}`, getFileDownload);
   yield takeLatest(`${actionTypes.SET_TASK_FAVORITE_SAGA}_${arg.sagaKey || arg.id}`, setTaskFavorite);
+  yield takeLatest(`${actionTypes.GET_FILE_DOWNLOAD_PROGRESS}_${arg.sagaKey || arg.id}`, getFileDownloadProgress);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);

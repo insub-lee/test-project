@@ -363,10 +363,19 @@ export const setBuilderModalByReducer = (id, flag, builderModalSetting, isSaveMo
 
 export const setIsLoadingByReducer = (id, flag) => ({ type: actionTypes.SET_IS_LOADING_REDUCER, id, flag });
 
-export const getFileDownload = (id, url, fileName) => ({
+export const getFileDownload = (id, url, fileName, callback) => ({
   type: `${actionTypes.GET_FILE_DOWNLOAD}_${id}`,
   url,
   fileName,
+  callback,
+});
+
+export const getFileDownloadProgress = (id, url, fileName, onProgress, callback) => ({
+  type: `${actionTypes.GET_FILE_DOWNLOAD_PROGRESS}_${id}`,
+  url,
+  fileName,
+  onProgress,
+  callback,
 });
 
 export const setFormDataByReducer = (id, formData) => ({ type: actionTypes.SET_FORMDATA_REDUCER, id, formData });

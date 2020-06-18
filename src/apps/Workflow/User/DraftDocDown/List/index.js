@@ -3,20 +3,18 @@ import moment from 'moment';
 import base64 from 'base-64';
 import uuid from 'uuid/v1';
 
-import { Table, Icon, Modal } from 'antd';
+import { Table, Icon, Modal, Progress, message } from 'antd';
 
-import DraggableModal from 'components/DraggableModal';
+import DragAntdModal from 'components/DragAntdModal';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
-import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModal(Modal);
 class DraftDocDown extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +28,8 @@ class DraftDocDown extends Component {
       version: undefined,
       downType: undefined,
       opinion: undefined,
+      percentCompleted: undefined,
+      showProgress: false,
     };
   }
 
@@ -103,24 +103,43 @@ class DraftDocDown extends Component {
   };
 
   onCloseModal = () => {
-    this.setState({ viewVisible: false });
+    this.setState({ viewVisible: false, showProgress: false });
   };
 
   onClickDownLoad = (down, fileName) => {
-    const { getFileDownload } = this.props;
+    const { sagaKey, getFileDownloadProgress } = this.props;
     const { selectedRow } = this.state;
     const { DRAFT_DATA } = selectedRow;
     const { BK, ED, PR, UC } = DRAFT_DATA;
     const drmInfo = { [uuid()]: 1, drmInfo: { bk: BK, ed: ED, pr: PR, uc: UC } };
     const acl = base64.encode(JSON.stringify(drmInfo));
     const url = `${down}/${acl}`;
-    getFileDownload(url, fileName);
+    console.debug('url', url, fileName, this.props);
+    this.setState({ showProgress: true, percentCompleted: 0 });
+
+    getFileDownloadProgress(url, fileName, this.onProgress, this.onComplete);
+  };
+
+  onProgress = percent => {
+    if (percent === 100) {
+      this.setState({ percentCompleted: percent, showProgress: false });
+    } else {
+      this.setState({ percentCompleted: percent });
+    }
+  };
+
+  onComplete = (response, url, fileName) => {
+    const { size } = response;
+    if (size === 0) {
+      message.warning('PDF변환 중입니다.');
+    } else {
+      message.info('DRM문서는 해당 소프트웨어를 통해서만 조회가 가능합니다. (브라우저 지원불가)');
+    }
   };
 
   render() {
-    const { viewVisible, fullName, docNumber, version, opinion, attach, attach2, selectedRow, downType } = this.state;
+    const { viewVisible, fullName, docNumber, version, opinion, attach, attach2, selectedRow, downType, showProgress, percentCompleted } = this.state;
     const { customDataList } = this.props;
-    console.debug('selectedRow', selectedRow);
     return (
       <>
         <StyledHeaderWrapper>
@@ -140,7 +159,7 @@ class DraftDocDown extends Component {
             bordered
           />
         </StyledContentsWrapper>
-        {/* <AntdModal
+        <DragAntdModal
           className="modalWrapper modalTechDoc"
           title="파일신청 내용보기"
           width={600}
@@ -148,85 +167,88 @@ class DraftDocDown extends Component {
           destroyOnClose
           onCancel={this.onCloseModal}
           footer={null}
-        > */}
-        {viewVisible && (
-          <DraggableModal title="표준문서 결재" visible={viewVisible}>
-            <StyledContentsWrapper>
-              <StyledHtmlTable>
-                <table>
-                  <tbody>
-                    <tr>
-                      <th>문서종류</th>
-                      <td colSpan={3}>{fullName}</td>
-                    </tr>
-                    <tr>
-                      <th>문서번호</th>
-                      <td>{docNumber}</td>
-                      <th>개정번호</th>
-                      <td>{version}</td>
-                    </tr>
-                    <tr>
-                      <th>요청종류</th>
-                      <td colSpan={3}>{downType}</td>
-                    </tr>
-                    <tr>
-                      <th>요청사용</th>
-                      <td colSpan={3}>{opinion}</td>
-                    </tr>
-                    {selectedRow && selectedRow.STATUS === 2 && selectedRow.PROC_STATUS === 2 ? (
-                      <>
-                        <tr>
-                          <th>본문내용</th>
-                          <td colSpan={3}>
-                            {attach &&
-                              attach.DETAIL &&
-                              attach.DETAIL.map(file => (
-                                <li className={`${file.fileExt} file-list`}>
-                                  <span style={{ verticalAlign: 'middle' }}>{file.icon}</span>
-                                  <span style={{ verticalAlign: 'middle' }}>{file.fileName}</span>
-                                  <StyledButton className="btn-light btn-xxs ml5" onClick={() => this.onClickDownLoad(file.down, file.fileName)}>
-                                    다운로드
-                                  </StyledButton>
-                                </li>
-                              ))}
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>별첨</th>
-                          <td colSpan={3}>
-                            {attach2 &&
-                              attach2.DETAIL &&
-                              attach2.DETAIL.map(file => (
-                                <li className={`${file.fileExt} file-list`}>
-                                  <span style={{ verticalAlign: 'middle' }}>{file.icon}</span>
-                                  <span style={{ verticalAlign: 'middle' }}>{file.fileName}</span>
-                                  <StyledButton className="btn-light btn-xxs ml5" onClick={() => this.onClickDownLoad(file.down, file.fileName)}>
-                                    다운로드
-                                  </StyledButton>
-                                </li>
-                              ))}
-                          </td>
-                        </tr>
-                      </>
-                    ) : (
+        >
+          <StyledContentsWrapper>
+            <StyledHtmlTable>
+              <table>
+                <tbody>
+                  <tr>
+                    <th>문서종류</th>
+                    <td colSpan={3}>{fullName}</td>
+                  </tr>
+                  <tr>
+                    <th>문서번호</th>
+                    <td>{docNumber}</td>
+                    <th>개정번호</th>
+                    <td>{version}</td>
+                  </tr>
+                  <tr>
+                    <th>요청종류</th>
+                    <td colSpan={3}>{downType}</td>
+                  </tr>
+                  <tr>
+                    <th>요청사용</th>
+                    <td colSpan={3}>{opinion}</td>
+                  </tr>
+                  {selectedRow && selectedRow.STATUS === 2 && selectedRow.PROC_STATUS === 2 ? (
+                    <>
                       <tr>
-                        <td colSpan={4} style={{ textAlign: 'center', background: '#f7f7f7', color: '#f31717' }}>
-                          결재중
+                        <th>본문내용</th>
+                        <td colSpan={3}>
+                          {attach &&
+                            attach.DETAIL &&
+                            attach.DETAIL.map(file => (
+                              <li className={`${file.fileExt} file-list`}>
+                                <span style={{ verticalAlign: 'middle' }}>{file.icon}</span>
+                                <span style={{ verticalAlign: 'middle' }}>{file.fileName}</span>
+                                <StyledButton className="btn-light btn-xxs ml5" onClick={() => this.onClickDownLoad(file.down, file.fileName)}>
+                                  다운로드
+                                </StyledButton>
+                              </li>
+                            ))}
                         </td>
                       </tr>
-                    )}
-                  </tbody>
-                </table>
-                <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
-                  <StyledButton className="btn-light btn-sm" onClick={this.onCloseModal}>
-                    닫기
-                  </StyledButton>
-                </StyledButtonWrapper>
-              </StyledHtmlTable>
-            </StyledContentsWrapper>
-          </DraggableModal>
-        )}
-        {/* </AntdModal> */}
+                      <tr>
+                        <th>별첨</th>
+                        <td colSpan={3}>
+                          {attach2 &&
+                            attach2.DETAIL &&
+                            attach2.DETAIL.map(file => (
+                              <li className={`${file.fileExt} file-list`}>
+                                <span style={{ verticalAlign: 'middle' }}>{file.icon}</span>
+                                <span style={{ verticalAlign: 'middle' }}>{file.fileName}</span>
+                                <StyledButton className="btn-light btn-xxs ml5" onClick={() => this.onClickDownLoad(file.down, file.fileName)}>
+                                  다운로드
+                                </StyledButton>
+                              </li>
+                            ))}
+                        </td>
+                      </tr>
+                      {showProgress && (
+                        <tr>
+                          <td colSpan={4}>
+                            <Progress percent={percentCompleted} status="active" />
+                          </td>
+                        </tr>
+                      )}
+                    </>
+                  ) : (
+                    <tr>
+                      <td colSpan={4} style={{ textAlign: 'center', background: '#f7f7f7', color: '#f31717' }}>
+                        결재중
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+              <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+                <StyledButton className="btn-light btn-sm" onClick={this.onCloseModal}>
+                  닫기
+                </StyledButton>
+              </StyledButtonWrapper>
+            </StyledHtmlTable>
+          </StyledContentsWrapper>
+        </DragAntdModal>
       </>
     );
   }

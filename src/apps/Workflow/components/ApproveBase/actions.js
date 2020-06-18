@@ -101,3 +101,11 @@ export const getFileDownload = (url, fileName) => ({
   url,
   fileName,
 });
+
+export const getFileDownloadProgress = (url, fileName, onProgress, callback) => ({
+  type: actionTypes.GET_FILE_DOWNLOAD_PROGRESS,
+  url,
+  fileName,
+  onProgress,
+  callback,
+});
