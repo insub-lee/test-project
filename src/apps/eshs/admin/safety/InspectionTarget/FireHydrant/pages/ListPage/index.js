@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal, Button, Tooltip } from 'antd';
+import { Table, Modal, Button, Spin } from 'antd';
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
@@ -358,67 +358,69 @@ const ListPage = props => {
             return (
               (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
                 <StyledSearchWrapper key={group.key}>
-                  {group.useTitle && <GroupTitle title={group.title} />}
-                  <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-                    <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
-                      <table className={`view-designer-table table-${groupIndex}`}>
-                        <tbody>
-                          {group.rows.map((row, rowIndex) => (
-                            <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
-                              {row.cols &&
-                                row.cols.map((col, colIndex) => (
-                                  <td
-                                    key={col.key}
-                                    {...col}
-                                    comp=""
-                                    colSpan={col.span}
-                                    className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
-                                  >
-                                    <Contents>
-                                      {col.comp &&
-                                        renderComp(
-                                          col.comp,
-                                          col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
-                                          true,
-                                          `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
-                                          `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
-                                          group.type === 'searchGroup',
-                                        )}
-                                    </Contents>
-                                  </td>
-                                ))}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                    {group.type === 'searchGroup' && group.useSearch && (
-                      <div className="view-designer-group-search-btn-wrap">
-                        <StyledButton
-                          className="btn-gray btn-first"
-                          onClick={() => {
-                            getListData(id, workSeq);
-                            setIsSearched(true);
-                          }}
-                        >
-                          검색
-                        </StyledButton>
-                        {ViewButtons && <ViewButtons {...props} clickStatus={clickStatus} clickUsage={clickUsage} clickRegister={clickRegister} />}
-                        {processedList && processedList.length > 0 && isExcelDown && (
-                          <ExcelDownloadComp
-                            isBuilder={false}
-                            fileName={fileName || 'excel'}
-                            className="workerExcelBtn"
-                            btnText={btnText || '엑셀받기'}
-                            sheetName={sheetName || 'sheet1'}
-                            columns={columns || []}
-                            fields={fields || []}
-                            listData={processedList || []}
-                          />
-                        )}
+                  <Spin tip="검색중..." spinning={isSearched}>
+                    {group.useTitle && <GroupTitle title={group.title} />}
+                    <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
+                      <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
+                        <table className={`view-designer-table table-${groupIndex}`}>
+                          <tbody>
+                            {group.rows.map((row, rowIndex) => (
+                              <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
+                                {row.cols &&
+                                  row.cols.map((col, colIndex) => (
+                                    <td
+                                      key={col.key}
+                                      {...col}
+                                      comp=""
+                                      colSpan={col.span}
+                                      className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
+                                    >
+                                      <Contents>
+                                        {col.comp &&
+                                          renderComp(
+                                            col.comp,
+                                            col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
+                                            true,
+                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
+                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
+                                            group.type === 'searchGroup',
+                                          )}
+                                      </Contents>
+                                    </td>
+                                  ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
-                    )}
-                  </Group>
+                      {group.type === 'searchGroup' && group.useSearch && (
+                        <div className="view-designer-group-search-btn-wrap">
+                          <StyledButton
+                            className="btn-gray btn-first"
+                            onClick={() => {
+                              getListData(id, workSeq);
+                              setIsSearched(true);
+                            }}
+                          >
+                            검색
+                          </StyledButton>
+                          {ViewButtons && <ViewButtons {...props} clickStatus={clickStatus} clickUsage={clickUsage} clickRegister={clickRegister} />}
+                          {processedList && processedList.length > 0 && isExcelDown && (
+                            <ExcelDownloadComp
+                              isBuilder={false}
+                              fileName={fileName || 'excel'}
+                              className="workerExcelBtn"
+                              btnText={btnText || '엑셀받기'}
+                              sheetName={sheetName || 'sheet1'}
+                              columns={columns || []}
+                              fields={fields || []}
+                              listData={processedList || []}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </Group>
+                  </Spin>
                 </StyledSearchWrapper>
               )
             );
