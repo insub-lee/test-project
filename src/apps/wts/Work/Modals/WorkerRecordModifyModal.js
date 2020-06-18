@@ -495,6 +495,7 @@ class WorkerRecordModifyModal extends React.Component {
                   <div style={{ float: 'left' }}>일일근태</div>
                   <div style={{ float: 'right' }}>
                     <Checkbox
+                      className="checkbox"
                       id="modify-work-yn"
                       checked={writeWork}
                       onChange={this.handleChangeWriteWork}
@@ -553,6 +554,7 @@ class WorkerRecordModifyModal extends React.Component {
                   <div style={{ float: 'left' }}>연장근무</div>
                   <div style={{ float: 'right' }}>
                     <Checkbox
+                      className="checkbox"
                       id="modify-use-yn"
                       checked={writeOverWork}
                       onChange={this.handleChangeWriteOverWork}
@@ -637,10 +639,10 @@ class WorkerRecordModifyModal extends React.Component {
                 )}
                 {!readmode && (
                   <div className="btn_wrap">
-                    <StyledButton type="submit" className="btn-light btn-xs">
+                    <StyledButton type="submit" className="btn-primary btn-sm mr5">
                       수정
                     </StyledButton>
-                    <StyledButton type="button" className="btn-light btn-xs" onClick={this.handleCloseModal}>
+                    <StyledButton type="button" className="btn-light btn-sm" onClick={this.handleCloseModal}>
                       취소
                     </StyledButton>
                   </div>
