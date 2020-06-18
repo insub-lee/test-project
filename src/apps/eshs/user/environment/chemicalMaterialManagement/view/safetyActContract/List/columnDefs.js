@@ -15,13 +15,17 @@ export const columnDefs = [
   {
     headerName: '해당 여부',
     field: 'IS_APPLICATE,',
+    filter: 'agTextColumnFilter',
+    sortable: true,
   },
   {
     headerName: '기준함량',
     field: 'CONTENT_STANDARD',
+    sortable: true,
   },
   {
     headerName: '규정량',
     field: 'CONTENT_DOSE',
+    sortable: true,
   },
 ];

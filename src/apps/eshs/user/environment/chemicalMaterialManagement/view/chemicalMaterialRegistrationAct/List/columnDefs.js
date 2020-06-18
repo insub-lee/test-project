@@ -16,5 +16,7 @@ export const columnDefs = [
     headerName: '해당여부',
     field: 'IS_APPLICATE',
     width: 80,
+    filter: 'agTextColumnFilter',
+    sortable: true,
   },
 ];

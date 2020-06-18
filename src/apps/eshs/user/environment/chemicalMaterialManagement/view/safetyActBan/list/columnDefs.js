@@ -14,5 +14,7 @@ export const columnDefs = [
   {
     headerName: '금지물질',
     field: 'IS_BAN',
+    filter: 'agTextColumnFilter',
+    sortable: true,
   },
 ];

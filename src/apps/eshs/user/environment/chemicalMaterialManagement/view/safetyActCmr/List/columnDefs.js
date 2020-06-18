@@ -22,14 +22,20 @@ export const columnDefs = [
   {
     headerName: '발암성(C)',
     field: 'CARCINOGENICITY',
+    filter: 'agTextColumnFilter',
+    sortable: true,
   },
   {
     headerName: '변이독성(M)',
     field: 'MUTAGENICITY',
+    filter: 'agTextColumnFilter',
+    sortable: true,
   },
   {
     headerName: '생식독성(R)',
     field: 'REPRODUCTIVE_TOXICIT',
+    filter: 'agTextColumnFilter',
+    sortable: true,
   },
   {
     headerName: '출처',

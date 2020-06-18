@@ -18,5 +18,7 @@ export const columnDefs = [
   {
     headerName: '허용기준설정물질',
     field: 'IS_PERMISSION',
+    filter: 'agTextColumnFilter',
+    sortable: true,
   },
 ];

@@ -18,5 +18,7 @@ export const columnDefs = [
   {
     headerName: '노출기준설정물질',
     field: 'IS_EXPOSURE',
+    filter: 'agTextColumnFilter',
+    sortable: true,
   },
 ];
