@@ -273,7 +273,7 @@ class WorkProcessModal extends Component {
 
   onSearchDept = val => {
     if (!val || val === '' || val.length === 0) {
-      message.info(<MessageContent>검색어를 한글자 이상 입력해 주세요</MessageContent>);
+      this.setState({ deptList2: [] });
       return false;
     }
     const { getDeptListByName } = this.props;
@@ -281,21 +281,32 @@ class WorkProcessModal extends Component {
       DEPT_NAME: val,
     };
     getDeptListByName(payload, response => {
-      this.setState({ deptList2: response.list });
+      this.setState({ deptList2: response.list }, () => {
+        if (response.list.length === 1) {
+          const record = response.list[0];
+          this.onDeptDoubleClick(record);
+        }
+      });
     });
   };
 
   onSearchUser = val => {
     if (!val || val === '' || val.length === 0) {
-      message.info(<MessageContent>검색어를 한글자 이상 입력해 주세요</MessageContent>);
+      this.setState({ deptUserList: [] });
       return false;
     }
     const { getUserListByName } = this.props;
     const payload = {
       USER_NAME: val,
     };
+
     getUserListByName(payload, response => {
-      this.setState({ deptUserList: response.list });
+      this.setState({ deptUserList: response.list }, () => {
+        if (response.list.length === 1) {
+          const record = response.list[0];
+          this.onUserDoubleClick(record);
+        }
+      });
     });
   };
 
