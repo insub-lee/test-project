@@ -126,7 +126,7 @@ class List extends React.Component {
             </div>
           </StyledCustomSearchWrapper>
           <div style={{ width: '100%', height: '100%' }}>
-            <div className="ag-theme-balham" style={{ height: '450px' }}>
+            <div className="ag-theme-balham" style={{ height: '390px' }}>
               <AgGridReact defaultColDef={defaultColDef} columnDefs={columnDefs} rowData={rowData} suppressRowTransform />
             </div>
           </div>
