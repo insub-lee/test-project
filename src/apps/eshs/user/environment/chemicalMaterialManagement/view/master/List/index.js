@@ -160,17 +160,19 @@ class List extends React.Component {
                 style={{ width: '20%' }}
                 placeholder="화학물질명을 입력하세요."
               />
-              <ExcelDownloadComp
-                isBuilder={false}
-                fileName={isMasterColumns ? `${moment().format('YYYYMMDD')}_화학물질관리 마스터` : `${moment().format('YYYYMMDD')}_화학물질관리 SAP 사용량`}
-                className="testClassName"
-                btnText="엑셀 다운로드"
-                sheetName={isMasterColumns ? 'MASTER' : 'SAP사용량'}
-                listData={rowData}
-                btnSize="btn-sm"
-                fields={createExcelData(isMasterColumns ? masterColumnDefs : sapUsageColumn, 'FIELD', 'field')}
-                columns={createExcelData(isMasterColumns ? masterColumnDefs : sapUsageColumn, 'COLUMNS', 'headerName')}
-              />
+              <div className="btn-area">
+                <ExcelDownloadComp
+                  isBuilder={false}
+                  fileName={isMasterColumns ? `${moment().format('YYYYMMDD')}_화학물질관리 마스터` : `${moment().format('YYYYMMDD')}_화학물질관리 SAP 사용량`}
+                  className="testClassName"
+                  btnText="엑셀 다운로드"
+                  sheetName={isMasterColumns ? 'MASTER' : 'SAP사용량'}
+                  listData={rowData}
+                  btnSize="btn-sm"
+                  fields={createExcelData(isMasterColumns ? masterColumnDefs : sapUsageColumn, 'FIELD', 'field')}
+                  columns={createExcelData(isMasterColumns ? masterColumnDefs : sapUsageColumn, 'COLUMNS', 'headerName')}
+                />
+              </div>
             </div>
           </StyledCustomSearchWrapper>
           <div style={{ width: '100%', height: '100%' }}>
