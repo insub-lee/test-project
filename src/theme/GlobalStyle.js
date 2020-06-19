@@ -805,6 +805,16 @@ button {
   display: none;
 }
 
+.ant-calendar-selected-date .ant-calendar-date, 
+.ant-calendar-selected-start-date .ant-calendar-date, 
+.ant-calendar-selected-end-date .ant-calendar-date {
+  color: #fff !important;
+}
+
+.rc-calendar-picker {
+  z-index: 1050;
+}
+
 `;
 
 export default GlobalStyle;
