@@ -63,7 +63,7 @@ class SearchBar extends Component {
   };
 
   render() {
-    const { formData, userSearch, profile, chkYear } = this.props;
+    const { formData, userSearch, profile, chkYear, yearSearch } = this.props;
     const { years } = this.state;
     const userInfo = (formData && formData.userInfo) || {};
     const empNo = (profile && profile.EMP_NO) || '';
@@ -76,21 +76,25 @@ class SearchBar extends Component {
             <span className="text-label">{userInfo.EMP_NO || ''}</span>
           )}
           <span className="text-label">{`/ ${userInfo.DEPT_NAME_KOR || ''} / ${userInfo.NAME_KOR || ''} ${userInfo.PSTN_NAME_KOR || ''}`}</span>
-          &nbsp; &nbsp;
-          <span className="text-label">년도</span>
-          &nbsp;
-          <AntdSelect
-            className="select-sm mr5"
-            defaultValue={chkYear || currentYear}
-            style={{ width: 120 }}
-            onChange={value => this.handleOnChangeSearchData('chkYear', value)}
-          >
-            {years.map(y => (
-              <Option key={y.text} value={y.value}>
-                {y.text}
-              </Option>
-            ))}
-          </AntdSelect>
+          {yearSearch && (
+            <>
+              &nbsp; &nbsp;
+              <span className="text-label">년도</span>
+              &nbsp;
+              <AntdSelect
+                className="select-sm mr5"
+                defaultValue={chkYear || currentYear}
+                style={{ width: 120 }}
+                onChange={value => this.handleOnChangeSearchData('chkYear', value)}
+              >
+                {years.map(y => (
+                  <Option key={y.text} value={y.value}>
+                    {y.text}
+                  </Option>
+                ))}
+              </AntdSelect>
+            </>
+          )}
         </div>
         <div className="btn-area">
           <StyledButton className="btn-primary btn-sm" onClick={this.handleOnSearch}>
@@ -113,6 +117,7 @@ SearchBar.propTypes = {
   chkYear: PropTypes.string,
   customApi: PropTypes.any,
   defaultUser: PropTypes.number,
+  yearSearch: PropTypes.bool,
 };
 SearchBar.defaultProps = {
   sagaKey: '',
@@ -122,6 +127,7 @@ SearchBar.defaultProps = {
   spinningOn: () => {},
   customApi: undefined,
   defaultUser: 0,
+  yearSearch: true,
 };
 
 export default SearchBar;

@@ -6,15 +6,19 @@ import PropTypes from 'prop-types';
 
 class MyPage extends Component {
   render() {
-    const { sagaKey } = this.props;
-    return <BizMicroDevBase sagaKey={sagaKey} component={View} />;
+    const { sagaKey, userId, userSearch } = this.props;
+    return <BizMicroDevBase sagaKey={sagaKey} component={View} defaultUser={userId} userSearch={userSearch} />;
   }
 }
 
 MyPage.propTypes = {
   sagaKey: PropTypes.string,
+  userId: PropTypes.number,
+  userSearch: PropTypes.bool,
 };
 MyPage.defaultProps = {
   sagaKey: 'SelfMyPage',
+  userId: undefined,
+  userSearch: true,
 };
 export default MyPage;
