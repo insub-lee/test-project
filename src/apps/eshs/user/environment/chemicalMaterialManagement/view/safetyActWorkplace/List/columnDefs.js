@@ -26,9 +26,12 @@ export const columnDefs = [
   {
     headerName: '여부',
     field: 'IS_APPLICATE',
+    filter: 'agTextColumnFilter',
+    sortable: true,
   },
   {
     headerName: '함량기준',
     field: 'CONTENT_STANDARD',
+    sortable: true,
   },
 ];

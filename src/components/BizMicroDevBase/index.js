@@ -61,6 +61,7 @@ BizMicroDevBase.defaultProps = {
   setFormData: () => false,
   submitHandlerBySaga: () => false,
   getFileDownload: () => false,
+  getFileDownloadProgress: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -82,6 +83,7 @@ const mapDispatchToProps = dispatch => ({
   removeFormDataReduxStateByKey: (id, key) => dispatch(actions.removeFormDataReduxStateByKey(id, key)),
   resetCalledData: id => dispatch(actions.resetCalledData(id)),
   getFileDownload: (id, url, fileName, callbackFunc) => dispatch(actions.getFileDownload(id, url, fileName, callbackFunc)),
+  getFileDownloadProgress: (id, url, fileName, onProgress, callback) => dispatch(actions.getFileDownloadProgress(id, url, fileName, onProgress, callback)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizMicroDevBase`, reducer });

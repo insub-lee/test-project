@@ -7,6 +7,7 @@ export const address = {
   registerIssueNote: `${baseUrl}registerIssueNote`,
   registerInspectionResult: `${baseUrl}registerInspectionResult`,
 };
+export const FIRE_CODE = 'fireRpump';
 export const VIEW_TYPE = { INPUT: 'INPUT', VIEW: 'VIEW', MODIFY: 'MODIFY', LIST: 'LIST' };
 export const META_SEQ = {
   MODAL_LIST: 11121, // 신규등록 MODAL_LIST (목록PAGE)
@@ -16,6 +17,7 @@ export const META_SEQ = {
   INPUT_ISSUE_NOTE: 11061, // 이슈등록 페이지
   INPUT_INSPECTION: 11052, // 점검결과 등록
   LIST_USAGE_SEARCH: 11141, // 미사용 등록
+  ISSUE_NOTE: 9999,
 };
 export const VIEW_CHANGE_SEQ = {};
 

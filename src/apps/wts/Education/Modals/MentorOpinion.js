@@ -4,7 +4,7 @@ import Modal from 'rc-dialog';
 
 import { Icon, Spin } from 'antd';
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import service from '../service';
 import StyledContent from './StyledContent';
 
@@ -116,9 +116,9 @@ class MentorOpinion extends React.Component {
                   </ul>
                   {writeAble && (
                     <div className="btn_wrap">
-                      <Button type="submit" color="primary" size="small">
+                      <StyledButton type="submit" className="btn-primary btn-sm">
                         확인
-                      </Button>
+                      </StyledButton>
                     </div>
                   )}
                 </StyledCommonForm>

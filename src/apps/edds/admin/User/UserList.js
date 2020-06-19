@@ -1,29 +1,50 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal } from 'antd';
+import { Table, Modal, Input, DatePicker } from 'antd';
+import moment from 'moment';
 
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
-import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+
 import UserView from './UserView';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
+const AntdInput = StyledInput(Input);
+const AntdRangePicker = StyledDatePicker(DatePicker.RangePicker);
 
 class UserList extends Component {
   state = {
     isShow: false,
     selectedRow: {},
+    searchInfo: {},
   };
 
   componentDidMount() {
-    this.initList();
+    this.getList();
   }
 
-  initList = () => {
-    const { id, apiAry, getCallDataHandler } = this.props;
-    getCallDataHandler(id, apiAry, () => {});
+  getList = () => {
+    const { id, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    const apiAry = [
+      {
+        key: 'userList',
+        url: '/api/edds/v1/common/eddsUserList',
+        type: 'POST',
+        params: {
+          PARAM: { ...this.state.searchInfo }
+        },
+      },
+    ];
+    spinningOn();
+    getCallDataHandler(id, apiAry, () => {
+      spinningOff();
+    });
   };
 
   onClickRow = (record, rowIndex) => {
@@ -35,7 +56,7 @@ class UserList extends Component {
 
   onCancelPopup = () => {
     this.setState({ isShow: false }, () => {
-      this.initList();
+      this.getList();
     });
   };
 
@@ -80,7 +101,7 @@ class UserList extends Component {
       key: 'EMAIL',
     },
     {
-      title: '요청일자',
+      title: '승인일자',
       dataIndex: 'REG_DATE',
       key: 'REG_DATE',
       align: 'center',
@@ -105,6 +126,26 @@ class UserList extends Component {
           <UserView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
         <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <AntdInput
+                className="ant-input-sm mr5" allowClear placeholder="업체명" style={{ width: 150 }}
+                onChange={e => this.setState({ searchInfo: { ...this.state.searchInfo, COMPANY_NAME: e.target.value } })}
+                onPressEnter={this.getList}
+              />
+              <AntdInput
+                className="ant-input-sm mr5" allowClear placeholder="사용자명" style={{ width: 100 }}
+                onChange={e => this.setState({ searchInfo: { ...this.state.searchInfo, USER_NAME: e.target.value } })}
+                onPressEnter={this.getList}
+              />
+              <span className="text-label">승인기간</span>
+              <AntdRangePicker
+                className="ant-picker-sm mr5" style={{ width: 220 }} format="YYYY-MM-DD" allowClear={false}
+                onChange={(val1, val2) => this.setState({ searchInfo: { ...this.state.searchInfo, FROM_DT: val2[0], TO_DT: val2[1] } })}
+              />
+              <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
+            </div>
+          </StyledCustomSearchWrapper>
           <AntdTable
             dataSource={list.map(item => ({ ...item, key: `KEY_${item.USER_ID}` }))}
             columns={this.columns}
@@ -123,21 +164,12 @@ class UserList extends Component {
 
 UserList.propTypes = {
   id: PropTypes.string,
-  apiAry: PropTypes.array,
   result: PropTypes.object,
   getCallDataHandler: PropTypes.func,
 };
 
 UserList.defaultProps = {
   id: 'userList',
-  apiAry: [
-    {
-      key: 'userList',
-      url: '/api/edds/v1/common/eddsUserList',
-      type: 'GET',
-      params: {},
-    },
-  ],
   result: {
     requesterList: {
       list: [],

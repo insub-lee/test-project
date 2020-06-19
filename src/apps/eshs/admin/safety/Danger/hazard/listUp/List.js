@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import { getTreeFromFlatData } from 'react-sortable-tree';
-import { Table, Input, message, TreeSelect, Select } from 'antd';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import { Table, TreeSelect, Select, message, Modal } from 'antd';
 
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+
+import BizBuilderBase from 'components/BizBuilderBase';
 import moment from 'moment';
 import ExcelDownloader from './Excel';
 
-const AntdInput = StyledInput(Input);
+const AntdModal = StyledAntdModal(Modal);
 const AntdSelect = StyledSelect(Select);
 const AntdTreeSelect = StyledTreeSelect(TreeSelect);
 const AntdLineTable = StyledLineTable(Table);
@@ -40,7 +41,10 @@ const getCategoryMapListAsTree = (flatData, rootkey) =>
 class List extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      year: Number(moment().year()),
+      isModal: false,
+    };
   }
 
   componentDidMount() {
@@ -52,88 +56,220 @@ class List extends Component {
         url: '/api/admin/v1/common/categoryMapList',
         params: { PARAM: { NODE_ID: 1831 } },
       },
-    ];
-    getCallDataHandler(id, apiAry, this.initData);
-    const currentYear = moment().year();
-    const yearList = [];
-    for (let i = Number(currentYear) - 20; i <= Number(currentYear); i += 1) {
-      yearList.push(i.toString());
-    }
-    this.setState({ yearList });
-  }
-
-  searchList = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    const apiAry = [
       {
-        key: 'treeSelectData',
+        key: 'codeData',
         type: 'POST',
-        url: `/api/eshs/v1/common/dangerHazard?TASK_SEQ=${id}`,
-        params: { PARAM: { NODE_ID: 1831 } },
+        url: '/api/admin/v1/common/categoryMapList',
+        params: { PARAM: { NODE_ID: 30431 } },
       },
     ];
     getCallDataHandler(id, apiAry, this.initData);
-  };
-
-  onChangeSelect = (value, node, extra) => {
-    console.debug('test : ', value, node, extra);
-  };
+  }
 
   initData = () => {
     const {
+      result: { treeSelectData, codeData },
+    } = this.props;
+    const tableFindList = treeSelectData && treeSelectData.categoryMapList;
+    const nData = (tableFindList && getCategoryMapListAsTree(tableFindList, 1831)) || [];
+    const aotList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30432);
+    const aocList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30433);
+    const currentYear = this.state.year;
+    const yearList = [];
+    for (let i = currentYear - 20; i <= currentYear; i += 1) {
+      yearList.push(i.toString());
+    }
+    this.setState({ nData, aotList, aocList, tableFindList, yearList });
+  };
+
+  searchList = () => {
+    const { levelName, searchValue, year } = this.state;
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    if (levelName && searchValue && year) {
+      const apiAry = [
+        {
+          key: 'listUp',
+          type: 'GET',
+          url: `/api/eshs/v1/common/dangerHazard?${levelName}=${searchValue}&&YEAR=${year}`,
+        },
+      ];
+      getCallDataHandler(id, apiAry, this.searchData);
+    } else {
+      message.warning('검색조건이 옳바르지 않습니다.');
+    }
+  };
+
+  searchData = () => {
+    const {
+      result: { listUp },
+    } = this.props;
+    if (listUp && listUp.list && listUp.list.length > 0) {
+      this.setState({ listData: listUp.list });
+    } else {
+      message.warning('검색 데이터가 없습니다.');
+    }
+  };
+
+  onChangeSelect = value => {
+    const {
       result: { treeSelectData },
     } = this.props;
-    const nData =
-      (treeSelectData &&
-        treeSelectData.categoryMapList &&
-        getCategoryMapListAsTree(
-          treeSelectData.categoryMapList.filter(f => f.USE_YN === 'Y' && f.LVL !== 7),
-          1831,
-        )) ||
-      [];
-    this.setState({ nData });
+    const temp = treeSelectData && treeSelectData.categoryMapList.find(item => item.NODE_ID === value);
+    switch (temp && temp.LVL) {
+      case 3:
+        return this.setState({ levelName: 'SDIV_ID', searchValue: value });
+      case 4:
+        return this.setState({ levelName: 'DIV_ID', searchValue: value });
+      case 5:
+        return this.setState({ levelName: 'PLACE_ID', searchValue: value });
+      case 6:
+        return this.setState({ levelName: 'PROCESS_ID', searchValue: value });
+      case 7:
+        return this.setState({ levelName: 'EQUIP_ID', searchValue: value });
+      default:
+        return '';
+    }
   };
 
   onChangeValue = (name, value) => {
     this.setState({ [name]: value });
   };
 
+  isModalBizBuilder = record => {
+    this.setState({ modalTask: record.PERENTS_TASK_SEQ });
+    this.onChangeModal();
+  };
+
+  onChangeModal = () => {
+    const { isModal } = this.state;
+    this.setState({ isModal: !isModal });
+  };
+
   render() {
-    const { nData, yearList, listData } = this.state;
-    const columns = [];
+    const { nData, yearList, listData, aotList, aocList, tableFindList } = this.state;
+    const columns = [
+      {
+        title: '구분',
+        align: 'center',
+        width: '70%',
+        children: [
+          {
+            title: '부서',
+            dataIndex: 'SDIV_ID',
+            width: '8.75%',
+            render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+          },
+          {
+            title: '공정(장소)',
+            dataIndex: 'PLACE_ID',
+            width: '8.75%',
+            render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+          },
+          {
+            title: '세부공정',
+            dataIndex: 'PROCESS_ID',
+            width: '8.75%',
+            render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+          },
+          {
+            title: '장비(설비)',
+            dataIndex: 'EQUIP_ID',
+            width: '8.75%',
+            render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+          },
+          {
+            title: '위험요인',
+            dataIndex: 'WORK_NM',
+            width: '35%',
+          },
+        ],
+      },
+      {
+        title: '사고의 발생원인',
+        align: 'center',
+        dataIndex: 'AOC_ID',
+        width: '10%',
+        render: text =>
+          Array.isArray(text)
+            ? text.map(item => aocList && aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR).toString()
+            : JSON.parse(text) &&
+              JSON.parse(text)
+                .map(item => aocList && aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR)
+                .toString(),
+      },
+      {
+        title: '사고의 발생유형',
+        dataIndex: 'AOT_ID',
+        width: '10%',
+        render: (text, record) =>
+          text === 30450
+            ? `${aotList && aotList.find(i => i.NODE_ID === text) && aotList.find(i => i.NODE_ID === text).NAME_KOR}(${record.OTHER_CASE})`
+            : aotList && aotList.find(i => i.NODE_ID === text) && aotList.find(i => i.NODE_ID === text).NAME_KOR,
+      },
+      {
+        title: 'R/A 실시여부',
+        dataIndex: 'RA_YN',
+        width: '10%',
+      },
+    ];
     return (
       <ContentsWrapper>
-        <div className="selSaveWrapper alignLeft">
-          <Select>{yearList && yearList.map(item => <Option value={item}>{item}</Option>)}</Select>
-          <AntdTreeSelect
-            style={{ width: '300px' }}
-            className="mr5 select-mid"
-            defultValue={this.state.changeSelectValue}
-            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-            treeData={nData || []}
-            placeholder="Please select"
-            onSelect={(value, node, extra) => this.onChangeSelect(value, node, extra)}
-          />
-          <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.selectCode}>
+        <StyledCustomSearch className="search-wrapper-inline">
+          <div className="search-input-area">
+            <AntdSelect className="select-sm mr5" style={{ width: 100 }} onChange={value => this.onChangeValue('year', value)} defaultValue={this.state.year}>
+              {yearList && yearList.map(item => <Option value={item}>{item}</Option>)}
+            </AntdSelect>
+            <AntdTreeSelect
+              style={{ width: '300px' }}
+              className="mr5 select-sm"
+              defultValue={this.state.changeSelectValue}
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              treeData={nData || []}
+              placeholder="Please select"
+              allowClear
+              onSelect={value => this.onChangeSelect(value)}
+            />
+          </div>
+          <div className="btn-area">
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.searchList}>
               검색
             </StyledButton>
             {listData && listData.length > 0 && <ExcelDownloader dataList={listData} excelNm="위험요인List-Up" />}
-          </StyledButtonWrapper>
-        </div>
-        {/* <AntdLineTable
-          rowKey="REG_NO"
-          key="REG_NO"
+          </div>
+        </StyledCustomSearch>
+        <AntdLineTable
+          rowKey={listData && `${listData.REG_NO}_${listData.SEQ}`}
+          key={listData && `${listData.REG_NO}_${listData.SEQ}`}
           columns={columns}
           dataSource={listData || []}
           bordered
           onRow={record => ({
             onClick: () => {
-              message.info('개발중입니다.');
+              this.isModalBizBuilder(record);
             },
           })}
-          footer={() => <span>{`${listData && listData.length} 건`}</span>}
-        /> */}
+          footer={() => <span>{`${(listData && listData.length) || 0} 건`}</span>}
+        />
+        <AntdModal
+          width={800}
+          visible={this.state.isModal && this.state.modalTask}
+          title="위험요인"
+          onCancel={this.onChangeModal}
+          destroyOnClose
+          footer={null}
+          className="modal-table-pad"
+        >
+          {this.state.isModal && (
+            <BizBuilderBase
+              sagaKey="hazard"
+              workSeq={12061}
+              taskSeq={this.state.modalTask}
+              viewType="MODIFY"
+              ModifyCustomButtons={() => null}
+              loadingComplete={this.loadingComplete}
+            />
+          )}
+        </AntdModal>
       </ContentsWrapper>
     );
   }
@@ -141,7 +277,6 @@ class List extends Component {
 
 List.propTypes = {
   sagaKey: PropTypes.string,
-  submitHandlerBySaga: PropTypes.func,
   getCallDataHandler: PropTypes.func,
   result: PropTypes.any,
 };

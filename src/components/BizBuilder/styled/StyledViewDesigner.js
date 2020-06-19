@@ -329,6 +329,39 @@ const StyledViewDesigner = styled.div`
           }
         }
 
+        .ant-input-number {
+          display: inline-block;
+          padding: 0.2rem 0.5rem;
+          font-size: 0.75rem;
+          height: auto;
+          font-weight: 400;
+          line-height: 1.47;
+          color: #495057;
+          background-color: #fff;
+          background-clip: padding-box;
+          border: 1px solid #e5e5e5;
+          border-radius: 4px;
+          transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+
+          .ant-input-number-input {
+            height: auto;
+            padding-left: 0;
+          }
+
+          &:hover,
+          &:focus {
+            color: #495057;
+            background-color: #fff;
+            border-color: #636a78;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem transparent;
+          }
+
+          &:disabled {
+            background: #f5f5f5;
+          }
+        }
+
         li.file-list {
           margin-bottom: 5px;
 

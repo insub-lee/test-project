@@ -4,8 +4,9 @@ import moment from 'moment';
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import { Input, Select, Popover, message, DatePicker, Modal } from 'antd';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledAntdModal from 'components/BizBuilder/styled//Modal/StyledAntdModal';
@@ -15,10 +16,11 @@ import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker
 
 const { TextArea } = Input;
 const { Option } = Select;
-const { RangePicker } = DatePicker;
+const { RangePicker, MonthPicker } = DatePicker;
 const AntdSelect = StyledSelect(Select);
 const AntdModal = StyledAntdModal(Modal);
 const AntdRangePicker = StyledDatePicker(RangePicker);
+const AntdMonthPicker = StyledDatePicker(MonthPicker);
 
 moment.locale('ko');
 
@@ -27,24 +29,12 @@ class List extends Component {
     super(props);
     this.state = {
       rangeDate: [moment(), moment()],
-      monthArray: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
-      yearArray: [],
-      journalDateY: moment().format('YYYY'),
-      journalDateM: moment().format('MM'),
       classificationSelcected: 1879,
     };
   }
 
   componentDidMount() {
     const { sagaKey: id, getCallDataHandler } = this.props;
-    const { journalDateY } = this.state;
-    const startYear = Number(journalDateY) - 20;
-    const endYear = Number(journalDateY) + 1;
-    const yearArray = [];
-    for (let i = startYear; i <= endYear; i += 1) {
-      yearArray.push(i);
-    }
-    this.setState({ yearArray });
     const apiAry = [
       {
         key: 'initData',
@@ -54,7 +44,7 @@ class List extends Component {
       },
     ];
     getCallDataHandler(id, apiAry, this.initData);
-    this.searchList();
+    // this.searchList();
   }
 
   initData = () => {
@@ -69,12 +59,12 @@ class List extends Component {
 
   searchList = () => {
     const { sagaKey: id, getCallDataHandler, rangeYn } = this.props;
-    const { fixedTeamSelected, timedTeamSelected, classificationSelcected, journalDateY, journalDateM, rangeDate } = this.state;
+    const { fixedTeamSelected, timedTeamSelected, classificationSelcected, rangeDate, dateStrings } = this.state;
     let dateParam;
     if (rangeYn) {
       dateParam = `DATE_START=${moment(rangeDate[0] || '').format('YYYY-MM-DD 00:00:00')}&DATE_END=${moment(rangeDate[1] || '').format('YYYY-MM-DD 24:00:00')}`;
     } else {
-      dateParam = journalDateY && journalDateM ? `${journalDateY}-${journalDateM}` : moment().format('YYYY-MM');
+      dateParam = dateStrings ? `${dateStrings}` : moment().format('YYYY-MM');
     }
     const apiAry = [
       {
@@ -99,11 +89,16 @@ class List extends Component {
         url: rangeYn ? `/api/eshs/v1/common/eshsCMS?${dateParam}&TYPE=RANGE` : `/api/eshs/v1/common/eshsCMS?JOURNAL_DATE=${dateParam}&TYPE=MONTH`,
       },
     ];
-    getCallDataHandler(id, apiAry, this.initData);
+    getCallDataHandler(id, apiAry, this.nullCheck);
   };
 
-  callBackApi = () => {
-    this.searchList();
+  nullCheck = () => {
+    const {
+      result: { detailData, listData },
+    } = this.props;
+    if (detailData.list.length <= 0 && listData.list.length <= 0) {
+      message.warning('검색된 데이터가 없습니다.');
+    }
   };
 
   onChangeValue = (name, value) => {
@@ -117,111 +112,81 @@ class List extends Component {
   };
 
   render() {
-    const {
-      fixedTeam,
-      timedTeam,
-      fixedTeamSelected,
-      timedTeamSelected,
-      classificationSelcected,
-      classification,
-      journalDateY,
-      journalDateM,
-      monthArray,
-      yearArray,
-      rangeDate,
-      isModal,
-      taskSeq,
-    } = this.state;
+    const { fixedTeam, timedTeam, fixedTeamSelected, timedTeamSelected, classificationSelcected, classification, rangeDate, isModal, taskSeq } = this.state;
     const {
       result: { detailData, listData },
       rangeYn,
     } = this.props;
     return (
       <StyledContentsWrapper>
-        <div className="selSaveWrapper alignLeft">
-          {rangeYn ? (
-            <>
-              <span className="textLabel">날짜</span>
+        <StyledCustomSearchWrapper className="search-wrapper-inline">
+          <div className="search-input-area">
+            <span className="text-label">날짜</span>
+            {rangeYn ? (
               <AntdRangePicker
-                className="ant-picker-mid mr5"
+                style={{ width: '200px' }}
+                className="ant-picker-sm mr5"
                 defaultValue={rangeDate}
                 format={['YYYY-MM-DD', 'YYYY-MM-DD']}
                 onChange={(date, dateStrings) => this.onChangeValue('rangeDate', dateStrings)}
               />
-            </>
-          ) : (
-            <>
-              <span className="textLabel">연도</span>
-              <AntdSelect
-                style={{ width: '200px' }}
-                className="select-mid mr5"
-                onChange={value => this.onChangeValue('journalDateY', value)}
-                value={journalDateY}
-              >
-                {yearArray.map(item => (
-                  <Option value={item}>{item}</Option>
-                ))}
-              </AntdSelect>
-              <span className="textLabel">월</span>
-              <AntdSelect
-                style={{ width: '200px' }}
-                className="select-mid mr5"
-                onChange={value => this.onChangeValue('journalDateM', value)}
-                value={journalDateM}
-              >
-                {monthArray.map(item => (
-                  <Option value={item}>{item}</Option>
-                ))}
-              </AntdSelect>
-            </>
-          )}
+            ) : (
+              <AntdMonthPicker
+                className="ant-picker-mid mr5"
+                defaultValue={moment(moment(), 'YYYY-MM')}
+                format="YYYY-MM"
+                onChange={(date, dateStrings) => this.onChangeValue('dateStrings', dateStrings)}
+              />
+            )}
 
-          <span className="textLabel">일지 구분</span>
-          <AntdSelect
-            style={{ width: '200px' }}
-            className="select-mid mr5"
-            onChange={value => this.onChangeValue('classificationSelcected', value)}
-            value={classificationSelcected}
-          >
-            {classification && classification.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
-          </AntdSelect>
-          <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={this.searchList}>
+            <span className="text-label">일지 구분</span>
+            <AntdSelect
+              style={{ width: '120px' }}
+              className="select-sm mr5"
+              onChange={value => this.onChangeValue('classificationSelcected', value)}
+              value={classificationSelcected}
+            >
+              {classification && classification.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
+            </AntdSelect>
+            <span className="text-label">고정조 구분</span>
+            <AntdSelect
+              style={{ width: '120px' }}
+              className="select-sm mr5"
+              onChange={value => this.onChangeValue('fixedTeamSelected', value)}
+              value={fixedTeamSelected}
+              allowClear
+              placeholder="전체"
+            >
+              {fixedTeam && fixedTeam.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
+            </AntdSelect>
+            <span className="text-label">시간조 구분</span>
+            <AntdSelect
+              style={{ width: '120px' }}
+              className="select-sm mr5"
+              onChange={value => this.onChangeValue('timedTeamSelected', value)}
+              value={timedTeamSelected}
+              allowClear
+              placeholder="전체"
+            >
+              {timedTeam && timedTeam.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
+            </AntdSelect>
+          </div>
+          <div className="btn-area">
+            <StyledButton className="btn-gray btn-first btn-sm" onClick={this.searchList}>
               검색
             </StyledButton>
-          </StyledButtonWrapper>
-        </div>
-        <div className="selSaveWrapper alignLeft">
-          <span className="textLabel">고정조 구분</span>
-          <AntdSelect
-            style={{ width: '200px' }}
-            className="select-mid mr5"
-            onChange={value => this.onChangeValue('fixedTeamSelected', value)}
-            value={fixedTeamSelected || ''}
-          >
-            <Option value="">전체</Option>
-            {fixedTeam && fixedTeam.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
-          </AntdSelect>
-          <span className="textLabel">시간조 구분</span>
-          <AntdSelect
-            style={{ width: '200px' }}
-            className="select-mid mr5"
-            onChange={value => this.onChangeValue('timedTeamSelected', value)}
-            value={timedTeamSelected || ''}
-          >
-            <Option value="">전체</Option>
-            {timedTeam && timedTeam.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
-          </AntdSelect>
-        </div>
-        <div className="selSaveWrapper alignLeft">
-          <StyledButton className="btn-primary btn-first" onClick={() => message.warning('개발중입니다.')}>
+          </div>
+        </StyledCustomSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <StyledButton className="btn-gray btn-first btn-sm" onClick={() => message.warning('개발중입니다.')}>
             출력
           </StyledButton>
-          <StyledButton className="btn-primary btn-first" onClick={() => message.warning('개발중입니다.')}>
+          <StyledButton className="btn-gray btn-sm" onClick={() => message.warning('개발중입니다.')}>
             엑셀 받기
           </StyledButton>
-        </div>
-        <StyledHtmlTable className="tableWrapper">
+        </StyledButtonWrapper>
+
+        <StyledHtmlTable>
           <table>
             <colgroup>
               {listData && listData.list && listData.list[0] && listData.list[0].FULLPATH && listData.list[0].FULLPATH.indexOf('CMS') === -1 ? (
@@ -398,10 +363,10 @@ class List extends Component {
             </tbody>
           </table>
         </StyledHtmlTable>
-        <div className="selSaveWrapper alignLeft">
-          <span>기타사항</span>
-        </div>
-        <StyledHtmlTable className="tableWrapper">
+        <StyledHtmlTable>
+          <div className="table-title" style={{ marginTop: '20px' }}>
+            기타사항
+          </div>
           <table>
             <colgroup>
               <col width="20%" />

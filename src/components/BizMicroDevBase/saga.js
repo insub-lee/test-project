@@ -105,9 +105,32 @@ function* getFileDownload({ id, url, fileName, callbackFunc }) {
   }
 }
 
+function* getFileDownloadProgress({ url, fileName, onProgress, callback }) {
+  const blobResponse = yield call(Axios.getDownProgress, url, {}, {}, onProgress);
+  const { size } = blobResponse;
+  if (size > 0) {
+    if (window.navigator && window.navigator.msSaveBlob) {
+      window.navigator.msSaveBlob(blobResponse, fileName);
+    } else {
+      const fileUrl = window.URL.createObjectURL(blobResponse);
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+
+  if (typeof callback === 'function') {
+    callback(blobResponse, url, fileName);
+  }
+}
+
 export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${arg.sagaKey || arg.id}`, submitHandlerBySaga);
   yield takeEvery(`${actionTypes.GET_CALLDATA_SAGA}_${arg.sagaKey || arg.id}`, getCallDataHandler);
   yield takeEvery(`${actionTypes.GET_CALLDATA_SAGA_RETURN_RES}_${arg.sagaKey || arg.id}`, getCallDataHandlerReturnRes);
   yield takeEvery(`${actionTypes.GET_FILE_DOWNLOAD}_${arg.sagaKey || arg.id}`, getFileDownload);
+  yield takeEvery(`${actionTypes.GET_FILE_DOWNLOAD_PROGRESS}_${arg.sagaKey || arg.id}`, getFileDownloadProgress);
 }

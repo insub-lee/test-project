@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { intlObj, lang } from 'utils/commonUtils';
-
+import cronstrue from 'cronstrue/i18n';
 import ReactDataGrid from 'react-data-grid';
 
 import { Select, Input, Modal } from 'antd';
@@ -63,7 +63,7 @@ class DaemonList extends React.Component {
         visible: true,
         sortable: true,
         resizable: true,
-        formatter: this.detailLinkFormatter2,
+        formatter: this.detailNameLinkFormatter,
         getRowMetaData: data => data,
       },
       {
@@ -80,7 +80,7 @@ class DaemonList extends React.Component {
         name: `${intlObj.get(messages.stopYn)}`,
         visible: true,
         sortable: true,
-        formatter: this.detailLinkFormatter,
+        formatter: this.detailStopYNLinkFormatter,
         getRowMetaData: data => data,
       },
       {
@@ -89,7 +89,7 @@ class DaemonList extends React.Component {
         visible: true,
         sortable: true,
         resizable: true,
-        formatter: this.detailLinkFormatter,
+        formatter: this.detailScheduleLinkFormatter,
         getRowMetaData: data => data,
       },
       {
@@ -166,9 +166,27 @@ class DaemonList extends React.Component {
 
   detailLinkFormatter = val => <hltext onClick={() => this.handleDetailLinkClick(val.dependentValues.DAEMON_ID)}>{val.value}</hltext>;
 
-  detailLinkFormatter2 = val => {
+  detailNameLinkFormatter = val => {
     const linkRow = lang.get('NAME', val.dependentValues);
     return <hltext onClick={() => this.handleDetailLinkClick(val.dependentValues.DAEMON_ID)}>{linkRow}</hltext>;
+  };
+
+  detailStopYNLinkFormatter = val => {
+    const stopYN = val.value === 'Y' ? `${intlObj.get(messages.statusStop)}` : `${intlObj.get(messages.statusWork)}`;
+    return (
+      <hltext style={val.value === 'Y' ? { color: 'red' } : {}} onClick={() => this.handleDetailLinkClick(val.dependentValues.DAEMON_ID)}>
+        {stopYN}
+      </hltext>
+    );
+  };
+
+  detailScheduleLinkFormatter = val => {
+    const cronString = cronstrue.toString(val.value, { locale: lang.getLocale() });
+    return (
+      <hltext title={cronString} onClick={() => this.handleDetailLinkClick(val.dependentValues.DAEMON_ID)}>
+        {val.value}
+      </hltext>
+    );
   };
 
   statusFormatter = val => <format>{statusSwitch(val.dependentValues.STOP_YN)}</format>;

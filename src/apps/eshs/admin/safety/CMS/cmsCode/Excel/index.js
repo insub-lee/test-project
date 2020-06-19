@@ -37,7 +37,7 @@ class Excel extends Component {
       <ExcelDownloadComp
         isBuilder={false}
         fileName={`${excelNm}_${Moment().format('YYYY_MM_DD')}`}
-        className="testClassName"
+        btnSize="btn-sm"
         btnText="엑셀받기"
         sheetName={excelNm}
         columns={columns}

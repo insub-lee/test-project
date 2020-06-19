@@ -7,6 +7,7 @@ export const address = {
   registerIssueNote: `${baseUrl}registerIssueNote`,
   registerInspectionResult: `${baseUrl}registerInspectionResult`,
 };
+export const FIRE_CODE = 'fireHydrant';
 export const VIEW_TYPE = { INPUT: 'INPUT', VIEW: 'VIEW', MODIFY: 'MODIFY', LIST: 'LIST' };
 export const META_SEQ = {
   MODAL_LIST: 9281, // 신규등록 MODAL_LIST (목록PAGE)
@@ -16,8 +17,7 @@ export const META_SEQ = {
   INPUT_ISSUE_NOTE: 9504, // 이슈등록 페이지
   INPUT_INSPECTION: 9481, // 점검결과 등록
   LIST_USAGE_SEARCH: 9541, // 미사용 등록
-  // MODIFY_INSPECTION: 5122,
-  // VIEW_STATUS: 8781, 현황없음
+  ISSUE_NOTE: 9999,
 };
 export const VIEW_CHANGE_SEQ = {};
 
