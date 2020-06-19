@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import { Table, Input, DatePicker, Select, Popover, Checkbox, message } from 'antd';
+import { Table, Input, DatePicker, Select, Popover, Checkbox, message, Popconfirm } from 'antd';
 import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
@@ -193,7 +193,11 @@ class List extends Component {
         align: 'center',
         dataIndex: 'CONTANTS',
         width: '10%',
-        render: (text, record, index) => <StyledButton onClick={() => this.onDeleteArr(record, index)}>[-]</StyledButton>,
+        render: (text, record, index) => (
+          <Popconfirm title="삭제 하시겠습니까?" onConfirm={() => this.onDeleteArr(record, index)} okText="Yes" cancelText="No">
+            <StyledButton className="btn-light btn-first btn-xs">삭제</StyledButton>
+          </Popconfirm>
+        ),
       },
       {
         title: `내용`,
@@ -216,7 +220,11 @@ class List extends Component {
         align: 'center',
         dataIndex: 'CONTANTS',
         width: '10%',
-        render: (text, record, index) => <StyledButton onClick={() => this.onDeleteArr(record, index)}>[-]</StyledButton>,
+        render: (text, record, index) => (
+          <Popconfirm title="삭제 하시겠습니까?" onConfirm={() => this.onDeleteArr(record, index)} okText="Yes" cancelText="No">
+            <StyledButton className="btn-light btn-first btn-xs">삭제</StyledButton>
+          </Popconfirm>
+        ),
       },
       {
         title: `내용`,
@@ -228,7 +236,7 @@ class List extends Component {
     ];
     return (
       <StyledContentsWrapper>
-        <StyledCustomSearch>
+        <StyledCustomSearch className="search-wrapper-inline">
           <div className="search-input-area">
             <span className="text-label">날짜 선택</span>
             <AntdDatePicker
@@ -261,32 +269,32 @@ class List extends Component {
             </AntdSelect>
           </div>
           <div className="btn-area">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.searchList}>
+            <StyledButton className="btn-gray btn-first btn-sm" onClick={this.searchList}>
               검색
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onChangeData}>
-              저장
-            </StyledButton>
-            <StyledButton className="btn-primary btn-sm" onClick={() => message.warning('개발중입니다.')}>
-              출력
             </StyledButton>
           </div>
         </StyledCustomSearch>
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">근무자 현황</span>
           <AntdInput
-            style={{ width: '30%' }}
+            style={{ width: '35%' }}
             className="ant-input-inline ant-input-sm mr5"
             value={this.state.workerStatus}
             onChange={e => this.onChangeValue('workerStatus', e.target.value)}
           />
           <span className="textLabel">휴가자</span>
           <AntdInput
-            style={{ width: '30%' }}
+            style={{ width: '35%' }}
             className="ant-input-inline ant-input-sm mr5"
             value={this.state.vacationer}
             onChange={e => this.onChangeValue('vacationer', e.target.value)}
           />
+          <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onChangeData}>
+            저장
+          </StyledButton>
+          <StyledButton className="btn-gray btn-sm" onClick={() => message.warning('개발중입니다.')}>
+            출력
+          </StyledButton>
         </div>
         <AntdLineTable
           rowKey={listData && listData.TASK_SEQ}
@@ -294,16 +302,20 @@ class List extends Component {
           dataSource={listData}
           footer={() => <span>{`${(listData && listData.length) || 0} 건`}</span>}
         />
-        <div className="selSaveWrapper alignLeft">
-          <span>기타사항</span>
-          <StyledButton onClick={() => this.handlePlusArr(1)}>[+1]</StyledButton>
+        <div className="table-title" style={{ margin: '20px 5px 4px 0', display: 'inline-block' }}>
+          기타사항
         </div>
+        <StyledButton className="btn-primary btn-first btn-sm" style={{ float: 'right', margin: '20px 5px 4px 0' }} onClick={() => this.handlePlusArr(1)}>
+          추가
+        </StyledButton>
         <AntdLineTable columns={otherArrCol} dataSource={otherArr} pagination={false} footer={null} />
 
-        <div className="selSaveWrapper alignLeft">
-          <span>업무계획</span>
-          <StyledButton onClick={() => this.handlePlusArr(2)}>[+1]</StyledButton>
+        <div className="table-title" style={{ margin: '20px 5px 4px 0', display: 'inline-block' }}>
+          업무계획
         </div>
+        <StyledButton className="btn-primary btn-first btn-sm" style={{ float: 'right', margin: '20px 5px 4px 0' }} onClick={() => this.handlePlusArr(2)}>
+          추가
+        </StyledButton>
         <AntdLineTable columns={planArrCol} dataSource={planArr} pagination={false} footer={null} />
       </StyledContentsWrapper>
     );
