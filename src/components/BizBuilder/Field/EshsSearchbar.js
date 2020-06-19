@@ -97,7 +97,7 @@ class CommonSearchbar extends React.Component {
             <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('S')}>
               등록
             </StyledButton>
-            <StyledButton className="btn-primary btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            <StyledButton className="btn-light btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
           </StyledButtonWrapper>
@@ -109,13 +109,13 @@ class CommonSearchbar extends React.Component {
             <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('M')}>
               저장
             </StyledButton>
-            <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('D')}>
-              삭제
-            </StyledButton>
             <StyledButton className="btn-primary btn-first btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
               신규등록
             </StyledButton>
-            <StyledButton className="btn-primary btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            <StyledButton className="btn-light btn-first btn-xs" onClick={() => this.onChangeSave('D')}>
+              삭제
+            </StyledButton>
+            <StyledButton className="btn-light btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
           </StyledButtonWrapper>

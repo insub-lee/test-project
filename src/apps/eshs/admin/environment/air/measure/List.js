@@ -145,10 +145,10 @@ class List extends Component {
             </AntdSelect>
           </div>
           <div className="btn-area">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.isSearch()}>
+            <StyledButton className="btn-gray btn-first btn-sm" onClick={() => this.isSearch()}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary btn-sm" onClick={() => this.isExcelUpload()}>
+            <StyledButton className="btn-gray btn-sm" onClick={() => this.isExcelUpload()}>
               엑셀 올리기
             </StyledButton>
           </div>
