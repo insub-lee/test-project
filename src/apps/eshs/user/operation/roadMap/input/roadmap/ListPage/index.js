@@ -1,13 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal, Select } from 'antd';
+import moment from 'moment';
+
+import { Table, Modal, Select, InputNumber, message } from 'antd';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 
+const AntdInputNumber = StyledInputNumber(InputNumber);
 const AntdModal = StyledAntdModal(Modal);
 const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
@@ -18,6 +24,8 @@ class ListPage extends React.Component {
       dataSource: [],
       categories: [],
       selectedCategory: 387,
+      modalVisible: false,
+      requestValue: {},
     };
   }
 
@@ -55,12 +63,19 @@ class ListPage extends React.Component {
     {
       title: '입력여부',
       align: 'center',
-      render: (text, record, index) => (
-        <>
-          <StyledButton className="btn-primary btn-sm mr5">완료</StyledButton>
-          <StyledButton className="btn-primary btn-sm">수정</StyledButton>
-        </>
-      ),
+      render: (text, record) =>
+        record.IS_CONFIRMED === 'Y' ? (
+          <span>입력완료</span>
+        ) : (
+          <>
+            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.handleConfirmClick(record)}>
+              완료
+            </StyledButton>
+            <StyledButton className="btn-primary btn-sm" onClick={() => this.handleRowClick(record)}>
+              수정
+            </StyledButton>
+          </>
+        ),
       width: '15%',
     },
     {
@@ -73,6 +88,7 @@ class ListPage extends React.Component {
   componentDidMount() {
     this.getDataSource();
     this.getCategories();
+    this.createYearList();
   }
 
   getDataSource = () => {
@@ -91,8 +107,12 @@ class ListPage extends React.Component {
 
   setDataSource = () => {
     const { extraApiData } = this.props;
-    this.setState({
-      dataSource: (extraApiData.dataSource && extraApiData.dataSource.roadmap) || [],
+    this.setState(() => {
+      const dataSource = (extraApiData.dataSource && extraApiData.dataSource.roadmap) || [];
+      return {
+        dataSource: dataSource || [],
+        nextDate: (dataSource[0] && dataSource[0].CHK_DATE && moment(dataSource[0].CHK_DATE).add(1, 'month')) || moment(),
+      };
     });
   };
 
@@ -117,29 +137,120 @@ class ListPage extends React.Component {
     });
   };
 
-  handleSelectChange = value => {
+  handleSelectChange = (key, value) => {
     this.setState({
-      selectedCategory: value,
+      [key]: value,
     });
   };
 
   handleAddClick = () => {
-    console.debug('@@@@ADD@@@@');
+    this.setState({ modalVisible: true });
+  };
+
+  createYearList = () => {
+    const initYear = moment()
+      .subtract(5, 'year')
+      .format('YYYY');
+    const endYear = moment().format('YYYY');
+    const yearList = [];
+    for (let i = Number(initYear); i <= Number(endYear); i += 1) {
+      yearList.push(i);
+    }
+
+    return yearList;
+  };
+
+  handleModalClose = () => {
+    this.setState({
+      modalVisible: false,
+      requestValue: {},
+      isModified: false,
+    });
+  };
+
+  handleSaveClick = () => {
+    const { requestValue, selectedCategory } = this.state;
+    const { sagaKey, submitExtraHandler, profile } = this.props;
+
+    const submitCallbackFunc = () => {
+      this.getDataSource();
+      this.handleModalClose();
+    };
+
+    this.setState(
+      prevState => ({
+        requestValue: Object.assign(prevState.requestValue, {
+          CHK_DATE: moment(prevState.nextDate).unix(),
+          REG_USER_ID: profile.USER_ID,
+          REG_USER_NAME: profile.NAME_KOR,
+          UPD_USER_ID: profile.USER_ID,
+          UPD_USER_NAME: profile.NAME_KOR,
+          CATEGORY: selectedCategory,
+        }),
+      }),
+      () =>
+        submitExtraHandler(sagaKey, 'POST', `/api/eshs/v1/common/selectinputroadmap`, requestValue, (id, response) =>
+          callBackAfterPost(id, response, submitCallbackFunc),
+        ),
+    );
+  };
+
+  handleInputChange = (key, value) => {
+    console.debug(this.state.dataSource, { [key]: value });
+    this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { [key]: value }) }));
+  };
+
+  handleRowClick = record => {
+    this.setState(prevState => ({
+      modalVisible: true,
+      requestValue: Object.assign(prevState.requestValue, record),
+      isModified: true,
+    }));
+  };
+
+  handleConfirmClick = record => {
+    const { sagaKey, submitExtraHandler } = this.props;
+    const taskSeq = { CP_TASK_SEQ: record.CP_TASK_SEQ, GP_TASK_SEQ: record.GP_TASK_SEQ };
+    const submitCallbackFunc = () => {
+      this.getDataSource();
+      this.handleModalClose();
+    };
+
+    submitExtraHandler(sagaKey, 'PUT', '/api/eshs/v1/common/updateroadmapisconfirmed', taskSeq, (id, response) =>
+      callBackAfterPost(id, response, submitCallbackFunc),
+    );
+  };
+
+  handleModifyClick = () => {
+    const { requestValue } = this.state;
+    const { sagaKey, submitExtraHandler } = this.props;
+    console.debug(requestValue);
   };
 
   render() {
     const { columns } = this;
-    const { handleSelectChange, handleAddClick } = this;
-    const { dataSource, categories } = this.state;
+    const { handleSelectChange, handleAddClick, createYearList, handleModalClose, handleSaveClick, handleInputChange, handleModifyClick } = this;
+    const { dataSource, categories, modalVisible, nextDate, requestValue, isModified } = this.state;
     return (
       <>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
             <div className="search-input-area">
               <span className="text-label">항목</span>
-              <AntdSelect className="select-mid" defaultValue={387} onChange={value => handleSelectChange(value)} style={{ width: '15%' }}>
+              <AntdSelect className="select-mid" defaultValue={387} onChange={value => handleSelectChange('selectedCategory', value)} style={{ width: '15%' }}>
                 {categories.map(category => (
                   <Select.Option value={category.NODE_ID}>{category.NAME_KOR}</Select.Option>
+                ))}
+              </AntdSelect>
+              <span className="text-label">연도</span>
+              <AntdSelect
+                className="select-mid"
+                defaultValue={Number(moment().format('YYYY'))}
+                onChange={value => handleSelectChange('selectedYear', value)}
+                style={{ width: '15%' }}
+              >
+                {createYearList().map(year => (
+                  <Select.Option value={year}>{year}년</Select.Option>
                 ))}
               </AntdSelect>
             </div>
@@ -149,7 +260,55 @@ class ListPage extends React.Component {
               </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
-          <AntdTable columns={columns} dataSource={dataSource} />
+          <AntdTable columns={columns} dataSource={dataSource} pagination={{ pageSize: 12 }} />
+          <AntdModal visible={modalVisible} title={isModified ? 'Roadmap 수정' : 'Roadmap 등록'} onCancel={handleModalClose} footer={null} destroyOnClose>
+            <StyledContentsWrapper>
+              <StyledHtmlTable>
+                <div className="tableWrapper">
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th>연도</th>
+                        <td>{isModified ? moment(requestValue.CHK_DATE).format('YYYY') : moment(nextDate).format('YYYY')}년</td>
+                      </tr>
+                      <tr>
+                        <th>월</th>
+                        <td>{isModified ? moment(requestValue.CHK_DATE).format('MM') : moment(nextDate).format('MM')}월</td>
+                      </tr>
+                      <tr>
+                        <th>청주</th>
+                        <td>
+                          <AntdInputNumber
+                            className="ant-input-number-sm"
+                            value={requestValue.CP_VALUE}
+                            onChange={value => handleInputChange('CP_VALUE', value)}
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>구미</th>
+                        <td>
+                          <AntdInputNumber
+                            className="ant-input-number-sm"
+                            value={requestValue.GP_VALUE}
+                            onChange={value => handleInputChange('GP_VALUE', value)}
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </StyledHtmlTable>
+              <div style={{ textAlign: 'center', padding: '10px' }}>
+                <StyledButton className="btn-primary btn-sm mr5" onClick={isModified ? handleModifyClick : handleSaveClick}>
+                  {isModified ? '수정' : '저장'}
+                </StyledButton>
+                <StyledButton className="btn-light btn-sm" onClick={handleModalClose}>
+                  취소
+                </StyledButton>
+              </div>
+            </StyledContentsWrapper>
+          </AntdModal>
         </StyledContentsWrapper>
       </>
     );
@@ -160,6 +319,8 @@ ListPage.propTypes = {
   sagaKey: PropTypes.string,
   getExtraApiData: PropTypes.func,
   extraApiData: PropTypes.object,
+  submitExtraHandler: PropTypes.func,
+  profile: PropTypes.object,
 };
 
 ListPage.defaultProps = {};
