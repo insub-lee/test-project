@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
-import { InputNumber } from 'antd';
+import { InputNumber, Radio } from 'antd';
 import { debounce } from 'lodash';
 
 class ComponentConfig extends Component {
@@ -36,6 +36,16 @@ class ComponentConfig extends Component {
             min={0}
             onChange={value => this.handleChangeViewCompData('listMetaSeq', value)}
           />
+        </div>
+        <div className="popoverItem popoverItemInput">
+          <span className="spanLabel">Revision 사용여부</span>
+          <Radio.Group
+            onChange={e => this.handleChangeViewCompData('useRevision', e.target.value)}
+            value={(configInfo && configInfo.property && configInfo.property.useRevision) || 'Y'}
+          >
+            <Radio value="Y">사용</Radio>
+            <Radio value="N">미사용</Radio>
+          </Radio.Group>
         </div>
       </>
     );

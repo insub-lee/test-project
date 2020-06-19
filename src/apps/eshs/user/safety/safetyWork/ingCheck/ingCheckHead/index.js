@@ -44,7 +44,7 @@ class IngCheckHead extends Component {
                 <td colSpan={3}>
                   <AntdDatePicker
                     className="ant-picker-xs"
-                    style={{ width: '200px' }}
+                    style={{ width: '120px' }}
                     value={ingCheckHead.CHECK_DT && ingCheckHead.CHECK_DT !== '' ? moment(ingCheckHead.CHECK_DT) : undefined}
                     onChange={e => {
                       if (e === null) {
@@ -77,6 +77,9 @@ class IngCheckHead extends Component {
                   >
                     <Radio value="양호">양호</Radio>
                     <Radio value="불합리"> 불합리</Radio>
+                    <Radio value="제재" disabled>
+                      제재
+                    </Radio>
                   </Radio.Group>
                 </td>
               </tr>
@@ -87,7 +90,7 @@ class IngCheckHead extends Component {
                 <td colSpan={3}>
                   <AntdSearch
                     className="input-search-xs"
-                    style={{ width: '200px' }}
+                    style={{ width: '120px' }}
                     value={ingCheckHead.CHECK_EMP_NO ? ingCheckHead.CHECK_EMP_NO : ''}
                     onClick={() => handleModal('userSelect', true)}
                     onSearch={() => handleModal('userSelect', true)}
@@ -100,7 +103,7 @@ class IngCheckHead extends Component {
                 <td colSpan={3}>
                   <AntdInput
                     className="ant-input-xs ant-input-inline"
-                    style={{ width: '200px' }}
+                    style={{ width: '100px' }}
                     value={ingCheckHead.CHECK_CMPNY_CD ? ingCheckHead.CHECK_CMPNY_CD : ''}
                     readOnly
                   />
