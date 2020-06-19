@@ -194,7 +194,7 @@ class List extends Component {
         children: [
           {
             title: (
-              <AntdSelect className="select-xs" style={{ width: 80 }} onChange={value => this.changeValue('ref01', value)} value={ref01}>
+              <AntdSelect className="select-xs" style={{ width: 80 }} allowClear onChange={value => this.changeValue('ref01', value)} value={ref01}>
                 {selectData && selectData.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
               </AntdSelect>
             ),
@@ -210,7 +210,7 @@ class List extends Component {
         children: [
           {
             title: (
-              <AntdSelect className="select-xs" style={{ width: 150 }} onChange={value => this.changeValue('ref02', value)} value={ref02}>
+              <AntdSelect className="select-xs" style={{ width: 150 }} allowClear onChange={value => this.changeValue('ref02', value)} value={ref02}>
                 <Option value="GAS">GAS</Option>
                 <Option value="CHEMICAL">CHEMICAL</Option>
               </AntdSelect>
@@ -259,11 +259,9 @@ class List extends Component {
     ];
     return (
       <ContentsWrapper>
-        <StyledCustomSearch className="search-wrapper-inline">
-          <div className="btn-area">
-            <ExcelDownloader dataList={dangerList} excelNm="MSDS 물질 코드" />
-          </div>
-        </StyledCustomSearch>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <ExcelDownloader dataList={dangerList} excelNm="MSDS 물질 코드" />
+        </StyledButtonWrapper>
         <AntdLineTable
           rowKey={`${dangerList && dangerList.MAJOR_CD}_${dangerList && dangerList.MINOR_CD}`}
           columns={columns}

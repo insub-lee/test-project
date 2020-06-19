@@ -299,9 +299,11 @@ class List extends Component {
             <StyledButton className="btn-gray mr5 btn-sm" onClick={this.selectCode}>
               검색
             </StyledButton>
-            <ExcelDownloader dataList={excelData} excelNm={excelNm} />
           </div>
         </StyledCustomSearch>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <ExcelDownloader dataList={excelData} excelNm={excelNm} />
+        </StyledButtonWrapper>
         <AntdTable
           rowKey={listData.NODE_ID}
           key={listData.NODE_ID}

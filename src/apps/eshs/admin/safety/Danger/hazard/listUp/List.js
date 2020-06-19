@@ -4,6 +4,7 @@ import { getTreeFromFlatData } from 'react-sortable-tree';
 import { Table, TreeSelect, Select, message, Modal } from 'antd';
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
@@ -103,8 +104,30 @@ class List extends Component {
     const {
       result: { listUp },
     } = this.props;
+    const { aotList, aocList, tableFindList } = this.state;
     if (listUp && listUp.list && listUp.list.length > 0) {
-      this.setState({ listData: listUp.list });
+      const excelData = listUp.list.map(item => ({
+        ...item,
+        SDIV_ID:
+          tableFindList.find(find => find.NODE_ID === Number(item.SDIV_ID)) && tableFindList.find(find => find.NODE_ID === Number(item.SDIV_ID)).NAME_KOR,
+        PLACE_ID:
+          tableFindList.find(find => find.NODE_ID === Number(item.PLACE_ID)) && tableFindList.find(find => find.NODE_ID === Number(item.PLACE_ID)).NAME_KOR,
+        PROCESS_ID:
+          tableFindList.find(find => find.NODE_ID === Number(item.PROCESS_ID)) && tableFindList.find(find => find.NODE_ID === Number(item.PROCESS_ID)).NAME_KOR,
+        EQUIP_ID:
+          tableFindList.find(find => find.NODE_ID === Number(item.EQUIP_ID)) && tableFindList.find(find => find.NODE_ID === Number(item.EQUIP_ID)).NAME_KOR,
+        AOC_ID: Array.isArray(item.AOC_ID)
+          ? item.AOC_ID.map(find => aocList && aocList.find(i => i.NODE_ID === find) && aocList.find(i => i.NODE_ID === find).NAME_KOR).toString()
+          : JSON.parse(item.AOC_ID) &&
+            JSON.parse(item.AOC_ID)
+              .map(find => aocList && aocList.find(i => i.NODE_ID === find) && aocList.find(i => i.NODE_ID === find).NAME_KOR)
+              .toString(),
+        AOT_ID:
+          item.AOT_ID === 30450
+            ? `${aotList && aotList.find(i => i.NODE_ID === item.AOT_ID) && aotList.find(i => i.NODE_ID === item.AOT_ID).NAME_KOR}(${item.OTHER_CASE})`
+            : aotList && aotList.find(i => i.NODE_ID === item.AOT_ID) && aotList.find(i => i.NODE_ID === item.AOT_ID).NAME_KOR,
+      }));
+      this.setState({ listData: listUp.list, excelData });
     } else {
       message.warning('검색 데이터가 없습니다.');
     }
@@ -146,7 +169,7 @@ class List extends Component {
   };
 
   render() {
-    const { nData, yearList, listData, aotList, aocList, tableFindList } = this.state;
+    const { nData, yearList, listData, aotList, aocList, tableFindList, excelData } = this.state;
     const columns = [
       {
         title: '구분',
@@ -234,9 +257,11 @@ class List extends Component {
             <StyledButton className="btn-primary btn-first btn-sm" onClick={this.searchList}>
               검색
             </StyledButton>
-            {listData && listData.length > 0 && <ExcelDownloader dataList={listData} excelNm="위험요인List-Up" />}
           </div>
         </StyledCustomSearch>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          {excelData && excelData.length > 0 && <ExcelDownloader dataList={excelData} excelNm="위험요인List-Up" />}
+        </StyledButtonWrapper>
         <AntdLineTable
           rowKey={listData && `${listData.REG_NO}_${listData.SEQ}`}
           key={listData && `${listData.REG_NO}_${listData.SEQ}`}

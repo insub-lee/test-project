@@ -13,6 +13,7 @@ import StyledAntdModal from 'components/BizBuilder/styled//Modal/StyledAntdModal
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import ExcelDownloader from './Excel';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -181,9 +182,9 @@ class List extends Component {
           <StyledButton className="btn-gray btn-first btn-sm" onClick={() => message.warning('개발중입니다.')}>
             출력
           </StyledButton>
-          <StyledButton className="btn-gray btn-sm" onClick={() => message.warning('개발중입니다.')}>
-            엑셀 받기
-          </StyledButton>
+          {listData && listData.list && listData.list.length > 0 && (
+            <ExcelDownloader dataList={listData.list} excelNm={`${rangeYn ? '기간별' : '월별'} 업무일지`} />
+          )}
         </StyledButtonWrapper>
 
         <StyledHtmlTable>

@@ -8,7 +8,7 @@ import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCusto
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
-import StyledModalWrapper from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledModalWrapper from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 
@@ -200,7 +200,7 @@ class List extends Component {
             />
           </div>
           <div className="btn-area">
-            <StyledButton className="btn-primary btn-sm" onClick={() => this.isSearch()}>
+            <StyledButton className="btn-gray btn-sm" onClick={() => this.isSearch()}>
               검색
             </StyledButton>
           </div>
@@ -266,6 +266,7 @@ class List extends Component {
         </StyledHtmlTable>
         <AntdModal width={800} visible={this.state.isModal} title="Gas 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
           <AntdTable
+            className="table-wrapper"
             dataSource={gasList}
             columns={this.columns}
             onRow={record => ({
