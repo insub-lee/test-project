@@ -47,7 +47,7 @@ class List extends Component {
     setFormData(id, { ...formData, userModalType: 'UPDATE', selectedUser: e.rowData, userModal: true });
   };
 
-  noRowsRenderer = () => <div className="noRows">0 명</div>;
+  noRowsRenderer = () => <div className="noRows"></div>;
 
   getColumns = () => [
     { label: '소속', dataKey: 'BELONG', width: 350, ratio: 31 },
