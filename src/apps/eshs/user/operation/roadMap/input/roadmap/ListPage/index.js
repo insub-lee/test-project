@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import { Table, Modal, Select, InputNumber } from 'antd';
+import { Table, Modal, Select, InputNumber, Popconfirm } from 'antd';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
@@ -70,9 +70,9 @@ class ListPage extends React.Component {
           <span>입력완료</span>
         ) : (
           <>
-            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.handleConfirmClick(record)}>
-              완료
-            </StyledButton>
+            <Popconfirm title="완료하시겠습니까?" onConfirm={() => this.handleConfirmClick(record)} onCancel={null}>
+              <StyledButton className="btn-primary btn-sm mr5">완료</StyledButton>
+            </Popconfirm>
             <StyledButton className="btn-primary btn-sm" onClick={() => this.handleRowClick(record)}>
               수정
             </StyledButton>
