@@ -7,6 +7,7 @@ import { Spin, Modal } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -19,6 +20,8 @@ import ListPage from './viewComponent/ListPage';
 import SearchComp from './viewComponent/SearchComp';
 import ModalPopup from './viewComponent/ModalPopup';
 import ExtraBuilder from './viewComponent/ExtraBuilder';
+
+const AntdModal = StyledAntdModal(Modal);
 
 class BizBuilderBase extends React.Component {
   constructor(props) {
@@ -222,6 +225,7 @@ class BizBuilderBase extends React.Component {
       ViewCustomButtonsByModal,
       compProps,
       conditional,
+      modalTitle,
     } = this.props;
     const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData, isLoading } = this.state;
 
@@ -230,13 +234,14 @@ class BizBuilderBase extends React.Component {
         <Spin size="large" spinning={isLoading}>
           {this.componentRenderer()}
         </Spin>
-        <Modal
+        <AntdModal
           centered
           destroyOnClose
           footer={null}
           maskClosable={false}
           visible={isShowBuilderModal}
           {...builderModalSetting}
+          title={modalTitle || <span style={{ color: '#4491e0' }}>-</span>}
           onCancel={() => this.changeBuilderModalState(false, 'INPUT', -1, -1)}
         >
           <ModalPopup
@@ -254,7 +259,7 @@ class BizBuilderBase extends React.Component {
             compProps={compProps}
             conditional={conditional}
           />
-        </Modal>
+        </AntdModal>
       </div>
     );
   }
