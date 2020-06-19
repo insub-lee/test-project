@@ -1,14 +1,14 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, Modal } from 'antd';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
-const AntdModal = StyledContentsModal(Modal);
+const AntdModal = StyledAntdModalPad(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
 
 class UnitComp extends React.Component {
@@ -108,12 +108,12 @@ class UnitComp extends React.Component {
         <AntdSearch
           value={colData}
           placeholder={CONFIG.property.placeholder}
-          className={CONFIG.property.className || ''}
+          className={`input-search-sm ${CONFIG.property.className || ''}`}
           style={{ width: '100%' }}
           onClick={this.handleModalVisible}
           onSearch={this.handleModalVisible}
         />
-        <AntdModal title="* 단위" visible={unitModal} width={700} height={400} onCancel={this.handleModalVisible} footer={[null]}>
+        <AntdModal title="* 단위" visible={unitModal} width={700} height={400} onCancel={this.handleModalVisible} footer={null}>
           <StyledHtmlTable>
             <table>
               <colgroup>
@@ -132,8 +132,8 @@ class UnitComp extends React.Component {
               <tbody>{modalGrid}</tbody>
             </table>
           </StyledHtmlTable>
-          <StyledButtonWrapper className="btn-wrap-center">
-            <StyledButton className="btn-primary" onClick={this.handleModalVisible}>
+          <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+            <StyledButton className="btn-light btn-sm" onClick={this.handleModalVisible}>
               취소
             </StyledButton>
           </StyledButtonWrapper>
