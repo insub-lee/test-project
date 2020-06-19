@@ -198,6 +198,7 @@ export const makeAvaterImg = data => {
     default:
       break;
   }
+  // 신호등
   if (gradeBiman === '비만' || gradeGo === '1등급' || gradeGan === '1등급' || gradeGoji === '1등급' || gradeDang === '1등급' || gradeBin === '1등급') {
     avater.signal = Re;
   } else if (gradeGo === '2등급' || gradeGan === '2등급' || gradeGoji === '2등급' || gradeDang === '2등급' || gradeBin === '2등급') {

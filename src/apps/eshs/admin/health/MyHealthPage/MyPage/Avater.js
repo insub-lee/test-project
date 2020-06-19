@@ -26,18 +26,39 @@ class Avater extends Component {
               <td height={1}></td>
             </tr>
             <tr>
-              <td style={{ backgroundImage: `url(${avaterImgs.head})`, width: '353', height: '113' }}>
-                <div style={{ width: '353px', height: '113px', position: 'relative', left: '0px', top: '0px' }}>
+              <td
+                style={
+                  avaterImgs.GENDER === 'm'
+                    ? {
+                        // 남자(style 다르게 적용시 이런식으로 구분 하시면 됩니다.)
+                        backgroundImage: `url(${avaterImgs.head})`,
+                        width: '353',
+                        height: '113',
+                      }
+                    : {
+                        // 여자
+                        backgroundImage: `url(${avaterImgs.head})`,
+                        width: '353',
+                        height: '128',
+                      }
+                }
+              >
+                {/* 이렇게도 가능 */}
+                <div style={{ width: '353px', height: avaterImgs.GENDER === 'm' ? '113px' : '128px', position: 'relative', left: '0px', top: '0px' }}>
                   <div
-                    style={{
-                      width: '103px',
-                      height: '31px',
-                      position: 'absolute',
-                      left: '10px',
-                      top: '10px',
-                      zIndex: '2',
-                      filter: 'Alpha(Opacity=100) revealTrans(transition=23,duration=0.5) blendTrans(duration=0.5)',
-                    }}
+                    style={
+                      avaterImgs.GENDER === 'M' // 남자
+                        ? {
+                            width: '103px',
+                            height: '31px',
+                            position: 'absolute',
+                            left: '10px',
+                            top: '10px',
+                            zIndex: '2',
+                            filter: 'Alpha(Opacity=100) revealTrans(transition=23,duration=0.5) blendTrans(duration=0.5)',
+                          }
+                        : {} // 여자
+                    }
                   >
                     <div
                       style={{
