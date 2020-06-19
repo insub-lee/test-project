@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Modal, Button, Select } from 'antd';
+import { Modal, Button, Select, Spin } from 'antd';
 import styled from 'styled-components';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
@@ -9,8 +9,6 @@ import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdBut
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import IngCheckViewer from '../../ingCheck';
@@ -33,6 +31,7 @@ class ResultReportPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isSearching: false,
       modalType: '',
       modalTitle: '',
       modalVisible: false,
@@ -59,6 +58,9 @@ class ResultReportPage extends Component {
   onSearch = () => {
     const { searchValues } = this.state;
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    this.setState({
+      isSearching: true,
+    });
     const apiInfo = {
       key: 'getResultReport',
       type: 'POST',
@@ -72,6 +74,7 @@ class ResultReportPage extends Component {
   onSearchCallback = (id, response) => {
     const { report } = response;
     this.setState({
+      isSearching: false,
       reportData: {
         year: report.year,
         month: report.month,
@@ -140,42 +143,43 @@ class ResultReportPage extends Component {
   };
 
   render() {
-    const { modalType, modalTitle, modalVisible, searchValues, selectedWork, reportData } = this.state;
-    console.debug('리포트화면 - 스탯', this.state);
-    console.debug('리포트화면 - 프롭스', this.props);
+    const { modalType, modalTitle, modalVisible, searchValues, selectedWork, reportData, isSearching } = this.state;
     return (
       <Styled>
         <StyledSearchWrapper>
-          <div className="search-group-layer">
-            <AntdSelect className="select-xs" value={searchValues.SITE} onChange={value => this.handleChangeSearchValue('SITE', value)}>
-              <Option value="청주">청주</Option>
-              <Option value="구미">구미</Option>
-            </AntdSelect>
-            <span>년도</span>
-            {this.renderYearSelect()}
-            <AntdSelect
-              className="select-xs"
-              style={{ width: '80px' }}
-              value={searchValues.MONTH}
-              onChange={value => this.handleChangeSearchValue('MONTH', value)}
-            >
-              <Option value="01">1</Option>
-              <Option value="02">2</Option>
-              <Option value="03">3</Option>
-              <Option value="04">4</Option>
-              <Option value="05">5</Option>
-              <Option value="06">6</Option>
-              <Option value="07">7</Option>
-              <Option value="08">8</Option>
-              <Option value="09">9</Option>
-              <Option value="10">10</Option>
-              <Option value="11">11</Option>
-              <Option value="12">12</Option>
-            </AntdSelect>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.onSearch()} style={{ marginBottom: '5px' }}>
-              검색
-            </StyledButton>
-          </div>
+          <Spin tip="검색중..." spinning={isSearching}>
+            <div className="search-group-layer">
+              <span style={{ fontSize: '12px', margin: '0px 10px 0px 10px' }}>지역</span>
+              <AntdSelect className="select-xs" value={searchValues.SITE} onChange={value => this.handleChangeSearchValue('SITE', value)}>
+                <Option value="청주">청주</Option>
+                <Option value="구미">구미</Option>
+              </AntdSelect>
+              <span style={{ fontSize: '12px', margin: '0px 10px 0px 10px' }}>년도 / 월</span>
+              {this.renderYearSelect()}
+              <AntdSelect
+                className="select-xs"
+                style={{ width: '80px' }}
+                value={searchValues.MONTH}
+                onChange={value => this.handleChangeSearchValue('MONTH', value)}
+              >
+                <Option value="01">1</Option>
+                <Option value="02">2</Option>
+                <Option value="03">3</Option>
+                <Option value="04">4</Option>
+                <Option value="05">5</Option>
+                <Option value="06">6</Option>
+                <Option value="07">7</Option>
+                <Option value="08">8</Option>
+                <Option value="09">9</Option>
+                <Option value="10">10</Option>
+                <Option value="11">11</Option>
+                <Option value="12">12</Option>
+              </AntdSelect>
+              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.onSearch()} style={{ marginLeft: '10px' }}>
+                검색
+              </StyledButton>
+            </div>
+          </Spin>
         </StyledSearchWrapper>
         <ContentsWrapper>
           <CustomTableStyled>
