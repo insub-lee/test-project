@@ -368,7 +368,7 @@ class DangerHazardSubComp extends React.Component {
             추가
           </StyledButton>
           <Popconfirm title="정말로 삭제하시겠습니까?" onConfirm={this.deleteList} okText="Yes" cancelText="No">
-            <StyledButton className="btn-primary btn-first btn-sm">삭제</StyledButton>
+            <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
           </Popconfirm>
         </StyledButtonWrapper>
         <AntdTable
