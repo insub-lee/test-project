@@ -106,7 +106,28 @@ class List extends Component {
         url: `/api/eshs/v1/common/eshsCMS?JOURNAL_DATE=${moment(journalDate).format('YYYY-MM-DD')}`,
       },
     ];
-    getCallDataHandler(id, apiAry, this.initData);
+    getCallDataHandler(id, apiAry, this.searchData);
+  };
+
+  searchData = () => {
+    const {
+      result: { listData, detailData },
+    } = this.props;
+    if ((listData.list && listData.list.length > 0) || (detailData.list && detailData.list.length > 0)) {
+      const workerStatus = (detailData && detailData.worker && detailData.worker.WORKER_STATUS) || '';
+      const vacationer = (detailData && detailData.worker && detailData.worker.VACATIONER) || '';
+      let otherArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 1);
+      let planArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 2);
+      if (otherArr.length < 1) {
+        otherArr = [{ CONTANTS: '', CONTANTS_TYPE: 1, UNIQUENESS: -1 }];
+      }
+      if (planArr.length < 1) {
+        planArr = [{ CONTANTS: '', CONTANTS_TYPE: 2, UNIQUENESS: -1 }];
+      }
+      this.setState({ listData: (listData && listData.list) || [], workerStatus, vacationer, otherArr, planArr });
+    } else {
+      message.warning('검색된 데이터가 없습니다.');
+    }
   };
 
   onChangeData = () => {
