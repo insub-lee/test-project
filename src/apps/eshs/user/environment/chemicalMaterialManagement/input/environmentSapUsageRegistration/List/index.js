@@ -1,16 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, message } from 'antd';
+import { Input, InputNumber } from 'antd';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
-import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
+import { callBackAfterPut } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 
 const AntdSearch = StyledSearchInput(Input.Search);
 class List extends React.Component {
@@ -140,7 +141,6 @@ class List extends React.Component {
       handleSearchClick,
       handleResetClick,
       handleMasterModifyClick,
-      isSelectSapMaterial,
       getMaterialList,
     } = this;
     const { requestValue, visible } = this.state;
@@ -158,16 +158,16 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <div className="btn-area">
-                <StyledButton className="btn-primary btn-first btn-sm" onClick={handleMasterModifyClick}>
-                  수정
-                </StyledButton>
-                <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
-                  초기화
-                </StyledButton>
-              </div>
             </div>
           </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary mr5 btn-sm" onClick={handleMasterModifyClick}>
+              수정
+            </StyledButton>
+            <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
+              초기화
+            </StyledButton>
+          </StyledButtonWrapper>
           <StyledHtmlTable>
             <table>
               <colgroup>
