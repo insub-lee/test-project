@@ -7,13 +7,14 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-community';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import './styled.css';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 
 import moment from 'moment';
 
-const { MonthPicker } = DatePicker;
+const AntdPicker = StyledDatePicker(DatePicker.MonthPicker);
 class List extends Component {
   // 날짜 바꿔줄 때 마다 입력값 초기화해야 함
   constructor(props) {
@@ -24,12 +25,7 @@ class List extends Component {
       isDisabled: true,
       endPlaceholder: '기준일을 먼저 선택하세요.',
       columnDefs: this.columnDefs,
-      gridOptions: {
-        defaultColDef: {
-          width: 100,
-          resizable: true,
-        },
-      },
+      gridOptions: {},
       filteredList: [],
       defaultColDef: {
         width: 120,
@@ -44,7 +40,7 @@ class List extends Component {
       field: 'category',
       filter: true,
       // sorter: true,
-      width: 100,
+      width: 125,
       pinned: 'left',
       rowSpan: () => 3,
       cellClassRules: { 'cell-span': "value=== 'WF 생산량 (장)'" },
@@ -165,34 +161,38 @@ class List extends Component {
   render() {
     const { isDisabled, defaultColDef, filteredList, gridOptions, columnDefs, startMonth, endMonth, endPlaceholder } = this.state;
     return (
-      <ContentsWrapper>
-        <div style={{ margin: '5px' }}>
-          <div className="selSaveWrapper alignLeft">
-            <span style={{ marginRight: '10px' }}>기간 별 검색</span>
-            <MonthPicker
-              placeholder="기준일을 선택하세요."
-              value={startMonth}
-              onChange={e => this.setState({ startMonth: e, isDisabled: false, endPlaceholder: '종료일을 선택하세요.' })}
-              style={{ marginRight: '5px' }}
-              format="Y년 MMM"
-            />
-            {'  ~  '}
-            <MonthPicker
-              disabled={isDisabled}
-              value={endMonth}
-              disabledDate={this.disabledMonth}
-              onChange={this.handleDateChange}
-              placeholder={endPlaceholder}
-              style={{ marginRight: '10px', marginLeft: '5px' }}
-              format="Y년 MMM"
-            />
-            <StyledButton className="btn-primary" onClick={this.handleFilterReset}>
-              초기화
-            </StyledButton>
+      <StyledContentsWrapper>
+        <StyledCustomSearchWrapper>
+          <div style={{ margin: '5px' }}>
+            <div className="search-input-area">
+              <span className="text-label">기간 별 검색</span>
+              <AntdPicker
+                className="ant-picker-sm"
+                placeholder="기준일을 선택하세요."
+                value={startMonth}
+                onChange={e => this.setState({ startMonth: e, isDisabled: false, endPlaceholder: '종료일을 선택하세요.' })}
+                style={{ marginRight: '5px' }}
+                format="Y년 MMM"
+              />
+              {'  ~  '}
+              <AntdPicker
+                className="ant-picker-sm"
+                disabled={isDisabled}
+                value={endMonth}
+                disabledDate={this.disabledMonth}
+                onChange={this.handleDateChange}
+                placeholder={endPlaceholder}
+                style={{ marginRight: '10px', marginLeft: '5px' }}
+                format="Y년 MMM"
+              />
+              <StyledButton className="btn-primary" onClick={this.handleFilterReset}>
+                초기화
+              </StyledButton>
+            </div>
           </div>
-        </div>
+        </StyledCustomSearchWrapper>
         <div style={{ width: '100%', height: '100%' }}>
-          <div className="ag-theme-balham tableWrapper" style={{ height: '560px' }}>
+          <div className="ag-theme-balham" style={{ height: '400px' }}>
             <AgGridReact
               defaultColDef={defaultColDef}
               rowData={filteredList}
@@ -203,7 +203,9 @@ class List extends Component {
             />
           </div>
         </div>
-      </ContentsWrapper>
+        <div className="div-comment div-comment-antd">WF생산량(In2)=WF생산량(장)*4*4*3.14</div>
+        <div className="div-comment div-comment-antd">WF생산량(m2)=WF생산량(장) *6.4516/10000</div>
+      </StyledContentsWrapper>
     );
   }
 }
