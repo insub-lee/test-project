@@ -8,6 +8,11 @@ const AvaterTableStyled = styled.div`
     border: 0;
     border-spacing: 0;
     width: 100%;
+
+    td {
+      position: relative;
+      padding: 0;
+    }
   }
 `;
 
@@ -32,14 +37,16 @@ class Avater extends Component {
                     ? {
                         // 남자(style 다르게 적용시 이런식으로 구분 하시면 됩니다.)
                         backgroundImage: `url(${avaterImgs.head})`,
-                        width: '353',
-                        height: '113',
+                        width: '353px',
+                        height: '113px',
+                        backgroundRepeat: 'no-repeat',
                       }
                     : {
                         // 여자
                         backgroundImage: `url(${avaterImgs.head})`,
-                        width: '353',
-                        height: '128',
+                        width: '353px',
+                        height: '128px',
+                        backgroundRepeat: 'no-repeat',
                       }
                 }
               >
@@ -63,6 +70,7 @@ class Avater extends Component {
                     <div
                       style={{
                         backgroundImage: `url(${avaterImgs.signal})`,
+                        backgroundRepeat: 'no-repeat',
                         width: '103px',
                         height: '31px',
                         position: 'absolute',
@@ -77,15 +85,24 @@ class Avater extends Component {
               </td>
             </tr>
             <tr>
-              <td colSpan={2} style={{ width: '353px', height: '118px', backgroundImage: `url(${avaterImgs.body})` }}>
+              <td
+                colSpan={2}
+                style={{
+                  width: '353px',
+                  height: avaterImgs.GENDER === 'm' ? '118px' : '94px',
+                  backgroundImage: `url(${avaterImgs.body})`,
+                  backgroundRepeat: 'no-repeat',
+                }}
+              >
                 <div
                   style={{
                     backgroundImage: `url(${avaterImgs.gan})`,
+                    backgroundRepeat: 'no-repeat',
                     width: '121px',
                     height: '72px',
                     position: 'absolute',
-                    left: '85px',
-                    top: '16px',
+                    left: avaterImgs.GENDER === 'm' ? '85px' : '93px',
+                    top: avaterImgs.GENDER === 'm' ? '16px' : '-4px',
                     zIndex: '2',
                     filter: 'Alpha(Opacity=100) revealTrans(transition=23,duration=0.5) blendTrans(duration=0.5)',
                   }}
@@ -93,6 +110,7 @@ class Avater extends Component {
                 <div
                   style={{
                     backgroundImage: `url(${avaterImgs.goji})`,
+                    backgroundRepeat: 'no-repeat',
                     width: '141px',
                     height: '26px',
                     position: 'absolute',
@@ -105,11 +123,12 @@ class Avater extends Component {
                 <div
                   style={{
                     backgroundImage: `url(${avaterImgs.dang})`,
+                    backgroundRepeat: 'no-repeat',
                     width: '88px',
                     height: '78px',
                     position: 'absolute',
-                    left: '220px',
-                    top: '10px',
+                    left: avaterImgs.GENDER === 'm' ? '220px' : '230px',
+                    top: avaterImgs.GENDER === 'm' ? '10px' : '-10px',
                     zIndex: '1',
                     filter: 'Alpha(Opacity=100) revealTrans(transition=23,duration=0.5) blendTrans(duration=0.5)',
                   }}
@@ -117,7 +136,7 @@ class Avater extends Component {
               </td>
             </tr>
             <tr>
-              <td colSpan={2} style={{ width: '353px', height: '219px', backgroundImage: `url(${avaterImgs.leg})` }}></td>
+              <td colSpan={2} style={{ width: '353px', height: '219px', backgroundImage: `url(${avaterImgs.leg})`, backgroundRepeat: 'no-repeat' }}></td>
             </tr>
           </tbody>
         </table>

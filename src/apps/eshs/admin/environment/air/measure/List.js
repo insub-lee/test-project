@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { DatePicker, Select, message } from 'antd';
+import { DatePicker, Select, message, Button } from 'antd';
+import { FileExcelOutlined } from '@ant-design/icons';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-
+import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
@@ -17,6 +19,7 @@ const { MonthPicker } = DatePicker;
 
 const AntdSelect = StyledSelect(Select);
 const AntdMonthPicker = StyledDatePicker(MonthPicker);
+const AntdButton = StyledAntdButton(Button);
 
 Moment.locale('ko');
 
@@ -72,10 +75,6 @@ class List extends Component {
     this.setState({
       [option.key]: value,
     });
-  };
-
-  isExcelUpload = () => {
-    message.info('개발 중 입니다.');
   };
 
   dateChange = dateStrings => {
@@ -145,14 +144,17 @@ class List extends Component {
             </AntdSelect>
           </div>
           <div className="btn-area">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.isSearch()}>
+            <StyledButton className="btn-gray btn-first btn-sm" onClick={() => this.isSearch()}>
               검색
-            </StyledButton>
-            <StyledButton className="btn-primary btn-sm" onClick={() => this.isExcelUpload()}>
-              엑셀 올리기
             </StyledButton>
           </div>
         </StyledCustomSearch>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <AntdButton className="btn-primary btn-sm" onClick={() => message.info('개발 중 입니다.')}>
+            <FileExcelOutlined />
+            엑셀 올리기
+          </AntdButton>
+        </StyledButtonWrapper>
         {measureList ? (
           <StyledHtmlTable style={{ height: measureList.length > 10 && 400, overflow: 'scroll', msOverflowStyle: 'scrollbar' }}>
             <table>

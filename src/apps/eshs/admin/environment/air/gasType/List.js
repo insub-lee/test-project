@@ -230,17 +230,9 @@ class List extends Component {
               </tbody>
             </table>
             <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-              {!formData.GAS_CD ? (
-                <StyledButton className="btn-primary mr5 btn-sm" onClick={this.overlab}>
-                  저장
-                </StyledButton>
-              ) : (
-                <>
-                  <StyledButton className="btn-primary mr5 btn-sm" onClick={() => this.onChangeData('U')}>
-                    수정
-                  </StyledButton>
-                </>
-              )}
+              <StyledButton className="btn-primary mr5 btn-sm" onClick={!formData.GAS_CD ? this.overlab : () => this.onChangeData('U')}>
+                저장
+              </StyledButton>
               <StyledButton className="btn-light btn-sm" onClick={this.onModalChange}>
                 취소
               </StyledButton>

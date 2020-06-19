@@ -206,7 +206,7 @@ class TableTypeSelector extends React.Component {
     };
     return (
       <>
-        <StyledButton className={`btn-primary btn-first ${customClassName}`} onClick={this.handleModalVisible}>
+        <StyledButton className={`btn-primary btn-sm ${customClassName || ''}`} onClick={this.handleModalVisible}>
           {btnText}
         </StyledButton>
 

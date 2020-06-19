@@ -16,21 +16,25 @@ class Excel extends Component {
     const { dataList, excelNm } = this.props;
 
     const columns = [
-      { title: '코드', width: { wpx: 100 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
-      { title: '코드명', width: { wpx: 250 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
-      { title: '비고', width: { wpx: 120 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
-      { title: '상태', width: { wpx: 50 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
-      { title: 'Level', width: { wpx: 50 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
-      { title: '경로', width: { wpx: 300 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
+      { title: '부서', width: { wpx: 100 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
+      { title: '공정(장소)', width: { wpx: 100 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
+      { title: '세부공정', width: { wpx: 100 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
+      { title: '장비(설비)', width: { wpx: 100 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
+      { title: '위험요인', width: { wpx: 250 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
+      { title: '사고의 발생원인', width: { wpx: 100 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
+      { title: '사고의 발생유형', width: { wpx: 100 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
+      { title: 'R/A 실시여부', width: { wpx: 100 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
     ];
 
     const fields = [
-      { field: 'CODE', style: { font: { sz: '12' } } },
-      { field: 'NAME_KOR', style: { font: { sz: '12' } } },
-      { field: 'DESCIPTION', style: { font: { sz: '12' } } },
-      { field: 'USE_YN', style: { font: { sz: '12' } } },
-      { field: 'LVL', style: { font: { sz: '12' } } },
-      { field: 'FULLPATH', style: { font: { sz: '12' } } },
+      { field: 'SDIV_ID', style: { font: { sz: '12' } } },
+      { field: 'PLACE_ID', style: { font: { sz: '12' } } },
+      { field: 'PROCESS_ID', style: { font: { sz: '12' } } },
+      { field: 'EQUIP_ID', style: { font: { sz: '12' } } },
+      { field: 'WORK_NM', style: { font: { sz: '12' } } },
+      { field: 'AOC_ID', style: { font: { sz: '12' } } },
+      { field: 'AOT_ID', style: { font: { sz: '12' } } },
+      { field: 'RA_YN', style: { font: { sz: '12' } } },
     ];
 
     return (
@@ -43,6 +47,7 @@ class Excel extends Component {
         columns={columns}
         fields={fields}
         listData={dataList}
+        btnSize="btn-sm"
       />
     );
   }

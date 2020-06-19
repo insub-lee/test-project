@@ -103,7 +103,7 @@ class EshsSiteItemSearchbar extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, colData, viewPageData, sagaKey: id, changeViewPage, changeFormData, formData } = this.props;
+    const { visible, colData, viewPageData, sagaKey: id, changeViewPage, changeFormData, formData } = this.props;
     const { siteList } = this.state;
     return visible ? (
       <>
@@ -111,7 +111,7 @@ class EshsSiteItemSearchbar extends React.Component {
         <span style={{ display: 'inline-block', verticalAlign: 'middle', padding: '0 12px' }}>지역</span>
         <AntdSelect
           style={{ width: '150px' }}
-          className="select-mid mr5"
+          className="select-sm mr5"
           onChange={value => changeFormData(id, 'SITE', value)}
           value={Number(formData.SITE) || ''}
         >
@@ -124,13 +124,13 @@ class EshsSiteItemSearchbar extends React.Component {
         <AntdSearch
           value={colData}
           readOnly
-          className="ant-search-inline input-search-mid mr5"
+          className="ant-search-inline input-search-sm mr5"
           style={{ width: 150, display: 'inline-block' }}
           onClick={this.handleModalVisible}
           onSearch={this.handleModalVisible}
         />
         <StyledButtonWrapper className="btn-wrap-inline">
-          <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+          <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
             Reset
           </StyledButton>
         </StyledButtonWrapper>
