@@ -54,7 +54,6 @@ class DragUploadViewComp extends Component {
   render() {
     const { COMP_FIELD } = this.props;
     const { fileList } = this.state;
-
     return (
       <div id={COMP_FIELD}>
         <ul>

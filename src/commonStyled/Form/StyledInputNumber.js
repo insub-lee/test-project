@@ -28,6 +28,8 @@ const StyledInputNumber = Component => styled(Component)`
     }
     .ant-input-number-input {
       height: auto;
+      border: 0px solid white;
+      border-radius: 0;
     }
   }
   &.ant-input-number-inline {
