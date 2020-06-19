@@ -7,7 +7,8 @@ import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
-import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
+import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
+
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
@@ -267,7 +268,7 @@ class CustomList extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray" onClick={() => getListData(id, workSeq)}>
+                          <StyledButton className="btn-gray btn-sm" onClick={() => getListData(id, workSeq)}>
                             Search
                           </StyledButton>
                         </div>

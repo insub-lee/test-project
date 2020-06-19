@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Select, Input, Button, Modal, message } from 'antd';
+import { Select, Input, Button, Modal } from 'antd';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import UserModal from './UserModal';
 import DeptModal from './DeptModal';
 
@@ -59,26 +61,38 @@ class SearchBar extends Component {
     setFormData(id, { ...formData, userModal: true, userModalType: 'INSERT' });
   };
 
-  handleUserOk = e => {
+  handleUserOk = () => {
     if (this.validationCheck()) {
       const { id, submitHandlerBySaga, formData } = this.props;
       const type = (formData && formData.userModalType) || '';
       if (type === 'INSERT') {
         const submitData = (formData && formData.userData) || {};
-
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsHstCmpnyUser', submitData, this.saveComplete);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsHstCmpnyUser', submitData, (afterId, res) => {
+          if (res && res.code === 200) {
+            message.info(<MessageContent>저장되었습니다.</MessageContent>);
+            return this.saveComplete();
+          }
+          return message.info(<MessageContent>저장에 실패하였습니다.</MessageContent>);
+        });
       } else if (type === 'UPDATE') {
         const submitData = (formData && formData.selectedUser) || {};
 
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsHstCmpnyUser', submitData, this.saveComplete);
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsHstCmpnyUser', submitData, (afterId, res) => {
+          if (res && res.code === 200) {
+            message.info(<MessageContent>수정되었습니다.</MessageContent>);
+            return this.saveComplete();
+          }
+          return message.info(<MessageContent>수정에 실패하였습니다.</MessageContent>);
+        });
       }
-    } else return false;
+    }
+    return undefined;
   };
 
-  saveComplete = sagaKey => {
+  saveComplete = () => {
     const { id, getCallDataHandler, apiAry, changeFormData, handleAppStart, formData } = this.props;
-    changeFormData(sagaKey, 'userData', { SITE: '청주' });
-    getCallDataHandler(sagaKey, apiAry, handleAppStart);
+    changeFormData(id, 'userData', { SITE: '청주' });
+    getCallDataHandler(id, apiAry, handleAppStart);
     const is_update = formData && formData.userModalType;
     if (is_update === 'UPDATE') changeFormData(id, 'userModal', false);
   };
@@ -106,26 +120,29 @@ class SearchBar extends Component {
     if (type === 'INSERT') {
       const userData = (formData && formData.userData) || {};
       if (!userData.HST_CMPNY_CD) {
-        message.warning('주관회사를 선택하세요');
+        message.info(<MessageContent>주관회사를 선택하세요.</MessageContent>);
+
         return false;
       }
       if (!userData.EMP_NM) {
-        message.warning('직원명을 입력하세요');
+        message.info(<MessageContent>직원명을 입력하세요.</MessageContent>);
         return false;
       }
       if (!userData.DEPT_NM) {
-        message.warning('부서를 선택하세요');
+        message.info(<MessageContent>부서를 선택하세요.</MessageContent>);
         return false;
       }
       is_ok = true;
     } else if (type === 'UPDATE') {
       const selectedUser = (formData && formData.selectedUser) || {};
       if (!selectedUser.EMP_NM) {
-        message.warning('직원명을 입력하세요');
+        message.info(<MessageContent>직원명을 입력하세요.</MessageContent>);
+
         return false;
       }
       if (!selectedUser.DEPT_NM) {
-        message.warning('부서를 선택하세요');
+        message.info(<MessageContent>부서를 선택하세요</MessageContent>);
+
         return false;
       }
       is_ok = true;
@@ -173,13 +190,13 @@ class SearchBar extends Component {
             placeholder="이름"
           />
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={this.handleOnSearch}>
+            <StyledButton className="btn-gray btn-first btn-sm" onClick={this.handleOnSearch}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={this.showUserModal}>
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.showUserModal}>
               추가
             </StyledButton>
-            <StyledButton className="btn-primary" type="link" onClick={this.showDeptModal}>
+            <StyledButton className="btn-gray btn-sm" type="link" onClick={this.showDeptModal}>
               [주관회사 부서관리]
             </StyledButton>
           </StyledButtonWrapper>
@@ -191,11 +208,11 @@ class SearchBar extends Component {
           height={400}
           onCancel={this.handleUserCancel}
           footer={[
-            <StyledButtonWrapper className="btn-wrap-center btn-wrap-mb-10">
+            <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
               <StyledButton className="btn-primary btn-sm btn-first" onClick={this.handleUserOk}>
                 {formData && formData.userModalType === 'INSERT' ? '추가' : '저장'}
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm" onClick={this.handleUserCancel}>
+              <StyledButton className="btn-light btn-sm" onClick={this.handleUserCancel}>
                 닫기
               </StyledButton>
             </StyledButtonWrapper>,
