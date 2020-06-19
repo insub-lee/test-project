@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import base64 from 'base-64';
-import { Table } from 'antd';
+import { Table, Progress } from 'antd';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -13,6 +13,10 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 const AntdTable = StyledAntdTable(Table);
 
 class DistributeDocView extends Component {
+  state = {
+    percentCompleted: undefined,
+    showProgress: false,
+  }
   
   componentDidMount() {
     this.getFileList();
@@ -33,12 +37,11 @@ class DistributeDocView extends Component {
     const {
       sagaKey,
       getFileDownload,
+      getFileDownloadProgress,
       result: {
         distributeDocView: { detail },
       },
       submitHandlerBySaga,
-      spinningOn,
-      spinningOff,
     } = this.props;
 
     if (row.FINE_DOWN_CNT <= 0 || row.PASSES_PERIOD > 0) {
@@ -60,13 +63,31 @@ class DistributeDocView extends Component {
         }
       }));
       const url = `/down/eddsfile/${row.FILE_SEQ}/${acl}`;
-      spinningOn();
-      getFileDownload(sagaKey, url, `${row.DOCNUMBER}_${row.VERSION}_${row.FILE_ORDER}.${row.EXT}`, () => {
+      const completeFunc = (response, url, fileName) => {
+        this.onComplete(response, url, fileName);
         // 첨부파일 열람 메일발송
         submitHandlerBySaga(sagaKey, 'POST', '/api/edds/v1/common/distributeDocOpenEmail', { PARAM: { ...detail, ...row }});
         this.getFileList();
-        spinningOff();
-      });
+      }
+      this.setState({ showProgress: true, percentCompleted: 0 });
+      getFileDownloadProgress(sagaKey, url, `${row.DOCNUMBER}_${row.VERSION}_${row.FILE_ORDER}.${row.EXT}`, this.onProgress, completeFunc);
+    }
+  };
+
+  onProgress = percent => {
+    if (percent === 100) {
+      this.setState({ percentCompleted: percent, showProgress: false });
+    } else {
+      this.setState({ percentCompleted: percent });
+    }
+  };
+
+  onComplete = (response, url, fileName) => {
+    const { size } = response;
+    if (size === 0) {
+      message.warning('파일 다운로드중입니다.');
+    } else {
+      message.info('DRM문서는 해당 소프트웨어를 통해서만 조회가 가능합니다. (브라우저 지원불가)');
     }
   };
 
@@ -104,6 +125,7 @@ class DistributeDocView extends Component {
 
   render() {
     const { result: { distributeDocView } } = this.props;
+    const { showProgress, percentCompleted } = this.state;
     let detail = {};
     if (distributeDocView && distributeDocView !== undefined) {
       if (distributeDocView.detail !== undefined) {
@@ -171,6 +193,9 @@ class DistributeDocView extends Component {
           pagination={false}
           style={{ marginTop: 10 }}
         />
+        {showProgress && (
+          <Progress percent={percentCompleted} status="active" />
+        )}
       </StyledContentsWrapper>
     )
   }
