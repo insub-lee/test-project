@@ -227,19 +227,20 @@ class List extends Component {
                   name="warehouseNm"
                 />
                 <StyledButtonWrapper className="btn-wrap-inline">
-                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.insertOverlab()}>
+                  <StyledButton className="btn-gray btn-first btn-xs" onClick={() => this.insertOverlab()}>
                     추가
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('U')}>
+                  <StyledButton className="btn-gray btn-first btn-xs" onClick={() => this.onChangeData('U')}>
                     수정
                   </StyledButton>
                   <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.onChangeData('D')} okText="Yes" cancelText="No">
-                    <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
+                    <StyledButton className="btn-light btn-first btn-xs">삭제</StyledButton>
                   </Popconfirm>
-                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onReset()}>
+                  <StyledButton className="btn-light btn-first btn-xs" onClick={() => this.onReset()}>
                     Reset
                   </StyledButton>
                   <TableTypeSelector
+                    customStyle={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)' }}
                     leftTableColumns={leftTableColumns}
                     rightTableColumns={rightTableColumns}
                     apiList={itemList || []}
@@ -250,7 +251,7 @@ class List extends Component {
                     rowKey="ITEM_CD"
                     customVisible={warehouseCd}
                     customWarning="코드를 선택해주세요"
-                    customClassName="btn-sm"
+                    customClassName="btn-xs"
                   />
                 </StyledButtonWrapper>
               </>
@@ -274,13 +275,12 @@ class List extends Component {
             ))}
           </AntdSelect>
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-sm" onClick={() => this.searchData()}>
+            <StyledButton className="btn-gray btn-sm" onClick={() => this.searchData()}>
               검색
             </StyledButton>
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
-          className="tableWrapper"
           rowKey={dataSource && dataSource.WAREHOUSE_CD}
           selectedRowKeys={[]}
           columns={columns}
