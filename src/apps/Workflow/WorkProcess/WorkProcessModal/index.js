@@ -92,11 +92,11 @@ class WorkProcessModal extends Component {
   };
 
   onTreeNodeCheck = checkedKeys => {
+    console.debug('treeNOde', checkedKeys);
     this.setState({ selectedDeptKeys: checkedKeys });
   };
 
   onDeptUserCheck = selectedUserKeys => {
-    console.debug('user', selectedUserKeys);
     this.setState({ selectedUserKeys });
   };
 
@@ -150,7 +150,7 @@ class WorkProcessModal extends Component {
     return columns;
   };
 
-  getDeptColumns = () => [
+  deptColumns = [
     {
       title: '부서정보',
       dataIndex: 'DEPT_ID',
@@ -169,6 +169,7 @@ class WorkProcessModal extends Component {
           dataIndex: 'DEPT_ID',
           align: 'left',
           width: 150,
+          ellipsis: true,
           render: (text, record) => <a onClick={() => this.onDeptNameClick(record)}>{record.NAME_KOR}</a>,
         },
       ],
@@ -307,19 +308,38 @@ class WorkProcessModal extends Component {
     getDeptUserList(row.DEPT_ID, this.initDeptUserList);
   };
 
-  onDeptDoubleClick = () => {};
+  onDeptDoubleClick = (record, rowIndex, e) => {
+    const { selectedNode } = this.state;
+    const { DEPT_ID } = record;
+    const { NODE_TYPE } = selectedNode;
+    if (NODE_TYPE === 'ND') {
+      this.setState({ selectedDeptKeys: [DEPT_ID] }, () => {
+        //handler
+        const prcRuleId = selectedNode.PRC_RULE_ID;
+        const nodeId = selectedNode.NODE_ID;
+        const nodeType = selectedNode.NODE_TYPE;
+        this.handleAddUser(prcRuleId, nodeId, nodeType);
+      });
+    } else {
+      message.info('배포부서 버튼을 클릭하거나, 선택해 주세요');
+    }
+  };
 
   onUserDoubleClick = (record, rowIndex, e) => {
     const { selectedNode } = this.state;
     const { USER_ID } = record;
-    console.debug('onDouble', selectedNode, record, rowIndex, e);
-    this.setState({ selectedUserKeys: [USER_ID] }, () => {
-      //handler
-      const prcRuleId = selectedNode.PRC_RULE_ID;
-      const nodeId = selectedNode.NODE_ID;
-      const nodeType = selectedNode.NODE_TYPE;
-      this.handleAddUser(prcRuleId, nodeId, nodeType);
-    });
+    const { NODE_TYPE } = selectedNode;
+    if (NODE_TYPE !== 'ND') {
+      this.setState({ selectedUserKeys: [USER_ID] }, () => {
+        //handler
+        const prcRuleId = selectedNode.PRC_RULE_ID;
+        const nodeId = selectedNode.NODE_ID;
+        const nodeType = selectedNode.NODE_TYPE;
+        this.handleAddUser(prcRuleId, nodeId, nodeType);
+      });
+    } else {
+      message.info('배포부서는 부서만 선택해 등록할 수 있습니다');
+    }
   };
 
   onChangeNode = e => {
@@ -359,7 +379,7 @@ class WorkProcessModal extends Component {
                 </Button>
               </div>
               <div className="tabContentsWrapper">
-                <div className="deptTree" style={{ display: `${tabIdx === 1 ? 'none' : ''}` }}>
+                <div className="deptTree" style={{ display: `${tabIdx !== 0 ? 'none' : ''}` }}>
                   {tabIdx === 0 && deptList.length > 0 && (
                     <Tree
                       checkable
@@ -372,41 +392,39 @@ class WorkProcessModal extends Component {
                       onExpand={this.onExpand}
                     />
                   )}
-                  {tabIdx === 2 && (
+                </div>
+                <div className="userList">
+                  {tabIdx === 2 ? (
                     <AntdPointTable
                       rowSelection={deptRowSelection}
-                      columns={this.getDeptColumns()}
+                      columns={this.deptColumns}
                       dataSource={deptList2.map(item => ({ ...item, key: item.DEPT_ID }))}
                       rowKey="DEPT_ID"
                       pagination={false}
                       size="small"
                       scroll={{ y: 395 }}
-                      className={`${tabIdx === 2 ? 'non-top-border' : ''} page-custom`}
+                      className="non-top-border page-custom"
                       onRow={(record, rowIndex) => ({
                         onDoubleClick: e => this.onDeptDoubleClick(record, rowIndex, e),
                       })}
                     />
+                  ) : (
+                    <AntdPointTable
+                      rowSelection={rowSelection}
+                      columns={this.getColumns()}
+                      dataSource={deptUserList.map(item => ({ ...item, key: item.USER_ID }))}
+                      rowKey="USER_ID"
+                      pagination={false}
+                      size="small"
+                      // scroll
+                      scroll={{ y: tabIdx === 1 ? 395 : 220 }}
+                      className={`${tabIdx === 1 ? 'non-top-border' : ''} page-custom`}
+                      onRow={(record, rowIndex) => ({
+                        onDoubleClick: e => this.onUserDoubleClick(record, rowIndex, e),
+                      })}
+                    />
                   )}
                 </div>
-                {tabIdx === 0 ||
-                  (tabIdx === 1 && (
-                    <div className="userList">
-                      <AntdPointTable
-                        rowSelection={rowSelection}
-                        columns={this.getColumns()}
-                        dataSource={deptUserList.map(item => ({ ...item, key: item.USER_ID }))}
-                        rowKey="USER_ID"
-                        pagination={false}
-                        size="small"
-                        // scroll
-                        scroll={{ y: tabIdx === 1 ? 395 : 220 }}
-                        className={`${tabIdx === 1 ? 'non-top-border' : ''} page-custom`}
-                        onRow={(record, rowIndex) => ({
-                          onDoubleClick: e => this.onUserDoubleClick(record, rowIndex, e),
-                        })}
-                      />
-                    </div>
-                  ))}
               </div>
             </div>
           </Col>

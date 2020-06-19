@@ -15,6 +15,12 @@ const StyledButtonWrapper = styled.div`
     text-align: center;
   }
 
+  &.btn-wrap-ab-right {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+  }
+
   &.btn-wrap-mt-20 {
     margin-top: 20px;
   }
