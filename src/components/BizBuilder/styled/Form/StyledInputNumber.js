@@ -22,11 +22,17 @@ const StyledInputNumber = Component => styled(Component)`
       background-color: #fff;
       border-color: #636a78;
       outline: 0;
-      box-shadow: 0 0 0 0.2rem transparent;
+      box-shadow: none;
     }
 
     &:disabled {
       background: #f5f5f5;
+    }
+
+    input {
+      padding: 0;
+      height: auto;
+      border: 0;
     }
   }
 
@@ -43,21 +49,12 @@ const StyledInputNumber = Component => styled(Component)`
     padding: 0.4rem 0.875rem;
     height: auto;
     font-size: 0.75rem;
-
-    input {
-      height: auto;
-      padding: 0;
-    }
   }
 
   &.ant-input-number-sm {
     padding: 0.313rem 0.844rem;
     font-size: 0.75rem;
     height: auto;
-
-    input {
-      height: auto;
-      padding: 0;
     }
   }
 
@@ -65,10 +62,6 @@ const StyledInputNumber = Component => styled(Component)`
     padding: 0.2rem 0.7rem;
     font-size: 0.75rem;
     height: auto;
-    input {
-      height: auto;
-      padding: 0;
-    }
   }
 
   &.ant-input-number-pointer {

@@ -24,6 +24,10 @@ const StyledAntdPointTable = Component => styled(Component)`
       }
       .ant-table-tbody {
         font-size: 12px;
+
+        td {
+          cursor: pointer;
+        }
       }
     }
   }

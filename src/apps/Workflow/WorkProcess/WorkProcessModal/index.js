@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { fromJS } from 'immutable';
-import { Row, Col, Tree, Table, Button, Icon, Input } from 'antd';
+import { Row, Col, Tree, Table, Button, Icon, Input, Radio } from 'antd';
 import { CloseCircleOutlined, AuditOutlined, WarningOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -55,7 +55,8 @@ class WorkProcessModal extends Component {
       deptUserList: [],
       visible: false,
       curDistDeptList: [],
-      tabIdx: 0,
+      tabIdx: 1,
+      selectedNode: undefined,
     };
   }
 
@@ -66,9 +67,13 @@ class WorkProcessModal extends Component {
 
   componentDidMount() {
     const { getDeptList, processRuleProc } = this.props;
-    console.debug('workprocessModal', this.props);
     const processStep = fromJS(processRuleProc.DRAFT_PROCESS_STEP).toJS();
     const tmpPrcStep = processStep.filter(f => f.APPV_METHOD === 1 && f.PARENT_PRC_RULE_ID !== 0 && f.NODE_TYPE !== 'NS');
+    tmpPrcStep.forEach(item => {
+      if (item.NODE_ID === 106 || item.STEP === 2) {
+        this.setState({ selectedNode: item });
+      }
+    });
     this.setState({ prcStep: tmpPrcStep });
     getDeptList(this.initDeptList);
   }
@@ -87,6 +92,7 @@ class WorkProcessModal extends Component {
   };
 
   onTreeNodeCheck = checkedKeys => {
+    console.debug('treeNOde', checkedKeys);
     this.setState({ selectedDeptKeys: checkedKeys });
   };
 
@@ -144,7 +150,7 @@ class WorkProcessModal extends Component {
     return columns;
   };
 
-  getDeptColumns = () => [
+  deptColumns = [
     {
       title: '부서정보',
       dataIndex: 'DEPT_ID',
@@ -163,6 +169,7 @@ class WorkProcessModal extends Component {
           dataIndex: 'DEPT_ID',
           align: 'left',
           width: 150,
+          ellipsis: true,
           render: (text, record) => <a onClick={() => this.onDeptNameClick(record)}>{record.NAME_KOR}</a>,
         },
       ],
@@ -301,8 +308,50 @@ class WorkProcessModal extends Component {
     getDeptUserList(row.DEPT_ID, this.initDeptUserList);
   };
 
+  onDeptDoubleClick = (record, rowIndex, e) => {
+    const { selectedNode } = this.state;
+    const { DEPT_ID } = record;
+    const { NODE_TYPE } = selectedNode;
+    if (NODE_TYPE === 'ND') {
+      this.setState({ selectedDeptKeys: [DEPT_ID] }, () => {
+        //handler
+        const prcRuleId = selectedNode.PRC_RULE_ID;
+        const nodeId = selectedNode.NODE_ID;
+        const nodeType = selectedNode.NODE_TYPE;
+        this.handleAddUser(prcRuleId, nodeId, nodeType);
+      });
+    } else {
+      message.info('배포부서 버튼을 클릭하거나, 선택해 주세요');
+    }
+  };
+
+  onUserDoubleClick = (record, rowIndex, e) => {
+    const { selectedNode } = this.state;
+    const { USER_ID } = record;
+    const { NODE_TYPE } = selectedNode;
+    if (NODE_TYPE !== 'ND') {
+      this.setState({ selectedUserKeys: [USER_ID] }, () => {
+        //handler
+        const prcRuleId = selectedNode.PRC_RULE_ID;
+        const nodeId = selectedNode.NODE_ID;
+        const nodeType = selectedNode.NODE_TYPE;
+        this.handleAddUser(prcRuleId, nodeId, nodeType);
+      });
+    } else {
+      message.info('배포부서는 부서만 선택해 등록할 수 있습니다');
+    }
+  };
+
+  onChangeNode = e => {
+    const { prcStep } = this.state;
+    const nodeId = e.target.value;
+    const fidx = prcStep.findIndex(f => f.NODE_ID === nodeId);
+    const selectedNode = fidx > -1 ? prcStep[fidx] : undefined;
+    this.setState({ selectedNode });
+  };
+
   render() {
-    const { prcStep, prcButton, selectedUserKeys, selectedDeptKeys, deptList, deptList2, deptUserList, rootKey, tabIdx } = this.state;
+    const { prcStep, prcButton, selectedUserKeys, selectedDeptKeys, deptList, deptList2, deptUserList, rootKey, tabIdx, selectedApprove } = this.state;
     const rowSelection = {
       selectedRowKeys: selectedUserKeys,
       onChange: this.onDeptUserCheck,
@@ -330,7 +379,7 @@ class WorkProcessModal extends Component {
                 </Button>
               </div>
               <div className="tabContentsWrapper">
-                <div className="deptTree" style={{ display: `${tabIdx === 1 ? 'none' : ''}` }}>
+                <div className="deptTree" style={{ display: `${tabIdx !== 0 ? 'none' : ''}` }}>
                   {tabIdx === 0 && deptList.length > 0 && (
                     <Tree
                       checkable
@@ -343,31 +392,38 @@ class WorkProcessModal extends Component {
                       onExpand={this.onExpand}
                     />
                   )}
-                  {tabIdx === 2 && (
+                </div>
+                <div className="userList">
+                  {tabIdx === 2 ? (
                     <AntdPointTable
                       rowSelection={deptRowSelection}
-                      columns={this.getDeptColumns()}
+                      columns={this.deptColumns}
                       dataSource={deptList2.map(item => ({ ...item, key: item.DEPT_ID }))}
                       rowKey="DEPT_ID"
                       pagination={false}
                       size="small"
-                      scroll={{ y: 220 }}
+                      scroll={{ y: 395 }}
                       className="non-top-border page-custom"
+                      onRow={(record, rowIndex) => ({
+                        onDoubleClick: e => this.onDeptDoubleClick(record, rowIndex, e),
+                      })}
+                    />
+                  ) : (
+                    <AntdPointTable
+                      rowSelection={rowSelection}
+                      columns={this.getColumns()}
+                      dataSource={deptUserList.map(item => ({ ...item, key: item.USER_ID }))}
+                      rowKey="USER_ID"
+                      pagination={false}
+                      size="small"
+                      // scroll
+                      scroll={{ y: tabIdx === 1 ? 395 : 220 }}
+                      className={`${tabIdx === 1 ? 'non-top-border' : ''} page-custom`}
+                      onRow={(record, rowIndex) => ({
+                        onDoubleClick: e => this.onUserDoubleClick(record, rowIndex, e),
+                      })}
                     />
                   )}
-                </div>
-                <div className="userList">
-                  <AntdPointTable
-                    rowSelection={rowSelection}
-                    columns={this.getColumns()}
-                    dataSource={deptUserList.map(item => ({ ...item, key: item.USER_ID }))}
-                    rowKey="USER_ID"
-                    pagination={false}
-                    size="small"
-                    // scroll
-                    scroll={{ y: tabIdx === 1 ? 395 : 220 }}
-                    className={`${tabIdx === 1 ? 'non-top-border' : ''} page-custom`}
-                  />
                 </div>
               </div>
             </div>
@@ -392,47 +448,48 @@ class WorkProcessModal extends Component {
             </div>
           </Col>
           <Col span={10}>
-            <div className="basicWrapper selectedWrapper">
-              {prcStep.map(item => (
-                <React.Fragment key={`node_${item.NODE_ID}`}>
-                  <h4>
-                    <AuditOutlined />
-                    {'  '}
-                    {item.NODE_NAME_KOR}
-                  </h4>
-                  <ul>
-                    {item.APPV_MEMBER.length > 0 ? (
-                      item.APPV_MEMBER.map(user => (
-                        <li key={user.USER_ID}>
-                          <span>
-                            {item.NODE_TYPE === 'ND' ? (
-                              <div>
-                                <TeamOutlined /> {user.DEPT_NAME_KOR}
-                              </div>
-                            ) : (
-                              <div>
-                                <UserOutlined /> {`${user.NAME_KOR}/${user.PSTN_NAME_KOR} (${user.DEPT_NAME_KOR}) `}
-                              </div>
+            <Radio.Group style={{ width: '100%' }} defaultValue={106} onChange={this.onChangeNode}>
+              <div className="basicWrapper selectedWrapper">
+                {prcStep.map(item => (
+                  <React.Fragment key={`node_${item.NODE_ID}`}>
+                    <h4>
+                      <Radio value={item.NODE_ID} />
+                      <AuditOutlined /> {item.NODE_NAME_KOR}
+                    </h4>
+                    <ul>
+                      {item.APPV_MEMBER.length > 0 ? (
+                        item.APPV_MEMBER.map(user => (
+                          <li key={user.USER_ID}>
+                            <span>
+                              {item.NODE_TYPE === 'ND' ? (
+                                <div>
+                                  <TeamOutlined /> {user.DEPT_NAME_KOR}
+                                </div>
+                              ) : (
+                                <div>
+                                  <UserOutlined /> {`${user.NAME_KOR}/${user.PSTN_NAME_KOR} (${user.DEPT_NAME_KOR}) `}
+                                </div>
+                              )}
+                            </span>
+                            {user.ISFIXED !== 'Y' && (
+                              <button type="button" onClick={() => this.handleDeleteSelectedUser(user, item.NODE_ID)}>
+                                <CloseCircleOutlined />
+                              </button>
                             )}
+                          </li>
+                        ))
+                      ) : (
+                        <li>
+                          <span>
+                            <WarningOutlined /> 선택 결재정보 없음
                           </span>
-                          {user.ISFIXED !== 'Y' && (
-                            <button type="button" onClick={() => this.handleDeleteSelectedUser(user, item.NODE_ID)}>
-                              <CloseCircleOutlined />
-                            </button>
-                          )}
                         </li>
-                      ))
-                    ) : (
-                      <li>
-                        <span>
-                          <WarningOutlined /> 선택 결재정보 없음
-                        </span>
-                      </li>
-                    )}
-                  </ul>
-                </React.Fragment>
-              ))}
-            </div>
+                      )}
+                    </ul>
+                  </React.Fragment>
+                ))}
+              </div>
+            </Radio.Group>
           </Col>
         </Row>
         <div className="applyButtonWrapper">
