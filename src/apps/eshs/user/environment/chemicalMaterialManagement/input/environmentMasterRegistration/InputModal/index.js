@@ -27,9 +27,9 @@ class InputModal extends React.Component {
 
   getMaterialList = () => {
     const { sagaKey: id, getCallDataHandler, apiUrl, getMaterialList } = this.props;
-    if (getMaterialList) {
-      return getMaterialList();
-    }
+    // if (getMaterialList) {
+    //   return getMaterialList();
+    // }
     const apiArr = [
       {
         key: 'materialList',
