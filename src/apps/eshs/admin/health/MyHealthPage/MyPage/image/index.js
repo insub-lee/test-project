@@ -56,6 +56,7 @@ export const makeAvaterImg = data => {
   const gradeGan = data.GRADE_GAN || '';
   const gradeGoji = data.GRADE_GOJI || '';
   const gradeDang = data.GRADE_DANG || '';
+  avater.GENDER = gender;
   if (gender === 'm') {
     // 남자 머리
     switch (gradeGo) {
