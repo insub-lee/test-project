@@ -140,8 +140,8 @@ class View extends Component {
         </StyledCustomSearchWrapper>
         <table>
           <colgroup>
-            <col width="50%" />
-            <col width="50%" />
+            <col width="400px" />
+            <col width="" />
           </colgroup>
           <thead></thead>
           <tbody>
@@ -182,7 +182,11 @@ class View extends Component {
                     <tfoot></tfoot>
                     <tbody>
                       <tr>
-                        <td>{userData.CONSULT && <div dangerouslySetInnerHTML={{ __html: userData.CONSULT }} />}</td>
+                        <td>
+                          {userData.CONSULT && (
+                            <div style={{ height: 150, overflowY: 'auto', borderBottom: 0 }} dangerouslySetInnerHTML={{ __html: userData.CONSULT }} />
+                          )}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
