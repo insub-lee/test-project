@@ -80,7 +80,7 @@ class List extends React.Component {
   handleInputClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { dataSource, requestValue } = this.state;
-    const param = dataSource.map(data => Object.assign(data, { SAP_ID: requestValue.SAP_ID }));
+    const param = dataSource.map(data => Object.assign(data, { SAP_ID: requestValue.SAP_ID, SAP_NO: requestValue.SAP_NO }));
 
     if (!requestValue.SAP_ID) {
       return message.error('화학물질을 선택해주세요.');
@@ -135,6 +135,7 @@ class List extends React.Component {
   };
 
   setRequestValue = record => {
+    console.debug(record);
     this.setState(
       prevState => ({
         requestValue: Object.assign(prevState.requestValue, record),
