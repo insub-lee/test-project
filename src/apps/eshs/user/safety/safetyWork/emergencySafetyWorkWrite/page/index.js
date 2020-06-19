@@ -2,23 +2,25 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Input, Modal } from 'antd';
-import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
+import { AppstoreTwoTone } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import message from 'components/Feedback/message';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import MessageContent from 'components/Feedback/message.style2';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import SafetyEquipTable from '../../commonComponents/SafetyEquip';
 import SafetyEquipSelect from '../../commonComponents/SafetyEquip/EquipSelect';
 import SafetyWorkInfo from '../../commonComponents/SafetyEmergencyWorkInfo';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import Bfcheck from '../../bfCheck';
-import Styled from './Styled';
 
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledContentsModal(Modal);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class emergencyWorkWrite extends Component {
   constructor(props) {
@@ -154,6 +156,12 @@ class emergencyWorkWrite extends Component {
         break;
       case 'safetyWork':
         title = '긴급작업 선택';
+        break;
+      case 'mainBfcheck':
+        title = '주작업 작업전 점검 등록';
+        break;
+      case 'subBfcheck':
+        title = '보충작업 작업전 점검 등록';
         break;
       default:
         break;
@@ -379,53 +387,54 @@ class emergencyWorkWrite extends Component {
     const { result, viewType } = this.props;
     const eshsSwtbEquip = (result && result.getSwtbEquipList && result.getSwtbEquipList.list) || [];
     return (
-      <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <div className="searchCmpnyWrap">
-              <label>
-                작업번호
-                <Input
-                  className="ant-input-sm"
-                  style={{ width: '150px', marginLeft: '5px', marginRight: '5px' }}
-                  value={formData.WORK_NO}
-                  onClick={() => this.handleModal('safetyWork', true)}
-                />
-              </label>
-            </div>
-            <div
-              className="searchCmpnyBtn"
-              tabIndex={0}
+      <>
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <span className="text-label">작업번호</span>
+            <AntdSearch
+              className="ant-search-inline input-search-mid mr5"
               onClick={() => this.handleModal('safetyWork', true)}
-              onKeyPress={() => this.handleModal('safetyWork', true)} // esLint
-              role="button" // esLint
-            >
-              <CaretDownOutlined />
-            </div>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.handleGetSafetyWork()} style={{ marginBottom: '5px' }}>
+              value={formData.WORK_NO || ''}
+              style={{ width: '200px' }}
+            />
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
               검색
             </StyledButton>
-            {formData.WORK_NO === '' ? (
-              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('ADD')} style={{ marginBottom: '5px' }}>
-                추가
-              </StyledButton>
-            ) : (
-              <>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('UPDATE')} style={{ marginBottom: '5px' }}>
-                  저장
-                </StyledButton>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('DELETE')} style={{ marginBottom: '5px' }}>
-                  삭제
-                </StyledButton>
-              </>
-            )}
-            {viewType !== 'modal' && false && (
-              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => alert('준비중')} style={{ marginBottom: '5px' }}>
-                일반작업으로 변경
-              </StyledButton>
-            )}
           </div>
-        </StyledSearchWrap>
+        </StyledCustomSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          {formData.WORK_NO === '' ? (
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('ADD')}>
+              추가
+            </StyledButton>
+          ) : (
+            <>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('UPDATE')}>
+                저장
+              </StyledButton>
+              <StyledButton
+                className="btn-gray btn-sm btn-first"
+                onClick={() => {
+                  if (formData.WORK_NO === '') {
+                    message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
+                    return;
+                  }
+                  this.handleModal('equip', true);
+                }}
+              >
+                투입 장비 추가
+              </StyledButton>
+              <StyledButton className="btn-light btn-sm" onClick={() => this.submitFormData('DELETE')}>
+                삭제
+              </StyledButton>
+            </>
+          )}
+          {viewType !== 'modal' && false && (
+            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => alert('준비중')}>
+              일반작업으로 변경
+            </StyledButton>
+          )}
+        </StyledButtonWrapper>
         <ContentsWrapper>
           <SafetyWorkInfo
             formData={formData}
@@ -435,27 +444,16 @@ class emergencyWorkWrite extends Component {
             handleUploadFileChange={this.handleUploadFileChange}
             fileList={this.state.fileList || []}
           />
-          <div className="middleTitle">
-            <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
-            <span className="middleTitleText">투입장비</span>
-            <StyledButton
-              className="btn-primary btn-xxs btn-first"
-              onClick={() => {
-                if (formData.WORK_NO === '') {
-                  message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
-                  return;
-                }
-                this.handleModal('equip', true);
-              }}
-            >
-              투입 장비 추가
-            </StyledButton>
+          <div className="middleTitle" style={{ margin: '10px 0px -5px 10px' }}>
+            <AppstoreTwoTone style={{ marginRight: '5px' }} />
+            <span>투입장비</span>
           </div>
           <div>
             <SafetyEquipTable equipList={formData.EQUIP_LIST} equipRemove={this.equipRemove} />
           </div>
         </ContentsWrapper>
         <AntdModal
+          className="modal-table-pad"
           title={modalTitle}
           width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '70%'}
           visible={modalVisible}
@@ -483,7 +481,7 @@ class emergencyWorkWrite extends Component {
             <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWorkEmergency_search" rowSelect={this.handleSafetyWorkSelect} />
           )}
         </AntdModal>
-      </Styled>
+      </>
     );
   }
 }
