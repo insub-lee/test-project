@@ -92,11 +92,11 @@ class WorkProcessModal extends Component {
   };
 
   onTreeNodeCheck = checkedKeys => {
+    console.debug('treeNOde', checkedKeys);
     this.setState({ selectedDeptKeys: checkedKeys });
   };
 
   onDeptUserCheck = selectedUserKeys => {
-    console.debug('user', selectedUserKeys);
     this.setState({ selectedUserKeys });
   };
 
@@ -308,19 +308,38 @@ class WorkProcessModal extends Component {
     getDeptUserList(row.DEPT_ID, this.initDeptUserList);
   };
 
-  onDeptDoubleClick = () => {};
+  onDeptDoubleClick = (record, rowIndex, e) => {
+    const { selectedNode } = this.state;
+    const { DEPT_ID } = record;
+    const { NODE_TYPE } = selectedNode;
+    if (NODE_TYPE === 'ND') {
+      this.setState({ selectedDeptKeys: [DEPT_ID] }, () => {
+        //handler
+        const prcRuleId = selectedNode.PRC_RULE_ID;
+        const nodeId = selectedNode.NODE_ID;
+        const nodeType = selectedNode.NODE_TYPE;
+        this.handleAddUser(prcRuleId, nodeId, nodeType);
+      });
+    } else {
+      message.info('배포부서 버튼을 클릭하거나, 선택해 주세요');
+    }
+  };
 
   onUserDoubleClick = (record, rowIndex, e) => {
     const { selectedNode } = this.state;
     const { USER_ID } = record;
-    console.debug('onDouble', selectedNode, record, rowIndex, e);
-    this.setState({ selectedUserKeys: [USER_ID] }, () => {
-      //handler
-      const prcRuleId = selectedNode.PRC_RULE_ID;
-      const nodeId = selectedNode.NODE_ID;
-      const nodeType = selectedNode.NODE_TYPE;
-      this.handleAddUser(prcRuleId, nodeId, nodeType);
-    });
+    const { NODE_TYPE } = selectedNode;
+    if (NODE_TYPE !== 'ND') {
+      this.setState({ selectedUserKeys: [USER_ID] }, () => {
+        //handler
+        const prcRuleId = selectedNode.PRC_RULE_ID;
+        const nodeId = selectedNode.NODE_ID;
+        const nodeType = selectedNode.NODE_TYPE;
+        this.handleAddUser(prcRuleId, nodeId, nodeType);
+      });
+    } else {
+      message.info('배포부서는 부서만 선택해 등록할 수 있습니다');
+    }
   };
 
   onChangeNode = e => {
