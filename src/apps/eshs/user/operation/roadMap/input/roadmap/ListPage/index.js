@@ -2,16 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-import { Table, Modal, Select, InputNumber, message } from 'antd';
+import { Table, Modal, Select, InputNumber } from 'antd';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
-import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
+import { callBackAfterPost, callBackAfterPut } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 
 const AntdInputNumber = StyledInputNumber(InputNumber);
 const AntdModal = StyledAntdModal(Modal);
@@ -26,6 +27,7 @@ class ListPage extends React.Component {
       selectedCategory: 387,
       modalVisible: false,
       requestValue: {},
+      selectedYear: Number(moment().format('YYYY')),
     };
   }
 
@@ -92,12 +94,12 @@ class ListPage extends React.Component {
   }
 
   getDataSource = () => {
-    const { selectedCategory } = this.state;
+    const { selectedCategory, selectedYear } = this.state;
     const { sagaKey, getExtraApiData } = this.props;
     const apiArr = [
       {
         key: 'dataSource',
-        url: `/api/eshs/v1/common/selectinputroadmap?CATEGORY=${selectedCategory}`,
+        url: `/api/eshs/v1/common/selectinputroadmap?CATEGORY=${selectedCategory}&CHK_DATE=${selectedYear}`,
         type: 'GET',
       },
     ];
@@ -138,9 +140,12 @@ class ListPage extends React.Component {
   };
 
   handleSelectChange = (key, value) => {
-    this.setState({
-      [key]: value,
-    });
+    this.setState(
+      {
+        [key]: value,
+      },
+      this.getDataSource,
+    );
   };
 
   handleAddClick = () => {
@@ -153,7 +158,7 @@ class ListPage extends React.Component {
       .format('YYYY');
     const endYear = moment().format('YYYY');
     const yearList = [];
-    for (let i = Number(initYear); i <= Number(endYear); i += 1) {
+    for (let i = Number(initYear); i <= Number(endYear) + 3; i += 1) {
       yearList.push(i);
     }
 
@@ -224,7 +229,15 @@ class ListPage extends React.Component {
   handleModifyClick = () => {
     const { requestValue } = this.state;
     const { sagaKey, submitExtraHandler } = this.props;
-    console.debug(requestValue);
+
+    const submitCallbackFunc = () => {
+      this.getDataSource();
+      this.handleModalClose();
+    };
+
+    submitExtraHandler(sagaKey, 'PUT', '/api/eshs/v1/common/updateroadmapvalue', requestValue, (id, response) =>
+      callBackAfterPut(id, response, submitCallbackFunc),
+    );
   };
 
   render() {
@@ -254,12 +267,12 @@ class ListPage extends React.Component {
                 ))}
               </AntdSelect>
             </div>
-            <div className="btn-area">
-              <StyledButton className="btn-primary btn-sm" onClick={handleAddClick} pagination={{ pageSize: 12 }}>
-                항목 추가
-              </StyledButton>
-            </div>
           </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm" onClick={handleAddClick}>
+              항목 추가
+            </StyledButton>
+          </StyledButtonWrapper>
           <AntdTable columns={columns} dataSource={dataSource} pagination={{ pageSize: 12 }} />
           <AntdModal visible={modalVisible} title={isModified ? 'Roadmap 수정' : 'Roadmap 등록'} onCancel={handleModalClose} footer={null} destroyOnClose>
             <StyledContentsWrapper>
