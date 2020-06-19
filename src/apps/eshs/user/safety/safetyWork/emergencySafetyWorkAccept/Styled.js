@@ -5,10 +5,6 @@ const Styled = styled.div`
   height: 100%;
   overflow: auto;
   padding: 20px;
-
-  .workerExcelBtn button {
-    margin-bottom: 5px;
-  }
 `;
 
 export default Styled;

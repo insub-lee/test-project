@@ -1,21 +1,25 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Modal, Descriptions } from 'antd';
-import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import { Input, Modal } from 'antd';
+import { AppstoreTwoTone } from '@ant-design/icons';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import Styled from './Styled';
 import EduListTable from '../SafetyEduList';
 import EduInfoTable from '../EduInfoTable';
 import WorkerInfoTable from '../WorkerInfoTable';
 
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledContentsModal(Modal);
+const AntdInput = StyledInput(Input);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class EduMgt extends Component {
   constructor(props) {
@@ -104,6 +108,25 @@ class EduMgt extends Component {
     );
   };
 
+  deleteCallback = (id, response) => {
+    const { result } = response;
+    if (result === 'success') {
+      message.success(<MessageContent>안전교육 정보를 삭제하였습니다.</MessageContent>);
+      this.initFormData();
+    } else {
+      message.error(<MessageContent>안전교육 정보 삭제에 실패하였습니다.</MessageContent>);
+    }
+  };
+
+  updateCallback = (id, resposnse) => {
+    const { result } = resposnse;
+    if (result === 'success') {
+      message.success(<MessageContent>안전교육 정보를 수정하였습니다.</MessageContent>);
+    } else {
+      message.error(<MessageContent>안전교육 정보 수정에 실패하였습니다.</MessageContent>);
+    }
+  };
+
   handleModalVisible = (type, bool) => {
     this.setState({
       modalType: type,
@@ -156,14 +179,11 @@ class EduMgt extends Component {
       case 'UPDATE':
         validResult = this.checkValidation(formData);
         if (validResult) {
-          submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyEdu', submitData);
+          submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyEdu', submitData, this.updateCallback);
         }
         break;
       case 'DELETE':
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/safetyEdu', submitData, this.initFormData);
-        break;
-      case 'SAVE':
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eduHistory', submitData, this.handleGetWorkers);
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/safetyEdu', submitData, this.deleteCallback);
         break;
       default:
         break;
@@ -225,7 +245,9 @@ class EduMgt extends Component {
       { key: 'M_TEL', size: 13 },
     ];
     const keyField = fieldList.find(field => field.key === key);
-    return <Input maxLength={keyField.size} value={value} onChange={e => this.changeWorkerFormData(keyField.key, e.target.value)} />;
+    return (
+      <AntdInput className="ant-input-sm" maxLength={keyField.size} value={value} onChange={e => this.changeWorkerFormData(keyField.key, e.target.value)} />
+    );
   };
 
   changeWorkerFormData = (key, value) => {
@@ -439,57 +461,54 @@ class EduMgt extends Component {
       onChange: this.workerTableRowSelect,
     };
     return (
-      <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <div className="searchCmpnyWrap">
-              <label>
-                교육등록번호
-                <Input
-                  className="ant-input-sm"
-                  style={{ width: '200px', marginLeft: '5px', marginRight: '5px' }}
-                  readOnly
-                  onClick={() => this.handleModalVisible('searchEdu', true)}
-                  value={(formData.EDU_NO && formData.EDU_NO) || ''}
-                />
-              </label>
-            </div>
-            <div
-              className="searchCmpnyBtn"
-              tabIndex={0}
+      <>
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <span className="text-label">교육등록번호</span>
+            <AntdSearch
+              className="ant-search-inline input-search-mid mr5"
               onClick={() => this.handleModalVisible('searchEdu', true)}
-              onKeyPress={() => this.handleModalVisible('searchEdu', true)} // esLint
-              role="button" // esLint
-            >
-              <CaretDownOutlined />
-            </div>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('검색')} style={{ marginBottom: '5px' }}>
-              검색
-            </StyledButton>
-            {formData.EDU_NO && formData.EDU_NO !== '' ? (
+              value={(formData.EDU_NO && formData.EDU_NO) || ''}
+              style={{ width: '200px' }}
+            />
+            {formData.EDU_NO && formData.EDU_NO !== '' && (
               <>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('UPDATE')} style={{ marginBottom: '5px' }}>
-                  수정
-                </StyledButton>
-                {formData.WORKER_LIST && formData.WORKER_LIST.length > 0 && (
-                  <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('SAVE')} style={{ marginBottom: '5px' }}>
-                    저장
-                  </StyledButton>
-                )}
+                <span className="text-label">거래처</span>
+                <AntdSearch
+                  className="ant-search-inline input-search-mid mr5"
+                  onClick={() => this.handleModalVisible('searchCmpny', true)}
+                  value={selectedCmpny.WRK_CMPNY_NM || ''}
+                  style={{ width: '200px' }}
+                />
               </>
-            ) : (
-              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('INSERT')} style={{ marginBottom: '5px' }}>
-                추가
-              </StyledButton>
             )}
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('삭제')} style={{ marginBottom: '5px' }}>
-              삭제
-            </StyledButton>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.initFormData()} style={{ marginBottom: '5px' }}>
-              초기화
-            </StyledButton>
           </div>
-        </StyledSearchWrap>
+        </StyledCustomSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          {formData.EDU_NO && formData.EDU_NO !== '' ? (
+            <>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('UPDATE')}>
+                저장
+              </StyledButton>
+              <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.submitFormData('DELETE')}>
+                삭제
+              </StyledButton>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetWorkers()}>
+                거래처 작업자 불러오기
+              </StyledButton>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModalVisible('addWorker', true)}>
+                작업자 추가 등록
+              </StyledButton>
+            </>
+          ) : (
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('INSERT')}>
+              추가
+            </StyledButton>
+          )}
+          <StyledButton className="btn-gray btn-sm" onClick={() => this.initFormData()}>
+            초기화
+          </StyledButton>
+        </StyledButtonWrapper>
         {/* 콘텐츠 영역 */}
         <ContentsWrapper>
           <EduInfoTable
@@ -500,42 +519,14 @@ class EduMgt extends Component {
             eshsHstCmpnyList={eshsHstCmpnyList}
             eshsHstCmpnyUserList={eshsHstCmpnyUserList}
           />
-          <div className="middleTitle">
+          <div className="middleTitle" style={{ margin: '10px 0px -5px 10px' }}>
             <AppstoreTwoTone style={{ marginRight: '5px' }} />
-            교육수강자
-          </div>
-          <div className="search-group-layer">
-            <div className="searchCmpnyWrap">
-              <label style={{ marginLeft: '20px' }}>
-                거래처
-                <Input
-                  className="ant-input-sm"
-                  style={{ width: '200px', marginLeft: '5px', marginRight: '5px' }}
-                  value={selectedCmpny.WRK_CMPNY_NM || ''}
-                  readOnly
-                  onClick={() => this.handleModalVisible('searchCmpny', true)}
-                />
-              </label>
-            </div>
-            <div
-              className="searchCmpnyBtn"
-              tabIndex={0}
-              onClick={() => this.handleModalVisible('searchCmpny', true)}
-              onKeyPress={() => this.handleModalVisible('searchCmpny', true)} // esLint
-              role="button" // esLint
-            >
-              <CaretDownOutlined />
-            </div>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.handleGetWorkers()} style={{ marginBottom: '5px' }}>
-              작업자 명단 불러오기
-            </StyledButton>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.handleModalVisible('addWorker', true)} style={{ marginBottom: '5px' }}>
-              작업자 추가 등록
-            </StyledButton>
+            <span>교육수강자 ( * 선택한 작업자만 교육이수 됩니다. )</span>
           </div>
           <WorkerInfoTable workerList={workerList} rowSelection={rowSelection} />
         </ContentsWrapper>
         <AntdModal
+          className="modal-table-pad"
           title={this.modalTitle(modalType)}
           width={790}
           visible={modalVisible}
@@ -561,36 +552,47 @@ class EduMgt extends Component {
             />
           )}
           {modalType === 'addWorker' && (
-            <>
-              <Descriptions size="default" bordered>
-                <Descriptions.Item label="거래처" span={4}>
-                  {selectedCmpny.WRK_CMPNY_NM === '' ? 'N/A' : selectedCmpny.WRK_CMPNY_NM}
-                </Descriptions.Item>
-                <Descriptions.Item label="이름" span={4}>
-                  {this.renderInputColumns('WORKER_NM', worker.WORKER_NM)}
-                </Descriptions.Item>
-                <Descriptions.Item label={`주민등록번호("-" 제외)`} span={4}>
-                  {this.renderInputColumns('WORKER_SSN', worker.WORKER_SSN)}
-                </Descriptions.Item>
-                <Descriptions.Item label="휴대폰(연락처)" span={4}>
-                  {this.renderInputColumns('M_TEL', worker.M_TEL)}
-                </Descriptions.Item>
-                <Descriptions.Item label="긴급연락처" span={4}>
-                  {this.renderInputColumns('TEL', worker.TEL)}
-                </Descriptions.Item>
-              </Descriptions>
-              <StyledButtonWrapper className="btn-wrap-right" style={{ marginTop: '10px' }}>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.addWorker()}>
+            <StyledHtmlTable>
+              <table>
+                <colgroup>
+                  <col width="20%"></col>
+                  <col width="80%"></col>
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th>거래처</th>
+                    <td>{selectedCmpny.WRK_CMPNY_NM === '' ? 'N/A' : selectedCmpny.WRK_CMPNY_NM}</td>
+                  </tr>
+                  <tr>
+                    <th>이름</th>
+                    <td>{this.renderInputColumns('WORKER_NM', worker.WORKER_NM)}</td>
+                  </tr>
+                  <tr>
+                    <th>주민등록번호("-" 제외)</th>
+                    <td>{this.renderInputColumns('WORKER_SSN', worker.WORKER_SSN)}</td>
+                  </tr>
+                  <tr>
+                    <th>휴대폰(연락처)</th>
+                    <td>{this.renderInputColumns('M_TEL', worker.M_TEL)}</td>
+                  </tr>
+                  <tr>
+                    <th>긴급연락처</th>
+                    <td>{this.renderInputColumns('TEL', worker.TEL)}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+                <StyledButton className="btn-primary mr5 btn-sm" onClick={() => this.addWorker()}>
                   저장
                 </StyledButton>
-                <StyledButton className="btn-primary btn-xs" onClick={() => this.handleModalVisible('', false)}>
+                <StyledButton className="btn-light btn-sm" onClick={() => this.handleModalVisible('', false)}>
                   취소
                 </StyledButton>
               </StyledButtonWrapper>
-            </>
+            </StyledHtmlTable>
           )}
         </AntdModal>
-      </Styled>
+      </>
     );
   }
 }

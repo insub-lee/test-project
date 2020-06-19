@@ -2,18 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // import { Table, Column, AutoSizer } from 'react-virtualized';
 import { Input, Table, Select } from 'antd';
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledSelect from 'commonStyled/EshsStyled/Select/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import Styled from './Styled';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 
 const { Option } = Select;
 const AntdInput = StyledInput(Input);
-const AntdTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
+const AntdSelect = StyledSelect(Select);
 
 class SafetyEduList extends Component {
   constructor(props) {
@@ -28,10 +26,6 @@ class SafetyEduList extends Component {
     const { searchSafetyEdu } = this.props;
     const { searchType, searchValue } = this.state;
     searchSafetyEdu(searchType, searchValue);
-    // if (searchValue !== '') {
-    // } else {
-    //   message.error(<MessageContent>검색어를 입력해 주십시오.</MessageContent>);
-    // }
   };
 
   render() {
@@ -76,29 +70,28 @@ class SafetyEduList extends Component {
     ];
 
     return (
-      <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <StyledSelect style={{ display: 'inline' }}>
-              <Select defaultValue="EDU_NO" style={{ width: '120px' }} onChange={e => this.setState({ searchType: e })}>
-                <Option value="EDU_NO">등록번호</Option>
-                <Option value="EDU_YEAR">연도</Option>
-                <Option value="WORK_NO">작업번호</Option>
-                <Option value="SITE">지역</Option>
-                <Option value="EDU_DT">교육일자</Option>
-                <Option value="EDU_LOC">교육장소</Option>
-              </Select>
-            </StyledSelect>
+      <>
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <span className="text-label">검색구분</span>
+            <AntdSelect className="select-mid" defaultValue="EDU_NO" style={{ width: '120px' }} onChange={e => this.setState({ searchType: e })}>
+              <Option value="EDU_NO">등록번호</Option>
+              <Option value="EDU_YEAR">연도</Option>
+              <Option value="WORK_NO">작업번호</Option>
+              <Option value="SITE">지역</Option>
+              <Option value="EDU_DT">교육일자</Option>
+              <Option value="EDU_LOC">교육장소</Option>
+            </AntdSelect>
             <AntdInput
-              className="ant-input-sm"
+              className="ant-input-mid"
               style={{ width: '200px', display: 'inline', marginLeft: '10px', marginRight: '10px' }}
               onChange={e => this.setState({ searchValue: e.target.value })}
             />
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.searchSafetyEdu()}>
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.searchSafetyEdu()}>
               검색
             </StyledButton>
           </div>
-        </StyledSearchWrap>
+        </StyledCustomSearchWrapper>
         <>
           <AntdTable
             columns={columns}
@@ -109,7 +102,7 @@ class SafetyEduList extends Component {
             footer={() => <div style={{ textAlign: 'center' }}>{`총 ${safetyEduList.length === 0 ? 0 : safetyEduList.length} 건`}</div>}
           />
         </>
-      </Styled>
+      </>
     );
   }
 }
