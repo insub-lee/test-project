@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
-import { debounce } from 'lodash';
 import moment from 'moment';
 
 import { AgGridReact } from 'ag-grid-react';
@@ -12,6 +11,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { Input, Select } from 'antd';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import { columnDefs } from './columnDefs';
@@ -28,7 +28,6 @@ class List extends React.Component {
       KEYWORD: '',
       CATEGORY_ID: '',
     };
-    this.getSearchData = debounce(this.getSearchData, 300);
   }
 
   defaultColDef = {
@@ -84,12 +83,12 @@ class List extends React.Component {
   };
 
   handleInputChange = (value, name) => {
-    const { getSearchData } = this;
+    // const { getSearchData } = this;
     this.setState(
       {
         [name]: value,
       },
-      getSearchData(),
+      // getSearchData(),
     );
   };
 
@@ -108,13 +107,20 @@ class List extends React.Component {
 
   render() {
     const { defaultColDef } = this;
-    const { handleInputChange } = this;
+    const { handleInputChange, getSearchData } = this;
     const { rowData, categories } = this.state;
     return (
       <>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
             <div className="search-input-area">
+              <div className="text-label">분류</div>
+              <AntdSelect className="select-mid mr5" defaultValue="" onChange={e => handleInputChange(e, 'CATEGORY_ID')} style={{ width: '240px' }}>
+                {categories.map(item => (
+                  <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
+                ))}
+                <Select.Option value="">전체 보기</Select.Option>
+              </AntdSelect>
               <div className="text-label">CAS_NO.</div>
               <AntdInput
                 className="ant-input-inline ant-input-mid mr5"
@@ -122,12 +128,6 @@ class List extends React.Component {
                 style={{ width: '150px' }}
                 placeholder="CAS_NO."
               />
-              <AntdSelect className="select-mid mr5" defaultValue="" onChange={e => handleInputChange(e, 'CATEGORY_ID')} style={{ width: '240px' }}>
-                {categories.map(item => (
-                  <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
-                ))}
-                <Select.Option value="">전체 보기</Select.Option>
-              </AntdSelect>
               <AntdInput
                 className="ant-input-inline ant-input-mid mr5"
                 onChange={e => handleInputChange(e.target.value, 'KEYWORD')}
@@ -135,6 +135,9 @@ class List extends React.Component {
                 placeholder="화학물질명을 입력하세요."
               />
               <div className="btn-area">
+                <StyledButton className="btn-gray btn-sm mr5" onClick={getSearchData}>
+                  검색
+                </StyledButton>
                 <ExcelDownloadComp
                   isBuilder={false}
                   fileName={`${moment().format('YYYYMMDD')}_화관법(유해)`}
