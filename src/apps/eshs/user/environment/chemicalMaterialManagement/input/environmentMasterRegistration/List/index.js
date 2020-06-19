@@ -396,14 +396,14 @@ class List extends React.Component {
             <StyledButton className="btn-primary mr5 btn-sm" onClick={handleInputClick}>
               저장/수정
             </StyledButton>
-            <Popconfirm disabled={requestValue.SAP_ID} title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
-              <StyledButton className="btn-light mr5 btn-sm" onClick={handleDeleteClick}>
+            <StyledButton className="btn-light mr5 btn-sm" onClick={handleResetClick}>
+              초기화
+            </StyledButton>
+            <Popconfirm disabled={!isModified} title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
+              <StyledButton className="btn-light btn-sm" onClick={handleDeleteClick}>
                 삭제
               </StyledButton>
             </Popconfirm>
-            <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
-              초기화
-            </StyledButton>
           </StyledButtonWrapper>
           <StyledHtmlTable>
             <table style={{ marginBottom: '10px' }}>
