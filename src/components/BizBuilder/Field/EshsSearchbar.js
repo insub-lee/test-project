@@ -104,7 +104,7 @@ class CommonSearchbar extends React.Component {
               등록
             </StyledButton>
             <StyledButton className="btn-light btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-              Reset
+              초기화
             </StyledButton>
           </StyledButtonWrapper>
         );
@@ -126,7 +126,7 @@ class CommonSearchbar extends React.Component {
               ''
             )}
             <StyledButton className="btn-light btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-              Reset
+              초기화
             </StyledButton>
           </StyledButtonWrapper>
         );
@@ -187,6 +187,7 @@ CommonSearchbar.propTypes = {
   modifyTask: PropTypes.func,
   deleteTask: PropTypes.func,
   changeFormData: PropTypes.func,
+  loadingComplete: PropTypes.bool,
 };
 
 export default CommonSearchbar;
