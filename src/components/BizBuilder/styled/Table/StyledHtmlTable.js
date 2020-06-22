@@ -67,6 +67,9 @@ const StyledHtmlTable = styled.div`
             background: #e6f7ff;
           }
         }
+        &.tr-total td {
+          background: #c5c9cd;
+        }
       }
     }
 
