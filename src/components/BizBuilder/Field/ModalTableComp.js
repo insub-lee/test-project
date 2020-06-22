@@ -7,10 +7,10 @@ import { SearchOutlined } from '@ant-design/icons';
 
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import StyledModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledModal(Modal);
+const AntdModal = StyledAntdModalPad(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
 
 class ModalTableComp extends React.Component {
@@ -213,7 +213,7 @@ class ModalTableComp extends React.Component {
               onSearch={this.handleModalVisible}
               style={{ width: '100%' }}
             />
-            <AntdModal title={NAME_KOR || COMP_FIELD} visible={this.state.modal} width={800} onCancel={this.handleModalVisible} footer={[]}>
+            <AntdModal title={NAME_KOR || COMP_FIELD} visible={this.state.modal} width={800} onCancel={this.handleModalVisible} footer={null}>
               {this.state.modal && this.modalTableRender()}
             </AntdModal>
           </>
