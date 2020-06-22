@@ -83,31 +83,14 @@ class List extends React.Component {
   };
 
   handleInputChange = (value, name) => {
-    // const { getSearchData } = this;
-    this.setState(
-      {
-        [name]: value,
-      },
-      // getSearchData(),
-    );
-  };
-
-  getSearchData = () => {
-    const { CAS_NO, KEYWORD, CATEGORY_ID } = this.state;
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    const apiArr = [
-      {
-        key: 'chemicalMaterials',
-        type: 'GET',
-        url: `/api/eshs/v1/common/eshschemicalmaterialmanageactview?CAS_NO=${CAS_NO}&KEYWORD=${KEYWORD}&CATEGORY=${CATEGORY_ID}`,
-      },
-    ];
-    getCallDataHandler(id, apiArr, this.setRowData);
+    this.setState({
+      [name]: value,
+    });
   };
 
   render() {
     const { defaultColDef } = this;
-    const { handleInputChange, getSearchData } = this;
+    const { handleInputChange } = this;
     const { rowData, categories } = this.state;
     return (
       <>
@@ -127,15 +110,17 @@ class List extends React.Component {
                 onChange={e => handleInputChange(e.target.value, 'CAS_NO')}
                 style={{ width: '150px' }}
                 placeholder="CAS_NO."
+                onPressEnter={this.getRowData}
               />
               <AntdInput
                 className="ant-input-inline ant-input-mid mr5"
                 onChange={e => handleInputChange(e.target.value, 'KEYWORD')}
                 style={{ width: '300px' }}
                 placeholder="화학물질명을 입력하세요."
+                onPressEnter={this.getRowData}
               />
               <div className="btn-area">
-                <StyledButton className="btn-gray btn-sm mr5" onClick={getSearchData}>
+                <StyledButton className="btn-gray btn-sm mr5" onClick={this.getRowData}>
                   검색
                 </StyledButton>
                 <ExcelDownloadComp

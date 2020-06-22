@@ -142,6 +142,7 @@ class List extends React.Component {
                 value={requestValue.SAP_NO}
                 style={{ width: '15%' }}
                 placeholder="SAP_NO."
+                onPressEnter={getSearchData}
               />
               <div className="text-label">CAS_NO.</div>
               <AntdInput
@@ -149,14 +150,17 @@ class List extends React.Component {
                 onChange={e => handleInputChange(e.target.value, 'CAS_NO')}
                 value={requestValue.CAS_NO}
                 style={{ width: '15%' }}
+                onPressEnter={getSearchData}
                 placeholder="CAS_NO."
               />
+              <div className="text-label">화학물질명</div>
               <AntdInput
                 className="ant-input-inline ant-input-mid mr5"
                 onChange={e => handleInputChange(e.target.value, 'KEYWORD')}
                 value={requestValue.KEYWORD}
                 style={{ width: '20%' }}
                 placeholder="화학물질명을 입력하세요."
+                onPressEnter={getSearchData}
               />
               <div className="btn-area">
                 <StyledButton className="btn-gray btn-sm mr5" onClick={getSearchData}>
