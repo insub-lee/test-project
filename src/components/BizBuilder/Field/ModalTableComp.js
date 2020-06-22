@@ -25,9 +25,10 @@ class ModalTableComp extends React.Component {
 
   componentDidMount() {
     const {
+      getExtraApiData,
+      sagaKey: id,
       CONFIG: { property },
     } = this.props;
-    this.apiData();
     const temp =
       property &&
       property.columns &&
@@ -35,21 +36,23 @@ class ModalTableComp extends React.Component {
         .filter(item => item.columnHiddenYN !== true)
         .map(nItem => ({ title: nItem.title, dataIndex: nItem.dataIndex, width: nItem.width, ...this.getColumnSearchProps(nItem.dataIndex) }));
 
-    this.setState({ nColumns: temp });
+    this.setState({ nColumns: temp }, () => getExtraApiData(id, [{ key: 'apiList', url: '/api/builder/v1/work/apimaster', type: 'GET' }], this.apiData));
   }
 
   apiData = () => {
-    const { getExtraApiData, sagaKey: id, CONFIG } = this.props;
-    const apiArray =
-      CONFIG &&
-      CONFIG.property &&
-      CONFIG.property.apiData &&
-      CONFIG.property.apiData &&
-      CONFIG.property.apiData.apiInfo.map(item => ({
-        key: `item_${item.API_SEQ}`,
-        url: `${item.API_SRC}`,
-        type: `${item.METHOD_TYPE}`.toUpperCase(),
-      }));
+    const { getExtraApiData, sagaKey: id, CONFIG, extraApiData } = this.props;
+
+    const apiList = (extraApiData && extraApiData.apiList && extraApiData.apiList.list) || [];
+    const apiInfo = (CONFIG && CONFIG.property && CONFIG.property.apiData && CONFIG.property.apiData && CONFIG.property.apiData.apiInfo) || [];
+
+    const apiArray = [];
+    apiList.forEach(item => {
+      if (apiInfo.findIndex(info => info.API_SEQ === item.API_SEQ) > -1) {
+        return apiArray.push({ key: `item_${item.API_SEQ}`, url: `${item.API_SRC}`, type: `${item.METHOD_TYPE}`.toUpperCase() });
+      }
+      return null;
+    });
+
     getExtraApiData(id, apiArray);
   };
 
