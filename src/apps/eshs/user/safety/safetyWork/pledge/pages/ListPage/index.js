@@ -245,9 +245,6 @@ class ListPage extends Component {
       listData,
     } = this.props;
     const { StyledWrap, searchType, searchListData } = this.state;
-
-    console.debug('확인해봐', this.state);
-    console.debug('확인해봐', searchListData);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const {
