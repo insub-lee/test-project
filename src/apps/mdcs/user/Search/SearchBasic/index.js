@@ -94,6 +94,8 @@ const initState = {
   selectedRow: undefined,
   DRAFT_PROCESS: undefined,
   appvMember: undefined,
+  PAGE: 1,
+  PAGE_CNT: 10,
 };
 
 const InputGroup = Input.Group;
@@ -236,6 +238,11 @@ class SearchBasic extends Component {
     this.setState({ isDownVisible: false });
   };
 
+  setPaginationIdx = PAGE =>
+    this.setState({ PAGE }, () => {
+      this.callApi();
+    });
+
   render() {
     const {
       nodeIdList,
@@ -255,10 +262,12 @@ class SearchBasic extends Component {
       selectedRow,
       DRAFT_PROCESS,
       appvMember,
+      PAGE,
     } = this.state;
     const { result, sagaKey, submitHandlerBySaga } = this.props;
     const { listData = {} } = result;
     const listDataArr = listData.arr || [];
+    const listTotalCnt = listData.cnt || 0;
     const { onClickRow, closeBtnFunc } = this;
     return (
       <StyledSearch>
@@ -394,6 +403,8 @@ class SearchBasic extends Component {
                       onClickRow(record, rowIndex);
                     },
                   })}
+                  pagination={{ current: PAGE, total: listTotalCnt }}
+                  onChange={pagination => this.setPaginationIdx(pagination.current)}
                 />
               </StyledContentsWrapper>
             </>
