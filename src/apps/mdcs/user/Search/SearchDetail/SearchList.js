@@ -9,6 +9,7 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import BizBuilderBase from 'components/BizBuilderBase';
 import DraftDownLoad from 'apps/mdcs/Modal/DraftDownLoad';
 import history from 'utils/history';
+import { PAGINATION_OPT_CODE } from 'components/BizBuilder/Common/Constants';
 
 import CoverViewer from '../CoverViewer';
 
@@ -47,8 +48,23 @@ class SearchList extends Component {
       selectedRow: undefined,
       DRAFT_PROCESS: undefined,
       appvMember: undefined,
+      paginationIdx: 1,
+      pageSize: 10,
+      isPagingData: false,
     };
   }
+
+  componentDidMount = () => {
+    const { workInfo } = this.props;
+    let isPagingData = false;
+
+    if (workInfo && workInfo.OPT_INFO) {
+      workInfo.OPT_INFO.forEach(opt => {
+        if (opt.OPT_CODE === PAGINATION_OPT_CODE && opt.ISUSED === 'Y') isPagingData = true;
+      });
+      this.setState({ isPagingData });
+    }
+  };
 
   // 검색결과 클릭시 발생
   onClickRow = (record, rowIndex) => {
@@ -113,9 +129,18 @@ class SearchList extends Component {
     this.setState({ isDownVisible: false });
   };
 
+  setPaginationIdx = paginationIdx =>
+    this.setState({ paginationIdx }, () => {
+      const { pageSize, isPagingData } = this.state;
+      if (isPagingData) {
+        const { sagaKey, workSeq, conditional, getListData } = this.props;
+        getListData(sagaKey, workSeq, conditional, paginationIdx, pageSize);
+      }
+    });
+
   render() {
-    const { listData, sagaKey, submitExtraHandler } = this.props;
-    const { SearchView, coverView, isDownVisible, selectedRow, DRAFT_PROCESS, appvMember } = this.state;
+    const { listData, sagaKey, submitExtraHandler, listTotalCnt } = this.props;
+    const { SearchView, coverView, isDownVisible, selectedRow, DRAFT_PROCESS, appvMember, paginationIdx } = this.state;
     return (
       <>
         <AntdTable
@@ -128,6 +153,8 @@ class SearchList extends Component {
               this.onClickRow(record, rowIndex);
             },
           })}
+          pagination={{ current: paginationIdx, total: listTotalCnt }}
+          onChange={pagination => this.setPaginationIdx(pagination.current)}
         />
         <AntdModal
           className="modalWrapper modalTechDoc"
