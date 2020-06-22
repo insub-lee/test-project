@@ -3,18 +3,18 @@ import PropTypes from 'prop-types';
 import { Input, Select, Table } from 'antd';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import Styled from './Styled';
 
 const { Option } = Select;
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
-const AntdTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 
 class SafetyWorkSearch extends Component {
   constructor(props) {
@@ -96,37 +96,35 @@ class SafetyWorkSearch extends Component {
     ];
     return (
       <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <div className="searchCmpnyWrap">
-              <span className="label-text">지역</span>
-              <AntdSelect className="select-xs" style={{ width: '100px' }} value={site} onChange={val => this.setState({ site: val })}>
-                <Option value="전체">전체</Option>
-                <Option value="청주">청주</Option>
-                <Option value="구미">구미</Option>
-              </AntdSelect>
-              <span className="label-text">검색구분</span>
-              <AntdSelect className="select-xs" style={{ width: '100px' }} value={searchType} onChange={val => this.setState({ searchType: val })}>
-                <Option value="WORK_NO">작업번호</Option>
-                <Option value="WGUBUN">작업구분</Option>
-                <Option value="TITLE">작업명</Option>
-                <Option value="WCATEGORY">주작업</Option>
-                <Option value="WLOC">작업장소</Option>
-                <Option value="WRK_CMPNY_NM">작업업체</Option>
-              </AntdSelect>
-              <span className="label-text">검색어</span>
-              <AntdInput
-                className="ant-input-xs ant-input-inline"
-                value={keyword}
-                onChange={e => this.setState({ keyword: e.target.value })}
-                style={{ width: '200px' }}
-              />
-              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.handleGetSafetyWorkList()} style={{ marginLeft: '10px' }}>
-                검색
-              </StyledButton>
-            </div>
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <span className="text-label">지역</span>
+            <AntdSelect className="select-xs" style={{ width: '100px' }} value={site} onChange={val => this.setState({ site: val })}>
+              <Option value="전체">전체</Option>
+              <Option value="청주">청주</Option>
+              <Option value="구미">구미</Option>
+            </AntdSelect>
+            <span className="text-label">검색구분</span>
+            <AntdSelect className="select-xs" style={{ width: '100px' }} value={searchType} onChange={val => this.setState({ searchType: val })}>
+              <Option value="WORK_NO">작업번호</Option>
+              <Option value="WGUBUN">작업구분</Option>
+              <Option value="TITLE">작업명</Option>
+              <Option value="WCATEGORY">주작업</Option>
+              <Option value="WLOC">작업장소</Option>
+              <Option value="WRK_CMPNY_NM">작업업체</Option>
+            </AntdSelect>
+            <span className="text-label">검색어</span>
+            <AntdInput
+              className="ant-input-xs ant-input-inline"
+              value={keyword}
+              onChange={e => this.setState({ keyword: e.target.value })}
+              style={{ width: '200px' }}
+            />
+            <StyledButton className="btn-gray btn-xs btn-first" onClick={() => this.handleGetSafetyWorkList()} style={{ marginLeft: '10px' }}>
+              검색
+            </StyledButton>
           </div>
-        </StyledSearchWrap>
+        </StyledCustomSearchWrapper>
         <ContentsWrapper>
           <AntdTable
             columns={columns}

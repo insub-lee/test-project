@@ -4,27 +4,26 @@ import PropTypes from 'prop-types';
 import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import BizBuilderBase from 'components/BizBuilderBase';
-import { CaretDownOutlined } from '@ant-design/icons';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import { Input, Modal } from 'antd';
-import Styled from './Styled';
 import CustomListPage from '../ListPage';
+
 const AntdModal = StyledModalWrapper(Modal);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class InputPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       initLoading: true,
-      cmpnyInfo: {
-        WRK_CMPNY_CD: '',
-      },
       modalType: '',
       modalVisible: false,
     };
@@ -148,48 +147,27 @@ class InputPage extends Component {
       }
       return (
         <>
-          <StyledSearchWrap>
-            <Styled>
-              <div className="search-group-layer">
-                <div className="searchCmpnyWrap">
-                  <label>
-                    서약서코드
-                    <Input
-                      className="ant-input-sm"
-                      style={{ width: '200px', marginLeft: '5px', marginRight: '5px' }}
-                      readOnly
-                      onClick={() => this.handleModalVisible('searchPledge', true)}
-                      value={(formData.PLEDGE_NO && formData.PLEDGE_NO) || ''}
-                    />
-                  </label>
-                </div>
-                <div
-                  className="searchCmpnyBtn"
-                  tabIndex={0}
-                  onClick={() => this.handleModalVisible('searchPledge', true)}
-                  onKeyPress={() => this.handleModalVisible('searchPledge', true)} // esLint
-                  role="button" // esLint
-                >
-                  <CaretDownOutlined />
-                </div>
-                <StyledButton
-                  className="btn-primary btn-xs btn-first"
-                  onClick={() => this.handleModalVisible('searchPledge', true)}
-                  style={{ marginBottom: '5px' }}
-                >
-                  검색
-                </StyledButton>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => saveTask(id, id, this.saveTaskAfter)} style={{ marginBottom: '5px' }}>
-                  추가
-                </StyledButton>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={this.resetPage} style={{ marginBottom: '5px' }}>
-                  초기화
-                </StyledButton>
-              </div>
-            </Styled>
-          </StyledSearchWrap>
           <StyledViewDesigner>
             <Sketch {...bodyStyle}>
+              <StyledCustomSearchWrapper>
+                <div className="search-input-area">
+                  <span className="text-label">서약서코드</span>
+                  <AntdSearch
+                    className="ant-search-inline input-search-mid mr5"
+                    onClick={() => this.handleModalVisible('searchPledge', true)}
+                    value={(formData.PLEDGE_NO && formData.PLEDGE_NO) || ''}
+                    style={{ width: '200px' }}
+                  />
+                </div>
+              </StyledCustomSearchWrapper>
+              <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => saveTask(id, id, this.saveTaskAfter)}>
+                  추가
+                </StyledButton>
+                <StyledButton className="btn-gray btn-sm btn-first" onClick={this.resetPage}>
+                  초기화
+                </StyledButton>
+              </StyledButtonWrapper>
               {isWorkflowUsed &&
                 PRC_ID !== -1 &&
                 (typeof CustomWorkProcess === 'function' ? (

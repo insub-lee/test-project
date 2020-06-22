@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Input, DatePicker, Select, Modal, Radio } from 'antd';
 import BizMicroDevBase from 'components/BizMicroDevBase';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSelect from 'commonStyled/EshsStyled/Select/StyledSelect';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import UserSelect from 'components/UserSelect';
@@ -16,6 +17,8 @@ import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 const AntdModal = StyledModalWrapper(Modal);
 const AntdInput = StyledInput(Input);
 const AntdSearch = StyledSearchInput(Input.Search);
+const AntdDatePicker = StyledDatePicker(DatePicker);
+const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
 
 const EduInfoTableStyled = styled.div`
@@ -107,13 +110,16 @@ class EduInfoTable extends Component {
       options.push(year);
     }
     return (
-      <StyledSelect>
-        <Select style={{ width: '200px' }} value={(formData.EDU_YEAR && formData.EDU_YEAR) || ''} onChange={e => this.handleFormDataOnchange('EDU_YEAR', e)}>
-          {options.map(YYYY => (
-            <Option value={`${YYYY}`}>{YYYY}</Option>
-          ))}
-        </Select>
-      </StyledSelect>
+      <AntdSelect
+        className="select-xs"
+        style={{ width: '200px' }}
+        value={(formData.EDU_YEAR && formData.EDU_YEAR) || ''}
+        onChange={e => this.handleFormDataOnchange('EDU_YEAR', e)}
+      >
+        {options.map(YYYY => (
+          <Option value={`${YYYY}`}>{YYYY}</Option>
+        ))}
+      </AntdSelect>
     );
   };
 
@@ -143,8 +149,8 @@ class EduInfoTable extends Component {
                     <span>* 교육일자</span>
                   </th>
                   <td colSpan={7}>
-                    <DatePicker
-                      className="ant-input-inline"
+                    <AntdDatePicker
+                      className="ant-picker-inline ant-picker-xs"
                       value={(formData.EDU_DT && moment(formData.EDU_DT)) || undefined}
                       onChange={date => this.handleFormDataOnchange('EDU_DT', date.format('YYYY-MM-DD'))}
                     />
@@ -155,24 +161,23 @@ class EduInfoTable extends Component {
                     <span>* 지역</span>
                   </th>
                   <td colSpan={2}>
-                    <StyledSelect>
-                      <Select
-                        style={{ width: '100%' }}
-                        defaultValue={(formData.SITE && formData.SITE) || '청주'}
-                        onChange={e => this.handleFormDataOnchange('SITE', e)}
-                      >
-                        <Option value="청주">청주</Option>
-                        <Option value="구미">구미</Option>
-                      </Select>
-                    </StyledSelect>
+                    <AntdSelect
+                      className="select-xs"
+                      style={{ width: '200px' }}
+                      defaultValue={(formData.SITE && formData.SITE) || '청주'}
+                      onChange={e => this.handleFormDataOnchange('SITE', e)}
+                    >
+                      <Option value="청주">청주</Option>
+                      <Option value="구미">구미</Option>
+                    </AntdSelect>
                   </td>
                   <th colSpan={2}>
                     <span>교육장소</span>
                   </th>
                   <td colSpan={3}>
                     <AntdInput
-                      className="ant-input-sm"
-                      style={{ width: '200px' }}
+                      className="ant-input-xs"
+                      style={{ width: '100%' }}
                       defaultValue={(formData.EDU_LOC && formData.EDU_LOC) || ''}
                       onChange={e => this.handleFormDataOnchange('EDU_LOC', e.target.value)}
                       onClick={this.toggleModal}
@@ -192,7 +197,7 @@ class EduInfoTable extends Component {
                   </th>
                   <td colSpan={7}>
                     <AntdSearch
-                      className="input-search-sm"
+                      className="input-search-xs"
                       style={{ width: '200px' }}
                       value={(formData.LECT_EMP_NM && formData.LECT_EMP_NM) || ''}
                       onClick={() => this.handleModalVisible('userSelect', true)}
@@ -211,7 +216,8 @@ class EduInfoTable extends Component {
                   </th>
                   <td colSpan={7}>
                     <AntdInput
-                      className="ant-input-sm"
+                      className="ant-input-xs"
+                      style={{ width: '200px' }}
                       maxlength={6}
                       value={(formData.OUT_LECT_SSN && formData.OUT_LECT_SSN) || ''}
                       onChange={e => this.handleFormDataOnchange('OUT_LECT_SSN', e.target.value)}
@@ -224,7 +230,8 @@ class EduInfoTable extends Component {
                   </th>
                   <td colSpan={7}>
                     <AntdInput
-                      className="ant-input-sm"
+                      className="ant-input-xs"
+                      style={{ width: '200px' }}
                       value={(formData.OUT_LECT_NM && formData.OUT_LECT_NM) || ''}
                       onChange={e => this.handleFormDataOnchange('OUT_LECT_NM', e.target.value)}
                     />
@@ -247,7 +254,7 @@ class EduInfoTable extends Component {
                   </th>
                   <td colSpan={7}>
                     <AntdSearch
-                      className="input-search-sm"
+                      className="input-search-xs"
                       style={{ width: '200px' }}
                       value={(formData.WORK_NO && formData.WORK_NO) || ''}
                       disable
@@ -262,7 +269,7 @@ class EduInfoTable extends Component {
         </ContentsWrapper>
         <AntdModal
           title={modalTitle}
-          width="70%"
+          width="80%"
           visible={modalVisible}
           footer={null}
           onOk={() => this.handleModalVisible('', false)}

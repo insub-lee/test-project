@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Select, Input, Modal } from 'antd';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import SwCode from 'apps/eshs/admin/safety/swCode';
-import Styled from './Styled';
 
 const AntdTable = StyledLineTable(Table);
 const AntdInput = StyledInput(Input);
@@ -61,31 +61,31 @@ class SafetyWorker extends Component {
     ];
 
     return (
-      <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <div className="searchCmpnyWrap">
-              <span className="label-text">검색분류</span>
-              <AntdSelect className="select-xs" style={{ width: '100px' }} value={searchType} onChange={val => this.setState({ searchType: val })}>
-                <Option value="NAME_KOR">코드명</Option>
-                <Option value="CODE">코드</Option>
-              </AntdSelect>
-              <span className="label-text">검색어</span>
-              <AntdInput
-                className="ant-input-xs ant-input-inline"
-                value={searchValue}
-                onChange={e => this.setState({ searchValue: e.target.value })}
-                style={{ width: '200px' }}
-              />
-              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.onClickSearch()} style={{ marginLeft: '10px' }}>
-                검색
-              </StyledButton>
-              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.setState({ modalVisible: true })}>
-                등록
-              </StyledButton>
-            </div>
+      <>
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <span className="text-label">검색분류</span>
+            <AntdSelect className="select-sm" style={{ width: '100px' }} value={searchType} onChange={val => this.setState({ searchType: val })}>
+              <Option value="NAME_KOR">코드명</Option>
+              <Option value="CODE">코드</Option>
+            </AntdSelect>
+            <span className="text-label">검색어</span>
+            <AntdInput
+              className="ant-input-sm ant-input-inline"
+              value={searchValue}
+              onChange={e => this.setState({ searchValue: e.target.value })}
+              style={{ width: '200px' }}
+            />
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.onClickSearch()} style={{ marginLeft: '10px' }}>
+              검색
+            </StyledButton>
           </div>
-        </StyledSearchWrap>
+        </StyledCustomSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.setState({ modalVisible: true })}>
+            안전작업 코드 등록
+          </StyledButton>
+        </StyledButtonWrapper>
         <AntdTable
           columns={columns}
           dataSource={list}
@@ -95,8 +95,8 @@ class SafetyWorker extends Component {
           })}
         />
         <AntdModal
-          title="코드 등록"
-          width="70%"
+          title="안전작업 코드 등록"
+          width="80%"
           visible={modalVisible}
           footer={null}
           onOk={() => this.setState({ modalVisible: false })}
@@ -104,7 +104,7 @@ class SafetyWorker extends Component {
         >
           <SwCode />
         </AntdModal>
-      </Styled>
+      </>
     );
   }
 }

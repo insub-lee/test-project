@@ -4,20 +4,25 @@ import PropTypes from 'prop-types';
 import { Input, Modal, Spin } from 'antd';
 import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import UserSelect from 'components/UserSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import BfcheckHead from '../bfcheckHead';
 import BfcheckDetail from '../bfcheckDetail';
 import BfcheckItemSelect from '../bfcheckItemSelect';
 import Styled from './Styled';
 
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledContentsModal(Modal);
+const AntdInput = StyledInput(Input);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class BfCheckPage extends Component {
   constructor(props) {
@@ -409,55 +414,44 @@ class BfCheckPage extends Component {
     const { modalType, modalTitle, modalVisible, formData, isLoaded } = this.state;
     const bfcheckItemList = (result && result.getBfcheckItem && result.getBfcheckItem.list) || [];
     return (
-      <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <div className="searchCmpnyWrap">
-              <label>
-                작업번호
-                <Input
-                  className="ant-input-sm"
-                  style={{ width: '150px', marginLeft: '5px', marginRight: '5px' }}
-                  value={formData.WORK_NO}
-                  onClick={() => this.handleModal('safetyWork', true)}
-                />
-              </label>
-            </div>
-            <div
-              className="searchCmpnyBtn"
-              tabIndex={0}
-              onClick={() => this.handleModal('safetyWork', true)}
-              onKeyPress={() => this.handleModal('safetyWork', true)} // esLint
-              role="button" // esLint
-            >
-              <CaretDownOutlined />
-            </div>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.handleGetSafetyWork()} style={{ marginBottom: '5px' }}>
+      <>
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <span className="text-label">작업번호</span>
+            <AntdSearch
+              className="ant-search-inline input-search-mid mr5"
+              onClick={() => this.handleModal('search', true)}
+              value={formData.WORK_NO}
+              style={{ width: '200px', marginRight: '10px' }}
+            />
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
               검색
             </StyledButton>
-            {formData.WORK_NO && formData.WORK_NO !== '' && (
-              <>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('SAVE')} style={{ marginBottom: '5px' }}>
-                  저장
-                </StyledButton>
-                {formData.SAVE_TYPE === 'update' && (
-                  <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('DELETE')} style={{ marginBottom: '5px' }}>
-                    삭제
-                  </StyledButton>
-                )}
-              </>
-            )}
           </div>
-        </StyledSearchWrap>
+        </StyledCustomSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          {formData.WORK_NO && formData.WORK_NO !== '' && (
+            <>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('SAVE')}>
+                저장
+              </StyledButton>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('bfcheckItem', true)}>
+                점검항목 추가
+              </StyledButton>
+              {formData.SAVE_TYPE === 'update' && (
+                <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.submitFormData('DELETE')}>
+                  삭제
+                </StyledButton>
+              )}
+            </>
+          )}
+        </StyledButtonWrapper>
         <ContentsWrapper>
           <Spin tip="Loading..." spinning={!isLoaded}>
             <BfcheckHead formData={formData.BFCHECK_HEAD} onChangeFormData={this.handleChangeHeadFormData} allChangeFormData={this.handleChangeFormData} />
-            <div className="middleTitle">
-              <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
-              <span className="middleTitleText">점검항목</span>
-              <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.handleModal('bfcheckItem', true)}>
-                점검항목 추가
-              </StyledButton>
+            <div className="middleTitle" style={{ margin: '10px 0px -5px 10px' }}>
+              <AppstoreTwoTone style={{ marginRight: '5px' }} />
+              <span>점검항목</span>
             </div>
             {pageType === 'mainBfcheck' && (
               <BfcheckDetail
@@ -491,7 +485,7 @@ class BfCheckPage extends Component {
           {modalType === 'safetyWork' && <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />}
           {modalType === 'userSelect' && <UserSelect onUserSelectHandler={undefined} onUserSelectedComplete={this.onSelectedComplete} onCancel={undefined} />}
         </AntdModal>
-      </Styled>
+      </>
     );
   }
 }

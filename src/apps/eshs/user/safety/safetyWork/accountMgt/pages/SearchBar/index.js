@@ -37,7 +37,6 @@ class SearchBar extends Component {
       gubun,
     } = this.props;
 
-    console.debug('gubun [ ', gubun, ' ] ');
     return this.setState({
       SearchList: [
         <BizBuilderBase
@@ -129,24 +128,24 @@ class SearchBar extends Component {
         <StyledButtonWrapper className="btn-wrap-inline">
           {viewType !== 'MODIFY' ? (
             <>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.handleSearchBarAction('INPUT')}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.handleSearchBarAction('INPUT')}>
                 추가
               </StyledButton>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.handleSearchBarAction('RESET')}>
+              <StyledButton className="btn-light btn-first btn-sm" onClick={() => this.handleSearchBarAction('RESET')}>
                 Reset
               </StyledButton>
             </>
           ) : (
             <>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.handleSearchBarAction('REVISION')}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.handleSearchBarAction('REVISION')}>
                 신규등록
               </StyledButton>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.handleSearchBarAction('MODIFY')}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.handleSearchBarAction('MODIFY')}>
                 수정
               </StyledButton>
               {gubun === 'SW' && (
                 <Popconfirm title="Are you sure delete this task?" onConfirm={() => this.handleSearchBarAction('DELETE')} okText="Yes" cancelText="No">
-                  <StyledButton className="btn-primary">삭제</StyledButton>
+                  <StyledButton className="btn-light btn-sm">삭제</StyledButton>
                 </Popconfirm>
               )}
             </>
