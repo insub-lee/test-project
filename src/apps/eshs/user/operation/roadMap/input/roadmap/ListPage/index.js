@@ -36,16 +36,19 @@ class ListPage extends React.Component {
       title: '항목',
       dataIndex: 'CATEGORY_NAME',
       align: 'center',
+      width: '15%',
     },
     {
       title: '연도',
       dataIndex: 'YEAR',
       align: 'center',
+      width: '10%',
     },
     {
       title: '월',
       dataIndex: 'MONTH',
       align: 'center',
+      width: '10%',
     },
     {
       title: '지역',
@@ -54,11 +57,13 @@ class ListPage extends React.Component {
           title: '청주',
           dataIndex: 'CP_VALUE',
           align: 'center',
+          width: '20%',
         },
         {
           title: '구미',
           dataIndex: 'GP_VALUE',
           align: 'center',
+          width: '20%',
         },
       ],
     },
@@ -84,6 +89,7 @@ class ListPage extends React.Component {
       title: '작성자',
       dataIndex: 'REG_USER_NAME',
       align: 'center',
+      width: '10%',
     },
   ];
 
@@ -265,6 +271,7 @@ class ListPage extends React.Component {
                 {createYearList().map(year => (
                   <Select.Option value={year}>{year}년</Select.Option>
                 ))}
+                <Select.Option value="">전체 보기</Select.Option>
               </AntdSelect>
             </div>
           </StyledCustomSearchWrapper>

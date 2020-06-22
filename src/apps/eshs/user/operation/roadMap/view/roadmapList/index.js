@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import List from './List';
