@@ -29,23 +29,24 @@ const AntdSelect = StyledSelect(Select);
 const FormItem = Form.Item;
 
 const columns = [
-  { title: 'No.', key: 'id', width: '12%', dataIndex: 'id' },
-  { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION' },
-  { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM' },
-  { title: 'Title', align: 'left', key: 'title', dataIndex: 'title' },
   {
     title: '종류',
     key: 'fullPathStr',
     dataIndex: 'fullPathStr',
-    width: '21%',
-    render: (text, row, index) => {
-      if (text) {
-        return <span>{text.replace(/&gt;/g, ' > ')}</span>;
-      }
-    },
+    align: 'center',
+    width: '14%',
+    // render: (text, row, index) => {
+    //   if (text) {
+    //     return <span>{text.replace(/&gt;/g, ' > ')}</span>;
+    //   }
+    // },
   },
-  { title: '기안부서', key: 'deptName', width: '12%', dataIndex: 'deptName' },
-  { title: '기안자', key: 'name', width: '8%', dataIndex: 'name' },
+  { title: 'No.', key: 'id', width: '12%', dataIndex: 'id' },
+  { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION' },
+  { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM' },
+  { title: 'Title', align: 'left', key: 'title', dataIndex: 'title' },
+  { title: '기안부서', key: 'deptName', width: '14%', dataIndex: 'deptName' },
+  { title: '기안자', key: 'name', width: '10%', dataIndex: 'name' },
 ];
 
 // Table NODE_ID 값
