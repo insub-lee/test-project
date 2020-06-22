@@ -88,8 +88,14 @@ class CommonSearchbar extends React.Component {
   };
 
   ButtonRender() {
-    const { viewPageData, sagaKey: id, changeViewPage } = this.props;
+    const {
+      viewPageData,
+      sagaKey: id,
+      changeViewPage,
+      CONFIG: { property },
+    } = this.props;
     let buttonGruop;
+    const useRevision = property.useRevision || 'Y';
     switch (viewPageData && viewPageData.viewType.toUpperCase()) {
       case 'INPUT':
         buttonGruop = (
@@ -97,7 +103,7 @@ class CommonSearchbar extends React.Component {
             <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('S')}>
               등록
             </StyledButton>
-            <StyledButton className="btn-primary btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            <StyledButton className="btn-light btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
           </StyledButtonWrapper>
@@ -109,13 +115,17 @@ class CommonSearchbar extends React.Component {
             <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('M')}>
               저장
             </StyledButton>
-            <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('D')}>
+            <StyledButton className="btn-light btn-first btn-xs" onClick={() => this.onChangeSave('D')}>
               삭제
             </StyledButton>
-            <StyledButton className="btn-primary btn-first btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
-              신규등록
-            </StyledButton>
-            <StyledButton className="btn-primary btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            {useRevision === 'Y' ? (
+              <StyledButton className="btn-primary btn-first btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
+                신규등록
+              </StyledButton>
+            ) : (
+              ''
+            )}
+            <StyledButton className="btn-light btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
           </StyledButtonWrapper>
@@ -148,7 +158,7 @@ class CommonSearchbar extends React.Component {
             className="modal-table-pad"
             title={NAME_KOR || COMP_FIELD}
             visible={this.state.modal}
-            width={800}
+            width="80%"
             onCancel={this.handleModalVisible}
             footer={null}
           >

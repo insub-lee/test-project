@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import { Table, Modal, Input, InputNumber, message, Popconfirm } from 'antd';
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
@@ -13,7 +15,9 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import UnitType from 'components/BizBuilder/Field/UnitComp';
 
 const AntdModal = StyledContentsModal(Modal);
-const AntdLineTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
+const AntdInputNumber = StyledInputNumber(InputNumber);
+const AntdInput = StyledInput(Input);
 
 class List extends Component {
   constructor(props) {
@@ -139,7 +143,7 @@ class List extends Component {
               추가
             </StyledButton>
           </div>
-          <AntdLineTable
+          <AntdTable
             rowKey={dataSource && dataSource.GAS_CD}
             columns={columns}
             dataSource={dataSource || []}
@@ -180,7 +184,8 @@ class List extends Component {
                 <tr>
                   <th>가스종류명</th>
                   <td>
-                    <Input
+                    <AntdInput
+                      className="ant-input-sm"
                       style={{ width: '100%' }}
                       defaultValue={formData && formData.GAS_NM}
                       onChange={e => this.onChangeValue('GAS_NM', e.target.value)}
@@ -191,7 +196,8 @@ class List extends Component {
                 <tr>
                   <th>가스분자량</th>
                   <td>
-                    <InputNumber
+                    <AntdInputNumber
+                      className="ant-input-number-sm"
                       style={{ width: '100%' }}
                       value={formData && formData.GAS_WEIGHT}
                       max={100}
@@ -204,7 +210,8 @@ class List extends Component {
                 <tr>
                   <th>법적허용농도</th>
                   <td>
-                    <InputNumber
+                    <AntdInputNumber
+                      className="ant-input-number-sm"
                       style={{ width: '100%' }}
                       value={formData && formData.PERMISSION_DENSITY}
                       max={1000}
@@ -222,25 +229,23 @@ class List extends Component {
                 </tr>
               </tbody>
             </table>
-            <StyledButtonWrapper className="btn-wrap-center">
-              {!formData.GAS_CD ? (
-                <StyledButton className="btn-primary btn-first btn-sm" onClick={this.overlab}>
-                  저장
-                </StyledButton>
-              ) : (
-                <>
-                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('U')}>
-                    수정
-                  </StyledButton>
-                  <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.onChangeData('D')} okText="Yes" cancelText="No">
-                    <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
-                  </Popconfirm>
-                </>
-              )}
+            <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+              <StyledButton className="btn-primary mr5 btn-sm" onClick={!formData.GAS_CD ? this.overlab : () => this.onChangeData('U')}>
+                저장
+              </StyledButton>
               <StyledButton className="btn-light btn-sm" onClick={this.onModalChange}>
                 취소
               </StyledButton>
             </StyledButtonWrapper>
+            {!formData.GAS_CD ? (
+              ''
+            ) : (
+              <StyledButtonWrapper className="btn-wrap-ab-right">
+                <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.onChangeData('D')} okText="Yes" cancelText="No">
+                  <StyledButton className="btn-gray mr5 btn-sm">삭제</StyledButton>
+                </Popconfirm>
+              </StyledButtonWrapper>
+            )}
           </StyledHtmlTable>
         </AntdModal>
       </>

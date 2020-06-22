@@ -21,6 +21,7 @@ class Comp extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      list: [],
       formData: {
         CONSULTING: 'Y',
         MAIL: 'N', // 메일발송 미구현
@@ -28,7 +29,20 @@ class Comp extends Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { list } = this.props;
+
+    let seNo = '';
+    this.setState({
+      list: list.filter(item => {
+        if (seNo !== item.SE_NO) {
+          seNo = item.SE_NO;
+          return true;
+        }
+        return false;
+      }),
+    });
+  }
 
   changeFormData = (target, value) =>
     this.setState(prevState => {
@@ -37,8 +51,8 @@ class Comp extends Component {
     });
 
   save = () => {
-    const { sagaKey, submitHandlerBySaga, saveAfter, modalVisible, spinningOn, spinningOff, list, profile } = this.props;
-    const { formData } = this.state;
+    const { sagaKey, submitHandlerBySaga, saveAfter, modalVisible, spinningOn, spinningOff, profile } = this.props;
+    const { formData, list } = this.state;
     const content = formData.CONTENT || '';
     const msg = this.saveBefore();
     const lIdx = list.length;
@@ -77,8 +91,8 @@ class Comp extends Component {
   };
 
   render() {
-    const { list, profile, modalVisible } = this.props;
-    const { formData } = this.state;
+    const { profile, modalVisible } = this.props;
+    const { formData, list } = this.state;
     return (
       <StyledContentsWrapper>
         <StyledHtmlTable>

@@ -5,6 +5,7 @@ import { Input, InputNumber, Select, Popconfirm, Table, message } from 'antd';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
@@ -12,7 +13,7 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 
-import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
+import { callBackAfterPost, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 import Modal from '../InputModal';
 import SearchComp from '../InputModal/SearchComp';
 
@@ -80,7 +81,7 @@ class List extends React.Component {
   handleInputClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { dataSource, requestValue } = this.state;
-    const param = dataSource.map(data => Object.assign(data, { SAP_ID: requestValue.SAP_ID }));
+    const param = dataSource.map(data => Object.assign(data, { SAP_ID: requestValue.SAP_ID, SAP_NO: requestValue.SAP_NO }));
 
     if (!requestValue.SAP_ID) {
       return message.error('화학물질을 선택해주세요.');
@@ -97,10 +98,8 @@ class List extends React.Component {
 
   handleDeleteClick = () => {
     const { requestValue } = this.state;
-    if (!requestValue.MASTER_ID) {
-      return this.setState({
-        deleteConfirmMessage: '선택된 항목이 없습니다.',
-      });
+    if (!requestValue.SAP_ID) {
+      return message.error('화학물질을 선택해주세요.');
     }
     return this.setState({
       deleteConfirmMessage: '삭제하시겠습니까?',
@@ -391,21 +390,21 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <div className="btn-area">
-                <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
-                  저장/수정
-                </StyledButton>
-                <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
-                  <StyledButton className="btn-light btn-first btn-sm" onClick={handleDeleteClick}>
-                    삭제
-                  </StyledButton>
-                </Popconfirm>
-                <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
-                  초기화
-                </StyledButton>
-              </div>
             </div>
           </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary mr5 btn-sm" onClick={handleInputClick}>
+              저장/수정
+            </StyledButton>
+            <StyledButton className="btn-light mr5 btn-sm" onClick={handleResetClick}>
+              초기화
+            </StyledButton>
+            <Popconfirm disabled={!isModified} title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
+              <StyledButton className="btn-light btn-sm" onClick={handleDeleteClick}>
+                삭제
+              </StyledButton>
+            </Popconfirm>
+          </StyledButtonWrapper>
           <StyledHtmlTable>
             <table style={{ marginBottom: '10px' }}>
               <colgroup>

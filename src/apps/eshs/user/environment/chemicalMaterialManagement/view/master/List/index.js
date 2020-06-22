@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
-import { debounce } from 'lodash';
 import moment from 'moment';
 
 import { AgGridReact } from 'ag-grid-react';
@@ -12,6 +11,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { Input, Select } from 'antd';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import { masterColumnDefs, sapUsageColumn } from './columnDefs';
@@ -31,7 +31,6 @@ class List extends React.Component {
         KEYWORD: '',
       },
     };
-    this.getSearchData = debounce(this.getSearchData, 300);
   }
 
   defaultColDef = {
@@ -90,13 +89,12 @@ class List extends React.Component {
   };
 
   handleInputChange = (value, name) => {
-    const { getSearchData } = this;
     const valueObj = { [name]: value };
     this.setState(
       prevState => ({
         requestValue: Object.assign(prevState.requestValue, valueObj),
       }),
-      getSearchData,
+      // getSearchData,
     );
   };
 
@@ -125,7 +123,7 @@ class List extends React.Component {
 
   render() {
     const { defaultColDef } = this;
-    const { handleSelectChange, handleInputChange, onGridReady } = this;
+    const { handleSelectChange, handleInputChange, onGridReady, getSearchData } = this;
     const { rowData, isMasterColumns, requestValue } = this.state;
     return (
       <>
@@ -144,6 +142,7 @@ class List extends React.Component {
                 value={requestValue.SAP_NO}
                 style={{ width: '15%' }}
                 placeholder="SAP_NO."
+                onPressEnter={getSearchData}
               />
               <div className="text-label">CAS_NO.</div>
               <AntdInput
@@ -151,16 +150,22 @@ class List extends React.Component {
                 onChange={e => handleInputChange(e.target.value, 'CAS_NO')}
                 value={requestValue.CAS_NO}
                 style={{ width: '15%' }}
+                onPressEnter={getSearchData}
                 placeholder="CAS_NO."
               />
+              <div className="text-label">화학물질명</div>
               <AntdInput
                 className="ant-input-inline ant-input-mid mr5"
                 onChange={e => handleInputChange(e.target.value, 'KEYWORD')}
                 value={requestValue.KEYWORD}
                 style={{ width: '20%' }}
                 placeholder="화학물질명을 입력하세요."
+                onPressEnter={getSearchData}
               />
               <div className="btn-area">
+                <StyledButton className="btn-gray btn-sm mr5" onClick={getSearchData}>
+                  검색
+                </StyledButton>
                 <ExcelDownloadComp
                   isBuilder={false}
                   fileName={isMasterColumns ? `${moment().format('YYYYMMDD')}_화학물질관리 마스터` : `${moment().format('YYYYMMDD')}_화학물질관리 SAP 사용량`}

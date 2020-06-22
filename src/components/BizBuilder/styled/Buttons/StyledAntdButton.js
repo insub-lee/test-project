@@ -49,12 +49,12 @@ const StyledButton = component => styled(component)`
 
   &.btn-primary {
     color: #fff;
-    background-color: #1fb5ad;
-    border-color: #1fb5ad;
+    background-color: #4491e0;
+    border-color: #4491e0;
     &:hover {
       color: #fff;
-      background-color: #17a9a1;
-      border-color: #1fb5ad;
+      background-color: #2a81da;
+      border-color: #4491e0;
     }
   }
 
@@ -96,6 +96,12 @@ const StyledButton = component => styled(component)`
 
   &.mr5 {
     margin-right: 5px;
+  }
+
+  .ant-btn > .anticon + span,
+  .ant-btn > span + .anticon {
+    vertical-align: middle;
+    margin-left: 2px;
   }
 `;
 

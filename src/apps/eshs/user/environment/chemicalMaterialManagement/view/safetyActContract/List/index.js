@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
-import { debounce } from 'lodash';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import moment from 'moment';
 
 import { AgGridReact } from 'ag-grid-react';
@@ -24,7 +24,6 @@ class List extends React.Component {
       CAS_NO: '',
       KEYWORD: '',
     };
-    this.getSearchData = debounce(this.getSearchData, 300);
   }
 
   defaultColDef = {
@@ -57,26 +56,9 @@ class List extends React.Component {
   };
 
   handleInputChange = (value, name) => {
-    const { getSearchData } = this;
-    this.setState(
-      {
-        [name]: value,
-      },
-      getSearchData(),
-    );
-  };
-
-  getSearchData = () => {
-    const { CAS_NO, KEYWORD } = this.state;
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    const apiArr = [
-      {
-        key: 'chemicalMaterials',
-        type: 'GET',
-        url: `/api/eshs/v1/common/eshschemicalmaterialsafecontractview?CAS_NO=${CAS_NO}&KEYWORD=${KEYWORD}`,
-      },
-    ];
-    getCallDataHandler(id, apiArr, this.setRowData);
+    this.setState({
+      [name]: value,
+    });
   };
 
   render() {
@@ -94,6 +76,7 @@ class List extends React.Component {
                 onChange={e => handleInputChange(e.target.value, 'CAS_NO')}
                 style={{ width: '150px' }}
                 placeholder="CAS_NO."
+                onPressEnter={this.getRowData}
               />
               <div className="text-label">화학물질명</div>
               <AntdInput
@@ -101,8 +84,12 @@ class List extends React.Component {
                 onChange={e => handleInputChange(e.target.value, 'KEYWORD')}
                 style={{ width: '300px' }}
                 placeholder="화학물질명을 입력하세요."
+                onPressEnter={this.getRowData}
               />
               <div className="btn-area">
+                <StyledButton className="btn-gray btn-sm mr5" onClick={this.getRowData}>
+                  검색
+                </StyledButton>
                 <ExcelDownloadComp
                   isBuilder={false}
                   fileName={`${moment().format('YYYYMMDD')}_산안법(도급승인)`}

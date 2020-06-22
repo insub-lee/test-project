@@ -24,21 +24,12 @@ const currentYear = moment(new Date()).format('YYYY');
 const AntdSelect = StyledSelect(Select);
 const AntdModal = StyledAntdModal(Modal);
 const ConsultStyle = styled.div`
-  p {
-    display: none;
-
-    &:nth-of-type(1) {
-      width: 100%;
-      height: 31px;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-      display: block;
-    }
-  }
-  table {
-    display: none;
-  }
+  width: 100%;
+  height: 20px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  display: block;
 `;
 
 class List extends Component {
@@ -226,24 +217,25 @@ class List extends Component {
       title: '내용',
       dataIndex: 'CONSULT',
       rowSpan: 1,
-      render: (text, record) => (
-        <Popover title="상담내용" trigger="hover" content={<div dangerouslySetInnerHTML={{ __html: text }} />}>
-          <ConsultStyle
-            dangerouslySetInnerHTML={{ __html: text }}
-            onClick={() =>
-              this.setState(
-                {
-                  modalObj: {
-                    modalTitle: '상담 내용',
-                    modalContent: [<ConsultDeleteForm key="ConsultDeleteForm" data={record} modalVisible={this.modalVisible} saveAfter={this.getList} />],
+      render: (text, record) =>
+        text && (
+          <Popover title="상담내용" trigger="hover" content={<div dangerouslySetInnerHTML={{ __html: text }} />}>
+            <ConsultStyle
+              dangerouslySetInnerHTML={{ __html: text }}
+              onClick={() =>
+                this.setState(
+                  {
+                    modalObj: {
+                      modalTitle: '상담 내용',
+                      modalContent: [<ConsultDeleteForm key="ConsultDeleteForm" data={record} modalVisible={this.modalVisible} saveAfter={this.getList} />],
+                    },
                   },
-                },
-                this.modalVisible,
-              )
-            }
-          />
-        </Popover>
-      ),
+                  this.modalVisible,
+                )
+              }
+            />
+          </Popover>
+        ),
       className: 'td-pointer',
       align: 'left',
     },
@@ -402,11 +394,11 @@ class List extends Component {
                   <th>내용</th>
                 </tr>
               </thead>
-              {/* <tfoot>
+              <tfoot>
                 <tr>
-                  <td colSpan={9}>{`${listSize} 건`}</td>
+                  <td colSpan={9}>{`${list.length} 건`}</td>
                 </tr>
-              </tfoot> */}
+              </tfoot>
               <tbody>
                 {list.map(item => {
                   if (item.SEQ === 1) {

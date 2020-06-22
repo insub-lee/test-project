@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Popconfirm, Table } from 'antd';
+import { Input, InputNumber, Select, Popconfirm, Table, message } from 'antd';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
@@ -164,11 +166,9 @@ class List extends React.Component {
   };
 
   handleDeleteClick = () => {
-    const { requestValue } = this.state;
-    if (!requestValue.HEALTH_ID) {
-      return this.setState({
-        deleteConfirmMessage: '선택된 항목이 없습니다.',
-      });
+    const { isModified } = this.state;
+    if (!isModified) {
+      return message.error('선택된 항목이 없습니다.');
     }
     return this.setState({
       deleteConfirmMessage: '삭제하시겠습니까?',
@@ -547,44 +547,45 @@ class List extends React.Component {
                 value=""
                 style={{ width: '200px' }}
               />
-              <div className="btn-area">
-                <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
-                  저장/수정
-                </StyledButton>
-                <Popconfirm
-                  title={deleteConfirmMessage}
-                  onConfirm={isModified ? handleDeleteConfirm : null}
-                  okText={isModified ? '삭제' : '확인'}
-                  cancelText="취소"
-                >
-                  <StyledButton className="btn-light btn-first btn-sm" onClick={handleDeleteClick}>
-                    삭제
-                  </StyledButton>
-                </Popconfirm>
-                <StyledButton className="btn-light btn-first btn-sm" onClick={handleResetClick}>
-                  초기화
-                </StyledButton>
-                <Popconfirm disabled={requestValue.CATEGORY && requestValue.NAME_KOR} title="상위물질 정보를 먼저 입력하세요.">
-                  <StyledButton
-                    className="btn-light btn-sm"
-                    onClick={() => {
-                      if (subTableVisible) {
-                        return this.setState({ subTableVisible: false, dataSource: [{}] });
-                      }
-
-                      if (requestValue.CATEGORY && requestValue.NAME_KOR) {
-                        return handleSubMaterialAddClick();
-                      }
-
-                      return null;
-                    }}
-                  >
-                    {subTableVisible ? '하위물질 삭제' : '하위물질 추가'}
-                  </StyledButton>
-                </Popconfirm>
-              </div>
             </div>
           </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={handleInputClick}>
+              저장/수정
+            </StyledButton>
+            <StyledButton className="btn-light mr5 btn-sm" onClick={handleResetClick}>
+              초기화
+            </StyledButton>
+            <Popconfirm
+              disabled={!isModified}
+              title={deleteConfirmMessage}
+              onConfirm={isModified ? handleDeleteConfirm : null}
+              okText={isModified ? '삭제' : '확인'}
+              cancelText="취소"
+            >
+              <StyledButton className="btn-light mr5 btn-sm" onClick={handleDeleteClick}>
+                삭제
+              </StyledButton>
+            </Popconfirm>
+            <Popconfirm disabled={requestValue.CATEGORY && requestValue.NAME_KOR} title="상위물질 정보를 먼저 입력하세요.">
+              <StyledButton
+                className="btn-light btn-sm"
+                onClick={() => {
+                  if (subTableVisible) {
+                    return this.setState({ subTableVisible: false, dataSource: [{}] });
+                  }
+
+                  if (requestValue.CATEGORY && requestValue.NAME_KOR) {
+                    return handleSubMaterialAddClick();
+                  }
+
+                  return null;
+                }}
+              >
+                {subTableVisible ? '하위물질 삭제' : '하위물질 추가'}
+              </StyledButton>
+            </Popconfirm>
+          </StyledButtonWrapper>
           <StyledHtmlTable>
             <table>
               <colgroup>

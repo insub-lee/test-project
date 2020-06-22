@@ -18,6 +18,8 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
+import DraftDownLoad from 'apps/mdcs/Modal/DraftDownLoad';
+
 const AntdModal = StyledAntdModal(Modal);
 const AntdTable = StyledAntdTable(Table);
 const AntdTextArea = StyledTextarea(Input.TextArea);
@@ -27,23 +29,24 @@ const AntdSelect = StyledSelect(Select);
 const FormItem = Form.Item;
 
 const columns = [
-  { title: 'No.', key: 'id', width: '12%', dataIndex: 'id' },
-  { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION' },
-  { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM' },
-  { title: 'Title', align: 'left', key: 'title', dataIndex: 'title' },
   {
     title: '종류',
     key: 'fullPathStr',
     dataIndex: 'fullPathStr',
-    width: '21%',
-    render: (text, row, index) => {
-      if (text) {
-        return <span>{text.replace(/&gt;/g, ' > ')}</span>;
-      }
-    },
+    align: 'center',
+    width: '14%',
+    // render: (text, row, index) => {
+    //   if (text) {
+    //     return <span>{text.replace(/&gt;/g, ' > ')}</span>;
+    //   }
+    // },
   },
-  { title: '기안부서', key: 'deptName', width: '12%', dataIndex: 'deptName' },
-  { title: '기안자', key: 'name', width: '8%', dataIndex: 'name' },
+  { title: 'No.', key: 'id', width: '12%', dataIndex: 'id' },
+  { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION' },
+  { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM' },
+  { title: 'Title', align: 'left', key: 'title', dataIndex: 'title' },
+  { title: '기안부서', key: 'deptName', width: '14%', dataIndex: 'deptName' },
+  { title: '기안자', key: 'name', width: '10%', dataIndex: 'name' },
 ];
 
 // Table NODE_ID 값
@@ -90,12 +93,7 @@ const initState = {
   isDownVisible: false,
   selectedRow: undefined,
   DRAFT_PROCESS: undefined,
-  OPINION: undefined,
   appvMember: undefined,
-  drmByDraft: undefined,
-  drmByPrint: undefined,
-  selectedDRM: undefined,
-  downType: undefined,
 };
 
 const InputGroup = Input.Group;
@@ -103,19 +101,6 @@ const { Option } = Select;
 
 class SearchBasic extends Component {
   state = initState;
-
-  componentDidMount() {
-    const { sagaKey, submitHandlerBySaga } = this.props;
-    const prefixUrl = '/api/mdcs/v1/common/drmAclHandler';
-    submitHandlerBySaga(sagaKey, 'GET', prefixUrl, {}, this.initAclData);
-  }
-
-  initAclData = (id, response) => {
-    const { aclList } = response;
-    const drmByDarft = aclList.filter(x => x.IDX === 2).length > 0 ? aclList.filter(x => x.IDX === 2)[0] : undefined;
-    const drmByPrint = aclList.filter(x => x.IDX === 3).length > 0 ? aclList.filter(x => x.IDX === 3)[0] : undefined;
-    this.setState({ downType: 1, selectedDRM: drmByDarft, drmByDarft, drmByPrint });
-  };
 
   callApi = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
@@ -246,34 +231,9 @@ class SearchBasic extends Component {
     this.setState({ DRAFT_PROCESS, appvMember });
   };
 
-  onChangeDRMRadio = e => {
-    const { drmByDraft, drmByPrint } = this.state;
-    if (e.target.value === 2) {
-      this.setState({ downType: 2, selectedDRM: drmByPrint });
-    } else {
-      this.setState({ downType: 1, selectedDRM: drmByDraft });
-    }
-  };
-
-  onDraftDownLoad = () => {
-    const { selectedDRM, DRAFT_PROCESS, selectedRow, OPINION } = this.state;
-    const { sagaKey, submitHandlerBySaga } = this.props;
-    const { TITLE, WORK_SEQ, TASK_SEQ } = selectedRow;
-    const draftTitle = `${TITLE} 다운로드신청`;
-    const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
-    const draftData = {
-      DRAFT_PROCESS: { ...DRAFT_PROCESS, DRAFT_TITLE: draftTitle, WORK_SEQ, TASK_SEQ, OPINION, REL_TYPE: 4, DRAFT_DATA: { ...selectedDRM, OPINION } },
-    };
-    submitHandlerBySaga(sagaKey, 'POST', prefixUrl, draftData, this.onCompleteProc);
-  };
-
   onCompleteProc = (id, response) => {
     history.push('/apps/Workflow/User/DraftDocDown');
     this.setState({ isDownVisible: false });
-  };
-
-  onChangeOpinion = e => {
-    this.setState({ OPINION: e.target.value });
   };
 
   render() {
@@ -296,7 +256,7 @@ class SearchBasic extends Component {
       DRAFT_PROCESS,
       appvMember,
     } = this.state;
-    const { result } = this.props;
+    const { result, sagaKey, submitHandlerBySaga } = this.props;
     const { listData = {} } = result;
     const listDataArr = listData.arr || [];
     const { onClickRow, closeBtnFunc } = this;
@@ -491,58 +451,15 @@ class SearchBasic extends Component {
             okButtonProps={null}
             destroyOnClose
           >
-            <StyledContentsWrapper>
-              <div style={{ fontSize: 12, color: 'rgb(255, 36, 36)', marginBottom: 10, textAlign: 'center' }}>
-                ※ 이 문서 및 도면은 MagnaChip 반도체의 자산이므로 불법 유출 시,관계법과 MagnaChip 회사 규정에 의해 처벌함.
-              </div>
-              <StyledHtmlTable>
-                {selectedRow && (
-                  <>
-                    <table>
-                      <tbody>
-                        <tr>
-                          <th>문서종류</th>
-                          <td colSpan={3}>{selectedRow.NODE_FULLNAME}</td>
-                        </tr>
-                        <tr>
-                          <th>문서번호</th>
-                          <td>{selectedRow.DOCNUMBER}</td>
-                          <th>개정번호</th>
-                          <td>{selectedRow.VERSION}</td>
-                        </tr>
-                        <tr>
-                          <th>결재자</th>
-                          <td colSpan={3}>{appvMember && appvMember.map(item => `${item.NAME_KOR} ( ${item.PSTN_NAME_KOR} ) `)}</td>
-                        </tr>
-                        <tr>
-                          <th>요청종류</th>
-                          <td colSpan={3}>
-                            <Radio.Group onChange={this.onChangeDRMRadio} defaultValue={1}>
-                              <Radio value={1}>기안용 Download 권한신청 </Radio>
-                              <Radio value={2}>Print 권한신청</Radio>
-                            </Radio.Group>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>요청사유</th>
-                          <td colSpan={3}>
-                            <AntdTextArea rows={4} onChange={this.onChangeOpinion} />
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
-                      <StyledButton className="btn-primary btn-sm mr5" onClick={this.onDraftDownLoad}>
-                        신청
-                      </StyledButton>
-                      <StyledButton className="btn-light btn-sm" onClick={this.onCloseDownLoad}>
-                        닫기
-                      </StyledButton>
-                    </StyledButtonWrapper>
-                  </>
-                )}
-              </StyledHtmlTable>
-            </StyledContentsWrapper>
+            <DraftDownLoad
+              selectedRow={selectedRow}
+              appvMember={appvMember}
+              DRAFT_PROCESS={DRAFT_PROCESS}
+              sagaKey={sagaKey}
+              submitHandlerBySaga={submitHandlerBySaga}
+              onCompleteProc={this.onCompleteProc}
+              onCloseDownLoad={this.onCloseDownLoad}
+            />
           </AntdModal>
           <AntdModal
             className="modalWrapper modalTechDoc"

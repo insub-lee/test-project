@@ -2,21 +2,25 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // import { Table, Column, AutoSizer } from 'react-virtualized';
 import { Input, Modal, Table, Descriptions, Popconfirm } from 'antd';
-import { CaretDownOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
+import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
-import Styled from './Styled';
 import ExcelDownloader from '../Excel';
 
-const AntdModal = StyledModalWrapper(Modal);
-const AntdTable = StyledLineTable(Table);
+const AntdModal = StyledContentsModal(Modal);
+const AntdTable = StyledAntdTable(Table);
+const AntdInput = StyledInput(Input);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class List extends Component {
   constructor(props) {
@@ -248,17 +252,17 @@ class List extends Component {
       { key: 'M_TEL', size: 13 },
     ];
     const keyField = fieldList.find(field => field.key === key);
-    return <Input maxLength={keyField.size} value={value} onChange={e => changeFormData(id, key, e.target.value)} />;
+    return <AntdInput className="ant-input-sm" maxLength={keyField.size} value={value} onChange={e => changeFormData(id, key, e.target.value)} />;
   };
 
   // render Table Action Buttons (수정 = modify 모달 버튼)
   renderActionButtons = row => (
     <StyledButtonWrapper>
-      <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.handleModifyWorker(row)}>
+      <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.handleModifyWorker(row)}>
         수정
       </StyledButton>
       <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.handleWorkerData('D')} onCancel={this.resetFormData} okText="Yes" cancelText="No">
-        <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.handleDeleteWorker(row)}>
+        <StyledButton className="btn-light btn-xs btn-first" onClick={() => this.handleDeleteWorker(row)}>
           삭제
         </StyledButton>
       </Popconfirm>
@@ -328,61 +332,39 @@ class List extends Component {
     ];
 
     return (
-      <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <div className="searchCmpnyWrap">
-              <label>
-                거래처
-                <Input
-                  className="input-width200 use-label input-first use_addon"
-                  readOnly
-                  onClick={() => this.handleModal('search', true)}
-                  value={searchValue.WRK_CMPNY_NM}
-                />
-              </label>
-              {searchValue.WRK_CMPNY_NM !== '' && (
-                <div
-                  className="clearInputBtn"
-                  tabIndex={0}
-                  onClick={this.handleSelectCmpnyReset}
-                  onKeyPress={this.handleSelectCmpnyReset} // esLint
-                  role="button" // esLint
-                >
-                  <CloseOutlined />
-                </div>
-              )}
-            </div>
-            <div
-              className="searchCmpnyBtn"
-              tabIndex={0}
+      <>
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <span className="text-label">거래처</span>
+            <AntdSearch
+              className="ant-search-inline input-search-mid mr5"
               onClick={() => this.handleModal('search', true)}
-              onKeyPress={() => this.handleModal('search', true)} // esLint
-              role="button" // esLint
-            >
-              <CaretDownOutlined />
-            </div>
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={this.handleGetWorkers} style={{ marginBottom: '5px' }}>
+              value={searchValue.WRK_CMPNY_NM}
+              style={{ width: '200px', marginRight: '10px' }}
+            />
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={this.handleGetWorkers}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('insert', true)} style={{ marginBottom: '5px' }}>
-              작업자 추가
-            </StyledButton>
-            {workerList.length > 0 && <ExcelDownloader dataList={workerList} wrkCmpnyNm={cmpnyNm} />}
           </div>
-        </StyledSearchWrap>
-        <>
-          <AntdTable
-            columns={columns}
-            dataSource={workerList}
-            footer={() => <div style={{ textAlign: 'center' }}>{`총 ${workerList.length === 0 ? 0 : workerList.length} 명`}</div>}
-          />
-        </>
+        </StyledCustomSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('insert', true)}>
+            작업자 추가
+          </StyledButton>
+          {workerList.length > 0 && <ExcelDownloader dataList={workerList} wrkCmpnyNm={cmpnyNm} />}
+        </StyledButtonWrapper>
+        <AntdTable
+          columns={columns}
+          dataSource={workerList}
+          footer={() => <div style={{ textAlign: 'center' }}>{`총 ${workerList.length === 0 ? 0 : workerList.length} 명`}</div>}
+        />
         <AntdModal
+          className="modal-table-pad"
           title={this.setModalTitle(modalType)}
-          width={790}
+          width={modalType === 'search' ? '790px' : '500px'}
           visible={modalVisible}
           footer={null}
+          destroyOnClose
           onOk={() => this.handleModal('', false)}
           onCancel={() => this.handleModal('', false)}
         >
@@ -400,42 +382,53 @@ class List extends Component {
               eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleSelectCmpny(companyInfo, COMP_FIELD)}
             />
           ) : (
-            <>
-              <Descriptions size="default" bordered>
-                <Descriptions.Item label="거래처" span={4}>
-                  {searchValue.WRK_CMPNY_NM === '' ? 'N/A' : searchValue.WRK_CMPNY_NM}
-                </Descriptions.Item>
-                <Descriptions.Item label="이름" span={4}>
-                  {this.renderInputColumns('WORKER_NM', formData.WORKER_NM)}
-                </Descriptions.Item>
-                <Descriptions.Item label={`주민등록번호("-" 제외)`} span={4}>
-                  {this.renderInputColumns('WORKER_SSN', formData.WORKER_SSN)}
-                </Descriptions.Item>
-                <Descriptions.Item label="휴대폰(연락처)" span={4}>
-                  {this.renderInputColumns('M_TEL', formData.M_TEL)}
-                </Descriptions.Item>
-                <Descriptions.Item label="긴급연락처" span={4}>
-                  {this.renderInputColumns('TEL', formData.TEL)}
-                </Descriptions.Item>
-              </Descriptions>
-              <StyledButtonWrapper className="btn-wrap-right">
+            <StyledHtmlTable>
+              <table>
+                <colgroup>
+                  <col width="20%"></col>
+                  <col width="80%"></col>
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th>거래처</th>
+                    <td>{searchValue.WRK_CMPNY_NM === '' ? 'N/A' : searchValue.WRK_CMPNY_NM}</td>
+                  </tr>
+                  <tr>
+                    <th>이름</th>
+                    <td>{this.renderInputColumns('WORKER_NM', formData.WORKER_NM)}</td>
+                  </tr>
+                  <tr>
+                    <th>주민등록번호("-" 제외)</th>
+                    <td>{this.renderInputColumns('WORKER_SSN', formData.WORKER_SSN)}</td>
+                  </tr>
+                  <tr>
+                    <th>휴대폰(연락처)</th>
+                    <td>{this.renderInputColumns('M_TEL', formData.M_TEL)}</td>
+                  </tr>
+                  <tr>
+                    <th>긴급연락처</th>
+                    <td>{this.renderInputColumns('TEL', formData.TEL)}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
                 {formData.WORKER_SEQ === undefined || formData.WORKER_SEQ === -1 ? (
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.handleWorkerData('I')}>
+                  <StyledButton className="btn-primary mr5 btn-sm" onClick={() => this.handleWorkerData('I')}>
                     저장
                   </StyledButton>
                 ) : (
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.handleWorkerData('U')}>
+                  <StyledButton className="btn-primary mr5 btn-sm" onClick={() => this.handleWorkerData('U')}>
                     수정
                   </StyledButton>
                 )}
-                <StyledButton className="btn-primary" onClick={() => this.handleModal('', false)}>
+                <StyledButton className="btn-light btn-sm" onClick={() => this.handleModal('', false)}>
                   취소
                 </StyledButton>
               </StyledButtonWrapper>
-            </>
+            </StyledHtmlTable>
           )}
         </AntdModal>
-      </Styled>
+      </>
     );
   }
 }
