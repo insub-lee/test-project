@@ -20,8 +20,8 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: moment().startOf('year'),
-      endDate: moment().endOf('year'),
+      startDate: '',
+      endDate: '',
       isDisabled: true,
       endPlaceholder: '기준일을 먼저 선택하세요.',
       columnDefs: this.columnDefs,
@@ -87,8 +87,7 @@ class List extends Component {
     // this.handleGetExtraApi();
   };
 
-  handleGetExtraApi = () => {
-    const { startDate, endDate } = this.state;
+  handleGetExtraApi = (startDate = moment().startOf('year'), endDate = moment().endOf('year')) => {
     const { sagaKey: id, getExtraApiData } = this.props;
 
     if (!startDate && !endDate) {
@@ -215,7 +214,7 @@ class List extends Component {
                 format="Y년 MMM"
               />
               <div className="btn-area">
-                <StyledButton className="btn-gray mr5 btn-sm" onClick={this.handleGetExtraApi}>
+                <StyledButton className="btn-gray mr5 btn-sm" onClick={() => this.handleGetExtraApi(startDate, endDate)}>
                   검색
                 </StyledButton>
                 <StyledButton className="btn-gray btn-sm" onClick={this.handleFilterReset}>
