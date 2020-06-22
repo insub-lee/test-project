@@ -113,8 +113,8 @@ class Avater extends Component {
                     width: '141px',
                     height: '26px',
                     position: 'absolute',
-                    left: '130px',
-                    top: '74px',
+                    left: avaterImgs.GENDER === 'm' ? '130px' : '140px',
+                    top: avaterImgs.GENDER === 'm' ? '74px' : '51px',
                     zIndex: '3',
                     filter: 'Alpha(Opacity=100) revealTrans(transition=23,duration=0.5) blendTrans(duration=0.5)',
                   }}
