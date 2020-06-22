@@ -23,7 +23,7 @@ class List extends Component {
       startDate: '',
       endDate: '',
       isDisabled: true,
-      endPlaceholder: '기준일을 먼저 선택하세요.',
+      endPlaceholder: '기준월을 먼저 선택하세요.',
       columnDefs: this.columnDefs,
       gridOptions: {},
       filteredList: [],
@@ -78,7 +78,7 @@ class List extends Component {
 
   handleDateChange = (key, value) => {
     if (key.toUpperCase() === 'STARTDATE') {
-      this.setState({ [key]: value, isDisabled: false, endPlaceholder: '종료일을 선택하세요.', endDate: '' });
+      this.setState({ [key]: value, isDisabled: false, endPlaceholder: '종료월을 선택하세요.', endDate: '' });
     } else {
       this.setState({
         [key]: value,
@@ -91,7 +91,7 @@ class List extends Component {
     const { sagaKey: id, getExtraApiData } = this.props;
 
     if (!startDate && !endDate) {
-      return message.error('검색일을 확인하세요.');
+      return message.error('검색월을 확인하세요.');
     }
 
     const paramMap = this.getMonthBetweenStartToEnd(moment(startDate), moment(endDate));
@@ -168,7 +168,7 @@ class List extends Component {
       startDate: '',
       endDate: '',
       isDisabled: true,
-      endPlaceholder: '기준일을 먼저 선택하세요.',
+      endPlaceholder: '기준월을 먼저 선택하세요.',
     });
   };
 
@@ -195,9 +195,9 @@ class List extends Component {
               <span className="text-label">기간 별 검색</span>
               <AntdPicker
                 className="ant-picker-sm"
-                placeholder="기준일을 선택하세요."
+                placeholder="기준월을 선택하세요."
                 value={startDate}
-                // onChange={e => this.setState({ startMonth: e, isDisabled: false, endPlaceholder: '종료일을 선택하세요.' })}
+                // onChange={e => this.setState({ startMonth: e, isDisabled: false, endPlaceholder: '종료월을 선택하세요.' })}
                 onChange={value => this.handleDateChange('startDate', value)}
                 style={{ marginRight: '5px' }}
                 format="Y년 MMM"
