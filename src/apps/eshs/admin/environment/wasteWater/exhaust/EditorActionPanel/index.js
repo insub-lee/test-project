@@ -18,7 +18,7 @@ class EditorActionPanel extends Component {
 
   render() {
     return (
-      <StyledButton className="btn-primary" onClick={this.onClickSave}>
+      <StyledButton className="btn-primary btn-sm" onClick={this.onClickSave}>
         <Icon type="save" />
         저장
       </StyledButton>

@@ -87,7 +87,7 @@ class ExcelDownloadComp extends Component {
         filename={this.props.fileName}
         element={
           <span className={this.props.className}>
-            <StyledButton className={`btn-gray ${btnSize}`}>
+            <StyledButton className="btn-gray btn-xs">
               <FileExcelOutlined />
               &nbsp;{this.props.btnText}
             </StyledButton>
