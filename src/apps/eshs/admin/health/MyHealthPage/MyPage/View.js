@@ -146,28 +146,7 @@ class View extends Component {
           <thead></thead>
           <tbody>
             <tr>
-              <td rowSpan={3}>{avaterTable}</td>
-              <td>
-                <StyledHtmlTable>
-                  <table>
-                    <colgroup>
-                      <col width="100%" />
-                    </colgroup>
-                    <thead>
-                      <tr>
-                        <th>건강정보</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </StyledHtmlTable>
-              </td>
-            </tr>
-            <tr>
+              <td rowSpan={2}>{avaterTable}</td>
               <td>
                 <StyledHtmlTable>
                   <table>
@@ -241,6 +220,7 @@ class View extends Component {
             </tr>
           </tbody>
         </table>
+
         <AntdModal width={850} visible={modalObj.modalVisible} title={modalObj.modalTitle || ''} onCancel={this.modalVisible} destroyOnClose footer={null}>
           {modalObj.modalContent}
         </AntdModal>

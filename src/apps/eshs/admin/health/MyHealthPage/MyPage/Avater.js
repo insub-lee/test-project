@@ -21,11 +21,14 @@ class Avater extends Component {
 
   render() {
     const { avaterImgs } = this.props;
-    console.debug('avaterImgs -- ', avaterImgs);
     return (
       <AvaterTableStyled>
         <table>
-          <thead></thead>
+          <thead>
+            <tr>
+              <th>건강상태</th>
+            </tr>
+          </thead>
           <tbody>
             <tr>
               <td height={1}></td>
@@ -53,19 +56,15 @@ class Avater extends Component {
                 {/* 이렇게도 가능 */}
                 <div style={{ width: '353px', height: avaterImgs.GENDER === 'm' ? '113px' : '128px', position: 'relative', left: '0px', top: '0px' }}>
                   <div
-                    style={
-                      avaterImgs.GENDER === 'M' // 남자
-                        ? {
-                            width: '103px',
-                            height: '31px',
-                            position: 'absolute',
-                            left: '10px',
-                            top: '10px',
-                            zIndex: '2',
-                            filter: 'Alpha(Opacity=100) revealTrans(transition=23,duration=0.5) blendTrans(duration=0.5)',
-                          }
-                        : {} // 여자
-                    }
+                    style={{
+                      width: '103px',
+                      height: '31px',
+                      position: 'absolute',
+                      left: '10px',
+                      top: '10px',
+                      zIndex: '2',
+                      filter: 'Alpha(Opacity=100) revealTrans(transition=23,duration=0.5) blendTrans(duration=0.5)',
+                    }}
                   >
                     <div
                       style={{
