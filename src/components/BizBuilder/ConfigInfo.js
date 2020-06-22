@@ -53,6 +53,7 @@ import EducationExamConfig from 'components/BizBuilder/Field/EducationExamConfig
 import EshsCmpnyConfig from 'components/BizBuilder/Field/EshsCmpnyConfig';
 import TextJoinFieldCompConfig from 'components/BizBuilder/Field/TextJoinFieldCompConfig';
 import DragUploadMDCSCompConfig from 'components/BizBuilder/Field/DragUploadMDCSCompConfig';
+import EshsDangerEvalInSafetyImproveConfig from 'components/BizBuilder/Field/EshsDangerEvalInSafetyImproveConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/DragUploadMDCSCompConfig': { renderer: property => <DragUploadMDCSCompConfig {...property} /> },
@@ -108,4 +109,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/EducationExamConfig': { renderer: property => <EducationExamConfig {...property} /> },
   'components/BizBuilder/Field/EshsCmpnyConfig': { renderer: property => <EshsCmpnyConfig {...property} /> },
   'components/BizBuilder/Field/TextJoinFieldCompConfig': { renderer: property => <TextJoinFieldCompConfig {...property} /> },
+  'components/BizBuilder/Field/EshsDangerEvalInSafetyImproveConfig': { renderer: property => <EshsDangerEvalInSafetyImproveConfig {...property} /> },
 };
