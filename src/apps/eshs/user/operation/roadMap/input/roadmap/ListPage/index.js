@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { debounce } from 'lodash';
 
 import { Table, Modal, Select, InputNumber, Popconfirm } from 'antd';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
@@ -29,6 +30,9 @@ class ListPage extends React.Component {
       requestValue: {},
       selectedYear: Number(moment().format('YYYY')),
     };
+    this.handleSaveClick = debounce(this.handleSaveClick, 300);
+    this.handleConfirmClick = debounce(this.handleConfirmClick, 300);
+    this.handleModifyClick = debounce(this.handleModifyClick, 300);
   }
 
   columns = [
