@@ -5,17 +5,19 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { Select, Input, InputNumber, Modal } from 'antd';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
 import request from 'utils/request';
 import { debounce } from 'lodash';
 
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 import ImageUploader from 'components/FormStuff/Upload/ImageUploader';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import CustomTooltip from './customTooltip';
@@ -23,7 +25,7 @@ import CustomTooltip from './customTooltip';
 const { Option } = Select;
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
-const AntdModal = StyledContentsModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -514,9 +516,11 @@ class List extends React.Component {
                 <Option value="318">구미</Option>
               </AntdSelect>
               <AntdInput className="ant-input-inline mr5" onChange={handleInputChange} style={{ width: '300px' }} placeholder="품목을 입력하세요." />
-              <StyledButton className="btn-primary" onClick={() => this.setState({ visible: true, viewType: 'INPUT' })}>
-                등록
-              </StyledButton>
+              <div className="btn-area">
+                <StyledButton className="btn-primary" onClick={() => this.setState({ visible: true, viewType: 'INPUT' })}>
+                  등록
+                </StyledButton>
+              </div>
             </div>
           </StyledCustomSearchWrapper>
           <div style={{ width: '100%', height: '100%' }}>

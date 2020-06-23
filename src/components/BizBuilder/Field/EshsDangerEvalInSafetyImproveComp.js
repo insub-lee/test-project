@@ -78,8 +78,9 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
     const { sagaKey, changeFormData } = this.props;
 
     if (key.toUpperCase() === 'IS_DANGER') {
-      changeFormData(sagaKey, 'ACCIDENT_CAUSE', '');
-      changeFormData(sagaKey, 'ACCIDENT_TYPE', '');
+      changeFormData(sagaKey, 'ACCIDENT_CAUSE_ID', '');
+      changeFormData(sagaKey, 'ACCIDENT_TYPE_ID', '');
+      changeFormData(sagaKey, 'DANGER_CATEGORY', '');
     }
     return changeFormData(sagaKey, key.toUpperCase(), value);
   };
@@ -124,7 +125,7 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
                     disabled={formData.IS_DANGER === 'N'}
                     className="select-sm"
                     value={formData.ACCIDENT_CAUSE}
-                    onChange={value => handleSelectChange('ACCIDENT_CAUSE', value)}
+                    onChange={value => handleSelectChange('ACCIDENT_CAUSE_ID', value)}
                     style={{ width: '100%' }}
                   >
                     {accidentCauseList.map(cause => (
@@ -138,7 +139,7 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
                     disabled={formData.IS_DANGER === 'N'}
                     className="select-sm"
                     value={formData.ACCIDENT_TYPE}
-                    onChange={value => handleSelectChange('ACCIDENT_TYPE', value)}
+                    onChange={value => handleSelectChange('ACCIDENT_TYPE_ID', value)}
                     style={{ width: '100%' }}
                   >
                     {accientTypes.map(type => (
