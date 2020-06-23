@@ -275,9 +275,8 @@ class ModifyPage extends Component {
             </Sketch>
           </StyledWrap>
           <AntdModal
-            className="modal-table-pad"
             title="야외행사 신청 리스트"
-            width="80%"
+            width="90%"
             destroyOnClose
             visible={modalVisible}
             footer={null}

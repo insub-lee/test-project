@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Popconfirm } from 'antd';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 class CustomButtons extends Component {
   constructor(props) {
@@ -10,7 +12,15 @@ class CustomButtons extends Component {
 
   render() {
     // eslint-disable-next-line react/prop-types
-    const { sagaKey: id, reloadId, viewPageData, changeViewPage, deleteTask, isLoading, saveBeforeProcess } = this.props;
+    const { sagaKey: id, reloadId, viewPageData, changeViewPage, deleteTask, isLoading, saveBeforeProcess, workSeq } = this.props;
+
+    const customDeleteCallback = () => {
+      const { viewPageData, setViewPageData, sagaKey: id, changeViewPage } = this.props;
+      message.success(<MessageContent>야외행사 신청 정보를 삭제하였습니다.</MessageContent>);
+      setViewPageData(id, workSeq, -1, 'MODIFY');
+      changeViewPage(id, workSeq, -1, 'MODIFY');
+    };
+
     return (
       <div className="alignRight">
         {viewPageData.taskSeq !== -1 && (
@@ -20,7 +30,7 @@ class CustomButtons extends Component {
             </StyledButton>
             <Popconfirm
               title="Are you sure delete this task?"
-              onConfirm={() => deleteTask(id, reloadId, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage)}
+              onConfirm={() => deleteTask(id, reloadId, viewPageData.workSeq, viewPageData.taskSeq, customDeleteCallback)}
               okText="Yes"
               cancelText="No"
             >

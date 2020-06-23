@@ -222,7 +222,7 @@ class ModifyPage extends Component {
                 setProcessRule={setProcessRule}
               />
             )}
-            <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
+            <View key={`${id}_${viewPageData.viewType}`} {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
             {ModifyCustomButtons ? (
               <ModifyCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
             ) : (
