@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Select, Typography } from 'antd';
 import numeral from 'numeral';
+import { FileExcelOutlined } from '@ant-design/icons';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+
+import { excelDown } from 'utils/excelFunc';
 
 const AntdSelect = StyledSelect(Select);
 
@@ -79,13 +82,29 @@ class Statistics extends Component {
   initStatistics = () => {
     const { result } = this.props;
     if (result && result.statistics && result.statistics.list) {
+
+      let groupCnt = 0;
+      let currChkType = 0;
+
       let hosChkTypeCnt = 0;  // 검진종류 rowSpan
       let hosChkSeqCnt = 0    // 검진차수 rowSpan
       let hosCurrChkType = 0;
       let hosCurrChkSeq = '';
       
       this.setState({
-        list: result.statistics.list,
+        list: result.statistics.list.map(item => {
+          if (currChkType !== item.CHK_TYPE_CD_NODE_ID) {
+            groupCnt = result.statistics.list.filter(l => l.CHK_TYPE_CD_NODE_ID === item.CHK_TYPE_CD_NODE_ID).length;
+          } else {
+            groupCnt = 0;
+          }
+
+          currChkType = item.CHK_TYPE_CD_NODE_ID;
+          return {
+            ...item,
+            rowSpan: groupCnt,
+          }
+        }),
         hosList: result.statistics.hosList.map(item => {
           // 검진종류 rowSpan 구하기
           if (hosCurrChkType !== item.CHK_TYPE_CD_NODE_ID) {
@@ -119,6 +138,11 @@ class Statistics extends Component {
       searchInfo[key] = val;
       return { searchInfo }
     });
+  };
+
+  excelDownload = () => {
+    const tableHtml = document.getElementById('excel-down-table');
+    excelDown(tableHtml.outerHTML, 'aaaaaa');
   };
 
   render() {
@@ -159,7 +183,8 @@ class Statistics extends Component {
               ))
             )}
             </AntdSelect>
-            <StyledButton className="btn-gray btn-sm" onClick={this.getStatistics}>검색</StyledButton>
+            <StyledButton className="btn-gray btn-sm mr5" onClick={this.getStatistics}>검색</StyledButton>
+            {/* <StyledButton className="btn-gray btn-sm" onClick={this.excelDownload}><FileExcelOutlined /> Excel</StyledButton> */}
           </div>
         </StyledCustomSearchWrapper>
         <Typography.Text>1. 예약/검진률</Typography.Text>
@@ -190,7 +215,7 @@ class Statistics extends Component {
             <tbody>
             {this.state.list && this.state.list.map(item => (
               <tr className="tr-center">
-                <td>{item.CHK_TYPE_NAME}</td>
+                {item.rowSpan !== 0 && <td rowSpan={item.rowSpan}>{item.CHK_TYPE_NAME}</td>}
                 <td>{item.CHK_SEQ === '1' ? '1차' : '재검'}</td>
                 <td style={{ textAlign: 'right' }}>{numeral(item.EMPLOYEE_CNT).format('0,0')}</td>
                 <td style={{ textAlign: 'right' }}>{numeral(item.FAM_CNT).format('0,0')}</td>
@@ -206,7 +231,7 @@ class Statistics extends Component {
         </StyledHtmlTable>
         <Typography.Text>2. 검진기관별 인원</Typography.Text>
         <StyledHtmlTable>
-        <table>
+          <table id="excel-down-table">
             <colgroup>
               <col width="10%" />
               <col width="10%" />
