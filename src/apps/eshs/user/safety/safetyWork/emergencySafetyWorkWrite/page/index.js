@@ -444,7 +444,7 @@ class emergencyWorkWrite extends Component {
             handleUploadFileChange={this.handleUploadFileChange}
             fileList={this.state.fileList || []}
           />
-          <div className="middleTitle" style={{ margin: '10px 0px -5px 10px' }}>
+          <div className="middleTitle" style={{ margin: '10px 0px 10px 0px' }}>
             <AppstoreTwoTone style={{ marginRight: '5px' }} />
             <span>투입장비</span>
           </div>

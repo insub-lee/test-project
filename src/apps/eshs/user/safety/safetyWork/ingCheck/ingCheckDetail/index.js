@@ -4,7 +4,7 @@ import { Table, Select, InputNumber } from 'antd';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const AntdInputNumber = StyledInputNumber(InputNumber);
 const AntdTable = StyledLineTable(Table);
@@ -28,7 +28,7 @@ class IngCheckListComp extends Component {
         align: 'center',
         render: (value, record, index) => (
           <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => handleRemoveDetailFormData(index)}>
-            제거
+            삭제
           </StyledButton>
         ),
       },
