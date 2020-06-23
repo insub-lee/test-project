@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // import { Table, Column, AutoSizer } from 'react-virtualized';
-import { Input, Modal, Table, Descriptions, Popconfirm } from 'antd';
+import { Input, Modal, Table, Popconfirm } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-
 import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
@@ -339,6 +338,7 @@ class List extends Component {
             <AntdSearch
               className="ant-search-inline input-search-mid mr5"
               onClick={() => this.handleModal('search', true)}
+              onSearch={() => this.handleModal('search', true)}
               value={searchValue.WRK_CMPNY_NM}
               style={{ width: '200px', marginRight: '10px' }}
             />

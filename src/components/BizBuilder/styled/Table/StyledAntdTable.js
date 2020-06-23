@@ -19,6 +19,7 @@ const StyledAntdTable = Component => styled(Component)`
           border-radius: 0;
           font-size: 12px;
           text-align: center;
+          position: relative;
         }
 
         &:not(:last-child) > th[colspan] {

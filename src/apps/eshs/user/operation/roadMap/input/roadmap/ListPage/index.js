@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { debounce } from 'lodash';
 
 import { Table, Modal, Select, InputNumber, Popconfirm } from 'antd';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
@@ -29,6 +30,9 @@ class ListPage extends React.Component {
       requestValue: {},
       selectedYear: Number(moment().format('YYYY')),
     };
+    this.handleSaveClick = debounce(this.handleSaveClick, 300);
+    this.handleConfirmClick = debounce(this.handleConfirmClick, 300);
+    this.handleModifyClick = debounce(this.handleModifyClick, 300);
   }
 
   columns = [
@@ -36,16 +40,19 @@ class ListPage extends React.Component {
       title: '항목',
       dataIndex: 'CATEGORY_NAME',
       align: 'center',
+      width: '15%',
     },
     {
       title: '연도',
       dataIndex: 'YEAR',
       align: 'center',
+      width: '10%',
     },
     {
       title: '월',
       dataIndex: 'MONTH',
       align: 'center',
+      width: '10%',
     },
     {
       title: '지역',
@@ -54,11 +61,13 @@ class ListPage extends React.Component {
           title: '청주',
           dataIndex: 'CP_VALUE',
           align: 'center',
+          width: '20%',
         },
         {
           title: '구미',
           dataIndex: 'GP_VALUE',
           align: 'center',
+          width: '20%',
         },
       ],
     },
@@ -84,6 +93,7 @@ class ListPage extends React.Component {
       title: '작성자',
       dataIndex: 'REG_USER_NAME',
       align: 'center',
+      width: '10%',
     },
   ];
 
@@ -265,6 +275,7 @@ class ListPage extends React.Component {
                 {createYearList().map(year => (
                   <Select.Option value={year}>{year}년</Select.Option>
                 ))}
+                <Select.Option value="">전체 보기</Select.Option>
               </AntdSelect>
             </div>
           </StyledCustomSearchWrapper>

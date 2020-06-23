@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Table } from 'antd';
+import { Modal, Table, Spin } from 'antd';
 import BizMicroDevBase from 'components/BizMicroDevBase';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import message from 'components/Feedback/message';
@@ -16,7 +14,7 @@ import EduListTable from '../../safetyEdu/SafetyEduList';
 import EduMgtView from '../../safetyEdu/EduMgt/viewPage';
 import Styled from './Styled';
 
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledContentsModal(Modal);
 const AntdTable = StyledLineTable(Table);
 
 class workerTrByPersonalPage extends Component {
@@ -26,6 +24,7 @@ class workerTrByPersonalPage extends Component {
       modalType: '',
       modalTitle: '',
       modalVisible: false,
+      isSearching: false,
       seletedEduNo: '',
       safetyEduList: [],
       SafetyEduConditionList: [],
@@ -73,6 +72,9 @@ class workerTrByPersonalPage extends Component {
   onSearch = () => {
     const { searchValues } = this.state;
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    this.setState({
+      isSearching: true,
+    });
     const apiInfo = {
       key: 'getSafetyEduCondition',
       type: 'POST',
@@ -85,11 +87,17 @@ class workerTrByPersonalPage extends Component {
   onSearchCallback = (id, response) => {
     const listData = response.list || [];
     if (listData.length === 0) {
-      message.error(<MessageContent>검색결과가 없습니다.</MessageContent>);
+      this.setState({
+        isSearching: false,
+      },
+        () => message.error(<MessageContent>검색결과가 없습니다.</MessageContent>)
+      )
     }
     this.setState({
+      isSearching: false,
       SafetyEduConditionList: response.list,
-    });
+    }
+    );
   };
 
   // 모달 핸들러
@@ -204,7 +212,7 @@ class workerTrByPersonalPage extends Component {
   };
 
   render() {
-    const { modalType, modalTitle, modalVisible, searchValues, safetyEduList, SafetyEduConditionList, seletedEduNo } = this.state;
+    const { modalType, modalTitle, modalVisible, searchValues, safetyEduList, SafetyEduConditionList, seletedEduNo, isSearching } = this.state;
     const columns = [
       {
         title: '성명',
@@ -300,25 +308,24 @@ class workerTrByPersonalPage extends Component {
     ];
     return (
       <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.onSearch()} style={{ marginBottom: '5px' }}>
-              검색
-            </StyledButton>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.resetSearchValue()} style={{ marginBottom: '5px' }}>
-              검색조건 초기화
-            </StyledButton>
-          </div>
-        </StyledSearchWrap>
+        <Spin tip="검색중 ..." spinning={isSearching}>
+          <SearchSafetyEduInfo
+            searchValues={searchValues}
+            onChangeSearchValue={this.handleChangeSearchValue}
+            handleModal={this.handleModal}
+            onSearch={this.onSearch}
+            resetSearchValue={this.resetSearchValue}
+          />
+        </Spin>
         <ContentsWrapper>
-          <SearchSafetyEduInfo searchValues={searchValues} onChangeSearchValue={this.handleChangeSearchValue} handleModal={this.handleModal} />
           <div style={{ marginTop: '10px' }}>
             <AntdTable columns={columns} dataSource={SafetyEduConditionList} />
           </div>
         </ContentsWrapper>
         <AntdModal
+          className="modal-table-pad"
           title={modalTitle}
-          width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '70%'}
+          width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '80%'}
           visible={modalVisible}
           footer={null}
           onOk={() => this.handleModal('', false)}

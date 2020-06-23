@@ -14,18 +14,20 @@ const { Dragger } = Upload;
 const imgExts = ['jpg', 'png', 'gif', 'jpeg'];
 
 class DragUploadComp extends Component {
-  state = {
-    fileInfo: [],
-    options: {
-      MULTIPLE_UPLOAD: 'N', // 복수 업로드 여부
-      MULTIPLE_SELECT: 'N', // 복수 파일 선택 여부
-      FILTER_EXTENSION: 'N', // 파일 확장자 검열
-      EXTENSION_LIST: undefined, // 검열 대상 확장자 목록
-    },
-    previewImage: [],
-    previewVisible: false,
-    shouldUpload: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      fileInfo: [],
+      options: {
+        MULTIPLE_UPLOAD: 'N', // 복수 업로드 여부
+        MULTIPLE_SELECT: 'N', // 복수 파일 선택 여부
+        FILTER_EXTENSION: 'N', // 파일 확장자 검열
+        EXTENSION_LIST: undefined, // 검열 대상 확장자 목록
+      },
+      previewImage: [],
+      previewVisible: false,
+    };
+  }
 
   componentDidMount() {
     const { WORK_SEQ, COMP_FIELD, COMP_TAG, colData, CONFIG } = this.props;
@@ -49,6 +51,19 @@ class DragUploadComp extends Component {
         PREVIEW_SETTING: PREVIEW_SETTING || 'N',
       },
     });
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if (this.props.colData !== nextProps.colData) {
+      const { fileInfo } = this.state;
+      this.setState({
+        fileInfo: {
+          ...fileInfo,
+          DETAIL: nextProps.colData.DETAIL,
+        },
+      });
+    }
+    return true;
   }
 
   changeFormDataHanlder = () => {
@@ -232,6 +247,7 @@ class DragUploadComp extends Component {
     const { MULTIPLE_SELECT, MULTIPLE_UPLOAD, FILTER_EXTENSION, EXTENSION_LIST, PREVIEW_SETTING } = options;
     const IS_MULTIPLE_UPLOAD_ON = MULTIPLE_UPLOAD === 'Y';
     const IS_PREVIEW_ON = PREVIEW_SETTING === 'Y';
+    console.debug('파일리스트', fileList);
     return (
       <div onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
         <Dragger
@@ -290,9 +306,11 @@ class DragUploadComp extends Component {
 
 DragUploadComp.propTypes = {
   CONFIG: PropTypes.objectOf(PropTypes.object),
+  changeIsLoading: PropTypes.func,
 };
 
 DragUploadComp.defaultProps = {
+  changeIsLoading: () => false,
   CONFIG: {
     info: {},
     property: { MULTIPLE_UPLOAD: 'N', MULTIPLE_SELECT: 'N', FILTER_EXTENSION: 'N', EXTENSION_LIST: '' },
