@@ -13,7 +13,7 @@ const StyledInput = Component => styled(Component)`
     color: #495057;
     background-color: #fff;
     background-clip: padding-box;
-    border: 1px solid #e5e5e5;
+    border: 1px solid #ddd;
     border-radius: 4px;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
     vertical-align: middle;
@@ -116,7 +116,7 @@ const StyledInput = Component => styled(Component)`
       right: 18px;
     }
 
-    .ant-input:not(.ant-input-disabled) {
+    &:hover .ant-input:not(.ant-input-disabled) {
       border-color: #636a78;
     }
   }
