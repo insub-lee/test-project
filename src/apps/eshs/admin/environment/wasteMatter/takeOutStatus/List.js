@@ -137,10 +137,10 @@ class List extends Component {
               <Option value={0}>결제 해결후 사용</Option>
             </AntdSelect>
             <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.searchData}>
+              <StyledButton className="btn-gray btn-first btn-sm" onClick={this.searchData}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm" onClick={this.print}>
+              <StyledButton className="btn-gray btn-sm" onClick={this.print}>
                 인쇄
               </StyledButton>
             </StyledButtonWrapper>

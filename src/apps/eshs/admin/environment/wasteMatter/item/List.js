@@ -6,6 +6,7 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
@@ -190,7 +191,7 @@ class List extends Component {
         width: 250,
         children: [
           {
-            title: <AntdInput className="ant-input-sm" value={itemNm} onChange={e => this.onChangeValue('itemNm', e.target.value)} />,
+            title: <AntdInput className="ant-input-xs" value={itemNm} onChange={e => this.onChangeValue('itemNm', e.target.value)} />,
             dataIndex: 'ITEM_NM',
             align: 'left',
           },
@@ -204,7 +205,7 @@ class List extends Component {
           {
             title: (
               <AntdSelect
-                className="select-sm"
+                className="select-xs"
                 style={{ width: '150px' }}
                 onChange={value => this.onChangeValue('shape', value)}
                 value={Number(shape) || (shapeList && shapeList[0] && shapeList[0].NODE_ID)}
@@ -230,7 +231,7 @@ class List extends Component {
           {
             title: (
               <AntdSelect
-                className="select-sm"
+                className="select-xs"
                 style={{ width: '150px' }}
                 onChange={value => this.onChangeValue('unit', value)}
                 value={Number(unit) || (unitList && unitList[0] && unitList[0].NODE_ID)}
@@ -256,7 +257,7 @@ class List extends Component {
             title: (
               <>
                 <AntdSelect
-                  className="select-sm mr5"
+                  className="select-xs mr5"
                   style={{ width: '150px' }}
                   onChange={value => this.onChangeValue('isTransForm', value)}
                   value={Number(isTransForm) || (transFormList && transFormList[0] && transFormList[0].NODE_ID)}
@@ -269,16 +270,16 @@ class List extends Component {
                     ))}
                 </AntdSelect>
                 <StyledButtonWrapper className="btn-wrap-inline">
-                  <StyledButton className="btn-primary btn-first btn-sm" onClick={this.insertOverlab}>
+                  <StyledButton className="btn-primary btn-first btn-xs" onClick={this.insertOverlab}>
                     추가
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('U')}>
+                  <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeData('U')}>
                     수정
                   </StyledButton>
                   <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.onChangeData('D')} okText="Yes" cancelText="No">
-                    <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
+                    <StyledButton className="btn-light btn-first btn-xs">삭제</StyledButton>
                   </Popconfirm>
-                  <StyledButton className="btn-primary btn-sm" onClick={this.onReset}>
+                  <StyledButton className="btn-light btn-xs" onClick={this.onReset}>
                     Reset
                   </StyledButton>
                 </StyledButtonWrapper>
@@ -292,25 +293,27 @@ class List extends Component {
     ];
     return (
       <ContentsWrapper>
-        <div className="selSaveWrapper alignLeft">
-          <span className="textLabel">품목명</span>
-          <AntdInput
-            className="ant-input-inline ant-input-mid"
-            style={{ width: '200px' }}
-            value={this.state.searchNm}
-            onChange={e => this.onChangeValue('searchNm', e.target.value)}
-          />
-          <span className="textLabel">조회순서</span>
-          <AntdSelect className="select-mid mr5" onChange={value => this.onChangeValue('orderbySelect', value)} value={this.state.orderbySelect}>
-            <Option value="1">품목명</Option>
-            <Option value="2">코드</Option>
-          </AntdSelect>
-          <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={this.searchDataApi}>
+        <StyledCustomSearch className="search-wrapper-inline">
+          <div className="search-input-area">
+            <span className="text-label">품목명</span>
+            <AntdInput
+              className="ant-input-inline ant-input-sm"
+              style={{ width: '200px' }}
+              value={this.state.searchNm}
+              onChange={e => this.onChangeValue('searchNm', e.target.value)}
+            />
+            <span className="text-label">조회순서</span>
+            <AntdSelect className="select-sm mr5" onChange={value => this.onChangeValue('orderbySelect', value)} value={this.state.orderbySelect}>
+              <Option value="1">품목명</Option>
+              <Option value="2">코드</Option>
+            </AntdSelect>
+          </div>
+          <StyledButtonWrapper className="btn-area">
+            <StyledButton className="btn-gray btn-first btn-sm" onClick={this.searchDataApi}>
               검색
             </StyledButton>
           </StyledButtonWrapper>
-        </div>
+        </StyledCustomSearch>
         <AntdLineTable
           rowKey={itemList && itemList.ITEM_CD}
           columns={columns}
@@ -321,7 +324,7 @@ class List extends Component {
               this.selectedRecord(record);
             },
           })}
-          footer={() => <span>{`${itemList && itemList.length} 건`}</span>}
+          footer={() => <span>{`${(itemList && itemList.length) || 0} 건`}</span>}
         />
       </ContentsWrapper>
     );

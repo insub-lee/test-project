@@ -55,6 +55,7 @@
     "react-data-export": "^0.6.0",
     "react-data-grid": "^6.1.0",
     "react-data-grid-addons": "^4.0.8",
+    "react-datasheet": "^1.4.4",
     "react-datepicker": "^1.8.0",
     "react-dates": "^17.1.1",
     "react-dnd": "^2.6.0",
