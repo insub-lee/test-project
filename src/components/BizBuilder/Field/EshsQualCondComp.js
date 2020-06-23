@@ -106,7 +106,7 @@ class EshsQualCondComp extends Component {
     const depts = (extraApiData && extraApiData[`${id}_COND_DEPT`] && extraApiData[`${id}_COND_DEPT`].categoryMapList) || [];
 
     const condCategories = categories.filter(c => c.LVL === 3 && c.USE_YN === 'Y');
-    const condDept = depts.filter(d => deptCodeList.indexOf(d.CODE) > -1 && d.USE_YN === 'Y');
+    const condDept = depts.filter(d => deptCodeList.indexOf(d.CODE) > -1);
 
     let resultWidth = '50%';
     let approveWidth = '50%';
@@ -444,13 +444,13 @@ class EshsQualCondComp extends Component {
     const condList = (formData && formData.condList) || [];
     const initCondList = [];
     if (APPROVE_TYPE === 'INPUT') {
-      initCondList.push({ ...initRow, APPROVE_CATEGORY_CD: 2128, APPROVE_DEPT_CD: 2118, APPROVE_FILE_TYPE: 'TEMP', STEP: '1' });
-      initCondList.push({ ...initRow, APPROVE_CATEGORY_CD: 2128, APPROVE_DEPT_CD: 2118, APPROVE_FILE_TYPE: 'TEMP', STEP: '1' });
-      initCondList.push({ ...initRow, APPROVE_CATEGORY_CD: 2128, APPROVE_DEPT_CD: 2118, APPROVE_FILE_TYPE: 'TEMP', STEP: '1' });
+      initCondList.push({ ...initRow, APPROVE_CATEGORY_CD: 2128, APPROVE_DEPT_CD: 19263, APPROVE_FILE_TYPE: 'TEMP', STEP: '1' });
+      initCondList.push({ ...initRow, APPROVE_CATEGORY_CD: 2128, APPROVE_DEPT_CD: 19263, APPROVE_FILE_TYPE: 'TEMP', STEP: '1' });
+      initCondList.push({ ...initRow, APPROVE_CATEGORY_CD: 2128, APPROVE_DEPT_CD: 19263, APPROVE_FILE_TYPE: 'TEMP', STEP: '1' });
     } else if (RESULT_TYPE === 'INPUT') {
-      initCondList.push({ ...initRow, RESULT_CATEGORY_CD: 2128, RESULT_DEPT_CD: 2118, RESULT_FILE_TYPE: 'TEMP', STEP: '3' });
-      initCondList.push({ ...initRow, RESULT_CATEGORY_CD: 2128, RESULT_DEPT_CD: 2118, RESULT_FILE_TYPE: 'TEMP', STEP: '3' });
-      initCondList.push({ ...initRow, RESULT_CATEGORY_CD: 2128, RESULT_DEPT_CD: 2118, RESULT_FILE_TYPE: 'TEMP', STEP: '3' });
+      initCondList.push({ ...initRow, RESULT_CATEGORY_CD: 2128, RESULT_DEPT_CD: 19263, RESULT_FILE_TYPE: 'TEMP', STEP: '3' });
+      initCondList.push({ ...initRow, RESULT_CATEGORY_CD: 2128, RESULT_DEPT_CD: 19263, RESULT_FILE_TYPE: 'TEMP', STEP: '3' });
+      initCondList.push({ ...initRow, RESULT_CATEGORY_CD: 2128, RESULT_DEPT_CD: 19263, RESULT_FILE_TYPE: 'TEMP', STEP: '3' });
     }
     changeFormData(id, 'condList', condList.concat(initCondList));
   };

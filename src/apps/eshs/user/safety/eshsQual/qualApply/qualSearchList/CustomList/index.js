@@ -34,7 +34,7 @@ class CustomList extends Component {
   }
 
   componentDidMount = () => {
-    const { workInfo } = this.props;
+    const { workInfo, changeSearchData, sagaKey: id, getListData, listGubun } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
     let isOnRowClick = false;
@@ -60,6 +60,9 @@ class CustomList extends Component {
       });
       this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
     }
+
+    changeSearchData(id, 'GUBUN', `AND GUBUN = '${listGubun}'`);
+    getListData(id, 6821);
   };
 
   // state값 reset테스트
@@ -166,9 +169,6 @@ class CustomList extends Component {
     }
 
     console.debug('리스트 GUBUN [ ', listGubun, ' ]');
-    let filterList = [];
-    if (listGubun) filterList = listData && listData.filter(l => l.GUBUN === listGubun);
-    else filterList = listData || [];
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -179,7 +179,7 @@ class CustomList extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData && listGubun ? listData.filter(l => l.GUBUN === listGubun) : listData || []}
+            dataSource={listData}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
