@@ -3,15 +3,15 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Input, DatePicker, Select, Radio, Checkbox } from 'antd';
-import Upload from 'components/FormStuff/Upload/DropZone';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import DragUploadComp from 'components/BizBuilder/Field/DragUploadComp';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import StyledTextarea from 'commonStyled/Form/StyledTextarea';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
@@ -20,7 +20,7 @@ const { TextArea } = Input;
 const AntdInput = StyledInput(Input);
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdSelect = StyledSelect(Select);
-const AntdDatePicker = StyledPicker(DatePicker);
+const AntdDatePicker = StyledDatePicker(DatePicker);
 const AntdTextArea = StyledTextarea(TextArea);
 
 const EduInfoTableStyled = styled.div`
@@ -62,7 +62,7 @@ class SafetyWorkInfo extends Component {
   };
 
   render() {
-    const { handleModal, formData, handleChangeFormData, handleWorkCategory, handleUploadFileChange } = this.props;
+    const { handleModal, formData, handleChangeFormData, handleWorkCategory, handleChangeAttach } = this.props;
     const fromTimes = ['09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'];
     const toTimes = ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'];
     return (
@@ -176,7 +176,7 @@ class SafetyWorkInfo extends Component {
                   </th>
                   <td colSpan={3}>
                     <div className="tableInBtnWrap">
-                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.onClickBfcheckBtn('mainBfcheck')}>
+                      <StyledButton className="btn-gray btn-xxs btn-first" onClick={() => this.onClickBfcheckBtn('mainBfcheck')}>
                         작업전 점검 등록
                       </StyledButton>
                     </div>
@@ -209,9 +209,9 @@ class SafetyWorkInfo extends Component {
                   <th colSpan={2}>
                     <span>* 보충작업</span>
                   </th>
-                  <td colSpan={3}>
+                  <td colSpan={3} style={{ verticalAlign: 'top' }}>
                     <div className="tableInBtnWrap">
-                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.onClickBfcheckBtn('subBfcheck')}>
+                      <StyledButton className="btn-gray btn-xxs btn-first" onClick={() => this.onClickBfcheckBtn('subBfcheck')}>
                         작업전 점검 등록
                       </StyledButton>
                     </div>
@@ -220,6 +220,7 @@ class SafetyWorkInfo extends Component {
                       <Checkbox value="굴착">굴착</Checkbox>
                       <Checkbox value="밀폐">밀폐공간</Checkbox>
                       <Checkbox value="방사선">방사선</Checkbox>
+                      <br />
                       <Checkbox value="전기">전기</Checkbox>
                       <Checkbox value="중량물">중량물</Checkbox>
                     </Checkbox.Group>
@@ -374,10 +375,14 @@ class SafetyWorkInfo extends Component {
                     <span>첨부</span>
                   </th>
                   <td colSpan={8}>
-                    {/*
-                      { handleChange, fileList, customRequest, action, limit, disabled, onRemove }
-                    */}
-                    <Upload action="/upload" handleChange={handleUploadFileChange} fileList={formData.fileList} />
+                    <DragUploadComp
+                      WORK_SEQ={-1}
+                      colData={{ DETAIL: formData.UPLOAD_FILES || [] }}
+                      changeFormData={handleChangeAttach}
+                      COMP_FIELD="UPLOAD_FILES"
+                      visible
+                      CONFIG={{ property: { MULTIPLE_UPLOAD: 'Y' } }}
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -394,7 +399,7 @@ SafetyWorkInfo.propTypes = {
   handleModal: PropTypes.func,
   handleChangeFormData: PropTypes.func,
   handleWorkCategory: PropTypes.func,
-  handleUploadFileChange: PropTypes.func,
+  handleChangeAttach: PropTypes.func,
 };
 
 SafetyWorkInfo.defaultProps = {};
