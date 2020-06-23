@@ -381,7 +381,7 @@ class SafetyWorkMain extends Component {
         break;
       case 'UPDATE':
         if (uploadFiles === 0) {
-          submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkAddCallback);
+          submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkUpdateCallback);
         } else {
           const attachParam = { PARAM: { DETAIL: formData.UPLOAD_FILES } };
           submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', attachParam, this.uploadFileCallbackUpdate);
@@ -430,7 +430,7 @@ class SafetyWorkMain extends Component {
       UPLOADED_FILES: JSON.stringify(FILE_DETAIL) || [],
     };
     const submitData = { PARAM: nextFormData };
-    submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkAddCallback);
+    submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkUpdateCallback);
   };
 
   // 폼데이터 유효성 점검
@@ -480,10 +480,10 @@ class SafetyWorkMain extends Component {
   safetyWorkUpdateCallback = (id, response) => {
     const { result } = response;
     if (result && result === 'fail') {
-      message.error(<MessageContent>안전작업 정보를 저장하지 못하였습니다.</MessageContent>);
+      message.error(<MessageContent>안전작업 정보 수정에 실패하였습니다.</MessageContent>);
       return;
     }
-    message.success(<MessageContent>안전작업 정보를 저장하였습니다.</MessageContent>);
+    message.success(<MessageContent>안전작업 정보를 수정하였습니다.</MessageContent>);
   };
 
   // 작업 삭제 콜백
@@ -650,15 +650,9 @@ class SafetyWorkMain extends Component {
     }
   };
 
-  // 파일 다운로드
-  onClickDownloadBtn = type => {
-    switch (type) {
-      case 'safetyWorkPledge':
-        window.location.href = `/down/file/3151`;
-        break;
-      default:
-        break;
-    }
+  handleDown = (e, fileSeq) => {
+    e.stopPropagation();
+    window.location.href = `/down/file/${Number(fileSeq)}`;
   };
 
   render() {
@@ -699,16 +693,16 @@ class SafetyWorkMain extends Component {
               </StyledButton>
             </>
           )}
-          <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.onClickDownloadBtn('safetyWorkPledge')}>
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174228)}>
             안전교육 서약서
           </StyledButton>
-          <StyledButton className="btn-gray btn-sm btn-first" onClick={() => console.debug('(청주) 중량물 작업계획서')}>
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174229)}>
             (청주) 중량물 작업계획서
           </StyledButton>
-          <StyledButton className="btn-gray btn-sm btn-first" onClick={() => console.debug('(청주) 밀폐공간 체크리스트')}>
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174231)}>
             (청주) 밀폐공간 체크리스트
           </StyledButton>
-          <StyledButton className="btn-gray btn-sm btn-first" onClick={() => console.debug('(청주) 안전계획/절차서')}>
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174230)}>
             (청주) 안전계획/절차서
           </StyledButton>
         </StyledButtonWrapper>

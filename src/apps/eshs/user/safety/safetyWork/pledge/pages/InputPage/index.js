@@ -13,6 +13,8 @@ import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal'
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import { Input, Modal } from 'antd';
 import CustomListPage from '../ListPage';
 
@@ -83,6 +85,7 @@ class InputPage extends Component {
     const { nextFormData } = response;
     const nextFormValid = nextFormData && nextFormData.PLEDGE_NO && true;
     if (nextFormValid) {
+      message.success(<MessageContent>서약서를 추가하였습니다.</MessageContent>);
       setFormData(id, nextFormData);
     }
   };
@@ -90,6 +93,7 @@ class InputPage extends Component {
   deletePledge = () => {
     const { sagaKey: id, deleteTask, changeViewPage, viewPageData } = this.props;
     const { workSeq, taskSeq } = viewPageData;
+    message.success(<MessageContent>서약서를 삭제하였습니다.</MessageContent>);
     deleteTask(id, id, workSeq, taskSeq, changeViewPage, () => changeViewPage(id, workSeq, -1, 'INPUT'));
   };
 
