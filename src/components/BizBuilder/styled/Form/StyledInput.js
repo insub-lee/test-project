@@ -21,7 +21,6 @@ const StyledInput = Component => styled(Component)`
     &:hover,
     &:focus {
       color: #495057;
-      background-color: #fff;
       border-color: #636a78;
       outline: 0;
       box-shadow: 0 0 0 0.2rem transparent;
