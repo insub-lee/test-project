@@ -238,7 +238,7 @@ class InputPage extends Component {
                 setProcessRule={setProcessRule}
               />
             )}
-            <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
+            <View key={`${id}_${viewPageData.viewType}`} {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
             {InputCustomButtons ? (
               <InputCustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
             ) : (

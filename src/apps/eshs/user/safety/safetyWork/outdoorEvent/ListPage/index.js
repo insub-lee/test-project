@@ -13,6 +13,7 @@ const outdoorEvent = () => (
     sagaKey="outdoorEvent"
     viewType="LIST"
     workSeq={4821}
+    modalTitle="야외행사 신청 정보"
     viewChangeSeqByModal={38}
     ModifyCustomButtons={ModifyCustomButtons}
     ListCustomButtons={ListCustomButtons}

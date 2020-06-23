@@ -21,7 +21,7 @@ class UserSelectComp extends React.Component {
       // 커스텀영역이 필요하지만 일단 id 기준으로 야외행사 신청서 일경우 따로 formData Change 지정(이정현)
       // 발견된 이슈사항 :: result 조회시 EMP_NO (사번)이 NAME 으로 나타나고 있습니다.
       if (id === 'outdoorEvent') {
-        changeFormData(id, COMP_FIELD, `${result[0].USER_ID}`);
+        changeFormData(id, COMP_FIELD, `${result[0].EMP_NO}`);
         changeFormData(id, COMP_FIELD.replace('NO', 'NM'), `${result[0].NAME_KOR}`);
       } else {
         changeFormData(id, COMP_FIELD, `${result[0].EMP_NO}`);
