@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Input, Select, Radio, Checkbox } from 'antd';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
@@ -147,7 +147,7 @@ class SafetyWorkInfo extends Component {
                   </th>
                   <td colSpan={3}>
                     <div className="tableInBtnWrap">
-                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.onClickBfcheckBtn('mainBfcheck')}>
+                      <StyledButton className="btn-gray btn-xxs btn-first" onClick={() => this.onClickBfcheckBtn('mainBfcheck')}>
                         작업전 점검 등록
                       </StyledButton>
                     </div>
@@ -180,9 +180,9 @@ class SafetyWorkInfo extends Component {
                   <th colSpan={2}>
                     <span>* 보충작업</span>
                   </th>
-                  <td colSpan={3}>
+                  <td colSpan={3} style={{ verticalAlign: 'top' }}>
                     <div className="tableInBtnWrap">
-                      <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.onClickBfcheckBtn('subBfcheck')}>
+                      <StyledButton className="btn-gray btn-xxs btn-first" onClick={() => this.onClickBfcheckBtn('subBfcheck')}>
                         작업전 점검 등록
                       </StyledButton>
                     </div>
@@ -191,6 +191,7 @@ class SafetyWorkInfo extends Component {
                       <Checkbox value="굴착">굴착</Checkbox>
                       <Checkbox value="밀폐">밀폐공간</Checkbox>
                       <Checkbox value="방사선">방사선</Checkbox>
+                      <br />
                       <Checkbox value="전기">전기</Checkbox>
                       <Checkbox value="중량물">중량물</Checkbox>
                     </Checkbox.Group>

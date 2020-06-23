@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Input, DatePicker, Radio, Modal } from 'antd';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import UserSelect from 'components/UserSelect';
 
 const AntdModal = StyledModalWrapper(Modal);
 const AntdInput = StyledInput(Input);
 const AntdSearch = StyledSearchInput(Input.Search);
-const AntdDatePicker = StyledPicker(DatePicker);
+const AntdDatePicker = StyledDatePicker(DatePicker);
 
 class BfcheckHead extends Component {
   constructor(props) {
@@ -155,6 +155,7 @@ class BfcheckHead extends Component {
                 <td colSpan={7}>
                   <AntdInput
                     className="ant-input-xs"
+                    style={{ width: '200px' }}
                     vlaue={(formData.OUT_CHECK_SSN && formData.OUT_CHECK_SSN) || ''}
                     maxLength={13}
                     onChange={e => onChangeFormData('OUT_CHECK_SSN', e.target.value)}
@@ -168,6 +169,7 @@ class BfcheckHead extends Component {
                 <td colSpan={7}>
                   <AntdInput
                     className="ant-input-xs"
+                    style={{ width: '200px' }}
                     vlaue={(formData.OUT_CHECK_NM && formData.OUT_CHECK_NM) || ''}
                     maxLength={20}
                     onChange={e => onChangeFormData('OUT_CHECK_NM', e.target.value)}

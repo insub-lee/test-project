@@ -3,8 +3,9 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Input } from 'antd';
+import DragUploadViewComp from 'components/BizBuilder/Field/DragUploadViewComp';
 // import Upload from 'components/FormStuff/Upload/DropZone';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledTextarea from 'commonStyled/Form/StyledTextarea';
 
@@ -208,7 +209,9 @@ class SafetyWorkInfo extends Component {
                     <th colSpan={2}>
                       <span>첨부</span>
                     </th>
-                    <td colSpan={8}></td>
+                    <td colSpan={8}>
+                      <DragUploadViewComp colData={{ DETAIL: formData.UPLOAD_FILES || [] }} />
+                    </td>
                   </tr>
                 )}
               </tbody>

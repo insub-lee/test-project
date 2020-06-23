@@ -99,7 +99,6 @@ class BfcheckItemSelect extends Component {
         </StyledSearchWrap>
         <ContentsWrapper>
           <AntdTable
-            pagination={false}
             columns={columns}
             dataSource={searchResult}
             rowSelection={rowSelection}

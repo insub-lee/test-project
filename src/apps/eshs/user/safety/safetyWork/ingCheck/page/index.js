@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Input, Modal } from 'antd';
-import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
+import { AppstoreTwoTone } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -20,7 +22,8 @@ import IngCheckHead from '../ingCheckHead';
 import PenaltyItem from '../penaltyItem';
 import Styled from './Styled';
 
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledContentsModal(Modal);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class SafetyWorkMain extends Component {
   constructor(props) {
@@ -399,48 +402,38 @@ class SafetyWorkMain extends Component {
     const penaltyItem = (result && result.getSwtbPenaltyItem && result.getSwtbPenaltyItem.penaltyActiveItems) || [];
     return (
       <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <div className="searchCmpnyWrap">
-              <label>
-                작업번호
-                <Input
-                  className="ant-input-sm"
-                  style={{ width: '150px', marginLeft: '5px', marginRight: '5px' }}
-                  value={formData.WORK_NO}
-                  onClick={() => this.handleModal('safetyWork', true)}
-                />
-              </label>
-            </div>
-            <div
-              className="searchCmpnyBtn"
-              tabIndex={0}
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <span className="text-label">거래처</span>
+            <AntdSearch
+              className="ant-search-inline input-search-mid mr5"
               onClick={() => this.handleModal('safetyWork', true)}
-              onKeyPress={() => this.handleModal('safetyWork', true)} // esLint
-              role="button" // esLint
-            >
-              <CaretDownOutlined />
-            </div>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.handleGetSafetyWork()} style={{ marginBottom: '5px' }}>
+              onSearch={() => this.handleModal('safetyWork', true)}
+              value={formData.WORK_NO}
+              style={{ width: '200px', marginRight: '10px' }}
+            />
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
               검색
             </StyledButton>
-            {formData.WORK_NO && formData.WORK_NO !== '' && (
-              <>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('SAVE')} style={{ marginBottom: '5px' }}>
-                  저장
-                </StyledButton>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('DELETE')} style={{ marginBottom: '5px' }}>
-                  삭제
-                </StyledButton>
-              </>
-            )}
-            {pageType && pageType === 'modal' && (
-              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => alert('인쇄')} style={{ marginBottom: '5px' }}>
-                인쇄
-              </StyledButton>
-            )}
           </div>
-        </StyledSearchWrap>
+        </StyledCustomSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          {formData.WORK_NO && formData.WORK_NO !== '' && (
+            <>
+              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('SAVE')}>
+                저장
+              </StyledButton>
+              <StyledButton className="btn-light btn-xs btn-first" onClick={() => this.submitFormData('DELETE')}>
+                삭제
+              </StyledButton>
+            </>
+          )}
+          {pageType && pageType === 'modal' && (
+            <StyledButton className="btn-gray btn-xs btn-first" onClick={() => alert('인쇄기능 준비중')}>
+              인쇄
+            </StyledButton>
+          )}
+        </StyledButtonWrapper>
         <ContentsWrapper>
           <SafetyWorkInfo formData={formData} viewPage="ingCheck" />
           <div className="ingCheckHeader">
@@ -477,6 +470,7 @@ class SafetyWorkMain extends Component {
           </div>
         </ContentsWrapper>
         <AntdModal
+          className="modal-table-pad"
           title={modalTitle}
           width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '70%'}
           visible={modalVisible}

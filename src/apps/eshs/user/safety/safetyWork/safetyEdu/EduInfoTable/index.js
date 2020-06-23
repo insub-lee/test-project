@@ -10,7 +10,7 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import UserSelect from 'components/UserSelect';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 
