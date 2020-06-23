@@ -18,7 +18,7 @@ class HealthChkResultCodeView extends Component {
   state = {
     detail: {},
     saveType: '',
-  }
+  };
 
   componentDidMount() {
     const { sagaKey: id, selectedRow } = this.props;
@@ -40,36 +40,42 @@ class HealthChkResultCodeView extends Component {
           ORDER_SEQ: '',
           UNIT: '',
           USE_YN: '',
-        }
+        },
       });
     }
   }
 
-  onChangeDetail = (key, val) =>  {
+  onChangeDetail = (key, val) => {
     this.setState(prevState => {
-      let { detail } = prevState;
+      const { detail } = prevState;
       detail[key] = val;
-      return { detail }
+      return { detail };
     });
-  }
+  };
 
   onSaveCode = () => {
     const { sagaKey, submitHandlerBySaga, onSaveAfter, spinningOn, spinningOff } = this.props;
     const submitData = {
       PARAM: {
         ...this.state.detail,
-        ORDER_SEQ: Number(this.state.detail.ORDER_SEQ)
-      }
+        ORDER_SEQ: Number(this.state.detail.ORDER_SEQ),
+      },
     };
-    
+
     spinningOn();
-    submitHandlerBySaga(sagaKey, (this.state.saveType === 'I' ? 'POST' : 'PUT'), `/api/eshs/v1/common/health/healthChkResultCode/${this.state.detail.CHK_RESULT_ITEM_CD}`, submitData, (id, response) => {
-      if (response && response.result === 1) {
-        message.info(<MessageContent>저장하였습니다.</MessageContent>);
-        spinningOff();
-        onSaveAfter();
-      }
-    });
+    submitHandlerBySaga(
+      sagaKey,
+      this.state.saveType === 'I' ? 'POST' : 'PUT',
+      `/api/eshs/v1/common/health/healthChkResultCode/${this.state.detail.CHK_RESULT_ITEM_CD}`,
+      submitData,
+      (id, response) => {
+        if (response && response.result === 1) {
+          message.info(<MessageContent>저장하였습니다.</MessageContent>);
+          spinningOff();
+          onSaveAfter();
+        }
+      },
+    );
   };
 
   render() {
@@ -94,19 +100,32 @@ class HealthChkResultCodeView extends Component {
               <tr>
                 <th>코드</th>
                 <td>
-                  <AntdInput value={detail.CHK_RESULT_ITEM_CD} className="ant-input-sm" onChange={e => this.onChangeDetail('CHK_RESULT_ITEM_CD', e.target.value)} readOnly={saveType === 'U'} />
+                  <AntdInput
+                    value={detail.CHK_RESULT_ITEM_CD}
+                    className="ant-input-sm"
+                    onChange={e => this.onChangeDetail('CHK_RESULT_ITEM_CD', e.target.value)}
+                    readOnly={saveType === 'U'}
+                  />
                 </td>
               </tr>
               <tr>
                 <th>검진결과항목구분</th>
                 <td>
-                  <AntdInput value={detail.CHK_RESULT_ITEM_NM} className="ant-input-sm" onChange={e => this.onChangeDetail('CHK_RESULT_ITEM_NM', e.target.value)} />
+                  <AntdInput
+                    value={detail.CHK_RESULT_ITEM_NM}
+                    className="ant-input-sm"
+                    onChange={e => this.onChangeDetail('CHK_RESULT_ITEM_NM', e.target.value)}
+                  />
                 </td>
               </tr>
               <tr>
                 <th>검진결과항목명</th>
                 <td>
-                  <AntdInput value={detail.CHK_RESULT_ITEM_DESC} className="ant-input-sm" onChange={e => this.onChangeDetail('CHK_RESULT_ITEM_DESC', e.target.value)} />
+                  <AntdInput
+                    value={detail.CHK_RESULT_ITEM_DESC}
+                    className="ant-input-sm"
+                    onChange={e => this.onChangeDetail('CHK_RESULT_ITEM_DESC', e.target.value)}
+                  />
                 </td>
               </tr>
               <tr>
@@ -146,8 +165,12 @@ class HealthChkResultCodeView extends Component {
           </table>
         </StyledHtmlTable>
         <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-          <StyledButton className="btn-light btn-sm mr5" onClick={onCancelPopup}>닫기</StyledButton>
-          <StyledButton className="btn-primary btn-sm" onClick={this.onSaveCode}>저장</StyledButton>
+          <StyledButton className="btn-primary btn-sm mr5" onClick={this.onSaveCode}>
+            저장
+          </StyledButton>
+          <StyledButton className="btn-light btn-sm" onClick={onCancelPopup}>
+            닫기
+          </StyledButton>
         </StyledButtonWrapper>
       </StyledContentsWrapper>
     );

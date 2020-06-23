@@ -98,8 +98,8 @@ const StyledButton = component => styled(component)`
     margin-right: 5px;
   }
 
-  .ant-btn > .anticon + span,
-  .ant-btn > span + .anticon {
+  &.ant-btn > .anticon + span,
+  &.ant-btn > span + .anticon {
     vertical-align: middle;
     margin-left: 2px;
   }

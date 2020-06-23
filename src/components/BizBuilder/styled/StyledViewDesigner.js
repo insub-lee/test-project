@@ -327,6 +327,12 @@ const StyledViewDesigner = styled.div`
               }
             }
           }
+
+          &.ant-select-disabled {
+            .ant-select-selection {
+              background: #f5f5f5;
+            }
+          }
         }
 
         .ant-input-number {
