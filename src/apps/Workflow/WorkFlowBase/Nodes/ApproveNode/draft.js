@@ -50,9 +50,7 @@ class ApproveNodeDraft extends Component {
     }
   }
 
-  render = () => {
-    return <div>필수심의권자 노드</div>;
-  };
+  render = () => <div>필수 심의권자 노드</div>;
 }
 
 export default ApproveNodeDraft;
