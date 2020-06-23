@@ -267,76 +267,173 @@ class SelfCheck extends Component {
               <tr>
                 <th>신장(cm)</th>
                 <td>
-                  <AntdInput value={formData.GOL || ''} maxLength={10} onChange={e => this.changeFormData('GOL', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.GOL || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('GOL', e.target.value)}
+                    allowClear
+                  />
                 </td>
                 <th>수축기(mmHg)</th>
                 <td>
-                  <AntdInput value={formData.SUCHUK || ''} maxLength={10} onChange={e => this.changeFormData('SUCHUK', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.SUCHUK || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('SUCHUK', e.target.value)}
+                    allowClear
+                  />
                 </td>
                 <th>GOT</th>
                 <td>
-                  <AntdInput value={formData.GOT || ''} maxLength={10} onChange={e => this.changeFormData('GOT', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.GOT || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('GOT', e.target.value)}
+                    allowClear
+                  />
                 </td>
                 <th>T-콜레스테롤</th>
                 <td>
-                  <AntdInput value={formData.COL || ''} maxLength={10} onChange={e => this.changeFormData('COL', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.COL || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('COL', e.target.value)}
+                    allowClear
+                  />
                 </td>
               </tr>
               <tr>
                 <th>체중(kg)</th>
                 <td>
-                  <AntdInput value={formData.WEIGHT || ''} maxLength={10} onChange={e => this.changeFormData('WEIGHT', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.WEIGHT || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('WEIGHT', e.target.value)}
+                    allowClear
+                  />
                 </td>
                 <th>이완기(mmHg)</th>
                 <td>
-                  <AntdInput value={formData.IWAN || ''} maxLength={10} onChange={e => this.changeFormData('IWAN', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.IWAN || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('IWAN', e.target.value)}
+                    allowClear
+                  />
                 </td>
                 <th>GPT</th>
                 <td>
-                  <AntdInput value={formData.GPT || ''} maxLength={10} onChange={e => this.changeFormData('GPT', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.GPT || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('GPT', e.target.value)}
+                    allowClear
+                  />
                 </td>
                 <th>중성지방</th>
                 <td>
-                  <AntdInput value={formData.JOONGSUNG || ''} maxLength={10} onChange={e => this.changeFormData('JOONGSUNG', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.JOONGSUNG || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('JOONGSUNG', e.target.value)}
+                    allowClear
+                  />
                 </td>
               </tr>
               <tr>
                 <th>체지방률(%)</th>
                 <td>
-                  <AntdInput value={formData.CHEJI || ''} maxLength={10} onChange={e => this.changeFormData('CHEJI', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.CHEJI || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('CHEJI', e.target.value)}
+                    allowClear
+                  />
                 </td>
                 <th>혈당</th>
                 <td>
-                  <AntdInput value={formData.HYULDANG || ''} maxLength={10} onChange={e => this.changeFormData('HYULDANG', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.HYULDANG || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('HYULDANG', e.target.value)}
+                    allowClear
+                  />
                 </td>
                 <th>감마GTP</th>
                 <td>
-                  <AntdInput value={formData.GAMMA || ''} maxLength={10} onChange={e => this.changeFormData('GAMMA', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    className="ant-input-sm"
+                    value={formData.GAMMA || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('GAMMA', e.target.value)}
+                    allowClear
+                  />
                 </td>
                 <th>HDL</th>
                 <td>
-                  <AntdInput value={formData.HDL || ''} maxLength={10} onChange={e => this.changeFormData('HDL', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.HDL || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('HDL', e.target.value)}
+                    allowClear
+                  />
                 </td>
               </tr>
               <tr>
                 <th>복부지방률(WHR)</th>
                 <td>
-                  <AntdInput value={formData.BOK || ''} maxLength={10} onChange={e => this.changeFormData('BOK', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.BOK || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('BOK', e.target.value)}
+                    allowClear
+                  />
                 </td>
                 <td colSpan={4} rowSpan={2}></td>
                 <th>LDL</th>
                 <td>
-                  <AntdInput value={formData.LDL || ''} maxLength={10} onChange={e => this.changeFormData('LDL', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.LDL || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('LDL', e.target.value)}
+                    allowClear
+                  />
                 </td>
               </tr>
               <tr>
                 <th>기초대사량(Kcal)</th>
                 <td>
-                  <AntdInput value={formData.GICHO || ''} maxLength={10} onChange={e => this.changeFormData('GICHO', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.GICHO || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('GICHO', e.target.value)}
+                    allowClear
+                  />
                 </td>
                 <th>혈색소 </th>
                 <td>
-                  <AntdInput value={formData.HYULSAK || ''} maxLength={10} onChange={e => this.changeFormData('HYULSAK', e.target.value)} allowClear />
+                  <AntdInput
+                    className="ant-input-sm"
+                    value={formData.HYULSAK || ''}
+                    maxLength={10}
+                    onChange={e => this.changeFormData('HYULSAK', e.target.value)}
+                    allowClear
+                  />
                 </td>
               </tr>
               <tr>
