@@ -9,13 +9,13 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
 import request from 'utils/request';
 import { debounce } from 'lodash';
-
-import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
-import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
 import ImageUploader from 'components/FormStuff/Upload/ImageUploader';
@@ -152,22 +152,18 @@ class List extends React.Component {
   };
 
   handleSelectChange = async value => {
-    const { input } = this.state;
     this.setState({
       selectedSite: value,
     });
-    this.getNewRowData(value, input);
   };
 
   handleInputChange = e => {
-    const { selectedSite } = this.state;
     this.setState({
       input: e.target.value,
     });
-    this.getNewRowData(selectedSite, e.target.value);
   };
 
-  getNewRowData = async (site, keyword) => {
+  getNewRowData = async (site = 317, keyword = '') => {
     const data = await request({
       url: `/api/eshs/v1/common/geteshsprotectionitems?SITE=${site}&KEYWORD=${keyword}`,
       method: 'GET',
@@ -198,17 +194,24 @@ class List extends React.Component {
     const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga, result } = this.props;
     const fileSeqArr = [];
+
     if (result.realFile && result.realFile.DETAIL.length) {
       result.realFile.DETAIL.map(item => fileSeqArr.push(item.seq));
     }
+
     if (fileSeqArr.length) {
       this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { FILE_SEQ: fileSeqArr }) }));
     }
-    submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () => {
+
+    const submitCallbackFunc = () => {
       this.gridApi.updateRowData({ add: [requestValue], addIndex: 0 });
       this.getNewRowData('', '');
       this.setState({ visible: false, requestValue: { SITE: '317' }, responseList: [], fileList: [] });
-    });
+    };
+
+    submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, (key, response) =>
+      callBackAfterPost(key, response, submitCallbackFunc),
+    );
   };
 
   handleCancel = () => {
@@ -223,6 +226,12 @@ class List extends React.Component {
     const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga, result } = this.props;
     const fileSeqArr = [];
+
+    const submitCallbackFunc = () => {
+      this.gridApi.redrawRows();
+      this.setState({ requestValue: { SITE: '317' }, visible: false });
+    };
+
     if (result.realFile && result.realFile.DETAIL.length) {
       // 수정화면에서 사진을 추가했다면
       result.realFile.DETAIL.map(item => fileSeqArr.push(item.seq));
@@ -230,22 +239,27 @@ class List extends React.Component {
         // file_seq = 새로 올라온 파일, attachedFile = 기존 파일 (삭제해야 함)
         requestValue: Object.assign(prevState.requestValue, { FILE_SEQ: fileSeqArr }, { ATTACHEDFILE: result.attachs.fileList }),
       }));
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () => {
-        this.gridApi.redrawRows();
-        this.setState({ requestValue: { SITE: '317' }, visible: false });
-      });
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, (key, response) =>
+        callBackAfterPut(key, response, submitCallbackFunc),
+      );
     }
-    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () => {
-      this.gridApi.redrawRows();
-      this.setState({ requestValue: { SITE: '317' }, visible: false });
-    });
+    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, (key, response) =>
+      callBackAfterPut(key, response, submitCallbackFunc),
+    );
   };
 
   handleDeleteClick = () => {
     const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/geteshsprotectionitems`, { HITEM_CD: requestValue.hitem_cd }, this.gridApi.redrawRows());
-    this.setState(prevState => ({ rowData: prevState.rowData.filter(item => item.HITEM_CD !== prevState.requestValue.HITEM_CD), visible: false }));
+
+    const submitCallbackFunc = () => {
+      this.gridApi.redrawRows();
+      this.setState(prevState => ({ rowData: prevState.rowData.filter(item => item.HITEM_CD !== prevState.requestValue.HITEM_CD), visible: false }));
+    };
+
+    submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/geteshsprotectionitems`, { HITEM_CD: requestValue.hitem_cd }, requestValue, (key, response) =>
+      callBackAfterDelete(key, response, submitCallbackFunc),
+    );
   };
 
   handleUploadFileChange = ({ fileList }) => {
@@ -309,8 +323,9 @@ class List extends React.Component {
   ];
 
   render() {
-    const { visible, columnDefs, rowData, viewType, frameworkComponents, tooltipShowDelay, requestValue } = this.state;
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, inputFooter, viewFooter } = this;
+    const { selectedSite, input, visible, columnDefs, rowData, viewType, frameworkComponents, tooltipShowDelay, requestValue } = this.state;
+    const { result } = this.props;
     return (
       <>
         <StyledContentsWrapper>
@@ -324,12 +339,17 @@ class List extends React.Component {
               <span className="text-label">품목</span>
               <AntdInput className="ant-input-inline mr5" onChange={handleInputChange} style={{ width: '300px' }} placeholder="품목을 입력하세요." />
               <div className="btn-area">
-                <StyledButton className="btn-primary" onClick={() => this.setState({ visible: true, viewType: 'INPUT' })}>
-                  등록
+                <StyledButton className="btn-gray btn-sm mr5" onClick={() => this.getNewRowData(selectedSite, input)}>
+                  검색
                 </StyledButton>
               </div>
             </div>
           </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm" onClick={() => this.setState({ visible: true, viewType: 'INPUT' })}>
+              등록
+            </StyledButton>
+          </StyledButtonWrapper>
           <div style={{ width: '100%', height: '100%' }}>
             <div className="ag-theme-balham" style={{ height: '400px' }}>
               <AgGridReact
@@ -363,6 +383,16 @@ class List extends React.Component {
                   <col width="70%" />
                 </colgroup>
                 <tbody>
+                  <tr>
+                    <th>사진</th>
+                    <td>
+                      {viewType.toUpperCase() === 'VIEW' && result.attachs && result.attachs.fileList.length
+                        ? result.attachs.fileList.map(item => (
+                            <img src={`http://192.168.251.14:10197/down/file/${item.FILE_SEQ}`} alt="사진이 없습니다." width="150px" />
+                          ))
+                        : ''}
+                    </td>
+                  </tr>
                   <tr>
                     <th>지역</th>
                     <td>

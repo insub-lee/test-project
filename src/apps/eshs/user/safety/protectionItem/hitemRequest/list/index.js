@@ -8,8 +8,9 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
+import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import ModalContents from './modalContents';
 
@@ -277,16 +278,20 @@ class List extends React.Component {
                   <Select.Option value={department.DEPT_ID}>{department.NAME_KOR}</Select.Option>
                 ))}
               </AntdSelect>
-              <StyledButton className="btn-primary btn-sm mr5" onClick={handleModalVisible}>
-                등록
-              </StyledButton>
+              <div className="btn-area">
+                <StyledButton className="btn-gray btn-sm">검색</StyledButton>
+              </div>
             </div>
           </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm mr5" onClick={handleModalVisible}>
+              등록
+            </StyledButton>
+          </StyledButtonWrapper>
           <div style={{ padding: '10px' }}>
             <AntdTable
               columns={columns}
               dataSource={dataSource}
-              // onRow={record => ({ onClick: () => this.setState({ rowData: record, modalVisible: true, isModified: true }) })}
               onRow={record => ({ onClick: () => this.handleRowClick(record) })}
               footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
             />

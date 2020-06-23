@@ -8,8 +8,9 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
+import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import ModalContents from './modalContents';
 
@@ -193,23 +194,15 @@ class List extends React.Component {
   ];
 
   handleSearchChange = (key, value) => {
-    const { getSearchData } = this;
-    this.setState(
-      prevState => ({
-        searchValue: Object.assign(prevState.searchValue, { [key]: value }),
-      }),
-      getSearchData,
-    );
+    this.setState(prevState => ({
+      searchValue: Object.assign(prevState.searchValue, { [key]: value }),
+    }));
   };
 
   handleSearchDateChange = (date, dateString) => {
-    const { getSearchData } = this;
-    this.setState(
-      prevState => ({
-        searchValue: Object.assign(prevState.searchValue, { startDate: dateString[0], endDate: dateString[1] }),
-      }),
-      getSearchData,
-    );
+    this.setState(prevState => ({
+      searchValue: Object.assign(prevState.searchValue, { startDate: dateString[0], endDate: dateString[1] }),
+    }));
   };
 
   handleModalVisible = () => {
@@ -271,11 +264,18 @@ class List extends React.Component {
                   <Select.Option value={department.DEPT_ID}>{department.NAME_KOR}</Select.Option>
                 ))}
               </AntdSelect>
-              <StyledButton className="btn-primary btn-sm mr5" onClick={handleModalVisible}>
-                입고등록
-              </StyledButton>
+              <div className="btn-area">
+                <StyledButton className="btn-gray btn-sm mr5" onClick={this.getSearchData}>
+                  검색
+                </StyledButton>
+              </div>
             </div>
           </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm mr5" onClick={handleModalVisible}>
+              입고등록
+            </StyledButton>
+          </StyledButtonWrapper>
           <div style={{ padding: '10px' }}>
             <AntdTable
               columns={columns}
