@@ -19,7 +19,7 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
     };
   }
 
-  getCategoryMapListAsTree = (flatData, flag, viewLang, rootkey) => {
+  getCategoryMapListAsTree = (flatData, flag, viewLang, rootkey) =>
     getTreeFromFlatData({
       flatData: flatData.map(item => ({
         title: item[`NAME_${viewLang && viewLang.length > 0 ? viewLang : 'KOR'}`],
@@ -33,7 +33,6 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
       getParentKey: node => node.parentValue,
       rootKey: rootkey || 0,
     });
-  };
 
   componentDidMount() {
     this.getCategoryList();
@@ -67,16 +66,12 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
 
   setCategory = () => {
     const { extraApiData } = this.props;
-    console.debug('@@@SET CATEGORY');
     const tempData = (extraApiData.categories && extraApiData.categories.categoryMapList.slice(1)) || [];
-    this.setState(
-      {
-        accidentCauseList: (extraApiData.accidentCauseList && extraApiData.accidentCauseList.categoryMapList.slice(1)) || [],
-        accientTypes: (extraApiData.accidentTypes && extraApiData.accidentTypes.categoryMapList.slice(1)) || [],
-        categoryList: this.getCategoryMapListAsTree(tempData, 'N', 'KOR', 1831)[0] || [],
-      },
-      () => console.debug('@@@@SET STATE@@@@'),
-    );
+    this.setState({
+      accidentCauseList: (extraApiData.accidentCauseList && extraApiData.accidentCauseList.categoryMapList.slice(1)) || [],
+      accientTypes: (extraApiData.accidentTypes && extraApiData.accidentTypes.categoryMapList.slice(1)) || [],
+      categoryList: this.getCategoryMapListAsTree(tempData, 'N', 'KOR', 1831) || [],
+    });
   };
 
   handleSelectChange = (key, value) => {
