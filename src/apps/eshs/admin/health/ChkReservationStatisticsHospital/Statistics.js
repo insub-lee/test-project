@@ -9,7 +9,7 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
-import { excelDown } from 'utils/excelFunc';
+// import { excelDown } from 'utils/excelFunc';
 
 const AntdSelect = StyledSelect(Select);
 
@@ -142,7 +142,7 @@ class Statistics extends Component {
 
   excelDownload = () => {
     const tableHtml = document.getElementById('excel-down-table');
-    excelDown(tableHtml.outerHTML, 'aaaaaa');
+    // excelDown(tableHtml.outerHTML, 'aaaaaa');
   };
 
   render() {
