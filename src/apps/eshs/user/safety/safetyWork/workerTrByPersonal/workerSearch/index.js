@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Input, Table, Select } from 'antd';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import Styled from './Styled';
 
 const AntdSelect = StyledSelect(Select);
-const AntdTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdInput = StyledInput(Input);
 const { Option } = Select;
 
@@ -116,7 +116,7 @@ class List extends Component {
       options.push(year);
     }
     return (
-      <AntdSelect className="select-xs mr5" style={{ width: '100px' }} value={searchValue.year} onChange={e => this.changeSearchValue('year', e)}>
+      <AntdSelect className="select-sm mr5" style={{ width: '100px' }} value={searchValue.year} onChange={e => this.changeSearchValue('year', e)}>
         <Option value="">년도</Option>
         {options.map(YYYY => (
           <Option value={`${YYYY}`}>{YYYY}</Option>
@@ -190,49 +190,46 @@ class List extends Component {
     ];
 
     return (
-      <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <div className="searchCmpnyWrap">
-              {this.renderYearSelect()}
+      <>
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <span className="text-label">년도</span>
+            {this.renderYearSelect()}
+            <span className="text-label">검색구분</span>
+            <AntdSelect
+              className="select-sm mr5"
+              style={{ width: '100px' }}
+              value={searchValue.searchType}
+              onChange={e => this.changeSearchValue('searchType', e)}
+            >
+              <Option value="cmpny">업체</Option>
+              <Option value="name">성명</Option>
+              <Option value="ssn">생년월일</Option>
+            </AntdSelect>
+            {searchValue.searchType === 'cmpny' ? (
               <AntdSelect
-                className="select-xs mr5"
-                style={{ width: '100px' }}
-                value={searchValue.searchType}
-                onChange={e => this.changeSearchValue('searchType', e)}
+                className="select-sm mr5"
+                style={{ width: '300px' }}
+                value={searchValue.keyword}
+                onChange={e => this.onChangeCmpnySelect(e)}
+                disabled={eshsCmpnyList.length === 0}
               >
-                <Option value="cmpny">업체</Option>
-                <Option value="name">성명</Option>
-                <Option value="ssn">생년월일</Option>
+                {this.renderCmpnySelect(eshsCmpnyList)}
               </AntdSelect>
-              {searchValue.searchType === 'cmpny' ? (
-                <AntdSelect
-                  className="select-xs mr5"
-                  style={{ width: '300px' }}
-                  value={searchValue.keyword}
-                  onChange={e => this.onChangeCmpnySelect(e)}
-                  disabled={eshsCmpnyList.length === 0}
-                >
-                  {this.renderCmpnySelect(eshsCmpnyList)}
-                </AntdSelect>
-              ) : (
-                <AntdInput
-                  className="ant-input-xs ant-input-inline"
-                  style={{ width: '300px' }}
-                  defaultValue={searchValue.keyword}
-                  onChange={e => this.changeSearchValue('keyword', e.target.value)}
-                />
-              )}
-              <StyledButton
-                className="btn-primary btn-xs btn-first"
-                onClick={() => this.handleGetWorkers('searchByEdu', searchValue.keyword)}
-                style={{ marginLeft: '10px' }}
-              >
-                검색
-              </StyledButton>
-            </div>
+            ) : (
+              <AntdInput
+                className="ant-input-sm ant-input-inline"
+                style={{ width: '300px', marginRight: '10px' }}
+                placeholder="검색어 입력"
+                defaultValue={searchValue.keyword}
+                onChange={e => this.changeSearchValue('keyword', e.target.value)}
+              />
+            )}
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetWorkers('searchByEdu', searchValue.keyword)}>
+              검색
+            </StyledButton>
           </div>
-        </StyledSearchWrap>
+        </StyledCustomSearchWrapper>
         <AntdTable
           columns={columns}
           pagination={false}
@@ -244,7 +241,7 @@ class List extends Component {
           })}
           footer={() => <div style={{ textAlign: 'center' }}>{`총 ${eshsWorkerList.length === 0 ? 0 : eshsWorkerList.length} 명`}</div>}
         />
-      </Styled>
+      </>
     );
   }
 }

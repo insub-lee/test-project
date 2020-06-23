@@ -2,22 +2,23 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Input, Modal, Table } from 'antd';
-import { CaretDownOutlined } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import SafetyWorkViewer from '../../safetyWorkView';
 import WorkerSelector from '../workerSearch';
-import ExcelDownloadBtn from '../excel';
-import Styled from './Styled';
 
-const AntdModal = StyledModalWrapper(Modal);
-const AntdTable = StyledLineTable(Table);
+const AntdModal = StyledContentsModal(Modal);
+const AntdTable = StyledAntdTable(Table);
+const AntdInput = StyledInput(Input);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class workerTrByPersonalPage extends Component {
   constructor(props) {
@@ -162,38 +163,23 @@ class workerTrByPersonalPage extends Component {
       },
     ];
     return (
-      <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <div className="searchCmpnyWrap">
-              <label>
-                작업자
-                <Input
-                  className="ant-input-sm"
-                  style={{ width: '100px', marginLeft: '5px', marginRight: '5px' }}
-                  value={workerSeq}
-                  onClick={() => this.handleModal('worker', true)}
-                />
-              </label>
-            </div>
-            <div
-              className="searchCmpnyBtn"
-              tabIndex={0}
+      <>
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <span className="text-label">거래처</span>
+            <AntdSearch
+              className="ant-search-inline input-search-sm mr5"
               onClick={() => this.handleModal('worker', true)}
-              onKeyPress={() => this.handleModal('worker', true)} // esLint
-              role="button" // esLint
-            >
-              <CaretDownOutlined />
-            </div>
-            <div className="searchCmpnyWrap">
-              <Input className="ant-input-sm" style={{ width: '150px', marginRight: '5px' }} readOnly value={workerNm} />
-            </div>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.handleGetSafetyWork()} style={{ marginBottom: '5px' }}>
+              onSearch={() => this.handleModal('worker', true)}
+              value={workerSeq}
+              style={{ width: '200px', marginRight: '5px' }}
+            />
+            <AntdInput className="ant-input-sm" style={{ width: '150px', marginRight: '10px' }} readOnly value={workerNm} />
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
               검색
             </StyledButton>
-            {workerData && workerData.length > 0 && <ExcelDownloadBtn dataList={workerData} workerNm={workerNm} />}
           </div>
-        </StyledSearchWrap>
+        </StyledCustomSearchWrapper>
         <ContentsWrapper>
           <AntdTable
             pagination={false}
@@ -203,6 +189,7 @@ class workerTrByPersonalPage extends Component {
           />
         </ContentsWrapper>
         <AntdModal
+          className="modal-table-pad"
           title={modalTitle}
           width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '70%'}
           visible={modalVisible}
@@ -213,19 +200,15 @@ class workerTrByPersonalPage extends Component {
           {modalType === 'worker' && <BizMicroDevBase component={WorkerSelector} sagaKey="worker_search" onRow={this.onRowSelect} />}
           {modalType === 'safetyWorkView' && <SafetyWorkViewer workNo={selectedWork} pageType="modal" />}
         </AntdModal>
-      </Styled>
+      </>
     );
   }
 }
 
 workerTrByPersonalPage.propTypes = {
-  pageType: PropTypes.string,
   workNo: PropTypes.string,
-  result: PropTypes.object,
   sagaKey: PropTypes.string,
   getCallDataHandlerReturnRes: PropTypes.func,
-  submitHandlerBySaga: PropTypes.func,
-  getCallDataHandler: PropTypes.func,
 };
 
 export default workerTrByPersonalPage;

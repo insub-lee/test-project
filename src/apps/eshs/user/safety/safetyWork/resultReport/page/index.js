@@ -147,7 +147,7 @@ class ResultReportPage extends Component {
     return (
       <Styled>
         <StyledSearchWrapper>
-          <Spin tip="검색중..." spinning={isSearching}>
+          <Spin tip="검색중 ..." spinning={isSearching}>
             <div className="search-group-layer">
               <span style={{ fontSize: '12px', margin: '0px 10px 0px 10px' }}>지역</span>
               <AntdSelect className="select-xs" value={searchValues.SITE} onChange={value => this.handleChangeSearchValue('SITE', value)}>
@@ -175,7 +175,7 @@ class ResultReportPage extends Component {
                 <Option value="11">11</Option>
                 <Option value="12">12</Option>
               </AntdSelect>
-              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.onSearch()} style={{ marginLeft: '10px' }}>
+              <StyledButton className="btn-gray btn-xs btn-first" onClick={() => this.onSearch()} style={{ marginLeft: '10px' }}>
                 검색
               </StyledButton>
             </div>
