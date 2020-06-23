@@ -127,201 +127,6 @@ class List extends React.Component {
     },
   };
 
-  modalContent = () => [
-    {
-      title: this.state.viewType.toUpperCase() === 'VIEW' ? '사진' : '',
-      content:
-        this.state.viewType.toUpperCase() === 'VIEW' && this.props.result.attachs && this.props.result.attachs.fileList.length
-          ? this.props.result.attachs.fileList.map(item => (
-              <img src={`http://192.168.251.14:10197/down/file/${item.FILE_SEQ}`} alt={this.state.requestValue.kind} width="150px" />
-            ))
-          : '',
-    },
-    {
-      title: '지역',
-      content: (
-        <AntdSelect
-          name="SITE"
-          defaultValue="317"
-          width="300px"
-          onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { SITE: e }) }))}
-        >
-          <Option value="317">청주</Option>
-          <Option value="318">구미</Option>
-        </AntdSelect>
-      ),
-    },
-    {
-      title: '품목',
-      content: (
-        <AntdInput
-          name="KIND"
-          defaultValue={this.state.requestValue.KIND}
-          value={this.state.requestValue.KIND}
-          style={{ width: '500px' }}
-          placeholder="품목명을 입력하세요."
-          onChange={e => this.handleChange(e)}
-        />
-      ),
-    },
-    {
-      title: '모델',
-      content: (
-        <AntdInput
-          name="MODEL"
-          defaultValue={this.state.requestValue.MODEL}
-          value={this.state.requestValue.MODEL}
-          style={{ width: '500px' }}
-          placeholder="모델명을 입력하세요."
-          onChange={e => this.handleChange(e)}
-        />
-      ),
-    },
-    {
-      title: 'Size',
-      content: (
-        <AntdInput
-          name="SIZE1"
-          defaultValue={this.state.requestValue.SIZE1}
-          value={this.state.requestValue.SIZE1}
-          style={{ width: '500px' }}
-          placeholder="사이즈를 입력하세요."
-          onChange={e => this.handleChange(e)}
-        />
-      ),
-    },
-    {
-      title: '검정번호',
-      content: (
-        <AntdInput
-          name="APP_NO"
-          defaultValue={this.state.requestValue.APP_NO}
-          value={this.state.requestValue.APP_NO}
-          style={{ width: '500px' }}
-          placeholder="검정번호를 입력하세요."
-          onChange={e => this.handleChange(e)}
-        />
-      ),
-    },
-    {
-      title: 'Vendor',
-      content:
-        this.state.viewType === 'VIEW' ? (
-          <EshsCmpnyComp
-            sagaKey={this.props.sagaKey}
-            getExtraApiData={this.props.getCallDataHandler}
-            extraApiData={this.props.result}
-            colData={this.state.requestValue.VENDOR_CD ? this.state.requestValue.VENDOR_CD : ''}
-            readOnly={false}
-            visible
-            CONFIG={{ property: { isRequired: false } }}
-            changeFormData={this.props.changeFormData}
-            COMP_FIELD="VENDOR"
-            eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-          />
-        ) : (
-          <EshsCmpnyComp
-            sagaKey={this.props.sagaKey}
-            getExtraApiData={this.props.getCallDataHandler}
-            extraApiData={this.props.result}
-            colData={this.state.requestValue.VENDOR_CD}
-            visible
-            CONFIG={{ property: { isRequired: false } }}
-            changeFormData={this.props.changeFormData}
-            COMP_FIELD="VENDOR"
-            eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-          />
-        ),
-    },
-    {
-      title: 'Maker',
-      content:
-        this.state.viewType === 'VIEW' ? (
-          <EshsCmpnyComp
-            sagaKey={this.props.sagaKey}
-            getExtraApiData={this.props.getCallDataHandler}
-            extraApiData={this.props.result}
-            colData={this.state.requestValue && this.state.requestValue.MAKER_CD ? this.state.requestValue.MAKER_CD : ''}
-            readOnly={false}
-            visible
-            CONFIG={{ property: { isRequired: false } }}
-            changeFormData={this.props.changeFormData}
-            COMP_FIELD="MAKER"
-            eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-          />
-        ) : (
-          <EshsCmpnyComp
-            sagaKey={this.props.sagaKey}
-            getExtraApiData={this.props.getCallDataHandler}
-            extraApiData={this.props.result}
-            colData={this.state.requestValue.MAKER_CD}
-            visible
-            CONFIG={{ property: { isRequired: false } }}
-            changeFormData={this.props.changeFormData}
-            COMP_FIELD="MAKER"
-            eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-          />
-        ),
-    },
-    {
-      title: '단위',
-      content: (
-        <AntdInput
-          name="UNIT"
-          defaultValue={this.state.requestValue.UNIT}
-          value={this.state.requestValue.UNIT}
-          style={{ width: '500px' }}
-          placeholder="단위를 입력하세요."
-          onChange={e => this.handleChange(e)}
-        />
-      ),
-    },
-    {
-      title: '유효기간',
-      content: (
-        <AntdInput
-          name="VALIDITY_TERM"
-          defaultValue={this.state.requestValue.VALIDITY_TERM}
-          value={this.state.requestValue.VALIDITY_TERM}
-          style={{ width: '500px' }}
-          placeholder="유효기간을 입력하세요."
-          onChange={e => this.handleChange(e)}
-        />
-      ),
-    },
-    {
-      title: '적정재고',
-      content: (
-        <InputNumber
-          name="PROPERSTOCK"
-          defaultValue={this.state.requestValue.PROPERSTOCK}
-          value={this.state.requestValue.PROPERSTOCK}
-          style={{ width: '500px' }}
-          placeholder="적정재고를 입력하세요."
-          onChange={value => this.handleNumberChange(value)}
-        />
-      ),
-    },
-    {
-      title: '비고',
-      content: (
-        <Input.TextArea
-          name="COMMENTS"
-          defaultValue={this.state.requestValue.COMMENTS}
-          value={this.state.requestValue.COMMENTS}
-          style={{ width: '500px' }}
-          placeholder="비고를 입력하세요."
-          onChange={e => this.handleChange(e)}
-          autoSize
-        />
-      ),
-    },
-    {
-      title: '첨부',
-      content: <ImageUploader action="/upload" listType="picture-card" handleChange={this.handleUploadFileChange} fileList={this.state.fileList} multiple />,
-    },
-  ];
-
   initGridData = params => {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
@@ -504,17 +309,19 @@ class List extends React.Component {
   ];
 
   render() {
-    const { visible, columnDefs, rowData, viewType, frameworkComponents, tooltipShowDelay } = this.state;
-    const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent, inputFooter, viewFooter } = this;
+    const { visible, columnDefs, rowData, viewType, frameworkComponents, tooltipShowDelay, requestValue } = this.state;
+    const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, inputFooter, viewFooter } = this;
     return (
       <>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
-            <div className="selSaveWrapper alignLeft">
+            <div className="search-input-area">
+              <span className="text-label">지역</span>
               <AntdSelect defaultValue="청주" onChange={handleSelectChange} className="ant-select-mid mr5">
                 <Option value="317">청주</Option>
                 <Option value="318">구미</Option>
               </AntdSelect>
+              <span className="text-label">품목</span>
               <AntdInput className="ant-input-inline mr5" onChange={handleInputChange} style={{ width: '300px' }} placeholder="품목을 입력하세요." />
               <div className="btn-area">
                 <StyledButton className="btn-primary" onClick={() => this.setState({ visible: true, viewType: 'INPUT' })}>
@@ -524,7 +331,7 @@ class List extends React.Component {
             </div>
           </StyledCustomSearchWrapper>
           <div style={{ width: '100%', height: '100%' }}>
-            <div className="ag-theme-balham" style={{ height: '420px' }}>
+            <div className="ag-theme-balham" style={{ height: '400px' }}>
               <AgGridReact
                 columnDefs={columnDefs}
                 rowData={rowData}
@@ -538,25 +345,230 @@ class List extends React.Component {
               />
             </div>
           </div>
+          <AntdModal
+            className="modal-table-pad"
+            visible={visible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            width="600px"
+            closable
+            destroyOnClose
+            title={viewType.toUpperCase() === 'INPUT' ? '보호구 등록' : '보호구 수정'}
+            footer={viewType.toUpperCase() === 'INPUT' ? inputFooter() : viewFooter()}
+          >
+            <StyledHtmlTable>
+              <table>
+                <colgroup>
+                  <col width="30%" />
+                  <col width="70%" />
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th>지역</th>
+                    <td>
+                      <AntdSelect
+                        className="select-sm"
+                        name="SITE"
+                        defaultValue="317"
+                        onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { SITE: e }) }))}
+                        style={{ width: '100%' }}
+                      >
+                        <Option value="317">청주</Option>
+                        <Option value="318">구미</Option>
+                      </AntdSelect>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>품목</th>
+                    <td>
+                      <AntdInput
+                        className="ant-input-sm"
+                        name="KIND"
+                        defaultValue={requestValue.KIND}
+                        value={requestValue.KIND}
+                        style={{ width: '100%' }}
+                        placeholder="품목명을 입력하세요."
+                        onChange={e => this.handleChange(e)}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>모델</th>
+                    <td>
+                      <AntdInput
+                        className="ant-input-sm"
+                        name="MODEL"
+                        defaultValue={requestValue.MODEL}
+                        value={requestValue.MODEL}
+                        style={{ width: '100%' }}
+                        placeholder="모델명을 입력하세요."
+                        onChange={e => this.handleChange(e)}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Size</th>
+                    <td>
+                      <AntdInput
+                        className="ant-input-sm"
+                        name="SIZE1"
+                        defaultValue={requestValue.SIZE1}
+                        value={requestValue.SIZE1}
+                        style={{ width: '100%' }}
+                        placeholder="사이즈를 입력하세요."
+                        onChange={e => this.handleChange(e)}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>검정번호</th>
+                    <td>
+                      <AntdInput
+                        className="ant-input-sm"
+                        name="APP_NO"
+                        defaultValue={requestValue.APP_NO}
+                        value={requestValue.APP_NO}
+                        style={{ width: '100%' }}
+                        placeholder="검정번호를 입력하세요."
+                        onChange={e => this.handleChange(e)}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Vendor</th>
+                    <td>
+                      {this.state.viewType === 'VIEW' ? (
+                        <EshsCmpnyComp
+                          sagaKey={this.props.sagaKey}
+                          getExtraApiData={this.props.getCallDataHandler}
+                          extraApiData={this.props.result}
+                          colData={requestValue.VENDOR_CD ? requestValue.VENDOR_CD : ''}
+                          readOnly={false}
+                          visible
+                          CONFIG={{ property: { isRequired: false } }}
+                          changeFormData={this.props.changeFormData}
+                          COMP_FIELD="VENDOR"
+                          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+                        />
+                      ) : (
+                        <EshsCmpnyComp
+                          sagaKey={this.props.sagaKey}
+                          getExtraApiData={this.props.getCallDataHandler}
+                          extraApiData={this.props.result}
+                          colData={requestValue.VENDOR_CD}
+                          visible
+                          CONFIG={{ property: { isRequired: false } }}
+                          changeFormData={this.props.changeFormData}
+                          COMP_FIELD="VENDOR"
+                          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+                        />
+                      )}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Maker</th>
+                    <td>
+                      {this.state.viewType === 'VIEW' ? (
+                        <EshsCmpnyComp
+                          sagaKey={this.props.sagaKey}
+                          getExtraApiData={this.props.getCallDataHandler}
+                          extraApiData={this.props.result}
+                          colData={requestValue && requestValue.MAKER_CD ? requestValue.MAKER_CD : ''}
+                          readOnly={false}
+                          visible
+                          CONFIG={{ property: { isRequired: false } }}
+                          changeFormData={this.props.changeFormData}
+                          COMP_FIELD="MAKER"
+                          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+                        />
+                      ) : (
+                        <EshsCmpnyComp
+                          sagaKey={this.props.sagaKey}
+                          getExtraApiData={this.props.getCallDataHandler}
+                          extraApiData={this.props.result}
+                          colData={requestValue.MAKER_CD}
+                          visible
+                          CONFIG={{ property: { isRequired: false } }}
+                          changeFormData={this.props.changeFormData}
+                          COMP_FIELD="MAKER"
+                          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+                        />
+                      )}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>단위</th>
+                    <td>
+                      <AntdInput
+                        className="ant-input-sm"
+                        name="UNIT"
+                        defaultValue={requestValue.UNIT}
+                        value={requestValue.UNIT}
+                        style={{ width: '100%' }}
+                        placeholder="단위를 입력하세요."
+                        onChange={e => this.handleChange(e)}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>유효기간</th>
+                    <td>
+                      <AntdInput
+                        className="ant-input-sm"
+                        name="VALIDITY_TERM"
+                        defaultValue={requestValue.VALIDITY_TERM}
+                        value={requestValue.VALIDITY_TERM}
+                        style={{ width: '100%' }}
+                        placeholder="유효기간을 입력하세요."
+                        onChange={e => this.handleChange(e)}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>적정재고</th>
+                    <td>
+                      <InputNumber
+                        className="ant-input-number-sm"
+                        name="PROPERSTOCK"
+                        defaultValue={requestValue.PROPERSTOCK}
+                        value={requestValue.PROPERSTOCK}
+                        style={{ width: '100%' }}
+                        placeholder="적정재고를 입력하세요."
+                        onChange={value => this.handleNumberChange(value)}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>비고</th>
+                    <td>
+                      <Input.TextArea
+                        name="COMMENTS"
+                        defaultValue={requestValue.COMMENTS}
+                        value={requestValue.COMMENTS}
+                        style={{ width: '100%' }}
+                        placeholder="비고를 입력하세요."
+                        onChange={e => this.handleChange(e)}
+                        autoSize
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>첨부</th>
+                    <td>
+                      <ImageUploader
+                        action="/upload"
+                        listType="picture-card"
+                        handleChange={this.handleUploadFileChange}
+                        fileList={this.state.fileList}
+                        multiple
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </StyledHtmlTable>
+          </AntdModal>
         </StyledContentsWrapper>
-        <AntdModal
-          className="modal-table-pad"
-          visible={visible}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          width="600px"
-          closable
-          destroyOnClose
-          title={viewType.toUpperCase() === 'INPUT' ? '등록' : '수정'}
-          footer={viewType.toUpperCase() === 'INPUT' ? inputFooter() : viewFooter()}
-        >
-          {modalContent().map(item => (
-            <div>
-              <div>{item.title}</div>
-              <div>{item.content}</div>
-            </div>
-          ))}
-        </AntdModal>
       </>
     );
   }
