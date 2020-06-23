@@ -269,7 +269,7 @@ class SafetyWorkInfo extends Component {
                   <td colSpan={3}>
                     <AntdSearch
                       className="input-search-xs"
-                      style={{ width: '200px' }}
+                      style={{ width: '100px' }}
                       value={formData.FINAL_OK_EMP_NO}
                       disable
                       onClick={() => handleModal('final', true)}

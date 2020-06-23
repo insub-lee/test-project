@@ -8,7 +8,7 @@ import UserSelect from 'components/UserSelect';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import BizBuilderBase from 'components/BizBuilderBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';

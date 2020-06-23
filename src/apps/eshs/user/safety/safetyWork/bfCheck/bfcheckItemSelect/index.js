@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Table, Select } from 'antd';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import Styled from './Styled';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const AntdInput = StyledInput(Input);
-const AntdTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
 
@@ -71,32 +71,39 @@ class BfcheckItemSelect extends Component {
     ];
 
     return (
-      <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <div className="searchCmpnyWrap">
-              <span className="label-text">검색구분</span>
-              <AntdSelect className="select-xs" value={searchType} style={{ width: '100px' }} onChange={e => this.setState({ searchType: e })}>
-                <Option value="WCATEGORY">작업종류</Option>
-                <Option value="ITEM_CD">코드</Option>
-                <Option value="ITEM_NM">항목명</Option>
-              </AntdSelect>
-              <span className="label-text">검색어</span>
-              <AntdInput
-                className="ant-input-xs ant-input-inline"
-                value={searchValue}
-                style={{ width: '200px' }}
-                onChange={e => this.setState({ searchValue: e.target.value })}
-              />
-              <StyledButton className="btn-primary btn-xs btn-first" style={{ marginLeft: '10px' }} onClick={this.onSearch}>
-                검색
-              </StyledButton>
-              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => onSave(selectedItems)}>
-                저장
-              </StyledButton>
-            </div>
+      <>
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <span className="text-label">검색구분</span>
+            <AntdSelect
+              className="select-sm"
+              value={searchType}
+              style={{ width: '100px', marginRight: '10px' }}
+              onChange={e => this.setState({ searchType: e })}
+            >
+              <Option value="WCATEGORY">작업종류</Option>
+              <Option value="ITEM_CD">코드</Option>
+              <Option value="ITEM_NM">항목명</Option>
+            </AntdSelect>
+            <span className="text-label" style={{ marginRight: '10px' }}>
+              검색어
+            </span>
+            <AntdInput
+              className="ant-input-sm ant-input-inline"
+              value={searchValue}
+              style={{ width: '200px', marginRight: '10px' }}
+              onChange={e => this.setState({ searchValue: e.target.value })}
+            />
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={this.onSearch}>
+              검색
+            </StyledButton>
           </div>
-        </StyledSearchWrap>
+        </StyledCustomSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => onSave(selectedItems)}>
+            저장
+          </StyledButton>
+        </StyledButtonWrapper>
         <ContentsWrapper>
           <AntdTable
             columns={columns}
@@ -108,7 +115,7 @@ class BfcheckItemSelect extends Component {
             })}
           />
         </ContentsWrapper>
-      </Styled>
+      </>
     );
   }
 }
