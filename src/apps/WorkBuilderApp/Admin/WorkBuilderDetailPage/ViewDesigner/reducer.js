@@ -415,7 +415,7 @@ const reducer = (state = initialState, action) => {
       if (compIdx > -1) {
         let compItem = compData.get(compIdx);
         compItem = compItem.set(key, setValue);
-        const compField = compItem.COMP_FIELD;
+        const compField = compItem.get('COMP_FIELD');
         const layerIdxs = compItem.getIn(['CONFIG', 'property', 'layerIdx']);
         const keySet = Object.keys(layerIdxs.toJS());
         if (keySet.length > 0) {
@@ -425,7 +425,7 @@ const reducer = (state = initialState, action) => {
               if (viewIdx > -1) {
                 const keys = layerIdxs.get(layerKey).split('-');
                 if (
-                  compData.getIn([viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', key]) &&
+                  compData.getIn([viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp']) &&
                   compData.getIn([viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', 'COMP_FIELD']) ===
                     compField
                 ) {
@@ -439,9 +439,14 @@ const reducer = (state = initialState, action) => {
           });
           state = state.set('compData', compData);
         }
-        return state
-          .setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp'], compItem)
-          .setIn(['compData', compIdx], compItem);
+
+        if (
+          state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp']) &&
+          state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp', 'COMP_FIELD']) === compField
+        ) {
+          state = state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp', key], setValue);
+        }
+        return state.setIn(['compData', compIdx], compItem);
       }
       let compItem = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp']);
       compItem = compItem.set(key, setValue);
