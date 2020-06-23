@@ -115,6 +115,10 @@ const StyledInput = Component => styled(Component)`
     .ant-input-suffix {
       right: 18px;
     }
+
+    .ant-input:not(.ant-input-disabled) {
+      border-color: #636a78;
+    }
   }
 `;
 
