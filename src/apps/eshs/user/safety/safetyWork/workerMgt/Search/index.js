@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Input, Table, Select } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -252,6 +252,11 @@ class List extends Component {
             </StyledButton>
           </div>
         </StyledCustomSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <StyledButton className="btn-primary btn-xs btn-first" onClick={() => onSave(selectedWorkers)}>
+            저장
+          </StyledButton>
+        </StyledButtonWrapper>
         <AntdTable
           columns={columns}
           pagination={false}

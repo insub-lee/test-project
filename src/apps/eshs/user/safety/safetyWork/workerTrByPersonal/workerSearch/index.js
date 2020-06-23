@@ -5,9 +5,9 @@ import { Input, Table, Select } from 'antd';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import Styled from './Styled';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
 const AntdSelect = StyledSelect(Select);
 const AntdTable = StyledAntdTable(Table);
