@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Input, Modal } from 'antd';
-import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
+import { AppstoreTwoTone } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import SafetyWorkerTable from '../../commonComponents/SafetyWorker/viewPage';
@@ -15,9 +17,9 @@ import SafetyEquipTable from '../../commonComponents/SafetyEquip/viewPage';
 import SafetyWorkInfo from '../../commonComponents/SafetyWorkInfo/viewPage';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import EduMgtView from '../../safetyEdu/EduMgt/viewPage';
-import Styled from './Styled';
 
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledContentsModal(Modal);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class SafetyWorkMain extends Component {
   constructor(props) {
@@ -56,8 +58,8 @@ class SafetyWorkMain extends Component {
         FIRE_MANAGER: '', //            화재감시 담당   (String, 50)
         WORKER_LIST: [],
         EQUIP_LIST: [],
-        fileList: [],
-        responseList: [],
+        // ------------------------------------------------------------------------ 파일업로드
+        UPLOAD_FILES: [],
         REQ_CMPNY_NM: '', // 발주회사명
         REQ_DEPT_NM: '', // 발주부서명
         REQ_EMP_NM: '', // 담당자명
@@ -115,8 +117,7 @@ class SafetyWorkMain extends Component {
         FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
         REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
         SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
-        fileList: [],
-        responseList: [],
+        UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
       },
     });
   };
@@ -158,53 +159,42 @@ class SafetyWorkMain extends Component {
   render() {
     const { modalType, modalTitle, modalVisible, formData } = this.state;
     return (
-      <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <div className="searchCmpnyWrap">
-              <label>
-                작업번호
-                <Input
-                  className="ant-input-sm"
-                  style={{ width: '150px', marginLeft: '5px', marginRight: '5px' }}
-                  value={formData.WORK_NO}
-                  onClick={() => this.handleModal('safetyWork', true)}
-                />
-              </label>
-            </div>
-            <div
-              className="searchCmpnyBtn"
-              tabIndex={0}
+      <>
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <span className="text-label">작업번호</span>
+            <AntdSearch
+              className="ant-search-inline input-search-mid mr5"
               onClick={() => this.handleModal('safetyWork', true)}
-              onKeyPress={() => this.handleModal('safetyWork', true)} // esLint
-              role="button" // esLint
-            >
-              <CaretDownOutlined />
-            </div>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.handleGetSafetyWork()} style={{ marginBottom: '5px' }}>
+              onSearch={() => this.handleModal('safetyWork', true)}
+              value={formData.WORK_NO}
+              style={{ width: '200px', marginRight: '10px' }}
+            />
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => alert('인쇄기능 준비중')} style={{ marginBottom: '5px' }}>
-              인쇄
-            </StyledButton>
           </div>
-        </StyledSearchWrap>
+        </StyledCustomSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={() => alert('인쇄기능 준비중')}>
+            인쇄
+          </StyledButton>
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('safetyEdu', true)}>
+            안전교육 조회
+          </StyledButton>
+        </StyledButtonWrapper>
         <ContentsWrapper>
           <SafetyWorkInfo
             formData={formData}
             handleModal={this.handleModal}
             handleWorkCategory={this.handleWorkCategory}
             handleUploadFileChange={this.handleUploadFileChange}
-            fileList={this.state.fileList || []}
           />
           {formData.WORKER_LIST.length > 0 && (
             <>
               <div className="middleTitle">
                 <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
                 <span className="middleTitleText">작업자</span>
-                <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.handleModal('safetyEdu', true)}>
-                  안전교육 조회
-                </StyledButton>
               </div>
               <div>
                 <SafetyWorkerTable workerList={formData.WORKER_LIST} handleWorkerPosition={this.handleWorkerPosition} workerRemove={this.workerRemove} />
@@ -234,21 +224,14 @@ class SafetyWorkMain extends Component {
           {modalType === 'safetyEdu' && <BizMicroDevBase component={EduMgtView} sagaKey="safetyEdu_search" />}
           {modalType === 'safetyWork' && <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />}
         </AntdModal>
-      </Styled>
+      </>
     );
   }
 }
 
 SafetyWorkMain.propTypes = {
-  // type - number
-  // type - string
   sagaKey: PropTypes.string,
   workNo: PropTypes.string,
-  // type - object
-  result: PropTypes.object,
-  profile: PropTypes.object,
-  // type - func
-  getCallDataHandler: PropTypes.func,
   getCallDataHandlerReturnRes: PropTypes.func,
 };
 

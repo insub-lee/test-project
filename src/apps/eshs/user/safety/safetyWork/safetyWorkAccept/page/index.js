@@ -219,15 +219,7 @@ class SafetyWorkMain extends Component {
 }
 
 SafetyWorkMain.propTypes = {
-  // type - number
-  // type - string
   sagaKey: PropTypes.string,
-  workNo: PropTypes.string,
-  // type - object
-  result: PropTypes.object,
-  profile: PropTypes.object,
-  // type - func
-  getCallDataHandler: PropTypes.func,
   getCallDataHandlerReturnRes: PropTypes.func,
 };
 

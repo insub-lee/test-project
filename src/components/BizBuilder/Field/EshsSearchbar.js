@@ -67,6 +67,19 @@ class CommonSearchbar extends React.Component {
     }
   };
 
+  customApi = () => {
+    const { sagaKey: id, getExtraApiData, formData } = this.props;
+    const apiArray = [
+      {
+        key: `complite`,
+        url: `/api/eshs/v1/common/dangerHazard`,
+        type: 'POST',
+        params: { PARAM: { ...formData } },
+      },
+    ];
+    getExtraApiData(id, apiArray);
+  };
+
   BizbuilderbaseRender = () => {
     const {
       sagaKey: id,
@@ -125,9 +138,16 @@ class CommonSearchbar extends React.Component {
             ) : (
               ''
             )}
-            <StyledButton className="btn-light btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            <StyledButton className="btn-light btn-xs mr5" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               초기화
             </StyledButton>
+            {property.searchbarWorkSeq === 12061 ? (
+              <StyledButton className="btn-light btn-xs" onClick={this.customApi}>
+                완료
+              </StyledButton>
+            ) : (
+              ''
+            )}
           </StyledButtonWrapper>
         );
         break;

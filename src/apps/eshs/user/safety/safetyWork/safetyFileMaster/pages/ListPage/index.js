@@ -14,6 +14,7 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import Contents from 'components/BizBuilder/Common/Contents';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import {
   MULTI_DELETE_OPT_SEQ,
   LIST_NO_OPT_SEQ,
@@ -369,7 +370,26 @@ class ListPage extends Component {
           <Sketch {...bodyStyle}>
             {groups.map((group, groupIndex) => {
               if (group.type === 'listGroup') {
-                return this.renderList(group, groupIndex);
+                return (
+                  <>
+                    <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+                      {ListPageButtons && <ListPageButtons {...this.props} modalHandler={this.modalHandler} />}
+                      {useExcelDownload && isExcelDown && (
+                        <ExcelDownloadComp
+                          isBuilder={false}
+                          fileName={fileName || 'excel'}
+                          className="workerExcelBtn"
+                          btnText={btnTex || '엑셀받기'}
+                          sheetName={sheetName || 'sheet1'}
+                          columns={columns || []}
+                          fields={fields || []}
+                          listData={listData || []}
+                        />
+                      )}
+                    </StyledButtonWrapper>
+                    {this.renderList(group, groupIndex)}
+                  </>
+                );
               }
               return (
                 (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
@@ -419,19 +439,6 @@ class ListPage extends Component {
                           <StyledButton className="btn-gray btn-sm btn-first" onClick={this.handleClickSearch}>
                             검색
                           </StyledButton>
-                          {ListPageButtons && <ListPageButtons {...this.props} modalHandler={this.modalHandler} />}
-                          {useExcelDownload && isExcelDown && (
-                            <ExcelDownloadComp
-                              isBuilder={false}
-                              fileName={fileName || 'excel'}
-                              className="workerExcelBtn"
-                              btnText={btnTex || '엑셀받기'}
-                              sheetName={sheetName || 'sheet1'}
-                              columns={columns || []}
-                              fields={fields || []}
-                              listData={listData || []}
-                            />
-                          )}
                         </div>
                       )}
                     </Group>

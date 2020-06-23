@@ -194,7 +194,7 @@ class TakeOutSearchComp extends React.Component {
             <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('S')}>
               등록
             </StyledButton>
-            <StyledButton className="btn-primary btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
           </StyledButtonWrapper>
@@ -206,13 +206,13 @@ class TakeOutSearchComp extends React.Component {
             <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('M')}>
               저장
             </StyledButton>
-            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('D')}>
-              삭제
-            </StyledButton>
             <StyledButton className="btn-primary btn-sm mr5" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
               신규등록
             </StyledButton>
-            <StyledButton className="btn-primary btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+            <StyledButton className="btn-light btn-sm mr5" onClick={() => this.onChangeSave('D')}>
+              삭제
+            </StyledButton>
+            <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               Reset
             </StyledButton>
           </StyledButtonWrapper>
