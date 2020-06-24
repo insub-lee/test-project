@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Table, Input, message, Popconfirm } from 'antd';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
@@ -206,7 +206,7 @@ class List extends Component {
     return (
       <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
         <StyledContentsWrapper>
-          <div className="selSaveWrapper alignLeft">
+          <div className="selSaveWrapper alignRight">
             <StyledButtonWrapper>
               <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.insertOverlab()}>
                 추가
@@ -217,7 +217,7 @@ class List extends Component {
               <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.onChangeData('D')} okText="Yes" cancelText="No">
                 <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
               </Popconfirm>
-              <StyledButton className="btn-primary btn-sm" onClick={() => this.onReset()}>
+              <StyledButton className="btn-light btn-sm" onClick={() => this.onReset()}>
                 Reset
               </StyledButton>
             </StyledButtonWrapper>
