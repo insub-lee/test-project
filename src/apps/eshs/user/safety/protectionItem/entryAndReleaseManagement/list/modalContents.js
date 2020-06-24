@@ -28,12 +28,13 @@ class ModalContents extends React.Component {
   }
 
   componentDidMount() {
-    this.createFormData();
+    // this.createFormData();
   }
 
   createFormData = () => {
     const { sagaKey, changeFormData, profile } = this.props;
     changeFormData(sagaKey, 'CREATE_EMP_NO', profile.EMP_NO);
+    changeFormData(sagaKey, 'POSTING_DT', moment());
   };
 
   handleSubModalVisible = () => {
@@ -89,7 +90,13 @@ class ModalContents extends React.Component {
   handleDeleteClick = () => {
     const { saveAfterFunc } = this;
     const { sagaKey: id, submitExtraHandler, rowData } = this.props;
-    submitExtraHandler(id, 'PUT', `/api/eshs/v1/common/protectionerm`, rowData, saveAfterFunc);
+    submitExtraHandler(id, 'DELETE', `/api/eshs/v1/common/protectionerm`, rowData, saveAfterFunc);
+  };
+
+  saveBeforeFunc = () => {
+    const { sagaKey, changeFormData, saveTask } = this.props;
+    changeFormData(sagaKey, 'POSTING_DT', moment());
+    saveTask(sagaKey, sagaKey, this.saveAfterFunc);
   };
 
   render() {
@@ -99,12 +106,12 @@ class ModalContents extends React.Component {
       handleDateChange,
       handleSubModalVisible,
       handleSubModalClose,
-      saveAfterFunc,
       handleModifyClick,
       handleDeleteClick,
+      saveBeforeFunc,
     } = this;
     const { modalVisible } = this.state;
-    const { handleModalClose, saveTask, sagaKey: id, rowData, isModified, formData } = this.props;
+    const { handleModalClose, rowData, isModified, formData } = this.props;
     return (
       <>
         <StyledContentsWrapper>
@@ -200,7 +207,7 @@ class ModalContents extends React.Component {
                   <th>단가</th>
                   <td>
                     <AntdInputNumber
-                      className="input-number-sm"
+                      className="ant-input-number-sm"
                       defaultValue={isModified ? rowData.UNITPRICE : ''}
                       onChange={value => handleInputChange('UNITPRICE', value)}
                     />
@@ -210,7 +217,7 @@ class ModalContents extends React.Component {
                   <th>수량</th>
                   <td>
                     <AntdInputNumber
-                      className="input-number-sm"
+                      className="ant-input-number-sm"
                       defaultValue={isModified ? rowData.QTY : ''}
                       onChange={value => handleInputChange('QTY', value)}
                     />
@@ -220,7 +227,7 @@ class ModalContents extends React.Component {
             </table>
           </StyledHtmlTable>
           <div style={{ textAlign: 'center', padding: '10px' }}>
-            <StyledButton className="btn-primary mr5" onClick={isModified ? handleModifyClick : () => saveTask(id, id, saveAfterFunc)}>
+            <StyledButton className="btn-primary mr5" onClick={isModified ? handleModifyClick : saveBeforeFunc}>
               {isModified ? '수정' : '저장'}
             </StyledButton>
             {isModified ? (
