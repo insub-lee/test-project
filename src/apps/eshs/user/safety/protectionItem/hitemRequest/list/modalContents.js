@@ -264,7 +264,6 @@ class ModalContents extends React.Component {
     const { sagaKey: id, saveTask } = this.props;
 
     const hasEmptyValue = requestValue.findIndex(value => !value.PLACE || !value.QTY || !value.REQ_COMMENTS || !value.HITEM_CD);
-    console.debug(hasEmptyValue);
 
     if (!requestValue.length) {
       return message.error('신청할 보호구를 선택하세요.');
@@ -352,7 +351,6 @@ ModalContents.propTypes = {
   getDataSource: PropTypes.func,
   rowData: PropTypes.object,
   isModified: PropTypes.bool,
-  submitExtraHandler: PropTypes.func,
   extraApiData: PropTypes.object,
   getExtraApiData: PropTypes.func,
   profile: PropTypes.object,
