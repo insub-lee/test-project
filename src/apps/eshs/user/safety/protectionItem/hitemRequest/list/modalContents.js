@@ -8,11 +8,11 @@ import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledPicker from 'commonStyled/Form/StyledPicker';
 // import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdPicker = StyledPicker(DatePicker);
@@ -176,7 +176,7 @@ class ModalContents extends React.Component {
           <span>{record.QTY}</span>
         ) : (
           <AntdInputNumber
-            className="input-number-sm"
+            className="ant-input-number-sm"
             min={0}
             value={this.state.requestValue[index] && this.state.requestValue[index].QTY}
             onChange={this.props.isModified ? null : value => this.handleRequestChange('QTY', value, index)}
