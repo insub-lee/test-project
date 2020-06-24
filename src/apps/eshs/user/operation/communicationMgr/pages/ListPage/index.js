@@ -7,8 +7,10 @@ import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import TitleModalComp from 'components/BizBuilder/Field/TitleModalComp';
@@ -298,7 +300,7 @@ class ListPage extends Component {
               }
               return (
                 (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
-                  <div key={group.key}>
+                  <StyledSearchWrapper key={group.key}>
                     {group.useTitle && <GroupTitle title={group.title} />}
                     <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
                       <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
@@ -335,21 +337,21 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
-                            Search
+                          <StyledButton className="btn-gray btn-sm" onClick={() => getListData(id, workSeq)}>
+                            검색
                           </StyledButton>
                         </div>
                       )}
                     </Group>
-                  </div>
+                  </StyledSearchWrapper>
                 )
               );
             })}
-            <div className="alignRight">
-              <StyledButton className="btn-primary" onClick={this.handleAddClick}>
+            <StyledButtonWrapper className="btn-wrap-right">
+              <StyledButton className="btn-primary btn-sm" onClick={this.handleAddClick}>
                 새 글
               </StyledButton>
-            </div>
+            </StyledButtonWrapper>
           </Sketch>
         </StyledViewDesigner>
       );

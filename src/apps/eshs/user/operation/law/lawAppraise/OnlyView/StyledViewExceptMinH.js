@@ -201,7 +201,7 @@ const StyledViewDesigner = styled.div`
     background-color: rgba(0, 0, 0, 0);
     border-color: rgba(0, 0, 0, 0);
     .attachDownCompIcon {
-      font-size: 20px;
+      font-size: 14px;
     }
   }
 

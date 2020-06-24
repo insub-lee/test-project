@@ -80,9 +80,9 @@ class ListPage extends React.Component {
         ) : (
           <>
             <Popconfirm title="완료하시겠습니까?" onConfirm={() => this.handleConfirmClick(record)} onCancel={null}>
-              <StyledButton className="btn-primary btn-sm mr5">완료</StyledButton>
+              <StyledButton className="btn-gray btn-xs mr5">완료</StyledButton>
             </Popconfirm>
-            <StyledButton className="btn-primary btn-sm" onClick={() => this.handleRowClick(record)}>
+            <StyledButton className="btn-gray btn-xs" onClick={() => this.handleRowClick(record)}>
               수정
             </StyledButton>
           </>
@@ -288,49 +288,47 @@ class ListPage extends React.Component {
           <AntdModal visible={modalVisible} title={isModified ? 'Roadmap 수정' : 'Roadmap 등록'} onCancel={handleModalClose} footer={null} destroyOnClose>
             <StyledContentsWrapper>
               <StyledHtmlTable>
-                <div className="tableWrapper">
-                  <table>
-                    <tbody>
-                      <tr>
-                        <th>연도</th>
-                        <td>{isModified ? moment(requestValue.CHK_DATE).format('YYYY') : moment(nextDate).format('YYYY')}년</td>
-                      </tr>
-                      <tr>
-                        <th>월</th>
-                        <td>{isModified ? moment(requestValue.CHK_DATE).format('MM') : moment(nextDate).format('MM')}월</td>
-                      </tr>
-                      <tr>
-                        <th>청주</th>
-                        <td>
-                          <AntdInputNumber
-                            className="ant-input-number-sm"
-                            value={requestValue.CP_VALUE}
-                            onChange={value => handleInputChange('CP_VALUE', value)}
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>구미</th>
-                        <td>
-                          <AntdInputNumber
-                            className="ant-input-number-sm"
-                            value={requestValue.GP_VALUE}
-                            onChange={value => handleInputChange('GP_VALUE', value)}
-                          />
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <table>
+                  <tbody>
+                    <tr>
+                      <th>연도</th>
+                      <td>{isModified ? moment(requestValue.CHK_DATE).format('YYYY') : moment(nextDate).format('YYYY')}년</td>
+                    </tr>
+                    <tr>
+                      <th>월</th>
+                      <td>{isModified ? moment(requestValue.CHK_DATE).format('MM') : moment(nextDate).format('MM')}월</td>
+                    </tr>
+                    <tr>
+                      <th>청주</th>
+                      <td>
+                        <AntdInputNumber
+                          className="ant-input-number-sm"
+                          value={requestValue.CP_VALUE}
+                          onChange={value => handleInputChange('CP_VALUE', value)}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>구미</th>
+                      <td>
+                        <AntdInputNumber
+                          className="ant-input-number-sm"
+                          value={requestValue.GP_VALUE}
+                          onChange={value => handleInputChange('GP_VALUE', value)}
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </StyledHtmlTable>
-              <div style={{ textAlign: 'center', padding: '10px' }}>
+              <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
                 <StyledButton className="btn-primary btn-sm mr5" onClick={isModified ? handleModifyClick : handleSaveClick}>
                   {isModified ? '수정' : '저장'}
                 </StyledButton>
                 <StyledButton className="btn-light btn-sm" onClick={handleModalClose}>
                   취소
                 </StyledButton>
-              </div>
+              </StyledButtonWrapper>
             </StyledContentsWrapper>
           </AntdModal>
         </StyledContentsWrapper>
