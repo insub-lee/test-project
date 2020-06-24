@@ -104,7 +104,7 @@ class DocDashBoard extends Component {
           <div className="widget-hover-inner">
             <a onClick={() => this.onClickList(3013)} className="widget-cover">
               <span className="widget-icon widget-icon5"></span>
-              <span className="widget-title-kor">업무절차</span>
+              <span className="widget-title-kor">Work Process</span>
               <span className="widget-title-eng">Work Process</span>
               <span className="widget-item-number">
                 {(docCntObj && docCntObj[3013] && docCntObj[3013].NEW_CNT) || 0}{' '}
@@ -113,7 +113,7 @@ class DocDashBoard extends Component {
             </a>
           </div>
         </div>
-        <div className="main-widget-col col-1-2 mb-0">
+        {/* <div className="main-widget-col col-1-2 mb-0">
           <div className="widget-hover-inner">
             <a onClick={() => this.onClickList(2975)} className="widget-cover">
               <span className="widget-icon widget-icon8"></span>
@@ -141,28 +141,28 @@ class DocDashBoard extends Component {
         </div>
         <div className="main-widget-col col-1-2 mb-0">
           <div className="widget-hover-inner">
-            {/* <a href="#none" className="widget-cover">
+            <a href="#none" className="widget-cover">
               <span className="widget-icon widget-icon9"></span>
               <span className="widget-title-kor">승인서</span>
               <span className="widget-title-eng">Approval document</span>
               <span className="widget-item-number">
                 12 <span className="total">/ 120</span>
               </span>
-            </a> */}
+            </a>
           </div>
         </div>
         <div className="main-widget-col col-1-2 mb-0">
           <div className="widget-hover-inner">
-            {/* <a href="#none" className="widget-cover">
+            <a href="#none" className="widget-cover">
               <span className="widget-icon widget-icon7"></span>
               <span className="widget-title-kor">PDP</span>
               <span className="widget-title-eng">Plasma Display Panel</span>
               <span className="widget-item-number">
                 12 <span className="total">/ 120</span>
               </span>
-            </a> */}
+            </a>
           </div>
-        </div>
+        </div> */}
         <DocDashModal
           visible={visible}
           viewType={viewType}

@@ -190,9 +190,10 @@ class RadioMaterialComp extends Component {
     changeFormData(sagaKey, COMP_FIELD, e.target.value);
     if (e.target.value === 'N') {
       changeValidationData(sagaKey, COMP_FIELD, true, '');
-      this.setState({ meterialType: undefined, meterialText: undefined });
+      this.setState({ meterialType: undefined, meterialText: undefined, isMeterialView: false });
     } else {
       changeValidationData(sagaKey, COMP_FIELD, false, '코드를 입력해주세요');
+      this.setState({ isMeterialView: true });
     }
   };
 

@@ -35,11 +35,15 @@ class CommonSearchbar extends React.Component {
   };
 
   onChangeSave = type => {
-    const { saveTask, modifyTask, deleteTask, sagaKey: id, changeViewPage, viewPageData } = this.props;
+    const { saveTask, modifyTask, deleteTask, sagaKey: id, changeViewPage, viewPageData, saveBeforeProcess } = this.props;
     if (type === 'S') {
-      saveTask(id, id, this.saveTaskAfter);
+      // 기존로직 : 업로드한 파일에 대한 real 이관이 이루어 지지 않아 수정하였음.
+      // saveTask(id, id, this.saveTaskAfter);
+      saveBeforeProcess(id, id, saveTask);
     } else if (type === 'M') {
-      modifyTask(id, this.saveTaskAfter);
+      // 기존로직 : 업로드한 파일에 대한 real 이관이 이루어 지지 않아 수정하였음.
+      // modifyTask(id, this.saveTaskAfter);
+      saveBeforeProcess(id, id, modifyTask);
     } else if (type === 'D') {
       deleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage, this.deleteCallBack);
     }
@@ -208,6 +212,7 @@ CommonSearchbar.propTypes = {
   deleteTask: PropTypes.func,
   changeFormData: PropTypes.func,
   loadingComplete: PropTypes.bool,
+  saveBeforeProcess: PropTypes.func,
 };
 
 export default CommonSearchbar;

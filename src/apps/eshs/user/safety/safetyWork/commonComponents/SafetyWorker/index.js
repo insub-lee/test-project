@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Select } from 'antd';
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-const AntdTable = StyledLineTable(Table);
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
 

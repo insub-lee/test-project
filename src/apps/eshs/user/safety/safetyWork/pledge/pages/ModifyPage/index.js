@@ -12,9 +12,9 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import BizBuilderBase from 'components/BizBuilderBase';
-import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
-import { Input, Modal, Descriptions, Checkbox } from 'antd';
-import Styled from './Styled';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+import { Input, Modal } from 'antd';
 import CustomListPage from '../ListPage';
 
 const AntdModal = StyledModalWrapper(Modal);
@@ -37,6 +37,7 @@ class ModifyPage extends Component {
   deletePledge = () => {
     const { sagaKey: id, deleteTask, changeViewPage, viewPageData } = this.props;
     const { workSeq, taskSeq } = viewPageData;
+    message.success(<MessageContent>서약서를 삭제하였습니다.</MessageContent>);
     deleteTask(id, id, workSeq, taskSeq, changeViewPage, () => changeViewPage(id, workSeq, -1, 'INPUT'));
   };
 
@@ -47,6 +48,7 @@ class ModifyPage extends Component {
 
   modifyTaskCallback = (id, modifyWorkSeq, modifyTaskSeq) => {
     const { workSeq, getDetailData } = this.props;
+    message.success(<MessageContent>서약서를 수정하였습니다.</MessageContent>);
     getDetailData(id, workSeq, modifyTaskSeq, 'MODIFY');
   };
 

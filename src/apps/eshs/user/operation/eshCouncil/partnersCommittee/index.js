@@ -18,7 +18,7 @@ class PartnersCommittee extends Component {
   };
 
   render() {
-    return <BizBuilderBase sagaKey="PartnersCommittee" workSeq={1765} viewType="LIST" loadingComplete={this.loadingComplete} CustomListPage={List} />;
+    return <BizBuilderBase sagaKey="PartnersCommittee" workSeq={1765} viewType="LIST" loadingComplete={this.loadingComplete} />;
   }
 }
 

@@ -74,7 +74,7 @@ class EduInfoTable extends Component {
               </tr>
               <tr>
                 <th colSpan={3}>
-                  <span>* 지역</span>
+                  <span>지역</span>
                 </th>
                 <td colSpan={2}>
                   <AntdSelect className="select-xs" style={{ width: '200px' }} value={searchValues.SITE} onChange={e => onChangeSearchValue('SITE', e)}>

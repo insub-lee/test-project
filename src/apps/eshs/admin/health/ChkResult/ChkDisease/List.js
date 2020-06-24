@@ -268,7 +268,7 @@ class List extends Component {
           {modalObj.modalContent}
         </AntdModal>
         <StyledContentsWrapper>
-          <StyledCustomSearchWrapper className="search-wrapper-inline">
+          <StyledCustomSearchWrapper>
             <div className="search-input-area mb10">
               <AntdSelect
                 defaultValue={currentYear}
