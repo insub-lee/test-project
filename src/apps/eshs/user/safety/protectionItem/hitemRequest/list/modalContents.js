@@ -262,9 +262,17 @@ class ModalContents extends React.Component {
   beforeSaveTask = () => {
     const { requestValue } = this.state;
     const { sagaKey: id, saveTask } = this.props;
+
+    const hasEmptyValue = requestValue.findIndex(value => !value.PLACE || !value.QTY || !value.REQ_COMMENTS || !value.HITEM_CD);
+
     if (!requestValue.length) {
       return message.error('신청할 보호구를 선택하세요.');
     }
+
+    if (hasEmptyValue !== -1) {
+      return message.error('입력 항목을 모두 입력해주세요.');
+    }
+
     return saveTask(id, id, this.saveAfterFunc);
   };
 
@@ -310,8 +318,8 @@ class ModalContents extends React.Component {
           {/* </div> */}
           <div style={{ padding: '10px' }}>
             {isModified ? null : (
-              <div style={{ textAlign: 'right', marginRight: '10px' }}>
-                <StyledButton className="btn-light" onClick={handleListAddClick}>
+              <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+                <StyledButton className="btn-gray btn-sm" onClick={handleListAddClick}>
                   추가
                 </StyledButton>
               </div>
@@ -343,7 +351,6 @@ ModalContents.propTypes = {
   getDataSource: PropTypes.func,
   rowData: PropTypes.object,
   isModified: PropTypes.bool,
-  submitExtraHandler: PropTypes.func,
   extraApiData: PropTypes.object,
   getExtraApiData: PropTypes.func,
   profile: PropTypes.object,

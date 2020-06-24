@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, InputNumber, Select } from 'antd';
+import { Table, Select } from 'antd';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import moment from 'moment';
 
 const AntdTable = StyledAntdTable(Table);
@@ -246,13 +247,12 @@ class List extends React.Component {
   };
 
   handleSearchChange = (key, value) => {
-    const { getDataSource } = this;
     this.setState(prevState => {
       if (key === 'chkYear') {
         return { searchValue: Object.assign(prevState.searchValue, { [key]: value }), selectedYear: Number(value) + 1 };
       }
       return { searchValue: Object.assign(prevState.searchValue, { [key]: value }) };
-    }, getDataSource);
+    });
   };
 
   yearList = this.createYearList();
@@ -283,6 +283,11 @@ class List extends React.Component {
                   <Select.Option value={year}>{year}년</Select.Option>
                 ))}
               </AntdSelect>
+            </div>
+            <div className="btn-area">
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.getDataSource}>
+                검색
+              </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
           <div style={{ padding: '10px' }}>
