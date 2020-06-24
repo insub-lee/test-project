@@ -97,13 +97,10 @@ class List extends React.Component {
   handleHqChange = headquarterId => {
     const { sagaKey: id, getExtraApiData } = this.props;
     if (!headquarterId) {
-      return this.setState(
-        prevState => ({
-          isHeadquarterSelect: false,
-          searchValue: Object.assign(prevState.searchValue, { deptId: '' }, { hqId: headquarterId }),
-        }),
-        this.getDataSource,
-      );
+      return this.setState(prevState => ({
+        isHeadquarterSelect: false,
+        searchValue: Object.assign(prevState.searchValue, { deptId: '' }, { hqId: headquarterId }),
+      }));
     }
     this.setState({ isHeadquarterSelect: true });
     const apiArr = [
@@ -115,7 +112,6 @@ class List extends React.Component {
     ];
 
     const selectHqCallback = () => {
-      this.getDataSource();
       this.setDeptList();
     };
 
@@ -190,13 +186,9 @@ class List extends React.Component {
   ];
 
   handleSearchChange = (key, value) => {
-    const { getSearchData } = this;
-    this.setState(
-      prevState => ({
-        searchValue: Object.assign(prevState.searchValue, { [key]: value }),
-      }),
-      getSearchData,
-    );
+    this.setState(prevState => ({
+      searchValue: Object.assign(prevState.searchValue, { [key]: value }),
+    }));
   };
 
   handleSearchDateChange = (date, dateString) => {
@@ -255,18 +247,21 @@ class List extends React.Component {
       <>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
-            <div style={{ marginBottom: '10px' }}>
-              <AntdSelect defaultValue="CP" className="select-mid mr5" onChange={value => handleSearchChange('site', value)} style={{ width: '10%' }}>
-                <Select.Option value="CP">청주</Select.Option>
-                <Select.Option value="GP">구미</Select.Option>
+            <div className="search-input-area mb10">
+              <span className="text-label">지역</span>
+              <AntdSelect defaultValue={317} className="select-mid mr5" onChange={value => handleSearchChange('site', value)} style={{ width: '10%' }}>
+                <Select.Option value={317}>청주</Select.Option>
+                <Select.Option value={318}>구미</Select.Option>
               </AntdSelect>
+              <span className="text-label">기간</span>
               <AntdPicker
                 className="ant-picker-mid"
                 defaultValue={[moment(searchValue.startDate), moment(searchValue.endDate)]}
                 onChange={handleSearchDateChange}
               />
             </div>
-            <div>
+            <div className="search-input-area">
+              <span className="text-label">신청부서</span>
               <AntdSelect defaultValue="" className="select-mid mr5" onChange={handleHqChange} style={{ width: '20%' }}>
                 <Select.Option value="">본부 전체</Select.Option>
                 {headquarterList.map(headquarter => (
@@ -280,15 +275,17 @@ class List extends React.Component {
                 className="select-mid mr5"
                 onChange={value => handleSearchChange('deptId', value)}
                 style={{ width: '20%' }}
+                placeholder="본부를 먼저 선택해주세요."
               >
-                <Select.Option value="">팀 전체</Select.Option>
-                {departmentList.map(department => (
-                  <Select.Option value={department.DEPT_ID}>{department.NAME_KOR}</Select.Option>
+                {departmentList.map((department, index) => (
+                  <Select.Option value={department.DEPT_ID}>{!index ? '팀 전체' : department.NAME_KOR}</Select.Option>
                 ))}
               </AntdSelect>
-              <div className="btn-area">
-                <StyledButton className="btn-gray btn-sm">검색</StyledButton>
-              </div>
+            </div>
+            <div className="btn-area">
+              <StyledButton className="btn-gray btn-sm" onClick={this.getDataSource}>
+                검색
+              </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
           <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">

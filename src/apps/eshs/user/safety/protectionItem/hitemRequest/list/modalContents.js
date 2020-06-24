@@ -310,8 +310,8 @@ class ModalContents extends React.Component {
           {/* </div> */}
           <div style={{ padding: '10px' }}>
             {isModified ? null : (
-              <div style={{ textAlign: 'right', marginRight: '10px' }}>
-                <StyledButton className="btn-light" onClick={handleListAddClick}>
+              <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+                <StyledButton className="btn-gray btn-sm" onClick={handleListAddClick}>
                   추가
                 </StyledButton>
               </div>

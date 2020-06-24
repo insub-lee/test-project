@@ -332,12 +332,17 @@ class List extends React.Component {
           <StyledCustomSearchWrapper>
             <div className="search-input-area">
               <span className="text-label">지역</span>
-              <AntdSelect defaultValue="청주" onChange={handleSelectChange} className="ant-select-mid mr5">
+              <AntdSelect defaultValue="청주" onChange={handleSelectChange} className="select-mid mr5">
                 <Option value="317">청주</Option>
                 <Option value="318">구미</Option>
               </AntdSelect>
               <span className="text-label">품목</span>
-              <AntdInput className="ant-input-inline mr5" onChange={handleInputChange} style={{ width: '300px' }} placeholder="품목을 입력하세요." />
+              <AntdInput
+                className="ant-input-inline ant-input-mid mr5"
+                onChange={handleInputChange}
+                style={{ width: '300px' }}
+                placeholder="품목을 입력하세요."
+              />
               <div className="btn-area">
                 <StyledButton className="btn-gray btn-sm mr5" onClick={() => this.getNewRowData(selectedSite, input)}>
                   검색
