@@ -30,7 +30,7 @@ class EshSystemLaw extends Component {
         viewType="LIST"
         loadingComplete={this.loadingComplete}
         // isOpenModalChange={this.isOpenModalChange}
-        CustomListPage={List}
+        // CustomListPage={List}
       />
     );
   }
