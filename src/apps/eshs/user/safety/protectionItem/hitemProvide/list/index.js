@@ -9,8 +9,8 @@ import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/Styl
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import ModalContents from './modalContents';
 
 const AntdModal = StyledAntdModal(Modal);

@@ -150,12 +150,9 @@ class ListPage extends React.Component {
   };
 
   handleSelectChange = (key, value) => {
-    this.setState(
-      {
-        [key]: value,
-      },
-      this.getDataSource,
-    );
+    this.setState({
+      [key]: value,
+    });
   };
 
   handleAddClick = () => {
@@ -211,7 +208,6 @@ class ListPage extends React.Component {
   };
 
   handleInputChange = (key, value) => {
-    console.debug(this.state.dataSource, { [key]: value });
     this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { [key]: value }) }));
   };
 
@@ -277,6 +273,11 @@ class ListPage extends React.Component {
                 ))}
                 <Select.Option value="">전체 보기</Select.Option>
               </AntdSelect>
+            </div>
+            <div className="btn-area">
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.getDataSource}>
+                검색
+              </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
           <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">

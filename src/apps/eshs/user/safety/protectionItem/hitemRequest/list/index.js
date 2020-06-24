@@ -8,8 +8,9 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
+import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import ModalContents from './modalContents';
 
@@ -135,48 +136,56 @@ class List extends React.Component {
       dataIndex: 'REQ_DT',
       key: 'REQ_DT',
       width: '10%',
+      align: 'center',
     },
     {
       title: '신청팀',
       dataIndex: 'DEPT_NAME_KOR',
       key: 'DEPT_NAME_KOR',
       width: '10%',
+      align: 'center',
     },
     {
       title: '신청자',
       dataIndex: 'NAME_KOR',
       key: 'NAME_KOR',
       width: '5%',
+      align: 'center',
     },
     {
       title: '결재자',
       dataIndex: '',
       key: '',
       width: '5%',
+      align: 'center',
     },
     {
       title: '품목',
       dataIndex: 'REQ_AMOUNT',
       key: 'REQ_AMOUNT',
       width: '5%',
+      align: 'center',
     },
     {
       title: '지급요청일',
       dataIndex: 'TARGET_DT',
       key: 'TARGET_DT',
       width: '10%',
+      align: 'center',
     },
     {
       title: '신청상태',
       dataIndex: 'APP_STATUS',
       key: 'APP_STATUS',
       width: '10%',
+      align: 'center',
     },
     {
       title: '지급상태',
       dataIndex: 'CONF_STATUS',
       key: 'CONF_STATUS',
       width: '10%',
+      align: 'center',
     },
   ];
 
@@ -220,7 +229,7 @@ class List extends React.Component {
     const apiArr = [
       {
         key: 'reqDetails',
-        url: `/api/eshs/v1/common/protection-req-detail?REQ_CD=${record.REQ_CD}`,
+        url: `/api/eshs/v1/common/protection-req-detail?TASK_SEQ=${record.TASK_SEQ}`,
         type: 'GET',
       },
     ];
@@ -277,40 +286,44 @@ class List extends React.Component {
                   <Select.Option value={department.DEPT_ID}>{department.NAME_KOR}</Select.Option>
                 ))}
               </AntdSelect>
-              <StyledButton className="btn-primary btn-sm mr5" onClick={handleModalVisible}>
-                등록
-              </StyledButton>
+              <div className="btn-area">
+                <StyledButton className="btn-gray btn-sm">검색</StyledButton>
+              </div>
             </div>
           </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm mr5" onClick={handleModalVisible}>
+              등록
+            </StyledButton>
+          </StyledButtonWrapper>
           <div style={{ padding: '10px' }}>
             <AntdTable
               columns={columns}
               dataSource={dataSource}
-              // onRow={record => ({ onClick: () => this.setState({ rowData: record, modalVisible: true, isModified: true }) })}
               onRow={record => ({ onClick: () => this.handleRowClick(record) })}
               footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
             />
           </div>
+          <AntdModal title="입고 등록" visible={modalVisible} footer={null} onCancel={handleModalClose} width="80%" destroyOnClose>
+            <ModalContents
+              sagaKey={sagaKey}
+              changeFormData={changeFormData}
+              formData={formData}
+              viewPageData={viewPageData}
+              handleModalVisible={handleModalVisible}
+              handleModalClose={handleModalClose}
+              saveTask={saveTask}
+              getDataSource={getDataSource}
+              rowData={rowData}
+              isModified={isModified}
+              getExtraApiData={getExtraApiData}
+              submitExtraHandler={submitExtraHandler}
+              extraApiData={extraApiData}
+              profile={profile}
+              modalDataSource={modalDataSource}
+            />
+          </AntdModal>
         </StyledContentsWrapper>
-        <AntdModal title="입고 등록" visible={modalVisible} footer={null} onCancel={handleModalClose} width="80%" destroyOnClose>
-          <ModalContents
-            sagaKey={sagaKey}
-            changeFormData={changeFormData}
-            formData={formData}
-            viewPageData={viewPageData}
-            handleModalVisible={handleModalVisible}
-            handleModalClose={handleModalClose}
-            saveTask={saveTask}
-            getDataSource={getDataSource}
-            rowData={rowData}
-            isModified={isModified}
-            getExtraApiData={getExtraApiData}
-            submitExtraHandler={submitExtraHandler}
-            extraApiData={extraApiData}
-            profile={profile}
-            modalDataSource={modalDataSource}
-          />
-        </AntdModal>
       </>
     );
   }
