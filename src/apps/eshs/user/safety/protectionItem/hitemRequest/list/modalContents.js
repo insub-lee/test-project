@@ -262,9 +262,18 @@ class ModalContents extends React.Component {
   beforeSaveTask = () => {
     const { requestValue } = this.state;
     const { sagaKey: id, saveTask } = this.props;
+
+    const hasEmptyValue = requestValue.findIndex(value => !value.PLACE || !value.QTY || !value.REQ_COMMENTS || !value.HITEM_CD);
+    console.debug(hasEmptyValue);
+
     if (!requestValue.length) {
       return message.error('신청할 보호구를 선택하세요.');
     }
+
+    if (hasEmptyValue !== -1) {
+      return message.error('입력 항목을 모두 입력해주세요.');
+    }
+
     return saveTask(id, id, this.saveAfterFunc);
   };
 
