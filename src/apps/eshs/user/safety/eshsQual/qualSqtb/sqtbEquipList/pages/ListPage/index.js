@@ -69,7 +69,7 @@ class ListPage extends Component {
       {
         key: 'item_26',
         type: 'GET',
-        url: '/api/eshs/v1/common/EshsCmpnyList/null/null',
+        url: '/api/eshs/v1/common/EshsCmpnyList/gubun=SW',
       },
     ];
 
