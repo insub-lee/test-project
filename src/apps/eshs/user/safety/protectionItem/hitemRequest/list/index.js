@@ -136,48 +136,56 @@ class List extends React.Component {
       dataIndex: 'REQ_DT',
       key: 'REQ_DT',
       width: '10%',
+      align: 'center',
     },
     {
       title: '신청팀',
       dataIndex: 'DEPT_NAME_KOR',
       key: 'DEPT_NAME_KOR',
       width: '10%',
+      align: 'center',
     },
     {
       title: '신청자',
       dataIndex: 'NAME_KOR',
       key: 'NAME_KOR',
       width: '5%',
+      align: 'center',
     },
     {
       title: '결재자',
       dataIndex: '',
       key: '',
       width: '5%',
+      align: 'center',
     },
     {
       title: '품목',
       dataIndex: 'REQ_AMOUNT',
       key: 'REQ_AMOUNT',
       width: '5%',
+      align: 'center',
     },
     {
       title: '지급요청일',
       dataIndex: 'TARGET_DT',
       key: 'TARGET_DT',
       width: '10%',
+      align: 'center',
     },
     {
       title: '신청상태',
       dataIndex: 'APP_STATUS',
       key: 'APP_STATUS',
       width: '10%',
+      align: 'center',
     },
     {
       title: '지급상태',
       dataIndex: 'CONF_STATUS',
       key: 'CONF_STATUS',
       width: '10%',
+      align: 'center',
     },
   ];
 
@@ -221,7 +229,7 @@ class List extends React.Component {
     const apiArr = [
       {
         key: 'reqDetails',
-        url: `/api/eshs/v1/common/protection-req-detail?REQ_CD=${record.REQ_CD}`,
+        url: `/api/eshs/v1/common/protection-req-detail?TASK_SEQ=${record.TASK_SEQ}`,
         type: 'GET',
       },
     ];
@@ -296,26 +304,26 @@ class List extends React.Component {
               footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
             />
           </div>
+          <AntdModal title="입고 등록" visible={modalVisible} footer={null} onCancel={handleModalClose} width="80%" destroyOnClose>
+            <ModalContents
+              sagaKey={sagaKey}
+              changeFormData={changeFormData}
+              formData={formData}
+              viewPageData={viewPageData}
+              handleModalVisible={handleModalVisible}
+              handleModalClose={handleModalClose}
+              saveTask={saveTask}
+              getDataSource={getDataSource}
+              rowData={rowData}
+              isModified={isModified}
+              getExtraApiData={getExtraApiData}
+              submitExtraHandler={submitExtraHandler}
+              extraApiData={extraApiData}
+              profile={profile}
+              modalDataSource={modalDataSource}
+            />
+          </AntdModal>
         </StyledContentsWrapper>
-        <AntdModal title="입고 등록" visible={modalVisible} footer={null} onCancel={handleModalClose} width="80%" destroyOnClose>
-          <ModalContents
-            sagaKey={sagaKey}
-            changeFormData={changeFormData}
-            formData={formData}
-            viewPageData={viewPageData}
-            handleModalVisible={handleModalVisible}
-            handleModalClose={handleModalClose}
-            saveTask={saveTask}
-            getDataSource={getDataSource}
-            rowData={rowData}
-            isModified={isModified}
-            getExtraApiData={getExtraApiData}
-            submitExtraHandler={submitExtraHandler}
-            extraApiData={extraApiData}
-            profile={profile}
-            modalDataSource={modalDataSource}
-          />
-        </AntdModal>
       </>
     );
   }

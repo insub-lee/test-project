@@ -23,6 +23,7 @@ class ModalContents extends React.Component {
     super(props);
     this.state = {
       modalVisible: false,
+      requestValue: props.rowData,
     };
   }
 
@@ -52,24 +53,24 @@ class ModalContents extends React.Component {
     handleSubModalClose();
   };
 
-  // setRequestValue = valueObj => {
-  //   this.setState(prevState => ({
-  //     requestValue: Object.assign(prevState.requestValue, valueObj),
-  //   }));
-  // };
+  setRequestValue = valueObj => {
+    this.setState(prevState => ({
+      requestValue: Object.assign(prevState.requestValue, valueObj),
+    }));
+  };
 
   handleInputChange = (key, value) => {
     const { sagaKey: id, changeFormData } = this.props;
-    // const valueObj = { [key]: value };
+    const valueObj = { [key]: value };
     changeFormData(id, key, value);
-    // this.setRequestValue(valueObj);
+    this.setRequestValue(valueObj);
   };
 
   handleDateChange = date => {
     const { sagaKey: id, changeFormData } = this.props;
-    // const valueObj = { POSTING_DT: date };
+    const valueObj = { POSTING_DT: date };
     changeFormData(id, 'POSTING_DT', date);
-    // this.setRequestValue(valueObj);
+    this.setRequestValue(valueObj);
   };
 
   saveAfterFunc = () => {
