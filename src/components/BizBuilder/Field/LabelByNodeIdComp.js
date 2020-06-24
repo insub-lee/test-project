@@ -7,15 +7,16 @@ class LabelByNodeIdComp extends Component {
     const targetField = (CONFIG && CONFIG.property && CONFIG.property.targetField) || '';
 
     const colData = defaultValue || formData[targetField] || '';
-    const apiValue = [
-      {
-        key: `labelByNode_${colData}`,
-        url: '/api/admin/v1/common/categoryOneByNodeId',
-        params: { PARAM: { NODE_ID: Number(colData) } },
-        type: 'POST',
-      },
-    ];
-    if (colData && colData !== ' ') {
+
+    if (colData && colData !== ' ' && typeof eval(colData) === 'number') {
+      const apiValue = [
+        {
+          key: `labelByNode_${colData}`,
+          url: '/api/admin/v1/common/categoryOneByNodeId',
+          params: { PARAM: { NODE_ID: Number(colData) } },
+          type: 'POST',
+        },
+      ];
       getExtraApiData(id, apiValue);
     }
   }
@@ -23,10 +24,14 @@ class LabelByNodeIdComp extends Component {
   render() {
     const { extraApiData, formData, visible, CONFIG, colData: defaultValue } = this.props;
     const targetField = (CONFIG && CONFIG.property && CONFIG.property.targetField) || '';
+    const viewColumn = (CONFIG && CONFIG.property && CONFIG.property.viewColumn) || '';
+
     const colData = defaultValue || formData[targetField] || '';
 
     const apiData = extraApiData[`labelByNode_${colData}`];
-    return visible && <span className={CONFIG.property.className || ''}>{(apiData && apiData.category && apiData.category.NAME_KOR) || ''}</span>;
+    return (
+      visible && <span className={CONFIG.property.className || ''}>{(apiData && apiData.category && apiData.category[viewColumn || 'NAME_KOR']) || ''}</span>
+    );
   }
 }
 
