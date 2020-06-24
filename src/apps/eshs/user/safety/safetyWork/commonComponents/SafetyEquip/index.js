@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-const AntdTable = StyledLineTable(Table);
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+const AntdTable = StyledAntdTable(Table);
 
 class SafetyWorker extends Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class SafetyWorker extends Component {
         align: 'center',
         render: (value, record, index) => (
           <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => equipRemove(index)}>
-            장비 제거
+            삭제
           </StyledButton>
         ),
       },

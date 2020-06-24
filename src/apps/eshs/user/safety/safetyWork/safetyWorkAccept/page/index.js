@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Input, Modal } from 'antd';
 import { AppstoreTwoTone } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
@@ -175,32 +175,31 @@ class SafetyWorkMain extends Component {
             수정 [관리자]
           </StyledButton>
         </StyledButtonWrapper>
-        <ContentsWrapper>
-          <SafetyWorkInfo
-            formData={formData}
-            handleModal={this.handleModal}
-            handleWorkCategory={this.handleWorkCategory}
-            handleUploadFileChange={this.handleUploadFileChange}
-            fileList={this.state.fileList || []}
-          />
-          <div className="exmInfoWrap">
-            <ExmInfo formData={formData} changeFormData={this.onChangeFormData} />
-          </div>
-          <div className="middleTitle">
-            <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
-            <span className="middleTitleText">작업자</span>
-          </div>
-          <div>
-            <SafetyWorkerTable workerList={formData.WORKER_LIST} handleWorkerPosition={this.handleWorkerPosition} workerRemove={this.workerRemove} />
-          </div>
-          <div className="middleTitle">
-            <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
-            <span className="middleTitleText">투입장비</span>
-          </div>
-          <div>
-            <SafetyEquipTable equipList={formData.EQUIP_LIST} equipRemove={this.equipRemove} />
-          </div>
-        </ContentsWrapper>
+        <SafetyWorkInfo
+          formData={formData}
+          handleModal={this.handleModal}
+          handleWorkCategory={this.handleWorkCategory}
+          handleUploadFileChange={this.handleUploadFileChange}
+          fileList={this.state.fileList || []}
+        />
+        <div className="exmInfoWrap">
+          <ExmInfo formData={formData} changeFormData={this.onChangeFormData} />
+        </div>
+        <div className="middleTitle" style={{ marginTop: '10px' }}>
+          <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+          <span className="middleTitleText">작업자</span>
+        </div>
+        <div>
+          <SafetyWorkerTable workerList={formData.WORKER_LIST} handleWorkerPosition={this.handleWorkerPosition} workerRemove={this.workerRemove} />
+        </div>
+        <div className="middleTitle">
+          <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+          <span className="middleTitleText">투입장비</span>
+        </div>
+        <div>
+          <SafetyEquipTable equipList={formData.EQUIP_LIST} equipRemove={this.equipRemove} />
+        </div>
+
         <AntdModal
           className="modal-table-pad"
           title={modalTitle}
@@ -219,15 +218,7 @@ class SafetyWorkMain extends Component {
 }
 
 SafetyWorkMain.propTypes = {
-  // type - number
-  // type - string
   sagaKey: PropTypes.string,
-  workNo: PropTypes.string,
-  // type - object
-  result: PropTypes.object,
-  profile: PropTypes.object,
-  // type - func
-  getCallDataHandler: PropTypes.func,
   getCallDataHandlerReturnRes: PropTypes.func,
 };
 

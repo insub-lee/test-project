@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, message } from 'antd';
+import { Input, Button, message, Modal } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
@@ -9,18 +9,25 @@ import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdBut
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import BizBuilderBase from 'components/BizBuilderBase';
+import MessageContent from 'components/Feedback/message.style2';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 
-// import Loadable from 'components/Loadable';
-// import Loading from '../Common/Loading';
+// 야외행사 수립 신청 - Input 페이지 커스텀
 
+const AntdModal = StyledContentsModal(Modal);
 const StyledButton = StyledAntdButton(Button);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class InputPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      modalVisible: false,
       uploadFileList: [],
       StyledWrap: StyledViewDesigner,
     };
@@ -154,12 +161,6 @@ class InputPage extends Component {
     saveTask(id, reloadId, typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.saveTaskAfter, changeIsLoading);
   };
 
-  // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
-
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
     const {
       onCloseModalHandler,
@@ -174,6 +175,7 @@ class InputPage extends Component {
       reloadViewType,
       reloadTaskSeq,
     } = this.props;
+    message.success(<MessageContent>야외행사 신청서를 저장하였습니다.</MessageContent>);
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler(id, redirectUrl);
     }
@@ -200,6 +202,33 @@ class InputPage extends Component {
     changeIsLoading(false);
   };
 
+  // 야외행사 신청번호 찾기 모달 핸들러
+  searchModalHandler = bool => {
+    this.setState({
+      modalVisible: bool,
+    });
+  };
+
+  // 커스텀 로우 온 클릭
+  customRowOnclick = record => {
+    const { viewPageData, setViewPageData, sagaKey: id, changeViewPage } = this.props;
+    this.setState(
+      {
+        modalVisible: false,
+      },
+      () => {
+        setViewPageData(id, record.WORK_SEQ, record.TASK_SEQ, 'MODIFY');
+        changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, 'MODIFY');
+      },
+    );
+  };
+
+  resetFormData = () => {
+    const { sagaKey: id, workSeq, setViewPageData, changeViewPage } = this.props;
+    setViewPageData(id, workSeq, -1, 'INPUT');
+    changeViewPage(id, workSeq, -1, 'INPUT');
+  };
+
   render = () => {
     const {
       sagaKey: id,
@@ -215,9 +244,10 @@ class InputPage extends Component {
       reloadId,
       isBuilderModal,
       InputCustomButtons,
+      formData,
     } = this.props;
 
-    const { StyledWrap } = this.state;
+    const { StyledWrap, modalVisible } = this.state;
 
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
@@ -226,35 +256,76 @@ class InputPage extends Component {
       const { bodyStyle } = viewLayerData;
       const { PRC_ID } = processRule;
       return (
-        <StyledWrap className={viewPageData.viewType}>
-          <Sketch {...bodyStyle}>
-            {isWorkflowUsed && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
-              <WorkProcess
-                id={id}
-                CustomWorkProcess={CustomWorkProcess}
-                CustomWorkProcessModal={CustomWorkProcessModal}
-                PRC_ID={PRC_ID}
-                processRule={processRule}
-                setProcessRule={setProcessRule}
-              />
-            )}
-            <View key={`${id}_${viewPageData.viewType}`} {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
-            {InputCustomButtons ? (
-              <InputCustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
-            ) : (
-              <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+        <>
+          <StyledWrap className={viewPageData.viewType}>
+            <Sketch {...bodyStyle}>
+              <StyledCustomSearchWrapper>
+                <div className="search-input-area">
+                  <span className="text-label">신청번호</span>
+                  <AntdSearch
+                    className="ant-search-inline input-search-mid mr5"
+                    onClick={() => this.searchModalHandler(true)}
+                    onSearch={() => this.searchModalHandler(true)}
+                    value={(formData.DOC_NO && formData.DOC_NO) || ''}
+                    style={{ width: '200px' }}
+                  />
+                </div>
+              </StyledCustomSearchWrapper>
+              <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
                 <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
                   저장
                 </StyledButton>
-                {!isBuilderModal && (
-                  <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                    목록
-                  </StyledButton>
-                )}
+                <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.resetFormData()}>
+                  초기화
+                </StyledButton>
               </StyledButtonWrapper>
+              {isWorkflowUsed && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
+                <WorkProcess
+                  id={id}
+                  CustomWorkProcess={CustomWorkProcess}
+                  CustomWorkProcessModal={CustomWorkProcessModal}
+                  PRC_ID={PRC_ID}
+                  processRule={processRule}
+                  setProcessRule={setProcessRule}
+                />
+              )}
+              <View key={`${id}_${viewPageData.viewType}`} {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
+              {InputCustomButtons ? (
+                <InputCustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
+              ) : (
+                <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+                  <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
+                    저장
+                  </StyledButton>
+                  {!isBuilderModal && (
+                    <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                      목록
+                    </StyledButton>
+                  )}
+                </StyledButtonWrapper>
+              )}
+            </Sketch>
+          </StyledWrap>
+          <AntdModal
+            title="야외행사 신청 리스트"
+            width="90%"
+            destroyOnClose
+            visible={modalVisible}
+            footer={null}
+            onOk={() => this.searchModalHandler(false)}
+            onCancel={() => this.searchModalHandler(false)}
+          >
+            {modalVisible && (
+              <BizBuilderBase
+                sagaKey="outdoorEvent_search"
+                viewType="LIST"
+                workSeq={4821}
+                ListCustomButtons={() => <></>}
+                customOnRowClick={this.customRowOnclick}
+              />
             )}
-          </Sketch>
-        </StyledWrap>
+          </AntdModal>
+        </>
       );
     }
     return '';

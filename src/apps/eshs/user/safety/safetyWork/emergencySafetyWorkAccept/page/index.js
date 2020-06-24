@@ -3,7 +3,6 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Input, Modal, Button, DatePicker, Select, Table } from 'antd';
 import { AppstoreTwoTone } from '@ant-design/icons';
-import styled from 'styled-components';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -11,7 +10,6 @@ import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal'
 import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledPicker from 'commonStyled/Form/StyledPicker';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
@@ -222,6 +220,7 @@ class SafetyWorkMain extends Component {
             role="button"
             onKeyPress={() => this.handleModal('eSafetyWorkWrite', true, value)}
             onClick={() => this.handleModal('eSafetyWorkWrite', true, value)}
+            style={{ color: '#2a81da' }}
           >
             {value}
           </span>

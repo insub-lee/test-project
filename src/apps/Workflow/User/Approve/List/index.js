@@ -689,7 +689,7 @@ class ApproveList extends Component {
                           <table className="mdcsProcessList">
                             <thead>
                               <tr className="mdcsProcessRow">
-                                <th colSpan="2">필수심의권자</th>
+                                <th colSpan="2">필수 심의권자</th>
                               </tr>
                             </thead>
                             <tbody>{reviewerNode}</tbody>

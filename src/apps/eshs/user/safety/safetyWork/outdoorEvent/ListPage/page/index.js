@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Popconfirm, Button, Modal } from 'antd';
+
 import { isJSON } from 'utils/helpers';
-import BizBuilderBase from 'components/BizBuilderBase';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import BizBuilderBase from 'components/BizBuilderBase';
 import Contents from 'components/BizBuilder/Common/Contents';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import {
   MULTI_DELETE_OPT_SEQ,
   LIST_NO_OPT_SEQ,
@@ -23,9 +24,8 @@ import {
   PAGINATION_OPT_CODE,
 } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
-import { VIEW_TYPE, META_SEQ } from '../../internal_constants';
 
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledContentsModal(Modal);
 const AntdTable = StyledAntdTable(Table);
 const StyledButton = StyledAntdButton(Button);
 
@@ -33,6 +33,8 @@ class ListPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectedTaskSeq: -1,
+      modalVisible: false,
       isMultiDelete: false,
       isRowNo: false,
       isOnRowClick: false,
@@ -47,11 +49,6 @@ class ListPage extends Component {
       paginationIdx: 1,
       pageSize: 10,
       isPagingData: false,
-      // 커스텀 페이지 모달용
-      modalTitle: '',
-      modalType: '',
-      modalVisible: false,
-      selectedTaskSeq: -1,
     };
   }
 
@@ -194,94 +191,29 @@ class ListPage extends Component {
     setListSelectRowKeys(sagaKey, selectedRowKeys);
   };
 
+  // 야외행사 신청번호 찾기 모달 핸들러
+  viewModalHandler = (taskSeq, bool) => {
+    this.setState({
+      selectedTaskSeq: taskSeq,
+      modalVisible: bool,
+    });
+  };
+
   /* 
       신규추가 
       목적 : ListGroup 내에서 Row를 클릭시 원하는 뷰로 이동할 수 있는 Config를 지원하기 위해 생성
       타입 : func (추가사항. antd - Table Props 참조)
       create by. JeongHyun
   */
-  onRowClick = record => {
-    const { sagaKey: id, isBuilderModal, changeBuilderModalState, changeViewPage } = this.props;
-    const { rowClickView } = this.state;
-    return {
-      onClick: () => {
-        if (isBuilderModal) {
-          changeBuilderModalState(true, rowClickView, record.WORK_SEQ, record.TASK_SEQ, record);
-        } else {
-          changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, rowClickView);
-        }
-      },
-    };
-  };
-
-  // 모달 핸들러
-  modalHandler = (type, visible, selectedTaskSeq) => {
-    let title = '';
-    let taskSeq = -1;
-    switch (type) {
-      case 'newReg':
-        title = '안전작업 자료 등록';
-        taskSeq = -1;
-        break;
-      case 'viewTask':
-        title = '안전작업 자료 조회';
-        taskSeq = selectedTaskSeq;
-        break;
-      default:
-        break;
-    }
-    this.setState({
-      modalType: type,
-      modalTitle: title,
-      modalVisible: visible,
-      selectedTaskSeq: taskSeq,
-    });
-  };
-
-  customOnRowClick = record => {
-    this.modalHandler('viewTask', true, record.TASK_SEQ);
-  };
-
-  renderModalContents = () => {
-    const { selectedTaskSeq, modalType } = this.state;
-    const { workSeq, sagaKey, CustomButtons } = this.props;
-    switch (modalType) {
-      case 'newReg':
-        return (
-          <BizBuilderBase
-            key="SWTB_FILE_INSERT_MODAL"
-            sagaKey="SWTB_FILE_INSERT_MODAL"
-            workSeq={workSeq} // metadata binding
-            viewType={VIEW_TYPE.INPUT_PAGE}
-            taskSeq={selectedTaskSeq} // data binding
-            onCloseModalHandler={() => this.modalHandler('', false)}
-            baseSagaKey={sagaKey}
-            useExcelDownload={false}
-            saveTaskAfterCallbackFunc={() => this.modalHandler('', false)}
-          />
-        );
-      case 'viewTask':
-        return (
-          <BizBuilderBase
-            key="SWTB_FILE_VIEW_MODAL"
-            sagaKey="SWTB_FILE_VIEW_MODAL"
-            workSeq={workSeq} // metadata binding
-            viewType={VIEW_TYPE.VIEW_PAGE}
-            taskSeq={selectedTaskSeq} // data binding
-            onCloseModalHandler={() => this.modalHandler('', false)}
-            baseSagaKey={sagaKey}
-            ViewCustomButtons={CustomButtons?.ViewPageButtons}
-          />
-        );
-      default:
-        return '';
-    }
-  };
+  onRowClick = record => ({
+    onClick: () => {
+      this.viewModalHandler(record.TASK_SEQ, true);
+    },
+  });
 
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, workInfo, listTotalCnt } = this.props;
+    const { listData, listSelectRowKeys, workInfo, customOnRowClick, listTotalCnt } = this.props;
     const { isMultiDelete, isOnRowClick, paginationIdx } = this.state;
-    const { customOnRowClick } = this;
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
@@ -336,9 +268,7 @@ class ListPage extends Component {
       ListCustomButtons,
       useExcelDownload,
       conditional,
-      CustomButtons,
     } = this.props;
-    const { ListPageButtons } = CustomButtons || false;
     const {
       isMultiDelete,
       StyledWrap,
@@ -350,9 +280,8 @@ class ListPage extends Component {
       fields,
       pageSize,
       isPagingData,
-      modalTitle,
-      modalType,
       modalVisible,
+      selectedTaskSeq,
     } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -366,91 +295,115 @@ class ListPage extends Component {
       } = workFlowConfig;
 
       return (
-        <StyledWrap className={viewPageData.viewType}>
-          <Sketch {...bodyStyle}>
-            {groups.map((group, groupIndex) => {
-              if (group.type === 'listGroup') {
+        <>
+          <StyledWrap className={viewPageData.viewType}>
+            <Sketch {...bodyStyle}>
+              {groups.map((group, groupIndex) => {
+                if (group.type === 'listGroup') {
+                  return this.renderList(group, groupIndex);
+                }
                 return (
-                  <>
-                    <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-                      {ListPageButtons && <ListPageButtons {...this.props} modalHandler={this.modalHandler} />}
-                      {useExcelDownload && isExcelDown && (
-                        <ExcelDownloadComp
-                          isBuilder={false}
-                          fileName={fileName || 'excel'}
-                          className="workerExcelBtn"
-                          btnText={btnTex || '엑셀받기'}
-                          sheetName={sheetName || 'sheet1'}
-                          columns={columns || []}
-                          fields={fields || []}
-                          listData={listData || []}
-                        />
-                      )}
-                    </StyledButtonWrapper>
-                    {this.renderList(group, groupIndex)}
-                  </>
-                );
-              }
-              return (
-                (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
-                  <StyledSearchWrapper key={group.key}>
-                    {group.useTitle && <GroupTitle title={group.title} />}
-                    <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-                      <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
-                        <table className={`view-designer-table table-${groupIndex}`}>
-                          <tbody>
-                            {group.rows.map((row, rowIndex) => (
-                              <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
-                                {row.cols &&
-                                  row.cols.map((col, colIndex) =>
-                                    col ? (
-                                      <td
-                                        key={col.key}
-                                        {...col}
-                                        comp=""
-                                        colSpan={col.span}
-                                        className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}${
-                                          col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName.toString().replaceAll(',', ' ')}` : ''
-                                        }`}
-                                      >
-                                        <Contents>
-                                          {col.comp &&
-                                            this.renderComp(
-                                              col.comp,
-                                              col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
-                                              true,
-                                              `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
-                                              `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
-                                              group.type === 'searchGroup',
-                                            )}
-                                        </Contents>
-                                      </td>
-                                    ) : (
-                                      ''
-                                    ),
-                                  )}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      {group.type === 'searchGroup' && group.useSearch && (
-                        <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray btn-sm btn-first" onClick={this.handleClickSearch}>
-                            검색
-                          </StyledButton>
+                  (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
+                    <StyledSearchWrapper key={group.key}>
+                      {group.useTitle && <GroupTitle title={group.title} />}
+                      <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
+                        <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
+                          <table className={`view-designer-table table-${groupIndex}`}>
+                            <tbody>
+                              {group.rows.map((row, rowIndex) => (
+                                <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
+                                  {row.cols &&
+                                    row.cols.map((col, colIndex) =>
+                                      col ? (
+                                        <td
+                                          key={col.key}
+                                          {...col}
+                                          comp=""
+                                          colSpan={col.span}
+                                          className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}${
+                                            col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName.toString().replaceAll(',', ' ')}` : ''
+                                          }`}
+                                        >
+                                          <Contents>
+                                            {col.comp &&
+                                              this.renderComp(
+                                                col.comp,
+                                                col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
+                                                true,
+                                                `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
+                                                `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
+                                                group.type === 'searchGroup',
+                                              )}
+                                          </Contents>
+                                        </td>
+                                      ) : (
+                                        ''
+                                      ),
+                                    )}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
                         </div>
-                      )}
-                    </Group>
-                  </StyledSearchWrapper>
-                )
-              );
-            })}
-            <AntdModal title={modalTitle} width="80%" visible={modalVisible} footer={null} destroyOnClose onCancel={() => this.modalHandler('', false)}>
-              {modalVisible && this.renderModalContents()}
-            </AntdModal>
-          </Sketch>
-        </StyledWrap>
+                        {group.type === 'searchGroup' && group.useSearch && (
+                          <div className="view-designer-group-search-btn-wrap">
+                            <StyledButton className="btn-gray btn-sm" onClick={this.handleClickSearch}>
+                              검색
+                            </StyledButton>
+                            {useExcelDownload && isExcelDown && (
+                              <ExcelDownloadComp
+                                isBuilder={false}
+                                fileName={fileName || 'excel'}
+                                className="workerExcelBtn"
+                                btnText={btnTex || '엑셀받기'}
+                                sheetName={sheetName || 'sheet1'}
+                                columns={columns || []}
+                                fields={fields || []}
+                                listData={listData || []}
+                              />
+                            )}
+                          </div>
+                        )}
+                      </Group>
+                    </StyledSearchWrapper>
+                  )
+                );
+              })}
+              <StyledButtonWrapper className="btn-wrap-right">
+                {ListCustomButtons ? (
+                  <ListCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
+                ) : (
+                  <StyledButton
+                    className="btn-primary btn-sm mr5"
+                    onClick={() =>
+                      isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
+                    }
+                  >
+                    추가
+                  </StyledButton>
+                )}
+                {isMultiDelete && (
+                  <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
+                    <StyledButton className="btn-light btn-sm">삭제</StyledButton>
+                  </Popconfirm>
+                )}
+              </StyledButtonWrapper>
+            </Sketch>
+          </StyledWrap>
+          <AntdModal
+            title="야외행사 신청 리스트"
+            width="70%"
+            destroyOnClose
+            visible={modalVisible}
+            footer={null}
+            onOk={() => this.viewModalHandler(-1, false)}
+            onCancel={() => this.viewModalHandler(-1, false)}
+          >
+            {modalVisible && (
+              <BizBuilderBase sagaKey="outdoorEvent_view" viewType="VIEW" workSeq={4821} taskSeq={selectedTaskSeq} ViewCustomButtons={() => <></>} />
+            )}
+          </AntdModal>
+        </>
       );
     }
     return '';
@@ -458,7 +411,6 @@ class ListPage extends Component {
 }
 
 ListPage.propTypes = {
-  workSeq: PropTypes.number,
   workInfo: PropTypes.object,
   sagaKey: PropTypes.string,
   workFlowConfig: PropTypes.object,
