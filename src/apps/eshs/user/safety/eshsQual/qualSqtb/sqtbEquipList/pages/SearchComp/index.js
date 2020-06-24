@@ -392,7 +392,7 @@ SearchComp.defaultProps = {
           {
             API_SEQ: 26,
             API_NAME: 'Eshs 거래처 리스트',
-            API_SRC: '/api/eshs/v1/common/EshsCmpnyList/null/null',
+            API_SRC: '/api/eshs/v1/common/EshsCmpnyList/gubun=SW',
             METHOD_TYPE: 'get',
             CALL_TYPE: 'F',
             ISUSED: 'Y',

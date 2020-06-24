@@ -150,7 +150,7 @@ class EshsInterLockComp extends Component {
           },
           {
             title: '승인상태',
-            dataIndex: 'QUAL_STATUS',
+            dataIndex: 'QUAL_STATUS_NM',
             align: 'center',
             width: '8%',
           },

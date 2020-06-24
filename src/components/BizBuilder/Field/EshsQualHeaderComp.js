@@ -5,8 +5,9 @@ import { Input, Modal, message, Popconfirm } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
 import SearchListPage from 'apps/eshs/user/safety/eshsQual/qualApply/qualSearchList/CustomList';
@@ -73,7 +74,7 @@ class EshsQualHeaderComp extends Component {
   handleAction = type => {
     const { sagaKey, saveTask, changeViewPage, formData, viewPageData, modifySaveTask, deleteTask, changeFormData } = this.props;
     const { workSeq, taskSeq } = viewPageData;
-    const selectTask = (formData && formData.selectRow && formData.selectRow.TASK_SEQ) || 0;
+    const selectTask = (formData && formData.selectRow && formData.selectRow.TASK_SEQ) || formData.TASK_SEQ || 0;
     const gubun = (formData && formData.GUBUN) || '';
     const selectGubun = (formData && formData.selectRow && formData.selectRow.GUBUN) || '';
     let msg = '';
@@ -86,7 +87,6 @@ class EshsQualHeaderComp extends Component {
           msg = 'ESH Qual 확인 신청건이 아닙니다.';
           break;
         default:
-          msg = '신청번호를 입력하세요';
           break;
       }
     }
@@ -213,13 +213,13 @@ class EshsQualHeaderComp extends Component {
         APP_STATUS: status,
         F_QUAL_STATUS: qualStatus,
         F_QUAL_DT: moment(new Date()).format('YYYY-MM-DD'),
-        QUAL_DT: qualStatus === 2007 || qualStatus === '2007' ? moment(new Date()).format('YYYY-MM-DD') : '',
+        QUAL_DT: qualStatus === 1 || qualStatus === '1' ? moment(new Date()).format('YYYY-MM-DD') : '',
       });
     } else {
       setFormData(id, {
         ...formData,
         APP_STATUS: status,
-        QUAL_DT: qualStatus === 2007 || qualStatus === '2007' ? moment(new Date()).format('YYYY-MM-DD') : '',
+        QUAL_DT: qualStatus === 1 || qualStatus === '1' ? moment(new Date()).format('YYYY-MM-DD') : '',
       });
     }
     if (typeof callBack === 'function') {
@@ -268,7 +268,7 @@ class EshsQualHeaderComp extends Component {
               onSearch={this.handleModalVisible}
               className="ant-search-inline input-search-mid mr5"
             />
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH_VIEW')}>
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleAction('SEARCH_VIEW')}>
               검색
             </StyledButton>
           </StyledButtonWrapper>
@@ -291,10 +291,10 @@ class EshsQualHeaderComp extends Component {
               onSearch={this.handleModalVisible}
               className="ant-search-inline input-search-mid mr5"
             />
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
-            {!!QUAL_STATUS && QUAL_STATUS !== '2007' && taskSeq > -1 && (
+            {!!QUAL_STATUS && QUAL_STATUS !== '1' && taskSeq > -1 && (
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
                 저장
               </StyledButton>
@@ -318,12 +318,12 @@ class EshsQualHeaderComp extends Component {
               onSearch={this.handleModalVisible}
               className="ant-search-inline input-search-mid mr5"
             />
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
-            {QUAL_STATUS !== '2007' && taskSeq > -1 && (
+            {QUAL_STATUS !== '1' && taskSeq > -1 && (
               /*
-                QUAL_STATUS 2007 (승인), 2008(조건부승인), 2009(미승인)
+                QUAL_STATUS 1 (승인), 2(조건부승인), 3(미승인)
                 QUAL_STATUS (ESHS Qual 승인. 확인결과 메뉴에서만 [판정] 상태값 변경)
                 승인건에 대해서만 COND 데이터 저장가능 - STEP2 개선계획
               */
@@ -332,8 +332,8 @@ class EshsQualHeaderComp extends Component {
               </StyledButton>
             )}
 
-            {QUAL_STATUS !== '2007' && isAllconfirm && taskSeq > -1 && (
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleMakeConfirm('2007', 'MODIFY', this.handleAction)}>
+            {QUAL_STATUS !== '1' && isAllconfirm && taskSeq > -1 && (
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleMakeConfirm('1', 'MODIFY', this.handleAction)}>
                 승인
               </StyledButton>
             )}
@@ -357,12 +357,12 @@ class EshsQualHeaderComp extends Component {
               onSearch={this.handleModalVisible}
               className="ant-search-inline input-search-mid mr5"
             />
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
-            {QUAL_STATUS !== '2007' && taskSeq > -1 && (
+            {QUAL_STATUS !== '1' && taskSeq > -1 && (
               /*
-                QUAL_STATUS 2007 (승인), 2008(조건부승인), 2009(미승인)
+                QUAL_STATUS 1 (승인), 2(조건부승인), 3(미승인)
                 QUAL_STATUS (ESHS Qual 승인. 확인결과 메뉴에서만 [판정] 상태값 변경)
                 승인건에 대해서만 COND 데이터 저장가능 - STEP2 개선계획
               */
@@ -389,7 +389,7 @@ class EshsQualHeaderComp extends Component {
               onSearch={this.handleModalVisible}
               className="ant-search-inline input-search-mid mr5"
             />
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
             {((taskSeq !== -1 && REQ_CD !== '' && !APP_STATUS) || APP_STATUS === '1') && (
@@ -408,7 +408,7 @@ class EshsQualHeaderComp extends Component {
                 <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('1', 'MODIFY', this.handleAction)}>
                   저장
                 </StyledButton>
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('2', 'MODIFY', this.handleAction)}>
+                <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.handleConfirmProcess('2', 'MODIFY', this.handleAction)}>
                   상신
                 </StyledButton>
                 <ConfirmCheckSheet
@@ -453,7 +453,7 @@ class EshsQualHeaderComp extends Component {
               onSearch={this.handleModalVisible}
               className="ant-search-inline input-search-mid mr5"
             />
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
             {viewType === 'INPUT' && (
@@ -466,10 +466,10 @@ class EshsQualHeaderComp extends Component {
                 <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleValidationChk('MODIFY')}>
                   저장
                 </StyledButton>
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('CONFIRM_LINE')}>
+                <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.handleAction('CONFIRM_LINE')}>
                   결제선지정
                 </StyledButton>
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleValidationChk('상신')}>
+                <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.handleValidationChk('상신')}>
                   상신
                 </StyledButton>
                 <Popconfirm title="정말 삭제하시겠습니까?" onConfirm={() => this.handleAction('DELETE')} okText="확인" cancelText="취소">
@@ -496,7 +496,7 @@ class EshsQualHeaderComp extends Component {
               onSearch={this.handleModalVisible}
               className="ant-search-inline input-search-mid mr5"
             />
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
             {viewType === 'INPUT' && (
@@ -509,14 +509,14 @@ class EshsQualHeaderComp extends Component {
                 <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
                   저장
                 </StyledButton>
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('CONFIRM_LINE')}>
+                <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.handleAction('CONFIRM_LINE')}>
                   결제선지정
                 </StyledButton>
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('상신')}>
+                <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.handleAction('상신')}>
                   상신
                 </StyledButton>
                 <Popconfirm title="정말 삭제하시겠습니까?" onConfirm={() => this.handleAction('DELETE')} okText="확인" cancelText="취소">
-                  <StyledButton className="btn-primary btn-sm">삭제</StyledButton>
+                  <StyledButton className="btn-light btn-sm">삭제</StyledButton>
                 </Popconfirm>
               </>
             )}
@@ -539,7 +539,7 @@ class EshsQualHeaderComp extends Component {
               onSearch={this.handleModalVisible}
               className="ant-search-inline input-search-mid mr5"
             />
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
             {((taskSeq !== -1 && REQ_CD !== '' && !APP_STATUS) || APP_STATUS === '1') && (
@@ -558,7 +558,7 @@ class EshsQualHeaderComp extends Component {
                 <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('1', 'MODIFY', this.handleAction)}>
                   저장
                 </StyledButton>
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleConfirmProcess('2', 'MODIFY', this.handleAction)}>
+                <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.handleConfirmProcess('2', 'MODIFY', this.handleAction)}>
                   상신
                 </StyledButton>
               </>
