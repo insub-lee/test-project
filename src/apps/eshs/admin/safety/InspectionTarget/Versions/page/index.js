@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Button, Select, Spin } from 'antd';
-import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
-import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
-import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import styled from 'styled-components';
+
+const CustomStyled = styled.div`
+  width: 50%;
+  text-align: center;
+`;
 
 class VersionMgtPage extends Component {
   constructor(props) {
@@ -29,25 +29,124 @@ class VersionMgtPage extends Component {
 
   render() {
     const { result } = this.props;
-    // const initVersion = {
-    //   fh_master:
-    //   eb_master:
-    //   wh_master:
-    //   ws_master:
-    //   er_master:
-    //   wp_master:
-    //   rp_master:
-    //   dp_master:
-    //   fe_master:
-    //   al_master:
-    //   pk_master:
-    //   pa_master:
-    // }
-    const fireVersions = (result && result.getFireVersion && result.getFireVersion.fireversion) || {};
+    const fireVersions = (result && result.getFireVersion && result.getFireVersion.fireVersion) || {};
     return (
-      <div>
-        <ContentsWrapper>보류</ContentsWrapper>
-      </div>
+      <CustomStyled>
+        <StyledHtmlTable>
+          <table>
+            <colgroup>
+              <col width="40%" />
+              <col width="60%" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>
+                  <span>신청일</span>
+                </th>
+                <th>
+                  <span>버전</span>
+                </th>
+              </tr>
+              <tr>
+                <td>
+                  <span>소화기 점검</span>
+                </td>
+                <td>
+                  <span>{fireVersions.fe_master || '버전정보가 없습니다.'}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span>소화전 점검</span>
+                </td>
+                <td>
+                  <span>{fireVersions.fh_master || '버전정보가 없습니다.'}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span>Pre Action & Alarm Valve</span>
+                </td>
+                <td>
+                  <span>{fireVersions.pa_master || '버전정보가 없습니다.'}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span>PKG 소화설비</span>
+                </td>
+                <td>
+                  <span>{fireVersions.pk_master || '버전정보가 없습니다.'}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span>미분무 소화전</span>
+                </td>
+                <td>
+                  <span>{fireVersions.wh_master || '버전정보가 없습니다.'}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span>미분무 콘센트</span>
+                </td>
+                <td>
+                  <span>{fireVersions.ws_master || '버전정보가 없습니다.'}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span>미분무 펌프</span>
+                </td>
+                <td>
+                  <span>{fireVersions.wp_master || '버전정보가 없습니다.'}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span>R동 소방 펌프</span>
+                </td>
+                <td>
+                  <span>{fireVersions.rp_master || '버전정보가 없습니다.'}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span>DI동 소방 펌프</span>
+                </td>
+                <td>
+                  <span>{fireVersions.dp_master || '버전정보가 없습니다.'}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span>ERT 장비 보관함</span>
+                </td>
+                <td>
+                  <span>{fireVersions.er_master || '버전정보가 없습니다.'}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span>EYE & BODY SHOWER</span>
+                </td>
+                <td>
+                  <span>{fireVersions.eb_master || '버전정보가 없습니다.'}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span>Air Line Mask함</span>
+                </td>
+                <td>
+                  <span>{fireVersions.al_master || '버전정보가 없습니다.'}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </StyledHtmlTable>
+      </CustomStyled>
     );
   }
 }
