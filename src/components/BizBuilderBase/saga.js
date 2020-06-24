@@ -33,7 +33,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
   if (isBuilderModal) {
     const tempObj = isJSON(work.OPT_INFO[builderModalOptIdx].OPT_VALUE) ? JSON.parse(work.OPT_INFO[builderModalOptIdx].OPT_VALUE) : undefined;
     if (tempObj) {
-      builderModalSetting = { bodyStyle: { padding: '20px 1px 1px 1px', overflow: 'auto' } };
+      builderModalSetting = { bodyStyle: { overflow: 'auto' } };
       if (tempObj.width && tempObj.width > 0) {
         builderModalSetting.width = tempObj.width + tempObj.widthType;
       }

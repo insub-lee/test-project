@@ -135,24 +135,22 @@ class List extends Component {
     return (
       <>
         <StyledContentsWrapper>
-          <div className="tableWrapper">
-            <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-              <StyledButton className="btn-primary btn-sm" onClick={this.onModalChange}>
-                추가
-              </StyledButton>
-            </StyledButtonWrapper>
-            <AntdTable
-              rowKey={() => totalData.SIPA_SEQ}
-              pagination={false}
-              dataSource={totalData}
-              columns={columns}
-              onRow={record => ({
-                onClick: () => {
-                  this.onUpdateDo(record);
-                },
-              })}
-            />
-          </div>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm" onClick={this.onModalChange}>
+              추가
+            </StyledButton>
+          </StyledButtonWrapper>
+          <AntdTable
+            rowKey={() => totalData.SIPA_SEQ}
+            pagination={false}
+            dataSource={totalData}
+            columns={columns}
+            onRow={record => ({
+              onClick: () => {
+                this.onUpdateDo(record);
+              },
+            })}
+          />
         </StyledContentsWrapper>
         <AntdModal
           className="modal-table-pad"

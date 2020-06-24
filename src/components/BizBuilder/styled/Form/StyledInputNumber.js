@@ -10,7 +10,6 @@ const StyledInputNumber = Component => styled(Component)`
     font-weight: 400;
     line-height: 1.47;
     color: #495057;
-    background-color: #fff;
     background-clip: padding-box;
     border: 1px solid #e5e5e5;
     border-radius: 4px;
@@ -19,7 +18,6 @@ const StyledInputNumber = Component => styled(Component)`
     &:hover,
     &:focus {
       color: #495057;
-      background-color: #fff;
       border-color: #636a78;
       outline: 0;
       box-shadow: none;

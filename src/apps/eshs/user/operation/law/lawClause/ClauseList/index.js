@@ -7,6 +7,7 @@ import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
@@ -247,8 +248,8 @@ class ClauseList extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
-                            Search
+                          <StyledButton className="btn-gray btn-sm" onClick={() => getListData(id, workSeq)}>
+                            검색
                           </StyledButton>
                         </div>
                       )}
@@ -257,11 +258,11 @@ class ClauseList extends Component {
                 )
               );
             })}
-            <div className="alignRight">
-              <StyledButton className="btn-primary btn-first" onClick={() => isOpenInputModal(formData.MASTER_SEQ, formData.RECH_LAW_NAME, formData.RECH_NO)}>
+            <StyledButtonWrapper className="btn-wrap-right">
+              <StyledButton className="btn-primary btn-sm" onClick={() => isOpenInputModal(formData.MASTER_SEQ, formData.RECH_LAW_NAME, formData.RECH_NO)}>
                 Add
               </StyledButton>
-            </div>
+            </StyledButtonWrapper>
           </Sketch>
         </StyledWrap>
       );
