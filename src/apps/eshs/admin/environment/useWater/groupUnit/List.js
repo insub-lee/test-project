@@ -178,7 +178,7 @@ class List extends Component {
     return (
       <>
         <StyledContentsWrapper>
-          <StyledCustomSearch>
+          <StyledCustomSearch className="search-wrapper-inline">
             <div className="search-input-area">
               <AntdSelect className="select-sm mr5" onChange={value => this.changeState('siteSBV', value)} value={this.state.siteSBV}>
                 <Option value="0" key="siteSBV">
@@ -188,7 +188,7 @@ class List extends Component {
               </AntdSelect>
               <span className="text-label">회사</span>
               <AntdSearchInput
-                style={{ width: '200px' }}
+                style={{ width: '150px' }}
                 className="input-search-inline input-search-sm input-pointer mr5"
                 value={this.state.companyName}
                 onClick={() => this.setState({ modalCompany: true })}
@@ -243,14 +243,16 @@ class List extends Component {
               </AntdSelect>
             </div>
             <StyledButtonWrapper className="btn-area">
-              <StyledButton className="btn-gray btn-first btn-sm" onClick={() => this.listDataApi()}>
+              <StyledButton className="btn-gray btn-first btn-sm" onClick={this.listDataApi}>
                 검색
-              </StyledButton>
-              <StyledButton className="btn-gray btn-sm" onClick={() => this.isOpenEdit()}>
-                추가
               </StyledButton>
             </StyledButtonWrapper>
           </StyledCustomSearch>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm" onClick={this.isOpenEdit}>
+              추가
+            </StyledButton>
+          </StyledButtonWrapper>
           <AntdTable
             rowKey={listData && listData.GROUP_UNIT_CD}
             columns={columns}

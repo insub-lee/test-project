@@ -43,7 +43,7 @@ class SafetyWorkInfo extends Component {
                   <span>* 작업지역</span>
                 </th>
                 <td colSpan={3}>
-                  <AntdSelect className="select-xs" style={{ width: '200px' }} value={formData.SITE} onChange={value => handleChangeFormData('SITE', value)}>
+                  <AntdSelect className="select-xs" style={{ width: '100px' }} value={formData.SITE} onChange={value => handleChangeFormData('SITE', value)}>
                     <Option value="청주">청주</Option>
                     <Option value="구미">구미</Option>
                   </AntdSelect>
@@ -54,7 +54,7 @@ class SafetyWorkInfo extends Component {
                 <td colSpan={3}>
                   <AntdSelect
                     className="select-xs"
-                    style={{ width: '200px' }}
+                    style={{ width: '100px' }}
                     value={formData.WGUBUN}
                     onChange={value => handleChangeFormData('WGUBUN', value)}
                   >
@@ -71,14 +71,14 @@ class SafetyWorkInfo extends Component {
                   <span>* 발주회사</span>
                 </th>
                 <td colSpan={3}>
-                  <AntdInput className="ant-input-xs ant-input-inline" value={formData.REQ_CMPNY_CD} readOnly style={{ width: '200px' }} />
+                  <AntdInput className="ant-input-xs ant-input-inline" value={formData.REQ_CMPNY_CD} readOnly style={{ width: '100px' }} />
                   <span style={{ color: '#495057', marginLeft: '5px' }}>{formData.REQ_CMPNY_NM}</span>
                 </td>
                 <th colSpan={2}>
                   <span>* 주관팀</span>
                 </th>
                 <td colSpan={3}>
-                  <AntdInput className="ant-input-xs ant-input-inline" value={formData.REQ_DEPT_CD} readOnly style={{ width: '200px' }} />
+                  <AntdInput className="ant-input-xs ant-input-inline" value={formData.REQ_DEPT_CD} readOnly style={{ width: '100px' }} />
                   <span style={{ color: '#495057', marginLeft: '5px' }}>{formData.REQ_DEPT_NM}</span>
                 </td>
               </tr>
@@ -89,7 +89,7 @@ class SafetyWorkInfo extends Component {
                 <td colSpan={7}>
                   <AntdSearch
                     className="input-search-xs"
-                    style={{ width: '200px' }}
+                    style={{ width: '100px' }}
                     value={formData.WRK_CMPNY_CD}
                     disable
                     onClick={() => handleModal('cmpny', true)}

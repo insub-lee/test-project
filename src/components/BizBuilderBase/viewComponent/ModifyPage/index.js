@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, message } from 'antd';
-
 import { isJSON } from 'utils/helpers';
+import View from 'components/BizBuilder/PageComp/view';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 
@@ -33,10 +32,6 @@ class ModifyPage extends Component {
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
 
     if (workInfo.BUILDER_STYLE_PATH) {
-      // const StyledWrap = Loadable({
-      //   loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
-      //   loading: Loading,
-      // });
       const StyledWrap = DefaultStyleInfo(workInfo.BUILDER_STYLE_PATH);
       this.setState({ StyledWrap });
     }
@@ -227,7 +222,7 @@ class ModifyPage extends Component {
                 setProcessRule={setProcessRule}
               />
             )}
-            <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
+            <View key={`${id}_${viewPageData.viewType}`} {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
             {ModifyCustomButtons ? (
               <ModifyCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
             ) : (

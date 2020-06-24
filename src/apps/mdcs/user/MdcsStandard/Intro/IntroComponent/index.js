@@ -293,7 +293,7 @@ class IntroComponent extends Component {
                 InputCustomButtons={({ saveBeforeProcess, onCloseModal, sagaKey, reloadId }) => (
                   <div style={{ textAlign: 'center', marginTop: '12px' }}>
                     <StyledButton className="btn-primary btn-sm btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
-                      저장
+                      상신
                     </StyledButton>
                     <StyledButton className="btn-light btn-sm" onClick={() => onCloseModal()}>
                       닫기

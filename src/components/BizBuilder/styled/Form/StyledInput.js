@@ -13,7 +13,7 @@ const StyledInput = Component => styled(Component)`
     color: #495057;
     background-color: #fff;
     background-clip: padding-box;
-    border: 1px solid #e5e5e5;
+    border: 1px solid #ddd;
     border-radius: 4px;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
     vertical-align: middle;
@@ -21,7 +21,6 @@ const StyledInput = Component => styled(Component)`
     &:hover,
     &:focus {
       color: #495057;
-      background-color: #fff;
       border-color: #636a78;
       outline: 0;
       box-shadow: 0 0 0 0.2rem transparent;
@@ -114,6 +113,10 @@ const StyledInput = Component => styled(Component)`
 
     .ant-input-suffix {
       right: 18px;
+    }
+
+    &:hover .ant-input:not(.ant-input-disabled) {
+      border-color: #636a78;
     }
   }
 `;

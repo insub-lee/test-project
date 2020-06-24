@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { DatePicker as AntdDatePicker } from 'antd';
+import { DatePicker } from 'antd';
 import PropTypes from 'prop-types';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import moment from 'moment';
 
+const AntdDatePicker = StyledDatePicker(DatePicker);
 class DatePickerComp extends Component {
   // Config 설정 추가로 마운트 완료후 cahngeFormData가 필요하여 추가 by.이정현
   componentDidMount() {
@@ -39,10 +41,6 @@ class DatePickerComp extends Component {
 
   render() {
     const { CONFIG, visible, isSearch, readOnly, viewPageData, colData, searchCompRenderer } = this.props;
-    // console.debug('프롭스 딱대!', this.props);
-    // if (!visible) {
-    //   return '';
-    // }
 
     if (isSearch && CONFIG.property.searchType === 'CUSTOM') {
       return (

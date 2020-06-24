@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Input, Modal, Button, DatePicker, Table } from 'antd';
+import { Input, Modal, DatePicker, Table } from 'antd';
 import styled from 'styled-components';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
-import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import message from 'components/Feedback/message';
 import Group from 'components/BizBuilder/Sketch/Group';
 import MessageContent from 'components/Feedback/message.style2';
@@ -19,11 +19,10 @@ import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import IngCheckViewer from '../../ingCheck';
 import Styled from './Styled';
 
-const AntdModal = StyledModalWrapper(Modal);
-const AntdTable = StyledLineTable(Table);
+const AntdModal = StyledContentsModal(Modal);
+const AntdTable = StyledAntdTable(Table);
 const AntdSearch = StyledSearchInput(Input.Search);
-const StyledButton = StyledAntdButton(Button);
-const AntdDatePicker = StyledPicker(DatePicker);
+const AntdDatePicker = StyledDatePicker(DatePicker);
 
 const CustomTableStyled = styled.div`
   .ant-table-column-title {
@@ -331,11 +330,8 @@ class SafetyWorkList extends Component {
               </table>
             </div>
             <div className="view-designer-group-search-btn-wrap">
-              <StyledButton className="btn-primary btn-gray btn-first" onClick={() => this.onSearch()}>
+              <StyledButton className="btn-gray btn-first btn-sm" onClick={() => this.onSearch()}>
                 검색
-              </StyledButton>
-              <StyledButton className="btn-primary btn-gray btn-first" onClick={() => alert('엑셀받기')}>
-                엑셀받기
               </StyledButton>
             </div>
           </Group>

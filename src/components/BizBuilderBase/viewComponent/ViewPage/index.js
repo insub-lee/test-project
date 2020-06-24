@@ -11,6 +11,7 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
+import { REVISION_OPT_CODE } from 'components/BizBuilder/Common/Constants';
 
 // import Loadable from 'components/Loadable';
 // import Loading from 'components/BizBuilderBase/viewComponent/Common/Loading';
@@ -20,6 +21,7 @@ class ViewPage extends Component {
     super(props);
     this.state = {
       StyledWrap: StyledViewDesigner,
+      isRevision: false,
     };
   }
 
@@ -33,6 +35,14 @@ class ViewPage extends Component {
       // });
       const StyledWrap = DefaultStyleInfo(workInfo.BUILDER_STYLE_PATH);
       this.setState({ StyledWrap });
+    }
+
+    if (workInfo && workInfo.OPT_INFO) {
+      let isRevision = false;
+      workInfo.OPT_INFO.forEach(opt => {
+        if (opt.OPT_CODE === REVISION_OPT_CODE && opt.ISUSED === 'Y') isRevision = true;
+      });
+      this.setState({ isRevision });
     }
 
     if (draftId !== -1) {
@@ -61,7 +71,7 @@ class ViewPage extends Component {
       setTaskFavorite,
     } = this.props;
 
-    const { StyledWrap } = this.state;
+    const { StyledWrap, isRevision } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -98,9 +108,11 @@ class ViewPage extends Component {
                 >
                   <StyledButton className="btn-light mr5 btn-sm">삭제</StyledButton>
                 </Popconfirm>
-                <StyledButton className="btn-light mr5 btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
-                  새버전
-                </StyledButton>
+                {isRevision && (
+                  <StyledButton className="btn-light mr5 btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
+                    새버전
+                  </StyledButton>
+                )}
                 {!isBuilderModal && (
                   <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
                     목록
