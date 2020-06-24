@@ -206,22 +206,20 @@ class List extends Component {
     return (
       <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
         <StyledContentsWrapper>
-          <div className="selSaveWrapper alignRight">
-            <StyledButtonWrapper>
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.insertOverlab()}>
-                추가
-              </StyledButton>
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('U')}>
-                수정
-              </StyledButton>
-              <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.onChangeData('D')} okText="Yes" cancelText="No">
-                <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
-              </Popconfirm>
-              <StyledButton className="btn-light btn-sm" onClick={() => this.onReset()}>
-                Reset
-              </StyledButton>
-            </StyledButtonWrapper>
-          </div>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.insertOverlab()}>
+              추가
+            </StyledButton>
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('U')}>
+              수정
+            </StyledButton>
+            <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.onChangeData('D')} okText="Yes" cancelText="No">
+              <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
+            </Popconfirm>
+            <StyledButton className="btn-light btn-sm" onClick={() => this.onReset()}>
+              Reset
+            </StyledButton>
+          </StyledButtonWrapper>
           <AntdTable
             rowKey={docList && docList.WAREHOUSE_CD}
             columns={columns}
