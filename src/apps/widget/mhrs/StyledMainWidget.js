@@ -224,6 +224,25 @@ const StyledMainWidget = styled.div`
               td {
                 padding: 0;
 
+                .gray {
+                  color: #CCCCCC;
+                }
+                .red {
+                  color: #FF6262;
+                }
+                .blue {
+                  color: #3B8BE4;
+                }
+                .reserve-number {
+                  text-align: center;
+                  color: #666666;
+                  font-size: 12px;
+                  margin: 10px;
+                }
+                .reserve-number > span {
+                  color: #4491E0;
+                }
+
                 .ant-fullcalendar-date {
                   height: auto;
                   margin: 0;
