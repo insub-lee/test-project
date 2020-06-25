@@ -34,7 +34,7 @@ class FileManage extends Component {
       <Styled>
         <div className="section-wrapper">
           <div className="right-section">
-            <div className="title-area">타이틀이라네요..</div>
+            <div className="title-area">[타이틀이라네요..]</div>
             <div className="menu-area">
               <div className="menu-item">메뉴1</div>
               <div className="menu-item">메뉴2</div>
