@@ -163,7 +163,7 @@ class List extends Component {
         <StyledCustomSearch className="search-wrapper-inline">
           <div className="search-input-area">
             <span className="text-label">조회구분</span>
-            <AntdSelect className="select-mid mr5" onChange={value => this.onChangeState('selectGubun', value)} value={this.state.selectGubun}>
+            <AntdSelect className="select-sm mr5" onChange={value => this.onChangeState('selectGubun', value)} value={this.state.selectGubun}>
               <Option value={1} key="selectGubun">
                 측정항목
               </Option>
@@ -172,7 +172,7 @@ class List extends Component {
               </Option>
             </AntdSelect>
             <AntdRangePicker
-              className="ant-picker-mid mr5"
+              className="ant-picker-sm mr5"
               value={[Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[1], 'YYYY-MM')]}
               open={this.state.isopen}
               mode={['month', 'month']}
@@ -191,13 +191,7 @@ class List extends Component {
                 }
               }}
             />
-            <AntdSearch
-              style={{ width: 200 }}
-              className="input-search-mid ant-search-inline mr5"
-              value={this.state.gasCd}
-              readOnly
-              onClick={this.onChangeModal}
-            />
+            <AntdSearch style={{ width: 200 }} className="input-search-sm ant-search-inline" value={this.state.gasCd} readOnly onClick={this.onChangeModal} />
           </div>
           <div className="btn-area">
             <StyledButton className="btn-gray btn-sm" onClick={() => this.isSearch()}>
