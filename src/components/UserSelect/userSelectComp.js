@@ -245,8 +245,8 @@ class UserSelectComp extends Component {
                       )}
                       사용자 선택
                       <AntdSearchInput
-                        className="input-search-sm"
-                        style={{ width: 146, marginLeft: 4 }}
+                        className="input-search-xs"
+                        style={{ width: 130, marginLeft: 10, padding: 0 }}
                         onPressEnter={e => this.onSearchUserByName(e.target.value)}
                         onSearch={val => this.onSearchUserByName(val)}
                       />

@@ -238,7 +238,7 @@ class Header extends Component {
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
-            {!!QUAL_STATUS && QUAL_STATUS !== '2007' && taskSeq > -1 && (
+            {!!QUAL_STATUS && QUAL_STATUS !== '1' && taskSeq > -1 && (
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
                 저장
               </StyledButton>
@@ -265,9 +265,9 @@ class Header extends Component {
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
-            {QUAL_STATUS !== '2007' && taskSeq > -1 && (
+            {QUAL_STATUS !== '1' && taskSeq > -1 && (
               /*
-                QUAL_STATUS 2007 (승인), 2008(조건부승인), 2009(미승인)
+                QUAL_STATUS 1 (승인), 2(조건부승인), 3(미승인)
                 QUAL_STATUS (ESHS Qual 승인. 확인결과 메뉴에서만 [판정] 상태값 변경)
                 승인건에 대해서만 COND 데이터 저장가능 - STEP2 개선계획
               */
@@ -276,8 +276,8 @@ class Header extends Component {
               </StyledButton>
             )}
 
-            {QUAL_STATUS !== '2007' && isAllconfirm && taskSeq > -1 && (
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleMakeConfirm('2007', 'MODIFY', this.handleAction)}>
+            {QUAL_STATUS !== '1' && isAllconfirm && taskSeq > -1 && (
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleMakeConfirm('1', 'MODIFY', this.handleAction)}>
                 승인
               </StyledButton>
             )}
@@ -304,9 +304,9 @@ class Header extends Component {
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
               검색
             </StyledButton>
-            {QUAL_STATUS !== '2007' && taskSeq > -1 && (
+            {QUAL_STATUS !== '1' && taskSeq > -1 && (
               /*
-                QUAL_STATUS 2007 (승인), 2008(조건부승인), 2009(미승인)
+                QUAL_STATUS 1 (승인), 2(조건부승인), 3(미승인)
                 QUAL_STATUS (ESHS Qual 승인. 확인결과 메뉴에서만 [판정] 상태값 변경)
                 승인건에 대해서만 COND 데이터 저장가능 - STEP2 개선계획
               */

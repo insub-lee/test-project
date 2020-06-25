@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 import { Modal } from 'antd';
-import StyledModal from 'commonStyled/Modal/StyledModal';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import ClauseList from './AppraiseList';
 import ModalInput from '../ModalInput';
 import ModalModify from '../ModalModify';
 import OnlyView from './OnlyView';
 import RevisionHistory from './RevisionHistory';
 
-const AntdModal = StyledModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 class lawClause extends Component {
   constructor(props) {
@@ -166,13 +166,13 @@ class lawClause extends Component {
           yearSetFunc={this.yearSetFunc}
           YEAR={this.state.yyyy}
         />
-        <AntdModal visible={this.state.isInputModal} width="1000px" onCancel={this.onCancel} destroyOnClose title="분기별 평가 등록" footer={[]}>
+        <AntdModal visible={this.state.isInputModal} width="1000px" onCancel={this.onCancel} destroyOnClose title="분기별 평가 등록" footer={null}>
           {this.state.isInputModal && this.onShowModalTemplate('INPUT', -1)}
         </AntdModal>
-        <AntdModal visible={this.state.isModifyModal} width="1000px" onCancel={this.onCancel} destroyOnClose title="분기별 평가 수정" footer={[]}>
+        <AntdModal visible={this.state.isModifyModal} width="1000px" onCancel={this.onCancel} destroyOnClose title="분기별 평가 수정" footer={null}>
           {this.state.isModifyModal && this.onShowModalTemplate('MODIFY', this.state.modifyTaskSeq)}
         </AntdModal>
-        <AntdModal visible={this.state.isRevisionModal} width="1000px" onCancel={this.onCancel} destroyOnClose title="Rev History" footer={[]}>
+        <AntdModal visible={this.state.isRevisionModal} width="1000px" onCancel={this.onCancel} destroyOnClose title="Rev History" footer={null}>
           {this.state.isRevisionModal && (
             <>
               <BizBuilderBase

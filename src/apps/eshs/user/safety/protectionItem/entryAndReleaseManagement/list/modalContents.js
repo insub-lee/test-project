@@ -4,13 +4,13 @@ import moment from 'moment';
 import ProtectionItemList from 'apps/eshs/user/safety/protectionItem/protectionItemList';
 
 import { Select, Input, DatePicker, InputNumber, Modal } from 'antd';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
-import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
-// import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const AntdModal = StyledContentsModal(Modal);
@@ -23,16 +23,18 @@ class ModalContents extends React.Component {
     super(props);
     this.state = {
       modalVisible: false,
+      requestValue: props.rowData,
     };
   }
 
   componentDidMount() {
-    this.createFormData();
+    // this.createFormData();
   }
 
   createFormData = () => {
     const { sagaKey, changeFormData, profile } = this.props;
     changeFormData(sagaKey, 'CREATE_EMP_NO', profile.EMP_NO);
+    changeFormData(sagaKey, 'POSTING_DT', moment());
   };
 
   handleSubModalVisible = () => {
@@ -52,24 +54,24 @@ class ModalContents extends React.Component {
     handleSubModalClose();
   };
 
-  // setRequestValue = valueObj => {
-  //   this.setState(prevState => ({
-  //     requestValue: Object.assign(prevState.requestValue, valueObj),
-  //   }));
-  // };
+  setRequestValue = valueObj => {
+    this.setState(prevState => ({
+      requestValue: Object.assign(prevState.requestValue, valueObj),
+    }));
+  };
 
   handleInputChange = (key, value) => {
     const { sagaKey: id, changeFormData } = this.props;
-    // const valueObj = { [key]: value };
+    const valueObj = { [key]: value };
     changeFormData(id, key, value);
-    // this.setRequestValue(valueObj);
+    this.setRequestValue(valueObj);
   };
 
   handleDateChange = date => {
     const { sagaKey: id, changeFormData } = this.props;
-    // const valueObj = { POSTING_DT: date };
+    const valueObj = { POSTING_DT: date };
     changeFormData(id, 'POSTING_DT', date);
-    // this.setRequestValue(valueObj);
+    this.setRequestValue(valueObj);
   };
 
   saveAfterFunc = () => {
@@ -88,7 +90,13 @@ class ModalContents extends React.Component {
   handleDeleteClick = () => {
     const { saveAfterFunc } = this;
     const { sagaKey: id, submitExtraHandler, rowData } = this.props;
-    submitExtraHandler(id, 'PUT', `/api/eshs/v1/common/protectionerm`, rowData, saveAfterFunc);
+    submitExtraHandler(id, 'DELETE', `/api/eshs/v1/common/protectionerm`, rowData, saveAfterFunc);
+  };
+
+  saveBeforeFunc = () => {
+    const { sagaKey, changeFormData, saveTask } = this.props;
+    changeFormData(sagaKey, 'POSTING_DT', moment());
+    saveTask(sagaKey, sagaKey, this.saveAfterFunc);
   };
 
   render() {
@@ -98,15 +106,15 @@ class ModalContents extends React.Component {
       handleDateChange,
       handleSubModalVisible,
       handleSubModalClose,
-      saveAfterFunc,
       handleModifyClick,
       handleDeleteClick,
+      saveBeforeFunc,
     } = this;
     const { modalVisible } = this.state;
-    const { handleModalClose, saveTask, sagaKey: id, rowData, isModified, formData } = this.props;
+    const { handleModalClose, rowData, isModified, formData } = this.props;
     return (
       <>
-        <div className="tableWrapper">
+        <StyledContentsWrapper>
           <StyledHtmlTable>
             <table>
               <colgroup>
@@ -199,7 +207,7 @@ class ModalContents extends React.Component {
                   <th>단가</th>
                   <td>
                     <AntdInputNumber
-                      className="input-number-sm"
+                      className="ant-input-number-sm"
                       defaultValue={isModified ? rowData.UNITPRICE : ''}
                       onChange={value => handleInputChange('UNITPRICE', value)}
                     />
@@ -209,7 +217,7 @@ class ModalContents extends React.Component {
                   <th>수량</th>
                   <td>
                     <AntdInputNumber
-                      className="input-number-sm"
+                      className="ant-input-number-sm"
                       defaultValue={isModified ? rowData.QTY : ''}
                       onChange={value => handleInputChange('QTY', value)}
                     />
@@ -219,7 +227,7 @@ class ModalContents extends React.Component {
             </table>
           </StyledHtmlTable>
           <div style={{ textAlign: 'center', padding: '10px' }}>
-            <StyledButton className="btn-primary mr5" onClick={isModified ? handleModifyClick : () => saveTask(id, id, saveAfterFunc)}>
+            <StyledButton className="btn-primary mr5" onClick={isModified ? handleModifyClick : saveBeforeFunc}>
               {isModified ? '수정' : '저장'}
             </StyledButton>
             {isModified ? (
@@ -231,7 +239,7 @@ class ModalContents extends React.Component {
               취소
             </StyledButton>
           </div>
-        </div>
+        </StyledContentsWrapper>
         <AntdModal visible={modalVisible} title="보호구 목록" onCancel={handleSubModalClose} footer={null} width="80%">
           <ProtectionItemList handleRowClick={handleRowClick} />
         </AntdModal>

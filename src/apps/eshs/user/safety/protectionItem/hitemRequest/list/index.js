@@ -97,13 +97,10 @@ class List extends React.Component {
   handleHqChange = headquarterId => {
     const { sagaKey: id, getExtraApiData } = this.props;
     if (!headquarterId) {
-      return this.setState(
-        prevState => ({
-          isHeadquarterSelect: false,
-          searchValue: Object.assign(prevState.searchValue, { deptId: '' }, { hqId: headquarterId }),
-        }),
-        this.getDataSource,
-      );
+      return this.setState(prevState => ({
+        isHeadquarterSelect: false,
+        searchValue: Object.assign(prevState.searchValue, { deptId: '' }, { hqId: headquarterId }),
+      }));
     }
     this.setState({ isHeadquarterSelect: true });
     const apiArr = [
@@ -115,7 +112,6 @@ class List extends React.Component {
     ];
 
     const selectHqCallback = () => {
-      this.getDataSource();
       this.setDeptList();
     };
 
@@ -136,59 +132,63 @@ class List extends React.Component {
       dataIndex: 'REQ_DT',
       key: 'REQ_DT',
       width: '10%',
+      align: 'center',
     },
     {
       title: '신청팀',
       dataIndex: 'DEPT_NAME_KOR',
       key: 'DEPT_NAME_KOR',
       width: '10%',
+      align: 'center',
     },
     {
       title: '신청자',
       dataIndex: 'NAME_KOR',
       key: 'NAME_KOR',
       width: '5%',
+      align: 'center',
     },
     {
       title: '결재자',
       dataIndex: '',
       key: '',
       width: '5%',
+      align: 'center',
     },
     {
       title: '품목',
       dataIndex: 'REQ_AMOUNT',
       key: 'REQ_AMOUNT',
       width: '5%',
+      align: 'center',
     },
     {
       title: '지급요청일',
       dataIndex: 'TARGET_DT',
       key: 'TARGET_DT',
       width: '10%',
+      align: 'center',
     },
     {
       title: '신청상태',
       dataIndex: 'APP_STATUS',
       key: 'APP_STATUS',
       width: '10%',
+      align: 'center',
     },
     {
       title: '지급상태',
       dataIndex: 'CONF_STATUS',
       key: 'CONF_STATUS',
       width: '10%',
+      align: 'center',
     },
   ];
 
   handleSearchChange = (key, value) => {
-    const { getSearchData } = this;
-    this.setState(
-      prevState => ({
-        searchValue: Object.assign(prevState.searchValue, { [key]: value }),
-      }),
-      getSearchData,
-    );
+    this.setState(prevState => ({
+      searchValue: Object.assign(prevState.searchValue, { [key]: value }),
+    }));
   };
 
   handleSearchDateChange = (date, dateString) => {
@@ -221,7 +221,7 @@ class List extends React.Component {
     const apiArr = [
       {
         key: 'reqDetails',
-        url: `/api/eshs/v1/common/protection-req-detail?REQ_CD=${record.REQ_CD}`,
+        url: `/api/eshs/v1/common/protection-req-detail?TASK_SEQ=${record.TASK_SEQ}`,
         type: 'GET',
       },
     ];
@@ -247,18 +247,21 @@ class List extends React.Component {
       <>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
-            <div style={{ marginBottom: '10px' }}>
-              <AntdSelect defaultValue="CP" className="select-mid mr5" onChange={value => handleSearchChange('site', value)} style={{ width: '10%' }}>
-                <Select.Option value="CP">청주</Select.Option>
-                <Select.Option value="GP">구미</Select.Option>
+            <div className="search-input-area mb10">
+              <span className="text-label">지역</span>
+              <AntdSelect defaultValue={317} className="select-mid mr5" onChange={value => handleSearchChange('site', value)} style={{ width: '10%' }}>
+                <Select.Option value={317}>청주</Select.Option>
+                <Select.Option value={318}>구미</Select.Option>
               </AntdSelect>
+              <span className="text-label">기간</span>
               <AntdPicker
                 className="ant-picker-mid"
                 defaultValue={[moment(searchValue.startDate), moment(searchValue.endDate)]}
                 onChange={handleSearchDateChange}
               />
             </div>
-            <div>
+            <div className="search-input-area">
+              <span className="text-label">신청부서</span>
               <AntdSelect defaultValue="" className="select-mid mr5" onChange={handleHqChange} style={{ width: '20%' }}>
                 <Select.Option value="">본부 전체</Select.Option>
                 {headquarterList.map(headquarter => (
@@ -272,15 +275,17 @@ class List extends React.Component {
                 className="select-mid mr5"
                 onChange={value => handleSearchChange('deptId', value)}
                 style={{ width: '20%' }}
+                placeholder="본부를 먼저 선택해주세요."
               >
-                <Select.Option value="">팀 전체</Select.Option>
-                {departmentList.map(department => (
-                  <Select.Option value={department.DEPT_ID}>{department.NAME_KOR}</Select.Option>
+                {departmentList.map((department, index) => (
+                  <Select.Option value={department.DEPT_ID}>{!index ? '팀 전체' : department.NAME_KOR}</Select.Option>
                 ))}
               </AntdSelect>
-              <div className="btn-area">
-                <StyledButton className="btn-gray btn-sm">검색</StyledButton>
-              </div>
+            </div>
+            <div className="btn-area">
+              <StyledButton className="btn-gray btn-sm" onClick={this.getDataSource}>
+                검색
+              </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
           <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
@@ -296,26 +301,26 @@ class List extends React.Component {
               footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
             />
           </div>
+          <AntdModal title="입고 등록" visible={modalVisible} footer={null} onCancel={handleModalClose} width="80%" destroyOnClose>
+            <ModalContents
+              sagaKey={sagaKey}
+              changeFormData={changeFormData}
+              formData={formData}
+              viewPageData={viewPageData}
+              handleModalVisible={handleModalVisible}
+              handleModalClose={handleModalClose}
+              saveTask={saveTask}
+              getDataSource={getDataSource}
+              rowData={rowData}
+              isModified={isModified}
+              getExtraApiData={getExtraApiData}
+              submitExtraHandler={submitExtraHandler}
+              extraApiData={extraApiData}
+              profile={profile}
+              modalDataSource={modalDataSource}
+            />
+          </AntdModal>
         </StyledContentsWrapper>
-        <AntdModal title="입고 등록" visible={modalVisible} footer={null} onCancel={handleModalClose} width="80%" destroyOnClose>
-          <ModalContents
-            sagaKey={sagaKey}
-            changeFormData={changeFormData}
-            formData={formData}
-            viewPageData={viewPageData}
-            handleModalVisible={handleModalVisible}
-            handleModalClose={handleModalClose}
-            saveTask={saveTask}
-            getDataSource={getDataSource}
-            rowData={rowData}
-            isModified={isModified}
-            getExtraApiData={getExtraApiData}
-            submitExtraHandler={submitExtraHandler}
-            extraApiData={extraApiData}
-            profile={profile}
-            modalDataSource={modalDataSource}
-          />
-        </AntdModal>
       </>
     );
   }

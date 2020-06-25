@@ -108,11 +108,11 @@ class ClauseList extends Component {
   setColumnButton = (quarterSeq, record, quarter, year) => {
     const { isOpenInputModal } = this.props;
     return quarterSeq ? (
-      <StyledButton className="btn-primary" onClick={() => isOpenInputModal(record, quarter, year, quarterSeq)}>
+      <StyledButton className="btn-primary btn-xs" onClick={() => isOpenInputModal(record, quarter, year, quarterSeq)}>
         수정
       </StyledButton>
     ) : (
-      <StyledButton className="btn-primary" onClick={() => isOpenInputModal(record, quarter, year)}>
+      <StyledButton className="btn-primary btn-xs" onClick={() => isOpenInputModal(record, quarter, year)}>
         평가
       </StyledButton>
     );
@@ -149,21 +149,25 @@ class ClauseList extends Component {
         {
           title: '1분기',
           width: 100,
+          align: 'center',
           render: record => this.setColumnButton(record.ONE_Q_SEQ, record, 1, YEAR),
         },
         {
           title: '2분기',
           width: 100,
+          align: 'center',
           render: record => this.setColumnButton(record.TWO_Q_SEQ, record, 2, YEAR),
         },
         {
           title: '3분기',
           width: 100,
+          align: 'center',
           render: record => this.setColumnButton(record.THREE_Q_SEQ, record, 3, YEAR),
         },
         {
           title: '4분기',
           width: 100,
+          align: 'center',
           render: record => this.setColumnButton(record.FOUR_Q_SEQ, record, 4, YEAR),
         },
       ],
@@ -328,8 +332,8 @@ class ClauseList extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-primary" onClick={() => this.getListData()}>
-                            Search
+                          <StyledButton className="btn-gray btn-sm" onClick={() => this.getListData()}>
+                            검색
                           </StyledButton>
                         </div>
                       )}
