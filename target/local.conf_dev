@@ -364,8 +364,8 @@ server {
 	}
 	
 	location / {
-		#return 301 https://www.magnachip.com;
-		return 404;
+		return 307 https://www.magnachip.com;
+		#return 404;
 	}
 }
 

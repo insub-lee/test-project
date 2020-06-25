@@ -218,7 +218,7 @@ class TableTypeSelector extends React.Component {
           onCancel={this.handleModalVisible}
           onOk={this.handleModalOk}
           okText="적용"
-          footer={[null]}
+          footer={null}
         >
           <table style={{ width: '100%', tableLayout: 'fixed' }}>
             <colgroup>
@@ -278,10 +278,10 @@ class TableTypeSelector extends React.Component {
               <tr>
                 <td colSpan={3}>
                   <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-                    <StyledButton className="btn-primary mr5" onClick={this.handleModalOk}>
+                    <StyledButton className="btn-primary btn-sm mr5" onClick={this.handleModalOk}>
                       적용
                     </StyledButton>
-                    <StyledButton className="btn-light" onClick={this.handleModalVisible}>
+                    <StyledButton className="btn-light btn-sm" onClick={this.handleModalVisible}>
                       취소
                     </StyledButton>
                   </StyledButtonWrapper>

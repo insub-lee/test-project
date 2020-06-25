@@ -40,6 +40,7 @@ class ModalContents extends React.Component {
     changeFormData(sagaKey, 'REQ_EMPNO', profile.USER_ID);
     changeFormData(sagaKey, 'REQ_DT', moment());
     changeFormData(sagaKey, 'DEPT_ID', profile.DEPT_ID);
+    changeFormData(sagaKey, 'TARGET_DT', moment());
   };
 
   getLastReqCd = () => {
@@ -261,8 +262,8 @@ class ModalContents extends React.Component {
 
   beforeSaveTask = () => {
     const { requestValue } = this.state;
-    const { sagaKey: id, saveTask } = this.props;
-
+    const { sagaKey: id, changeFormData, saveTask } = this.props;
+    changeFormData(id, 'TARGET_DT', moment());
     const hasEmptyValue = requestValue.findIndex(value => !value.PLACE || !value.QTY || !value.REQ_COMMENTS || !value.HITEM_CD);
 
     if (!requestValue.length) {

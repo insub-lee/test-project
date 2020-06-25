@@ -178,14 +178,7 @@ class CommonSearchbar extends React.Component {
         {readOnly || CONFIG.property.readOnly ? (
           ''
         ) : (
-          <AntdModal
-            className="modal-table-pad"
-            title={NAME_KOR || COMP_FIELD}
-            visible={this.state.modal}
-            width="80%"
-            onCancel={this.handleModalVisible}
-            footer={null}
-          >
+          <AntdModal title={NAME_KOR || COMP_FIELD} visible={this.state.modal} width="80%" onCancel={this.handleModalVisible} footer={null}>
             <div>{this.state.modal && this.BizbuilderbaseRender()}</div>
           </AntdModal>
         )}
