@@ -117,7 +117,7 @@ class List extends Component {
         <StyledCustomSearch className="search-wrapper-inline">
           <div className="search-input-area">
             <span className="text-label">조회구분</span>
-            <AntdSelect className="select-mid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.selectGubun}>
+            <AntdSelect className="select-sm" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.selectGubun}>
               <Option value={1} key="selectGubun">
                 측정항목
               </Option>
@@ -127,14 +127,14 @@ class List extends Component {
             </AntdSelect>
             <div style={{ margin: '0 5px', display: 'inline-block' }}>
               <AntdMonthPicker
-                className="ant-picker-mid mr5"
+                className="ant-picker-sm mr5"
                 defaultValue={Moment(Moment(), 'YYYY-MM')}
                 format="YYYY-MM"
                 onChange={(date, dateStrings) => this.dateChange(dateStrings)}
               />
             </div>
             <span className="text-label">측정회차(월)</span>
-            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
+            <AntdSelect className="select-sm" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
               <Option value={1} key="seq">
                 1
               </Option>
@@ -144,13 +144,13 @@ class List extends Component {
             </AntdSelect>
           </div>
           <div className="btn-area">
-            <StyledButton className="btn-gray btn-first btn-sm" onClick={() => this.isSearch()}>
+            <StyledButton className="btn-gray btn-sm" onClick={() => this.isSearch()}>
               검색
             </StyledButton>
           </div>
         </StyledCustomSearch>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <AntdButton className="btn-primary btn-sm" onClick={() => message.info('개발 중 입니다.')}>
+          <AntdButton className="btn-gray btn-xs" onClick={() => message.info('개발 중 입니다.')}>
             <FileExcelOutlined />
             엑셀 올리기
           </AntdButton>
