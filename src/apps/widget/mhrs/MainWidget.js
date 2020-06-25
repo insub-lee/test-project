@@ -9,7 +9,6 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import history from 'utils/history';
 
 import StyledMainWidget from './StyledMainWidget';
-import leftPad from '../../../../node_modules/left-pad/index';
 
 class MainWidget extends Component {
   state = {
@@ -39,7 +38,7 @@ class MainWidget extends Component {
     }
   };
 
-  onPanelChange = (value, mode) => {
+  onPanelChange = value => {
     this.setState({ CALENDAR_DT: moment(value).format('YYYY-MM') }, () => {
       this.getList();
     });
@@ -89,8 +88,8 @@ class MainWidget extends Component {
         <div className={`${dateClass}`}>{value.date()}</div>
         {filterAppDt.length === 1 && (
           <div className="reserve-number">
-            (<span>{filterAppDt[0].DAY_CNT}</span>/{filterAppDt[0].QUOTA_NUM})
-          </div>
+          (<span>{filterAppDt[0].DAY_CNT}</span>/{filterAppDt[0].QUOTA_NUM})
+        </div>
         )}
       </div>
     );
@@ -105,21 +104,21 @@ class MainWidget extends Component {
           <div className="widget-card card1">
             <p className="card-txt">검진 예약인원 수</p>
             <p className="card-num">
-              <b>{result && result.mhrsMain && result.mhrsMain.statistics && numeral(result.mhrsMain.statistics.TOTAL_CNT).format('0,0')}</b> 명
+              <b>{result && result.mhrsMain && result.mhrsMain.statistics && (numeral(result.mhrsMain.statistics.TOTAL_CNT).format('0,0'))}</b> 명
             </p>
             <div className="card-deco"></div>
           </div>
           <div className="widget-card card2">
             <p className="card-txt">임직원</p>
             <p className="card-num">
-              <b>{result && result.mhrsMain && result.mhrsMain.statistics && numeral(result.mhrsMain.statistics.EMPLOYEE_CNT).format('0,0')}</b> 명
+              <b>{result && result.mhrsMain && result.mhrsMain.statistics && (numeral(result.mhrsMain.statistics.EMPLOYEE_CNT).format('0,0'))}</b> 명
             </p>
             <div className="card-deco"></div>
           </div>
           <div className="widget-card card3">
             <p className="card-txt">배우자</p>
             <p className="card-num">
-              <b>{result && result.mhrsMain && result.mhrsMain.statistics && numeral(result.mhrsMain.statistics.FAM_CNT).format('0,0')}</b> 명
+              <b>{result && result.mhrsMain && result.mhrsMain.statistics && (numeral(result.mhrsMain.statistics.FAM_CNT).format('0,0'))}</b> 명
             </p>
             <div className="card-deco"></div>
           </div>
@@ -133,20 +132,17 @@ class MainWidget extends Component {
           </div>
           <div className="section-body">
             <ul className="reservation-list-area">
-              {result &&
-                result.mhrsMain &&
-                result.mhrsMain.todayList &&
-                result.mhrsMain.todayList.map(item => (
-                  <li>
-                    <div>
-                      <p className="txt1">
-                        {item.USER_NAME}({item.SSN.substring(0, 6)}-{item.SSN.substring(6, 13)})
-                      </p>
-                      <span className="txt2">전화번호 : {item.MOBILE_TEL_NO}</span>
-                      <span className="txt3">검진유형 : {item.CHK_TYPE && `${item.CHK_TYPE}형`}</span>
-                    </div>
-                  </li>
-                ))}
+            {result && result.mhrsMain && result.mhrsMain.todayList && (
+              result.mhrsMain.todayList.map(item => (
+                <li>
+                  <div>
+                    <p className="txt1">{item.USER_NAME}({item.SSN.substring(0, 6)}-{item.SSN.substring(6, 13)})</p>
+                    <span className="txt2">전화번호 : {item.MOBILE_TEL_NO}</span>
+                    <span className="txt3">검진유형 : {item.CHK_TYPE && ( `${item.CHK_TYPE}형`)}</span>
+                  </div>
+                </li>
+              ))
+            )}
             </ul>
             <div className="more-btn-area">
               <button type="button">+ 더보기</button>
@@ -157,11 +153,15 @@ class MainWidget extends Component {
           <div className="section-header">
             <h2 className="section-title">
               날짜별 예약현황
-              <span>※ 조회할 날짜를 클릭하세요.</span>
+              <span>※ 조회할 날짜를 선택하세요.</span>
             </h2>
           </div>
           <div className="section-body">
-            <Calendar defaultValue={moment(this.state.APP_DT)} dateFullCellRender={this.dateFullCellRender} onPanelChange={this.onPanelChange} />
+            <Calendar
+              defaultValue={moment(this.state.APP_DT)}
+              dateFullCellRender={this.dateFullCellRender}
+              onPanelChange={this.onPanelChange}
+            />
           </div>
         </div>
         <div className="main-widget-section widget-bottom">
