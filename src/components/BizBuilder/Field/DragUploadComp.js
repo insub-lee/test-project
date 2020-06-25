@@ -247,7 +247,6 @@ class DragUploadComp extends Component {
     const { MULTIPLE_SELECT, MULTIPLE_UPLOAD, FILTER_EXTENSION, EXTENSION_LIST, PREVIEW_SETTING } = options;
     const IS_MULTIPLE_UPLOAD_ON = MULTIPLE_UPLOAD === 'Y';
     const IS_PREVIEW_ON = PREVIEW_SETTING === 'Y';
-    console.debug('파일리스트', fileList);
     return (
       <div onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
         <Dragger
