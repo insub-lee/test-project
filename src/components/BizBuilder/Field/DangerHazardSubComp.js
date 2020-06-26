@@ -101,8 +101,6 @@ class DangerHazardSubComp extends React.Component {
       if (deleteList && deleteList.length) {
         submitExtraHandler(id, 'DELETE', `/api/eshs/v1/common/dangerHazard`, submitData, this.deleteCallback);
       }
-      console.debug('selectedRowKeys : ', selectedRowKeys);
-      console.debug('tempList : ', tempList);
       changeFormData(id, 'HAZARD_LIST', tempList);
       this.setState({ selectedRowKeys: [] });
     } else {
