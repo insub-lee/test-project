@@ -155,9 +155,9 @@ class TargetRegList extends Component {
         spinningOn();
         submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/healthChkTargetSelection', submitData, (id, res) => {
           if (res && res.result > 0) {
-            message.info(<MessageContent>대상자 목록을 생성하였습니다.</MessageContent>)
+            message.success(<MessageContent>대상자 목록을 생성하였습니다.</MessageContent>)
           } else {
-            message.info(<MessageContent>대상자 목록 생성에 실패하였습니다.</MessageContent>)
+            message.error(<MessageContent>대상자 목록 생성에 실패하였습니다.</MessageContent>)
           }
           spinningOff();
         });
@@ -189,9 +189,9 @@ class TargetRegList extends Component {
         spinningOn();
         submitHandlerBySaga(sagaKey, 'DELETE', '/api/eshs/v1/common/health/healthChkTarget', submitData, (id, res) => {
           if (res && res.result > 0) {
-            message.info(<MessageContent>대상자를 삭제하였습니다.</MessageContent>);
+            message.success(<MessageContent>대상자를 삭제하였습니다.</MessageContent>);
           } else {
-            message.info(<MessageContent>대상자 삭제에 실패하였습니다.</MessageContent>);
+            message.error(<MessageContent>대상자 삭제에 실패하였습니다.</MessageContent>);
           }
           spinningOff();
           that.getList();
