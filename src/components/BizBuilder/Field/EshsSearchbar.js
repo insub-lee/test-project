@@ -112,7 +112,7 @@ class CommonSearchbar extends React.Component {
       CONFIG: { property },
     } = this.props;
     let buttonGruop;
-    const useRevision = property.useRevision || 'Y';
+    const useRevision = property.useRevision || 'N';
     switch (viewPageData && viewPageData.viewType.toUpperCase()) {
       case 'INPUT':
         buttonGruop = (
