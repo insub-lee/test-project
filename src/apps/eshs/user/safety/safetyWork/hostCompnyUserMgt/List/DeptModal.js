@@ -10,7 +10,7 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
-import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import { createExcelData } from 'apps/eshs/common/createExcelData';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';

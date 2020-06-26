@@ -11,7 +11,7 @@ import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledTreeSelect from 'commonStyled/Form/StyledTreeSelect';
-import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
+import { callBackAfterPost } from 'apps/eshs/common/submitCallbackFunc';
 
 const AntdTable = StyledLineTable(Table);
 const AntdInput = StyledInput(Input);
