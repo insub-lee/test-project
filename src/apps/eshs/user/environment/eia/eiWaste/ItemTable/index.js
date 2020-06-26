@@ -8,7 +8,7 @@ import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
 
 import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
-import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import { createExcelData } from 'apps/eshs/common/createExcelData';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import moment from 'moment';
 

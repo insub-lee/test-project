@@ -114,33 +114,35 @@ class DeptModal extends Component {
     }
     return (
       <StyledContentsWrapper>
-        <StyledCustomSearchWrapper>
-          <span className="textLabel">검색구분</span>
-          <AntdSelect className="mr5 select-sm" value={searchType} style={{ width: 130 }} onChange={this.handleSearchType}>
-            <Option key="NAME_KOR" value="NAME_KOR">
-              부서명
-            </Option>
-            <Option key="DEPT_CD" value="DEPT_CD">
-              부서코드
-            </Option>
-          </AntdSelect>
-          <span className="textLabel">검색어</span>
-          <AntdInput
-            className="ant-input-sm ant-input-inline mr5"
-            value={searchText}
-            style={{ width: 150 }}
-            onChange={e => this.handleSearchInput(e.target.value)}
-            placeholder="검색어"
-            onPressEnter={this.handleSearch}
-          />
-          <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-sm mr5" onClick={this.handleSearch}>
+        <StyledCustomSearchWrapper className="search-wrapper-inline">
+          <div className="search-input-area">
+            <span className="text-label">검색구분</span>
+            <AntdSelect className="mr5 select-sm" value={searchType} style={{ width: 130 }} onChange={this.handleSearchType}>
+              <Option key="NAME_KOR" value="NAME_KOR">
+                부서명
+              </Option>
+              <Option key="DEPT_CD" value="DEPT_CD">
+                부서코드
+              </Option>
+            </AntdSelect>
+            <span className="text-label">검색어</span>
+            <AntdInput
+              className="ant-input-sm"
+              value={searchText}
+              style={{ width: 150 }}
+              onChange={e => this.handleSearchInput(e.target.value)}
+              placeholder="검색어"
+              onPressEnter={this.handleSearch}
+            />
+          </div>
+          <div className="btn-area">
+            <StyledButton className="btn-gray btn-sm mr5" onClick={this.handleSearch}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary btn-sm" onClick={this.handleReset}>
+            <StyledButton className="btn-light btn-sm" onClick={this.handleReset}>
               Reset
             </StyledButton>
-          </StyledButtonWrapper>
+          </div>
         </StyledCustomSearchWrapper>
         <AntdTable
           columns={columns}
