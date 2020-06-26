@@ -10,7 +10,7 @@ export const getDaemonList = (sortColumn, sortDirection, keyword, stopYn) => ({
   },
 });
 
-export const startDaemon = (daemonId) => ({
+export const startDaemon = daemonId => ({
   type: actionTypes.START_DAEMON,
   payload: {
     daemonId,
