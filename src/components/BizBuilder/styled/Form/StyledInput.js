@@ -11,7 +11,6 @@ const StyledInput = Component => styled(Component)`
     font-weight: 400;
     line-height: 1.47;
     color: #495057;
-    background-color: #fff;
     background-clip: padding-box;
     border: 1px solid #ddd;
     border-radius: 4px;

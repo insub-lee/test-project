@@ -22,12 +22,11 @@ const AntdRangeDatePicker = StyledDatePicker(DatePicker.RangePicker)
 class Quota extends Component {
   state = {
     quotaList: [],
-    hospitalList: [],
     yearList: [],
     searchInfo: {
       CHK_TYPE_CD: '002',  //고정(종합검진)
-      HOSPITAL_CODE: '',
       CHK_YEAR: '',
+      HOSPITAL_CODE: '',
       START_DT: '',
       END_DT: '',
     },
@@ -50,30 +49,24 @@ class Quota extends Component {
       }
     });
 
-    // 검진기관 목록 조회
-    const{ sagaKey, getCallDataHandler } = this.props;
-    const apiAry = [
-      {
-        key: 'hospitalList',
-        url: `/api/eshs/v1/common/health/healthChkHospital`,
-        type: 'GET',
-        params: {},
-      },
-    ];
-    getCallDataHandler(sagaKey, apiAry, this.initState);
-  }
-
-  initState = () => {
-    const { result } = this.props;
-    this.setState({
-      hospitalList: result.hospitalList ?  result.hospitalList.list : [],
+    const{ sagaKey, getCallDataHandlerReturnRes } = this.props;
+    const apiInfo = {
+      key: 'hospitalUser',
+      url: `/api/eshs/v1/common/MhrsHospitalUser`,
+      type: 'GET',
+    };
+    getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, res) => {
+      if (res && res.user && res.user.HOSPITAL_CODE) {
+        this.setState({
+          searchInfo: { ...this.state.searchInfo, HOSPITAL_CODE: res.user.HOSPITAL_CODE }
+        });
+      }
     });
-  };
+  }
 
   getList = () => {
     const { searchInfo } = this.state;
     if (searchInfo.HOSPITAL_CODE === '') {
-      message.info(<MessageContent>검진기관을 선택해 주세요.</MessageContent>);
       return false;
     }
 
@@ -82,7 +75,6 @@ class Quota extends Component {
       key: 'quotaList',
       url: `/api/eshs/v1/common/health/healthChkHospitalQuota?HOSPITAL_CODE=${searchInfo.HOSPITAL_CODE}&CHK_YEAR=${searchInfo.CHK_YEAR}`,
       type: 'GET',
-      params: {},
     };
     spinningOn();
     getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, response) => {
@@ -120,9 +112,9 @@ class Quota extends Component {
     const { sagaKey, getCallDataHandlerReturnRes, spinningOn, spinningOff } = this.props;
 
     if (searchInfo.HOSPITAL_CODE === '') {
-      message.info(<MessageContent>검진기관을 선택해 주세요.</MessageContent>);
       return false;
     }
+
     if (searchInfo.START_DT === '' || searchInfo.END_DT === '') {
       message.info(<MessageContent>기간을 선택해 주세요.</MessageContent>);
       return false;
@@ -151,9 +143,9 @@ class Quota extends Component {
   onDeletePeriod = () => {
     const { searchInfo } = this.state;
     if (searchInfo.HOSPITAL_CODE === '') {
-      message.info(<MessageContent>검진기관을 선택해 주세요.</MessageContent>);
       return false;
     }
+
     if (searchInfo.START_DT === '' || searchInfo.END_DT === '') {
       message.info(<MessageContent>기간을 선택해 주세요.</MessageContent>);
       return false;
@@ -310,11 +302,6 @@ class Quota extends Component {
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
             <div className="search-input-area mb10">
-              <AntdSelect className="select-sm mr5" placeholder="검진기관 선택" style={{ width: 200 }} onChange={val => this.onChangeSearchInfo('HOSPITAL_CODE', val)}>
-                {hospitalList && hospitalList.map(item => (
-                  <AntdSelect.Option value={item.HOSPITAL_CODE}>{item.HOSPITAL_NAME}</AntdSelect.Option>
-                ))}
-              </AntdSelect>
               <AntdSelect
                 className="select-sm mr5" placeholder="년도 선택" style={{ width: 120 }}
                 onChange={val => this.onChangeSearchInfo('CHK_YEAR', val)}
@@ -324,9 +311,7 @@ class Quota extends Component {
                   <AntdSelect.Option value={item}>{`${item}년`}</AntdSelect.Option>
                 ))}
               </AntdSelect>
-              <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
-            </div>
-            <div className="search-input-area">
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>검색</StyledButton>
               <AntdRangeDatePicker className="ant-picker-sm mr5" format="YYYY-MM-DD" style={{ width: 325 }} onChange={(val1, val2) => this.onChangeRangeDatePicker(val1, val2)} />
               <StyledButton className="btn-gray btn-sm mr5" onClick={this.onCreatePeriod}>기간생성</StyledButton>
               <StyledButton className="btn-gray btn-sm mr5" onClick={this.onDeletePeriod}>기간삭제</StyledButton>

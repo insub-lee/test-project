@@ -12,12 +12,14 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdModal = StyledModal(Modal);
 const { RangePicker } = DatePicker;
+const AntdRangPicker = StyledDatePicker(DatePicker.RangePicker);
 
 class TakeOutSearchComp extends React.Component {
   constructor(props) {
@@ -162,8 +164,17 @@ class TakeOutSearchComp extends React.Component {
     return (
       <StyledViewDesigner>
         <Sketch>
-          <RangePicker defaultValue={this.state.dates} format={['YYYY-MM-DD', 'YYYY-MM-DD']} onChange={(date, dateStrings) => this.dateChange(dateStrings)} />
-          <Button onClick={this.searchList}>검색</Button>
+          <StyledButtonWrapper className="btn-wrap-mb-10">
+            <AntdRangPicker
+              className="ant-picker-sm mr5"
+              defaultValue={this.state.dates}
+              format={['YYYY-MM-DD', 'YYYY-MM-DD']}
+              onChange={(date, dateStrings) => this.dateChange(dateStrings)}
+            />
+            <StyledButton className="btn-sm btn-gray" onClick={this.searchList}>
+              검색
+            </StyledButton>
+          </StyledButtonWrapper>
           <AntdTable
             rowKey={modalList.TAKEOUT_CD}
             key={`${modalList.TAKEOUT_CD}_list`}

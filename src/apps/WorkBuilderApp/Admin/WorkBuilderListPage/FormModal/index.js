@@ -18,6 +18,7 @@ const totalBuilderList = [
   { TOTAL_BUILDER_SEQ: 2, NAME_KOR: 'MDCS' },
   { TOTAL_BUILDER_SEQ: 3, NAME_KOR: 'ESHS' },
   { TOTAL_BUILDER_SEQ: 4, NAME_KOR: 'WTS' },
+  { TOTAL_BUILDER_SEQ: 5, NAME_KOR: 'MXLIFE' },
 ];
 
 // eslint-disable-next-line react/prefer-stateless-function

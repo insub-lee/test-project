@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { Input, Button, Checkbox, Popconfirm } from 'antd';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 
 import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
 import { createExcelData } from 'apps/eshs/common/createExcelData';
@@ -185,21 +185,20 @@ class ItemTable extends Component {
             btnText="Excel Download"
             sheetName={`Natural_${moment().format('YYYYMMDD')}`}
             listData={itemList}
-            btnSize="btn-sm btn-first"
             fields={createExcelData(excelColumn, 'FIELD', 'field')}
             columns={excelColumn.map(item => ({ ...item, ...excelStyle }))}
           />
           {!searchFlag && (
             <>
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
+              <StyledButton className="btn-gray btn-sm ml5 mr5" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
                 Excel Upload
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
+              <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.handleAction('SAVE')}>
                 추가
               </StyledButton>
               {btnOk && (
                 <>
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('UPDATE')}>
+                  <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.handleAction('UPDATE')}>
                     수정
                   </StyledButton>
                   <Popconfirm
@@ -208,9 +207,9 @@ class ItemTable extends Component {
                     okText="확인"
                     cancelText="취소"
                   >
-                    <StyledButton className="btn-primary btn-sm btn-first">삭제</StyledButton>
+                    <StyledButton className="btn-light btn-sm mr5">삭제</StyledButton>
                   </Popconfirm>
-                  <StyledButton className="btn-primary btn-sm" onClick={() => this.handleAction('RESET')}>
+                  <StyledButton className="btn-light btn-sm" onClick={() => this.handleAction('RESET')}>
                     Reset
                   </StyledButton>
                 </>
@@ -234,7 +233,7 @@ class ItemTable extends Component {
               <th> </th>
               <th>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm input-left"
+                  className="ant-input-inline ant-input-xs input-left"
                   name="FIRST_DEPTH"
                   value={itemData.FIRST_DEPTH || ''}
                   onChange={this.handleInputOnChange}
@@ -242,7 +241,7 @@ class ItemTable extends Component {
               </th>
               <th>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm input-left"
+                  className="ant-input-inline ant-input-xs input-left"
                   name="SECOND_DEPTH"
                   value={itemData.SECOND_DEPTH || ''}
                   onChange={this.handleInputOnChange}
@@ -250,7 +249,7 @@ class ItemTable extends Component {
               </th>
               <th>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm input-left"
+                  className="ant-input-inline ant-input-xs input-left"
                   name="USE_LOCATION"
                   value={itemData.USE_LOCATION || ''}
                   onChange={this.handleInputOnChange}
@@ -258,7 +257,7 @@ class ItemTable extends Component {
               </th>
               <th>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm input-left"
+                  className="ant-input-inline ant-input-xs input-left"
                   name="LOAD_FACTOR"
                   value={itemData.LOAD_FACTOR || ''}
                   onChange={this.handleInputOnChange}
@@ -266,14 +265,14 @@ class ItemTable extends Component {
               </th>
               <th>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm input-left"
+                  className="ant-input-inline ant-input-xs input-left"
                   name="USE_PERCENT"
                   value={itemData.USE_PERCENT || ''}
                   onChange={this.handleInputOnChange}
                 />
               </th>
               <th>
-                <AntdInput className="ant-input-inline ant-input-sm input-left" name="UNIT" value={itemData.UNIT || ''} onChange={this.handleInputOnChange} />
+                <AntdInput className="ant-input-inline ant-input-xs input-left" name="UNIT" value={itemData.UNIT || ''} onChange={this.handleInputOnChange} />
               </th>
             </tr>
             <tr>

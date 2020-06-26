@@ -287,7 +287,7 @@ class EshsCmpnyComp extends React.Component {
               width={800}
               height={600}
               footer={[
-                <StyledButton className="btn-primary" onClick={this.handleModalVisible}>
+                <StyledButton className="btn-light btn-sm" onClick={this.handleModalVisible}>
                   닫기
                 </StyledButton>,
               ]}

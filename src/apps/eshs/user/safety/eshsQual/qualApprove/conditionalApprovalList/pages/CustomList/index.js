@@ -198,7 +198,7 @@ class CustomList extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={(listData && listData.filter(l => l.GUBUN === 'CF' && l.F_QUAL_STATUS === '2008')) || []}
+            dataSource={(listData && listData.filter(l => l.GUBUN === 'CF' && l.F_QUAL_STATUS === '2')) || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
