@@ -5,7 +5,7 @@ const Styled = styled.div`
   padding: 0 10px;
 
   .right-section {
-    width: 250px;
+    width: 320px;
     float: left;
     padding: 20px;
     border-right: 1px solid #ddd;
@@ -19,15 +19,16 @@ const Styled = styled.div`
     }
     .menu-area {
       .menu-item {
-        height: 150px;
-        overflow: auto;
+        height: 350px;
+        /* height: calc((100vh - 160px) / 3); */
+        /* overflow: auto; */
         margin-bottom: 20px;
       }
     }
   }
 
   .left-section {
-    width: calc(100% - 250px);
+    width: calc(100% - 320px);
     float: left;
     padding: 20px;
     height: calc(100vh - 42px);
