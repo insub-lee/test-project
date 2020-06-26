@@ -9,7 +9,7 @@ import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
-import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import { createExcelData } from 'apps/eshs/common/createExcelData';
 import moment from 'moment';
 import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
 

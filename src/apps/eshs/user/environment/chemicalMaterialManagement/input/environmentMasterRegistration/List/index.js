@@ -13,7 +13,7 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 
-import { callBackAfterPost, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
+import { callBackAfterPost, callBackAfterDelete } from 'apps/eshs/common/submitCallbackFunc';
 import Modal from '../InputModal';
 import SearchComp from '../InputModal/SearchComp';
 

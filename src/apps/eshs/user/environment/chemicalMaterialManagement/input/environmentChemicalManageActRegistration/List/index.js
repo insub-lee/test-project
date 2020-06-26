@@ -12,7 +12,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
-import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/common/submitCallbackFunc';
 import SearchComp from '../SearchComp';
 
 const AntdSearch = StyledSearchInput(Input.Search);
