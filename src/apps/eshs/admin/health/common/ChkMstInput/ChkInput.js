@@ -94,12 +94,12 @@ class ChkInput extends Component {
             if (res.result === -9) {
               message.info(<MessageContent>이미 대상자로 등록되어 있습니다.</MessageContent>);
             } else if (res.result === 1) {
-              message.info(<MessageContent>등록하였습니다.</MessageContent>);
+              message.success(<MessageContent>등록하였습니다.</MessageContent>);
             } else {
-              message.info(<MessageContent>등록에 실패하였습니다.</MessageContent>);
+              message.error(<MessageContent>등록에 실패하였습니다.</MessageContent>);
             }
           } else {
-            message.info(<MessageContent>등록에 실패하였습니다.</MessageContent>);
+            message.error(<MessageContent>등록에 실패하였습니다.</MessageContent>);
           }
           spinningOff();
           onSaveAfter();
