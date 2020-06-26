@@ -215,7 +215,6 @@ class EshsCmpnyComp extends React.Component {
     if (readOnly || CONFIG.property.readOnly) {
       return visible ? <span>&nbsp;{cmpny_nm}</span> : '';
     }
-    console.debug('프롭', this.props);
     return visible ? (
       <>
         {directSearchTable ? (

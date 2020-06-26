@@ -29,7 +29,7 @@ import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 const AntdTable = StyledAntdTable(Table);
 const StyledButton = StyledAntdButton(Button);
 
-class ListPage extends Component {
+class MsdsSearchList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,6 +47,15 @@ class ListPage extends Component {
       paginationIdx: 1,
       pageSize: 10,
       isPagingData: false,
+      columnWidths: {
+        MTRL_NM: 200,
+        ITEM_CD: 100,
+        MOLECULAR_FORMULA: 200,
+        CAS_NO: 150,
+        UN_NO: 150,
+        ITEM_NM: 200,
+        VENDOR_NM: 200,
+      },
     };
   }
 
@@ -160,7 +169,7 @@ class ListPage extends Component {
   };
 
   setColumns = (cols, widths) => {
-    const { isRowNo } = this.state;
+    const { isRowNo, columnWidths } = this.state;
     const columns = [];
     if (isRowNo) {
       columns.push({
@@ -174,10 +183,10 @@ class ListPage extends Component {
           dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
           title: node.comp.CONFIG.property.HEADER_NAME_KOR,
           // width: (node.style && node.style.width) || undefined,
-          width: (widths && widths[idx] && `${widths[idx]}%`) || undefined,
+          // width: columnWidths[widths && widths[idx] && `${widths[idx]}%`] || undefined,
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
           className: node.addonClassName && node.addonClassName.length > 0 ? `${node.addonClassName.toString().replaceAll(',', ' ')}` : '',
-          align: (node.style && node.style.textAlign) || undefined,
+          align: 'center',
         });
       }
     });
@@ -211,7 +220,7 @@ class ListPage extends Component {
 
   renderList = (group, groupIndex) => {
     const { listData, listSelectRowKeys, workInfo, customOnRowClick, listTotalCnt } = this.props;
-    const { isMultiDelete, isOnRowClick, paginationIdx } = this.state;
+    const { isMultiDelete, isOnRowClick, paginationIdx, columnWidths } = this.state;
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
@@ -227,6 +236,7 @@ class ListPage extends Component {
     if (typeof customOnRowClick === 'function') {
       onRow = record => ({ onClick: () => customOnRowClick(record) });
     }
+
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -236,13 +246,14 @@ class ListPage extends Component {
             rowKey="TASK_SEQ"
             key={`${group.key}_list`}
             className="view-designer-list"
-            columns={columns}
+            columns={columns.map(col => ({ ...col, width: columnWidths[col.dataIndex] }))}
             dataSource={listData || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
             pagination={{ current: paginationIdx, total: listTotalCnt }}
             onChange={pagination => this.setPaginationIdx(pagination.current)}
+            scroll={{ x: '100%' }}
           />
         </Group>
       </div>
@@ -380,7 +391,7 @@ class ListPage extends Component {
   };
 }
 
-ListPage.propTypes = {
+MsdsSearchList.propTypes = {
   workInfo: PropTypes.object,
   sagaKey: PropTypes.string,
   workFlowConfig: PropTypes.object,
@@ -401,7 +412,7 @@ ListPage.propTypes = {
   useExcelDownload: PropTypes.bool,
 };
 
-ListPage.defaultProps = {
+MsdsSearchList.defaultProps = {
   workFlowConfig: {
     info: {
       PRC_ID: -1,
@@ -411,4 +422,4 @@ ListPage.defaultProps = {
   useExcelDownload: true,
 };
 
-export default ListPage;
+export default MsdsSearchList;

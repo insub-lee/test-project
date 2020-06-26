@@ -59,7 +59,7 @@ class DragUploadComp extends Component {
       this.setState({
         fileInfo: {
           ...fileInfo,
-          DETAIL: nextProps.colData.DETAIL,
+          DETAIL: (nextProps && nextProps.colData && nextProps.colData.DETAIL) || [],
         },
       });
     }
@@ -243,11 +243,9 @@ class DragUploadComp extends Component {
       previewVisible,
       previewImage,
     } = this.state;
-
     const { MULTIPLE_SELECT, MULTIPLE_UPLOAD, FILTER_EXTENSION, EXTENSION_LIST, PREVIEW_SETTING } = options;
     const IS_MULTIPLE_UPLOAD_ON = MULTIPLE_UPLOAD === 'Y';
     const IS_PREVIEW_ON = PREVIEW_SETTING === 'Y';
-    console.debug('파일리스트', fileList);
     return (
       <div onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
         <Dragger

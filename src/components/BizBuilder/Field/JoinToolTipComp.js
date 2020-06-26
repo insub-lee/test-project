@@ -31,14 +31,14 @@ class JoinToolTipComp extends React.Component {
                 : changeViewPage(id, rowData.WORK_SEQ, rowData.TASK_SEQ, property.changeViewType || 'VIEW')
             }
             className={property.className || ''}
-            style={{ textOverflow: 'ellipsis', overflow: 'hidden', width: '100px', whiteSpace: 'nowrap', fontWeight: `${bold}`, cursor: 'pointer' }}
+            style={{ textOverflow: 'ellipsis', overflow: 'hidden', width: '100%', whiteSpace: 'nowrap', fontWeight: `${bold}`, cursor: 'pointer' }}
           >
             {formData[property.viewDataKey] || text}
           </div>
         ) : (
           <div
             className={property.className || ''}
-            style={{ textOverflow: 'ellipsis', overflow: 'hidden', width: '100px', whiteSpace: 'nowrap', fontWeight: `${bold}` }}
+            style={{ textOverflow: 'ellipsis', overflow: 'hidden', width: '100%', whiteSpace: 'nowrap', fontWeight: `${bold}` }}
           >
             {formData[property.viewDataKey] || text}
           </div>

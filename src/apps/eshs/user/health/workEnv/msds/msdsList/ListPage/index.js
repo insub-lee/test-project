@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Popconfirm, Select, Input, Modal } from 'antd';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -8,22 +14,22 @@ import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { debounce } from 'lodash';
 import BizBuilderBase from 'components/BizBuilderBase';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
-import CustomViewPage from '../CustomViewPage';
-import CursorStyled from '../CursorStyled';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import { getTaskSeq } from 'components/BizBuilderBase/actions';
 
 const { Option } = Select;
+const AntdModal = StyledAntdModal(Modal);
+const AntdSearchInput = StyledSearchInput(Input.Search);
+
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledContentsModal(Modal);
-const AntdSearch = StyledSearchInput(Input.Search);
+const AntdSelect = StyledSelect(Select);
+const AntdInput = StyledInput(Input);
 
 class ListPage extends Component {
   constructor(props) {
@@ -36,6 +42,7 @@ class ListPage extends Component {
       searchText: '',
       viewModalVisible: false,
       viewTaskSeq: -1,
+      modalObj: { visible: false, content: [], title: '' },
     };
     this.handleOnChangeSearch = debounce(this.handleOnChangeSearch, 300);
   }
@@ -51,7 +58,6 @@ class ListPage extends Component {
       });
       this.setState({ isMultiDelete, isRowNo });
     }
-    changeViewPage('MsdsListView', 3161, -1, 'VIEW');
   };
 
   // state값 reset테스트
@@ -59,6 +65,23 @@ class ListPage extends Component {
   //   const { removeReduxState, id } = this.props;
   //   removeReduxState(id);
   // }
+
+  columnWidths = {
+    MTRL_NM: 200,
+    ITEM_CD: 100,
+    MOLECULAR_FORMULA: 200,
+    CAS_NO: 150,
+    UN_NO: 150,
+    ITEM_NM: 200,
+    VENDOR_NM: 200,
+    IS_HAZARD_NAME: 200,
+    NFPA_A: 50,
+    NFPA_B: 50,
+    NFPA_C: 80,
+    ATTACH: 250,
+    NFPA_D_NAME: 100,
+    NOTE_AREA: 300,
+  };
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -103,6 +126,7 @@ class ListPage extends Component {
           dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
           title: node.comp.CONFIG.property.HEADER_NAME_KOR,
           width: node.style.width,
+          align: 'center',
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
         });
       }
@@ -126,55 +150,68 @@ class ListPage extends Component {
         onChange: this.onSelectChange,
       };
     }
+
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-          <CursorStyled>
-            <AntdTable
-              rowKey="TASK_SEQ"
-              key={`${group.key}_list`}
-              className="view-designer-list"
-              columns={columns}
-              dataSource={listData || []}
-              rowSelection={rowSelection}
-              scroll={{ x: 1300 }}
-              onRow={(record, rowIndex) => ({
-                onClick: event => this.handleViewModalVisible(record.TASK_SEQ),
-              })}
-            />
-          </CursorStyled>
+          <AntdTable
+            rowKey="TASK_SEQ"
+            key={`${group.key}_list`}
+            columns={columns.map(col => ({ ...col, width: this.columnWidths[col.dataIndex] }))}
+            dataSource={listData || []}
+            rowSelection={rowSelection}
+            scroll={{ x: '100%' }}
+            bordered
+            onRow={(record, rowIndex) => ({
+              onClick: () => this.handleModalVisible('VIEW', record.TASK_SEQ, record.ITEM_CD),
+            })}
+          />
         </Group>
-        <AntdModal title="MSDS 조회" visible={viewModalVisible} closable onCancel={() => this.handleViewModalVisible(-1)} width={1000} footer={null}>
-          <div>{viewModalVisible && this.handleOnViewModal(viewTaskSeq)}</div>
-        </AntdModal>
       </div>
     );
   };
 
-  handleViewModalVisible = viewTaskSeq => {
-    const { viewModalVisible } = this.state;
-
-    this.setState({
-      viewModalVisible: !viewModalVisible,
-      viewTaskSeq,
+  handleModalVisible = (viewType, taskSeq = -1, itemCd = '') => {
+    const { modalObj } = this.state;
+    const { visible } = modalObj;
+    if (visible) {
+      return this.setState({
+        modalObj: {
+          visible: !visible,
+          content: [],
+        },
+      });
+    }
+    return this.setState({
+      modalObj: {
+        visible: !visible,
+        content: [
+          <BizBuilderBase
+            sagaKey="MsdsListModal"
+            workSeq={3161}
+            taskSeq={taskSeq}
+            ListCustomButtons={() => null}
+            ViewCustomButtons={() => null}
+            viewType={viewType}
+            listMetaSeq={4141}
+            customOnRowClick={record => this.rowClick(record)}
+          />,
+        ],
+        title: viewType === 'LIST' ? 'MSDS 검색' : `MSDS 조회 코드 [ ${itemCd} ] `,
+      },
     });
   };
 
-  handleOnViewModal = viewTaskSeq => (
-    <BizBuilderBase
-      sagaKey="MsdsListView"
-      workSeq={3161}
-      taskSeq={viewTaskSeq}
-      viewType="VIEW"
-      loadingComplete={this.loadingComplete}
-      CustomViewPage={CustomViewPage}
-    />
-  );
+  rowClick = record => {
+    const { sagaKey: id, setFormData, formData } = this.props;
+    setFormData(id, { ...formData, selectedRowItemCode: record.ITEM_CD, selectedRowTaskSeq: record.TASK_SEQ });
+    this.handleModalVisible();
+  };
 
-  handleSearchSite = e => {
+  handleSearchSite = value => {
     const { sagaKey, changeSearchData } = this.props;
-    const searchText = e.length > 1 ? `AND W.SITE LIKE '%${e}%'` : ' AND 1 = 1';
+    const searchText = value ? `AND W.SITE LIKE '%${value}%'` : ' AND 1 = 1';
     changeSearchData(sagaKey, 'andSearch_1', searchText);
   };
 
@@ -184,7 +221,7 @@ class ListPage extends Component {
     this.setState({
       searchType,
     });
-    const andSearch2 = searchText.length > 0 ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1';
+    const andSearch2 = searchType && searchText ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1';
     changeSearchData(sagaKey, 'andSearch_2', andSearch2);
   };
 
@@ -194,7 +231,7 @@ class ListPage extends Component {
     this.setState({
       searchText,
     });
-    const andSearch2 = searchText.length > 0 ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1';
+    const andSearch2 = searchType && searchText ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1';
     changeSearchData(sagaKey, 'andSearch_2', andSearch2);
   };
 
@@ -206,34 +243,9 @@ class ListPage extends Component {
     changeSearchData(sagaKey, 'andSearch_3', andSearch3);
   };
 
-  handleChangeViewPage = () => {
-    const { sagaKey: id, viewPageData, changeViewPage, changeFormData } = this.props;
-    changeFormData(id, 'selectedRowItemCode', '');
-    changeFormData(id, 'selectedTaskSeq', '');
-    changeViewPage(id, viewPageData.workSeq, -1, 'INPUT');
-  };
-
-  searchListModalVisible = () => {
-    const { handleModalVisible, sagaKey: id, changeViewPage } = this.props;
-    // changeViewPage('MsdsListView', 3161, -1, 'LIST');
-
-    handleModalVisible();
-  };
-
   render = () => {
-    const {
-      sagaKey: id,
-      viewLayer,
-      formData,
-      workFlowConfig,
-      loadingComplete,
-      viewPageData,
-      changeViewPage,
-      getListData,
-      workSeq,
-      removeMultiTask,
-    } = this.props;
-    const { isMultiDelete, viewTaskSeq, viewModalVisible } = this.state;
+    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, getListData, workSeq, removeMultiTask } = this.props;
+    const { isMultiDelete, modalObj } = this.state;
 
     const selectedRowItemCode = (formData && formData.selectedRowItemCode) || '';
     if (selectedRowItemCode) {
@@ -260,74 +272,65 @@ class ListPage extends Component {
         );
       }
       return (
-        <StyledViewDesigner>
-          <Sketch {...bodyStyle}>
-            {groups.map((group, groupIndex) => {
-              if (group.type === 'listGroup') {
-                return this.renderList(group, groupIndex);
-              }
-              return (
-                (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
-                  <div key={group.key}>
-                    {group.useTitle && <GroupTitle title={group.title} />}
-                    <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-                      <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
-                        <table className={`view-designer-table table-${groupIndex}`}>
-                          <tbody>
-                            <tr className="view-designer-row row-1">
-                              <td>
-                                <Contents>
-                                  <Select style={{ width: 120 }} defaultValue=" " onChange={this.handleSearchSite}>
-                                    <Option key=" ">지역전체</Option>
-                                    <Option key="526">청주</Option>
-                                    <Option key="527">구미</Option>
-                                  </Select>
-                                  <Select defaultValue="W.MTRL_NM" style={{ width: 150 }} onChange={this.onChangeHandler}>
-                                    <Option value="W.MTRL_NM">물질명</Option>
-                                    <Option value="W.ITEM_NM">제품명</Option>
-                                    <Option value="W.MOLECULAR_FORMULA">분자식</Option>
-                                    <Option value="W.CAS_NO">CAS_NO</Option>
-                                    <Option value="W.UN_NO">UN_NO</Option>
-                                    <Option value="W.ITEM_CD">MSDS코드</Option>
-                                    <Option value="Y.WRK_CMPNY_NM">Vendor</Option>
-                                  </Select>
-                                  <Input style={{ width: 150 }} onChange={e => this.handleOnChangeSearch(e.target.value)} />
-                                  &nbsp; &nbsp;
-                                  <span>구성성분</span>
-                                  <AntdSearch
-                                    className="ant-search-inline input-search-mid mr5"
-                                    style={{ width: 150 }}
-                                    value={selectedRowItemCode}
-                                    onSearch={this.searchListModalVisible}
-                                    onClick={this.searchListModalVisible}
-                                  />
-                                </Contents>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      {group.type === 'searchGroup' && group.useSearch && (
-                        <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray" onClick={() => getListData(id, workSeq)}>
-                            Search
-                          </StyledButton>
-                        </div>
-                      )}
-                    </Group>
-                  </div>
-                )
-              );
-            })}
-            <div className="alignRight">
-              {isMultiDelete && (
-                <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
-                  <StyledButton className="btn-primary">Delete</StyledButton>
-                </Popconfirm>
-              )}
-            </div>
-          </Sketch>
-        </StyledViewDesigner>
+        <StyledContentsWrapper>
+          {groups.map((group, groupIndex) => {
+            if (group.type === 'listGroup') {
+              return this.renderList(group, groupIndex);
+            }
+            return (
+              <StyledCustomSearchWrapper>
+                <div className="search-input-area mb10">
+                  <AntdSelect style={{ width: 120 }} allowClear className="select-sm mr5" onChange={this.handleSearchSite} placeholder="지역전체">
+                    <Option key="317">청주</Option>
+                    <Option key="318">구미</Option>
+                    <Option key="30410">서울</Option>
+                    <Option key="30412">이천</Option>
+                    <Option key="30411">해외</Option>
+                  </AntdSelect>
+                  <AntdSelect
+                    defaultValue="W.MTRL_NM"
+                    placeholder="검색구분"
+                    allowClear
+                    className="select-sm"
+                    style={{ width: 150 }}
+                    onChange={this.onChangeHandler}
+                  >
+                    <Option value="W.MTRL_NM">물질명</Option>
+                    <Option value="W.ITEM_NM">제품명</Option>
+                    <Option value="W.MOLECULAR_FORMULA">분자식</Option>
+                    <Option value="W.CAS_NO">CAS_NO</Option>
+                    <Option value="W.UN_NO">UN_NO</Option>
+                    <Option value="W.ITEM_CD">MSDS코드</Option>
+                    <Option value="Y.WRK_CMPNY_NM">Vendor</Option>
+                  </AntdSelect>
+                  <AntdInput
+                    style={{ width: 150 }}
+                    placeholder="검색어"
+                    allowClear
+                    className="ant-input-sm ant-input-inline mr5"
+                    onChange={e => this.handleOnChangeSearch(e.target.value)}
+                  />
+                  <AntdSearchInput
+                    className="input-search-sm ant-search-inline mr5"
+                    style={{ width: 150 }}
+                    placeholder="구성성분"
+                    value={selectedRowItemCode}
+                    onSearch={() => this.handleModalVisible('LIST')}
+                    onClick={() => this.handleModalVisible('LIST')}
+                  />
+                </div>
+                <div className="btn-area">
+                  <StyledButton className="btn-gray btn-sm mr5" onClick={() => getListData(id, workSeq)}>
+                    검색
+                  </StyledButton>
+                </div>
+              </StyledCustomSearchWrapper>
+            );
+          })}
+          <AntdModal width={850} visible={modalObj.visible} title={modalObj.title} onCancel={this.handleModalVisible} destroyOnClose footer={null}>
+            {modalObj.content}
+          </AntdModal>
+        </StyledContentsWrapper>
       );
     }
     return '';
@@ -348,6 +351,8 @@ ListPage.propTypes = {
   isLoading: PropTypes.bool,
   loadingComplete: PropTypes.func,
   handleModalVisible: PropTypes.func,
+  setFormData: PropTypes.func,
+  changeSearchData: PropTypes.func,
 };
 
 ListPage.defaultProps = {
