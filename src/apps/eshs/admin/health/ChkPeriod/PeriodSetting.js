@@ -98,9 +98,9 @@ class PeriodSetting extends Component {
         spinningOn();
         submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/healthChkReservationPeriod', submitData, (i, res) => {
           if (res && res.result > 0) {
-            message.info(<MessageContent>저장하였습니다.</MessageContent>);
+            message.success(<MessageContent>저장하였습니다.</MessageContent>);
           } else {
-            message.info(<MessageContent>저장에 실패하였습니다.</MessageContent>);
+            message.error(<MessageContent>저장에 실패하였습니다.</MessageContent>);
           }
           spinningOff();
         });

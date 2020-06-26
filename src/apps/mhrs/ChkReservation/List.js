@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Input, Select, DatePicker, Modal } from 'antd';
+import { Table, Input, DatePicker, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
@@ -11,8 +11,7 @@ import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
-import UserSearchModal from 'apps/eshs/common/userSearchModal';
-import ChkMstDetail from 'apps/eshs/admin/health/common/ChkMstDetail';
+import View from './View';
 
 const AntdTable = StyledAntdTable(Table)
 const AntdModal = StyledAntdModal(Modal);
@@ -21,7 +20,7 @@ const AntdRangePicker = StyledDatePicker(DatePicker.RangePicker);
 
 class List extends Component {
   state = {
-    isChkMstDetailShow: false,
+    isShow: false,
     selectedRow: {},
     searchInfo: {
       HOSPITAL_CODE: '',
@@ -61,7 +60,7 @@ class List extends Component {
     const { sagaKey, getCallDataHandlerReturnRes, spinningOn, spinningOff } = this.props;
     const apiInfo = {
       key: 'reservationList',
-      url: `/api/eshs/v1/common/MhrsHealthChkReservation`,
+      url: `/api/eshs/v1/common/MhrsHealthChkReservationList`,
       type: 'POST',
       params: {
         PARAM: { ...this.state.searchInfo },
@@ -93,6 +92,44 @@ class List extends Component {
       searchInfo.TO_DT = val[1];
       return { searchInfo }
     });
+  };
+
+  onSaveConfirm = record => {
+    const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
+    const submitData = {
+      PARAM: { ...record },
+    };
+
+    const callBackFunc = this.getList;
+    Modal.confirm({
+      title: `${record.IS_MATE === '0' ? record.USER_NAME : record.FAM_NAME}님 예약확인 하시겠습니까?`,
+      icon: <ExclamationCircleOutlined />,
+      okText: '확인',
+      cancelText: '취소',
+      onOk() {
+        spinningOn();
+        submitHandlerBySaga(sagaKey, 'PUT', '/api/eshs/v1/common/MhrsHealthChkReservation', submitData, () => {
+          spinningOff();
+          callBackFunc();
+        });
+      }
+    });
+  };
+
+  onClickDetailView = record => {
+    this.setState({
+      selectedRow: record,
+      isShow: true,
+    });
+  }
+
+  onCancelPopup = () => {
+    this.setState({ isShow: false });
+  };
+
+  onSavePopupAfter = () => {
+    this.setState({ isShow: false});
+    this.getList();
   };
 
   columns = [
@@ -145,18 +182,41 @@ class List extends Component {
       align: 'center',
     },
     {
-      title: '검진항목',
+      title: '상세보기',
       dataIndex: 'CHK_ITEMS',
       key: 'CHK_ITEMS',
-      ellipsis: true,
+      align: 'center',
+      render: (text, record) => (
+        <StyledButton className="btn-link btn-xs" onClick={() => this.onClickDetailView(record)}>상세보기 / 변경</StyledButton>
+      ),
     },
-  ]
+    {
+      title: '예약확인',
+      dataIndex: 'CONFIRM_DT',
+      key: 'CONFIRM_DT',
+      align: 'center',
+      width: '10%',
+      render: (text, record) => (
+        text ? moment(text).format('YYYY-MM-DD') : <StyledButton className="btn-primary btn-xxs" onClick={() => this.onSaveConfirm(record)}>예약확인</StyledButton>
+      ),
+    }
+  ];
 
   render() {
     const { result } = this.props;
 
     return (
       <>
+        <AntdModal
+          width={900}
+          visible={this.state.isShow}
+          title="예약 상세"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <View onCancelPopup={this.onCancelPopup} selectedRow={this.state.selectedRow} onSavePopupAfter={this.onSavePopupAfter} />
+        </AntdModal>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
             <div className="search-input-area">

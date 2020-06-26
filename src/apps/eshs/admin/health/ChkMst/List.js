@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Table, Input, Select, DatePicker, Modal } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';

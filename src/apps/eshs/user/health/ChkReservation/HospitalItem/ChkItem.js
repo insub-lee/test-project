@@ -86,7 +86,7 @@ class ChkItem extends Component {
       }
       return { checkedVals }
     });
-  };m
+  };
 
   onOk = () => {
     const { selectedChkType, checkedVals } = this.state;

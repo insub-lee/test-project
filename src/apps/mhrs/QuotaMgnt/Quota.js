@@ -235,6 +235,11 @@ class Quota extends Component {
       }
     };
 
+    if (this.state.quotaList.length === 0) {
+      message.info(<MessageContent>기간생성을 해주세요.</MessageContent>);
+      return false;
+    }
+
     let isValid = true;
     this.state.quotaList.forEach(item => {
       if (item.QUOTA_NUM === '') {
@@ -256,8 +261,10 @@ class Quota extends Component {
         spinningOn();
         submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/healthChkHospitalQuota', submitData, (id, res) => {
           if (res && res.result > 0) {
-            message.info(<MessageContent>저장하였습니다.</MessageContent>);
+            message.success(<MessageContent>저장하였습니다.</MessageContent>);
             spinningOff();
+          } else {
+            message.error(<MessageContent>저장에 실패하였습니다.</MessageContent>);
           }
         });
       }

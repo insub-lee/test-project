@@ -519,12 +519,12 @@ class App extends React.Component {
           */}
           <SideMenu>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Trigger>
+              {/* <Trigger>
                 <span className="trigger icon icon-menu" onClick={this.setMenuOpen} onKeyDown={this.setMenuOpen} role="button" tabIndex="0" />
-                {/* <Badge count={myHNotiCnt} overflowCount={99}>
-                  <Link to="/" className="badgeLink" />
-                </Badge> */}
-              </Trigger>
+                //<Badge count={myHNotiCnt} overflowCount={99}>
+                //  <Link to="/" className="badgeLink" />
+                //</Badge>
+              </Trigger> */}
             </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="Home">
@@ -582,6 +582,7 @@ class App extends React.Component {
                           className="portalHeader"
                           // setOpen={this.setMenuOpen}
                           execPage={this.execPage}
+                          goCommonHome={this.goCommonHome}
                           handleClick={this.handleClick}
                           setMyMenuData={setMyMenuData}
                           location={history.location}

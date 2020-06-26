@@ -5,6 +5,7 @@ import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Input } from 'antd';
 
+import Tree from 'components/Tree';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -26,19 +27,61 @@ class FileManage extends Component {
 
   componentDidMount() {
     this.props.getSiteList();
+    this.props.getUserFolderTree();
+    this.props.getShareUserList();
   }
 
+  handleOnClick = node => {
+    console.debug('handleOnClick', node);
+  };
+
   render() {
-    const { siteList } = this.props;
+    const { siteList, userFolderTreeData, shareUserList } = this.props;
     return (
       <Styled>
         <div className="section-wrapper">
           <div className="right-section">
-            <div className="title-area">[타이틀이라네요..]</div>
+            <div className="title-area">[파일관리]</div>
             <div className="menu-area">
-              <div className="menu-item">메뉴1</div>
-              <div className="menu-item">메뉴2</div>
-              <div className="menu-item">메뉴3</div>
+              <div className="menu-item">
+                시스템 폴더
+                <Tree
+                  style={{
+                    height: 300,
+                    width: 300,
+                    overflowY: 'scroll',
+                  }}
+                  treeData={siteList}
+                  handleOnClick={this.handleOnClick}
+                  selectedIndex={-1}
+                />
+              </div>
+              <div className="menu-item">
+                내 폴더
+                <Tree
+                  style={{
+                    height: 300,
+                    width: 300,
+                    overflowY: 'scroll',
+                  }}
+                  treeData={userFolderTreeData}
+                  handleOnClick={this.handleOnClick}
+                  selectedIndex={-1}
+                />
+              </div>
+              <div className="menu-item">
+                공유 폴더
+                <Tree
+                  style={{
+                    height: 300,
+                    width: 300,
+                    overflowY: 'scroll',
+                  }}
+                  treeData={shareUserList}
+                  handleOnClick={this.handleOnClick}
+                  selectedIndex={-1}
+                />
+              </div>
             </div>
           </div>
           <div className="left-section">
@@ -55,14 +98,54 @@ class FileManage extends Component {
 
 FileManage.propTypes = {
   getSiteList: PropTypes.func.isRequired,
-  siteList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  getSysFileList: PropTypes.func.isRequired,
+  getUserFolderTree: PropTypes.func.isRequired,
+  getUserFileList: PropTypes.func.isRequired,
+  getDonwloadLink: PropTypes.func.isRequired,
+  getShareUserList: PropTypes.func.isRequired,
+  getShareFileList: PropTypes.func.isRequired,
+  insertUserFolder: PropTypes.func.isRequired,
+  updateUserFolder: PropTypes.func.isRequired,
+  deleteUserFolder: PropTypes.func.isRequired,
+  uploadFile: PropTypes.func.isRequired,
+  deleteFile: PropTypes.func.isRequired,
+  getFileAuth: PropTypes.func.isRequired,
+  updateFileAuth: PropTypes.func.isRequired,
+  siteList: PropTypes.array.isRequired,
+  sysFileList: PropTypes.array.isRequired,
+  userFolderTreeData: PropTypes.array.isRequired,
+  userFileList: PropTypes.array.isRequired,
+  shareUserList: PropTypes.array.isRequired,
+  shareFileList: PropTypes.array.isRequired,
+  authData: PropTypes.object.isRequired,
+  link: PropTypes.string.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
   getSiteList: () => dispatch(actions.getSiteList()),
+  getSysFileList: (SITE_ID, KEYWORD) => dispatch(actions.getSysFileList(SITE_ID, KEYWORD)),
+  getUserFolderTree: () => dispatch(actions.getUserFolderTree()),
+  getUserFileList: (KEYWORD, FOLDER_ID) => dispatch(actions.getUserFileList(KEYWORD, FOLDER_ID)),
+  getDonwloadLink: FILE_SEQ => dispatch(actions.getDonwloadLink(FILE_SEQ)),
+  getShareUserList: () => dispatch(actions.getShareUserList()),
+  getShareFileList: (KEYWORD, SHARE_USER_ID) => dispatch(actions.getShareFileList(KEYWORD, SHARE_USER_ID)),
+  insertUserFolder: () => dispatch(actions.insertUserFolder()),
+  updateUserFolder: () => dispatch(actions.updateUserFolder()),
+  deleteUserFolder: () => dispatch(actions.deleteUserFolder()),
+  uploadFile: () => dispatch(actions.uploadFile()),
+  deleteFile: (FOLDER_ID, FILE_SEQ) => dispatch(actions.deleteFile(FOLDER_ID, FILE_SEQ)),
+  getFileAuth: () => dispatch(actions.getFileAuth()),
+  updateFileAuth: () => dispatch(actions.updateFileAuth()),
 });
 const mapStateToProps = createStructuredSelector({
   siteList: selectors.makeSelectSiteList(),
+  sysFileList: selectors.makeSelectSysFileList(),
+  userFolderTreeData: selectors.makeSelectUserFolderTreeData(),
+  userFileList: selectors.makeSelectUserFileList(),
+  link: selectors.makeSelectLink(),
+  shareUserList: selectors.makeSelectShareUserList(),
+  shareFileList: selectors.makeSelectShareFileList(),
+  authData: selectors.makeSelectAuthData(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

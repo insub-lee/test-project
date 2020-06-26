@@ -441,7 +441,7 @@ class ChkHospitalItemView extends Component {
             if (response.result === -1) {
               message.info(<MessageContent>이미 등록되어 있는 검진유형입니다.</MessageContent>);
             } else if (response.result > 0) {
-              message.info(<MessageContent>{saveType === 'I' ? '등록' : '저장'}하였습니다.</MessageContent>);
+              message.success(<MessageContent>{saveType === 'I' ? '등록' : '저장'}하였습니다.</MessageContent>);
               onSaveAfter();
             } else {
               message.error(<MessageContent>{saveType === 'I' ? '등록' : '저장'}에 실패하였습니다.</MessageContent>);

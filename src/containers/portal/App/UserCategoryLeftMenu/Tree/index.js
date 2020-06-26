@@ -114,7 +114,7 @@ class Tree extends Component {
     let menuIconClassName = ''; 
     if(node.APP_YN === 'F'){
       if(node.LVL === 1 ){
-        menuIconClassName = 'fa fa-lg fa-building'; 
+        menuIconClassName = 'icon-1st-menu'; 
       } else {
         menuIconClassName = 'icon-folder-close'; 
       }

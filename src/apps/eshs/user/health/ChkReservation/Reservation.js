@@ -300,7 +300,7 @@ class Reservation extends Component {
         submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/healthChkReservation', submitData, (id, res) => {
           if (res) {
             if (res.result === 1) {
-              message.info(<MessageContent>저장하였습니다.</MessageContent>);
+              message.success(<MessageContent>저장하였습니다.</MessageContent>);
             } else if (res.result === -9) {
               message.info(<MessageContent>현재 예약기간이 아닙니다.</MessageContent>);
             }

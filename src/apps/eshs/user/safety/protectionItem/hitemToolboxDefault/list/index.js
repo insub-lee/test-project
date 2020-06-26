@@ -11,7 +11,7 @@ import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/Styl
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import DeptSelect from 'components/DeptSelect';
 import moment from 'moment';
-import { callBackAfterPut } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
+import { callBackAfterPut } from 'apps/eshs/common/submitCallbackFunc';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);

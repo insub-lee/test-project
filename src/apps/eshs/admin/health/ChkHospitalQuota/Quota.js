@@ -263,9 +263,11 @@ class Quota extends Component {
       onOk() {
         spinningOn();
         submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/healthChkHospitalQuota', submitData, (id, res) => {
+          spinningOff();
           if (res && res.result > 0) {
-            message.info(<MessageContent>저장하였습니다.</MessageContent>);
-            spinningOff();
+            message.success(<MessageContent>저장하였습니다.</MessageContent>);
+          } else {
+            message.error(<MessageContent>저장에 실패하였습니다.</MessageContent>);
           }
         });
       }
