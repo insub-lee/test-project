@@ -21,6 +21,7 @@ import iconHyphen from 'images/portal/icon-hyphen.png';
 import iconPin from 'images/portal/icon-pin.png';
 import iconPinFill from 'images/portal/icon-pin-fill.png';
 import iconPageMove from 'images/portal/icon-page-move.png';
+import icon1stMenu from 'images/portal/icon-1st-menu.png';
 
 const Styled = styled.i`
   display: inline-block;
@@ -30,6 +31,11 @@ const Styled = styled.i`
     background: url(${iconClose}) no-repeat center;
     width: 15px;
     height: 15px;
+  }
+  &.icon-1st-menu {
+    background: url(${icon1stMenu}) no-repeat center;
+    width: 30px;
+    height: 22px;
   }
   &.icon-page-move {
     background: url(${iconPageMove}) no-repeat center;
