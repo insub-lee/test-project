@@ -1,8 +1,9 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Modal, Table, message, Input, Select, Popover, Popconfirm } from 'antd';
+import { Modal, Table, Input, Select, Popover, Popconfirm } from 'antd';
 
-import debounce from 'lodash/debounce';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
@@ -27,7 +28,6 @@ class DangerHazardSubComp extends React.Component {
     this.state = {
       modal: false,
     };
-    this.onChangeData = debounce(this.onChangeData, 500);
   }
 
   componentDidMount() {
@@ -59,11 +59,10 @@ class DangerHazardSubComp extends React.Component {
       extraApiData: { codeData, hazardSubList, treeData },
       changeFormData,
       sagaKey: id,
-      viewPageData,
     } = this.props;
     const aotList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30432);
     const aocList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30433);
-    changeFormData(id, 'HAZARD_LIST', viewPageData.viewType === 'MODIFY' ? hazardSubList && hazardSubList.list : []);
+    changeFormData(id, 'HAZARD_LIST', (hazardSubList && hazardSubList.list) || []);
     this.setState({ aotList, aocList, treeData: treeData && treeData.categoryMapList.filter(item => item.USE_YN === 'Y') });
   };
 
@@ -75,6 +74,9 @@ class DangerHazardSubComp extends React.Component {
   onChangeData = (name, value, record) => {
     const { formData, changeFormData, sagaKey: id } = this.props;
     const temp = formData.HAZARD_LIST.map(changeItem => {
+      if (changeItem.EQUIP_ID === record.EQUIP_ID && changeItem.SEQ === record.SEQ && name === 'AOC_ID') {
+        return { ...changeItem, [name]: JSON.stringify(value) };
+      }
       if (changeItem.EQUIP_ID === record.EQUIP_ID && changeItem.SEQ === record.SEQ) {
         return { ...changeItem, [name]: value };
       }
@@ -83,16 +85,47 @@ class DangerHazardSubComp extends React.Component {
     changeFormData(id, 'HAZARD_LIST', temp);
   };
 
+  onSelectChangeModal = selectedRowKeys => {
+    this.setState({ selectedRowKeys });
+  };
+
   deleteList = () => {
-    const { sagaKey: id, changeFormData } = this.props;
-    const { listOfDeleteExclusion } = this.state;
-    changeFormData(id, 'HAZARD_LIST', listOfDeleteExclusion);
-    this.setState({ selectedRowKeys: [], listOfDeleteExclusion: [] });
+    const { sagaKey: id, changeFormData, formData, submitExtraHandler } = this.props;
+    const { selectedRowKeys } = this.state;
+    const { HAZARD_LIST } = formData;
+
+    if (selectedRowKeys && selectedRowKeys.length > 0 && HAZARD_LIST && HAZARD_LIST.length > 0) {
+      const tempList = HAZARD_LIST.filter((selected, index) => selectedRowKeys.findIndex(rowKey => index === rowKey) === -1);
+      const deleteList = HAZARD_LIST.filter((selected, index) => selectedRowKeys.findIndex(rowKey => index === rowKey) !== -1 && selected.REG_NO);
+      const submitData = { PARAM: { DELETE_LIST: deleteList } };
+      if (deleteList && deleteList.length) {
+        submitExtraHandler(id, 'DELETE', `/api/eshs/v1/common/dangerHazard`, submitData, this.deleteCallback);
+      }
+      console.debug('selectedRowKeys : ', selectedRowKeys);
+      console.debug('tempList : ', tempList);
+      changeFormData(id, 'HAZARD_LIST', tempList);
+      this.setState({ selectedRowKeys: [] });
+    } else {
+      message.info(<MessageContent>삭제할 항목을 선택해주세요</MessageContent>);
+    }
+  };
+
+  deleteCallback = () => {
+    const { getExtraApiData, sagaKey: id, viewPageData } = this.props;
+    const apiArray = [
+      {
+        key: 'hazardSubList',
+        url: `/api/eshs/v1/common/dangerHazard?TASK_SEQ=${viewPageData.taskSeq}`,
+        type: 'GET',
+      },
+    ];
+    getExtraApiData(id, apiArray, this.initData);
   };
 
   render() {
     const { formData, visible, changeFormData, sagaKey: id } = this.props;
     const { aotList, aocList, selectedRowKeys, treeData } = this.state;
+    const { HAZARD_LIST } = formData;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChangeModal,
@@ -131,7 +164,7 @@ class DangerHazardSubComp extends React.Component {
                 title: '위험요인',
                 dataIndex: 'WORK_NM',
                 width: '140px',
-                render: (text, record) => <AntdTextarea defaultValue={text} onChange={e => this.onChangeData('WORK_NM', e.target.value, record)} />,
+                render: (text, record) => <AntdTextarea value={text} onChange={e => this.onChangeData('WORK_NM', e.target.value, record)} />,
               },
             ]
           : [],
@@ -154,7 +187,7 @@ class DangerHazardSubComp extends React.Component {
           <AntdSelect
             mode="multiple"
             className="select-xs"
-            defaultValue={Array.isArray(text) ? text : JSON.parse(text)}
+            value={Array.isArray(text) ? text : JSON.parse(text)}
             onChange={value => this.onChangeData('AOC_ID', value, record)}
             style={{ width: '100%' }}
           >
@@ -168,13 +201,13 @@ class DangerHazardSubComp extends React.Component {
         width: '130px',
         render: (text, record) => (
           <>
-            <AntdSelect className="select-xs" style={{ width: '100%' }} defaultValue={text} onChange={value => this.onChangeData('AOT_ID', value, record)}>
+            <AntdSelect className="select-xs" style={{ width: '100%' }} value={text} onChange={value => this.onChangeData('AOT_ID', value, record)}>
               {aotList && aotList.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
             </AntdSelect>
-            {text === 30450 ? (
+            {Number(text) === 30450 ? (
               <AntdInput
                 className="ant-input-sm ant-input-inline"
-                defaultValue={record.OTHER_CASE}
+                value={record.OTHER_CASE}
                 onChange={e => this.onChangeData('OTHER_CASE', e.target.value, record)}
               />
             ) : (
@@ -188,7 +221,7 @@ class DangerHazardSubComp extends React.Component {
         dataIndex: 'RA_YN',
         width: '50px',
         render: (text, record) => (
-          <AntdSelect className="select-xs" defaultValue={text} onChange={value => this.onChangeData('RA', value, record)} style={{ width: '100%' }}>
+          <AntdSelect className="select-xs" value={text} onChange={value => this.onChangeData('RA_YN', value, record)} style={{ width: '100%' }}>
             <Option value="Y">Y</Option>
             <Option value="N">N</Option>
           </AntdSelect>
@@ -211,10 +244,10 @@ class DangerHazardSubComp extends React.Component {
           ''
         )}
         <AntdTable
-          rowKey={formData.HAZARD_LIST && `${formData.HAZARD_LIST.REG_NO}_${formData.HAZARD_LIST.SEQ}`}
-          key={formData.HAZARD_LIST && `${formData.HAZARD_LIST.REG_NO}_${formData.HAZARD_LIST.SEQ}`}
+          rowKey={HAZARD_LIST && `${HAZARD_LIST.REG_NO}_${HAZARD_LIST.SEQ}`}
+          key={HAZARD_LIST && `${HAZARD_LIST.REG_NO}_${HAZARD_LIST.SEQ}`}
           columns={columns}
-          dataSource={formData.HAZARD_LIST || []}
+          dataSource={HAZARD_LIST || []}
           rowSelection={rowSelection}
           scroll={{ y: 400 }}
           pagination={false}
@@ -248,6 +281,7 @@ DangerHazardSubComp.propTypes = {
   getExtraApiData: PropTypes.func,
   visible: PropTypes.bool,
   changeFormData: PropTypes.func,
+  submitExtraHandler: PropTypes.func,
 };
 
 DangerHazardSubComp.defaultProps = {};

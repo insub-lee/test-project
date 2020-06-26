@@ -1,6 +1,6 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Table, message, InputNumber, TreeSelect } from 'antd';
+import { Table, InputNumber, TreeSelect } from 'antd';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
@@ -9,6 +9,8 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 
@@ -108,23 +110,34 @@ class DangerHazardSubComp extends React.Component {
   modalInsert = () => {
     const { selectedRowKeys, listData } = this.state;
     const { sagaKey: id, changeFormData, formData, onChangeModal } = this.props;
+    const { HAZARD_LIST, REG_NO, TASK_SEQ } = formData;
     if (selectedRowKeys && selectedRowKeys.length) {
       const tempList = listData && listData.filter(selectd => selectedRowKeys.findIndex(rowKey => selectd.NODE_ID === rowKey) !== -1);
+      const hazardListLength = HAZARD_LIST.lengt || 0;
       const realList = [];
       tempList.forEach(item => {
         for (let index = 0; index < item.NUM; index += 1) {
-          realList.push({ ...item, WORK_NM: '', AOC_ID: [], AOT_ID: undefined, RA_YN: undefined, SEQ: index + 1 });
+          realList.push({
+            ...item,
+            WORK_NM: '',
+            AOC_ID: JSON.stringify([]),
+            AOT_ID: undefined,
+            RA_YN: undefined,
+            SEQ: index + hazardListLength + 1,
+            REG_NO,
+            TASK_SEQ,
+          });
         }
       });
-      changeFormData(id, 'HAZARD_LIST', formData.HAZARD_LIST.concat(realList));
+      changeFormData(id, 'HAZARD_LIST', HAZARD_LIST.concat(realList));
       onChangeModal();
     } else {
-      message.warning('선택된 장비가 없습니다.');
+      message.info(<MessageContent>선택된 장비가 없습니다.</MessageContent>);
     }
   };
 
   render() {
-    const { treeData } = this.props;
+    const { treeData, onChangeModal } = this.props;
     const { selectedRowKeys, nTreeData, listData, tempList } = this.state;
     const rowSelection = {
       selectedRowKeys,
@@ -153,7 +166,9 @@ class DangerHazardSubComp extends React.Component {
       {
         title: '생성 수량',
         dataIndex: 'NUM',
-        render: (text, record) => <AntdInputNumber defaultValue={1} onChange={value => this.onChangeData(record, value)} />,
+        render: (text, record) => (
+          <AntdInputNumber className="ant-input-number-xs" defaultValue={1} min={1} onChange={value => this.onChangeData(record, value)} />
+        ),
       },
     ];
     return (
@@ -184,7 +199,7 @@ class DangerHazardSubComp extends React.Component {
           <StyledButton className="btn-primary btn-first btn-sm" onClick={this.modalInsert}>
             생성
           </StyledButton>
-          <StyledButton className="btn-light btn-first btn-sm" onClick={this.onChangeModal}>
+          <StyledButton className="btn-light btn-first btn-sm" onClick={onChangeModal}>
             취소
           </StyledButton>
         </StyledButtonWrapper>
