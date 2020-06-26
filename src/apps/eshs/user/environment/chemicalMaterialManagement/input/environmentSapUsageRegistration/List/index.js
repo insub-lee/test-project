@@ -11,7 +11,7 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal/SearchComp';
-import { callBackAfterPut } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
+import { callBackAfterPut } from 'apps/eshs/common/submitCallbackFunc';
 
 const AntdSearch = StyledSearchInput(Input.Search);
 class List extends React.Component {

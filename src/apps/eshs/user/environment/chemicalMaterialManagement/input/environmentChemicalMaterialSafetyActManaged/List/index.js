@@ -15,7 +15,7 @@ import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 
 import Modal from 'apps/eshs/user/environment/chemicalMaterialManagement/input/environmentMasterRegistration/InputModal';
-import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/common/submitCallbackFunc';
 import SearchComp from '../SearchComp';
 
 const AntdInput = StyledInput(Input);

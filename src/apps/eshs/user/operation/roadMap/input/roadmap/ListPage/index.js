@@ -13,7 +13,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
-import { callBackAfterPost, callBackAfterPut } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
+import { callBackAfterPost, callBackAfterPut } from 'apps/eshs/common/submitCallbackFunc';
 
 const AntdInputNumber = StyledInputNumber(InputNumber);
 const AntdModal = StyledAntdModal(Modal);
