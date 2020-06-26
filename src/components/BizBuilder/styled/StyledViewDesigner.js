@@ -318,10 +318,11 @@ const StyledViewDesigner = styled.div`
               line-height: normal;
               margin: 0;
 
-              > li {
-                height: auto;
-                line-height: normal;
-                margin-top: 0;
+              li {
+                height: 18px;
+                line-height: 16px;
+                margin: 2px 3px 2px 0;
+                font-size: 11px;
               }
             }
           }
