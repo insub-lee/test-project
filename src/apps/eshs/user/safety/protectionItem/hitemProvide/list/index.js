@@ -6,11 +6,12 @@ import { debounce } from 'lodash';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import ModalContents from './modalContents';
 
 const AntdModal = StyledAntdModal(Modal);
@@ -249,18 +250,21 @@ class List extends React.Component {
       <>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
-            <div style={{ marginBottom: '10px' }}>
-              <AntdSelect defaultValue="CP" className="select-mid mr5" onChange={value => handleSearchChange('site', value)} style={{ width: '10%' }}>
-                <Select.Option value="CP">청주</Select.Option>
-                <Select.Option value="GP">구미</Select.Option>
+            <div className="search-input-area mb10">
+              <span className="text-label">지역</span>
+              <AntdSelect defaultValue={317} className="select-mid mr5" onChange={value => handleSearchChange('site', value)} style={{ width: '10%' }}>
+                <Select.Option value={317}>청주</Select.Option>
+                <Select.Option value={318}>구미</Select.Option>
               </AntdSelect>
+              <span className="text-label">기간</span>
               <AntdPicker
                 className="ant-picker-mid"
                 defaultValue={[moment(searchValue.startDate), moment(searchValue.endDate)]}
                 onChange={handleSearchDateChange}
               />
             </div>
-            <div>
+            <div className="search-input-area mb10">
+              <span className="text-label">부서</span>
               <AntdSelect defaultValue="" className="select-mid mr5" onChange={handleHqChange} style={{ width: '20%' }}>
                 <Select.Option value="">본부 전체</Select.Option>
                 {headquarterList.map(headquarter => (
@@ -275,18 +279,22 @@ class List extends React.Component {
                 onChange={value => handleSearchChange('deptId', value)}
                 style={{ width: '20%' }}
               >
-                <Select.Option value="">팀 전체</Select.Option>
-                {departmentList.map(department => (
-                  <Select.Option value={department.DEPT_ID}>{department.NAME_KOR}</Select.Option>
+                {departmentList.map((department, index) => (
+                  <Select.Option value={department.DEPT_ID}>{!index ? '팀 전체' : department.NAME_KOR}</Select.Option>
                 ))}
               </AntdSelect>
+              <span className="text-label">상태</span>
               <AntdSelect defaultValue="" className="select-mid mr5" onChange={value => handleSearchChange('type', value)} style={{ width: '10%' }}>
                 <Select.Option value="1">접수</Select.Option>
                 <Select.Option value="2">진행</Select.Option>
                 <Select.Option value="3">완료</Select.Option>
                 <Select.Option value="">상태전체</Select.Option>
               </AntdSelect>
+              <span className="text-label">품목</span>
               <AntdInput className="ant-input-mid ant-input-inline" placeholder="품목명" style={{ width: '15%' }} />
+            </div>
+            <div className="btn-area">
+              <StyledButton className="btn-gray btn-sm">검색</StyledButton>
             </div>
           </StyledCustomSearchWrapper>
           <div style={{ padding: '10px' }}>

@@ -205,11 +205,11 @@ class Quota extends Component {
       return {
         quotaList: quotaList.map(item => {
           if (item.APP_DT === appDate) {
-            if (val === '' || (val !== '' && item.APP_DT_CNT <= Number(val))) {
-              item.QUOTA_NUM = val;
-            } else {
-              message.info(<MessageContent>수검정원은 예약인원보다 작을 수 없습니다.</MessageContent>);
-            }
+            // if (val === '' || (val !== '' && item.APP_DT_CNT <= Number(val))) {
+            item.QUOTA_NUM = val;
+            // } else {
+            //   message.info(<MessageContent>수검정원은 예약인원보다 작을 수 없습니다.</MessageContent>);
+            // }
           }
           return item;
         }),
@@ -258,6 +258,8 @@ class Quota extends Component {
     Modal.confirm({
       title: '저장하시겠습니까?',
       icon: <ExclamationCircleOutlined />,
+      okText: '저장',
+      cancelText: '취소',
       onOk() {
         spinningOn();
         submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/healthChkHospitalQuota', submitData, (id, res) => {
@@ -360,14 +362,14 @@ class Quota extends Component {
                       <td>{item.APP_DT}({moment(item.APP_DT).format('ddd')})</td>
                       <td>
                         <AntdInput
-                          className="ant-input-sm ant-input-inline" style={{ width: 100, textAlign: 'right' }}
+                          className="ant-input-xs ant-input-inline" style={{ width: 100, textAlign: 'right' }}
                           value={item.QUOTA_NUM} 
                           onChange={e => this.onChangeQuotaNum(item.APP_DT, e.target.value)}
                         />
                       </td>
                       <td>
                         <AntdInput
-                          className="ant-input-sm ant-input-full"
+                          className="ant-input-full"
                           value={item.APP_DT_CNT}
                           readOnly
                         />

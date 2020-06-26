@@ -47,6 +47,13 @@ const StyledButton = component => styled(component)`
     font-size: 0.7rem;
   }
 
+  &.btn-img {
+    &.btn-sm {
+      padding: 0 0.844rem;
+      height: 29px;
+    }
+  }
+
   &.btn-primary {
     color: #fff;
     background-color: #4491e0;

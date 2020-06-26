@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { Input, Checkbox, Popconfirm, Select, InputNumber } from 'antd';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
@@ -224,7 +224,7 @@ class ItemTable extends Component {
     }
     return (
       <StyledHtmlTable>
-        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10 btn-wrap-mt-20">
           {statusMsg && <span className="btn-comment btn-wrap-mr-5">{statusMsg}</span>}
 
           <ExcelDownloadComp
@@ -234,21 +234,20 @@ class ItemTable extends Component {
             btnText="Excel Download"
             sheetName={`Material_${moment().format('YYYYMMDD')}`}
             listData={itemList}
-            btnSize="btn-sm btn-first"
             fields={createExcelData(materialItemColumnDefs, 'FIELD', 'field')}
             columns={materialItemColumnDefs.map(item => ({ ...item, ...excelStyle }))}
           />
           {!searchFlag && (
             <>
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
+              <StyledButton className="btn-gray btn-sm mr5 ml5" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
                 Excel Upload
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
+              <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.handleAction('SAVE')}>
                 추가
               </StyledButton>
               {btnOk && (
                 <>
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('UPDATE')}>
+                  <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.handleAction('UPDATE')}>
                     수정
                   </StyledButton>
                   <Popconfirm
@@ -257,9 +256,9 @@ class ItemTable extends Component {
                     okText="확인"
                     cancelText="취소"
                   >
-                    <StyledButton className="btn-primary btn-sm btn-first">삭제</StyledButton>
+                    <StyledButton className="btn-light btn-sm mr5">삭제</StyledButton>
                   </Popconfirm>
-                  <StyledButton className="btn-primary btn-sm " onClick={() => this.handleAction('RESET')}>
+                  <StyledButton className="btn-light btn-sm " onClick={() => this.handleAction('RESET')}>
                     Reset
                   </StyledButton>
                 </>
@@ -286,10 +285,10 @@ class ItemTable extends Component {
               <td></td>
               <td></td>
               <td>
-                <AntdInput name="GUBUN" value={itemData.GUBUN || ''} className="ant-input-inline ant-input-sm input-left" onChange={this.handleInputOnChange} />
+                <AntdInput name="GUBUN" value={itemData.GUBUN || ''} className="ant-input-inline ant-input-xs input-left" onChange={this.handleInputOnChange} />
               </td>
               <td>
-                <AntdSelect className="select-sm" value={itemData.STATUS || '정상'} onChange={this.handleStatusOnChange}>
+                <AntdSelect className="select-xs" value={itemData.STATUS || '정상'} onChange={this.handleStatusOnChange}>
                   <Option value="정상">정상</Option>
                   <Option value="비정상">비정상</Option>
                 </AntdSelect>
@@ -298,7 +297,7 @@ class ItemTable extends Component {
                 <AntdInput
                   name="MATTER"
                   value={itemData.MATTER || ''}
-                  className="ant-input-inline ant-input-sm input-left"
+                  className="ant-input-inline ant-input-xs input-left"
                   onChange={this.handleInputOnChange}
                 />
               </td>
@@ -306,7 +305,7 @@ class ItemTable extends Component {
                 <AntdInput
                   name="INGREDIENT"
                   value={itemData.INGREDIENT || ''}
-                  className="ant-input-inline ant-input-sm input-left"
+                  className="ant-input-inline ant-input-xs input-left"
                   onChange={this.handleInputOnChange}
                 />
               </td>
@@ -314,18 +313,18 @@ class ItemTable extends Component {
                 <AntdInputNumber
                   name="VOLUME"
                   value={itemData.VOLUME || ''}
-                  className="ant-input-inline ant-input-number-sm input-left"
+                  className="ant-input-inline ant-input-number-xs input-left"
                   onChange={this.handleVolumeOnChange}
                 />
               </td>
               <td>
-                <AntdInput name="UNIT" value={itemData.UNIT || ''} className="ant-input-inline ant-input-sm input-left" onChange={this.handleInputOnChange} />
+                <AntdInput name="UNIT" value={itemData.UNIT || ''} className="ant-input-inline ant-input-xs input-left" onChange={this.handleInputOnChange} />
               </td>
               <td>
                 <AntdInput
                   name="INPUT_TYPE"
                   value={itemData.INPUT_TYPE || ''}
-                  className="ant-input-inline ant-input-sm input-left"
+                  className="ant-input-inline ant-input-xs input-left"
                   onChange={this.handleInputOnChange}
                 />
               </td>
@@ -333,7 +332,7 @@ class ItemTable extends Component {
                 <AntdInput
                   name="OUTPUT_TYPE"
                   value={itemData.OUTPUT_TYPE || ''}
-                  className="ant-input-inline ant-input-sm input-left"
+                  className="ant-input-inline ant-input-xs input-left"
                   onChange={this.handleInputOnChange}
                 />
               </td>
@@ -341,7 +340,7 @@ class ItemTable extends Component {
                 <AntdInput
                   name="DISCHRGE"
                   value={itemData.DISCHRGE || ''}
-                  className="ant-input-inline ant-input-sm input-left"
+                  className="ant-input-inline ant-input-xs input-left"
                   onChange={this.handleInputOnChange}
                 />
               </td>

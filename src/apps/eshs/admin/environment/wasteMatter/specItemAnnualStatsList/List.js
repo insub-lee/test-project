@@ -6,13 +6,14 @@ import { Table, Select, message } from 'antd';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
-import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import ExcelDownloader from './Excel';
 
 const AntdSelect = StyledSelect(Select);
-const AntdLineTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const { Option } = Select;
 
 Moment.locale('ko');
@@ -94,40 +95,43 @@ class List extends Component {
     const { columns } = this.props;
     const { siteList, specItems, arrayYear } = this.state;
     return (
-      <ContentsWrapper>
-        <div className="selSaveWrapper alignLeft">
-          <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.selectedYear}>
-            {arrayYear &&
-              arrayYear.map(val => (
-                <Option value={val} key="selectedYear">
-                  {val}
-                </Option>
-              ))}
-          </AntdSelect>
-          <span className="textLabel">년</span>
-          <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.site || 0}>
-            {siteList &&
-              siteList.map(itme => (
-                <Option value={itme.NODE_ID} key="site">
-                  {itme.NAME_KOR}
-                </Option>
-              ))}
-          </AntdSelect>
-          <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.searchData()}>
+      <StyledContentsWrapper>
+        <StyledCustomSearchWrapper className="search-wrapper-inline">
+          <div className="search-input-area">
+            <AntdSelect className="select-sm" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.selectedYear}>
+              {arrayYear &&
+                arrayYear.map(val => (
+                  <Option value={val} key="selectedYear">
+                    {val}
+                  </Option>
+                ))}
+            </AntdSelect>
+            <span className="text-label mr5">년</span>
+            <AntdSelect className="select-sm" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.site || 0}>
+              {siteList &&
+                siteList.map(itme => (
+                  <Option value={itme.NODE_ID} key="site">
+                    {itme.NAME_KOR}
+                  </Option>
+                ))}
+            </AntdSelect>
+          </div>
+          <div className="btn-area">
+            <StyledButton className="btn-gray btn-sm" onClick={() => this.searchData()}>
               검색
             </StyledButton>
-            <ExcelDownloader dataList={specItems} excelNm="지정폐기물 년간 현황" />
-          </StyledButtonWrapper>
-        </div>
-        <AntdLineTable
-          className="tableWrapper"
+          </div>
+        </StyledCustomSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <ExcelDownloader dataList={specItems} excelNm="지정폐기물 년간 현황" />
+        </StyledButtonWrapper>
+        <AntdTable
           rowKey={specItems && specItems.WAREHOUSE_CD}
           columns={columns}
           dataSource={specItems || []}
           footer={() => <span>{`${specItems && specItems.length} 건`}</span>}
         />
-      </ContentsWrapper>
+      </StyledContentsWrapper>
     );
   }
 }

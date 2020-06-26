@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Input, Table, Select } from 'antd';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 // import LawModal from 'apps/eshs/user/operation/law/lawModal';
 import request from 'utils/request';
 
-const AntdModal = StyledContentsModal(Modal);
-const AntdTable = StyledLineTable(Table);
+const AntdModal = StyledAntdModal(Modal);
+const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
 
@@ -139,29 +139,31 @@ class LawMasterSeqComp extends Component {
 
     return visible ? (
       <>
-        <AntdInput style={{ width: '30%' }} className="mr5 ant-input-inline" value={this.state.selectedRechNo} placeholder="관리 번호" readOnly />
-        <AntdInput style={{ width: '30%' }} className="mr5 ant-input-inline" value={this.state.selectedLawName} placeholder="법규명" readOnly />
-        <StyledButton className="btn-primary btn-sm" onClick={() => this.isOpenLawModal()} readOnly>
+        <AntdInput style={{ width: '30%' }} className="mr5 ant-input-xs" value={this.state.selectedRechNo} placeholder="관리 번호" readOnly />
+        <AntdInput style={{ width: '30%' }} className="mr5 ant-input-xs" value={this.state.selectedLawName} placeholder="법규명" readOnly />
+        <StyledButton className="btn-light btn-xs" onClick={() => this.isOpenLawModal()} readOnly>
           법규 검색
         </StyledButton>
         <AntdModal visible={this.state.isOpenModal} title="법규 검색" width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
-          <ContentsWrapper>
-            <div className="selSaveWrapper alignLeft">
-              <span className="textLabel">검색구분 </span>
-              <AntdSelect style={{ width: 120 }} className="mr5" onChange={this.onTypeChange} defaultValue="TITLE">
-                <Option value="TITLE">법규명</Option>
-                <Option value="RECH_NO">관리번호</Option>
-                <Option value="REG_USER_NAME">작성자</Option>
-                <Option value="REG_USER_DEPT">작성부서</Option>
-              </AntdSelect>
-              <span className="textLabel"> 검색어 </span>
-              <AntdInput style={{ width: 200 }} className="ant-input-inline" onChange={e => this.onTextChange(e.target.value)} value={this.state.text} />
-              <StyledButtonWrapper className="btn-wrap-inline">
-                <StyledButton className="btn-primary" onClick={() => this.onLawSeach(this.state.type, this.state.text).then(res => this.initData(res))}>
-                  Search
+          <StyledContentsWrapper>
+            <StyledCustomSearchWrapper className="search-wrapper-inline">
+              <div className="search-input-area">
+                <span className="text-label">검색구분 </span>
+                <AntdSelect style={{ width: 120 }} className="mr5 select-sm" onChange={this.onTypeChange} defaultValue="TITLE">
+                  <Option value="TITLE">법규명</Option>
+                  <Option value="RECH_NO">관리번호</Option>
+                  <Option value="REG_USER_NAME">작성자</Option>
+                  <Option value="REG_USER_DEPT">작성부서</Option>
+                </AntdSelect>
+                <span className="text-label"> 검색어 </span>
+                <AntdInput style={{ width: 200 }} className="ant-input-sm" onChange={e => this.onTextChange(e.target.value)} value={this.state.text} />
+              </div>
+              <div className="btn-area">
+                <StyledButton className="btn-gray btn-sm" onClick={() => this.onLawSeach(this.state.type, this.state.text).then(res => this.initData(res))}>
+                  검색
                 </StyledButton>
-              </StyledButtonWrapper>
-            </div>
+              </div>
+            </StyledCustomSearchWrapper>
             <AntdTable
               onRow={record => ({
                 onClick: () => {
@@ -174,7 +176,7 @@ class LawMasterSeqComp extends Component {
               columns={lawColumns}
               dataSource={this.state.data}
             />
-          </ContentsWrapper>
+          </StyledContentsWrapper>
         </AntdModal>
       </>
     ) : (

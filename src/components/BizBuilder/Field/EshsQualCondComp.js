@@ -13,7 +13,7 @@ import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsMod
 import Upload from 'components/FormStuff/Upload';
 import ConfirmResult from 'apps/eshs/user/safety/eshsQual/qualApprove/confirmResult';
 
-import { Input, Select, Table, Checkbox, message, Modal, Tooltip } from 'antd';
+import { Input, Select, Table, Checkbox, message, Modal, Popover } from 'antd';
 
 const AntdModal = StyledContentsModal(Modal);
 
@@ -106,7 +106,7 @@ class EshsQualCondComp extends Component {
     const depts = (extraApiData && extraApiData[`${id}_COND_DEPT`] && extraApiData[`${id}_COND_DEPT`].categoryMapList) || [];
 
     const condCategories = categories.filter(c => c.LVL === 3 && c.USE_YN === 'Y');
-    const condDept = depts.filter(d => deptCodeList.indexOf(d.CODE) > -1 && d.USE_YN === 'Y');
+    const condDept = depts.filter(d => deptCodeList.indexOf(d.CODE) > -1);
 
     let resultWidth = '50%';
     let approveWidth = '50%';
@@ -160,20 +160,20 @@ class EshsQualCondComp extends Component {
           render: (text, record, index) => {
             if (APPROVE_TYPE === 'INPUT') {
               return (
-                <Tooltip title={text}>
+                <Popover content={text} trigger="focus">
                   <Input
                     className="ant-input-inline ant-input-sm input-left"
                     defaultValue={record.APPROVE_QUAL_COMMENT || ''}
                     onChange={e => this.debounceHandelOnChange('APPROVE_QUAL_COMMENT', e.target.value, index)}
                   />
-                </Tooltip>
+                </Popover>
               );
             }
             if (APPROVE_TYPE === 'VIEW') {
               return (
-                <Tooltip title={text}>
+                <Popover content={text} trigger="hover">
                   <span>{record.APPROVE_QUAL_COMMENT}</span>{' '}
-                </Tooltip>
+                </Popover>
               );
             }
             return '';
@@ -293,22 +293,24 @@ class EshsQualCondComp extends Component {
           title: '개선내용',
           dataIndex: 'RESULT_QUAL_COMMENT',
           width: '34%',
+          align: 'center',
+
           render: (text, record, index) => {
             if (RESULT_TYPE === 'INPUT') {
               return (
-                <Tooltip title={text}>
+                <Popover content={text} trigger="focus">
                   <Input
                     className="ant-input-inline ant-input-sm input-left"
                     defaultValue={record.RESULT_QUAL_COMMENT || ''}
                     onChange={e => this.debounceHandelOnChange('RESULT_QUAL_COMMENT', e.target.value, index)}
                   />
-                </Tooltip>
+                </Popover>
               );
             }
             return (
-              <Tooltip title={text}>
+              <Popover content={text} trigger="hover">
                 <span>{record.RESULT_QUAL_COMMENT || ''}</span>{' '}
-              </Tooltip>
+              </Popover>
             );
           },
         },
@@ -444,13 +446,13 @@ class EshsQualCondComp extends Component {
     const condList = (formData && formData.condList) || [];
     const initCondList = [];
     if (APPROVE_TYPE === 'INPUT') {
-      initCondList.push({ ...initRow, APPROVE_CATEGORY_CD: 2128, APPROVE_DEPT_CD: 2118, APPROVE_FILE_TYPE: 'TEMP', STEP: '1' });
-      initCondList.push({ ...initRow, APPROVE_CATEGORY_CD: 2128, APPROVE_DEPT_CD: 2118, APPROVE_FILE_TYPE: 'TEMP', STEP: '1' });
-      initCondList.push({ ...initRow, APPROVE_CATEGORY_CD: 2128, APPROVE_DEPT_CD: 2118, APPROVE_FILE_TYPE: 'TEMP', STEP: '1' });
+      initCondList.push({ ...initRow, APPROVE_CATEGORY_CD: 2128, APPROVE_DEPT_CD: 19263, APPROVE_FILE_TYPE: 'TEMP', STEP: '1' });
+      initCondList.push({ ...initRow, APPROVE_CATEGORY_CD: 2128, APPROVE_DEPT_CD: 19263, APPROVE_FILE_TYPE: 'TEMP', STEP: '1' });
+      initCondList.push({ ...initRow, APPROVE_CATEGORY_CD: 2128, APPROVE_DEPT_CD: 19263, APPROVE_FILE_TYPE: 'TEMP', STEP: '1' });
     } else if (RESULT_TYPE === 'INPUT') {
-      initCondList.push({ ...initRow, RESULT_CATEGORY_CD: 2128, RESULT_DEPT_CD: 2118, RESULT_FILE_TYPE: 'TEMP', STEP: '3' });
-      initCondList.push({ ...initRow, RESULT_CATEGORY_CD: 2128, RESULT_DEPT_CD: 2118, RESULT_FILE_TYPE: 'TEMP', STEP: '3' });
-      initCondList.push({ ...initRow, RESULT_CATEGORY_CD: 2128, RESULT_DEPT_CD: 2118, RESULT_FILE_TYPE: 'TEMP', STEP: '3' });
+      initCondList.push({ ...initRow, RESULT_CATEGORY_CD: 2128, RESULT_DEPT_CD: 19263, RESULT_FILE_TYPE: 'TEMP', STEP: '3' });
+      initCondList.push({ ...initRow, RESULT_CATEGORY_CD: 2128, RESULT_DEPT_CD: 19263, RESULT_FILE_TYPE: 'TEMP', STEP: '3' });
+      initCondList.push({ ...initRow, RESULT_CATEGORY_CD: 2128, RESULT_DEPT_CD: 19263, RESULT_FILE_TYPE: 'TEMP', STEP: '3' });
     }
     changeFormData(id, 'condList', condList.concat(initCondList));
   };

@@ -139,7 +139,7 @@ class DeptSearchBar extends Component {
     return (
       <StyledCustomSearchWrapper className="search-wrapper-inline">
         <div className="search-input-area">
-          <span className="textLabel">평가년도</span>
+          <span className="text-label">평가년도</span>
           <AntdSelect className="select-sm mr5" value={formData.CHK_YEAR} style={{ width: 130 }} onChange={this.handleYearChange}>
             {years.map(y => (
               <Option key={y} value={y}>
@@ -147,9 +147,9 @@ class DeptSearchBar extends Component {
               </Option>
             ))}
           </AntdSelect>
-          <span className="textLabel">부서코드</span>
+          <span className="text-label">부서코드</span>
           <AntdSearch
-            className="input-search-sm ant-search-inline mr5"
+            className="input-search-sm mr5"
             name="DEPT_CD"
             value={searchRow.DEPT_CD ? searchRow.DEPT_CD : myDept.DEPT_CD}
             style={{ width: 150 }}
@@ -159,14 +159,14 @@ class DeptSearchBar extends Component {
             onSearch={this.handleModal}
           />
           <AntdInput
-            className="ant-input-sm ant-input-inline mr5"
+            className="ant-input-sm ant-input-inline"
             value={searchRow.NAME_KOR ? searchRow.NAME_KOR : myDept.NAME_KOR}
             style={{ width: 150 }}
             readOnly
           />
         </div>
         <div className="btn-area">
-          <StyledButton className="btn-gray btn-sm mr5" onClick={this.handleDeptSearch}>
+          <StyledButton className="btn-gray btn-sm" onClick={this.handleDeptSearch}>
             검색
           </StyledButton>
           {eiMaterialCnt > 0 && itemList.length > 0 && !searchFlag && (

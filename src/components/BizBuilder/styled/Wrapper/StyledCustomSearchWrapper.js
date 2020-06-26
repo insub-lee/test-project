@@ -43,7 +43,6 @@ const StyledCustomSearchWrapper = styled.div`
     .search-input-area,
     .btn-area {
       display: inline-block;
-      vertical-align: middle;
     }
 
     .btn-area {

@@ -227,6 +227,8 @@ class ModifyPage extends Component {
     changeViewPage(id, workSeq, -1, 'INPUT');
   };
 
+  customPageMove = () => false;
+
   render = () => {
     const {
       sagaKey: id,
@@ -280,7 +282,7 @@ class ModifyPage extends Component {
                 </StyledButton>
                 <Popconfirm
                   title="정말 삭제하시겠습니까?"
-                  onConfirm={() => deleteTask(id, reloadId, workSeq, changeViewPage, this.deleteCallback)}
+                  onConfirm={() => deleteTask(id, reloadId, workSeq, this.customPageMove, this.deleteCallback)}
                   okText="Yes"
                   cancelText="No"
                 >

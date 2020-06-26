@@ -1,6 +1,6 @@
  server {
     listen 80;
-    server_name dev.portal.com, eshs-dev.magnachip.com, magnachip.bizmicro.com;
+    server_name 127.0.0.1;
     client_max_body_size 1000M;
 
     location ~ /eventbus/ {
@@ -231,6 +231,16 @@
             proxy_set_header     host $http_host;
     }
 
+    location ~ ^(/api/mxlife/v1/common) {
+            proxy_pass  http://mxlife-common;
+            proxy_connect_timeout 10;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+
     location ~ ^/img/thumb/crop/(.*)/(.*)$ {
         proxy_pass http://thumbor/unsafe/$1/http://dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:40033/down/thumb/$2;
         proxy_connect_timeout 60;
@@ -326,6 +336,29 @@
 
 }
 
+# 외부 다운로드 링크 테스트
+server {
+	listen 80;
+	server_name dl-dev.magnachip.com;
+	client_max_body_size 1000M;
+	
+	location /share {
+        proxy_pass  http://portal-download;
+        proxy_connect_timeout 60;
+        proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+        proxy_set_header     user_agent $http_user_agent;
+        proxy_set_header     referer $http_referer;
+        proxy_set_header     host $http_host;
+	}
+	
+	location / {
+		return 307 https://www.magnachip.com;
+		#return 404;
+	}
+}
+
+
 upstream portal-sockjs {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:17000;
 }
@@ -397,6 +430,9 @@ upstream portal-filemanage {
 }
 upstream wts-common {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10801;
+}
+upstream mxlife-common {
+    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10901;
 }
 upstream thumbor {
     server dev-biz-thumbor.marathon.l4lb.thisdcos.directory:8000;

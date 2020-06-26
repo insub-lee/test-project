@@ -68,7 +68,7 @@ class ExcelDownloadComp extends Component {
         <ExcelFile
           filename={CONFIG.property.fileName || workInfo.NAME_KOR}
           element={
-            <StyledButton className="btn-gray btn-xs">
+            <StyledButton className="btn-img btn-gray btn-sm">
               <FileExcelOutlined />
               &nbsp;{CONFIG.property.btnText || '엑셀 다운로드'}
             </StyledButton>
@@ -87,7 +87,7 @@ class ExcelDownloadComp extends Component {
         filename={this.props.fileName}
         element={
           <span className={this.props.className}>
-            <StyledButton className="btn-gray btn-xs">
+            <StyledButton className="btn-img btn-gray btn-sm">
               <FileExcelOutlined />
               &nbsp;{this.props.btnText}
             </StyledButton>

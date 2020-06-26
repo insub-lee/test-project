@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, Select, DatePicker, Modal } from 'antd';
 import moment from 'moment';
-import { debounce } from 'lodash';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
+import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import ModalContents from './modalContents';
 
@@ -30,7 +30,6 @@ class List extends React.Component {
           .format('YYYY-MM-DD'),
         endDate: moment().format('YYYY-MM-DD'),
         type: '',
-        hqId: '',
         deptId: '',
       },
       modalVisible: false,
@@ -39,7 +38,6 @@ class List extends React.Component {
       departmentList: [],
       isHeadquarterSelect: false,
     };
-    this.getSearchData = debounce(this.getSearchData, 500);
   }
 
   componentDidMount() {
@@ -50,9 +48,9 @@ class List extends React.Component {
 
   getDataSource = () => {
     const { setDataSource } = this;
-    const { site, startDate, endDate, type, hqId, deptId } = this.state.searchValue;
+    const { site, startDate, endDate, type, deptId } = this.state.searchValue;
     const { sagaKey: id, getExtraApiData } = this.props;
-    const params = `?SITE=${site}&START_DATE=${startDate}&END_DATE=${endDate}&TYPE=${type}&HQ_ID=${hqId}&DEPT_ID=${deptId}`;
+    const params = `?SITE=${site}&START_DATE=${startDate}&END_DATE=${endDate}&TYPE=${type}&DEPT_ID=${deptId}`;
     const apiArr = [
       {
         key: 'dataSource',
@@ -96,15 +94,15 @@ class List extends React.Component {
   handleHqChange = headquarterId => {
     const { sagaKey: id, getExtraApiData } = this.props;
     if (!headquarterId) {
-      return this.setState(
-        prevState => ({
-          isHeadquarterSelect: false,
-          searchValue: Object.assign(prevState.searchValue, { deptId: '' }, { hqId: headquarterId }),
-        }),
-        this.getDataSource,
-      );
+      return this.setState(prevState => ({
+        isHeadquarterSelect: false,
+        searchValue: Object.assign(prevState.searchValue, { deptId: '' }),
+      }));
     }
-    this.setState({ isHeadquarterSelect: true });
+
+    this.setState({
+      isHeadquarterSelect: true,
+    });
     const apiArr = [
       {
         key: 'deptListUnderHq',
@@ -114,7 +112,6 @@ class List extends React.Component {
     ];
 
     const selectHqCallback = () => {
-      this.getDataSource();
       this.setDeptList();
     };
 
@@ -135,81 +132,83 @@ class List extends React.Component {
       dataIndex: 'KIND',
       key: 'KIND',
       width: '255px',
+      align: 'center',
     },
     {
       title: '모델',
       dataIndex: 'MODEL',
       key: 'MODEL',
       width: '220px',
+      align: 'center',
     },
     {
       title: 'Size',
       dataIndex: 'SIZE1',
       key: 'SIZE1',
       width: '110px',
+      align: 'center',
     },
     {
       title: '업체',
       dataIndex: 'VENDOR_NM',
       key: 'VENDOR_NM',
       width: '110px',
+      align: 'center',
     },
     {
       title: '입출',
       dataIndex: 'TYPE',
       key: 'TYPE',
       width: '85px',
+      align: 'center',
     },
     {
       title: '단가',
       dataIndex: 'UNITPRICE',
       key: 'UNITPRICE',
       width: '80px',
+      align: 'center',
     },
     {
       title: '수량',
       dataIndex: 'QTY',
       key: 'QTY',
       width: '50px',
+      align: 'center',
     },
     {
       title: '금액',
       dataIndex: 'TOTAL_PRICE',
       key: 'TOTAL_PRICE',
       width: '80px',
+      align: 'center',
     },
     {
       title: '발생일',
       dataIndex: 'POSTING_DT',
       key: 'POSTING_DT',
       width: '120px',
+      align: 'center',
     },
     {
       title: '출고장소',
       dataIndex: 'DEPT_NAME_KOR',
       key: 'DEPT_NAME_KOR',
       width: '150px',
+      align: 'center',
     },
   ];
 
   handleSearchChange = (key, value) => {
-    const { getSearchData } = this;
-    this.setState(
-      prevState => ({
-        searchValue: Object.assign(prevState.searchValue, { [key]: value }),
-      }),
-      getSearchData,
-    );
+    this.setState(prevState => ({
+      searchValue: Object.assign(prevState.searchValue, { [key]: value }),
+    }));
   };
 
   handleSearchDateChange = (date, dateString) => {
-    const { getSearchData } = this;
-    this.setState(
-      prevState => ({
-        searchValue: Object.assign(prevState.searchValue, { startDate: dateString[0], endDate: dateString[1] }),
-      }),
-      getSearchData,
-    );
+    this.setState(prevState => ({
+      searchValue: Object.assign(prevState.searchValue, { startDate: dateString[0], endDate: dateString[1] }),
+    }));
   };
 
   handleModalVisible = () => {
@@ -235,23 +234,27 @@ class List extends React.Component {
       <>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
-            <div style={{ marginBottom: '10px' }}>
-              <AntdSelect defaultValue="CP" className="select-mid mr5" onChange={value => handleSearchChange('site', value)} style={{ width: '10%' }}>
-                <Select.Option value="CP">청주</Select.Option>
-                <Select.Option value="GP">구미</Select.Option>
+            <div className="search-input-area mb10">
+              <span className="text-label">지역</span>
+              <AntdSelect defaultValue={317} className="select-mid mr5" onChange={value => handleSearchChange('site', value)} style={{ width: '10%' }}>
+                <Select.Option value={317}>청주</Select.Option>
+                <Select.Option value={318}>구미</Select.Option>
               </AntdSelect>
+              <span className="text-label">기간</span>
               <AntdPicker
                 className="ant-picker-mid"
                 defaultValue={[moment(searchValue.startDate), moment(searchValue.endDate)]}
                 onChange={handleSearchDateChange}
               />
             </div>
-            <div>
+            <div className="search-input-area">
+              <span className="text-label">상태</span>
               <AntdSelect defaultValue="" className="select-mid mr5" onChange={value => handleSearchChange('type', value)} style={{ width: '10%' }}>
                 <Select.Option value="E">입고</Select.Option>
                 <Select.Option value="R">출고</Select.Option>
                 <Select.Option value="">전체</Select.Option>
               </AntdSelect>
+              <span className="text-label">부서</span>
               <AntdSelect defaultValue="" className="select-mid mr5" onChange={handleHqChange} style={{ width: '20%' }}>
                 <Select.Option value="">본부 전체</Select.Option>
                 {headquarterList.map(headquarter => (
@@ -265,17 +268,24 @@ class List extends React.Component {
                 className="select-mid mr5"
                 onChange={value => handleSearchChange('deptId', value)}
                 style={{ width: '20%' }}
+                placeholder="본부를 먼저 선택해주세요."
               >
-                <Select.Option value="">팀 전체</Select.Option>
-                {departmentList.map(department => (
-                  <Select.Option value={department.DEPT_ID}>{department.NAME_KOR}</Select.Option>
+                {departmentList.map((department, index) => (
+                  <Select.Option value={department.DEPT_ID}>{!index ? '팀 전체' : department.NAME_KOR}</Select.Option>
                 ))}
               </AntdSelect>
-              <StyledButton className="btn-primary btn-sm mr5" onClick={handleModalVisible}>
-                입고등록
-              </StyledButton>
+              <div className="btn-area">
+                <StyledButton className="btn-gray btn-sm" onClick={this.getSearchData}>
+                  검색
+                </StyledButton>
+              </div>
             </div>
           </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm" onClick={handleModalVisible}>
+              입고등록
+            </StyledButton>
+          </StyledButtonWrapper>
           <div style={{ padding: '10px' }}>
             <AntdTable
               columns={columns}
