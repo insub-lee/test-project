@@ -232,17 +232,6 @@ export const sapUsageColumn = [
         sortable: true,
       },
       {
-        headerName: 'CAS_NO',
-        field: 'CAS_NO',
-        filter: 'agTextColumnFilter',
-      },
-      {
-        headerName: '화학물질명_국문',
-        field: 'NAME_KOR',
-        filter: 'agTextColumnFilter',
-        width: 140,
-      },
-      {
         headerName: '화학물질명_SAP',
         field: 'NAME_SAP',
         filter: 'agTextColumnFilter',
