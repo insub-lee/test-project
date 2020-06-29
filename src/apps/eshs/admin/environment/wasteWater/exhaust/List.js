@@ -46,13 +46,15 @@ class List extends Component {
     const {
       result: { eshsExhaust },
     } = this.props;
-    const { EXHAUST_IN_WATER, EXHAUST_OUT_PRC_FAB, EXHAUST_OUT_PRC_IN, EXHAUST_OUT_LAST } = eshsExhaust.exhaust;
-    this.setState({
-      exhaustInWater: EXHAUST_IN_WATER,
-      exhaustOutPrcFab: EXHAUST_OUT_PRC_FAB,
-      exhaustOutPrcIn: EXHAUST_OUT_PRC_IN,
-      exhaustOutLast: EXHAUST_OUT_LAST,
-    });
+    if (eshsExhaust && eshsExhaust.exhaust) {
+      const { EXHAUST_IN_WATER, EXHAUST_OUT_PRC_FAB, EXHAUST_OUT_PRC_IN, EXHAUST_OUT_LAST } = eshsExhaust.exhaust;
+      this.setState({
+        exhaustInWater: EXHAUST_IN_WATER,
+        exhaustOutPrcFab: EXHAUST_OUT_PRC_FAB,
+        exhaustOutPrcIn: EXHAUST_OUT_PRC_IN,
+        exhaustOutLast: EXHAUST_OUT_LAST,
+      });
+    }
   };
 
   onChange = (name, value) => {
@@ -62,7 +64,6 @@ class List extends Component {
   onFlowChartSave = (id, result) => {
     const { submitHandlerBySaga } = this.props;
     const { exhaustInWater, exhaustOutPrcFab, exhaustOutPrcIn, exhaustOutLast } = this.state;
-
     const submitData = {
       PARAM: {
         EXHAUST_DESIGN: result.DESIGN_DATA,
@@ -89,8 +90,6 @@ class List extends Component {
       sagaKey: id,
       result: { eshsExhaust },
       eshsExhaustView,
-      nodes,
-      edges,
     } = this.props;
     const EXHAUST_DESIGN = eshsExhaust && eshsExhaust.exhaust && JSON.parse(eshsExhaust.exhaust.EXHAUST_DESIGN);
     // 약품투입 및 배출 현황데이터
@@ -102,8 +101,6 @@ class List extends Component {
       nodes: EXHAUST_DESIGN && EXHAUST_DESIGN.nodes,
       edges: EXHAUST_DESIGN && EXHAUST_DESIGN.edges,
     };
-    // 제품 생산 공정도 design
-    const fairnessData = { nodes, edges };
     return (
       <ContentsWrapper>
         {eshsExhaustView ? (
@@ -122,7 +119,31 @@ class List extends Component {
               <GGEditor style={{ width: 400, border: '1px solid #444444', display: 'inline-block' }}>
                 <Row type="flex">
                   <Col span={24}>
-                    <Flow style={{ width: '100%', height: 800 }} data={fairnessData} graph={graphConfig} />
+                    <Flow
+                      style={{ width: '100%', height: 800 }}
+                      data={{
+                        nodes: [
+                          { type: 'node', id: 'materialInput', label: '원료투입', x: 200, y: 36.5, index: 1 },
+                          { type: 'node', id: 'oxideFilmStorage', label: '산화막저장', x: 200, y: 136.5, index: 2 },
+                          { type: 'node', id: 'photosensitive', label: '사진감광', x: 200, y: 236.5, index: 3 },
+                          { type: 'node', id: 'WashingDeveloper', label: '현상액 세척', x: 200, y: 336.5, index: 4 },
+                          { type: 'node', id: 'etchingAndwashing', label: '식각 및 세척', x: 200, y: 436.5, index: 5 },
+                          { type: 'node', id: 'diffusion', label: '확산', x: 200, y: 536.5, index: 6 },
+                          { type: 'node', id: 'screeningWork', label: '선별 작업', x: 200, y: 636.5, index: 7 },
+                          { type: 'node', id: 'cut', label: '절단', x: 200, y: 736.5, index: 8 },
+                        ],
+                        edges: [
+                          { source: 'materialInput', sourceAnchor: 2, target: 'oxideFilmStorage', targetAnchor: 0, id: 'fed3d49d', index: 8 },
+                          { source: 'oxideFilmStorage', sourceAnchor: 2, target: 'photosensitive', targetAnchor: 0, id: '35ad73b8', index: 9 },
+                          { source: 'photosensitive', sourceAnchor: 2, target: 'WashingDeveloper', targetAnchor: 0, id: '13a2e30a', index: 10 },
+                          { source: 'WashingDeveloper', sourceAnchor: 2, target: 'etchingAndwashing', targetAnchor: 0, id: '4455e73d', index: 11 },
+                          { source: 'etchingAndwashing', sourceAnchor: 2, target: 'diffusion', targetAnchor: 0, id: '5262c28e', index: 12 },
+                          { source: 'diffusion', sourceAnchor: 2, target: 'screeningWork', targetAnchor: 0, id: '9d1a7f0a', index: 13 },
+                          { source: 'screeningWork', sourceAnchor: 2, target: 'cut', targetAnchor: 0, id: '15203d09', index: 14 },
+                        ],
+                      }}
+                      graph={graphConfig}
+                    />
                   </Col>
                 </Row>
               </GGEditor>
@@ -284,137 +305,75 @@ List.propTypes = {
   submitHandlerBySaga: PropTypes.func,
   getCallDataHandler: PropTypes.func,
   result: PropTypes.object,
-  nodes: PropTypes.array,
-  edges: PropTypes.array,
   eshsExhaustView: PropTypes.bool,
 };
 
 List.defaultProps = {
   getCallDataHandler: () => {},
-  nodes: [
-    {
-      type: 'node',
-      id: 'materialInput',
-      label: '원료투입',
-      x: 200,
-      y: 36.5,
-      index: 1,
-    },
-    {
-      type: 'node',
-      id: 'oxideFilmStorage',
-      label: '산화막저장',
-      x: 200,
-      y: 136.5,
-      index: 2,
-    },
-    {
-      type: 'node',
-      id: 'photosensitive',
-      label: '사진감광',
-      x: 200,
-      y: 236.5,
-      index: 3,
-    },
-    {
-      type: 'node',
-      id: 'WashingDeveloper',
-      label: '현상액 세척',
-      x: 200,
-      y: 336.5,
-      index: 4,
-    },
-    {
-      type: 'node',
-      id: 'etchingAndwashing',
-      label: '식각 및 세척',
-      x: 200,
-      y: 436.5,
-      index: 5,
-    },
-    {
-      type: 'node',
-      id: 'diffusion',
-      label: '확산',
-      x: 200,
-      y: 536.5,
-      index: 6,
-    },
-    {
-      type: 'node',
-      id: 'screeningWork',
-      label: '선별 작업',
-      x: 200,
-      y: 636.5,
-      index: 7,
-    },
-    {
-      type: 'node',
-      id: 'cut',
-      label: '절단',
-      x: 200,
-      y: 736.5,
-      index: 8,
-    },
-  ],
-  edges: [
-    {
-      source: 'materialInput',
-      sourceAnchor: 2,
-      target: 'oxideFilmStorage',
-      targetAnchor: 0,
-      id: 'fed3d49d',
-      index: 8,
-    },
-    {
-      source: 'oxideFilmStorage',
-      sourceAnchor: 2,
-      target: 'photosensitive',
-      targetAnchor: 0,
-      id: '35ad73b8',
-      index: 9,
-    },
-    {
-      source: 'photosensitive',
-      sourceAnchor: 2,
-      target: 'WashingDeveloper',
-      targetAnchor: 0,
-      id: '13a2e30a',
-      index: 10,
-    },
-    {
-      source: 'WashingDeveloper',
-      sourceAnchor: 2,
-      target: 'etchingAndwashing',
-      targetAnchor: 0,
-      id: '4455e73d',
-      index: 11,
-    },
-    {
-      source: 'etchingAndwashing',
-      sourceAnchor: 2,
-      target: 'diffusion',
-      targetAnchor: 0,
-      id: '5262c28e',
-      index: 12,
-    },
-    {
-      source: 'diffusion',
-      sourceAnchor: 2,
-      target: 'screeningWork',
-      targetAnchor: 0,
-      id: '9d1a7f0a',
-      index: 13,
-    },
-    {
-      source: 'screeningWork',
-      sourceAnchor: 2,
-      target: 'cut',
-      targetAnchor: 0,
-      id: '15203d09',
-      index: 14,
-    },
-  ],
+  // 제품 생산 공정도
+  // nodes: [
+  //   { type: 'node', id: 'materialInput', label: '원료투입', x: 200, y: 36.5, index: 1 },
+  //   { type: 'node', id: 'oxideFilmStorage', label: '산화막저장', x: 200, y: 136.5, index: 2 },
+  //   { type: 'node', id: 'photosensitive', label: '사진감광', x: 200, y: 236.5, index: 3 },
+  //   { type: 'node', id: 'WashingDeveloper', label: '현상액 세척', x: 200, y: 336.5, index: 4 },
+  //   { type: 'node', id: 'etchingAndwashing', label: '식각 및 세척', x: 200, y: 436.5, index: 5 },
+  //   { type: 'node', id: 'diffusion', label: '확산', x: 200, y: 536.5, index: 6 },
+  //   { type: 'node', id: 'screeningWork', label: '선별 작업', x: 200, y: 636.5, index: 7 },
+  //   { type: 'node', id: 'cut', label: '절단', x: 200, y: 736.5, index: 8 },
+  // ],
+  // edges: [
+  //   { source: 'materialInput', sourceAnchor: 2, target: 'oxideFilmStorage', targetAnchor: 0, id: 'fed3d49d', index: 8 },
+  //   { source: 'oxideFilmStorage', sourceAnchor: 2, target: 'photosensitive', targetAnchor: 0, id: '35ad73b8', index: 9 },
+  //   { source: 'photosensitive', sourceAnchor: 2, target: 'WashingDeveloper', targetAnchor: 0, id: '13a2e30a', index: 10 },
+  //   { source: 'WashingDeveloper', sourceAnchor: 2, target: 'etchingAndwashing', targetAnchor: 0, id: '4455e73d', index: 11 },
+  //   { source: 'etchingAndwashing', sourceAnchor: 2, target: 'diffusion', targetAnchor: 0, id: '5262c28e', index: 12 },
+  //   { source: 'diffusion', sourceAnchor: 2, target: 'screeningWork', targetAnchor: 0, id: '9d1a7f0a', index: 13 },
+  //   { source: 'screeningWork', sourceAnchor: 2, target: 'cut', targetAnchor: 0, id: '15203d09', index: 14 },
+  // ],
+
+  // 폐수 배출 과정
+  // nodes: [
+  //   { id: 'circle5', index: 10, shape: 'flow-circle', size: '1*1', type: 'node', x: 387, y: 68 },
+  //   { id: 'materialInput', index: 12, label: '공업용수', size: '50*50', type: 'node', x: 47, y: 495 },
+  //   { id: 'circle7', index: 14, shape: 'flow-circle', size: '1*1', type: 'node', x: 47, y: 109 },
+  //   { id: 'circle4', index: 15, shape: 'flow-circle', size: '1*1', type: 'node', x: 47, y: 668 },
+  //   { id: 'circle9', index: 24, shape: 'flow-circle', size: '1*1', type: 'node', x: 47, y: 384 },
+  //   { id: 'pureMake', index: 25, label: '초순수 제조', size: '100*50', type: 'node', x: 155, y: 299 },
+  //   { id: 'make', index: 26, label: '생산', size: '50*50', type: 'node', x: 349, y: 299 },
+  //   { id: 'pureRecover', index: 27, label: '초순수 재사용', size: '100*50', type: 'node', x: 253, y: 250 },
+  //   { id: 'pureWaste', index: 28, label: '초순수 폐수', size: '100*50', type: 'node', x: 253, y: 360 },
+  //   { id: 'circle2', index: 29, shape: 'flow-circle', size: '1*1', type: 'node', x: 483, y: 299 },
+  //   { id: 'waste', index: 30, label: '폐수처리', size: '50*50', type: 'node', x: 483, y: 495 },
+  //   { id: 'circle6', index: 31, shape: 'flow-circle', size: '1*1', type: 'node', x: 483, y: 150 },
+  //   { id: 'sluge', index: 32, label: '탈수여액(슬러지)', size: '100*50', type: 'node', x: 253, y: 495 },
+  //   { id: 'utility', index: 33, label: '기타(Utility)', size: '100*50', type: 'node', x: 155, y: 190 },
+  //   { id: 'airExhuest', index: 34, label: '대기방지시설', size: '100*50', type: 'node', x: 155, y: 109 },
+  //   { id: 'ctIce', index: 35, label: 'C/T(냉동기)', size: '100*50', type: 'node', x: 155, y: 28 },
+  // ],
+  // edges: [
+  //   { id: '2925382f', index: 0, label: '6639', source: 'circle4', sourceAnchor: 0, target: 'materialInput', targetAnchor: 2 },
+  //   { id: '5369c226', index: 1, label: '3120(47%)', source: 'circle9', sourceAnchor: 0, target: 'circle7', targetAnchor: 2 },
+  //   { id: '10599704', index: 2, label: '3519(53%)', source: 'circle9', sourceAnchor: 1, target: 'pureMake', targetAnchor: 3 },
+  //   { id: '7369e3e1', index: 3, label: '2190', source: 'circle7', sourceAnchor: 1, target: 'ctIce', targetAnchor: 3 },
+  //   { id: '4a04f900', index: 4, label: '679', source: 'circle7', sourceAnchor: 1, target: 'airExhuest', targetAnchor: 3 },
+  //   { id: '8a2d4161', index: 5, label: '251', source: 'circle7', sourceAnchor: 1, target: 'utility', targetAnchor: 3 },
+  //   { id: 'b8980f6b', index: 6, source: 'ctIce', sourceAnchor: 1, target: 'circle5', targetAnchor: 3 },
+  //   { id: 'b98c426e', index: 7, source: 'airExhuest', sourceAnchor: 1, target: 'circle5', targetAnchor: 3 },
+  //   { id: '26efe292', index: 8, source: 'airExhuest', sourceAnchor: 1, target: 'circle6', targetAnchor: 3 },
+  //   { id: '6a7a753c', index: 9, source: 'utility', sourceAnchor: 1, target: 'circle6', targetAnchor: 3 },
+  //   { id: 'e93b2a38', index: 11, label: '6', source: 'waste', sourceAnchor: 3, target: 'sluge', targetAnchor: 1 },
+  //   { id: '3e8fe8aa', index: 13, label: '6639', source: 'materialInput', sourceAnchor: 0, target: 'circle9', targetAnchor: 2 },
+  //   { id: '9addad72', index: 16, label: '1241', source: 'circle6', sourceAnchor: 2, target: 'circle2', targetAnchor: 0 },
+  //   { id: 'c205f5c2', index: 17, label: '4760', source: 'circle2', sourceAnchor: 2, target: 'waste', targetAnchor: 0 },
+  //   { id: 'd3a47df7', index: 18, label: '2650', source: 'make', sourceAnchor: 1, target: 'circle2', targetAnchor: 3 },
+  //   { id: '42814213', index: 19, label: '4792', source: 'pureMake', sourceAnchor: 1, target: 'make', targetAnchor: 3 },
+  //   { id: 'f4e36732', index: 20, label: undefined, source: 'make', sourceAnchor: 0, target: 'pureRecover', targetAnchor: 1 },
+  //   { id: 'e2aa9fb9', index: 21, label: '2142', source: 'pureRecover', sourceAnchor: 3, target: 'pureMake', targetAnchor: 0 },
+  //   { id: '63466b90', index: 22, source: 'pureMake', sourceAnchor: 2, target: 'pureWaste', targetAnchor: 3 },
+  //   { id: 'ba83ed37', index: 23, label: '869', source: 'pureWaste', sourceAnchor: 1, target: 'circle2', targetAnchor: 2 },
+  //   { id: 'acf0ac23', index: 36, label: '1879', source: 'circle5', sourceAnchor: 1, target: { x: 484, y: 68 } },
+  //   { id: '0ced5274', index: 37, label: '4754', source: 'waste', sourceAnchor: 2, target: { x: 481, y: 663 } },
+  // ],
 };
 
 export default List;

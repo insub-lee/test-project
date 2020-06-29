@@ -69,7 +69,7 @@ class ChkHospitalView extends Component {
     submitHandlerBySaga(sagaKey, (this.state.saveType === 'I' ? 'POST' : 'PUT'), `/api/eshs/v1/common/health/healthChkHospital`, submitData, (id, response) => {
       if (response) {
         if (response.result === 1) {
-          message.info(<MessageContent>저장되었습니다.</MessageContent>);
+          message.success(<MessageContent>저장되었습니다.</MessageContent>);
           onSaveAfter();
         } else if (response.result === -1) {
           message.warn(<MessageContent>동일한 코드가 존재합니다.</MessageContent>);

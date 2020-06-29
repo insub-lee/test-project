@@ -24,7 +24,7 @@ function JoinReadComp(props) {
                 : changeViewPage(id, rowData.WORK_SEQ, rowData.TASK_SEQ, CONFIG.property.changeViewType || 'VIEW')
             }
             className={CONFIG.property.className || ''}
-            style={{ textOverflow: 'ellipsis', overflow: 'hidden', width: '100px', whiteSpace: 'nowrap', fontWeight: `${bold}`, cursor: 'pointer' }}
+            style={{ textOverflow: 'ellipsis', overflow: 'hidden', width: '100%', whiteSpace: 'nowrap', fontWeight: `${bold}`, cursor: 'pointer' }}
           >
             {content}
           </span>
@@ -47,7 +47,7 @@ function JoinReadComp(props) {
               : changeViewPage(id, rowData.WORK_SEQ, rowData.TASK_SEQ, CONFIG.property.changeViewType || 'VIEW')
           }
           className={CONFIG.property.className || ''}
-          style={{ textOverflow: 'ellipsis', overflow: 'hidden', width: '100px', whiteSpace: 'nowrap', fontWeight: `${bold}`, cursor: 'pointer' }}
+          style={{ textOverflow: 'ellipsis', overflow: 'hidden', width: '100%', whiteSpace: 'nowrap', fontWeight: `${bold}`, cursor: 'pointer' }}
         >
           {content}
         </span>

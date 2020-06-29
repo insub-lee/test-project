@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import { Input, Checkbox, Popconfirm, Popover } from 'antd';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 
 import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
-import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import { createExcelData } from 'apps/eshs/common/createExcelData';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import moment from 'moment';
 import message from 'components/Feedback/message';
@@ -184,21 +184,20 @@ class ItemTable extends Component {
             btnText="Excel Download"
             sheetName={`Air_${moment().format('YYYYMMDD')}`}
             listData={itemList}
-            btnSize="btn-sm btn-first"
             fields={createExcelData(excelColumn, 'FIELD', 'field')}
             columns={excelColumn.map(item => ({ ...item, ...excelStyle }))}
           />
           {!searchFlag && (
             <>
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
+              <StyledButton className="btn-gray btn-sm ml5 mr5" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
                 Excel Upload
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
+              <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.handleAction('SAVE')}>
                 추가
               </StyledButton>
               {btnOk && (
                 <>
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('UPDATE')}>
+                  <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.handleAction('UPDATE')}>
                     수정
                   </StyledButton>
                   <Popconfirm
@@ -207,9 +206,9 @@ class ItemTable extends Component {
                     okText="확인"
                     cancelText="취소"
                   >
-                    <StyledButton className="btn-primary btn-sm btn-first">삭제</StyledButton>
+                    <StyledButton className="btn-light btn-sm mr5">삭제</StyledButton>
                   </Popconfirm>
-                  <StyledButton className="btn-primary btn-sm" onClick={() => this.handleAction('RESET')}>
+                  <StyledButton className="btn-light btn-sm" onClick={() => this.handleAction('RESET')}>
                     Reset
                   </StyledButton>
                 </>
@@ -236,7 +235,7 @@ class ItemTable extends Component {
               <td>
                 <Popover content={itemData.EI_AREA} trigger="focus">
                   <AntdInput
-                    className="ant-input-inline ant-input-sm input-left"
+                    className="ant-input-inline ant-input-xs input-left"
                     name="EI_AREA"
                     value={itemData.EI_AREA || ''}
                     onChange={this.handleInputOnChange}
@@ -246,7 +245,7 @@ class ItemTable extends Component {
               <td>
                 <Popover content={itemData.PREVENTION_EQUIP} trigger="focus">
                   <AntdInput
-                    className="ant-input-inline ant-input-sm input-left"
+                    className="ant-input-inline ant-input-xs input-left"
                     name="PREVENTION_EQUIP"
                     value={itemData.PREVENTION_EQUIP || ''}
                     onChange={this.handleInputOnChange}
@@ -256,7 +255,7 @@ class ItemTable extends Component {
               <td>
                 <Popover content={itemData.INFLOW_AREA} trigger="focus">
                   <AntdInput
-                    className="ant-input-inline ant-input-sm input-left"
+                    className="ant-input-inline ant-input-xs input-left"
                     name="INFLOW_AREA"
                     value={itemData.INFLOW_AREA || ''}
                     onChange={this.handleInputOnChange}
@@ -266,7 +265,7 @@ class ItemTable extends Component {
               <td>
                 <Popover content={itemData.DISCHARGE_MATTER} trigger="focus">
                   <AntdInput
-                    className="ant-input-inline ant-input-sm input-left"
+                    className="ant-input-inline ant-input-xs input-left"
                     name="DISCHARGE_MATTER"
                     value={itemData.DISCHARGE_MATTER || ''}
                     onChange={this.handleInputOnChange}
@@ -276,7 +275,7 @@ class ItemTable extends Component {
               <td>
                 <Popover content={itemData.PPM_WARNING} trigger="focus">
                   <AntdInput
-                    className="ant-input-inline ant-input-sm input-left"
+                    className="ant-input-inline ant-input-xs input-left"
                     name="PPM_WARNING"
                     value={itemData.PPM_WARNING || ''}
                     onChange={this.handleInputOnChange}
@@ -286,7 +285,7 @@ class ItemTable extends Component {
               <td>
                 <Popover content={itemData.PPM_SHOTDOWN} trigger="focus">
                   <AntdInput
-                    className="ant-input-inline ant-input-sm input-left"
+                    className="ant-input-inline ant-input-xs input-left"
                     name="PPM_SHOTDOWN"
                     value={itemData.PPM_SHOTDOWN || ''}
                     onChange={this.handleInputOnChange}
@@ -296,7 +295,7 @@ class ItemTable extends Component {
               <td>
                 <Popover content={itemData.PPM_YEAR_AVERAGE} trigger="focus">
                   <AntdInput
-                    className="ant-input-inline ant-input-sm input-left"
+                    className="ant-input-inline ant-input-xs input-left"
                     name="PPM_YEAR_AVERAGE"
                     value={itemData.PPM_YEAR_AVERAGE || ''}
                     onChange={this.handleInputOnChange}
@@ -305,13 +304,13 @@ class ItemTable extends Component {
               </td>
               <td>
                 <Popover content={itemData.W1} trigger="focus">
-                  <AntdInput className="ant-input-inline ant-input-sm input-left" name="W1" value={itemData.W1 || ''} onChange={this.handleInputOnChange} />
+                  <AntdInput className="ant-input-inline ant-input-xs input-left" name="W1" value={itemData.W1 || ''} onChange={this.handleInputOnChange} />
                 </Popover>
               </td>
               <td>
                 <Popover content={itemData.LEGISLATION} trigger="focus">
                   <AntdInput
-                    className="ant-input-inline ant-input-sm input-left"
+                    className="ant-input-inline ant-input-xs input-left"
                     name="LEGISLATION"
                     value={itemData.LEGISLATION || ''}
                     onChange={this.handleInputOnChange}

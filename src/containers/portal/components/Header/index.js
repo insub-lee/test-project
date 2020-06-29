@@ -25,7 +25,7 @@ const Header = ({
   hasRoleAdmin,
   // setOpen: showMenu,
   handleClick: showFullScreen,
-  execPage: gotoHome,
+  goCommonHome,
   setMyMenuData,
   execPage,
   headerTitle,
@@ -54,7 +54,7 @@ const Header = ({
         <ul>
           <li className="leftBottom">
             <h1 className="siteHeader">
-              <span className="gotoHome" onClick={() => gotoHome('common')} onKeyDown={() => gotoHome('common')} role="button" tabIndex="0">
+              <span className="gotoHome" onClick={() => goCommonHome()} onKeyDown={() => goCommonHome()} role="button" tabIndex="0">
                 {view !== 'Mobile' && headerTitle}
               </span>
               {/* 담당자 popover */}

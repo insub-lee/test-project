@@ -144,6 +144,7 @@ import VersionComp from 'components/BizBuilder/Field/VersionComp';
 import TextJoinFieldComp from 'components/BizBuilder/Field/TextJoinFieldComp';
 import EshsDangerEvalInSafetyImproveComp from 'components/BizBuilder/Field/EshsDangerEvalInSafetyImproveComp';
 import MdcsKindNameViewComp from 'components/BizBuilder/Field/MdcsKindNameViewComp';
+import MsdsHeaderComp from 'components/BizBuilder/Field/MsdsHeaderComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/VersionComp': { renderer: property => <VersionComp {...property} /> },
@@ -290,4 +291,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/TextJoinFieldComp': { renderer: property => <TextJoinFieldComp {...property} /> },
   'components/BizBuilder/Field/EshsDangerEvalInSafetyImproveComp': { renderer: property => <EshsDangerEvalInSafetyImproveComp {...property} /> },
   'components/BizBuilder/Field/MdcsKindNameViewComp': { renderer: property => <MdcsKindNameViewComp {...property} /> },
+  'components/BizBuilder/Field/MsdsHeaderComp': { renderer: property => <MsdsHeaderComp {...property} /> },
 };
