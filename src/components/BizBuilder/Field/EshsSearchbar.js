@@ -54,10 +54,10 @@ class CommonSearchbar extends React.Component {
     changeViewPage(id, viewPageData.workSeq, -1, 'INPUT');
   };
 
-  saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { changeViewPage } = this.props;
-    changeViewPage(id, workSeq, taskSeq, 'MODIFY');
-  };
+  // saveTaskAfter = (id, workSeq, taskSeq, formData) => {
+  //   const { changeViewPage } = this.props;
+  //   changeViewPage(id, workSeq, taskSeq, 'MODIFY');
+  // };
 
   isModalChange = record => {
     const { viewPageData, setViewPageData, sagaKey: id, changeViewPage } = this.props;
@@ -69,19 +69,6 @@ class CommonSearchbar extends React.Component {
       setViewPageData(id, record.WORK_SEQ, record.TASK_SEQ, 'MODIFY');
       changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, 'MODIFY');
     }
-  };
-
-  customApi = () => {
-    const { sagaKey: id, getExtraApiData, formData } = this.props;
-    const apiArray = [
-      {
-        key: `complite`,
-        url: `/api/eshs/v1/common/dangerHazard`,
-        type: 'POST',
-        params: { PARAM: { ...formData } },
-      },
-    ];
-    getExtraApiData(id, apiArray);
   };
 
   BizbuilderbaseRender = () => {
@@ -145,13 +132,6 @@ class CommonSearchbar extends React.Component {
             <StyledButton className="btn-light btn-xs mr5" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
               초기화
             </StyledButton>
-            {property.searchbarWorkSeq === 12061 ? (
-              <StyledButton className="btn-light btn-xs" onClick={this.customApi}>
-                완료
-              </StyledButton>
-            ) : (
-              ''
-            )}
           </StyledButtonWrapper>
         );
         break;
