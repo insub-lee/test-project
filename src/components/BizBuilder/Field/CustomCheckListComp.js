@@ -147,25 +147,43 @@ class CustomCheckListComp extends Component {
   };
 
   onClickScope = () => {
-    this.setState(
-      prevState => ({
-        dataSource: prevState.selectedCheckList,
-        isShowModal: false,
-      }),
-      () => {
-        const { changeFormData, COMP_FIELD, sagaKey, colData, COMP_TAG, WORK_SEQ } = this.props;
-        const { dataSource } = this.state;
-        const submitData = dataSource
-          .filter(f => f.selectedValue.length > 0)
-          .map(grp => ({
-            groupName: grp.groupName,
-            groupKey: grp.groupKey,
-            selectedValue: grp.selectedValue,
-            selectedItem: grp.selectedItem,
-          }));
-        changeFormData(sagaKey, COMP_FIELD, this.setFormDataValue(submitData, colData, COMP_FIELD, COMP_TAG, WORK_SEQ));
-      },
-    );
+    const { selectedCheckList } = this.state;
+    let isSuccess = true;
+    if (selectedCheckList) {
+      selectedCheckList.forEach(node => {
+        if (node.groupKey === 'REGION' || node.groupKey === 'FAB' || node.groupKey === 'PRODUCT') {
+          if (!node.selectedValue || node.selectedValue.length < 1) {
+            isSuccess = false;
+          }
+        }
+      });
+    } else {
+      isSuccess = false;
+    }
+    if (isSuccess) {
+      this.setState(
+        prevState => ({
+          dataSource: prevState.selectedCheckList,
+          isShowModal: false,
+        }),
+        () => {
+          const { changeFormData, COMP_FIELD, sagaKey, colData, COMP_TAG, WORK_SEQ } = this.props;
+          const { dataSource } = this.state;
+
+          const submitData = dataSource
+            .filter(f => f.selectedValue.length > 0)
+            .map(grp => ({
+              groupName: grp.groupName,
+              groupKey: grp.groupKey,
+              selectedValue: grp.selectedValue,
+              selectedItem: grp.selectedItem,
+            }));
+          changeFormData(sagaKey, COMP_FIELD, this.setFormDataValue(submitData, colData, COMP_FIELD, COMP_TAG, WORK_SEQ));
+        },
+      );
+    } else {
+      message.error(<MessageContent>Site, Line/Site, Product는 반드시 선택되어야 합니다.</MessageContent>);
+    }
   };
 
   setFormDataValue = (value, colData, COMP_FIELD, COMP_TAG, WORK_SEQ) => {

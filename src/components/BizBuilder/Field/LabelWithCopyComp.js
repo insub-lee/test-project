@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { debounce } from 'lodash';
+import uuid from 'uuid/v1';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+
+const getNewKey = () => uuid();
 
 const onCopyHandler = (CONFIG, changeFormData, formData, id) => {
   const { optionCopyKey, optionCompKey } = CONFIG.property;
@@ -12,6 +15,7 @@ const onCopyHandler = (CONFIG, changeFormData, formData, id) => {
     const value = formData[optionCopyKey];
     if (value && value.trim()) {
       changeFormData(id, optionCompKey, value);
+      changeFormData(id, `builderTextareaCopyKey_${id}_${optionCompKey}`, `textarea-comp_${id}_${optionCompKey}_${getNewKey()}`);
 
       message.success(<MessageContent>복사 되었습니다.</MessageContent>, 3);
     } else {

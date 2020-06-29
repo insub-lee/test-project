@@ -2,20 +2,34 @@ import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input } from 'antd';
 import { debounce } from 'lodash';
+import uuid from 'uuid/v1';
 
 const { TextArea } = Input;
+const getNewKey = () => uuid();
 
 class TextareaComp extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = { compKey: `textarea-comp___${getNewKey()}` };
+
     this.handleOnChange = debounce(this.handleOnChange, 300);
   }
 
-  // componentDidUpdate() {
-  //   const { colData, sagaKey, COMP_FIELD } = this.props;
-  //   const textArea = document.querySelector(`#${sagaKey}_${COMP_FIELD}`);
-  //   if (textArea && colData !== textArea.value) textArea.value = colData;
-  // }
+  componentDidMount() {
+    const { sagaKey, COMP_FIELD } = this.props;
+    this.setState({ compKey: `textarea-comp_${sagaKey}_${COMP_FIELD}_${getNewKey()}` });
+  }
+
+  componentDidUpdate() {
+    const { formData, sagaKey, COMP_FIELD } = this.props;
+    const { compKey } = this.state;
+    const { [`builderTextareaCopyKey_${sagaKey}_${COMP_FIELD}`]: copyKey } = formData;
+
+    if (copyKey && copyKey.length > 0 && copyKey !== compKey) {
+      this.setState({ compKey: copyKey });
+    }
+  }
 
   handleOnChange = value => {
     const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData } = this.props;
@@ -27,9 +41,11 @@ class TextareaComp extends React.Component {
 
   render() {
     const { CONFIG, colData, readOnly, visible, sagaKey, COMP_FIELD } = this.props;
+    const { compKey } = this.state;
     return visible ? (
       <TextArea
         id={`${sagaKey}_${COMP_FIELD}`}
+        key={compKey}
         className={`ant-textarea${CONFIG.property.className ? ` ${CONFIG.property.className}` : ''}`}
         defaultValue={colData || ''}
         placeholder={CONFIG.property.placeholder}

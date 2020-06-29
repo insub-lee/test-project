@@ -38,6 +38,21 @@ class MultiSelector extends Component {
     this.setState({ checkDataList: tmpCheckDataList }, () => onChange(this.state.checkDataList, checkedValue));
   };
 
+  groupClear = groupKey => {
+    const { onChange } = this.props;
+    const { checkDataList } = this.state;
+    const tmpCheckDataList = checkDataList.map(grp =>
+      grp.groupKey === groupKey
+        ? {
+            ...grp,
+            selectedValue: [],
+            selectedItem: [],
+          }
+        : grp,
+    );
+    this.setState({ checkDataList: tmpCheckDataList }, () => onChange(this.state.checkDataList));
+  };
+
   render() {
     return (
       <StyledSelectTable>
@@ -50,7 +65,7 @@ class MultiSelector extends Component {
                     <table className="subTable">
                       <tr>
                         <th>
-                          {grp.groupName} <Icon type="close-circle" />
+                          {grp.groupName} <Icon type="close-circle" style={{ cursor: 'pointer' }} onClick={() => this.groupClear(grp.groupKey)} />
                         </th>
                       </tr>
                       <tr>
