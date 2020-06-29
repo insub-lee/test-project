@@ -90,18 +90,18 @@ class DraftList extends Component {
       align: 'center',
     },
     {
-      title: '구분',
+      title: '종류',
       dataIndex: 'APPVGUBUN',
       key: 'APPVGUBUN',
-      width: '12%',
+      width: '8%',
       align: 'center',
       render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
     },
     {
-      title: '문서번호',
+      title: '표준번호',
       dataIndex: 'DOCNUMBER',
       key: 'DOCNUMBER',
-      width: '10%',
+      width: '8%',
       align: 'center',
       ellipsis: true,
       render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? record.DRAFT_ID : text),
@@ -113,10 +113,10 @@ class DraftList extends Component {
       width: '5%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? 1 : Number(text)),
+      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '1' : text.indexOf('.') > -1 ? text.split('.')[0] : text),
     },
     {
-      title: 'Title',
+      title: '표준제목',
       dataIndex: 'DRAFT_TITLE',
       key: 'title',
       ellipsis: true,
@@ -125,15 +125,22 @@ class DraftList extends Component {
       title: '기안일',
       dataIndex: 'REG_DTTM',
       key: 'regDttm',
-      width: '10%',
+      width: '8%',
       align: 'center',
       render: (text, record) => moment(text).format('YYYY-MM-DD'),
     },
     {
-      title: '프로세스상태',
+      title: '상태',
       dataIndex: 'STATUS_NM',
       key: 'STATUS_NM',
-      width: '12%',
+      width: '8%',
+      align: 'center',
+    },
+    {
+      title: '기안자',
+      dataIndex: 'NAME_KOR',
+      key: 'NAME_KOR',
+      width: '10%',
       align: 'center',
     },
   ];
@@ -435,7 +442,7 @@ class DraftList extends Component {
         <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
-              <Icon type="form" /> 기안함
+              <Icon type="form" /> 기안함 상신한 문서 : {draftList.length || 0} 건
             </p>
           </div>
         </StyledHeaderWrapper>
