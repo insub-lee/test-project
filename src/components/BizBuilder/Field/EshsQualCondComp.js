@@ -7,13 +7,14 @@ import { createStructuredSelector } from 'reselect';
 import * as selectors from 'containers/common/Auth/selectors';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
 import Upload from 'components/FormStuff/Upload';
 import ConfirmResult from 'apps/eshs/user/safety/eshsQual/qualApprove/confirmResult';
 
-import { Input, Select, Table, Checkbox, message, Modal, Popover } from 'antd';
+import { Input, Select, Table, Checkbox, Modal, Popover } from 'antd';
 
 const AntdModal = StyledContentsModal(Modal);
 
@@ -139,16 +140,7 @@ class EshsQualCondComp extends Component {
     if (RESULT_TYPE === 'CHECK' || RESULT_TYPE === 'CHECK_VIEW') resultWidth = '40%';
 
     columns.push({
-      title: () => (
-        <span>
-          개선항목
-          {APPROVE_TYPE === 'INPUT' && (
-            <span onClick={this.handlePlusTd} className="add-row">
-              [+3]
-            </span>
-          )}
-        </span>
-      ),
+      title: () => '개선항목',
       align: 'center',
       width: approveWidth,
       children: [
@@ -172,7 +164,7 @@ class EshsQualCondComp extends Component {
             if (APPROVE_TYPE === 'VIEW') {
               return (
                 <Popover content={text} trigger="hover">
-                  <span>{record.APPROVE_QUAL_COMMENT}</span>{' '}
+                  <span>{record.APPROVE_QUAL_COMMENT}</span>
                 </Popover>
               );
             }
@@ -276,16 +268,7 @@ class EshsQualCondComp extends Component {
       ],
     });
     columns.push({
-      title: () => (
-        <span>
-          개선결과
-          {RESULT_TYPE === 'INPUT' && (
-            <span onClick={this.handlePlusTd} className="add-row">
-              [+3]
-            </span>
-          )}
-        </span>
-      ),
+      title: () => '개선결과',
       align: 'center',
       width: resultWidth,
       children: [
@@ -521,7 +504,7 @@ class EshsQualCondComp extends Component {
     const {
       formData,
       CONFIG: {
-        property: { ALL_LIST },
+        property: { ALL_LIST, APPROVE_TYPE, RESULT_TYPE },
       },
     } = this.props;
 
@@ -529,6 +512,14 @@ class EshsQualCondComp extends Component {
     const condList = (formData && formData.condList) || [];
     return (
       <>
+        {(APPROVE_TYPE === 'INPUT' || RESULT_TYPE === 'INPUT') && (
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10 btn-wrap-mt-10">
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.handlePlusTd}>
+              추가
+            </StyledButton>
+          </StyledButtonWrapper>
+        )}
+
         <AntdLineTable
           key="condTable"
           className="tableWrapper"

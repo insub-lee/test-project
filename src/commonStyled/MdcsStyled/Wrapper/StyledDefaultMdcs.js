@@ -123,6 +123,8 @@ const StyledDefaultMdcs = styled(StyledViewDesigner)`
         textarea:read-only,
         .ant-input:read-only {
           background-color: #ffffff;
+          border: 1px solid #e5e5e5;
+          cursor: default;
         }
       }
     }

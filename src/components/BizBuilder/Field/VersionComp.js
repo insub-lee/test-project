@@ -11,7 +11,8 @@ class VersionComp extends Component {
   componentDidMount() {
     const { visible, CONFIG, colData, formData } = this.props;
     const { STATUS } = formData;
-    const ver = STATUS === 99 ? 'OBS' : colData;
+    const value = colData.indexOf('.') > -1 ? colData.split('.')[0] : colData;
+    const ver = STATUS === 99 ? 'OBS' : value;
     this.setState({ version: ver });
   }
 

@@ -16,7 +16,7 @@ class FmeaTextareaComp extends Component {
     if (formData.FMEA_FLAG !== preFormData.FMEA_FLAG) {
       const rowNode = document.querySelector(`.${rowClass}`);
       console.debug(formData.FMEA_FLAG);
-      if (formData.FMEA_FLAG === 195) {
+      if (formData.FMEA_FLAG === 194) {
         rowNode.style.display = '';
         message.success('Description of FMEA를 입력해주세요', 2);
       } else {

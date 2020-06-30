@@ -286,9 +286,15 @@ class SearchBasic extends Component {
             </div>
             <StyledHtmlTable style={{ padding: '10px' }}>
               <table style={{ marginBottom: '10px' }}>
+                <colgroup>
+                  <col style={{ width: '12%' }} />
+                  <col style={{ width: '38%' }} />
+                  <col style={{ width: '12%' }} />
+                  <col style={{ width: '38%' }} />
+                </colgroup>
                 <tbody>
                   <tr>
-                    <th>문서종류</th>
+                    <th>표준종류</th>
                     <td colSpan={3}>
                       <Checkbox.Group onChange={this.onChangeDocType}>
                         <Checkbox value={901}>업무표준</Checkbox>
@@ -301,13 +307,14 @@ class SearchBasic extends Component {
                     </td>
                   </tr>
                   <tr>
-                    <th>문서번호</th>
+                    <th>표준번호</th>
                     <td>
                       <AntdInput
                         className="ant-input-sm"
                         onChange={e => {
                           this.onChangeInput('docNo', e.target.value);
                         }}
+                        onPressEnter={this.onSearch}
                       />
                     </td>
                     <th>Rev. 구분</th>
@@ -319,7 +326,7 @@ class SearchBasic extends Component {
                           this.onChangeRadio('gubun', e);
                         }}
                       >
-                        <StyledRadio value={1}>현재 버전</StyledRadio>
+                        <StyledRadio value={1}>현재 Rev.</StyledRadio>
                         {/* <StyledRadio value={2}>과거 Rev. 포함</StyledRadio> */}
                         <StyledRadio value={3}>폐기</StyledRadio>
                       </Radio.Group>
@@ -339,34 +346,35 @@ class SearchBasic extends Component {
                           onChange={e => {
                             this.onChangeInput('keyword', e.target.value);
                           }}
+                          onPressEnter={this.onSearch}
                         />
                       </InputGroup>
                     </td>
                   </tr>
                   <tr>
                     <th>기안자</th>
-                    <td colSpan={3}>
+                    <td>
                       <AntdInput
                         className="ant-input-sm"
                         onChange={e => {
                           this.onChangeInput('drafter', e.target.value);
                         }}
+                        onPressEnter={this.onSearch}
                       />
                     </td>
-                  </tr>
-                  <tr>
                     <th>기안부서</th>
-                    <td colSpan={3}>
+                    <td>
                       <AntdInput
                         className="ant-input-sm"
                         onChange={e => {
                           this.onChangeInput('draftDept', e.target.value);
                         }}
+                        onPressEnter={this.onSearch}
                       />
                     </td>
                   </tr>
                   <tr>
-                    <th>시행일</th>
+                    <th>유효일자</th>
                     <td colSpan={3}>
                       <AntdDatePicker className="ant-picker-sm" format="YYYY-MM-DD" onChange={(date, dateStr) => this.onChangeDate(dateStr, 'startDate')} />
                       <span style={{ display: 'inline-block', margin: '0 5px', verticalAlign: 'middle' }}>~</span>

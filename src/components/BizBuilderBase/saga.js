@@ -11,6 +11,7 @@ import {
   CHANGE_VIEW_OPT_SEQ,
   TASK_FAVORITE_OPT_CODE,
   PAGINATION_OPT_CODE,
+  REVISION_OPT_CODE,
 } from 'components/BizBuilder/Common/Constants';
 import history from 'utils/history';
 import { isJSON } from 'utils/helpers';
@@ -310,23 +311,195 @@ function* getTaskSeq({ id, workSeq }) {
 //   yield put(actions.successSaveTempContents(id, CONT_SEQ, FIELD_NM));
 // }
 
-function* tempSaveTask({ id, callbackFunc }) {
+// function* tempSaveTask({ id, callbackFunc }) {
+//   const workSeq = yield select(selectors.makeSelectWorkSeqById(id));
+//   const formData = yield select(selectors.makeSelectFormDataById(id));
+//   let taskSeq = yield select(selectors.makeSelectTaskSeqById(id));
+//   // taskSeq 생성
+//   if (taskSeq === -1) {
+//     const firstResponse = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {}, { BUILDER: 'tempSaveTaskCreate' });
+//     const {
+//       data: { TASK_SEQ },
+//     } = firstResponse;
+//     taskSeq = TASK_SEQ;
+//   }
+//   // temp저장
+//   const tempResponse = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: formData }, { BUILDER: 'tempSaveTask' });
+//   yield put(actions.successTempSaveTask(id));
+//   if (typeof callbackFunc === 'function') {
+//     callbackFunc(id, taskSeq, formData);
+//   }
+// }
+
+function* tempSaveTask({ id, reloadId, callbackFunc, changeIsLoading, workPrcProps }) {
   const workSeq = yield select(selectors.makeSelectWorkSeqById(id));
-  const formData = yield select(selectors.makeSelectFormDataById(id));
+  const preFormData = yield select(selectors.makeSelectFormDataById(id));
   let taskSeq = yield select(selectors.makeSelectTaskSeqById(id));
+  const validationData = yield select(selectors.makeSelectValidationDataById(id));
+  const processRule = yield select(selectors.makeSelectProcessRuleById(id));
+  const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
+  const extraApiList = yield select(selectors.makeSelectApiListById(id));
+
+  const formData = { ...preFormData, IS_TEMPSAVE: true };
+
+  if (validationData) {
+    const validKeyList = Object.keys(validationData);
+    if (validKeyList && validKeyList.length > 0) {
+      let validFlag = true;
+      let validMsg = '';
+
+      validKeyList.forEach(node => {
+        if (!validationData[node].flag) {
+          validFlag = validationData[node].flag;
+          validMsg = validationData[node].msg;
+        } else if (validationData[node].requiredFlag === false) {
+          validFlag = validationData[node].requiredFlag;
+          validMsg = `${validationData[node].requiredMsg}`;
+        }
+      });
+
+      if (!validFlag) {
+        message.error(<MessageContent>{validMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
+        if (typeof changeIsLoading === 'function') changeIsLoading(false);
+        return;
+      }
+    }
+  }
+
+  const beforeApiList = extraApiList.filter(fNode => fNode.CALL_TYPE === 'B');
+  if (beforeApiList.length > 0) {
+    for (let i = 0; i < beforeApiList.length; i += 1) {
+      const item = beforeApiList[i];
+      const beforeResponse = yield call(
+        Axios[item.METHOD_TYPE],
+        item.API_SRC,
+        {
+          PARAM: {
+            ...formData,
+            TASK_SEQ: taskSeq,
+            WORK_SEQ: workSeq,
+            viewType: 'INPUT',
+          },
+        },
+        { BUILDER: 'callApiBysaveBuilder' },
+      );
+
+      if (beforeResponse) {
+        const { retFlag, retMsg } = beforeResponse;
+        if (retFlag === false) {
+          message.error(<MessageContent>{retMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
+          return;
+        }
+      }
+    }
+  }
+
   // taskSeq 생성
   if (taskSeq === -1) {
-    const firstResponse = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {}, { BUILDER: 'tempSaveTaskCreate' });
+    const firstResponse = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {}, { BUILDER: 'saveTaskCreate' });
     const {
-      data: { TASK_SEQ },
+      data: { TASK_SEQ, TASK_ORIGIN_SEQ },
     } = firstResponse;
     taskSeq = TASK_SEQ;
+    formData.TASK_ORIGIN_SEQ = TASK_ORIGIN_SEQ;
   }
+
   // temp저장
-  const tempResponse = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: formData }, { BUILDER: 'tempSaveTask' });
-  yield put(actions.successTempSaveTask(id));
+  const secondResponse = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: formData }, { BUILDER: 'saveTask' });
+  // temp -> origin
+  const nextResponse = yield call(
+    Axios.post,
+    `/api/builder/v1/work/taskComplete`,
+    {
+      PARAM: {
+        ...formData,
+        TASK_SEQ: taskSeq,
+        WORK_SEQ: workSeq,
+        viewType: 'INPUT',
+      },
+    },
+    { BUILDER: 'saveTaskComplete' },
+  );
+
+  if (nextResponse && nextResponse.data) {
+    const { data: returnData } = nextResponse;
+    const keyset = Object.keys(formData);
+    if (keyset.length > 0) {
+      keyset.forEach(key => {
+        if (returnData[key]) formData[key] = returnData[key];
+      });
+    }
+  }
+
+  const isTotalDataUsed = !!(
+    workInfo &&
+    workInfo.OPT_INFO &&
+    workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === TOTAL_DATA_OPT_SEQ && opt.ISUSED === 'Y') !== -1
+  );
+  if (isTotalDataUsed) {
+    const totalDataResponse = yield call(
+      Axios.post,
+      `/api/builder/v1/work/totalBuilderHandler`,
+      {
+        PARAM: {
+          ...formData,
+          TASK_SEQ: taskSeq,
+          WORK_SEQ: workSeq,
+        },
+      },
+      { BUILDER: 'saveTotalData' },
+    );
+  }
+
+  const afterApiList = extraApiList.filter(fNode => fNode.CALL_TYPE === 'A');
+  if (afterApiList.length > 0) {
+    for (let i = 0; i < afterApiList.length; i += 1) {
+      const item = afterApiList[i];
+      yield call(
+        Axios[item.METHOD_TYPE],
+        item.API_SRC,
+        {
+          PARAM: {
+            ...formData,
+            TASK_SEQ: taskSeq,
+            WORK_SEQ: workSeq,
+            viewType: 'INPUT',
+          },
+        },
+        { BUILDER: 'callApiBysaveBuilder' },
+      );
+    }
+  }
+
+  if (Object.keys(processRule).length !== 0) {
+    const forthResponse = yield call(Axios.post, `/api/workflow/v1/common/workprocess/tempSaveProcess`, {
+      PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, PROCESS_RULE: JSON.stringify(processRule), WORK_PRC_PROPS: JSON.stringify(workPrcProps) },
+    });
+    //   // 결재 저장
+    //   const forthResponse = yield call(Axios.post, `/api/workflow/v1/common/workprocess/draft`, {
+    //     DRAFT_PROCESS: {
+    //       ...processRule,
+    //       DRAFT_TITLE: formData.TITLE,
+    //       WORK_SEQ: workSeq,
+    //       TASK_SEQ: taskSeq,
+    //       REL_TYPE: 1, // 고정(사용안하게 되면 삭제필요)
+    //     },
+    //   });
+  }
+
+  // yield call(
+  //   Axios.postNoResponse,
+  //   '/api/builder/v1/work/taskLog',
+  //   { PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, TASK_ORIGIN_SEQ: formData.TASK_ORIGIN_SEQ, LOG_TYPE: 'C' } },
+  //   { BUILDER: 'setTaskLog' },
+  // );
+
+  yield put(actions.successSaveTask(id));
+
   if (typeof callbackFunc === 'function') {
-    callbackFunc(id, taskSeq, formData);
+    callbackFunc(id, workSeq, taskSeq, formData);
+  } else {
+    yield put(actions.getBuilderData(reloadId || id, workSeq, -1));
   }
 }
 
@@ -791,6 +964,7 @@ function* getListData({ id, workSeq, conditional, pageIdx, pageCnt }) {
 
   let PAGE;
   let PAGE_CNT;
+  let ISLAST_VER;
   if (workInfo && workInfo.OPT_INFO) {
     workInfo.OPT_INFO.forEach(opt => {
       if (opt.OPT_CODE === PAGINATION_OPT_CODE && opt.ISUSED === 'Y') {
@@ -806,13 +980,25 @@ function* getListData({ id, workSeq, conditional, pageIdx, pageCnt }) {
           PAGE_CNT = 10;
         }
       }
+      if (opt.OPT_CODE === REVISION_OPT_CODE && opt.ISUSED === 'Y') {
+        switch (opt.OPT_VALUE) {
+          case 'A':
+            ISLAST_VER = 'Y';
+            break;
+          case 'N':
+            ISLAST_VER = 'N';
+            break;
+          default:
+            ISLAST_VER = 'Y';
+        }
+      }
     });
   }
 
   const responseList = yield call(
     Axios.post,
     `/api/builder/v1/work/taskList/${workSeq}`,
-    { PARAM: { whereString, PAGE, PAGE_CNT } },
+    { PARAM: { whereString, PAGE, PAGE_CNT, ISLAST_VER } },
     { BUILDER: 'getTaskList' },
   );
   if (responseList) {

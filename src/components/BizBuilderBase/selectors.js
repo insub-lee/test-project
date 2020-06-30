@@ -221,7 +221,7 @@ const makeSelectDraftInfo = () =>
   createSelector(
     selectorBizBuilderBase,
     (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
-    (state, id) => (state.getIn(['bizBuilderBase', id, 'draftInfo']) !== undefined ? state.getIn(['bizBuilderBase', id, 'draftInfo']).toJS() : {}),
+    (state, id) => (state.getIn(['bizBuilderBase', id, 'draftInfo']) ? state.getIn(['bizBuilderBase', id, 'draftInfo']).toJS() : {}),
   );
 
 const makeSelectFieldSelectData = () =>

@@ -16,7 +16,8 @@ import EmpChkResultDetail from 'apps/eshs/admin/health/ChkResult/EmpChkResultDet
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import moment from 'moment';
-import MessageTab from 'containers/portal/App/UserSetting/MessageTab';
+
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 
 const currentYear = moment(new Date()).format('YYYY');
 
@@ -150,7 +151,7 @@ class List extends Component {
   empNoColumn = {
     title: '사번',
     dataIndex: 'EMP_NO',
-    width: '7%',
+    width: '10%',
     align: 'center',
     render: (text, record) => (
       <StyledButton
@@ -176,7 +177,7 @@ class List extends Component {
     {
       title: '소속',
       dataIndex: 'DEPT_NAME_KOR',
-      width: '15%',
+      width: '14%',
       align: 'center',
     },
     {
@@ -189,7 +190,7 @@ class List extends Component {
     {
       title: '검진종류',
       dataIndex: 'CHK_TYPE_NAME',
-      width: '5%',
+      width: '7%',
       align: 'center',
     },
     {
@@ -201,7 +202,7 @@ class List extends Component {
     {
       title: '시행차수',
       dataIndex: 'TRIAL_SEQ',
-      width: '5%',
+      width: '7%',
       align: 'center',
     },
     {
@@ -230,25 +231,50 @@ class List extends Component {
         }
         return `${text}(${letter})`;
       },
+      excelRender: (text, record) => {
+        const str = text.substring(0, 1);
+        let letter = '';
+        switch (str) {
+          case 'B':
+            letter = '관리';
+            break;
+          case 'C':
+            letter = '주의';
+            break;
+          case 'D':
+            letter = '질환';
+            break;
+          case 'R':
+            letter = '의심';
+            break;
+          default:
+            return text;
+        }
+        return `${text}(${letter})`;
+      },
     },
     {
       title: '질환명',
       dataIndex: 'DISEASE_DESC',
       width: '12%',
-      align: 'left',
+      align: 'center',
+      excelAlign: 'left',
       render: (text, record) => <div dangerouslySetInnerHTML={{ __html: text }} />,
+      excelRender: text => (text ? text.replace(/<font color='#0000ff'>|<\/font>|<B>|<\/B>|<BR\/>|<BR \/>/gi, '') : ''),
     },
     {
       title: '종합소견',
       dataIndex: 'TOTAL_COMMENT',
-      width: '19%',
-      align: 'left',
+      width: '16%',
+      align: 'center',
+      excelAlign: 'left',
     },
     {
       title: '조치사항',
       dataIndex: 'MEASURE',
-      width: '19%',
-      align: 'left',
+      width: '16%',
+      align: 'center',
+      excelAlign: 'left',
     },
   ];
 
@@ -277,7 +303,7 @@ class List extends Component {
                 onChange={val => this.onChangeSearchParam('CHK_YEAR', val)}
               >
                 {yearList.map(year => (
-                  <AntdSelect.Option value={year}>{`${year}년`}</AntdSelect.Option>
+                  <AntdSelect.Option key={`year_${year}`} value={year}>{`${year}년`}</AntdSelect.Option>
                 ))}
               </AntdSelect>
               <AntdSelect
@@ -317,6 +343,9 @@ class List extends Component {
                     <AntdSelect.Option value={item.NODE_ID}>{item.NAME_KOR}</AntdSelect.Option>
                   ))}
               </AntdSelect>
+            </div>
+
+            <div className="search-input-area mb10">
               <AntdSelect
                 className="select-sm mr5"
                 style={{ width: 100 }}
@@ -366,12 +395,37 @@ class List extends Component {
               <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm" onClick={() => message.info(<MessageContent>미구현</MessageContent>)}>
-                엑셀받기
-              </StyledButton>
+              <ExcelDownloadComp
+                isBuilder={false}
+                fileName={`ESH_${0 in list ? `${list[0].CHK_YEAR}년` : ''}유소견현황`}
+                className="testClassName"
+                btnText="엑셀받기"
+                sheetName={`ESH_${0 in list ? `${list[0].CHK_YEAR}년` : ''}유소견현황`}
+                listData={list.map(row => {
+                  const result = {};
+                  this.columns.forEach(col => {
+                    result[col.dataIndex] =
+                      (row[col.dataIndex] && typeof col.excelRender === 'function' && col.excelRender(row[col.dataIndex], row)) || row[col.dataIndex];
+                  });
+
+                  return { ...row, ...result };
+                })}
+                btnSize="btn-sm btn-first"
+                fields={this.columns.map(item => ({
+                  field: item.dataIndex,
+                  style: { font: { sz: '12' }, alignment: { vertical: item.excelAlign || 'center', horizontal: item.excelAlign || 'center' } },
+                }))}
+                columns={this.columns.map(item => ({
+                  ...item,
+                  field: item.dataIndex,
+                  filter: 'agTextColumnFilter',
+                  width: item.width ? { wpx: Number(item.width.replace('%', '')) * 15 } : { wpx: 150 },
+                  style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '', bold: true }, alignment: { vertical: 'center', horizontal: 'center' } },
+                }))}
+              />
             </div>
           </StyledCustomSearchWrapper>
-          <AntdTable columns={this.columns} dataSource={list || []} bordered />
+          <AntdTable columns={this.columns} dataSource={list || []} bordered rowKey="CHK_CD" />
         </StyledContentsWrapper>
       </>
     );

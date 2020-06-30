@@ -22,7 +22,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import { getTaskSeq } from 'components/BizBuilderBase/actions';
-
+import MsdsSearchList from 'apps/eshs/user/health/workEnv/msdsSearchList';
 const { Option } = Select;
 const AntdModal = StyledAntdModal(Modal);
 const AntdSearchInput = StyledSearchInput(Input.Search);
@@ -150,7 +150,6 @@ class ListPage extends Component {
         onChange: this.onSelectChange,
       };
     }
-
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -158,7 +157,7 @@ class ListPage extends Component {
           <AntdTable
             rowKey="TASK_SEQ"
             key={`${group.key}_list`}
-            columns={columns.map(col => ({ ...col, width: this.columnWidths[col.dataIndex] }))}
+            columns={columns.map(col => ({ ...col, width: this.columnWidths[col.dataIndex], fixed: col.dataIndex === 'MTRL_NM' && 'left' }))}
             dataSource={listData || []}
             rowSelection={rowSelection}
             scroll={{ x: '100%' }}
@@ -195,6 +194,7 @@ class ListPage extends Component {
             ViewCustomButtons={() => null}
             viewType={viewType}
             listMetaSeq={4141}
+            CustomListPage={MsdsSearchList}
             customOnRowClick={record => this.rowClick(record)}
           />,
         ],
@@ -278,23 +278,13 @@ class ListPage extends Component {
               return this.renderList(group, groupIndex);
             }
             return (
-              <StyledCustomSearchWrapper>
-                <div className="search-input-area mb10">
+              <StyledCustomSearchWrapper className="search-wrapper-inline">
+                <div>
                   <AntdSelect style={{ width: 120 }} allowClear className="select-sm mr5" onChange={this.handleSearchSite} placeholder="지역전체">
-                    <Option key="317">청주</Option>
-                    <Option key="318">구미</Option>
-                    <Option key="30410">서울</Option>
-                    <Option key="30412">이천</Option>
-                    <Option key="30411">해외</Option>
+                    <Option value="317">청주</Option>
+                    <Option value="318">구미</Option>
                   </AntdSelect>
-                  <AntdSelect
-                    defaultValue="W.MTRL_NM"
-                    placeholder="검색구분"
-                    allowClear
-                    className="select-sm"
-                    style={{ width: 150 }}
-                    onChange={this.onChangeHandler}
-                  >
+                  <AntdSelect placeholder="검색구분" allowClear className="select-sm" style={{ width: 150 }} onChange={this.onChangeHandler}>
                     <Option value="W.MTRL_NM">물질명</Option>
                     <Option value="W.ITEM_NM">제품명</Option>
                     <Option value="W.MOLECULAR_FORMULA">분자식</Option>
@@ -318,8 +308,6 @@ class ListPage extends Component {
                     onSearch={() => this.handleModalVisible('LIST')}
                     onClick={() => this.handleModalVisible('LIST')}
                   />
-                </div>
-                <div className="btn-area">
                   <StyledButton className="btn-gray btn-sm mr5" onClick={() => getListData(id, workSeq)}>
                     검색
                   </StyledButton>

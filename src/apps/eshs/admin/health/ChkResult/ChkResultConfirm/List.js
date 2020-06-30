@@ -410,13 +410,13 @@ class List extends Component {
         title: '판정',
         dataIndex: 'DISEASE_CD',
         width: '100px',
-        align: 'left',
+        align: 'center',
       },
       {
         title: '기타및D2 병명',
         dataIndex: 'DISEASE_DESC',
         width: '350px',
-        align: 'left',
+        align: 'center',
         render: (text, record) => text && <div dangerouslySetInnerHTML={{ __html: text }} />,
       },
       {
@@ -475,8 +475,8 @@ class List extends Component {
           {modalObj.modalContent}
         </AntdModal>
         <StyledContentsWrapper>
-          <StyledCustomSearchWrapper className="search-wrapper-inline">
-            <div className="search-input-area">
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area mb10">
               <AntdSelect
                 defaultValue={currentYear}
                 className="select-sm mr5"

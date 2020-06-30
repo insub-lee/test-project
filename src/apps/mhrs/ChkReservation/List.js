@@ -27,7 +27,8 @@ class List extends Component {
       CHK_TYPE_CD_NODE_ID: 2065,  //종합(고정)
       FROM_DT: '',
       TO_DT: '',
-      USER_NAME: ''
+      USER_NAME: '',
+      SCH_DT_GB: 'APP_DT',
     },
     list: [],
   };
@@ -102,7 +103,7 @@ class List extends Component {
 
     const callBackFunc = this.getList;
     Modal.confirm({
-      title: `${record.IS_MATE === '0' ? record.USER_NAME : record.FAM_NAME}님 예약확인 하시겠습니까?`,
+      title: `${record.IS_MATE === '0' ? record.USER_NAME : record.FAM_NAME}님 예약건을 확인하시겠습니까?`,
       icon: <ExclamationCircleOutlined />,
       okText: '확인',
       cancelText: '취소',
@@ -164,7 +165,7 @@ class List extends Component {
       key: 'CHK_SEQ',
       width: '6%',
       align: 'center',
-      render: text => text ? `${text}차` : '재검',
+      render: text => text === '1' ? `${text}차` : '재검',
     },
     {
       title: '예약일',
@@ -220,9 +221,10 @@ class List extends Component {
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
             <div className="search-input-area">
+              <span className="text-label">예약일자</span>
               <AntdRangePicker
                 defaultValue={[moment(this.state.searchInfo.FROM_DT), moment(this.state.searchInfo.TO_DT)]}
-                className="ant-picker-sm mr5" style={{ width: 220 }} format="YYYY-MM-DD"
+                className="ant-picker-sm mr5" style={{ width: 220 }} format="YYYY-MM-DD" allowClear={false}
                 onChange={(val1, val2) => this.onChangeRangePicker(val2)}
               />
               <AntdInput
