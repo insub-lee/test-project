@@ -41,12 +41,14 @@ function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
   }
 }
 
-function* getUnApproveList({ customUrl }) {
+function* getUnApproveList({ customUrl, PAGE, PAGE_CNT }) {
   console.debug('customUrl', customUrl);
-  const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/unApproveList`, { PARAM: { relTypes: [1, 4, 99, 999] } });
+  const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/unApproveList`, {
+    PARAM: { relTypes: [1, 4, 99, 999], PAGE: PAGE || 1, PAGE_CNT: PAGE_CNT || 10 },
+  });
   if (response) {
-    const { list } = response;
-    yield put(actions.setUnApproveList(list));
+    const { list, listCnt } = response;
+    yield put(actions.setUnApproveList(list, listCnt));
     yield put(actions.setPartialInit());
   }
 }
