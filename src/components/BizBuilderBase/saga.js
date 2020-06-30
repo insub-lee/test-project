@@ -978,7 +978,8 @@ function* getListData({ id, workSeq, conditional, pageIdx, pageCnt }) {
         } else {
           PAGE_CNT = 10;
         }
-
+      }
+      if (opt.OPT_CODE === REVISION_OPT_CODE && opt.ISUSED === 'Y') {
         switch (opt.OPT_VALUE) {
           case 'A':
             ISLAST_VER = 'Y';
