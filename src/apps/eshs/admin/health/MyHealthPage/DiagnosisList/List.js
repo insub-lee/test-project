@@ -368,8 +368,8 @@ class List extends Component {
                 <col width="10%" />
                 <col width="7%" />
                 <col width="7%" />
-                <col width="7%" />
-                <col width="35%" />
+                <col width="9%" />
+                <col width="33%" />
               </colgroup>
               <thead>
                 <tr>
@@ -407,7 +407,7 @@ class List extends Component {
                         {this.columns.map((col, idx) => (
                           <td
                             key={`col_${item.rowKey}_${idx}`}
-                            align={col.align || 'left'}
+                            align={col.align || 'center'}
                             rowSpan={col.rowSpan || item.ROWSPAN}
                             className={col.className || ''}
                           >
@@ -422,7 +422,7 @@ class List extends Component {
                       {this.columns.map((col, idx) => {
                         if (col.dataIndex === 'REG_DTTM' || col.dataIndex === 'CONSULT') {
                           return (
-                            <td key={`col_${item.rowKey}_${idx}`} align={col.align || 'left'} className={col.className || ''}>
+                            <td key={`col_${item.rowKey}_${idx}`} align={col.align || 'center'} className={col.className || ''}>
                               {typeof col.render === 'function' ? col.render(item[col.dataIndex], item) : item[col.dataIndex]}
                             </td>
                           );

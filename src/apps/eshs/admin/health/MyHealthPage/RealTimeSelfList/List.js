@@ -17,6 +17,8 @@ import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import moment from 'moment';
 
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+
 const currentYear = moment(new Date()).format('YYYY');
 
 const AntdTable = StyledAntdTable(Table);
@@ -104,7 +106,7 @@ class List extends Component {
   empNoColumn = {
     title: '사번',
     dataIndex: 'EMP_NO',
-    width: '7%',
+    width: '9%',
     align: 'center',
     render: (text, record) => (
       <StyledButton
@@ -149,15 +151,29 @@ class List extends Component {
     {
       title: '질환등급',
       dataIndex: 'RESULT',
-      width: '5%',
+      width: '9%',
       align: 'center',
     },
     {
       title: '기관등급',
       dataIndex: 'GRADE',
-      width: '5%',
+      width: '7%',
       align: 'center',
       render: (text, record) => {
+        if (!text) {
+          switch (record.RESULT) {
+            case '1등급':
+              return 'D2';
+            case '2등급':
+              return 'D2';
+            case '3등급':
+              return 'C';
+            default:
+              return '';
+          }
+        } else return text;
+      },
+      excelRender: (text, record) => {
         if (!text) {
           switch (record.RESULT) {
             case '1등급':
@@ -176,14 +192,19 @@ class List extends Component {
       title: '진단일',
       dataIndex: 'SE_DT',
       width: '10%',
-      align: 'left',
+      align: 'center',
     },
     {
       title: '상담내용',
       dataIndex: 'CONSULT',
-      width: '41%',
-      align: 'left',
-      render: (text, record) => <div dangerouslySetInnerHTML={{ __html: text }} />,
+      width: '33%',
+      align: 'center',
+      excelAlign: 'left',
+      render: (text, record) => <div dangerouslySetInnerHTML={{ __html: text }} name={`CONSULT_${record.rowKey}`} />,
+      excelRender: (text, record) => {
+        const divText = document.querySelector(`div[name=CONSULT_${record.rowKey}]`);
+        return divText !== null && divText !== undefined && typeof divText === 'object' ? divText.textContent.replace(/Untitled/gi, '') : '';
+      },
     },
   ];
 
@@ -281,9 +302,35 @@ class List extends Component {
               <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm mr5" onClick={() => message.info(<MessageContent>미구현</MessageContent>)}>
-                엑셀받기
-              </StyledButton>
+              <ExcelDownloadComp
+                isBuilder={false}
+                fileName={`HC_SelfList_${moment().format('YYYYMMDD')}`}
+                className="testClassName"
+                btnText="엑셀받기"
+                sheetName={`HC_SelfList_${moment().format('YYYYMMDD')}`}
+                listData={list.map(row => {
+                  const result = {};
+                  this.columns.forEach(col => {
+                    result[col.dataIndex] =
+                      (row[col.dataIndex] && typeof col.excelRender === 'function' && col.excelRender(row[col.dataIndex], row)) || row[col.dataIndex];
+                  });
+
+                  return { ...row, ...result };
+                })}
+                btnSize="btn-sm btn-first mr5"
+                fields={this.columns.map(item => ({
+                  field: item.dataIndex,
+                  style: { font: { sz: '12' }, alignment: { vertical: item.excelAlign || 'center', horizontal: item.excelAlign || 'center' } },
+                }))}
+                columns={this.columns.map(item => ({
+                  ...item,
+                  field: item.dataIndex,
+                  filter: 'agTextColumnFilter',
+                  width: item.width ? { wpx: Number(item.width.replace('%', '')) * 15 } : { wpx: 150 },
+                  style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '', bold: true }, alignment: { vertical: 'center', horizontal: 'center' } },
+                }))}
+              />
+
               <StyledButton
                 className="btn-primary btn-sm"
                 onClick={() =>
@@ -306,7 +353,15 @@ class List extends Component {
               </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
-          <AntdTable rowSelection={rowSelection} rowKey="rowKey" columns={this.columns} dataSource={list || []} bordered />
+          <AntdTable
+            rowSelection={rowSelection}
+            rowKey="rowKey"
+            columns={this.columns}
+            dataSource={list || []}
+            bordered
+            pagination={false}
+            scroll={{ y: '100%' }}
+          />
         </StyledContentsWrapper>
       </>
     );
