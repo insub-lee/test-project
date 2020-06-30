@@ -4,10 +4,12 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import customList from 'apps/eshs/admin/environment/air/stack/List';
 import moment from 'moment';
 
-import { Input, message, Modal, Tabs } from 'antd';
+import { Input, Modal, Tabs } from 'antd';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
@@ -72,7 +74,7 @@ class List extends Component {
       extraApiData: { dangerInfo, dangerDanestAdmin },
     } = this.props;
     if (dangerDanestAdmin && dangerDanestAdmin.list && dangerDanestAdmin.list.length <= 0) {
-      message.wanning('검색된 데이터가 없습니다.');
+      message.info(<MessageContent>검색된 데이터가 없습니다.</MessageContent>);
     } else {
       this.setState({ dangerInfo: dangerInfo && dangerInfo.list, dangerDanestAdmin: dangerDanestAdmin && dangerDanestAdmin.list });
     }
@@ -112,9 +114,6 @@ class List extends Component {
             </StyledButton>
             <StyledButton className="btn-primary btn-first btn-sm" onClick={() => message.info('개발중입니다.')}>
               재평가
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={() => message.info('개발중입니다.')}>
-              완료
             </StyledButton>
             <StyledButton className="btn-gray btn-first btn-sm" onClick={() => message.info('개발중입니다.')}>
               재평가내역

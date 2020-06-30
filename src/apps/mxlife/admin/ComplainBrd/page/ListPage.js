@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import { Table, Popconfirm, Button } from 'antd';
+import { Table, Popconfirm, Button, Modal } from 'antd';
 import { isJSON } from 'utils/helpers';
+import BizBuilderBase from 'components/BizBuilderBase';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
+import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
@@ -21,10 +22,14 @@ import {
   EXCEL_DOWNLOAD_OPT_SEQ,
   PAGINATION_OPT_CODE,
 } from 'components/BizBuilder/Common/Constants';
-import { CaretUpOutlined } from '@ant-design/icons';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
-import RowExpand from '../internal_comp/RowExpand';
+import { ViewButtons } from '../customButton';
+import AnswerPage from './AnswerPage';
 
+// import Loadable from 'components/Loadable';
+// import Loading from '../Common/Loading';
+
+const AntdModal = StyledModalWrapper(Modal);
 const AntdTable = StyledAntdTable(Table);
 const StyledButton = StyledAntdButton(Button);
 
@@ -46,7 +51,10 @@ class ListPage extends Component {
       paginationIdx: 1,
       pageSize: 10,
       isPagingData: false,
-      expandedRowKeys: [], // Row 확장키
+      modalVisible: false,
+      modalType: '',
+      modalTitle: '',
+      record: {},
     };
   }
 
@@ -107,12 +115,6 @@ class ListPage extends Component {
       this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView, isExcelDown, btnTex, fileName, sheetName, columns, fields, isPagingData });
     }
   };
-
-  // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
 
   setPaginationIdx = paginationIdx =>
     this.setState({ paginationIdx }, () => {
@@ -189,115 +191,175 @@ class ListPage extends Component {
     setListSelectRowKeys(sagaKey, selectedRowKeys);
   };
 
-  /* 
-      신규추가 
-      목적 : ListGroup 내에서 Row를 클릭시 원하는 뷰로 이동할 수 있는 Config를 지원하기 위해 생성
-      타입 : func (추가사항. antd - Table Props 참조)
-      create by. JeongHyun
-  */
-  onRowClick = record => {
-    const { sagaKey: id, isBuilderModal, changeBuilderModalState, changeViewPage } = this.props;
-    const { rowClickView } = this.state;
-    return {
-      onClick: () => {
-        if (isBuilderModal) {
-          changeBuilderModalState(true, rowClickView, record.WORK_SEQ, record.TASK_SEQ, record);
-        } else {
-          changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, rowClickView);
-        }
+  // 테이블 row 클릭 => VIEW 모달
+  onRowClick = record => ({
+    onClick: () => {
+      if (record.LVL === 1) {
+        this.customModalHandler('view', true, record);
+      }
+      if (record.LVL === 2) {
+        this.customModalHandler('answerView', true, record);
+      }
+    },
+  });
+
+  // 모달 핸들러
+  customModalHandler = (type, bool, record, refresh) => {
+    const { changeViewPage, workSeq, sagaKey } = this.props;
+    let title = '';
+    let item = {};
+    const pageRefresh = (refresh && typeof refresh === 'boolean' && refresh) || false;
+    switch (type) {
+      case 'answer':
+        title = '답변작성';
+        item = record;
+        break;
+      case 'view':
+        title = '민원/고충 사항';
+        item = record;
+        break;
+      case 'answerView':
+        title = '민원/고충 답변';
+        item = record;
+        break;
+      default:
+        break;
+    }
+    this.setState(
+      {
+        modalVisible: bool,
+        modalType: type,
+        modalTitle: title,
+        record: item,
       },
-    };
+      () => {
+        if (pageRefresh) changeViewPage(sagaKey, workSeq, -1, 'LIST');
+      },
+    );
   };
 
-  // 제목 클릭시 Event
-  toggleChildren(TASK_SEQ) {
-    const { expandedRowKeys } = this.state;
-    if (expandedRowKeys.length > 0 && expandedRowKeys[0] === TASK_SEQ) {
-      this.setState({
-        expandedRowKeys: [],
-      });
-    } else {
-      this.setState({
-        expandedRowKeys: [TASK_SEQ],
-      });
-    }
-  }
+  // 일반 뷰 모달
+  renderViewModal = () => {
+    const { sagaKey, workSeq } = this.props;
+    const { record } = this.state;
+    return (
+      <BizBuilderBase
+        key={`${sagaKey}_view`}
+        sagaKey={`${sagaKey}_view`}
+        workSeq={workSeq} // metadata binding
+        taskSeq={record.TASK_SEQ}
+        viewType="VIEW"
+        onCloseModalHandler={() => this.customModalHandler('', false, {}, true)}
+        customModalHandler={this.customModalHandler}
+        bookmarkHandler={this.bookmarkHandler}
+        viewMetaSeq={13263}
+        baseSagaKey={sagaKey}
+        ViewCustomButtons={ViewButtons}
+      />
+    );
+  };
 
-  // 원글 클릭시 확장 (expandable)
-  orginExpand = record => <RowExpand record={record} />;
+  // 답변 작성 모달
+  renderAnswerModal = () => {
+    const { sagaKey, workSeq } = this.props;
+    const { record } = this.state;
+    return (
+      <BizBuilderBase
+        key={`${sagaKey}_answer_input`}
+        sagaKey={`${sagaKey}_answer_input`}
+        workSeq={workSeq}
+        viewType="INPUT"
+        onCloseModalHandler={() => this.customModalHandler('', false, {}, true)}
+        inputMetaSeq={13501}
+        initFormData={record}
+        baseSagaKey={sagaKey}
+        isSaveModalClose
+        CustomInputPage={AnswerPage}
+      />
+    );
+  };
 
-  // 답글 클릭시
+  // 답변 뷰 모달
+  renderAnswerViewModal = () => {
+    const { sagaKey, workSeq } = this.props;
+    const { record } = this.state;
+    return (
+      <BizBuilderBase
+        key={`${sagaKey}_answer_view`}
+        sagaKey={`${sagaKey}_answer_view`}
+        workSeq={workSeq}
+        taskSeq={record.TASK_SEQ}
+        viewType="VIEW"
+        onCloseModalHandler={() => this.customModalHandler('', false, {}, true)}
+        customModalHandler={this.customModalHandler}
+        bookmarkHandler={this.bookmarkHandler}
+        viewMetaSeq={13561}
+        modifyMetaSeq={13542}
+        baseSagaKey={sagaKey}
+        ViewCustomButtons={ViewButtons}
+      />
+    );
+  };
+
+  // 북마크 핸들러
+  bookmarkHandler = (sagaKey, record) => {
+    const { submitExtraHandler, profile } = this.props;
+    const bookMarkUserList = (record.BOOKMARK_USER_LIST && record.BOOKMARK_USER_LIST.length > 0 && record.BOOKMARK_USER_LIST) || '';
+    const isBookmark = bookMarkUserList.split(',').includes(`${profile.USER_ID}`) ? 'Y' : 'N';
+    const formData = {
+      ...record,
+      IS_BOOKMARK: isBookmark,
+    };
+    const submitData = { PARAM: { ...formData } };
+    submitExtraHandler(sagaKey, 'POST', '/api/mxlife/v1/common/bookmark', submitData, this.boomarkCallbackFunc, record);
+  };
+
+  // 북마크 설정시 toggle
+  boomarkCallbackFunc = (id, response, record) => {
+    const { setFormData } = this.props;
+    const { nextBookmarkUser } = response;
+    const nextFormData = {
+      ...record,
+      BOOKMARK_USER_LIST: nextBookmarkUser || '',
+    };
+    setFormData(id, nextFormData);
+  };
 
   renderList = (group, groupIndex) => {
     const { listData, listSelectRowKeys, workInfo, customOnRowClick, listTotalCnt } = this.props;
-    const { isMultiDelete, isOnRowClick, paginationIdx, expandedRowKeys } = this.state;
-    // 공개여부 ( Y, N ) 조건 걸어줘야함 권한에 따라 [아직 미적용]
-    const columns = [
-      {
-        title: 'No',
-        dataIndex: 'COMPLAIN_SEQ',
-        key: 'COMPLAIN_SEQ',
-        align: 'center',
-        width: '5%',
-        // 답변글 일시 (LVL === 2) 노출 하지 않음
-        render: (val, record) => (record.LVL === 1 ? <span>{val}</span> : ''),
-      },
-      {
-        title: 'Rev',
-        dataIndex: 'UPDATE_CNT',
-        key: 'UPDATE_CNT',
-        align: 'center',
-        width: '5%',
-        // 답변글 일시 (LVL === 2) 노출 하지 않음
-        render: (val, record) => (record.LVL === 1 ? <span>{val}</span> : ''),
-      },
-      {
-        title: '담당부서',
-        dataIndex: 'CHARGE_DEPT_NM',
-        key: 'CHARGE_DEPT_NM',
-        align: 'center',
-        width: '10%',
-        // 답변글 일시 (LVL === 2) 노출 하지 않음
-        render: (val, record) => (record.LVL === 1 ? <span>{val}</span> : ''),
-      },
-      {
-        title: '제목',
-        dataIndex: 'TITLE',
-        key: 'TITLE',
-        width: '50%',
-        // 제목을 클릭할 시, 아래에 본문 렌더 화살표 위아래 제목 맨 뒤에 추가
-        render: (val, record) => (
-          <span onClick={() => this.toggleChildren(record.TASK_SEQ)}>
-            {val} <CaretUpOutlined />
-          </span>
-        ),
-      },
-      {
-        title: '작성자',
-        dataIndex: 'REG_USER_NAME',
-        key: 'REG_USER_NAME',
-        align: 'center',
-        width: '10%',
-      },
-      {
-        title: '작성일',
-        dataIndex: 'REG_DTTM',
-        key: 'REG_DTTM',
-        align: 'center',
-        width: '10%',
-        render: val => <span>{moment(val).format('YYYY.MM.DD')}</span>,
-      },
-      {
-        title: '조회',
-        dataIndex: 'VIEW_CNT',
-        key: 'VIEW_CNT',
-        align: 'center',
-        width: '10%',
-      },
-    ];
-
+    const { isMultiDelete, isOnRowClick, paginationIdx } = this.state;
+    const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
+
+    // 리스트 - 원글 - 답변 row로 보여져야함
+    const reOrderList = [];
+    const tempList1 = listData
+      .filter(item => item.LVL === 1)
+      .sort((a, b) => {
+        if (a.COMPLAIN_SEQ > b.COMPLAIN_SEQ) {
+          return -1;
+        }
+        if (a.COMPLAIN_SEQ < b.COMPLAIN_SEQ) {
+          return 1;
+        }
+        return 0;
+      });
+    const tempList2 = listData.filter(item => item.LVL === 2);
+    if (tempList1.length > 0) {
+      tempList1.forEach(item => {
+        reOrderList.push(item);
+        const answerList = tempList2.filter(answer => answer.PRT_TASK_SEQ === item.TASK_ORIGIN_SEQ);
+        if (answerList.length > 0) {
+          answerList.forEach(answer => reOrderList.push(answer));
+        }
+      });
+    } else {
+      tempList2.forEach(item => {
+        reOrderList.push(item);
+      });
+    }
+
     if (isMultiDelete) {
       rowSelection = {
         selectedRowKeys: listSelectRowKeys,
@@ -307,7 +369,7 @@ class ListPage extends Component {
     if (isOnRowClick) {
       onRow = this.onRowClick;
     }
-    if (typeof customOnRowClick === 'function' && isOnRowClick) {
+    if (typeof customOnRowClick === 'function') {
       onRow = record => ({ onClick: () => customOnRowClick(record) });
     }
     return (
@@ -320,16 +382,12 @@ class ListPage extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData || []}
+            dataSource={reOrderList || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
             pagination={{ current: paginationIdx, total: listTotalCnt }}
             onChange={pagination => this.setPaginationIdx(pagination.current)}
-            expandIconAsCell={false}
-            expandIconColumnIndex={-1}
-            expandedRowKeys={expandedRowKeys}
-            expandedRowRender={(record, index, indent, expanded) => this.orginExpand(record)}
           />
         </Group>
       </div>
@@ -365,7 +423,7 @@ class ListPage extends Component {
       const {
         info: { PRC_ID },
       } = workFlowConfig;
-
+      console.debug('모든프롭스', this.props);
       return (
         <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
@@ -459,6 +517,18 @@ class ListPage extends Component {
                 </Popconfirm>
               )}
             </StyledButtonWrapper>
+            <AntdModal
+              title={this.state.modalTitle}
+              width="40%"
+              visible={this.state.modalVisible}
+              footer={null}
+              destroyOnClose
+              onCancel={() => this.customModalHandler('', false)}
+            >
+              {this.state.modalType === 'view' && this.renderViewModal()}
+              {this.state.modalType === 'answer' && this.renderAnswerModal()}
+              {this.state.modalType === 'answerView' && this.renderAnswerViewModal()}
+            </AntdModal>
           </Sketch>
         </StyledWrap>
       );
@@ -486,6 +556,7 @@ ListPage.propTypes = {
   customOnRowClick: PropTypes.any,
   listData: PropTypes.array,
   useExcelDownload: PropTypes.bool,
+  setFormData: PropTypes.func,
 };
 
 ListPage.defaultProps = {

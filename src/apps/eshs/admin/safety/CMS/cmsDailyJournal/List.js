@@ -414,7 +414,7 @@ List.defaultProps = {
       ),
     },
     {
-      title: `추가사항 비고`,
+      title: `원인 및 조치사항`,
       dataIndex: 'REMARK',
       align: 'center',
       render: (text, record) => (

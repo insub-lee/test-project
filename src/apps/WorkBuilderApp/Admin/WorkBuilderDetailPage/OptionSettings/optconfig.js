@@ -7,6 +7,7 @@ import ChangeViewSetting from './changeViewSetting';
 import OnRowClickSetting from './onRowClickSetting';
 import ExcelDownloadSetting from './excelDownloadSetting';
 import DeleteDataListSetting from './deleteDataListSetting';
+import RevisionSetting from './revisionSetting';
 
 export const OptionInfos = {
   procsetting: { renderer: property => <ProcSetting {...property} /> },
@@ -17,4 +18,5 @@ export const OptionInfos = {
   onRowClickSetting: { renderer: property => <OnRowClickSetting {...property} /> },
   excelDownloadSetting: { renderer: property => <ExcelDownloadSetting {...property} /> },
   deleteDataListSetting: { renderer: property => <DeleteDataListSetting {...property} /> },
+  revisionSetting: { renderer: property => <RevisionSetting {...property} /> },
 };

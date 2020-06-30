@@ -312,7 +312,9 @@ class List extends Component {
                                     onKeyPress={() => this.onModalChange(JSON.parse(detailItem.value).task_seq)}
                                     onClick={() => this.onModalChange(JSON.parse(detailItem.value).task_seq)}
                                   >
-                                    {JSON.parse(detailItem.value).title || ''}
+                                    {JSON.parse(detailItem.value).journal_date
+                                      ? `(${moment(JSON.parse(detailItem.value).journal_date).format('YYYY-MM-DD')})${JSON.parse(detailItem.value).title || ''}`
+                                      : `${JSON.parse(detailItem.value).title}`}
                                   </span>
                                   <hr />
                                 </>
@@ -344,6 +346,12 @@ class List extends Component {
                               item.DETAIL_DATA.map(detailItem => (
                                 <>
                                   <span>{JSON.parse(detailItem.value).remark || ''}</span>
+                                  {/* <span>
+                                    {JSON.parse(detailItem.value).journal_date
+                                      ? `(${moment(JSON.parse(detailItem.value).journal_date).format('YYYY-MM-DD')})${JSON.parse(detailItem.value).remark ||
+                                          ''}`
+                                      : `${JSON.parse(detailItem.value).remark}`}
+                                  </span> */}
                                   {JSON.parse(detailItem.value).remark ? <hr /> : ''}
                                 </>
                               ))}

@@ -1,5 +1,6 @@
 import React from 'react';
 import BizBuilderBase from 'components/BizBuilderBase';
+import { ViewButtons } from './customButton';
 import ListPage from './page/ListPage';
 
 /*
@@ -7,6 +8,8 @@ import ListPage from './page/ListPage';
     작업자 : 이정현
 */
 
-const complainBrd = () => <BizBuilderBase sagaKey="complainBrd_list" viewType="LIST" workSeq={13201} CustomListPage={ListPage} />;
+const complainBrd = () => (
+  <BizBuilderBase sagaKey="complainBrd_list" viewType="LIST" workSeq={13201} CustomListPage={ListPage} ViewCustomButtonsByModal={ViewButtons} />
+);
 
 export default complainBrd;

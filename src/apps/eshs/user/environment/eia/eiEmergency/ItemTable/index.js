@@ -327,7 +327,7 @@ class ItemTable extends Component {
               </th>
             </tr>
             <tr>
-              <th rowSpan={2}>삭제</th>
+              <th rowSpan={2}> </th>
               <th rowSpan={2}>영역</th>
               <th rowSpan={2}>비상사태 현</th>
               <th rowSpan={2}>

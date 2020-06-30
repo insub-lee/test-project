@@ -105,12 +105,12 @@ const View = ({ formData, dagerInfo }) => (
             <td align="center">{`${formData.REG_USER_NAME}(${formData.REG_EMP_NO})`}</td>
             <th align="center">부서장</th>
             <td align="center">
-              <AntdSearch
+              {/* <AntdSearch
                 value={`${formData.DEPT_MANAGER_NM}(${formData.DEPT_MANAGER})`}
                 className="input-search-sm ant-search-inline mr5"
                 onClick={() => message.warning('modal')}
                 onChange={() => message.warning('modal')}
-              />
+              /> */}
               <UserSearchModal
                 customWidth="100%"
                 colData={`${formData.DEPT_MANAGER_NM}(${formData.DEPT_MANAGER})`} // --  InputSearch 초기값
