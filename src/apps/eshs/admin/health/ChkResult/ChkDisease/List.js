@@ -303,7 +303,7 @@ class List extends Component {
                 onChange={val => this.onChangeSearchParam('CHK_YEAR', val)}
               >
                 {yearList.map(year => (
-                  <AntdSelect.Option value={year}>{`${year}년`}</AntdSelect.Option>
+                  <AntdSelect.Option key={`year_${year}`} value={year}>{`${year}년`}</AntdSelect.Option>
                 ))}
               </AntdSelect>
               <AntdSelect
