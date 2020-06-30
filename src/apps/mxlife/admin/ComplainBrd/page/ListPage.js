@@ -116,12 +116,6 @@ class ListPage extends Component {
     }
   };
 
-  // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
-
   setPaginationIdx = paginationIdx =>
     this.setState({ paginationIdx }, () => {
       const { pageSize, isPagingData } = this.state;
@@ -257,6 +251,7 @@ class ListPage extends Component {
         viewType="VIEW"
         onCloseModalHandler={() => this.customModalHandler('', false, {}, true)}
         customModalHandler={this.customModalHandler}
+        bookmarkHandler={this.bookmarkHandler}
         viewMetaSeq={13263}
         baseSagaKey={sagaKey}
         ViewCustomButtons={ViewButtons}
@@ -297,6 +292,7 @@ class ListPage extends Component {
         viewType="VIEW"
         onCloseModalHandler={() => this.customModalHandler('', false, {}, true)}
         customModalHandler={this.customModalHandler}
+        bookmarkHandler={this.bookmarkHandler}
         viewMetaSeq={13561}
         modifyMetaSeq={13542}
         baseSagaKey={sagaKey}
@@ -305,12 +301,65 @@ class ListPage extends Component {
     );
   };
 
+  // 북마크 핸들러
+  bookmarkHandler = (sagaKey, record) => {
+    const { submitExtraHandler, profile } = this.props;
+    const bookMarkUserList = (record.BOOKMARK_USER_LIST && record.BOOKMARK_USER_LIST.length > 0 && record.BOOKMARK_USER_LIST) || '';
+    const isBookmark = bookMarkUserList.split(',').includes(`${profile.USER_ID}`) ? 'Y' : 'N';
+    const formData = {
+      ...record,
+      IS_BOOKMARK: isBookmark,
+    };
+    const submitData = { PARAM: { ...formData } };
+    submitExtraHandler(sagaKey, 'POST', '/api/mxlife/v1/common/bookmark', submitData, this.boomarkCallbackFunc, record);
+  };
+
+  // 북마크 설정시 toggle
+  boomarkCallbackFunc = (id, response, record) => {
+    const { setFormData } = this.props;
+    const { nextBookmarkUser } = response;
+    const nextFormData = {
+      ...record,
+      BOOKMARK_USER_LIST: nextBookmarkUser || '',
+    };
+    setFormData(id, nextFormData);
+  };
+
   renderList = (group, groupIndex) => {
     const { listData, listSelectRowKeys, workInfo, customOnRowClick, listTotalCnt } = this.props;
     const { isMultiDelete, isOnRowClick, paginationIdx } = this.state;
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
+
+    // 리스트 - 원글 - 답변 row로 보여져야함
+    const reOrderList = [];
+    const tempList1 = listData
+      .filter(item => item.LVL === 1)
+      .sort((a, b) => {
+        if (a.COMPLAIN_SEQ > b.COMPLAIN_SEQ) {
+          return -1;
+        }
+        if (a.COMPLAIN_SEQ < b.COMPLAIN_SEQ) {
+          return 1;
+        }
+        return 0;
+      });
+    const tempList2 = listData.filter(item => item.LVL === 2);
+    if (tempList1.length > 0) {
+      tempList1.forEach(item => {
+        reOrderList.push(item);
+        const answerList = tempList2.filter(answer => answer.PRT_TASK_SEQ === item.TASK_ORIGIN_SEQ);
+        if (answerList.length > 0) {
+          answerList.forEach(answer => reOrderList.push(answer));
+        }
+      });
+    } else {
+      tempList2.forEach(item => {
+        reOrderList.push(item);
+      });
+    }
+
     if (isMultiDelete) {
       rowSelection = {
         selectedRowKeys: listSelectRowKeys,
@@ -333,7 +382,7 @@ class ListPage extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData || []}
+            dataSource={reOrderList || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
@@ -374,7 +423,7 @@ class ListPage extends Component {
       const {
         info: { PRC_ID },
       } = workFlowConfig;
-
+      console.debug('모든프롭스', this.props);
       return (
         <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
@@ -507,6 +556,7 @@ ListPage.propTypes = {
   customOnRowClick: PropTypes.any,
   listData: PropTypes.array,
   useExcelDownload: PropTypes.bool,
+  setFormData: PropTypes.func,
 };
 
 ListPage.defaultProps = {

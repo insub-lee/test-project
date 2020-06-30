@@ -9,7 +9,7 @@ import ListPage from './page/ListPage';
 */
 
 const complainBrd = () => (
-  <BizBuilderBase sagaKey="complainBrd_list" viewType="LIST" workSeq={13201} ViewCustomButtonsByModal={ViewButtons} />
+  <BizBuilderBase sagaKey="complainBrd_list" viewType="LIST" workSeq={13201} CustomListPage={ListPage} ViewCustomButtonsByModal={ViewButtons} />
 );
 
 export default complainBrd;
