@@ -12,16 +12,20 @@ class RadioMdcsChangeComp extends Component {
   }
 
   componentDidMount() {
-    const { fieldSelectData, CONFIG, formData, colData } = this.props;
+    const { fieldSelectData, CONFIG, formData, colData, viewType } = this.props;
     const { VERSION } = formData;
-    console.debug('colData', colData, VERSION);
+    console.debug('colData', colData, VERSION, viewType);
     this.setState({ selectedValue: Number(colData) });
     if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
       if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey].length > 0) {
         this.setState({
           options: fieldSelectData[CONFIG.property.compSelectDataKey]
             .filter(f => f.LVL !== 0)
-            .map(item => ({ label: item.NAME_KOR, value: item.NODE_ID, disabled: item.NODE_ID !== Number(colData) && Number(VERSION) <= 1 })),
+            .map(item => ({
+              label: item.NAME_KOR,
+              value: item.NODE_ID,
+              disabled: viewType === 'REVISION' ? false : item.NODE_ID !== Number(colData) && Number(VERSION) <= 1,
+            })),
         });
       }
     }

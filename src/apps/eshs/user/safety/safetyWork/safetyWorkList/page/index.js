@@ -9,7 +9,7 @@ import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdBut
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
@@ -575,25 +575,25 @@ class SafetyWorkList extends Component {
                 <StyledButton className="btn-gray mr5 btn-sm" onClick={() => this.onSearch()}>
                   검색
                 </StyledButton>
-                <StyledButton className="btn-gray mr5 btn-sm" onClick={() => alert('목록인쇄')}>
-                  목록인쇄
-                </StyledButton>
-                <StyledButton className="btn-gray  btn-sm" onClick={() => alert('점검일지 인쇄')}>
-                  점검일지 인쇄
-                </StyledButton>
               </div>
             </Group>
           </StyledSearchWrapper>
         </Spin>
-        <StyledContentsWrapper>
-          <CustomTableStyled>
-            <AntdTable
-              columns={columns}
-              dataSource={safetyWorks}
-              footer={() => <div style={{ textAlign: 'center' }}>{`총 ${safetyWorks.length === 0 ? 0 : safetyWorks.length} 건`}</div>}
-            />
-          </CustomTableStyled>
-        </StyledContentsWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <StyledButton className="btn-gray mr5 btn-sm" onClick={() => alert('목록인쇄 준비중')}>
+            목록인쇄
+          </StyledButton>
+          <StyledButton className="btn-gray  btn-sm" onClick={() => alert('점검일지 인쇄 준비중')}>
+            점검일지 인쇄
+          </StyledButton>
+        </StyledButtonWrapper>
+        <CustomTableStyled>
+          <AntdTable
+            columns={columns}
+            dataSource={safetyWorks}
+            footer={() => <div style={{ textAlign: 'center' }}>{`총 ${safetyWorks.length === 0 ? 0 : safetyWorks.length} 건`}</div>}
+          />
+        </CustomTableStyled>
         <AntdModal
           title={modalTitle}
           width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '70%'}

@@ -140,7 +140,6 @@ class List extends Component {
                 this.onClickRow(record, rowIndex);
               }
             })}
-            className="tableWrapper"
           />
           <StyledButtonWrapper className="btn-wrap-right btn-wrap-mr-20">
             <StyledButton className="btn-primary btn-sm" onClick={this.onClickAdd}>등록</StyledButton>

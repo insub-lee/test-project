@@ -76,7 +76,7 @@ class BizStd extends Component {
           </thead>
           <tbody>
             <tr>
-              <th>문서종류</th>
+              <th>표준종류</th>
               <td>
                 <Checkbox.Group onChange={this.onChangeDocType}>{docTypelist}</Checkbox.Group>
               </td>

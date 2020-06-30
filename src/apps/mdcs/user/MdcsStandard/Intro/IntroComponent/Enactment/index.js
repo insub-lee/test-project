@@ -236,10 +236,10 @@ class Enactment extends Component {
           </AntdSelect>
         </li>
         <li>
-          <div className="label-txt">문서LEVEL</div>
+          <div className="label-txt">표준 LEVEL</div>
           <AntdSelect
             className="select-mid"
-            placeholder="문서LEVEL/종류"
+            placeholder="표준 LEVEL/종류"
             onChange={this.onChangeStep04}
             value={selectedNodeIds[3] && selectedNodeIds[3].toString()}
           >

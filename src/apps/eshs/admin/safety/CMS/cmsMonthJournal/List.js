@@ -45,7 +45,6 @@ class List extends Component {
       },
     ];
     getCallDataHandler(id, apiAry, this.initData);
-    // this.searchList();
   }
 
   initData = () => {
@@ -99,6 +98,8 @@ class List extends Component {
     } = this.props;
     if (detailData.list.length <= 0 && listData.list.length <= 0) {
       message.warning('검색된 데이터가 없습니다.');
+    } else {
+      this.setState({ detailData: detailData.list, listData: listData.list });
     }
   };
 
@@ -113,11 +114,20 @@ class List extends Component {
   };
 
   render() {
-    const { fixedTeam, timedTeam, fixedTeamSelected, timedTeamSelected, classificationSelcected, classification, rangeDate, isModal, taskSeq } = this.state;
     const {
-      result: { detailData, listData },
-      rangeYn,
-    } = this.props;
+      fixedTeam,
+      timedTeam,
+      fixedTeamSelected,
+      timedTeamSelected,
+      classificationSelcected,
+      classification,
+      rangeDate,
+      isModal,
+      taskSeq,
+      detailData,
+      listData,
+    } = this.state;
+    const { rangeYn } = this.props;
     return (
       <StyledContentsWrapper>
         <StyledCustomSearchWrapper className="search-wrapper-inline">
@@ -182,15 +192,13 @@ class List extends Component {
           <StyledButton className="btn-gray btn-first btn-sm" onClick={() => message.warning('개발중입니다.')}>
             출력
           </StyledButton>
-          {listData && listData.list && listData.list.length > 0 && (
-            <ExcelDownloader dataList={listData.list} excelNm={`${rangeYn ? '기간별' : '월별'} 업무일지`} />
-          )}
+          {listData && listData.length > 0 && <ExcelDownloader dataList={listData} excelNm={`${rangeYn ? '기간별' : '월별'} 업무일지`} />}
         </StyledButtonWrapper>
 
         <StyledHtmlTable>
           <table>
             <colgroup>
-              {listData && listData.list && listData.list[0] && listData.list[0].FULLPATH && listData.list[0].FULLPATH.indexOf('CMS') === -1 ? (
+              {listData && listData[0] && listData[0].FULLPATH && listData[0].FULLPATH.indexOf('CMS') === -1 ? (
                 <>
                   <col width="4.54%" />
                   <col width="4.54%" />
@@ -225,9 +233,7 @@ class List extends Component {
             <tbody>
               <tr>
                 <th
-                  colSpan={`${
-                    listData && listData.list && listData.list[0] && listData.list[0].FULLPATH && listData.list[0].FULLPATH.indexOf('CMS') === -1 ? 11 : 10
-                  }`}
+                  colSpan={`${listData && listData[0] && listData[0].FULLPATH && listData[0].FULLPATH.indexOf('CMS') === -1 ? 11 : 10}`}
                   style={{ background: '#D6EBFF' }}
                 >
                   업무실적
@@ -240,7 +246,7 @@ class List extends Component {
                 <th rowSpan="2">분류2</th>
                 <th rowSpan="2">분류3</th>
                 <th rowSpan="2">총 대응건수</th>
-                {listData && listData.list && listData.list[0] && listData.list[0].FULLPATH && listData.list[0].FULLPATH.indexOf('CMS') === -1 ? (
+                {listData && listData[0] && listData[0].FULLPATH && listData[0].FULLPATH.indexOf('CMS') === -1 ? (
                   <th rowSpan="2">
                     점검
                     <br />
@@ -276,8 +282,7 @@ class List extends Component {
                 <th>기타</th>
               </tr>
               {listData &&
-                listData.list &&
-                listData.list.map(item => (
+                listData.map(item => (
                   <tr>
                     <th>{item.CLASSIFICATION_PATH}</th>
                     <td>{item.CLASSIFICATION_NM}</td>
@@ -379,8 +384,7 @@ class List extends Component {
                 <th style={{ background: '#D6EBFF' }}>내용</th>
               </tr>
               {detailData &&
-                detailData.list &&
-                detailData.list.map(item => (
+                detailData.map(item => (
                   <tr>
                     <td>{item.JOURNAL_DATE}</td>
                     <td>

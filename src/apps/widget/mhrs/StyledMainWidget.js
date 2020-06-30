@@ -218,27 +218,60 @@ const StyledMainWidget = styled.div`
                 background: #f8f8f8;
                 padding: 5px 12px 5px 0;
                 border-top: 1px solid #e8e8e8;
-                border-bottom: 1px solid #e8e8e8;
+                border-bottom: 0;
+                border-spacing: 0;
               }
 
               td {
                 padding: 0;
+                border-spacing: 0;
 
-                .ant-fullcalendar-date {
-                  height: auto;
+                .ant-calendar-date-item {
+                  height: 65px;
                   margin: 0;
+                  text-align: right;
                   padding: 4px 8px;
-                  border-bottom: 1px solid #e8e8e8;
-                  border-top: 0;
+                  border-top: 1px solid #e8e8e8;
+                  border-bottom: 0;
+                  color: #333;
 
-                  .ant-fullcalendar-content {
-                    height: 32px;
+                  .gray {
+                    color: #ccc;
+                  }
+                  .red {
+                    color: #ff6262;
+                  }
+                  .blue {
+                    color: #3b8be4;
+                  }
+
+                  .reserve-number {
+                    font-size: 11px;
+                    text-align: right;
+                    margin-top: 10px;
+                    color: #666;
+
+                    > span {
+                      color: #4491e0;
+                      font-weight: bold;
+                      font-size: 12px;
+                    }
                   }
                 }
-              }
 
-              &:last-child .ant-fullcalendar-date {
-                border-bottom: 0;
+                &:hover .ant-calendar-date-item,
+                &.ant-fullcalendar-selected-day .ant-calendar-date-item {
+                  background: #e6f7ff;
+                  cursor: pointer;
+                }
+
+                &.ant-fullcalendar-today {
+                  .ant-calendar-date-item {
+                    background: #e6f7ff;
+                    border-top: 1px solid #4491e0;
+                    color: #4491e0;
+                  }
+                }
               }
             }
           }

@@ -11,7 +11,7 @@ import StyledSelect from 'commonStyled/Form/StyledSelect';
 import moment from 'moment';
 
 import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
-import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import { createExcelData } from 'apps/eshs/common/createExcelData';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';

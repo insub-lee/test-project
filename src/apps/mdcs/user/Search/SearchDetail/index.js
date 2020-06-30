@@ -151,6 +151,7 @@ class SearchDetail extends Component {
               </div>
             </div>
             <div className="treeWrapper tfWrapper">
+              <div className="treeTitleWrapper">표준 체계별 검색</div>
               {stdTreeData.children && stdTreeData.children.length > 0 && <Tree onSelect={this.onSelectCategory} showLine treeData={stdTreeData} />}
             </div>
             <div className="formWrapper tfWrapper" style={{ padding: '10px' }}>
@@ -158,13 +159,14 @@ class SearchDetail extends Component {
                 <table style={{ marginBottom: '10px' }}>
                   <tbody>
                     <tr>
-                      <th>문서번호</th>
+                      <th>표준번호</th>
                       <td style={{ width: 200 }}>
                         <AntdInput
                           className="ant-input-sm"
                           onChange={e => {
                             this.onChangeSearchValue('w.docnumber', ` and w.docnumber like '%${e.target.value}%'`, e.target.value);
                           }}
+                          onPressEnter={this.onSearch}
                         />
                       </td>
                       <th>Rev. 구분</th>
@@ -204,29 +206,30 @@ class SearchDetail extends Component {
                             onChange={e => {
                               this.onChangeSearchValue('w.title', `and w.title like '%${e.target.value}%'`, e.target.value);
                             }}
+                            onPressEnter={this.onSearch}
                           />
                         </InputGroup>
                       </td>
                     </tr>
                     <tr>
                       <th>기안자</th>
-                      <td colSpan={3}>
+                      <td>
                         <AntdInput
                           className="ant-input-sm"
                           onChange={e => {
                             this.onChangeSearchValue('w.reg_user_name', ` and w.reg_user_name like '%${e.target.value}%'`, e.target.value);
                           }}
+                          onPressEnter={this.onSearch}
                         />
                       </td>
-                    </tr>
-                    <tr>
                       <th>기안부서</th>
-                      <td colSpan={3}>
+                      <td>
                         <AntdInput
                           className="ant-input-sm"
                           onChange={e => {
                             this.onChangeSearchValue('w.reg_dept_name', ` and w.reg_dept_name like '%${e.target.value}%'`, e.target.value);
                           }}
+                          onPressEnter={this.onSearch}
                         />
                       </td>
                     </tr>

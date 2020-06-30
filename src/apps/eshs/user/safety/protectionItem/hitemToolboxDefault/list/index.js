@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, InputNumber, Select, Modal, Input, message, Popconfirm } from 'antd';
+import { Table, InputNumber, Select, Modal, Input, Popconfirm } from 'antd';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import DeptSelect from 'components/DeptSelect';
 import moment from 'moment';
+import { callBackAfterPut } from 'apps/eshs/common/submitCallbackFunc';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
@@ -343,13 +345,12 @@ class List extends React.Component {
   };
 
   handleSearchChange = (key, value) => {
-    const { getDataSource } = this;
     this.setState(prevState => {
       if (key === 'chkYear') {
         return { searchValue: Object.assign(prevState.searchValue, { [key]: value }), selectedYear: Number(value) + 1 };
       }
       return { searchValue: Object.assign(prevState.searchValue, { [key]: value }) };
-    }, getDataSource);
+    });
   };
 
   yearList = this.createYearList();
@@ -367,15 +368,11 @@ class List extends React.Component {
   };
 
   handleDeptSelect = dept => {
-    const { getDataSource } = this;
     const deptInfo = { deptCd: dept.DEPT_CD, deptNm: dept.NAME_KOR };
-    this.setState(
-      prevState => ({
-        searchValue: Object.assign(prevState.searchValue, deptInfo),
-        modalVisible: false,
-      }),
-      getDataSource,
-    );
+    this.setState(prevState => ({
+      searchValue: Object.assign(prevState.searchValue, deptInfo),
+      modalVisible: false,
+    }));
   };
 
   handleInputChange = (key, id, value) => {
@@ -386,13 +383,14 @@ class List extends React.Component {
   };
 
   handleOnSaveClick = () => {
-    const { requestValue, searchValue } = this.state;
+    const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const submitCallback = () => {
-      message.success('수정되었습니다.');
       this.getDataSource();
     };
-    submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/protectiontoolboxdef`, requestValue, submitCallback);
+    submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/protectiontoolboxdef`, requestValue, (key, response) =>
+      callBackAfterPut(key, response, submitCallback),
+    );
   };
 
   render() {
@@ -423,14 +421,19 @@ class List extends React.Component {
                 onSearch={handleModalVisible}
               />
             </div>
-            {searchValue.chkYear && searchValue.deptCd ? (
-              <div style={{ textAlign: 'center' }}>
-                <Popconfirm title={<span>수정하시겠습니까?</span>} okText="수정" cancelText="취소" onConfirm={handleOnSaveClick}>
-                  <StyledButton className="btn-primary mr5">수정</StyledButton>
-                </Popconfirm>
-              </div>
-            ) : null}
+            <div className="btn-area">
+              <StyledButton className="btn-gray btn-sm" onClick={this.getDataSource}>
+                검색
+              </StyledButton>
+            </div>
           </StyledCustomSearchWrapper>
+          {dataSource.length ? (
+            <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+              <Popconfirm title={<span>수정하시겠습니까?</span>} okText="수정" cancelText="취소" onConfirm={handleOnSaveClick} placement="left">
+                <StyledButton className="btn-primary btn-sm">수정</StyledButton>
+              </Popconfirm>
+            </StyledButtonWrapper>
+          ) : null}
           <div style={{ padding: '10px' }}>
             <AntdTable bordered columns={columns()} dataSource={dataSource} scroll={{ x: true }} pagination={false} />
           </div>

@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Input, Modal } from 'antd';
-import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
+import { AppstoreTwoTone } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import UserSelect from 'components/UserSelect';
-import HstCmpnyUserSelectComp from 'apps/eshs/user/safety/safetyWork/safetyEdu/HstCmpnyUserTable';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import BizBuilderBase from 'components/BizBuilderBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -25,7 +26,8 @@ import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import Bfcheck from '../../bfCheck';
 import Styled from './Styled';
 
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledContentsModal(Modal);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class SafetyWorkMain extends Component {
   constructor(props) {
@@ -66,9 +68,8 @@ class SafetyWorkMain extends Component {
         WORKER_LIST: [],
         // ------------------------------------------------------------------------ SWTB_EQUIP - 안전작업 투입 장비 정보
         EQUIP_LIST: [],
-        // ------------------------------------------------------------------------ fileUpload
-        fileList: [],
-        responseList: [],
+        // ------------------------------------------------------------------------ 파일업로드
+        UPLOAD_FILES: [],
         // ------------------------------------------------------------------------ DB insert 시 제외되는 데이터 (View 에서만 사용됨)
         REQ_CMPNY_NM: '', // 발주회사명
         REQ_DEPT_NM: '', // 발주부서명
@@ -149,8 +150,7 @@ class SafetyWorkMain extends Component {
         FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
         REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
         SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
-        fileList: [],
-        responseList: [],
+        UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
       },
     });
   };
@@ -350,19 +350,42 @@ class SafetyWorkMain extends Component {
     });
   };
 
+  // 첨부파일
+  handleChangeAttach = (sagaKey, COMP_FIELD, fileInfo) => {
+    const { formData } = this.state;
+    const { DETAIL } = fileInfo;
+    this.setState({
+      formData: {
+        ...formData,
+        UPLOAD_FILES: DETAIL || [],
+      },
+    });
+  };
+
   submitFormData = type => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { formData } = this.state;
     const submitData = { PARAM: formData };
+    const uploadFiles = formData.UPLOAD_FILES || [];
     switch (type) {
       case 'ADD':
         // 작업번호 생성 및 작업정보 입력
         if (this.validFormData(formData)) {
-          submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkAddCallback);
+          if (uploadFiles === 0) {
+            submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkAddCallback);
+          } else {
+            const attachParam = { PARAM: { DETAIL: formData.UPLOAD_FILES } };
+            submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', attachParam, this.uploadFileCallback);
+          }
         }
         break;
       case 'UPDATE':
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkUpdateCallback);
+        if (uploadFiles === 0) {
+          submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkUpdateCallback);
+        } else {
+          const attachParam = { PARAM: { DETAIL: formData.UPLOAD_FILES } };
+          submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', attachParam, this.uploadFileCallbackUpdate);
+        }
         break;
       case 'DELETE':
         submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkDeleteCallback);
@@ -370,6 +393,44 @@ class SafetyWorkMain extends Component {
       default:
         break;
     }
+  };
+
+  uploadFileCallback = (id, response) => {
+    const { submitHandlerBySaga } = this.props;
+    const { formData } = this.state;
+    const FILE_DETAIL = response.DETAIL || [];
+    this.setState({
+      formData: {
+        ...formData,
+        UPLOAD_FILES: FILE_DETAIL || [],
+      },
+    });
+    const nextFormData = {
+      ...formData,
+      UPLOAD_FILES: FILE_DETAIL || [],
+      UPLOADED_FILES: JSON.stringify(FILE_DETAIL) || [],
+    };
+    const submitData = { PARAM: nextFormData };
+    submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkAddCallback);
+  };
+
+  uploadFileCallbackUpdate = (id, response) => {
+    const { submitHandlerBySaga } = this.props;
+    const { formData } = this.state;
+    const FILE_DETAIL = response.DETAIL || [];
+    this.setState({
+      formData: {
+        ...formData,
+        UPLOAD_FILES: FILE_DETAIL || [],
+      },
+    });
+    const nextFormData = {
+      ...formData,
+      UPLOAD_FILES: FILE_DETAIL || [],
+      UPLOADED_FILES: JSON.stringify(FILE_DETAIL) || [],
+    };
+    const submitData = { PARAM: nextFormData };
+    submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkUpdateCallback);
   };
 
   // 폼데이터 유효성 점검
@@ -419,10 +480,10 @@ class SafetyWorkMain extends Component {
   safetyWorkUpdateCallback = (id, response) => {
     const { result } = response;
     if (result && result === 'fail') {
-      message.error(<MessageContent>안전작업 정보를 저장하지 못하였습니다.</MessageContent>);
+      message.error(<MessageContent>안전작업 정보 수정에 실패하였습니다.</MessageContent>);
       return;
     }
-    message.success(<MessageContent>안전작업 정보를 저장하였습니다.</MessageContent>);
+    message.success(<MessageContent>안전작업 정보를 수정하였습니다.</MessageContent>);
   };
 
   // 작업 삭제 콜백
@@ -534,20 +595,6 @@ class SafetyWorkMain extends Component {
     });
   };
 
-  // 테스트업로드
-  handleUploadFileChange = ({ fileList }) => {
-    const { formData } = this.state;
-    const responseList = [];
-    fileList.map(item => responseList.push(item.response));
-    this.setState({
-      formData: {
-        ...formData,
-        fileList,
-        responseList,
-      },
-    });
-  };
-
   // 테스트 유저
   onSelectedComplete = selectedList => {
     const userInfo = selectedList[0];
@@ -603,75 +650,69 @@ class SafetyWorkMain extends Component {
     }
   };
 
+  handleDown = (e, fileSeq) => {
+    e.stopPropagation();
+    window.location.href = `/down/file/${Number(fileSeq)}`;
+  };
+
   render() {
     const { modalType, modalTitle, modalVisible, formData } = this.state;
     const { result } = this.props;
     const eshsSwtbEquip = (result && result.getSwtbEquipList && result.getSwtbEquipList.list) || [];
     return (
       <Styled>
-        <StyledSearchWrap>
-          <div className="search-group-layer">
-            <div className="searchCmpnyWrap">
-              <label>
-                작업번호
-                <Input
-                  className="ant-input-sm"
-                  style={{ width: '150px', marginLeft: '5px', marginRight: '5px' }}
-                  value={formData.WORK_NO}
-                  onClick={() => this.handleModal('safetyWork', true)}
-                />
-              </label>
-            </div>
-            <div
-              className="searchCmpnyBtn"
-              tabIndex={0}
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <span className="text-label">작업번호</span>
+            <AntdSearch
+              className="ant-search-inline input-search-mid mr5"
               onClick={() => this.handleModal('safetyWork', true)}
-              onKeyPress={() => this.handleModal('safetyWork', true)} // esLint
-              role="button" // esLint
-            >
-              <CaretDownOutlined />
-            </div>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.handleGetSafetyWork()} style={{ marginBottom: '5px' }}>
+              value={formData.WORK_NO}
+              style={{ width: '200px' }}
+            />
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
               검색
             </StyledButton>
-            {formData.WORK_NO === '' ? (
-              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('ADD')} style={{ marginBottom: '5px' }}>
-                추가
-              </StyledButton>
-            ) : (
-              <>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('ADD')} style={{ marginBottom: '5px' }}>
-                  연장
-                </StyledButton>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('UPDATE')} style={{ marginBottom: '5px' }}>
-                  저장
-                </StyledButton>
-                <StyledButton className="btn-primary btn-xs btn-first" onClick={() => this.submitFormData('DELETE')} style={{ marginBottom: '5px' }}>
-                  삭제
-                </StyledButton>
-              </>
-            )}
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('안전교육 서약서')} style={{ marginBottom: '5px' }}>
-              안전교육 서약서
-            </StyledButton>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('(청주) 중량물 작업계획서')} style={{ marginBottom: '5px' }}>
-              (청주) 중량물 작업계획서
-            </StyledButton>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('(청주) 밀폐공간 체크리스트')} style={{ marginBottom: '5px' }}>
-              (청주) 밀폐공간 체크리스트
-            </StyledButton>
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => console.debug('(청주) 안전계획/절차서')} style={{ marginBottom: '5px' }}>
-              (청주) 안전계획/절차서
-            </StyledButton>
           </div>
-        </StyledSearchWrap>
+        </StyledCustomSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          {formData.WORK_NO === '' ? (
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('ADD')}>
+              추가
+            </StyledButton>
+          ) : (
+            <>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('ADD')}>
+                연장
+              </StyledButton>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('UPDATE')}>
+                저장
+              </StyledButton>
+              <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.submitFormData('DELETE')}>
+                삭제
+              </StyledButton>
+            </>
+          )}
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174228)}>
+            안전교육 서약서
+          </StyledButton>
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174229)}>
+            (청주) 중량물 작업계획서
+          </StyledButton>
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174231)}>
+            (청주) 밀폐공간 체크리스트
+          </StyledButton>
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174230)}>
+            (청주) 안전계획/절차서
+          </StyledButton>
+        </StyledButtonWrapper>
         <ContentsWrapper>
           <SafetyWorkInfo
             formData={formData}
             handleModal={this.handleModal}
             handleChangeFormData={this.handleChangeFormData}
             handleWorkCategory={this.handleWorkCategory}
-            handleUploadFileChange={this.handleUploadFileChange}
+            handleChangeAttach={this.handleChangeAttach}
             fileList={this.state.fileList || []}
           />
           <div className="middleTitle">
@@ -692,7 +733,7 @@ class SafetyWorkMain extends Component {
             <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.handleModal('safetyEdu', true)}>
               안전교육 등록
             </StyledButton>
-            <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.handleGetWorkers()}>
+            <StyledButton className="btn-gray btn-xxs btn-first" onClick={() => this.handleGetWorkers()}>
               안전교육 수료자 가져오기
             </StyledButton>
           </div>
@@ -720,6 +761,7 @@ class SafetyWorkMain extends Component {
           </div>
         </ContentsWrapper>
         <AntdModal
+          className="modal-table-pad"
           title={modalTitle}
           width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '80%'}
           visible={modalVisible}

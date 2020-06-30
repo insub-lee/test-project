@@ -20,8 +20,8 @@ class ComponentConfig extends Component {
   componentDidMount() {
     const { configInfo } = this.props;
     const changeList = configInfo.property.changeList || [];
-    const tempId = changeList.reduce((prev, curr) => (prev.id < curr.id ? curr : prev));
-    this.setState({ changeList, id: tempId.id });
+    const tempId = 0 in changeList && changeList.reduce((prev, curr) => (prev.id < curr.id ? curr : prev));
+    this.setState({ changeList, id: 0 in changeList ? tempId.id : 0 });
   }
 
   handleChangeConfigData = (key, value) => {

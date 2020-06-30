@@ -69,10 +69,10 @@ class MsdsIngredientComp extends React.Component {
     changeFormData(id, 'applyList', newAry);
   };
 
-  handleInputOnChange = (e, data) => {
+  handleInputOnChange = (e, targetIdx) => {
     const { sagaKey: id, changeFormData } = this.props;
     const { applyList } = this.state;
-    const changeList = applyList.map(a => (a.TASK_SEQ === data.TASK_SEQ ? { ...a, RATIO: e.target.value } : a));
+    const changeList = applyList.map((a, idx) => (idx === targetIdx ? { ...a, RATIO: e.target.value } : a));
     this.setState({
       applyList: changeList,
     });
@@ -127,14 +127,14 @@ class MsdsIngredientComp extends React.Component {
             </tfoot>
             <tbody>
               {applyList.map((a, index) => (
-                <tr key={index}>
+                <tr key={`ingreDient_${index}`}>
                   <td>{a.ITEM_NM}</td>
                   <td>{a.MOLECULAR_FORMULA}</td>
                   <td>{a.CAS_NO}</td>
                   <td>
                     {viewType === 'INPUT' || viewType === 'MODIFY' ? (
                       <p>
-                        <Input style={{ width: '50px' }} onChange={e => this.handleInputOnChange(e, a)} value={a.RATIO || ''} />%
+                        <Input style={{ width: '50px' }} onChange={e => this.handleInputOnChange(e, index)} value={a.RATIO || ''} />%
                       </p>
                     ) : (
                       <span>{a.RATIO || ''} %</span>

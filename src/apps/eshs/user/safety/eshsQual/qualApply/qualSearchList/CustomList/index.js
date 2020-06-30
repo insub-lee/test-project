@@ -30,11 +30,27 @@ class CustomList extends Component {
       isOnRowClick: false,
       rowClickView: 'VIEW',
       StyledWrap: StyledViewDesigner,
+      columnWidths: {
+        REQ_CD: 130,
+        REQ_STATUS_NM: 60,
+        REQ_DT: 80,
+        APP_STATUS_NM: 60,
+        QUAL_DT: 80,
+        QUAL_STATUS_NM: 80,
+        REG_USER_NAME: 60,
+        EQUIP_CD: 80,
+        EQUIP_NM: 250,
+        SITE_NM: 60,
+        FAB_NM: 80,
+        AREA_NM: 80,
+        MAKER_NM: 200,
+        MODEL: 200,
+      },
     };
   }
 
   componentDidMount = () => {
-    const { workInfo } = this.props;
+    const { workInfo, changeSearchData, sagaKey: id, getListData, listGubun } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
     let isOnRowClick = false;
@@ -60,6 +76,9 @@ class CustomList extends Component {
       });
       this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
     }
+
+    changeSearchData(id, 'GUBUN', `AND GUBUN = '${listGubun}'`);
+    getListData(id, 6821);
   };
 
   // state값 reset테스트
@@ -97,7 +116,7 @@ class CustomList extends Component {
   };
 
   setColumns = (cols, widths) => {
-    const { isRowNo } = this.state;
+    const { isRowNo, columnWidths } = this.state;
     const columns = [];
     if (isRowNo) {
       columns.push({
@@ -110,11 +129,11 @@ class CustomList extends Component {
         columns.push({
           dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
           title: node.comp.CONFIG.property.HEADER_NAME_KOR,
-          // width: (node.style && node.style.width) || undefined,
-          width: (widths && widths[idx] && `${widths[idx]}%`) || undefined,
+          width: columnWidths[node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD],
+          // width: (widths && widths[idx] && `${widths[idx]}%`) || undefined,
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
           className: node.addonClassName && node.addonClassName.length > 0 ? `${node.addonClassName.toString().replaceAll(',', ' ')}` : '',
-          align: (node.style && node.style.textAlign) || undefined,
+          align: 'center',
         });
       }
     });
@@ -148,7 +167,7 @@ class CustomList extends Component {
 
   renderList = (group, groupIndex) => {
     const { listData, listSelectRowKeys, workInfo, customOnRowClick, listGubun } = this.props;
-    const { isMultiDelete, isOnRowClick } = this.state;
+    const { isMultiDelete, isOnRowClick, columnWidths } = this.state;
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
@@ -166,9 +185,10 @@ class CustomList extends Component {
     }
 
     console.debug('리스트 GUBUN [ ', listGubun, ' ]');
-    let filterList = [];
-    if (listGubun) filterList = listData && listData.filter(l => l.GUBUN === listGubun);
-    else filterList = listData || [];
+    console.debug(
+      'columns ',
+      columns.map(col => ({ ...col, width: columnWidths[col.dataIndex] })),
+    );
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -179,10 +199,11 @@ class CustomList extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData && listGubun ? listData.filter(l => l.GUBUN === listGubun) : listData || []}
+            dataSource={listData}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
+            scroll={{ x: '100%' }}
           />
         </Group>
       </div>

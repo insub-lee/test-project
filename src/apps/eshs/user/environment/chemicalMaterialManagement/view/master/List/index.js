@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
-import { createExcelData } from 'apps/eshs/user/environment/chemicalMaterialManagement/view/excelDownloadFunc';
+import { createExcelData } from 'apps/eshs/common/createExcelData';
 import moment from 'moment';
 
 import { AgGridReact } from 'ag-grid-react';
@@ -144,15 +144,19 @@ class List extends React.Component {
                 placeholder="SAP_NO."
                 onPressEnter={getSearchData}
               />
-              <div className="text-label">CAS_NO.</div>
-              <AntdInput
-                className="ant-input-inline ant-input-mid mr5"
-                onChange={e => handleInputChange(e.target.value, 'CAS_NO')}
-                value={requestValue.CAS_NO}
-                style={{ width: '15%' }}
-                onPressEnter={getSearchData}
-                placeholder="CAS_NO."
-              />
+              {isMasterColumns ? (
+                <>
+                  <div className="text-label">CAS_NO.</div>
+                  <AntdInput
+                    className="ant-input-inline ant-input-mid mr5"
+                    onChange={e => handleInputChange(e.target.value, 'CAS_NO')}
+                    value={requestValue.CAS_NO}
+                    style={{ width: '15%' }}
+                    onPressEnter={getSearchData}
+                    placeholder="CAS_NO."
+                  />
+                </>
+              ) : null}
               <div className="text-label">화학물질명</div>
               <AntdInput
                 className="ant-input-inline ant-input-mid mr5"

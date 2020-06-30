@@ -21,11 +21,14 @@ const AntdModal = StyledAntdModal(Modal);
 // />
 
 class UserSearchModal extends Component {
-  state = {
-    modalVisible: false,
-    modalContent: [],
-    colData: '',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalVisible: false,
+      modalContent: [],
+      colData: '',
+    };
+  }
 
   componentDidMount() {
     const { colData } = this.props;
@@ -60,15 +63,14 @@ class UserSearchModal extends Component {
   };
 
   render() {
-    const { className, modalOnCancel } = this.props;
+    const { className, modalOnCancel, customWidth } = this.props;
     const { modalVisible, modalContent, colData } = this.state;
 
     return (
       <>
         <AntdSearchInput
-          style={{ width: 110 }}
+          style={{ width: customWidth || 110 }}
           value={colData}
-          placeholder="사원검색"
           className={className || 'input-search-sm ant-search-inline mr5'}
           allowClear
           readOnly
@@ -81,14 +83,22 @@ class UserSearchModal extends Component {
           visible={modalVisible}
           title="사원 검색"
           onCancel={() => {
-            typeof modalOnCancel === 'function' ? modalOnCancel() : this.onClickRow({ EMP_NO: '', USER_ID: '' });
+            if (typeof modalOnCancel === 'function') {
+              modalOnCancel();
+            } else {
+              this.onClickRow({ EMP_NO: '', USER_ID: '' });
+            }
           }}
           destroyOnClose
           footer={[
             <StyledButton
               className="btn-light"
               onClick={() => {
-                typeof modalOnCancel === 'function' ? modalOnCancel() : this.onClickRow({ EMP_NO: '', USER_ID: '' });
+                if (typeof modalOnCancel === 'function') {
+                  modalOnCancel();
+                } else {
+                  this.onClickRow({ EMP_NO: '', USER_ID: '' });
+                }
               }}
             >
               닫기
@@ -108,6 +118,7 @@ UserSearchModal.propTypes = {
   columns: PropTypes.array,
   colData: PropTypes.string,
   className: PropTypes.string,
+  customWidth: PropTypes.any,
 };
 
 UserSearchModal.defaultProps = {

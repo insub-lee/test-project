@@ -9,7 +9,7 @@ function CustomValueSelectComp(props) {
   const [values, setValues] = useState([]);
   const [defaultValue, setDefaultValue] = useState({});
 
-  const { CONFIG, COMP_FIELD, isSearch } = props;
+  const { CONFIG, COMP_FIELD, isSearch, colData } = props;
   useEffect(() => {
     const { customValues, definedValue, setDefault } = props.CONFIG.property;
     setValues(customValues instanceof Array ? [...customValues] : [{ ...init }]);
@@ -70,7 +70,12 @@ function CustomValueSelectComp(props) {
   }
 
   return (
-    <Select className={CONFIG.property.className || ''} onChange={value => valueHandler(values, value)} style={{ width: '100%' }} value={defaultValue.text}>
+    <Select
+      className={CONFIG.property.className || ''}
+      onChange={value => valueHandler(values, value)}
+      style={{ width: '100%' }}
+      value={colData ? values.findIndex(item => item.value === colData) : defaultValue.text}
+    >
       {values.map(({ value, text }, idx) => (
         <Option key={`${idx}_${value}_${text}`} value={idx}>
           {text}
@@ -80,7 +85,7 @@ function CustomValueSelectComp(props) {
   );
 }
 
-CustomValueSelectComp.propTypes = { CONFIG: PropTypes.objectOf(PropTypes.object), COMP_FIELD: PropTypes.string };
+CustomValueSelectComp.propTypes = { CONFIG: PropTypes.objectOf(PropTypes.object), COMP_FIELD: PropTypes.string, colData: PropTypes.any };
 CustomValueSelectComp.defaultProps = {
   CONFIG: {
     info: {},
@@ -88,5 +93,6 @@ CustomValueSelectComp.defaultProps = {
     property: { customValues: [{ value: null, text: null }], definedValue: { value: null, text: null } },
   },
   COMP_FIELD: '',
+  colData: undefined,
 };
 export default CustomValueSelectComp;

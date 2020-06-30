@@ -1,26 +1,20 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Input, DatePicker, Select, Radio } from 'antd';
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
-import StyledSelect from 'commonStyled/EshsStyled/Select/StyledSelect';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledHtmlTable from './Styled';
 
 const AntdInput = StyledInput(Input);
 const AntdSearch = StyledSearchInput(Input.Search);
-const AntdDatePicker = StyledPicker(DatePicker);
+const AntdDatePicker = StyledDatePicker(DatePicker);
+const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
-
-const EduInfoTableStyled = styled.div`
-  .hstCmpnyCd {
-    margin-left: 5px;
-  }
-`;
 
 class EduInfoTable extends Component {
   constructor(props) {
@@ -37,20 +31,18 @@ class EduInfoTable extends Component {
       options.push(year);
     }
     return (
-      <StyledSelect>
-        <Select style={{ width: '200px' }} onChange={e => onChangeSearchValue('EDU_YEAR', e)}>
-          {options.map(YYYY => (
-            <Option value={`${YYYY}`}>{YYYY}</Option>
-          ))}
-        </Select>
-      </StyledSelect>
+      <AntdSelect className="select-xs" style={{ width: '200px' }} onChange={e => onChangeSearchValue('EDU_YEAR', e)}>
+        {options.map(YYYY => (
+          <Option value={`${YYYY}`}>{YYYY}</Option>
+        ))}
+      </AntdSelect>
     );
   };
 
   render() {
-    const { searchValues, onChangeSearchValue, handleModal } = this.props;
+    const { searchValues, onChangeSearchValue, handleModal, onSearch, resetSearchValue } = this.props;
     return (
-      <EduInfoTableStyled>
+      <StyledCustomSearchWrapper>
         <StyledHtmlTable>
           <table>
             <colgroup>
@@ -82,16 +74,14 @@ class EduInfoTable extends Component {
               </tr>
               <tr>
                 <th colSpan={3}>
-                  <span>* 지역</span>
+                  <span>지역</span>
                 </th>
                 <td colSpan={2}>
-                  <StyledSelect>
-                    <Select style={{ width: '100%' }} value={searchValues.SITE} onChange={e => onChangeSearchValue('SITE', e)}>
-                      <Option value="">전체</Option>
-                      <Option value="청주">청주</Option>
-                      <Option value="구미">구미</Option>
-                    </Select>
-                  </StyledSelect>
+                  <AntdSelect className="select-xs" style={{ width: '200px' }} value={searchValues.SITE} onChange={e => onChangeSearchValue('SITE', e)}>
+                    <Option value="">전체</Option>
+                    <Option value="청주">청주</Option>
+                    <Option value="구미">구미</Option>
+                  </AntdSelect>
                 </td>
                 <th colSpan={2}>
                   <span>교육기간</span>
@@ -145,7 +135,7 @@ class EduInfoTable extends Component {
                     onClick={() => handleModal('searchEmp', true)}
                     onSearch={() => handleModal('searchEmp', true)}
                   />
-                  {searchValues.LECT_CMPNY_NM && <span>{searchValues.LECT_CMPNY_NM}</span>}
+                  {searchValues.LECT_CMPNY_NM && <span style={{ marginLeft: '10px' }}>{searchValues.LECT_CMPNY_NM}</span>}
                 </td>
               </tr>
               <tr>
@@ -157,7 +147,12 @@ class EduInfoTable extends Component {
                   <span>생년월일</span>
                 </th>
                 <td colSpan={7}>
-                  <AntdInput className="ant-input-xs" maxlength={6} onChange={e => onChangeSearchValue('OUT_LECT_SSN', e.target.value)} />
+                  <AntdInput
+                    className="ant-input-xs"
+                    style={{ width: '200px' }}
+                    maxlength={6}
+                    onChange={e => onChangeSearchValue('OUT_LECT_SSN', e.target.value)}
+                  />
                 </td>
               </tr>
               <tr>
@@ -165,7 +160,12 @@ class EduInfoTable extends Component {
                   <span>성명</span>
                 </th>
                 <td colSpan={7}>
-                  <AntdInput value={searchValues.OUT_LECT_NM} className="ant-input-xs" onChange={e => onChangeSearchValue('OUT_LECT_NM', e.target.value)} />
+                  <AntdInput
+                    value={searchValues.OUT_LECT_NM}
+                    className="ant-input-xs"
+                    style={{ width: '200px' }}
+                    onChange={e => onChangeSearchValue('OUT_LECT_NM', e.target.value)}
+                  />
                 </td>
               </tr>
               <tr>
@@ -195,18 +195,33 @@ class EduInfoTable extends Component {
               </tr>
             </tbody>
           </table>
+          <div style={{ marginTop: '20px', textAlign: 'center' }}>
+            <StyledButton className="btn-gray mr5 btn-sm" onClick={() => onSearch()}>
+              검색
+            </StyledButton>
+            <StyledButton className="btn-gray mr5 btn-sm" onClick={() => resetSearchValue()}>
+              검색조건 초기화
+            </StyledButton>
+          </div>
         </StyledHtmlTable>
-      </EduInfoTableStyled>
+      </StyledCustomSearchWrapper>
     );
   }
 }
 
 EduInfoTable.propTypes = {
-  searchValues: PropTypes.func,
+  searchValues: PropTypes.object,
   onChangeSearchValue: PropTypes.func,
   handleModal: PropTypes.func,
+  onSearch: PropTypes.func,
+  resetSearchValue: PropTypes.func,
 };
 
-EduInfoTable.defaultProps = {};
+EduInfoTable.defaultProps = {
+  onChangeSearchValue: PropTypes.func,
+  handleModal: () => false,
+  onSearch: () => false,
+  resetSearchValue: () => false,
+};
 
 export default EduInfoTable;

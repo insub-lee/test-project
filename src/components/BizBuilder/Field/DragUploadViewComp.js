@@ -51,6 +51,50 @@ class DragUploadViewComp extends Component {
     this.setState({ fileList: tmpList });
   }
 
+  shouldComponentUpdate(nextProps) {
+    if (this.props.colData !== nextProps.colData) {
+      const nextColData = nextProps.colData;
+      const attachList = nextColData && nextColData.DETAIL ? nextColData.DETAIL : [];
+      const tmpList = attachList.map(file => {
+        let doctype = 'file-unknown';
+        switch (file.fileExt) {
+          case 'pdf':
+            doctype = 'file-pdf';
+            break;
+          case 'xls':
+            doctype = 'file-excel';
+            break;
+          case 'xlsx':
+            doctype = 'file-excel';
+            break;
+          case 'txt':
+            doctype = 'file-text';
+            break;
+          case 'doc':
+            doctype = 'file-word';
+            break;
+          case 'docx':
+            doctype = 'file-word';
+            break;
+          case 'ppt':
+            doctype = 'file-ppt';
+            break;
+          case 'pptx':
+            doctype = 'file-ppt';
+            break;
+          case 'zip':
+            doctype = 'file-zip';
+            break;
+          default:
+            break;
+        }
+        return { ...file, icon: <Icon type={doctype} style={{ fontSize: '18px', marginRight: '5px' }} /> };
+      });
+      this.setState({ fileList: tmpList });
+    }
+    return true;
+  }
+
   render() {
     const { COMP_FIELD } = this.props;
     const { fileList } = this.state;

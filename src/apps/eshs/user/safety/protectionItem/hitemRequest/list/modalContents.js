@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import ProtectionItemList from 'apps/eshs/user/safety/protectionItem/protectionItemList';
 
-import { Input, DatePicker, InputNumber, Modal, Table } from 'antd';
+import { Input, DatePicker, InputNumber, Modal, Table, message } from 'antd';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledPicker from 'commonStyled/Form/StyledPicker';
 // import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdPicker = StyledPicker(DatePicker);
@@ -40,6 +40,7 @@ class ModalContents extends React.Component {
     changeFormData(sagaKey, 'REQ_EMPNO', profile.USER_ID);
     changeFormData(sagaKey, 'REQ_DT', moment());
     changeFormData(sagaKey, 'DEPT_ID', profile.DEPT_ID);
+    changeFormData(sagaKey, 'TARGET_DT', moment());
   };
 
   getLastReqCd = () => {
@@ -70,6 +71,7 @@ class ModalContents extends React.Component {
 
   handleRowClick = rowData => {
     const { handleSubModalClose } = this;
+    const { sagaKey: id, changeFormData } = this.props;
 
     this.setState(prevState => {
       const tempData = prevState.requestValue;
@@ -78,6 +80,7 @@ class ModalContents extends React.Component {
       } else {
         tempData.push(rowData);
       }
+      changeFormData(id, 'requestValue', tempData);
       return { requestValue: tempData };
     });
 
@@ -95,16 +98,12 @@ class ModalContents extends React.Component {
   };
 
   saveAfterFunc = () => {
-    const { requestValue } = this.state;
-    const { sagaKey, getDataSource, handleModalClose, submitExtraHandler, extraApiData } = this.props;
-    const REQ_CD = (extraApiData.lastReqCd && extraApiData.lastReqCd.list && extraApiData.lastReqCd.list.REQ_CD) || '';
-    const param = requestValue.map(item => Object.assign(item, { REQ_CD }));
-    const submitCallbackFunc = () => {
-      getDataSource();
-      handleModalClose();
-    };
+    const { getDataSource, handleModalClose } = this.props;
+    // const REQ_CD = (extraApiData.lastReqCd && extraApiData.lastReqCd.list && extraApiData.lastReqCd.list.REQ_CD) || '';
+    getDataSource();
+    handleModalClose();
 
-    submitExtraHandler(sagaKey, 'POST', '/api/eshs/v1/common/protection-req-detail', { PARAM: { list: param } }, submitCallbackFunc);
+    // submitExtraHandler(sagaKey, 'POST', '/api/eshs/v1/common/protection-req-detail', { PARAM: { list: param } }, submitCallbackFunc);
   };
 
   handleListAddClick = () => {
@@ -121,10 +120,12 @@ class ModalContents extends React.Component {
   };
 
   handleRequestChange = (key, value, index) => {
+    const { sagaKey: id, changeFormData } = this.props;
     const valueObj = { [key]: value };
     this.setState(prevState => {
       const tempData = prevState.requestValue;
       tempData[index] = Object.assign(tempData[index], valueObj);
+      changeFormData(id, 'requestValue', tempData);
       return { requestValue: tempData };
     });
   };
@@ -176,7 +177,7 @@ class ModalContents extends React.Component {
           <span>{record.QTY}</span>
         ) : (
           <AntdInputNumber
-            className="input-number-sm"
+            className="ant-input-number-sm"
             min={0}
             value={this.state.requestValue[index] && this.state.requestValue[index].QTY}
             onChange={this.props.isModified ? null : value => this.handleRequestChange('QTY', value, index)}
@@ -259,50 +260,67 @@ class ModalContents extends React.Component {
         },
   ];
 
+  beforeSaveTask = () => {
+    const { requestValue } = this.state;
+    const { sagaKey: id, changeFormData, saveTask } = this.props;
+    changeFormData(id, 'TARGET_DT', moment());
+    const hasEmptyValue = requestValue.findIndex(value => !value.PLACE || !value.QTY || !value.REQ_COMMENTS || !value.HITEM_CD);
+
+    if (!requestValue.length) {
+      return message.error('신청할 보호구를 선택하세요.');
+    }
+
+    if (hasEmptyValue !== -1) {
+      return message.error('입력 항목을 모두 입력해주세요.');
+    }
+
+    return saveTask(id, id, this.saveAfterFunc);
+  };
+
   render() {
-    const { handleRowClick, handleSubModalClose, saveAfterFunc, handleListAddClick, handleDateChange } = this;
+    const { handleRowClick, handleSubModalClose, beforeSaveTask, handleListAddClick, handleDateChange } = this;
     const { modalVisible, requestValue } = this.state;
-    const { handleModalClose, saveTask, sagaKey: id, isModified, profile, modalDataSource, rowData } = this.props;
+    const { handleModalClose, isModified, profile, modalDataSource, rowData } = this.props;
     return (
       <>
         <ContentsWrapper>
-          <div className="tableWrapper">
-            <StyledHtmlTable>
-              <div style={{ padding: '10px' }}>
-                <table>
-                  <colgroup>
-                    <col width="20%" />
-                    <col width="20%" />
-                    <col width="20%" />
-                    <col width="20%" />
-                    <col width="20%" />
-                  </colgroup>
-                  <tbody>
-                    <tr>
-                      <th>신청일</th>
-                      <th>신청팀</th>
-                      <th>신청자</th>
-                      <th>결재자</th>
-                      <th>지급요청일</th>
-                    </tr>
-                    <tr>
-                      <td style={{ textAlign: 'center' }}>{isModified ? rowData.REQ_DT : moment().format('YYYY-MM-DD')}</td>
-                      <td style={{ textAlign: 'center' }}>{isModified ? rowData.DEPT_NAME_KOR : profile.DEPT_NAME_KOR}</td>
-                      <td style={{ textAlign: 'center' }}>{isModified ? rowData.NAME_KOR : profile.NAME_KOR}</td>
-                      <td style={{ textAlign: 'center' }}></td>
-                      <td style={{ textAlign: 'center' }}>
-                        {isModified ? rowData.TARGET_DT : <AntdPicker className="ant-picker-sm" defaultValue={moment()} onChange={handleDateChange} />}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </StyledHtmlTable>
-          </div>
+          {/* <div className="tableWrapper"> */}
+          <StyledHtmlTable>
+            <div style={{ padding: '10px' }}>
+              <table>
+                <colgroup>
+                  <col width="20%" />
+                  <col width="20%" />
+                  <col width="20%" />
+                  <col width="20%" />
+                  <col width="20%" />
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th>신청일</th>
+                    <th>신청팀</th>
+                    <th>신청자</th>
+                    <th>결재자</th>
+                    <th>지급요청일</th>
+                  </tr>
+                  <tr>
+                    <td style={{ textAlign: 'center' }}>{isModified ? rowData.REQ_DT : moment().format('YYYY-MM-DD')}</td>
+                    <td style={{ textAlign: 'center' }}>{isModified ? rowData.DEPT_NAME_KOR : profile.DEPT_NAME_KOR}</td>
+                    <td style={{ textAlign: 'center' }}>{isModified ? rowData.NAME_KOR : profile.NAME_KOR}</td>
+                    <td style={{ textAlign: 'center' }}></td>
+                    <td style={{ textAlign: 'center' }}>
+                      {isModified ? rowData.TARGET_DT : <AntdPicker className="ant-picker-sm" defaultValue={moment()} onChange={handleDateChange} />}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </StyledHtmlTable>
+          {/* </div> */}
           <div style={{ padding: '10px' }}>
             {isModified ? null : (
-              <div style={{ textAlign: 'right', marginRight: '10px' }}>
-                <StyledButton className="btn-light" onClick={handleListAddClick}>
+              <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+                <StyledButton className="btn-gray btn-sm" onClick={handleListAddClick}>
                   추가
                 </StyledButton>
               </div>
@@ -310,7 +328,7 @@ class ModalContents extends React.Component {
             <AntdTable columns={this.columns} dataSource={isModified ? modalDataSource : requestValue} pagination={false} />
           </div>
           <div style={{ textAlign: 'center', padding: '10px' }}>
-            <StyledButton className="btn-primary mr5" onClick={isModified ? () => console.debug('@@@@@@PRINT@@@@@@@') : () => saveTask(id, id, saveAfterFunc)}>
+            <StyledButton className="btn-primary mr5" onClick={isModified ? () => console.debug('@@@@@@PRINT@@@@@@@') : beforeSaveTask}>
               {isModified ? '인쇄' : '저장'}
             </StyledButton>
             <StyledButton className="btn-light" onClick={handleModalClose}>
@@ -334,7 +352,6 @@ ModalContents.propTypes = {
   getDataSource: PropTypes.func,
   rowData: PropTypes.object,
   isModified: PropTypes.bool,
-  submitExtraHandler: PropTypes.func,
   extraApiData: PropTypes.object,
   getExtraApiData: PropTypes.func,
   profile: PropTypes.object,

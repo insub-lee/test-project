@@ -1,6 +1,6 @@
  server {
     listen 80;
-    server_name dev.portal.com, eshs-dev.magnachip.com, magnachip.bizmicro.com;
+    server_name 127.0.0.1;
     client_max_body_size 1000M;
 
     location ~ /eventbus/ {
@@ -242,6 +242,16 @@
             proxy_set_header     host $http_host;
     }
 
+    location ~ ^(/api/mxlife/v1/common) {
+            proxy_pass  http://mxlife-common;
+            proxy_connect_timeout 10;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+
     location ~ ^/img/thumb/crop/(.*)/(.*)$ {
         proxy_pass http://thumbor/unsafe/$1/http://http://192.168.251.14:40033/down/thumb/$2;
         proxy_connect_timeout 60;
@@ -337,6 +347,28 @@
 
 }
 
+# 외부 다운로드 링크 테스트
+server {
+	listen 80;
+	server_name dev.download;
+	client_max_body_size 1000M;
+	
+	location /share {
+        proxy_pass  http://portal-download;
+        proxy_connect_timeout 60;
+        proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+        proxy_set_header     user_agent $http_user_agent;
+        proxy_set_header     referer $http_referer;
+        proxy_set_header     host $http_host;
+	}
+	
+	location / {
+		return 307 https://www.magnachip.com;
+		#return 404;
+	}
+}
+
 upstream portal-sockjs {
     server 192.168.251.14:10185;
 }
@@ -408,6 +440,9 @@ upstream portal-filemanage {
 }
 upstream wts-common {
     server 192.168.251.14:10801;
+}
+upstream mxlife-common {
+    server 192.168.251.14:10710;
 }
 upstream thumbor {
     # hosts 파일에 등록 후 사용 192.168.251.14, 192.168.251.15, 192.168.251.16

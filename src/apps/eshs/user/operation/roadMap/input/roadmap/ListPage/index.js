@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { debounce } from 'lodash';
 
 import { Table, Modal, Select, InputNumber, Popconfirm } from 'antd';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
@@ -12,7 +13,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
-import { callBackAfterPost, callBackAfterPut } from 'apps/eshs/user/environment/chemicalMaterialManagement/input/submitCallbackFunc';
+import { callBackAfterPost, callBackAfterPut } from 'apps/eshs/common/submitCallbackFunc';
 
 const AntdInputNumber = StyledInputNumber(InputNumber);
 const AntdModal = StyledAntdModal(Modal);
@@ -29,6 +30,9 @@ class ListPage extends React.Component {
       requestValue: {},
       selectedYear: Number(moment().format('YYYY')),
     };
+    this.handleSaveClick = debounce(this.handleSaveClick, 300);
+    this.handleConfirmClick = debounce(this.handleConfirmClick, 300);
+    this.handleModifyClick = debounce(this.handleModifyClick, 300);
   }
 
   columns = [
@@ -76,9 +80,9 @@ class ListPage extends React.Component {
         ) : (
           <>
             <Popconfirm title="완료하시겠습니까?" onConfirm={() => this.handleConfirmClick(record)} onCancel={null}>
-              <StyledButton className="btn-primary btn-sm mr5">완료</StyledButton>
+              <StyledButton className="btn-gray btn-xs mr5">완료</StyledButton>
             </Popconfirm>
-            <StyledButton className="btn-primary btn-sm" onClick={() => this.handleRowClick(record)}>
+            <StyledButton className="btn-gray btn-xs" onClick={() => this.handleRowClick(record)}>
               수정
             </StyledButton>
           </>
@@ -146,12 +150,9 @@ class ListPage extends React.Component {
   };
 
   handleSelectChange = (key, value) => {
-    this.setState(
-      {
-        [key]: value,
-      },
-      this.getDataSource,
-    );
+    this.setState({
+      [key]: value,
+    });
   };
 
   handleAddClick = () => {
@@ -207,7 +208,6 @@ class ListPage extends React.Component {
   };
 
   handleInputChange = (key, value) => {
-    console.debug(this.state.dataSource, { [key]: value });
     this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { [key]: value }) }));
   };
 
@@ -274,6 +274,11 @@ class ListPage extends React.Component {
                 <Select.Option value="">전체 보기</Select.Option>
               </AntdSelect>
             </div>
+            <div className="btn-area">
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.getDataSource}>
+                검색
+              </StyledButton>
+            </div>
           </StyledCustomSearchWrapper>
           <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
             <StyledButton className="btn-primary btn-sm" onClick={handleAddClick}>
@@ -284,49 +289,47 @@ class ListPage extends React.Component {
           <AntdModal visible={modalVisible} title={isModified ? 'Roadmap 수정' : 'Roadmap 등록'} onCancel={handleModalClose} footer={null} destroyOnClose>
             <StyledContentsWrapper>
               <StyledHtmlTable>
-                <div className="tableWrapper">
-                  <table>
-                    <tbody>
-                      <tr>
-                        <th>연도</th>
-                        <td>{isModified ? moment(requestValue.CHK_DATE).format('YYYY') : moment(nextDate).format('YYYY')}년</td>
-                      </tr>
-                      <tr>
-                        <th>월</th>
-                        <td>{isModified ? moment(requestValue.CHK_DATE).format('MM') : moment(nextDate).format('MM')}월</td>
-                      </tr>
-                      <tr>
-                        <th>청주</th>
-                        <td>
-                          <AntdInputNumber
-                            className="ant-input-number-sm"
-                            value={requestValue.CP_VALUE}
-                            onChange={value => handleInputChange('CP_VALUE', value)}
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>구미</th>
-                        <td>
-                          <AntdInputNumber
-                            className="ant-input-number-sm"
-                            value={requestValue.GP_VALUE}
-                            onChange={value => handleInputChange('GP_VALUE', value)}
-                          />
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <table>
+                  <tbody>
+                    <tr>
+                      <th>연도</th>
+                      <td>{isModified ? moment(requestValue.CHK_DATE).format('YYYY') : moment(nextDate).format('YYYY')}년</td>
+                    </tr>
+                    <tr>
+                      <th>월</th>
+                      <td>{isModified ? moment(requestValue.CHK_DATE).format('MM') : moment(nextDate).format('MM')}월</td>
+                    </tr>
+                    <tr>
+                      <th>청주</th>
+                      <td>
+                        <AntdInputNumber
+                          className="ant-input-number-sm"
+                          value={requestValue.CP_VALUE}
+                          onChange={value => handleInputChange('CP_VALUE', value)}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>구미</th>
+                      <td>
+                        <AntdInputNumber
+                          className="ant-input-number-sm"
+                          value={requestValue.GP_VALUE}
+                          onChange={value => handleInputChange('GP_VALUE', value)}
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </StyledHtmlTable>
-              <div style={{ textAlign: 'center', padding: '10px' }}>
+              <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
                 <StyledButton className="btn-primary btn-sm mr5" onClick={isModified ? handleModifyClick : handleSaveClick}>
                   {isModified ? '수정' : '저장'}
                 </StyledButton>
                 <StyledButton className="btn-light btn-sm" onClick={handleModalClose}>
                   취소
                 </StyledButton>
-              </div>
+              </StyledButtonWrapper>
             </StyledContentsWrapper>
           </AntdModal>
         </StyledContentsWrapper>

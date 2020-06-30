@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import moment from 'moment';
 import { debounce } from 'lodash';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
@@ -22,6 +23,7 @@ class List extends React.Component {
         month: moment().format('M'),
         type: 'kind',
         deptId: '',
+        hqId: '',
       },
       headquarterList: [],
       departmentList: [],
@@ -139,7 +141,7 @@ class List extends React.Component {
     const apiArr = [
       {
         key: 'getListData',
-        url: `/api/eshs/v1/common/protectionstock?SITE=${searchValue.site}&YEAR=${searchValue.year}&MONTH=${searchValue.month}&DEPT_ID=${searchValue.deptId}`,
+        url: `/api/eshs/v1/common/protectionstock?SITE=${searchValue.site}&YEAR=${searchValue.year}&MONTH=${searchValue.month}&HQ_ID=${searchValue.hqId}&DEPT_ID=${searchValue.deptId}`,
         type: 'GET',
       },
     ];
@@ -176,6 +178,14 @@ class List extends React.Component {
 
   handleHqChange = headquarterId => {
     const { sagaKey: id, getExtraApiData } = this.props;
+
+    if (!headquarterId) {
+      return this.setState(prevState => ({
+        isHeadquarterSelect: false,
+        searchValue: Object.assign(prevState.searchValue, { deptId: '' }, { hqId: headquarterId }),
+      }));
+    }
+
     this.setState({ isHeadquarterSelect: true });
     const apiArr = [
       {
@@ -184,24 +194,26 @@ class List extends React.Component {
         url: `/api/eshs/v1/common/EshsHqAndDeptList?DEPT_ID=${headquarterId}`,
       },
     ];
-    getExtraApiData(id, apiArr, this.setDeptList);
+
+    const selectHqCallback = () => {
+      this.setDeptList();
+    };
+
+    return getExtraApiData(id, apiArr, selectHqCallback);
   };
 
   setDeptList = () => {
     const { extraApiData } = this.props;
-    this.setState({
+    this.setState(prevState => ({
       departmentList: (extraApiData.deptListUnderHq && extraApiData.deptListUnderHq.dept) || [],
-    });
+      searchValue: Object.assign(prevState.searchValue, { deptId: '' }),
+    }));
   };
 
   handleSearchChange = (key, value) => {
-    const { getSearchData } = this;
-    this.setState(
-      prevState => ({
-        searchValue: Object.assign(prevState.searchValue, { [key]: value }),
-      }),
-      getSearchData,
-    );
+    this.setState(prevState => ({
+      searchValue: Object.assign(prevState.searchValue, { [key]: value }),
+    }));
   };
 
   getSearchData = () => {
@@ -282,6 +294,7 @@ class List extends React.Component {
                   <AntdSelect
                     disabled={!isHeadquarterSelect}
                     defaultValue=""
+                    value={searchValue.deptId}
                     className="select-mid"
                     onChange={value => handleSearchChange('deptId', value)}
                     style={{ width: '60%' }}
@@ -292,9 +305,22 @@ class List extends React.Component {
                   </AntdSelect>
                 </div>
               ) : null}
-              <StyledButton className="btn-primary" onClick={() => console.debug('@@@@@EXCEL DOWNLOAD@@@@@')}>
-                엑셀받기
-              </StyledButton>
+              <div className="btn-area">
+                <StyledButton className="btn-gray btn-sm mr5" onClick={this.getSearchData}>
+                  검색
+                </StyledButton>
+                <ExcelDownloadComp
+                  isBuilder={false}
+                  fileName={`${moment().format('YYYYMMDD')}_화학물질관리 마스터`}
+                  className="testClassName"
+                  btnText="엑셀 다운로드"
+                  sheetName="재고현황"
+                  listData={dataSource}
+                  btnSize="btn-sm"
+                  fields={columns()}
+                  columns={columns()}
+                />
+              </div>
             </div>
           </StyledCustomSearchWrapper>
           <div style={{ padding: '10px' }}>

@@ -224,7 +224,7 @@ class ListPage extends Component {
     if (isOnRowClick) {
       onRow = this.onRowClick;
     }
-    if (typeof customOnRowClick === 'function' && isOnRowClick) {
+    if (typeof customOnRowClick === 'function') {
       onRow = record => ({ onClick: () => customOnRowClick(record) });
     }
     return (

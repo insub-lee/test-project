@@ -47,6 +47,13 @@ const StyledButton = component => styled(component)`
     font-size: 0.7rem;
   }
 
+  &.btn-img {
+    &.btn-sm {
+      padding: 0 0.844rem;
+      height: 29px;
+    }
+  }
+
   &.btn-primary {
     color: #fff;
     background-color: #4491e0;
@@ -98,8 +105,8 @@ const StyledButton = component => styled(component)`
     margin-right: 5px;
   }
 
-  .ant-btn > .anticon + span,
-  .ant-btn > span + .anticon {
+  &.ant-btn > .anticon + span,
+  &.ant-btn > span + .anticon {
     vertical-align: middle;
     margin-left: 2px;
   }

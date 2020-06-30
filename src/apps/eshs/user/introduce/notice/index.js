@@ -18,7 +18,7 @@ class Notice extends Component {
   };
 
   render() {
-    return <BizBuilderBase sagaKey="Notice" workSeq={1221} viewType="LIST" loadingComplete={this.loadingComplete} CustomListPage={List} />;
+    return <BizBuilderBase sagaKey="Notice" workSeq={1221} viewType="LIST" loadingComplete={this.loadingComplete} />;
   }
 }
 

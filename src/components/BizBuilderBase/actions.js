@@ -143,10 +143,13 @@ export const setTaskSeq = (id, taskSeq) => ({
 //   FIELD_NAME,
 // });
 
-export const tempSaveTask = (id, callbackFunc) => ({
+export const tempSaveTask = (id, reloadId, callbackFunc, changeIsLoading, workPrcProps) => ({
   type: `${actionTypes.TEMP_SAVE_TASK}_${id}`,
   id,
+  reloadId,
   callbackFunc,
+  changeIsLoading,
+  workPrcProps,
 });
 
 export const successTempSaveTask = id => ({

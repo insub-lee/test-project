@@ -35,11 +35,15 @@ class CommonSearchbar extends React.Component {
   };
 
   onChangeSave = type => {
-    const { saveTask, modifyTask, deleteTask, sagaKey: id, changeViewPage, viewPageData } = this.props;
+    const { saveTask, modifyTask, deleteTask, sagaKey: id, changeViewPage, viewPageData, saveBeforeProcess } = this.props;
     if (type === 'S') {
-      saveTask(id, id, this.saveTaskAfter);
+      // 기존로직 : 업로드한 파일에 대한 real 이관이 이루어 지지 않아 수정하였음.
+      // saveTask(id, id, this.saveTaskAfter);
+      saveBeforeProcess(id, id, saveTask);
     } else if (type === 'M') {
-      modifyTask(id, this.saveTaskAfter);
+      // 기존로직 : 업로드한 파일에 대한 real 이관이 이루어 지지 않아 수정하였음.
+      // modifyTask(id, this.saveTaskAfter);
+      saveBeforeProcess(id, id, modifyTask);
     } else if (type === 'D') {
       deleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage, this.deleteCallBack);
     }
@@ -65,6 +69,19 @@ class CommonSearchbar extends React.Component {
       setViewPageData(id, record.WORK_SEQ, record.TASK_SEQ, 'MODIFY');
       changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, 'MODIFY');
     }
+  };
+
+  customApi = () => {
+    const { sagaKey: id, getExtraApiData, formData } = this.props;
+    const apiArray = [
+      {
+        key: `complite`,
+        url: `/api/eshs/v1/common/dangerHazard`,
+        type: 'POST',
+        params: { PARAM: { ...formData } },
+      },
+    ];
+    getExtraApiData(id, apiArray);
   };
 
   BizbuilderbaseRender = () => {
@@ -95,7 +112,7 @@ class CommonSearchbar extends React.Component {
       CONFIG: { property },
     } = this.props;
     let buttonGruop;
-    const useRevision = property.useRevision || 'Y';
+    const useRevision = property.useRevision || 'N';
     switch (viewPageData && viewPageData.viewType.toUpperCase()) {
       case 'INPUT':
         buttonGruop = (
@@ -104,7 +121,7 @@ class CommonSearchbar extends React.Component {
               등록
             </StyledButton>
             <StyledButton className="btn-light btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-              Reset
+              초기화
             </StyledButton>
           </StyledButtonWrapper>
         );
@@ -125,9 +142,16 @@ class CommonSearchbar extends React.Component {
             ) : (
               ''
             )}
-            <StyledButton className="btn-light btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-              Reset
+            <StyledButton className="btn-light btn-xs mr5" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+              초기화
             </StyledButton>
+            {property.searchbarWorkSeq === 12061 ? (
+              <StyledButton className="btn-light btn-xs" onClick={this.customApi}>
+                완료
+              </StyledButton>
+            ) : (
+              ''
+            )}
           </StyledButtonWrapper>
         );
         break;
@@ -154,14 +178,7 @@ class CommonSearchbar extends React.Component {
         {readOnly || CONFIG.property.readOnly ? (
           ''
         ) : (
-          <AntdModal
-            className="modal-table-pad"
-            title={NAME_KOR || COMP_FIELD}
-            visible={this.state.modal}
-            width="80%"
-            onCancel={this.handleModalVisible}
-            footer={null}
-          >
+          <AntdModal title={NAME_KOR || COMP_FIELD} visible={this.state.modal} width="80%" onCancel={this.handleModalVisible} footer={null}>
             <div>{this.state.modal && this.BizbuilderbaseRender()}</div>
           </AntdModal>
         )}
@@ -187,6 +204,8 @@ CommonSearchbar.propTypes = {
   modifyTask: PropTypes.func,
   deleteTask: PropTypes.func,
   changeFormData: PropTypes.func,
+  loadingComplete: PropTypes.bool,
+  saveBeforeProcess: PropTypes.func,
 };
 
 export default CommonSearchbar;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Input, Modal, Spin } from 'antd';
-import { CaretDownOutlined, AppstoreTwoTone } from '@ant-design/icons';
+import { AppstoreTwoTone } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
@@ -13,15 +13,12 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import UserSelect from 'components/UserSelect';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import BfcheckHead from '../bfcheckHead';
 import BfcheckDetail from '../bfcheckDetail';
 import BfcheckItemSelect from '../bfcheckItemSelect';
-import Styled from './Styled';
 
 const AntdModal = StyledContentsModal(Modal);
-const AntdInput = StyledInput(Input);
 const AntdSearch = StyledSearchInput(Input.Search);
 
 class BfCheckPage extends Component {
@@ -420,7 +417,7 @@ class BfCheckPage extends Component {
             <span className="text-label">작업번호</span>
             <AntdSearch
               className="ant-search-inline input-search-mid mr5"
-              onClick={() => this.handleModal('search', true)}
+              onClick={() => this.handleModal('safetyWork', true)}
               value={formData.WORK_NO}
               style={{ width: '200px', marginRight: '10px' }}
             />
@@ -435,7 +432,7 @@ class BfCheckPage extends Component {
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('SAVE')}>
                 저장
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('bfcheckItem', true)}>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('bfcheckItem', true)}>
                 점검항목 추가
               </StyledButton>
               {formData.SAVE_TYPE === 'update' && (
@@ -472,6 +469,7 @@ class BfCheckPage extends Component {
           </Spin>
         </ContentsWrapper>
         <AntdModal
+          className="modal-table-pad"
           title={modalTitle}
           width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '70%'}
           visible={modalVisible}

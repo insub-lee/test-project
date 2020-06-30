@@ -3,14 +3,13 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Input, Modal, Button, DatePicker, Select, Table } from 'antd';
 import { AppstoreTwoTone } from '@ant-design/icons';
-import styled from 'styled-components';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
-import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledPicker from 'commonStyled/Form/StyledPicker';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
@@ -23,17 +22,10 @@ import Styled from './Styled';
 const AntdModal = StyledModalWrapper(Modal);
 const AntdTable = StyledLineTable(Table);
 const AntdSearch = StyledSearchInput(Input.Search);
-const StyledButton = StyledAntdButton(Button);
 const AntdDatePicker = StyledPicker(DatePicker);
 const AntdSelect = StyledSelect(Select);
 
 const { Option } = Select;
-
-const CustomTableStyled = styled.div`
-  .ant-table-column-title {
-    font-size: 12px;
-  }
-`;
 
 class SafetyWorkMain extends Component {
   constructor(props) {
@@ -228,6 +220,7 @@ class SafetyWorkMain extends Component {
             role="button"
             onKeyPress={() => this.handleModal('eSafetyWorkWrite', true, value)}
             onClick={() => this.handleModal('eSafetyWorkWrite', true, value)}
+            style={{ color: '#2a81da' }}
           >
             {value}
           </span>
@@ -364,32 +357,30 @@ class SafetyWorkMain extends Component {
               </table>
             </div>
             <div className="view-designer-group-search-btn-wrap">
-              <StyledButton className="btn-primary btn-gray btn-first" onClick={() => this.onSearch()}>
+              <StyledButton className="btn-gray btn-first" onClick={() => this.onSearch()}>
                 검색
-              </StyledButton>
-              <StyledButton className="btn-primary btn-gray btn-first" onClick={() => this.acceptSafetyWork()}>
-                승인
               </StyledButton>
             </div>
           </Group>
         </StyledSearchWrapper>
-        <ContentsWrapper>
-          <div className="middleTitle">
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10" style={{ position: 'relative' }}>
+          <div style={{ display: 'inline', left: '10px', bottom: '5px', position: 'absolute' }}>
             <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
             <span className="middleTitleText">긴급작업 현황</span>
           </div>
-          <CustomTableStyled>
-            <AntdTable
-              rowKey="WORK_NO"
-              key="emergency_list"
-              pagination={false}
-              columns={columns}
-              dataSource={safetyWorkList}
-              rowSelection={rowSelection}
-              footer={() => <div style={{ textAlign: 'center' }}>{`총 ${safetyWorkList.length === 0 ? 0 : safetyWorkList.length} 건`}</div>}
-            />
-          </CustomTableStyled>
-        </ContentsWrapper>
+          <StyledButton className="btn-primary btn-first" onClick={() => this.acceptSafetyWork()}>
+            승인
+          </StyledButton>
+        </StyledButtonWrapper>
+        <AntdTable
+          rowKey="WORK_NO"
+          key="emergency_list"
+          pagination={false}
+          columns={columns}
+          dataSource={safetyWorkList}
+          rowSelection={rowSelection}
+          footer={() => <div style={{ textAlign: 'center' }}>{`총 ${safetyWorkList.length === 0 ? 0 : safetyWorkList.length} 건`}</div>}
+        />
         <AntdModal
           title={modalTitle}
           width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '90%'}

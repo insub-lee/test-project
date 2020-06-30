@@ -8,11 +8,11 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
-import StyledModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledAntdModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
 
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
-const AntdModal = StyledModal(Modal);
+const AntdModal = StyledAntdModalPad(Modal);
 const AntdTable = StyledAntdTable(Table);
 
 const { Option } = Select;
@@ -130,7 +130,7 @@ class EshsSiteItemSearchbar extends React.Component {
           onSearch={this.handleModalVisible}
         />
         <StyledButtonWrapper className="btn-wrap-inline">
-          <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+          <StyledButton className="btn-light btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
             Reset
           </StyledButton>
         </StyledButtonWrapper>

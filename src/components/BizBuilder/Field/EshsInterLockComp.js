@@ -5,6 +5,8 @@ import { TreeSelect, Input, Select, Checkbox, Table, DatePicker } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import moment from 'moment';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import StyledInput from 'commonStyled/Form/StyledInput';
 
@@ -85,14 +87,7 @@ class EshsInterLockComp extends Component {
           },
           { title: '해제여부', dataIndex: 'IL_KIND', align: 'center', width: '10%' },
           {
-            title: () => (
-              <span>
-                종류/형식
-                <span className="add-row" onClick={this.handlePlusTd}>
-                  [+1]
-                </span>
-              </span>
-            ),
+            title: () => '종류/형식',
             dataIndex: 'IL_KIND_FORM',
             width: '15%',
             align: 'center',
@@ -150,7 +145,7 @@ class EshsInterLockComp extends Component {
           },
           {
             title: '승인상태',
-            dataIndex: 'QUAL_STATUS',
+            dataIndex: 'QUAL_STATUS_NM',
             align: 'center',
             width: '8%',
           },
@@ -274,11 +269,24 @@ class EshsInterLockComp extends Component {
   };
 
   render() {
-    const { formData, sagaKey: id } = this.props;
+    const {
+      formData,
+      sagaKey: id,
+      CONFIG: {
+        property: { INTERLOCK_TYPE },
+      },
+    } = this.props;
     const { columns } = this.state;
     const interLockList = (formData && formData.interLockList) || [];
     return (
       <>
+        {INTERLOCK_TYPE === 'INPUT' && (
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10 btn-wrap-mt-10">
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.handlePlusTd}>
+              추가
+            </StyledButton>
+          </StyledButtonWrapper>
+        )}
         <AntdLineTable
           key={`${id}_interLock`}
           className="tableWrapper"

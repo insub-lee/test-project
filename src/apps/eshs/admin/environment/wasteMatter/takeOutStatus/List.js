@@ -5,8 +5,9 @@ import { Modal, Table, DatePicker, Input, Select, message } from 'antd';
 
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
@@ -19,7 +20,7 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 const AntdSelect = StyledSelect(Select);
-const AntdLineTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledContentsModal(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdRangePicker = StyledDatePicker(RangePicker);
@@ -115,38 +116,41 @@ class List extends Component {
     const nSiteItem = siteItem && siteItem.list;
     return (
       <>
-        <ContentsWrapper>
-          <div className="selSaveWrapper alignLeft">
-            <AntdSearch
-              className="input-search-sm mr5"
-              value={itemNm}
-              style={{ width: '150px' }}
-              onClick={this.handleItemModalVisible}
-              onSearch={this.handleItemModalVisible}
-            />
-            <AntdRangePicker
-              className="ant-picker-sm mr5"
-              defaultValue={this.state.dates}
-              format={['YYYY-MM-DD', 'YYYY-MM-DD']}
-              onChange={(date, dateStrings) => this.dateChange(dateStrings)}
-            />
-            <AntdSelect className="select-mid mr5" value={0}>
-              <Option value={0}>결제 해결후 사용</Option>
-            </AntdSelect>
-            <AntdSelect className="select-mid mr5" value={0}>
-              <Option value={0}>결제 해결후 사용</Option>
-            </AntdSelect>
-            <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.searchData}>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper className="search-wrapper-inline">
+            <div className="search-input-area">
+              <AntdSearch
+                className="input-search-sm ant-search-inline mr5"
+                value={itemNm}
+                style={{ width: '150px' }}
+                onClick={this.handleItemModalVisible}
+                onSearch={this.handleItemModalVisible}
+              />
+              <AntdRangePicker
+                className="ant-picker-sm mr5"
+                defaultValue={this.state.dates}
+                format={['YYYY-MM-DD', 'YYYY-MM-DD']}
+                onChange={(date, dateStrings) => this.dateChange(dateStrings)}
+              />
+              <AntdSelect className="select-sm mr5" value={0}>
+                <Option value={0}>결제 해결후 사용</Option>
+              </AntdSelect>
+              <AntdSelect className="select-sm" value={0}>
+                <Option value={0}>결제 해결후 사용</Option>
+              </AntdSelect>
+            </div>
+            <div className="btn-area">
+              <StyledButton className="btn-gray btn-sm" onClick={this.searchData}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm" onClick={this.print}>
-                인쇄
-              </StyledButton>
-            </StyledButtonWrapper>
-          </div>
-          <AntdLineTable
-            className="tableWrapper"
+            </div>
+          </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-gray btn-sm" onClick={this.print}>
+              인쇄
+            </StyledButton>
+          </StyledButtonWrapper>
+          <AntdTable
             rowKey={takeOutList && takeOutList.TASK_SEQ}
             columns={columns}
             dataSource={takeOutList || []}
@@ -157,14 +161,13 @@ class List extends Component {
             })}
             footer={() => <span>{`${takeOutList && takeOutList.length} 건`}</span>}
           />
-        </ContentsWrapper>
-        <AntdModal className="modal-table-pad" visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={null}>
+        </StyledContentsWrapper>
+        <AntdModal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={null}>
           {this.state.modal && this.renderBuilder()}
         </AntdModal>
-        <AntdModal className="modal-table-pad" visible={this.state.itemModal} width={800} height={600} onCancel={this.handleItemModalVisible} footer={null}>
+        <AntdModal visible={this.state.itemModal} width={800} height={600} onCancel={this.handleItemModalVisible} footer={null}>
           {this.state.itemModal && (
-            <AntdLineTable
-              className="tableWrapper"
+            <AntdTable
               rowKey={nSiteItem && nSiteItem.ITEM_CD}
               columns={itemColumns}
               dataSource={nSiteItem || []}

@@ -104,7 +104,7 @@ class DocDashBoard extends Component {
           <div className="widget-hover-inner">
             <a onClick={() => this.onClickList(3013)} className="widget-cover">
               <span className="widget-icon widget-icon5"></span>
-              <span className="widget-title-kor">업무절차</span>
+              <span className="widget-title-kor">Work Process</span>
               <span className="widget-title-eng">Work Process</span>
               <span className="widget-item-number">
                 {(docCntObj && docCntObj[3013] && docCntObj[3013].NEW_CNT) || 0}{' '}

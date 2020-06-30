@@ -215,7 +215,6 @@ class EshsCmpnyComp extends React.Component {
     if (readOnly || CONFIG.property.readOnly) {
       return visible ? <span>&nbsp;{cmpny_nm}</span> : '';
     }
-    console.debug('프롭', this.props);
     return visible ? (
       <>
         {directSearchTable ? (
@@ -287,7 +286,7 @@ class EshsCmpnyComp extends React.Component {
               width={800}
               height={600}
               footer={[
-                <StyledButton className="btn-primary" onClick={this.handleModalVisible}>
+                <StyledButton className="btn-light btn-sm" onClick={this.handleModalVisible}>
                   닫기
                 </StyledButton>,
               ]}

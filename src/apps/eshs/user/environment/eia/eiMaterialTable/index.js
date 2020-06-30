@@ -4,8 +4,8 @@ import { Input } from 'antd';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -59,7 +59,7 @@ class MaterialTable extends Component {
       <StyledHtmlTable>
         {saveBtn && !searchFlag && (
           <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-            <StyledButton className="btn-primary" onClick={() => this.handleSaveOnClick()}>
+            <StyledButton className="btn-primary btn-sm" onClick={() => this.handleSaveOnClick()}>
               저장
             </StyledButton>
           </StyledButtonWrapper>
@@ -82,7 +82,7 @@ class MaterialTable extends Component {
               </th>
               <td>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm"
+                  className="ant-input-inline ant-input-xs"
                   style={{ width: '100%' }}
                   name="DIVISION_NM"
                   value={materialData.DIVISION_NM || ''}
@@ -94,7 +94,7 @@ class MaterialTable extends Component {
               </th>
               <td colSpan={2}>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm"
+                  className="ant-input-inline ant-input-xs"
                   style={{ width: '100%' }}
                   name="FROM_BUILDING_NM"
                   value={materialData.FROM_BUILDING_NM || ''}
@@ -106,7 +106,7 @@ class MaterialTable extends Component {
               </th>
               <td>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm"
+                  className="ant-input-inline ant-input-xs"
                   style={{ width: '100%' }}
                   name="TO_BUILDING_NM"
                   value={materialData.TO_BUILDING_NM || ''}
@@ -120,7 +120,7 @@ class MaterialTable extends Component {
               </th>
               <td>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm"
+                  className="ant-input-inline ant-input-xs"
                   style={{ width: '100%' }}
                   name="FROM_DEPT_NM"
                   value={materialData.FROM_DEPT_NM || ''}
@@ -132,7 +132,7 @@ class MaterialTable extends Component {
               </th>
               <td>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm"
+                  className="ant-input-inline ant-input-xs"
                   style={{ width: '100%' }}
                   name="FROM_DEPT_MANAGER_NM"
                   value={materialData.FROM_DEPT_MANAGER_NM || ''}
@@ -144,7 +144,7 @@ class MaterialTable extends Component {
               </th>
               <td>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm"
+                  className="ant-input-inline ant-input-xs"
                   style={{ width: '100%' }}
                   name="FROM_EMP_NM"
                   value={materialData.FROM_EMP_NM || ''}
@@ -164,7 +164,7 @@ class MaterialTable extends Component {
               </th>
               <td>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm"
+                  className="ant-input-inline ant-input-xs"
                   style={{ width: '100%' }}
                   name="TO_DEPT_NM"
                   value={materialData.TO_DEPT_NM || ''}
@@ -176,7 +176,7 @@ class MaterialTable extends Component {
               </th>
               <td>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm"
+                  className="ant-input-inline ant-input-xs"
                   style={{ width: '100%' }}
                   name="TO_DEPT_MANAGER_NM"
                   value={materialData.TO_DEPT_MANAGER_NM || ''}
@@ -187,7 +187,7 @@ class MaterialTable extends Component {
                 <span>검토자</span>
               </th>
               <td>
-                <AntdInput className="ant-input-inline ant-input-sm" style={{ width: '100%' }} name="TO_EMP_NM" value={materialData.TO_EMP_NM || ''} readOnly />
+                <AntdInput className="ant-input-inline ant-input-xs" style={{ width: '100%' }} name="TO_EMP_NM" value={materialData.TO_EMP_NM || ''} readOnly />
               </td>
               <th>
                 <span>검토일</span>
