@@ -113,11 +113,16 @@ class IntroComponent extends Component {
     this.setState({ isLoading: false });
   };
 
-  onCloseModalHandler = (id, redirectUrl) => {
+  onCloseModalHandler = (id, redirectUrl, type) => {
     this.setState({ isShow: false });
-    message.success('기안 완료');
-    // history.push('/apps/Workflow/User/Draft');
-    redirectUrl(id, '/apps/Workflow/User/Draft');
+    if (type === 'tempSave') {
+      message.success('임시저장 완료');
+      redirectUrl(id, '/apps/mdcs/user/MdcsStandard/TempSaveList');
+    } else {
+      message.success('기안 완료');
+      // history.push('/apps/Workflow/User/Draft');
+      redirectUrl(id, '/apps/Workflow/User/Draft');
+    }
   };
 
   onCloseModal = () => {
@@ -290,8 +295,11 @@ class IntroComponent extends Component {
                 onCloseModalHandler={this.onCloseModalHandler}
                 onCloseModal={this.onCloseModal}
                 compProps={{ docNumber, NODE_ID: selectedNodeId }}
-                InputCustomButtons={({ saveBeforeProcess, onCloseModal, sagaKey, reloadId }) => (
+                InputCustomButtons={({ saveBeforeProcess, onCloseModal, sagaKey, reloadId, tempSaveBeforeProcess }) => (
                   <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => tempSaveBeforeProcess(sagaKey, reloadId)}>
+                      임시저장
+                    </StyledButton>
                     <StyledButton className="btn-primary btn-sm btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
                       상신
                     </StyledButton>

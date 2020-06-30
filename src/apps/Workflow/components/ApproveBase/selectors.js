@@ -20,6 +20,8 @@ const makeSelectOpinion = () => createSelector(selectApproveBase, state => state
 
 const makeSelectFormData = () => createSelector(selectApproveBase, state => state.get('formData'));
 
+const makeSelectUnApproveListCnt = () => createSelector(selectApproveBase, state => state.get('unApproveListCnt'));
+
 export {
   makeSelectApproveList,
   makeSelectUnApproveList,
@@ -30,4 +32,5 @@ export {
   makeSelectOpinionVisible,
   makeSelectOpinion,
   makeSelectFormData,
+  makeSelectUnApproveListCnt,
 };
