@@ -397,7 +397,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(actions.getDetailData(id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, changeWorkflowFormData)),
   getTaskSeq: (id, workSeq) => dispatch(actions.getTaskSeq(id, workSeq)),
   // saveTempContents: (id, detail, fieldName, compType, contSeq) => dispatch(actions.saveTempContents(id, detail, fieldName, compType, contSeq)),
-  tempSaveTask: (id, callbackFunc) => dispatch(actions.tempSaveTask(id, callbackFunc)),
+  tempSaveTask: (id, reloadId, callbackFunc, changeIsLoading, workPrcProps) =>
+    dispatch(actions.tempSaveTask(id, reloadId, callbackFunc, changeIsLoading, workPrcProps)),
   saveTask: (id, reloadId, callbackFunc, changeIsLoading) => dispatch(actions.saveTask(id, reloadId, callbackFunc, changeIsLoading)),
   modifyTask: (id, reloadId, callbackFunc, changeIsLoading) => dispatch(actions.modifyTask(id, reloadId, callbackFunc, changeIsLoading)),
   modifyTaskBySeq: (id, reloadId, workSeq, taskSeq, callbackFunc, changeIsLoading) =>
