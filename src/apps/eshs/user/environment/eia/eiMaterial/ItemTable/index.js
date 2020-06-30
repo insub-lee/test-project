@@ -346,9 +346,7 @@ class ItemTable extends Component {
               </td>
             </tr>
             <tr>
-              <th rowSpan={2}>
-                <span>삭제</span>
-              </th>
+              <th rowSpan={2}> </th>
               <th rowSpan={2}>
                 <span>Seq</span>
               </th>
