@@ -92,7 +92,6 @@ class WorkProcessModal extends Component {
   };
 
   onTreeNodeCheck = checkedKeys => {
-    console.debug('treeNOde', checkedKeys);
     this.setState({ selectedDeptKeys: checkedKeys });
   };
 
