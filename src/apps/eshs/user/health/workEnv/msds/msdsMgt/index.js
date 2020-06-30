@@ -26,13 +26,11 @@ class MsdsMgt extends Component {
           loadingComplete={this.loadingComplete}
           InputCustomButtons={({ saveBeforeProcess }) => {
             const { saveTask } = this.state;
-            console.debug('saveTask ', saveTask);
             if (typeof saveTask === 'undefined') this.setState({ saveTask: saveBeforeProcess });
             return null;
           }}
           ModifyCustomButtons={({ saveBeforeProcess }) => {
             const { modifyTask } = this.state;
-            console.debug('modifyTask ', modifyTask);
             if (typeof modifyTask === 'undefined') this.setState({ modifyTask: saveBeforeProcess });
 
             return null;

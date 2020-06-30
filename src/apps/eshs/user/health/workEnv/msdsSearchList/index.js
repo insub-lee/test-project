@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm, Button } from 'antd';
+import { Table, Popconfirm, Select, Input } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
-import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
-import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
-import Contents from 'components/BizBuilder/Common/Contents';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+
 import {
   MULTI_DELETE_OPT_SEQ,
   LIST_NO_OPT_SEQ,
@@ -27,7 +27,9 @@ import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 // import Loading from '../Common/Loading';
 
 const AntdTable = StyledAntdTable(Table);
-const StyledButton = StyledAntdButton(Button);
+const AntdSelect = StyledSelect(Select);
+const AntdInput = StyledInput(Input);
+const { Option } = Select;
 
 class MsdsSearchList extends Component {
   constructor(props) {
@@ -246,7 +248,7 @@ class MsdsSearchList extends Component {
             rowKey="TASK_SEQ"
             key={`${group.key}_list`}
             className="view-designer-list"
-            columns={columns.map(col => ({ ...col, width: columnWidths[col.dataIndex] }))}
+            columns={columns.map(col => ({ ...col, width: columnWidths[col.dataIndex], fixed: col.dataIndex === 'MTRL_NM' && 'left' }))}
             dataSource={listData || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
@@ -257,6 +259,15 @@ class MsdsSearchList extends Component {
           />
         </Group>
       </div>
+    );
+  };
+
+  handleOnChangeSearchData = (target, value, callBack) => {
+    this.setState(
+      {
+        [target]: value,
+      },
+      () => (typeof callBack === 'function' ? callBack() : undefined),
     );
   };
 
@@ -277,6 +288,7 @@ class MsdsSearchList extends Component {
       ListCustomButtons,
       useExcelDownload,
       conditional,
+      changeSearchData,
     } = this.props;
     const { isMultiDelete, StyledWrap, isExcelDown, btnTex, fileName, sheetName, columns, fields, pageSize, isPagingData } = this.state;
 
@@ -298,91 +310,59 @@ class MsdsSearchList extends Component {
                 return this.renderList(group, groupIndex);
               }
               return (
-                (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
-                  <StyledSearchWrapper key={group.key}>
-                    {group.useTitle && <GroupTitle title={group.title} />}
-                    <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-                      <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
-                        <table className={`view-designer-table table-${groupIndex}`}>
-                          <tbody>
-                            {group.rows.map((row, rowIndex) => (
-                              <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
-                                {row.cols &&
-                                  row.cols.map((col, colIndex) =>
-                                    col ? (
-                                      <td
-                                        key={col.key}
-                                        {...col}
-                                        comp=""
-                                        colSpan={col.span}
-                                        className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}${
-                                          col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName.toString().replaceAll(',', ' ')}` : ''
-                                        }`}
-                                      >
-                                        <Contents>
-                                          {col.comp &&
-                                            this.renderComp(
-                                              col.comp,
-                                              col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
-                                              true,
-                                              `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
-                                              `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
-                                              group.type === 'searchGroup',
-                                            )}
-                                        </Contents>
-                                      </td>
-                                    ) : (
-                                      ''
-                                    ),
-                                  )}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      {group.type === 'searchGroup' && group.useSearch && (
-                        <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray btn-sm" onClick={this.handleClickSearch}>
-                            검색
-                          </StyledButton>
-                          {useExcelDownload && isExcelDown && (
-                            <ExcelDownloadComp
-                              isBuilder={false}
-                              fileName={fileName || 'excel'}
-                              className="workerExcelBtn"
-                              btnText={btnTex || '엑셀받기'}
-                              sheetName={sheetName || 'sheet1'}
-                              columns={columns || []}
-                              fields={fields || []}
-                              listData={listData || []}
-                            />
-                          )}
-                        </div>
-                      )}
-                    </Group>
-                  </StyledSearchWrapper>
-                )
+                <StyledCustomSearchWrapper className="search-wrapper-inline">
+                  <div>
+                    <AntdSelect
+                      style={{ width: 120 }}
+                      allowClear
+                      className="select-sm mr5"
+                      onChange={value => changeSearchData(id, 'andSearch_1', value ? `AND W.SITE = '${value}'` : ' AND 1 = 1')}
+                      placeholder="지역전체"
+                    >
+                      <Option value="317">청주</Option>
+                      <Option value="318">구미</Option>
+                    </AntdSelect>
+                    <AntdSelect
+                      placeholder="검색구분"
+                      allowClear
+                      className="select-sm"
+                      style={{ width: 150 }}
+                      onChange={value =>
+                        this.handleOnChangeSearchData('searchType', value, () => {
+                          const { searchType, searchText } = this.state;
+                          return changeSearchData(id, 'andSearch_2', searchType && searchText ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1');
+                        })
+                      }
+                    >
+                      <Option value="W.MTRL_NM">물질명</Option>
+                      <Option value="W.ITEM_NM">제품명</Option>
+                      <Option value="W.MOLECULAR_FORMULA">분자식</Option>
+                      <Option value="W.CAS_NO">CAS_NO</Option>
+                      <Option value="W.UN_NO">UN_NO</Option>
+                      <Option value="W.ITEM_CD">MSDS코드</Option>
+                      <Option value="Y.WRK_CMPNY_NM">Vendor</Option>
+                    </AntdSelect>
+                    <AntdInput
+                      style={{ width: 150 }}
+                      placeholder="검색어"
+                      allowClear
+                      className="ant-input-sm ant-input-inline mr5"
+                      onChange={e =>
+                        this.handleOnChangeSearchData('searchText', e.target.value, () => {
+                          const { searchType, searchText } = this.state;
+                          return changeSearchData(id, 'andSearch_2', searchType && searchText ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1');
+                        })
+                      }
+                      onPressEnter={() => getListData(id, workSeq)}
+                    />
+
+                    <StyledButton className="btn-gray btn-sm mr5" onClick={() => getListData(id, workSeq)}>
+                      검색
+                    </StyledButton>
+                  </div>
+                </StyledCustomSearchWrapper>
               );
             })}
-            <StyledButtonWrapper className="btn-wrap-right">
-              {ListCustomButtons ? (
-                <ListCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
-              ) : (
-                <StyledButton
-                  className="btn-primary btn-sm mr5"
-                  onClick={() =>
-                    isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
-                  }
-                >
-                  추가
-                </StyledButton>
-              )}
-              {isMultiDelete && (
-                <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
-                  <StyledButton className="btn-light btn-sm">삭제</StyledButton>
-                </Popconfirm>
-              )}
-            </StyledButtonWrapper>
           </Sketch>
         </StyledWrap>
       );
