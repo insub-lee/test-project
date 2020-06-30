@@ -7,6 +7,7 @@ const StyledButton = StyledAntdButton(Button);
 
 export function ViewButtons(props) {
   const {
+    profile,
     deleteTask,
     changeViewPage,
     sagaKey,
@@ -16,8 +17,10 @@ export function ViewButtons(props) {
     formData,
     customModalHandler,
     onCloseModalHandler,
+    bookmarkHandler,
   } = props;
   const { workSeq, taskSeq } = viewPageData;
+  const bookMarkUserList = (formData.BOOKMARK_USER_LIST && formData.BOOKMARK_USER_LIST.length > 0 && formData.BOOKMARK_USER_LIST) || '';
   return (
     <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
       {formData.LVL === 1 ? (
@@ -34,6 +37,9 @@ export function ViewButtons(props) {
           수정
         </StyledButton>
       )}
+      <StyledButton className="btn-gray mr5 btn-sm" onClick={() => bookmarkHandler(sagaKey, formData)}>
+        {bookMarkUserList.split(',').includes(`${profile.USER_ID}`) ? '북마크 해제' : '북마크 설정'}
+      </StyledButton>
       <Popconfirm
         title="Are you sure delete this task?"
         onConfirm={() => deleteTask(sagaKey, sagaKey, workSeq, taskSeq, onCloseModalHandler)}
