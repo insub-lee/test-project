@@ -11,6 +11,7 @@ import {
   CHANGE_VIEW_OPT_SEQ,
   TASK_FAVORITE_OPT_CODE,
   PAGINATION_OPT_CODE,
+  REVISION_OPT_CODE,
 } from 'components/BizBuilder/Common/Constants';
 import history from 'utils/history';
 import { isJSON } from 'utils/helpers';
