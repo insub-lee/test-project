@@ -145,7 +145,7 @@ class MainWidget extends Component {
             )}
             </ul>
             <div className="more-btn-area">
-              <button type="button">+ 더보기</button>
+              <button type="button" onClick={() => history.push('/apps/mhrs/ChkReservation')}>+ 더보기</button>
             </div>
           </div>
         </div>

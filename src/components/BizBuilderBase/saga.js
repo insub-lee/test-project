@@ -11,6 +11,7 @@ import {
   CHANGE_VIEW_OPT_SEQ,
   TASK_FAVORITE_OPT_CODE,
   PAGINATION_OPT_CODE,
+  REVISION_OPT_CODE,
 } from 'components/BizBuilder/Common/Constants';
 import history from 'utils/history';
 import { isJSON } from 'utils/helpers';
@@ -978,7 +979,8 @@ function* getListData({ id, workSeq, conditional, pageIdx, pageCnt }) {
         } else {
           PAGE_CNT = 10;
         }
-
+      }
+      if (opt.OPT_CODE === REVISION_OPT_CODE && opt.ISUSED === 'Y') {
         switch (opt.OPT_VALUE) {
           case 'A':
             ISLAST_VER = 'Y';
