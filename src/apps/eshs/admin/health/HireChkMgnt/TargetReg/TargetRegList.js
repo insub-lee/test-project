@@ -63,7 +63,7 @@ class TargetRegList extends Component {
         url: '/api/admin/v1/common/categoryMapList',
         type: 'POST',
         params: {
-          PARAM: { NODE_ID: 235 },
+          PARAM: { NODE_ID: 316 },
         },
       },
       {
