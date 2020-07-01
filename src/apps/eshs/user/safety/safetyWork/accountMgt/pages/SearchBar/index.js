@@ -7,8 +7,7 @@ import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-
-import CustomList from '../CustomList';
+// import CustomList from '../CustomList';
 
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdModal = StyledContentsModal(Modal);
@@ -46,10 +45,11 @@ class SearchBar extends Component {
           taskSeq={-1}
           viewType="LIST"
           listMetaSeq={listMetaSeq}
-          CustomListPage={CustomList}
+          conditional={listMetaSeq === 424 ? `AND W.GUBUN = 'SW'` : `AND W.GUBUN = 'SQ'`}
+          // CustomListPage={CustomList}
           loadingComplete={loadingComplete}
           customOnRowClick={record => this.handleListRowClick(record)}
-          gubun={gubun}
+          ListCustomButtons={() => null}
         />,
       ],
     });
