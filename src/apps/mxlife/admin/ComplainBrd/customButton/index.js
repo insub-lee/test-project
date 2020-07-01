@@ -5,6 +5,18 @@ import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdBut
 
 const StyledButton = StyledAntdButton(Button);
 
+export function InputButtons(props) {
+  const { sagaKey, viewPageData, saveBeforeProcess, reloadId } = props;
+  const { workSeq, taskSeq } = viewPageData;
+  return (
+    <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+      <StyledButton className="btn-primary btn-sm mr5" onClick={() => saveBeforeProcess(sagaKey, reloadId || sagaKey)}>
+        저장
+      </StyledButton>
+    </StyledButtonWrapper>
+  );
+}
+
 export function ViewButtons(props) {
   const {
     profile,
@@ -25,9 +37,11 @@ export function ViewButtons(props) {
     <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
       {formData.LVL === 1 ? (
         <>
-          <StyledButton className="btn-primary mr5 btn-sm" onClick={() => customModalHandler('answer', 'INPUT', formData)}>
-            답변
-          </StyledButton>
+          {formData.REPLY_CNT === 0 && (
+            <StyledButton className="btn-primary mr5 btn-sm" onClick={() => customModalHandler('answer', 'INPUT', formData)}>
+              답변
+            </StyledButton>
+          )}
           <StyledButton className="btn-primary mr5 btn-sm" onClick={() => changeViewPage(sagaKey, workSeq, taskSeq, 'REVISION')}>
             수정
           </StyledButton>
