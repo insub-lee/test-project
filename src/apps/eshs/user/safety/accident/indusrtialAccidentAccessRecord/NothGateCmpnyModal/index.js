@@ -1,42 +1,51 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Select, Input, DatePicker, message } from 'antd';
-import { Table, Column, AutoSizer } from 'react-virtualized';
-import { debounce } from 'lodash';
-import StyledVirtualizedTable from 'components/BizBuilder/styled/Table/StyledVirtualizedTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import PropTypes from 'prop-types';
+
+import { Select, Input, DatePicker, Table, Popconfirm } from 'antd';
 import moment from 'moment';
-import { changeFormData } from 'components/BizBuilderBase/actions';
+
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from '@ant-design/icons';
 
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+
+import BizMicroDevBase from 'components/BizMicroDevBase';
+
+const AntdTable = StyledAntdTable(Table);
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
+const AntdDatePicker = StyledDatePicker(DatePicker);
+
 const { Option } = Select;
 
 const format = 'YYYY-MM-DD HH:mm:ss';
-const AntdSearch = StyledSearchInput(Input.Search);
 
 moment.locale('ko');
 
-class NothGateCmpnyModal extends Component {
+class Comp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nothGateCmpnyList: [],
       endOpen: false,
+      formData: {},
     };
-
-    this.handleSearchData = debounce(this.handleSearchData, 500);
   }
 
   componentDidMount = () => {
-    const { id, getCallDataHandler, changeFormData } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff, type, initData } = this.props;
+    spinningOn();
     const apiAry = [
       {
         key: 'NothGateCmpnyList',
@@ -44,135 +53,59 @@ class NothGateCmpnyModal extends Component {
         url: '/api/eshs/v1/common/eshsNothGateCmpny',
       },
     ];
-    this.setState({
-      startValue: null,
-      endValue: null,
-      endOpen: false,
-    });
-    changeFormData(id, 'nothGateSearch', { searchType: 'BIZ_REG_NO' });
-    getCallDataHandler(id, apiAry, this.handleAppStart);
-  };
-
-  handleAppStart = () => {
-    const { result } = this.props;
-    const nothGateCmpnyList = (result && result.NothGateCmpnyList && result.NothGateCmpnyList.List) || [];
-    this.setState({
-      nothGateCmpnyList,
-    });
-  };
-
-  onRowClick = e => {
-    const { id, changeFormData, formData } = this.props;
-    const modal = (formData && formData.modal) || {};
-    const info = (formData && formData.modal && formData.modal.info) || {};
-
-    changeFormData(id, 'modal', {
-      ...modal,
-      info: { ...info, ...e.rowData, WRK_CMPNY_NM: e.rowData.biz_reg_no === '000-00-00000' ? '' : e.rowData.WRK_CMPNY_NM },
-    });
-  };
-
-  noRowsRenderer = () => <div className="noRows"> </div>;
-
-  getColumns = () => [
-    { label: '사업자등록번호', dataKey: 'BIZ_REG_NO', width: 220, ratio: 25 },
-    { label: '업체명', dataKey: 'WRK_CMPNY_NM', width: 310, ratio: 35 },
-    { label: '사업장주소', dataKey: 'ADDRESS', width: 355, ratio: 40 },
-  ];
-
-  getTablewidth = () => {
-    this.getColumns()
-      .map(({ width }) => width)
-      .reduce((a, b) => a + b);
-  };
-
-  handleModalOpen = () => {
-    this.setState = {};
-  };
-
-  handleSearchTypeOnChange = e => {
-    const { id, changeFormData, formData } = this.props;
-    const nothGateSearch = (formData && formData.nothGateSearch) || {};
-    changeFormData(id, 'nothGateSearch', { ...nothGateSearch, searchType: e });
-    this.handleSearchData();
-  };
-
-  handleSearchOnChange = e => {
-    const { id, changeFormData, formData } = this.props;
-    const nothGateSearch = (formData && formData.nothGateSearch) || {};
-    changeFormData(id, 'nothGateSearch', { ...nothGateSearch, searchText: e.target.value });
-    this.handleSearchData();
-  };
-
-  handleSearchData = () => {
-    const { id, formData, getCallDataHandler } = this.props;
-    const searchType = (formData && formData.nothGateSearch && formData.nothGateSearch.searchType) || '';
-    const searchText = (formData && formData.nothGateSearch && formData.nothGateSearch.searchText) || '';
-    const apiAry = [
+    return this.setState(
       {
-        key: 'NothGateCmpnyList',
-        type: 'GET',
-        url: `/api/eshs/v1/common/eshsNothGateCmpny?searchType=${searchType}&searchText=${searchText}`,
+        startValue: null,
+        endValue: null,
+        endOpen: false,
+        formData:
+          JSON.stringify(initData) === '{}'
+            ? {
+                WORK_AREA_CD: 'CJ',
+                VISITOR_TYPE: 'N',
+                VISITOR_IN_DATE: moment().format(format),
+                VISITOR_OUT_DATE: moment().format(format),
+              }
+            : { ...initData },
       },
-    ];
-    getCallDataHandler(id, apiAry, this.handleAppStart);
+      type === 'INSERT' ? () => getCallDataHandler(id, apiAry, spinningOff) : spinningOff(),
+    );
   };
 
   handleBtnOnClick = () => {
     const is_ok = this.validationCheck();
     if (is_ok) {
-      const { id, formData, submitHandlerBySaga, changeFormData } = this.props;
-
-      const type = (formData && formData.modal && formData.modal.type) || '';
+      const { sagaKey: id, submitHandlerBySaga, modalVisible, type, saveAfter } = this.props;
+      const { formData } = this.state;
       if (type === 'INSERT') {
-        const submitData = (formData && formData.modal && formData.modal.info) || {};
-        changeFormData(id, 'actionType', 'INSERT');
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsNothGateCmpny', submitData, this.saveComplete);
+        // const submitData = (formData && formData.modal && formData.modal.info) || {};
+        // changeFormData(id, 'actionType', 'INSERT');
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsNothGateCmpny', formData, (afterId, res) => {
+          if (res && res.code === 200) {
+            message.info(<MessageContent>등록되었습니다.</MessageContent>);
+            modalVisible();
+            return saveAfter();
+          }
+          return message.info(<MessageContent>등록에 실패하였습니다.</MessageContent>);
+        });
       } else if (type === 'UPDATE') {
-        const submitData = (formData && formData.modal && formData.modal.info) || {};
-        changeFormData(id, 'actionType', 'UPDATE');
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsNothGateCmpny', submitData, this.saveComplete);
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsNothGateCmpny', formData, (afterId, res) => {
+          if (res && res.code === 200) {
+            message.info(<MessageContent>수정되었습니다.</MessageContent>);
+            modalVisible();
+            return saveAfter();
+          }
+          return message.info(<MessageContent>수정에 실패하였습니다.</MessageContent>);
+        });
       } else return false;
     }
     return false;
   };
 
-  saveComplete = sagaKey => {
-    const { getCallDataHandler, apiAry, handleAppStart, formData, handleModalOpen, handleModalCancel } = this.props;
-    getCallDataHandler(sagaKey, apiAry, handleAppStart);
-    const actionType = (formData && formData.actionType) || '';
-    if (actionType === 'INSERT') {
-      message.success('등록되었습니다.');
-    } else if (actionType === 'UPDATE') message.success('수정되었습니다.');
-    else if (actionType === 'DELETE') message.success('삭제되었습니다.');
-    changeFormData(sagaKey, 'actionType', '');
-    handleModalCancel();
-  };
-
-  handleInputChange = e => {
-    const { id, changeFormData, formData } = this.props;
-    const modal = (formData && formData.modal) || {};
-    const info = (formData && formData.modal && formData.modal.info) || {};
-    changeFormData(id, 'modal', { ...modal, info: { ...info, [e.target.name]: e.target.value } });
-  };
-
-  handleBusinessInputChange = e => {
-    const bspt = /^[0-9 \-]+$/;
-    if (bspt.test(e.target.value)) {
-      const { id, changeFormData, formData } = this.props;
-      const modal = (formData && formData.modal) || {};
-      const info = (formData && formData.modal && formData.modal.info) || {};
-
-      changeFormData(id, 'modal', { ...modal, info: { ...info, [e.target.name]: e.target.value } });
-    }
-    return false;
-  };
-
-  handleSiteOnChange = e => {
-    const { id, changeFormData, formData } = this.props;
-    const modal = (formData && formData.modal) || {};
-    const info = (formData && formData.modal && formData.modal.info) || {};
-    changeFormData(id, 'modal', { ...modal, info: { ...info, WORK_AREA_CD: e } });
+  handleChangeFormData = (target, value) => {
+    this.setState(prevState => ({
+      formData: Object.assign(prevState.formData, { [target]: value }),
+    }));
   };
 
   disabledStartDate = startValue => {
@@ -191,28 +124,6 @@ class NothGateCmpnyModal extends Component {
     return endValue.valueOf() <= startValue.valueOf();
   };
 
-  onChange = (field, value) => {
-    this.setState({
-      [field]: value,
-    });
-  };
-
-  onStartChange = value => {
-    this.onChange('startValue', value);
-    const { id, changeFormData, formData } = this.props;
-    const modal = (formData && formData.modal) || {};
-    const info = (formData && formData.modal && formData.modal.info) || {};
-    changeFormData(id, 'modal', { ...modal, info: { ...info, VISITOR_IN_DATE: moment(value).format(format) } });
-  };
-
-  onEndChange = value => {
-    this.onChange('endValue', value);
-    const { id, changeFormData, formData } = this.props;
-    const modal = (formData && formData.modal) || {};
-    const info = (formData && formData.modal && formData.modal.info) || {};
-    changeFormData(id, 'modal', { ...modal, info: { ...info, VISITOR_OUT_DATE: moment(value).format(format) } });
-  };
-
   handleStartOpenChange = open => {
     if (!open) {
       this.setState({ endOpen: true });
@@ -224,28 +135,34 @@ class NothGateCmpnyModal extends Component {
   };
 
   handleDeleteBtn = () => {
-    const { id, submitHandlerBySaga, formData, changeFormData } = this.props;
-    const submitData = (formData && formData.modal && formData.modal.info && formData.modal.info) || { ROWKEY: -1 };
-    changeFormData(id, 'actionType', 'DELETE');
-    submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsNothGateCmpny', submitData, this.saveComplete);
+    const { sagaKey: id, submitHandlerBySaga, modalVisible, saveAfter } = this.props;
+    const { formData } = this.state;
+    submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsNothGateCmpny', formData, (afterId, res) => {
+      if (res && res.code === 200) {
+        message.info(<MessageContent>삭제되었습니다.</MessageContent>);
+        modalVisible();
+        return saveAfter();
+      }
+      return message.info(<MessageContent>삭제에 실패하였습니다.</MessageContent>);
+    });
   };
 
   businessNumberCheck = () => {
     let sum = 0;
-    const getlist = new Array(10);
+    const nArray = new Array(10);
     const chkvalue = new Array('1', '3', '7', '1', '3', '7', '1', '3', '5');
 
-    const { formData } = this.props;
-    const BIZ_REG_NO = (formData && formData.modal && formData.modal.info && formData.modal.info.BIZ_REG_NO) || '';
+    const { formData } = this.state;
+    const BIZ_REG_NO = (formData && formData.BIZ_REG_NO) || '';
     if (BIZ_REG_NO) {
       const bNum = BIZ_REG_NO.replace(/-/gi, '');
       for (let i = 0; i < 10; i++) {
-        getlist[i] = bNum.substring(i, i + 1);
+        nArray[i] = bNum.substring(i, i + 1);
       }
       for (let i = 0; i < 9; i++) {
-        sum += getlist[i] * chkvalue[i];
+        sum += nArray[i] * chkvalue[i];
       }
-      sum += parseInt((getlist[8] * 5) / 10);
+      sum += parseInt((nArray[8] * 5) / 10);
       const sidliy = sum % 10;
       let sidchk = 0;
       if (sidliy != 0) {
@@ -253,34 +170,38 @@ class NothGateCmpnyModal extends Component {
       } else {
         sidchk = 0;
       }
-      if (sidchk != getlist[9]) {
-        message.warning('사업자번호를 정확히 입력해주세요.');
+      if (sidchk != nArray[9]) {
+        message.info(<MessageContent>사업자번호를 정확히 입력해주세요.</MessageContent>);
         return false;
       }
       return true;
     }
-    message.warning('사업자번호를 정확히 입력해주세요.');
+    message.info(<MessageContent>사업자번호를 정확히 입력해주세요.</MessageContent>);
+
     return false;
   };
 
   validationCheck = () => {
-    const { formData } = this.props;
-    const info = (formData && formData.modal && formData.modal.info) || {};
-    const WRK_CMPNY_NM = (info && info.WRK_CMPNY_NM) || '';
-    const VISITOR_NAME = (info && info.VISITOR_NAME) || '';
-    const BIZ_REG_NO = (info && info.BIZ_REG_NO) || '';
+    const { formData } = this.state;
+    const WRK_CMPNY_NM = (formData && formData.WRK_CMPNY_NM) || '';
+    const VISITOR_NAME = (formData && formData.VISITOR_NAME) || '';
+    const BIZ_REG_NO = (formData && formData.BIZ_REG_NO) || '';
+
     if (BIZ_REG_NO === '000-00-00000') {
       if (!WRK_CMPNY_NM) {
-        message.warning('업체명을 직접 입력해 주세요.');
+        message.info(<MessageContent>업체명을 직접 입력해 주세요.</MessageContent>);
+
         return false;
       }
     }
     if (!WRK_CMPNY_NM) {
-      message.warning('방문업체를 선택해 주세요.');
+      message.info(<MessageContent>방문업체를 선택해 주세요.</MessageContent>);
+
       return false;
     }
     if (!VISITOR_NAME) {
-      message.warning('방문자 성함을 입력해 주세요.');
+      message.info(<MessageContent>방문자 성함을 입력해 주세요.</MessageContent>);
+
       return false;
     }
     if (!this.businessNumberCheck()) {
@@ -289,19 +210,83 @@ class NothGateCmpnyModal extends Component {
     return true;
   };
 
+  getColumnSearchProps = (dataIndex, plac) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            this.searchInput = node;
+          }}
+          placeholder={plac}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <StyledButton
+          type="primary"
+          className="btn-gray btn-sm"
+          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          style={{ width: 90, marginRight: 8 }}
+        >
+          검색
+        </StyledButton>
+        <StyledButton className="btn-light btn-sm" onClick={() => this.handleReset(clearFilters)} style={{ width: 90 }}>
+          Reset
+        </StyledButton>
+      </div>
+    ),
+    filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: text =>
+      this.state.searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[this.state.searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    this.setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({ searchText: '' });
+  };
+
+  columns = [
+    { title: '사업자등록번호', dataIndex: 'BIZ_REG_NO', width: '20%', align: 'center', ...this.getColumnSearchProps('BIZ_REG_NO', '사업자등록번호') },
+    { title: '업체명', dataIndex: 'WRK_CMPNY_NM', width: '30%', align: 'center', ...this.getColumnSearchProps('WRK_CMPNY_NM', '업체명') },
+    { title: '사업장주소', dataIndex: 'ADDRESS', width: '50%', align: 'center', ...this.getColumnSearchProps('ADDRESS', '사업장주소') },
+  ];
+
   render() {
-    // const list = this.setList();
-    const { nothGateCmpnyList, startValue, endValue, endOpen } = this.state;
-    const { formData } = this.props;
-    const info = (formData && formData.modal && formData.modal.info) || {};
-    const modalType = (formData && formData.modal && formData.modal.type) || '';
-    const searchText = (formData && formData.nothGateSearch && formData.nothGateSearch.searchText) || '';
-    const VISITOR_IN_DATE = formData && formData.modal && formData.modal.info && formData.modal.info.VISITOR_IN_DATE;
-    const VISITOR_OUT_DATE = formData && formData.modal && formData.modal.info && formData.modal.info.VISITOR_OUT_DATE;
-    const BIZ_REG_NO = (formData && formData.modal && formData.modal.info && formData.modal.info.BIZ_REG_NO) || '';
-    console.debug('info', info);
+    const { endOpen, formData } = this.state;
+    const { type, modalVisible, result } = this.props;
+    const nothGateCmpnyList = (result && result.NothGateCmpnyList && result.NothGateCmpnyList.List) || [];
+
     return (
-      <div>
+      <StyledContentsWrapper>
         <StyledHtmlTable>
           <table>
             <colgroup>
@@ -314,7 +299,12 @@ class NothGateCmpnyModal extends Component {
               <tr>
                 <th>지역</th>
                 <td colSpan="3">
-                  <AntdSelect value={info.WORK_AREA_CD ? info.WORK_AREA_CD : 'CJ'} style={{ width: '30%' }} onChange={this.handleSiteOnChange}>
+                  <AntdSelect
+                    defaultValue="CJ"
+                    style={{ width: '30%' }}
+                    onChange={value => this.handleChangeFormData('WORK_AREA_CD', value)}
+                    className="select-sm mr5"
+                  >
                     <Option value="CJ">청주</Option>
                     <Option value="GM">구미</Option>
                   </AntdSelect>
@@ -325,23 +315,28 @@ class NothGateCmpnyModal extends Component {
                 <td>
                   <AntdInput
                     placeholder="업체명"
-                    className="ant-input-inline"
-                    name="WRK_CMPNY_NM"
-                    value={info.WRK_CMPNY_NM}
+                    className="ant-input-sm"
+                    value={formData.WRK_CMPNY_NM}
                     style={{ width: '100%' }}
-                    onChange={this.handleInputChange}
-                    readOnly={BIZ_REG_NO !== '000-00-00000'}
+                    onChange={e => this.handleChangeFormData('WRK_CMPNY_NM', e.target.value)}
+                    readOnly={formData.BIZ_REG_NO !== '000-00-00000'}
                   />
                 </td>
                 <th>사업자등록번호</th>
                 <td>
                   <AntdInput
                     placeholder="사업자등록번호"
-                    className="ant-input-inline"
+                    className="ant-input-sm"
                     style={{ width: '100%' }}
                     name="BIZ_REG_NO"
-                    value={info.BIZ_REG_NO}
-                    onChange={this.handleBusinessInputChange}
+                    value={formData.BIZ_REG_NO}
+                    onChange={e => {
+                      const bspt = /^[0-9 \-]+$/;
+                      if (bspt.test(e.target.value)) {
+                        return this.handleChangeFormData('BIZ_REG_NO', e.target.value);
+                      }
+                      return null;
+                    }}
                   />
                 </td>
               </tr>
@@ -350,49 +345,51 @@ class NothGateCmpnyModal extends Component {
                 <td>
                   <AntdInput
                     placeholder="방문자 성명"
-                    className="ant-input-inline"
+                    className="ant-input-sm"
                     style={{ width: '100%' }}
                     name="VISITOR_NAME"
-                    value={info.VISITOR_NAME}
-                    onChange={this.handleInputChange}
+                    value={formData.VISITOR_NAME}
+                    onChange={e => this.handleChangeFormData('VISITOR_NAME', e.target.value)}
                   />
                 </td>
                 <th>연락처</th>
                 <td>
                   <AntdInput
                     placeholder="연락처"
-                    className="ant-input-inline"
+                    className="ant-input-sm"
                     style={{ width: '100%' }}
                     name="PHONE_NUMBER"
-                    value={info.PHONE_NUMBER}
-                    onChange={this.handleInputChange}
+                    value={formData.PHONE_NUMBER}
+                    onChange={e => this.handleChangeFormData('PHONE_NUMBER', e.target.value)}
                   />
                 </td>
               </tr>
               <tr>
                 <th>출입시간</th>
                 <td>
-                  <DatePicker
+                  <AntdDatePicker
                     style={{ width: '100%' }}
                     disabledDate={this.disabledStartDate}
+                    className="ant-picker-sm"
                     showTime
                     format="YYYY-MM-DD HH:mm:ss"
-                    value={moment(VISITOR_IN_DATE)}
+                    value={moment(formData.VISITOR_IN_DATE)}
                     placeholder="Start"
-                    onChange={this.onStartChange}
+                    onChange={value => this.setState({ startValue: value }, () => this.handleChangeFormData('VISITOR_IN_DATE', moment(value).format(format)))}
                     onOpenChange={this.handleStartOpenChange}
                   />
                 </td>
                 <th>퇴장시간</th>
                 <td>
-                  <DatePicker
+                  <AntdDatePicker
                     disabledDate={this.disabledEndDate}
+                    className="ant-picker-sm"
                     showTime
                     style={{ width: '100%' }}
                     format="YYYY-MM-DD HH:mm:ss"
-                    value={moment(VISITOR_OUT_DATE)}
+                    value={moment(formData.VISITOR_OUT_DATE)}
                     placeholder="End"
-                    onChange={this.onEndChange}
+                    onChange={value => this.setState({ endValue: value }, () => this.handleChangeFormData('VISITOR_OUT_DATE', moment(value).format(format)))}
                     open={endOpen}
                     onOpenChange={this.handleEndOpenChange}
                   />
@@ -402,65 +399,76 @@ class NothGateCmpnyModal extends Component {
           </table>
         </StyledHtmlTable>
         <div>
-          <StyledButtonWrapper className="btn-wrap-center">
-            <StyledButton className="btn-primary btn-first" onClick={this.handleBtnOnClick}>
-              {modalType === 'INSERT' ? '등록' : '수정'}
+          <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20 btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm  btn-first" onClick={this.handleBtnOnClick}>
+              {type === 'INSERT' ? '등록' : '수정'}
             </StyledButton>
-            {modalType !== 'INSERT' && (
-              <StyledButton className="btn-primary" onClick={this.handleDeleteBtn}>
-                삭제
-              </StyledButton>
+            {type !== 'INSERT' && (
+              <Popconfirm title="선택하신 내용을(를) 정말로 삭제하시겠습니끼?" onConfirm={this.handleDeleteBtn} okText="확인" cancelText="취소">
+                <StyledButton className="btn-sm btn-light btn-first">삭제</StyledButton>
+              </Popconfirm>
             )}
+            <StyledButton className="btn-sm btn-light" onClick={modalVisible}>
+              닫기
+            </StyledButton>
           </StyledButtonWrapper>
         </div>
-        {modalType === 'INSERT' && (
+        {type === 'INSERT' && (
           <>
-            <StyledSearchWrap>
-              <div className="selSaveWrapper">
-                <AntdSelect defaultValue="사업자등록번호" onChange={this.handleSearchTypeOnChange} style={{ width: '20%' }}>
-                  <Option value="BIZ_REG_NO">사업자등록번호</Option>
-                  <Option value="WRK_CMPNY_NM">업체명</Option>
-                </AntdSelect>
-                <AntdSearch
-                  placeholder=" 검색어를 입력하세요"
-                  style={{ width: '30%' }}
-                  onChange={this.handleSearchOnChange}
-                  value={searchText}
-                  className="ant-search-inline input-search-mid mr5"
-                />
-              </div>
-            </StyledSearchWrap>
-
-            <StyledVirtualizedTable>
-              <AutoSizer disableHeight>
-                {({ width }) => (
-                  <Table
-                    width={width}
-                    height={300}
-                    headerHeight={40}
-                    rowHeight={53}
-                    rowCount={nothGateCmpnyList.length}
-                    rowGetter={({ index }) => nothGateCmpnyList[index]}
-                    noRowsRenderer={this.noRowsRenderer}
-                    onRowClick={this.onRowClick}
-                  >
-                    {this.getColumns().map(({ label, dataKey, ratio }) => (
-                      <Column key={dataKey} label={label} dataKey={dataKey} width={(width / 100) * ratio} />
-                    ))}
-                  </Table>
-                )}
-              </AutoSizer>
-            </StyledVirtualizedTable>
+            <AntdTable
+              rowKey="TASK_SEQ"
+              columns={this.columns}
+              onRow={(record, rowIndex) => ({
+                onClick: () => this.setState(prevState => ({ formData: { ...prevState.formData, ...record } })),
+              })}
+              dataSource={nothGateCmpnyList || []}
+              bordered
+            />
           </>
         )}
-      </div>
+      </StyledContentsWrapper>
     );
   }
 }
 
-NothGateCmpnyModal.defaultProps = {
-  id: 'EshsAccAccRecord',
-  getCallDataHandler: () => {},
+const NothGateCmpnyModal = ({ type, initData, modalVisible, saveAfter }) => (
+  <BizMicroDevBase
+    type={type}
+    initData={initData}
+    modalVisible={modalVisible}
+    saveAfter={saveAfter}
+    sagaKey="NothGateCmpnyModal"
+    component={Comp}
+  ></BizMicroDevBase>
+);
+NothGateCmpnyModal.propTypes = {
+  type: PropTypes.string,
+  initData: PropTypes.object,
+  modalVisible: PropTypes.func,
+  saveAfter: PropTypes.func,
+};
+
+Comp.propTypes = {
+  type: PropTypes.string,
+  initData: PropTypes.object,
+  spinningOn: PropTypes.func,
+  spinningOff: PropTypes.func,
+  result: PropTypes.object,
+  getCallDataHandler: PropTypes.func,
+  modalVisible: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
+  saveAfter: PropTypes.func,
+};
+
+Comp.defaultProps = {
+  type: '',
+  initData: {},
   result: {},
+  getCallDataHandler: () => {},
+  spinningOn: () => {},
+  spinningOff: () => {},
+  modalVisible: () => {},
+  submitHandlerBySaga: () => {},
+  saveAfter: () => {},
 };
 export default NothGateCmpnyModal;
