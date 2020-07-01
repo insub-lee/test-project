@@ -4,20 +4,20 @@ import { ViewButtons, InputButtons } from './customButton';
 import ListPage from './page/ListPage';
 
 /*
-    MXLIFE - 민원 / 고충처리 관리
+    MXLIFE - 제휴업체 관리
     작업자 : 이정현
 */
 
-const complainBrd = () => (
+const cooperationcompanyBrd = () => (
   <BizBuilderBase
-    sagaKey="complainBrd_list"
+    sagaKey="cooperationcompanyBrd_list"
     viewType="LIST"
-    workSeq={13201}
+    workSeq={13901}
     CustomListPage={ListPage}
-    modalTitle="민원/고충 등록"
+    modalTitle="협력업체 등록"
     InputCustomButtonsByModal={InputButtons}
     ViewCustomButtonsByModal={ViewButtons}
   />
 );
 
-export default complainBrd;
+export default cooperationcompanyBrd;

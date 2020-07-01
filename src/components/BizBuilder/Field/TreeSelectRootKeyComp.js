@@ -26,9 +26,10 @@ class TreeSelectComp extends Component {
       CONFIG: {
         property: { rootkey },
       },
-      viewType,
+      viewPageData,
       colData,
     } = this.props;
+    const { viewType } = viewPageData;
     const apiArray = [
       {
         key: viewType !== 'VIEW' ? `treeSelect_${rootkey}` : `treeSelect_${colData}`,
@@ -62,9 +63,9 @@ class TreeSelectComp extends Component {
       visible,
       searchCompRenderer,
       isSearch,
-      viewType,
+      viewPageData,
     } = this.props;
-
+    const { viewType } = viewPageData;
     const apiData = viewType !== 'VIEW' ? extraApiData[`treeSelect_${rootkey}`] : extraApiData[`treeSelect_${colData}`];
     let categoryData;
     if (readOnly || CONFIG.property.readOnly) {
@@ -118,7 +119,6 @@ TreeSelectComp.propTypes = {
   colData: PropTypes.string,
   sagaKey: PropTypes.string,
   NAME_KOR: PropTypes.string,
-  viewType: PropTypes.string,
   readOnly: PropTypes.bool,
   visible: PropTypes.bool,
   changeFormData: PropTypes.func,
@@ -127,6 +127,7 @@ TreeSelectComp.propTypes = {
   getExtraApiData: PropTypes.func,
   changeValidationData: PropTypes.func,
   isSearch: PropTypes.bool,
+  viewPageData: PropTypes.object,
 };
 
 TreeSelectComp.defaultProps = {};
