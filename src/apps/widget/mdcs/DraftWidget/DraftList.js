@@ -22,7 +22,7 @@ class DraftList extends Component {
     //   { PARAM: { relTypes: [1, 99], PAGE: 1, PAGE_CNT: 5 } },
     //   this.initDataBind,
     // );
-    this.props.getUnApproveList();
+    this.props.getUnApproveList(undefined, 1, 5);
   }
 
   initDataBind = (sagaKey, response) => {
@@ -44,7 +44,7 @@ class DraftList extends Component {
 
   render() {
     const { visible, viewType, taskSeq, draftList, draftListCnt } = this.state;
-    const { unApproveList } = this.props;
+    const { unApproveList, unApproveListCnt } = this.props;
     return (
       <>
         <div className="widget-inner widget-approve">
@@ -56,7 +56,7 @@ class DraftList extends Component {
           </div>
           <p className="widget-number">
             <strong>
-              {unApproveList.length}
+              {unApproveListCnt || unApproveList.length}
               <span></span>
             </strong>
             건

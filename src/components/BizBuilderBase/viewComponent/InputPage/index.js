@@ -175,7 +175,64 @@ class InputPage extends Component {
       reloadTaskSeq,
     } = this.props;
     if (typeof onCloseModalHandler === 'function') {
-      onCloseModalHandler(id, redirectUrl);
+      onCloseModalHandler(id, redirectUrl, 'save');
+    }
+    if (typeof changeViewPage === 'function') {
+      const changeViewOptIdx = workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === CHANGE_VIEW_OPT_SEQ);
+      if (changeViewOptIdx !== -1) {
+        const changeViewOpt = workInfo.OPT_INFO[changeViewOptIdx];
+        const optValue = JSON.parse(changeViewOpt.OPT_VALUE);
+        changeViewPage(id, workSeq, taskSeq, optValue.INPUT);
+      } else {
+        changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      }
+    }
+    if (isBuilderModal) {
+      changeViewPage(
+        reloadId,
+        workSeq,
+        reloadId && reloadViewType && reloadTaskSeq ? reloadTaskSeq : -1,
+        reloadId && reloadViewType && reloadTaskSeq ? reloadViewType : 'LIST',
+      );
+      if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
+    }
+
+    changeIsLoading(false);
+  };
+
+  tempSaveBeforeProcess = (id, reloadId, callBackFunc) => {
+    const { changeIsLoading } = this.props;
+    changeIsLoading(true);
+    this.tempSaveTask(id, reloadId, this.tempSaveTaskAfter);
+  };
+
+  tempSaveTask = (id, reloadId) => {
+    const { tempSaveTask, saveTaskAfterCallbackFunc, changeIsLoading, workPrcProps } = this.props;
+    tempSaveTask(
+      id,
+      reloadId,
+      typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.tempSaveTaskAfter,
+      changeIsLoading,
+      workPrcProps,
+    );
+  };
+
+  tempSaveTaskAfter = (id, workSeq, taskSeq, formData) => {
+    const {
+      onCloseModalHandler,
+      changeViewPage,
+      isBuilderModal,
+      reloadId,
+      isSaveModalClose,
+      changeBuilderModalStateByParent,
+      workInfo,
+      redirectUrl,
+      changeIsLoading,
+      reloadViewType,
+      reloadTaskSeq,
+    } = this.props;
+    if (typeof onCloseModalHandler === 'function') {
+      onCloseModalHandler(id, redirectUrl, 'tempSave');
     }
     if (typeof changeViewPage === 'function') {
       const changeViewOptIdx = workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === CHANGE_VIEW_OPT_SEQ);
@@ -238,11 +295,19 @@ class InputPage extends Component {
                 setProcessRule={setProcessRule}
               />
             )}
-            <View key={`${id}_${viewPageData.viewType}`} {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
+            <View
+              key={`${id}_${viewPageData.viewType}`}
+              {...this.props}
+              saveBeforeProcess={this.saveBeforeProcess}
+              tempSaveBeforeProcess={this.tempSaveBeforeProcess}
+            />
             {InputCustomButtons ? (
-              <InputCustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
+              <InputCustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} tempSaveBeforeProcess={this.tempSaveBeforeProcess} />
             ) : (
               <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+                <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.tempSaveBeforeProcess(id, reloadId || id, this.tempSaveTask)}>
+                  임시저장
+                </StyledButton>
                 <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
                   저장
                 </StyledButton>

@@ -9,7 +9,7 @@ function CustomValueSelectComp(props) {
   const [values, setValues] = useState([]);
   const [defaultValue, setDefaultValue] = useState({});
 
-  const { CONFIG, COMP_FIELD, isSearch, colData } = props;
+  const { CONFIG, COMP_FIELD, isSearch, colData, viewPageData } = props;
   useEffect(() => {
     const { customValues, definedValue, setDefault } = props.CONFIG.property;
     setValues(customValues instanceof Array ? [...customValues] : [{ ...init }]);
@@ -68,20 +68,28 @@ function CustomValueSelectComp(props) {
     const searchText = value ? `AND W.${COMP_FIELD} ${searchCondition} '${value}'` : '';
     changeSearchData(id, COMP_FIELD, searchText);
   }
-
+  // VIEW 페이지 에서 사용할 경우 선택한 value의 text가 노출되도록 수정
+  const value = colData && values.length > 0 ? values.find(item => item.value === colData) : { text: '' };
+  const viewText = value.text || '';
   return (
-    <Select
-      className={CONFIG.property.className || ''}
-      onChange={value => valueHandler(values, value)}
-      style={{ width: '100%' }}
-      value={colData ? values.findIndex(item => item.value === colData) : defaultValue.text}
-    >
-      {values.map(({ value, text }, idx) => (
-        <Option key={`${idx}_${value}_${text}`} value={idx}>
-          {text}
-        </Option>
-      ))}
-    </Select>
+    <>
+      {viewPageData && viewPageData.viewType === 'VIEW' ? (
+        <span>{colData ? viewText : defaultValue.text}</span>
+      ) : (
+        <Select
+          className={CONFIG.property.className || ''}
+          onChange={value => valueHandler(values, value)}
+          style={{ width: '100%' }}
+          value={colData ? values.findIndex(item => item.value === colData) : defaultValue.text}
+        >
+          {values.map(({ value, text }, idx) => (
+            <Option key={`${idx}_${value}_${text}`} value={idx}>
+              {text}
+            </Option>
+          ))}
+        </Select>
+      )}
+    </>
   );
 }
 

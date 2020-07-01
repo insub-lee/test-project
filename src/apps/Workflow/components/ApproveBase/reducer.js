@@ -10,6 +10,7 @@ const initialState = fromJS({
   viewVisible: false,
   opinionVisible: false,
   opinion: '',
+  unApproveListCnt: 0,
 });
 
 const appReducer = (state = initialState, action) => {
@@ -19,8 +20,8 @@ const appReducer = (state = initialState, action) => {
       return state.set('approveList', fromJS(list)).set('viewVisible', false);
     }
     case actionTypes.SET_UNAPPROVE_LIST: {
-      const { list } = action;
-      return state.set('unApproveList', fromJS(list).set('viewVisible', false));
+      const { list, listCnt } = action;
+      return state.set('unApproveList', fromJS(list).set('viewVisible', false)).set('unApproveListCnt', listCnt);
     }
     case actionTypes.SET_DRAFT_LIST: {
       const { list } = action;

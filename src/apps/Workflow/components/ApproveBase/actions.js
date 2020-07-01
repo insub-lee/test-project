@@ -22,14 +22,17 @@ export const setApproveList = list => ({
   list,
 });
 
-export const getUnApproveList = customUrl => ({
+export const getUnApproveList = (customUrl, PAGE, PAGE_CNT) => ({
   type: actionTypes.GET_UNAPPROVE_LIST,
   customUrl,
+  PAGE,
+  PAGE_CNT,
 });
 
-export const setUnApproveList = list => ({
+export const setUnApproveList = (list, listCnt) => ({
   type: actionTypes.SET_UNAPPROVE_LIST,
   list,
+  listCnt,
 });
 
 export const getDraftList = customUrl => ({
