@@ -21,7 +21,7 @@ class Excel extends Component {
       { title: '점검수량', width: { wpx: 120 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
       { title: '상태', width: { wpx: 50 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
       { title: 'Level', width: { wpx: 50 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
-      { title: '경로', width: { wpx: 300 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
+      { title: '경로', width: { wpx: 350 }, style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '' } } },
     ];
 
     const fields = [
@@ -30,7 +30,7 @@ class Excel extends Component {
       { field: 'DESCIPTION', style: { font: { sz: '12' } } },
       { field: 'USE_YN', style: { font: { sz: '12' } } },
       { field: 'LVL', style: { font: { sz: '12' } } },
-      { field: 'FULLPATH', style: { font: { sz: '12' } } },
+      { field: 'FULLPATH_NAME', style: { font: { sz: '12' } } },
     ];
 
     return (

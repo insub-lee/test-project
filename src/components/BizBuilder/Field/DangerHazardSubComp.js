@@ -118,7 +118,7 @@ class DangerHazardSubComp extends React.Component {
       changeFormData(id, 'HAZARD_LIST', tempList);
       this.setState({ selectedRowKeys: [] });
     } else {
-      message.info(<MessageContent>삭제할 항목을 선택해주세요</MessageContent>);
+      message.info(<MessageContent>삭제할 항목을 선택해주세요.</MessageContent>);
     }
   };
 

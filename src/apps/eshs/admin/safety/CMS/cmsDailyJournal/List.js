@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import BizBuilderBase from 'components/BizBuilderBase';
 
-import { Table, Input, DatePicker, Select, Popover, Checkbox, message, Popconfirm } from 'antd';
+import { Table, Input, DatePicker, Select, Popover, Popconfirm, Modal } from 'antd';
 import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledAntdModal from 'components/BizBuilder/styled//Modal/StyledAntdModal';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
@@ -16,6 +21,7 @@ const { TextArea } = Input;
 const { Option } = Select;
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
+const AntdModal = StyledAntdModal(Modal);
 const AntdLineTable = StyledAntdTable(Table);
 const AntdDatePicker = StyledDatePicker(DatePicker);
 
@@ -26,8 +32,8 @@ class List extends Component {
     super(props);
     this.state = {
       journalDate: moment(),
-      otherArr: [{ CONTANTS: '', CONTANTS_TYPE: 1, UNIQUENESS: -1 }],
-      planArr: [{ CONTANTS: '', CONTANTS_TYPE: 2, UNIQUENESS: -1 }],
+      selectedOhterRowKeys: [],
+      selectedPlanRowKeys: [],
     };
   }
 
@@ -64,27 +70,26 @@ class List extends Component {
   };
 
   initData = () => {
+    const { result } = this.props;
     const {
-      result: { initData, listData, detailData },
-    } = this.props;
-    const fixedTeam = initData && initData.categoryMapList && initData.categoryMapList.filter(item => item.PARENT_NODE_ID === 2010);
-    const timedTeam = initData && initData.categoryMapList && initData.categoryMapList.filter(item => item.PARENT_NODE_ID === 2011);
-    const workerStatus = (detailData && detailData.worker && detailData.worker.WORKER_STATUS) || '';
-    const vacationer = (detailData && detailData.worker && detailData.worker.VACATIONER) || '';
-    let otherArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 1);
-    let planArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 2);
-    if (otherArr.length < 1) {
-      otherArr = [{ CONTANTS: '', CONTANTS_TYPE: 1, UNIQUENESS: -1 }];
-    }
-    if (planArr.length < 1) {
-      planArr = [{ CONTANTS: '', CONTANTS_TYPE: 2, UNIQUENESS: -1 }];
-    }
+      listData,
+      initData: { categoryMapList },
+      detailData: { worker, list },
+    } = result;
+    const fixedTeam = categoryMapList && categoryMapList.filter(item => item.PARENT_NODE_ID === 2010);
+    const timedTeam = categoryMapList && categoryMapList.filter(item => item.PARENT_NODE_ID === 2011);
+    const workerStatus = (worker && worker.WORKER_STATUS) || '';
+    const vacationer = (worker && worker.VACATIONER) || '';
+    const otherArr = (list && list.filter(item => item.CONTANTS_TYPE === 1)) || [];
+    const planArr = (list && list.filter(item => item.CONTANTS_TYPE === 2)) || [];
     this.setState({ fixedTeam, timedTeam, listData: (listData && listData.list) || [], workerStatus, vacationer, otherArr, planArr });
   };
 
   searchList = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const { fixedTeamSelected, timedTeamSelected, journalDate } = this.state;
+    const fixTemp = fixedTeamSelected ? `FIXED_TEAM=${fixedTeamSelected}` : '';
+    const timeTemp = timedTeamSelected ? `TIME_TEAM=${timedTeamSelected}` : '';
     const apiAry = [
       {
         key: 'listData',
@@ -103,30 +108,26 @@ class List extends Component {
       {
         key: 'detailData',
         type: 'GET',
-        url: `/api/eshs/v1/common/eshsCMS?JOURNAL_DATE=${moment(journalDate).format('YYYY-MM-DD')}`,
+        url: `/api/eshs/v1/common/eshsCMS?JOURNAL_DATE=${moment(journalDate).format('YYYY-MM-DD')}&&${fixTemp}&&${timeTemp}`,
       },
     ];
     getCallDataHandler(id, apiAry, this.searchData);
   };
 
   searchData = () => {
+    const { result } = this.props;
     const {
-      result: { listData, detailData },
-    } = this.props;
-    if ((listData.list && listData.list.length > 0) || (detailData.list && detailData.list.length > 0)) {
-      const workerStatus = (detailData && detailData.worker && detailData.worker.WORKER_STATUS) || '';
-      const vacationer = (detailData && detailData.worker && detailData.worker.VACATIONER) || '';
-      let otherArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 1);
-      let planArr = detailData && detailData.list && detailData.list.filter(item => item.CONTANTS_TYPE === 2);
-      if (otherArr.length < 1) {
-        otherArr = [{ CONTANTS: '', CONTANTS_TYPE: 1, UNIQUENESS: -1 }];
-      }
-      if (planArr.length < 1) {
-        planArr = [{ CONTANTS: '', CONTANTS_TYPE: 2, UNIQUENESS: -1 }];
-      }
+      listData,
+      detailData: { worker, list },
+    } = result;
+    if ((listData.list && listData.list.length > 0) || (list && list.length > 0)) {
+      const workerStatus = (worker && worker.WORKER_STATUS) || '';
+      const vacationer = (worker && worker.VACATIONER) || '';
+      const otherArr = (list && list.filter(item => item.CONTANTS_TYPE === 1)) || [];
+      const planArr = (list && list.filter(item => item.CONTANTS_TYPE === 2)) || [];
       this.setState({ listData: (listData && listData.list) || [], workerStatus, vacationer, otherArr, planArr });
     } else {
-      message.warning('검색된 데이터가 없습니다.');
+      message.info(<MessageContent>검색된 데이터가 없습니다.</MessageContent>);
     }
   };
 
@@ -142,9 +143,9 @@ class List extends Component {
           CONTANTS_ARRAY: [...otherArr, ...planArr],
         },
       };
-      submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsCMS', submitData, this.callBackApi);
+      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsCMS', submitData, this.callBackApi);
     } else {
-      message.warning('입력정보가 옳바르지 않습니다.');
+      message.info(<MessageContent>입력정보가 옳바르지 않습니다.</MessageContent>);
     }
   };
 
@@ -152,109 +153,224 @@ class List extends Component {
     const { journalDate } = this.state;
     if (response.result === 1) {
       this.searchList();
-      message.success(`${moment(journalDate || '').format('YYYY-MM-DD')}일지가 저장되었습니다.`);
+      message.success(<MessageContent>{moment(journalDate || '').format('YYYY-MM-DD')} 일지가 저장되었습니다.</MessageContent>);
     } else {
-      message.warning(`폐이지에 오류가 있습니다. 잠시 후 다시 시도해주세요`);
+      message.info(<MessageContent>폐이지에 오류가 있습니다. 잠시 후 다시 시도해주세요</MessageContent>);
     }
   };
 
-  // 기타사항 및 업무계획 Array 추가
   handlePlusArr = type => {
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { journalDate, fixedTeamSelected, timedTeamSelected } = this.state;
+    const submitData = {
+      PARAM: {
+        JOURNAL_DATE: `${moment(journalDate || '').format()}`,
+        CONTANTS: '',
+        CONTANTS_TYPE: type,
+        UNIQUENESS: type === 1 ? -1 : undefined,
+        FIXED_TEAM: fixedTeamSelected || undefined,
+        TIME_TEAM: timedTeamSelected || undefined,
+      },
+    };
+    submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsCMS', submitData, this.searchList);
+  };
+
+  onChangeTableData = (type, name, value, seq) => {
     const { otherArr, planArr } = this.state;
-    const nOtherArr = { CONTANTS: '', CONTANTS_TYPE: type, UNIQUENESS: -1 };
     if (type === 1) {
-      this.setState({ otherArr: otherArr.concat(nOtherArr) });
+      this.setState({ otherArr: otherArr.map(changeItem => (changeItem.SEQ === seq ? { ...changeItem, [name]: value } : { ...changeItem })) });
     } else {
-      this.setState({ planArr: planArr.concat(nOtherArr) });
+      this.setState({ planArr: planArr.map(changeItem => (changeItem.SEQ === seq ? { ...changeItem, [name]: value } : { ...changeItem })) });
     }
   };
 
-  // 기타사항 및 업무계획에 TextArea 값 변경
-  onChangeContants = (text, record, index) => {
-    const { otherArr, planArr } = this.state;
-    if (record.CONTANTS_TYPE === 1) {
-      const nOtherArr = otherArr;
-      otherArr.splice(index, 1, { CONTANTS: text, CONTANTS_TYPE: record.CONTANTS_TYPE, UNIQUENESS: record.UNIQUENESS });
-      this.setState({ otherArr: nOtherArr });
+  onDeleteArr = DELETE_LIST => {
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    if (DELETE_LIST && DELETE_LIST.length) {
+      const submitData = { PARAM: { DELETE_LIST } };
+      submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsCMS', submitData, this.deletaCallBackApi);
     } else {
-      const nPlanArr = planArr;
-      nPlanArr.splice(index, 1, { CONTANTS: text, CONTANTS_TYPE: record.CONTANTS_TYPE, UNIQUENESS: record.UNIQUENESS });
-      this.setState({ planArr: nPlanArr });
+      message.info(<MessageContent>삭제할 항목을 선택해주세요.</MessageContent>);
     }
   };
 
-  // 기타사항에 Checkbox 값 변경
-  onChangeCheck = (checked, record, index) => {
-    const { otherArr } = this.state;
-    const nOtherArr = otherArr;
-    nOtherArr.splice(index, 1, { CONTANTS: record.CONTANTS, CONTANTS_TYPE: record.CONTANTS_TYPE, UNIQUENESS: checked ? 1 : -1 });
-    this.setState({ otherArr: nOtherArr });
+  deletaCallBackApi = (id, response) => {
+    const { selectedOhterRowKeys, selectedPlanRowKeys } = this.state;
+    if (response.result === selectedOhterRowKeys.length || response.result === selectedPlanRowKeys.length) {
+      this.searchList();
+      this.setState({ selectedOhterRowKeys: [], selectedPlanRowKeys: [] });
+      message.success(<MessageContent>삭제되었습니다.</MessageContent>);
+    } else {
+      message.info(<MessageContent>폐이지에 오류가 있습니다. 잠시 후 다시 시도해주세요</MessageContent>);
+    }
   };
 
-  // 기타사항 및 업무계획 Array 제거
-  onDeleteArr = (record, index) => {
-    const { otherArr, planArr } = this.state;
-    if (record.CONTANTS_TYPE === 1) {
-      const nOtherArr = otherArr;
-      nOtherArr.splice(index, 1);
-      this.setState({ otherArr: nOtherArr });
-    } else {
-      const nPlanArr = planArr;
-      nPlanArr.splice(index, 1);
-      this.setState({ planArr: nPlanArr });
-    }
+  // 상세 모달 페이지
+  onChangeModal = seq => {
+    const { isModal } = this.state;
+    if (isModal) this.searchList();
+    this.setState({ isModal: !isModal, taskSeq: seq });
+  };
+
+  onSelectedOhterRowKeys = selectedRowKey => {
+    this.setState({ selectedOhterRowKeys: selectedRowKey });
+  };
+
+  onSelectedPlanRowKeys = selectedRowKey => {
+    this.setState({ selectedPlanRowKeys: selectedRowKey });
   };
 
   render() {
-    const { listData, planArr, otherArr, fixedTeam, timedTeam, fixedTeamSelected, timedTeamSelected } = this.state;
+    const {
+      listData,
+      planArr,
+      otherArr,
+      fixedTeam,
+      timedTeam,
+      fixedTeamSelected,
+      timedTeamSelected,
+      taskSeq,
+      isModal,
+      selectedOhterRowKeys,
+      selectedPlanRowKeys,
+    } = this.state;
     const { journalCol } = this.props;
     const otherArrCol = [
       {
-        title: `삭제`,
+        title: `고정조`,
+        dataIndex: 'FIXED_TEAM',
         align: 'center',
-        dataIndex: 'CONTANTS',
-        width: '10%',
-        render: (text, record, index) => (
-          <Popconfirm title="삭제 하시겠습니까?" onConfirm={() => this.onDeleteArr(record, index)} okText="Yes" cancelText="No">
-            <StyledButton className="btn-light btn-first btn-xs">삭제</StyledButton>
-          </Popconfirm>
+        width: 100,
+        render: (text, record) => (
+          <AntdSelect
+            style={{ width: '100%' }}
+            className="select-sm"
+            onChange={value => this.onChangeTableData(1, 'FIXED_TEAM', value, record.SEQ)}
+            value={text}
+            allowClear
+            placeholder="전체"
+          >
+            {fixedTeam &&
+              fixedTeam.map(itme => (
+                <Option key={itme.NODE_ID} value={itme.NODE_ID}>
+                  {itme.NAME_KOR}
+                </Option>
+              ))}
+          </AntdSelect>
         ),
       },
       {
-        title: `내용`,
-        dataIndex: 'CONTANTS',
+        title: `시간조`,
+        dataIndex: 'TIME_TEAM',
         align: 'center',
-        width: '80%',
-        render: (text, record, index) => <TextArea value={text} onChange={e => this.onChangeContants(e.target.value, record, index)} />,
+        width: 100,
+        render: (text, record) => (
+          <AntdSelect
+            style={{ width: '100%' }}
+            className="select-sm"
+            onChange={value => this.onChangeTableData(1, 'TIME_TEAM', value, record.SEQ)}
+            value={text}
+            allowClear
+            placeholder="전체"
+          >
+            {timedTeam &&
+              timedTeam.map(itme => (
+                <Option key={itme.NODE_ID} value={itme.NODE_ID}>
+                  {itme.NAME_KOR}
+                </Option>
+              ))}
+          </AntdSelect>
+        ),
       },
       {
         title: `일일 특이사항`,
         dataIndex: 'UNIQUENESS',
         align: 'center',
-        width: '10%',
-        render: (text, record, index) => <Checkbox checked={Number(text) === 1} onChange={e => this.onChangeCheck(e.target.checked, record, index)} />,
-      },
-    ];
-    const planArrCol = [
-      {
-        title: `삭제`,
-        align: 'center',
-        dataIndex: 'CONTANTS',
-        width: '10%',
-        render: (text, record, index) => (
-          <Popconfirm title="삭제 하시겠습니까?" onConfirm={() => this.onDeleteArr(record, index)} okText="Yes" cancelText="No">
-            <StyledButton className="btn-light btn-first btn-xs">삭제</StyledButton>
-          </Popconfirm>
+        width: 100,
+        render: (text, record) => (
+          <AntdSelect
+            style={{ width: '100%' }}
+            className="select-sm"
+            onChange={value => this.onChangeTableData(1, 'UNIQUENESS', value, record.SEQ)}
+            value={text}
+            allowClear
+            placeholder="전체"
+          >
+            <Option value={1}>Y</Option>
+            <Option value={-1}>N</Option>
+          </AntdSelect>
         ),
       },
       {
         title: `내용`,
         dataIndex: 'CONTANTS',
-        width: '90%',
         align: 'center',
-        render: (text, record, index) => <TextArea value={text} onChange={e => this.onChangeContants(e.target.value, record, index)} />,
+        render: (text, record) => <TextArea value={text} onChange={e => this.onChangeTableData(1, 'CONTANTS', e.target.value, record.SEQ)} />,
       },
     ];
+    const planArrCol = [
+      {
+        title: `고정조`,
+        dataIndex: 'FIXED_TEAM',
+        align: 'center',
+        width: 100,
+        render: (text, record) => (
+          <AntdSelect
+            style={{ width: '100%' }}
+            className="select-sm"
+            onChange={value => this.onChangeTableData(2, 'FIXED_TEAM', value, record.SEQ)}
+            value={text}
+            allowClear
+            placeholder="전체"
+          >
+            {fixedTeam &&
+              fixedTeam.map(itme => (
+                <Option key={itme.NODE_ID} value={itme.NODE_ID}>
+                  {itme.NAME_KOR}
+                </Option>
+              ))}
+          </AntdSelect>
+        ),
+      },
+      {
+        title: `시간조`,
+        dataIndex: 'TIME_TEAM',
+        align: 'center',
+        width: 100,
+        render: (text, record) => (
+          <AntdSelect
+            style={{ width: '100%' }}
+            className="select-sm"
+            onChange={value => this.onChangeTableData(2, 'TIME_TEAM', value, record.SEQ)}
+            value={text}
+            allowClear
+            placeholder="전체"
+          >
+            {timedTeam &&
+              timedTeam.map(itme => (
+                <Option key={itme.NODE_ID} value={itme.NODE_ID}>
+                  {itme.NAME_KOR}
+                </Option>
+              ))}
+          </AntdSelect>
+        ),
+      },
+      {
+        title: `내용`,
+        dataIndex: 'CONTANTS',
+        align: 'center',
+        render: (text, record) => <TextArea value={text} onChange={e => this.onChangeTableData(2, 'CONTANTS', e.target.value, record.SEQ)} />,
+      },
+    ];
+
+    const rowOhterSelection = {
+      selectedOhterRowKeys,
+      onChange: this.onSelectedOhterRowKeys,
+    };
+    const rowPlanSelection = {
+      selectedPlanRowKeys,
+      onChange: this.onSelectedPlanRowKeys,
+    };
     return (
       <StyledContentsWrapper>
         <StyledCustomSearch className="search-wrapper-inline">
@@ -275,7 +391,12 @@ class List extends Component {
               allowClear
               placeholder="전체"
             >
-              {fixedTeam && fixedTeam.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
+              {fixedTeam &&
+                fixedTeam.map(itme => (
+                  <Option key={itme.NODE_ID} value={itme.NODE_ID}>
+                    {itme.NAME_KOR}
+                  </Option>
+                ))}
             </AntdSelect>
             <span className="text-label">시간조 구분</span>
             <AntdSelect
@@ -286,7 +407,12 @@ class List extends Component {
               allowClear
               placeholder="전체"
             >
-              {timedTeam && timedTeam.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
+              {timedTeam &&
+                timedTeam.map(itme => (
+                  <Option key={itme.NODE_ID} value={itme.NODE_ID}>
+                    {itme.NAME_KOR}
+                  </Option>
+                ))}
             </AntdSelect>
           </div>
           <div className="btn-area">
@@ -313,7 +439,7 @@ class List extends Component {
           <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onChangeData}>
             저장
           </StyledButton>
-          <StyledButton className="btn-gray btn-sm" onClick={() => message.warning('개발중입니다.')}>
+          <StyledButton className="btn-gray btn-sm" onClick={() => message.warning(<MessageContent>개발중입니다.</MessageContent>)}>
             출력
           </StyledButton>
         </div>
@@ -322,22 +448,62 @@ class List extends Component {
           columns={journalCol}
           dataSource={listData}
           footer={() => <span>{`${(listData && listData.length) || 0} 건`}</span>}
+          onRow={record => ({
+            onClick: () => {
+              this.onChangeModal(record.TASK_SEQ);
+            },
+          })}
         />
         <div className="table-title" style={{ margin: '20px 5px 4px 0', display: 'inline-block' }}>
           기타사항
         </div>
-        <StyledButton className="btn-primary btn-first btn-sm" style={{ float: 'right', margin: '20px 5px 4px 0' }} onClick={() => this.handlePlusArr(1)}>
-          추가
-        </StyledButton>
-        <AntdLineTable columns={otherArrCol} dataSource={otherArr} pagination={false} footer={null} />
-
+        <StyledButtonWrapper className="btn-wrap-inline btn-wrap-mb-10 btn-wrap-mt-10 btn-wrap-right" style={{ float: 'right' }}>
+          {/* <StyledButton className="btn-primary btn-first btn-sm" style={{ float: 'right', margin: '20px 5px 4px 0' }} onClick={() => this.handlePlusArr(1)}> */}
+          <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.handlePlusArr(1)}>
+            추가
+          </StyledButton>
+          <Popconfirm title="삭제 하시겠습니까?" onConfirm={() => this.onDeleteArr(selectedOhterRowKeys)} okText="Yes" cancelText="No">
+            <StyledButton className="btn-light btn-sm">삭제</StyledButton>
+          </Popconfirm>
+        </StyledButtonWrapper>
+        {otherArr && otherArr.length > 0 && (
+          <AntdLineTable
+            rowKey="SEQ"
+            columns={otherArrCol}
+            dataSource={otherArr}
+            pagination={false}
+            footer={null}
+            rowSelection={rowOhterSelection}
+            scroll={{ y: 400 }}
+          />
+        )}
+        <hr />
         <div className="table-title" style={{ margin: '20px 5px 4px 0', display: 'inline-block' }}>
           업무계획
         </div>
-        <StyledButton className="btn-primary btn-first btn-sm" style={{ float: 'right', margin: '20px 5px 4px 0' }} onClick={() => this.handlePlusArr(2)}>
-          추가
-        </StyledButton>
-        <AntdLineTable columns={planArrCol} dataSource={planArr} pagination={false} footer={null} />
+        <StyledButtonWrapper className="btn-wrap-inline btn-wrap-mb-10 btn-wrap-mt-10 btn-wrap-right" style={{ float: 'right' }}>
+          {/* <StyledButton className="btn-primary btn-first btn-sm" style={{ float: 'right', margin: '20px 5px 4px 0' }} onClick={() => this.handlePlusArr(2)}> */}
+          <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.handlePlusArr(2)}>
+            추가
+          </StyledButton>
+          <Popconfirm title="삭제 하시겠습니까?" onConfirm={() => this.onDeleteArr(selectedPlanRowKeys)} okText="Yes" cancelText="No">
+            <StyledButton className="btn-light btn-sm">삭제</StyledButton>
+          </Popconfirm>
+        </StyledButtonWrapper>
+        {planArr && planArr.length > 0 && (
+          <AntdLineTable
+            rowKey="SEQ"
+            columns={planArrCol}
+            dataSource={planArr}
+            pagination={false}
+            footer={null}
+            rowSelection={rowPlanSelection}
+            scroll={{ y: 400 }}
+          />
+        )}
+        <AntdModal width={1000} visible={isModal} title="이벤트 상세보기" onCancel={this.onChangeModal} destroyOnClose footer={null}>
+          {isModal && <BizBuilderBase sagaKey="cmsDetailJournal" workSeq={5781} taskSeq={taskSeq} viewType="MODIFY" onCloseModalHandler={this.onChangeModal} />}
+        </AntdModal>
       </StyledContentsWrapper>
     );
   }
