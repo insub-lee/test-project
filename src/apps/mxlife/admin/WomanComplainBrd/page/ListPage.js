@@ -24,6 +24,10 @@ import {
 } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
 import { ViewButtons, InputButtons } from '../customButton';
+import AnswerPage from './AnswerPage';
+
+// import Loadable from 'components/Loadable';
+// import Loading from '../Common/Loading';
 
 const AntdModal = StyledAntdModal(Modal);
 const AntdTable = StyledAntdTable(Table);
@@ -190,7 +194,12 @@ class ListPage extends Component {
   // 테이블 row 클릭 => VIEW 모달
   onRowClick = record => ({
     onClick: () => {
-      this.customModalHandler('view', true, record);
+      if (record.LVL === 1) {
+        this.customModalHandler('view', true, record);
+      }
+      if (record.LVL === 2) {
+        this.customModalHandler('answerView', true, record);
+      }
     },
   });
 
@@ -201,8 +210,16 @@ class ListPage extends Component {
     let item = {};
     const pageRefresh = (refresh && typeof refresh === 'boolean' && refresh) || false;
     switch (type) {
+      case 'answer':
+        title = '답변작성';
+        item = record;
+        break;
       case 'view':
-        title = `업체명 : ${record.TITLE}`;
+        title = '고충 사항';
+        item = record;
+        break;
+      case 'answerView':
+        title = '고충 답변';
         item = record;
         break;
       default:
@@ -235,9 +252,51 @@ class ListPage extends Component {
         onCloseModalHandler={() => this.customModalHandler('', false, {}, true)}
         customModalHandler={this.customModalHandler}
         bookmarkHandler={this.bookmarkHandler}
-        viewMetaSeq={13921}
+        viewMetaSeq={14103}
         baseSagaKey={sagaKey}
         InputCustomButtons={InputButtons}
+        ViewCustomButtons={ViewButtons}
+      />
+    );
+  };
+
+  // 답변 작성 모달
+  renderAnswerModal = () => {
+    const { sagaKey, workSeq } = this.props;
+    const { record } = this.state;
+    return (
+      <BizBuilderBase
+        key={`${sagaKey}_answer_input`}
+        sagaKey={`${sagaKey}_answer_input`}
+        workSeq={workSeq}
+        viewType="INPUT"
+        onCloseModalHandler={() => this.customModalHandler('', false, {}, true)}
+        inputMetaSeq={14185}
+        initFormData={record}
+        baseSagaKey={sagaKey}
+        isSaveModalClose
+        CustomInputPage={AnswerPage}
+      />
+    );
+  };
+
+  // 답변 뷰 모달
+  renderAnswerViewModal = () => {
+    const { sagaKey, workSeq } = this.props;
+    const { record } = this.state;
+    return (
+      <BizBuilderBase
+        key={`${sagaKey}_answer_view`}
+        sagaKey={`${sagaKey}_answer_view`}
+        workSeq={workSeq}
+        taskSeq={record.TASK_SEQ}
+        viewType="VIEW"
+        onCloseModalHandler={() => this.customModalHandler('', false, {}, true)}
+        customModalHandler={this.customModalHandler}
+        bookmarkHandler={this.bookmarkHandler}
+        viewMetaSeq={14202}
+        modifyMetaSeq={14201}
+        baseSagaKey={sagaKey}
         ViewCustomButtons={ViewButtons}
       />
     );
@@ -267,18 +326,35 @@ class ListPage extends Component {
     setFormData(id, nextFormData);
   };
 
-  // custom sorting list (revsion시 sorting 문제)
+  // 리스트 정렬 (원글 밑 답변배치 , 리비전시 sorting 문제)
   customListSort = listData => {
-    const nextListData = listData.sort((a, b) => {
-      if (a.COOPERATION_SEQ > b.COOPERATION_SEQ) {
-        return -1;
-      }
-      if (a.COOPERATION_SEQ < b.COOPERATION_SEQ) {
-        return 1;
-      }
-      return 0;
-    });
-    return nextListData;
+    const reOrderList = [];
+    const tempList1 = listData
+      .filter(item => item.LVL === 1)
+      .sort((a, b) => {
+        if (a.WOMAN_SEQ > b.WOMAN_SEQ) {
+          return -1;
+        }
+        if (a.WOMAN_SEQ < b.WOMAN_SEQ) {
+          return 1;
+        }
+        return 0;
+      });
+    const tempList2 = listData.filter(item => item.LVL === 2);
+    if (tempList1.length > 0) {
+      tempList1.forEach(item => {
+        reOrderList.push(item);
+        const answerList = tempList2.filter(answer => answer.PRT_TASK_SEQ === item.TASK_ORIGIN_SEQ);
+        if (answerList.length > 0) {
+          answerList.forEach(answer => reOrderList.push(answer));
+        }
+      });
+    } else {
+      tempList2.forEach(item => {
+        reOrderList.push(item);
+      });
+    }
+    return reOrderList;
   };
 
   renderList = (group, groupIndex) => {
@@ -288,6 +364,7 @@ class ListPage extends Component {
     let rowSelection = false;
     let onRow = false;
 
+    // 리스트 Sorting
     const sortingListData = this.customListSort(listData);
 
     if (isMultiDelete) {
@@ -353,7 +430,6 @@ class ListPage extends Component {
       const {
         info: { PRC_ID },
       } = workFlowConfig;
-      // console.debug('모든프롭스', this.props);
       return (
         <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
@@ -452,12 +528,14 @@ class ListPage extends Component {
               destroyOnClose
               footer={null}
               maskClosable={false}
-              visible={this.state.modalVisible}
               width="40%"
               title={this.state.modalTitle}
+              visible={this.state.modalVisible}
               onCancel={() => this.customModalHandler('', false)}
             >
               {this.state.modalType === 'view' && this.renderViewModal()}
+              {this.state.modalType === 'answer' && this.renderAnswerModal()}
+              {this.state.modalType === 'answerView' && this.renderAnswerViewModal()}
             </AntdModal>
           </Sketch>
         </StyledWrap>
