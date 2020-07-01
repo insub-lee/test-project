@@ -331,7 +331,7 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray btn-sm" onClick={this.handleClickSearch}>
+                          <StyledButton className="btn-gray btn-sm mr5" onClick={this.handleClickSearch}>
                             검색
                           </StyledButton>
                           {useExcelDownload && isExcelDown && (

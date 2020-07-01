@@ -1,5 +1,5 @@
-import * as PropTypes from 'prop-types';
 import React from 'react';
+import * as PropTypes from 'prop-types';
 import { Modal, Table, Input, Select, Popover, Popconfirm } from 'antd';
 
 import message from 'components/Feedback/message';
@@ -31,39 +31,53 @@ class DangerHazardSubComp extends React.Component {
   }
 
   componentDidMount() {
-    const { getExtraApiData, sagaKey: id, viewPageData, viewType } = this.props;
+    const { getExtraApiData, sagaKey: id } = this.props;
     const apiArray = [
       {
         key: 'codeData',
-        url: `/api/admin/v1/common/categoryMapList`,
+        url: `/api/admin/v1/common/categoryChildrenListUseYn`,
         type: 'POST',
-        params: { PARAM: { NODE_ID: 30431 } },
+        params: { PARAM: { NODE_ID: 30431, USE_YN: 'Y' } },
       },
       {
         key: 'treeData',
-        url: `/api/admin/v1/common/categoryMapList`,
+        url: `/api/admin/v1/common/categoryChildrenListUseYn`,
         type: 'POST',
-        params: { PARAM: { NODE_ID: 1831 } },
+        params: { PARAM: { NODE_ID: 1831, USE_YN: 'Y' } },
       },
-      viewPageData.viewType === 'MODIFY' && {
+    ];
+    getExtraApiData(id, apiArray, this.initData);
+    this.subList();
+  }
+
+  initData = () => {
+    const {
+      extraApiData: { codeData, treeData },
+    } = this.props;
+    const aotList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30432);
+    const aocList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30433);
+    this.setState({ aotList, aocList, treeData: treeData && treeData.categoryMapList });
+  };
+
+  subList = () => {
+    const { getExtraApiData, sagaKey: id, viewPageData } = this.props;
+    const apiArray = [
+      {
         key: 'hazardSubList',
         url: `/api/eshs/v1/common/dangerHazard?TASK_SEQ=${viewPageData.taskSeq}`,
         type: 'GET',
       },
     ];
-    if (viewType !== 'VIEW' || viewType !== 'LIST') getExtraApiData(id, apiArray, this.initData);
-  }
+    getExtraApiData(id, apiArray, this.subListData);
+  };
 
-  initData = () => {
+  subListData = () => {
     const {
-      extraApiData: { codeData, hazardSubList, treeData },
+      extraApiData: { hazardSubList },
       changeFormData,
       sagaKey: id,
     } = this.props;
-    const aotList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30432);
-    const aocList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30433);
-    changeFormData(id, 'HAZARD_LIST', (hazardSubList && hazardSubList.list) || []);
-    this.setState({ aotList, aocList, treeData: treeData && treeData.categoryMapList.filter(item => item.USE_YN === 'Y') });
+    changeFormData(id, 'HAZARD_LIST', hazardSubList && hazardSubList.list);
   };
 
   onChangeModal = () => {
@@ -85,7 +99,7 @@ class DangerHazardSubComp extends React.Component {
     changeFormData(id, 'HAZARD_LIST', temp);
   };
 
-  onSelectChangeModal = selectedRowKeys => {
+  onSelectedRowKeys = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
@@ -99,25 +113,13 @@ class DangerHazardSubComp extends React.Component {
       const deleteList = HAZARD_LIST.filter((selected, index) => selectedRowKeys.findIndex(rowKey => index === rowKey) !== -1 && selected.REG_NO);
       const submitData = { PARAM: { DELETE_LIST: deleteList } };
       if (deleteList && deleteList.length) {
-        submitExtraHandler(id, 'DELETE', `/api/eshs/v1/common/dangerHazard`, submitData, this.deleteCallback);
+        submitExtraHandler(id, 'DELETE', `/api/eshs/v1/common/dangerHazard`, submitData, this.subList);
       }
       changeFormData(id, 'HAZARD_LIST', tempList);
       this.setState({ selectedRowKeys: [] });
     } else {
-      message.info(<MessageContent>삭제할 항목을 선택해주세요</MessageContent>);
+      message.info(<MessageContent>삭제할 항목을 선택해주세요.</MessageContent>);
     }
-  };
-
-  deleteCallback = () => {
-    const { getExtraApiData, sagaKey: id, viewPageData } = this.props;
-    const apiArray = [
-      {
-        key: 'hazardSubList',
-        url: `/api/eshs/v1/common/dangerHazard?TASK_SEQ=${viewPageData.taskSeq}`,
-        type: 'GET',
-      },
-    ];
-    getExtraApiData(id, apiArray, this.initData);
   };
 
   render() {
@@ -126,7 +128,7 @@ class DangerHazardSubComp extends React.Component {
     const { HAZARD_LIST } = formData;
     const rowSelection = {
       selectedRowKeys,
-      onChange: this.onSelectChangeModal,
+      onChange: this.onSelectedRowKeys,
     };
     const columns = [
       {
@@ -230,26 +232,29 @@ class DangerHazardSubComp extends React.Component {
     return visible ? (
       <>
         {treeData ? (
-          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10 btn-wrap-mt-10">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onChangeModal}>
-              추가
-            </StyledButton>
-            <Popconfirm title="정말로 삭제하시겠습니까?" onConfirm={this.deleteList} okText="Yes" cancelText="No">
-              <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
-            </Popconfirm>
-          </StyledButtonWrapper>
+          <>
+            <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10 btn-wrap-mt-10">
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onChangeModal}>
+                추가
+              </StyledButton>
+              <Popconfirm title="정말로 삭제하시겠습니까?" onConfirm={this.deleteList} okText="Yes" cancelText="No">
+                <StyledButton className="btn-light btn-first btn-sm">삭제</StyledButton>
+              </Popconfirm>
+            </StyledButtonWrapper>
+            <AntdTable
+              rowKey={HAZARD_LIST && `${HAZARD_LIST.REG_NO}_${HAZARD_LIST.SEQ}`}
+              key={HAZARD_LIST && `${HAZARD_LIST.REG_NO}_${HAZARD_LIST.SEQ}`}
+              columns={columns}
+              dataSource={HAZARD_LIST || []}
+              rowSelection={rowSelection}
+              scroll={{ y: 400 }}
+              pagination={false}
+            />
+          </>
         ) : (
           ''
         )}
-        <AntdTable
-          rowKey={HAZARD_LIST && `${HAZARD_LIST.REG_NO}_${HAZARD_LIST.SEQ}`}
-          key={HAZARD_LIST && `${HAZARD_LIST.REG_NO}_${HAZARD_LIST.SEQ}`}
-          columns={columns}
-          dataSource={HAZARD_LIST || []}
-          rowSelection={rowSelection}
-          scroll={{ y: 400 }}
-          pagination={false}
-        />
+
         <AntdModal
           className="modal-table-pad"
           title="위험요인 LIST"
@@ -272,7 +277,6 @@ class DangerHazardSubComp extends React.Component {
 
 DangerHazardSubComp.propTypes = {
   sagaKey: PropTypes.string,
-  viewType: PropTypes.string,
   extraApiData: PropTypes.func,
   formData: PropTypes.object,
   viewPageData: PropTypes.object,

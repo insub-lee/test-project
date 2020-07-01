@@ -33,9 +33,9 @@ class TreeSelectComp extends Component {
     const apiArray = [
       {
         key: viewType !== 'VIEW' ? `treeSelect_${rootkey}` : `treeSelect_${colData}`,
-        url: `/api/admin/v1/common/categoryMapList`,
+        url: `/api/admin/v1/common/categoryChildrenListUseYn`,
         type: 'POST',
-        params: { PARAM: { NODE_ID: Number(rootkey) } },
+        params: { PARAM: { NODE_ID: Number(rootkey), USE_YN: 'Y' } },
       },
     ];
     if (colData && colData.length > 0) getExtraApiData(id, apiArray);

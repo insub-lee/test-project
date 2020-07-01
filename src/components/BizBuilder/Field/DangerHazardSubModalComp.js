@@ -113,17 +113,18 @@ class DangerHazardSubComp extends React.Component {
     const { HAZARD_LIST, REG_NO, TASK_SEQ } = formData;
     if (selectedRowKeys && selectedRowKeys.length) {
       const tempList = listData && listData.filter(selectd => selectedRowKeys.findIndex(rowKey => selectd.NODE_ID === rowKey) !== -1);
-      const hazardListLength = HAZARD_LIST.lengt || 0;
+      let hazardLastSeq = Number((HAZARD_LIST[HAZARD_LIST.length - 1] && HAZARD_LIST[HAZARD_LIST.length - 1].SEQ) || 0);
+
       const realList = [];
       tempList.forEach(item => {
         for (let index = 0; index < item.NUM; index += 1) {
           realList.push({
             ...item,
-            WORK_NM: '',
+            WORK_NM: undefined,
             AOC_ID: JSON.stringify([]),
-            AOT_ID: undefined,
+            AOT_ID: 30438,
             RA_YN: undefined,
-            SEQ: index + hazardListLength + 1,
+            SEQ: (hazardLastSeq += 1),
             REG_NO,
             TASK_SEQ,
           });

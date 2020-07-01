@@ -62,9 +62,15 @@ class List extends Component {
       {
         key: 'treeSelectData',
         type: 'POST',
-        url: '/api/admin/v1/common/categoryMapList',
+        url: '/api/admin/v1/common/categoryChildrenListUseYn',
         params: { PARAM: { NODE_ID: 1878 } },
       },
+      // {
+      //   key: 'treeSelectData',
+      //   type: 'POST',
+      //   url: '/api/admin/v1/common/categoryMapList',
+      //   params: { PARAM: { NODE_ID: 1878 } },
+      // },
     ];
     getCallDataHandler(id, apiAry, this.initData);
   };
@@ -74,14 +80,6 @@ class List extends Component {
       result: { treeSelectData },
     } = this.props;
     const nData = (treeSelectData && treeSelectData.categoryMapList && getCategoryMapListAsTree(treeSelectData.categoryMapList, 1878)) || [];
-    // const nData =
-    //   (treeSelectData &&
-    //     treeSelectData.categoryMapList &&
-    //     getCategoryMapListAsTree(
-    //       treeSelectData.categoryMapList.filter(f => f.LVL !== 4),
-    //       1878,
-    //     )) ||
-    //   [];
     this.setState({ nData });
   };
 
@@ -91,7 +89,7 @@ class List extends Component {
       {
         key: 'selectData',
         type: 'POST',
-        url: '/api/admin/v1/common/categoryMapList',
+        url: '/api/admin/v1/common/categoryChildrenListUseYn',
         params: { PARAM: { NODE_ID: value } },
       },
     ];
