@@ -202,7 +202,7 @@ class ListPage extends Component {
     const pageRefresh = (refresh && typeof refresh === 'boolean' && refresh) || false;
     switch (type) {
       case 'view':
-        title = '콘도 정보';
+        title = `업체명: ${record.TITLE}`;
         item = record;
         break;
       default:
@@ -235,7 +235,7 @@ class ListPage extends Component {
         onCloseModalHandler={() => this.customModalHandler('', false, {}, true)}
         customModalHandler={this.customModalHandler}
         bookmarkHandler={this.bookmarkHandler}
-        viewMetaSeq={13763}
+        viewMetaSeq={13921}
         baseSagaKey={sagaKey}
         InputCustomButtons={InputButtons}
         ViewCustomButtons={ViewButtons}
@@ -270,10 +270,10 @@ class ListPage extends Component {
   // custom sorting list (revsion시 sorting 문제)
   customListSort = listData => {
     const nextListData = listData.sort((a, b) => {
-      if (a.CONDO_SEQ > b.CONDO_SEQ) {
+      if (a.COOPERATION_SEQ > b.COOPERATION_SEQ) {
         return -1;
       }
-      if (a.CONDO_SEQ < b.CONDO_SEQ) {
+      if (a.COOPERATION_SEQ < b.COOPERATION_SEQ) {
         return 1;
       }
       return 0;
