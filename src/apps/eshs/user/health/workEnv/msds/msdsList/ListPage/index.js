@@ -78,9 +78,9 @@ class ListPage extends Component {
     NFPA_A: 50,
     NFPA_B: 50,
     NFPA_C: 80,
-    ATTACH: 250,
+    ATTACH: 100,
     NFPA_D_NAME: 100,
-    NOTE_AREA: 300,
+    NOTE_AREA: 100,
   };
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {

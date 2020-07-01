@@ -1,17 +1,21 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { Modal, Select, Input, DatePicker, message, Table, Tooltip } from 'antd';
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import moment from 'moment';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledPicker from 'commonStyled/Form/StyledPicker';
-import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import AccCmpnyInputPage from 'apps/eshs/user/safety/accident/indusrtialAccidentCmpnyMgt';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import { debounce } from 'lodash';
 import NothGateCmpnyModal from '../NothGateCmpnyModal';
 
 const AntdLineTable = StyledAntdTable(Table);
@@ -20,9 +24,8 @@ const { Option } = Select;
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const AntdModal = StyledContentsModal(Modal);
-const AntdPicker = StyledPicker(DatePicker.RangePicker);
+const AntdRangePicker = StyledDatePicker(DatePicker.RangePicker);
 
-const { RangePicker } = DatePicker;
 const format = 'YYYY-MM-DD HH:mm:ss';
 moment.locale('ko');
 
@@ -30,10 +33,9 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      recordList: [],
-      nothGateModal: false,
-      type: '',
+      searchData: {},
       accCmpnyInputPage: [],
+      nothGateModal: { visible: false, content: [], title: '' },
       accCmpnyModal: false,
       columns: [
         {
@@ -44,19 +46,19 @@ class List extends Component {
         },
         {
           title: '일자',
-          width: '12%',
+          width: '10%',
           align: 'center',
           dataIndex: 'VISIT_DATE',
         },
         {
           title: '업체명',
-          width: '17%',
+          width: '15%',
           align: 'center',
           dataIndex: 'WRK_CMPNY_NM',
         },
         {
           title: '사업자등록번호',
-          width: '15%',
+          width: '13%',
           align: 'center',
           dataIndex: 'BIZ_REG_NO',
         },
@@ -91,7 +93,7 @@ class List extends Component {
         },
         {
           title: '업체등록여부',
-          width: '8%',
+          width: '10%',
           align: 'center',
           dataIndex: 'WRK_REG',
           render: (text, record) => {
@@ -105,27 +107,15 @@ class List extends Component {
           },
         },
         {
-          title: '매그나칩 담당자',
-          width: '8%',
+          title: '매그나칩  담당자',
+          width: '12%',
           align: 'center',
           dataIndex: 'EMP_NM',
         },
       ],
     };
+    this.handleOnChangeSearchData = debounce(this.handleOnChangeSearchData, 300);
   }
-
-  componentDidMount = () => {
-    const { id, getCallDataHandler, apiAry } = this.props;
-    getCallDataHandler(id, apiAry, this.handleAppStart);
-  };
-
-  handleAppStart = () => {
-    const { result, id, changeFormData } = this.props;
-    const recordList = (result && result.recordList && result.recordList.recordList) || [];
-    this.setState({
-      recordList,
-    });
-  };
 
   onRowClick = record => {
     const { id, changeFormData } = this.props;
@@ -145,63 +135,48 @@ class List extends Component {
     });
   };
 
-  handleModalOpen = () => {
-    const { id, changeFormData } = this.props;
-    const now = new Date();
-    const now2 = new Date(`${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`);
-
-    changeFormData(id, 'modal', {
-      type: 'INSERT',
-      modalVisible: true,
-      info: { WORK_AREA_CD: 'CJ', VISITOR_TYPE: 'N', VISITOR_IN_DATE: moment().format(format), VISITOR_OUT_DATE: moment(now2, format) },
+  handleNothGateModalVisible = (title, type, initData = {}) => {
+    const { nothGateModal } = this.state;
+    const { visible } = nothGateModal;
+    if (visible) {
+      return this.setState({
+        nothGateModal: {
+          visible: !visible,
+          title: '',
+          content: [],
+        },
+      });
+    }
+    return this.setState({
+      nothGateModal: {
+        visible: !visible,
+        title,
+        content: [<NothGateCmpnyModal type={type} initData={initData} modalVisible={this.handleNothGateModalVisible} saveAfter={this.handleOnSearch} />],
+      },
     });
-  };
-
-  handleCancel = () => {
-    const { id, changeFormData } = this.props;
-    changeFormData(id, 'modal', { type: '', modalVisible: false, info: {} });
   };
 
   handleDateOnChange = (data, dateString) => {
-    const { id, changeFormData, formData } = this.props;
-    const search = (formData && formData.search) || {};
-    changeFormData(id, 'search', { ...search, FROM_DATE: dateString[0], TO_DATE: dateString[1] });
+    this.setState(prevState => ({ searchData: { ...prevState.searchData, FROM_DATE: dateString[0], TO_DATE: dateString[1] } }));
   };
 
-  handleSearchOnChange = (target, value) => {
-    const { id, changeFormData, formData } = this.props;
-    const search = (formData && formData.search) || {};
-
-    changeFormData(id, 'search', { ...search, [target]: value });
+  handleOnChangeSearchData = (target, value) => {
+    this.setState(prevState => ({ searchData: { ...prevState.searchData, [target]: value } }));
   };
 
   handleOnSearch = () => {
-    const { id, getCallDataHandler, formData } = this.props;
-    const search = (formData && formData.search) || {};
+    const { id, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    const { searchData } = this.state;
+    spinningOn();
     const apiAry = [
       {
-        key: 'searchList',
+        key: 'recordList',
         type: 'POST',
         url: '/api/eshs/v1/common/eshsAccessRecord',
-        params: search,
+        params: searchData,
       },
     ];
-    getCallDataHandler(id, apiAry, this.onSearchCallBack);
-  };
-
-  onSearchCallBack = sagaKey => {
-    const { result } = this.props;
-
-    const recordList = (result && result.searchList && result.searchList.recordList) || [];
-    this.setState({
-      recordList,
-    });
-  };
-
-  handleTypeOnChange = e => {
-    const { id, changeFormData, formData } = this.props;
-    const search = (formData && formData.search) || {};
-    changeFormData(id, 'search', { ...search, VISITOR_TYPE: e });
+    getCallDataHandler(id, apiAry, spinningOff);
   };
 
   handleDwExcel = () => {
@@ -240,14 +215,12 @@ class List extends Component {
   };
 
   render() {
-    const { recordList, nothGateModal, columns, accCmpnyModal, accCmpnyInputPage } = this.state;
-    const { formData } = this.props;
-    const search = (formData && formData.search) || {};
-    const modalVisible = (formData && formData.modal && formData.modal.modalVisible) || false;
-    const modalType = (formData && formData.modal && formData.modal.type) || '';
+    const { searchData, nothGateModal, columns, accCmpnyModal, accCmpnyInputPage } = this.state;
+    const { result } = this.props;
+    const recordList = (result && result.recordList && result.recordList.recordList) || [];
 
     return (
-      <ContentsWrapper>
+      <StyledContentsWrapper>
         <div>
           <StyledHtmlTable>
             <table>
@@ -261,8 +234,13 @@ class List extends Component {
                 <tr>
                   <th>지역</th>
                   <td colSpan={3}>
-                    <AntdSelect defaultValue="" onChange={value => this.handleSearchOnChange('WORK_AREA_CD', value)} style={{ width: '10%' }}>
-                      <Option value="">지역 전체</Option>
+                    <AntdSelect
+                      allowClear
+                      placeholder="지역전체"
+                      className="select-sm mr5"
+                      onChange={value => this.handleOnChangeSearchData('WORK_AREA_CD', value)}
+                      style={{ width: '15%' }}
+                    >
                       <Option value="청주">청주</Option>
                       <Option value="구미">구미</Option>
                     </AntdSelect>
@@ -273,22 +251,22 @@ class List extends Component {
                   <td>
                     <AntdInput
                       placeholder="업체명"
-                      className="ant-input-inline"
+                      className="ant-input-sm"
                       style={{ width: '100%' }}
-                      value={search.WRK_CMPNY_NM || ''}
+                      allowClear
                       name="WRK_CMPNY_NM"
-                      onChange={e => this.handleSearchOnChange('WRK_CMPNY_NM', e.target.value)}
+                      onChange={e => this.handleOnChangeSearchData('WRK_CMPNY_NM', e.target.value)}
                     />
                   </td>
                   <th>사업자등록번호</th>
                   <td>
                     <AntdInput
                       placeholder="사업자 등록번호"
-                      className="ant-input-inline"
+                      className="ant-input-sm"
                       style={{ width: '100%' }}
-                      value={search.BIZ_REG_NO || ''}
+                      allowClear
                       name="BIZ_REG_NO"
-                      onChange={e => this.handleSearchOnChange('BIZ_REG_NO', e.target.value)}
+                      onChange={e => this.handleOnChangeSearchData('BIZ_REG_NO', e.target.value)}
                     />
                   </td>
                 </tr>
@@ -297,17 +275,23 @@ class List extends Component {
                   <td>
                     <AntdInput
                       placeholder="방문자 성명"
-                      value={search.VISITOR_NAME || ''}
                       name="VISITOR_NAME"
-                      className="ant-input-inline"
+                      allowClear
+                      className="ant-input-sm"
                       style={{ width: '100%' }}
-                      onChange={e => this.handleSearchOnChange('VISITOR_NAME', e.target.value)}
+                      onChange={e => this.handleOnChangeSearchData('VISITOR_NAME', e.target.value)}
                     />
                   </td>
                   <th>출입구분</th>
                   <td>
-                    <AntdSelect defaultValue="" onChange={value => this.handleSearchOnChange('VISITOR_TYPE', value)} style={{ width: '100%' }}>
-                      <Option value="">전체</Option>
+                    <AntdSelect
+                      allowClear
+                      className="select-sm"
+                      placeholder="전체"
+                      // onChange={value => this.handleOnChangeSearchData('VISITOR_TYPE', value)}
+                      onChange={value => this.setState(prevState => ({ searchData: { ...prevState.searchData, VISITOR_TYPE: value } }))}
+                      style={{ width: '100%' }}
+                    >
                       <Option value="일일">일일</Option>
                       <Option value="북/후문">북/후문</Option>
                       <Option value="상시">상시</Option>
@@ -317,12 +301,17 @@ class List extends Component {
                 <tr>
                   <th>출입기간</th>
                   <td>
-                    <AntdPicker onChange={this.handleDateOnChange} style={{ width: '100%' }} />
+                    <AntdRangePicker className="ant-picker-sm" onChange={this.handleDateOnChange} style={{ width: '100%' }} />
                   </td>
                   <th>업체등록여부</th>
                   <td>
-                    <AntdSelect defaultValue="" onChange={value => this.handleSearchOnChange('WRK_REG', value)} style={{ width: '100%' }}>
-                      <Option value="">선택</Option>
+                    <AntdSelect
+                      allowClear
+                      placeholder="전체"
+                      className="select-sm"
+                      onChange={value => this.handleOnChangeSearchData('WRK_REG', value)}
+                      style={{ width: '100%' }}
+                    >
                       <Option value="등록">등록</Option>
                       <Option value="미등록">미등록</Option>
                     </AntdSelect>
@@ -332,54 +321,78 @@ class List extends Component {
             </table>
           </StyledHtmlTable>
           <div className="selSaveWrapper">
-            <StyledButtonWrapper className="btn-wrap-inline">
-              {search.VISITOR_TYPE === '북/후문' ? (
-                <StyledButton className="btn-primary btn-first" onClick={this.handleModalOpen}>
+            <StyledButtonWrapper className="btn-wrap-inline btn-wrap-mt-20">
+              {searchData.VISITOR_TYPE === '북/후문' ? (
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleNothGateModalVisible('북/후문 출입기록 등록', 'INSERT', {})}>
                   등록
                 </StyledButton>
               ) : (
                 ''
               )}
-              <StyledButton className="btn-primary btn-first" onClick={this.handleOnSearch}>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={this.handleOnSearch}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={this.handleDwExcel}>
-                액셀받기
-              </StyledButton>
+              <ExcelDownloadComp
+                isBuilder={false}
+                fileName={`Visitor_${moment().format('YYYYMMDD')}`}
+                className="testClassName"
+                btnText="엑셀 받기"
+                sheetName={`Visitor_${moment().format('YYYYMMDD')}`}
+                listData={recordList.map(row => {
+                  const result = {};
+                  columns.forEach(col => {
+                    result[col.dataIndex] =
+                      (row[col.dataIndex] && typeof col.excelRender === 'function' && col.excelRender(row[col.dataIndex], row)) || row[col.dataIndex];
+                  });
+
+                  return { ...row, ...result };
+                })}
+                btnSize="btn-sm btn-first mr5"
+                fields={columns.map(item => ({
+                  field: item.dataIndex,
+                  style: { font: { sz: '12' }, alignment: { vertical: item.excelAlign || 'center', horizontal: item.excelAlign || 'center', wrapText: true } },
+                }))}
+                columns={columns.map(item => ({
+                  ...item,
+                  field: item.dataIndex,
+                  filter: 'agTextColumnFilter',
+                  width: item.width ? { wpx: Number(item.width.replace('%', '')) * 10 } : { wpx: 150 },
+                  style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '', bold: true }, alignment: { vertical: 'center', horizontal: 'center' } },
+                }))}
+              />
             </StyledButtonWrapper>
           </div>
           <AntdLineTable
             key="recordTable"
-            className="tableWrapper"
             rowKey="ROWKEY"
             columns={columns}
             dataSource={recordList || []}
             bordered
-            scroll={{ y: 500 }}
-            pagination={false}
             footer={() => <span>{`${recordList.length} 건`}</span>}
-            onRow={record => ({ onClick: () => this.onRowClick(record) })}
+            onRow={record => ({
+              onClick: () =>
+                this.handleNothGateModalVisible('출입기록 수정', 'UPDATE', {
+                  ...record,
+                  VISITOR_OUT_DATE: moment(`${record.VISIT_DATE} ${record.VISITOR_OUT_DATE}`).format(format),
+                  VISITOR_IN_DATE: moment(`${record.VISIT_DATE} ${record.VISITOR_IN_DATE}`).format(format),
+                }),
+            })}
           />
           <AntdModal
-            title={modalType === 'INSERT' ? '북/후문 출입기록 등록' : '출입기록 수정'}
-            visible={modalVisible}
-            onCancel={this.handleCancel}
+            title={nothGateModal.title}
+            visible={nothGateModal.visible}
+            onCancel={this.handleNothGateModalVisible}
             width={800}
             height={450}
             footer={[null]}
           >
-            <NothGateCmpnyModal
-              {...this.props}
-              handleAppStart={this.handleAppStart}
-              handleModalOpen={this.handleModalOpen}
-              handleModalCancel={this.handleCancel}
-            />
+            {nothGateModal.content}
           </AntdModal>
           <AntdModal title="업체 등록Page" visible={accCmpnyModal} onCancel={this.handleOpenAccCmpnyInputPage} width={900} height={550} footer={[null]}>
             {accCmpnyInputPage}
           </AntdModal>
         </div>
-      </ContentsWrapper>
+      </StyledContentsWrapper>
     );
   }
 }

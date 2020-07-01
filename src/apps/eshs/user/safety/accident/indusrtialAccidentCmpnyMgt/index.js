@@ -128,7 +128,6 @@ class IndusrtialAccidentCmpnyMgt extends Component {
     );
   }
 }
-// 8921 -- 미등록 업체 등록페이지
 IndusrtialAccidentCmpnyMgt.propTypes = {
   listSagaKey: PropTypes.string,
   sagaKey: PropTypes.string,
