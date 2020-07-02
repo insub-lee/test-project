@@ -24,10 +24,13 @@ class TreeSelectComp extends Component {
       getExtraApiData,
       sagaKey: id,
       CONFIG: {
-        property: { rootkey },
+        property: { rootkey, customChangeForm },
       },
       viewPageData,
       colData,
+      changeFormData,
+      COMP_FIELD,
+      compProps,
     } = this.props;
     const { viewType } = viewPageData;
     const apiArray = [
@@ -40,6 +43,10 @@ class TreeSelectComp extends Component {
     ];
     if (colData && colData.length > 0) getExtraApiData(id, apiArray);
     else if (viewType !== 'VIEW') getExtraApiData(id, apiArray);
+    // builderBase 최상단에서 데이터를 넘겨주고 싶을 때 사용 ex) saveTask 후에 formData를 index에 state로 가지고 있다가 내려주는용도
+    if (compProps && compProps[COMP_FIELD]) {
+      changeFormData(id, COMP_FIELD, compProps[COMP_FIELD]);
+    }
   }
 
   onChangeHandler = value => {
