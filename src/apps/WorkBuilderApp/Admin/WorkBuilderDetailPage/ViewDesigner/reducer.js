@@ -532,7 +532,7 @@ const reducer = (state = initialState, action) => {
         'compKey',
       ]);
       const compIdx = compData.findIndex(iNode => iNode.getIn(['CONFIG', 'property', 'compKey']) === compKey);
-      compData = compData.setIn([compIdx, 'CONFIG', 'property', 'viewLayerConfig', layerIdxKey, key], typeof value === 'object' ? fromJS(value) : value);
+      // compData = compData.setIn([compIdx, 'CONFIG', 'property', 'viewLayerConfig', layerIdxKey, key], typeof value === 'object' ? fromJS(value) : value);
       return state
         .setIn(
           ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp', key],
