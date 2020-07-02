@@ -23,7 +23,7 @@ import {
   PAGINATION_OPT_CODE,
 } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
-import { ViewButtons } from '../customButton';
+import { ViewButtons, InputButtons } from '../customButton';
 
 const AntdModal = StyledAntdModal(Modal);
 const AntdTable = StyledAntdTable(Table);
@@ -237,6 +237,7 @@ class ListPage extends Component {
         bookmarkHandler={this.bookmarkHandler}
         viewMetaSeq={13763}
         baseSagaKey={sagaKey}
+        InputCustomButtons={InputButtons}
         ViewCustomButtons={ViewButtons}
       />
     );
@@ -266,12 +267,28 @@ class ListPage extends Component {
     setFormData(id, nextFormData);
   };
 
+  // custom sorting list (revsion시 sorting 문제)
+  customListSort = listData => {
+    const nextListData = listData.sort((a, b) => {
+      if (a.CONDO_SEQ > b.CONDO_SEQ) {
+        return -1;
+      }
+      if (a.CONDO_SEQ < b.CONDO_SEQ) {
+        return 1;
+      }
+      return 0;
+    });
+    return nextListData;
+  };
+
   renderList = (group, groupIndex) => {
     const { listData, listSelectRowKeys, workInfo, customOnRowClick, listTotalCnt } = this.props;
     const { isMultiDelete, isOnRowClick, paginationIdx } = this.state;
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
+
+    const sortingListData = this.customListSort(listData);
 
     if (isMultiDelete) {
       rowSelection = {
@@ -295,7 +312,7 @@ class ListPage extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData || []}
+            dataSource={sortingListData || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}

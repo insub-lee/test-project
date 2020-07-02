@@ -23,7 +23,7 @@ import {
   PAGINATION_OPT_CODE,
 } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
-import { ViewButtons } from '../customButton';
+import { ViewButtons, InputButtons } from '../customButton';
 import AnswerPage from './AnswerPage';
 
 // import Loadable from 'components/Loadable';
@@ -254,6 +254,7 @@ class ListPage extends Component {
         bookmarkHandler={this.bookmarkHandler}
         viewMetaSeq={13263}
         baseSagaKey={sagaKey}
+        InputCustomButtons={InputButtons}
         ViewCustomButtons={ViewButtons}
       />
     );
@@ -325,14 +326,8 @@ class ListPage extends Component {
     setFormData(id, nextFormData);
   };
 
-  renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, workInfo, customOnRowClick, listTotalCnt } = this.props;
-    const { isMultiDelete, isOnRowClick, paginationIdx } = this.state;
-    const columns = this.setColumns(group.rows[0].cols, group.widths || []);
-    let rowSelection = false;
-    let onRow = false;
-
-    // 리스트 - 원글 - 답변 row로 보여져야함
+  // 리스트 정렬 (원글 밑 답변배치 , 리비전시 sorting 문제)
+  customListSort = listData => {
     const reOrderList = [];
     const tempList1 = listData
       .filter(item => item.LVL === 1)
@@ -359,6 +354,18 @@ class ListPage extends Component {
         reOrderList.push(item);
       });
     }
+    return reOrderList;
+  };
+
+  renderList = (group, groupIndex) => {
+    const { listData, listSelectRowKeys, workInfo, customOnRowClick, listTotalCnt } = this.props;
+    const { isMultiDelete, isOnRowClick, paginationIdx } = this.state;
+    const columns = this.setColumns(group.rows[0].cols, group.widths || []);
+    let rowSelection = false;
+    let onRow = false;
+
+    // 리스트 Sorting
+    const sortingListData = this.customListSort(listData);
 
     if (isMultiDelete) {
       rowSelection = {
@@ -382,7 +389,7 @@ class ListPage extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={reOrderList || []}
+            dataSource={sortingListData || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}

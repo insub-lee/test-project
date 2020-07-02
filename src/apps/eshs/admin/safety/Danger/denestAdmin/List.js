@@ -57,11 +57,16 @@ class List extends Component {
       },
       {
         key: 'dangerDanestAdmin',
+        type: 'GET',
+        url: `/api/eshs/v1/common/dangerDanestAdmin?REG_NO=${record.REG_NO}`,
+      },
+      {
+        key: 'dangerDanestAdminSub',
         type: 'POST',
-        url: '/api/eshs/v1/common/eshsBuilderCustomSearch/12981',
+        url: `/api/eshs/v1/common/dangerDanestAdmin`,
         params: {
           PARAM: {
-            whereString: [`AND W.REG_NO = '${record.REG_NO}'`],
+            REG_NO: record.REG_NO,
           },
         },
       },
@@ -71,12 +76,16 @@ class List extends Component {
 
   dangerData = () => {
     const {
-      extraApiData: { dangerInfo, dangerDanestAdmin },
+      extraApiData: { dangerInfo, dangerDanestAdmin, dangerDanestAdminSub },
     } = this.props;
     if (dangerDanestAdmin && dangerDanestAdmin.list && dangerDanestAdmin.list.length <= 0) {
       message.info(<MessageContent>검색된 데이터가 없습니다.</MessageContent>);
     } else {
-      this.setState({ dangerInfo: dangerInfo && dangerInfo.list, dangerDanestAdmin: dangerDanestAdmin && dangerDanestAdmin.list });
+      this.setState({
+        dangerInfo: dangerInfo && dangerInfo.list,
+        dangerDanestAdmin: dangerDanestAdmin && dangerDanestAdmin.list,
+        dangerDanestAdminSub: dangerDanestAdminSub && dangerDanestAdminSub.list,
+      });
     }
   };
 
@@ -85,7 +94,7 @@ class List extends Component {
   };
 
   render() {
-    const { isModal, dangerDanestAdmin, dangerInfo } = this.state;
+    const { isModal, dangerDanestAdmin, dangerInfo, dangerDanestAdminSub } = this.state;
     const { formData } = this.props;
     return (
       <>
@@ -108,22 +117,26 @@ class List extends Component {
               </StyledButton>
             </StyledButtonWrapper>
           </StyledCustomSearchWrapper>
-          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={() => message.info('개발중입니다.')}>
-              저장/수정
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={() => message.info('개발중입니다.')}>
-              재평가
-            </StyledButton>
-            <StyledButton className="btn-gray btn-first btn-sm" onClick={() => message.info('개발중입니다.')}>
-              재평가내역
-            </StyledButton>
-          </StyledButtonWrapper>
           {Array.isArray(dangerDanestAdmin) && dangerDanestAdmin[0] && (
             <Tabs defaultActiveKey={dangerDanestAdmin[0].DA_REG_NO} onChange={this.callback}>
               {dangerDanestAdmin.map(item => (
                 <TabPane tab={item.DA_REG_NO} key={item.DA_REG_NO}>
-                  <View formData={item} dangerInfo={dangerInfo} />
+                  <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+                    <StyledButton className="btn-primary btn-first btn-sm" onClick={() => message.info('개발중입니다.')}>
+                      저장/수정
+                    </StyledButton>
+                    <StyledButton className="btn-primary btn-first btn-sm" onClick={() => message.info('개발중입니다.')}>
+                      재평가
+                    </StyledButton>
+                    <StyledButton className="btn-gray btn-first btn-sm" onClick={() => message.info('개발중입니다.')}>
+                      재평가내역
+                    </StyledButton>
+                  </StyledButtonWrapper>
+                  <View
+                    formData={item}
+                    dangerInfo={dangerInfo}
+                    SUB_LIST={dangerDanestAdminSub && dangerDanestAdminSub.filter(sub => sub.DA_REG_NO === item.DA_REG_NO)}
+                  />
                 </TabPane>
               ))}
             </Tabs>

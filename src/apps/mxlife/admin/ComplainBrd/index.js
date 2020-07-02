@@ -1,6 +1,6 @@
 import React from 'react';
 import BizBuilderBase from 'components/BizBuilderBase';
-import { ViewButtons } from './customButton';
+import { ViewButtons, InputButtons } from './customButton';
 import ListPage from './page/ListPage';
 
 /*
@@ -15,6 +15,7 @@ const complainBrd = () => (
     workSeq={13201}
     CustomListPage={ListPage}
     modalTitle="민원/고충 등록"
+    InputCustomButtonsByModal={InputButtons}
     ViewCustomButtonsByModal={ViewButtons}
   />
 );

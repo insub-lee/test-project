@@ -8,16 +8,16 @@ import ListPage from './page/ListPage';
     작업자 : 이정현
 */
 
-const condoBrd = () => (
+const noticeBrd = () => (
   <BizBuilderBase
-    sagaKey="condoBrd_list"
+    sagaKey="noticeBrd_list"
     viewType="LIST"
-    workSeq={13601}
+    workSeq={14261}
     CustomListPage={ListPage}
-    modalTitle="콘도 등록"
+    modalTitle="공지사항 등록"
     InputCustomButtonsByModal={InputButtons}
     ViewCustomButtonsByModal={ViewButtons}
   />
 );
 
-export default condoBrd;
+export default noticeBrd;

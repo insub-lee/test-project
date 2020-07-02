@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm, Button } from 'antd';
-
+import { Table, Popconfirm, Button, Modal } from 'antd';
 import { isJSON } from 'utils/helpers';
+import BizBuilderBase from 'components/BizBuilderBase';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledSearchWrapper';
@@ -22,10 +23,13 @@ import {
   PAGINATION_OPT_CODE,
 } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
+import { ViewButtons, InputButtons } from '../customButton';
+import AnswerPage from './AnswerPage';
 
 // import Loadable from 'components/Loadable';
 // import Loading from '../Common/Loading';
 
+const AntdModal = StyledAntdModal(Modal);
 const AntdTable = StyledAntdTable(Table);
 const StyledButton = StyledAntdButton(Button);
 
@@ -47,6 +51,10 @@ class ListPage extends Component {
       paginationIdx: 1,
       pageSize: 10,
       isPagingData: false,
+      modalVisible: false,
+      modalType: '',
+      modalTitle: '',
+      record: {},
     };
   }
 
@@ -107,12 +115,6 @@ class ListPage extends Component {
       this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView, isExcelDown, btnTex, fileName, sheetName, columns, fields, isPagingData });
     }
   };
-
-  // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
 
   setPaginationIdx = paginationIdx =>
     this.setState({ paginationIdx }, () => {
@@ -189,24 +191,170 @@ class ListPage extends Component {
     setListSelectRowKeys(sagaKey, selectedRowKeys);
   };
 
-  /* 
-      신규추가 
-      목적 : ListGroup 내에서 Row를 클릭시 원하는 뷰로 이동할 수 있는 Config를 지원하기 위해 생성
-      타입 : func (추가사항. antd - Table Props 참조)
-      create by. JeongHyun
-  */
-  onRowClick = record => {
-    const { sagaKey: id, isBuilderModal, changeBuilderModalState, changeViewPage } = this.props;
-    const { rowClickView } = this.state;
-    return {
-      onClick: () => {
-        if (isBuilderModal) {
-          changeBuilderModalState(true, rowClickView, record.WORK_SEQ, record.TASK_SEQ, record);
-        } else {
-          changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, rowClickView);
-        }
+  // 테이블 row 클릭 => VIEW 모달
+  onRowClick = record => ({
+    onClick: () => {
+      if (record.LVL === 1) {
+        this.customModalHandler('view', true, record);
+      }
+      if (record.LVL === 2) {
+        this.customModalHandler('answerView', true, record);
+      }
+    },
+  });
+
+  // 모달 핸들러
+  customModalHandler = (type, bool, record, refresh) => {
+    const { changeViewPage, workSeq, sagaKey } = this.props;
+    let title = '';
+    let item = {};
+    const pageRefresh = (refresh && typeof refresh === 'boolean' && refresh) || false;
+    switch (type) {
+      case 'answer':
+        title = '답변작성';
+        item = record;
+        break;
+      case 'view':
+        title = '고충 사항';
+        item = record;
+        break;
+      case 'answerView':
+        title = '고충 답변';
+        item = record;
+        break;
+      default:
+        break;
+    }
+    this.setState(
+      {
+        modalVisible: bool,
+        modalType: type,
+        modalTitle: title,
+        record: item,
       },
+      () => {
+        if (pageRefresh) changeViewPage(sagaKey, workSeq, -1, 'LIST');
+      },
+    );
+  };
+
+  // 일반 뷰 모달
+  renderViewModal = () => {
+    const { sagaKey, workSeq } = this.props;
+    const { record } = this.state;
+    return (
+      <BizBuilderBase
+        key={`${sagaKey}_view`}
+        sagaKey={`${sagaKey}_view`}
+        workSeq={workSeq} // metadata binding
+        taskSeq={record.TASK_SEQ}
+        viewType="VIEW"
+        onCloseModalHandler={() => this.customModalHandler('', false, {}, true)}
+        customModalHandler={this.customModalHandler}
+        bookmarkHandler={this.bookmarkHandler}
+        viewMetaSeq={14103}
+        baseSagaKey={sagaKey}
+        InputCustomButtons={InputButtons}
+        ViewCustomButtons={ViewButtons}
+      />
+    );
+  };
+
+  // 답변 작성 모달
+  renderAnswerModal = () => {
+    const { sagaKey, workSeq } = this.props;
+    const { record } = this.state;
+    return (
+      <BizBuilderBase
+        key={`${sagaKey}_answer_input`}
+        sagaKey={`${sagaKey}_answer_input`}
+        workSeq={workSeq}
+        viewType="INPUT"
+        onCloseModalHandler={() => this.customModalHandler('', false, {}, true)}
+        inputMetaSeq={14185}
+        initFormData={record}
+        baseSagaKey={sagaKey}
+        isSaveModalClose
+        CustomInputPage={AnswerPage}
+      />
+    );
+  };
+
+  // 답변 뷰 모달
+  renderAnswerViewModal = () => {
+    const { sagaKey, workSeq } = this.props;
+    const { record } = this.state;
+    return (
+      <BizBuilderBase
+        key={`${sagaKey}_answer_view`}
+        sagaKey={`${sagaKey}_answer_view`}
+        workSeq={workSeq}
+        taskSeq={record.TASK_SEQ}
+        viewType="VIEW"
+        onCloseModalHandler={() => this.customModalHandler('', false, {}, true)}
+        customModalHandler={this.customModalHandler}
+        bookmarkHandler={this.bookmarkHandler}
+        viewMetaSeq={14202}
+        modifyMetaSeq={14201}
+        baseSagaKey={sagaKey}
+        ViewCustomButtons={ViewButtons}
+      />
+    );
+  };
+
+  // 북마크 핸들러
+  bookmarkHandler = (sagaKey, record) => {
+    const { submitExtraHandler, profile } = this.props;
+    const bookMarkUserList = (record.BOOKMARK_USER_LIST && record.BOOKMARK_USER_LIST.length > 0 && record.BOOKMARK_USER_LIST) || '';
+    const isBookmark = bookMarkUserList.split(',').includes(`${profile.USER_ID}`) ? 'Y' : 'N';
+    const formData = {
+      ...record,
+      IS_BOOKMARK: isBookmark,
     };
+    const submitData = { PARAM: { ...formData } };
+    submitExtraHandler(sagaKey, 'POST', '/api/mxlife/v1/common/bookmark', submitData, this.boomarkCallbackFunc, record);
+  };
+
+  // 북마크 설정시 toggle
+  boomarkCallbackFunc = (id, response, record) => {
+    const { setFormData } = this.props;
+    const { nextBookmarkUser } = response;
+    const nextFormData = {
+      ...record,
+      BOOKMARK_USER_LIST: nextBookmarkUser || '',
+    };
+    setFormData(id, nextFormData);
+  };
+
+  // 리스트 정렬 (원글 밑 답변배치 , 리비전시 sorting 문제)
+  customListSort = listData => {
+    const reOrderList = [];
+    const tempList1 = listData
+      .filter(item => item.LVL === 1)
+      .sort((a, b) => {
+        if (a.WOMAN_SEQ > b.WOMAN_SEQ) {
+          return -1;
+        }
+        if (a.WOMAN_SEQ < b.WOMAN_SEQ) {
+          return 1;
+        }
+        return 0;
+      });
+    const tempList2 = listData.filter(item => item.LVL === 2);
+    if (tempList1.length > 0) {
+      tempList1.forEach(item => {
+        reOrderList.push(item);
+        const answerList = tempList2.filter(answer => answer.PRT_TASK_SEQ === item.TASK_ORIGIN_SEQ);
+        if (answerList.length > 0) {
+          answerList.forEach(answer => reOrderList.push(answer));
+        }
+      });
+    } else {
+      tempList2.forEach(item => {
+        reOrderList.push(item);
+      });
+    }
+    return reOrderList;
   };
 
   renderList = (group, groupIndex) => {
@@ -215,6 +363,10 @@ class ListPage extends Component {
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
+
+    // 리스트 Sorting
+    const sortingListData = this.customListSort(listData);
+
     if (isMultiDelete) {
       rowSelection = {
         selectedRowKeys: listSelectRowKeys,
@@ -237,7 +389,7 @@ class ListPage extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData || []}
+            dataSource={sortingListData || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
@@ -278,7 +430,6 @@ class ListPage extends Component {
       const {
         info: { PRC_ID },
       } = workFlowConfig;
-
       return (
         <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
@@ -331,7 +482,7 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray btn-sm mr5" onClick={this.handleClickSearch}>
+                          <StyledButton className="btn-gray btn-sm" onClick={this.handleClickSearch}>
                             검색
                           </StyledButton>
                           {useExcelDownload && isExcelDown && (
@@ -372,6 +523,20 @@ class ListPage extends Component {
                 </Popconfirm>
               )}
             </StyledButtonWrapper>
+            <AntdModal
+              centered
+              destroyOnClose
+              footer={null}
+              maskClosable={false}
+              width="40%"
+              title={this.state.modalTitle}
+              visible={this.state.modalVisible}
+              onCancel={() => this.customModalHandler('', false)}
+            >
+              {this.state.modalType === 'view' && this.renderViewModal()}
+              {this.state.modalType === 'answer' && this.renderAnswerModal()}
+              {this.state.modalType === 'answerView' && this.renderAnswerViewModal()}
+            </AntdModal>
           </Sketch>
         </StyledWrap>
       );
@@ -399,6 +564,7 @@ ListPage.propTypes = {
   customOnRowClick: PropTypes.any,
   listData: PropTypes.array,
   useExcelDownload: PropTypes.bool,
+  setFormData: PropTypes.func,
 };
 
 ListPage.defaultProps = {

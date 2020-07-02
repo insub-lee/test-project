@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Radio, message, DatePicker } from 'antd';
+import { Input, InputNumber, Select, Radio, DatePicker } from 'antd';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
-import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
@@ -15,7 +14,6 @@ import UserSearchModal from 'apps/eshs/common/userSearchModal';
 import moment from 'moment';
 
 moment.locale('ko');
-const AntdSearch = StyledSearchInput(Input.Search);
 const AntdInputNumber = StyledInputNumber(InputNumber);
 const AntdSelect = StyledSelect(Select);
 const AntdTextArea = StyledTextarea(Input.TextArea);
@@ -43,7 +41,7 @@ const dangerRank = value => {
   }
 };
 
-const View = ({ formData, dagerInfo }) => (
+const View = ({ formData, dagerInfo, SUB_LIST }) => (
   <StyledHtmlTable>
     {formData && (
       <table>
@@ -69,7 +67,7 @@ const View = ({ formData, dagerInfo }) => (
             <td colSpan="2" align="center">
               <span>{`${formData.SDIV_NM || ''} > ${formData.DIV_NM || ''}`}</span>
             </td>
-            <td rowSpan="3" colSpan="4" align="center">
+            <td rowSpan="4" colSpan="4" align="center">
               <font size="5">위험성평가표</font>
             </td>
             <th align="center">근무인원</th>
@@ -97,23 +95,25 @@ const View = ({ formData, dagerInfo }) => (
             </td>
           </tr>
           <tr>
-            <th colSpan="2">작성일자</th>
-            <td colSpan="2" align="center">
-              <span>{moment(formData.REG_DTTM).format('YYYY-MM-DD')}</span>
+            <th colSpan="2" rowSpan="2">
+              작성일자
+            </th>
+            <td colSpan="2" rowSpan="2" align="center">
+              <span>{moment(formData.REG_DATE).format('YYYY-MM-DD')}</span>
             </td>
-            <th align="center">작성자</th>
-            <td align="center">{`${formData.REG_USER_NAME}(${formData.REG_EMP_NO})`}</td>
-            <th align="center">부서장</th>
-            <td align="center">
-              {/* <AntdSearch
-                value={`${formData.DEPT_MANAGER_NM}(${formData.DEPT_MANAGER})`}
-                className="input-search-sm ant-search-inline mr5"
-                onClick={() => message.warning('modal')}
-                onChange={() => message.warning('modal')}
-              /> */}
+            <th align="center" colSpan="1">
+              작성자
+            </th>
+            <td align="center" colSpan="3">{`${formData.REG_EMPNM}(${formData.REG_EMPNO})`}</td>
+          </tr>
+          <tr>
+            <th align="center" colSpan="1">
+              부서장
+            </th>
+            <td align="center" colSpan="3">
               <UserSearchModal
                 customWidth="100%"
-                colData={`${formData.DEPT_MANAGER_NM}(${formData.DEPT_MANAGER})`} // --  InputSearch 초기값
+                colData={formData.DEPT_MANAGER && formData.DEPT_MANAGER_NM ? `${formData.DEPT_MANAGER_NM}(${formData.DEPT_MANAGER})` : ''} // --  InputSearch 초기값
                 // onClickRow={record => ()}                             //--  [필수] userList rowClick시 record를 리턴받는 함수
                 // modalOnCancel={() => ()}                              //-- modal onCancel event (props 없을 경우 AntdSearchInput 값 비워주고 props 로 들어온 onClickRow({EMP_NO:'', USER_ID:''}) 호출 )
                 className="input-search-sm ant-search-inline mr5" // -- AntdSearchInput className
@@ -138,48 +138,65 @@ const View = ({ formData, dagerInfo }) => (
             <th>개선대책</th>
             <th>완료예정일</th>
           </tr>
-          <tr>
-            <td>{formData.EQUIP_NM}</td>
-            <td>
-              <AntdSelect defaultValue={Number(formData.WOKRCND)}>
-                <Option value={0}>정상</Option>
-                <Option value={1}>비정상</Option>
-              </AntdSelect>
-            </td>
-            <td>
-              <AntdTextArea defaultValue={formData.WOKRCND} />
-            </td>
-            <td>{formData.WOKRCND}</td>
-            <td>
-              <AntdTextArea defaultValue={formData.WOKRCND} />
-            </td>
-            <td>
-              <AntdSelect style={{ width: 40 }} defaultValue={Number(formData.WOKRCND || 1)}>
-                <Option value={1}>1</Option>
-                <Option value={2}>2</Option>
-                <Option value={3}>3</Option>
-                <Option value={4}>4</Option>
-                <Option value={5}>5</Option>
-              </AntdSelect>
-            </td>
-            <td>
-              <AntdSelect style={{ width: 40 }} defaultValue={Number(formData.WOKRCND || 1)}>
-                <Option value={1}>1</Option>
-                <Option value={2}>2</Option>
-                <Option value={3}>3</Option>
-                <Option value={4}>4</Option>
-              </AntdSelect>
-            </td>
-            <td>{dangerRank(Number(formData.WOKRCND || 1) * Number(formData.WOKRCND || 1))}</td>
-            <td>
-              <AntdTextArea defaultValue={formData.WOKRCND} />
-            </td>
-            <td>
-              <AntdDatePicker defaultValue={formData.WOKRCND} />
-            </td>
-            <td>개선계획 첨부파일</td>
-            <td>개선결과 첨부파일</td>
-          </tr>
+
+          {console.debug('SUB_LIST : ', SUB_LIST)}
+          {/* 
+			LEGALST 법적기준 (화면상에 안나옴)
+			DANGRAD 위험등급 (화면상에 안나옴)
+      ADAPTEDEXAM 적합성검토 (화면상에 안나옴)
+			EDIT_YN 수정 가능 불가능
+      */}
+          {SUB_LIST &&
+            SUB_LIST.map(subItem => (
+              <tr>
+                <td>{subItem.EQUIP_NM}</td>
+                <td>
+                  <AntdSelect className="select-xs" defaultValue={Number(subItem.WOKRCND)}>
+                    {/* 작업조건 */}
+                    <Option value={0}>정상</Option>
+                    <Option value={1}>비정상</Option>
+                  </AntdSelect>
+                </td>
+                <td>
+                  <AntdTextArea defaultValue={subItem.DANGFACT} />
+                  {/* 작업단계 위험요인 */}
+                </td>
+                <td>{subItem.AOT_NM}</td>
+                {/* 발생형태 */}
+                <td>
+                  <AntdTextArea defaultValue={subItem.SAFEACTION} />
+                  {/* 현재 안전조치(대책) */}
+                </td>
+                <td>
+                  <AntdSelect className="select-xs" style={{ width: 40 }} defaultValue={Number(subItem.DAN_FREQC || 1)}>
+                    {/* 위험빈도 */}
+                    <Option value={1}>1</Option>
+                    <Option value={2}>2</Option>
+                    <Option value={3}>3</Option>
+                    <Option value={4}>4</Option>
+                    <Option value={5}>5</Option>
+                  </AntdSelect>
+                </td>
+                <td>
+                  <AntdSelect className="select-xs" style={{ width: 40 }} defaultValue={Number(subItem.DAN_STRGT || 1)}>
+                    {/* 위험강도 */}
+                    <Option value={1}>1</Option>
+                    <Option value={2}>2</Option>
+                    <Option value={3}>3</Option>
+                    <Option value={4}>4</Option>
+                  </AntdSelect>
+                </td>
+                <td>{dangerRank(Number(subItem.WOKRCND || 1) * Number(subItem.WOKRCND || 1))}</td> {/* DAN_LEVEL 위험수준 */}
+                <td>
+                  <AntdTextArea defaultValue={subItem.AP_IMPROVE} /> {/* 개선대책 */}
+                </td>
+                <td>
+                  <AntdDatePicker defaultValue={subItem.AP_ENDDATE} /> {/* 완료예정일 */}
+                </td>
+                <td>개선계획 첨부파일</td> {/* FILE_ATTACH 개선계획 첨부파일 */}
+                <td>개선결과 첨부파일</td> {/* FILE_ATTACH2 개선결과 첨부파일 */}
+              </tr>
+            ))}
         </tbody>
       </table>
     )}
@@ -189,6 +206,7 @@ const View = ({ formData, dagerInfo }) => (
 View.propTypes = {
   formData: PropTypes.object,
   dagerInfo: PropTypes.object,
+  SUB_LIST: PropTypes.array,
 };
 
 export default React.memo(View);
