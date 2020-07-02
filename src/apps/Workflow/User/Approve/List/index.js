@@ -75,12 +75,14 @@ class ApproveList extends Component {
       mailReviewerNode: undefined,
       isAbrogationMultiShow: false,
       workPrcProps: undefined,
+      paginationIdx: 1,
+      pageSize: 10,
     };
   }
 
   componentDidMount() {
     const { profile, id, getApproveList } = this.props;
-
+    const { paginationIdx, pageSize } = this.state;
     const { ACCOUNT_IDS_DETAIL } = profile;
     const vList = ACCOUNT_IDS_DETAIL && ACCOUNT_IDS_DETAIL.V.split(',');
     const vId = vList.findIndex(v => v === '1221');
@@ -88,22 +90,22 @@ class ApproveList extends Component {
       this.setState({ isDcc: true });
     }
     const fixUrl = '/api/workflow/v1/common/approve/ApproveListMDCSHandler';
-    this.props.getApproveList(fixUrl);
+    this.props.getApproveList(fixUrl, paginationIdx, pageSize);
   }
 
   getTableColumns = () => [
+    // {
+    //   title: 'No',
+    //   dataIndex: 'RNUM',
+    //   key: 'rnum',
+    //   width: '5%',
+    //   align: 'center',
+    // },
     {
-      title: 'No',
-      dataIndex: 'RNUM',
-      key: 'rnum',
-      width: '5%',
-      align: 'center',
-    },
-    {
-      title: '구분',
+      title: '종류',
       dataIndex: 'APPVGUBUN',
       key: 'APPVGUBUN',
-      width: '12%',
+      width: '15%',
       align: 'center',
       render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
     },
@@ -111,15 +113,15 @@ class ApproveList extends Component {
       title: '유형',
       dataIndex: 'NODETYPE',
       key: 'NODETYPE',
-      width: '10%',
+      width: '9%',
       align: 'center',
       render: (text, record) => (record.APPV_USER_ID === record.ORG_APPV_USER_ID ? text : `${text}(위임결재)`),
     },
     {
-      title: '문서번호',
+      title: '표준번호',
       dataIndex: 'DOCNUMBER',
       key: 'DOCNUMBER',
-      width: '10%',
+      width: '9%',
       align: 'center',
       ellipsis: true,
       render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? record.DRAFT_ID : text),
@@ -131,10 +133,10 @@ class ApproveList extends Component {
       width: '5%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? 1 : Number(text)),
+      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '1' : text.indexOf('.') > -1 ? text.split('.')[0] : text),
     },
     {
-      title: 'Title',
+      title: '표준제목',
       dataIndex: 'DRAFT_TITLE',
       key: 'title',
       ellipsis: true,
@@ -143,14 +145,14 @@ class ApproveList extends Component {
       title: '결재상태',
       dataIndex: 'APPV_STATUS_NM',
       key: 'APPV_STATUS_NM',
-      width: '10%',
+      width: '9%',
       align: 'center',
     },
     {
       title: '진행상태',
       dataIndex: 'PROC_STATUS',
       key: 'PROC_STATUS',
-      width: '10%',
+      width: '9%',
       align: 'center',
       render: (text, record) => (text === 3 ? '홀드' : text === 2 ? '완료' : '진행중'),
     },
@@ -167,7 +169,7 @@ class ApproveList extends Component {
       key: 'appv_dttm',
       width: '10%',
       align: 'center',
-      render: (text, record) => moment(text).format('YYYY-MM-DD'),
+      render: (text, record) => (text && text.length > 0 ? moment(text).format('YYYY-MM-DD') : text),
     },
   ];
 
@@ -447,8 +449,17 @@ class ApproveList extends Component {
     this.setState({ workPrcProps, isAbrogationMultiShow: false });
   };
 
+  setPaginationIdx = paginationIdx =>
+    this.setState({ paginationIdx }, () => {
+      const { getApproveList } = this.props;
+      const { pageSize } = this.state;
+
+      const fixUrl = '/api/workflow/v1/common/approve/ApproveListMDCSHandler';
+      this.props.getApproveList(fixUrl, paginationIdx, pageSize);
+    });
+
   render() {
-    const { approveList, selectedRow, opinionVisible, setOpinionVisible } = this.props;
+    const { approveList, approveListCnt, selectedRow, opinionVisible, setOpinionVisible } = this.props;
     const {
       modalWidth,
       coverView,
@@ -461,6 +472,7 @@ class ApproveList extends Component {
       mailReviewerNode,
       isAbrogationMultiShow,
       workPrcProps,
+      paginationIdx,
     } = this.state;
 
     return (
@@ -480,6 +492,8 @@ class ApproveList extends Component {
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
+            pagination={{ current: paginationIdx, total: approveListCnt }}
+            onChange={pagination => this.setPaginationIdx(pagination.current)}
           />
         </StyledContentsWrapper>
         {workPrcProps && workPrcProps.REL_TYPE && workPrcProps.REL_TYPE !== 999 ? (

@@ -14,15 +14,9 @@ class DraftList extends Component {
   }
 
   componentDidMount() {
-    // const { sagaKey, submitHandlerBySaga } = this.props;
-    // submitHandlerBySaga(
-    //   sagaKey,
-    //   'POST',
-    //   '/api/workflow/v1/common/approve/unApproveList',
-    //   { PARAM: { relTypes: [1, 99], PAGE: 1, PAGE_CNT: 5 } },
-    //   this.initDataBind,
-    // );
-    this.props.getUnApproveList(undefined, 1, 5);
+    const { getUnApproveList } = this.props;
+    const prefixUrl = '/api/workflow/v1/common/approve/UnApproveListMDCSHandler';
+    getUnApproveList(prefixUrl, 1, 5);
   }
 
   initDataBind = (sagaKey, response) => {

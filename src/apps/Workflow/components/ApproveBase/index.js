@@ -78,13 +78,15 @@ const mapStateToProps = createStructuredSelector({
   opinion: selectors.makeSelectOpinion(),
   formData: selectors.makeSelectFormData(),
   unApproveListCnt: selectors.makeSelectUnApproveListCnt(),
+  approveListCnt: selectors.makeSelectApproveListCnt(),
+  draftListCnt: selectors.makeSelectDraftListCnt(),
   profile: authSelectors.makeSelectProfile(),
 });
 
 const mapDispatchToProps = dispatch => ({
-  getApproveList: customUrl => dispatch(actions.getApproveList(customUrl)),
+  getApproveList: (customUrl, PAGE, PAGE_CNT) => dispatch(actions.getApproveList(customUrl, PAGE, PAGE_CNT)),
   getUnApproveList: (customUrl, PAGE, PAGE_CNT) => dispatch(actions.getUnApproveList(customUrl, PAGE, PAGE_CNT)),
-  getDraftList: customUrl => dispatch(actions.getDraftList(customUrl)),
+  getDraftList: (customUrl, PAGE, PAGE_CNT) => dispatch(actions.getDraftList(customUrl, PAGE, PAGE_CNT)),
   getCustomDataBind: (httpMethod, rtnUrl, param) => dispatch(actions.getCustomDataBind(httpMethod, rtnUrl, param)),
   submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
     dispatch(actions.submitHandlerBySaga(id, httpMethod, apiUrl, submitData, callbackFunc)),
