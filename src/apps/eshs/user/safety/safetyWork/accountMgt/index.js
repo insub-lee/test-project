@@ -22,7 +22,6 @@ class AccountMgt extends Component {
 
   render() {
     const { sagaKey, inputMetaSeq, modifyMetaSeq, listMetaSeq, gubun } = this.props;
-    console.debug('gubun ---------- ', gubun);
     return (
       <BizBuilderBase
         sagaKey={sagaKey}

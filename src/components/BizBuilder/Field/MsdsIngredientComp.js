@@ -2,6 +2,7 @@ import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input } from 'antd';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import TableTypeSelector from '../../TableTypeSelector';
 
 class MsdsIngredientComp extends React.Component {
@@ -86,33 +87,31 @@ class MsdsIngredientComp extends React.Component {
 
     return visible ? (
       <>
+        {viewType === 'INPUT' || viewType === 'MODIFY' ? (
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <TableTypeSelector
+              leftTableColumns={leftTableColumns}
+              rightTableColumns={rightTableColumns}
+              apiList={apiList}
+              applyList={applyList}
+              handleApply={this.handleApply}
+              btnText="구성성분 등록"
+              modalTitle="MSDS 검색"
+              rowKey="TASK_SEQ"
+            />
+          </StyledButtonWrapper>
+        ) : (
+          ''
+        )}
         <StyledHtmlTable className="tableWrapper">
           <table className="table-border">
             <colgroup>
-              <col width="25%" />
-              <col width="25%" />
-              <col width="25%" />
-              <col width="25%" />
+              <col width="20%" />
+              <col width="45%" />
+              <col width="20%" />
+              <col width="15%" />
             </colgroup>
             <thead>
-              {viewType === 'INPUT' || viewType === 'MODIFY' ? (
-                <tr textAlign="left">
-                  <td colSpan={4}>
-                    <TableTypeSelector
-                      leftTableColumns={leftTableColumns}
-                      rightTableColumns={rightTableColumns}
-                      apiList={apiList}
-                      applyList={applyList}
-                      handleApply={this.handleApply}
-                      btnText="구성성분 등록"
-                      modalTitle="MSDS 검색"
-                      rowKey="TASK_SEQ"
-                    />
-                  </td>
-                </tr>
-              ) : (
-                ''
-              )}
               <tr>
                 <th>ITEM</th>
                 <th>분자식</th>
@@ -128,10 +127,10 @@ class MsdsIngredientComp extends React.Component {
             <tbody>
               {applyList.map((a, index) => (
                 <tr key={`ingreDient_${index}`}>
-                  <td>{a.ITEM_NM}</td>
-                  <td>{a.MOLECULAR_FORMULA}</td>
-                  <td>{a.CAS_NO}</td>
-                  <td>
+                  <td align="center">{a.ITEM_NM}</td>
+                  <td align="center">{a.MOLECULAR_FORMULA}</td>
+                  <td align="center">{a.CAS_NO}</td>
+                  <td align="center">
                     {viewType === 'INPUT' || viewType === 'MODIFY' ? (
                       <p>
                         <Input style={{ width: '50px' }} onChange={e => this.handleInputOnChange(e, index)} value={a.RATIO || ''} />%
@@ -153,16 +152,8 @@ class MsdsIngredientComp extends React.Component {
 }
 
 MsdsIngredientComp.propTypes = {
-  COMP_FIELD: PropTypes.any,
-  NAME_KOR: PropTypes.any,
   CONFIG: PropTypes.any,
-  colData: PropTypes.any,
   changeFormData: PropTypes.any,
-  id: PropTypes.any,
-  changeValidationData: PropTypes.any,
-  readOnly: PropTypes.any,
-  compProp: PropTypes.any,
-  changeSearchData: PropTypes.any,
 };
 
 export default MsdsIngredientComp;
