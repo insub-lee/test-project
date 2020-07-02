@@ -9,6 +9,7 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import moment from 'moment';
 
 const AntdTable = StyledAntdTable(Table);
 const StyledButton = StyledAntdButton(Button);
@@ -18,17 +19,17 @@ const AntdInput = StyledInput(Input);
 const columns = [
   { dataIndex: 'REQ_CD', title: '신청번호', width: 130, align: 'center' },
   { dataIndex: 'REQ_STATUS_NM', title: '신청', width: 60, align: 'center' },
-  { dataIndex: 'REQ_DT', title: '신청일', width: 80, align: 'center' },
+  { dataIndex: 'REQ_DT', title: '신청일', width: 80, align: 'center', render: text => (text ? moment(text).format('YYYY-MM-DD') : '') },
   { dataIndex: 'APP_STATUS_NM', title: '승인', width: 60, align: 'center' },
-  { dataIndex: 'QUAL_DT', title: '승인일', width: 80, align: 'center' },
+  { dataIndex: 'QUAL_DT', title: '승인일', width: 80, align: 'center', render: text => (text ? moment(text).format('YYYY-MM-DD') : '') },
   { dataIndex: 'QUAL_STATUS_NM', title: '판정', width: 80, align: 'center' },
   { dataIndex: 'REG_USER_NAME', title: '신청자', width: 60, align: 'center' },
   { dataIndex: 'EQUIP_CD', title: '장비코드', width: 80, align: 'center' },
   { dataIndex: 'EQUIP_NM', title: '장비명', width: 250, align: 'center' },
   { dataIndex: 'SITE_NM', title: '지역', width: 60, align: 'center' },
   { dataIndex: 'FAB_NM', title: 'FAB', width: 80, align: 'center' },
-  { dataIndex: 'AREA_NM', title: '공정', width: 80, align: 'center' },
-  { dataIndex: 'MAKER_NM', title: 'Maker', width: 200, align: 'center' },
+  { dataIndex: 'AREA_NM', title: '공정', width: 100, align: 'center' },
+  { dataIndex: 'MAKER_NM', title: 'Maker', width: 250, align: 'center' },
 ];
 
 class CustomList extends Component {
@@ -39,26 +40,18 @@ class CustomList extends Component {
     };
   }
 
-  componentDidMount = () => {
-    const { changeSearchData, sagaKey: id, listGubun } = this.props;
-
-    changeSearchData(id, 'GUBUN', `AND GUBUN = '${listGubun}'`);
-    this.getListData();
-  };
-
   getListData = () => {
-    const { sagaKey: id, getListData, changeSearchData } = this.props;
+    const { sagaKey: id, getListData, changeSearchData, workSeq, conditional } = this.props;
     const { searchData } = this.state;
 
     changeSearchData(id, 'CUSTOM', searchData.target && searchData.text ? `AND W.${searchData.target} like '%${searchData.text}%'` : '');
-    return getListData(id, 6821);
+    return getListData(id, workSeq, conditional);
   };
 
-  handleOnChangeSearchData = (target, value) => this.setState(prevState => Object.assign(prevState.searchData, { [target]: value }));
+  handleOnChangeStateSearchData = (target, value) => this.setState(prevState => Object.assign(prevState.searchData, { [target]: value }));
 
   render = () => {
     const { listData, customOnRowClick } = this.props;
-
     return (
       <StyledContentsWrapper>
         <StyledCustomSearchWrapper className="search-wrapper-inline">
@@ -67,7 +60,7 @@ class CustomList extends Component {
             style={{ width: 150 }}
             placeholder="검색구분"
             allowClear
-            onChange={value => this.handleOnChangeSearchData('target', value)}
+            onChange={value => this.handleOnChangeStateSearchData('target', value)}
           >
             <AntdSelect.Option value="REQ_CD">신청번호</AntdSelect.Option>
             <AntdSelect.Option value="EQUIP_CD">장비코드</AntdSelect.Option>
@@ -80,7 +73,7 @@ class CustomList extends Component {
             placeholder="검색어"
             allowClear
             onPressEnter={this.getListData}
-            onChange={e => this.handleOnChangeSearchData('text', e.target.value)}
+            onChange={e => this.handleOnChangeStateSearchData('text', e.target.value)}
           />
           <StyledButton className="btn-gray btn-sm" onClick={this.getListData}>
             검색
@@ -93,6 +86,8 @@ class CustomList extends Component {
           dataSource={listData}
           onRow={record => ({ onClick: () => customOnRowClick(record) })}
           scroll={{ x: '100%' }}
+          // pagination={{ current: paginationIdx, total: listTotalCnt }}
+          // onChange={pagination => this.setPaginationIdx(pagination.current)}
         />
       </StyledContentsWrapper>
     );
@@ -102,11 +97,12 @@ class CustomList extends Component {
 CustomList.propTypes = {
   sagaKey: PropTypes.string,
   customOnRowClick: PropTypes.any,
-  listGubun: PropTypes.string,
   listData: PropTypes.array,
-
   changeSearchData: PropTypes.func,
   getListData: PropTypes.func,
+  listTotalCnt: PropTypes.number,
+  workSeq: PropTypes.number,
+  conditional: PropTypes.string,
 };
 
 CustomList.defaultProps = {
@@ -114,6 +110,9 @@ CustomList.defaultProps = {
   listData: [],
   changeSearchData: () => {},
   getListData: () => {},
+  conditional: '',
+  listTotalCnt: 0,
+  workSeq: 0,
 };
 
 export default CustomList;
