@@ -123,7 +123,7 @@ class EshsQualCondComp extends Component {
             신청번호
           </span>
         ),
-        width: '12%',
+        width: 60,
         align: 'center',
         dataIndex: 'REQ_CD',
         render: (text, record) => (
@@ -148,7 +148,7 @@ class EshsQualCondComp extends Component {
           title: '승인조건',
           dataIndex: 'APPROVE_QUAL_COMMENT',
           align: 'center',
-          width: '28%',
+          width: 250,
           render: (text, record, index) => {
             if (APPROVE_TYPE === 'INPUT') {
               return (
@@ -175,7 +175,7 @@ class EshsQualCondComp extends Component {
           title: 'Categories',
           dataIndex: 'APPROVE_CATEGORY_CD',
           align: 'center',
-          width: '24%',
+          width: 250,
           render: (text, record, index) => {
             if (APPROVE_TYPE === 'INPUT') {
               return (
@@ -207,7 +207,7 @@ class EshsQualCondComp extends Component {
           title: '담당부서',
           dataIndex: 'APPROVE_DEPT_CD',
           align: 'center',
-          width: '24%',
+          width: 250,
           render: (text, record, index) => {
             if (APPROVE_TYPE === 'INPUT') {
               return (
@@ -239,7 +239,7 @@ class EshsQualCondComp extends Component {
           title: () => (APPROVE_TYPE === 'INPUT' ? '파일첨부' : '첨부파일'),
           dataIndex: 'APPROVE_FILE_SEQ',
           align: 'center',
-          width: '24%',
+          width: 250,
           render: (text, record, index) => (
             <Upload
               key={`approve_${index}`}
@@ -275,13 +275,25 @@ class EshsQualCondComp extends Component {
         {
           title: '개선내용',
           dataIndex: 'RESULT_QUAL_COMMENT',
-          width: '34%',
+          width: 300,
           align: 'center',
 
           render: (text, record, index) => {
             if (RESULT_TYPE === 'INPUT') {
               return (
-                <Popover content={text} trigger="focus">
+                <Popover
+                  content={
+                    <>
+                      <p>
+                        [ <strong>승인조건</strong> ] {record.APPROVE_QUAL_COMMENT || ''}
+                      </p>
+                      <p>
+                        [ <strong>개선내용</strong> ] {text || ''}
+                      </p>
+                    </>
+                  }
+                  trigger="focus"
+                >
                   <Input
                     className="ant-input-inline ant-input-sm input-left"
                     defaultValue={record.RESULT_QUAL_COMMENT || ''}
@@ -301,7 +313,7 @@ class EshsQualCondComp extends Component {
           title: '담당부서',
           dataIndex: 'RESULT_DEPT_CD',
           align: 'center',
-          width: '33%',
+          width: 250,
           render: (text, record, index) => {
             if (RESULT_TYPE === 'INPUT') {
               return (
@@ -333,7 +345,7 @@ class EshsQualCondComp extends Component {
           title: () => (RESULT_TYPE === 'INPUT' ? '파일첨부' : '첨부파일'),
           dataIndex: 'REUSLT_FILE_SEQ',
           align: 'center',
-          width: '33%',
+          width: 250,
           render: (text, record, index) => (
             <Upload
               key={`result_${index}`}
@@ -365,7 +377,7 @@ class EshsQualCondComp extends Component {
       columns.push({
         title: '확인',
         align: 'center',
-        width: '10%',
+        width: 60,
         render: (text, record, index) => (
           <Checkbox className="ant-checkbox-wrapper" checked={!!record.RESULT_QUAL_EMPID} onChange={() => this.handleConfirmChecked(index)} />
         ),
@@ -376,7 +388,7 @@ class EshsQualCondComp extends Component {
         title: '확인자',
         align: 'center',
         dataIndex: 'RESULT_QUAL_EMP_NAME',
-        width: '10%',
+        width: 60,
       });
     }
 
@@ -527,7 +539,7 @@ class EshsQualCondComp extends Component {
           columns={columns}
           dataSource={condList || []}
           bordered
-          scroll={ALL_LIST === 'Y' ? { y: 45 * 12 } : { y: 45 * 6 }}
+          scroll={ALL_LIST === 'Y' ? { x: '100%', y: 45 * 12 } : { x: '100%', y: 45 * 6 }}
           pagination={false}
           footer={() => <span>{`${condList.length} 건`}</span>}
         />
