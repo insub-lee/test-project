@@ -22,7 +22,7 @@ class ChkItem extends Component {
     isNext: false,
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { sagaKey, getCallDataHandler, reservationInfo, userInfo } = this.props;
     const apiAry = [
       {
@@ -47,6 +47,7 @@ class ChkItem extends Component {
 
   initState = () => {
     const { result, checkedVals, reservationInfo } = this.props;
+    console.debug('reservationInfo > ', reservationInfo);
     this.setState({
       chkTypeList: result.chkTypeList && result.chkTypeList.list ? result.chkTypeList.list.map(item => {
         if (item.ITEM_JSON){
@@ -56,7 +57,7 @@ class ChkItem extends Component {
       }) : [],
       selectedChkType: result.chkTypeList && result.chkTypeList.list ? 
                       (reservationInfo.CHK_TYPE ? result.chkTypeList.list.filter(item => item.CHK_TYPE === reservationInfo.CHK_TYPE)[0] : result.chkTypeList.list[0]) : '',
-      checkedVals: checkedVals || [],
+      checkedVals: reservationInfo.CHK_ITEMS_CODE ? reservationInfo.CHK_ITEMS_CODE : [],
     });
   };
 
