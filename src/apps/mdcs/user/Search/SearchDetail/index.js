@@ -188,7 +188,7 @@ class SearchDetail extends Component {
                         >
                           <StyledRadio value={2}>현재 Revision</StyledRadio>
                           <StyledRadio value={1}>과거 Rev. 포함</StyledRadio>
-                          <StyledRadio value={8}>폐기</StyledRadio>
+                          <StyledRadio value={99}>폐기</StyledRadio>
                         </Radio.Group>
                       </td>
                     </tr>
