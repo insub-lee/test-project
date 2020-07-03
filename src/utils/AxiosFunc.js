@@ -158,6 +158,26 @@ function* getFileDownProgressAxios(fullUrl, payload, headers, onProgress) {
   return {};
 }
 
+function* postExcelUploadAxios(fullUrl, formData, headers) {
+  try {
+    const response = yield Promise.resolve(
+      axios({
+        method: 'post',
+        url: fullUrl,
+        data: formData,
+        headers: { ...headers, META: yield makeRequestHeader() },
+      }),
+    );
+    if (response.statusText !== 'OK') {
+      return Promise.reject(response.data);
+    }
+    return response.data;
+  } catch (error) {
+    errorAxiosProcess(error);
+  }
+  return {};
+}
+
 export const Axios = {
   get: (fullUrl, payload, headers) => getAxios(fullUrl, payload, headers),
   post: (fullUrl, payload, headers) => postAxios(fullUrl, payload, headers),
@@ -166,6 +186,7 @@ export const Axios = {
   getDown: (fullUrl, payload, headers) => getFileDownAxios(fullUrl, payload, headers),
   getDownProgress: (fullUrl, payload, headers, onProgress) => getFileDownProgressAxios(fullUrl, payload, headers, onProgress),
   postNoResponse: (fullUrl, payload, headers) => postNoResponseAxios(fullUrl, payload, headers),
+  postExcelUpload: (fullUrl, formData, headers) => postExcelUploadAxios(fullUrl, formData, headers),
 };
 
 export default Axios;
