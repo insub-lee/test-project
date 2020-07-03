@@ -269,6 +269,7 @@ class SearchDetail extends Component {
             this.setState({ visible: false });
           }}
           okButtonProps={null}
+          destroyOnClose
         >
           <StyledContentsWrapper>
             <BizBuilderBase

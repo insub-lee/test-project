@@ -178,6 +178,7 @@ class ListPage extends Component {
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
           className: node.addonClassName && node.addonClassName.length > 0 ? `${node.addonClassName.toString().replaceAll(',', ' ')}` : '',
           align: (node.style && node.style.textAlign) || undefined,
+          ellipsis: node.comp.CONFIG.property.isEllipsis || undefined,
         });
       }
     });
