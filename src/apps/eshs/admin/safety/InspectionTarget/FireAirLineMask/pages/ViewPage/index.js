@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Popconfirm, Modal } from 'antd';
+import { Popconfirm, Modal, Spin } from 'antd';
 import { isJSON } from 'utils/helpers';
 import SignLine from 'apps/Workflow/SignLine';
 import ApproveHistory from 'apps/Workflow/ApproveHistory';
@@ -25,6 +25,7 @@ class ViewPage extends Component {
       activateModal: false,
       pageMetaSeq: '',
       viewType: VIEW_TYPE.VIEW,
+      loading: false,
     };
   }
 
@@ -132,6 +133,7 @@ class ViewPage extends Component {
             onCloseModalHandler={this.onCloseModalAfterRefresh}
             inputMetaSeq={pageMetaSeq}
             baseSagaKey={sagaKey}
+            handleModalLoading={this.handleModalLoading}
             InputCustomButtons={CustomButtons.RegInspection}
           />
         );
@@ -162,6 +164,12 @@ class ViewPage extends Component {
     }
   };
 
+  handleModalLoading = bool => {
+    this.setState({
+      loading: bool,
+    });
+  };
+
   render = () => {
     const { sagaKey: id, reloadId, viewLayer, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal, ViewCustomButtons } = this.props;
 
@@ -181,7 +189,9 @@ class ViewPage extends Component {
               <>
                 <ViewCustomButtons viewMetaSeqHandler={this.pageMetaSeqHandler} modalHandler={this.modalHandler} {...this.props} />
                 <AntdModal title={this.modalTitle()} width="80%" visible={activateModal} footer={null} destroyOnClose onCancel={() => this.modalHandler(false)}>
-                  {activateModal && this.openModal(`modal${id}`)}
+                  <Spin tip="처리중 ..." spinning={this.state.loading}>
+                    {activateModal && this.openModal(`modal${id}`)}
+                  </Spin>
                 </AntdModal>
               </>
             ) : (

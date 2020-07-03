@@ -40,6 +40,18 @@ class ComponentConfig extends Component {
         </Radio.Group>
       </div>,
       <div className="popoverItem popoverItemInput">
+        <span className="spanLabel">툴팁 필드 지정</span>
+        <Input
+          className="alignCenter"
+          placeholder="툴팁에 표현될 필드 작성(미설정시 기존필드)"
+          value={(configInfo && configInfo.property && configInfo.property.toolTipField) || ''}
+          onChange={e => {
+            const { value } = e.target;
+            this.handleChangeConfigData('toolTipField', value);
+          }}
+        />
+      </div>,
+      <div className="popoverItem popoverItemInput">
         <span className="spanLabel">Bold체 조건</span>
         <Input
           style={{ width: '50%' }}

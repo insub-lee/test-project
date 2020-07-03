@@ -20,10 +20,12 @@ export default function RegisterInspection({
   workSeq,
   viewPageData,
   shouldFire,
+  handleModalLoading,
 }) {
   const shoudFireAPI = () => {
     // viewMetaSeqHandler(META_SEQ.INPUT_INSPECTION, VIEW_TYPE.INPUT);
     const { SAFEPIN_YN, PHARM_YN, FORM_YN, POSITION_YN } = formData;
+    handleModalLoading(true);
     if (SAFEPIN_YN && PHARM_YN && FORM_YN && POSITION_YN) {
       const { POSITION_NO, CHIP_NO, REG_USER_ID } = formData;
       request({
@@ -32,13 +34,16 @@ export default function RegisterInspection({
         data: { SAFEPIN_YN, PHARM_YN, FORM_YN, POSITION_YN, POSITION_NO, CHIP_NO, REG_USER_ID },
       }).then(({ response }) => {
         if (response?.result === 1) {
+          handleModalLoading(false);
           message.success(<MessageContent>점검결과를 등록 하였습니다.</MessageContent>);
           onCloseModalHandler();
         } else {
+          handleModalLoading(false);
           message.error(<MessageContent>점검결과 등록에 실패하였습니다.</MessageContent>);
         }
       });
     } else {
+      handleModalLoading(false);
       message.error(<MessageContent>점검항목중 누락된 내용이 있습니다.</MessageContent>);
     }
   };
