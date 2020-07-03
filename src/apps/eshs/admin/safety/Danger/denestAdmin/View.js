@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Radio, DatePicker } from 'antd';
+import { Input, InputNumber, Select, Radio, DatePicker, Icon, Popover, Row, Col } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
@@ -8,7 +9,7 @@ import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumb
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-
+import Upload from 'components/Upload';
 import UserSearchModal from 'apps/eshs/common/userSearchModal';
 
 import moment from 'moment';
@@ -22,42 +23,33 @@ const AntdDatePicker = StyledDatePicker(DatePicker);
 const { Option } = Select;
 
 const dangerRank = value => {
-  console.debug('value : ', value);
-  switch (value) {
-    case value >= 16 && value <= 20:
-      return 'A';
-    case value >= 12 && value <= 15:
-      return 'B';
-    case value >= 9 && value <= 12:
-      return 'C';
-    case value === 8:
-      return 'D';
-    case value >= 4 && value <= 6:
-      return 'E';
-    case value >= 1 && value <= 3:
-      return 'F';
-    default:
-      return '';
-  }
+  let returnValue;
+  if (value >= 16) returnValue = 'A';
+  else if (value >= 12) returnValue = 'B';
+  else if (value >= 9) returnValue = 'C';
+  else if (value === 8) returnValue = 'D';
+  else if (value >= 4) returnValue = 'E';
+  else returnValue = 'F';
+  return returnValue;
 };
 
-const View = ({ formData, dagerInfo, SUB_LIST }) => (
+const View = ({ formData, dagerInfo, SUB_LIST, onChangeAdmin, onChangeManager, onChangeAdminSub, onFileUploadTemp, UploadFilesDel }) => (
   <StyledHtmlTable>
     {formData && (
       <table>
         <colgroup>
-          <col width="8.33%" />
-          <col width="8.33%" />
-          <col width="8.33%" />
-          <col width="8.33%" />
-          <col width="8.33%" />
-          <col width="8.33%" />
-          <col width="8.33%" />
-          <col width="8.33%" />
-          <col width="8.33%" />
-          <col width="8.33%" />
-          <col width="8.33%" />
-          <col width="8.33%" />
+          <col width="8%" />
+          <col width="8%" />
+          <col width="12%" />
+          <col width="8%" />
+          <col width="12%" />
+          <col width="6%" />
+          <col width="6%" />
+          <col width="5%" />
+          <col width="12%" />
+          <col width="13%" />
+          <col width="5%" />
+          <col width="5%" />
         </colgroup>
         <tbody>
           <tr>
@@ -73,10 +65,20 @@ const View = ({ formData, dagerInfo, SUB_LIST }) => (
             <th align="center">근무인원</th>
             <td colSpan="3" align="center">
               남/여(&nbsp;
-              <AntdInputNumber className="ant-input-number-inline ant-input-number-xs mr5" style={{ width: 50 }} defaultValue={formData.WORKMAN_MALE || 0} />
+              <AntdInputNumber
+                className="ant-input-number-inline ant-input-number-xs mr5"
+                style={{ width: 50 }}
+                defaultValue={formData.WORKMAN_MALE || 0}
+                onChange={e => onChangeAdmin('WORKMAN_MALE', e, formData)}
+              />
               /&nbsp;
-              <AntdInputNumber className="ant-input-number-inline ant-input-number-xs mr5" style={{ width: 50 }} defaultValue={formData.WORKMAN_FEMALE || 0} />)
-              {Number(formData.WORKMAN_MALE) + Number(formData.WORKMAN_FEMALE)}&nbsp;명
+              <AntdInputNumber
+                className="ant-input-number-inline ant-input-number-xs mr5"
+                style={{ width: 50 }}
+                defaultValue={formData.WORKMAN_FEMALE || 0}
+                onChange={e => onChangeAdmin('WORKMAN_FEMALE', e, formData)}
+              />
+              ){Number(formData.WORKMAN_MALE) + Number(formData.WORKMAN_FEMALE)}&nbsp;명
             </td>
           </tr>
           <tr>
@@ -87,7 +89,7 @@ const View = ({ formData, dagerInfo, SUB_LIST }) => (
             </td>
             <th align="center">소속</th>
             <td colSpan="3" align="center">
-              <Radio.Group onChange={undefined} value={Number(formData.POST)}>
+              <Radio.Group onChange={e => onChangeAdmin('POST', e.target.value, formData)} defaultValue={Number(formData.POST)}>
                 <Radio value={1}>자체</Radio>
                 <Radio value={2}>용역</Radio>
                 <Radio value={3}>기타</Radio>
@@ -114,8 +116,8 @@ const View = ({ formData, dagerInfo, SUB_LIST }) => (
               <UserSearchModal
                 customWidth="100%"
                 colData={formData.DEPT_MANAGER && formData.DEPT_MANAGER_NM ? `${formData.DEPT_MANAGER_NM}(${formData.DEPT_MANAGER})` : ''} // --  InputSearch 초기값
-                // onClickRow={record => ()}                             //--  [필수] userList rowClick시 record를 리턴받는 함수
-                // modalOnCancel={() => ()}                              //-- modal onCancel event (props 없을 경우 AntdSearchInput 값 비워주고 props 로 들어온 onClickRow({EMP_NO:'', USER_ID:''}) 호출 )
+                onClickRow={record => onChangeManager(record, formData)} // --  [필수] userList rowClick시 record를 리턴받는 함수
+                modalOnCancel={() => null} // -- modal onCancel event (props 없을 경우 AntdSearchInput 값 비워주고 props 로 들어온 onClickRow({EMP_NO:'', USER_ID:''}) 호출 )
                 className="input-search-sm ant-search-inline mr5" // -- AntdSearchInput className
               />
             </td>
@@ -138,37 +140,35 @@ const View = ({ formData, dagerInfo, SUB_LIST }) => (
             <th>개선대책</th>
             <th>완료예정일</th>
           </tr>
-
-          {console.debug('SUB_LIST : ', SUB_LIST)}
-          {/* 
-			LEGALST 법적기준 (화면상에 안나옴)
-			DANGRAD 위험등급 (화면상에 안나옴)
+          {/*
+  		LEGALST 법적기준 (화면상에 안나옴)
+  		DANGRAD 위험등급 (화면상에 안나옴)
       ADAPTEDEXAM 적합성검토 (화면상에 안나옴)
-			EDIT_YN 수정 가능 불가능
+  		EDIT_YN 수정 가능 불가능
       */}
           {SUB_LIST &&
             SUB_LIST.map(subItem => (
               <tr>
                 <td>{subItem.EQUIP_NM}</td>
                 <td>
-                  <AntdSelect className="select-xs" defaultValue={Number(subItem.WOKRCND)}>
+                  <AntdSelect className="select-xs" defaultValue={Number(subItem.WOKRCND)} onChange={value => onChangeAdminSub('WOKRCND', value, subItem)}>
                     {/* 작업조건 */}
                     <Option value={0}>정상</Option>
                     <Option value={1}>비정상</Option>
                   </AntdSelect>
                 </td>
                 <td>
-                  <AntdTextArea defaultValue={subItem.DANGFACT} />
+                  <AntdTextArea defaultValue={subItem.DANGFACT} onChange={e => onChangeAdminSub('DANGFACT', e.target.value, subItem)} />
                   {/* 작업단계 위험요인 */}
                 </td>
                 <td>{subItem.AOT_NM}</td>
                 {/* 발생형태 */}
                 <td>
-                  <AntdTextArea defaultValue={subItem.SAFEACTION} />
+                  <AntdTextArea defaultValue={subItem.SAFEACTION} onChange={e => onChangeAdminSub('SAFEACTION', e.target.value, subItem)} />
                   {/* 현재 안전조치(대책) */}
                 </td>
                 <td>
-                  <AntdSelect className="select-xs" style={{ width: 40 }} defaultValue={Number(subItem.DAN_FREQC || 1)}>
+                  <AntdSelect className="select-xs" defaultValue={Number(subItem.DAN_FREQC)} onChange={value => onChangeAdminSub('DAN_FREQC', value, subItem)}>
                     {/* 위험빈도 */}
                     <Option value={1}>1</Option>
                     <Option value={2}>2</Option>
@@ -178,7 +178,7 @@ const View = ({ formData, dagerInfo, SUB_LIST }) => (
                   </AntdSelect>
                 </td>
                 <td>
-                  <AntdSelect className="select-xs" style={{ width: 40 }} defaultValue={Number(subItem.DAN_STRGT || 1)}>
+                  <AntdSelect className="select-xs" defaultValue={Number(subItem.DAN_STRGT)} onChange={value => onChangeAdminSub('DAN_STRGT', value, subItem)}>
                     {/* 위험강도 */}
                     <Option value={1}>1</Option>
                     <Option value={2}>2</Option>
@@ -186,14 +186,55 @@ const View = ({ formData, dagerInfo, SUB_LIST }) => (
                     <Option value={4}>4</Option>
                   </AntdSelect>
                 </td>
-                <td>{dangerRank(Number(subItem.WOKRCND || 1) * Number(subItem.WOKRCND || 1))}</td> {/* DAN_LEVEL 위험수준 */}
+                {/* DAN_LEVEL 위험수준 */}
+                <td>{dangerRank(Number(subItem.DAN_FREQC || 1) * Number(subItem.DAN_STRGT || 1))}</td>
                 <td>
-                  <AntdTextArea defaultValue={subItem.AP_IMPROVE} /> {/* 개선대책 */}
+                  <AntdTextArea defaultValue={subItem.AP_IMPROVE} onChange={e => onChangeAdminSub('AP_IMPROVE', e.target.value, subItem)} /> {/* 개선대책 */}
                 </td>
                 <td>
-                  <AntdDatePicker defaultValue={subItem.AP_ENDDATE} /> {/* 완료예정일 */}
+                  <AntdDatePicker
+                    defaultValue={moment(subItem.AP_ENDDATE)}
+                    onChange={(date, dateString) => onChangeAdminSub('AP_ENDDATE', dateString, subItem)}
+                  />
+                  {/* 완료예정일 */}
                 </td>
-                <td>개선계획 첨부파일</td> {/* FILE_ATTACH 개선계획 첨부파일 */}
+                <td>
+                  {console.debug('subItem.file : ', subItem.file)}
+                  <Upload
+                    onFileUploaded={obj => onFileUploadTemp('file', obj, subItem)}
+                    // multiple={false} // default true
+                    width="100%"
+                    height="100%"
+                    borderStyle="none"
+                    serviceEnv="dev"
+                    serviceKey="KEY"
+                  >
+                    <div style={{ width: '100%', height: '100%', textAlign: 'center' }}>
+                      <StyledButton className="btn-light btn-first btn-xs">파일첨부</StyledButton>
+                    </div>
+                  </Upload>
+                  {subItem.file &&
+                    Array.isArray(subItem.file) &&
+                    subItem.file.map((file, index) => (
+                      <Popover
+                        content={
+                          <ul>
+                            <li key={file.fileName}>
+                              <a href={file.down.replace('/file/', '/tempfile/')}>{file.fileName}</a> - {file.fileSize} bytes
+                            </li>
+                            <DeleteOutlined onClick={e => UploadFilesDel(e, index)} />
+                          </ul>
+                        }
+                        trigger="hover"
+                        placement="right"
+                      >
+                        <button type="button" className="attachDownCompIconBtn" style={{ width: '100%', height: '100%', textAlign: 'center' }}>
+                          <Icon className="attachDownCompIcon" type="file-markdown" />
+                        </button>
+                      </Popover>
+                    ))}
+                </td>
+                {/* FILE_ATTACH 개선계획 첨부파일 */}
                 <td>개선결과 첨부파일</td> {/* FILE_ATTACH2 개선결과 첨부파일 */}
               </tr>
             ))}
@@ -207,6 +248,9 @@ View.propTypes = {
   formData: PropTypes.object,
   dagerInfo: PropTypes.object,
   SUB_LIST: PropTypes.array,
+  onChangeAdmin: PropTypes.func,
+  onChangeManager: PropTypes.func,
+  onChangeAdminSub: PropTypes.func,
 };
 
 export default React.memo(View);
