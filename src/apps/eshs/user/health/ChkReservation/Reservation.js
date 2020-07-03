@@ -30,8 +30,6 @@ class Reservation extends Component {
     familyInfo: {},         // 배우자 검진예약 정보
     hospitalList: [],       // 검진기관 목록
     userInfo: {},           // 본인 상세정보
-    checkedVals: [],        // 본인 검진항목 선택 코드값
-    famCheckedVals: [],     // 배우자 검진항목 선택 코드값
     quotaList: [],          // 검진기관 검진예약가능일
     gubun: 1,               // 데이터 변경시 구분값(1:본인 2:배우자)
     isFamily: false,        // 배우자 존재여부
@@ -78,11 +76,20 @@ class Reservation extends Component {
 
   initState = () => {
     const { result, spinningOff, sagaKey, getCallDataHandlerReturnRes } = this.props;
+    let reservationInfo = {};
+    let familyInfo;
+    if (result.reservation && result.reservation.detail && result.reservation.detail.reservationInfo) {
+      reservationInfo = result.reservation.detail.reservationInfo;
+    }
+    if (result.reservation && result.reservation.detail && result.reservation.detail.familyInfo) {
+      familyInfo = result.reservation.detail.familyInfo;
+    }
+
     this.setState({
       hospitalList: result.hospitalList && result.hospitalList.list ? result.hospitalList.list : [],
       userInfo: result.userDetail && result.userDetail.data ? result.userDetail.data : {},
-      reservationInfo: result.reservation && result.reservation.detail && result.reservation.detail.reservationInfo ? result.reservation.detail.reservationInfo : {},
-      familyInfo: result.reservation && result.reservation.detail && result.reservation.detail.familyInfo ? result.reservation.detail.familyInfo : {},
+      reservationInfo: reservationInfo ? { ...reservationInfo, CHK_ITEMS_CODE: reservationInfo.CHK_ITEMS_CODE ? JSON.parse(reservationInfo.CHK_ITEMS_CODE) : [] } : {},
+      familyInfo: familyInfo ? { ...familyInfo, CHK_ITEMS_CODE: familyInfo.CHK_ITEMS_CODE ? JSON.parse(familyInfo.CHK_ITEMS_CODE) : [] } : {},
       isFamily: result.userDetail && result.userDetail.data && result.userDetail.data.FAM_NAME && result.userDetail.data.FAM_REGNO ? true : false,
       isRcv: result.reservation && result.reservation.detail && result.reservation.detail.reservationInfo ? true : false,
     });
@@ -142,31 +149,21 @@ class Reservation extends Component {
   // 추가검진항목 팝업에서 선택버튼 클릭시
   onOkChkItem = (chkType, selectedItems, vals) => {
     this.setState(prevState => {
-      const { reservationInfo, familyInfo, gubun, checkedVals, famCheckedVals } = prevState;
+      const { reservationInfo, familyInfo, gubun } = prevState;
       if (gubun === 1) {
         reservationInfo.CHK_ITEMS = selectedItems.map(item => item.ITEM_NAME).join(', ');
         reservationInfo.CHK_TYPE = chkType.CHK_TYPE;
         reservationInfo.CHK_TYPE_NAME = chkType.CHK_TYPE_NAME;
-        vals.forEach(t => {
-          if (!checkedVals.includes(t)) {
-            checkedVals.push(t);
-          }
-        });
+        reservationInfo.CHK_ITEMS_CODE = vals;
       } else {
         familyInfo.CHK_ITEMS = selectedItems.map(item => item.ITEM_NAME).join(', ');
         familyInfo.CHK_TYPE = chkType.CHK_TYPE;
         familyInfo.CHK_TYPE_NAME = chkType.CHK_TYPE_NAME;
-        vals.forEach(t => {
-          if (!famCheckedVals.includes(t)) {
-            famCheckedVals.push(t);
-          }
-        });
+        familyInfo.CHK_ITEMS_CODE = vals;
       }
       return {
         reservationInfo,
         familyInfo,
-        checkedVals,
-        famCheckedVals,
         isChkItemShow: false,
       }
     });
@@ -175,23 +172,27 @@ class Reservation extends Component {
   // 검진기관 변경시 추가검진항목 초기화
   onChangeHospital = (val, gubun) => {
     this.setState(prevState => {
-      const { reservationInfo, familyInfo, checkedVals, famCheckedVals, hospitalList } = prevState;
+      const { reservationInfo, familyInfo, hospitalList } = prevState;
       if (gubun === 1) {
         reservationInfo.HOSPITAL_CODE = val;
         reservationInfo['HOSPITAL_NAME'] = hospitalList.filter(item => item.HOSPITAL_CODE === val)[0].HOSPITAL_NAME;
         reservationInfo['CHK_ITEMS'] = '';
-        checkedVals.splice(0, checkedVals.length);
+        reservationInfo['CHK_ITEMS_CODE'] = [];
+        reservationInfo['CHK_TYPE'] = '';
+        reservationInfo['CHK_TYPE_NAME'] = '';
+        reservationInfo['APP_DT'] = '';
       } else {
         familyInfo.HOSPITAL_CODE = val;
         familyInfo['HOSPITAL_NAME'] = hospitalList.filter(item => item.HOSPITAL_CODE === val)[0].HOSPITAL_NAME;
         familyInfo['CHK_ITEMS'] = '';
-        famCheckedVals.splice(0, famCheckedVals.length);
+        familyInfo['CHK_ITEMS_CODE'] = [];
+        familyInfo['CHK_TYPE'] = '';
+        familyInfo['CHK_TYPE_NAME'] = '';
+        familyInfo['APP_DT'] = '';
       }
       return {
         reservationInfo,
         familyInfo,
-        checkedVals,
-        famCheckedVals,
       }
     });
     
@@ -249,7 +250,7 @@ class Reservation extends Component {
           message.info(<MessageContent>최근 1년 검진내역이 있어 당해년도 검진대상이 아닙니다.</MessageContent>);
         } else {
           this.setState(prevState => {
-            const { reservationInfo, familyInfo } = prevState;
+            const { reservationInfo } = prevState;
             return {
               familyInfo: {
                 ...reservationInfo,
@@ -260,7 +261,8 @@ class Reservation extends Component {
                 CHK_TYPE: '',
                 CHK_TYPE_NAME: '',
                 APP_DT: '',
-                CHK_ITEMS: ''
+                CHK_ITEMS: '',
+                CHK_ITEMS_CODE: [],
               },
               isDelFamilyInfo: false,
             }
@@ -341,7 +343,7 @@ class Reservation extends Component {
   };
 
   render() {
-    const { hospitalList, userInfo, reservationInfo, familyInfo, checkedVals, famCheckedVals, quotaList, gubun } = this.state;
+    const { hospitalList, userInfo, reservationInfo, familyInfo, quotaList, gubun } = this.state;
 
     return (
       <>
@@ -366,7 +368,6 @@ class Reservation extends Component {
           <HospitalItem
             onCancelPopup={this.onCancelChkItem}
             onOkChkItem={this.onOkChkItem}
-            checkedVals={gubun === 1 ? checkedVals : famCheckedVals}
             reservationInfo={gubun === 1 ? reservationInfo : familyInfo}
             userInfo={userInfo}
           />

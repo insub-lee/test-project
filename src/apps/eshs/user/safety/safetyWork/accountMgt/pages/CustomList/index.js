@@ -167,9 +167,6 @@ class CustomList extends Component {
     if (isOnRowClick) {
       onRow = this.onRowClick;
     }
-
-    console.debug('gubun [ ', gubun, ' ]');
-
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -180,7 +177,7 @@ class CustomList extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={(listData && listData.filter(l => l.GUBUN === gubun)) || []}
+            dataSource={listData || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
@@ -203,6 +200,7 @@ class CustomList extends Component {
       removeMultiTask,
       isBuilderModal,
       changeBuilderModalState,
+      conditional,
     } = this.props;
     const { isMultiDelete, StyledWrap } = this.state;
 
@@ -268,7 +266,7 @@ class CustomList extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray btn-sm" onClick={() => getListData(id, workSeq)}>
+                          <StyledButton className="btn-gray btn-sm" onClick={() => getListData(id, workSeq, conditional)}>
                             Search
                           </StyledButton>
                         </div>

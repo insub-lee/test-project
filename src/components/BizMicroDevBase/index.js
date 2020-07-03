@@ -50,6 +50,7 @@ BizMicroDevBase.propTypes = {
   setFormData: PropTypes.func,
   submitHandlerBySaga: PropTypes.func,
   getFileDownload: PropTypes.func,
+  excelUpload: PropTypes.func,
 };
 
 BizMicroDevBase.defaultProps = {
@@ -62,6 +63,7 @@ BizMicroDevBase.defaultProps = {
   submitHandlerBySaga: () => false,
   getFileDownload: () => false,
   getFileDownloadProgress: () => false,
+  excelUpload: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -84,6 +86,7 @@ const mapDispatchToProps = dispatch => ({
   resetCalledData: id => dispatch(actions.resetCalledData(id)),
   getFileDownload: (id, url, fileName, callbackFunc) => dispatch(actions.getFileDownload(id, url, fileName, callbackFunc)),
   getFileDownloadProgress: (id, url, fileName, onProgress, callback) => dispatch(actions.getFileDownloadProgress(id, url, fileName, onProgress, callback)),
+  excelUpload: (id, url, formData, headers, callback) => dispatch(actions.excelUpload(id, url, formData, headers, callback)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizMicroDevBase`, reducer });

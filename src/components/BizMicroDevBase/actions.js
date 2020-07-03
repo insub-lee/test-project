@@ -85,3 +85,11 @@ export const getFileDownloadProgress = (id, url, fileName, onProgress, callback)
   onProgress,
   callback,
 });
+
+export const excelUpload = (id, url, formData, headers, callback) => ({
+  type: `${actionTypes.EXCEL_UPLOAD}_${id}`,
+  url,
+  formData,
+  headers,
+  callback,
+});

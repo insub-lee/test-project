@@ -12,3 +12,4 @@ export const PUBLIC_ACTIONMETHOD_SAGA = `${prefix}/PUBLIC_ACTIONMETHOD_SAGA`;
 export const RESET_CALLED_DATA = `${prefix}/RESET_CALLED_DATA`;
 export const GET_FILE_DOWNLOAD = `${prefix}/GET_FILE_DOWNLOAD`;
 export const GET_FILE_DOWNLOAD_PROGRESS = `${prefix}GET_FILE_DOWNLOAD_PROGRESS`;
+export const EXCEL_UPLOAD = `${prefix}EXCEL_UPLOAD`;

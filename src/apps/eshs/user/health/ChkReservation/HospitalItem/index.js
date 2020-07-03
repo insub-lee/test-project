@@ -4,7 +4,7 @@ import ChkItem from './ChkItem';
 
 class HospitalItem extends Component {
   render() {
-    const { onCancelPopup, onOkChkItem, reservationInfo, userInfo, checkedVals } = this.props;
+    const { onCancelPopup, onOkChkItem, reservationInfo, userInfo } = this.props;
     return (
       <BizMicroDevBase
         sagaKey="ChkItem"
@@ -13,7 +13,6 @@ class HospitalItem extends Component {
         onOkChkItem={onOkChkItem}
         reservationInfo={reservationInfo}
         userInfo={userInfo}
-        checkedVals={checkedVals}
       />
     );
   }

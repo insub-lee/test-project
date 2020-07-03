@@ -12,14 +12,17 @@ export const setCustomDataBind = list => ({
   list,
 });
 
-export const getApproveList = customUrl => ({
+export const getApproveList = (customUrl, PAGE, PAGE_CNT) => ({
   type: actionTypes.GET_APPROVE_LIST,
   customUrl,
+  PAGE,
+  PAGE_CNT,
 });
 
-export const setApproveList = list => ({
+export const setApproveList = (list, listCnt) => ({
   type: actionTypes.SET_APPROVE_LIST,
   list,
+  listCnt,
 });
 
 export const getUnApproveList = (customUrl, PAGE, PAGE_CNT) => ({
@@ -35,14 +38,17 @@ export const setUnApproveList = (list, listCnt) => ({
   listCnt,
 });
 
-export const getDraftList = customUrl => ({
+export const getDraftList = (customUrl, PAGE, PAGE_CNT) => ({
   type: actionTypes.GET_DRAFT_LIST,
   customUrl,
+  PAGE,
+  PAGE_CNT,
 });
 
-export const setDraftList = list => ({
+export const setDraftList = (list, listCnt) => ({
   type: actionTypes.SET_DRAFT_LIST,
   list,
+  listCnt,
 });
 
 export const setPartialInit = () => ({
