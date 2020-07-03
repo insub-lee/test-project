@@ -40,6 +40,75 @@ class InputPage extends React.Component {
     this.handleSearchClick = debounce(this.handleSearchClick, 100);
   }
 
+  columns = [
+    {
+      title: '일시',
+      dataIndex: 'JRNL_DTTM',
+      align: 'center',
+      width: '15%',
+    },
+    {
+      title: '소속',
+      dataIndex: 'DEPT_NAME',
+      align: 'center',
+      width: '7%',
+    },
+    {
+      title: '사번',
+      dataIndex: 'PATIENT_EMP_NO',
+      align: 'center',
+      width: '7%',
+    },
+    {
+      title: '이름',
+      dataIndex: 'PATIENT_NAME',
+      align: 'center',
+      width: '5%',
+    },
+    {
+      title: '질환',
+      dataIndex: 'DISEASE',
+      align: 'center',
+      width: '9%',
+    },
+    {
+      title: '치료구분',
+      dataIndex: 'TREATMENT',
+      align: 'center',
+      width: '10%',
+    },
+    {
+      title: '증상',
+      dataIndex: 'SYMPTOM',
+      align: 'center',
+      width: '6%',
+    },
+    {
+      title: '의약품:출고수량',
+      dataIndex: '',
+      align: 'center',
+      width: '10%',
+    },
+    {
+      title: '세부증상',
+      dataIndex: 'DETAIL_CONTENT',
+      align: 'center',
+      width: '10%',
+    },
+    {
+      title: '조치내용',
+      dataIndex: 'MEASURE',
+      align: 'center',
+      width: '11%',
+    },
+    {
+      title: 'ACS 결과',
+      dataIndex: 'ACS',
+      align: 'center',
+      width: '9%',
+    },
+  ];
+
   componentDidMount() {
     this.getInitData();
   }
@@ -186,75 +255,6 @@ class InputPage extends React.Component {
     return console.debug(requestValue);
   };
 
-  columns = [
-    {
-      title: '일시',
-      dataIndex: 'JRNL_DTTM',
-      align: 'center',
-      width: '15%',
-    },
-    {
-      title: '소속',
-      dataIndex: 'DEPT_NAME',
-      align: 'center',
-      width: '7%',
-    },
-    {
-      title: '사번',
-      dataIndex: 'PATIENT_EMP_NO',
-      align: 'center',
-      width: '7%',
-    },
-    {
-      title: '이름',
-      dataIndex: 'PATIENT_NAME',
-      align: 'center',
-      width: '5%',
-    },
-    {
-      title: '질환',
-      dataIndex: 'DISEASE',
-      align: 'center',
-      width: '9%',
-    },
-    {
-      title: '치료구분',
-      dataIndex: 'TREATMENT',
-      align: 'center',
-      width: '10%',
-    },
-    {
-      title: '증상',
-      dataIndex: 'SYMPTOM',
-      align: 'center',
-      width: '6%',
-    },
-    {
-      title: '의약품:출고수량',
-      dataIndex: '',
-      align: 'center',
-      width: '10%',
-    },
-    {
-      title: '세부증상',
-      dataIndex: 'DETAIL_CONTENT',
-      align: 'center',
-      width: '10%',
-    },
-    {
-      title: '조치내용',
-      dataIndex: 'MEASURE',
-      align: 'center',
-      width: '11%',
-    },
-    {
-      title: 'ACS 결과',
-      dataIndex: 'ACS',
-      align: 'center',
-      width: '9%',
-    },
-  ];
-
   render() {
     const { columns } = this;
     const { checkCooperator, handleInputChange, handleSearchClick, handleSearchInput, handleSaveClick } = this;
@@ -308,6 +308,7 @@ class InputPage extends React.Component {
                           className="input-search-sm mr5"
                           value={empNo}
                           onChange={event => handleSearchInput('empNo', event.target.value)}
+                          onPressEnter={handleSearchClick}
                           placeholder="사번을 입력하세요"
                           style={{ width: '20%', marginLeft: '5px' }}
                         />
@@ -318,12 +319,13 @@ class InputPage extends React.Component {
                           className="input-search-sm mr5"
                           value={empNo}
                           onChange={event => handleSearchInput('empNo', event.target.value)}
+                          onPressEnter={handleSearchClick}
                           placeholder="사번을 입력하세요"
                           style={{ width: '20%' }}
                         />
                       </>
                     )}
-                    <StyledButton className="btn-gray btn-xs" onClick={handleSearchClick} onPrsssEnter={handleSearchClick}>
+                    <StyledButton className="btn-gray btn-xs" onClick={handleSearchClick}>
                       검색
                     </StyledButton>
                   </td>
