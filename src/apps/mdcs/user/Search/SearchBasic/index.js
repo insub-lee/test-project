@@ -155,14 +155,16 @@ class SearchBasic extends Component {
   };
 
   onSearch = () => {
-    this.callApi();
-    this.setState({
-      visible: true,
-      SearchView: {
-        visible: false,
-        taskSeq: -1,
-        workSeq: -1,
-      },
+    this.setState({ PAGE: 1 }, () => {
+      this.callApi();
+      this.setState({
+        visible: true,
+        SearchView: {
+          visible: false,
+          taskSeq: -1,
+          workSeq: -1,
+        },
+      });
     });
   };
 
