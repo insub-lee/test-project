@@ -146,8 +146,8 @@ class CustomList extends Component {
   ];
 
   getListData = () => {
-    const { sagaKey: id, getListData } = this.props;
-    return getListData(id, 6821);
+    const { sagaKey: id, getListData, workSeq } = this.props;
+    return getListData(id, workSeq);
   };
 
   setModalContent = (title, taskSeq, gubun) => {
@@ -350,6 +350,7 @@ CustomList.propTypes = {
   changeSearchData: PropTypes.func,
   getExtraApiData: PropTypes.func,
   extraApiData: PropTypes.object,
+  workSeq: PropTypes.number,
 };
 
 CustomList.defaultProps = {
@@ -363,6 +364,7 @@ CustomList.defaultProps = {
   changeSearchData: () => {},
   getExtraApiData: () => {},
   extraApiData: {},
+  workSeq: 6821,
 };
 
 export default CustomList;
