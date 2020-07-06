@@ -2,25 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { debounce } from 'lodash';
-import { Radio, Select, Input, Checkbox, Table, Modal, message } from 'antd';
+import { Radio, Select, Input, Checkbox, Table, Modal, message, DatePicker } from 'antd';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/common/submitCallbackFunc';
 
 const AntdSelect = StyledSelect(Select);
-const AntdInput = StyledInput(Input);
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdTextarea = StyledTextarea(Input.TextArea);
 const AntdModal = StyledAntdModal(Modal);
 const AntdTable = StyledAntdTable(Table);
+const AntdPicker = StyledPicker(DatePicker);
 class InputPage extends React.Component {
   constructor(props) {
     super(props);
@@ -30,12 +32,14 @@ class InputPage extends React.Component {
       cooperatorList: [],
       siteList: [],
       requestValue: {
-        COOPERATOR_ID: '',
+        SITE_ID: 317,
       },
+      detailValue: {},
       hasUserInfo: false,
       dataSource: [],
       isCooperator: 'N',
-      empNo: '',
+      modalVisible: false,
+      visitDateTime: moment(),
     };
     this.handleSearchClick = debounce(this.handleSearchClick, 100);
   }
@@ -198,7 +202,7 @@ class InputPage extends React.Component {
     this.setState(prevState =>
       value === 'Y'
         ? { isCooperator: value, requestValue: Object.assign(prevState.requestValue, { COOPERATOR_ID: DEFAULT_COOPERATOR_ID }) }
-        : { isCooperator: value, requestValue: Object.assign(prevState.requestValue, { COOPERATOR_ID: '' }) },
+        : { isCooperator: value, requestValue: Object.assign(prevState.requestValue, { COOPERATOR_ID: null }) },
     );
   };
 
@@ -209,38 +213,42 @@ class InputPage extends React.Component {
   };
 
   handleSearchClick = () => {
-    const { empNo, requestValue, isCooperator } = this.state;
+    const { requestValue, isCooperator } = this.state;
     const { sagaKey, getCallDataHandler, submitHandlerBySaga } = this.props;
 
-    if (!empNo) {
+    if (!requestValue.PATIENT_EMP_NO) {
       return message.warn('사번을 입력해주세요.');
     }
 
-    if (!isCooperator) {
-      const submitUrl = `/api/eshs/v1/common/health-usage-vaild?EMP_NO=${empNo}&CO_ID=${requestValue.COOPERATOR_ID}`;
-      const userIdValidationCheck = ({ isValid }) =>
-        isValid === 1 ? message.success('검색에 성공했습니다.') : this.setState({ empNo: '' }, () => message.warn('검색된 사원이 없습니다.'));
-
-      submitHandlerBySaga(sagaKey, 'GET', submitUrl, null, (key, response) => userIdValidationCheck(response));
+    if (isCooperator === 'N') {
+      const submitUrl = `/api/eshs/v1/common/health-usage-vaild?EMP_NO=${requestValue.PATIENT_EMP_NO}`;
+      submitHandlerBySaga(sagaKey, 'GET', submitUrl, null, (key, response) => this.userIdValidationCheck(response));
     }
 
     const apiArr = [
       {
         key: 'userDiagnosisList',
-        url: `/api/eshs/v1/common/health-usage?EMP_NO=${empNo}&CO_ID=${requestValue.COOPERATOR_ID}`,
+        url: `/api/eshs/v1/common/health-usage?EMP_NO=${requestValue.PATIENT_EMP_NO}`.concat(
+          requestValue.COOPERATOR_ID ? `&CO_ID=${requestValue.COOPERATOR_ID}` : '',
+        ),
         type: 'GET',
       },
     ];
     return getCallDataHandler(sagaKey, apiArr, this.setDataSource);
   };
 
+  userIdValidationCheck = ({ isValid }) =>
+    isValid === 1
+      ? this.setState({ hasUserInfo: true }, message.success('검색에 성공했습니다.'))
+      : this.setState({ hasUserInfo: false }, message.warn('검색된 사원이 없습니다.'));
+
   setDataSource = () => {
     const { result } = this.props;
-    this.setState({
-      hasUserInfo: true,
+    this.setState(prevState => ({
       visitDateTime: moment(),
       dataSource: result.userDiagnosisList && result.userDiagnosisList.list,
-    });
+      requestValue: Object.assign(prevState.requestValue, { GENDER: result.userDiagnosisList && result.userDiagnosisList.list[0].GENDER }),
+    }));
   };
 
   handleSearchInput = (key, value) => {
@@ -248,17 +256,73 @@ class InputPage extends React.Component {
   };
 
   handleSaveClick = () => {
-    const { empNo, requestValue } = this.state;
-    if (!empNo) {
-      return message.warn('조회되지 않은 사원입니다.');
+    const { requestValue, visitDateTime } = this.state;
+    const { sagaKey, submitHandlerBySaga } = this.props;
+
+    if (!this.validationCheckBeforeSave()) {
+      return null;
     }
-    return console.debug(requestValue);
+
+    const submitCallbackFunc = () => {
+      this.handleSearchClick();
+      this.resetRequestValue();
+    };
+
+    return submitHandlerBySaga(
+      sagaKey,
+      'POST',
+      '/api/eshs/v1/common/health-usage',
+      Object.assign(requestValue, { JRNL_DTTM: visitDateTime }),
+      (key, response) => callBackAfterPost(key, response, submitCallbackFunc),
+    );
+  };
+
+  validationCheckBeforeSave = () => {
+    const { hasUserInfo, isCooperator, requestValue } = this.state;
+
+    if (!hasUserInfo && isCooperator === 'N') {
+      message.warn('조회되지 않은 사원입니다.');
+      return false;
+    }
+
+    if (!requestValue.PATIENT_CATEGORY_ID) {
+      message.warn('업무관련성 구분을 선택하세요.');
+      return false;
+    }
+
+    return true;
+  };
+
+  resetRequestValue = () => {
+    this.setState(prevState => ({
+      requestValue: { PATIENT_EMP_NO: prevState.requestValue.PATIENT_EMP_NO, SITE_ID: 317 },
+    }));
+  };
+
+  handleRowClick = record => {
+    this.setState({ modalVisible: true, detailValue: record });
+  };
+
+  handleModalClose = () => {
+    this.setState({ modalVisible: false, detailValue: {} });
   };
 
   render() {
     const { columns } = this;
-    const { checkCooperator, handleInputChange, handleSearchClick, handleSearchInput, handleSaveClick } = this;
-    const { diseaseList, treatmentList, cooperatorList, siteList, isCooperator, visitDateTime, hasUserInfo, dataSource, empNo } = this.state;
+    const { checkCooperator, handleInputChange, handleSearchClick, handleSaveClick, handleRowClick, handleModalClose } = this;
+    const {
+      diseaseList,
+      treatmentList,
+      cooperatorList,
+      siteList,
+      isCooperator,
+      visitDateTime,
+      hasUserInfo,
+      dataSource,
+      modalVisible,
+      requestValue,
+      detailValue,
+    } = this.state;
     return (
       <>
         <StyledContentsWrapper>
@@ -281,7 +345,13 @@ class InputPage extends React.Component {
                   </td>
                   <th>검진지역</th>
                   <td>
-                    <AntdSelect className="select-sm" defaultValue={317} style={{ width: '50%' }} onChange={value => handleInputChange('SITE_ID', value)}>
+                    <AntdSelect
+                      className="select-sm"
+                      defaultValue={317}
+                      value={requestValue.SITE_ID}
+                      style={{ width: '50%' }}
+                      onChange={value => handleInputChange('SITE_ID', value)}
+                    >
                       {siteList.map(site => (
                         <Select.Option value={site.NODE_ID}>{site.NAME_KOR}</Select.Option>
                       ))}
@@ -296,6 +366,7 @@ class InputPage extends React.Component {
                         <AntdSelect
                           className="select-sm mr5"
                           defaultValue={1876}
+                          value={requestValue.COOPERATOR_ID}
                           onChange={value => handleInputChange('COOPERATOR_ID', value)}
                           style={{ width: '15%' }}
                         >
@@ -306,8 +377,8 @@ class InputPage extends React.Component {
                         /
                         <AntdSearch
                           className="input-search-sm mr5"
-                          value={empNo}
-                          onChange={event => handleSearchInput('empNo', event.target.value)}
+                          value={requestValue.PATIENT_EMP_NO}
+                          onChange={event => handleInputChange('PATIENT_EMP_NO', event.target.value)}
                           onPressEnter={handleSearchClick}
                           placeholder="사번을 입력하세요"
                           style={{ width: '20%', marginLeft: '5px' }}
@@ -317,8 +388,8 @@ class InputPage extends React.Component {
                       <>
                         <AntdSearch
                           className="input-search-sm mr5"
-                          value={empNo}
-                          onChange={event => handleSearchInput('empNo', event.target.value)}
+                          value={requestValue.PATIENT_EMP_NO}
+                          onChange={event => handleInputChange('PATIENT_EMP_NO', event.target.value)}
                           onPressEnter={handleSearchClick}
                           placeholder="사번을 입력하세요"
                           style={{ width: '20%' }}
@@ -334,7 +405,7 @@ class InputPage extends React.Component {
                   <tr>
                     <th>성별</th>
                     <td colSpan={3}>
-                      <Radio.Group onChange={event => handleInputChange('GENDER', event.target.value)}>
+                      <Radio.Group value={requestValue.GENDER} onChange={event => handleInputChange('GENDER', event.target.value)}>
                         <Radio value="M">남</Radio>
                         <Radio value="F">여</Radio>
                       </Radio.Group>
@@ -348,16 +419,16 @@ class InputPage extends React.Component {
                 <tr>
                   <th>업무관련성 구분</th>
                   <td colSpan={3}>
-                    <Radio.Group onChange={event => handleInputChange('PATIENT_CATEGORY_ID', event.target.value)}>
-                      <Radio value="4">직업성</Radio>
-                      <Radio value="5">비직업성</Radio>
+                    <Radio.Group value={requestValue.PATIENT_CATEGORY_ID} onChange={event => handleInputChange('PATIENT_CATEGORY_ID', event.target.value)}>
+                      <Radio value={4}>직업성</Radio>
+                      <Radio value={5}>비직업성</Radio>
                     </Radio.Group>
                   </td>
                 </tr>
                 <tr>
                   <th>질환</th>
                   <td colSpan={3}>
-                    <Radio.Group onChange={event => handleInputChange('DISEASE_ID', event.target.value)}>
+                    <Radio.Group value={requestValue.DISEASE_ID} onChange={event => handleInputChange('DISEASE_ID', event.target.value)}>
                       {diseaseList.map(disease => (
                         <Radio value={disease.NODE_ID}>{disease.NAME_KOR}</Radio>
                       ))}
@@ -367,7 +438,7 @@ class InputPage extends React.Component {
                 <tr>
                   <th>치료구분</th>
                   <td colSpan={3}>
-                    <Checkbox.Group onChange={value => handleInputChange('TREATMENT_ID', value)}>
+                    <Checkbox.Group value={requestValue.TREATMENT_ID} onChange={value => handleInputChange('TREATMENT_ID', value)}>
                       {treatmentList.map(treatment => (
                         <Checkbox value={treatment.NODE_ID}>{treatment.NAME_KOR}</Checkbox>
                       ))}
@@ -377,11 +448,19 @@ class InputPage extends React.Component {
                 <tr>
                   <th>세부증상</th>
                   <td>
-                    <AntdTextarea autoSize={{ minRows: 6, maxRows: 6 }} />
+                    <AntdTextarea
+                      autoSize={{ minRows: 6, maxRows: 6 }}
+                      value={requestValue.DETAIL_CONTENT}
+                      onChange={event => handleInputChange('DETAIL_CONTENT', event.target.value)}
+                    />
                   </td>
                   <th>조치내용</th>
                   <td>
-                    <AntdTextarea autoSize={{ minRows: 6, maxRows: 6 }} />
+                    <AntdTextarea
+                      autoSize={{ minRows: 6, maxRows: 6 }}
+                      value={requestValue.MEASURE}
+                      onChange={event => handleInputChange('MEASURE', event.target.value)}
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -392,7 +471,104 @@ class InputPage extends React.Component {
               저장
             </StyledButton>
           </StyledButtonWrapper>
-          <AntdTable columns={columns} dataSource={dataSource} />
+          <AntdTable columns={columns} dataSource={dataSource} onRow={record => ({ onClick: () => handleRowClick(record) })} />
+          <AntdModal title="건강관리실 이용관리" visible={modalVisible} footer={null} onCancel={handleModalClose} width="70%" destroyOnClose>
+            <StyledContentsWrapper>
+              <StyledHtmlTable>
+                <table>
+                  <colgroup>
+                    <col width="13%" />
+                    <col width="20%" />
+                    <col width="13%" />
+                    <col width="20%" />
+                    <col width="13%" />
+                    <col width="20%" />
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <th>일시</th>
+                      <td>
+                        <AntdPicker
+                          className="ant-picker-sm"
+                          showTime={{ format: 'HH:mm' }}
+                          defaultValue={moment(detailValue.JRNL_DTTM, 'YYYY년 MM월 DD일 HH시 mm분')}
+                          format="YYYY-MM-DD HH:mm"
+                          style={{ width: '100%' }}
+                        />
+                      </td>
+                      <th>이용자 구분</th>
+                      <td colSpan={3}>
+                        <Radio.Group onChange={event => checkCooperator(event.target.value)} value={isCooperator}>
+                          <Radio value="N">매그나칩</Radio>
+                          <Radio value="Y">협력업체</Radio>
+                        </Radio.Group>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>방문구분</th>
+                      <td>
+                        <Radio.Group defaultValue={detailValue.VISIT_CATEGORY_ID} onChange={event => handleInputChange('GENDER', event.target.value)}>
+                          <Radio value={3}>건강관리실</Radio>
+                          <Radio value={4}>CMS</Radio>
+                        </Radio.Group>
+                      </td>
+                      <th>사번</th>
+                      <td>{`${detailValue.PATIENT_EMP_NO} / ${detailValue.PATIENT_NAME} / ${detailValue.DEPT_NAME}`}</td>
+                      <th>성별</th>
+                      <td>{detailValue.GENDER === 'M' ? '남' : '여'}</td>
+                    </tr>
+                    <tr>
+                      <th>업무관련성 구분</th>
+                      <td>
+                        <Radio.Group
+                          defaultValue={detailValue.PATIENT_CATEGORY_ID}
+                          onChange={event => handleInputChange('PATIENT_CATEGORY_ID', event.target.value)}
+                        >
+                          <Radio value={4}>직업성</Radio>
+                          <Radio value={5}>비직업성</Radio>
+                        </Radio.Group>
+                      </td>
+                      <th>질환</th>
+                      <td colSpan={3}>
+                        <AntdSelect
+                          className="select-sm"
+                          defaultValue={detailValue.DISEASE_ID}
+                          onChange={value => handleInputChange('DISEASE_ID', value)}
+                          style={{ width: '170px' }}
+                        >
+                          {diseaseList.map(disease => (
+                            <Select.Option value={disease.NODE_ID}>{disease.NAME_KOR}</Select.Option>
+                          ))}
+                        </AntdSelect>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>치료구분</th>
+                      <td>{detailValue.TREATMENT}</td>
+                      <th>증상</th>
+                      <td>{detailValue.SYMPTOM}</td>
+                      <th>약품</th>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <th>조치내용</th>
+                      <td>
+                        <AntdTextarea defaultValue={detailValue.MEASURE} autoSize={{ minRows: 3, maxRows: 6 }} />
+                      </td>
+                      <th>세부증상</th>
+                      <td>
+                        <AntdTextarea defaultValue={detailValue.DETAIL_CONTENT} autoSize={{ minRows: 3, maxRows: 6 }} />
+                      </td>
+                      <th>ACS 결과</th>
+                      <td>
+                        <AntdTextarea defaultValue={detailValue.ACS} autoSize={{ minRows: 3, maxRows: 6 }} />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </StyledHtmlTable>
+            </StyledContentsWrapper>
+          </AntdModal>
         </StyledContentsWrapper>
       </>
     );
