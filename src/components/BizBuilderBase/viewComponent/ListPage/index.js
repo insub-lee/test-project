@@ -166,6 +166,7 @@ class ListPage extends Component {
       columns.push({
         dataIndex: 'RNUM',
         title: 'No.',
+        align: 'center',
       });
     }
     cols.forEach((node, idx) => {
