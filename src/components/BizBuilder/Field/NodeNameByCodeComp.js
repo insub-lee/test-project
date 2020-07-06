@@ -9,31 +9,14 @@ class NodeNameByCodeComp extends Component {
   }
 
   componentDidMount() {
-    const {
-      sagaKey: id,
-      COMP_FIELD,
-      CONFIG: {
-        property: { mapId },
-      },
-      submitExtraHandler,
-    } = this.props;
-    console.debug('NodeNameByCodeComp', mapId);
-    const url = `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`;
-    submitExtraHandler(id, 'GET', url, {}, this.initData);
-  }
-
-  initData = (id, response) => {
-    const { colData } = this.props;
-    const { categoryMapList } = response;
-    console.debug('categoryMapList', categoryMapList);
-    console.debug('colData', colData);
-    if (categoryMapList && categoryMapList.length > 0 && colData) {
-      const nodeIdx = categoryMapList.findIndex(iNode => iNode.CODE === colData);
-      console.debug('nodeIdx', nodeIdx);
-      console.debug('colData', colData);
-      if (nodeIdx > -1) this.setState({ viewNodeName: categoryMapList[nodeIdx].NAME_KOR });
+    const { fieldSelectData, CONFIG } = this.props;
+    if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
+      if (fieldSelectData[CONFIG.property.compSelectDataKey]) {
+        const viewNodeName = fieldSelectData[CONFIG.property.compSelectDataKey].NAME_KOR;
+        this.setState({ viewNodeName });
+      }
     }
-  };
+  }
 
   render() {
     const { viewNodeName } = this.state;

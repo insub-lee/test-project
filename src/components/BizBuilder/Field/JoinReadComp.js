@@ -3,8 +3,9 @@ import { Tooltip } from 'antd';
 import PropTypes from 'prop-types';
 
 function JoinReadComp(props) {
-  const { CONFIG, formData, colData, rowData, isBuilderModal, changeBuilderModalState, changeViewPage, sagaKey: id } = props;
-  const content = formData[CONFIG.property.viewDataKey] || colData;
+  const { CONFIG, colData, formData, rowData, isBuilderModal, changeBuilderModalState, changeViewPage, sagaKey: id } = props;
+  const content = rowData[CONFIG.property.viewDataKey] || formData[CONFIG.property.viewDataKey] || colData;
+  const toolTipContent = rowData[CONFIG.property.toolTipField] || formData[CONFIG.property.viewDataKey] || colData;
   const { usingToolTip } = CONFIG.property;
   const bold =
     CONFIG.property.boldCondition && CONFIG.property.boldTarget && String(rowData[CONFIG.property.boldCondition]) === String(CONFIG.property.boldTarget)
@@ -12,7 +13,7 @@ function JoinReadComp(props) {
       : '';
   if (usingToolTip === 'Y') {
     return (
-      <Tooltip placement="bottom" title={content} style={{ cursor: 'pointer' }}>
+      <Tooltip placement="bottom" title={toolTipContent} style={{ cursor: 'pointer' }}>
         {CONFIG.property.titleUse === 'Y' ? (
           <span
             role="button"

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Table, Input, DatePicker, Modal } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
@@ -13,6 +12,7 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import View from './View';
+import ChkResultUpload from './ChkResultUpload';
 
 const AntdTable = StyledAntdTable(Table)
 const AntdModal = StyledAntdModal(Modal);
@@ -22,6 +22,7 @@ const AntdRangePicker = StyledDatePicker(DatePicker.RangePicker);
 class List extends Component {
   state = {
     isShow: false,
+    isExcelUploadShow: false,
     selectedRow: {},
     list: [],
     searchInfo: {
@@ -100,10 +101,17 @@ class List extends Component {
       selectedRow: record,
       isShow: true,
     });
-  }
+  };
+
+  onRegistChkResult = () => {
+    this.setState({ isExcelUploadShow: true });
+  };
 
   onCancelPopup = () => {
-    this.setState({ isShow: false });
+    this.setState({
+      isShow: false,
+      isExcelUploadShow: false,
+    });
   };
 
   columns = [
@@ -187,6 +195,16 @@ class List extends Component {
         >
           <View onCancelPopup={this.onCancelPopup} selectedRow={this.state.selectedRow} />
         </AntdModal>
+        <AntdModal
+          width={400}
+          visible={this.state.isExcelUploadShow}
+          title="검진결과 엑셀 등록"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <ChkResultUpload onCancelPopup={this.onCancelPopup} />
+        </AntdModal>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
             <div className="search-input-area">
@@ -205,7 +223,7 @@ class List extends Component {
             </div>
           </StyledCustomSearchWrapper>
           <StyledButtonWrapper className="btn-wrap-inline btn-wrap-mb-10">
-            <StyledButton className="btn-primary btn-sm" onClick={() => window.alert('개발중')}>검진결과 업로드</StyledButton>
+            <StyledButton className="btn-primary btn-sm" onClick={this.onRegistChkResult}>검진결과 업로드</StyledButton>
           </StyledButtonWrapper>
           <AntdTable
             columns={this.columns}

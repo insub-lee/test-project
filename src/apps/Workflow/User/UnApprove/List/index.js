@@ -16,25 +16,34 @@ const AntdLineTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
 
 class UnApproveList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      paginationIdx: 1,
+      pageSize: 10,
+    };
+  }
+
   componentDidMount() {
     const { getUnApproveList } = this.props;
+    const { paginationIdx, pageSize } = this.state;
     const prefixUrl = '/api/workflow/v1/common/approve/UnApproveListMDCSHandler';
-    getUnApproveList(prefixUrl);
+    getUnApproveList(prefixUrl, paginationIdx, pageSize);
   }
 
   getTableColumns = () => [
+    // {
+    //   title: 'No',
+    //   dataIndex: 'RNUM',
+    //   key: 'rnum',
+    //   width: '5%',
+    //   align: 'center',
+    // },
     {
-      title: 'No',
-      dataIndex: 'RNUM',
-      key: 'rnum',
-      width: '5%',
-      align: 'center',
-    },
-    {
-      title: '구분',
+      title: '종류',
       dataIndex: 'APPVGUBUN',
       key: 'APPVGUBUN',
-      width: '12%',
+      width: '15%',
       align: 'center',
       render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
     },
@@ -47,7 +56,7 @@ class UnApproveList extends Component {
       render: (text, record) => (record.APPV_USER_ID === record.ORG_APPV_USER_ID ? text : `${text}(위임결재)`),
     },
     {
-      title: '문서번호',
+      title: '표준번호',
       dataIndex: 'DOCNUMBER',
       key: 'DOCNUMBER',
       width: '10%',
@@ -62,10 +71,10 @@ class UnApproveList extends Component {
       width: '5%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? 1 : Number(text)),
+      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '1' : text.indexOf('.') > -1 ? text.split('.')[0] : text),
     },
     {
-      title: 'Title',
+      title: '표준제목',
       dataIndex: 'DRAFT_TITLE',
       key: 'title',
       ellipsis: true,
@@ -97,8 +106,18 @@ class UnApproveList extends Component {
     this.props.setViewVisible(false);
   };
 
+  setPaginationIdx = paginationIdx =>
+    this.setState({ paginationIdx }, () => {
+      const { pageSize } = this.state;
+      const { getUnApproveList } = this.props;
+      const prefixUrl = '/api/workflow/v1/common/approve/UnApproveListMDCSHandler';
+      getUnApproveList(prefixUrl, paginationIdx, pageSize);
+    });
+
   render() {
-    const { unApproveList, viewVisible } = this.props;
+    const { unApproveList, unApproveListCnt, viewVisible } = this.props;
+    const { paginationIdx } = this.state;
+
     return (
       <>
         <StyledHeaderWrapper>
@@ -116,6 +135,8 @@ class UnApproveList extends Component {
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
+            pagination={{ current: paginationIdx, total: unApproveListCnt }}
+            onChange={pagination => this.setPaginationIdx(pagination.current)}
           />
         </StyledContentsWrapper>
 

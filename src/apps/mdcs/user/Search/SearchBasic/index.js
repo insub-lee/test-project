@@ -155,14 +155,16 @@ class SearchBasic extends Component {
   };
 
   onSearch = () => {
-    this.callApi();
-    this.setState({
-      visible: true,
-      SearchView: {
-        visible: false,
-        taskSeq: -1,
-        workSeq: -1,
-      },
+    this.setState({ PAGE: 1 }, () => {
+      this.callApi();
+      this.setState({
+        visible: true,
+        SearchView: {
+          visible: false,
+          taskSeq: -1,
+          workSeq: -1,
+        },
+      });
     });
   };
 
@@ -328,7 +330,7 @@ class SearchBasic extends Component {
                       >
                         <StyledRadio value={1}>현재 Rev.</StyledRadio>
                         {/* <StyledRadio value={2}>과거 Rev. 포함</StyledRadio> */}
-                        <StyledRadio value={3}>폐기</StyledRadio>
+                        <StyledRadio value={99}>폐기</StyledRadio>
                       </Radio.Group>
                     </td>
                   </tr>

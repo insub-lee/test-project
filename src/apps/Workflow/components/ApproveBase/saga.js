@@ -9,11 +9,13 @@ import * as actionTypes from './constants';
 import * as actions from './actions';
 import * as selectors from './selectors';
 
-function* getApproveList({ customUrl }) {
-  const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/approveList`, { PARAM: { relTypes: [1, 99, 999] } });
+function* getApproveList({ customUrl, PAGE, PAGE_CNT }) {
+  const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/approveList`, {
+    PARAM: { relTypes: [1, 99, 999], PAGE: PAGE || 1, PAGE_CNT: PAGE_CNT || 10 },
+  });
   if (response) {
-    const { list } = response;
-    yield put(actions.setApproveList(list));
+    const { list, listCnt } = response;
+    yield put(actions.setApproveList(list, listCnt));
     yield put(actions.setPartialInit());
   }
 }
@@ -53,11 +55,13 @@ function* getUnApproveList({ customUrl, PAGE, PAGE_CNT }) {
   }
 }
 
-function* getDraftList({ customUrl }) {
-  const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/draftList`, { PARAM: { relTypes: [1, 99, 999] } });
+function* getDraftList({ customUrl, PAGE, PAGE_CNT }) {
+  const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/draftList`, {
+    PARAM: { relTypes: [1, 99, 999], PAGE: PAGE || 1, PAGE_CNT: PAGE_CNT || 10 },
+  });
   if (response) {
-    const { list } = response;
-    yield put(actions.setDraftList(list));
+    const { list, listCnt } = response;
+    yield put(actions.setDraftList(list, listCnt));
     yield put(actions.setPartialInit());
   }
 }

@@ -73,7 +73,7 @@ function CustomValueSelectComp(props) {
   const viewText = value.text || (defaultValue && defaultValue.text) || '';
   return (
     <>
-      {viewPageData && viewPageData.viewType === 'VIEW' ? (
+      {(viewPageData && viewPageData.viewType === 'VIEW') || (viewPageData.viewType === 'LIST' && !isSearch) ? (
         <span>{viewText}</span>
       ) : (
         <Select

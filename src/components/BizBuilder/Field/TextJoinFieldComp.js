@@ -3,11 +3,16 @@ import { Tooltip } from 'antd';
 import PropTypes from 'prop-types';
 
 function TextJoinFieldComp(props) {
-  const { CONFIG, formData, colData, rowData, isBuilderModal, changeBuilderModalState, changeViewPage, sagaKey: id } = props;
+  const { CONFIG, formData, colData, rowData, isBuilderModal, changeBuilderModalState, changeViewPage, sagaKey: id, viewPageData } = props;
   const { textItems } = CONFIG.property;
+  const { viewType } = viewPageData;
   let content = colData;
   if (textItems && textItems.length > 0) {
-    content = textItems.map(item => (item.type === 'field' ? `${formData[item.text]}` : item.text)).join('');
+    if (viewType === 'LIST') {
+      content = textItems.map(item => (item.type === 'field' ? `${rowData[item.text]}` : item.text)).join('');
+    } else {
+      content = textItems.map(item => (item.type === 'field' ? `${formData[item.text]}` : item.text)).join('');
+    }
   }
   const { usingToolTip } = CONFIG.property;
   const bold =
@@ -77,6 +82,8 @@ TextJoinFieldComp.propTypes = {
   changeViewPage: PropTypes.func,
   changeBuilderModalState: PropTypes.func,
   isBuilderModal: PropTypes.bool,
+  viewPageData: PropTypes.object,
+  rowData: PropTypes.object,
 };
 
 export default TextJoinFieldComp;

@@ -70,30 +70,33 @@ class DraftList extends Component {
       mailReviewerNode: undefined,
       isAbrogationMultiShow: false,
       workPrcProps: undefined,
+      paginationIdx: 1,
+      pageSize: 10,
     };
   }
 
   componentDidMount() {
     const { getDraftList } = this.props;
+    const { paginationIdx, pageSize } = this.state;
     // getDraftList();
     const fixUrl = '/api/workflow/v1/common/approve/DraftListMDCSHandler';
-    getDraftList(fixUrl);
+    getDraftList(fixUrl, paginationIdx, pageSize);
     // getCustomDataBind('POST', prefixUrl, { PARAM: { relTypes: [1, 99, 999] } });
   }
 
   getTableColumns = () => [
-    {
-      title: 'No',
-      dataIndex: 'RNUM',
-      key: 'rnum',
-      width: '8%',
-      align: 'center',
-    },
+    // {
+    //   title: 'No',
+    //   dataIndex: 'RNUM',
+    //   key: 'rnum',
+    //   width: '7%',
+    //   align: 'center',
+    // },
     {
       title: '종류',
       dataIndex: 'APPVGUBUN',
       key: 'APPVGUBUN',
-      width: '8%',
+      width: '15%',
       align: 'center',
       render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
     },
@@ -433,10 +436,30 @@ class DraftList extends Component {
     this.setState({ workPrcProps, isAbrogationMultiShow: false });
   };
 
+  setPaginationIdx = paginationIdx =>
+    this.setState({ paginationIdx }, () => {
+      const { getDraftList } = this.props;
+      const { pageSize } = this.state;
+
+      const fixUrl = '/api/workflow/v1/common/approve/DraftListMDCSHandler';
+      getDraftList(fixUrl, paginationIdx, pageSize);
+    });
+
   render() {
     // const { approveList } = this.props;
-    const { draftList, selectedRow, opinionVisible, setOpinionVisible, profile } = this.props;
-    const { modalWidth, coverView, holdReqList, abrogationList, draftNode, reviewerNode, mailReviewerNode, isAbrogationMultiShow, workPrcProps } = this.state;
+    const { draftList, selectedRow, opinionVisible, setOpinionVisible, profile, draftListCnt } = this.props;
+    const {
+      modalWidth,
+      coverView,
+      holdReqList,
+      abrogationList,
+      draftNode,
+      reviewerNode,
+      mailReviewerNode,
+      isAbrogationMultiShow,
+      workPrcProps,
+      paginationIdx,
+    } = this.state;
     return (
       <>
         <StyledHeaderWrapper>
@@ -457,6 +480,8 @@ class DraftList extends Component {
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
+            pagination={{ current: paginationIdx, total: draftListCnt }}
+            onChange={pagination => this.setPaginationIdx(pagination.current)}
           />
         </StyledContentsWrapper>
         {workPrcProps && workPrcProps.REL_TYPE && workPrcProps.REL_TYPE !== 999 ? (

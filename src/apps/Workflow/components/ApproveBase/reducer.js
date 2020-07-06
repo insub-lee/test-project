@@ -10,22 +10,27 @@ const initialState = fromJS({
   viewVisible: false,
   opinionVisible: false,
   opinion: '',
+  approveListCnt: 0,
   unApproveListCnt: 0,
+  draftListCnt: 0,
 });
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_APPROVE_LIST: {
-      const { list } = action;
-      return state.set('approveList', fromJS(list)).set('viewVisible', false);
+      const { list, listCnt } = action;
+      return state
+        .set('approveList', fromJS(list))
+        .set('viewVisible', false)
+        .set('approveListCnt', listCnt);
     }
     case actionTypes.SET_UNAPPROVE_LIST: {
       const { list, listCnt } = action;
       return state.set('unApproveList', fromJS(list).set('viewVisible', false)).set('unApproveListCnt', listCnt);
     }
     case actionTypes.SET_DRAFT_LIST: {
-      const { list } = action;
-      return state.set('draftList', fromJS(list).set('viewVisible', false));
+      const { list, listCnt } = action;
+      return state.set('draftList', fromJS(list).set('viewVisible', false)).set('draftListCnt', listCnt);
     }
     case actionTypes.SET_PARTIAL_INIT: {
       return state

@@ -507,6 +507,15 @@ class CompModal extends Component {
                 />
               )}
             </div>
+            {viewType === 'LIST' && groupType !== 'searchGroup' && (
+              <div className="popoverItem popoverItemInput">
+                <span className="spanLabel">문자 넘침 생략 여부</span>
+                <Checkbox
+                  defaultChecked={comp.CONFIG.property.isEllipsis}
+                  onChange={e => this.handleChangeViewConfig('isEllipsis', e.target.checked, 'property')}
+                />
+              </div>
+            )}
             {ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC] && (
               <div>{ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC].renderer({ ...configProps, configInfo: comp.CONFIG, submitHandlerBySaga })}</div>
             )}
