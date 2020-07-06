@@ -23,7 +23,7 @@ const FlowItemPanel = props => (
             agreeType: 'SA',
             appvAuth: [],
             appMember: [],
-            ruleConfig: {},
+            ruleConfig: '',
             parentId: '0',
             rejectId: '0',
           }}
