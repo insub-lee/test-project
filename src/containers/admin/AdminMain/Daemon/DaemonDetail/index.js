@@ -27,10 +27,12 @@ const FormItem = Form.Item;
 const { Option } = Select;
 const { TabPane } = Tabs;
 
+/*
 const cronValid = str => {
   const re = /(@(annually|yearly|monthly|weekly|daily|hourly|reboot))|(@every (\d+(ns|us|µs|ms|s|m|h))+)|((((\d+,)+\d+|(\d+(\/|-)\d+)|\d+|\*) ?){5,7})/g;
   return re.test(String(str).toLowerCase());
 };
+*/
 const defaultCronExpress = '0 0 0 1 * *';
 const setListState = state => ({
   sortColumn: state.listSortColumn,
@@ -38,6 +40,20 @@ const setListState = state => ({
   keyword: state.listKeyword,
   stopYn: state.listStopYn,
 });
+
+const setCronture = schedule => {
+  let result = false;
+  try {
+    if (!schedule || schedule.trim().split(' ').length === 6) {
+      result = cronstrue.toString(schedule || defaultCronExpress, {
+        locale: lang.getLocale(),
+      });
+    }
+  } catch (error) {
+    console.debug(`invalid cron schedule format: ${schedule}`);
+  }
+  return result;
+};
 
 class DaemonDetail extends React.Component {
   constructor(prop) {
@@ -125,7 +141,7 @@ class DaemonDetail extends React.Component {
     if (this.state.mode === 'D') return '';
     switch (type) {
       case 'schedule':
-        return val !== '' && !cronValid(val) ? 'error' : '';
+        return val !== '' && !setCronture(val) ? 'error' : '';
       case 'daemonKey':
         return val !== '' ? '' : 'error';
       default:
@@ -143,7 +159,7 @@ class DaemonDetail extends React.Component {
       this.state.stopYn !== ''
     ) {
       if (this.state.schedule !== '' && this.state.schedule !== null) {
-        if (!cronValid(this.state.schedule)) {
+        if (!setCronture(this.state.schedule)) {
           message.error(`${intlObj.get(messages.chkInput)}`, 2);
           return false;
         }
@@ -175,7 +191,7 @@ class DaemonDetail extends React.Component {
       dscrEtc: this.state.dscrEtc,
       daemonKey: this.state.daemonKey,
       stopYn: this.state.stopYn,
-      schedule: this.state.schedule,
+      schedule: this.state.schedule || defaultCronExpress,
     };
     const { history, insertDaemonInfo, updateDaemonInfo } = this.props;
     const listParam = setListState(this.state);
@@ -189,8 +205,8 @@ class DaemonDetail extends React.Component {
   };
 
   handleScheduleMonthChange = e => {
-    const cronSchedule = this.state.schedule ? this.state.schedule : defaultCronExpress;
-    const cronArray = cronSchedule.split(' ');
+    const cronSchedule = setCronture(this.state.schedule) ? this.state.schedule : defaultCronExpress;
+    const cronArray = cronSchedule.trim().split(' ');
     cronArray[3] = e;
     cronArray[5] = '*';
     this.setState({
@@ -202,8 +218,8 @@ class DaemonDetail extends React.Component {
   };
 
   handleScheduleWeekChange = e => {
-    const cronSchedule = this.state.schedule ? this.state.schedule : defaultCronExpress;
-    const cronArray = cronSchedule.split(' ');
+    const cronSchedule = setCronture(this.state.schedule) ? this.state.schedule : defaultCronExpress;
+    const cronArray = cronSchedule.trim().split(' ');
     cronArray[5] = e;
     cronArray[3] = '*';
     this.setState({
@@ -215,8 +231,8 @@ class DaemonDetail extends React.Component {
   };
 
   handleScheduleDayChange = e => {
-    const cronSchedule = this.state.schedule ? this.state.schedule : defaultCronExpress;
-    const cronArray = cronSchedule.split(' ');
+    const cronSchedule = setCronture(this.state.schedule) ? this.state.schedule : defaultCronExpress;
+    const cronArray = cronSchedule.trim().split(' ');
     cronArray[3] = `1/${e}`;
     cronArray[5] = '*';
     this.setState({
@@ -228,8 +244,8 @@ class DaemonDetail extends React.Component {
   };
 
   handleScheduleTimeChange = time => {
-    const cronSchedule = this.state.schedule ? this.state.schedule : defaultCronExpress;
-    const cronArray = cronSchedule.split(' ');
+    const cronSchedule = setCronture(this.state.schedule) ? this.state.schedule : defaultCronExpress;
+    const cronArray = cronSchedule.trim().split(' ');
     cronArray[0] = time.format('ss');
     cronArray[1] = time.format('mm');
     cronArray[2] = time.format('HH');
@@ -519,7 +535,8 @@ class DaemonDetail extends React.Component {
                               <Option key="99" value="L">
                                 {intlObj.get(messages.lastday)}
                               </Option>
-                            </Select>&nbsp;일
+                            </Select>
+                            &nbsp;일
                           </TabPane>
                           <TabPane tab="매주" key="2">
                             <Select
@@ -534,7 +551,8 @@ class DaemonDetail extends React.Component {
                                   {e}
                                 </Option>
                               ))}
-                            </Select>&nbsp;요일
+                            </Select>
+                            &nbsp;요일
                           </TabPane>
                           <TabPane tab="매일" key="3">
                             <Select
@@ -549,7 +567,8 @@ class DaemonDetail extends React.Component {
                                   {i + 1}
                                 </Option>
                               ))}
-                            </Select>&nbsp;일마다
+                            </Select>
+                            &nbsp;일마다
                           </TabPane>
                         </Tabs>
                         <TimePicker
@@ -562,9 +581,17 @@ class DaemonDetail extends React.Component {
                       </ErrorBoundary>
                       <span className="tipText" />
                     </FormItem>
-                    {`[${this.state.schedule}] ${cronstrue.toString(this.state.schedule ? this.state.schedule : defaultCronExpress, {
-                      locale: lang.getLocale(),
-                    })}`}
+                    <Input
+                      placeholder={defaultCronExpress}
+                      name="schedule"
+                      value={this.state.schedule}
+                      onChange={e => this.setState({ schedule: e.target.value })}
+                      maxLength={30}
+                      style={{ width: '120px', textAlign: 'center' }}
+                      id="s10"
+                      readOnly={this.state.mode === 'D'}
+                    />
+                    {setCronture(this.state.schedule)}
                   </td>
                 </tr>
               </tbody>
