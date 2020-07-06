@@ -706,7 +706,7 @@
   "admin.AdminMain.UserAdmin.nameKor": "@이름(KOR)",
   "admin.AdminMain.UserAdmin.initSearch": "@검색조건초기화",
   "admin.AdminMain.UserAdmin.userManage": "@사용자관리",
-  "admin.AdminMain.Daemon.daemonManage": "@대몬관리",  
+  "admin.AdminMain.Daemon.daemonManage": "@데몬관리",  
   "admin.AdminMain.Daemon.noSearch": "@검색결과 없음",
   "admin.AdminMain.Daemon.daemonName": "@데몬 이름",
   "admin.AdminMain.Daemon.daemoKey": "@데몬키",
