@@ -40,7 +40,7 @@ class EditorActionPanel extends React.Component {
       agreeType: node.agreeType,
       appMember: node.appMember,
       appvAuth: node.appvAuth,
-      ruleConfig: node.ruleConfig,
+      ruleConfig: typeof node.ruleConfig === 'object' ? JSON.stringify(node.ruleConfig) : node.ruleConfig,
       isRequired: node.isRequired,
       parentId: '0',
       rejectId: '0',

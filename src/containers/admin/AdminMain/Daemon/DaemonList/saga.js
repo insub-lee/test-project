@@ -29,7 +29,7 @@ export function* startDaemon(payload) {
     // 이미 실행중
     feed.error(`${intlObj.get(messages.startDaemonFail3)}`);
   } else if (code === 404) {
-    // 대몬 정보를 찾을수 없음
+    // 데몬 정보를 찾을수 없음
     feed.error(`${intlObj.get(messages.startDaemonFail2)}`);
   } else {
     feed.error(`${intlObj.get(messages.startDaemonFail)}`);
