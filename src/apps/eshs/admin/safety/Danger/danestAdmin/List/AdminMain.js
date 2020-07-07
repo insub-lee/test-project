@@ -16,7 +16,7 @@ moment.locale('ko');
 const AntdModalPad = StyledAntdModalPad(Modal);
 const AntdInputNumber = StyledInputNumber(InputNumber);
 
-const View = ({ formData, dangerInfo, onDangerInfoModal, dangerInfoModal, onChangeAdmin, onChangeManager, dangerInfoModalData, dangerInfoSelect }) => (
+const AdminMain = ({ formData, dangerInfo, onDangerInfoModal, dangerInfoModal, onChangeAdmin, onChangeManager, dangerInfoModalData, dangerInfoSelect }) => (
   <>
     <tr>
       <th colSpan="2" align="center">
@@ -53,7 +53,7 @@ const View = ({ formData, dangerInfo, onDangerInfoModal, dangerInfoModal, onChan
         <span>{`${formData.PLACE_NM || ''} > ${formData.PROCESS_NM || ''}`}</span>
         {dangerInfo && dangerInfoModalData && dangerInfoSelect && (
           <>
-            <StyledButton className="btn-light btn-first btn-xs" onClick={() => onDangerInfoModal(dangerInfo.TASK_SEQ)}>
+            <StyledButton className="btn-light btn-first btn-xs" onClick={onDangerInfoModal}>
               위험정보
             </StyledButton>
             <AntdModalPad width={1000} visible={dangerInfoModal} title="위험성 평가 검색" onCancel={onDangerInfoModal} destroyOnClose footer={null}>
@@ -128,7 +128,7 @@ const View = ({ formData, dangerInfo, onDangerInfoModal, dangerInfoModal, onChan
   </>
 );
 
-View.propTypes = {
+AdminMain.propTypes = {
   formData: PropTypes.object,
   dangerInfo: PropTypes.object,
   dangerInfoModal: PropTypes.bool,
@@ -139,4 +139,4 @@ View.propTypes = {
   dangerInfoSelect: PropTypes.array,
 };
 
-export default React.memo(View);
+export default React.memo(AdminMain);

@@ -17,7 +17,7 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 import StyledAntdModal from 'components/BizBuilder/styled//Modal/StyledAntdModal';
 import StyledAntdModalPad from 'components/BizBuilder/styled//Modal/StyledAntdModalPad';
 import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/common/submitCallbackFunc';
-import View from './View';
+import AdminMain from './AdminMain';
 import SubList from './SubList';
 import ReAppriseList from '../ReAppriseList';
 
@@ -237,9 +237,9 @@ class List extends Component {
     );
   };
 
-  onDangerInfoModal = taskSeq => {
+  onDangerInfoModal = () => {
     const { dangerInfoModal } = this.state;
-    this.setState({ dangerInfoModal: !dangerInfoModal, dangerInfoTask: taskSeq });
+    this.setState({ dangerInfoModal: !dangerInfoModal });
   };
 
   render() {
@@ -313,7 +313,7 @@ class List extends Component {
                     </colgroup>
                     {this.state.revisionReRendering && (
                       <tbody>
-                        <View
+                        <AdminMain
                           formData={item}
                           dangerInfo={dangerInfo.find(info => info.PROCESS_ID === item.PROCESS_ID)}
                           onChangeAdmin={this.onChangeAdmin}

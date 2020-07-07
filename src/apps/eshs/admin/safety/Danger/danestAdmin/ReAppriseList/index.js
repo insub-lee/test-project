@@ -4,7 +4,7 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import FilePopover from './FilePopover';
 
 const ReAppriseList = ({ reAppriseList, dangerDanestAdminSubFile }) => (
-  <StyledHtmlTable style={{ overflow: 'auto' }}>
+  <StyledHtmlTable style={{ overflow: 'auto', height: 400 }}>
     <table>
       <colgroup>
         <col width={100} />
@@ -25,21 +25,21 @@ const ReAppriseList = ({ reAppriseList, dangerDanestAdminSubFile }) => (
       </colgroup>
       <tbody>
         <tr>
-          <th>세부평가번호</th>
-          <th>순번</th>
-          <th>장비(설비)</th>
-          <th>작업조건</th>
-          <th>위험요인</th>
-          <th>발생형태</th>
-          <th>현재안전조치</th>
-          <th>위험빈도</th>
-          <th>위험강도</th>
-          <th>위험등급</th>
-          <th>개선대책</th>
-          <th>완료예정일</th>
-          <th>개선 첨부파일</th>
-          <th>작성일</th>
-          <th>평가횟수</th>
+          <th style={{ position: 'sticky', top: 0 }}>세부평가번호</th>
+          <th style={{ position: 'sticky', top: 0 }}>순번</th>
+          <th style={{ position: 'sticky', top: 0 }}>장비(설비)</th>
+          <th style={{ position: 'sticky', top: 0 }}>작업조건</th>
+          <th style={{ position: 'sticky', top: 0 }}>위험요인</th>
+          <th style={{ position: 'sticky', top: 0 }}>발생형태</th>
+          <th style={{ position: 'sticky', top: 0 }}>현재안전조치</th>
+          <th style={{ position: 'sticky', top: 0 }}>위험빈도</th>
+          <th style={{ position: 'sticky', top: 0 }}>위험강도</th>
+          <th style={{ position: 'sticky', top: 0 }}>위험등급</th>
+          <th style={{ position: 'sticky', top: 0 }}>개선대책</th>
+          <th style={{ position: 'sticky', top: 0 }}>완료예정일</th>
+          <th style={{ position: 'sticky', top: 0 }}>개선 첨부파일</th>
+          <th style={{ position: 'sticky', top: 0 }}>작성일</th>
+          <th style={{ position: 'sticky', top: 0 }}>평가횟수</th>
         </tr>
         {reAppriseList &&
           reAppriseList.map(item => (
