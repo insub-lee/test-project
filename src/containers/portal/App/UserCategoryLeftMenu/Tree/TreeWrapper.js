@@ -209,6 +209,30 @@ const TreeWrapper = styled.div`
     background-size: 100%;
   }
 
+  .sortableTreeWrapper.sidebar .rst__nodeContent .eshs_tree_depth1 .rstcustom__rowTitle button i {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 9px;
+  }
+
+  .sortableTreeWrapper.sidebar .rst__nodeContent.tree_open .eshs_tree_typeF.eshs_tree_depth1 .rstcustom__rowTitle button i {
+    background: url(${iconArrTop}) no-repeat center;
+    background-size: 100%;
+  }
+
+  .rstcustom__row.eshs_tree_depth1 {
+    border-top: 1px solid #223344;
+  }
+
+  .rstcustom__row.eshs_tree_depth2,
+  .rstcustom__row.eshs_tree_depth3,
+  .rstcustom__row.eshs_tree_depth4 {
+    background: #09141f;
+  }
+
   .sortableTreeWrapper.sidebar .rst__nodeContent .inTree.ant-badge .ant-badge-count {
     width: 28px;
     height: 17px;
