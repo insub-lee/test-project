@@ -390,7 +390,7 @@ class BfCheckPage extends Component {
           ...formData,
           INGCHECK_HEAD: {
             ...formData.INGCHECK_HEAD,
-            CHECK_CMPNY_CD: 72761,
+            CHECK_CMPNY_CD: userInfo.COMP_CD.replace('COMP_', ''),
             CHECK_CMPNY_NM: 'MAGNACHIP반도체',
             CHECK_EMP_NO: userInfo.USER_ID,
             CHECK_EMP_NM: userInfo.NAME_KOR,

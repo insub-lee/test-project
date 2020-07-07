@@ -34,7 +34,7 @@ class ListPage extends Component {
       isOnRowClick: false,
       rowClickView: 'VIEW',
       StyledWrap: StyledViewDesigner,
-      searchType: 'PLEDGE_NO',
+      searchType: 'WRK_CMPNY_NM',
       searchYear: moment().format('YYYY'),
       searchValue: '',
       searchListData: [],
@@ -42,7 +42,7 @@ class ListPage extends Component {
   }
 
   componentDidMount = () => {
-    const { workInfo } = this.props;
+    const { workInfo, initSearchValue } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
     let isOnRowClick = false;
@@ -65,7 +65,13 @@ class ListPage extends Component {
           rowClickView = opt.OPT_VALUE === '' ? 'VIEW' : opt.OPT_VALUE;
         }
       });
-      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
+      this.setState({
+        isMultiDelete,
+        isRowNo,
+        isOnRowClick,
+        rowClickView,
+        searchValue: initSearchValue || '',
+      });
     }
   };
 
@@ -250,6 +256,7 @@ class ListPage extends Component {
       isBuilderModal,
       changeBuilderModalState,
       listData,
+      initSearchValue,
     } = this.props;
     const { StyledWrap, searchType, searchListData, isSearching } = this.state;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -295,6 +302,7 @@ class ListPage extends Component {
                                 <AntdInput
                                   className="ant-input-xs ant-input-inline"
                                   style={{ width: '200px' }}
+                                  defaultValue={initSearchValue || ''}
                                   onChange={e => this.setState({ searchValue: e.target.value })}
                                 />
                                 <StyledButton
@@ -346,6 +354,7 @@ ListPage.propTypes = {
   changeViewPage: PropTypes.func,
   customOnRowClick: PropTypes.any,
   listData: PropTypes.array,
+  initSearchValue: PropTypes.string,
 };
 
 ListPage.defaultProps = {
@@ -356,6 +365,7 @@ ListPage.defaultProps = {
   },
   customOnRowClick: undefined,
   listData: [],
+  initSearchValue: '',
 };
 
 export default ListPage;

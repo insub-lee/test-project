@@ -412,23 +412,23 @@ class emergencyWorkWrite extends Component {
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('UPDATE')}>
                 저장
               </StyledButton>
-              <StyledButton
-                className="btn-gray btn-sm btn-first"
-                onClick={() => {
-                  if (formData.WORK_NO === '') {
-                    message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
-                    return;
-                  }
-                  this.handleModal('equip', true);
-                }}
-              >
-                투입 장비 추가
-              </StyledButton>
               <StyledButton className="btn-light btn-sm" onClick={() => this.submitFormData('DELETE')}>
                 삭제
               </StyledButton>
             </>
           )}
+          <StyledButton
+            className="btn-gray btn-sm btn-first"
+            onClick={() => {
+              // if (formData.WORK_NO === '') {
+              //   message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
+              //   return;
+              // }
+              this.handleModal('equip', true);
+            }}
+          >
+            투입 장비 추가
+          </StyledButton>
           {viewType !== 'modal' && false && (
             <StyledButton className="btn-primary btn-xs btn-first" onClick={() => alert('준비중')}>
               일반작업으로 변경
