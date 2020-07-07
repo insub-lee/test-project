@@ -245,7 +245,7 @@ class Tree extends Component {
                       // }}
                       isVirtualized={false}
                       generateNodeProps={this.generateNodeProps}
-                      rowHeight={28}
+                      rowHeight={30}
                       scaffoldBlockPxWidth={10}
                       className="sortableTreeWrapper sidebar CustomSCRB"
                       ref={ref => {
