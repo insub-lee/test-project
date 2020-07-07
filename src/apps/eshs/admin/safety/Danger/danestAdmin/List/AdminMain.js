@@ -16,7 +16,17 @@ moment.locale('ko');
 const AntdModalPad = StyledAntdModalPad(Modal);
 const AntdInputNumber = StyledInputNumber(InputNumber);
 
-const AdminMain = ({ formData, dangerInfo, onDangerInfoModal, dangerInfoModal, onChangeAdmin, onChangeManager, dangerInfoModalData, dangerInfoSelect }) => (
+const AdminMain = ({
+  formData,
+  dangerInfo,
+  onDangerInfoModal,
+  dangerInfoModal,
+  onChangeAdmin,
+  onChangeManager,
+  dangerInfoModalData,
+  dangerInfoSelect,
+  safetyImprove,
+}) => (
   <>
     <tr>
       <th colSpan="2" align="center">
@@ -113,7 +123,7 @@ const AdminMain = ({ formData, dangerInfo, onDangerInfoModal, dangerInfoModal, o
       <th rowSpan="2">발생형태</th>
       <th rowSpan="2">현재 안전조치(대책)</th>
       <th colSpan="3">위험도</th>
-      <th colSpan="2">개선계획 개선계획 번호 span</th>
+      <th colSpan="2">개선계획 {safetyImprove && <p>개선계획</p>}</th>
       <th colSpan="2" rowSpan="2">
         개선 첨부파일
       </th>
@@ -131,6 +141,7 @@ const AdminMain = ({ formData, dangerInfo, onDangerInfoModal, dangerInfoModal, o
 AdminMain.propTypes = {
   formData: PropTypes.object,
   dangerInfo: PropTypes.object,
+  safetyImprove: PropTypes.object,
   dangerInfoModal: PropTypes.bool,
   onDangerInfoModal: PropTypes.func,
   onChangeAdmin: PropTypes.func,

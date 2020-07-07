@@ -7,21 +7,21 @@ const ReAppriseList = ({ reAppriseList, dangerDanestAdminSubFile }) => (
   <StyledHtmlTable style={{ overflow: 'auto', height: 400 }}>
     <table>
       <colgroup>
+        <col width={120} />
+        <col width={50} />
         <col width={100} />
         <col width={100} />
+        <col width={200} />
         <col width={100} />
+        <col width={200} />
+        <col width={50} />
+        <col width={50} />
+        <col width={50} />
+        <col width={200} />
         <col width={100} />
+        <col width={50} />
         <col width={100} />
-        <col width={100} />
-        <col width={100} />
-        <col width={100} />
-        <col width={100} />
-        <col width={100} />
-        <col width={100} />
-        <col width={100} />
-        <col width={100} />
-        <col width={100} />
-        <col width={100} />
+        <col width={50} />
       </colgroup>
       <tbody>
         <tr>

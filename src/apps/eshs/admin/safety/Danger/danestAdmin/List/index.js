@@ -4,7 +4,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import customList from 'apps/eshs/admin/environment/air/stack/List';
 import moment from 'moment';
 
-import { Input, Modal, Tabs } from 'antd';
+import { Input, Modal, Tabs, Popconfirm } from 'antd';
 
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
@@ -94,6 +94,16 @@ class List extends Component {
         },
       },
       {
+        key: 'safetyImprove',
+        type: 'POST',
+        url: '/api/eshs/v1/common/eshsBuilderCustomSearch/5262',
+        params: {
+          PARAM: {
+            whereString: [`AND W.IS_DANGER = '${record.REG_NO}'`],
+          },
+        },
+      },
+      {
         key: 'dangerDanestAdmin',
         type: 'GET',
         url: `/api/eshs/v1/common/dangerDanestAdmin?REG_NO=${record.REG_NO}`,
@@ -104,13 +114,14 @@ class List extends Component {
 
   dangerData = () => {
     const {
-      result: { dangerInfo, dangerDanestAdmin },
+      result: { dangerInfo, dangerDanestAdmin, safetyImprove },
     } = this.props;
     if (dangerDanestAdmin && dangerDanestAdmin.list && dangerDanestAdmin.list.length <= 0) {
       message.info(<MessageContent>검색된 데이터가 없습니다.</MessageContent>);
     } else {
       this.setState({
         dangerInfo: dangerInfo && dangerInfo.list,
+        safetyImprove: safetyImprove && safetyImprove.list,
         dangerDanestAdmin: dangerDanestAdmin && dangerDanestAdmin.list,
         dangerDanestAdminSub: dangerDanestAdmin && dangerDanestAdmin.subList,
         dangerDanestAdminSubFile: dangerDanestAdmin && dangerDanestAdmin.fileList,
@@ -272,12 +283,12 @@ class List extends Component {
                   <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.updateDanest(item.DA_REG_NO)}>
                     수정
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.revisionDanest(item.DA_REG_NO)}>
-                    재평가
-                  </StyledButton>
+                  <Popconfirm title="재평가 하시겠습니까?" onConfirm={() => this.revisionDanest(item.DA_REG_NO)} okText="Yes" cancelText="No">
+                    <StyledButton className="btn-primary btn-first btn-sm"> 재평가</StyledButton>
+                  </Popconfirm>
                   {reAppriseList && reAppriseList.length > 0 ? (
                     <>
-                      <StyledButton className="btn-gray btn-first btn-sm" onClick={this.reAppriseModal}>
+                      <StyledButton className="btn-gray btn-sm" onClick={this.reAppriseModal}>
                         재평가내역
                       </StyledButton>
                       <AntdModalPad
@@ -322,6 +333,7 @@ class List extends Component {
                           onChangeManager={this.onChangeManager}
                           dangerInfoModalData={this.state.dangerInfoModalData}
                           dangerInfoSelect={this.state.dangerInfoSelect}
+                          safetyImprove={this.state.safetyImprove.find(improve => improve.REG_NO === item.REG_NO)}
                         />
                         {dangerDanestAdminSub &&
                           dangerDanestAdminSub
