@@ -152,7 +152,6 @@ class SafetyWorkInfo extends Component {
                       </StyledButton>
                     </div>
                     <Radio.Group value={formData.WCATEGORY} onChange={value => handleWorkCategory(value.target.value)}>
-                      <Radio value="공통">공통</Radio>
                       <Radio value="화기작업">
                         화기작업
                         <br />
