@@ -10,7 +10,7 @@ const StyledSideMenu = styled.div`
   width: 45px;
   transition: left 0.1s ease-out 0s, ease-out 0s, ease-out 0s, ease-out 0s;
   opacity: 1;
-  background-color: ${props => (props.blackThema ? '#868e96' : '#152434')};
+  background-color: ${props => (props.blackThema ? '#868e96' : '#15222d')};
   text-align: center;
   z-index: 99;
 `;
