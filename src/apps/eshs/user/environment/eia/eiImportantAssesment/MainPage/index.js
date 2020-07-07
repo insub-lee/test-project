@@ -1,4 +1,4 @@
-/* eslint-disable react/prefer-stateless-function */
+/* eslint-disable no-unused-expressions */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -19,7 +19,7 @@ class MainPage extends Component {
   }
 
   handleSearchOnClick = () => {
-    const { id, getCallDataHandler, formData } = this.props;
+    const { sagaKey, getCallDataHandler, formData } = this.props;
     const chkYear = (formData && formData.CHK_YEAR) || '0';
     const deptId = (formData && formData.searchRow && formData.searchRow.DEPT_ID) || (formData && formData.myDept && formData.myDept.DEPT_ID) || '0';
     const apiAry = [
@@ -29,25 +29,25 @@ class MainPage extends Component {
         url: `/api/eshs/v1/common/EshsGetEiMaterial/${chkYear}/${deptId}`,
       },
     ];
-    getCallDataHandler(id, apiAry, this.handleSetMaterial);
+    getCallDataHandler(sagaKey, apiAry, this.handleSetMaterial);
   };
 
   handleSetMaterial = () => {
-    const { id, result, changeFormData } = this.props;
+    const { sagaKey, result, changeFormData } = this.props;
     // const itemList = (result && result.itemList && result.itemList.list) || [];
     const materialData = (result && result.materialData && result.materialData.result) || {};
     const materialCnt = (result && result.materialData && result.materialData.materialCnt) || 0;
     // changeFormData(id, 'itemList', itemList);
-    changeFormData(id, 'materialData', materialData);
-    changeFormData(id, 'materialCnt', materialCnt);
+    changeFormData(sagaKey, 'materialData', materialData);
+    changeFormData(sagaKey, 'materialCnt', materialCnt);
     this.itemListReload();
   };
 
   itemListReload = () => {
-    const { id, getCallDataHandler, formData, changeFormData } = this.props;
+    const { sagaKey, getCallDataHandler, formData, changeFormData } = this.props;
     const materialCnt = (formData && formData.materialCnt) || 0;
     if (!materialCnt) {
-      changeFormData(id, 'itemList', []);
+      changeFormData(sagaKey, 'itemList', []);
       return;
     }
     const deptId = (formData && formData.materialData && formData.materialData.FROM_DEPT_ID) || '';
@@ -60,22 +60,22 @@ class MainPage extends Component {
         url: `/api/eshs/v1/common/eshsEiImportantAssesmentList/${chkYear}/${deptId}/${reqNo}`,
       },
     ];
-    getCallDataHandler(id, apiAry, this.setItemList);
+    getCallDataHandler(sagaKey, apiAry, this.setItemList);
   };
 
   setItemList = () => {
-    const { result, id, changeFormData } = this.props;
+    const { result, sagaKey, changeFormData } = this.props;
     const itemList = (result && result.itemList && result.itemList.list) || [];
 
     changeFormData(
-      id,
+      sagaKey,
       'itemList',
       itemList.map(item => (item.PLAN_REVIEW === '' || item.PLAN_REVIEW === null ? { ...item, PLAN_REVIEW: 'N' } : item)),
     );
   };
 
   onFileUploaded = (file, SEQ) => {
-    const { changeFormData, formData, id } = this.props;
+    const { changeFormData, formData, sagaKey } = this.props;
     // one file upload 최신 파일만 업로드 되게
     const { uploadFileList } = this.state;
     const itemList = (formData && formData.itemList) || [];
@@ -85,19 +85,88 @@ class MainPage extends Component {
       uploadFileList: fileList,
     });
     changeFormData(
-      id,
+      sagaKey,
       'itemList',
       itemList.map(item => (Number(item.SEQ) === Number(SEQ) ? { ...item, FILE_SEQ: file.seq, FILE_NAME: file.fileName, FILE_TYPE: -1 } : item)),
     );
   };
 
   saveBeforeProcess = () => {
-    const { id, getCallDataHandler, submitHandlerBySaga, formData } = this.props;
+    const { sagaKey, getCallDataHandler } = this.props;
+    const apiAry = [
+      {
+        key: 'prcRule',
+        type: 'POST',
+        url: '/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder',
+        params: { PARAM: { PRC_ID: 104 } },
+      },
+    ];
+
+    getCallDataHandler(sagaKey, apiAry, this.setPrcRule);
+  };
+
+  setPrcRule = () => {
+    const { sagaKey, submitHandlerBySaga, result, formData } = this.props;
+    const prcRule = (result && result.prcRule && result.prcRule.DRAFT_PROCESS) || {};
+    const materialData = (formData && formData.materialData) || {};
+    /* 
+      청주 검토자 GRP_ID 84381
+      청주 승인권자 GRP_ID 84382
+
+      구미 검토자 GRP_ID 84401
+      구미 승인권자 GRP_ID 84402
+    */
+
+    prcRule &&
+      prcRule.DRAFT_PROCESS_STEP &&
+      prcRule.DRAFT_PROCESS_STEP.forEach((step, index) => {
+        switch (index) {
+          case 1:
+            step.APPV_MEMBER = [
+              { USER_ID: materialData.TO_USER_ID, DEPT_ID: materialData.TO_DEPT_ID, DEPT_NAME_KOR: materialData.TO_DEPT_NM, NAME_KOR: materialData.TO_EMP_NM },
+            ];
+            break;
+          case 2:
+            step.APPV_MEMBER = [
+              {
+                USER_ID: materialData.FROM_DEPT_MANAGER_ID,
+                DEPT_ID: materialData.FROM_DEPT_ID,
+                DEPT_NAME_KOR: materialData.FROM_DEPT_NM,
+                NAME_KOR: materialData.FROM_DEPT_MANAGER_NM,
+              },
+            ];
+            break;
+          case 3:
+            step.APPV_MEMBER = [
+              {
+                USER_ID: materialData.TO_DEPT_MANAGER_ID,
+                DEPT_ID: materialData.TO_DEPT_ID,
+                DEPT_NAME_KOR: materialData.TO_DEPT_NM,
+                NAME_KOR: materialData.TO_DEPT_MANAGER_NM,
+              },
+            ];
+            break;
+          default:
+            break;
+        }
+      });
+
+    submitHandlerBySaga(
+      sagaKey,
+      'POST',
+      '/api/workflow/v1/common/workprocess/draft',
+      { DRAFT_PROCESS: { ...prcRule, REL_TYPE: 200, REL_KEY: materialData.REQ_NO } },
+      this.fileMoveToReal,
+    );
+  };
+
+  fileMoveToReal = () => {
+    const { sagaKey, getCallDataHandler, submitHandlerBySaga, formData } = this.props;
     const { uploadFileList } = this.state;
     const materialData = (formData && formData.materialData) || '';
     const itemList = (formData && formData.itemList) || [];
     if (!uploadFileList.length) {
-      submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiImportantAssesment', { ...materialData, itemList }, this.updateComplete);
+      submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/eshsEiImportantAssesment', { ...materialData, itemList }, this.updateComplete);
       return;
     }
     const param = { PARAM: { DETAIL: uploadFileList } };
@@ -112,11 +181,11 @@ class MainPage extends Component {
     this.setState({
       uploadFileList: [],
     });
-    getCallDataHandler(id, apiAry, this.fileUploadComplete);
+    getCallDataHandler(sagaKey, apiAry, this.fileUploadComplete);
   };
 
   fileUploadComplete = () => {
-    const { id, result, formData, submitHandlerBySaga } = this.props;
+    const { sagaKey, result, formData, submitHandlerBySaga } = this.props;
     const materialData = (formData && formData.materialData) || '';
     const realFileList = (result && result.realFile && result.realFile.DETAIL) || [];
 
@@ -135,7 +204,7 @@ class MainPage extends Component {
       [];
 
     // data 저장
-    submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiImportantAssesment', { ...materialData, itemList }, this.updateComplete);
+    submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/eshsEiImportantAssesment', { ...materialData, itemList }, this.updateComplete);
   };
 
   updateComplete = () => {
@@ -152,7 +221,7 @@ class MainPage extends Component {
           <MaterialTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
         </div>
         <div>
-          <ItemTable {...this.props} onFileUploaded={this.onFileUploaded} saveBeforeProcess={this.saveBeforeProcess} />
+          <ItemTable {...this.props} onFileUploaded={this.onFileUploaded} saveBeforeProcess={this.fileMoveToReal} />
         </div>
       </StyledContentsWrapper>
     );
@@ -160,7 +229,6 @@ class MainPage extends Component {
 }
 
 MainPage.defaultProps = {
-  id: 'eiImportantAssesment',
   getCallDataHandler: () => {},
   result: {},
 };
