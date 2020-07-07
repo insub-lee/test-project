@@ -36,6 +36,7 @@ class SafetyWorkMain extends Component {
       modalType: '',
       modalTitle: '',
       modalVisible: false,
+      deptMasterList: [],
       formData: {
         // ------------------------------------------------------------------------ SWTB_SFAETY_WORK - 안전작업 정보
         WORK_NO: '', //                 작업번호        (String, 13)
@@ -102,6 +103,11 @@ class SafetyWorkMain extends Component {
         type: 'GET',
         url: `/api/eshs/v1/common/EshsUserSearch?searchType=safetyWork&keyword=${profile.USER_ID}`,
       },
+      {
+        key: 'getDeptMasterList',
+        type: 'GET',
+        url: `/api/eshs/v1/common/EshsUserSearch?searchType=deptMasterList`,
+      },
     ];
     getCallDataHandler(sagaKey, apiArr, this.initForm);
   }
@@ -109,8 +115,10 @@ class SafetyWorkMain extends Component {
   initForm = () => {
     const { formData } = this.state;
     const { result } = this.props;
+    const deptMasterList = (result && result.getDeptMasterList && result.getDeptMasterList.deptMasterList) || [];
     const myInfo = (result && result.getMyInfo && result.getMyInfo.myInfo) || {};
     this.setState({
+      deptMasterList,
       formData: {
         ...formData,
         REQ_CMPNY_CD: myInfo.CMPNY_CD,
@@ -253,6 +261,9 @@ class SafetyWorkMain extends Component {
         break;
       case 'subBfcheck':
         title = '작업전 점검 등록 (보충작업)';
+        break;
+      case 'riskAssessment':
+        title = '위험성평가표 목록';
         break;
       default:
         break;
@@ -603,8 +614,17 @@ class SafetyWorkMain extends Component {
 
   // 감독자 선택
   handleHstUserSelect = record => {
-    const { modalType, formData } = this.state;
+    const { modalType, formData, deptMasterList } = this.state;
     let field = '';
+    let deptMaster = {};
+    if (record === undefined) {
+      this.setState({
+        modalType: '',
+        modalTitle: '',
+        modalVisible: false,
+      });
+      return;
+    }
     switch (modalType) {
       case 'supervisor':
         field = 'REQ_SUPERVISOR_EMP_NO';
@@ -619,8 +639,9 @@ class SafetyWorkMain extends Component {
           },
         });
         break;
-      case 'exm':
+      case 'exm': // 검토자 선택 (검토자 선택시, 해당 검토자의 팀장(F1 직책의 인원이 선택됨))
         field = 'EXM_EMP_NO';
+        deptMaster = deptMasterList.find(item => item.DEPT_ID === record.DEPT_ID);
         this.setState({
           modalType: '',
           modalTitle: '',
@@ -631,6 +652,8 @@ class SafetyWorkMain extends Component {
             EXM_DEPT_CD: record.DEPT_CD,
             [field]: record.EMP_NO,
             [field.replace('NO', 'NM')]: record.NAME_KOR,
+            FINAL_OK_EMP_NO: deptMaster.EMP_NO || '',
+            FINAL_OK_EMP_NM: deptMaster.NAME_KOR || '',
           },
         });
         break;
@@ -650,6 +673,21 @@ class SafetyWorkMain extends Component {
     }
   };
 
+  // 위험성평가표 선택
+  selectRiskAssessment = record => {
+    const { formData } = this.state;
+    this.setState({
+      modalType: '',
+      modalTitle: '',
+      modalVisible: false,
+      formData: {
+        ...formData,
+        DETB_DANEST: record.REG_NO,
+      },
+    });
+  };
+
+  // 다운로드
   handleDown = (e, fileSeq) => {
     e.stopPropagation();
     window.location.href = `/down/file/${Number(fileSeq)}`;
@@ -683,10 +721,10 @@ class SafetyWorkMain extends Component {
           ) : (
             <>
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('ADD')}>
-                연장
+                작업번호 신규 생성
               </StyledButton>
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('UPDATE')}>
-                저장
+                수정
               </StyledButton>
               <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.submitFormData('DELETE')}>
                 삭제
@@ -696,15 +734,19 @@ class SafetyWorkMain extends Component {
           <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174228)}>
             안전교육 서약서
           </StyledButton>
-          <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174229)}>
-            (청주) 중량물 작업계획서
-          </StyledButton>
-          <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174231)}>
-            (청주) 밀폐공간 체크리스트
-          </StyledButton>
-          <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174230)}>
-            (청주) 안전계획/절차서
-          </StyledButton>
+          {formData.SITE === '청주' && (
+            <>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174229)}>
+                (청주) 중량물 작업계획서
+              </StyledButton>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174231)}>
+                (청주) 밀폐공간 체크리스트
+              </StyledButton>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174230)}>
+                (청주) 안전계획/절차서
+              </StyledButton>
+            </>
+          )}
         </StyledButtonWrapper>
         <ContentsWrapper>
           <SafetyWorkInfo
@@ -721,10 +763,10 @@ class SafetyWorkMain extends Component {
             <StyledButton
               className="btn-primary btn-xxs btn-first"
               onClick={() => {
-                if (formData.WORK_NO === '') {
-                  message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
-                  return;
-                }
+                // if (formData.WORK_NO === '') {
+                //   message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
+                //   return;
+                // }
                 this.handleModal('worker', true);
               }}
             >
@@ -746,10 +788,10 @@ class SafetyWorkMain extends Component {
             <StyledButton
               className="btn-primary btn-xxs btn-first"
               onClick={() => {
-                if (formData.WORK_NO === '') {
-                  message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
-                  return;
-                }
+                // if (formData.WORK_NO === '') {
+                //   message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
+                //   return;
+                // }
                 this.handleModal('equip', true);
               }}
             >
@@ -765,6 +807,7 @@ class SafetyWorkMain extends Component {
           title={modalTitle}
           width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '80%'}
           visible={modalVisible}
+          destroyOnClose
           footer={null}
           onOk={() => this.handleModal('', false)}
           onCancel={() => this.handleModal('', false)}
@@ -795,6 +838,7 @@ class SafetyWorkMain extends Component {
               taskSeq={-1}
               viewType="LIST"
               CustomListPage={CustomListPage}
+              initSearchValue={formData.WRK_CMPNY_NM || ''}
               customOnRowClick={record => this.handlePledgeSelect(record)}
             />
           )}
@@ -802,6 +846,9 @@ class SafetyWorkMain extends Component {
           {modalType === 'equip' && <SafetyEquipSelect equipList={eshsSwtbEquip} rowSelect={this.equipAdd} />}
           {modalType === 'safetyEdu' && <SafetyEdu />}
           {modalType === 'safetyWork' && <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />}
+          {modalType === 'riskAssessment' && (
+            <BizBuilderBase sagaKey="riskAssessment" workSeq={12061} viewType="LIST" listMetaSeq={14561} customOnRowClick={this.selectRiskAssessment} />
+          )}
         </AntdModal>
       </Styled>
     );
