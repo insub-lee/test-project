@@ -1077,15 +1077,26 @@ function* getFileDownload({ url, fileName }) {
 
 function* getFileDownloadProgress({ url, fileName, onProgress, callback }) {
   const blobResponse = yield call(Axios.getDownProgress, url, {}, {}, onProgress);
-  const { size } = blobResponse;
+  const { data, headers } = blobResponse;
+  const { size } = data;
+  const cdp = headers['content-disposition'];
+  let downFileName = fileName;
+
+  if (cdp.length > 0 && cdp.indexOf('filename=') > -1) {
+    const splitData = cdp.split('filename=');
+    if (splitData.length > 1) {
+      downFileName = splitData[1].replace(';', '');
+    }
+  }
+
   if (size > 0) {
     if (window.navigator && window.navigator.msSaveBlob) {
-      window.navigator.msSaveBlob(blobResponse, fileName);
+      window.navigator.msSaveBlob(data, downFileName);
     } else {
-      const fileUrl = window.URL.createObjectURL(blobResponse);
+      const fileUrl = window.URL.createObjectURL(data);
       const link = document.createElement('a');
       link.href = fileUrl;
-      link.setAttribute('download', fileName);
+      link.setAttribute('download', downFileName);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -1093,7 +1104,7 @@ function* getFileDownloadProgress({ url, fileName, onProgress, callback }) {
   }
 
   if (typeof callback === 'function') {
-    callback(blobResponse, url, fileName);
+    callback(data, url, downFileName);
   }
 }
 

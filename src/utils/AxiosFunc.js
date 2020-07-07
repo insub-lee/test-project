@@ -142,7 +142,7 @@ function* getFileDownProgressAxios(fullUrl, payload, headers, onProgress) {
         headers: { ...headers, META: yield makeRequestHeader() },
         responseType: 'blob',
         onDownloadProgress: progressEvent => {
-          var percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           onProgress(percentCompleted);
         },
       }),
@@ -151,7 +151,7 @@ function* getFileDownProgressAxios(fullUrl, payload, headers, onProgress) {
     if (response.statusText !== 'OK') {
       return Promise.reject(response.data);
     }
-    return response.data;
+    return response;
   } catch (error) {
     errorAxiosProcess(error);
   }
