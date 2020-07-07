@@ -75,8 +75,8 @@ const reducer = (state = initialState, action) => {
         .setIn(['bizBuilderBase', id, 'isLoading'], false);
     }
     case actionTypes.SET_PROCESS_RULE: {
-      const { id, processRule } = action;
-      return state.setIn(['bizBuilderBase', id, 'processRule'], fromJS(processRule));
+      const { id, processRule, relType } = action;
+      return state.setIn(['bizBuilderBase', id, 'processRule'], fromJS(processRule)).setIn(['bizBuilderBase', id, 'relType'], relType);
     }
     case actionTypes.SET_PROCESS_STEP: {
       const { id, processStep } = action;
