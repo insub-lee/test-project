@@ -34,6 +34,25 @@ class ModifyPage extends Component {
     };
   }
 
+  componentDidMount() {
+    const { sagaKey: id, submitExtraHandler, formData } = this.props;
+    const { WRK_CMPNY_CD } = formData;
+    // `/api/eshs/v1/common/EshsCmpnyList?gubun=${gubun}`
+    submitExtraHandler(id, 'GET', `/api/eshs/v1/common/EshsCmpnyList?searchType=selectOne&gubun=SW&wrkCmpnyCd=${WRK_CMPNY_CD}`, {}, this.initCallback);
+  }
+
+  initCallback = (id, response) => {
+    const { formData, setFormData } = this.props;
+    const { cmpnyInfo } = response;
+    const nextFormData = {
+      ...formData,
+      PRSDNT_NM: cmpnyInfo.PRSDNT_NM || '등록된 대표자 이름이 없습니다.',
+      ADDRESS: cmpnyInfo.ADDRESS || '등록된 업체주소가 없습니다.',
+      TEL: cmpnyInfo.TEL || '등록된 업체 연락처가 없습니다.',
+    };
+    setFormData(id, nextFormData);
+  };
+
   deletePledge = () => {
     const { sagaKey: id, deleteTask, changeViewPage, viewPageData } = this.props;
     const { workSeq, taskSeq } = viewPageData;

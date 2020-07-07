@@ -239,14 +239,20 @@ class EduMgt extends Component {
 
   renderInputColumns = (key, value) => {
     const fieldList = [
-      { key: 'WORKER_SSN', size: 13 },
+      { key: 'WORKER_SSN', size: 8, placeholder: '예) 19910207' },
       { key: 'WORKER_NM', size: 20 },
       { key: 'TEL', size: 13 },
       { key: 'M_TEL', size: 13 },
     ];
     const keyField = fieldList.find(field => field.key === key);
     return (
-      <AntdInput className="ant-input-sm" maxLength={keyField.size} value={value} onChange={e => this.changeWorkerFormData(keyField.key, e.target.value)} />
+      <AntdInput
+        className="ant-input-sm"
+        maxLength={keyField.size}
+        value={value}
+        placeholder={keyField.placeholder || ''}
+        onChange={e => this.changeWorkerFormData(keyField.key, e.target.value)}
+      />
     );
   };
 
@@ -308,31 +314,13 @@ class EduMgt extends Component {
       return false;
     }
 
-    // 개발기준으로 주민등록번호 유효성 검사무시
     const ssn = formData.WORKER_SSN;
-    const validSsn = ssn.length === 13;
-    // const validSsn = this.ssnCheck(ssn);
+    const validSsn = ssn.length === 8;
     if (!validSsn) {
       message.error(<MessageContent>주민등록번호가 유효하지 않습니다.</MessageContent>);
       return false;
     }
     return true;
-  };
-
-  // 작업자 등록 - 주민등록번호 유효성
-  ssnCheck = ssn => {
-    const checkNum = [2, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5];
-    let sum = 0;
-    checkNum.forEach((num, index) => {
-      const temp = ssn.charAt(index) * num;
-      sum += temp;
-    });
-    let pin = 11 - (sum % 11);
-    if (pin >= 10) pin -= 10;
-    if (Number(ssn.charAt(12)) === pin) {
-      return true;
-    }
-    return false;
   };
 
   // 작업자 등록 콜백
@@ -471,17 +459,13 @@ class EduMgt extends Component {
               value={(formData.EDU_NO && formData.EDU_NO) || ''}
               style={{ width: '200px' }}
             />
-            {formData.EDU_NO && formData.EDU_NO !== '' && (
-              <>
-                <span className="text-label">거래처</span>
-                <AntdSearch
-                  className="ant-search-inline input-search-mid mr5"
-                  onClick={() => this.handleModalVisible('searchCmpny', true)}
-                  value={selectedCmpny.WRK_CMPNY_NM || ''}
-                  style={{ width: '200px' }}
-                />
-              </>
-            )}
+            <span className="text-label">거래처</span>
+            <AntdSearch
+              className="ant-search-inline input-search-mid mr5"
+              onClick={() => this.handleModalVisible('searchCmpny', true)}
+              value={selectedCmpny.WRK_CMPNY_NM || ''}
+              style={{ width: '200px' }}
+            />
           </div>
         </StyledCustomSearchWrapper>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
@@ -493,18 +477,18 @@ class EduMgt extends Component {
               <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.submitFormData('DELETE')}>
                 삭제
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetWorkers()}>
-                거래처 작업자 불러오기
-              </StyledButton>
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModalVisible('addWorker', true)}>
-                작업자 추가 등록
-              </StyledButton>
             </>
           ) : (
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('INSERT')}>
               추가
             </StyledButton>
           )}
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetWorkers()}>
+            거래처 작업자 불러오기
+          </StyledButton>
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModalVisible('addWorker', true)}>
+            작업자 추가 등록
+          </StyledButton>
           <StyledButton className="btn-gray btn-sm" onClick={() => this.initFormData()}>
             초기화
           </StyledButton>
@@ -568,7 +552,7 @@ class EduMgt extends Component {
                     <td>{this.renderInputColumns('WORKER_NM', worker.WORKER_NM)}</td>
                   </tr>
                   <tr>
-                    <th>주민등록번호("-" 제외)</th>
+                    <th>생년월일</th>
                     <td>{this.renderInputColumns('WORKER_SSN', worker.WORKER_SSN)}</td>
                   </tr>
                   <tr>
