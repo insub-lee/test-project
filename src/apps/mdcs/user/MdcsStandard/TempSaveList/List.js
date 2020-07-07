@@ -28,6 +28,7 @@ class List extends Component {
       isModifyView: false,
       workPrcProps: {},
       tempProcessRule: {},
+      relType: 1,
     };
   }
 
@@ -112,11 +113,17 @@ class List extends Component {
   initDataBind = (sagaKey, response) => {
     if (response && response.result) {
       const { result } = response;
-      const { PROCESS_RULE, WORK_PRC_PROPS } = result;
+      const { PROCESS_RULE, WORK_PRC_PROPS, REL_TYPE } = result;
       if (PROCESS_RULE && PROCESS_RULE.length > 0 && isJSON(PROCESS_RULE) && WORK_PRC_PROPS && WORK_PRC_PROPS.length > 0 && isJSON(WORK_PRC_PROPS)) {
         const tempProcessRule = JSON.parse(PROCESS_RULE);
         const workPrcProps = JSON.parse(WORK_PRC_PROPS);
-        this.setState({ selectedRow: { WORK_SEQ: result.WORK_SEQ, TASK_SEQ: result.TASK_SEQ }, tempProcessRule, workPrcProps, isModifyView: true });
+        this.setState({
+          selectedRow: { WORK_SEQ: result.WORK_SEQ, TASK_SEQ: result.TASK_SEQ },
+          tempProcessRule,
+          workPrcProps,
+          relType: REL_TYPE || 1,
+          isModifyView: true,
+        });
       }
     }
   };
@@ -126,11 +133,11 @@ class List extends Component {
   };
 
   onCloseModalHandler = () => {
-    this.setState({ selectedRow: {}, tempProcessRule: {}, workPrcProps: {}, isModifyView: false }, () => this.getListData());
+    this.setState({ selectedRow: {}, tempProcessRule: {}, workPrcProps: {}, relType: 1, isModifyView: false }, () => this.getListData());
   };
 
   onCloseModal = () => {
-    this.setState({ selectedRow: {}, tempProcessRule: {}, workPrcProps: {}, isModifyView: false });
+    this.setState({ selectedRow: {}, tempProcessRule: {}, workPrcProps: {}, relType: 1, isModifyView: false });
   };
 
   onSelectChange = (selectedRowKeys, selectedRows) => {
@@ -151,7 +158,7 @@ class List extends Component {
 
   render() {
     const { profile } = this.props;
-    const { dataList, selectedRowKeys, isModifyView, selectedRow, workPrcProps, tempProcessRule } = this.state;
+    const { dataList, selectedRowKeys, isModifyView, selectedRow, workPrcProps, tempProcessRule, relType } = this.state;
     const isLoading = false;
     return (
       <>
@@ -195,6 +202,7 @@ class List extends Component {
                 viewType="MODIFY"
                 workPrcProps={workPrcProps}
                 tempProcessRule={tempProcessRule}
+                relType={relType}
                 onCloseModalHandler={this.onCloseModalHandler}
                 onCloseModal={this.onCloseModal}
                 // compProps={{ docNumber, NODE_ID: selectedNodeId }}

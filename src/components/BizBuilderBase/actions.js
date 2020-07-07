@@ -103,10 +103,11 @@ export const getProcessRuleByModify = (id, payload) => ({
   payload,
 });
 
-export const setProcessRule = (id, processRule) => ({
+export const setProcessRule = (id, processRule, relType) => ({
   type: actionTypes.SET_PROCESS_RULE,
   id,
   processRule,
+  relType,
 });
 
 export const setProcessStep = (id, processStep) => ({
