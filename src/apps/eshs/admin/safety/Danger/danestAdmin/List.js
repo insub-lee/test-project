@@ -5,20 +5,25 @@ import customList from 'apps/eshs/admin/environment/air/stack/List';
 import moment from 'moment';
 
 import { Input, Modal, Tabs } from 'antd';
+
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledAntdModal from 'components/BizBuilder/styled//Modal/StyledAntdModal';
-import { callBackAfterPut } from 'apps/eshs/common/submitCallbackFunc';
+import StyledAntdModalPad from 'components/BizBuilder/styled//Modal/StyledAntdModalPad';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/common/submitCallbackFunc';
 import View from './View';
+import SubList from './SubList';
+import ReAppriseList from './ReAppriseList';
 
 const AntdSearchInput = StyledSearchInput(Input.Search);
 const AntdModal = StyledAntdModal(Modal);
+const AntdModalPad = StyledAntdModalPad(Modal);
 
 const { TabPane } = Tabs;
 
@@ -27,7 +32,9 @@ moment.locale('ko');
 class List extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      revisionReRendering: true,
+    };
   }
 
   componentDidMount() {}
@@ -39,6 +46,11 @@ class List extends Component {
   hazardModal = () => {
     const { isModal } = this.state;
     this.setState({ isModal: !isModal });
+  };
+
+  reAppriseModal = () => {
+    const { isModalReApprise } = this.state;
+    this.setState({ isModalReApprise: !isModalReApprise });
   };
 
   selectedModal = record => {
@@ -61,23 +73,13 @@ class List extends Component {
         type: 'GET',
         url: `/api/eshs/v1/common/dangerDanestAdmin?REG_NO=${record.REG_NO}`,
       },
-      {
-        key: 'dangerDanestAdminSub',
-        type: 'POST',
-        url: `/api/eshs/v1/common/dangerDanestAdmin`,
-        params: {
-          PARAM: {
-            REG_NO: record.REG_NO,
-          },
-        },
-      },
     ];
     getCallDataHandler(id, apiAry, this.dangerData);
   };
 
   dangerData = () => {
     const {
-      result: { dangerInfo, dangerDanestAdmin, dangerDanestAdminSub },
+      result: { dangerInfo, dangerDanestAdmin },
     } = this.props;
     if (dangerDanestAdmin && dangerDanestAdmin.list && dangerDanestAdmin.list.length <= 0) {
       message.info(<MessageContent>검색된 데이터가 없습니다.</MessageContent>);
@@ -85,7 +87,11 @@ class List extends Component {
       this.setState({
         dangerInfo: dangerInfo && dangerInfo.list,
         dangerDanestAdmin: dangerDanestAdmin && dangerDanestAdmin.list,
-        dangerDanestAdminSub: dangerDanestAdminSub && dangerDanestAdminSub.list,
+        dangerDanestAdminSub: dangerDanestAdmin && dangerDanestAdmin.subList,
+        dangerDanestAdminSubFile: dangerDanestAdmin && dangerDanestAdmin.fileList,
+        reAppriseList: dangerDanestAdmin && dangerDanestAdmin.reAppriseList,
+        tempfile: [],
+        revisionReRendering: true,
       });
     }
   };
@@ -115,28 +121,30 @@ class List extends Component {
   };
 
   onFileUploadTemp = (name, obj, record) => {
-    const { dangerDanestAdminSub } = this.state;
+    const { dangerDanestAdminSub, tempfile } = this.state;
     const change = dangerDanestAdminSub.map(changeData =>
       changeData.DA_REG_NO === record.DA_REG_NO && changeData.SEQ === record.SEQ
-        ? { ...changeData, [name]: Array.isArray(changeData[name]) ? changeData[name].push(obj) : [obj] }
-        : { ...changeData },
+        ? {
+            ...changeData,
+            file: Array.isArray(changeData.file) ? [...changeData.file, obj] : [obj],
+          }
+        : {
+            ...changeData,
+          },
     );
-    this.setState({ dangerDanestAdminSub: change });
+    const temp = tempfile || [];
+    const tempfileConcat = temp.concat({ ...obj, DANEST_SUB_SEQ: record.UNIQUE_SEQ, REG_NO: record.REG_NO, DA_REG_NO: record.DA_REG_NO });
+    this.setState({ dangerDanestAdminSub: change, tempfile: tempfileConcat });
   };
 
   updateDanest = daRegNo => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const { dangerDanestAdmin, dangerDanestAdminSub } = this.state;
+    const { dangerDanestAdmin, dangerDanestAdminSub, tempfile } = this.state;
     const submitFind = dangerDanestAdmin.find(findItem => findItem.DA_REG_NO === daRegNo);
     const submitFindSub = dangerDanestAdminSub.filter(findItem => findItem.DA_REG_NO === daRegNo);
     const submitData = { PARAM: { ...submitFind, DANEST_SUB_LIST: submitFindSub } };
-    // submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/dangerDanestAdmin`, submitData, (key, response) =>
-    //   callBackAfterPut(key, response, this.callbackDataSet),
-    // );
-
-    const file = (submitFindSub && submitFindSub.itemData && submitFindSub.itemData.file) || {};
-    if (JSON.stringify(file) !== '{}') {
-      submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', { PARAM: { DETAIL: [file] } }, (afterId, res) => {
+    if (tempfile && tempfile.length) {
+      submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', { PARAM: { DETAIL: tempfile } }, (afterId, res) => {
         if (res && res.message === 'success') {
           submitHandlerBySaga(
             id,
@@ -156,6 +164,17 @@ class List extends Component {
     }
   };
 
+  revisionDanest = daRegNo => {
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { dangerDanestAdminSub } = this.state;
+    this.setState({ revisionReRendering: false }); // revsion 사용 시 필드에 defaultValue 초기화용
+    const submitFindSub = dangerDanestAdminSub.filter(findItem => findItem.DA_REG_NO === daRegNo);
+    const submitData = { PARAM: { REVISION_LIST: submitFindSub } };
+    submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/dangerDanestAdmin`, submitData, (key, response) =>
+      callBackAfterPost(key, response, this.callbackDataSet),
+    );
+  };
+
   callbackDataSet = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const { regNo } = this.state;
@@ -165,22 +184,41 @@ class List extends Component {
         type: 'GET',
         url: `/api/eshs/v1/common/dangerDanestAdmin?REG_NO=${regNo}`,
       },
-      {
-        key: 'dangerDanestAdminSub',
-        type: 'POST',
-        url: `/api/eshs/v1/common/dangerDanestAdmin`,
-        params: {
-          PARAM: {
-            REG_NO: regNo,
-          },
-        },
-      },
     ];
     getCallDataHandler(id, apiAry, this.dangerData);
   };
 
+  UploadTempFilesDel = seq => {
+    const { dangerDanestAdminSub, tempfile } = this.state;
+    const deleteItem = dangerDanestAdminSub.map(deleteData =>
+      deleteData.file
+        ? {
+            ...deleteData,
+            file: deleteData.file.filter(filter => Number(filter.seq) !== Number(seq)),
+          }
+        : {
+            ...deleteData,
+          },
+    );
+    const temp = tempfile || [];
+    const tempfileConcat = temp.filter(deleteTemp => Number(deleteTemp.seq) !== Number(seq));
+    this.setState({ dangerDanestAdminSub: deleteItem, tempfile: tempfileConcat });
+  };
+
+  UploadFilesDel = SEQ => {
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/dangerDanestAdmin`, { PARAM: { SEQ } }, (key, response) =>
+      callBackAfterDelete(key, response, this.callbackDataSet),
+    );
+  };
+
+  dangerInfoModal = taskSeq => {
+    const { dangerInfoModal } = this.state;
+    this.setState({ dangerInfoModal: !dangerInfoModal, dangerInfoTask: taskSeq });
+  };
+
   render() {
-    const { isModal, dangerDanestAdmin, dangerInfo, dangerDanestAdminSub, regNo } = this.state;
+    const { dangerDanestAdmin, dangerInfo, dangerDanestAdminSub, dangerDanestAdminSubFile, regNo, reAppriseList } = this.state;
     return (
       <StyledContentsWrapper>
         <StyledCustomSearchWrapper className="search-wrapper-inline">
@@ -209,28 +247,80 @@ class List extends Component {
                   <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.updateDanest(item.DA_REG_NO)}>
                     수정
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => message.info(<MessageContent>개발중입니다.</MessageContent>)}>
+                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.revisionDanest(item.DA_REG_NO)}>
                     재평가
                   </StyledButton>
-                  <StyledButton className="btn-gray btn-first btn-sm" onClick={() => message.info(<MessageContent>개발중입니다.</MessageContent>)}>
-                    재평가내역
-                  </StyledButton>
+                  {reAppriseList && reAppriseList.length > 0 ? (
+                    <>
+                      <StyledButton className="btn-gray btn-first btn-sm" onClick={this.reAppriseModal}>
+                        재평가내역
+                      </StyledButton>
+                      <AntdModalPad
+                        width={1000}
+                        visible={this.state.isModalReApprise}
+                        title="재평가 목록"
+                        onCancel={this.reAppriseModal}
+                        destroyOnClose
+                        footer={null}
+                      >
+                        {this.state.isModalReApprise && <ReAppriseList reAppriseList={reAppriseList} dangerDanestAdminSubFile={dangerDanestAdminSubFile} />}
+                      </AntdModalPad>
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </StyledButtonWrapper>
-                <View
-                  formData={item}
-                  dangerInfo={dangerInfo}
-                  SUB_LIST={dangerDanestAdminSub && dangerDanestAdminSub.filter(sub => sub.DA_REG_NO === item.DA_REG_NO)}
-                  onChangeAdmin={this.onChangeAdmin}
-                  onChangeManager={this.onChangeManager}
-                  onChangeAdminSub={this.onChangeAdminSub}
-                  onFileUploadTemp={this.onFileUploadTemp}
-                />
+                <StyledHtmlTable>
+                  <table>
+                    <colgroup>
+                      <col width="8%" />
+                      <col width="8%" />
+                      <col width="12%" />
+                      <col width="8%" />
+                      <col width="12%" />
+                      <col width="6%" />
+                      <col width="6%" />
+                      <col width="5%" />
+                      <col width="12%" />
+                      <col width="13%" />
+                      <col width="5%" />
+                      <col width="5%" />
+                    </colgroup>
+                    {this.state.revisionReRendering && (
+                      <tbody>
+                        <View
+                          formData={item}
+                          dangerInfo={dangerInfo.find(info => info.PROCESS_ID === item.PROCESS_ID)}
+                          onChangeAdmin={this.onChangeAdmin}
+                          onDangerInfoModal={this.onDangerInfoModal}
+                          dangerInfoModal={this.state.dangerInfoModal}
+                          onChangeManager={this.onChangeManager}
+                        />
+                        {dangerDanestAdminSub &&
+                          dangerDanestAdminSub
+                            .filter(sub => sub.DA_REG_NO === item.DA_REG_NO)
+                            .map(subItem => (
+                              <SubList
+                                key={subItem.SEQ}
+                                subItem={subItem}
+                                onChangeManager={this.onChangeManager}
+                                onChangeAdminSub={this.onChangeAdminSub}
+                                onFileUploadTemp={this.onFileUploadTemp}
+                                UploadFilesDel={this.UploadFilesDel}
+                                UploadTempFilesDel={this.UploadTempFilesDel}
+                                dangerDanestAdminSubFile={dangerDanestAdminSubFile.filter(filterFile => filterFile.DANEST_SUB_SEQ === subItem.UNIQUE_SEQ)}
+                              />
+                            ))}
+                      </tbody>
+                    )}
+                  </table>
+                </StyledHtmlTable>
               </TabPane>
             ))}
           </Tabs>
         )}
-        <AntdModal width={1000} visible={isModal} title="위험성 평가 검색" onCancel={this.hazardModal} destroyOnClose footer={null}>
-          {isModal && (
+        <AntdModal width={1000} visible={this.state.isModal} title="위험성 평가 검색" onCancel={this.hazardModal} destroyOnClose footer={null}>
+          {this.state.isModal && (
             <BizBuilderBase sagaKey="hazardModal" workSeq={12061} CustomListPage={customList} viewType="LIST" customOnRowClick={this.selectedModal} />
           )}
         </AntdModal>
