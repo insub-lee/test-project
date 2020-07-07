@@ -299,7 +299,7 @@ class appSetting extends Component {
               <Col xl={16} className="navContent">
                 <Scrollbars
                   className="custom-scrollbar"
-                  style={{ width: 'calc(100% + 20px)', height: 'calc(100vh - 126px)' }}
+                  style={{ width: 'calc(100% + 20px)', height: 'calc(100vh - 170px)' }}
                   autoHide
                   autoHideTimeout={1000}
                   autoHideDuration={200}
