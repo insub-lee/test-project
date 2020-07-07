@@ -811,8 +811,8 @@ button {
   color: #fff !important;
 }
 
-.rc-calendar-picker {
-  z-index: 1050;
+div.rc-calendar-picker {
+  z-index: 1051;
 }
 
 `;

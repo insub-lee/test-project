@@ -419,9 +419,7 @@ class AllWorkSchedulerModal extends React.Component {
         animation="zoom"
         maskAnimation="fade"
         onClose={this.handleCloseModal}
-        style={{
-          width: 1000,
-        }}
+        style={{ width: 1000 }}
         bodyStyle={{
           padding: 0,
         }}

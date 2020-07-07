@@ -371,8 +371,8 @@ class TargetRegList extends Component {
               </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
-          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-            <StyledButton className="btn-light btn-sm mr5" onClick={this.onDelete}>
+          <StyledButtonWrapper className="btn-wrap-inline btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm mr5" onClick={this.onDelete}>
               삭제
             </StyledButton>
             <StyledButton className="btn-primary btn-sm" onClick={this.onOpenPopup}>

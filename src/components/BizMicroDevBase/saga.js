@@ -127,10 +127,18 @@ function* getFileDownloadProgress({ url, fileName, onProgress, callback }) {
   }
 }
 
+function* excelUpload({ url, formData, headers, callback}) {
+  const response = yield call(Axios.postExcelUpload, url, formData, headers);
+  if (typeof callback === 'function') {
+    callback(response);
+  }
+}
+
 export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${arg.sagaKey || arg.id}`, submitHandlerBySaga);
   yield takeEvery(`${actionTypes.GET_CALLDATA_SAGA}_${arg.sagaKey || arg.id}`, getCallDataHandler);
   yield takeEvery(`${actionTypes.GET_CALLDATA_SAGA_RETURN_RES}_${arg.sagaKey || arg.id}`, getCallDataHandlerReturnRes);
   yield takeEvery(`${actionTypes.GET_FILE_DOWNLOAD}_${arg.sagaKey || arg.id}`, getFileDownload);
   yield takeEvery(`${actionTypes.GET_FILE_DOWNLOAD_PROGRESS}_${arg.sagaKey || arg.id}`, getFileDownloadProgress);
+  yield takeLatest(`${actionTypes.EXCEL_UPLOAD}_${arg.sagaKey || arg.id}`, excelUpload);
 }

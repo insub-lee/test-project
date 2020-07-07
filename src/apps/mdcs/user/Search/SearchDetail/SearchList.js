@@ -26,8 +26,8 @@ const columns = [
   { title: 'No.', key: 'DOCNUMBER', width: '11%', dataIndex: 'DOCNUMBER' },
   { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION' },
   { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM', render: (text, record) => moment(text).format('YYYY-MM-DD') },
-  { title: 'Title', align: 'left', key: 'TITLE', width: '35%', dataIndex: 'TITLE' },
-  { title: '기안부서', key: 'REG_DEPT_NAME', width: '14%', dataIndex: 'REG_DEPT_NAME' },
+  { title: 'Title', align: 'left', key: 'TITLE', width: '35%', dataIndex: 'TITLE', ellipsis: true },
+  { title: '기안부서', align: 'center', key: 'REG_DEPT_NAME', width: '14%', dataIndex: 'REG_DEPT_NAME', ellipsis: true },
   { title: '기안자', key: 'REG_USER_NAME', width: '10%', dataIndex: 'REG_USER_NAME' },
 ];
 

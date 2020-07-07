@@ -30,6 +30,7 @@ class ConditionalApprovalList extends Component {
           listMetaSeq={8161}
           viewType="LIST"
           loadingComplete={this.loadingComplete}
+          conditional={`AND W.GUBUN = 'CF' AND W.F_QUAL_STATUS = '2'`}
           ConfirmView={taskSeq => <ConfirmView taskSeq={taskSeq} />}
         />
       </>

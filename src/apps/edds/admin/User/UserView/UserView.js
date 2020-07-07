@@ -8,6 +8,7 @@ import PostionSelect from 'components/PostionSelect';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -64,7 +65,7 @@ class UserView extends Component {
     const { formData: detail } = this.props;
 
     return (
-      <div>
+      <StyledContentsWrapper>
         {Object.keys(detail).length > 0 && (
           <>
             <StyledTable>
@@ -81,7 +82,10 @@ class UserView extends Component {
                   <tr>
                     <th>사용자명</th>
                     <td>
-                      <AntdInput value={detail.NAME_KOR} onChange={e => this.onChangeFormData('NAME_KOR', e.target.value)} />
+                      <AntdInput
+                        value={detail.NAME_KOR} className="ant-input-xs" style={{ width: '25%'}}
+                        onChange={e => this.onChangeFormData('NAME_KOR', e.target.value)}
+                      />
                     </td>
                   </tr>
                   <tr>
@@ -99,7 +103,10 @@ class UserView extends Component {
                   <tr>
                     <th>전화번호</th>
                     <td>
-                      <AntdInput value={detail.MOBILE_TEL_NO} onChange={e => this.onChangeFormData('MOBILE_TEL_NO', e.target.value)} />
+                      <AntdInput
+                        value={detail.MOBILE_TEL_NO} className="ant-input-xs" style={{ width: '30%' }}
+                        onChange={e => this.onChangeFormData('MOBILE_TEL_NO', e.target.value)}
+                      />
                     </td>
                   </tr>
                   <tr>
@@ -109,13 +116,13 @@ class UserView extends Component {
                 </tbody>  
               </table>
             </StyledTable>
-            <StyledButtonWrapper className="btn-wrap-center">
-              <StyledButton className="btn-light mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
-              <StyledButton className="btn-primary" onClick={this.onClickUpdate}>수정</StyledButton>
+            <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+              <StyledButton className="btn-light btn-sm mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
+              <StyledButton className="btn-primary btn-sm" onClick={this.onClickUpdate}>수정</StyledButton>
             </StyledButtonWrapper>
           </>
         )}
-      </div>
+      </StyledContentsWrapper>
     );
   }
 }

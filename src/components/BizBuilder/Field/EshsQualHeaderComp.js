@@ -142,6 +142,7 @@ class EshsQualHeaderComp extends Component {
     const { modalVisible } = this.state;
     const searchList = [];
     const gubun = (formData && formData.GUBUN) || '';
+    console.debug('여기는 qual header ', gubun);
     if (!modalVisible) {
       searchList.push(
         <BizBuilderBase
@@ -154,6 +155,7 @@ class EshsQualHeaderComp extends Component {
           listMetaSeq={6844}
           customOnRowClick={record => this.modalRowSelected(record)}
           listGubun={gubun}
+          conditional={gubun === 'IL' ? `AND W.GUBUN = 'IL'` : ` AND W.GUBUN = 'CF'`}
         />,
       );
     }

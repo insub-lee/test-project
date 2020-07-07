@@ -59,8 +59,9 @@ const ListPage = props => {
   useEffect(() => {
     if (listData instanceof Array) {
       if (listData.length > 0) {
+        const filterListData = listData.filter(item => item.USE_YN === 'Y');
         if (props?.shouldSearchAll) {
-          const temp = listData.map(e => {
+          const temp = filterListData.map(e => {
             const splitedDT = e?.REG_DTTM.split(' ');
             return { ...e, REG_DTTM: splitedDT[0] };
           });
@@ -72,8 +73,7 @@ const ListPage = props => {
             request({
               method: 'POST',
               url: address.search,
-              // FIRE_CODE: AL (Air Line Mask)
-              data: { listData, QUARTER, INSPECTION_YEAR, IS_INSPECTED },
+              data: { filterListData, QUARTER, INSPECTION_YEAR, IS_INSPECTED },
             }).then((response, error) => {
               if (!error) {
                 const { result, data } = response.response || {};

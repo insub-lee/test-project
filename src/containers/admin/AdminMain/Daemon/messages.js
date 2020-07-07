@@ -3,7 +3,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   daemonManage: {
     id: 'admin.AdminMain.Daemon.daemonManage',
-    defaultMessage: '대몬관리',
+    defaultMessage: '데몬관리',
   },
   noSearch: {
     id: 'admin.AdminMain.Daemon.noSearch',
