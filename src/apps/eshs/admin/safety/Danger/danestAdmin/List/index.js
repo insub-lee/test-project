@@ -19,7 +19,7 @@ import StyledAntdModalPad from 'components/BizBuilder/styled//Modal/StyledAntdMo
 import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/common/submitCallbackFunc';
 import View from './View';
 import SubList from './SubList';
-import ReAppriseList from './ReAppriseList';
+import ReAppriseList from '../ReAppriseList';
 
 const AntdSearchInput = StyledSearchInput(Input.Search);
 const AntdModal = StyledAntdModal(Modal);
@@ -37,7 +37,32 @@ class List extends Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiAry = [
+      {
+        key: 'dangerInfoModalDataList',
+        type: 'GET',
+        url: '/api/eshs/v1/common/eshsDanger',
+      },
+      {
+        key: 'dangerInfoSelectList',
+        type: 'POST',
+        url: '/api/admin/v1/common/categoryChildrenListUseYn',
+        params: { PARAM: { NODE_ID: 1831, USE_YN: 'Y' } },
+      },
+    ];
+    getCallDataHandler(id, apiAry, this.initData);
+  }
+
+  initData = () => {
+    const {
+      result: { dangerInfoModalDataList, dangerInfoSelectList },
+    } = this.props;
+    const dangerInfoModalData = dangerInfoModalDataList && dangerInfoModalDataList.list;
+    const dangerInfoSelect = dangerInfoSelectList && dangerInfoSelectList.categoryMapList && dangerInfoSelectList.categoryMapList.filter(f => f.LVL === 7);
+    this.setState({ dangerInfoModalData, dangerInfoSelect });
+  };
 
   search = () => {
     this.dangerData();
@@ -212,7 +237,7 @@ class List extends Component {
     );
   };
 
-  dangerInfoModal = taskSeq => {
+  onDangerInfoModal = taskSeq => {
     const { dangerInfoModal } = this.state;
     this.setState({ dangerInfoModal: !dangerInfoModal, dangerInfoTask: taskSeq });
   };
@@ -295,6 +320,8 @@ class List extends Component {
                           onDangerInfoModal={this.onDangerInfoModal}
                           dangerInfoModal={this.state.dangerInfoModal}
                           onChangeManager={this.onChangeManager}
+                          dangerInfoModalData={this.state.dangerInfoModalData}
+                          dangerInfoSelect={this.state.dangerInfoSelect}
                         />
                         {dangerDanestAdminSub &&
                           dangerDanestAdminSub

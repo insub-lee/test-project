@@ -6,7 +6,7 @@ import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import moment from 'moment';
-import FileUpload from './FileUpload';
+import FileUpload from '../FileUpload';
 
 moment.locale('ko');
 const AntdSelect = StyledSelect(Select);

@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { InputNumber, Radio, Modal } from 'antd';
 
-import StyledAntdModal from 'components/BizBuilder/styled//Modal/StyledAntdModal';
+import StyledAntdModalPad from 'components/BizBuilder/styled//Modal/StyledAntdModalPad';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import UserSearchModal from 'apps/eshs/common/userSearchModal';
@@ -12,10 +13,10 @@ import moment from 'moment';
 
 moment.locale('ko');
 
-const AntdModal = StyledAntdModal(Modal);
+const AntdModalPad = StyledAntdModalPad(Modal);
 const AntdInputNumber = StyledInputNumber(InputNumber);
 
-const View = ({ formData, dangerInfo, onDangerInfoModal, dangerInfoModal, onChangeAdmin, onChangeManager }) => (
+const View = ({ formData, dangerInfo, onDangerInfoModal, dangerInfoModal, onChangeAdmin, onChangeManager, dangerInfoModalData, dangerInfoSelect }) => (
   <>
     <tr>
       <th colSpan="2" align="center">
@@ -50,23 +51,23 @@ const View = ({ formData, dangerInfo, onDangerInfoModal, dangerInfoModal, onChan
       <th colSpan="2">공정 {`>`} 세부공정명</th>
       <td colSpan="2" align="center">
         <span>{`${formData.PLACE_NM || ''} > ${formData.PROCESS_NM || ''}`}</span>
-        {dangerInfo && (
+        {dangerInfo && dangerInfoModalData && dangerInfoSelect && (
           <>
             <StyledButton className="btn-light btn-first btn-xs" onClick={() => onDangerInfoModal(dangerInfo.TASK_SEQ)}>
               위험정보
             </StyledButton>
-            <AntdModal width={1000} visible={dangerInfoModal} title="위험성 평가 검색" onCancel={onDangerInfoModal} destroyOnClose footer={null}>
+            <AntdModalPad width={1000} visible={dangerInfoModal} title="위험성 평가 검색" onCancel={onDangerInfoModal} destroyOnClose footer={null}>
               {dangerInfoModal && (
-                <DangerInfoModify
-                  processNm={dangerInfo.PROCESS_NM}
-                  placeNm={dangerInfo.PLACE_NM}
-                  divNm={dangerInfo.DIV_NM}
-                  sdivNm={dangerInfo.SDIV_NM}
-                  // selectData={selectData}
-                  formData={dangerInfo}
-                />
+                <StyledHtmlTable>
+                  <DangerInfoModify
+                    formData={formData}
+                    INFO_DATA={JSON.parse(dangerInfo.INFO_DATA)}
+                    modalData={dangerInfoModalData}
+                    selectData={dangerInfoSelect}
+                  />
+                </StyledHtmlTable>
               )}
-            </AntdModal>
+            </AntdModalPad>
           </>
         )}
       </td>
@@ -134,6 +135,8 @@ View.propTypes = {
   onDangerInfoModal: PropTypes.func,
   onChangeAdmin: PropTypes.func,
   onChangeManager: PropTypes.func,
+  dangerInfoModalData: PropTypes.array,
+  dangerInfoSelect: PropTypes.array,
 };
 
 export default React.memo(View);
