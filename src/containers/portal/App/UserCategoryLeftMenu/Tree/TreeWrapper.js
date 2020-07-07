@@ -230,7 +230,7 @@ const TreeWrapper = styled.div`
   .rstcustom__row.eshs_tree_depth2,
   .rstcustom__row.eshs_tree_depth3,
   .rstcustom__row.eshs_tree_depth4 {
-    background: #09141f;
+    background: #2a3548;
   }
 
   .sortableTreeWrapper.sidebar .rst__nodeContent .inTree.ant-badge .ant-badge-count {
