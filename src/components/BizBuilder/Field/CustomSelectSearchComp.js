@@ -76,7 +76,7 @@ class CustomSelectSearchComp extends React.Component {
       <>
         <AntdSelect
           placeholder={placeholder || '검색구분'}
-          style={{ width: '50%' }}
+          style={{ width: '30%' }}
           onChange={value => {
             this.handleOnChange('searchType', value);
           }}
@@ -90,7 +90,7 @@ class CustomSelectSearchComp extends React.Component {
           ))}
         </AntdSelect>
         <AntdInput
-          style={{ width: '50%' }}
+          style={{ width: '68%', marginLeft: '5px' }}
           readOnly={!searchType}
           placeholder="검색어"
           onChange={e => this.handleOnChange('searchText', e.target.value)}
