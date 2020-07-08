@@ -75,8 +75,8 @@ const reducer = (state = initialState, action) => {
         .setIn(['bizBuilderBase', id, 'isLoading'], false);
     }
     case actionTypes.SET_PROCESS_RULE: {
-      const { id, processRule, relType } = action;
-      return state.setIn(['bizBuilderBase', id, 'processRule'], fromJS(processRule)).setIn(['bizBuilderBase', id, 'relType'], relType);
+      const { id, processRule } = action;
+      return state.setIn(['bizBuilderBase', id, 'processRule'], fromJS(processRule));
     }
     case actionTypes.SET_PROCESS_STEP: {
       const { id, processStep } = action;
@@ -251,6 +251,10 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SET_IS_TASK_FAVORITE_REDUCER: {
       const { id, flag } = action;
       return state.setIn(['bizBuilderBase', id, 'isTaskFavorite'], flag);
+    }
+    case actionTypes.SET_REL_TYPE_REDUCER: {
+      const { id, relType } = action;
+      return state.setIn(['bizBuilderBase', id, 'relType'], relType);
     }
     default:
       return state;
