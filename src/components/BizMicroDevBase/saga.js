@@ -91,6 +91,7 @@ function* getFileDownload({ id, url, fileName, callbackFunc }) {
   if (window.navigator && window.navigator.msSaveBlob) {
     window.navigator.msSaveBlob(blobResponse, fileName);
   } else {
+    fileName = decodeURI(fileName);
     const fileUrl = window.URL.createObjectURL(blobResponse);
     const link = document.createElement('a');
     link.href = fileUrl;
@@ -123,6 +124,7 @@ function* getFileDownloadProgress({ url, fileName, onProgress, callback }) {
     if (window.navigator && window.navigator.msSaveBlob) {
       window.navigator.msSaveBlob(data, downFileName);
     } else {
+      downFileName = decodeURI(downFileName);
       const fileUrl = window.URL.createObjectURL(data);
       const link = document.createElement('a');
       link.href = fileUrl;
