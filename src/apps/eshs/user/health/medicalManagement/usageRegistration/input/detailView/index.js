@@ -10,7 +10,7 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import { callBackAfterPut, callBackAfterDelete } from 'apps/eshs/common/submitCallbackFunc';
+import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/common/submitCallbackFunc';
 
 const AntdSelect = StyledSelect(Select);
 const AntdTextarea = StyledTextarea(Input.TextArea);
@@ -22,6 +22,7 @@ class DetailView extends React.Component {
       detailValue: {},
       isCooperator: 'N',
       symptomsByDiseaseIdList: [],
+      isDateChange: false,
     };
   }
 
@@ -31,7 +32,7 @@ class DetailView extends React.Component {
 
   static getDerivedStateFromProps(props, state) {
     if (state.detailValue !== props.record) {
-      return { detailValue: props.record };
+      return { detailValue: Object.assign(props.record) };
     }
     return null;
   }
@@ -108,25 +109,59 @@ class DetailView extends React.Component {
   };
 
   handleModifyClick = () => {
-    const { detailValue } = this.state;
-    const { sagaKey, submitHandlerBySaga, handleModalClose } = this.props;
+    const { modalCloseAndStateClear } = this;
+    const { detailValue, isDateChange } = this.state;
+    const { sagaKey, submitHandlerBySaga } = this.props;
 
-    submitHandlerBySaga(sagaKey, 'PUT', `/api/eshs/v1/common/health-usage`, detailValue, (key, response) => callBackAfterPut(key, response, handleModalClose));
+    return isDateChange
+      ? submitHandlerBySaga(
+          sagaKey,
+          'POST',
+          `/api/eshs/v1/common/health-usage`,
+          Object.assign(detailValue, { JRNL_DTTM: moment(detailValue.JRNL_DTTM).unix() }),
+          (key, response) => callBackAfterPost(key, response, modalCloseAndStateClear),
+        )
+      : submitHandlerBySaga(sagaKey, 'PUT', `/api/eshs/v1/common/health-usage`, detailValue, (key, response) =>
+          callBackAfterPut(key, response, modalCloseAndStateClear),
+        );
   };
 
   handleDeleteClick = () => {
     const { detailValue } = this.state;
-    const { sagaKey, submitHandlerBySaga, handleModalClose } = this.props;
+    const { sagaKey, submitHandlerBySaga } = this.props;
 
     submitHandlerBySaga(sagaKey, 'DELETE', `/api/eshs/v1/common/health-usage`, detailValue, (key, response) =>
-      callBackAfterDelete(key, response, handleModalClose),
+      callBackAfterDelete(key, response, this.modalCloseAndStateClear),
     );
   };
 
+  handleDateChange = value => {
+    this.setState(prevState => ({
+      detailValue: Object.assign(prevState.detailValue, { JRNL_DTTM: moment(value) }),
+      isDateChange: true,
+    }));
+  };
+
+  modalCloseAndStateClear = () => {
+    const { handleModalClose, handleSearchClick } = this.props;
+    this.setState({ detailValue: {} }, () => {
+      handleSearchClick();
+      handleModalClose();
+    });
+  };
+
   render() {
-    const { checkCooperator, handleInputChange, handleInputChangeAndGetSympoms, handleModifyClick, handleDeleteClick } = this;
+    const {
+      checkCooperator,
+      handleInputChange,
+      handleInputChangeAndGetSympoms,
+      handleModifyClick,
+      handleDeleteClick,
+      handleDateChange,
+      modalCloseAndStateClear,
+    } = this;
     const { detailValue, isCooperator, symptomsByDiseaseIdList } = this.state;
-    const { handleModalClose, diseaseList, treatmentList } = this.props;
+    const { diseaseList, treatmentList } = this.props;
     const hasMedicineList = detailValue.TREATMENT && detailValue.TREATMENT.includes('일반의약품');
 
     return (
@@ -148,7 +183,8 @@ class DetailView extends React.Component {
                   <AntdPicker
                     className="ant-picker-sm"
                     showTime={{ format: 'HH:mm' }}
-                    defaultValue={moment(detailValue.JRNL_DTTM, 'YYYY년 MM월 DD일 HH시 mm분')}
+                    onChange={handleDateChange}
+                    value={moment(detailValue.JRNL_DTTM, 'YYYY년 MM월 DD일 HH시 mm분')}
                     format="YYYY-MM-DD HH:mm"
                     style={{ width: '165px' }}
                   />
@@ -231,7 +267,7 @@ class DetailView extends React.Component {
               {hasMedicineList ? (
                 <tr>
                   <th>약품</th>
-                  <td colSpan={5}>{detailValue.DRUG.replace('\n', ', ')}</td>
+                  <td colSpan={5}>{(detailValue.DRUG && detailValue.DRUG.replace('\n', ', ')) || ''}</td>
                 </tr>
               ) : null}
               <tr>
@@ -270,7 +306,7 @@ class DetailView extends React.Component {
           <StyledButton className="btn-gray btn-sm mr5" onClick={handleDeleteClick}>
             삭제
           </StyledButton>
-          <StyledButton className="btn-light btn-sm" onClick={handleModalClose}>
+          <StyledButton className="btn-light btn-sm" onClick={modalCloseAndStateClear}>
             닫기
           </StyledButton>
         </StyledButtonWrapper>
@@ -288,6 +324,7 @@ DetailView.propTypes = {
   result: PropTypes.object,
   diseaseList: PropTypes.arrayOf('object'),
   treatmentList: PropTypes.arrayOf('object'),
+  handleSearchClick: PropTypes.func,
 };
 
 DetailView.defaultProps = {};

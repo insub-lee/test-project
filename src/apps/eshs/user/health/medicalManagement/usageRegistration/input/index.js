@@ -237,8 +237,8 @@ class InputPage extends React.Component {
     return getCallDataHandler(sagaKey, apiArr, this.setDataSource);
   };
 
-  userIdValidationCheck = ({ isValid }) =>
-    isValid === 1
+  userIdValidationCheck = response =>
+    Object.values(response)[0] === 1
       ? this.setState({ hasUserInfo: true }, message.success('검색에 성공했습니다.'))
       : this.setState({ hasUserInfo: false }, message.warn('검색된 사원이 없습니다.'));
 
@@ -313,13 +313,34 @@ class InputPage extends React.Component {
   handleSelectMedicineComplete = selectMedicineList => {
     this.setState(
       prevState => ({ isSelectMedicine: false, requestValue: Object.assign(prevState.requestValue, { MEDICINE_LIST: selectMedicineList }) }),
-      this.handleSaveClick,
+      () => {
+        this.handleSaveClick();
+        this.handleSearchClick();
+      },
+    );
+  };
+
+  handleResetClick = () => {
+    this.setState(
+      {
+        dataSource: [],
+      },
+      this.resetRequestValue,
     );
   };
 
   render() {
     const { columns } = this;
-    const { checkCooperator, handleInputChange, handleSearchClick, handleSaveClick, handleRowClick, handleModalClose, handleSelectMedicineComplete } = this;
+    const {
+      checkCooperator,
+      handleInputChange,
+      handleSearchClick,
+      handleSaveClick,
+      handleRowClick,
+      handleModalClose,
+      handleSelectMedicineComplete,
+      handleResetClick,
+    } = this;
     const {
       diseaseList,
       treatmentList,
@@ -429,7 +450,7 @@ class InputPage extends React.Component {
                 ) : null}
                 <tr>
                   <th>일시</th>
-                  <td>{hasUserInfo ? moment(visitDateTime).format('YYYY-MM-DD HH시 mm분') : null}</td>
+                  <td>{hasUserInfo ? moment(visitDateTime).format('YYYY년 MM월 DD일 HH시 mm분') : null}</td>
                 </tr>
                 <tr>
                   <th>업무관련성 구분</th>
@@ -482,8 +503,11 @@ class InputPage extends React.Component {
             </table>
           </StyledHtmlTable>
           <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10 btn-wrap-mt-10">
-            <StyledButton className="btn-primary btn-sm" onClick={handleSaveClick}>
+            <StyledButton className="btn-primary btn-sm mr5" onClick={handleSaveClick}>
               저장
+            </StyledButton>
+            <StyledButton className="btn-light btn-sm" onClick={handleResetClick}>
+              초기화
             </StyledButton>
           </StyledButtonWrapper>
           <AntdTable columns={columns} dataSource={dataSource} onRow={record => ({ onClick: () => handleRowClick(record) })} />
@@ -498,6 +522,7 @@ class InputPage extends React.Component {
               diseaseList={diseaseList}
               treatmentList={treatmentList}
               submitHandlerBySaga={this.props.submitHandlerBySaga}
+              handleSearchClick={this.handleSearchClick}
             />
           </AntdModal>
           <AntdModal title="일반의약품 선택" visible={isSelectMedicine} footer={null} onCancel={handleModalClose} width="50%" destroyOnClose>
@@ -508,6 +533,7 @@ class InputPage extends React.Component {
               requestValue={requestValue}
               handleInputChange={handleInputChange}
               handleSelectMedicineComplete={handleSelectMedicineComplete}
+              handleSearchClick={this.handleSearchClick}
             />
           </AntdModal>
         </StyledContentsWrapper>
