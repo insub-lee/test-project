@@ -99,7 +99,7 @@ class List extends Component {
         url: '/api/eshs/v1/common/eshsBuilderCustomSearch/5262',
         params: {
           PARAM: {
-            whereString: [`AND W.IS_DANGER = '${record.REG_NO}'`],
+            whereString: [`AND W.DA_REG_NO = '${record.REG_NO}'`],
           },
         },
       },
@@ -121,11 +121,11 @@ class List extends Component {
     } else {
       this.setState({
         dangerInfo: dangerInfo && dangerInfo.list,
-        safetyImprove: safetyImprove && safetyImprove.list,
-        dangerDanestAdmin: dangerDanestAdmin && dangerDanestAdmin.list,
-        dangerDanestAdminSub: dangerDanestAdmin && dangerDanestAdmin.subList,
-        dangerDanestAdminSubFile: dangerDanestAdmin && dangerDanestAdmin.fileList,
-        reAppriseList: dangerDanestAdmin && dangerDanestAdmin.reAppriseList,
+        safetyImprove: (safetyImprove && safetyImprove.list) || [],
+        dangerDanestAdmin: (dangerDanestAdmin && dangerDanestAdmin.list) || [],
+        dangerDanestAdminSub: (dangerDanestAdmin && dangerDanestAdmin.subList) || [],
+        dangerDanestAdminSubFile: (dangerDanestAdmin && dangerDanestAdmin.fileList) || [],
+        reAppriseList: (dangerDanestAdmin && dangerDanestAdmin.reAppriseList) || [],
         tempfile: [],
         revisionReRendering: true,
       });
@@ -253,6 +253,11 @@ class List extends Component {
     this.setState({ dangerInfoModal: !dangerInfoModal });
   };
 
+  onSafetyImproveModal = () => {
+    const { safetyImproveModal } = this.state;
+    this.setState({ safetyImproveModal: !safetyImproveModal });
+  };
+
   render() {
     const { dangerDanestAdmin, dangerInfo, dangerDanestAdminSub, dangerDanestAdminSubFile, regNo, reAppriseList } = this.state;
     return (
@@ -333,7 +338,9 @@ class List extends Component {
                           onChangeManager={this.onChangeManager}
                           dangerInfoModalData={this.state.dangerInfoModalData}
                           dangerInfoSelect={this.state.dangerInfoSelect}
-                          safetyImprove={this.state.safetyImprove.find(improve => improve.REG_NO === item.REG_NO)}
+                          safetyImprove={this.state.safetyImprove[0]}
+                          safetyImproveModal={this.state.safetyImproveModal}
+                          onSafetyImproveModal={this.onSafetyImproveModal}
                         />
                         {dangerDanestAdminSub &&
                           dangerDanestAdminSub
