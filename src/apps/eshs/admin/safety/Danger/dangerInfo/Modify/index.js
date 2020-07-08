@@ -50,11 +50,17 @@ class ModifyPage extends Component {
   componentDidMount() {
     const { sagaKey: id, getExtraApiData, changeFormData, getListData, changeSearchData } = this.props;
     const apiAry = [
+      // {
+      //   key: 'treeSelectData',
+      //   type: 'POST',
+      //   url: '/api/admin/v1/common/categoryMapList',
+      //   params: { PARAM: { NODE_ID: 1831 } },
+      // },
       {
         key: 'treeSelectData',
         type: 'POST',
-        url: '/api/admin/v1/common/categoryMapList',
-        params: { PARAM: { NODE_ID: 1831 } },
+        url: '/api/admin/v1/common/categoryChildrenListUseYn',
+        params: { PARAM: { NODE_ID: 1831, USE_YN: 'Y' } },
       },
       {
         key: 'modalData',
