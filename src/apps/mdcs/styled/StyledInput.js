@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import closeImg from '../../../../images/icon_pclose.png';
+import closeImg from '../images/icon_pclose.png';
 
 const Styled = styled.div`
   .pop_tit {
