@@ -363,7 +363,6 @@ class ListPage extends Component {
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
-
     // 리스트 Sorting
     const sortingListData = this.customListSort(listData);
 
@@ -475,30 +474,37 @@ class ListPage extends Component {
                                       ''
                                     ),
                                   )}
+                                <td>
+                                  <StyledButton className="btn-gray btn-xs" onClick={this.handleClickSearch}>
+                                    검색
+                                  </StyledButton>
+                                </td>
                               </tr>
                             ))}
                           </tbody>
                         </table>
                       </div>
-                      {group.type === 'searchGroup' && group.useSearch && (
-                        <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray btn-sm" onClick={this.handleClickSearch}>
-                            검색
-                          </StyledButton>
-                          {useExcelDownload && isExcelDown && (
-                            <ExcelDownloadComp
-                              isBuilder={false}
-                              fileName={fileName || 'excel'}
-                              className="workerExcelBtn"
-                              btnText={btnTex || '엑셀받기'}
-                              sheetName={sheetName || 'sheet1'}
-                              columns={columns || []}
-                              fields={fields || []}
-                              listData={listData || []}
-                            />
-                          )}
-                        </div>
-                      )}
+                      {/*
+                        group.type === 'searchGroup' && group.useSearch && false && (
+                          <div className="view-designer-group-search-btn-wrap">
+                            <StyledButton className="btn-gray btn-sm" onClick={this.handleClickSearch}>
+                              검색
+                            </StyledButton>
+                            {useExcelDownload && isExcelDown && (
+                              <ExcelDownloadComp
+                                isBuilder={false}
+                                fileName={fileName || 'excel'}
+                                className="workerExcelBtn"
+                                btnText={btnTex || '엑셀받기'}
+                                sheetName={sheetName || 'sheet1'}
+                                columns={columns || []}
+                                fields={fields || []}
+                                listData={listData || []}
+                              />
+                            )}
+                          </div>
+                        )
+                      */}
                     </Group>
                   </StyledSearchWrapper>
                 )
@@ -517,11 +523,13 @@ class ListPage extends Component {
                   추가
                 </StyledButton>
               )}
-              {isMultiDelete && (
+              {/*
+              isMultiDelete && (
                 <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
                   <StyledButton className="btn-light btn-sm">삭제</StyledButton>
                 </Popconfirm>
-              )}
+              )
+              */}
             </StyledButtonWrapper>
             <AntdModal
               centered

@@ -252,6 +252,10 @@ const reducer = (state = initialState, action) => {
       const { id, flag } = action;
       return state.setIn(['bizBuilderBase', id, 'isTaskFavorite'], flag);
     }
+    case actionTypes.SET_REL_TYPE_REDUCER: {
+      const { id, relType } = action;
+      return state.setIn(['bizBuilderBase', id, 'relType'], relType);
+    }
     default:
       return state;
   }

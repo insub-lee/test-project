@@ -27,7 +27,7 @@ class InputPage extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getProcessRule, workInfo, workPrcProps } = this.props;
+    const { sagaKey: id, getProcessRule, workInfo, workPrcProps, relType, setRelType } = this.props;
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
@@ -49,6 +49,7 @@ class InputPage extends Component {
         },
       };
       getProcessRule(id, payload);
+      setRelType(id, relType);
     }
   }
 
@@ -194,7 +195,7 @@ class InputPage extends Component {
         reloadId && reloadViewType && reloadTaskSeq ? reloadTaskSeq : -1,
         reloadId && reloadViewType && reloadTaskSeq ? reloadViewType : 'LIST',
       );
-      if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
+      if (isSaveModalClose && typeof changeBuilderModalStateByParent === 'function') changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
 
     changeIsLoading(false);
@@ -251,7 +252,7 @@ class InputPage extends Component {
         reloadId && reloadViewType && reloadTaskSeq ? reloadTaskSeq : -1,
         reloadId && reloadViewType && reloadTaskSeq ? reloadViewType : 'LIST',
       );
-      if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
+      if (isSaveModalClose && typeof changeBuilderModalStateByParent === 'function') changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
 
     changeIsLoading(false);

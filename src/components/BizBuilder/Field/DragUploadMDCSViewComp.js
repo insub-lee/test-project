@@ -32,7 +32,7 @@ class DragUploadMDCSViewComp extends Component {
       covertFileName = fileName;
     } else {
       nSelectedValue = { [uuid()]: 1, ...selectedValue };
-      covertFileName = selectedValue && selectedValue.downType === 'PDF' ? `${fileName}.pdf` : fileName;
+      covertFileName = fileName;
     }
     const acl = base64.encode(JSON.stringify(nSelectedValue));
     const fileUrl = `${url}/${acl}`;

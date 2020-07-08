@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Input, DatePicker, Select, InputNumber, Popconfirm } from 'antd';
+import { Input, DatePicker, Select, InputNumber, Modal, Popconfirm } from 'antd';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
+import DrugList from 'apps/eshs/user/health/medicalManagement/Drug/DrugList';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
@@ -12,8 +13,9 @@ import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -21,54 +23,115 @@ import moment from 'moment';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
-const AntdTextarea = StyledTextarea(Input.TextArea);
 const AntdDatePicker = StyledDatePicker(DatePicker);
 const AntdInputNumber = StyledInputNumber(InputNumber);
+const AntdSearchInput = StyledSearchInput(Input.Search);
+const AntdModal = StyledAntdModal(Modal);
+
+const today = moment(new Date()).format('YYYY-MM-DD');
+const onlyNumber = /^[0-9]*$/;
 
 class Comp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      formData: { SITE_NODE_ID: 317, PROPERSTOCK: 0 },
+      formData: {},
+      modalObj: {
+        visible: false,
+        content: [],
+      },
     };
   }
 
-  changeFormData = (target, value) => this.setState(prevState => ({ formData: Object.assign(prevState.formData, { [target]: value }) }));
+  componentDidMount = () => {
+    this.appStart();
+  };
+
+  appStart = () => {
+    const { defaultForm } = this.props;
+
+    this.setState({
+      formData: { SITE_NODE_ID: 317, ...defaultForm, POSTING_DT: defaultForm.POSTING_DT ? defaultForm.POSTING_DT : moment(new Date()).format('YYYY-MM-DD') },
+    });
+  };
+
+  DrugModalVisible = () => {
+    const {
+      modalObj: { visible },
+    } = this.state;
+
+    if (visible) {
+      return this.setState({
+        modalObj: {
+          visible: !visible,
+          content: [],
+        },
+      });
+    }
+    return this.setState({
+      modalObj: {
+        visible: !visible,
+        content: [<DrugList key="DrugList" customOnRowClick={this.DrugListRowClick} saveBtn={false} />],
+        title: '의약품 검색',
+      },
+    });
+  };
+
+  DrugListRowClick = record => {
+    this.setState(
+      prevState => ({
+        formData: { ...prevState.formData, ...record },
+      }),
+      this.DrugModalVisible,
+    );
+  };
+
+  changeFormData = (target, value) =>
+    this.setState(prevState => ({
+      formData: Object.assign(prevState.formData, { [target]: value }),
+    }));
 
   handleAction = type => {
-    const { sagaKey, submitHandlerBySaga, profile, defaultForm, modalVisible, getList, spinningOn, spinningOff } = this.props;
+    const { sagaKey, submitHandlerBySaga, profile, modalVisible, getList, spinningOn, spinningOff } = this.props;
     const { formData } = this.state;
-    const drug = (formData && formData.DRUG) || '';
-    spinningOn();
     const submitData = {
       PARAM: {
-        ...defaultForm,
         ...formData,
         EMP_NO: profile.EMP_NO,
         USER_ID: profile.USER_ID,
       },
     };
+
     switch (type) {
       case 'INPUT':
-      case 'MODIFY':
-        if (!drug) {
+        spinningOn();
+        if (!this.validationChk(formData)) return spinningOff();
+        submitHandlerBySaga(sagaKey, 'PUT', '/api/eshs/v1/common/health/eshsHealthMedicineInOut', submitData, (id, res) => {
           spinningOff();
-          return this.messageShow('품목을 입력해주십시오.');
-        }
-        submitHandlerBySaga(sagaKey, 'PUT', '/api/eshs/v1/common/health/eshsHealthMedicine', submitData, (id, res) => {
-          spinningOff();
-          if (res && res.code === 200) {
-            this.showMessage(type === 'INPUT' ? '저장되었습니다.' : '수정되었습니다.');
+          if (res && res.result === 1) {
+            this.showMessage('저장되었습니다.');
             modalVisible();
             return getList();
           }
-          return this.showMessage(type === 'INPUT' ? '저장에 실패하였습니다.' : '수정에 실패하였습니다.');
+          return this.showMessage('저장에 실패하였습니다.');
+        });
+        break;
+      case 'MODIFY':
+        if (!this.validationChk(formData)) return spinningOff();
+        submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/eshsHealthMedicineInOutUpdate', submitData, (id, res) => {
+          spinningOff();
+          if (res && res.result === 1) {
+            this.showMessage('수정되었습니다.');
+            modalVisible();
+            return getList();
+          }
+          return this.showMessage('수정에 실패하였습니다.');
         });
         break;
       case 'DELETE':
-        submitHandlerBySaga(sagaKey, 'DELETE', '/api/eshs/v1/common/health/eshsHealthMedicine', submitData, (id, res) => {
+        submitHandlerBySaga(sagaKey, 'DELETE', '/api/eshs/v1/common/health/eshsHealthMedicineInOut', submitData, (id, res) => {
           spinningOff();
-          if (res && res.result === 1) {
+          if (res && res.result > 1) {
             this.showMessage('삭제되었습니다.');
             modalVisible();
             return getList();
@@ -83,8 +146,32 @@ class Comp extends Component {
 
   showMessage = text => message.info(<MessageContent>{text}</MessageContent>);
 
+  validationChk = formData => {
+    const { type } = this.props;
+    const postingDt = formData.POSTING_DT || '';
+    const qty = formData.QTY || '';
+    const drugCd = formData.DRUG_CD || '';
+
+    let isPass = true;
+    if (!drugCd) {
+      this.showMessage('의약품을 선택해주세요.');
+      isPass = false;
+    } else if (!postingDt) {
+      this.showMessage('입고 날짜를 입력해 주세요.');
+      isPass = false;
+    } else if (type === 'INPUT' && postingDt > today) {
+      this.showMessage(`${postingDt}은 입력할 수 없습니다.`);
+      isPass = false;
+    } else if (!qty || qty === 0) {
+      this.showMessage('수량을 입력해 주세요.');
+      isPass = false;
+    }
+    return isPass;
+  };
+
   render() {
-    const { type, defaultForm, modalVisible, workAreaList } = this.props;
+    const { type, modalVisible, workAreaList } = this.props;
+    const { formData, modalObj } = this.state;
     return (
       <StyledContentsWrapper>
         <StyledHtmlTable>
@@ -95,7 +182,7 @@ class Comp extends Component {
             </colgroup>
             <thead>
               <tr>
-                <th colSpan={2}>구급약품 {type === 'INPUT' ? '신규등록' : '관리'}</th>
+                <th colSpan={2}>구급약품 입고{type === 'INPUT' ? '등록' : '관리'}</th>
               </tr>
             </thead>
             <tfoot>
@@ -124,11 +211,10 @@ class Comp extends Component {
                   <AntdSelect
                     className="select-sm mr5"
                     style={{ width: 100 }}
-                    defaultValue={defaultForm.SITE_NODE_ID || 317}
-                    allowClear
+                    value={formData.SITE_NODE_ID || 317}
                     placeholder="지역"
                     onChange={val => this.changeFormData('SITE_NODE_ID', val)}
-                    readOnly={type !== 'INPUT'}
+                    disabled={type !== 'INPUT'}
                   >
                     {workAreaList
                       .filter(item => item.LVL === 1)
@@ -143,14 +229,25 @@ class Comp extends Component {
               <tr>
                 <th>품목</th>
                 <td>
-                  <AntdInput
-                    placeholder="품목"
-                    allowClear
-                    className="ant-input-sm ant-input-inline mr5"
-                    defaultValue={defaultForm.DRUG || ''}
-                    style={{ width: '100%' }}
-                    onChange={e => this.changeFormData('DRUG', e.target.value)}
-                  />
+                  {type === 'INPUT' ? (
+                    <AntdSearchInput
+                      style={{ width: '100%' }}
+                      value={formData.DRUG}
+                      className="input-search-sm ant-search-inline mr5"
+                      placeholder="의약품 검색"
+                      onClick={this.DrugModalVisible}
+                      onChange={this.DrugModalVisible}
+                    />
+                  ) : (
+                    <AntdInput
+                      placeholder="품목"
+                      allowClear
+                      className="ant-input-sm ant-input-inline mr5"
+                      value={formData.DRUG || ''}
+                      style={{ width: '100%' }}
+                      readOnly
+                    />
+                  )}
                 </td>
               </tr>
               <tr>
@@ -159,10 +256,10 @@ class Comp extends Component {
                   <AntdInput
                     placeholder="제약회사"
                     allowClear
+                    readOnly
                     className="ant-input-sm ant-input-inline mr5"
-                    defaultValue={defaultForm.COMPANY || ''}
+                    value={formData.COMPANY || ''}
                     style={{ width: '100%' }}
-                    onChange={e => this.changeFormData('COMPANY', e.target.value)}
                   />
                 </td>
               </tr>
@@ -173,9 +270,9 @@ class Comp extends Component {
                     placeholder="규격"
                     allowClear
                     className="ant-input-sm ant-input-inline mr5"
-                    defaultValue={defaultForm.SIZE1 || ''}
+                    value={formData.SIZE1 || ''}
                     style={{ width: '100%' }}
-                    onChange={e => this.changeFormData('SIZE1', e.target.value)}
+                    readOnly
                   />
                 </td>
               </tr>
@@ -186,58 +283,63 @@ class Comp extends Component {
                     placeholder="단위"
                     allowClear
                     className="ant-input-sm ant-input-inline mr5"
-                    defaultValue={defaultForm.UNIT || ''}
+                    value={formData.UNIT || ''}
                     style={{ width: '100%' }}
-                    onChange={e => this.changeFormData('UNIT', e.target.value)}
+                    readOnly
                   />
                 </td>
               </tr>
               <tr>
-                <th>유효기간</th>
+                <th>{formData.IN_OUT_TYPE === '출고' ? '출고일' : '입고일'}</th>
                 <td>
                   <AntdDatePicker
                     className="ant-picker-sm mr5"
                     style={{ width: '100%' }}
-                    placeholder="유효기간"
-                    defaultValue={defaultForm.VALIDITY_TERM ? moment(defaultForm.VALIDITY_TERM, 'YYYY-MM-DD') : undefined}
-                    allowClear
-                    onChange={(val, strVal) => this.changeFormData('VALIDITY_TERM', strVal)}
+                    placeholder="입고일"
+                    disabled={type !== 'INPUT'}
+                    value={formData.POSTING_DT ? moment(formData.POSTING_DT) : moment(new Date())}
+                    onChange={(val, strVal) => this.changeFormData('POSTING_DT', strVal)}
                   />
                 </td>
               </tr>
               <tr>
-                <th>적정재고</th>
+                <th>수량</th>
                 <td>
                   <AntdInputNumber
                     className="ant-input-number-sm"
                     style={{ width: '100%' }}
-                    defaultValue={defaultForm.PROPERSTOCK || 0}
-                    onChange={value => this.changeFormData('PROPERSTOCK', value)}
+                    value={formData.QTY || 0}
+                    onChange={value => {
+                      if (onlyNumber.test(value)) return this.changeFormData('QTY', value);
+                      return this.showMessage('숫자만 입력할 수 있습니다.');
+                    }}
                     name="gasWeight"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <th>비고</th>
-                <td>
-                  <AntdTextarea
-                    rows={3}
-                    style={{ width: '100%' }}
-                    placeholder="비고"
-                    defaultValue={defaultForm.COMMENTS || ''}
-                    allowClear
-                    onChange={e => this.changeFormData('COMMENTS', e.target.value)}
                   />
                 </td>
               </tr>
             </tbody>
           </table>
         </StyledHtmlTable>
+        <AntdModal
+          width={900}
+          visible={modalObj.visible}
+          title={modalObj.title}
+          onCancel={this.DrugModalVisible}
+          destroyOnClose
+          footer={[
+            <StyledButton className="btn-light" onClick={this.DrugModalVisible}>
+              닫기
+            </StyledButton>,
+          ]}
+        >
+          {modalObj.content}
+        </AntdModal>
       </StyledContentsWrapper>
     );
   }
 }
-const DrugForm = ({ defaultForm, type, modalVisible, workAreaList, getList }) => (
+
+const DuugInForm = ({ defaultForm, type, workAreaList, modalVisible, getList }) => (
   <BizMicroDevBase
     sagaKey="DrugForm"
     defaultForm={defaultForm}
@@ -249,20 +351,20 @@ const DrugForm = ({ defaultForm, type, modalVisible, workAreaList, getList }) =>
   ></BizMicroDevBase>
 );
 
-DrugForm.propTypes = {
+DuugInForm.propTypes = {
   defaultForm: PropTypes.object,
   type: PropTypes.string,
   modalVisible: PropTypes.func,
-  workAreaList: PropTypes.array,
   getList: PropTypes.func,
+  workAreaList: PropTypes.array,
 };
 
-DrugForm.defaultProps = {
+DuugInForm.defaultProps = {
   defaultForm: {},
   type: 'INPUT',
   modalVisible: () => {},
-  workAreaList: [],
   getList: () => {},
+  workAreaList: [],
 };
 
 Comp.propTypes = {
@@ -275,6 +377,7 @@ Comp.propTypes = {
   workAreaList: PropTypes.array,
   sagaKey: PropTypes.string,
   getList: PropTypes.func,
+  profile: PropTypes.object,
 };
 
 Comp.defaultProps = {
@@ -285,6 +388,7 @@ Comp.defaultProps = {
   workAreaList: [],
   sagaKey: '',
   getList: () => {},
+  profile: {},
 };
 
-export default DrugForm;
+export default DuugInForm;

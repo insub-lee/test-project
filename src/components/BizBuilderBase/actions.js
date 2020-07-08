@@ -392,3 +392,5 @@ export const setTaskFavoriteBySaga = (id, workSeq, taskOriginSeq, flag) => ({
   taskOriginSeq,
   flag,
 });
+
+export const setRelTypeByReducer = (id, relType) => ({ type: actionTypes.SET_REL_TYPE_REDUCER, id, relType });
