@@ -26,7 +26,7 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
         value: item.NODE_ID,
         key: item.NODE_ID,
         parentValue: item.PARENT_NODE_ID,
-        selectable: flag === 'Y' || item.CHILDREN_CNT === 0,
+        selectable: item.LVL === 7,
       })),
 
       getKey: node => node.key,
@@ -56,8 +56,8 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
       {
         key: 'categories',
         type: 'POST',
-        url: `/api/admin/v1/common/categoryMapList`,
-        params: { PARAM: { NODE_ID: 1831 } },
+        url: '/api/admin/v1/common/categoryChildrenListUseYn',
+        params: { PARAM: { NODE_ID: 1831, USE_YN: 'Y' } },
       },
     ];
 
@@ -77,16 +77,36 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
   handleSelectChange = (key, value) => {
     const { sagaKey, changeFormData } = this.props;
 
-    if (key.toUpperCase() === 'IS_DANGER') {
+    if (key.toUpperCase() === 'DANGERYN') {
       changeFormData(sagaKey, 'ACCIDENT_CAUSE_ID', '');
       changeFormData(sagaKey, 'ACCIDENT_TYPE_ID', '');
-      changeFormData(sagaKey, 'DANGER_CATEGORY', '');
+      changeFormData(sagaKey, 'EQUIP_ID', undefined);
+      changeFormData(sagaKey, 'PROCESS_ID', undefined);
+      changeFormData(sagaKey, 'PLACE_ID', undefined);
+      changeFormData(sagaKey, 'DIV_ID', undefined);
+      changeFormData(sagaKey, 'SDIV_ID', undefined);
     }
     return changeFormData(sagaKey, key.toUpperCase(), value);
   };
 
+  handleTreeSelectChange = value => {
+    const { sagaKey, changeFormData, extraApiData } = this.props;
+    const treeData = (extraApiData.categories && extraApiData.categories.categoryMapList) || [];
+
+    const processId = treeData.find(f => f.NODE_ID === value);
+    const placeId = treeData.find(f => f.NODE_ID === processId.PARENT_NODE_ID);
+    const divId = treeData.find(f => f.NODE_ID === placeId.PARENT_NODE_ID);
+    const sdivId = treeData.find(f => f.NODE_ID === divId.PARENT_NODE_ID);
+
+    changeFormData(sagaKey, 'EQUIP_ID', value);
+    changeFormData(sagaKey, 'PROCESS_ID', processId.NODE_ID);
+    changeFormData(sagaKey, 'PLACE_ID', placeId.NODE_ID);
+    changeFormData(sagaKey, 'DIV_ID', divId.NODE_ID);
+    changeFormData(sagaKey, 'SDIV_ID', sdivId.NODE_ID);
+  };
+
   render() {
-    const { handleSelectChange } = this;
+    const { handleSelectChange, handleTreeSelectChange } = this;
     const { accidentCauseList, accientTypes, categoryList } = this.state;
     const { formData } = this.props;
     return (
@@ -111,8 +131,8 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
                   <AntdSelect
                     defaultValue="N"
                     className="select-sm"
-                    value={formData.IS_DANGER}
-                    onChange={value => handleSelectChange('IS_DANGER', value)}
+                    value={Number(formData.DANGERYN)}
+                    onChange={value => handleSelectChange('DANGERYN', value)}
                     style={{ width: '100%' }}
                   >
                     <Select.Option value="Y">실시</Select.Option>
@@ -122,9 +142,9 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
                 <th>사고의 발생원인</th>
                 <td colSpan={2}>
                   <AntdSelect
-                    disabled={formData.IS_DANGER === 'N'}
+                    disabled={formData.DANGERYN === 'N'}
                     className="select-sm"
-                    value={formData.ACCIDENT_CAUSE}
+                    value={Number(formData.ACCIDENT_CAUSE_ID)}
                     onChange={value => handleSelectChange('ACCIDENT_CAUSE_ID', value)}
                     style={{ width: '100%' }}
                   >
@@ -136,9 +156,9 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
                 <th>사고의 발생유형</th>
                 <td colSpan={2}>
                   <AntdSelect
-                    disabled={formData.IS_DANGER === 'N'}
+                    disabled={formData.DANGERYN === 'N'}
                     className="select-sm"
-                    value={formData.ACCIDENT_TYPE}
+                    value={Number(formData.ACCIDENT_TYPE_ID)}
                     onChange={value => handleSelectChange('ACCIDENT_TYPE_ID', value)}
                     style={{ width: '100%' }}
                   >
@@ -155,10 +175,10 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
                     // treeData={categoryList.children}
                     treeData={categoryList}
                     dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                    disabled={formData.IS_DANGER === 'N'}
+                    disabled={formData.DANGERYN === 'N'}
                     className="select-sm"
-                    value={formData.DANGER_CATEGORY}
-                    onChange={value => handleSelectChange('DANGER_CATEGORY', value)}
+                    value={formData.EQUIP_ID}
+                    onChange={value => handleTreeSelectChange(value)}
                     style={{ width: '100%' }}
                   >
                     {accientTypes.map(type => (
