@@ -273,14 +273,14 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeIsLo
 function* getProcessRule({ id, payload }) {
   const response = yield call(Axios.post, `/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder`, { PARAM: { ...payload } });
   const { DRAFT_PROCESS } = response;
-  yield put(actions.setProcessRule(id, DRAFT_PROCESS, payload.relType));
+  yield put(actions.setProcessRule(id, DRAFT_PROCESS));
 }
 
 // processRule  조회
 function* getProcessRuleByModify({ id, payload }) {
   const response = yield call(Axios.post, `/api/workflow/v1/common/workprocess/defaultPrcRuleModifyHanlder`, { PARAM: { ...payload } });
   const { DRAFT_PROCESS } = response;
-  yield put(actions.setProcessRule(id, DRAFT_PROCESS, payload.relType));
+  yield put(actions.setProcessRule(id, DRAFT_PROCESS));
 }
 
 function* getTaskSeq({ id, workSeq }) {

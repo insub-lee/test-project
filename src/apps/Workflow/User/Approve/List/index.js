@@ -133,7 +133,7 @@ class ApproveList extends Component {
       width: '5%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '1' : text.indexOf('.') > -1 ? text.split('.')[0] : text),
+      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '1' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
     },
     {
       title: '표준제목',
@@ -486,8 +486,9 @@ class ApproveList extends Component {
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
           <AntdTable
+            key="apps-workflow-user-approve-list"
             columns={this.getTableColumns()}
-            dataSource={approveList.map(item => ({ ...item, key: `approveList_${item.RNUM}` }))}
+            dataSource={approveList}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}

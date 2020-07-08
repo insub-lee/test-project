@@ -88,17 +88,17 @@ function* getUserInfo({ userInfo, callBack }) {
   typeof callBack === 'function' && callBack(JSON.parse(list));
 }
 
-function* successApprove({ message: msg, customUrl }) {
+function* successApprove({ message: msg, customUrl, customUrlApprove, customUrlUnApprove, customUrlDraft }) {
   message.success(msg, 3);
-  yield put(actions.getApproveList(customUrl));
-  yield put(actions.getUnApproveList(customUrl));
-  yield put(actions.getDraftList(customUrl));
+  yield put(actions.getApproveList(customUrlApprove || customUrl));
+  yield put(actions.getUnApproveList(customUrlUnApprove || customUrl));
+  yield put(actions.getDraftList(customUrlDraft || customUrl));
 }
 
-function* failApprove({ errMsg }) {
+function* failApprove({ errMsg, customUrl }) {
   feed.error(errMsg);
   // yield put(actions.getApproveList({ searchType: 'unApproval' }));
-  yield put(actions.getUnApproveList());
+  yield put(actions.getUnApproveList(customUrl));
 }
 
 function* submitHandlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc }) {
