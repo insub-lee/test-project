@@ -8,7 +8,7 @@ import history from 'utils/history';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
 import * as ModifyType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
-import StyledInputView from 'apps/mdcs/components/BizBuilderBase/viewComponent/InputPage/Styled';
+import StyledInputView from 'apps/mdcs/styled/StyledInput';
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
