@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
 import { Modal } from 'antd';
 
-import BizBuilderBase from 'apps/mdcs/components/BizBuilderBase';
+import BizBuilderBase from 'components/BizBuilderBase';
 
 import IconCollection from '../../../components/IconCollection';
 import Styled from './Styled';

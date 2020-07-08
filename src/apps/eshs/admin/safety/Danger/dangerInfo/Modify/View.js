@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Input, InputNumber, Select, Checkbox } from 'antd';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
@@ -171,7 +172,8 @@ const tagArray = (onChangeData, formData) => [
   </>,
 ];
 
-const View = viewData => (
+// const View = ({ processNm, placeNm, divNm, sdivNm, selectData, formData, listData, modalData, onChangeData, onChangeModal }) => (
+const View = ({ processNm, placeNm, divNm, sdivNm, selectData, formData, modalData, onChangeData, onChangeModal }) => (
   <StyledHtmlTable>
     <table>
       <colgroup>
@@ -188,7 +190,7 @@ const View = viewData => (
         <tr>
           <th align="center">분류 {`>`} 부서명</th>
           <td colSpan="2" align="center">
-            <span>{`${(viewData && viewData.sdivNm) || ''} > ${(viewData && viewData.divNm) || ''}`}</span>
+            <span>{`${sdivNm || ''} > ${divNm || ''}`}</span>
           </td>
           <td rowSpan="2" colSpan="3" align="center">
             <font size="5">안전보건상 위험정보</font>
@@ -198,23 +200,23 @@ const View = viewData => (
             <AntdInput
               className="ant-input-sm ant-input-inline"
               style={{ width: 80 }}
-              defaultValue={viewData && viewData.formData && viewData.formData.INFO_DATA && viewData.formData.INFO_DATA.PRODUCT}
-              onChange={e => viewData && viewData.onChangeData('PRODUCT', e.target.value)}
+              defaultValue={formData && formData.INFO_DATA && formData.INFO_DATA.PRODUCT}
+              onChange={e => onChangeData('PRODUCT', e.target.value)}
             />
           </td>
         </tr>
         <tr>
           <th>공정 {`>`} 세부공정명</th>
           <td colSpan="2" align="center">
-            <span>{`${(viewData && viewData.placeNm) || ''} > ${(viewData && viewData.processNm) || ''}`}</span>
+            <span>{`${placeNm || ''} > ${processNm || ''}`}</span>
           </td>
           <th align="center">근로자수</th>
           <td align="center">
             <AntdInputNumber
               className="ant-input-number-sm ant-input-number-inline"
               style={{ width: 80 }}
-              defaultValue={viewData && viewData.formData && viewData.formData.INFO_DATA && viewData.formData.INFO_DATA.EMP_CNT}
-              onChange={value => viewData && viewData.onChangeData('EMP_CNT', value)}
+              defaultValue={formData && formData.INFO_DATA && formData.INFO_DATA.EMP_CNT}
+              onChange={value => onChangeData('EMP_CNT', value)}
             />
           </td>
         </tr>
@@ -237,20 +239,18 @@ const View = viewData => (
           <th align="center">유해화학물질명</th>
           <th align="center">등급</th>
         </tr>
-        {tagArray(viewData && viewData.onChangeData, viewData && viewData.formData && viewData.formData.INFO_DATA).map((tag, index) =>
-          viewData && viewData.formData ? (
+        {tagArray(onChangeData, formData && formData.INFO_DATA).map((tag, index) =>
+          formData ? (
             <tr>
               <td align="center" colSpan="2">
                 <AntdSelect
                   className="select-sm"
                   style={{ width: '100%' }}
-                  defaultValue={(viewData.formData.INFO_DATA && Number(viewData.formData.INFO_DATA[`M_CD${index + 1}`])) || ''}
-                  onChange={value => viewData && viewData.onChangeData(`M_CD${index + 1}`, value)}
+                  defaultValue={(formData.INFO_DATA && Number(formData.INFO_DATA[`M_CD${index + 1}`])) || ''}
+                  onChange={value => onChangeData(`M_CD${index + 1}`, value)}
                 >
-                  {viewData &&
-                    viewData.selectData &&
-                    viewData &&
-                    viewData.selectData.map(item => (
+                  {selectData &&
+                    selectData.map(item => (
                       <Option key={item.NODE_ID} value={item.NODE_ID}>
                         {item.NAME_KOR}
                       </Option>
@@ -261,28 +261,27 @@ const View = viewData => (
                 <AntdInputNumber
                   className="ant-input-number-sm"
                   style={{ width: 100 }}
-                  defaultValue={(viewData.formData.INFO_DATA && Number(viewData.formData.INFO_DATA[`M_QTY${index + 1}`])) || ''}
-                  onChange={value => viewData && viewData.onChangeData(`M_QTY${index + 1}`, value)}
+                  defaultValue={(formData.INFO_DATA && Number(formData.INFO_DATA[`M_QTY${index + 1}`])) || ''}
+                  onChange={value => onChangeData(`M_QTY${index + 1}`, value)}
                 />
               </td>
               <td align="center">
                 <AntdSearchInput
                   className="input-search-sm"
                   defaultValue={
-                    (viewData &&
-                      viewData.modalData &&
-                      viewData.formData &&
-                      viewData.formData.INFO_DATA &&
-                      viewData.modalData.find(item => item.MINOR_CD === viewData.formData.INFO_DATA[`C_NM${index + 1}`]) &&
-                      viewData.modalData.find(item => item.MINOR_CD === viewData.formData.INFO_DATA[`C_NM${index + 1}`]).CD_NM) ||
+                    (modalData &&
+                      formData &&
+                      formData.INFO_DATA &&
+                      modalData.find(item => item.MINOR_CD === formData.INFO_DATA[`C_NM${index + 1}`]) &&
+                      modalData.find(item => item.MINOR_CD === formData.INFO_DATA[`C_NM${index + 1}`]).CD_NM) ||
                     undefined
                   }
                   readOnly
-                  onClick={viewData && viewData.onChangeModal}
+                  onClick={onChangeModal}
                 />
               </td>
               <td align="center">
-                <span>{(viewData.formData.INFO_DATA && viewData.formData.INFO_DATA[`C_GR${index + 1}`]) || ''}</span>
+                <span>{(formData.INFO_DATA && formData.INFO_DATA[`C_GR${index + 1}`]) || ''}</span>
               </td>
               {tag}
             </tr>
@@ -294,5 +293,20 @@ const View = viewData => (
     </table>
   </StyledHtmlTable>
 );
+
+View.propTypes = {
+  processNm: PropTypes.string,
+  placeNm: PropTypes.string,
+  divNm: PropTypes.string,
+  sdivNm: PropTypes.string,
+  selectData: PropTypes.array,
+  formData: PropTypes.object,
+  // listData: PropTypes.array,
+  modalData: PropTypes.array,
+  onChangeData: PropTypes.func,
+  onChangeModal: PropTypes.func,
+};
+
+View.defaultProps = {};
 
 export default React.memo(View);

@@ -5,9 +5,9 @@ import { debounce } from 'lodash';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
 
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import * as selectors from 'apps/mdcs/admin/ViewDesigner/selectors';
+// import { connect } from 'react-redux';
+// import { createStructuredSelector } from 'reselect';
+// import * as selectors from 'apps/mdcs/admin/ViewDesigner/selectors';
 
 const { Option } = Select;
 
@@ -153,4 +153,5 @@ CustomSearchInputConfig.propTypes = {
   compData: PropTypes.array,
 };
 
-export default connect(() => createStructuredSelector({ compData: selectors.makeSelectCompData() }))(ComponentConfig);
+// export default connect(() => createStructuredSelector({ compData: selectors.makeSelectCompData() }))(ComponentConfig);
+export default ComponentConfig;
