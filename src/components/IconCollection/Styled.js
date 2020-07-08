@@ -21,8 +21,8 @@ import iconHyphen from 'images/portal/icon-hyphen.png';
 import iconPin from 'images/portal/icon-pin.png';
 import iconPinFill from 'images/portal/icon-pin-fill.png';
 import iconPageMove from 'images/portal/icon-page-move.png';
-// import icon1stMenu from 'images/portal/icon-1st-menu.png';
-import icon1stMenu from 'images/portal/icon-arrow-bt.png';
+import icon1stMenu from 'images/portal/icon-1st-menubar.png';
+// import icon1stMenu from 'images/portal/icon-arrow-bt.png';
 
 const Styled = styled.i`
   display: inline-block;

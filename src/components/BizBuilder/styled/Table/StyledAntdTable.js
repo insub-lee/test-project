@@ -42,6 +42,10 @@ const StyledAntdTable = Component => styled(Component)`
           border-bottom: 0;
         }
 
+        .textAlignColCenter {
+          text-align: center;
+        }
+
         &:nth-child(even) > td {
           background-color: #f6f8fa;
         }

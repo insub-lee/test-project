@@ -3,6 +3,7 @@ import iconSearch from 'images/common/icon-search2.png';
 import iconArrBtm from 'images/portal/icon-arrow-bt.png';
 import iconArrTop from 'images/portal/icon-arrow-top.png';
 import iconFolderOpen from 'images/portal/icon-folder-open.png';
+import icon1stMenu from 'images/portal/icon-1st-menubar.png';
 
 const TreeWrapper = styled.div`
   display: flex;
@@ -210,16 +211,16 @@ const TreeWrapper = styled.div`
   }
 
   .sortableTreeWrapper.sidebar .rst__nodeContent .eshs_tree_depth1 .rstcustom__rowTitle button i {
-    position: absolute;
+    /* position: absolute;
     top: 50%;
     right: 0;
-    transform: translateY(-50%);
+    transform: translateY(-50%); */
     width: 10px;
     height: 9px;
   }
 
   .sortableTreeWrapper.sidebar .rst__nodeContent.tree_open .eshs_tree_typeF.eshs_tree_depth1 .rstcustom__rowTitle button i {
-    background: url(${iconArrTop}) no-repeat center;
+    background: url(${icon1stMenu}) no-repeat center;
     background-size: 100%;
   }
 
@@ -283,13 +284,15 @@ const TreeWrapper = styled.div`
 
   .sortableTreeWrapper .rstcustom__expandButton {
     background-image: url(${iconArrBtm});
-    background-size: 12px;
-    display: none;
+    background-size: 100%;
+    width: 10px;
+    height: 10px;
   }
   .sortableTreeWrapper .rstcustom__collapseButton {
     background-image: url(${iconArrTop});
-    background-size: 12px;
-    display: none;
+    background-size: 100%;
+    width: 10px;
+    height: 10px;
   }
 `;
 

@@ -4,7 +4,7 @@ import MainPage from './MainPage';
 
 class eiImportantAssesment extends Component {
   render() {
-    return <BizMicroDevBase component={MainPage} sagaKey="eiImportantAssesment" />;
+    return <BizMicroDevBase component={MainPage} sagaKey="eiImportantAssesment" id="eiImportantAssesment" />;
   }
 }
 
