@@ -193,29 +193,13 @@ class List extends Component {
 
     // 개발기준으로 주민등록번호 유효성 검사무시
     const ssn = formData.WORKER_SSN;
-    const validSsn = ssn.length === 13;
+    const validSsn = ssn.length === 8;
     // const validSsn = this.ssnCheck(ssn);
     if (!validSsn) {
       message.error(<MessageContent>주민등록번호가 유효하지 않습니다.</MessageContent>);
       return false;
     }
     return true;
-  };
-
-  // ssn checker (주민등록번호 유효성 검사)
-  ssnCheck = ssn => {
-    const checkNum = [2, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5];
-    let sum = 0;
-    checkNum.forEach((num, index) => {
-      const temp = ssn.charAt(index) * num;
-      sum += temp;
-    });
-    let pin = 11 - (sum % 11);
-    if (pin >= 10) pin -= 10;
-    if (Number(ssn.charAt(12)) === pin) {
-      return true;
-    }
-    return false;
   };
 
   /* 
@@ -245,13 +229,21 @@ class List extends Component {
   renderInputColumns = (key, value) => {
     const { sagaKey: id, changeFormData } = this.props;
     const fieldList = [
-      { key: 'WORKER_SSN', size: 13 },
+      { key: 'WORKER_SSN', size: 8, placeholder: '예) 19910207' },
       { key: 'WORKER_NM', size: 20 },
       { key: 'TEL', size: 13 },
       { key: 'M_TEL', size: 13 },
     ];
     const keyField = fieldList.find(field => field.key === key);
-    return <AntdInput className="ant-input-sm" maxLength={keyField.size} value={value} onChange={e => changeFormData(id, key, e.target.value)} />;
+    return (
+      <AntdInput
+        className="ant-input-sm"
+        maxLength={keyField.size}
+        value={value}
+        placeholder={keyField.placeholder || ''}
+        onChange={e => changeFormData(id, key, e.target.value)}
+      />
+    );
   };
 
   // render Table Action Buttons (수정 = modify 모달 버튼)
@@ -361,7 +353,7 @@ class List extends Component {
         <AntdModal
           className="modal-table-pad"
           title={this.setModalTitle(modalType)}
-          width={modalType === 'search' ? '790px' : '500px'}
+          width={modalType === 'search' ? '60%' : '500px'}
           visible={modalVisible}
           footer={null}
           destroyOnClose
@@ -398,7 +390,7 @@ class List extends Component {
                     <td>{this.renderInputColumns('WORKER_NM', formData.WORKER_NM)}</td>
                   </tr>
                   <tr>
-                    <th>주민등록번호("-" 제외)</th>
+                    <th>생년월일</th>
                     <td>{this.renderInputColumns('WORKER_SSN', formData.WORKER_SSN)}</td>
                   </tr>
                   <tr>

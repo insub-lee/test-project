@@ -181,7 +181,6 @@ class SafetyWorkInfo extends Component {
                       </StyledButton>
                     </div>
                     <Radio.Group value={formData.WCATEGORY} onChange={value => handleWorkCategory(value.target.value)}>
-                      <Radio value="공통">공통</Radio>
                       <Radio value="화기작업">
                         화기작업
                         <br />
@@ -234,7 +233,13 @@ class SafetyWorkInfo extends Component {
                     <span>위험성평가</span>
                   </th>
                   <td colSpan={3}>
-                    <AntdSearch className="input-search-xs" style={{ width: '200px' }} disable />
+                    <AntdSearch
+                      className="input-search-xs"
+                      style={{ width: '200px' }}
+                      value={formData.DETB_DANEST}
+                      onClick={() => handleModal('riskAssessment', true)}
+                      onSearch={() => handleModal('riskAssessment', true)}
+                    />
                   </td>
                   <th colSpan={2}>
                     <span>* 검토자</span>

@@ -6,6 +6,7 @@ import StyledMainWidget from 'components/BizBuilder/styled/StyledMainWidget';
 class MainWidget extends Component {
   constructor(props) {
     super(props);
+    this.state = {};
   }
 
   render() {

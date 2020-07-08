@@ -11,7 +11,8 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
-import DrugForm from 'apps/eshs/user/health/medicalManagement/Drug/DrugList/DrugForm';
+import DrugInForm from 'apps/eshs/user/health/medicalManagement/Drug/DrugInOutList/DrugInForm';
+
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import moment from 'moment';
@@ -22,6 +23,8 @@ const AntdInput = StyledInput(Input);
 const AntdRangeDatePicker = StyledDatePicker(DatePicker.RangePicker);
 
 const AntdModal = StyledAntdModal(Modal);
+
+const deptRootId = 72761;
 
 const now = new Date();
 const currentYear = now.getFullYear().toString();
@@ -90,6 +93,11 @@ class List extends Component {
         type: 'POST',
         params: { PARAM: searchParam },
       },
+      {
+        key: 'deptList',
+        url: `/api/eshs/v1/common/EshsHqAndDeptList?DEPT_ID=${deptRootId}`,
+        type: 'GET',
+      },
     ];
 
     getCallDataHandler(sagaKey, apiAry, spinningOff);
@@ -143,7 +151,7 @@ class List extends Component {
       modalObj: {
         modalVisible: !modalVisible,
         modalContent: [
-          <DrugForm key="DrugForm" defaultForm={formData} type={type} workAreaList={workAreaList} modalVisible={this.modalVisible} saveAfter={this.getList} />,
+          <DrugInForm key="DrugForm" defaultForm={formData} type={type} workAreaList={workAreaList} modalVisible={this.modalVisible} getList={this.getList} />,
         ],
         modalTitle: type === 'INPUT' ? '신규등록' : '관리',
       },
@@ -260,7 +268,7 @@ class List extends Component {
                 style={{ width: 150 }}
                 allowClear
                 placeholder="협력업체 전체"
-                onChange={val => this.onChangeSearchParam('COOPERATOR', val)}
+                onChange={val => this.onChangeSearchParam('COMPANY', val)}
               >
                 {companyList
                   .filter(item => item.LVL === 3)
@@ -296,8 +304,6 @@ class List extends Component {
           <AntdTable
             columns={this.columns}
             footer={() => <span>{`${(list && list.length) || 0} 건`}</span>}
-            // scroll={{ y: '100%' }}
-            // pagination={false}
             dataSource={list || []}
             bordered
             rowKey="ROWNUM"

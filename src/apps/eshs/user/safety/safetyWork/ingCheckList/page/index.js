@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Input, Modal, DatePicker, Table } from 'antd';
+import { Input, Modal, DatePicker, Table, Spin } from 'antd';
 import styled from 'styled-components';
 import BizMicroDevBase from 'components/BizMicroDevBase';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
@@ -17,6 +18,7 @@ import Group from 'components/BizBuilder/Sketch/Group';
 import MessageContent from 'components/Feedback/message.style2';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import IngCheckViewer from '../../ingCheck';
+import ExcelDown from '../Excel';
 import Styled from './Styled';
 
 const AntdModal = StyledContentsModal(Modal);
@@ -38,6 +40,7 @@ class SafetyWorkList extends Component {
       modalTitle: '',
       modalVisible: false,
       selectedWork: '',
+      isSearching: false,
       searchValues: {
         WORK_NO: '', // 작업번호
         REQ_CMPNY_CD: '', // 발주회사코드
@@ -58,6 +61,9 @@ class SafetyWorkList extends Component {
   onSearch = () => {
     const { searchValues } = this.state;
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    this.setState({
+      isSearching: true,
+    });
     const apiInfo = {
       key: 'getIngCheckList',
       type: 'POST',
@@ -72,12 +78,14 @@ class SafetyWorkList extends Component {
     const result = response.list;
     if (result.length > 0) {
       this.setState({
+        isSearching: false,
         ingCheckList: result,
       });
       return;
     }
     this.setState(
       {
+        isSearching: false,
         ingCheckList: [],
       },
       () => message.error(<MessageContent>검색결과가 없습니다.</MessageContent>),
@@ -151,7 +159,7 @@ class SafetyWorkList extends Component {
   };
 
   render() {
-    const { modalType, modalTitle, modalVisible, searchValues, safetyWorks, selectedWork, ingCheckList } = this.state;
+    const { modalType, modalTitle, modalVisible, searchValues, safetyWorks, selectedWork, ingCheckList, isSearching } = this.state;
     const columns = [
       {
         title: '작업번호',
@@ -215,7 +223,7 @@ class SafetyWorkList extends Component {
         align: 'center',
       },
       {
-        title: '점검임',
+        title: '점검일',
         dataIndex: 'CHECK_DT',
         align: 'center',
         render: value => <span>{moment(value).format('YYYY-MM-DD')}</span>,
@@ -228,118 +236,122 @@ class SafetyWorkList extends Component {
     ];
     return (
       <Styled>
-        <StyledSearchWrapper>
-          <Group className="view-designer-group group-0">
-            <div className="view-designer-group-search-wrap">
-              <table className="view-designer-table table-0">
-                <tbody>
-                  <tr className="view-designer-row">
-                    <td className="view-designer-col view-designer-label">
-                      <span>작업번호</span>
-                    </td>
-                    <td className="view-designer-col">
-                      <div>
-                        <AntdSearch
-                          className="ant-search-inline input-search-xs mr5"
-                          style={{ width: '50%' }}
-                          value={searchValues.WORK_NO}
-                          onChange={e => this.handleChangeSearchValue('WORK_NO', e.target.value)}
-                          onSearch={() => this.handleModal('safetyWork', true)}
-                        />
-                      </div>
-                    </td>
-                    <td className="view-designer-col view-designer-label">
-                      <span>발주회사</span>
-                    </td>
-                    <td className="view-designer-col">
-                      <div>
-                        <AntdSearch
-                          className="ant-search-inline input-search-xs mr5"
-                          style={{ width: '50%' }}
-                          value={searchValues.REQ_CMPNY_CD}
-                          onClick={() => this.handleModal('', false)}
-                          onSearch={() => this.handleModal('', false)}
-                        />
-                      </div>
-                    </td>
-                    <td className="view-designer-col view-designer-label">
-                      <span>주관팀</span>
-                    </td>
-                    <td className="view-designer-col">
-                      <div>
-                        <AntdSearch
-                          className="ant-search-inline input-search-xs mr5"
-                          style={{ width: '50%' }}
-                          value={searchValues.REQ_DEPT_CD}
-                          onClick={() => this.handleModal('', false)}
-                          onSearch={() => this.handleModal('', false)}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                  <tr className="view-designer-row">
-                    <td className="view-designer-col view-designer-label">
-                      <span>작업업체</span>
-                    </td>
-                    <td className="view-designer-col">
-                      <div>
-                        <AntdSearch
-                          className="ant-search-inline input-search-xs mr5"
-                          style={{ width: '50%' }}
-                          value={searchValues.WRK_CMPNY_CD}
-                          onClick={() => this.handleModal('cmpny', true)}
-                          onSearch={() => this.handleModal('cmpny', true)}
-                        />
-                        {searchValues.WRK_CMPNY_NM !== '' && <span>{searchValues.WRK_CMPNY_NM}</span>}
-                      </div>
-                    </td>
-                    <td className="view-designer-col view-designer-label">
-                      <span>점검기간</span>
-                    </td>
-                    <td className="view-designer-col">
-                      <div>
-                        <AntdDatePicker
-                          className="ant-picker-xs"
-                          style={{ width: '45%' }}
-                          value={searchValues.START_CHECK_DT !== '' ? moment(searchValues.START_CHECK_DT) : undefined}
-                          onChange={e => {
-                            if (e === null) {
-                              this.handleChangeSearchValue('START_CHECK_DT', '');
-                              return;
-                            }
-                            this.handleChangeSearchValue('START_CHECK_DT', e.format('YYYY-MM-DD'));
-                          }}
-                        />
-                        <span styled={{ margin: '0px 10px 0px 10px', width: '10%' }}> ~ </span>
-                        <AntdDatePicker
-                          className="ant-picker-xs"
-                          style={{ width: '45%' }}
-                          value={searchValues.END_CHECK_DT !== '' ? moment(searchValues.END_CHECK_DT) : undefined}
-                          onChange={e => {
-                            if (e === null) {
-                              this.handleChangeSearchValue('END_CHECK_DT', '');
-                              return;
-                            }
-                            this.handleChangeSearchValue('END_CHECK_DT', e.format('YYYY-MM-DD'));
-                          }}
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="view-designer-group-search-btn-wrap">
-              <StyledButton className="btn-gray btn-first btn-sm" onClick={() => this.onSearch()}>
-                검색
-              </StyledButton>
-            </div>
-          </Group>
+        <StyledSearchWrapper style={{ marginBottom: '15px' }}>
+          <Spin tip="검색중..." spinning={isSearching}>
+            <Group className="view-designer-group group-0">
+              <div className="view-designer-group-search-wrap">
+                <table className="view-designer-table table-0">
+                  <tbody>
+                    <tr className="view-designer-row">
+                      <td className="view-designer-col view-designer-label">
+                        <span>작업번호</span>
+                      </td>
+                      <td className="view-designer-col">
+                        <div>
+                          <AntdSearch
+                            className="ant-search-inline input-search-xs mr5"
+                            style={{ width: '50%' }}
+                            value={searchValues.WORK_NO}
+                            onChange={e => this.handleChangeSearchValue('WORK_NO', e.target.value)}
+                            onSearch={() => this.handleModal('safetyWork', true)}
+                          />
+                        </div>
+                      </td>
+                      <td className="view-designer-col view-designer-label">
+                        <span>발주회사</span>
+                      </td>
+                      <td className="view-designer-col">
+                        <div>
+                          <AntdSearch
+                            className="ant-search-inline input-search-xs mr5"
+                            style={{ width: '50%' }}
+                            value={searchValues.REQ_CMPNY_CD}
+                            onClick={() => this.handleModal('', false)}
+                            onSearch={() => this.handleModal('', false)}
+                          />
+                        </div>
+                      </td>
+                      <td className="view-designer-col view-designer-label">
+                        <span>주관팀</span>
+                      </td>
+                      <td className="view-designer-col">
+                        <div>
+                          <AntdSearch
+                            className="ant-search-inline input-search-xs mr5"
+                            style={{ width: '50%' }}
+                            value={searchValues.REQ_DEPT_CD}
+                            onClick={() => this.handleModal('', false)}
+                            onSearch={() => this.handleModal('', false)}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="view-designer-row">
+                      <td className="view-designer-col view-designer-label">
+                        <span>작업업체</span>
+                      </td>
+                      <td className="view-designer-col">
+                        <div>
+                          <AntdSearch
+                            className="ant-search-inline input-search-xs mr5"
+                            style={{ width: '50%' }}
+                            value={searchValues.WRK_CMPNY_CD}
+                            onClick={() => this.handleModal('cmpny', true)}
+                            onSearch={() => this.handleModal('cmpny', true)}
+                          />
+                          {searchValues.WRK_CMPNY_NM !== '' && <span>{searchValues.WRK_CMPNY_NM}</span>}
+                        </div>
+                      </td>
+                      <td className="view-designer-col view-designer-label">
+                        <span>점검기간</span>
+                      </td>
+                      <td className="view-designer-col">
+                        <div>
+                          <AntdDatePicker
+                            className="ant-picker-xs"
+                            style={{ width: '45%' }}
+                            value={searchValues.START_CHECK_DT !== '' ? moment(searchValues.START_CHECK_DT) : undefined}
+                            onChange={e => {
+                              if (e === null) {
+                                this.handleChangeSearchValue('START_CHECK_DT', '');
+                                return;
+                              }
+                              this.handleChangeSearchValue('START_CHECK_DT', e.format('YYYY-MM-DD'));
+                            }}
+                          />
+                          <span styled={{ margin: '0px 10px 0px 10px', width: '10%' }}> ~ </span>
+                          <AntdDatePicker
+                            className="ant-picker-xs"
+                            style={{ width: '45%' }}
+                            value={searchValues.END_CHECK_DT !== '' ? moment(searchValues.END_CHECK_DT) : undefined}
+                            onChange={e => {
+                              if (e === null) {
+                                this.handleChangeSearchValue('END_CHECK_DT', '');
+                                return;
+                              }
+                              this.handleChangeSearchValue('END_CHECK_DT', e.format('YYYY-MM-DD'));
+                            }}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="view-designer-group-search-btn-wrap">
+                <StyledButton className="btn-gray btn-first btn-sm" onClick={() => this.onSearch()}>
+                  검색
+                </StyledButton>
+              </div>
+            </Group>
+          </Spin>
         </StyledSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <ExcelDown dataList={ingCheckList} />
+        </StyledButtonWrapper>
         <ContentsWrapper>
           <CustomTableStyled>
             <AntdTable
-              pagination={false}
               columns={columns}
               dataSource={ingCheckList}
               footer={() => <div style={{ textAlign: 'center' }}>{`총 ${ingCheckList.length === 0 ? 0 : ingCheckList.length} 건`}</div>}

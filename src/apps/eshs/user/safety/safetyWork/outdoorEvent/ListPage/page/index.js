@@ -300,7 +300,25 @@ class ListPage extends Component {
             <Sketch {...bodyStyle}>
               {groups.map((group, groupIndex) => {
                 if (group.type === 'listGroup') {
-                  return this.renderList(group, groupIndex);
+                  return (
+                    <>
+                      <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10" style={{ position: 'relative' }}>
+                        {useExcelDownload && isExcelDown && (
+                          <ExcelDownloadComp
+                            isBuilder={false}
+                            fileName={fileName || 'excel'}
+                            className="workerExcelBtn"
+                            btnText={btnTex || '엑셀받기'}
+                            sheetName={sheetName || 'sheet1'}
+                            columns={columns || []}
+                            fields={fields || []}
+                            listData={listData || []}
+                          />
+                        )}
+                      </StyledButtonWrapper>
+                      {this.renderList(group, groupIndex)}
+                    </>
+                  );
                 }
                 return (
                   (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
@@ -350,18 +368,6 @@ class ListPage extends Component {
                             <StyledButton className="btn-gray btn-sm" onClick={this.handleClickSearch}>
                               검색
                             </StyledButton>
-                            {useExcelDownload && isExcelDown && (
-                              <ExcelDownloadComp
-                                isBuilder={false}
-                                fileName={fileName || 'excel'}
-                                className="workerExcelBtn"
-                                btnText={btnTex || '엑셀받기'}
-                                sheetName={sheetName || 'sheet1'}
-                                columns={columns || []}
-                                fields={fields || []}
-                                listData={listData || []}
-                              />
-                            )}
                           </div>
                         )}
                       </Group>

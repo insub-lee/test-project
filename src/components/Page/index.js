@@ -243,8 +243,8 @@ class Page extends Component {
         layoutConfig.width = menuFixedYn === 'Y' ? 1000 : 1330;
         break;
       case 'DesktopNarrow':
-        layoutConfig.col = menuFixedYn === 'Y' ? 2 : 3;
-        layoutConfig.width = menuFixedYn === 'Y' ? 670 : 1000;
+        layoutConfig.col = menuFixedYn === 'Y' ? 3 : 3;
+        layoutConfig.width = menuFixedYn === 'Y' ? 1000 : 1000;
         break;
       case 'Tablet':
         // 태블릿 디자인 적용하면서 값 조정

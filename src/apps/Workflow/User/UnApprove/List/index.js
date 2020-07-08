@@ -71,7 +71,7 @@ class UnApproveList extends Component {
       width: '5%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '1' : text.indexOf('.') > -1 ? text.split('.')[0] : text),
+      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '1' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
     },
     {
       title: '표준제목',
@@ -129,8 +129,9 @@ class UnApproveList extends Component {
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
           <AntdLineTable
+            key="apps-workflow-user-unapprove-list"
             columns={this.getTableColumns()}
-            dataSource={unApproveList.map(item => ({ ...item, key: `unApproveList_${item.RNUM}` }))}
+            dataSource={unApproveList}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}

@@ -13,7 +13,14 @@ class SubResourceDispReq extends Component {
 
   render() {
     return (
-      <BizBuilderBase sagaKey="subResourceDispReq" workSeq={4981} viewType="INPUT" loadingComplete={this.loadingComplete} InputCustomButtons={() => null} />
+      <BizBuilderBase
+        sagaKey="subResourceDispReq"
+        workSeq={4981}
+        relType={100}
+        viewType="INPUT"
+        loadingComplete={this.loadingComplete}
+        InputCustomButtons={() => null}
+      />
     );
   }
 }

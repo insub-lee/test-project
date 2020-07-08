@@ -339,6 +339,7 @@ function* tempSaveTask({ id, reloadId, callbackFunc, changeIsLoading, workPrcPro
   const processRule = yield select(selectors.makeSelectProcessRuleById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
   const extraApiList = yield select(selectors.makeSelectApiListById(id));
+  const relType = yield select(selectors.makeSelectRelTypeById(id));
 
   const formData = { ...preFormData, IS_TEMPSAVE: true };
 
@@ -473,7 +474,13 @@ function* tempSaveTask({ id, reloadId, callbackFunc, changeIsLoading, workPrcPro
 
   if (Object.keys(processRule).length !== 0) {
     const forthResponse = yield call(Axios.post, `/api/workflow/v1/common/workprocess/tempSaveProcess`, {
-      PARAM: { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, PROCESS_RULE: JSON.stringify(processRule), WORK_PRC_PROPS: JSON.stringify(workPrcProps) },
+      PARAM: {
+        WORK_SEQ: workSeq,
+        TASK_SEQ: taskSeq,
+        PROCESS_RULE: JSON.stringify(processRule),
+        WORK_PRC_PROPS: JSON.stringify(workPrcProps),
+        REL_TYPE: relType,
+      },
     });
     //   // 결재 저장
     //   const forthResponse = yield call(Axios.post, `/api/workflow/v1/common/workprocess/draft`, {
@@ -511,6 +518,7 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
   const processRule = yield select(selectors.makeSelectProcessRuleById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
   const extraApiList = yield select(selectors.makeSelectApiListById(id));
+  const relType = yield select(selectors.makeSelectRelTypeById(id));
 
   if (validationData) {
     const validKeyList = Object.keys(validationData);
@@ -661,7 +669,7 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
         DRAFT_TITLE: formData.TITLE,
         WORK_SEQ: workSeq,
         TASK_SEQ: taskSeq,
-        REL_TYPE: 1, // 고정(사용안하게 되면 삭제필요)
+        REL_TYPE: relType, // 고정(사용안하게 되면 삭제필요) 없으면 기본값 1
       },
     });
   }
@@ -690,21 +698,18 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc, change
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
   const extraApiList = yield select(selectors.makeSelectApiListById(id));
   const processRule = yield select(selectors.makeSelectProcessRuleById(id));
+  const relType = yield select(selectors.makeSelectRelTypeById(id));
 
   if (validationData) {
     const validKeyList = Object.keys(validationData);
     if (validKeyList && validKeyList.length > 0) {
       let validFlag = true;
       let validMsg = '';
-      console.debug('확인해리스트', validKeyList);
-      console.debug('이게없다고?', validationData);
       validKeyList.forEach(node => {
         if (!validationData[node].flag) {
-          console.debug('1번', node, validationData[node].flag);
           validFlag = validationData[node].flag;
           validMsg = validationData[node].msg;
         } else if (validationData[node].requiredFlag === false) {
-          console.debug('2번', node, validationData[node].requiredFlag);
           validFlag = validationData[node].requiredFlag;
           validMsg = `${validationData[node].requiredMsg}`;
         }
@@ -823,7 +828,7 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc, change
         DRAFT_TITLE: formData.TITLE,
         WORK_SEQ: workSeq,
         TASK_SEQ: taskSeq,
-        REL_TYPE: 1, // 고정(사용안하게 되면 삭제필요)
+        REL_TYPE: relType, // 고정(사용안하게 되면 삭제필요) 없으면 기본값 1
       },
     });
   }
@@ -1077,15 +1082,26 @@ function* getFileDownload({ url, fileName }) {
 
 function* getFileDownloadProgress({ url, fileName, onProgress, callback }) {
   const blobResponse = yield call(Axios.getDownProgress, url, {}, {}, onProgress);
-  const { size } = blobResponse;
+  const { data, headers } = blobResponse;
+  const { size } = data;
+  const cdp = headers['content-disposition'];
+  let downFileName = fileName;
+
+  if (cdp.length > 0 && cdp.indexOf('filename=') > -1) {
+    const splitData = cdp.split('filename=');
+    if (splitData.length > 1) {
+      downFileName = splitData[1].replace(';', '');
+    }
+  }
+
   if (size > 0) {
     if (window.navigator && window.navigator.msSaveBlob) {
-      window.navigator.msSaveBlob(blobResponse, fileName);
+      window.navigator.msSaveBlob(data, downFileName);
     } else {
-      const fileUrl = window.URL.createObjectURL(blobResponse);
+      const fileUrl = window.URL.createObjectURL(data);
       const link = document.createElement('a');
       link.href = fileUrl;
-      link.setAttribute('download', fileName);
+      link.setAttribute('download', downFileName);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -1093,7 +1109,7 @@ function* getFileDownloadProgress({ url, fileName, onProgress, callback }) {
   }
 
   if (typeof callback === 'function') {
-    callback(blobResponse, url, fileName);
+    callback(data, url, downFileName);
   }
 }
 
