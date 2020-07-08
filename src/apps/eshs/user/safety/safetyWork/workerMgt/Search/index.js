@@ -26,9 +26,20 @@ class List extends Component {
         wrkCmpnyNm: '',
         keyword: '',
       },
+      cmpnyList: [],
       selectedRowKeys: [],
       selectedWorkers: [],
     };
+  }
+
+  componentDidMount() {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const apiInfo = {
+      key: 'getCmpnyList',
+      type: 'GET',
+      url: `/api/eshs/v1/common/EshsCmpnyList?gubun=SW`,
+    };
+    getCallDataHandlerReturnRes(id, apiInfo, this.getCmpnyListAfter);
   }
 
   componentWillUnmount() {
@@ -38,76 +49,34 @@ class List extends Component {
 
   changeSearchValue = (type, value) => {
     const { searchValue } = this.state;
-    if (type === 'year' && searchValue.searchType === 'cmpny') {
-      this.setState(
-        {
-          searchValue: {
-            ...searchValue,
-            [type]: value,
-          },
-        },
-        () => {
-          this.getCmpnyListbyYear(value);
-        },
-      );
-    } else if (type === 'searchType' && value !== 'cmpny' && searchValue.searchType === 'cmpny') {
-      this.setState({
-        searchValue: {
-          ...searchValue,
-          [type]: value,
-          keyword: '',
-        },
-      });
-    } else {
-      this.setState({
-        searchValue: {
-          ...searchValue,
-          [type]: value,
-        },
-      });
-    }
-  };
-
-  getCmpnyListbyYear = year => {
-    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
-    const apiInfo = {
-      key: 'getCmpnyList',
-      type: 'GET',
-      url: `/api/eshs/v1/common/EshsCmpnyList?searchType=year&searchText=${year}&gubun=SW`,
-    };
-    getCallDataHandlerReturnRes(id, apiInfo, this.getCmpnyListAfter);
+    this.setState({
+      searchValue: {
+        ...searchValue,
+        [type]: value,
+      },
+    });
   };
 
   getCmpnyListAfter = (id, response) => {
-    const { searchValue } = this.state;
-    const cmpnyList = (response && response.list) || [];
-    let selectCmpnyCd = '';
-    let selectCmpnyNm = '';
-    if (cmpnyList.length > 0) {
-      selectCmpnyCd = cmpnyList[0].WRK_CMPNY_CD;
-      selectCmpnyNm = cmpnyList[0].WRK_CMPNY_NM;
-    }
-    this.setState(
-      {
-        searchValue: {
-          ...searchValue,
-          keyword: selectCmpnyCd,
-          wrkCmpnyNm: selectCmpnyNm,
-        },
-      },
-      () => {
-        if (selectCmpnyCd !== '') this.handleGetWorkers('searchByEdu', selectCmpnyCd);
-      },
-    );
+    this.setState({
+      cmpnyList: (response && response.list) || [],
+    });
   };
 
-  handleGetWorkers = (type, keyword) => {
-    const { searchValue } = this.state;
+  handleGetWorkers = (type, value) => {
+    const { searchValue, cmpnyList } = this.state;
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const { searchType, year } = searchValue;
+    let keyword = value;
+    if (searchType === 'cmpny') {
+      const regex = new RegExp(`${value}`, 'gi');
+      const selectedCmpny = cmpnyList.find(item => regex.test(item.WRK_CMPNY_NM));
+      keyword = selectedCmpny.WRK_CMPNY_CD;
+    }
     const apiInfo = {
       key: 'getWorkers',
       type: 'GET',
-      url: `/api/eshs/v1/common/eshsWorker?type=${type}&searchType=${searchValue.searchType}&keyword=${keyword}&year=${searchValue.year}`,
+      url: `/api/eshs/v1/common/eshsWorker?type=${type}&searchType=${searchType}&keyword=${keyword}&year=${year}`,
     };
     getCallDataHandlerReturnRes(id, apiInfo);
   };
@@ -136,13 +105,6 @@ class List extends Component {
     );
   };
 
-  renderCmpnySelect = cmpnyList => {
-    if (cmpnyList.length > 0) {
-      return cmpnyList.map(cmpny => <Option value={cmpny.WRK_CMPNY_CD}>{cmpny.WRK_CMPNY_NM}</Option>);
-    }
-    return <Option value="">해당 년도에는 등록된 업체가 없습니다.</Option>;
-  };
-
   onChangeCmpnySelect = wrkCmpnyCd => {
     const { searchValue } = this.state;
     const { result } = this.props;
@@ -163,7 +125,6 @@ class List extends Component {
   render() {
     const { result, onSave } = this.props;
     const { searchValue, selectedRowKeys, selectedWorkers } = this.state;
-    const eshsCmpnyList = (result && result.getCmpnyList && result.getCmpnyList.list) || [];
     const eshsWorkerList = (result && result.getWorkers && result.getWorkers.workerList) || [];
     const rowSelection = {
       selectedRowKeys,
@@ -182,10 +143,9 @@ class List extends Component {
       },
       {
         title: '업체',
-        dataIndex: '',
+        dataIndex: 'WRK_CMPNY_NM',
         width: '30%',
         align: 'center',
-        render: () => <span>{`${searchValue.wrkCmpnyNm} (${searchValue.year})`}</span>,
       },
       {
         title: '성명',
@@ -229,24 +189,12 @@ class List extends Component {
               <Option value="name">성명</Option>
               <Option value="ssn">생년월일</Option>
             </AntdSelect>
-            {searchValue.searchType === 'cmpny' ? (
-              <AntdSelect
-                className="select-mid mr5"
-                style={{ width: '300px' }}
-                value={searchValue.keyword}
-                onChange={e => this.onChangeCmpnySelect(e)}
-                disabled={eshsCmpnyList.length === 0}
-              >
-                {this.renderCmpnySelect(eshsCmpnyList)}
-              </AntdSelect>
-            ) : (
-              <AntdInput
-                className="ant-input-mid ant-input-inline"
-                style={{ width: '300px', marginRight: '10px' }}
-                defaultValue={searchValue.keyword}
-                onChange={e => this.changeSearchValue('keyword', e.target.value)}
-              />
-            )}
+            <AntdInput
+              className="ant-input-mid ant-input-inline"
+              style={{ width: '300px', marginRight: '10px' }}
+              defaultValue={searchValue.keyword}
+              onChange={e => this.changeSearchValue('keyword', e.target.value)}
+            />
             <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetWorkers('searchByEdu', searchValue.keyword)}>
               검색
             </StyledButton>

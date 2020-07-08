@@ -196,7 +196,7 @@ class workerTrByPersonalPage extends Component {
         modalVisible: false,
         searchValues: {
           ...searchValues,
-          LECT_CMPNY_CD: 72761,
+          LECT_CMPNY_CD: userInfo.COMP_CD.replace('COMP_', ''),
           LECT_CMPNY_NM: 'MAGNACHIP반도체',
           LECT_EMP_NO: userInfo.USER_ID,
           LECT_EMP_NM: userInfo.NAME_KOR,

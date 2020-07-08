@@ -102,6 +102,15 @@ class DetailForm extends React.Component {
     });
   };
 
+  ruleConfigHandle = e => {
+    const { propsAPI } = this.props;
+    const { getSelected, update } = propsAPI;
+    const item = getSelected()[0];
+    update(item, {
+      ruleConfig: e.target.value,
+    });
+  }
+
   renderEdgeShapeSelect = () => (
     <Select onChange={this.handleSubmit}>
       <Option value="flow-smooth">Smooth</Option>
@@ -112,8 +121,7 @@ class DetailForm extends React.Component {
 
   renderNodeDetail = () => {
     const { form } = this.props;
-    const { label, step, SRC_PATH, stepType, agreeType, isRequired } = this.item.getModel();
-    console.debug('form', form);
+    const { label, step, SRC_PATH, stepType, agreeType, isRequired, ruleConfig } = this.item.getModel();
     return (
       <>
         <Item label="Label" {...inlineFormItemLayout}>
@@ -180,6 +188,13 @@ class DetailForm extends React.Component {
               <Option value="0">불필요</Option>
               <Option value="1">필요</Option>
             </Select>,
+          )}
+        </Item>
+        <Item label="설정값" {...inlineFormItemLayout}>
+          {form.getFieldDecorator('ruleConfig', {
+            initialValue: typeof ruleConfig === 'object' ? JSON.stringify(ruleConfig) : ruleConfig,
+          })(
+            <Input.TextArea rows={2} onChange={this.ruleConfigHandle} />
           )}
         </Item>
       </>

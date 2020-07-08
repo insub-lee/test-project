@@ -9,8 +9,8 @@ const Styled = styled.div`
   min-width: 235px;
   width: 235px;
   opacity: 1;
-  background-color: #152434;
-  border-left: 1px solid #35414e;
+  background-color: #344051;
+  /* border-left: 1px solid #223344; */
   z-index: 98;
   transition: left 0.3s ease-out 0s;
 

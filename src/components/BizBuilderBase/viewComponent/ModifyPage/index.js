@@ -26,7 +26,7 @@ class ModifyPage extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getProcessRuleByModify, workInfo, workPrcProps, draftInfo, tempProcessRule, setProcessRule } = this.props;
+    const { sagaKey: id, getProcessRuleByModify, workInfo, workPrcProps, draftInfo, tempProcessRule, setProcessRule, relType } = this.props;
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
@@ -37,7 +37,7 @@ class ModifyPage extends Component {
     }
 
     if (isWorkflowUsed && tempProcessRule) {
-      setProcessRule(id, tempProcessRule);
+      setProcessRule(id, tempProcessRule, relType);
     } else if (isWorkflowUsed && prcId !== -1) {
       const payload = {
         PRC_ID: Number(prcId),
@@ -45,6 +45,7 @@ class ModifyPage extends Component {
         DRAFT_DATA: {
           ...workPrcProps,
         },
+        relType,
       };
       getProcessRuleByModify(id, payload);
     }

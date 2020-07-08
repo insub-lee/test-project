@@ -380,7 +380,7 @@ class SafetyWorkMain extends Component {
           ...formData,
           INGCHECK_HEAD: {
             ...formData.INGCHECK_HEAD,
-            CHECK_CMPNY_CD: 72761,
+            CHECK_CMPNY_CD: 'M000',
             CHECK_CMPNY_NM: 'MAGNACHIP반도체',
             CHECK_EMP_NO: userInfo.USER_ID,
             CHECK_EMP_NM: userInfo.NAME_KOR,
@@ -404,7 +404,7 @@ class SafetyWorkMain extends Component {
       <Styled>
         <StyledCustomSearchWrapper>
           <div className="search-input-area">
-            <span className="text-label">거래처</span>
+            <span className="text-label">작업번호</span>
             <AntdSearch
               className="ant-search-inline input-search-mid mr5"
               onClick={() => this.handleModal('safetyWork', true)}

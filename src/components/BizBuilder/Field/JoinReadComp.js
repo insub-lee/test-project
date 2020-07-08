@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 function JoinReadComp(props) {
   const { CONFIG, colData, formData, rowData, isBuilderModal, changeBuilderModalState, changeViewPage, sagaKey: id } = props;
-  const content = rowData[CONFIG.property.viewDataKey] || formData[CONFIG.property.viewDataKey] || colData;
-  const toolTipContent = rowData[CONFIG.property.toolTipField] || formData[CONFIG.property.viewDataKey] || colData;
+  const content = (rowData && rowData[CONFIG.property.toolTipField]) || formData[CONFIG.property.viewDataKey] || colData || '';
+  const toolTipContent = (rowData && rowData[CONFIG.property.toolTipField]) || formData[CONFIG.property.viewDataKey] || colData || '';
   const { usingToolTip } = CONFIG.property;
   const bold =
     CONFIG.property.boldCondition && CONFIG.property.boldTarget && String(rowData[CONFIG.property.boldCondition]) === String(CONFIG.property.boldTarget)

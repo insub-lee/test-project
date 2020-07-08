@@ -205,11 +205,7 @@ class Quota extends Component {
       return {
         quotaList: quotaList.map(item => {
           if (item.APP_DT === appDate) {
-            // if (val === '' || (val !== '' && item.APP_DT_CNT <= Number(val))) {
             item.QUOTA_NUM = val;
-            // } else {
-            //   message.info(<MessageContent>수검정원은 예약인원보다 작을 수 없습니다.</MessageContent>);
-            // }
           }
           return item;
         }),
@@ -247,6 +243,10 @@ class Quota extends Component {
     this.state.quotaList.forEach(item => {
       if (item.QUOTA_NUM === '') {
         message.info(<MessageContent>수검정원을 입력해주세요.</MessageContent>);
+        isValid = false;
+        return;
+      } else if (item.APP_DT_CNT > Number(item.QUOTA_NUM)) {
+        message.info(<MessageContent>[{item.APP_DT}]의 수검정원은 예약인원보다 작을 수 없습니다.</MessageContent>);
         isValid = false;
         return;
       }
