@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'antd';
+import BizBuilderBase from 'components/BizBuilderBase';
 import List from './List';
 // import View from './List/View';
 import View from './List/View';
-import BizBuilderBase from '../../components/BizBuilderBase';
 
 class Favorite extends Component {
   state = {

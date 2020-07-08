@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Modal } from 'antd';
+import BizBuilderBase from 'components/BizBuilderBase';
 import List from './List';
 import Edit from './Edit';
 import View from './View';
-
-import BizBuilderBase from '../../components/BizBuilderBase';
 
 class NotificationBoard extends Component {
   state = {

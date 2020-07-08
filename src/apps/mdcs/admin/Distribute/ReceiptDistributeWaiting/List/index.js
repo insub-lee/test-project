@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Modal, Button } from 'antd';
 
-import BizBuilderBase from 'apps/mdcs/components/BizBuilderBase';
+import BizBuilderBase from 'components/BizBuilderBase';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 
 import Styled from './Styled';

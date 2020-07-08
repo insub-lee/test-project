@@ -38,7 +38,7 @@ class CompItem extends React.Component {
       groupType,
       // compPoolList,
       viewType,
-      // compList,
+      compList,
       setCompConfigModal,
     } = this.props;
     if (col && col.comp && col.comp.CONFIG && col.comp.CONFIG.property.COMP_SRC) {
@@ -54,7 +54,7 @@ class CompItem extends React.Component {
         col,
         viewType,
         groupType,
-        // compList,
+        compData: compList,
       };
       if (groupType !== 'listGroup') {
         const colClassName = 'compConfigCol compConfigDiv wid100-28';
