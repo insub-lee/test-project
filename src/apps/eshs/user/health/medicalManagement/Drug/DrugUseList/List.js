@@ -1,30 +1,19 @@
 import React, { Component } from 'react';
-import { Table, Input, Select, DatePicker, Modal } from 'antd';
+import { Table, Select, DatePicker } from 'antd';
 import PropTypes from 'prop-types';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
-import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
-import DrugInForm from 'apps/eshs/user/health/medicalManagement/Drug/DrugInOutList/DrugInForm';
-
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
 import moment from 'moment';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
-const AntdInput = StyledInput(Input);
 const AntdRangeDatePicker = StyledDatePicker(DatePicker.RangePicker);
-
-const AntdModal = StyledAntdModal(Modal);
-
-const deptRootId = 72761;
 
 const now = new Date();
 const currentYear = now.getFullYear().toString();
@@ -39,11 +28,6 @@ class List extends Component {
     super(props);
     this.state = {
       searchParam: {},
-      modalObj: {
-        modalTitle: '',
-        modalContent: [],
-        modalVisible: false,
-      },
     };
   }
 
@@ -74,29 +58,10 @@ class List extends Component {
         },
       },
       {
-        key: 'companyList',
-        url: '/api/admin/v1/common/categoryMapList',
-        type: 'POST',
-        params: {
-          PARAM: { NODE_ID: 673 },
-        },
-      },
-      {
-        key: 'drugList',
-        url: `/api/eshs/v1/common/health/eshsHealthMedicine`,
-        type: 'POST',
-        params: { PARAM: {} },
-      },
-      {
         key: 'List',
-        url: `/api/eshs/v1/common/health/eshsHealthMedicineInOut`,
+        url: `/api/eshs/v1/common/health/eshsHealthMdeicineUseList`,
         type: 'POST',
         params: { PARAM: searchParam },
-      },
-      {
-        key: 'deptList',
-        url: `/api/eshs/v1/common/EshsHqAndDeptList?DEPT_ID=${deptRootId}`,
-        type: 'GET',
       },
     ];
 
@@ -111,7 +76,7 @@ class List extends Component {
     const apiAry = [
       {
         key: 'List',
-        url: `/api/eshs/v1/common/health/eshsHealthMedicineInOut`,
+        url: `/api/eshs/v1/common/health/eshsHealthMdeicineUseList`,
         type: 'POST',
         params: { PARAM: searchParam },
       },
@@ -136,39 +101,17 @@ class List extends Component {
     }
   };
 
-  modalVisible = (formData = {}, type = 'INPUT') => {
-    const { result } = this.props;
-    const {
-      modalObj: { modalVisible },
-    } = this.state;
-    const workAreaList = (result && result.workAreaList && result.workAreaList.categoryMapList) || [];
-    if (modalVisible) {
-      return this.setState({
-        modalObj: { modalContent: [], modalTitle: '', modalVisible: !modalVisible },
-      });
-    }
-    return this.setState({
-      modalObj: {
-        modalVisible: !modalVisible,
-        modalContent: [
-          <DrugInForm key="DrugForm" defaultForm={formData} type={type} workAreaList={workAreaList} modalVisible={this.modalVisible} getList={this.getList} />,
-        ],
-        modalTitle: type === 'INPUT' ? '신규등록' : '관리',
-      },
-    });
-  };
-
   columns = [
     {
       title: '품목',
       dataIndex: 'DRUG',
-      width: '13%',
+      width: '30%',
       align: 'center',
     },
     {
       title: '제약회사',
       dataIndex: 'COMPANY',
-      width: '13%',
+      width: '16%',
       align: 'center',
     },
     {
@@ -178,59 +121,36 @@ class List extends Component {
       align: 'center',
     },
     {
-      title: '입출',
-      dataIndex: 'IN_OUT_TYPE',
-      width: '8%',
-      align: 'center',
-    },
-    {
-      title: '수량',
-      dataIndex: 'QTY',
-      width: '10%',
-      align: 'center',
-    },
-    {
       title: '단위',
       dataIndex: 'UNIT',
       width: '8%',
       align: 'center',
     },
     {
-      title: '발생일',
-      dataIndex: 'POSTING_DT',
-      width: '10%',
+      title: '수량',
+      dataIndex: 'QTY',
+      width: '8%',
       align: 'center',
+      render: text => text || 0,
     },
     {
-      title: '부서',
-      dataIndex: 'DEPT_NAME_KOR',
-      width: '20%',
-      align: 'center',
-    },
-    {
-      title: '이름',
-      dataIndex: 'EMP_NM',
-      width: '10%',
+      title: '비고',
+      dataIndex: 'COMMENTS',
+      width: '30%',
       align: 'center',
     },
   ];
 
   render() {
     const { result } = this.props;
-    const { modalObj } = this.state;
     const list = (result && result.List && result.List.list) || [];
     const workAreaList = (result && result.workAreaList && result.workAreaList.categoryMapList) || [];
-    const companyList = (result && result.companyList && result.companyList.categoryMapList) || [];
-    const drugList = (result && result.drugList && result.drugList.list) || [];
 
     return (
       <>
-        <AntdModal width={850} visible={modalObj.modalVisible} title={modalObj.modalTitle || ''} onCancel={this.modalVisible} destroyOnClose footer={null}>
-          {modalObj.modalContent}
-        </AntdModal>
         <StyledContentsWrapper>
-          <StyledCustomSearchWrapper>
-            <div className="search-input-area mb10">
+          <StyledCustomSearchWrapper className="search-wrapper-inline">
+            <div className="search-input-area">
               <AntdSelect
                 className="select-sm mr5"
                 style={{ width: 100 }}
@@ -253,51 +173,8 @@ class List extends Component {
                 defaultValue={[moment(toDate), moment(fromDate)]}
                 onChange={(val1, val2) => this.onChangeRangeDatePicker(val1, val2)}
               />
-              <AntdSelect
-                className="select-sm mr5"
-                style={{ width: 120 }}
-                allowClear
-                placeholder="입출고 전체"
-                onChange={val => this.onChangeSearchParam('IN_OUT_TYPE', val)}
-              >
-                <AntdSelect.Option value="입고">입고</AntdSelect.Option>
-                <AntdSelect.Option value="출고">출고</AntdSelect.Option>
-              </AntdSelect>
-              <AntdSelect
-                className="select-sm mr5"
-                style={{ width: 150 }}
-                allowClear
-                placeholder="협력업체 전체"
-                onChange={val => this.onChangeSearchParam('COMPANY', val)}
-              >
-                {companyList
-                  .filter(item => item.LVL === 3)
-                  .map(item => (
-                    <AntdSelect.Option key={item.NODE_ID} value={item.NODE_ID}>
-                      {item.NAME_KOR}
-                    </AntdSelect.Option>
-                  ))}
-              </AntdSelect>
-              <AntdSelect
-                className="select-sm mr5"
-                style={{ width: 200 }}
-                allowClear
-                placeholder="일반의약품 전체"
-                onChange={val => this.onChangeSearchParam('DRUG_CD', val)}
-              >
-                {drugList.map(item => (
-                  <AntdSelect.Option key={item.DRUG_CD} value={item.DRUG_CD}>
-                    {item.DRUG}
-                  </AntdSelect.Option>
-                ))}
-              </AntdSelect>
-            </div>
-            <div className="btn-area">
               <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>
                 검색
-              </StyledButton>
-              <StyledButton className="btn-primary btn-sm" onClick={() => this.modalVisible({}, 'INPUT')}>
-                등록
               </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
@@ -306,10 +183,9 @@ class List extends Component {
             footer={() => <span>{`${(list && list.length) || 0} 건`}</span>}
             dataSource={list || []}
             bordered
-            rowKey="ROWNUM"
-            onRow={record => ({
-              onClick: e => this.modalVisible(record, 'MODIFY'),
-            })}
+            pagination={false}
+            scroll={{ y: '100%' }}
+            rowKey="DRUG_CD"
           />
         </StyledContentsWrapper>
       </>
