@@ -14,7 +14,8 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import { callBackAfterPost } from 'apps/eshs/common/submitCallbackFunc';
-import ModalContent from './modalContent';
+import DetailView from './detailView';
+import SelectMedicine from './selectMedicine';
 
 const AntdSelect = StyledSelect(Select);
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -31,6 +32,7 @@ class InputPage extends React.Component {
       siteList: [],
       requestValue: {
         SITE_ID: 317,
+        MEDICINE_LIST: [],
       },
       selectedRecord: {},
       hasUserInfo: false,
@@ -38,6 +40,7 @@ class InputPage extends React.Component {
       isCooperator: 'N',
       modalVisible: false,
       visitDateTime: moment(),
+      isSelectMedicine: false,
     };
     this.handleSearchClick = debounce(this.handleSearchClick, 100);
   }
@@ -87,9 +90,10 @@ class InputPage extends React.Component {
     },
     {
       title: '의약품:출고수량',
-      dataIndex: '',
+      dataIndex: 'DRUG',
       align: 'center',
       width: '10%',
+      render: text => <pre style={{ margin: 'auto' }}>{text}</pre>,
     },
     {
       title: '세부증상',
@@ -184,7 +188,7 @@ class InputPage extends React.Component {
       cooperatorList:
         result.cooperatorList &&
         result.cooperatorList.categoryMapList &&
-        result.cooperatorList.categoryMapList.filter(cooperator => cooperator.PARENT_NODE_ID === cooperatorNodeId),
+        result.cooperatorList.categoryMapList.filter(cooperator => cooperator.PARENT_NODE_ID === cooperatorNodeId && cooperator.USE_YN === 'Y'),
     });
   };
 
@@ -196,7 +200,7 @@ class InputPage extends React.Component {
   };
 
   checkCooperator = value => {
-    const DEFAULT_COOPERATOR_ID = 1876;
+    const DEFAULT_COOPERATOR_ID = 1877;
     this.setState(prevState =>
       value === 'Y'
         ? { isCooperator: value, requestValue: Object.assign(prevState.requestValue, { COOPERATOR_ID: DEFAULT_COOPERATOR_ID }) }
@@ -252,9 +256,14 @@ class InputPage extends React.Component {
   handleSaveClick = () => {
     const { requestValue, visitDateTime } = this.state;
     const { sagaKey, submitHandlerBySaga } = this.props;
+    const COMMON_MEDICINE_NODE_ID = 3842;
 
     if (!this.validationCheckBeforeSave()) {
       return null;
+    }
+
+    if (requestValue.TREATMENT_ID.includes(COMMON_MEDICINE_NODE_ID) && !requestValue.MEDICINE_LIST.length) {
+      return this.setState({ isSelectMedicine: true });
     }
 
     const submitCallbackFunc = () => {
@@ -266,7 +275,7 @@ class InputPage extends React.Component {
       sagaKey,
       'POST',
       '/api/eshs/v1/common/health-usage',
-      Object.assign(requestValue, { JRNL_DTTM: visitDateTime }),
+      Object.assign(requestValue, { JRNL_DTTM: moment(visitDateTime).unix() }),
       (key, response) => callBackAfterPost(key, response, submitCallbackFunc),
     );
   };
@@ -289,7 +298,7 @@ class InputPage extends React.Component {
 
   resetRequestValue = () => {
     this.setState(prevState => ({
-      requestValue: { PATIENT_EMP_NO: prevState.requestValue.PATIENT_EMP_NO, SITE_ID: 317 },
+      requestValue: { PATIENT_EMP_NO: prevState.requestValue.PATIENT_EMP_NO, SITE_ID: 317, MEDICINE_LIST: [] },
     }));
   };
 
@@ -298,12 +307,19 @@ class InputPage extends React.Component {
   };
 
   handleModalClose = () => {
-    this.setState({ modalVisible: false, selectedRecord: {} });
+    this.setState({ modalVisible: false, isSelectMedicine: false, selectedRecord: {} });
+  };
+
+  handleSelectMedicineComplete = selectMedicineList => {
+    this.setState(
+      prevState => ({ isSelectMedicine: false, requestValue: Object.assign(prevState.requestValue, { MEDICINE_LIST: selectMedicineList }) }),
+      this.handleSaveClick,
+    );
   };
 
   render() {
     const { columns } = this;
-    const { checkCooperator, handleInputChange, handleSearchClick, handleSaveClick, handleRowClick, handleModalClose } = this;
+    const { checkCooperator, handleInputChange, handleSearchClick, handleSaveClick, handleRowClick, handleModalClose, handleSelectMedicineComplete } = this;
     const {
       diseaseList,
       treatmentList,
@@ -316,7 +332,9 @@ class InputPage extends React.Component {
       modalVisible,
       requestValue,
       selectedRecord,
+      isSelectMedicine,
     } = this.state;
+
     return (
       <>
         <StyledContentsWrapper>
@@ -359,7 +377,6 @@ class InputPage extends React.Component {
                       <>
                         <AntdSelect
                           className="select-sm mr5"
-                          defaultValue={1876}
                           value={requestValue.COOPERATOR_ID}
                           onChange={value => handleInputChange('COOPERATOR_ID', value)}
                           style={{ width: '15%' }}
@@ -390,9 +407,13 @@ class InputPage extends React.Component {
                         />
                       </>
                     )}
-                    <StyledButton className="btn-gray btn-xs" onClick={handleSearchClick}>
+                    <StyledButton className="btn-gray btn-xs mr5" onClick={handleSearchClick}>
                       검색
                     </StyledButton>
+                    {hasUserInfo
+                      ? `${dataSource[0] && dataSource[0].PATIENT_NAME ? dataSource[0].PATIENT_NAME : ''} / 
+                      ${dataSource[0] && dataSource[0].DEPT_NAME ? dataSource[0].DEPT_NAME : ''}`
+                      : ''}
                   </td>
                 </tr>
                 {isCooperator === 'Y' ? (
@@ -467,7 +488,7 @@ class InputPage extends React.Component {
           </StyledButtonWrapper>
           <AntdTable columns={columns} dataSource={dataSource} onRow={record => ({ onClick: () => handleRowClick(record) })} />
           <AntdModal title="건강관리실 이용관리" visible={modalVisible} footer={null} onCancel={handleModalClose} width="70%" destroyOnClose>
-            <ModalContent
+            <DetailView
               modalVisible={modalVisible}
               handleModalClose={handleModalClose}
               record={selectedRecord}
@@ -477,6 +498,16 @@ class InputPage extends React.Component {
               diseaseList={diseaseList}
               treatmentList={treatmentList}
               submitHandlerBySaga={this.props.submitHandlerBySaga}
+            />
+          </AntdModal>
+          <AntdModal title="일반의약품 선택" visible={isSelectMedicine} footer={null} onCancel={handleModalClose} width="50%" destroyOnClose>
+            <SelectMedicine
+              sagaKey={this.props.sagaKey}
+              getCallDataHandler={this.props.getCallDataHandler}
+              result={this.props.result}
+              requestValue={requestValue}
+              handleInputChange={handleInputChange}
+              handleSelectMedicineComplete={handleSelectMedicineComplete}
             />
           </AntdModal>
         </StyledContentsWrapper>
@@ -491,6 +522,7 @@ InputPage.propTypes = {
   result: PropTypes.object,
   submitHandlerBySaga: PropTypes.func,
 };
+
 InputPage.defaultProps = {};
 
 export default InputPage;

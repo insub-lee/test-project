@@ -4,6 +4,7 @@ import { Radio, Select, Input, DatePicker } from 'antd';
 import moment from 'moment';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
@@ -14,7 +15,7 @@ import { callBackAfterPut, callBackAfterDelete } from 'apps/eshs/common/submitCa
 const AntdSelect = StyledSelect(Select);
 const AntdTextarea = StyledTextarea(Input.TextArea);
 const AntdPicker = StyledPicker(DatePicker);
-class ModalContent extends React.Component {
+class DetailView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -113,8 +114,17 @@ class ModalContent extends React.Component {
     submitHandlerBySaga(sagaKey, 'PUT', `/api/eshs/v1/common/health-usage`, detailValue, (key, response) => callBackAfterPut(key, response, handleModalClose));
   };
 
+  handleDeleteClick = () => {
+    const { detailValue } = this.state;
+    const { sagaKey, submitHandlerBySaga, handleModalClose } = this.props;
+
+    submitHandlerBySaga(sagaKey, 'DELETE', `/api/eshs/v1/common/health-usage`, detailValue, (key, response) =>
+      callBackAfterDelete(key, response, handleModalClose),
+    );
+  };
+
   render() {
-    const { checkCooperator, handleInputChange, handleInputChangeAndGetSympoms, handleModifyClick } = this;
+    const { checkCooperator, handleInputChange, handleInputChangeAndGetSympoms, handleModifyClick, handleDeleteClick } = this;
     const { detailValue, isCooperator, symptomsByDiseaseIdList } = this.state;
     const { handleModalClose, diseaseList, treatmentList } = this.props;
     const hasMedicineList = detailValue.TREATMENT && detailValue.TREATMENT.includes('일반의약품');
@@ -192,7 +202,7 @@ class ModalContent extends React.Component {
                   <AntdSelect
                     className="select-sm"
                     mode="multiple"
-                    value={detailValue.SYMPTOM_ID || []}
+                    value={(detailValue.SYMPTOM_ID && detailValue.SYMPTOM_ID.map(symptom => Number(symptom))) || []}
                     onChange={value => handleInputChange('SYMPTOM_ID', value)}
                     style={{ width: '100%' }}
                   >
@@ -208,7 +218,7 @@ class ModalContent extends React.Component {
                   <AntdSelect
                     className="select-sm"
                     mode="multiple"
-                    value={detailValue.TREATMENT_ID && detailValue.TREATMENT_ID.map(treatmentId => Number(treatmentId))}
+                    value={(detailValue.TREATMENT_ID && detailValue.TREATMENT_ID.map(treatmentId => Number(treatmentId))) || []}
                     onChange={value => handleInputChange('TREATMENT_ID', value)}
                     style={{ width: '100%' }}
                   >
@@ -221,23 +231,23 @@ class ModalContent extends React.Component {
               {hasMedicineList ? (
                 <tr>
                   <th>약품</th>
-                  <td></td>
+                  <td colSpan={5}>{detailValue.DRUG.replace('\n', ', ')}</td>
                 </tr>
               ) : null}
               <tr>
-                <th>조치내용</th>
-                <td>
-                  <AntdTextarea
-                    defaultValue={detailValue.MEASURE}
-                    onChange={event => handleInputChange('MEASURE', event.target.value)}
-                    autoSize={{ minRows: 3, maxRows: 6 }}
-                  />
-                </td>
                 <th>세부증상</th>
                 <td>
                   <AntdTextarea
                     defaultValue={detailValue.DETAIL_CONTENT}
                     onChange={event => handleInputChange('DETAIL_CONTENT', event.target.value)}
+                    autoSize={{ minRows: 3, maxRows: 6 }}
+                  />
+                </td>
+                <th>조치내용</th>
+                <td>
+                  <AntdTextarea
+                    defaultValue={detailValue.MEASURE}
+                    onChange={event => handleInputChange('MEASURE', event.target.value)}
                     autoSize={{ minRows: 3, maxRows: 6 }}
                   />
                 </td>
@@ -253,21 +263,23 @@ class ModalContent extends React.Component {
             </tbody>
           </table>
         </StyledHtmlTable>
-        <div style={{ textAlign: 'center', padding: '10px' }}>
+        <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20 btn-wrap-mb-10">
           <StyledButton className="btn-primary btn-sm mr5" onClick={handleModifyClick}>
             저장
           </StyledButton>
-          <StyledButton className="btn-gray btn-sm mr5">삭제</StyledButton>
+          <StyledButton className="btn-gray btn-sm mr5" onClick={handleDeleteClick}>
+            삭제
+          </StyledButton>
           <StyledButton className="btn-light btn-sm" onClick={handleModalClose}>
             닫기
           </StyledButton>
-        </div>
+        </StyledButtonWrapper>
       </StyledContentsWrapper>
     );
   }
 }
 
-ModalContent.propTypes = {
+DetailView.propTypes = {
   handleModalClose: PropTypes.func,
   record: PropTypes.object,
   sagaKey: PropTypes.string,
@@ -278,6 +290,6 @@ ModalContent.propTypes = {
   treatmentList: PropTypes.arrayOf('object'),
 };
 
-ModalContent.defaultProps = {};
+DetailView.defaultProps = {};
 
-export default ModalContent;
+export default DetailView;
