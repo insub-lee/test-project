@@ -13,6 +13,7 @@ import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import request from 'utils/request';
 import ExcelParser from '../excelParser';
+import ExcelDownload from '../excelDownload';
 
 // Common Styled Component Ant.D
 const AntdModal = StyledContentsModal(Modal);
@@ -329,6 +330,7 @@ class SafetyWorkMain extends Component {
           <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.submitFormData('DELETE')}>
             주간메뉴 삭제
           </StyledButton>
+          <ExcelDownload dataList={mealPlan} />
         </StyledButtonWrapper>
         <ContentsWrapper>
           <Spin tip="삭제중..." spinning={isDeleting}>
