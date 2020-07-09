@@ -22,6 +22,7 @@ const totalBuilderList = [
   { TOTAL_BUILDER_SEQ: 3, NAME_KOR: 'ESHS' },
   { TOTAL_BUILDER_SEQ: 4, NAME_KOR: 'WTS' },
   { TOTAL_BUILDER_SEQ: 5, NAME_KOR: 'MXLIFE' },
+  { TOTAL_BUILDER_SEQ: 5, NAME_KOR: 'GCS' },
 ];
 
 class WorkBuilderSysFieldMgr extends Component {
