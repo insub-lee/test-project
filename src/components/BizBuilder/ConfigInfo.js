@@ -54,6 +54,8 @@ import EshsCmpnyConfig from 'components/BizBuilder/Field/EshsCmpnyConfig';
 import TextJoinFieldCompConfig from 'components/BizBuilder/Field/TextJoinFieldCompConfig';
 import DragUploadMDCSCompConfig from 'components/BizBuilder/Field/DragUploadMDCSCompConfig';
 import EshsDangerEvalInSafetyImproveConfig from 'components/BizBuilder/Field/EshsDangerEvalInSafetyImproveConfig';
+import CustomListSelectCompConfig from 'components/BizBuilder/Field/CustomListSelectCompConfig';
+import MonthPickerCompConfig from 'components/BizBuilder/Field/MonthPickerCompConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/DragUploadMDCSCompConfig': { renderer: property => <DragUploadMDCSCompConfig {...property} /> },
@@ -110,4 +112,6 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/EshsCmpnyConfig': { renderer: property => <EshsCmpnyConfig {...property} /> },
   'components/BizBuilder/Field/TextJoinFieldCompConfig': { renderer: property => <TextJoinFieldCompConfig {...property} /> },
   'components/BizBuilder/Field/EshsDangerEvalInSafetyImproveConfig': { renderer: property => <EshsDangerEvalInSafetyImproveConfig {...property} /> },
+  'components/BizBuilder/Field/CustomListSelectCompConfig': { renderer: property => <CustomListSelectCompConfig {...property} /> },
+  'components/BizBuilder/Field/MonthPickerCompConfig': { renderer: property => <MonthPickerCompConfig {...property} /> },
 };
