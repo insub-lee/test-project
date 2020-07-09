@@ -44,13 +44,13 @@ const columns = [
   {
     title: '메뉴',
     dataIndex: 'menu',
-    width: '70%',
+    width: '65%',
     align: 'center',
     render: (data, record) => <span>{record.menu.list.join(', ')}</span>,
   },
   {
     title: '칼로리',
-    dataIndex: 'menu',
+    dataIndex: '',
     width: '10%',
     align: 'center',
     render: (data, record) => <span>{record.menu.cal}</span>,
@@ -63,16 +63,18 @@ class SafetyWorkMain extends Component {
     this.state = {
       modalVisible: false,
       isSaving: false,
+      isDeleting: false,
+      mealPlan: [], // 검색한 주간메뉴 리스트
       searchValue: {
         sDate: '',
         eDate: '',
         area: 'A',
       },
-      mealPlan: [], // 검색한 주간메뉴 리스트
       formData: {
         area: 'A',
         list: [],
       },
+      selectedRows: [], // 테이블 rowSelection
     };
   }
 
@@ -89,7 +91,7 @@ class SafetyWorkMain extends Component {
         this.saveData();
         break;
       case 'DELETE':
-        // submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkDeleteCallback);
+        this.deleteData();
         break;
       case 'GET':
         if (sDate !== '' && eDate !== '') {
@@ -108,31 +110,34 @@ class SafetyWorkMain extends Component {
     const { list } = response;
     if (list && list.length > 0) {
       this.setState({
+        selectedRowKeys: [],
+        selectedRows: [],
         mealPlan: list,
       });
     }
   };
 
-  async saveData() {
+  // 식단저장(엑셀)
+  saveData() {
     const { formData } = this.state;
     const { list, area } = formData;
     this.setState({
       isSaving: true,
     });
     if (list?.length > 0) {
-      let failedList = [];
-      await list.forEach(async (row, rowIndex) => {
+      const failedList = [];
+      list.forEach((row, rowIndex) => {
         const payload = {
           ...row,
           area,
         };
-        const result = await this.sendSingleData(payload);
+        const result = this.sendSingleData(payload);
         if (!result) {
-          failedList = failedList.push(row);
+          failedList.push(row);
         }
         if (rowIndex === list.length - 1) {
           if (failedList.length > 0) {
-            message.error(<MessageContent>{`${failedList.size}건의 입력을 실패했습니다.`}</MessageContent>);
+            message.error(<MessageContent>{`${failedList.length}건의 입력을 실패했습니다.`}</MessageContent>);
           } else {
             message.success(<MessageContent>{`${list.length}건의 주간메뉴를 입력했습니다.`}</MessageContent>);
           }
@@ -150,6 +155,7 @@ class SafetyWorkMain extends Component {
     }
   }
 
+  // 식단 저장(단일)
   async sendSingleData(payload) {
     const { response, error } = await this.saveMealInfo(payload);
     if (response && !error) {
@@ -158,9 +164,76 @@ class SafetyWorkMain extends Component {
     return false;
   }
 
+  // 식단 저장
   saveMealInfo = async payload => {
     const result = await request({
       method: 'POST',
+      url: `/api/mxlife/v1/common/tabsectList`,
+      data: payload,
+    });
+    return result;
+  };
+
+  // 리스트 필터 (삭제된 메뉴 제거)
+  deleteFilter = (item, successList) => {
+    const result = successList.find(meal => meal.day === item.day && meal.mealtype === item.mealtype && meal.daydiv === item.daydiv);
+    if (result === undefined) return true;
+    return false;
+  };
+
+  // 식단 삭제(select 된 목록)
+  deleteData() {
+    const { selectedRows, mealPlan } = this.state;
+    this.setState({
+      isDeleting: true,
+    });
+    if (selectedRows.length > 0) {
+      const failedList = []; // 삭제 실패 리스트
+      const successList = []; // 삭제 성공 리스트
+      selectedRows.forEach(row => {
+        const payload = {
+          ...row,
+        };
+        const result = this.deleteSingleData(payload);
+        if (!result) {
+          failedList.push(row);
+        } else if (result) {
+          successList.push(row);
+        }
+      });
+      // 삭제된 항목을 검색된 리스트에서 제거
+      const nextMealPlan = mealPlan.filter(item => this.deleteFilter(item, successList));
+      this.setState({
+        isDeleting: false,
+        selectedRows: failedList,
+        mealPlan: nextMealPlan,
+      });
+      if (failedList.length > 0) {
+        message.error(<MessageContent>{`${failedList.length}건의 삭제를 실패했습니다.`}</MessageContent>);
+      } else {
+        message.success(<MessageContent>{`${selectedRows.length}건의 주간메뉴를 삭제했습니다.`}</MessageContent>);
+      }
+    } else {
+      this.setState({
+        isDeleting: false,
+      });
+      message.error(<MessageContent>삭제할 식단정보가 없습니다.</MessageContent>);
+    }
+  }
+
+  // 식단 삭제(단일)
+  async deleteSingleData(payload) {
+    const { response, error } = await this.deleteMealInfo(payload);
+    if (response && !error) {
+      return true;
+    }
+    return false;
+  }
+
+  // 식단 삭제
+  deleteMealInfo = async payload => {
+    const result = await request({
+      method: 'DELETE',
       url: `/api/mxlife/v1/common/tabsectList`,
       data: payload,
     });
@@ -217,8 +290,17 @@ class SafetyWorkMain extends Component {
     });
   };
 
+  rowSelectOnchange = Rows => {
+    this.setState({
+      selectedRows: Rows,
+    });
+  };
+
   render() {
-    const { modalVisible, formData, mealPlan, searchValue, isSaving } = this.state;
+    const { modalVisible, formData, mealPlan, searchValue, isSaving, isDeleting } = this.state;
+    const rowSelection = {
+      onChange: (keys, Rows) => this.rowSelectOnchange(Rows),
+    };
     return (
       <>
         <StyledCustomSearchWrapper>
@@ -242,11 +324,16 @@ class SafetyWorkMain extends Component {
         </StyledCustomSearchWrapper>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
           <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.ModalHandler(true)}>
-            주간메뉴 등록
+            주간메뉴 등록(엑셀)
+          </StyledButton>
+          <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.submitFormData('DELETE')}>
+            주간메뉴 삭제
           </StyledButton>
         </StyledButtonWrapper>
         <ContentsWrapper>
-          <AntdTable pagination={false} columns={columns} dataSource={mealPlan} />
+          <Spin tip="삭제중..." spinning={isDeleting}>
+            <AntdTable rowSelection={rowSelection} pagination={false} columns={columns} dataSource={mealPlan} />
+          </Spin>
         </ContentsWrapper>
         <AntdModal
           className="modal-table-pad"
