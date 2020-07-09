@@ -85,7 +85,7 @@ class DeptSearchBar extends Component {
   };
 
   handleFinsh = () => {
-    const { id, formData, submitHandlerBySaga, handleSearchOnClick } = this.props;
+    const { id, formData, submitHandlerBySaga, handleSearchOnClick, getCallDataHandler } = this.props;
     const materialData = (formData && formData.materialData) || '';
     const REQ_NO = (formData && formData.materialData && formData.materialData.REQ_NO) || '';
     const CHK_YEAR = (formData && formData.materialData && formData.materialData.CHK_YEAR) || '';
@@ -166,7 +166,7 @@ class DeptSearchBar extends Component {
           />
         </div>
         <div className="btn-area">
-          <StyledButton className="btn-gray btn-sm" onClick={this.handleDeptSearch}>
+          <StyledButton className="btn-gray btn-sm mr5" onClick={this.handleDeptSearch}>
             검색
           </StyledButton>
           {eiMaterialCnt > 0 && itemList.length > 0 && !searchFlag && (
@@ -186,5 +186,6 @@ class DeptSearchBar extends Component {
 DeptSearchBar.defaultProps = {
   getCallDataHandler: () => {},
   result: {},
+  saveBeforeProcess: () => {},
 };
 export default DeptSearchBar;

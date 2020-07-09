@@ -72,19 +72,19 @@ const useHooks = ({ defaultWidthType, defaultWidth, updateBodyWidthType, updateB
         const diffX = e.pageX - pageX;
         const textNode = curCol.childNodes[0];
         const nextTextNode = nxtCol.childNodes[0];
-        if (curColWidth + diffX < 100 || (nxtCol && nxtColWidth - diffX < 100)) {
-          curCol.style.width = curColWidth + diffX < 100 ? `100px` : `${curColWidth + nxtColWidth - 100}px`;
+        if (curColWidth + diffX < 40 || (nxtCol && nxtColWidth - diffX < 40)) {
+          curCol.style.width = curColWidth + diffX < 40 ? `40px` : `${curColWidth + nxtColWidth - 40}px`;
           if (textNode)
             textNode.innerText =
-              curColWidth + diffX < 100
+              curColWidth + diffX < 40
                 ? `% ${((100 / tableNode.offsetWidth) * 100).toFixed(2)}`
-                : `% ${(((curColWidth + nxtColWidth - 100) / tableNode.offsetWidth) * 100).toFixed(2)}`;
+                : `% ${(((curColWidth + nxtColWidth - 40) / tableNode.offsetWidth) * 100).toFixed(2)}`;
           if (nxtCol) {
-            nxtCol.style.width = curColWidth + diffX < 100 ? `${curColWidth + nxtColWidth - 100}px` : `100px`;
+            nxtCol.style.width = curColWidth + diffX < 40 ? `${curColWidth + nxtColWidth - 40}px` : `40px`;
             if (nextTextNode)
               nextTextNode.innerText =
-                curColWidth + diffX < 100
-                  ? `% ${(((curColWidth + nxtColWidth - 100) / tableNode.offsetWidth) * 100).toFixed(2)}`
+                curColWidth + diffX < 40
+                  ? `% ${(((curColWidth + nxtColWidth - 40) / tableNode.offsetWidth) * 100).toFixed(2)}`
                   : `% ${((100 / tableNode.offsetWidth) * 100).toFixed(2)}`;
           }
         } else if (nxtCol) {

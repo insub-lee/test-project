@@ -37,6 +37,7 @@ class NumberComp extends React.Component {
               placeholder={CONFIG.property.placeholder}
               onChange={value => this.handleOnChange(value)}
               readOnly={readOnly || CONFIG.property.readOnly}
+              style={{ width: '100%' }}
               className={CONFIG.property.className || ''}
             />
             {CONFIG && CONFIG.property && CONFIG.property.unit}

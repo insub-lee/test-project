@@ -100,7 +100,7 @@ class List extends Component {
       modalObj: {
         modalVisible: !modalVisible,
         modalContent: [
-          <DrugForm key="DrugForm" defaultForm={formData} type={type} workAreaList={workAreaList} modalVisible={this.modalVisible} saveAfter={this.getList} />,
+          <DrugForm key="DrugForm" defaultForm={formData} type={type} workAreaList={workAreaList} modalVisible={this.modalVisible} getList={this.getList} />,
         ],
         modalTitle: type === 'INPUT' ? '신규등록' : '관리',
       },
@@ -111,13 +111,13 @@ class List extends Component {
     {
       title: '품목',
       dataIndex: 'DRUG',
-      width: '13%',
+      width: '20%',
       align: 'center',
     },
     {
       title: '제약회사',
       dataIndex: 'COMPANY',
-      width: '13%',
+      width: '20%',
       align: 'center',
     },
     {
@@ -147,13 +147,13 @@ class List extends Component {
     {
       title: '비고',
       dataIndex: 'COMMENTS',
-      width: '40%',
+      width: '26%',
       align: 'center',
     },
   ];
 
   render() {
-    const { result } = this.props;
+    const { result, customOnRowClick, saveBtn } = this.props;
     const { modalObj } = this.state;
     const list = (result && result.List && result.List.list) || [];
     const workAreaList = (result && result.workAreaList && result.workAreaList.categoryMapList) || [];
@@ -182,7 +182,7 @@ class List extends Component {
                   ))}
               </AntdSelect>
               <AntdInput
-                placeholder="품목 검색"
+                placeholder="품목"
                 allowClear
                 className="ant-input-sm ant-input-inline mr5"
                 style={{ width: 150 }}
@@ -192,21 +192,24 @@ class List extends Component {
               <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm" onClick={() => this.modalVisible({}, 'INPUT')}>
-                등록
-              </StyledButton>
+
+              {saveBtn && (
+                <StyledButton className="btn-primary btn-sm" onClick={() => this.modalVisible({}, 'INPUT')}>
+                  등록
+                </StyledButton>
+              )}
             </div>
           </StyledCustomSearchWrapper>
           <AntdTable
             columns={this.columns}
             footer={() => <span>{`${(list && list.length) || 0} 건`}</span>}
-            scroll={{ y: '100%' }}
-            pagination={false}
+            // scroll={{ y: '100%' }}
+            // pagination={false}
             dataSource={list || []}
             bordered
             rowKey="DRUG_CD"
             onRow={record => ({
-              onClick: e => this.modalVisible(record, 'MODIFY'),
+              onClick: e => (typeof customOnRowClick === 'function' ? customOnRowClick(record) : this.modalVisible(record, 'MODIFY')),
             })}
           />
         </StyledContentsWrapper>
@@ -221,6 +224,8 @@ List.propTypes = {
   sagaKey: PropTypes.string,
   result: PropTypes.object,
   getCallDataHandler: PropTypes.func,
+  customOnRowClick: PropTypes.any,
+  saveBtn: PropTypes.bool,
 };
 
 List.defaultProps = {
@@ -228,6 +233,8 @@ List.defaultProps = {
   spinningOff: () => {},
   result: {},
   getCallDataHandler: () => {},
+  customOnRowClick: undefined,
+  saveBtn: true,
 };
 
 export default List;

@@ -122,7 +122,7 @@ const StyleManager = ({
               <thead>
                 <tr>
                   {headers.map((percent, index) => (
-                    <th key={index} style={{ width: width * (percent / 100) > 100 ? width * (percent / 100) : 100 }}>
+                    <th key={index} style={{ width: width * (percent / 100) > 40 ? width * (percent / 100) : 40 }}>
                       <div className="col-contents">{`% ${percent.toFixed(2)}`}</div>
                     </th>
                   ))}

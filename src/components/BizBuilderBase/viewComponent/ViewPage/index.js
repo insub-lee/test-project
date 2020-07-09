@@ -52,7 +52,9 @@ class ViewPage extends Component {
 
   builderModalClose = () => {
     const { changeBuilderModalStateByParent } = this.props;
-    changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
+    if (typeof changeBuilderModalStateByParent === 'function') {
+      changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
+    }
   };
 
   render = () => {

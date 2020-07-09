@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Input, DatePicker, Select, InputNumber } from 'antd';
+import { Input, DatePicker, Select, InputNumber, Popconfirm } from 'antd';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
 
@@ -36,7 +36,7 @@ class Comp extends Component {
   changeFormData = (target, value) => this.setState(prevState => ({ formData: Object.assign(prevState.formData, { [target]: value }) }));
 
   handleAction = type => {
-    const { sagaKey, submitHandlerBySaga, profile, defaultForm, modalVisible, saveAfter, spinningOn, spinningOff } = this.props;
+    const { sagaKey, submitHandlerBySaga, profile, defaultForm, modalVisible, getList, spinningOn, spinningOff } = this.props;
     const { formData } = this.state;
     const drug = (formData && formData.DRUG) || '';
     spinningOn();
@@ -60,7 +60,7 @@ class Comp extends Component {
           if (res && res.code === 200) {
             this.showMessage(type === 'INPUT' ? '저장되었습니다.' : '수정되었습니다.');
             modalVisible();
-            return saveAfter();
+            return getList();
           }
           return this.showMessage(type === 'INPUT' ? '저장에 실패하였습니다.' : '수정에 실패하였습니다.');
         });
@@ -71,7 +71,7 @@ class Comp extends Component {
           if (res && res.result === 1) {
             this.showMessage('삭제되었습니다.');
             modalVisible();
-            return saveAfter();
+            return getList();
           }
           return this.showMessage('삭제에 실패하였습니다.');
         });
@@ -105,9 +105,11 @@ class Comp extends Component {
                     <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.handleAction(type)}>
                       {type === 'INPUT' ? '저장' : '수정'}
                     </StyledButton>
-                    <StyledButton className="btn-light btn-first btn-sm " onClick={() => this.handleAction('DELETE')}>
-                      삭제
-                    </StyledButton>
+                    {type !== 'INPUT' && (
+                      <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.handleAction('DELETE')} okText="Yes" cancelText="No">
+                        <StyledButton className="btn-light btn-first btn-sm ">삭제</StyledButton>
+                      </Popconfirm>
+                    )}
                     <StyledButton className="btn-light btn-sm" onClick={modalVisible}>
                       닫기
                     </StyledButton>
@@ -235,7 +237,7 @@ class Comp extends Component {
     );
   }
 }
-const DrugForm = ({ defaultForm, type, modalVisible, workAreaList, saveAfter }) => (
+const DrugForm = ({ defaultForm, type, modalVisible, workAreaList, getList }) => (
   <BizMicroDevBase
     sagaKey="DrugForm"
     defaultForm={defaultForm}
@@ -243,7 +245,7 @@ const DrugForm = ({ defaultForm, type, modalVisible, workAreaList, saveAfter }) 
     modalVisible={modalVisible}
     workAreaList={workAreaList}
     component={Comp}
-    saveAfter={saveAfter}
+    getList={getList}
   ></BizMicroDevBase>
 );
 
@@ -252,7 +254,7 @@ DrugForm.propTypes = {
   type: PropTypes.string,
   modalVisible: PropTypes.func,
   workAreaList: PropTypes.array,
-  saveAfter: PropTypes.func,
+  getList: PropTypes.func,
 };
 
 DrugForm.defaultProps = {
@@ -260,7 +262,7 @@ DrugForm.defaultProps = {
   type: 'INPUT',
   modalVisible: () => {},
   workAreaList: [],
-  saveAfter: () => {},
+  getList: () => {},
 };
 
 Comp.propTypes = {
@@ -272,7 +274,7 @@ Comp.propTypes = {
   submitHandlerBySaga: PropTypes.func,
   workAreaList: PropTypes.array,
   sagaKey: PropTypes.string,
-  saveAfter: PropTypes.func,
+  getList: PropTypes.func,
 };
 
 Comp.defaultProps = {
@@ -282,7 +284,7 @@ Comp.defaultProps = {
   modalVisible: () => {},
   workAreaList: [],
   sagaKey: '',
-  saveAfter: () => {},
+  getList: () => {},
 };
 
 export default DrugForm;

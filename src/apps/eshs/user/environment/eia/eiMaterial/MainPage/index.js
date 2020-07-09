@@ -29,14 +29,14 @@ class MainPage extends Component {
   };
 
   handleSetMaterial = () => {
-    const { id, result, changeFormData } = this.props;
+    const { id, result, setFormData, formData } = this.props;
     // const itemList = (result && result.itemList && result.itemList.list) || [];
     const materialData = (result && result.materialData && result.materialData.result) || {};
     const materialCnt = (result && result.materialData && result.materialData.materialCnt) || 0;
+
+    setFormData(id, { ...formData, materialData, materialCnt });
     // changeFormData(id, 'itemList', itemList);
-    changeFormData(id, 'materialData', materialData);
-    changeFormData(id, 'materialCnt', materialCnt);
-    this.itemListReload();
+    return this.itemListReload();
   };
 
   itemListReload = () => {

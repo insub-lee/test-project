@@ -103,11 +103,10 @@ export const getProcessRuleByModify = (id, payload) => ({
   payload,
 });
 
-export const setProcessRule = (id, processRule, relType) => ({
+export const setProcessRule = (id, processRule) => ({
   type: actionTypes.SET_PROCESS_RULE,
   id,
   processRule,
-  relType,
 });
 
 export const setProcessStep = (id, processStep) => ({
@@ -393,3 +392,5 @@ export const setTaskFavoriteBySaga = (id, workSeq, taskOriginSeq, flag) => ({
   taskOriginSeq,
   flag,
 });
+
+export const setRelTypeByReducer = (id, relType) => ({ type: actionTypes.SET_REL_TYPE_REDUCER, id, relType });

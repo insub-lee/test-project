@@ -273,14 +273,14 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeIsLo
 function* getProcessRule({ id, payload }) {
   const response = yield call(Axios.post, `/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder`, { PARAM: { ...payload } });
   const { DRAFT_PROCESS } = response;
-  yield put(actions.setProcessRule(id, DRAFT_PROCESS, payload.relType));
+  yield put(actions.setProcessRule(id, DRAFT_PROCESS));
 }
 
 // processRule  조회
 function* getProcessRuleByModify({ id, payload }) {
   const response = yield call(Axios.post, `/api/workflow/v1/common/workprocess/defaultPrcRuleModifyHanlder`, { PARAM: { ...payload } });
   const { DRAFT_PROCESS } = response;
-  yield put(actions.setProcessRule(id, DRAFT_PROCESS, payload.relType));
+  yield put(actions.setProcessRule(id, DRAFT_PROCESS));
 }
 
 function* getTaskSeq({ id, workSeq }) {
@@ -1070,6 +1070,7 @@ function* getFileDownload({ url, fileName }) {
   if (window.navigator && window.navigator.msSaveBlob) {
     window.navigator.msSaveBlob(blobResponse, fileName);
   } else {
+    fileName = decodeURI(fileName);
     const fileUrl = window.URL.createObjectURL(blobResponse);
     const link = document.createElement('a');
     link.href = fileUrl;
@@ -1098,6 +1099,7 @@ function* getFileDownloadProgress({ url, fileName, onProgress, callback }) {
     if (window.navigator && window.navigator.msSaveBlob) {
       window.navigator.msSaveBlob(data, downFileName);
     } else {
+      downFileName = decodeURI(downFileName);
       const fileUrl = window.URL.createObjectURL(data);
       const link = document.createElement('a');
       link.href = fileUrl;
