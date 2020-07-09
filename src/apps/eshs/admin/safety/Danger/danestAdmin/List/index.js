@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import BizBuilderBase from 'components/BizBuilderBase';
 import customList from 'apps/eshs/admin/environment/air/stack/List';
 import moment from 'moment';
@@ -17,6 +18,7 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 import StyledAntdModal from 'components/BizBuilder/styled//Modal/StyledAntdModal';
 import StyledAntdModalPad from 'components/BizBuilder/styled//Modal/StyledAntdModalPad';
 import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/common/submitCallbackFunc';
+
 import AdminMain from './AdminMain';
 import SubList from './SubList';
 import ReAppriseList from '../ReAppriseList';
@@ -38,7 +40,7 @@ class List extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, improveDanger } = this.props;
     const apiAry = [
       {
         key: 'dangerInfoModalDataList',
@@ -53,6 +55,9 @@ class List extends Component {
       },
     ];
     getCallDataHandler(id, apiAry, this.initData);
+    if (improveDanger) {
+      this.selectedModal(improveDanger);
+    }
   }
 
   initData = () => {
@@ -81,7 +86,10 @@ class List extends Component {
   selectedModal = record => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     this.setState({ regNo: record.REG_NO });
-    this.hazardModal();
+    if (!record.IMPROVE) {
+      this.hazardModal();
+    }
+
     const apiAry = [
       {
         key: 'dangerInfo',
@@ -331,7 +339,7 @@ class List extends Component {
                       <tbody>
                         <AdminMain
                           formData={item}
-                          dangerInfo={dangerInfo.find(info => info.PROCESS_ID === item.PROCESS_ID)}
+                          dangerInfo={dangerInfo && dangerInfo.find(info => info.PROCESS_ID === item.PROCESS_ID)}
                           onChangeAdmin={this.onChangeAdmin}
                           onDangerInfoModal={this.onDangerInfoModal}
                           dangerInfoModal={this.state.dangerInfoModal}
@@ -379,6 +387,7 @@ List.propTypes = {
   getCallDataHandler: PropTypes.func,
   sagaKey: PropTypes.string,
   result: PropTypes.object,
+  improveDanger: PropTypes.object,
   submitHandlerBySaga: PropTypes.func,
 };
 
