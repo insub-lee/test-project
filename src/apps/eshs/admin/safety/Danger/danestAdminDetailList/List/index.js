@@ -41,12 +41,12 @@ class List extends Component {
   componentDidMount() {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const { rangeData } = this.state;
-    const param = `?START_DATE=${moment(rangeData[0]).format('YYYY-MM-DD')}&&END_DATE=${moment(rangeData[1]).format('YYYY-MM-DD')}`;
     const apiAry = [
       {
         key: 'dangerDanestAdmin',
-        type: 'GET',
-        url: `/api/eshs/v1/common/dangerDanestAdmin${param}`,
+        type: 'POST',
+        url: `/api/eshs/v1/common/dangerDanestAdminSub`,
+        params: { PARAM: { START_DATE: moment(rangeData[0]).format('YYYY-MM-DD'), END_DATE: moment(rangeData[1]).format('YYYY-MM-DD') } },
       },
       {
         key: 'selectList',
@@ -70,17 +70,22 @@ class List extends Component {
   search = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const { rangeData, regGubun, empNo, empNm, deptNm, title } = this.state;
-    let param = `?START_DATE=${moment(rangeData[0]).format('YYYY-MM-DD')}&&END_DATE=${moment(rangeData[1]).format('YYYY-MM-DD')}`;
-    param += regGubun ? `&&REG_GUBUN=${regGubun}` : '';
-    param += empNo ? `&&EMP_NO=${empNo}` : '';
-    param += empNm ? `&&EMP_NM=${empNm}` : '';
-    param += deptNm ? `&&DEPT_NM=${deptNm}` : '';
-    param += title ? `&&TITLE=${title}` : '';
     const apiAry = [
       {
         key: 'dangerDanestAdmin',
-        type: 'GET',
-        url: `/api/eshs/v1/common/dangerDanestAdmin${param}`,
+        type: 'POST',
+        url: `/api/eshs/v1/common/dangerDanestAdminSub`,
+        params: {
+          PARAM: {
+            START_DATE: moment(rangeData[0]).format('YYYY-MM-DD'),
+            END_DATE: moment(rangeData[1]).format('YYYY-MM-DD'),
+            REG_GUBUN: regGubun,
+            EMP_NO: empNo,
+            EMP_NM: empNm,
+            DEPT_NM: deptNm,
+            TITLE: title,
+          },
+        },
       },
     ];
     getCallDataHandler(id, apiAry, this.searchData);
@@ -113,47 +118,84 @@ class List extends Component {
       title: '평가번호',
       dataIndex: 'REG_NO',
       align: 'center',
-      width: '12%',
+      width: 110,
     },
     {
-      title: '등록일자',
-      dataIndex: 'REG_DTTM',
+      title: '세부평가번호',
+      dataIndex: 'DA_REG_NO',
       align: 'center',
-      width: '10%',
+      width: 120,
     },
     {
-      title: '문서제목',
-      dataIndex: 'TITLE',
+      title: '부서',
+      dataIndex: 'DIV_NM',
       align: 'center',
-      width: '43%',
+      width: 100,
     },
     {
-      title: '부서명',
-      dataIndex: 'DEPT_NM',
+      title: '공정(장소)',
+      dataIndex: 'PLACE_NM',
       align: 'center',
-      width: '15%',
+      width: 100,
     },
     {
-      title: '등록자',
+      title: '세부공정',
+      dataIndex: 'PROCESS_NM',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: '장비(설비)',
+      dataIndex: 'EQUIP_NM',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: '작업단계위험요인',
+      dataIndex: 'DANGFACT',
+      align: 'center',
+      width: 200,
+    },
+    {
+      title: '현재안전조치대책',
+      dataIndex: 'SAFEACTION',
+      align: 'center',
+      width: 200,
+    },
+    {
+      title: '위험빈도',
+      dataIndex: 'DAN_FREQC',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: '위험강도',
+      dataIndex: 'DAN_STRGT',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: '위험등급',
+      align: 'center',
+      dataIndex: 'DANGRAD',
+      width: 100,
+    },
+    {
+      title: '작성자',
       dataIndex: 'REG_USER_NAME',
       align: 'center',
-      width: '10%',
+      width: 100,
     },
     {
-      title: '등록구분',
-      dataIndex: 'REG_GUBUN',
+      title: '개선대책',
+      dataIndex: 'AP_IMPROVE',
       align: 'center',
-      width: '10%',
-      render: text =>
-        `${this.state.selectData &&
-          this.state.selectData.find(findItem => findItem.NODE_ID === Number(text)) &&
-          this.state.selectData.find(findItem => findItem.NODE_ID === Number(text)).NAME_KOR}`,
+      width: 200,
     },
   ];
 
   render() {
     const { list, recordByState, selectData } = this.state;
-    console.debug('list   :  ', list);
     return (
       <StyledContentsWrapper>
         <StyledCustomSearchWrapper>
@@ -182,7 +224,6 @@ class List extends Component {
             <AntdInput className="ant-input-sm" allowClear placeholder="전체" style={{ width: 200 }} onChange={e => this.setState({ deptNm: e.target.vale })} />
             <span className="text-label">작성자 사번</span>
             <AntdInput className="ant-input-sm" allowClear placeholder="전체" style={{ width: 200 }} onChange={e => this.setState({ empNo: e.target.vale })} />
-
             <span className="text-label">작성자 성명</span>
             <AntdInput className="ant-input-sm" allowClear placeholder="전체" style={{ width: 200 }} onChange={e => this.setState({ empNm: e.target.vale })} />
           </div>
@@ -211,6 +252,8 @@ class List extends Component {
             },
           })}
           bordered
+          pagination={false}
+          scroll={{ x: 1500, y: 300 }}
         />
         <AntdModal width={1000} visible={this.state.isModal} title="위험성 평가" onCancel={this.onModalChange} destroyOnClose footer={null}>
           {this.state.isModal && <DanestAdmin improveDanger={{ REG_NO: recordByState.REG_NO, REG_DTTM: recordByState.REG_DTTM, IMPROVE: true }} />}
