@@ -145,6 +145,8 @@ import TextJoinFieldComp from 'components/BizBuilder/Field/TextJoinFieldComp';
 import EshsDangerEvalInSafetyImproveComp from 'components/BizBuilder/Field/EshsDangerEvalInSafetyImproveComp';
 import MdcsKindNameViewComp from 'components/BizBuilder/Field/MdcsKindNameViewComp';
 import MsdsHeaderComp from 'components/BizBuilder/Field/MsdsHeaderComp';
+import CustomListSelectComp from 'components/BizBuilder/Field/CustomListSelectComp';
+import MonthPickerComp from 'components/BizBuilder/Field/MonthPickerComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/VersionComp': { renderer: property => <VersionComp {...property} /> },
@@ -292,4 +294,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/EshsDangerEvalInSafetyImproveComp': { renderer: property => <EshsDangerEvalInSafetyImproveComp {...property} /> },
   'components/BizBuilder/Field/MdcsKindNameViewComp': { renderer: property => <MdcsKindNameViewComp {...property} /> },
   'components/BizBuilder/Field/MsdsHeaderComp': { renderer: property => <MsdsHeaderComp {...property} /> },
+  'components/BizBuilder/Field/CustomListSelectComp': { renderer: property => <CustomListSelectComp {...property} /> },
+  'components/BizBuilder/Field/MonthPickerComp': { renderer: property => <MonthPickerComp {...property} /> },
 };
