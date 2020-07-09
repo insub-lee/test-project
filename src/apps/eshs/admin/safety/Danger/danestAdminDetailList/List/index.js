@@ -62,7 +62,7 @@ class List extends Component {
     const {
       result: { selectList, dangerDanestAdmin },
     } = this.props;
-    const list = dangerDanestAdmin && dangerDanestAdmin.subList;
+    const list = dangerDanestAdmin && dangerDanestAdmin.list;
     const selectData = selectList && selectList.categoryMapList;
     this.setState({ selectData, list });
   };
@@ -95,7 +95,7 @@ class List extends Component {
     const {
       result: { dangerDanestAdmin },
     } = this.props;
-    const list = dangerDanestAdmin && dangerDanestAdmin.subList;
+    const list = dangerDanestAdmin && dangerDanestAdmin.list;
     if (list && list.length > 0) {
       this.setState({ list });
     } else {
