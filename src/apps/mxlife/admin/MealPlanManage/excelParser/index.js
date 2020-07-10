@@ -157,7 +157,7 @@ class ExcelParser extends Component {
       },
       {
         title: '칼로리',
-        dataIndex: 'menu',
+        dataIndex: '',
         width: '10%',
         align: 'center',
         render: (data, record) => <span>{record.menu.cal}</span>,

@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Table, Icon, Modal } from 'antd';
+import { Table, Icon, Modal, Input } from 'antd';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper'
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import DragAntdModal from 'components/DragAntdModal';
 import ContentView from './ContentView';
 
 const AntdTable = StyledAntdTable(Table);
+const AntdInput = StyledInput(Input);
 
 class PubDocList extends Component {
   // eslint-disable-next-line react/state-in-constructor
@@ -20,6 +23,7 @@ class PubDocList extends Component {
     pubDocList: [],
     taskSeq: 0,
     workSeq: 0,
+    searchInfo: {},
   };
 
   columns = [
@@ -28,7 +32,8 @@ class PubDocList extends Component {
       dataIndex: 'FULLPATH_NM',
       key: 'FULLPATH_NM',
       align: 'center',
-      width: '10%',
+      width: '15%',
+      ellipsis: true,
     },
     {
       title: 'No.',
@@ -42,12 +47,13 @@ class PubDocList extends Component {
       dataIndex: 'VERSION',
       key: 'VERSION',
       align: 'center',
-      width: '10%',
+      width: '7%',
     },
     {
       title: 'Title',
       dataIndex: 'TITLE',
       key: 'TITLE',
+      ellipsis: true,
       render: (text, record) => <a onClick={() => this.onTitleClick(record)}>{text}</a>,
     },
     {
@@ -65,15 +71,34 @@ class PubDocList extends Component {
   };
 
   onDataBind = () => {
-    const { result } = this.props;
+    const { result, spinningOff } = this.props;
+    spinningOff();
     const pubDocList = result.list && result.list.pubDocList;
     this.setState({ pubDocList });
   };
 
   componentDidMount() {
-    const { getCallDataHandler, sagaKey, apiArys } = this.props;
-    getCallDataHandler(sagaKey, apiArys, this.onDataBind);
+    this.getList();
   }
+
+  getList = () => {
+    const { getCallDataHandler, sagaKey, spinningOn } = this.props;
+    const apiArys = [
+      {
+        key: 'list',
+        url: '/api/mdcs/v1/common/mdscPubDocListHandler',
+        type: 'POST',
+        params: {
+          PARAM: {
+            STATUS: 0,
+            ...this.state.searchInfo,
+          } 
+        },
+      },
+    ];
+    spinningOn();
+    getCallDataHandler(sagaKey, apiArys, this.onDataBind);
+  };
 
   onCancel = () => {
     this.setState({ isShow: false });
@@ -94,6 +119,14 @@ class PubDocList extends Component {
       },
     };
     submitHandlerBySaga(sagaKey, 'PUT', '/api/mdcs/v1/common/mdscPubDocListHandler', param, this.onReceltComplete);
+  };
+
+  onChangeSearchInfo = (key, val) => {
+    this.setState(prevState => {
+      const { searchInfo } = prevState;
+      searchInfo[key] = val;
+      return { searchInfo }
+    });
   };
 
   render() {
@@ -120,26 +153,30 @@ class PubDocList extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
-          <AntdTable dataSource={this.state.pubDocList} columns={this.columns} />
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <AntdInput
+                className="ant-input-sm mr5" allowClear style={{ width: 130 }} placeholder="문서번호"
+                onChange={e => this.onChangeSearchInfo('DOCNUMBER', e.target.value)}
+                onPressEnter={this.getList}
+              />
+              <AntdInput
+                className="ant-input-sm mr5" allowClear style={{ width: 150 }} placeholder="Title"
+                onChange={e => this.onChangeSearchInfo('TITLE', e.target.value)}
+                onPressEnter={this.getList}
+              />
+              <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
+            </div>
+          </StyledCustomSearchWrapper>
+          <AntdTable dataSource={this.state.pubDocList} columns={this.columns} bordered />
         </StyledContentsWrapper>
       </>
     );
   }
 }
 
-PubDocList.propTypes = {
-  apiArys: PropTypes.array,
-};
+PubDocList.propTypes = {};
 
-PubDocList.defaultProps = {
-  apiArys: [
-    {
-      key: 'list',
-      url: '/api/mdcs/v1/common/mdscPubDocListHandler',
-      type: 'POST',
-      params: { PARAM: { STATUS: 0 } },
-    },
-  ],
-};
+PubDocList.defaultProps = {};
 
 export default PubDocList;
