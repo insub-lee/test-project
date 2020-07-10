@@ -12,6 +12,7 @@ import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal'
 import UserSearchModal from 'apps/eshs/common/userSearchModal';
 
 import EmpChkResultDetail from 'apps/eshs/admin/health/ChkResult/EmpChkResultDetail';
+import ChkMstDetail from 'apps/eshs/admin/health/common/ChkMstDetail';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -161,9 +162,26 @@ class List extends Component {
   chkCdColumn = {
     title: '검진코드',
     dataIndex: 'CHK_CD',
-    width: '100px',
+    width: '150px',
     align: 'center',
-    render: (text, record) => text, // TODO 검진코드 모달 추가
+    render: (text, record) => (
+      <StyledButton
+        className="btn-link btn-sm"
+        onClick={() =>
+          this.setState(
+            {
+              modalObj: {
+                modalTitle: '대상자 개인관리',
+                modalContent: [<ChkMstDetail onCancelPopup={this.modalVisible} selectedRow={record} />],
+              },
+            },
+            this.modalVisible,
+          )
+        }
+      >
+        {text}
+      </StyledButton>
+    ),
   };
 
   colObj = {
