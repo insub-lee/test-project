@@ -9,9 +9,13 @@ import * as actionTypes from './constants';
 import * as actions from './actions';
 import * as selectors from './selectors';
 
-function* getApproveList({ customUrl, PAGE, PAGE_CNT }) {
+function* getApproveList({ customUrl, PAGE, PAGE_CNT, relTypes }) {
+  let paramRelTypes = relTypes;
+  if (!paramRelTypes || paramRelTypes.length === 0) {
+    paramRelTypes = yield select(selectors.makeSelectRelTypes());
+  }
   const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/approveList`, {
-    PARAM: { relTypes: [1, 99, 999], PAGE: PAGE || 1, PAGE_CNT: PAGE_CNT || 10 },
+    PARAM: { relTypes: paramRelTypes && paramRelTypes.length > 0 ? paramRelTypes : [1, 99, 999], PAGE: PAGE || 1, PAGE_CNT: PAGE_CNT || 10 },
   });
   if (response) {
     const { list, listCnt } = response;
@@ -43,10 +47,14 @@ function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
   }
 }
 
-function* getUnApproveList({ customUrl, PAGE, PAGE_CNT }) {
+function* getUnApproveList({ customUrl, PAGE, PAGE_CNT, relTypes }) {
   console.debug('customUrl', customUrl);
+  let paramRelTypes = relTypes;
+  if (!paramRelTypes || paramRelTypes.length === 0) {
+    paramRelTypes = yield select(selectors.makeSelectRelTypes());
+  }
   const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/unApproveList`, {
-    PARAM: { relTypes: [1, 4, 99, 999], PAGE: PAGE || 1, PAGE_CNT: PAGE_CNT || 10 },
+    PARAM: { relTypes: paramRelTypes && paramRelTypes.length > 0 ? paramRelTypes : [1, 4, 99, 999], PAGE: PAGE || 1, PAGE_CNT: PAGE_CNT || 10 },
   });
   if (response) {
     const { list, listCnt } = response;
@@ -55,9 +63,13 @@ function* getUnApproveList({ customUrl, PAGE, PAGE_CNT }) {
   }
 }
 
-function* getDraftList({ customUrl, PAGE, PAGE_CNT }) {
+function* getDraftList({ customUrl, PAGE, PAGE_CNT, relTypes }) {
+  let paramRelTypes = relTypes;
+  if (!paramRelTypes || paramRelTypes.length === 0) {
+    paramRelTypes = yield select(selectors.makeSelectRelTypes());
+  }
   const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/draftList`, {
-    PARAM: { relTypes: [1, 99, 999], PAGE: PAGE || 1, PAGE_CNT: PAGE_CNT || 10 },
+    PARAM: { relTypes: paramRelTypes && paramRelTypes.length > 0 ? paramRelTypes : [1, 99, 999], PAGE: PAGE || 1, PAGE_CNT: PAGE_CNT || 10 },
   });
   if (response) {
     const { list, listCnt } = response;

@@ -26,6 +26,8 @@ const makeSelectUnApproveListCnt = () => createSelector(selectApproveBase, state
 
 const makeSelectDraftListCnt = () => createSelector(selectApproveBase, state => state.get('draftListCnt'));
 
+const makeSelectRelTypes = () => createSelector(selectApproveBase, state => state.get('relTypes'));
+
 export {
   makeSelectApproveList,
   makeSelectUnApproveList,
@@ -39,4 +41,5 @@ export {
   makeSelectUnApproveListCnt,
   makeSelectApproveListCnt,
   makeSelectDraftListCnt,
+  makeSelectRelTypes,
 };
