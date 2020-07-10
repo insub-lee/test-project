@@ -84,9 +84,9 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getApproveList: (customUrl, PAGE, PAGE_CNT) => dispatch(actions.getApproveList(customUrl, PAGE, PAGE_CNT)),
-  getUnApproveList: (customUrl, PAGE, PAGE_CNT) => dispatch(actions.getUnApproveList(customUrl, PAGE, PAGE_CNT)),
-  getDraftList: (customUrl, PAGE, PAGE_CNT) => dispatch(actions.getDraftList(customUrl, PAGE, PAGE_CNT)),
+  getApproveList: (customUrl, PAGE, PAGE_CNT, relTypes) => dispatch(actions.getApproveList(customUrl, PAGE, PAGE_CNT, relTypes)),
+  getUnApproveList: (customUrl, PAGE, PAGE_CNT, relTypes) => dispatch(actions.getUnApproveList(customUrl, PAGE, PAGE_CNT, relTypes)),
+  getDraftList: (customUrl, PAGE, PAGE_CNT, relTypes) => dispatch(actions.getDraftList(customUrl, PAGE, PAGE_CNT, relTypes)),
   getCustomDataBind: (httpMethod, rtnUrl, param) => dispatch(actions.getCustomDataBind(httpMethod, rtnUrl, param)),
   submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
     dispatch(actions.submitHandlerBySaga(id, httpMethod, apiUrl, submitData, callbackFunc)),
@@ -99,6 +99,7 @@ const mapDispatchToProps = dispatch => ({
   getUserInfo: (userInfo, callBack) => dispatch(actions.getUserInfo(userInfo, callBack)),
   getFileDownload: (url, fileName) => dispatch(actions.getFileDownload(url, fileName)),
   getFileDownloadProgress: (url, fileName, onProgress, callback) => dispatch(actions.getFileDownloadProgress(url, fileName, onProgress, callback)),
+  setRelTypes: relTypes => dispatch(actions.setRelTypesByReducer(relTypes)),
 });
 
 const withReducer = injectReducer({

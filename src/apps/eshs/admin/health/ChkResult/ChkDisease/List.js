@@ -95,7 +95,7 @@ class List extends Component {
         url: '/api/admin/v1/common/categoryMapList',
         type: 'POST',
         params: {
-          PARAM: { NODE_ID: 316 },
+          PARAM: { NODE_ID: 1721 },
         },
       },
     ];
@@ -194,8 +194,8 @@ class List extends Component {
       align: 'center',
     },
     {
-      title: '지역',
-      dataIndex: 'WORK_AREA_NAME',
+      title: '현 지역',
+      dataIndex: 'CURRENT_WORK_AREA',
       width: '4%',
       align: 'center',
     },
@@ -310,13 +310,15 @@ class List extends Component {
                 className="select-sm mr5"
                 style={{ width: 100 }}
                 allowClear
-                placeholder="지역"
+                placeholder="현지역"
                 onChange={val => this.onChangeSearchParam('WORK_AREA_CD', val)}
               >
                 {workAreaList
                   .filter(item => item.LVL === 1)
                   .map(item => (
-                    <AntdSelect.Option value={item.NODE_ID}>{item.NAME_KOR}</AntdSelect.Option>
+                    <AntdSelect.Option key={item.NODE_ID} value={item.CODE}>
+                      {item.NAME_KOR}
+                    </AntdSelect.Option>
                   ))}
               </AntdSelect>
               <AntdSelect

@@ -113,7 +113,8 @@ class Comp extends Component {
             modalVisible();
             return getList();
           }
-          return this.showMessage('저장에 실패하였습니다.');
+          this.showMessage('저장에 실패하였습니다.');
+          return this.showMessage('입고일을 확인해주십시오.');
         });
         break;
       case 'MODIFY':
@@ -131,7 +132,7 @@ class Comp extends Component {
       case 'DELETE':
         submitHandlerBySaga(sagaKey, 'DELETE', '/api/eshs/v1/common/health/eshsHealthMedicineInOut', submitData, (id, res) => {
           spinningOff();
-          if (res && res.result > 1) {
+          if (res && res.result === 1) {
             this.showMessage('삭제되었습니다.');
             modalVisible();
             return getList();
