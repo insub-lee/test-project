@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import DanestAdmin from 'apps/eshs/admin/safety/Danger/danestAdmin';
 import moment from 'moment';
 
-import { Input, Modal, Table, DatePicker, Select } from 'antd';
+import { Modal, Table, DatePicker, Select, TreeSelect } from 'antd';
 
+import { getTreeFromFlatData } from 'react-sortable-tree';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
@@ -16,19 +17,35 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
 import StyledAntdModal from 'components/BizBuilder/styled//Modal/StyledAntdModal';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const AntdModal = StyledAntdModal(Modal);
+const AntdTreeSelect = StyledTreeSelect(TreeSelect);
 const AntdSelect = StyledSelect(Select);
 const AntdTable = StyledAntdTable(Table);
-const AntdInput = StyledInput(Input);
 const AntdRangePicker = StyledDatePicker(RangePicker);
 
 moment.locale('ko');
+
+const getCategoryMapListAsTree = (flatData, rootkey) =>
+  getTreeFromFlatData({
+    flatData: flatData.map(item => ({
+      title: item.NAME_KOR,
+      value: item.NODE_ID,
+      key: item.NODE_ID,
+      parentValue: item.PARENT_NODE_ID,
+      selectable: true,
+      level: item.LVL,
+    })),
+    getKey: node => node.key,
+    getParentKey: node => node.parentValue,
+    rootKey: rootkey || 0,
+    level: node => node.level || 0,
+  });
 
 class List extends Component {
   constructor(props) {
@@ -49,10 +66,10 @@ class List extends Component {
         params: { PARAM: { START_DATE: moment(rangeData[0]).format('YYYY-MM-DD'), END_DATE: moment(rangeData[1]).format('YYYY-MM-DD') } },
       },
       {
-        key: 'selectList',
+        key: 'treeSelectData',
         type: 'POST',
         url: '/api/admin/v1/common/categoryChildrenListUseYn',
-        params: { PARAM: { NODE_ID: 30451, USE_YN: 'Y' } },
+        params: { PARAM: { NODE_ID: 1831, USE_YN: 'Y' } },
       },
     ];
     getCallDataHandler(id, apiAry, this.initData);
@@ -60,16 +77,16 @@ class List extends Component {
 
   initData = () => {
     const {
-      result: { selectList, dangerDanestAdmin },
+      result: { treeSelectData, dangerDanestAdmin },
     } = this.props;
-    const list = dangerDanestAdmin && dangerDanestAdmin.subList;
-    const selectData = selectList && selectList.categoryMapList;
-    this.setState({ selectData, list });
+    const list = dangerDanestAdmin && dangerDanestAdmin.list;
+    const nData = (treeSelectData && treeSelectData.categoryMapList && getCategoryMapListAsTree(treeSelectData.categoryMapList, 1831)) || [];
+    this.setState({ nData, list });
   };
 
   search = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
-    const { rangeData, regGubun, empNo, empNm, deptNm, title } = this.state;
+    const { rangeData, DANGRAD, SDIV_ID, DIV_ID, PLACE_ID, PROCESS_ID, EQUIP_ID } = this.state;
     const apiAry = [
       {
         key: 'dangerDanestAdmin',
@@ -79,11 +96,12 @@ class List extends Component {
           PARAM: {
             START_DATE: moment(rangeData[0]).format('YYYY-MM-DD'),
             END_DATE: moment(rangeData[1]).format('YYYY-MM-DD'),
-            REG_GUBUN: regGubun,
-            EMP_NO: empNo,
-            EMP_NM: empNm,
-            DEPT_NM: deptNm,
-            TITLE: title,
+            DANGRAD,
+            SDIV_ID,
+            DIV_ID,
+            PLACE_ID,
+            PROCESS_ID,
+            EQUIP_ID,
           },
         },
       },
@@ -95,7 +113,7 @@ class List extends Component {
     const {
       result: { dangerDanestAdmin },
     } = this.props;
-    const list = dangerDanestAdmin && dangerDanestAdmin.subList;
+    const list = dangerDanestAdmin && dangerDanestAdmin.list;
     if (list && list.length > 0) {
       this.setState({ list });
     } else {
@@ -111,6 +129,23 @@ class List extends Component {
   onClickRow = record => {
     this.setState({ recordByState: record });
     this.onModalChange();
+  };
+
+  onChangeTreeSelect = (value, label, extra) => {
+    switch (extra.triggerNode.props.level) {
+      case 3:
+        return this.setState({ SDIV_ID: value, DIV_ID: undefined, PLACE_ID: undefined, PROCESS_ID: undefined, EQUIP_ID: undefined });
+      case 4:
+        return this.setState({ SDIV_ID: undefined, DIV_ID: value, PLACE_ID: undefined, PROCESS_ID: undefined, EQUIP_ID: undefined });
+      case 5:
+        return this.setState({ SDIV_ID: undefined, DIV_ID: undefined, PLACE_ID: value, PROCESS_ID: undefined, EQUIP_ID: undefined });
+      case 6:
+        return this.setState({ SDIV_ID: undefined, DIV_ID: undefined, PLACE_ID: undefined, PROCESS_ID: value, EQUIP_ID: undefined });
+      case 7:
+        return this.setState({ SDIV_ID: undefined, DIV_ID: undefined, PLACE_ID: undefined, PROCESS_ID: undefined, EQUIP_ID: value });
+      default:
+        return '';
+    }
   };
 
   columns = [
@@ -195,46 +230,38 @@ class List extends Component {
   ];
 
   render() {
-    const { list, recordByState, selectData } = this.state;
+    const { list, recordByState, nData } = this.state;
     return (
       <StyledContentsWrapper>
         <StyledCustomSearchWrapper>
           <div className="search-input-area mb10">
-            <span className="text-label">평가종류</span>
-            <AntdSelect
-              style={{ width: 200, marginLeft: 15 }}
-              className="select-xs"
-              placeholder="전체"
-              allowClear
-              onChange={value => this.setState({ regGubun: value })}
-            >
-              {selectData && selectData.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
-            </AntdSelect>
             <span className="text-label">등록일</span>
             <AntdRangePicker
               className="ant-picker-sm"
-              style={{ marginLeft: 24 }}
               defaultValue={[moment(this.state.rangeData[0], 'YYYY-MM'), moment(this.state.rangeData[1], 'YYYY-MM')]}
               format={['YYYY-MM-DD', 'YYYY-MM-DD']}
               onChange={(date, dateStrings) => this.dateChange(dateStrings)}
             />
+            <span className="text-label">위험등급</span>
+            <AntdSelect style={{ width: 200 }} className="select-sm" placeholder="전체" allowClear onChange={value => this.setState({ DANGRAD: value })}>
+              <Option value="A">A</Option>
+              <Option value="B">B</Option>
+              <Option value="C">C</Option>
+              <Option value="D">D</Option>
+              <Option value="E">E</Option>
+              <Option value="F">F</Option>
+            </AntdSelect>
           </div>
           <div className="search-input-area mb10">
-            <span className="text-label">작성자 부서</span>
-            <AntdInput className="ant-input-sm" allowClear placeholder="전체" style={{ width: 200 }} onChange={e => this.setState({ deptNm: e.target.vale })} />
-            <span className="text-label">작성자 사번</span>
-            <AntdInput className="ant-input-sm" allowClear placeholder="전체" style={{ width: 200 }} onChange={e => this.setState({ empNo: e.target.vale })} />
-            <span className="text-label">작성자 성명</span>
-            <AntdInput className="ant-input-sm" allowClear placeholder="전체" style={{ width: 200 }} onChange={e => this.setState({ empNm: e.target.vale })} />
-          </div>
-          <div className="search-input-area">
-            <span className="text-label">제목</span>
-            <AntdInput
-              className="ant-input-sm"
-              allowClear
+            <span className="text-label">분류</span>
+            <AntdTreeSelect
+              style={{ width: 361, marginLeft: 11 }}
+              className="select-sm"
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              treeData={nData || []}
               placeholder="전체"
-              style={{ width: 200, marginLeft: 37 }}
-              onChange={e => this.setState({ title: e.target.vale })}
+              allowClear
+              onChange={this.onChangeTreeSelect}
             />
           </div>
           <StyledButtonWrapper className="btn-area">
