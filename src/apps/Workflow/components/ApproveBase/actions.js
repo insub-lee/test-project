@@ -12,11 +12,12 @@ export const setCustomDataBind = list => ({
   list,
 });
 
-export const getApproveList = (customUrl, PAGE, PAGE_CNT) => ({
+export const getApproveList = (customUrl, PAGE, PAGE_CNT, relTypes) => ({
   type: actionTypes.GET_APPROVE_LIST,
   customUrl,
   PAGE,
   PAGE_CNT,
+  relTypes,
 });
 
 export const setApproveList = (list, listCnt) => ({
@@ -25,11 +26,12 @@ export const setApproveList = (list, listCnt) => ({
   listCnt,
 });
 
-export const getUnApproveList = (customUrl, PAGE, PAGE_CNT) => ({
+export const getUnApproveList = (customUrl, PAGE, PAGE_CNT, relTypes) => ({
   type: actionTypes.GET_UNAPPROVE_LIST,
   customUrl,
   PAGE,
   PAGE_CNT,
+  relTypes,
 });
 
 export const setUnApproveList = (list, listCnt) => ({
@@ -38,11 +40,12 @@ export const setUnApproveList = (list, listCnt) => ({
   listCnt,
 });
 
-export const getDraftList = (customUrl, PAGE, PAGE_CNT) => ({
+export const getDraftList = (customUrl, PAGE, PAGE_CNT, relTypes) => ({
   type: actionTypes.GET_DRAFT_LIST,
   customUrl,
   PAGE,
   PAGE_CNT,
+  relTypes,
 });
 
 export const setDraftList = (list, listCnt) => ({
@@ -117,4 +120,9 @@ export const getFileDownloadProgress = (url, fileName, onProgress, callback) => 
   fileName,
   onProgress,
   callback,
+});
+
+export const setRelTypesByReducer = relTypes => ({
+  type: actionTypes.SET_REL_TYPES_BY_REDUCER,
+  relTypes,
 });
