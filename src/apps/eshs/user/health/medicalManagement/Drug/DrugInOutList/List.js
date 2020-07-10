@@ -10,6 +10,7 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
 import DrugInForm from 'apps/eshs/user/health/medicalManagement/Drug/DrugInOutList/DrugInForm';
 
@@ -296,11 +297,13 @@ class List extends Component {
               <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm" onClick={() => this.modalVisible({}, 'INPUT')}>
-                등록
-              </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm" onClick={() => this.modalVisible({}, 'INPUT')}>
+              등록
+            </StyledButton>
+          </StyledButtonWrapper>
           <AntdTable
             columns={this.columns}
             footer={() => <span>{`${(list && list.length) || 0} 건`}</span>}
