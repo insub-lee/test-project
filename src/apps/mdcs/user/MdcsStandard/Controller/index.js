@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import BizBuilderBase from 'components/BizBuilderBase';
 import DwDoc from '../DwDoc';
-import BizBuilderBase from '../../../components/BizBuilderBase';
 import PmDoc from '../PmDoc';
 import BizDoc from '../BizDoc';
 import TechDoc from '../TechDoc';

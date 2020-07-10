@@ -416,7 +416,7 @@ const mapDispatchToProps = dispatch => ({
   changeValidationData: (id, key, flag, msg) => dispatch(actions.changeValidationDataByReducr(id, key, flag, msg)),
   getProcessRule: (id, payload) => dispatch(actions.getProcessRule(id, payload)),
   getProcessRuleByModify: (id, payload) => dispatch(actions.getProcessRuleByModify(id, payload)),
-  setProcessRule: (id, processRule, relType) => dispatch(actions.setProcessRule(id, processRule, relType)),
+  setProcessRule: (id, processRule) => dispatch(actions.setProcessRule(id, processRule)),
   setProcessStep: (id, processStep) => dispatch(actions.setProcessStep(id, processStep)),
   getDraftProcess: (id, draftId) => dispatch(actions.getDraftProcess(id, draftId)),
   setViewPageData: (id, workSeq, taskSeq, viewType) => dispatch(actions.setViewPageDataByReducer(id, workSeq, taskSeq, viewType)),
@@ -432,6 +432,7 @@ const mapDispatchToProps = dispatch => ({
   getFileDownloadProgress: (id, url, fileName, onProgress, callback) => dispatch(actions.getFileDownloadProgress(id, url, fileName, onProgress, callback)),
   setFormData: (id, formData) => dispatch(actions.setFormDataByReducer(id, formData)),
   setTaskFavorite: (id, workSeq, taskOriginSeq, flag) => dispatch(actions.setTaskFavoriteBySaga(id, workSeq, taskOriginSeq, flag)),
+  setRelType: (id, relType) => dispatch(actions.setRelTypeByReducer(id, relType)),
 });
 
 const withReducer = injectReducer({ key: `apps.bizmicro.components.BizBuilderBase`, reducer });

@@ -3,9 +3,9 @@ import * as PropTypes from 'prop-types';
 import { Select, Input, Radio } from 'antd';
 import { debounce } from 'lodash';
 
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
-import * as selectors from 'apps/mdcs/admin/ViewDesigner/selectors';
+// import { connect } from 'react-redux';
+// import { createStructuredSelector } from 'reselect';
+// import * as selectors from 'apps/mdcs/admin/ViewDesigner/selectors';
 
 const { Option } = Select;
 

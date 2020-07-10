@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import BizBuilderBase from 'apps/mdcs/components/BizBuilderBase';
+import BizBuilderBase from 'components/BizBuilderBase';
 
 import Edit from './Edit';
 import List from './List';

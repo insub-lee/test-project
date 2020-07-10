@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import BizBuilderBase from 'components/BizBuilderBase';
 import List from './List';
-import BizBuilderBase from '../../components/BizBuilderBase';
 
 class DocPubMgr extends Component {
   render() {
