@@ -302,6 +302,10 @@ class List extends Component {
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper className="search-wrapper-inline">
             <div>
+              <AntdSelect className="select-sm mr5" style={{ width: 170 }} defaultValue="NEWLIST" onChange={val => this.onChangeSearchParam('LIST_TYPE', val)}>
+                <AntdSelect.Option value="NEWLIST">최근 일지목록</AntdSelect.Option>
+                <AntdSelect.Option value="OLDLIST">과거 일지목록</AntdSelect.Option>
+              </AntdSelect>
               <AntdSelect
                 className="select-sm mr5"
                 style={{ width: 100 }}
@@ -316,10 +320,6 @@ class List extends Component {
                       {item.NAME_KOR}
                     </AntdSelect.Option>
                   ))}
-              </AntdSelect>
-              <AntdSelect className="select-sm mr5" style={{ width: 170 }} defaultValue="NEWLIST" onChange={val => this.onChangeSearchParam('LIST_TYPE', val)}>
-                <AntdSelect.Option value="NEWLIST">최근 일지목록</AntdSelect.Option>
-                <AntdSelect.Option value="OLDLIST">과거 일지목록</AntdSelect.Option>
               </AntdSelect>
               <AntdRangeDatePicker
                 className="ant-picker-sm mr5"
