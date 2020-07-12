@@ -1,19 +1,22 @@
-import React, { Component, useState, useCallback } from 'react';
-import { Button } from 'antd';
-import { DragModal } from './DragModal';
-import { DraggableModalProvider } from './DraggableModalProvider';
-// import { DraggableModal, DraggableModalProvider } from 'ant-design-draggable-modal';
+import React from 'react';
+import PropTypes from 'prop-types';
 import 'antd/dist/antd.css';
-import 'ant-design-draggable-modal/dist/index.css';
 
-class DraggableModal extends Component {
-  render() {
-    return (
-      <DraggableModalProvider>
-        <DragModal {...this.props}>{this.props.children}</DragModal>
-      </DraggableModalProvider>
-    );
-  }
-}
+import './AntdDraggableModal/style.css';
+import { DraggableModal as Modal, DraggableModalProvider } from './AntdDraggableModal';
+
+const DraggableModal = ({ children, ...otherProps }) => (
+  <DraggableModalProvider>
+    <Modal {...otherProps}>{children}</Modal>
+  </DraggableModalProvider>
+);
+
+DraggableModal.propTypes = {
+  children: PropTypes.node,
+};
+
+DraggableModal.defaultProps = {
+  children: null,
+};
 
 export default DraggableModal;
