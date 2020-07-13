@@ -15,6 +15,7 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import DragCustomModal from 'components/DragCustomModal';
 
 const StyledWrap = styled.div`
   table.mdcsProcessList {
@@ -104,7 +105,7 @@ class DraftList extends Component {
       title: '표준번호',
       dataIndex: 'DOCNUMBER',
       key: 'DOCNUMBER',
-      width: '8%',
+      width: '10%',
       align: 'center',
       ellipsis: true,
       render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? record.DRAFT_ID : text),
@@ -494,7 +495,7 @@ class DraftList extends Component {
               footer={null}
             > */}
             {this.props.viewVisible && (
-              <DraggableModal key="draftListKeys" title="내용보기" visible={this.props.viewVisible}>
+              <DragCustomModal key="draftListKeys" title="내용보기" visible={this.props.viewVisible}>
                 <BizBuilderBase
                   sagaKey="approveBase_approveView"
                   viewType="VIEW"
@@ -563,7 +564,7 @@ class DraftList extends Component {
                     </StyledHtmlTable>
                   </StyledContentsWrapper>
                 )}
-              </DraggableModal>
+              </DragCustomModal>
             )}
             {/* </AntdModal> */}
             <AntdModal

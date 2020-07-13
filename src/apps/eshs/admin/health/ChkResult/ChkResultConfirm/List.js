@@ -12,6 +12,7 @@ import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal'
 import UserSearchModal from 'apps/eshs/common/userSearchModal';
 
 import EmpChkResultDetail from 'apps/eshs/admin/health/ChkResult/EmpChkResultDetail';
+import ChkMstDetail from 'apps/eshs/admin/health/common/ChkMstDetail';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -40,6 +41,8 @@ class List extends Component {
         modalVisible: false,
       },
       selectColumn: 'STMT',
+      pageSize: 10,
+      paginationIdx: 1,
     };
   }
 
@@ -79,7 +82,7 @@ class List extends Component {
         url: '/api/admin/v1/common/categoryMapList',
         type: 'POST',
         params: {
-          PARAM: { NODE_ID: 316 },
+          PARAM: { NODE_ID: 1721 },
         },
       },
     ];
@@ -92,13 +95,17 @@ class List extends Component {
     const {
       searchParam,
       searchParam: { SEARCH_LIST },
+      paginationIdx,
+      pageSize,
     } = this.state;
     const apiAry = [
       {
         key: 'List',
         url: `/api/eshs/v1/common/health/eshsHealthChkResultList`,
         type: 'POST',
-        params: { PARAM: { ...searchParam } },
+        params: {
+          PARAM: SEARCH_LIST === 'ITEM' ? { ...searchParam, PAGE_CNT: pageSize, PAGE: paginationIdx } : { ...searchParam },
+        },
       },
     ];
     spinningOn();
@@ -161,9 +168,26 @@ class List extends Component {
   chkCdColumn = {
     title: '검진코드',
     dataIndex: 'CHK_CD',
-    width: '100px',
+    width: '150px',
     align: 'center',
-    render: (text, record) => text, // TODO 검진코드 모달 추가
+    render: (text, record) => (
+      <StyledButton
+        className="btn-link btn-sm"
+        onClick={() =>
+          this.setState(
+            {
+              modalObj: {
+                modalTitle: '대상자 개인관리',
+                modalContent: [<ChkMstDetail onCancelPopup={this.modalVisible} selectedRow={record} />],
+              },
+            },
+            this.modalVisible,
+          )
+        }
+      >
+        {text}
+      </StyledButton>
+    ),
   };
 
   colObj = {
@@ -209,7 +233,7 @@ class List extends Component {
       },
       {
         title: '현지역',
-        dataIndex: 'WORK_AREA_NAME',
+        dataIndex: 'CURRENT_WORK_AREA',
         width: '100px',
         align: 'center',
       },
@@ -305,7 +329,7 @@ class List extends Component {
       },
       {
         title: '현지역',
-        dataIndex: 'WORK_AREA_NAME',
+        dataIndex: 'CURRENT_WORK_AREA',
         width: '100px',
         align: 'center',
       },
@@ -360,7 +384,7 @@ class List extends Component {
       },
       {
         title: '현지역',
-        dataIndex: 'WORK_AREA_NAME',
+        dataIndex: 'CURRENT_WORK_AREA',
         width: '100px',
         align: 'center',
       },
@@ -433,7 +457,7 @@ class List extends Component {
       },
       {
         title: '현지역',
-        dataIndex: 'WORK_AREA_NAME',
+        dataIndex: 'CURRENT_WORK_AREA',
         width: '100px',
         align: 'center',
       },
@@ -463,8 +487,9 @@ class List extends Component {
 
   render() {
     const { result } = this.props;
-    const { yearList, modalObj, selectColumn } = this.state;
-    const list = (result && result.List && result.List.list) || [];
+    const { yearList, modalObj, selectColumn, paginationIdx, pageSize, getPageLength } = this.state;
+    const list = (result && result.List && result.List.result && result.List.result.list) || [];
+    const listTotalCnt = (result && result.List && result.List.result && result.List.result.totalCnt) || [];
     const hospitalList = (result && result.hospitalList && result.hospitalList.list) || [];
     const chkTypeList = (result && result.chkTypeList && result.chkTypeList.categoryMapList) || [];
     const workAreaList = (result && result.workAreaList && result.workAreaList.categoryMapList) || [];
@@ -491,13 +516,15 @@ class List extends Component {
                 className="select-sm mr5"
                 style={{ width: 100 }}
                 allowClear
-                placeholder="지역"
+                placeholder="현지역"
                 onChange={val => this.onChangeSearchParam('WORK_AREA_CD', val)}
               >
                 {workAreaList
                   .filter(item => item.LVL === 1)
                   .map(item => (
-                    <AntdSelect.Option value={item.NODE_ID}>{item.NAME_KOR}</AntdSelect.Option>
+                    <AntdSelect.Option key={item.NODE_ID} value={item.CODE}>
+                      {item.NAME_KOR}
+                    </AntdSelect.Option>
                   ))}
               </AntdSelect>
               <AntdSelect
@@ -556,7 +583,17 @@ class List extends Component {
               </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
-          <AntdTable columns={this.colObj[selectColumn]} dataSource={list || []} bordered scroll={{ x: 1277 }} />
+          {/* 항목검사 검색시에만 페이징처리 */}
+          <AntdTable
+            columns={this.colObj[selectColumn]}
+            dataSource={list || []}
+            bordered
+            scroll={{ x: 1277 }}
+            pagination={selectColumn === 'ITEM' ? { current: paginationIdx, total: listTotalCnt, pageSize } : { pageSize, total: listTotalCnt }}
+            onChange={pagination =>
+              selectColumn === 'ITEM' ? this.setState({ paginationIdx: pagination.current }, this.getList) : this.setState({ paginationIdx: 1 })
+            }
+          />
         </StyledContentsWrapper>
       </>
     );

@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Table, Icon } from 'antd';
+import { Table, Icon, Input } from 'antd';
 import { ExportOutlined } from '@ant-design/icons';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper'
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import DragAntdModal from 'components/DragAntdModal';
 
 import ContentView from './ContentView';
 import ExternalDist from './ExternalDist';
 
 const AntdTable = StyledAntdTable(Table);
+const AntdInput = StyledInput(Input);
 
 class PubCompleteDocList extends Component {
   // eslint-disable-next-line react/state-in-constructor
@@ -28,6 +31,7 @@ class PubCompleteDocList extends Component {
     selectedRowKeys: [],
     selectedPubDocList: [],
     isExternalDistShow: false,
+    searchInfo: {},
   };
 
   columns = [
@@ -36,7 +40,8 @@ class PubCompleteDocList extends Component {
       dataIndex: 'FULLPATH_NM',
       key: 'FULLPATH_NM',
       align: 'center',
-      width: '10%',
+      width: '15%',
+      ellipsis: true,
     },
     {
       title: 'No.',
@@ -50,12 +55,13 @@ class PubCompleteDocList extends Component {
       dataIndex: 'VERSION',
       key: 'VERSION',
       align: 'center',
-      width: '10%',
+      width: '7%',
     },
     {
       title: 'Title',
       dataIndex: 'TITLE',
       key: 'TITLE',
+      ellipsis: true,
       render: (text, record) => <a onClick={() => this.onTitleClick(record)}>{text}</a>,
     },
     {
@@ -86,15 +92,34 @@ class PubCompleteDocList extends Component {
   };
 
   onDataBind = () => {
-    const { result } = this.props;
+    const { result, spinningOff } = this.props;
+    spinningOff();
     const pubDocList = result.list && result.list.pubDocList;
     this.setState({ pubDocList: pubDocList.map(item => ({ ...item, key: item.TASK_SEQ })) });
   };
 
   componentDidMount() {
-    const { getCallDataHandler, sagaKey, apiArys } = this.props;
-    getCallDataHandler(sagaKey, apiArys, this.onDataBind);
+    this.getList();
   }
+
+  getList = () => {
+    const { getCallDataHandler, sagaKey, spinningOn } = this.props;
+    const apiArys = [
+      {
+        key: 'list',
+        url: '/api/mdcs/v1/common/mdscPubDocListHandler',
+        type: 'POST',
+        params: {
+          PARAM: {
+            STATUS: 1,
+            ...this.state.searchInfo,
+          } 
+        },
+      },
+    ];
+    spinningOn();
+    getCallDataHandler(sagaKey, apiArys, this.onDataBind);
+  };
 
   onCancel = () => {
     this.setState({ isShow: false });
@@ -147,6 +172,14 @@ class PubCompleteDocList extends Component {
     message.success(<MessageContent>외부배포에 성공하였습니다.</MessageContent>);
   };
 
+  onChangeSearchInfo = (key, val) => {
+    this.setState(prevState => {
+      const { searchInfo } = prevState;
+      searchInfo[key] = val;
+      return { searchInfo }
+    });
+  };
+
   render() {
     const rowSelection = {
       selectedRowKeys: this.state.selectedRowKeys,
@@ -190,26 +223,30 @@ class PubCompleteDocList extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
-          <AntdTable rowSelection={rowSelection} dataSource={this.state.pubDocList} columns={this.columns} />
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <AntdInput
+                className="ant-input-sm mr5" allowClear style={{ width: 130 }} placeholder="문서번호"
+                onChange={e => this.onChangeSearchInfo('DOCNUMBER', e.target.value)}
+                onPressEnter={this.getList}
+              />
+              <AntdInput
+                className="ant-input-sm mr5" allowClear style={{ width: 150 }} placeholder="Title"
+                onChange={e => this.onChangeSearchInfo('TITLE', e.target.value)}
+                onPressEnter={this.getList}
+              />
+              <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
+            </div>
+          </StyledCustomSearchWrapper>
+          <AntdTable rowSelection={rowSelection} dataSource={this.state.pubDocList} columns={this.columns} bordered />
         </StyledContentsWrapper>
       </>
     );
   }
 }
 
-PubCompleteDocList.propTypes = {
-  apiArys: PropTypes.array,
-};
+PubCompleteDocList.propTypes = {};
 
-PubCompleteDocList.defaultProps = {
-  apiArys: [
-    {
-      key: 'list',
-      url: '/api/mdcs/v1/common/mdscPubDocListHandler',
-      type: 'POST',
-      params: { PARAM: { STATUS: 1 } },
-    },
-  ],
-};
+PubCompleteDocList.defaultProps = {};
 
 export default PubCompleteDocList;
