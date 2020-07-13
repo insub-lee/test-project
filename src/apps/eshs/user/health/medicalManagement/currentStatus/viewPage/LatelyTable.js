@@ -167,7 +167,15 @@ const LatelyTable = ({ dataObject, useBedPatient }) => (
               <td>{dataObject.R005 || 0}</td>
               <td>{dataObject.R006 || 0}</td>
               <td>{dataObject.R004 || 0}</td>
-              <td>{dataObject.R || 0}</td>
+              <td>
+                {Number(dataObject.R001) +
+                  Number(dataObject.R002) +
+                  Number(dataObject.R003) +
+                  Number(dataObject.R007) +
+                  Number(dataObject.R005) +
+                  Number(dataObject.R006) +
+                  Number(dataObject.R004)}
+              </td>
             </tr>
           </tbody>
         </table>

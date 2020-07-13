@@ -106,7 +106,7 @@ class ViewPage extends React.Component {
   getLatelyDataSource = () => {
     const { searchValue } = this.state;
     const { sagaKey, getCallDataHandler } = this.props;
-    const apiUrl = '/api/eshs/v1/common/health-usage-journal-lately';
+    const apiUrl = '/api/eshs/v1/common/health-usage-current-status-lately';
     const queryString = new URLSearchParams(searchValue).toString();
     const apiArr = [
       {
@@ -116,7 +116,7 @@ class ViewPage extends React.Component {
       },
       {
         key: 'useBedPatient',
-        url: `/api/eshs/v1/common/health-usage-journal-past-bed?${queryString}`,
+        url: `/api/eshs/v1/common/health-usage-current-status-past-bed?${queryString}`,
         type: 'GET',
       },
     ];
@@ -166,13 +166,13 @@ class ViewPage extends React.Component {
       <>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
-            <div className="search-input-area mb10">
+            <div className="search-input-area">
               <span className="text-label">지역</span>
               <AntdSelect
                 className="select-mid mr5"
                 value={searchValue.SITE_NODE_ID}
                 onChange={value => handleInputChange('SITE_NODE_ID', value)}
-                style={{ width: '10%' }}
+                style={{ width: '7%' }}
               >
                 {siteList.map(site => (
                   <Select.Option value={site.NODE_ID}>{site.NAME_KOR}</Select.Option>
