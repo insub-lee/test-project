@@ -34,10 +34,12 @@ class ListPage extends React.Component {
       departmentList: [],
       isSelectHeadQuarter: false,
       searchValue: {
-        startDate: moment()
-          .startOf('month')
-          .format('YYYY-MM-DD'),
-        endDate: moment().format('YYYY-MM-DD'),
+        startDate: props.startDate
+          ? moment(props.startDate).format('YYYY-MM-DD')
+          : moment()
+              .startOf('month')
+              .format('YYYY-MM-DD'),
+        endDate: props.endDate ? moment(props.endDate).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD'),
         siteId: 317,
         cooperatorId: '',
         departmentId: '',
@@ -491,6 +493,8 @@ ListPage.propTypes = {
   result: PropTypes.object,
   submitHandlerBySaga: PropTypes.func,
   isNew: PropTypes.bool,
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
 };
 
 ListPage.defaultProps = {
