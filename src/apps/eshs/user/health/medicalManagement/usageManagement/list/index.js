@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Input, Select, DatePicker } from 'antd';
+import { Table, Input, Select, DatePicker, Modal } from 'antd';
 import moment from 'moment';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import { createExcelData } from 'apps/eshs/common/createExcelData';
+import DetailView from 'apps/eshs/user/health/medicalManagement/usageRegistration/input/detailView';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
@@ -13,11 +14,13 @@ import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdInput = StyledInput(Input);
 const AntdPicker = StyledPicker(DatePicker.RangePicker);
 const AntdSelect = StyledSelect(Select);
+const AntdModal = StyledAntdModal(Modal);
 class ListPage extends React.Component {
   constructor(props) {
     super(props);
@@ -47,6 +50,8 @@ class ListPage extends React.Component {
         hqId: '',
       },
       isCooperator: false,
+      modalVisible: false,
+      selectedRecord: {},
     };
   }
 
@@ -67,7 +72,7 @@ class ListPage extends React.Component {
       title: '사번',
       dataIndex: 'PATIENT_EMP_NO',
       align: 'center',
-      width: '7%',
+      width: '5%',
     },
     {
       title: '이름',
@@ -79,7 +84,7 @@ class ListPage extends React.Component {
       title: '질환',
       dataIndex: 'DISEASE',
       align: 'center',
-      width: '9%',
+      width: '7%',
     },
     {
       title: '치료구분',
@@ -91,11 +96,11 @@ class ListPage extends React.Component {
       title: '증상',
       dataIndex: 'SYMPTOM',
       align: 'center',
-      width: '6%',
+      width: '10%',
     },
     {
       title: '의약품:출고수량',
-      dataIndex: '',
+      dataIndex: 'DRUG',
       align: 'center',
       width: '10%',
     },
@@ -121,6 +126,7 @@ class ListPage extends React.Component {
 
   componentDidMount() {
     this.getInitData();
+    this.handleSearchClick();
   }
 
   getInitData = () => {
@@ -276,9 +282,17 @@ class ListPage extends React.Component {
     });
   };
 
+  handleModalVisible = (record = {}) => {
+    this.setState({ modalVisible: true, selectedRecord: record });
+  };
+
+  handleModalClose = () => {
+    this.setState({ modalVisible: false });
+  };
+
   render() {
     const { columns } = this;
-    const { handleHqChange, checkUserType, handleDateChange, handleInputChange, handleSearchClick } = this;
+    const { handleHqChange, checkUserType, handleDateChange, handleInputChange, handleSearchClick, handleModalVisible, handleModalClose } = this;
     const {
       dataSource,
       siteList,
@@ -290,6 +304,8 @@ class ListPage extends React.Component {
       isSelectHeadQuarter,
       departmentList,
       isCooperator,
+      modalVisible,
+      selectedRecord,
     } = this.state;
     return (
       <>
@@ -360,6 +376,7 @@ class ListPage extends React.Component {
                 className="ant-input-mid"
                 value={searchValue.empNo}
                 onChange={event => handleInputChange('empNo', event.target.value)}
+                onPressEnter={handleSearchClick}
                 placeholder="사번을 입력하세요."
                 style={{ width: '15%' }}
               />
@@ -436,9 +453,32 @@ class ListPage extends React.Component {
             </div>
           </StyledCustomSearchWrapper>
           <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-            <StyledButton className="btn-primary btn-sm mr5">등록</StyledButton>
+            <StyledButton className="btn-primary btn-sm mr5" onClick={handleModalVisible}>
+              등록
+            </StyledButton>
           </StyledButtonWrapper>
-          <AntdTable columns={columns} dataSource={dataSource} footer={() => <span>{dataSource.length} 건</span>} />
+          <AntdTable
+            columns={columns}
+            dataSource={dataSource}
+            onRow={record => ({ onClick: () => handleModalVisible(record) })}
+            footer={() => <span>{dataSource.length} 건</span>}
+          />
+          <AntdModal title="건강관리실 이용관리" visible={modalVisible} footer={null} onCancel={handleModalClose} width="70%" destroyOnClose>
+            <DetailView
+              modalVisible={modalVisible}
+              handleModalClose={handleModalClose}
+              record={selectedRecord}
+              sagaKey={this.props.sagaKey}
+              getCallDataHandler={this.props.getCallDataHandler}
+              result={this.props.result}
+              diseaseList={diseaseList}
+              treatmentList={treatmentList}
+              submitHandlerBySaga={this.props.submitHandlerBySaga}
+              handleSearchClick={this.handleSearchClick}
+              isNew={this.props.isNew}
+              listReload={handleSearchClick}
+            />
+          </AntdModal>
         </StyledContentsWrapper>
       </>
     );
@@ -449,8 +489,12 @@ ListPage.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
   result: PropTypes.object,
+  submitHandlerBySaga: PropTypes.func,
+  isNew: PropTypes.bool,
 };
 
-ListPage.defaultProps = {};
+ListPage.defaultProps = {
+  isNew: true,
+};
 
 export default ListPage;
