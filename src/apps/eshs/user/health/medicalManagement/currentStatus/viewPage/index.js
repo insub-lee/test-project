@@ -12,12 +12,11 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
-import { callBackAfterPost } from 'apps/eshs/common/submitCallbackFunc';
 import PastTable from './PastTable';
 import LatelyTable from './LatelyTable';
 
 const AntdSelect = StyledSelect(Select);
-const AntdPicker = StyledPicker(DatePicker);
+const AntdPicker = StyledPicker(DatePicker.RangePicker);
 const AntdModal = StyledAntdModal(Modal);
 const AntdTextarea = StyledTextarea(Input.TextArea);
 class ViewPage extends React.Component {
@@ -26,9 +25,13 @@ class ViewPage extends React.Component {
     this.state = {
       siteList: [],
       searchValue: {
+        SYSTEM_CD: '1',
         SITE_NODE_ID: props.SITE_NODE_ID || 317,
-        JRNL_DT: props.JRNL_DT ? moment(props.JRNL_DT).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD'),
-        TREATMENT_NODE_ID: 3844,
+        START_DATE: moment()
+          .startOf('month')
+          .format('YYYY-MM-DD'),
+        END_DATE: moment().format('YYYY-MM-DD'),
+        APP_STATUS: '',
       },
       dataObject: {},
       useBedPatient: [],
@@ -60,14 +63,17 @@ class ViewPage extends React.Component {
   setInitData = SITE_NODE_ID => {
     const { result } = this.props;
     this.setState({
-      siteList: result.siteList && result.siteList.categoryMapList && result.siteList.categoryMapList.filter(site => site.PARENT_NODE_ID === SITE_NODE_ID),
+      siteList:
+        result.siteList &&
+        result.siteList.categoryMapList &&
+        result.siteList.categoryMapList.filter(site => site.PARENT_NODE_ID === SITE_NODE_ID && site.USE_YN === 'Y'),
     });
   };
 
   getPastDataSource = () => {
     const { searchValue } = this.state;
     const { sagaKey, getCallDataHandler } = this.props;
-    const apiUrl = '/api/eshs/v1/common/health-usage-journal-past';
+    const apiUrl = '/api/eshs/v1/common/health-usage-current-status-past';
     const queryString = new URLSearchParams(searchValue).toString();
 
     const apiArr = [
@@ -100,7 +106,7 @@ class ViewPage extends React.Component {
   getLatelyDataSource = () => {
     const { searchValue } = this.state;
     const { sagaKey, getCallDataHandler } = this.props;
-    const apiUrl = '/api/eshs/v1/common/health-usage-journal-lately';
+    const apiUrl = '/api/eshs/v1/common/health-usage-current-status-lately';
     const queryString = new URLSearchParams(searchValue).toString();
     const apiArr = [
       {
@@ -110,7 +116,7 @@ class ViewPage extends React.Component {
       },
       {
         key: 'useBedPatient',
-        url: `/api/eshs/v1/common/health-usage-journal-past-bed?${queryString}`,
+        url: `/api/eshs/v1/common/health-usage-current-status-past-bed?${queryString}`,
         type: 'GET',
       },
     ];
@@ -136,9 +142,10 @@ class ViewPage extends React.Component {
   };
 
   handleDateChange = (date, dateString) => {
-    this.setState(prevState => ({
-      searchValue: Object.assign(prevState.searchValue, { JRNL_DT: dateString }),
-    }));
+    this.setState(prevState => {
+      const [START_DATE, END_DATE] = dateString;
+      return { searchValue: Object.assign(prevState.searchValue, { START_DATE, END_DATE }) };
+    });
   };
 
   handleModalVisible = () => {
@@ -152,26 +159,8 @@ class ViewPage extends React.Component {
   handleTypeChange = value =>
     value === 'L' ? this.setState({ isShowLately: true }, this.getLatelyDataSource) : this.setState({ isShowLately: false }, this.getPastDataSource);
 
-  handleSaveClick = () => {
-    const { searchValue, isShowLately } = this.state;
-    const { sagaKey, submitHandlerBySaga } = this.props;
-
-    submitHandlerBySaga(sagaKey, 'POST', `/api/eshs/v1/common/health/eshs-health-journal`, searchValue, (key, response) =>
-      callBackAfterPost(key, response, isShowLately ? this.getLatelyDataSource : this.getPastDataSource),
-    );
-  };
-
   render() {
-    const {
-      handleInputChange,
-      handleDateChange,
-      getPastDataSource,
-      handleModalVisible,
-      handleModalClose,
-      handleTypeChange,
-      getLatelyDataSource,
-      handleSaveClick,
-    } = this;
+    const { handleInputChange, handleDateChange, getPastDataSource, handleModalVisible, handleModalClose, handleTypeChange, getLatelyDataSource } = this;
     const { siteList, dataObject, searchValue, useBedPatient, modalVisible, isShowLately } = this.state;
     return (
       <>
@@ -189,8 +178,18 @@ class ViewPage extends React.Component {
                   <Select.Option value={site.NODE_ID}>{site.NAME_KOR}</Select.Option>
                 ))}
               </AntdSelect>
-              <span className="text-label">날짜</span>
-              <AntdPicker className="ant-picker-mid mr5" value={moment(searchValue.JRNL_DT)} onChange={handleDateChange} />
+              <span className="text-label">기간</span>
+              <AntdPicker
+                className="ant-picker-mid mr5"
+                value={[moment(searchValue.START_DATE), moment(searchValue.END_DATE)]}
+                onChange={handleDateChange}
+                style={{ width: '20%' }}
+              />
+              <span className="text-label">결재 구분</span>
+              <AntdSelect className="select-mid mr5" defaultValue="" onChange={value => handleInputChange('APP_STATUS', value)} style={{ width: '10%' }}>
+                <Select.Option value="">전체</Select.Option>
+                <Select.Option value="1A">결재 완료</Select.Option>
+              </AntdSelect>
               <span className="text-label">구분</span>
               <AntdSelect className="select-mid mr5" defaultValue="L" onChange={handleTypeChange} style={{ width: '10%' }}>
                 <Select.Option value="P">과거 일지</Select.Option>
@@ -199,13 +198,9 @@ class ViewPage extends React.Component {
               <StyledButton className="btn-gray btn-sm mr5" onClick={isShowLately ? getLatelyDataSource : getPastDataSource}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm mr5" onClick={handleSaveClick}>
-                저장
-              </StyledButton>
               <StyledButton className="btn-gray btn-sm mr5" onClick={handleModalVisible}>
                 목록
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm mr5">완료통보</StyledButton>
             </div>
           </StyledCustomSearchWrapper>
           {isShowLately ? (
