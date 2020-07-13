@@ -66,6 +66,7 @@ const StyledMainWidget = styled.div`
           padding: 15px 25px 0px 25px;
 
           li {
+            color: #fff;
             a {
               position: relative;
               display: block;
@@ -140,6 +141,7 @@ const StyledMainWidget = styled.div`
             }
           }
 
+          .widget-board > li,
           .widget-board > li > a {
             color: #333;
           }

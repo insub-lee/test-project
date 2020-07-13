@@ -363,9 +363,10 @@ class ApproveList extends Component {
 
   closeBtnFunc = () => {
     const { getApproveList } = this.props;
+    const { paginationIdx, pageSize } = this.state;
     this.props.setViewVisible(false);
     const fixUrl = '/api/workflow/v1/common/approve/ApproveListMDCSHandler';
-    getApproveList(fixUrl);
+    getApproveList(fixUrl, paginationIdx, pageSize);
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {

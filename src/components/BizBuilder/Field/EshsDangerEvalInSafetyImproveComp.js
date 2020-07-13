@@ -2,13 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
-import { Select, TreeSelect } from 'antd';
+import { Select, TreeSelect, Modal } from 'antd';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
+import StyledModalPad from 'components/BizBuilder/styled/Modal/StyledAntdModalPad';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import DanestAdmin from 'apps/eshs/admin/safety/Danger/danestAdmin';
+import moment from 'moment';
 
 const AntdSelect = StyledSelect(Select);
+const AntdModalPad = StyledModalPad(Modal);
 const AntdTreeSelect = StyledTreeSelect(TreeSelect);
+moment.locale('ko');
 class EshsDangerEvalInSafetyImproveComp extends React.Component {
   constructor(props) {
     super(props);
@@ -105,10 +111,16 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
     changeFormData(sagaKey, 'SDIV_ID', sdivId.NODE_ID);
   };
 
+  onAppriseModal = () => {
+    const { appriseModal } = this.state;
+    this.setState({ appriseModal: !appriseModal });
+  };
+
   render() {
     const { handleSelectChange, handleTreeSelectChange } = this;
     const { accidentCauseList, accientTypes, categoryList } = this.state;
-    const { formData } = this.props;
+    const { formData, viewPageData } = this.props;
+    const { viewType } = viewPageData;
     return (
       <>
         <StyledHtmlTable>
@@ -124,71 +136,109 @@ class EshsDangerEvalInSafetyImproveComp extends React.Component {
               <col width="11%" />
               <col width="11%" />
             </colgroup>
-            <tbody>
-              <tr>
-                <th>위험성평가</th>
-                <td colSpan={2}>
-                  <AntdSelect
-                    defaultValue="N"
-                    className="select-sm"
-                    value={Number(formData.DANGERYN)}
-                    onChange={value => handleSelectChange('DANGERYN', value)}
-                    style={{ width: '100%' }}
-                  >
-                    <Select.Option value="Y">실시</Select.Option>
-                    <Select.Option value="N">해당 없음</Select.Option>
-                  </AntdSelect>
-                </td>
-                <th>사고의 발생원인</th>
-                <td colSpan={2}>
-                  <AntdSelect
-                    disabled={formData.DANGERYN === 'N'}
-                    className="select-sm"
-                    value={Number(formData.ACCIDENT_CAUSE_ID)}
-                    onChange={value => handleSelectChange('ACCIDENT_CAUSE_ID', value)}
-                    style={{ width: '100%' }}
-                  >
-                    {accidentCauseList.map(cause => (
-                      <Select.Option value={cause.NODE_ID}>{cause.NAME_KOR}</Select.Option>
-                    ))}
-                  </AntdSelect>
-                </td>
-                <th>사고의 발생유형</th>
-                <td colSpan={2}>
-                  <AntdSelect
-                    disabled={formData.DANGERYN === 'N'}
-                    className="select-sm"
-                    value={Number(formData.ACCIDENT_TYPE_ID)}
-                    onChange={value => handleSelectChange('ACCIDENT_TYPE_ID', value)}
-                    style={{ width: '100%' }}
-                  >
-                    {accientTypes.map(type => (
-                      <Select.Option value={type.NODE_ID}>{type.NAME_KOR}</Select.Option>
-                    ))}
-                  </AntdSelect>
-                </td>
-              </tr>
-              <tr>
-                <th>장비(설비)</th>
-                <td colSpan={8}>
-                  <AntdTreeSelect
-                    // treeData={categoryList.children}
-                    treeData={categoryList}
-                    dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                    disabled={formData.DANGERYN === 'N'}
-                    className="select-sm"
-                    value={formData.EQUIP_ID}
-                    onChange={value => handleTreeSelectChange(value)}
-                    style={{ width: '100%' }}
-                  >
-                    {accientTypes.map(type => (
-                      <Select.Option value={type.NODE_ID}>{type.NAME_KOR}</Select.Option>
-                    ))}
-                  </AntdTreeSelect>
-                </td>
-              </tr>
-            </tbody>
+            {(viewType && viewType.toUpperCase() === 'INPUT') || formData.DANGERYN === 'N' ? (
+              <tbody>
+                <tr>
+                  <th>위험성평가</th>
+                  <td colSpan={2}>
+                    <AntdSelect
+                      defaultValue="N"
+                      className="select-sm"
+                      value={formData.DANGERYN}
+                      onChange={value => handleSelectChange('DANGERYN', value)}
+                      style={{ width: '100%' }}
+                    >
+                      <Select.Option value="Y">실시</Select.Option>
+                      <Select.Option value="N">해당 없음</Select.Option>
+                    </AntdSelect>
+                  </td>
+                  <th>사고의 발생원인</th>
+                  <td colSpan={2}>
+                    <AntdSelect
+                      disabled={formData.DANGERYN === 'N'}
+                      className="select-sm"
+                      value={Number(formData.ACCIDENT_CAUSE_ID)}
+                      onChange={value => handleSelectChange('ACCIDENT_CAUSE_ID', value)}
+                      style={{ width: '100%' }}
+                    >
+                      {accidentCauseList.map(cause => (
+                        <Select.Option value={cause.NODE_ID}>{cause.NAME_KOR}</Select.Option>
+                      ))}
+                    </AntdSelect>
+                  </td>
+                  <th>사고의 발생유형</th>
+                  <td colSpan={2}>
+                    <AntdSelect
+                      disabled={formData.DANGERYN === 'N'}
+                      className="select-sm"
+                      value={Number(formData.ACCIDENT_TYPE_ID)}
+                      onChange={value => handleSelectChange('ACCIDENT_TYPE_ID', value)}
+                      style={{ width: '100%' }}
+                    >
+                      {accientTypes.map(type => (
+                        <Select.Option value={type.NODE_ID}>{type.NAME_KOR}</Select.Option>
+                      ))}
+                    </AntdSelect>
+                  </td>
+                </tr>
+                <tr>
+                  <th>장비(설비)</th>
+                  <td colSpan={8}>
+                    <AntdTreeSelect
+                      // treeData={categoryList.children}
+                      treeData={categoryList}
+                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                      disabled={formData.DANGERYN === 'N'}
+                      className="select-sm"
+                      value={formData.EQUIP_ID}
+                      onChange={value => handleTreeSelectChange(value)}
+                      style={{ width: '100%' }}
+                    >
+                      {accientTypes.map(type => (
+                        <Select.Option value={type.NODE_ID}>{type.NAME_KOR}</Select.Option>
+                      ))}
+                    </AntdTreeSelect>
+                  </td>
+                </tr>
+              </tbody>
+            ) : (
+              <tbody>
+                <tr>
+                  <th>위험성평가</th>
+                  <td colSpan={2}>
+                    실시
+                    <StyledButton className="btn-light btn-xs ml5" onClick={this.onAppriseModal}>
+                      {formData.DA_REG_NO}
+                    </StyledButton>
+                  </td>
+                  <th>사고의 발생원인</th>
+                  <td colSpan={2}>
+                    {accientTypes.find(type => type.NODE_ID === Number(formData.ACCIDENT_CAUSE_ID)) &&
+                      accientTypes.find(type => type.NODE_ID === Number(formData.ACCIDENT_CAUSE_ID)).NAME_KOR}
+                  </td>
+                  <th>사고의 발생유형</th>
+                  <td colSpan={2}>
+                    {accientTypes.find(type => type.NODE_ID === Number(formData.ACCIDENT_TYPE_ID)) &&
+                      accientTypes.find(type => type.NODE_ID === Number(formData.ACCIDENT_TYPE_ID)).NAME_KOR}
+                  </td>
+                </tr>
+                <tr>
+                  <th>장비(설비)</th>
+                  <td colSpan={8}>
+                    {accientTypes.find(type => type.NODE_ID === Number(formData.EQUIP_ID)) &&
+                      accientTypes.find(type => type.NODE_ID === Number(formData.EQUIP_ID)).NAME_KOR}
+                  </td>
+                </tr>
+              </tbody>
+            )}
           </table>
+          <AntdModalPad width={1000} visible={this.state.appriseModal} title="위험성평가" onCancel={this.onAppriseModal} destroyOnClose footer={null}>
+            {this.state.appriseModal && (
+              <DanestAdmin
+                improveDanger={{ REG_NO: formData.DA_REG_NO, REG_DTTM: formData.REG_DTTM === 'NOW()' ? moment() : formData.REG_DTTM, IMPROVE: true }}
+              />
+            )}
+          </AntdModalPad>
         </StyledHtmlTable>
       </>
     );
@@ -201,6 +251,7 @@ EshsDangerEvalInSafetyImproveComp.propTypes = {
   getExtraApiData: PropTypes.func,
   changeFormData: PropTypes.func,
   formData: PropTypes.object,
+  viewPageData: PropTypes.object,
 };
 
 EshsDangerEvalInSafetyImproveComp.defaultProps = {};

@@ -13,6 +13,7 @@ const initialState = fromJS({
   approveListCnt: 0,
   unApproveListCnt: 0,
   draftListCnt: 0,
+  relTypes: [],
 });
 
 const appReducer = (state = initialState, action) => {
@@ -70,6 +71,10 @@ const appReducer = (state = initialState, action) => {
     case actionTypes.SET_BIZFORMDATA: {
       const { formData } = action;
       return state.set('formData', formData);
+    }
+    case actionTypes.SET_REL_TYPES_BY_REDUCER: {
+      const { relTypes } = action;
+      return state.set('relTypes', relTypes);
     }
     default:
       return state;

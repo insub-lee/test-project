@@ -11,7 +11,7 @@ class BuildTitle extends Component {
     this.modalDom.style.transform = transformStr;
   };
   componentDidMount() {
-    this.modalDom = document.getElementsByClassName("ant-modal-wrap")[0];
+    this.modalDom = document.getElementsByClassName('ant-modal-wrap')[0];
     this.modalDom.style.transform = 'translate(0px,0px)';
   }
   render() {

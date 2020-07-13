@@ -8,7 +8,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import UserSelect from 'components/UserSelect';
 import AbrogationMultiModifyDraft from 'apps/Workflow/User/CommonView/abrogationMultiModifyDraft';
 
-import StyledInputView from 'apps/mdcs/components/BizBuilderBase/viewComponent/InputPage/Styled';
+import StyledInputView from 'apps/mdcs/styled/StyledInput';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
@@ -186,7 +186,7 @@ class MdcsAppvView extends Component {
     const { selectedRow } = this.props;
     const { REL_TYPE } = selectedRow;
     if (REL_TYPE === 999) {
-      //일괄폐기 수정화면
+      // 일괄폐기 수정화면
       this.setState({ isAbrogationMultiShow: true, workPrcProps: { ...selectedRow, draftMethod: 'modify' } });
     } else {
       const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };

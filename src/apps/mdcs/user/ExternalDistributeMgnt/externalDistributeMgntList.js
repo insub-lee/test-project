@@ -1,27 +1,48 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon } from 'antd';
+import { Table, Icon, Input } from 'antd';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import DragAntdModal from 'components/DragAntdModal';
 
 import DistributeCompany from './DistributeCompany';
 
 const AntdTable = StyledAntdTable(Table);
+const AntdInput = StyledInput(Input);
 
 class ExternalDistributeMgntList extends Component {
   state = {
     isShow: false,
     selectedRow: {},
+    searchInfo: {},
   };
 
   componentDidMount() {
-    const { id, apiAry, getCallDataHandler } = this.props;
-    getCallDataHandler(id, apiAry, () => {});
+    this.getList();
   }
+
+  getList = () => {
+    const { sagaKey, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    const apiAry = [
+      {
+        key: 'externalDistributeMgntList',
+        url: '/api/mdcs/v1/common/externalDistributeMgntList',
+        type: 'POST',
+        params: {
+          PARAM: { ...this.state.searchInfo }
+        },
+      },
+    ];
+    spinningOn();
+    getCallDataHandler(sagaKey, apiAry, () => {
+      spinningOff();
+    });
+  };
 
   onClickMail = record => {
     window.alert('개발중');
@@ -48,10 +69,17 @@ class ExternalDistributeMgntList extends Component {
   onCancelPopup = () => {
     this.setState({
       isShow: false,
-      selectedRow: [],
+      selectedRow: {},
     });
-    const { id, apiAry, getCallDataHandler } = this.props;
-    getCallDataHandler(id, apiAry, () => {});
+    this.getList();
+  };
+
+  onChangeSearchInfo = (key, val) => {
+    this.setState(prevState => {
+      const { searchInfo } = prevState;
+      searchInfo[key] = val;
+      return { searchInfo }
+    });
   };
 
   columns = [
@@ -156,19 +184,6 @@ class ExternalDistributeMgntList extends Component {
 
     return (
       <>
-        <StyledHeaderWrapper>
-          <div className="pageTitle">
-            <p>
-              <Icon type="form" /> 외부배포 관리
-            </p>
-          </div>
-        </StyledHeaderWrapper>
-        <StyledContentsWrapper>
-          <AntdTable
-            dataSource={list.map(item => ({ ...item, key: `${item.DOCNUMBER}_${item.RECV_DEPT_ID}` }))}
-            columns={this.columns}
-          />
-        </StyledContentsWrapper>
         <DragAntdModal
           width={700}
           visible={this.state.isShow}
@@ -179,28 +194,52 @@ class ExternalDistributeMgntList extends Component {
         >
           <DistributeCompany selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </DragAntdModal>
+        <StyledHeaderWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 외부배포 관리
+            </p>
+          </div>
+        </StyledHeaderWrapper>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <AntdInput
+                className="ant-input-sm mr5" allowClear placeholder="문서번호" style={{ width: 130 }}
+                onChange={e => this.onChangeSearchInfo('DOCNUMBER', e.target.value)}
+                onPressEnter={this.getList}
+              />
+              <AntdInput
+                className="ant-input-sm mr5" allowClear placeholder="Title" style={{ width: 150 }}
+                onChange={e => this.onChangeSearchInfo('TITLE', e.target.value)}
+                onPressEnter={this.getList}
+              />
+              <AntdInput
+                className="ant-input-sm mr5" allowClear placeholder="업체명" style={{ width: 150 }}
+                onChange={e => this.onChangeSearchInfo('RECV_DEPT_NAME', e.target.value)}
+                onPressEnter={this.getList}
+              />
+              <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
+            </div>
+          </StyledCustomSearchWrapper>
+          <AntdTable
+            dataSource={list.map(item => ({ ...item, key: `${item.DOCNUMBER}_${item.RECV_DEPT_ID}` }))}
+            columns={this.columns}
+          />
+        </StyledContentsWrapper>
       </>
     );
   }
 }
 
 ExternalDistributeMgntList.propTypes = {
-  id: PropTypes.string,
-  apiAry: PropTypes.array,
+  sagaKey: PropTypes.string,
   result: PropTypes.object,
   getCallDataHandler: PropTypes.func,
 };
 
 ExternalDistributeMgntList.defaultProps = {
-  id: 'externalDistributeMgnt',
-  apiAry: [
-    {
-      key: 'externalDistributeMgntList',
-      url: '/api/mdcs/v1/common/externalDistributeMgntList',
-      type: 'POST',
-      params: {},
-    },
-  ],
+  sagaKey: 'externalDistributeMgnt',
   result: {
     externalDistributeMgntList: {
       list: [],

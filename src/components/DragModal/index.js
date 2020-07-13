@@ -4,15 +4,15 @@
     2. ZIndex 还需要优化，当前目标应当为最上
 */
 
-import React from "react";
-import { Modal } from "antd";
+import React from 'react';
+import { Modal } from 'antd';
 
 // 获得随机数
 const genNonDuplicateID = length => {
   return Number(
     Math.random()
       .toString()
-      .substr(3, length) + Date.now()
+      .substr(3, length) + Date.now(),
   ).toString(36);
 };
 
@@ -49,7 +49,7 @@ class DragModal extends React.PureComponent {
       const dragDom = document.getElementsByClassName(`d_${this.id}`)[0];
       if (dragDom) {
         dragDom.style.left = `${this.initLeft}px`;
-        dragDom.style.top = "100px";
+        dragDom.style.top = '100px';
         this.dragDom = dragDom;
       }
     });
@@ -59,25 +59,25 @@ class DragModal extends React.PureComponent {
     e.preventDefault();
     this.dragging = true; // 激活拖拽状态
     /*
-    ** 实现点击后，当前浮层在最上面
-    ** 将当前所有涉及可拖拽的浮层的 zindex = 999
-    ** 将当前拖拽目标的 zindex = 1000
-    **/
-    const nodeList = document.getElementsByClassName("drag_modal");
+     ** 实现点击后，当前浮层在最上面
+     ** 将当前所有涉及可拖拽的浮层的 zindex = 999
+     ** 将当前拖拽目标的 zindex = 1000
+     **/
+    const nodeList = document.getElementsByClassName('drag_modal');
     if (nodeList.length > 0) {
       Array.from(nodeList).forEach(item => (item.style.zIndex = 999));
       this.dragDom.style.zIndex = 1000;
     }
 
     /*
-    * getBoundingClientRect: 返回一个 DomRect 对象
-    *   包含该元素的 top、right、bottom、left 值，对应的是到屏幕上方和左边的距离，单位 px
-    * */
+     * getBoundingClientRect: 返回一个 DomRect 对象
+     *   包含该元素的 top、right、bottom、left 值，对应的是到屏幕上方和左边的距离，单位 px
+     * */
     const dragDomRect = this.dragDom.getBoundingClientRect();
     /*
-    * e.clientX、e.clientY
-    *   获取鼠标的坐标位置
-    * */
+     * e.clientX、e.clientY
+     *   获取鼠标的坐标位置
+     * */
     this.tLeft = e.clientX - dragDomRect.left; // 鼠标按下时和选中元素的坐标偏移:x坐标
     this.tTop = e.clientY - dragDomRect.top; // 鼠标按下时和选中元素的坐标偏移:y坐标
 
@@ -101,7 +101,7 @@ class DragModal extends React.PureComponent {
   };
 
   render() {
-    const { children, title = "Drag-Modal", wrapClassName = "" } = this.props;
+    const { children, title = 'Drag-Modal', wrapClassName = '' } = this.props;
 
     return (
       <Modal
@@ -109,11 +109,7 @@ class DragModal extends React.PureComponent {
         mask={false}
         wrapClassName={`drag_modal d_${this.id} ${wrapClassName}`}
         title={
-          <div
-            className="drag_title"
-            onMouseDown={this.onMouseDown}
-            onMouseUp={this.onMouseUp}
-          >
+          <div className="drag_title" onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp}>
             {title}
           </div>
         }
