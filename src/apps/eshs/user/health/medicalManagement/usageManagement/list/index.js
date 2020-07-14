@@ -314,7 +314,9 @@ class ListPage extends React.Component {
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
             <div className="search-input-area mb10">
-              <span className="text-label">지역</span>
+              <span className="text-label" style={{ display: 'inline-block', width: '82.55px' }}>
+                지역
+              </span>
               <AntdSelect className="select-mid mr5" onChange={value => handleInputChange('siteId', value)} value={317} style={{ width: '10%' }}>
                 {siteList.map(site => (
                   <Select.Option value={site.NODE_ID}>{site.NAME_KOR}</Select.Option>
@@ -329,7 +331,9 @@ class ListPage extends React.Component {
               />
             </div>
             <div className="search-input-area mb10">
-              <span className="text-label">이용자 구분</span>
+              <span className="text-label" style={{ display: 'inline-block', width: '82.55px' }}>
+                이용자 구분
+              </span>
               <AntdSelect defaultValue="N" onChange={checkUserType} className="select-mid mr5" style={{ width: '10%' }}>
                 <AntdSelect.Option value="N">매그나칩</AntdSelect.Option>
                 <AntdSelect.Option value="Y">협력업체</AntdSelect.Option>
@@ -384,7 +388,9 @@ class ListPage extends React.Component {
               />
             </div>
             <div className="search-input-area">
-              <span className="text-label">방문구분</span>
+              <span className="text-label" style={{ display: 'inline-block', width: '82.55px' }}>
+                방문구분
+              </span>
               <AntdSelect
                 className="select-mid mr5"
                 value={searchValue.visitCategoryId}
