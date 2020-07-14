@@ -13,7 +13,7 @@ import DraggableModal from 'components/DraggableModal';
 import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
 
 const AntdLineTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModal(Modal);
+const AntdModal = StyledAntdModal(DraggableModal);
 
 class UnApproveList extends Component {
   constructor(props) {
@@ -142,12 +142,20 @@ class UnApproveList extends Component {
         </StyledContentsWrapper>
 
         {viewVisible && (
-          <DraggableModal key="upApproveListKeys" title="표준문서 결재" visible={viewVisible}>
+          <AntdModal
+            title="표준문서 결재"
+            initialWidth={680}
+            initialHeight={600}
+            visible={this.props.viewVisible}
+            destroyOnClose
+            onCancel={this.onModalClose}
+            footer={[]}
+          >
             <MdcsAppvView {...this.props} />
             {/* <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
               <MdcsAppvView {...this.props} />
             </AntdModal> */}
-          </DraggableModal>
+          </AntdModal>
         )}
       </>
     );
