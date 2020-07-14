@@ -21,10 +21,10 @@ class CommonSearchbar extends React.Component {
   }
 
   componentDidUpdate() {
-    const { changeFormData, sagaKey: id, COMP_FIELD, viewPageData } = this.props;
-    if (viewPageData.viewType === 'INPUT') {
-      changeFormData(id, COMP_FIELD, '');
-    }
+    // const { changeFormData, sagaKey: id, COMP_FIELD, viewPageData } = this.props;
+    // if (viewPageData.viewType === 'INPUT') {
+    //   changeFormData(id, COMP_FIELD, '');
+    // }
   }
 
   handleModalVisible = () => {
