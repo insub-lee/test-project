@@ -60,6 +60,8 @@ class DistributeDocView extends Component {
           RECV_USER_ID: row.RECV_USER_ID, 
           FILE_DOWN_CNT: row.FILE_DOWN_CNT,
           FILE_ORDER: row.FILE_ORDER,
+          DOCNUMBER: row.DOCNUMBER,
+          VERSION: row.VERSION,
         }
       }));
       const url = `/down/eddsfile/${row.FILE_SEQ}/${acl}`;

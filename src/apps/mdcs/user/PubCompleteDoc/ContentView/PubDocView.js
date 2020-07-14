@@ -30,7 +30,7 @@ class PubDocView extends Component {
             <tbody>
               <tr>
                 <th style={{ width: '100px' }}>문서종류</th>
-                <td colSpan={3}>{pubDocInfo.TITLE}</td>
+                <td colSpan={3}>{pubDocInfo.FULLPATH_NM}</td>
               </tr>
               <tr>
                 <th style={{ width: '100px' }}>문서번호</th>

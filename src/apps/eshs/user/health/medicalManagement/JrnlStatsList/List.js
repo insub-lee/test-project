@@ -11,7 +11,7 @@ import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal'
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
-import DrugForm from 'apps/eshs/user/health/medicalManagement/Drug/DrugList/DrugForm';
+import JournalManagement from 'apps/eshs/user/health/medicalManagement/journalManangement';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import moment from 'moment';
@@ -160,12 +160,10 @@ class List extends Component {
     }
   };
 
-  modalVisible = (formData = {}, type = 'INPUT') => {
-    const { result } = this.props;
+  modalVisible = record => {
     const {
       modalObj: { modalVisible },
     } = this.state;
-    const workAreaList = (result && result.workAreaList && result.workAreaList.categoryMapList) || [];
     if (modalVisible) {
       return this.setState({
         modalObj: { modalContent: [], modalTitle: '', modalVisible: !modalVisible },
@@ -174,10 +172,8 @@ class List extends Component {
     return this.setState({
       modalObj: {
         modalVisible: !modalVisible,
-        modalContent: [
-          <DrugForm key="DrugForm" defaultForm={formData} type={type} workAreaList={workAreaList} modalVisible={this.modalVisible} getList={this.getList} />,
-        ],
-        modalTitle: type === 'INPUT' ? '신규등록' : '관리',
+        modalContent: [<JournalManagement SITE_NODE_ID={record.SITE_NODE_ID} JRNL_DT={record.JRNL_DT} />],
+        modalTitle: '일지관리',
       },
     });
   };

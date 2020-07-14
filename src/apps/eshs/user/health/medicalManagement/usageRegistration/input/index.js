@@ -201,11 +201,10 @@ class InputPage extends React.Component {
 
   checkCooperator = value => {
     const DEFAULT_COOPERATOR_ID = 1877;
-    this.setState(prevState =>
-      value === 'Y'
-        ? { isCooperator: value, requestValue: Object.assign(prevState.requestValue, { COOPERATOR_ID: DEFAULT_COOPERATOR_ID }) }
-        : { isCooperator: value, requestValue: Object.assign(prevState.requestValue, { COOPERATOR_ID: null }) },
-    );
+    this.setState(prevState => ({
+      isCooperator: value,
+      requestValue: Object.assign(prevState.requestValue, { COOPERATOR_ID: value === 'Y' ? DEFAULT_COOPERATOR_ID : null }),
+    }));
   };
 
   handleInputChange = (key, value) => {

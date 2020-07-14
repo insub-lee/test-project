@@ -128,11 +128,11 @@ class DistributeDocList extends Component {
     },
     {
       title: '다운로드',
-      dataIndex: 'STATUS',
-      key: 'STATUS',
+      dataIndex: 'DOWNLOAD_COUNT',
+      key: 'DOWNLOAD_COUNT',
       width: '10%',
       align: 'center',
-      render: (text, record) => record.STATUS === 0 ? '  In progress' : 'Completed',
+      render: text => text === 0 ? '  In progress' : 'Completed',
     },
     {
       title: '재배포요청',
