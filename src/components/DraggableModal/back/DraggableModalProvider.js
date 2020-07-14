@@ -1,0 +1,29 @@
+import React, { useEffect, useReducer } from 'react';
+import { DraggableModalContext } from './DraggableModalContext';
+import { getWindowSize } from './getWindowSize';
+import { draggableModalReducer, initialModalsState } from './draggableModalReducer';
+
+export const DraggableModalProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(draggableModalReducer, initialModalsState);
+
+  useEffect(() => {
+    if (typeof window !== 'object') {
+      return;
+    }
+    const onResize = () => dispatch({ type: 'windowResize', size: getWindowSize() });
+    window.addEventListener('resize', onResize);
+    onResize();
+    return () => window.removeEventListener('resize', onResize);
+  }, [dispatch]);
+
+  return (
+    <DraggableModalContext.Provider
+      value={{
+        state,
+        dispatch,
+      }}
+    >
+      {children}
+    </DraggableModalContext.Provider>
+  );
+};

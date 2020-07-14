@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { FunctionComponent, ReactElement, useContext } from 'react';
+import { useContext } from 'react';
 import { useUID } from 'react-uid';
 import { DraggableModalContext } from './DraggableModalContext';
 import { DraggableModalInner } from './DraggableModalInner';
 import { getModalState } from './draggableModalReducer';
 import { ModalProps } from 'antd/lib/modal';
 
-export interface DraggableModalProps extends ModalProps {
-  initialWidth?: number;
-  initialHeight?: number;
-}
+// export interface DraggableModalProps extends ModalProps {
+//   initialWidth?: number;
+//   initialHeight?: number;
+// }
 
-export const DragCustomModal: FunctionComponent<DraggableModalProps> = (props: DraggableModalProps): ReactElement => {
+export const DragModal = props => {
   // Get the unique ID of this modal.
   const id = useUID();
 
@@ -25,8 +25,8 @@ export const DragCustomModal: FunctionComponent<DraggableModalProps> = (props: D
   const modalState = getModalState({
     state,
     id,
-    initialHeight: props.initialHeight,
-    initialWidth: props.initialWidth,
+    initialHeight: props.initialHeight || 800,
+    initialWidth: props.initialWidth || 1000,
   });
 
   // We do this so that we don't re-render all modals for every state change.
@@ -34,3 +34,5 @@ export const DragCustomModal: FunctionComponent<DraggableModalProps> = (props: D
   // if props change (e.g. modalState).
   return <DraggableModalInner id={id} dispatch={dispatch} modalState={modalState} {...props} />;
 };
+
+export default DragModal;

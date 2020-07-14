@@ -152,23 +152,23 @@ class ExternalDistributeMgntList extends Component {
       width: '7%',
       align: 'center',
       render: (text, record) => (
-        <StyledButton className="btn-primary btn-xs" onClick={() => this.onClickNew(record)}>
+        <StyledButton className="btn-primary btn-xxs" onClick={() => this.onClickNew(record)}>
           추가
         </StyledButton>
       ),
     },
-    {
-      title: 'Mail',
-      dataIndex: 'DOCNUMBER',
-      key: 'mail',
-      width: '4%',
-      align: 'center',
-      render: (text, record) => (
-        <StyledButton className="btn-link btn-xs" onClick={() => this.onClickMail(record)}>
-          <Icon type="mail" />
-        </StyledButton>
-      ),
-    },
+    // {
+    //   title: 'Mail',
+    //   dataIndex: 'DOCNUMBER',
+    //   key: 'mail',
+    //   width: '4%',
+    //   align: 'center',
+    //   render: (text, record) => (
+    //     <StyledButton className="btn-link btn-xs" onClick={() => this.onClickMail(record)}>
+    //       <Icon type="mail" />
+    //     </StyledButton>
+    //   ),
+    // },
   ];
 
   render() {

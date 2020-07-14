@@ -1,17 +1,12 @@
-import * as React from 'react';
-import { FunctionComponent, ReactElement, useContext } from 'react';
+import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { useUID } from 'react-uid';
+import { ModalProps } from 'antd/lib/modal';
 import { DraggableModalContext } from './DraggableModalContext';
 import { DraggableModalInner } from './DraggableModalInner';
 import { getModalState } from './draggableModalReducer';
-import { ModalProps } from 'antd/lib/modal';
 
-export interface DraggableModalProps extends ModalProps {
-  initialWidth?: number;
-  initialHeight?: number;
-}
-
-export const DragCustomModal: FunctionComponent<DraggableModalProps> = (props: DraggableModalProps): ReactElement => {
+const DraggableModal = props => {
   // Get the unique ID of this modal.
   const id = useUID();
 
@@ -34,3 +29,16 @@ export const DragCustomModal: FunctionComponent<DraggableModalProps> = (props: D
   // if props change (e.g. modalState).
   return <DraggableModalInner id={id} dispatch={dispatch} modalState={modalState} {...props} />;
 };
+
+DraggableModal.propTypes = {
+  // ...ModalProps,
+  initialHeight: PropTypes.number,
+  initialWidth: PropTypes.number,
+};
+
+DraggableModal.defaultProps = {
+  initialHeight: 0,
+  initialWidth: 0,
+};
+
+export default DraggableModal;
