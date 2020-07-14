@@ -41,6 +41,7 @@ class InputPage extends React.Component {
       modalVisible: false,
       visitDateTime: moment(),
       isSelectMedicine: false,
+      userInfo: {},
     };
     this.handleSearchClick = debounce(this.handleSearchClick, 100);
   }
@@ -220,7 +221,8 @@ class InputPage extends React.Component {
     }
 
     if (isCooperator === 'N') {
-      const submitUrl = `/api/eshs/v1/common/health-usage-vaild?EMP_NO=${requestValue.PATIENT_EMP_NO}`;
+      // const submitUrl = `/api/eshs/v1/common/health-usage-vaild?EMP_NO=${requestValue.PATIENT_EMP_NO}`;
+      const submitUrl = `/api/eshs/v1/common/health-usage-user-info?EMP_NO=${requestValue.PATIENT_EMP_NO}`;
       submitHandlerBySaga(sagaKey, 'GET', submitUrl, null, (key, response) => this.userIdValidationCheck(response));
     }
 
@@ -236,10 +238,12 @@ class InputPage extends React.Component {
     return getCallDataHandler(sagaKey, apiArr, this.setDataSource);
   };
 
-  userIdValidationCheck = response =>
-    Object.values(response)[0] === 1
-      ? this.setState({ hasUserInfo: true }, message.success('검색에 성공했습니다.'))
+  userIdValidationCheck = response => {
+    console.debug(response);
+    return response.userInfo
+      ? this.setState({ hasUserInfo: true, userInfo: response.userInfo }, message.success('검색에 성공했습니다.'))
       : this.setState({ hasUserInfo: false }, message.warn('검색된 사원이 없습니다.'));
+  };
 
   setDataSource = () => {
     const { result } = this.props;
@@ -348,6 +352,7 @@ class InputPage extends React.Component {
       isCooperator,
       visitDateTime,
       hasUserInfo,
+      userInfo,
       dataSource,
       modalVisible,
       requestValue,
@@ -430,10 +435,7 @@ class InputPage extends React.Component {
                     <StyledButton className="btn-gray btn-xs mr5" onClick={handleSearchClick}>
                       검색
                     </StyledButton>
-                    {hasUserInfo
-                      ? `${dataSource[0] && dataSource[0].PATIENT_NAME ? dataSource[0].PATIENT_NAME : ''} / 
-                      ${dataSource[0] && dataSource[0].DEPT_NAME ? dataSource[0].DEPT_NAME : ''}`
-                      : ''}
+                    {hasUserInfo ? `${userInfo.PATIENT_NAME} / ${userInfo.DEPT_NAME} / ${userInfo.GENDER === 'F' ? '여' : '남'}` : ''}
                   </td>
                 </tr>
                 {isCooperator === 'Y' ? (
