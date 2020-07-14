@@ -314,17 +314,17 @@ class ItemTable extends Component {
               <tr key={item.SEQ} className="tr-center">
                 <td>{index + 1}</td>
                 <td>
-                  <Popover content={item.MATTER} trigger="focus">
+                  <Popover content={item.MATTER} trigger="hover">
                     <AntdInput className="ant-input-inline ant-input-sm input-left" name="MATTER" value={item.MATTER} readOnly />
                   </Popover>
                 </td>
                 <td>
-                  <Popover content={item.VOLUME} trigger="focus">
+                  <Popover content={item.VOLUME} trigger="hover">
                     <AntdInput className="ant-input-inline ant-input-sm input-left" name="VOLUME" value={item.VOLUME} readOnly />
                   </Popover>
                 </td>
                 <td>
-                  <Popover content={item.UNIT} trigger="focus">
+                  <Popover content={item.UNIT} trigger="hover">
                     <AntdInput className="ant-input-inline ant-input-sm input-left" name="UNIT" value={item.UNIT} readOnly />
                   </Popover>
                 </td>
@@ -337,7 +337,14 @@ class ItemTable extends Component {
                   />
                 </td>
                 <td>
-                  <AntdInput className="ant-input-inline ant-input-sm input-left" name="MALEFICENCE_ASSESSMENT" value={item.MALEFICENCE_ASSESSMENT} readOnly />
+                  <Popover content={item.MALEFICENCE_ASSESSMENT || ''} trigger="hover">
+                    <AntdInput
+                      className="ant-input-inline ant-input-sm input-left"
+                      name="MALEFICENCE_ASSESSMENT"
+                      value={item.MALEFICENCE_ASSESSMENT}
+                      readOnly
+                    />
+                  </Popover>
                 </td>
                 <td>
                   <AntdSelect
@@ -382,7 +389,9 @@ class ItemTable extends Component {
                   </AntdSelect>
                 </td>
                 <td>
-                  <AntdInput className="ant-input-inline ant-input-sm input-left" name="MANAGE_ASSESSMENT" value={item.MANAGE_ASSESSMENT} readOnly />
+                  <Popover content={item.MANAGE_ASSESSMENT || ''} trigger="hover">
+                    <AntdInput className="ant-input-inline ant-input-sm input-left" name="MANAGE_ASSESSMENT" value={item.MANAGE_ASSESSMENT} readOnly />
+                  </Popover>
                 </td>
                 <td>
                   <AntdInput className="ant-input-inline ant-input-sm input-left" name="ENV_IMPACT_SIZE" value={item.ENV_IMPACT_SIZE} readOnly />
