@@ -238,7 +238,7 @@ class List extends Component {
             <span className="text-label">등록일</span>
             <AntdRangePicker
               className="ant-picker-sm"
-              defaultValue={[moment(this.state.rangeData[0], 'YYYY-MM'), moment(this.state.rangeData[1], 'YYYY-MM')]}
+              defaultValue={[moment(this.state.rangeData[0], 'YYYY-MM-DD'), moment(this.state.rangeData[1], 'YYYY-MM-DD')]}
               format={['YYYY-MM-DD', 'YYYY-MM-DD']}
               onChange={(date, dateStrings) => this.dateChange(dateStrings)}
             />
