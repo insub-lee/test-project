@@ -94,7 +94,7 @@ const StyledAntdTable = Component => styled(Component)`
 
   /* bordered table style */
   .ant-table-bordered {
-    table {
+    .ant-table-body > table {
       border-top: 1px solid #bbb;
       border-bottom: 1px solid #eee;
     }
