@@ -238,12 +238,10 @@ class InputPage extends React.Component {
     return getCallDataHandler(sagaKey, apiArr, this.setDataSource);
   };
 
-  userIdValidationCheck = response => {
-    console.debug(response);
-    return response.userInfo
+  userIdValidationCheck = response =>
+    response.userInfo
       ? this.setState({ hasUserInfo: true, userInfo: response.userInfo }, message.success('검색에 성공했습니다.'))
       : this.setState({ hasUserInfo: false }, message.warn('검색된 사원이 없습니다.'));
-  };
 
   setDataSource = () => {
     const { result } = this.props;
