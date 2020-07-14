@@ -18,7 +18,7 @@ class MainPage extends Component {
   }
 
   handleSearchOnClick = () => {
-    const { sagaKey: id, getCallDataHandler, formData } = this.props;
+    const { sagaKey: id, getCallDataHandler, formData, spinningOn } = this.props;
     const chkYear = (formData && formData.CHK_YEAR) || '0';
     const deptId = (formData && formData.searchRow && formData.searchRow.DEPT_ID) || (formData && formData.myDept && formData.myDept.DEPT_ID) || '0';
     const apiAry = [
@@ -28,13 +28,15 @@ class MainPage extends Component {
         url: `/api/eshs/v1/common/EshsEiAirList/${chkYear}/${deptId}`,
       },
     ];
+    spinningOn();
     getCallDataHandler(id, apiAry, this.handleSetItemList);
   };
 
   handleSetItemList = () => {
-    const { sagaKey: id, result, changeFormData } = this.props;
+    const { sagaKey: id, result, changeFormData, spinningOff } = this.props;
     const itemList = (result && result.itemList && result.itemList.list) || [];
     changeFormData(id, 'itemList', itemList);
+    spinningOff();
   };
 
   render() {

@@ -139,7 +139,7 @@ class PubDocList extends Component {
           onCancel={this.onCancel}
           destroyOnClose
           footer={[
-            <StyledButton className="btn-light btn-sm" onClick={this.onCancel}>취소</StyledButton>,
+            <StyledButton className="btn-light btn-sm" onClick={this.onCancel}>닫기</StyledButton>,
             <StyledButton className="btn-primary btn-sm" onClick={this.onRecept}>접수완료</StyledButton>,
           ]}
         >

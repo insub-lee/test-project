@@ -19,9 +19,11 @@ class MainPage extends Component {
   }
 
   handleSearchOnClick = () => {
-    const { sagaKey, getCallDataHandler, formData } = this.props;
+    const { sagaKey, getCallDataHandler, formData, spinningOn } = this.props;
     const chkYear = (formData && formData.CHK_YEAR) || '0';
     const deptId = (formData && formData.searchRow && formData.searchRow.DEPT_ID) || (formData && formData.myDept && formData.myDept.DEPT_ID) || '0';
+
+    spinningOn();
     const apiAry = [
       {
         key: 'materialData',
@@ -44,9 +46,10 @@ class MainPage extends Component {
   };
 
   itemListReload = () => {
-    const { sagaKey, getCallDataHandler, formData, changeFormData } = this.props;
+    const { sagaKey, getCallDataHandler, formData, changeFormData, spinningOff } = this.props;
     const materialCnt = (formData && formData.materialCnt) || 0;
     if (!materialCnt) {
+      spinningOff();
       changeFormData(sagaKey, 'itemList', []);
       return;
     }
@@ -64,9 +67,9 @@ class MainPage extends Component {
   };
 
   setItemList = () => {
-    const { result, sagaKey, changeFormData } = this.props;
+    const { result, sagaKey, changeFormData, spinningOff } = this.props;
     const itemList = (result && result.itemList && result.itemList.list) || [];
-
+    spinningOff();
     changeFormData(
       sagaKey,
       'itemList',

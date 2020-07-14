@@ -237,7 +237,7 @@ class ItemTable extends Component {
                   <span>{item.MATTER}</span>
                 </td>
                 <td className="td-pointer">
-                  <Popover content={<span>{item.APPLY_PROCESS}</span>} title={null} trigger="focus">
+                  <Popover content={<span>{item.APPLY_PROCESS}</span>} title={null} trigger="hover">
                     <AntdInput
                       className="ant-input-inline ant-input-sm input-left"
                       name="APPLY_PROCESS"
@@ -247,7 +247,7 @@ class ItemTable extends Component {
                   </Popover>
                 </td>
                 <td className="td-pointer">
-                  <Popover content={<span>{item.APPLY_EQUIPMENT}</span>} title={null} trigger="focus">
+                  <Popover content={<span>{item.APPLY_EQUIPMENT}</span>} title={null} trigger="hover">
                     <AntdInput
                       className="ant-input-inline ant-input-sm input-left"
                       name="APPLY_EQUIPMENT"
@@ -257,7 +257,7 @@ class ItemTable extends Component {
                   </Popover>
                 </td>
                 <td className="td-pointer">
-                  <Popover content={<span>{item.LAWS_REVIEW}</span>} title={null} trigger="focus">
+                  <Popover content={<span>{item.LAWS_REVIEW}</span>} title={null} trigger="hover">
                     <AntdInput
                       className="ant-input-inline ant-input-sm input-left"
                       name="LAWS_REVIEW"
@@ -267,7 +267,7 @@ class ItemTable extends Component {
                   </Popover>
                 </td>
                 <td className="td-pointer">
-                  <Popover content={<span>{item.CRITICAL_ENVIRONMENT}</span>} title={null} trigger="focus">
+                  <Popover content={<span>{item.CRITICAL_ENVIRONMENT}</span>} title={null} trigger="hover">
                     <AntdInput
                       className="ant-input-inline ant-input-sm input-left"
                       name="CRITICAL_ENVIRONMENT"
@@ -277,7 +277,7 @@ class ItemTable extends Component {
                   </Popover>
                 </td>
                 <td className="td-pointer">
-                  <Popover content={<span>{item.TECH_REVIEW}</span>} title={null} trigger="focus">
+                  <Popover content={<span>{item.TECH_REVIEW}</span>} title={null} trigger="hover">
                     <AntdInput
                       className="ant-input-inline ant-input-sm input-left"
                       name="TECH_REVIEW"
@@ -287,7 +287,7 @@ class ItemTable extends Component {
                   </Popover>
                 </td>
                 <td className="td-pointer">
-                  <Popover content={<span>{item.FINANCIAL_SIDE}</span>} title={null} trigger="focus">
+                  <Popover content={<span>{item.FINANCIAL_SIDE}</span>} title={null} trigger="hover">
                     <AntdInput
                       className="ant-input-inline ant-input-sm input-left"
                       name="FINANCIAL_SIDE"
@@ -297,7 +297,7 @@ class ItemTable extends Component {
                   </Popover>
                 </td>
                 <td className="td-pointer">
-                  <Popover content={<span>{item.OPERATION_SIDE}</span>} title={null} trigger="focus">
+                  <Popover content={<span>{item.OPERATION_SIDE}</span>} title={null} trigger="hover">
                     <AntdInput
                       className="ant-input-inline ant-input-sm input-left"
                       name="OPERATION_SIDE"
@@ -307,7 +307,7 @@ class ItemTable extends Component {
                   </Popover>
                 </td>
                 <td className="td-pointer">
-                  <Popover content={<span>{item.BUSINESS_SIDE}</span>} title={null} trigger="focus">
+                  <Popover content={<span>{item.BUSINESS_SIDE}</span>} title={null} trigger="hover">
                     <AntdInput
                       className="ant-input-inline ant-input-sm input-left"
                       name="BUSINESS_SIDE"
@@ -317,7 +317,7 @@ class ItemTable extends Component {
                   </Popover>
                 </td>
                 <td className="td-pointer">
-                  <Popover content={<span>{item.STAKEHOLDERS}</span>} title={null} trigger="focus">
+                  <Popover content={<span>{item.STAKEHOLDERS}</span>} title={null} trigger="hover">
                     <AntdInput
                       className="ant-input-inline ant-input-sm input-left"
                       name="STAKEHOLDERS"
@@ -331,7 +331,7 @@ class ItemTable extends Component {
                 </td>
                 <td className={item.PLAN_REVIEW === 'Y' && 'td-pointer'}>
                   {item.PLAN_REVIEW === 'N' ? (
-                    <Popover content={<span>{item.IMPROVEMENT_PLAN}</span>} title={null} trigger="focus">
+                    <Popover content={<span>{item.IMPROVEMENT_PLAN}</span>} title={null} trigger="hover">
                       <AntdInput
                         className="ant-input-inline ant-input-sm input-left"
                         name="IMPROVEMENT_PLAN"
