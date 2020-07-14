@@ -433,10 +433,10 @@ upstream portal-upload {
     server 192.168.251.14:10199;
 }
 upstream portal-migration {
-    server 192.168.251.14:10201;
+    server 192.168.251.14:10501;
 }
 upstream portal-filemanage {
-    server 192.168.251.14:10202;
+    server 192.168.251.14:10502;
 }
 upstream wts-common {
     server 192.168.251.14:10801;

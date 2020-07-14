@@ -466,7 +466,7 @@ class DraftList extends Component {
         <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
-              <Icon type="form" /> 기안함 상신한 문서 : {draftList.length || 0} 건
+              <Icon type="form" /> 기안함 상신한 문서 : {draftListCnt || 0} 건
             </p>
           </div>
         </StyledHeaderWrapper>
