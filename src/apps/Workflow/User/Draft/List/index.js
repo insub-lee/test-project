@@ -47,7 +47,7 @@ const StyledWrap = styled.div`
   }
 `;
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModal(Modal);
+const AntdModal = StyledAntdModal(DraggableModal);
 const { TextArea } = Input;
 class DraftList extends Component {
   constructor(props) {
@@ -484,17 +484,18 @@ class DraftList extends Component {
         </StyledContentsWrapper>
         {workPrcProps && workPrcProps.REL_TYPE && workPrcProps.REL_TYPE !== 999 ? (
           <div>
-            {/* <AntdModal
-              className="modalWrapper modalTechDoc"
-              title="내용 보기"
-              width={modalWidth}
-              visible={this.props.viewVisible}
-              destroyOnClose
-              onCancel={this.closeBtnFunc}
-              footer={null}
-            > */}
             {this.props.viewVisible && (
-              <DraggableModal key="draftListKeys" title="내용보기" visible={this.props.viewVisible}>
+              <AntdModal
+                className="modalWrapper modalTechDoc"
+                key="draftListKeys"
+                title="내용 보기"
+                initialWidth={680}
+                initialHeight={500}
+                visible={this.props.viewVisible}
+                destroyOnClose
+                onCancel={this.closeBtnFunc}
+                footer={null}
+              >
                 <BizBuilderBase
                   sagaKey="approveBase_approveView"
                   viewType="VIEW"
@@ -563,13 +564,14 @@ class DraftList extends Component {
                     </StyledHtmlTable>
                   </StyledContentsWrapper>
                 )}
-              </DraggableModal>
+              </AntdModal>
             )}
             {/* </AntdModal> */}
             <AntdModal
               className="modalWrapper modalTechDoc"
               title="표지 보기"
-              width={modalWidth}
+              initialWidth={800}
+              initialHeight={600}
               destroyOnClose
               visible={coverView.visible}
               onCancel={this.onCloseCoverView}
@@ -620,7 +622,16 @@ class DraftList extends Component {
               footer={null}
             > */}
             {this.props.viewVisible && (
-              <DraggableModal title="표준문서 결재" visible={this.props.viewVisible}>
+              <AntdModal
+                className="modalWrapper modalTechDoc"
+                title="표준문서 결제"
+                initialWidth={800}
+                initialHeight={600}
+                visible={this.props.viewVisible}
+                destroyOnClose
+                onCancel={this.closeBtnFunc}
+                footer={null}
+              >
                 <StyledContentsWrapper>
                   <StyledHtmlTable>
                     <>
@@ -728,13 +739,14 @@ class DraftList extends Component {
                     </>
                   </StyledHtmlTable>
                 </StyledContentsWrapper>
-              </DraggableModal>
+              </AntdModal>
             )}
             {/* </AntdModal> */}
             <AntdModal
               className="modalWrapper modalTechDoc"
               title="표지 보기"
-              width={modalWidth}
+              initialWidth={800}
+              initialHeight={600}
               visible={isAbrogationMultiShow}
               destroyOnClose
               onCancel={this.onCloseAbrogationMultiModal}

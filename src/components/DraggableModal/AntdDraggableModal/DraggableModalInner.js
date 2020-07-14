@@ -61,6 +61,7 @@ const DraggableModalInnerNonMemo = ({ id, modalState, dispatch, visible, childre
       zIndex={zIndex}
       title={titleElement}
       visible={visible}
+      footer={[]}
       {...otherProps}
     >
       {children}
@@ -91,8 +92,8 @@ DraggableModalInnerNonMemo.defaultProps = {
   modalState: {
     x: 0,
     y: 0,
-    width: 800,
-    height: 800,
+    width: 0,
+    height: 0,
     zIndex: 0,
     visible: false,
   },

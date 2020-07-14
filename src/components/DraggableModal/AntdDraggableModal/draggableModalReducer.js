@@ -4,7 +4,7 @@ import { clamp } from './clamp';
 const mapObject = (o, f) => Object.assign({}, ...Object.keys(o).map(k => ({ [k]: f(o[k]) })));
 
 export const initialModalsState = {
-  maxZIndex: 0,
+  maxZIndex: 1000,
   windowSize: getWindowSize(),
   modals: {},
 };
@@ -14,7 +14,7 @@ export const initialModalState = {
   y: 0,
   width: 800,
   height: 800,
-  zIndex: 0,
+  zIndex: 1000,
   visible: false,
 };
 
@@ -77,6 +77,7 @@ export const draggableModalReducer = (state, action) => {
       const modalState = state.modals[action.id];
       const centerX = state.windowSize.width / 2 - modalState.width / 2;
       const centerY = state.windowSize.height / 2 - modalState.height / 2;
+      console.debug(state.windowSize.width, modalState.width, centerX, state.windowSize.height, modalState.height, centerY);
       const position = clampDrag(state.windowSize.width, state.windowSize.height, centerX, centerY, modalState.width, modalState.height);
       const size = clampResize(state.windowSize.width, state.windowSize.height, position.x, position.y, modalState.width, modalState.height);
       return {

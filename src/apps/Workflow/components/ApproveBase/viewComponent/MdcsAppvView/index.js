@@ -7,6 +7,7 @@ import { Radio, Input, Button, Icon, Select, message, Modal, Table } from 'antd'
 import BizBuilderBase from 'components/BizBuilderBase';
 import UserSelect from 'components/UserSelect';
 import AbrogationMultiModifyDraft from 'apps/Workflow/User/CommonView/abrogationMultiModifyDraft';
+import DraggableModal from 'components/DraggableModal';
 
 import StyledInputView from 'apps/mdcs/styled/StyledInput';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
@@ -17,7 +18,7 @@ import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal'
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledTagDraft from 'components/BizBuilder/styled/Tag/StyledTagDraft';
 
-const AntdModal = StyledAntdModal(Modal);
+const AntdModal = StyledAntdModal(DraggableModal);
 const { Option } = Select;
 const { TextArea } = Input;
 const AntdTextArea = StyledTextarea(Input.TextArea);
@@ -238,6 +239,7 @@ class MdcsAppvView extends Component {
       isDCC,
       isAbrogationMultiShow,
     } = this.state;
+    console.debug('modalWidth', modalWidth);
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -417,7 +419,7 @@ class MdcsAppvView extends Component {
             <AntdModal
               destroyOnClose
               style={{ top: '50px' }}
-              width={900}
+              initialWidth={900}
               visible={isAbrogationMultiShow}
               onCancel={this.onCloseAbrogationMultiModal}
               footer={null}
@@ -439,7 +441,8 @@ class MdcsAppvView extends Component {
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"
           title="표지 보기"
-          width={modalWidth}
+          initialWidth={900}
+          initialHeight={600}
           destroyOnClose
           visible={coverView.visible}
           onCancel={this.onCloseCoverView}
@@ -479,7 +482,8 @@ class MdcsAppvView extends Component {
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"
           title="사용자 선택"
-          width={1000}
+          initialWidth={1000}
+          initialHeight={400}
           destroyOnClose
           visible={isUserSelect}
           onCancel={this.onCancelUserSelect}
