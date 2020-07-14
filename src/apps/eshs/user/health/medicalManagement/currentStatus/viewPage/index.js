@@ -104,8 +104,10 @@ class ViewPage extends React.Component {
       const useBedPatient = (result.useBedPatient && result.useBedPatient.list) || [];
       const noteList = (result.noteList && result.noteList.list) || [];
       const dataObject = {};
+      let noteListToString = '';
+      noteList.map(note => (noteListToString += `${note.NOTE}\n`));
       tempList.map(item => Object.assign(dataObject, { [item.KEY]: item.VALUE }));
-      return { dataObject, useBedPatient, noteList: Object.values(noteList) };
+      return { dataObject, useBedPatient, noteList: noteListToString };
     });
   };
 

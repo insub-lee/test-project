@@ -1,6 +1,43 @@
 import React from 'react';
+import { Table } from 'antd';
 import PropTypes from 'prop-types';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+
+const AntdTable = StyledAntdTable(Table);
+
+const columns = [
+  {
+    title: '일시',
+    dataIndex: 'JRNL_DTTM',
+    width: '20%',
+  },
+  {
+    title: '소속',
+    dataIndex: 'DEPT_NAME_KOR',
+    width: '20%',
+  },
+  {
+    title: '사번',
+    dataIndex: 'PATIENT_EMP_NO',
+    width: '10%',
+  },
+  {
+    title: '이름',
+    dataIndex: 'PATIENT_NAME',
+    width: '10%',
+  },
+  {
+    title: '증상',
+    dataIndex: 'SYMPTOMS',
+    width: '20%',
+  },
+  {
+    title: '조치내용',
+    dataIndex: 'MEASURE',
+    width: '20%',
+  },
+];
 
 const PastTable = ({ dataObject = {}, useBedPatient = [] }) => (
   <>
@@ -205,43 +242,11 @@ const PastTable = ({ dataObject = {}, useBedPatient = [] }) => (
           </tbody>
         </table>
       </div>
-      <div style={{ marginBottom: '20px' }}>
-        <span className="selSaveWrapper textLabel alignLeft">BED/후송환자 현황</span>
-        <table>
-          <colgroup>
-            <col width="20%" />
-            <col width="20%" />
-            <col width="10%" />
-            <col width="10%" />
-            <col width="20%" />
-            <col width="20%" />
-          </colgroup>
-          <tbody>
-            <tr>
-              <th>일시</th>
-              <th>소속</th>
-              <th>사번</th>
-              <th>이름</th>
-              <th>증상</th>
-              <th>조치내용</th>
-            </tr>
-            {useBedPatient.map(patient => (
-              <tr>
-                <td>{patient.JRNL_DTTM}</td>
-                <td>{patient.DEPT_NAME_KOR}</td>
-                <td>{patient.PATIENT_EMP_NO}</td>
-                <td>{patient.PATIENT_NAME}</td>
-                <td>{patient.SYMPTOMS}</td>
-                <td>{patient.MEASURE}</td>
-              </tr>
-            ))}
-            <tr>
-              <th colSpan={6}>{`${useBedPatient.length} 건`}</th>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </StyledHtmlTable>
+    <div style={{ marginBottom: '20px' }}>
+      <span className="selSaveWrapper textLabel alignLeft">BED/후송환자 현황</span>
+      <AntdTable columns={columns} dataSource={useBedPatient} footer={() => <span>{useBedPatient.length} 건</span>} />
+    </div>
   </>
 );
 
