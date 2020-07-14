@@ -93,7 +93,7 @@ class MedicineOutList extends React.Component {
           <StyledCustomSearchWrapper>
             <div className="search-input-area mb10">
               <span className="text-label">기간</span>
-              <AntdPicker defaultValue={[moment(startDate), moment(endDate)]} onChange={handleDateChange} style={{ width: '85%' }} />
+              <AntdPicker allowClear={false} defaultValue={[moment(startDate), moment(endDate)]} onChange={handleDateChange} style={{ width: '85%' }} />
             </div>
             <div className="btn-area">
               <StyledButton className="btn-gray btn-sm" onClick={getDataSource}>

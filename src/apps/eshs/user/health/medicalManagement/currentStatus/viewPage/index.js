@@ -196,6 +196,7 @@ class ViewPage extends React.Component {
               </AntdSelect>
               <span className="text-label">기간</span>
               <AntdPicker
+                allowClear={false}
                 className="ant-picker-mid mr5"
                 value={[moment(searchValue.START_DATE), moment(searchValue.END_DATE)]}
                 onChange={handleDateChange}
