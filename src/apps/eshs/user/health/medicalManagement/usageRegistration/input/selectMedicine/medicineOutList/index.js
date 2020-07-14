@@ -103,10 +103,9 @@ class MedicineOutList extends React.Component {
           </StyledCustomSearchWrapper>
           <AntdTable columns={columns} dataSource={dataSource} footer={() => <span>{`${dataSource.length || 0} 건`}</span>} />
           <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20 btn-wrap-mb-10">
-            <StyledButton className="btn-primary btn-sm mr5" onClick={handleModalClose}>
+            <StyledButton className="btn-gray btn-sm mr5" onClick={handleModalClose}>
               확인
             </StyledButton>
-            <StyledButton className="btn-light btn-sm">닫기</StyledButton>
           </StyledButtonWrapper>
         </StyledContentsWrapper>
       </>

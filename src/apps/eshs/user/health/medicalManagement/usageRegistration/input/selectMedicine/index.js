@@ -177,7 +177,7 @@ class SelectMedicine extends React.Component {
             <StyledButton className="btn-primary btn-sm mr5" onClick={() => handleSelectMedicineComplete(medicineQuantityList)}>
               저장
             </StyledButton>
-            <StyledButton className="btn-light btn-sm">닫기</StyledButton>
+            <StyledButton className="btn-gray btn-sm">닫기</StyledButton>
           </StyledButtonWrapper>
           <AntdModal title={`${selectedDrugName} 출고 내역`} visible={modalVisible} footer={null} onCancel={handleModalClose} destroyOnClose>
             <MedicineOutList
