@@ -4,6 +4,11 @@ import PropTypes from 'prop-types';
 import List from 'apps/eshs/user/health/medicalManagement/JrnlStatsList/List';
 
 class JrnlStatsList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
   render() {
     const { sagaKey, customOnRowClick, saveBtn } = this.props;
     return <BizMicroDevBase sagaKey={sagaKey} component={List} />;

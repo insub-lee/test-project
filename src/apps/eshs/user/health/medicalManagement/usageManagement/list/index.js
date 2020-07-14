@@ -324,6 +324,7 @@ class ListPage extends React.Component {
               </AntdSelect>
               <span className="text-label">일시</span>
               <AntdPicker
+                allowClear={false}
                 className="ant-picker-mid mr5"
                 value={[moment(searchValue.startDate), moment(searchValue.endDate)]}
                 onChange={handleDateChange}
