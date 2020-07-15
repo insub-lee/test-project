@@ -41,7 +41,7 @@ class ListPage extends React.Component {
               .format('YYYY-MM-DD'),
         endDate: props.endDate ? moment(props.endDate).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD'),
         siteId: 317,
-        cooperatorId: '',
+        cooperatorId: null,
         departmentId: '',
         empNo: '',
         visitCategoryId: '',
@@ -50,6 +50,7 @@ class ListPage extends React.Component {
         treatmentId: '',
         gender: '',
         hqId: '',
+        isWorkday: '',
       },
       isCooperator: false,
       modalVisible: false,
@@ -111,18 +112,21 @@ class ListPage extends React.Component {
       dataIndex: 'MEASURE',
       align: 'center',
       width: '11%',
+      ellipsis: true,
     },
     {
       title: '세부증상',
       dataIndex: 'DETAIL_CONTENT',
       align: 'center',
       width: '10%',
+      ellipsis: true,
     },
     {
       title: 'ACS 결과',
       dataIndex: 'ACS',
       align: 'center',
       width: '9%',
+      ellipsis: true,
     },
   ];
 
@@ -244,7 +248,7 @@ class ListPage extends React.Component {
     this.setState(prevState =>
       value === 'Y'
         ? { isCooperator: value === 'Y' }
-        : { isCooperator: value === 'Y', searchValue: Object.assign(prevState.searchValue, { cooperatorId: '' }) },
+        : { isCooperator: value === 'Y', searchValue: Object.assign(prevState.searchValue, { cooperatorId: null }) },
     );
   };
 
@@ -284,12 +288,12 @@ class ListPage extends React.Component {
     });
   };
 
-  handleModalVisible = (record = {}) => {
+  handleModalVisible = (record = null) => {
     this.setState({ modalVisible: true, selectedRecord: record });
   };
 
   handleModalClose = () => {
-    this.setState({ modalVisible: false });
+    this.setState({ modalVisible: false, selectedRecord: {} });
   };
 
   render() {
@@ -314,7 +318,9 @@ class ListPage extends React.Component {
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
             <div className="search-input-area mb10">
-              <span className="text-label">지역</span>
+              <span className="text-label" style={{ display: 'inline-block', width: '82.55px' }}>
+                지역
+              </span>
               <AntdSelect className="select-mid mr5" onChange={value => handleInputChange('siteId', value)} value={317} style={{ width: '10%' }}>
                 {siteList.map(site => (
                   <Select.Option value={site.NODE_ID}>{site.NAME_KOR}</Select.Option>
@@ -322,14 +328,28 @@ class ListPage extends React.Component {
               </AntdSelect>
               <span className="text-label">일시</span>
               <AntdPicker
+                allowClear={false}
                 className="ant-picker-mid mr5"
                 value={[moment(searchValue.startDate), moment(searchValue.endDate)]}
                 onChange={handleDateChange}
                 style={{ width: '20%' }}
               />
+              <span className="text-label">방문시간 구분</span>
+              <AntdSelect
+                className="select-mid"
+                value={searchValue.isWorkday}
+                onChange={value => handleInputChange('isWorkday', value)}
+                style={{ width: '15%' }}
+              >
+                <Select.Option value="">전체보기</Select.Option>
+                <Select.Option value="Y">평일</Select.Option>
+                <Select.Option value="N">주말/공휴일</Select.Option>
+              </AntdSelect>
             </div>
             <div className="search-input-area mb10">
-              <span className="text-label">이용자 구분</span>
+              <span className="text-label" style={{ display: 'inline-block', width: '82.55px' }}>
+                이용자 구분
+              </span>
               <AntdSelect defaultValue="N" onChange={checkUserType} className="select-mid mr5" style={{ width: '10%' }}>
                 <AntdSelect.Option value="N">매그나칩</AntdSelect.Option>
                 <AntdSelect.Option value="Y">협력업체</AntdSelect.Option>
@@ -384,7 +404,9 @@ class ListPage extends React.Component {
               />
             </div>
             <div className="search-input-area">
-              <span className="text-label">방문구분</span>
+              <span className="text-label" style={{ display: 'inline-block', width: '82.55px' }}>
+                방문구분
+              </span>
               <AntdSelect
                 className="select-mid mr5"
                 value={searchValue.visitCategoryId}
@@ -455,7 +477,7 @@ class ListPage extends React.Component {
             </div>
           </StyledCustomSearchWrapper>
           <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-            <StyledButton className="btn-primary btn-sm mr5" onClick={handleModalVisible}>
+            <StyledButton className="btn-primary btn-sm mr5" onClick={() => handleModalVisible()}>
               등록
             </StyledButton>
           </StyledButtonWrapper>
@@ -476,9 +498,8 @@ class ListPage extends React.Component {
               diseaseList={diseaseList}
               treatmentList={treatmentList}
               submitHandlerBySaga={this.props.submitHandlerBySaga}
-              handleSearchClick={this.handleSearchClick}
+              handleSearchClick={handleSearchClick}
               isNew={this.props.isNew}
-              listReload={handleSearchClick}
             />
           </AntdModal>
         </StyledContentsWrapper>

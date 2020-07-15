@@ -110,7 +110,7 @@ class EvaluationFormModal extends React.Component {
         tot_score: this.getResultScore(),
         plan_result: this.getResultScore() >= 90 ? 'O' : 'X',
         study: jobType,
-        checkAll: step === 3 && area.includes('PHOTO'),
+        checkAll: (step === 3 && area && area.includes('PHOTO')) || false,
       };
       if (isFinished) {
         this.updateData(payload).then(result => {

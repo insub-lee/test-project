@@ -41,10 +41,10 @@ class ExcelDownloadComp extends Component {
     const { listData } = this.props;
     const data = listData.map(item => {
       const result = [];
-      fields.forEach(field => {
+      fields.forEach(fieldInfo => {
         const cell = {};
-        cell.value = item[field.field] || '';
-        cell.style = field.style;
+        cell.value = item[fieldInfo.field] !== undefined && item[fieldInfo.field] !== null ? item[fieldInfo.field] : '';
+        cell.style = fieldInfo.style;
         result.push(cell);
       });
       return result;
@@ -62,20 +62,19 @@ class ExcelDownloadComp extends Component {
       dataSet = this.makeExcelDataSet(this.props.columns, this.props.fields) || [];
     }
 
+    const excelExport = () => (
+      <ExcelFile filename={CONFIG.property.fileName || workInfo.NAME_KOR}>
+        <ExcelSheet dataSet={dataSet} name={(CONFIG.property.sheetName && CONFIG.property.sheetName) || 'Sheet1'} />
+      </ExcelFile>
+    );
+
     // BuilderBase 에서 사용시 (개발중)
     if (isBuilder) {
       return visible && viewPageData.viewType === 'LIST' && CONFIG.property.columns && CONFIG.property.columns.length > 0 ? (
-        <ExcelFile
-          filename={CONFIG.property.fileName || workInfo.NAME_KOR}
-          element={
-            <StyledButton className="btn-img btn-gray btn-sm">
-              <FileExcelOutlined />
-              &nbsp;{CONFIG.property.btnText || '엑셀 다운로드'}
-            </StyledButton>
-          }
-        >
-          <ExcelSheet dataSet={dataSet} name={(CONFIG.property.sheetName && CONFIG.property.sheetName) || 'Sheet1'} />
-        </ExcelFile>
+        <StyledButton className="btn-img btn-gray btn-sm" onClick={() => excelExport()}>
+          <FileExcelOutlined />
+          &nbsp;{CONFIG.property.btnText || '엑셀 다운로드'}
+        </StyledButton>
       ) : (
         ''
       );

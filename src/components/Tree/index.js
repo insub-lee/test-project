@@ -136,7 +136,7 @@ class Tree extends Component {
                 onClick={() => this.handleOnTreeNodeClick(node)}
                 style={{ cursor: 'pointer' }}
               >
-                {lang.get('NAME', node)}
+                {lang.get('NAME', node) ? lang.get('NAME', node) : node.title}
               </button>
             ),
             ...parentsGenerateNodeProps,
