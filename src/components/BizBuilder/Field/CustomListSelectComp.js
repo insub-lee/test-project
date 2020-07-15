@@ -25,7 +25,7 @@ function CustomListSelectComp(props) {
     viewPageData,
   } = props;
 
-  const { url, method, optValue, optLabel, className } = props.CONFIG.property || {};
+  const { url, method, optValue, optLabel, className, readOnly, additionalData } = props.CONFIG.property || {};
 
   useEffect(() => {
     if (typeof url === 'string' || url !== '') {
@@ -47,6 +47,19 @@ function CustomListSelectComp(props) {
         changeValidationData(id, COMP_FIELD, value.trim() !== '', value.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
       }
       changeFormData(id, COMP_FIELD, value);
+      if (additionalData && additionalData.length > 0) {
+        // 선택된 Record Data
+        const selectedOption = options.find(item => item[optValue] === value);
+        // 추가 폼데이터 변경이 필요한 필드가 존재하는 경우
+        if (additionalData && additionalData.length > 0) {
+          additionalData.forEach(data => {
+            // FormData 필드와 ListData 필드가 ''이 아닐경우
+            if (data.formDatafield !== '' && data.listDatafield !== '') {
+              changeFormData(id, data.formDatafield, selectedOption[data.listDatafield] || '');
+            }
+          });
+        }
+      }
     }
   };
 
@@ -54,18 +67,23 @@ function CustomListSelectComp(props) {
     if (options?.length > 0) {
       return options.map(option => <Option value={option[optValue]}>{option[optLabel]}</Option>);
     }
-    return <Option value="">호출된 list정보없음</Option>;
+    return <Option value=""></Option>;
+  };
+
+  const getOptLabel = () => {
+    const selectedOpt = options.find(option => option[optValue] === colData);
+    return (selectedOpt && selectedOpt[optLabel]) || '';
   };
 
   // 렌더
   return (
     <>
-      {viewPageData.viewType.toUpperCase() === 'MODIFY' || viewPageData.viewType.toUpperCase() === 'INPUT' ? (
+      {!readOnly && (viewPageData.viewType.toUpperCase() === 'MODIFY' || viewPageData.viewType.toUpperCase() === 'INPUT') ? (
         <AntdSelect style={{ width: '100%' }} className={className || ''} value={colData || ''} onChange={value => onChangeHandler(value)}>
           {renderOptions()}
         </AntdSelect>
       ) : (
-        <span>{options.find(option => option[optValue] === colData).optLabel || ''}</span>
+        <span>{getOptLabel()}</span>
       )}
     </>
   );

@@ -6,7 +6,8 @@ import { DatePicker } from 'antd';
 const { MonthPicker } = DatePicker;
 
 function MonthPickerComp(props) {
-  const [format, setFormat] = useState('YYYY-MM');
+  const [formFormat, setFormFormat] = useState('YYYY-MM');
+  const [labelFormat, setLabelFormat] = useState('YYYY-MM');
   const {
     changeFormData,
     sagaKey: id,
@@ -17,20 +18,22 @@ function MonthPickerComp(props) {
     NAME_KOR,
     changeValidationData,
     colData,
-    formData,
     viewPageData,
   } = props;
 
-  const { dateformat, className } = props.CONFIG.property || {};
+  const { dateformat, viewformat, className, readOnly } = props.CONFIG.property || {};
 
   useEffect(() => {
-    if (typeof format === 'string' || format !== '') {
-      setFormat(format);
+    if (typeof dateformat === 'string' || dateformat !== '') {
+      setFormFormat(dateformat);
+    }
+    if (typeof viewformat === 'string' || viewformat !== '') {
+      setLabelFormat(viewformat);
     }
   }, []);
 
   const onChangeHandler = value => {
-    if (typeof strDate === 'string') {
+    if (typeof value === 'string') {
       if (isRequired) {
         changeValidationData(id, COMP_FIELD, value.trim() !== '', value.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
       }
@@ -38,26 +41,20 @@ function MonthPickerComp(props) {
     }
   };
 
-  const renderMonth = date => (
-    <div className="monthArea">
-      <span>{`${date.format('MM')}월`}</span>
-    </div>
-  );
-
   // 렌더
   return (
     <>
-      {viewPageData.viewType.toUpperCase() === 'MODIFY' || viewPageData.viewType.toUpperCase() === 'INPUT' ? (
+      {!readOnly && (viewPageData.viewType.toUpperCase() === 'MODIFY' || viewPageData.viewType.toUpperCase() === 'INPUT') ? (
         <MonthPicker
           style={{ width: '100%' }}
           className={className || ''}
-          defaultPickerValue={colData ? moment(colData) : undefined}
-          format={dateformat}
-          monthCellRender={renderMonth}
-          onChange={value => onChangeHandler(value)}
+          defaultValue={colData ? moment(colData, formFormat) : undefined}
+          value={colData ? moment(colData, formFormat) : undefined}
+          format={labelFormat || 'YYYY-MM'}
+          onChange={date => onChangeHandler(moment(date).format(formFormat))}
         />
       ) : (
-        <span>{colData || ''}</span>
+        <span className={className || ''}>{(colData && moment(colData, formFormat).format(labelFormat || 'YYYY-MM')) || ''}</span>
       )}
     </>
   );
@@ -71,6 +68,7 @@ MonthPickerComp.propTypes = {
   NAME_KOR: PropTypes.string,
   changeValidationData: PropTypes.func,
   viewPageData: PropTypes.object,
+  colData: PropTypes.string,
 };
 
 MonthPickerComp.defaultProps = {

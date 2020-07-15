@@ -25,6 +25,7 @@ class NumberComp extends React.Component {
         max={10 ** CONFIG.info.size}
         placeholder={CONFIG.property.placeholder}
         onChange={value => this.handleOnChange(value)}
+        style={{ width: '100%' }}
         readOnly={readOnly || CONFIG.property.readOnly}
         className={CONFIG.property.className || ''}
       />
