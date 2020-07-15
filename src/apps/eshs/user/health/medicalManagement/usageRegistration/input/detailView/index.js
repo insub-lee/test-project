@@ -232,6 +232,7 @@ class DetailView extends React.Component {
                 <th>일시</th>
                 <td>
                   <AntdPicker
+                    allowClear={false}
                     className="ant-picker-sm"
                     showTime={{ format: 'HH:mm' }}
                     onChange={handleDateChange}

@@ -1,5 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Input, Select, Popconfirm } from 'antd';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
@@ -30,7 +31,7 @@ class DeptSearchBar extends Component {
   }
 
   componentDidMount = () => {
-    const { id, getCallDataHandler, changeFormData } = this.props;
+    const { id, getCallDataHandler, setFormData, formData, searchData } = this.props;
     const years = [];
     for (let i = 2006; i <= currentYear + 1; i++) {
       years.push(String(i));
@@ -43,8 +44,12 @@ class DeptSearchBar extends Component {
       },
     ];
     this.setState({ years });
-    changeFormData(id, 'CHK_YEAR', String(currentYear));
-    changeFormData(id, 'searchFlag', false);
+    if (JSON.stringify(searchData) !== '{}') {
+      const { CHK_YEAR } = searchData;
+      setFormData(id, { ...formData, CHK_YEAR, searchFlag: true, searchRow: searchData });
+    } else {
+      setFormData(id, { ...formData, CHK_YEAR: String(currentYear), searchFlag: false });
+    }
     getCallDataHandler(id, apiAry, this.handleAppStart);
   };
 
@@ -182,10 +187,17 @@ class DeptSearchBar extends Component {
     );
   }
 }
-
+DeptSearchBar.propTypes = {
+  id: PropTypes.string,
+  getCallDataHandler: PropTypes.func,
+  result: PropTypes.object,
+  searchData: PropTypes.object,
+  saveBeforeProcess: PropTypes.func,
+};
 DeptSearchBar.defaultProps = {
   getCallDataHandler: () => {},
   result: {},
   saveBeforeProcess: () => {},
+  searchData: {},
 };
 export default DeptSearchBar;

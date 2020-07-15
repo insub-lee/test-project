@@ -15,7 +15,7 @@ class MainPage extends Component {
   }
 
   handleSearchOnClick = () => {
-    const { id, getCallDataHandler, formData } = this.props;
+    const { id, getCallDataHandler, formData, spinningOn } = this.props;
     const chkYear = (formData && formData.CHK_YEAR) || '0';
     const deptId = (formData && formData.searchRow && formData.searchRow.DEPT_ID) || (formData && formData.myDept && formData.myDept.DEPT_ID) || '0';
     const apiAry = [
@@ -25,6 +25,7 @@ class MainPage extends Component {
         url: `/api/eshs/v1/common/EshsGetEiMaterial/${chkYear}/${deptId}`,
       },
     ];
+    spinningOn();
     getCallDataHandler(id, apiAry, this.handleSetMaterial);
   };
 
@@ -55,9 +56,10 @@ class MainPage extends Component {
   };
 
   setItemList = () => {
-    const { result, id, changeFormData } = this.props;
+    const { result, id, changeFormData, spinningOff } = this.props;
     const itemList = (result && result.itemList && result.itemList.list) || [];
     changeFormData(id, 'itemList', itemList);
+    spinningOff();
   };
 
   render() {

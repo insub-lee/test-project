@@ -190,7 +190,7 @@ class ViewPage extends React.Component {
                 ))}
               </AntdSelect>
               <span className="text-label">날짜</span>
-              <AntdPicker className="ant-picker-mid mr5" value={moment(searchValue.JRNL_DT)} onChange={handleDateChange} />
+              <AntdPicker allowClear={false} className="ant-picker-mid mr5" value={moment(searchValue.JRNL_DT)} onChange={handleDateChange} />
               <span className="text-label">구분</span>
               <AntdSelect className="select-mid mr5" defaultValue="L" onChange={handleTypeChange} style={{ width: '10%' }}>
                 <Select.Option value="P">과거 일지</Select.Option>

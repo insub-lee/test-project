@@ -23,7 +23,7 @@ import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHead
 const { TextArea } = Input;
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModal(Modal);
+const AntdModal = StyledAntdModal(DraggableModal);
 const StyledWrap = styled.div`
   table.mdcsProcessList {
     width: 100%;
@@ -510,7 +510,16 @@ class ApproveList extends Component {
               footer={null}
             > */}
             {this.props.viewVisible && (
-              <DraggableModal key="approveListKeys" title="내용보기" visible={this.props.viewVisible}>
+              <AntdModal
+                className="modalWrapper modalTechDoc"
+                title="내용 보기"
+                initialWidth={680}
+                initialHeight={500}
+                visible={this.props.viewVisible}
+                destroyOnClose
+                onCancel={this.closeBtnFunc}
+                footer={null}
+              >
                 <BizBuilderBase
                   sagaKey="approveBase_approveView"
                   viewType="VIEW"
@@ -576,14 +585,15 @@ class ApproveList extends Component {
                     </StyledHtmlTable>
                   </StyledContentsWrapper>
                 )}
-              </DraggableModal>
+              </AntdModal>
             )}
             {/* </AntdModal> */}
 
             <AntdModal
               className="modalWrapper modalTechDoc"
               title="표지 보기"
-              width={modalWidth}
+              initialWidth={900}
+              initialHeight={600}
               destroyOnClose
               visible={coverView.visible}
               onCancel={this.onCloseCoverView}
@@ -632,7 +642,16 @@ class ApproveList extends Component {
               footer={null}
             > */}
             {this.props.viewVisible && (
-              <DraggableModal key="approveListKeys" title="내용보기" visible={this.props.viewVisible}>
+              <AntdModal
+                className="modalWrapper modalTechDoc"
+                title="내용 보기"
+                initialWidth={680}
+                initialHeight={500}
+                visible={this.props.viewVisible}
+                destroyOnClose
+                onCancel={this.closeBtnFunc}
+                footer={null}
+              >
                 <StyledContentsWrapper>
                   <StyledHtmlTable>
                     <>
@@ -741,13 +760,14 @@ class ApproveList extends Component {
                     </>
                   </StyledHtmlTable>
                 </StyledContentsWrapper>
-              </DraggableModal>
+              </AntdModal>
             )}
             {/* </AntdModal> */}
             <AntdModal
               className="modalWrapper modalTechDoc modalCustom"
               title="표지 보기"
-              width={modalWidth}
+              initialWidth={900}
+              initialHeight={600}
               visible={isAbrogationMultiShow}
               destroyOnClose
               onCancel={this.onCloseAbrogationMultiModal}
@@ -765,7 +785,8 @@ class ApproveList extends Component {
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"
           title="홀드해제 의견"
-          width={500}
+          initialWidth={500}
+          initialHeight={240}
           destroyOnClose
           visible={opinionVisible}
           onCancel={() => setOpinionVisible(false)}
