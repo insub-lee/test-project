@@ -46,7 +46,7 @@ const clampResize = (windowWidth, windowHeight, x, y, width, height) => {
 
 export const draggableModalReducer = (state, action) => {
   switch (action.type) {
-    case 'resize':
+    case 'resize': {
       const size = clampResize(state.windowSize.width, state.windowSize.height, action.x, action.y, action.width, action.height);
       return {
         ...state,
@@ -60,6 +60,7 @@ export const draggableModalReducer = (state, action) => {
           },
         },
       };
+    }
     case 'drag':
       return {
         ...state,
@@ -95,7 +96,7 @@ export const draggableModalReducer = (state, action) => {
         },
       };
     }
-    case 'focus':
+    case 'focus': {
       const modalState = state.modals[action.id];
       return {
         ...state,
@@ -108,6 +109,7 @@ export const draggableModalReducer = (state, action) => {
           },
         },
       };
+    }
     case 'hide': {
       const modalState = state.modals[action.id];
       return {
@@ -121,7 +123,7 @@ export const draggableModalReducer = (state, action) => {
         },
       };
     }
-    case 'mount':
+    case 'mount': {
       const initialState = getInitialModalState(action.intialState);
       return {
         ...state,
@@ -136,13 +138,15 @@ export const draggableModalReducer = (state, action) => {
           },
         },
       };
-    case 'unmount':
+    }
+    case 'unmount': {
       const modalsClone = { ...state.modals };
       delete modalsClone[action.id];
       return {
         ...state,
         modals: modalsClone,
       };
+    }
     case 'windowResize':
       return {
         ...state,

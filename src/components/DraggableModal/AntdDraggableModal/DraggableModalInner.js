@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
+import browser from 'browser-detect';
 
 import { Modal } from 'antd';
 import { ResizeHandle } from './ResizeHandle';
@@ -7,7 +8,9 @@ import { useDrag } from './hooks/useDrag';
 import { usePrevious } from './hooks/usePrevious';
 import { useResize } from './hooks/useResize';
 
-const modalStyle = { margin: 0, paddingBottom: 0, pointerEvents: 'auto' };
+const browserInfo = browser();
+
+const modalStyle = { margin: 0, paddingBottom: 0, pointerEvents: 'auto', maxHeight: 'calc(100vh - 100px)' };
 
 const DraggableModalInnerNonMemo = ({ id, modalState, dispatch, visible, children, title, initialWidth, initialHeight, ...otherProps }) => {
   // Call on mount and unmount.
@@ -30,7 +33,7 @@ const DraggableModalInnerNonMemo = ({ id, modalState, dispatch, visible, childre
 
   const { zIndex, x, y, width, height } = modalState;
 
-  const style = useMemo(() => ({ ...modalStyle, top: y, left: x, height }), [y, x, height]);
+  const style = useMemo(() => ({ ...modalStyle, top: y, left: x }), [y, x]);
 
   const onFocus = useCallback(() => dispatch({ type: 'focus', id }), [id, dispatch]);
 
@@ -43,7 +46,7 @@ const DraggableModalInnerNonMemo = ({ id, modalState, dispatch, visible, childre
 
   const titleElement = useMemo(
     () => (
-      <div className="ant-design-draggable-modal-title" onMouseDown={onMouseDown} onMouseMove={onMouseMove} onClick={onFocus}>
+      <div className="ant-design-draggable-modal-title" onMouseDown={onMouseDown} onMouseMove={browserInfo.name === 'ie' && onMouseMove} onClick={onFocus}>
         {title}
       </div>
     ),
@@ -62,10 +65,11 @@ const DraggableModalInnerNonMemo = ({ id, modalState, dispatch, visible, childre
       title={titleElement}
       visible={visible}
       footer={[]}
+      centered={false}
       {...otherProps}
     >
       {children}
-      <ResizeHandle onMouseDown={onResizeMouseDown} onMouseMove={onResizeMouseMove} />
+      <ResizeHandle onMouseDown={onResizeMouseDown} onMouseMove={browserInfo.name === 'ie' && onResizeMouseMove} />
     </Modal>
   );
 };

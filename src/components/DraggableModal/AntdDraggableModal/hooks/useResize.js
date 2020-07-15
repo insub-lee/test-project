@@ -1,4 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
+import browser from 'browser-detect';
+
+const browserInfo = browser();
 
 export const useResize = (x, y, width, height, onResize) => {
   const [dragging, setDragging] = useState(false);
@@ -40,6 +43,15 @@ export const useResize = (x, y, width, height, onResize) => {
     },
     [onResize, initialDragState, dragging],
   );
+
+  useEffect(() => {
+    if (browserInfo.name !== 'ie') {
+      window.addEventListener('mousemove', onMouseMove, { passive: true });
+    }
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+    };
+  }, [onMouseMove]);
 
   useEffect(() => {
     const onMouseUp = () => {
