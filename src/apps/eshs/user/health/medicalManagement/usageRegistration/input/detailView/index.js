@@ -12,6 +12,7 @@ import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/common/submitCallbackFunc';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+import MessageContent from 'components/Feedback/message.style2';
 
 const AntdSelect = StyledSelect(Select);
 const AntdTextarea = StyledTextarea(Input.TextArea);
@@ -39,7 +40,7 @@ class DetailView extends React.Component {
   }
 
   static getDerivedStateFromProps(props, state) {
-    if (state.detailValue !== props.record && Object.values(props.record).length) {
+    if (props.record && state.detailValue !== props.record) {
       return { detailValue: Object.assign(props.record) };
     }
     return null;
@@ -67,7 +68,7 @@ class DetailView extends React.Component {
     );
   };
 
-  getSymptomsByDiseaseId = (diseaseId = this.props.record.DISEASE_ID) => {
+  getSymptomsByDiseaseId = (diseaseId = (this.props.record && this.props.record.DISEASE_ID) || '') => {
     const { sagaKey, getCallDataHandler } = this.props;
     const apiArr = [
       {
@@ -122,7 +123,11 @@ class DetailView extends React.Component {
     const { sagaKey, submitHandlerBySaga, isNew } = this.props;
 
     if (!hasUserInfo) {
-      return message.warn('사번을 조회해주세요.');
+      return message.warn(<MessageContent>사번을 조회해주세요.</MessageContent>);
+    }
+
+    if (!detailValue.IS_WORKDAY) {
+      return message.warn(<MessageContent>방문시간을 선택해주세요.</MessageContent>);
     }
 
     return isDateChange || isNew
@@ -155,12 +160,14 @@ class DetailView extends React.Component {
   };
 
   modalCloseAndStateClear = () => {
-    const { handleModalClose, handleSearchClick, listReload } = this.props;
-    this.setState({ detailValue: {} }, () => {
+    const { handleModalClose, handleSearchClick } = this.props;
+
+    const afterModalCloseFunc = () => {
       handleSearchClick();
       handleModalClose();
-      listReload();
-    });
+    };
+
+    this.setState({ detailValue: {} }, afterModalCloseFunc);
   };
 
   handleUserSearchClick = () => {
@@ -180,16 +187,16 @@ class DetailView extends React.Component {
   };
 
   userIdValidationCheck = response =>
-    response.userInfo.PATIENT_NAME
+    response.userInfo && response.userInfo.PATIENT_NAME
       ? this.setState(
           prevState => ({
             hasUserInfo: true,
             userInfo: response.userInfo,
             detailValue: Object.assign(prevState.detailValue, { GENDER: response.userInfo.GENDER }),
           }),
-          message.success('검색에 성공했습니다.'),
+          message.success(<MessageContent>검색에 성공했습니다.</MessageContent>),
         )
-      : this.setState({ hasUserInfo: false }, message.warn('검색된 사원이 없습니다.'));
+      : this.setState({ hasUserInfo: false, userInfo: {} }, message.warn(<MessageContent>검색된 사원이 없습니다.</MessageContent>));
 
   setDataSource = () => {
     const { result } = this.props;
@@ -212,7 +219,7 @@ class DetailView extends React.Component {
       handleUserSearchClick,
     } = this;
     const { detailValue, isCooperator, symptomsByDiseaseIdList, userInfo, hasUserInfo } = this.state;
-    const { diseaseList, treatmentList, isNew } = this.props;
+    const { diseaseList, treatmentList, isNew, record } = this.props;
     const hasMedicineList = detailValue.TREATMENT && detailValue.TREATMENT.includes('일반의약품');
 
     return (
@@ -238,15 +245,27 @@ class DetailView extends React.Component {
                     onChange={handleDateChange}
                     value={detailValue.JRNL_DTTM ? moment(detailValue.JRNL_DTTM, 'YYYY년 MM월 DD일 HH시 mm분') : moment()}
                     format="YYYY-MM-DD HH:mm"
-                    style={{ width: '165px' }}
+                    style={{ width: '165px', minWidth: '165px' }}
                   />
                 </td>
                 <th>이용자 구분</th>
-                <td colSpan={3}>
+                <td>
                   <Radio.Group onChange={event => checkCooperator(event.target.value)} value={isCooperator}>
                     <Radio value="N">매그나칩</Radio>
                     <Radio value="Y">협력업체</Radio>
                   </Radio.Group>
+                </td>
+                <th>방문시간</th>
+                <td>
+                  <AntdSelect
+                    className="select-sm"
+                    value={detailValue.IS_WORKDAY || ''}
+                    onChange={value => handleInputChange('IS_WORKDAY', value)}
+                    style={{ width: '100%' }}
+                  >
+                    <Select.Option value="Y">평일</Select.Option>
+                    <Select.Option value="N">주말/공휴일</Select.Option>
+                  </AntdSelect>
                 </td>
               </tr>
               <tr>
@@ -259,11 +278,11 @@ class DetailView extends React.Component {
                 </td>
                 <th>사번</th>
                 <td colSpan={isNew ? 3 : 1}>
-                  {isNew ? (
+                  {isNew && !record ? (
                     <>
                       <AntdSearch
                         className="input-search-sm mr5"
-                        placeholder="사번을 입력하세요"
+                        placeholder="사번을 입력하세요."
                         onChange={event => handleInputChange('PATIENT_EMP_NO', event.target.value)}
                         onSearch={handleUserSearchClick}
                         onPressEnter={handleUserSearchClick}
@@ -398,7 +417,6 @@ DetailView.propTypes = {
   treatmentList: PropTypes.arrayOf('object'),
   handleSearchClick: PropTypes.func,
   isNew: PropTypes.bool,
-  listReload: PropTypes.func,
 };
 
 DetailView.defaultProps = {};

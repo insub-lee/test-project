@@ -7,6 +7,7 @@ import UsageManagement from 'apps/eshs/user/health/medicalManagement/usageManage
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
@@ -83,17 +84,17 @@ class ViewPage extends React.Component {
       },
     ];
 
-    getCallDataHandler(sagaKey, apiArr, this.setPastDataSource);
+    getCallDataHandler(sagaKey, apiArr, this.setDataSource);
   };
 
-  setPastDataSource = () => {
+  setDataSource = () => {
     const { result } = this.props;
-    this.setState(() => {
+    this.setState(prevState => {
       const tempList = (result.dataSource && result.dataSource.list) || [];
       const useBedPatient = (result.useBedPatient && result.useBedPatient.list) || [];
       const dataObject = {};
       tempList.map(item => Object.assign(dataObject, { [item.KEY]: item.VALUE }));
-      return { dataObject, useBedPatient };
+      return { dataObject, useBedPatient, searchValue: Object.assign(prevState.searchValue, { NOTE: dataObject.NOTE }) };
     });
   };
 
@@ -115,18 +116,7 @@ class ViewPage extends React.Component {
       },
     ];
 
-    getCallDataHandler(sagaKey, apiArr, this.setLatelyDataSource);
-  };
-
-  setLatelyDataSource = () => {
-    const { result } = this.props;
-    this.setState(() => {
-      const tempList = (result.dataSource && result.dataSource.list) || [];
-      const useBedPatient = (result.useBedPatient && result.useBedPatient.list) || [];
-      const dataObject = {};
-      tempList.map(item => Object.assign(dataObject, { [item.nm]: item.val }));
-      return { dataObject, useBedPatient };
-    });
+    getCallDataHandler(sagaKey, apiArr, this.setDataSource);
   };
 
   handleInputChange = (key, value) => {
@@ -199,22 +189,24 @@ class ViewPage extends React.Component {
               <StyledButton className="btn-gray btn-sm mr5" onClick={isShowLately ? getLatelyDataSource : getPastDataSource}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm mr5" onClick={handleSaveClick}>
-                저장
-              </StyledButton>
               <StyledButton className="btn-gray btn-sm mr5" onClick={handleModalVisible}>
                 목록
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm mr5">완료통보</StyledButton>
             </div>
           </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm mr5" onClick={handleSaveClick}>
+              저장
+            </StyledButton>
+            <StyledButton className="btn-gray btn-sm">완료통보</StyledButton>
+          </StyledButtonWrapper>
           {isShowLately ? (
             <LatelyTable dataObject={dataObject} useBedPatient={useBedPatient} />
           ) : (
             <PastTable dataObject={dataObject} useBedPatient={useBedPatient} />
           )}
           <span className="selSaveWrapper textLabel alignLeft">특기사항/건의사항</span>
-          <AntdTextarea onChange={event => handleInputChange('NOTE', event.target.value)} autoSize={{ minRows: 3, maxRows: 6 }} />
+          <AntdTextarea value={searchValue.NOTE} onChange={event => handleInputChange('NOTE', event.target.value)} autoSize={{ minRows: 3, maxRows: 6 }} />
           <AntdModal title="이용관리" visible={modalVisible} onCancel={handleModalClose} width="90%" destroyOnClose>
             <UsageManagement
               isNew={false}
