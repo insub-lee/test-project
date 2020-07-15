@@ -22,12 +22,10 @@ class NumberComp extends React.Component {
     return visible ? (
       <>
         {readOnly || CONFIG.property.readOnly ? (
-          <>
-            <span>
-              {colData}
-              {CONFIG && CONFIG.property && CONFIG.property.unit}
-            </span>
-          </>
+          <span>
+            {colData}
+            {CONFIG && CONFIG.property && CONFIG.property.unit}
+          </span>
         ) : (
           <>
             <InputNumber

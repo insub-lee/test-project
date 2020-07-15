@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Icon, Modal } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import UserSelect from 'components/UserSelect';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
@@ -28,20 +29,32 @@ class DistributeCompanyView extends Component {
     dataKey: '',
     seq: '',
     userType: 1,  //1:외부사용자 2:내부사용자
+    changeHistory: [],
+    orgReffer1: undefined,
+    orgReffer2: undefined,
   }
 
   componentDidMount() {
-    const{ id, getCallDataHandler, selectedRow, apiAry } = this.props;
-    apiAry.push({
-      key: 'externalDistributeMgnt',
-      url: `/api/mdcs/v1/common/externalDistributeMgnt?DOCNUMBER=${selectedRow.DOCNUMBER}&RECV_DEPT_ID=${selectedRow.RECV_DEPT_ID}`,
-      type: 'GET',
-    });
+    const{ id, getCallDataHandler, selectedRow, spinningOn } = this.props;
+    const apiAry = [
+      {
+        key: 'distDeptList',
+        url: '/api/mdcs/v1/common/distribute/ExternalDeptList',
+        type: 'GET',
+      },
+      {
+        key: 'externalDistributeMgnt',
+        url: `/api/mdcs/v1/common/externalDistributeMgnt?DOCNUMBER=${selectedRow.DOCNUMBER}&RECV_DEPT_ID=${selectedRow.RECV_DEPT_ID}`,
+        type: 'GET',
+      }
+    ];
+    spinningOn();
     getCallDataHandler(id, apiAry, this.afterCallDataHandler);
   }
 
   afterCallDataHandler = () => {
-    const { id, result: { externalDistributeMgnt }, setFormData, selectedRow } = this.props;
+    const { id, result: { externalDistributeMgnt }, setFormData, selectedRow, spinningOff } = this.props;
+    spinningOff();
     if (selectedRow.RECV_DEPT_ID === -1) {
       setFormData(id, {
         ...selectedRow,
@@ -72,13 +85,15 @@ class DistributeCompanyView extends Component {
         IQC_USER_NAME4: null,
         IQC_USER_EMAIL4: null,
         COMMENT: null,
-        changeHistory: [],
       });
     } else {
       if (externalDistributeMgnt !== undefined && externalDistributeMgnt.detail !== undefined) {
         setFormData(id, {
           ...externalDistributeMgnt.detail,
-          changeHistory: [],
+        });
+        this.setState({
+          orgReffer1: externalDistributeMgnt.detail.REFERRER_EMAIL1,
+          orgReffer2: externalDistributeMgnt.detail.REFERRER_EMAIL2,
         });
       }
     }
@@ -95,6 +110,13 @@ class DistributeCompanyView extends Component {
 
   onUserSelectedComplete = result => {
     const { id, formData, changeFormData, selectedRow } = this.props;
+
+    // 기존 담당자가 변경될 경우 히스토리를 남기기위해서 변수 생성
+    let orgUserInfo = {
+      USER_ID: formData[`${this.state.dataKey}_ID${this.state.seq}`],
+      EMAIL: formData[`${this.state.dataKey}_EMAIL${this.state.seq}`],
+    };
+
     if (result && result !== undefined && result.length > 0) {
 
       // 수신자 선택일 경우
@@ -134,20 +156,52 @@ class DistributeCompanyView extends Component {
         changeFormData(id, `${this.state.dataKey}_NAME${this.state.seq}`, result[0].NAME_KOR);
         changeFormData(id, `${this.state.dataKey}_EMAIL${this.state.seq}`, result[0].EMAIL);
       }
-
-      // 히스토리 (수정인 경우에만)
-      if (selectedRow.RECV_DEPT_ID !== -1) {
-        console.debug('form[] : ' + formData[`${this.state.dataKey}_ID${this.state.seq}`]);
-      }
     }
-    this.setState({ isShow: false });
+
+    this.setState(prevState => {
+      const { changeHistory } = prevState;
+      if (result && result !== undefined && result.length > 0 && selectedRow.RECV_DEPT_ID !== -1) {
+        if (orgUserInfo.USER_ID !== null) {
+          changeHistory.push({
+            ...orgUserInfo,
+            USER_TYPE: this.getModifyTypeString(this.state.dataKey),
+            MODIFY_TYPE: 'N', // 추가
+          });
+        }
+
+        changeHistory.push({
+          USER_TYPE: this.getModifyTypeString(this.state.dataKey),
+          USER_ID: result[0].USER_ID,
+          EMAIL: result[0].EMAIL,
+          MODIFY_TYPE: 'P', // 추가
+        });
+      }
+      return {
+        changeHistory,
+        isShow: false,
+      }
+    });
   };
 
-  onDeleteUser = (dataKey, seq) => {
-    const { id, changeFormData } = this.props;
+  onDeleteUser = (dataKey, seq, userId, userEmail) => {
+    const { id, formData, changeFormData, selectedRow } = this.props;
     changeFormData(id, `${dataKey}_ID${seq}`, null);
     changeFormData(id, `${dataKey}_NAME${seq}`, null);
     changeFormData(id, `${dataKey}_EMAIL${seq}`, null);
+
+    // 수정일 경우 변경이력 등록하기 위한 state 저장
+    if (selectedRow.RECV_DEPT_ID !== -1 && formData[`${dataKey}_ID${seq}`] !== null) {
+      this.setState(prevState => {
+        const { changeHistory } = prevState;
+        changeHistory.push({
+          USER_TYPE: this.getModifyTypeString(dataKey),
+          USER_ID: userId,
+          EMAIL: userEmail,
+          MODIFY_TYPE: 'N', // 삭제
+        });
+        return { changeHistory }
+      });
+    }
   };
 
   onCancelUserSelect = () => {
@@ -155,23 +209,119 @@ class DistributeCompanyView extends Component {
   };
 
   onClickSave = saveType => {
-    const {id, submitHandlerBySaga, formData, onCancelPopup } = this.props;
-    submitHandlerBySaga(id, saveType, '/api/mdcs/v1/common/externalDistributeMgnt', { PARAM: { ...formData } }, (id, response) => {
-      if (response) {
-        if (response.result === -1) {
-          message.info(<MessageContent>{`이미 등록되어 있는 회사입니다.`}</MessageContent>);
+    const {id, submitHandlerBySaga, formData, onSaveAfter, spinningOn, spinningOff } = this.props;
+    const { orgReffer1, orgReffer2, changeHistory } = this.state;
+
+    Modal.confirm({
+      title: `${saveType === 'POST' ? '등록' : '수정'}하시겠습니까?`,
+      icon: <ExclamationCircleOutlined />,
+      okText: `${saveType === 'POST' ? '등록' : '수정'}`,
+      cancelText: '취소',
+      onOk() {
+        
+        // 업체 참조자 변경 히스토리 설정
+        if (saveType === 'PUT') {
+          //참조자1
+          if (formData.REFERRER_EMAIL1 && formData.REFERRER_EMAIL1 !== null && formData.REFERRER_EMAIL1 !== '') {
+            if (orgReffer1) { // org 참조자가 있을경우
+              if (orgReffer1 !== formData.REFERRER_EMAIL1) {  // org참조자와 new참조자가 같지 않을경우 변경히스토리 삭제, 추가 두건 등록
+                changeHistory.push({
+                  USER_TYPE: 'ccc',
+                  EMAIL: orgReffer1,
+                  MODIFY_TYPE: 'N',
+                });
+                changeHistory.push({
+                  USER_TYPE: 'ccc',
+                  EMAIL: formData.REFERRER_EMAIL1,
+                  MODIFY_TYPE: 'P',
+                });
+              }
+            } else {  // org 참조자가 없을경우 new 참조자만 등록
+              changeHistory.push({
+                USER_TYPE: 'ccc',
+                EMAIL: formData.REFERRER_EMAIL1,
+                MODIFY_TYPE: 'P',
+              });
+            }
+          }
         } else {
-          onCancelPopup();
+          if (orgReffer1) {
+            changeHistory.push({
+              USER_TYPE: 'ccc',
+              EMAIL: orgReffer1,
+              MODIFY_TYPE: 'N',
+            });
+          }
         }
+        //참조자2
+        if (formData.REFERRER_EMAIL2 && formData.REFERRER_EMAIL2 !== null && formData.REFERRER_EMAIL2 !== '') {
+          if (orgReffer2) { // org 참조자가 있을경우
+            if (orgReffer2 !== formData.REFERRER_EMAIL2) {  // org참조자와 new참조자가 같지 않을경우 변경히스토리 삭제, 추가 두건 등록
+              changeHistory.push({
+                USER_TYPE: 'ccc',
+                EMAIL: orgReffer2,
+                MODIFY_TYPE: 'N',
+              });
+              changeHistory.push({
+                USER_TYPE: 'ccc',
+                EMAIL: formData.REFERRER_EMAIL2,
+                MODIFY_TYPE: 'P',
+              });
+            }
+          } else {  // org 참조자가 없을경우 new 참조자만 등록
+            changeHistory.push({
+              USER_TYPE: 'ccc',
+              EMAIL: formData.REFERRER_EMAIL2,
+              MODIFY_TYPE: 'P',
+            });
+          }
+        } else {
+          if (orgReffer2) {
+            changeHistory.push({
+              USER_TYPE: 'ccc',
+              EMAIL: orgReffer2,
+              MODIFY_TYPE: 'N',
+            });
+          }
+        }
+
+        spinningOn();
+        submitHandlerBySaga(id, saveType, '/api/mdcs/v1/common/externalDistributeMgnt', { PARAM: { ...formData, changeHistory } }, (id, response) => {
+          spinningOff();
+          if (response) {
+            if (response.result === -1) {
+              message.info(<MessageContent>{`이미 등록되어 있는 회사입니다.`}</MessageContent>);
+            } else {
+              message.success(<MessageContent>{`${saveType === 'POST' ? '등록' : '수정'}하였습니다.`}</MessageContent>);
+              onSaveAfter();
+            }
+          } else {
+            message.error(<MessageContent>{`${saveType === 'POST' ? '등록' : '수정'}에 실패하였습니다.`}</MessageContent>);
+          }
+        });
       }
     });
   };
 
   onClickDelete = () => {
-    const {id, submitHandlerBySaga, formData, onCancelPopup } = this.props;
-    submitHandlerBySaga(id, 'DELETE', '/api/mdcs/v1/common/externalDistributeMgnt', { PARAM: { ...formData } }, (id, response) => {
-      if (response && response.result === 1) {
-         onCancelPopup();
+    const {id, submitHandlerBySaga, formData, onSaveAfter, spinningOn, spinningOff } = this.props;
+
+    Modal.confirm({
+      title: `삭제하시겠습니까?`,
+      icon: <ExclamationCircleOutlined />,
+      okText: `삭제`,
+      cancelText: '취소',
+      onOk() {
+        spinningOn();
+        submitHandlerBySaga(id, 'DELETE', '/api/mdcs/v1/common/externalDistributeMgnt', { PARAM: { ...formData } }, (id, response) => {
+          if (response && response.result === 1) {
+            spinningOff();
+            message.success(<MessageContent>삭제하였습니다.</MessageContent>);
+            onSaveAfter();
+          } else {
+            message.error(<MessageContent>삭제에 실패하였습니다.</MessageContent>);
+          }
+        });
       }
     });
   };
@@ -184,19 +334,36 @@ class DistributeCompanyView extends Component {
     this.setState({ isHistoryShow: false });
   };
 
+  getModifyTypeString = type => {
+    let typeStr = '';
+    switch(type) {
+      case 'RECV_USER':
+        typeStr = 'to'; //수신자
+        break;
+      case 'REFERRER_EMAIL1':
+        typeStr = 'ccc';  //업체참조자
+        break;
+      case 'PURCHASE_USER':
+        typeStr = 'cc';   //구매담당자
+        break;
+      case 'IQC_USER':
+        typeStr = 'iqc';  //IQC담당자
+        break;
+      default:
+        break;
+    }
+    return typeStr;
+  };
+
   render() {
     const { id, selectedRow, formData, onCancelPopup, result: { distDeptList }, changeFormData } = this.props;
     let list;
     if (distDeptList && distDeptList !== undefined) {
       if (distDeptList.list !== undefined) {
-        if (this.state.userType === 1) {
-          if (selectedRow.RECV_DEPT_ID !== -1) {
-            list = distDeptList.list.filter(item => item.DEPT_ID === 1461 || item.DEPT_ID === selectedRow.RECV_DEPT_ID);
-          } else {
-            list = distDeptList.list.filter(item => item.DEPT_ID === 1461 || item.PRNT_ID === 1461);
-          }
+        if (selectedRow.RECV_DEPT_ID !== -1) {
+          list = distDeptList.list.filter(item => item.DEPT_ID === 1461 || item.DEPT_ID === selectedRow.RECV_DEPT_ID);
         } else {
-          list = distDeptList.list.filter(item => item.DEPT_ID !== 1461 && item.PRNT_ID !== 1461);
+          list = distDeptList.list;
         }
       }
     }
@@ -213,7 +380,7 @@ class DistributeCompanyView extends Component {
           footer={[]}
         >
           <UserSelect
-            treeDataSource={list}
+            treeDataSource={this.state.userType === 1 ? list : null}
             // onTreeSelect={this.onTreeSelect}
             // onUserSelectHandler={this.onUserSelect}
             onUserSelectedComplete={this.onUserSelectedComplete}
@@ -271,7 +438,7 @@ class DistributeCompanyView extends Component {
                       className="ant-input-xs"
                       style={{ width: '90%' }}
                       readOnly
-                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('RECV_USER', '1')} />} 
+                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('RECV_USER', '1', formData.RECV_USER_ID1, formData.RECV_USER_EMAIL1)} />} 
                     />
                     <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('RECV_USER', '1', 1)}>
                       <Icon type="edit" />
@@ -286,7 +453,7 @@ class DistributeCompanyView extends Component {
                       className="ant-input-xs"
                       style={{ width: '90%' }}
                       readOnly
-                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('RECV_USER', '2')} />} 
+                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('RECV_USER', '2', formData.RECV_USER_ID2, formData.RECV_USER_EMAIL2)} />} 
                     />
                     <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('RECV_USER', '2', 1)}>
                       <Icon type="edit" />
@@ -299,7 +466,7 @@ class DistributeCompanyView extends Component {
                     <AntdInput
                       value={formData.REFERRER_EMAIL1}
                       className="ant-input-xs"
-                      style={{ width: '90%' }}
+                      style={{ width: '90%' }} allowClear
                       onChange={e => changeFormData(id, 'REFERRER_EMAIL1', e.target.value)}
                     />
                   </td>
@@ -310,7 +477,7 @@ class DistributeCompanyView extends Component {
                     <AntdInput
                       value={formData.REFERRER_EMAIL2}
                       className="ant-input-xs"
-                      style={{ width: '90%' }}
+                      style={{ width: '90%' }} allowClear
                       onChange={e => changeFormData(id, 'REFERRER_EMAIL2', e.target.value)}
                     />
                   </td>
@@ -323,7 +490,7 @@ class DistributeCompanyView extends Component {
                       className="ant-input-xs"
                       style={{ width: '90%' }}
                       readOnly
-                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('PURCHASE_USER', '1')} />} 
+                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('PURCHASE_USER', '1', formData.PURCHASE_USER_ID1, formData.PURCHASE_USER_EMAIL1)} />} 
                     />
                     <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('PURCHASE_USER', '1', 2)}>
                       <Icon type="edit" />
@@ -338,7 +505,7 @@ class DistributeCompanyView extends Component {
                       className="ant-input-xs"
                       style={{ width: '90%' }}
                       readOnly
-                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('PURCHASE_USER', '2')} />} 
+                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('PURCHASE_USER', '2', formData.PURCHASE_USER_ID2, formData.PURCHASE_USER_EMAIL2)} />} 
                     />
                     <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('PURCHASE_USER', '2', 2)}>
                       <Icon type="edit" />
@@ -353,7 +520,7 @@ class DistributeCompanyView extends Component {
                       className="ant-input-xs"
                       style={{ width: '90%' }}
                       readOnly
-                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('IQC_USER', '1')} />} 
+                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('IQC_USER', '1', formData.IQC_USER_ID1, formData.IQC_USER_EMAIL1)} />} 
                     />
                     <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('IQC_USER', '1', 2)}>
                       <Icon type="edit" />
@@ -368,7 +535,7 @@ class DistributeCompanyView extends Component {
                       className="ant-input-xs"
                       style={{ width: '90%' }}
                       readOnly
-                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('IQC_USER', '2')} />} 
+                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('IQC_USER', '2', formData.IQC_USER_ID2, formData.IQC_USER_EMAIL2)} />} 
                     />
                     <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('IQC_USER', '2', 2)}>
                       <Icon type="edit" />
@@ -383,7 +550,7 @@ class DistributeCompanyView extends Component {
                       className="ant-input-xs"
                       style={{ width: '90%' }}
                       readOnly
-                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('IQC_USER', '3')} />} 
+                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('IQC_USER', '3', formData.IQC_USER_ID3, formData.IQC_USER_EMAIL3)} />} 
                     />
                     <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('IQC_USER', '3', 2)}>
                       <Icon type="edit" />
@@ -398,7 +565,7 @@ class DistributeCompanyView extends Component {
                       className="ant-input-xs"
                       style={{ width: '90%' }}
                       readOnly
-                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('IQC_USER', '4')} />} 
+                      addonAfter={<CloseOutlined style={{ cursor: 'pointer' }} onClick={() => this.onDeleteUser('IQC_USER', '4', formData.IQC_USER_ID4, formData.IQC_USER_EMAIL4)} />} 
                     />
                     <StyledButton style={{ float: 'right' }} className="btn-primary btn-xs mr5" onClick={() => this.onClickSelectUsers('IQC_USER', '4', 2)}>
                       <Icon type="edit" />
@@ -434,7 +601,6 @@ class DistributeCompanyView extends Component {
 
 DistributeCompanyView.propTypes = {
   id: PropTypes.string,
-  apiAry: PropTypes.array,
   result: PropTypes.object,
   getCallDataHandler: PropTypes.func,
   selectedRow: PropTypes.object,
@@ -443,14 +609,6 @@ DistributeCompanyView.propTypes = {
 
 DistributeCompanyView.defaultProps = {
   id: 'distributeCompany',
-  apiAry: [
-    {
-      key: 'distDeptList',
-      url: '/api/mdcs/v1/common/distribute/DistributeDeptMgnt',
-      type: 'GET',
-      params: {},
-    },
-  ],
   result: {
     externalDistributeMgnt: {
       detail: [],

@@ -70,6 +70,26 @@ const Styled = styled.div`
             background: rgb(243, 243, 243);
           }
         }
+        .ant-calendar-picker {
+          .ant-calendar-picker-input {
+            border-top-style: initial;
+            border-right-style: initial;
+            border-left-style: initial;
+            border-top-color: initial;
+            border-right-color: initial;
+            border-left-color: initial;
+            height: 30px;
+            line-height: 30px;
+            color: rgb(51, 51, 51);
+            vertical-align: middle;
+            font-size: 12px;
+            border-width: 0px 0px 1px;
+            border-image: initial;
+            border-bottom: 1px solid rgb(217, 224, 231);
+            border-radius: 0px;
+            padding: 0px 10px;
+          }
+        }
         .ant-select .ant-select-selection {
           border-top-style: initial;
           border-right-style: initial;

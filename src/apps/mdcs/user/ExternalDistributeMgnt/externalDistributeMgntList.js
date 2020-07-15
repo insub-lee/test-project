@@ -71,6 +71,13 @@ class ExternalDistributeMgntList extends Component {
       isShow: false,
       selectedRow: {},
     });
+  };
+
+  onSaveAfter = () => {
+    this.setState({
+      isShow: false,
+      selectedRow: {},
+    });
     this.getList();
   };
 
@@ -192,7 +199,7 @@ class ExternalDistributeMgntList extends Component {
           destroyOnClose
           footer={null}
         >
-          <DistributeCompany selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
+          <DistributeCompany selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} onSaveAfter={this.onSaveAfter} />
         </DragAntdModal>
         <StyledHeaderWrapper>
           <div className="pageTitle">
