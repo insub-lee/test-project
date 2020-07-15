@@ -33,6 +33,7 @@ class InputPage extends React.Component {
       requestValue: {
         SITE_ID: 317,
         MEDICINE_LIST: [],
+        IS_WORKDAY: 'Y',
       },
       selectedRecord: {},
       hasUserInfo: false,
@@ -299,7 +300,7 @@ class InputPage extends React.Component {
 
   resetRequestValue = () => {
     this.setState(prevState => ({
-      requestValue: { PATIENT_EMP_NO: prevState.requestValue.PATIENT_EMP_NO, SITE_ID: 317, MEDICINE_LIST: [] },
+      requestValue: { PATIENT_EMP_NO: prevState.requestValue.PATIENT_EMP_NO, SITE_ID: 317, MEDICINE_LIST: [], IS_WORKDAY: 'Y' },
     }));
   };
 
@@ -449,15 +450,27 @@ class InputPage extends React.Component {
                 ) : null}
                 <tr>
                   <th>일시</th>
-                  <td>{hasUserInfo ? moment(visitDateTime).format('YYYY년 MM월 DD일 HH시 mm분') : null}</td>
+                  <td colSpan={3}>{hasUserInfo ? moment(visitDateTime).format('YYYY년 MM월 DD일 HH시 mm분') : null}</td>
                 </tr>
                 <tr>
                   <th>업무관련성 구분</th>
-                  <td colSpan={3}>
+                  <td>
                     <Radio.Group value={requestValue.PATIENT_CATEGORY_ID} onChange={event => handleInputChange('PATIENT_CATEGORY_ID', event.target.value)}>
                       <Radio value={4}>직업성</Radio>
                       <Radio value={5}>비직업성</Radio>
                     </Radio.Group>
+                  </td>
+                  <th>방문시간 구분</th>
+                  <td>
+                    <AntdSelect
+                      className="select-sm"
+                      value={requestValue.IS_WORKDAY}
+                      onChange={value => handleInputChange('IS_WORKDAY', value)}
+                      style={{ width: '50%' }}
+                    >
+                      <Select.Option value="Y">평일</Select.Option>
+                      <Select.Option value="N">주말/공휴일</Select.Option>
+                    </AntdSelect>
                   </td>
                 </tr>
                 <tr>
