@@ -192,7 +192,7 @@ class PubCompleteDocList extends Component {
           visible={this.state.isShow}
           onCancel={this.onCancel}
           destroyOnClose
-          footer={[<StyledButton className="btn-light btn-sm" onClick={this.onCancel}>취소</StyledButton>]}
+          footer={[<StyledButton className="btn-light btn-sm" onClick={this.onCancel}>닫기</StyledButton>]}
         >
           <ContentView workSeq={this.state.workSeq} taskSeq={this.state.taskSeq} pubDocInfo={this.state.pubDocInfo} />
         </DragAntdModal>
