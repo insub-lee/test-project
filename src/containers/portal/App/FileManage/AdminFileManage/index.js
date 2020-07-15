@@ -8,7 +8,6 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { makeSelectProfile } from 'containers/common/Auth/selectors';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import { loginPage } from 'utils/commonUtils';
 
 import Styled from './Styled';
 
@@ -45,13 +44,9 @@ class AdminFileManage extends Component {
   }
 
   componentDidMount() {
-    const { getSiteList, profile } = this.props;
-    if (!profile.SA) {
-      loginPage();
-    } else {
-      getSiteList();
-      this.viewMain();
-    }
+    const { getSiteList } = this.props;
+    getSiteList();
+    this.viewMain();
   }
 
   viewMain = () => {

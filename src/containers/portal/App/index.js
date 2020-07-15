@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { isDesktop } from 'utils/commonUtils';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 // import { Icon, Layout, Spin, Tooltip } from 'antd';
 import Icon from 'antd/lib/icon';
 import Layout from 'antd/lib/layout';
@@ -698,7 +698,10 @@ class App extends React.Component {
                               )}
                             />
                             <Route path={`/${basicPath.PORTAL}/filemanage`} render={() => <UserFileManage />} />
-                            <Route path={`/${basicPath.PORTAL}/admin/filemanage`} render={() => <AdminFileManage />} />
+                            <Route
+                              path={`/${basicPath.PORTAL}/admin/filemanage`}
+                              render={() => (hasRoleAdmin ? <AdminFileManage /> : <Redirect to={{ pathname: '/' }} />)}
+                            />
                           </Switch>
                         </Content>
                       </div>
