@@ -512,7 +512,7 @@ function* tempSaveTask({ id, reloadId, callbackFunc, changeIsLoading, workPrcPro
 
 function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
   const workSeq = yield select(selectors.makeSelectWorkSeqById(id));
-  const formData = yield select(selectors.makeSelectFormDataById(id));
+  let formData = yield select(selectors.makeSelectFormDataById(id));
   let taskSeq = yield select(selectors.makeSelectTaskSeqById(id));
   const validationData = yield select(selectors.makeSelectValidationDataById(id));
   const processRule = yield select(selectors.makeSelectProcessRuleById(id));
@@ -645,7 +645,7 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
   if (afterApiList.length > 0) {
     for (let i = 0; i < afterApiList.length; i += 1) {
       const item = afterApiList[i];
-      yield call(
+      const response = yield call(
         Axios[item.METHOD_TYPE],
         item.API_SRC,
         {
@@ -658,6 +658,11 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
         },
         { BUILDER: 'callApiBysaveBuilder' },
       );
+
+      if (response && response.resultFlag === true && response.result) {
+        yield put(actions.setFormDataByReducer(id, { ...formData, ...response.result }));
+        formData = yield select(selectors.makeSelectFormDataById(id));
+      }
     }
   }
 
@@ -693,7 +698,7 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
 function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc, changeIsLoading }) {
   const modifyWorkSeq = workSeq && workSeq > 0 ? workSeq : yield select(selectors.makeSelectWorkSeqById(id));
   const modifyTaskSeq = taskSeq && taskSeq > 0 ? taskSeq : yield select(selectors.makeSelectTaskSeqById(id));
-  const formData = yield select(selectors.makeSelectFormDataById(id));
+  let formData = yield select(selectors.makeSelectFormDataById(id));
   const validationData = yield select(selectors.makeSelectValidationDataById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
   const extraApiList = yield select(selectors.makeSelectApiListById(id));
@@ -804,7 +809,7 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc, change
   if (afterApiList.length > 0) {
     for (let i = 0; i < afterApiList.length; i += 1) {
       const item = afterApiList[i];
-      yield call(
+      const response = yield call(
         Axios[item.METHOD_TYPE],
         item.API_SRC,
         {
@@ -817,6 +822,11 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc, change
         },
         { BUILDER: 'callApiBysaveBuilder' },
       );
+
+      if (response && response.resultFlag === true && response.result) {
+        yield put(actions.setFormDataByReducer(id, { ...formData, ...response.result }));
+        formData = yield select(selectors.makeSelectFormDataById(id));
+      }
     }
   }
 
