@@ -52,7 +52,8 @@ const UserStore = Loadable({ loader: () => import('./UserStore') });
 const RodalPage = Loadable({ loader: () => import('../../../components/Rodal') });
 const Page = Loadable({ loader: () => import('../../../components/Page') });
 const AppsRouter = Loadable({ loader: () => import('../../../apps/appsRouter') });
-const FileManage = Loadable({ loader: () => import('./FileManage') });
+const UserFileManage = Loadable({ loader: () => import('./FileManage/UserFileManage') });
+const AdminFileManage = Loadable({ loader: () => import('./FileManage/AdminFileManage') });
 
 // import Fullscreen from 'components/Fullscreen';
 // import SideMenu from 'components/SideMenu';
@@ -390,6 +391,14 @@ class App extends React.Component {
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/myPage/page/${homeId}`);
   };
 
+  goUserFileManage = () => {
+    this.props.history.push(`/${basicPath.PORTAL}/filemanage`);
+  };
+
+  goAdminFileManage = () => {
+    this.props.history.push(`/${basicPath.PORTAL}/admin/filemanage`);
+  };
+
   goCommonHome = () => {
     const { rootPageInfo, myHomePageId } = this.props;
 
@@ -556,6 +565,19 @@ class App extends React.Component {
                 </Tooltip>
               </div>
             )}
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Tooltip placement="right" title="FileManage">
+                <Icon type="folder" style={{ color: 'white', fontSize: '20px' }} onClick={this.goUserFileManage} />
+              </Tooltip>
+            </div>
+            {/* SA 권한일 경우 관리자용 파일 관리자 메뉴 노출 임시! */}
+            {hasRoleAdmin && (
+              <div className="iconPositon" style={{ marginTop: '20px' }}>
+                <Tooltip placement="right" title="FileManage Admin">
+                  <Icon type="tool" style={{ color: 'white', fontSize: '20px' }} onClick={this.goAdminFileManage} />
+                </Tooltip>
+              </div>
+            )}
           </SideMenu>
           <MenuCategory open={headerMenuOpen} execMenu={this.execMenu} execPage={this.execPage} setMenuClose={this.setHeaderMenuClose}>
             <Layout style={this.getLayoutStyle(isDesktop(view))}>
@@ -675,7 +697,8 @@ class App extends React.Component {
                                 </div>
                               )}
                             />
-                            <Route path={`/${basicPath.PORTAL}/filemanage`} render={() => <FileManage />} />
+                            <Route path={`/${basicPath.PORTAL}/filemanage`} render={() => <UserFileManage />} />
+                            <Route path={`/${basicPath.PORTAL}/admin/filemanage`} render={() => <AdminFileManage />} />
                           </Switch>
                         </Content>
                       </div>
