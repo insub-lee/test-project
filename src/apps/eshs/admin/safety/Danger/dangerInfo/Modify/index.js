@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import debounce from 'lodash/debounce';
 import { getTreeFromFlatData } from 'react-sortable-tree';
-import { TreeSelect, Select, message, Modal } from 'antd';
+import { TreeSelect, Select, Modal } from 'antd';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
@@ -12,6 +12,8 @@ import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/Styl
 import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 import moment from 'moment';
 import View from './View';
@@ -48,14 +50,8 @@ class ModifyPage extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getExtraApiData, changeFormData, getListData, changeSearchData } = this.props;
+    const { sagaKey: id, getExtraApiData, changeFormData } = this.props;
     const apiAry = [
-      // {
-      //   key: 'treeSelectData',
-      //   type: 'POST',
-      //   url: '/api/admin/v1/common/categoryMapList',
-      //   params: { PARAM: { NODE_ID: 1831 } },
-      // },
       {
         key: 'treeSelectData',
         type: 'POST',
@@ -72,11 +68,16 @@ class ModifyPage extends Component {
         type: 'GET',
         url: '/api/admin/v1/common/categoryMapList?MAP_ID=45',
       },
+      {
+        key: 'listDataByCustom',
+        url: `/api/eshs/v1/common/eshsBuilderCustomSearch/10341`,
+        type: 'POST',
+        params: { PARAM: { whereString: [`AND W.INFO_YEAR = '${moment().format('YYYY')}'`] } },
+      },
     ];
-    changeSearchData(id, 'INFO_YEAR', `AND W.INFO_YEAR = '${moment().format('YYYY')}'`);
     changeFormData(id, 'INFO_YEAR', moment().format('YYYY'));
+    this.setState({ INFO_YEAR: moment().format('YYYY') });
     getExtraApiData(id, apiAry, this.initData);
-    getListData(id, 10341);
     const endYear = Number(moment().format('YYYY')) + 1;
     const YearOptions = [];
     for (let year = 2006; year <= endYear; year += 1) {
@@ -87,21 +88,43 @@ class ModifyPage extends Component {
 
   initData = () => {
     const {
-      extraApiData: { treeSelectData },
+      extraApiData: { treeSelectData, listDataByCustom },
     } = this.props;
     const treeData = treeSelectData && treeSelectData.categoryMapList && treeSelectData.categoryMapList.filter(f => f.USE_YN === 'Y' && f.LVL < 7);
-    this.setState({ treeData });
+    const listData = listDataByCustom && listDataByCustom.list && listDataByCustom.list;
+    this.setState({ treeData, listData });
+  };
+
+  searchListApi = () => {
+    const { INFO_YEAR, PROCESS_ID } = this.state;
+    const { sagaKey: id, getExtraApiData } = this.props;
+    if (PROCESS_ID) {
+      const apiAry = [
+        {
+          key: 'listDataByCustom',
+          url: `/api/eshs/v1/common/eshsBuilderCustomSearch/10341`,
+          type: 'POST',
+          params: { PARAM: { whereString: [`AND W.INFO_YEAR = '${INFO_YEAR}'`, `AND W.PROCESS_ID = ${PROCESS_ID}`] } },
+        },
+      ];
+      getExtraApiData(id, apiAry, () => this.searchListData(PROCESS_ID));
+    } else {
+      message.success(<MessageContent>분류를 먼저 선택해주세요.</MessageContent>);
+    }
+  };
+
+  searchListData = value => {
+    const {
+      extraApiData: { listDataByCustom },
+    } = this.props;
+    const listData = listDataByCustom && listDataByCustom.list && listDataByCustom.list;
+    this.setState({ listData }, () => this.selectTreeData(value));
   };
 
   onChangeData = (name, value) => {
-    const { sagaKey: id, changeFormData, changeSearchData, getListData } = this.props;
+    const { sagaKey: id, changeFormData } = this.props;
     changeFormData(id, name, value);
-    if (name === 'PROCESS_ID') {
-      this.selectTreeData(value);
-    } else if (name === 'INFO_YEAR') {
-      changeSearchData(id, 'INFO_YEAR', `AND W.INFO_YEAR = '${value}'`);
-      getListData(id, 10341);
-    }
+    this.setState({ [name]: value });
   };
 
   onChangeDetailData = (name, value) => {
@@ -110,18 +133,17 @@ class ModifyPage extends Component {
   };
 
   selectTreeData = value => {
+    const { listData } = this.state;
     const {
       sagaKey: id,
       changeFormData,
-      listData,
       setFormData,
       formData,
       profile,
       extraApiData: { treeSelectData },
     } = this.props;
     const { treeData } = this.state;
-
-    const overlab = listData.find(f => f.PROCESS_ID === value);
+    const overlab = listData && listData.find(f => f.PROCESS_ID === value);
     if (overlab && overlab.length !== 0) {
       setFormData(id, overlab);
       changeFormData(id, 'TASK_ORIGIN_SEQ', overlab.TASK_ORIGIN_SEQ);
@@ -150,13 +172,16 @@ class ModifyPage extends Component {
     changeFormData(id, 'PLACE_ID', placeId.NODE_ID);
     changeFormData(id, 'DIV_ID', divId.NODE_ID);
     changeFormData(id, 'SDIV_ID', sdivId.NODE_ID);
-    this.setState({
-      processNm: processId.NAME_KOR,
-      placeNm: placeId.NAME_KOR,
-      divNm: divId.NAME_KOR,
-      sdivNm: sdivId.NAME_KOR,
-      selectData,
-    });
+    this.setState(
+      {
+        processNm: processId.NAME_KOR,
+        placeNm: placeId.NAME_KOR,
+        divNm: divId.NAME_KOR,
+        sdivNm: sdivId.NAME_KOR,
+        selectData,
+      },
+      this.mySearch,
+    );
   };
 
   onChangeModal = () => {
@@ -170,61 +195,55 @@ class ModifyPage extends Component {
       changeFormData(id, 'INFO_DATA', formData.INFO_DATA && JSON.stringify(formData.INFO_DATA));
       saveTask(id, id, this.callbackHandle);
     } else {
-      message.warning('분류를 먼저 선택해주세요');
+      message.success(<MessageContent>분류를 먼저 선택해주세요.</MessageContent>);
     }
   };
 
   modifyBeforeProcess = () => {
-    const { sagaKey: id, getExtraApiData, formData } = this.props;
+    const { sagaKey: id, submitExtraHandler, formData } = this.props;
     const temp = typeof formData.INFO_DATA !== 'string' ? JSON.stringify(formData.INFO_DATA) : formData.INFO_DATA;
-    const apiAry = [
-      {
-        key: 'modify',
-        type: 'POST',
-        url: '/api/eshs/v1/common/dangerInfo',
-        params: { PARAM: { ...formData, INFO_DATA: temp } },
-      },
-    ];
-    getExtraApiData(id, apiAry, this.callbackHandle);
+    submitExtraHandler(id, 'POST', '/api/eshs/v1/common/dangerInfo', { PARAM: { ...formData, INFO_DATA: temp } }, this.callbackHandle, formData);
   };
 
-  callbackHandle = (id, modifyWorkSeq, taskSeq, formData) => {
-    const { getListData } = this.props;
-    getListData(id, 10341);
-    message.success('완료되었습니다.');
+  callbackHandle = () => {
+    this.searchListApi();
+    message.success(<MessageContent>완료되었습니다.</MessageContent>);
   };
 
   mySearch = () => {
     const { processNm, placeNm, divNm, sdivNm, selectData } = this.state;
     const {
       formData,
-      listData,
       extraApiData: { modalData },
     } = this.props;
-
-    console.debug('modalData : ', modalData);
-    this.setState(
-      {
-        conTent: [],
-      },
-      () =>
-        this.setState({
-          conTent: [
-            <View
-              processNm={processNm}
-              placeNm={placeNm}
-              divNm={divNm}
-              sdivNm={sdivNm}
-              selectData={selectData}
-              formData={formData}
-              listData={listData}
-              modalData={modalData.list}
-              onChangeData={this.onChangeDetailData}
-              onChangeModal={this.onChangeModal}
-            />,
-          ],
-        }),
-    );
+    const vaildation = Boolean(formData && formData.INFO_DATA && modalData && modalData.list && processNm && placeNm && divNm && sdivNm);
+    if (vaildation) {
+      this.setState(
+        {
+          conTent: [],
+        },
+        () =>
+          this.setState({
+            conTent: [
+              <View
+                processNm={processNm}
+                placeNm={placeNm}
+                divNm={divNm}
+                sdivNm={sdivNm}
+                selectData={selectData}
+                INFO_DATA={formData.INFO_DATA}
+                modalData={modalData.list}
+                onChangeData={this.onChangeDetailData}
+                onChangeModal={this.onChangeModal}
+              />,
+            ],
+          }),
+      );
+    } else if (!processNm || !placeNm || !divNm || !sdivNm) {
+      message.success(<MessageContent>분류를 먼저 선택해주세요.</MessageContent>);
+    } else {
+      message.success(<MessageContent>폐이지에 오류가 있습니다. 잠시 후 다시 시도해주세요.</MessageContent>);
+    }
   };
 
   render() {
@@ -256,10 +275,10 @@ class ModifyPage extends Component {
           </div>
           <div className="btn-area">
             <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.mySearch()}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.searchListApi()}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => message.info('개발 중입니다.')}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => message.success(<MessageContent>개발중입니다.</MessageContent>)}>
                 엑셀받기
               </StyledButton>
               {formData.TASK_SEQ !== -1 ? (
@@ -297,13 +316,11 @@ ModifyPage.propTypes = {
   sagaKey: PropTypes.string,
   extraApiData: PropTypes.object,
   formData: PropTypes.object,
-  listData: PropTypes.object,
   profile: PropTypes.object,
   getExtraApiData: PropTypes.func,
   changeFormData: PropTypes.func,
   saveTask: PropTypes.func,
-  getListData: PropTypes.func,
-  changeSearchData: PropTypes.func,
+  submitExtraHandler: PropTypes.func,
   setFormData: PropTypes.func,
 };
 
