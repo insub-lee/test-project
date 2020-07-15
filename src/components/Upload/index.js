@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import { message, Progress } from 'antd';
+import * as feed from 'components/Feedback/functions';
 
 class Upload extends React.Component {
   constructor(props) {
@@ -21,8 +22,10 @@ class Upload extends React.Component {
         accepted.forEach(item => {
           this.sendFileDirect(item);
         });
+      } else {
+        console.debug('REJECTED FILES', rejected);
+        feed.error('Retected files', 'Check file type or file size');
       }
-      console.log('REJECTED FILES', rejected);
     });
 
   onDragEnter = () => {
@@ -114,7 +117,7 @@ class Upload extends React.Component {
   };
 
   render() {
-    const { children, accept, multiple, width, height, borderWidth, borderColor, borderRadius, borderStyle } = this.props;
+    const { children, accept, multiple, width, height, borderWidth, borderColor, borderRadius, borderStyle, maxSize } = this.props;
     const { dropzoneActive, progressBarShow, status, percent } = this.state;
     const style = {
       width,
@@ -155,11 +158,12 @@ class Upload extends React.Component {
             onDragEnter={this.onDragEnter}
             onDragLeave={this.onDragLeave}
             multiple={multiple && true}
+            maxSize={maxSize}
           >
             {dropzoneActive && <div style={overlayStyle}>Drop files...</div>}
             {children}
+            <Progress type="line" percent={percent} status={status} size="small" showInfo={false} style={{ display: progressBarShow ? 'block' : 'none' }} />
           </Dropzone>
-          <Progress type="line" percent={percent} status={status} size="small" showInfo={false} style={{ display: progressBarShow ? 'block' : 'none' }} />
         </div>
       </section>
     );
@@ -178,6 +182,7 @@ Upload.propTypes = {
   onFileUploaded: PropTypes.func.isRequired,
   serviceEnv: PropTypes.string, // eslint-disable-line
   serviceKey: PropTypes.string, // eslint-disable-line
+  maxSize: PropTypes.number,
 };
 
 Upload.defaultProps = {
@@ -187,6 +192,7 @@ Upload.defaultProps = {
   borderColor: 'rgb(102, 102, 102)',
   borderStyle: 'dashed',
   borderRadius: 5,
+  maxSize: 1 / 0,
 };
 
 export default Upload;
