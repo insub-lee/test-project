@@ -71,10 +71,11 @@ function CustomValueSelectComp(props) {
   // VIEW 페이지 에서 사용할 경우 선택한 value의 text가 노출되도록 수정
   const value = colData && values.length > 0 ? values.find(item => item.value === colData) : { text: '' };
   const viewText = value.text || (defaultValue && defaultValue.text) || '';
+  const { readOnly } = CONFIG.property;
   return (
     <>
-      {(viewPageData && viewPageData.viewType === 'VIEW') || (viewPageData.viewType === 'LIST' && !isSearch) ? (
-        <span>{viewText}</span>
+      {(viewPageData && viewPageData.viewType === 'VIEW') || (viewPageData.viewType === 'LIST' && !isSearch) || readOnly ? (
+        <span className={CONFIG.property.className || ''}>{viewText}</span>
       ) : (
         <Select
           className={CONFIG.property.className || ''}
