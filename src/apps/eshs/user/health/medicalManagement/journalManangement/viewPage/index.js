@@ -214,7 +214,7 @@ class ViewPage extends React.Component {
             <PastTable dataObject={dataObject} useBedPatient={useBedPatient} />
           )}
           <span className="selSaveWrapper textLabel alignLeft">특기사항/건의사항</span>
-          <AntdTextarea onChange={event => handleInputChange('NOTE', event.target.value)} autoSize={{ minRows: 3, maxRows: 6 }} />
+          <AntdTextarea value={dataObject.NOTE} onChange={event => handleInputChange('NOTE', event.target.value)} autoSize={{ minRows: 3, maxRows: 6 }} />
           <AntdModal title="이용관리" visible={modalVisible} onCancel={handleModalClose} width="90%" destroyOnClose>
             <UsageManagement
               isNew={false}
