@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Button } from 'antd';
+import { Input, Button, Radio } from 'antd';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import message from 'components/Feedback/message';
@@ -10,6 +10,7 @@ class QuickLinkWidgetSetting extends Component {
     data: {
       QUICK_LINK_DESC: '',
       QUICK_LINK_URL: '',
+      QUICK_LINK_SCREEN:'',
     },
   }
 
@@ -73,6 +74,15 @@ class QuickLinkWidgetSetting extends Component {
               <th>link</th>
               <td>
                 <Input defaultValue={item.data.QUICK_LINK_URL} style={{ width: '80%' }} onChange={e => this.onChangeData('QUICK_LINK_URL', e.target.value)} />
+              </td>
+            </tr>
+            <tr>
+              <th>화면 옵션</th>
+              <td>  
+                <Radio.Group defaultValue={item.data.QUICK_LINK_SCREEN||''} onChange={e => this.onChangeData('QUICK_LINK_SCREEN', e.target.value)}>
+                  <Radio value="">화면전환</Radio>
+                  <Radio value="NEW_WINDOW">새창으로 열기</Radio>
+                </Radio.Group>
                 <Button type="primary" htmlType="button" size="small" onClick={this.onSaveWidgetConfig} style={{ marginLeft: 8 }}>
                   적용
                 </Button>
