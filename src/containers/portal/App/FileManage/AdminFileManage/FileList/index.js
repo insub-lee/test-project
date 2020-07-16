@@ -242,7 +242,7 @@ class FileList extends Component {
 
   // 리스트 검색 및 페이징
   getList = () => {
-    const { selectedIndex, selectUserListFlag } = this.props;
+    const { selectUserListFlag } = this.props;
     if (selectUserListFlag) {
       this.getUserList();
     } else {
@@ -341,12 +341,12 @@ class FileList extends Component {
       this.setState({ shareListLoading: false });
       this.getModalFileList(shareModalUserId, shareModalPage); // 공유 링크 리스트 갱신
       this.getList(); // 사용자 관리 리스트갱신
-    }
+    };
     deleteFileShareLink(fileSeq, shareKey, USER_ID, callback);
   };
 
   render() {
-    const { list, total, modalFileList, modalTotal, linkList } = this.props;
+    const { fileList, fileListTotal, userList, userListTotal, modalFileList, modalTotal, linkList, selectUserListFlag } = this.props;
     const {
       page,
       loading,
@@ -360,7 +360,6 @@ class FileList extends Component {
       shareListLoading,
       fileListType,
     } = this.state;
-
     return (
       <>
         <FileManageModal
@@ -404,7 +403,13 @@ class FileList extends Component {
           </StyledButton>
         </div>
         <div>
-          <AntdTable dataSource={list} loading={loading} columns={this.getColumns()} onChange={this.handleOnChange} pagination={{ current: page, total }} />
+          <AntdTable
+            dataSource={selectUserListFlag ? userList : fileList}
+            loading={loading}
+            columns={this.getColumns()}
+            onChange={this.handleOnChange}
+            pagination={{ current: page, total: selectUserListFlag ? userListTotal : fileListTotal }}
+          />
         </div>
       </>
     );
@@ -412,8 +417,10 @@ class FileList extends Component {
 }
 
 FileList.propTypes = {
-  list: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
+  userList: PropTypes.array.isRequired,
+  userListTotal: PropTypes.number.isRequired,
+  fileList: PropTypes.array.isRequired,
+  fileListTotal: PropTypes.number.isRequired,
   selectedIndex: PropTypes.number.isRequired,
   selectUserListFlag: PropTypes.bool.isRequired,
   getSysFileList: PropTypes.func.isRequired,

@@ -36,7 +36,7 @@ export function* getSysFileList(payload) {
   );
   const { list, total } = response;
   yield put({
-    type: constants.SET_FILE_LIST,
+    type: constants.SET_SYSFILE_LIST,
     fileList: list ? fromJS(list) : fromJS([]),
     total: total || 0,
   });
@@ -52,14 +52,14 @@ export function* getUserFileList(payload) {
 
   if (code === 200) {
     yield put({
-      type: constants.SET_FILE_LIST,
+      type: constants.SET_USER_FILE_LIST,
       fileList: list ? fromJS(list) : fromJS([]),
       total: total || 0,
     });
   } else {
     feed.error('Invalid Parameter');
     yield put({
-      type: constants.SET_FILE_LIST,
+      type: constants.SET_USER_FILE_LIST,
       fileList: fromJS([]),
     });
   }
@@ -69,7 +69,6 @@ export function* getUserFileList(payload) {
 }
 
 export function* deleteFileShareLink(payload) {
-  // TODO 공유 링크리스트가 전부 삭제된후 (n개에서 0개로 ) 상위 리스트 갱신 여부
 
   const { FILE_SEQ, SHARE_KEY, USER_ID, CALLBACK } = payload;
   const response = yield call(Axios.delete, '/api/common/v1/filemanage/adminFileShareLink', { PARAM_USER_ID: USER_ID, FILE_SEQ, SHARE_KEY });
@@ -144,7 +143,7 @@ export function* getUserList(payload) {
   const { list, total } = response;
 
   yield put({
-    type: constants.SET_FILE_LIST,
+    type: constants.SET_USER_LIST,
     fileList: list ? fromJS(list) : fromJS([]),
     total: total || 0,
   });
