@@ -87,6 +87,11 @@ class ViewPage extends React.Component {
         url: `${apiUrl}-bed?${queryString}`,
         type: 'GET',
       },
+      {
+        key: 'noteList',
+        url: `/api/eshs/v1/common/health-usage-note-list?${queryString}`,
+        type: 'GET',
+      },
     ];
 
     getCallDataHandler(sagaKey, apiArr, this.setPastDataSource);
@@ -97,9 +102,12 @@ class ViewPage extends React.Component {
     this.setState(() => {
       const tempList = (result.dataSource && result.dataSource.list) || [];
       const useBedPatient = (result.useBedPatient && result.useBedPatient.list) || [];
+      const noteList = (result.noteList && result.noteList.list) || [];
       const dataObject = {};
+      let noteListToString = '';
+      noteList.map(note => (noteListToString += `${note.NOTE}\n`));
       tempList.map(item => Object.assign(dataObject, { [item.KEY]: item.VALUE }));
-      return { dataObject, useBedPatient };
+      return { dataObject, useBedPatient, noteList: noteListToString };
     });
   };
 
@@ -119,6 +127,11 @@ class ViewPage extends React.Component {
         url: `/api/eshs/v1/common/health-usage-current-status-past-bed?${queryString}`,
         type: 'GET',
       },
+      {
+        key: 'noteList',
+        url: `/api/eshs/v1/common/health-usage-note-list?${queryString}`,
+        type: 'GET',
+      },
     ];
 
     getCallDataHandler(sagaKey, apiArr, this.setLatelyDataSource);
@@ -129,9 +142,12 @@ class ViewPage extends React.Component {
     this.setState(() => {
       const tempList = (result.dataSource && result.dataSource.list) || [];
       const useBedPatient = (result.useBedPatient && result.useBedPatient.list) || [];
+      const noteList = (result.noteList && result.noteList.list) || [];
+      let noteListToString = '';
+      noteList.map(note => (noteListToString += `${note.NOTE}\n`));
       const dataObject = {};
       tempList.map(item => Object.assign(dataObject, { [item.nm]: item.val }));
-      return { dataObject, useBedPatient };
+      return { dataObject, useBedPatient, noteList: noteListToString };
     });
   };
 
@@ -161,7 +177,7 @@ class ViewPage extends React.Component {
 
   render() {
     const { handleInputChange, handleDateChange, getPastDataSource, handleModalVisible, handleModalClose, handleTypeChange, getLatelyDataSource } = this;
-    const { siteList, dataObject, searchValue, useBedPatient, modalVisible, isShowLately } = this.state;
+    const { siteList, dataObject, searchValue, useBedPatient, modalVisible, isShowLately, noteList } = this.state;
     return (
       <>
         <StyledContentsWrapper>
@@ -180,6 +196,7 @@ class ViewPage extends React.Component {
               </AntdSelect>
               <span className="text-label">기간</span>
               <AntdPicker
+                allowClear={false}
                 className="ant-picker-mid mr5"
                 value={[moment(searchValue.START_DATE), moment(searchValue.END_DATE)]}
                 onChange={handleDateChange}
@@ -209,7 +226,7 @@ class ViewPage extends React.Component {
             <PastTable dataObject={dataObject} useBedPatient={useBedPatient} />
           )}
           <span className="selSaveWrapper textLabel alignLeft">특기사항/건의사항</span>
-          <AntdTextarea onChange={event => handleInputChange('NOTE', event.target.value)} autoSize={{ minRows: 3, maxRows: 6 }} />
+          <AntdTextarea readOnly value={noteList} autoSize={{ minRows: 3, maxRows: 6 }} />
           <AntdModal title="이용관리" visible={modalVisible} onCancel={handleModalClose} width="90%" destroyOnClose>
             <UsageManagement
               isNew={false}
@@ -233,7 +250,6 @@ ViewPage.propTypes = {
   result: PropTypes.object,
   submitHandlerBySaga: PropTypes.func,
   SITE_NODE_ID: PropTypes.number,
-  JRNL_DT: PropTypes.string,
 };
 
 ViewPage.defaultProps = {};

@@ -1,21 +1,36 @@
-import React, { Component } from 'react';
-import { DraggableModal, DraggableModalProvider } from 'ant-design-draggable-modal';
-import 'antd/dist/antd.css';
-import 'ant-design-draggable-modal/dist/index.css';
+import * as React from 'react';
+import { FunctionComponent, ReactElement, useContext } from 'react';
+import { useUID } from 'react-uid';
+import { DraggableModalContext } from './DraggableModalContext';
+import { DraggableModalInner } from './DraggableModalInner';
+import { getModalState } from './draggableModalReducer';
+import { ModalProps } from 'antd/lib/modal';
 
-class DragCustomModal extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    const { visible } = this.props;
-    return (
-      <DraggableModalProvider>
-        <DraggableModal visible={visible}>Body text.</DraggableModal>
-      </DraggableModalProvider>
-    );
-  }
+export interface DraggableModalProps extends ModalProps {
+  initialWidth?: number;
+  initialHeight?: number;
 }
 
-export default DragCustomModal;
+export const DragCustomModal: FunctionComponent<DraggableModalProps> = (props: DraggableModalProps): ReactElement => {
+  // Get the unique ID of this modal.
+  const id = useUID();
+
+  // Get modal provider.
+  const modalProvider = useContext(DraggableModalContext);
+  if (!modalProvider) {
+    throw new Error('No Provider');
+  }
+
+  const { dispatch, state } = modalProvider;
+  const modalState = getModalState({
+    state,
+    id,
+    initialHeight: props.initialHeight,
+    initialWidth: props.initialWidth,
+  });
+
+  // We do this so that we don't re-render all modals for every state change.
+  // DraggableModalInner uses React.memo, so it only re-renders if
+  // if props change (e.g. modalState).
+  return <DraggableModalInner id={id} dispatch={dispatch} modalState={modalState} {...props} />;
+};

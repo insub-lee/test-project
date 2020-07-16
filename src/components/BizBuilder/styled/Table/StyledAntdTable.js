@@ -3,7 +3,6 @@ import styled from 'styled-components';
 const primaryColor = '#636a78';
 
 const StyledAntdTable = Component => styled(Component)`
-  /* default table style */
   table {
     border-radius: 0;
     border-top: 1px solid #bbb;
@@ -94,7 +93,7 @@ const StyledAntdTable = Component => styled(Component)`
 
   /* bordered table style */
   .ant-table-bordered {
-    table {
+    .ant-table-body > table {
       border-top: 1px solid #bbb;
       border-bottom: 1px solid #eee;
     }

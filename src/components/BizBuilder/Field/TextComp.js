@@ -6,7 +6,7 @@ import { debounce } from 'lodash';
 class TextComp extends React.Component {
   constructor(props) {
     super(props);
-    this.handleOnChange = debounce(this.handleOnChange, 300);
+    this.handleOnChange = debounce(this.handleOnChange, 50);
     // this.handleOnChangeSearch = debounce(this.handleOnChangeSearch, 300);
   }
 
@@ -36,7 +36,7 @@ class TextComp extends React.Component {
     // }
     return visible ? (
       <Input
-        defaultValue={colData}
+        dafaultValue={colData}
         placeholder={CONFIG.property.placeholder}
         onChange={e => this.handleOnChange(e.target.value)}
         readOnly={readOnly || CONFIG.property.readOnly}
