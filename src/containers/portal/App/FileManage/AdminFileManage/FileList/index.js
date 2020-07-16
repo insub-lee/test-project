@@ -360,6 +360,7 @@ class FileList extends Component {
       shareListLoading,
       fileListType,
     } = this.state;
+    const placeholder = selectUserListFlag ? '사번 또는 이름을 입력해주세요.' : '파일명을 입력해주세요.';
     return (
       <>
         <FileManageModal
@@ -393,7 +394,7 @@ class FileList extends Component {
           <AntdInput
             style={{ width: 200 }}
             className="ant-input-sm ant-input-inline mr5"
-            placeholder="검색어를 입력해 주세요."
+            placeholder={placeholder}
             onPressEnter={this.handleSearch}
             ref={this.searchInputRef}
             maxLength="50"
