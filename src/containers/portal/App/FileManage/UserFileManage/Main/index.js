@@ -206,9 +206,9 @@ class UserMain extends Component {
           </div>
           <div className="quick-menu-share">
             <h3 className="quick-menu-title">공유하기</h3>
+            <div className="quick-menu-sub">파일 {uploadFiles.length}개</div>
             <List
-              style={{ height: '240px' }}
-              header={<div>파일 {uploadFiles.length}개</div>}
+              style={{ height: '210px', overflowY: 'auto' }}
               itemLayout="horizontal"
               dataSource={uploadFiles}
               size="small"
@@ -232,7 +232,6 @@ class UserMain extends Component {
                   />
                 </List.Item>
               )}
-              footer=""
             />
             <div className="share-opt">
               유효기간 설정

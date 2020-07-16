@@ -116,9 +116,8 @@ const FileListModal = ({ isShow, onCancelPopup, data, list, loading, getList, to
     getList(data.USER_ID, pagination.current);
   };
 
-  const handleOnCancel = () => {
+  const resetUseState = () => {
     setPage(1);
-    onCancelPopup();
   };
 
   return (
@@ -126,11 +125,12 @@ const FileListModal = ({ isShow, onCancelPopup, data, list, loading, getList, to
       width={1200}
       zIndex={999}
       visible={isShow}
+      afterClose={resetUseState}
       title={title}
-      onCancel={handleOnCancel}
+      onCancel={onCancelPopup}
       destroyOnClose
       footer={
-        <StyledButton className="btn-light btn-sm" onClick={handleOnCancel}>
+        <StyledButton className="btn-light btn-sm" onClick={onCancelPopup}>
           닫기
         </StyledButton>
       }

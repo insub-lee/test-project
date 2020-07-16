@@ -236,16 +236,20 @@ class FileList extends Component {
   };
 
   confirmRename = rename => {
-    const { renameFile: file } = this.state;
-    const orgExt = file.NAME.split('.').pop();
-    const destExt = rename.split('.').pop();
+    if (!rename) {
+      feed.error('파일 명을 입력하세요.');
+    } else {
+      const { renameFile: file } = this.state;
+      const orgExt = file.NAME.split('.').pop();
+      const destExt = rename.split('.').pop();
 
-    const message =
-      orgExt.toUpperCase() !== destExt.toUpperCase()
-        ? '파일의 확장명을 변경하면 사용할 수 도 없게 될 수도 있습니다. 변경 하시겠습니까?'
-        : '파일 이름을 변경하시겠습니까?';
+      const message =
+        orgExt.toUpperCase() !== destExt.toUpperCase()
+          ? '파일의 확장명을 변경하면 사용할 수 도 없게 될 수도 있습니다. 변경 하시겠습니까?'
+          : '파일 이름을 변경하시겠습니까?';
 
-    feed.showConfirm(message, rename, () => this.onRenameOkClick(rename));
+      feed.showConfirm(message, rename, () => this.onRenameOkClick(rename));
+    }
   };
 
   onRenameOkClick = rename => {
@@ -288,7 +292,7 @@ class FileList extends Component {
     this.setState({ shareLinkFlag: true, selectedFiles: link, selectedRowKeys: [], shareLoading: false });
     const { getFileList, selectedIndex } = this.props;
     const { page, pageSize } = this.state;
-    this.setState({ loading: true });
+    this.setState({ loading: true, selectedRowKeys: [] });
     const keyword = this.searchInputRef.current.state.value || '';
     getFileList(selectedIndex, keyword, page, pageSize, this.resetLoading);
   };
