@@ -148,6 +148,10 @@ class List extends Component {
     }
   };
 
+  dateChange = rangeData => {
+    this.setState({ rangeData });
+  };
+
   columns = [
     {
       title: '평가번호',
