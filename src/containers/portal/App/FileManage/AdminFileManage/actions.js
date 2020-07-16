@@ -55,10 +55,10 @@ export const updateUser = (USER_ID, STORAGE_SIZE, UPLOAD_LIMIT_SIZE, KEYWORD, CU
   CALLBACK,
 });
 
-export const deleteFileShareLink = (FILE_SEQ, SHARE_KEY, USER_ID, CALLBACK) => ({
+export const deleteFileShareLink = (FILE_SEQ, SHARE_ID, USER_ID, CALLBACK) => ({
   type: actionType.DELETE_FILESHARE_LINK,
   FILE_SEQ,
-  SHARE_KEY,
+  SHARE_ID,
   USER_ID,
   CALLBACK,
 });

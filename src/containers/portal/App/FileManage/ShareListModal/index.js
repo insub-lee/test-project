@@ -57,7 +57,7 @@ const ShareListModal = ({ isShow, onCancelPopup, file, shareList, confirmDeleteF
                   <CopyToClipboard text={item.LINK} onCopy={() => feed.success('클립보드에 복사 되었습니다.')}>
                     <BtnRedShare>복사</BtnRedShare>
                   </CopyToClipboard>
-                  <StyledButton className="btn-primary btn-sm" onClick={() => confirmDeleteFileShareLink(Number(item.FILE_SEQ), item.SHARE_KEY)}>
+                  <StyledButton className="btn-primary btn-sm" onClick={() => confirmDeleteFileShareLink(Number(item.FILE_SEQ), item.SHARE_ID)}>
                     삭제
                   </StyledButton>
                   <br />
