@@ -19,15 +19,22 @@ const { Option } = Select;
 const ShareModal = ({ isShow, onCancelPopup, selectedFiles, confirmDownloadLink, loading, flag }) => {
   const [expDay, setExpDay] = useState('10');
   const [dlLimt, setDlLimit] = useState('10');
+
+  const onCancelClick = () => {
+    setExpDay(10);
+    setDlLimit(10);
+    onCancelPopup();
+  };
+
   return (
     <AntdModal
       width={500}
       visible={isShow}
       title="공유하기"
-      onCancel={onCancelPopup}
+      onCancel={onCancelClick}
       destroyOnClose
       footer={[
-        <StyledButton className="btn-light btn-sm" onClick={onCancelPopup}>
+        <StyledButton className="btn-light btn-sm" onClick={onCancelClick}>
           닫기
         </StyledButton>,
         <StyledButton

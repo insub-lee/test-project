@@ -191,7 +191,7 @@ class AdminMain extends Component {
           <AntdInput
             style={{ width: 200 }}
             className="ant-input-sm ant-input-inline mr5"
-            placeholder="검색어를 입력해 주세요."
+            placeholder="파일명을 입력해주세요."
             onPressEnter={this.handleSearch}
             ref={this.searchInputRef}
             maxLength="50"
