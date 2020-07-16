@@ -105,8 +105,8 @@ export function* getFileShareLink(payload) {
 export function* deleteFileShareLink(payload) {
   // TODO 공유 링크리스트가 전부 삭제된후 (n개에서 0개로 ) 상위 리스트 갱신 여부
 
-  const { FILE_SEQ, SHARE_KEY, CALLBACK } = payload;
-  const response = yield call(Axios.delete, '/api/common/v1/filemanage/fileShareLink', { FILE_SEQ, SHARE_KEY });
+  const { FILE_SEQ, SHARE_ID, CALLBACK } = payload;
+  const response = yield call(Axios.delete, '/api/common/v1/filemanage/fileShareLink', { FILE_SEQ, SHARE_ID });
   const { code } = response;
 
   if (code === 200) {

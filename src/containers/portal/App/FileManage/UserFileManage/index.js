@@ -182,7 +182,7 @@ const mapDispatchToProps = dispatch => ({
   getUserFolderTree: () => dispatch(actions.getUserFolderTree()),
   getUserFileList: (FOLDER_ID, KEYWORD, CURRENT, PAGE_SIZE, CALLBACK) => dispatch(actions.getUserFileList(FOLDER_ID, KEYWORD, CURRENT, PAGE_SIZE, CALLBACK)),
   getFileShareLink: (FILE_ARRAY, EXPIRE_DAY, LIMIT_CNT, CALLBACK) => dispatch(actions.getFileShareLink(FILE_ARRAY, EXPIRE_DAY, LIMIT_CNT, CALLBACK)),
-  deleteFileShareLink: (FILE_SEQ, SHARE_KEY, CALLBACK) => dispatch(actions.deleteFileShareLink(FILE_SEQ, SHARE_KEY, CALLBACK)),
+  deleteFileShareLink: (FILE_SEQ, SHARE_ID, CALLBACK) => dispatch(actions.deleteFileShareLink(FILE_SEQ, SHARE_ID, CALLBACK)),
   getLinkList: (FILE_SEQ, KEYWORD, CALLBACK) => dispatch(actions.getLinkList(FILE_SEQ, KEYWORD, CALLBACK)),
   insertUserFolder: (PRNT_FOLDER_ID, FOLDER_NAME, CALLBACK) => dispatch(actions.insertUserFolder(PRNT_FOLDER_ID, FOLDER_NAME, CALLBACK)),
   updateUserFolder: (FOLDER_ID, FOLDER_NAME, CALLBACK) => dispatch(actions.updateUserFolder(FOLDER_ID, FOLDER_NAME, CALLBACK)),

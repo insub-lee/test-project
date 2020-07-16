@@ -325,11 +325,11 @@ class FileList extends Component {
     this.setState({ isShareModalShow: false, shareFile: {} });
   };
 
-  confirmDeleteFileShareLink = (fileSeq, shareKey) => {
-    feed.showConfirm(`공유링크를 삭제합니다. 계속 하시겠습니까?`, '', () => this.deleteFileShareLink(fileSeq, shareKey));
+  confirmDeleteFileShareLink = (fileSeq, shareId) => {
+    feed.showConfirm(`공유링크를 삭제합니다. 계속 하시겠습니까?`, '', () => this.deleteFileShareLink(fileSeq, shareId));
   };
 
-  deleteFileShareLink = (fileSeq, shareKey) => {
+  deleteFileShareLink = (fileSeq, shareId) => {
     const {
       shareFile: { USER_ID },
       shareModalUserId,
@@ -342,7 +342,7 @@ class FileList extends Component {
       this.getModalFileList(shareModalUserId, shareModalPage); // 공유 링크 리스트 갱신
       this.getList(); // 사용자 관리 리스트갱신
     };
-    deleteFileShareLink(fileSeq, shareKey, USER_ID, callback);
+    deleteFileShareLink(fileSeq, shareId, USER_ID, callback);
   };
 
   render() {
