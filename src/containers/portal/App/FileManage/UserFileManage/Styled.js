@@ -70,6 +70,12 @@ const Styled = styled.div`
         padding: 10px;
         height: 100%;
 
+        .quick-menu-sub {
+          border-bottom-style: inset;
+          margin-bottom: 5px;
+          padding-bottom: 5px;
+        }
+
         .share-opt {
           text-align: center;
         }
