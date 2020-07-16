@@ -533,7 +533,7 @@ class UseInfoListTable extends Component {
       },
     ];
 
-    return <AntdTable pagination={false} columns={columns} dataSource={listData} scroll={{ x: 3900 }} />;
+    return <AntdTable pagination={false} columns={columns} dataSource={listData} scroll={{ y: 550, x: 3900 }} />;
   }
 }
 
