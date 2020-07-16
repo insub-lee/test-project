@@ -80,8 +80,13 @@ class AdminFileManage extends Component {
   render() {
     const {
       siteList,
-      fileList,
-      total,
+      sysFileList,
+      sysFileListTotal,
+      userFileList,
+      userFileListTotal,
+      userList,
+      userListTotal,
+
       getSysFileList,
       getUserList,
       updateUser,
@@ -129,15 +134,17 @@ class AdminFileManage extends Component {
               <AdminMain
                 getAdminMain={getAdminMain}
                 adminMain={adminMain}
-                list={fileList}
-                total={total}
+                list={userFileList}
+                total={userFileListTotal}
                 getUserFileList={getUserFileList}
                 deleteFile={deleteFile}
               />
             ) : (
               <FileList
-                list={fileList}
-                total={total}
+                fileList={sysFileList}
+                fileListTotal={sysFileListTotal}
+                userList={userList}
+                userListTotal={userListTotal}
                 selectUserListFlag={selectUserListFlag}
                 selectedIndex={sysSelectedIndex}
                 getSysFileList={getSysFileList}
@@ -170,9 +177,13 @@ AdminFileManage.propTypes = {
   deleteFileShareLink: PropTypes.func.isRequired,
   getLinkList: PropTypes.func.isRequired,
   siteList: PropTypes.array.isRequired,
-  fileList: PropTypes.array.isRequired,
   linkList: PropTypes.array.isRequired,
-  total: PropTypes.number.isRequired,
+  sysFileList: PropTypes.array.isRequired,
+  sysFileListTotal: PropTypes.number.isRequired,
+  userFileList: PropTypes.array.isRequired,
+  userFileListTotal: PropTypes.number.isRequired,
+  userList: PropTypes.array.isRequired,
+  userListTotal: PropTypes.number.isRequired,
   modalFileList: PropTypes.array.isRequired,
   modalTotal: PropTypes.number.isRequired,
   getModalFileList: PropTypes.func.isRequired,
@@ -199,9 +210,13 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = createStructuredSelector({
   siteList: selectors.makeSelectSiteList(),
   adminMain: selectors.makeSelectAminMain(),
-  fileList: selectors.makeSelectFileList(),
   linkList: selectors.makeSelectLinkList(),
-  total: selectors.makeSelectListTotal(),
+  sysFileList: selectors.makeSelectSysFileList(),
+  sysFileListTotal: selectors.makeSelectSysFileListTotal(),
+  userFileList: selectors.makeSelectUserFileList(),
+  userFileListTotal: selectors.makeSelectUserFileListTotal(),
+  userList: selectors.makeSelectUserList(),
+  userListTotal: selectors.makeSelectUserListTotal(),
   modalFileList: selectors.makeSelectModalFileList(),
   modalTotal: selectors.makeSelectModalListTotal(),
   profile: makeSelectProfile(),
