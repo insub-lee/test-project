@@ -14,17 +14,17 @@ const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
 
 const FileManageModal = ({ isShow, onCancelPopup, data, updateUser, openFileModal }) => {
-  const [storageSize, setStorageSize] = useState('');
-  const [limitSize, setLimitSize] = useState('');
+  const [storageSize, setStorageSize] = useState(undefined);
+  const [limitSize, setLimitSize] = useState(undefined);
 
   const onCancelClick = () => {
-    setStorageSize('');
-    setLimitSize('');
+    setStorageSize(undefined);
+    setLimitSize(undefined);
     onCancelPopup();
   };
 
-  if (!storageSize && data.STORAGE_SIZE) setStorageSize(data.STORAGE_SIZE);
-  if (!limitSize && data.UPLOAD_LIMIT_SIZE) setLimitSize(data.UPLOAD_LIMIT_SIZE);
+  if (storageSize === undefined && data.STORAGE_SIZE) setStorageSize(data.STORAGE_SIZE);
+  if (limitSize === undefined && data.UPLOAD_LIMIT_SIZE) setLimitSize(data.UPLOAD_LIMIT_SIZE);
 
   return (
     <AntdModal

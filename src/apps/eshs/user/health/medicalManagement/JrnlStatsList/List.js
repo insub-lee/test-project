@@ -292,7 +292,7 @@ class List extends Component {
 
     return (
       <>
-        <AntdModal width={850} visible={modalObj.modalVisible} title={modalObj.modalTitle || ''} onCancel={this.modalVisible} destroyOnClose footer={null}>
+        <AntdModal width="80%" visible={modalObj.modalVisible} title={modalObj.modalTitle || ''} onCancel={this.modalVisible} destroyOnClose footer={null}>
           {modalObj.modalContent}
         </AntdModal>
         <StyledContentsWrapper>

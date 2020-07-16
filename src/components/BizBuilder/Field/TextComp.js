@@ -36,7 +36,7 @@ class TextComp extends React.Component {
     // }
     return visible ? (
       <Input
-        value={colData}
+        dafaultValue={colData}
         placeholder={CONFIG.property.placeholder}
         onChange={e => this.handleOnChange(e.target.value)}
         readOnly={readOnly || CONFIG.property.readOnly}

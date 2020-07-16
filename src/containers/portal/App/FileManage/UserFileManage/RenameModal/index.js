@@ -9,14 +9,14 @@ const AntdInput = StyledInput(Input);
 const AntdModal = StyledModal(Modal);
 
 const RenameModalShow = ({ isShow, onCancelPopup, data, confirmRename }) => {
-  const [renameFile, setRenameFile] = useState('');
+  const [renameFile, setRenameFile] = useState(undefined);
 
   const onCancelClick = () => {
-    setRenameFile('');
+    setRenameFile(undefined);
     onCancelPopup();
   };
 
-  if (!renameFile && data.NAME) setRenameFile(data.NAME);
+  if (renameFile === undefined && data.NAME) setRenameFile(data.NAME);
 
   return (
     <AntdModal
@@ -37,7 +37,7 @@ const RenameModalShow = ({ isShow, onCancelPopup, data, confirmRename }) => {
       <AntdInput
         style={{ width: '300px' }}
         className="ant-input-sm ant-input-inline mr5"
-        placeholder="검색어를 입력해 주세요."
+        placeholder="변경할 파일명을 입력해주세요."
         onPressEnter={() => confirmRename(renameFile)}
         onChange={e => setRenameFile(e.target.value)}
         value={renameFile}
