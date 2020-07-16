@@ -51,7 +51,7 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rangeData: [moment(moment().subtract(1, 'years')).format('YYYY-MM'), moment().format('YYYY-MM')],
+      rangeData: [moment(moment().subtract(1, 'month')).format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')],
     };
   }
 
@@ -59,12 +59,12 @@ class List extends Component {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const { rangeData } = this.state;
     const apiAry = [
-      {
-        key: 'dangerDanestAdmin',
-        type: 'POST',
-        url: `/api/eshs/v1/common/dangerDanestAdminSub`,
-        params: { PARAM: { START_DATE: moment(rangeData[0]).format('YYYY-MM-DD'), END_DATE: moment(rangeData[1]).format('YYYY-MM-DD') } },
-      },
+      // {
+      //   key: 'dangerDanestAdmin',
+      //   type: 'POST',
+      //   url: `/api/eshs/v1/common/dangerDanestAdminSub`,
+      //   params: { PARAM: { START_DATE: moment(rangeData[0]).format('YYYY-MM-DD'), END_DATE: moment(rangeData[1]).format('YYYY-MM-DD') } },
+      // },
       {
         key: 'treeSelectData',
         type: 'POST',
@@ -271,6 +271,7 @@ class List extends Component {
           </StyledButtonWrapper>
         </StyledCustomSearchWrapper>
         <AntdTable
+          key="DA_REG_NO,SEQ"
           dataSource={list}
           columns={this.columns}
           onRow={record => ({
@@ -279,7 +280,7 @@ class List extends Component {
             },
           })}
           bordered
-          pagination={false}
+          // pagination={false}
           scroll={{ x: 1500, y: 300 }}
         />
         <AntdModal width={1000} visible={this.state.isModal} title="위험성 평가" onCancel={this.onModalChange} destroyOnClose footer={null}>

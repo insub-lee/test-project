@@ -116,9 +116,10 @@ class UserMain extends Component {
   };
 
   render() {
-    const { userFileManage, treeData } = this.props;
+    const { userFileManage, treeData, menuFixedYn } = this.props;
     const { expDay, dlLimt, tempuploadFiles, selectedFolder, uploadFiles, flag } = this.state;
     const usage = (userFileManage.UPLOAD_FILE_SIZE / 1024 / (userFileManage.STORAGE_SIZE * 1024)) * 100;
+    // const usageValue = fileUtil.getFileSize(userFileManage.UPLOAD_FILE_SIZE);
     return (
       <>
         <div className="main-dashboard">
@@ -127,11 +128,11 @@ class UserMain extends Component {
               <Card>
                 <Statistic
                   title="Usage"
-                  value={fileUtil.getFileSize(userFileManage.UPLOAD_FILE_SIZE)}
                   precision={0}
                   valueStyle={{ color: '#000000' }}
                   prefix={<Progress type="dashboard" percent={parseFloat(usage.toFixed(1))} width={52} />}
-                  suffix={`/ ${userFileManage.STORAGE_SIZE} MB`}
+                  value={fileUtil.getFileSize(userFileManage.UPLOAD_FILE_SIZE)}
+                  suffix={menuFixedYn === 'N' ? `/ ${userFileManage.STORAGE_SIZE} MB` : ''}
                 />
               </Card>
             </Col>
@@ -139,10 +140,10 @@ class UserMain extends Component {
               <Card>
                 <Statistic
                   title="Files"
-                  value={userFileManage.UPLOAD_FILE_CNT}
                   precision={0}
                   valueStyle={{ color: '#000000' }}
-                  prefix={<FileTextOutlined style={{ color: '#3ca4a9', fontSize: '50px' }} />}
+                  prefix={<FileTextOutlined style={{ color: '#3ca4a9', fontSize: '50.29px' }} />}
+                  value={userFileManage.UPLOAD_FILE_CNT}
                   suffix=""
                 />
               </Card>
@@ -151,10 +152,10 @@ class UserMain extends Component {
               <Card>
                 <Statistic
                   title="Expired"
-                  value={userFileManage.EXPIRED}
                   precision={0}
                   valueStyle={{ color: '#000000' }}
-                  prefix={<FileExclamationOutlined style={{ color: '#e65656', fontSize: '50px' }} />}
+                  prefix={<FileExclamationOutlined style={{ color: '#e65656', fontSize: '50.29px' }} />}
+                  value={userFileManage.EXPIRED}
                   suffix=""
                 />
               </Card>
@@ -205,9 +206,9 @@ class UserMain extends Component {
           </div>
           <div className="quick-menu-share">
             <h3 className="quick-menu-title">공유하기</h3>
+            <div className="quick-menu-sub">파일 {uploadFiles.length}개</div>
             <List
-              style={{ height: '240px' }}
-              header={<div>파일 {uploadFiles.length}개</div>}
+              style={{ height: '210px', overflowY: 'auto' }}
               itemLayout="horizontal"
               dataSource={uploadFiles}
               size="small"
@@ -231,7 +232,6 @@ class UserMain extends Component {
                   />
                 </List.Item>
               )}
-              footer=""
             />
             <div className="share-opt">
               유효기간 설정
@@ -282,6 +282,7 @@ UserMain.propTypes = {
   getUserFileManage: PropTypes.func.isRequired,
   treeData: PropTypes.array.isRequired,
   getUserFolderTree: PropTypes.func.isRequired,
+  menuFixedYn: PropTypes.string.isRequired,
 };
 
 export default UserMain;

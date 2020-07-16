@@ -5,9 +5,9 @@ const Styled = styled.div`
   padding: 0 10px;
 
   .right-section {
-    width: 320px;
+    width: 235px;
     float: left;
-    padding: 20px;
+    padding: 20px 10px 20px 5px;
     border-right: 1px solid #ddd;
     height: calc(100vh - 42px);
 
@@ -18,30 +18,30 @@ const Styled = styled.div`
       font-weight: 600;
     }
     .menu-area {
-      overflow-y: auto;
-      height: 100%;
+      overflow-y: hidden;
+      height: 90%;
       .menu-title {
         font-size: 14px;
         color: #333;
         font-weight: 600;
       }
       .menu-item {
-        height: 260px;
+        height: 100%;
         /* height: calc((100vh - 160px) / 3); */
         /* overflow: auto; */
-        margin-bottom: 25px;
+        /* margin-bottom: 25px; */
       }
     }
   }
 
   .left-section {
-    width: calc(100% - 320px);
+    width: calc(100% - 235px);
     float: left;
     padding: 20px;
-    height: calc(100vh - 42px);
+    /* height: calc(100vh - 42px); */
 
     .main-dashboard {
-      padding: 30px;
+      padding: 0px 0px 20px 0px;
     }
 
     .quick-menu {
@@ -69,6 +69,12 @@ const Styled = styled.div`
         border: 2px solid #afafaf;
         padding: 10px;
         height: 100%;
+
+        .quick-menu-sub {
+          border-bottom-style: inset;
+          margin-bottom: 5px;
+          padding-bottom: 5px;
+        }
 
         .share-opt {
           text-align: center;

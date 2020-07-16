@@ -7,7 +7,9 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { makeSelectProfile } from 'containers/common/Auth/selectors';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import ScrollBar from 'react-custom-scrollbars';
 
+import * as pageSelectors from 'components/Page/selectors';
 import Styled from './Styled';
 import UserFolderTree from './UserFolderTree';
 
@@ -29,8 +31,8 @@ const treeWrapperStyle = {
 };
 
 const treeStyle = {
-  height: 230,
-  width: 230,
+  height: '100%',
+  width: '100%',
   // overflowY: 'scroll',
 };
 
@@ -96,6 +98,7 @@ class UserFileManage extends Component {
       getUserFileManage,
       userFileManage,
       getUserFolderTree,
+      menuFixedYn,
     } = this.props;
     const { userSelectedIndex, viewMainFlag } = this.state;
     return (
@@ -132,6 +135,7 @@ class UserFileManage extends Component {
                 uploadFile={uploadFile}
                 getFileShareLink={getFileShareLink}
                 getUserFolderTree={getUserFolderTree}
+                menuFixedYn={menuFixedYn}
               />
             ) : (
               <FileList
@@ -176,13 +180,14 @@ UserFileManage.propTypes = {
   userFileManage: PropTypes.object.isRequired,
   getUserFileManage: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
+  menuFixedYn: PropTypes.string.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
   getUserFolderTree: () => dispatch(actions.getUserFolderTree()),
   getUserFileList: (FOLDER_ID, KEYWORD, CURRENT, PAGE_SIZE, CALLBACK) => dispatch(actions.getUserFileList(FOLDER_ID, KEYWORD, CURRENT, PAGE_SIZE, CALLBACK)),
   getFileShareLink: (FILE_ARRAY, EXPIRE_DAY, LIMIT_CNT, CALLBACK) => dispatch(actions.getFileShareLink(FILE_ARRAY, EXPIRE_DAY, LIMIT_CNT, CALLBACK)),
-  deleteFileShareLink: (FILE_SEQ, SHARE_KEY, CALLBACK) => dispatch(actions.deleteFileShareLink(FILE_SEQ, SHARE_KEY, CALLBACK)),
+  deleteFileShareLink: (FILE_SEQ, SHARE_ID, CALLBACK) => dispatch(actions.deleteFileShareLink(FILE_SEQ, SHARE_ID, CALLBACK)),
   getLinkList: (FILE_SEQ, KEYWORD, CALLBACK) => dispatch(actions.getLinkList(FILE_SEQ, KEYWORD, CALLBACK)),
   insertUserFolder: (PRNT_FOLDER_ID, FOLDER_NAME, CALLBACK) => dispatch(actions.insertUserFolder(PRNT_FOLDER_ID, FOLDER_NAME, CALLBACK)),
   updateUserFolder: (FOLDER_ID, FOLDER_NAME, CALLBACK) => dispatch(actions.updateUserFolder(FOLDER_ID, FOLDER_NAME, CALLBACK)),
@@ -199,6 +204,7 @@ const mapStateToProps = createStructuredSelector({
   total: selectors.makeSelectListTotal(),
   userFileManage: selectors.makeSelectUserFileManage(),
   profile: makeSelectProfile(),
+  menuFixedYn: pageSelectors.makeSelectMenuFixedYn(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

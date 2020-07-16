@@ -265,23 +265,13 @@ class ChemicalStatusPage extends Component {
           onOk={() => this.handleModal('', false)}
           onCancel={() => this.handleModal('', false)}
         >
-          <FormDataTable formData={formData} type={modalType} onChangeFormData={this.onChangeFormData} site={selectedSite} />
-          <div style={{ textAlign: 'center', marginTop: '20px' }}>
-            {modalType === 'NEW' ? (
-              <StyledButton className="btn-primary btn-sm btn-first ml5" onClick={() => this.submitFormData('NEW')}>
-                저장
-              </StyledButton>
-            ) : (
-              <>
-                <StyledButton className="btn-primary btn-sm btn-first ml5" onClick={() => this.submitFormData('MODIFY')}>
-                  저장
-                </StyledButton>
-                <StyledButton className="btn-light btn-sm btn-first ml5" onClick={() => this.submitFormData('DELETE')}>
-                  삭제
-                </StyledButton>
-              </>
-            )}
-          </div>
+          <FormDataTable
+            formData={formData}
+            type={modalType}
+            onChangeFormData={this.onChangeFormData}
+            site={selectedSite}
+            submitFormData={this.submitFormData}
+          />
         </AntdModal>
       </>
     );

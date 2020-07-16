@@ -33,10 +33,10 @@ export const getFileShareLink = (FILE_ARRAY, EXPIRE_DAY, LIMIT_CNT, CALLBACK) =>
   CALLBACK,
 });
 
-export const deleteFileShareLink = (FILE_SEQ, SHARE_KEY, CALLBACK) => ({
+export const deleteFileShareLink = (FILE_SEQ, SHARE_ID, CALLBACK) => ({
   type: actionType.DELETE_FILESHARE_LINK,
   FILE_SEQ,
-  SHARE_KEY,
+  SHARE_ID,
   CALLBACK,
 });
 

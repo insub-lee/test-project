@@ -264,7 +264,7 @@ class UserFolderTree extends Component {
     };
     return (
       <StyleUserFolderTree style={wrapperStyle}>
-        <ScrollBar>
+        <ScrollBar autoHeight autoHeightMin="100%" autoHeightMax="100%">
           <SortableTree
             theme={CustomTheme}
             treeData={treeData}
@@ -408,8 +408,8 @@ UserFolderTree.defaultProps = {
     flex: '1 0 50%',
     padding: '10px 0 0 10px',
     flexDirection: 'column',
-    height: 'calc(100vh - 100px)',
     width: '100%',
+    height: '95%',
   },
   style: {},
   innerStyle: {},
