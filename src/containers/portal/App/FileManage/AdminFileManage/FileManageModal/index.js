@@ -17,10 +17,9 @@ const FileManageModal = ({ isShow, onCancelPopup, data, updateUser, openFileModa
   const [storageSize, setStorageSize] = useState(undefined);
   const [limitSize, setLimitSize] = useState(undefined);
 
-  const onCancelClick = () => {
+  const resetUseState = () => {
     setStorageSize(undefined);
     setLimitSize(undefined);
-    onCancelPopup();
   };
 
   if (storageSize === undefined && data.STORAGE_SIZE) setStorageSize(data.STORAGE_SIZE);
@@ -30,12 +29,13 @@ const FileManageModal = ({ isShow, onCancelPopup, data, updateUser, openFileModa
     <AntdModal
       width={500}
       visible={isShow}
+      afterClose={resetUseState}
       zIndex={998}
       title={`파일/저장소 상세 - ${data.EMP_NO} ${data.USER_NAME}`}
-      onCancel={onCancelClick}
+      onCancel={onCancelPopup}
       destroyOnClose
       footer={[
-        <StyledButton className="btn-light btn-sm" onClick={onCancelClick}>
+        <StyledButton className="btn-light btn-sm" onClick={onCancelPopup}>
           닫기
         </StyledButton>,
         <StyledButton className="btn-primary btn-sm" onClick={() => updateUser(data.USER_ID, Number(storageSize), Number(limitSize))}>
