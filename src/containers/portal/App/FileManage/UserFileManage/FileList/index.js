@@ -286,6 +286,11 @@ class FileList extends Component {
 
   setDownloadLink = link => {
     this.setState({ shareLinkFlag: true, selectedFiles: link, selectedRowKeys: [], shareLoading: false });
+    const { getFileList, selectedIndex } = this.props;
+    const { page, pageSize } = this.state;
+    this.setState({ loading: true });
+    const keyword = this.searchInputRef.current.state.value || '';
+    getFileList(selectedIndex, keyword, page, pageSize, this.resetLoading);
   };
 
   // 링크 리스트
@@ -295,18 +300,18 @@ class FileList extends Component {
     getLinkList(file.SEQ, '', () => this.setState({ isShareListModalShow: true, shareListLoading: false }));
   };
 
-  confirmDeleteFileShareLink = (fileSeq, shareKey) => {
-    feed.showConfirm(`공유링크를 삭제합니다. 계속 하시겠습니까?`, '', () => this.deleteFileShareLink(fileSeq, shareKey));
+  confirmDeleteFileShareLink = (fileSeq, shareId) => {
+    feed.showConfirm(`공유링크를 삭제합니다. 계속 하시겠습니까?`, '', () => this.deleteFileShareLink(fileSeq, shareId));
   };
 
-  deleteFileShareLink = (fileSeq, shareKey) => {
+  deleteFileShareLink = (fileSeq, shareId) => {
     this.setState({ shareListLoading: true });
     const { deleteFileShareLink } = this.props;
     const callback = () => {
       this.setState({ shareListLoading: false });
       this.getFileList(); // 파일 리스트 갱신
     };
-    deleteFileShareLink(fileSeq, shareKey, callback);
+    deleteFileShareLink(fileSeq, shareId, callback);
   };
 
   onCancelShareListPopup = () => {

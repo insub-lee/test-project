@@ -70,8 +70,8 @@ export function* getUserFileList(payload) {
 
 export function* deleteFileShareLink(payload) {
 
-  const { FILE_SEQ, SHARE_KEY, USER_ID, CALLBACK } = payload;
-  const response = yield call(Axios.delete, '/api/common/v1/filemanage/adminFileShareLink', { PARAM_USER_ID: USER_ID, FILE_SEQ, SHARE_KEY });
+  const { FILE_SEQ, SHARE_ID, USER_ID, CALLBACK } = payload;
+  const response = yield call(Axios.delete, '/api/common/v1/filemanage/adminFileShareLink', { PARAM_USER_ID: USER_ID, FILE_SEQ, SHARE_ID });
   const { code } = response;
 
   if (code === 200) {

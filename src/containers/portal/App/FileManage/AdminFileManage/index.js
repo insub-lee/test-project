@@ -202,7 +202,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(actions.updateUser(USER_ID, STORAGE_SIZE, UPLOAD_LIMIT_SIZE, KEYWORD, CURRENT, PAGE_SIZE, CALLBACK)),
   deleteFile: (FILE_SEQ, USER_ID, CALLBACK) => dispatch(actions.deleteFile(FILE_SEQ, USER_ID, CALLBACK)),
   getLinkList: (FILE_SEQ, KEYWORD, CALLBACK) => dispatch(actions.getLinkList(FILE_SEQ, KEYWORD, CALLBACK)),
-  deleteFileShareLink: (FILE_SEQ, SHARE_KEY, USER_ID, CALLBACK) => dispatch(actions.deleteFileShareLink(FILE_SEQ, SHARE_KEY, USER_ID, CALLBACK)),
+  deleteFileShareLink: (FILE_SEQ, SHARE_ID, USER_ID, CALLBACK) => dispatch(actions.deleteFileShareLink(FILE_SEQ, SHARE_ID, USER_ID, CALLBACK)),
   getModalFileList: (USER_ID, TYPE, KEYWORD, CURRENT, PAGE_SIZE, CALLBACK) =>
     dispatch(actions.getModalFileList(USER_ID, TYPE, KEYWORD, CURRENT, PAGE_SIZE, CALLBACK)),
 });
