@@ -117,7 +117,7 @@ class ChemicalManagePage extends Component {
           <Spin tip="검색중 ..." spinning={isSearching}>
             <div className="search-input-area">
               <span className="text-label">지역</span>
-              <AntdSelect defaultValue={site} className="select-sm" style={{ width: '100px' }} onChange={val => this.setState({ site: val })}>
+              <AntdSelect defaultValue={site} className="select-sm" style={{ width: '100px' }} onChange={val => this.setState({ site: val })} disabled>
                 <Option value="청주">청주</Option>
                 <Option value="구미">구미</Option>
               </AntdSelect>
