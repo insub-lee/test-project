@@ -423,32 +423,33 @@ class List extends Component {
               />
             </div>
             <div className="btn-area">
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={() => getListData(id, 9201)}>
+              <StyledButton className="btn-greay btn-first btn-sm" onClick={() => getListData(id, 9201)}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onInsertModal}>
-                추가
-              </StyledButton>
-              <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
-                <StyledButton className="btn-primary btn-first btn-sm">삭제</StyledButton>
-              </Popconfirm>
-              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onReset}>
-                Reset
-              </StyledButton>
-              <ExcelDownloadComp
-                isBuilder={false}
-                fileName={fileName || 'excel'}
-                className="workerExcelBtn"
-                btnText={btnTex || '엑셀받기'}
-                sheetName={sheetName || 'sheet1'}
-                columns={excelColumns || []}
-                fields={fields || []}
-                listData={listData || []}
-              />
             </div>
           </StyledCustomSearchWrapper>
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onInsertModal}>
+              추가
+            </StyledButton>
+            <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
+              <StyledButton className="btn-gray btn-first btn-sm">삭제</StyledButton>
+            </Popconfirm>
+            <StyledButton className="btn-gray btn-first btn-sm" onClick={this.onReset}>
+              Reset
+            </StyledButton>
+            <ExcelDownloadComp
+              isBuilder={false}
+              fileName={fileName || 'excel'}
+              className="workerExcelBtn"
+              btnText={btnTex || '엑셀받기'}
+              sheetName={sheetName || 'sheet1'}
+              columns={excelColumns || []}
+              fields={fields || []}
+              listData={listData || []}
+            />
+          </StyledButtonWrapper>
           <AntdTable
-            className="tableWrapper"
             rowKey="TASK_SEQ"
             key="TASK_SEQ"
             columns={columns}
