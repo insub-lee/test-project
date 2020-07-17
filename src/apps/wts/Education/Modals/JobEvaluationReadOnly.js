@@ -1,12 +1,14 @@
 import React from 'react';
 import Modal from 'rc-dialog';
 import ReactToPrint from 'react-to-print';
+import 'rc-dialog/assets/index.css';
 
 import { Icon, Spin } from 'antd';
 import { fromJS } from 'immutable';
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
 import StyledContent from './StyledContent';
 import { template } from '../config';
+import StyledTable from '../../StyledTable';
 
 const textareaStyle = {
   padding: '5px 5px 15px 5px',
@@ -174,7 +176,7 @@ class JobEvaluationReadOnly extends React.Component {
               <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
                 <StyledCommonForm className="print-body" onSubmit={this.saveData} autoComplete="off" ref={el => (this.printComponentRef = el)}>
                   <div className="sub_form_tit cr">기본정보</div>
-                  <div className="ta_wrap">
+                  <StyledTable className="tb_wrap">
                     <table className="tb02">
                       <colgroup>
                         <col width="25%" />
@@ -209,7 +211,7 @@ class JobEvaluationReadOnly extends React.Component {
                         </tr>
                       </tbody>
                     </table>
-                  </div>
+                  </StyledTable>
                   {template[type] && (
                     <>
                       <br />
@@ -220,7 +222,7 @@ class JobEvaluationReadOnly extends React.Component {
                   <br />
                   <div className="sub_form_tit cr">평가정보</div>
                   {type === 'job_proc' && (
-                    <div className="ta_wrap">
+                    <StyledTable className="ta_wrap">
                       <table className="tb02">
                         <thead>
                           <tr className="bd">
@@ -289,10 +291,10 @@ class JobEvaluationReadOnly extends React.Component {
                           </tr>
                         </tbody>
                       </table>
-                    </div>
+                    </StyledTable>
                   )}
                   {type !== 'job_proc' && (
-                    <div className="ta_wrap">
+                    <StyledTable className="ta_wrap">
                       <table className="tb02">
                         <colgroup>
                           <col width="40%" />
@@ -405,7 +407,7 @@ class JobEvaluationReadOnly extends React.Component {
                           </tr>
                         </tbody>
                       </table>
-                    </div>
+                    </StyledTable>
                   )}
                   {type !== 'job_proc' && (
                     <>
