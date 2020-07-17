@@ -22,11 +22,11 @@ class QuestionnaireView extends Component {
   };
 
   componentWillMount() {
-    const { sagaKey, getCallDataHandler } = this.props;
+    const { sagaKey, getCallDataHandler, userInfo } = this.props;
     const apiAry = [
       {
         key: 'questionnaire',
-        url: `/api/eshs/v1/common/health/healthChkQuestionnaire`,
+        url: `/api/eshs/v1/common/health/healthChkQuestionnaire?SCH_USER_ID=${userInfo.USER_ID}`,
         type: 'GET',
         params: {},
       },

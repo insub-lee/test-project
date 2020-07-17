@@ -151,8 +151,8 @@ class ChkHospitalItemView extends Component {
       const activeGroup = `panel_${groupKeyIdx}`;
       groupList.push({
         KEY: activeGroup,
-        GROUP: '',
-        ABLE_CNT: '',
+        GROUP: undefined,
+        ABLE_CNT: undefined,
         ITEMS: [],
       });
 
@@ -404,12 +404,12 @@ class ChkHospitalItemView extends Component {
     
     let isValid = true;
     groupList.every(group => {
-      if (group.GROUP === '') {
+      if (!group.GROUP || group.GROUP === '') {
         message.info(<MessageContent>그룹을 선택해 주세요.</MessageContent>);
         isValid = false;
         return false;
       }
-      if (group.ABLE_CNT === '') {
+      if (!group.ABLE_CNT || group.ABLE_CNT === '') {
         message.info(<MessageContent>선택갯수를 선택해 주세요.</MessageContent>);
         isValid = false;
         return false;

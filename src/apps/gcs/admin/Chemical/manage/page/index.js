@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Modal, Select, DatePicker } from 'antd';
+import { Modal, Select, DatePicker, Spin } from 'antd';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -29,6 +29,7 @@ class ChemicalManagePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isSearching: false,
       modalType: '',
       modalTitle: '',
       modalVisible: false,
@@ -44,10 +45,11 @@ class ChemicalManagePage extends Component {
 
   // 검색
   handlerSearch = () => {
+    this.setState({ isSearching: true });
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
     const { site, searchMonth } = this.state;
     const apiInfo = {
-      key: 'getIngCheckList',
+      key: 'chemiacalManageList',
       type: 'GET',
       url: `/api/gcs/v1/common/chemiacal/manage?type=month&site=${site}&month=${searchMonth}`,
     };
@@ -57,6 +59,7 @@ class ChemicalManagePage extends Component {
   searchCallback = (id, response) => {
     const { list } = response;
     this.setState({
+      isSearching: false,
       listData: list || [],
     });
   };
@@ -107,37 +110,39 @@ class ChemicalManagePage extends Component {
   };
 
   render() {
-    const { modalType, modalTitle, modalVisible, modalData, searchMonth, site, viewInfo, listData } = this.state;
+    const { modalType, modalTitle, modalVisible, modalData, searchMonth, site, viewInfo, listData, isSearching } = this.state;
     return (
       <>
         <StyledCustomSearchWrapper>
-          <div className="search-input-area">
-            <span className="text-label">지역</span>
-            <AntdSelect defaultValue={site} className="select-sm" style={{ width: '100px' }} onChange={val => this.setState({ site: val })}>
-              <Option value="청주">청주</Option>
-              <Option value="구미">구미</Option>
-            </AntdSelect>
-            <span className="text-label">사용 월</span>
-            <AntdMonthPicker
-              className="ant-picker-sm"
-              defaultValue={moment(searchMonth, 'YYYYMM')}
-              format="YYYY.MM"
-              onChange={date => this.setState({ searchMonth: moment(date).format('YYYYMM') })}
-            />
-            <span className="text-label">구분</span>
-            <AntdSelect
-              defaultValue={viewInfo}
-              className="select-sm"
-              style={{ width: '200px', marginRight: '10px' }}
-              onChange={val => this.setState({ viewInfo: val })}
-            >
-              <Option value="month">사용정보</Option>
-              <Option value="day">일간 데이터</Option>
-            </AntdSelect>
-            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handlerSearch()}>
-              검색
-            </StyledButton>
-          </div>
+          <Spin tip="검색중 ..." spinning={isSearching}>
+            <div className="search-input-area">
+              <span className="text-label">지역</span>
+              <AntdSelect defaultValue={site} className="select-sm" style={{ width: '100px' }} onChange={val => this.setState({ site: val })} disabled>
+                <Option value="청주">청주</Option>
+                <Option value="구미">구미</Option>
+              </AntdSelect>
+              <span className="text-label">사용 월</span>
+              <AntdMonthPicker
+                className="ant-picker-sm"
+                defaultValue={moment(searchMonth, 'YYYYMM')}
+                format="YYYY.MM"
+                onChange={date => this.setState({ searchMonth: moment(date).format('YYYYMM') })}
+              />
+              <span className="text-label">구분</span>
+              <AntdSelect
+                defaultValue={viewInfo}
+                className="select-sm"
+                style={{ width: '200px', marginRight: '10px' }}
+                onChange={val => this.setState({ viewInfo: val })}
+              >
+                <Option value="month">사용정보</Option>
+                <Option value="day">일간 데이터</Option>
+              </AntdSelect>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handlerSearch()}>
+                검색
+              </StyledButton>
+            </div>
+          </Spin>
         </StyledCustomSearchWrapper>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
           <MonthExcel dataList={listData} />
