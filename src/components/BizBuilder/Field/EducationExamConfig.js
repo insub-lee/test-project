@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input } from 'antd';
+import { Input, InputNumber } from 'antd';
 import StyledInput from '../styled/Form/StyledInput';
+import StyledInputNumber from '../styled/Form/StyledInputNumber';
 
 const AntdInput = StyledInput(Input);
+const AntdInputNumber = StyledInputNumber(InputNumber);
 class EducationExamConfig extends React.Component {
   constructor(props) {
     super(props);
@@ -28,6 +30,17 @@ class EducationExamConfig extends React.Component {
             placeholder="버튼에 들어갈 내용을 입력하세요."
             onChange={e => handleChangeViewCompData('BTN_NAME', e.target.value)}
             style={{ width: '100%' }}
+          />
+        </div>
+        <div className="popoverItem popoverItemInput">
+          <span className="spanLabel">시험 차수 설정</span>
+          <AntdInputNumber
+            defaultValue={configInfo.property.BTN_NAME || ''}
+            placeholder="버튼에 들어갈 내용을 입력하세요."
+            onChange={value => handleChangeViewCompData('SEQ', value)}
+            style={{ width: '100%' }}
+            max={2}
+            min={0}
           />
         </div>
       </>

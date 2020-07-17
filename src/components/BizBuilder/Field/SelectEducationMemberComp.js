@@ -5,12 +5,8 @@ import { Modal } from 'antd';
 import CustomUserSelect from 'components/CustomUserSelect';
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
-import { submitHandlerBySaga } from 'apps/Workflow/components/ApproveBase/actions';
-import { callBackAfterPost, callBackAfterDelete } from 'apps/eshs/common/submitCallbackFunc';
+import { callBackAfterPost } from 'apps/eshs/common/submitCallbackFunc';
 
 const AntdModal = StyledAntdModal(Modal);
 class SelectEducationMemberComp extends React.Component {
@@ -26,7 +22,7 @@ class SelectEducationMemberComp extends React.Component {
   getUserList = () => {
     const { sagaKey, getExtraApiData, rowData } = this.props;
     const apiUrl = '/api/eshs/v1/common/safety-edu-user';
-    const paramObj = { PARENT_WORK_SEQ: rowData.WORK_SEQ, PARENT_TASK_SEQ: rowData.TASK_SEQ };
+    const paramObj = { PARENT_WORK_SEQ: rowData.WORK_SEQ, PARENT_TASK_SEQ: rowData.TASK_SEQ, KEYWORD: '' };
     const queryString = new URLSearchParams(paramObj).toString();
     const apiArr = [
       {
@@ -48,10 +44,6 @@ class SelectEducationMemberComp extends React.Component {
     });
   };
 
-  handleModalVisible = () => {
-    this.setState({ modalVisible: true }, this.getUserList);
-  };
-
   handleModalClose = () => {
     this.setState({ modalVisible: false });
   };
@@ -70,11 +62,13 @@ class SelectEducationMemberComp extends React.Component {
       USER_LIST: selectedUserList,
     };
 
-    submitExtraHandler(sagaKey, 'POST', `/api/eshs/v1/common/safety-edu-user`, PARAMS, (key, response) => callBackAfterPost(key, response));
+    submitExtraHandler(sagaKey, 'POST', `/api/eshs/v1/common/safety-edu-user`, PARAMS, (key, response) =>
+      callBackAfterPost(key, response, this.handleModalClose),
+    );
   };
 
   render() {
-    const { handleModalVisible, handleModalClose, handleUserSelect, handleUserSelectComplete } = this;
+    const { handleModalClose, handleUserSelect, handleUserSelectComplete } = this;
     const { modalVisible, userIdList } = this.state;
     const { visible } = this.props;
 
@@ -87,7 +81,7 @@ class SelectEducationMemberComp extends React.Component {
         <StyledButton className="btn-primary btn-sm" onClick={this.getUserList} style={{ width: '100%' }}>
           교육대상자 지정
         </StyledButton>
-        <AntdModal title="교육대상자 지정" visible={modalVisible} width="950px" onCancel={handleModalClose} footer={null} destroyOnClose>
+        <AntdModal title="교육대상자 지정" visible={modalVisible} width="85%" onCancel={handleModalClose} footer={null} destroyOnClose>
           <CustomUserSelect
             onCancel={handleModalClose}
             initUserList={userIdList}
