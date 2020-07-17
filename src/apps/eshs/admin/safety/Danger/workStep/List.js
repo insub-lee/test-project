@@ -218,7 +218,7 @@ class List extends Component {
                 {useYN === 'Y' ? (
                   <span className="span-item">사용</span>
                 ) : (
-                  <StyledButton className="btn-primary btn-sm" onClick={() => this.onChangeData('R')}>
+                  <StyledButton className="btn-gray btn-xs" onClick={() => this.onChangeData('R')}>
                     삭제 취소
                   </StyledButton>
                 )}
@@ -278,16 +278,16 @@ class List extends Component {
                   onChange={e => this.onChangeValue('desciption', e.target.value)}
                 />
                 <StyledButtonWrapper className="btn-wrap-inline">
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={this.overlabCode}>
+                  <StyledButton className="btn-gray btn-xs btn-first" onClick={this.overlabCode}>
                     추가
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('U')}>
+                  <StyledButton className="btn-gray btn-xs btn-first" onClick={() => this.onChangeData('U')}>
                     수정
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('D')}>
+                  <StyledButton className="btn-gray btn-xs btn-first" onClick={() => this.onChangeData('D')}>
                     삭제
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-sm" onClick={this.onReset}>
+                  <StyledButton className="btn-gray btn-sm" onClick={this.onReset}>
                     Reset
                   </StyledButton>
                 </StyledButtonWrapper>
@@ -318,7 +318,7 @@ class List extends Component {
             <Option value="N">미사용</Option>
           </AntdSelect>
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.selectCode}>
+            <StyledButton className="btn-gray btn-sm" onClick={this.selectCode}>
               검색
             </StyledButton>
             {listData && listData.length > 0 && <ExcelDownloader dataList={listData} excelNm="작업단계관리" />}
