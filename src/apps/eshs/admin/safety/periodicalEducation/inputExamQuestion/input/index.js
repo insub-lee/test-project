@@ -1,13 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Input, Select, message } from 'antd';
+import { Card, Input, Select, message, DatePicker } from 'antd';
+import moment from 'moment';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import { callBackAfterPost, callBackAfterPut } from 'apps/eshs/common/submitCallbackFunc';
+import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
+const AntdPicker = StyledPicker(DatePicker.RangePicker);
 class InputPage extends React.Component {
   constructor(props) {
     super(props);
@@ -16,6 +20,7 @@ class InputPage extends React.Component {
       selectedDate: {},
       PARENT_WORK_SEQ: props.parentWorkSeq,
       PARENT_TASK_SEQ: props.parentTaskSeq,
+      videoId: '',
       questions: {
         0: {
           title: '',
@@ -66,11 +71,11 @@ class InputPage extends React.Component {
   }
 
   getQuestions = () => {
-    const { sagaKey: id, getCallDataHandler, parentWorkSeq, parentTaskSeq } = this.props;
+    const { sagaKey: id, getCallDataHandler, parentWorkSeq, parentTaskSeq, CONFIG } = this.props;
     const apiArr = [
       {
         key: 'questions',
-        url: `/api/eshs/v1/common/eduexam?PARENT_WORK_SEQ=${parentWorkSeq}&PARENT_TASK_SEQ=${parentTaskSeq}`,
+        url: `/api/eshs/v1/common/eduexam?PARENT_WORK_SEQ=${parentWorkSeq}&PARENT_TASK_SEQ=${parentTaskSeq}&SEQ=${CONFIG.property.SEQ}`,
         type: 'GET',
       },
     ];
@@ -129,6 +134,9 @@ class InputPage extends React.Component {
         (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].PARENT_WORK_SEQ) || prevState.PARENT_WORK_SEQ,
       PARENT_TASK_SEQ:
         (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].PARENT_TASK_SEQ) || prevState.PARENT_TASK_SEQ,
+      videoId: (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].VIDEO_ID) || '',
+      OPEN_DTTM: (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].OPEN_DTTM) || moment(),
+      END_DTTM: (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].END_DTTM) || moment(),
     }));
   };
 
@@ -216,8 +224,8 @@ class InputPage extends React.Component {
   };
 
   handleSaveClick = isModify => {
-    const { questions, PARENT_WORK_SEQ, PARENT_TASK_SEQ } = this.state;
-    const { sagaKey: id, submitHandlerBySaga, handleModalClose, profile, result } = this.props;
+    const { questions, PARENT_WORK_SEQ, PARENT_TASK_SEQ, videoId, OPEN_DTTM, END_DTTM } = this.state;
+    const { sagaKey: id, submitHandlerBySaga, handleModalClose, profile, result, CONFIG } = this.props;
     const questionArr = [questions[0], questions[1], questions[2], questions[3], questions[4]]; // questions === object
 
     if (questionArr.filter(question => !question.answer).length) {
@@ -231,23 +239,44 @@ class InputPage extends React.Component {
         QUESTIONS: JSON.stringify(questionArr),
         REG_USER_ID: profile.USER_ID,
         EXAM_ID: (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].EXAM_ID) || '',
+        VIDEO_ID: videoId,
+        SEQ: CONFIG.property.SEQ,
+        OPEN_DTTM,
+        END_DTTM,
       },
     };
 
     if (isModify) {
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eduexam`, apiArr, handleModalClose);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eduexam`, apiArr, (key, response) => callBackAfterPut(key, response, handleModalClose));
     }
 
-    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eduexam`, apiArr, handleModalClose);
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eduexam`, apiArr, (key, response) => callBackAfterPost(key, response, handleModalClose));
+  };
+
+  handleVideoUrlInput = event => {
+    const url = event.target.value;
+    const videoParamKey = 'v=';
+
+    if (url.includes(videoParamKey)) {
+      return this.setState({ videoId: url.substring(url.indexOf(videoParamKey) + videoParamKey.length) });
+    }
+    return this.setState({ videoId: '' });
+  };
+
+  handleDateChange = (date, dateString) => {
+    const [OPEN_DTTM, END_DTTM] = date;
+    this.setState({
+      OPEN_DTTM,
+      END_DTTM,
+    });
   };
 
   render() {
-    const { handleInputChange, handleSaveClick, handleSelectChange } = this;
-    const { questionsLenght } = this;
-    const { questions, eduDate, selectedDate } = this.state;
-    const { handleModalClose, result } = this.props;
+    const { handleInputChange, handleSaveClick, handleSelectChange, handleVideoUrlInput } = this;
+    const { questionsLenght, handleDateChange } = this;
+    const { questions, eduDate, selectedDate, videoId, OPEN_DTTM, END_DTTM } = this.state;
+    const { handleModalClose, result, CONFIG } = this.props;
     const isModify = result.questions && result.questions.list && result.questions.list && result.questions.list[0] && result.questions.list[0].EXAM_ID;
-    console.debug(isModify);
     return (
       <>
         <ContentsWrapper>
@@ -268,85 +297,120 @@ class InputPage extends React.Component {
                 result.educationMonths.list.map(month => <Select.Option value={month.EDU_MONTH}>{`${month.EDU_MONTH}월`}</Select.Option>)}
             </AntdSelect>
           </div>
-        </ContentsWrapper>
-        {questionsLenght.map((v, i) => (
+          {CONFIG.property.SEQ === 2 ? (
+            <div className="selSaveWrapper">
+              <p style={{ display: 'inline-block', width: '15%', textAlign: 'center' }}>2차 교육일정</p>
+              <AntdPicker className="ant-picker-mid" onChange={handleDateChange} value={[OPEN_DTTM, END_DTTM]} />
+            </div>
+          ) : null}
           <div style={{ marginTop: '30px', marginLeft: '100px', marginBottom: '10px' }}>
             <Card
               title={
                 <>
-                  <div className="ant-card-head-title">{`${i + 1}번 문제`}</div>
+                  <div className="ant-card-head-title">교육 영상 주소를 입력하세요.</div>
                   <AntdInput
                     className="ant-input-block"
-                    defaultValue={questions[i].title || ''}
-                    value={questions[i].title || ''}
-                    onChange={e => handleInputChange(i, 'title', e.target.value)}
-                    placeholder="문제를 입력하세요."
+                    value={`https://www.youtube.com/watch?v=${videoId}`}
+                    onChange={handleVideoUrlInput}
+                    placeholder="교육 영상 주소를 입력하세요."
+                    style={{ width: '100%' }}
                   />
                 </>
               }
-              style={{ width: '90%' }}
+              style={{ width: '90%', height: videoId ? '600px' : '200px' }}
             >
-              <div style={{ textAlign: 'right' }}>
-                <p style={{ display: 'inline-block', width: '5%', textAlign: 'center' }}>정답</p>
-                <AntdSelect
-                  defaultValue={(questions[i] && questions[i].answer) || '정답'}
-                  value={(questions[i] && questions[i].answer) || '정답'}
-                  onChange={value => handleInputChange(i, 'answer', value)}
-                  style={{ width: '20%', marginBottom: '10px' }}
-                >
-                  <Select.Option value={1}>1</Select.Option>
-                  <Select.Option value={2}>2</Select.Option>
-                  <Select.Option value={3}>3</Select.Option>
-                  <Select.Option value={4}>4</Select.Option>
-                </AntdSelect>
-              </div>
-              <p style={{ display: 'inline-block', width: '5%' }}>1.</p>
-              <AntdInput
-                className="ant-input-inline"
-                defaultValue={questions[i].firstSelection || ''}
-                value={questions[i].firstSelection || ''}
-                onChange={e => handleInputChange(i, 'firstSelection', e.target.value)}
-                placeholder="보기 1"
-                style={{ width: '95%', marginBottom: '10px' }}
-              />
-              <p style={{ display: 'inline-block', width: '5%' }}>2.</p>
-              <AntdInput
-                className="ant-input-inline"
-                defaultValue={questions[i].secondSelection || ''}
-                value={questions[i].secondSelection || ''}
-                onChange={e => handleInputChange(i, 'secondSelection', e.target.value)}
-                placeholder="보기 2"
-                style={{ width: '95%', marginBottom: '10px' }}
-              />
-              <p style={{ display: 'inline-block', width: '5%' }}>3.</p>
-              <AntdInput
-                className="ant-input-inline"
-                defaultValue={questions[i].thirdSelection || ''}
-                value={questions[i].thirdSelection || ''}
-                onChange={e => handleInputChange(i, 'thirdSelection', e.target.value)}
-                placeholder="보기 3"
-                style={{ width: '95%', marginBottom: '10px' }}
-              />
-              <p style={{ display: 'inline-block', width: '5%' }}>4.</p>
-              <AntdInput
-                className="ant-input-inline"
-                defaultValue={questions[i].fourthSelection || ''}
-                value={questions[i].fourthSelection || ''}
-                onChange={e => handleInputChange(i, 'fourthSelection', e.target.value)}
-                placeholder="보기 4"
-                style={{ width: '95%', marginBottom: '10px' }}
-              />
+              {videoId ? (
+                <iframe
+                  title="test"
+                  width="100%"
+                  height="425px"
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              ) : null}
             </Card>
           </div>
-        ))}
-        <div style={{ padding: '30px' }}>
-          <StyledButton className="btn-primary mr5" onClick={() => handleSaveClick(isModify)}>
-            {isModify ? '수정' : '저장'}
-          </StyledButton>
-          <StyledButton className="btn-light" onClick={handleModalClose}>
-            취소
-          </StyledButton>
-        </div>
+          {questionsLenght.map((v, i) => (
+            <div style={{ marginTop: '30px', marginLeft: '100px', marginBottom: '10px' }}>
+              <Card
+                title={
+                  <>
+                    <div className="ant-card-head-title">{`${i + 1}번 문제`}</div>
+                    <AntdInput
+                      className="ant-input-block"
+                      defaultValue={questions[i].title || ''}
+                      value={questions[i].title || ''}
+                      onChange={e => handleInputChange(i, 'title', e.target.value)}
+                      placeholder="문제를 입력하세요."
+                    />
+                  </>
+                }
+                style={{ width: '90%' }}
+              >
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ display: 'inline-block', width: '5%', textAlign: 'center' }}>정답</p>
+                  <AntdSelect
+                    defaultValue={(questions[i] && questions[i].answer) || '정답'}
+                    value={(questions[i] && questions[i].answer) || '정답'}
+                    onChange={value => handleInputChange(i, 'answer', value)}
+                    style={{ width: '20%', marginBottom: '10px' }}
+                  >
+                    <Select.Option value={1}>1</Select.Option>
+                    <Select.Option value={2}>2</Select.Option>
+                    <Select.Option value={3}>3</Select.Option>
+                    <Select.Option value={4}>4</Select.Option>
+                  </AntdSelect>
+                </div>
+                <p style={{ display: 'inline-block', width: '5%' }}>1.</p>
+                <AntdInput
+                  className="ant-input-inline"
+                  defaultValue={questions[i].firstSelection || ''}
+                  value={questions[i].firstSelection || ''}
+                  onChange={e => handleInputChange(i, 'firstSelection', e.target.value)}
+                  placeholder="보기 1"
+                  style={{ width: '95%', marginBottom: '10px' }}
+                />
+                <p style={{ display: 'inline-block', width: '5%' }}>2.</p>
+                <AntdInput
+                  className="ant-input-inline"
+                  defaultValue={questions[i].secondSelection || ''}
+                  value={questions[i].secondSelection || ''}
+                  onChange={e => handleInputChange(i, 'secondSelection', e.target.value)}
+                  placeholder="보기 2"
+                  style={{ width: '95%', marginBottom: '10px' }}
+                />
+                <p style={{ display: 'inline-block', width: '5%' }}>3.</p>
+                <AntdInput
+                  className="ant-input-inline"
+                  defaultValue={questions[i].thirdSelection || ''}
+                  value={questions[i].thirdSelection || ''}
+                  onChange={e => handleInputChange(i, 'thirdSelection', e.target.value)}
+                  placeholder="보기 3"
+                  style={{ width: '95%', marginBottom: '10px' }}
+                />
+                <p style={{ display: 'inline-block', width: '5%' }}>4.</p>
+                <AntdInput
+                  className="ant-input-inline"
+                  defaultValue={questions[i].fourthSelection || ''}
+                  value={questions[i].fourthSelection || ''}
+                  onChange={e => handleInputChange(i, 'fourthSelection', e.target.value)}
+                  placeholder="보기 4"
+                  style={{ width: '95%', marginBottom: '10px' }}
+                />
+              </Card>
+            </div>
+          ))}
+          <div style={{ padding: '30px' }}>
+            <StyledButton className="btn-primary mr5" onClick={() => handleSaveClick(isModify)}>
+              {isModify ? '수정' : '저장'}
+            </StyledButton>
+            <StyledButton className="btn-light" onClick={handleModalClose}>
+              취소
+            </StyledButton>
+          </div>
+        </ContentsWrapper>
       </>
     );
   }
@@ -361,6 +425,7 @@ InputPage.propTypes = {
   parentWorkSeq: PropTypes.number,
   profile: PropTypes.object,
   result: PropTypes.object,
+  CONFIG: PropTypes.object,
 };
 
 InputPage.defaultProps = {

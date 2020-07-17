@@ -4,7 +4,7 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 import InputPage from './input';
 import ViewPage from './view';
 
-const InputExamQuestion = ({ parentTaskSeq, parentWorkSeq, handleModalClose, authority, getDataSource }) => (
+const InputExamQuestion = ({ parentTaskSeq, parentWorkSeq, handleModalClose, authority, getDataSource, CONFIG, seq }) => (
   <BizMicroDevBase
     sagaKey="InputExamQuestion"
     parentTaskSeq={parentTaskSeq}
@@ -14,6 +14,8 @@ const InputExamQuestion = ({ parentTaskSeq, parentWorkSeq, handleModalClose, aut
     handleModalClose={handleModalClose}
     authority={authority}
     getDataSource={getDataSource}
+    CONFIG={CONFIG}
+    seq={seq}
   />
 );
 
@@ -23,6 +25,8 @@ InputExamQuestion.propTypes = {
   handleModalClose: PropTypes.func,
   authority: PropTypes.arrayOf('string'),
   getDataSource: PropTypes.func,
+  CONFIG: PropTypes.object,
+  seq: PropTypes.number,
 };
 
 export default InputExamQuestion;
