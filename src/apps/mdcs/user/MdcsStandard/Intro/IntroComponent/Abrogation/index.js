@@ -22,6 +22,7 @@ const columns = [
     title: 'REV',
     align: 'center',
     width: '9%',
+    render: text => (text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
   },
   {
     dataIndex: 'TITLE',
@@ -57,6 +58,9 @@ class Abrogation extends Component {
     this.state = {
       searchValue: undefined,
       revisionList: [],
+      paginationIdx: 1,
+      pageSize: 10,
+      listCount: 0,
     };
   }
 
@@ -65,15 +69,34 @@ class Abrogation extends Component {
   };
 
   onInitDataBind = (id, response) => {
-    const { revisionList } = response;
-    this.setState({ revisionList });
+    const { revisionList, listCount } = response;
+    this.setState({ revisionList, listCount });
   };
 
   onSearchRevisionData = () => {
     const { sagaKey, submitHandlerBySaga } = this.props;
-    const { searchValue } = this.state;
-    submitHandlerBySaga(sagaKey, 'POST', `/api/mdcs/v1/common/mdcsrevisionListHandler`, { PARAM: { DOCNUMBER: searchValue || '' } }, this.onInitDataBind);
+    const { searchValue, paginationIdx, pageSize } = this.state;
+    submitHandlerBySaga(
+      sagaKey,
+      'POST',
+      `/api/mdcs/v1/common/mdcsrevisionListHandler`,
+      { PARAM: { DOCNUMBER: searchValue || '', PAGE: paginationIdx || 1, PAGE_CNT: pageSize || 10 } },
+      this.onInitDataBind,
+    );
   };
+
+  setPaginationIdx = paginationIdx =>
+    this.setState({ paginationIdx }, () => {
+      const { searchValue, pageSize } = this.state;
+      const { sagaKey, submitHandlerBySaga } = this.props;
+      submitHandlerBySaga(
+        sagaKey,
+        'POST',
+        `/api/mdcs/v1/common/mdcsrevisionListHandler`,
+        { PARAM: { DOCNUMBER: searchValue || '', PAGE: paginationIdx || 1, PAGE_CNT: pageSize || 10 } },
+        this.onInitDataBind,
+      );
+    });
 
   onSelectedWorkSeq = selectedNodeIds => {
     let viewChangeSeq;
@@ -121,7 +144,7 @@ class Abrogation extends Component {
   };
 
   render() {
-    const { revisionList } = this.state;
+    const { revisionList, paginationIdx, listCount } = this.state;
     return (
       <>
         <li>
@@ -150,6 +173,8 @@ class Abrogation extends Component {
                 record.CHANGE,
               ),
           })}
+          pagination={{ current: paginationIdx, total: listCount }}
+          onChange={pagination => this.setPaginationIdx(pagination.current)}
         />
       </>
     );
