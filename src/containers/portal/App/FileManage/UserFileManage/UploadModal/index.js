@@ -13,7 +13,7 @@ const UploadModal = ({ isShow, onCancelPopup, uploadFile, tempUploadFiles, onTem
   <AntdModal
     width={500}
     visible={isShow}
-    title="업로드 (파일 용량 안내 추가!)"
+    title={`업로드 (업로드 제한: ${fileUtil.getFileSize(userFileManage.UPLOAD_LIMIT_SIZE)})`}
     onCancel={onCancelPopup}
     destroyOnClose
     footer={[
