@@ -47,7 +47,7 @@ const StyledWrap = styled.div`
   }
 `;
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModal(DraggableModal);
+const AntdModal = StyledAntdModal(Modal);
 const { TextArea } = Input;
 class DraftList extends Component {
   constructor(props) {

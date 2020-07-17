@@ -5,7 +5,10 @@ const mapObject = (o, f) => Object.assign({}, ...Object.keys(o).map(k => ({ [k]:
 
 export const initialModalsState = {
   maxZIndex: 1000,
-  windowSize: getWindowSize(),
+  windowSize: {
+    width: 800,
+    height: 800,
+  },
   modals: {},
 };
 
