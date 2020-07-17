@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useUID } from 'react-uid';
-import { ModalProps } from 'antd/lib/modal';
+// import { ModalProps } from 'antd/lib/modal';
 import { DraggableModalContext } from './DraggableModalContext';
 import { DraggableModalInner } from './DraggableModalInner';
 import { getModalState } from './draggableModalReducer';
