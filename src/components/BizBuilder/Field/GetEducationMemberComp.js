@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal, Input } from 'antd';
+import { Table, Modal, Input, message } from 'antd';
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
@@ -72,11 +72,22 @@ class GetEducationMemberComp extends React.Component {
       {
         key: 'educationUsers',
         url: `${apiUrl}?${queryString}`,
+        // url: `/api/eshs/v1/common/safety-edu-second-user?${queryString}`,
         type: 'GET',
       },
     ];
 
-    getExtraApiData(sagaKey, apiArr, this.setUserList);
+    const secondApiArr = [
+      {
+        key: 'educationUsers',
+        url: `/api/eshs/v1/common/safety-edu-second-user?${queryString}`,
+        type: 'GET',
+      },
+    ];
+
+    return this.props.selectSecondEducationTarget
+      ? getExtraApiData(sagaKey, secondApiArr, this.setUserList)
+      : getExtraApiData(sagaKey, apiArr, this.setUserList);
   };
 
   setUserList = () => {
@@ -109,7 +120,7 @@ class GetEducationMemberComp extends React.Component {
 
     return (
       <>
-        <StyledButton className="btn-primary btn-sm" onClick={handleModalVisible} style={{ width: '100%' }}>
+        <StyledButton className={this.props.className || 'btn-primary btn-sm'} onClick={handleModalVisible} style={{ width: this.props.buttonWidth || '100%' }}>
           교육인원 조회
         </StyledButton>
         <AntdModal title="교육인원 조회" visible={modalVisible} width="950px" onCancel={handleModalClose} footer={null} destroyOnClose>
@@ -124,11 +135,18 @@ class GetEducationMemberComp extends React.Component {
                   placeholder="검색어를 입력하세요."
                   style={{ width: '20%' }}
                 />
-                <StyledButton className="btn-gray btn-sm" onClick={getUserList}>
+                <StyledButton className="btn-gray btn-sm mr5" onClick={getUserList}>
                   검색
                 </StyledButton>
               </div>
             </StyledCustomSearchWrapper>
+            {this.props.selectSecondEducationTarget ? (
+              <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+                <StyledButton className="btn-gray btn-sm" onClick={() => message.warn('core-addon.redisApiClient')}>
+                  메일 전송
+                </StyledButton>
+              </StyledButtonWrapper>
+            ) : null}
             <AntdTable columns={columns} dataSource={dataSource} />
           </StyledContentsWrapper>
         </AntdModal>
@@ -143,6 +161,13 @@ GetEducationMemberComp.propTypes = {
   getExtraApiData: PropTypes.func,
   rowData: PropTypes.object,
   extraApiData: PropTypes.object,
+  buttonWidth: PropTypes.string,
+  className: PropTypes.string,
+  selectSecondEducationTarget: PropTypes.bool,
+};
+
+GetEducationMemberComp.defaultProps = {
+  selectSecondEducationTarget: false,
 };
 
 export default GetEducationMemberComp;

@@ -15,9 +15,9 @@ class EducationManagement extends React.Component {
           loadingComplete={this.loadingComplete}
           authority={authority}
           listMetaSeq={authority[0] === 'V' ? 6956 : 8901} // 관리자 페이지
-          CustomListPage={authority[0] === 'V' ? null : UserListPage} // 커스텀 적용 X
+          CustomListPage={authority[0] === 'V' ? null : UserListPage} // 관리자 페이지
           // listMetaSeq={authority[0] !== 'V' ? 6956 : 8901} // 사용자 페이지
-          // CustomListPage={authority[0] !== 'V' ? null : UserListPage} // 커스텀 적용
+          // CustomListPage={authority[0] !== 'V' ? null : UserListPage} // 사용자 페이지
         />
       </>
     );
