@@ -209,7 +209,14 @@ class WorkProcessModal extends Component {
   };
 
   handleAddUser = (prcRuleId, nodeId, nodeType) => {
-    const { prcStep, selectedDeptKeys, deptList, deptList2, selectedUserKeys, deptUserList, tabIdx } = this.state;
+    const { prcStep, selectedDeptKeys, deptList, deptList2, selectedUserKeys, deptUserList, tabIdx, selectedNode } = this.state;
+    if (nodeId === 107) {
+      const { APPV_MEMBER } = selectedNode;
+      if (APPV_MEMBER.length === 1) {
+        message.info('최종승인권자 삭제 후 재설정');
+        return;
+      }
+    }
     const tmpPrcStep = prcStep.map(step => {
       const { APPV_MEMBER: appvMember } = step;
       if (step.PRC_RULE_ID === prcRuleId) {
@@ -446,9 +453,10 @@ class WorkProcessModal extends Component {
                     <StyledButton
                       className="btn-light btn-sm"
                       ghost
-                      style={{ width: '150px', display: item.APPV_STATUS !== 2 ? '' : 'none' }}
+                      style={{ width: '150px', display: item.APPV_STATUS === 2 || item.STEP === 2 ? 'none' : '' }}
                       onClick={() => this.handleAddUser(item.PRC_RULE_ID, item.NODE_ID, item.NODE_TYPE)}
                     >
+                      {console.debug(item)}
                       {item.NODE_NAME_KOR}
                       <Icon type="double-right" />
                     </StyledButton>
@@ -463,7 +471,7 @@ class WorkProcessModal extends Component {
                 {prcStep.map(item => (
                   <React.Fragment key={`node_${item.NODE_ID}`}>
                     <h4>
-                      <Radio value={item.NODE_ID} />
+                      {item.STEP !== 2 && <Radio value={item.NODE_ID} />}
                       <AuditOutlined /> {item.NODE_NAME_KOR}
                     </h4>
                     <ul>

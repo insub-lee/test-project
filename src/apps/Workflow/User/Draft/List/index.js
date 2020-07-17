@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import BizBuilderBase from 'components/BizBuilderBase';
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
 import AbrogationMultiModifyDraft from 'apps/Workflow/User/CommonView/abrogationMultiModifyDraft';
-import DraggableModal from 'components/DraggableModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
@@ -47,7 +46,7 @@ const StyledWrap = styled.div`
   }
 `;
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModal(DraggableModal);
+const AntdModal = StyledAntdModal(Modal);
 const { TextArea } = Input;
 class DraftList extends Component {
   constructor(props) {
@@ -489,8 +488,7 @@ class DraftList extends Component {
                 className="modalWrapper modalTechDoc"
                 key="draftListKeys"
                 title="내용 보기"
-                initialWidth={680}
-                initialHeight={500}
+                width={680}
                 visible={this.props.viewVisible}
                 destroyOnClose
                 onCancel={this.closeBtnFunc}
@@ -570,8 +568,8 @@ class DraftList extends Component {
             <AntdModal
               className="modalWrapper modalTechDoc"
               title="표지 보기"
-              initialWidth={800}
-              initialHeight={600}
+              width={800}
+              style={{ top: '20px' }}
               destroyOnClose
               visible={coverView.visible}
               onCancel={this.onCloseCoverView}
@@ -625,8 +623,7 @@ class DraftList extends Component {
               <AntdModal
                 className="modalWrapper modalTechDoc"
                 title="표준문서 결제"
-                initialWidth={800}
-                initialHeight={600}
+                width={800}
                 visible={this.props.viewVisible}
                 destroyOnClose
                 onCancel={this.closeBtnFunc}
@@ -745,9 +742,9 @@ class DraftList extends Component {
             <AntdModal
               className="modalWrapper modalTechDoc"
               title="표지 보기"
-              initialWidth={800}
-              initialHeight={600}
+              width={800}
               visible={isAbrogationMultiShow}
+              style={{ top: '20px' }}
               destroyOnClose
               onCancel={this.onCloseAbrogationMultiModal}
               footer={[]}
@@ -766,6 +763,7 @@ class DraftList extends Component {
           className="modalWrapper modalTechDoc"
           title="홀드해제 의견"
           width={500}
+          height={400}
           destroyOnClose
           visible={opinionVisible}
           onCancel={() => setOpinionVisible(false)}
@@ -783,7 +781,7 @@ class DraftList extends Component {
               </tbody>
             </table>
           </StyledHtmlTable>
-          <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+          <StyledButtonWrapper className="btn-wrap-mt-10 btn-wrap-mb-10 btn-wrap-center">
             <StyledButton className="btn-primary btn-sm mr5" onClick={this.handleReqApprove}>
               저장
             </StyledButton>
