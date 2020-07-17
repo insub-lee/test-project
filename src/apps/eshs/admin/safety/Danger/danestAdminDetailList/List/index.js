@@ -132,7 +132,7 @@ class List extends Component {
   };
 
   onChangeTreeSelect = (value, label, extra) => {
-    switch (extra.triggerNode.props.level) {
+    switch (extra && extra.triggerNode && extra.triggerNode.props && extra.triggerNode.props.level) {
       case 3:
         return this.setState({ SDIV_ID: value, DIV_ID: undefined, PLACE_ID: undefined, PROCESS_ID: undefined, EQUIP_ID: undefined });
       case 4:
@@ -144,7 +144,7 @@ class List extends Component {
       case 7:
         return this.setState({ SDIV_ID: undefined, DIV_ID: undefined, PLACE_ID: undefined, PROCESS_ID: undefined, EQUIP_ID: value });
       default:
-        return '';
+        return this.setState({ SDIV_ID: undefined, DIV_ID: undefined, PLACE_ID: undefined, PROCESS_ID: undefined, EQUIP_ID: undefined });
     }
   };
 
