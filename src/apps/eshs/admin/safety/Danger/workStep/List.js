@@ -7,6 +7,7 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
@@ -218,7 +219,7 @@ class List extends Component {
                 {useYN === 'Y' ? (
                   <span className="span-item">사용</span>
                 ) : (
-                  <StyledButton className="btn-primary btn-sm" onClick={() => this.onChangeData('R')}>
+                  <StyledButton className="btn-gray btn-xs" onClick={() => this.onChangeData('R')}>
                     삭제 취소
                   </StyledButton>
                 )}
@@ -278,16 +279,16 @@ class List extends Component {
                   onChange={e => this.onChangeValue('desciption', e.target.value)}
                 />
                 <StyledButtonWrapper className="btn-wrap-inline">
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={this.overlabCode}>
+                  <StyledButton className="btn-gray btn-xs btn-first" onClick={this.overlabCode}>
                     추가
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('U')}>
+                  <StyledButton className="btn-gray btn-xs btn-first" onClick={() => this.onChangeData('U')}>
                     수정
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('D')}>
+                  <StyledButton className="btn-gray btn-xs btn-first" onClick={() => this.onChangeData('D')}>
                     삭제
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-sm" onClick={this.onReset}>
+                  <StyledButton className="btn-gray btn-xs" onClick={this.onReset}>
                     Reset
                   </StyledButton>
                 </StyledButtonWrapper>
@@ -302,28 +303,30 @@ class List extends Component {
     ];
     return (
       <ContentsWrapper>
-        <div className="selSaveWrapper alignLeft">
-          <AntdTreeSelect
-            style={{ width: '300px' }}
-            className="mr5 select-mid"
-            defultValue={this.state.changeSelectValue}
-            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-            treeData={nData || []}
-            placeholder="Please select"
-            onChange={value => this.onChangeSelect(value)}
-          />
-          <AntdSelect className="select-mid mr5" onChange={value => this.onChangeValue('useType', value)} value={useType}>
-            <Option value="">전체</Option>
-            <Option value="Y">사용</Option>
-            <Option value="N">미사용</Option>
-          </AntdSelect>
-          <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.selectCode}>
+        <StyledCustomSearch className="search-wrapper-inline">
+          <div className="search-input-area">
+            <AntdTreeSelect
+              style={{ width: '300px' }}
+              className="mr5 select-sm"
+              defultValue={this.state.changeSelectValue}
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              treeData={nData || []}
+              placeholder="Please select"
+              onChange={value => this.onChangeSelect(value)}
+            />
+            <AntdSelect className="select-sm mr5" onChange={value => this.onChangeValue('useType', value)} value={useType}>
+              <Option value="">전체</Option>
+              <Option value="Y">사용</Option>
+              <Option value="N">미사용</Option>
+            </AntdSelect>
+          </div>
+          <div className="btn-area">
+            <StyledButton className="btn-gray btn-sm" onClick={this.selectCode}>
               검색
             </StyledButton>
             {listData && listData.length > 0 && <ExcelDownloader dataList={listData} excelNm="작업단계관리" />}
-          </StyledButtonWrapper>
-        </div>
+          </div>
+        </StyledCustomSearch>
         <AntdLineTable
           rowKey="NODE_ID"
           key="NODE_ID"
