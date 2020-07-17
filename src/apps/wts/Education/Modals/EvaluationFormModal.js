@@ -10,6 +10,7 @@ import Button from 'components/Button';
 import { jsonToQueryString } from 'utils/helpers';
 import service from '../service';
 import StyledContent from './StyledContent';
+import StyledTable from '../../StyledTable';
 
 class EvaluationFormModal extends React.Component {
   constructor(props) {
@@ -224,7 +225,7 @@ class EvaluationFormModal extends React.Component {
                   </div>
                   <br />
                   <div className="sub_form_tit cr">평가정보</div>
-                  <div className="ta_wrap">
+                  <StyledTable className="ta_wrap">
                     <table className="tb02">
                       <colgroup>
                         <col width="40%" />
@@ -343,7 +344,7 @@ class EvaluationFormModal extends React.Component {
                         </tr>
                       </tbody>
                     </table>
-                  </div>
+                  </StyledTable>
                   {!readOnly && (
                     <div className="btn_wrap">
                       <Button type="button" size="small" color="primary" onClick={this.handleClickSubmit}>
