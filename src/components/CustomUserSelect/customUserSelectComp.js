@@ -49,9 +49,12 @@ class CustomUserSelectComp extends Component {
   onInitComplete = id => {
     const { result } = this.props;
     const selectedUserList = result.initUserList && result.initUserList.userList;
-    this.setState({
-      selectedUserList,
-    });
+    this.setState(
+      {
+        selectedUserList,
+      },
+      this.props.onInitComplete(selectedUserList),
+    );
   };
 
   onInitUserSelect = () => {
