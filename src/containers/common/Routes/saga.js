@@ -1534,6 +1534,13 @@ export function* getLoaddata(payload) {
     */
     response = yield call(Axios.post, '/api/portal/v1/page/executeApps/', { PAGE_ID: nodeData.PAGE_ID, HOME_YN, SYS_YN });
     const resultValue = JSON.parse(response.list);
+    
+    /**
+     * app unread count update
+     */
+    if (data && data.node) {
+      yield call(Axios.post, '/api/portal/v1/page/updateAppUnread', { ...data.node });
+    }
 
     if (notiVal !== null) {
       for (let a = 0; a < resultValue.length; a += 1) {

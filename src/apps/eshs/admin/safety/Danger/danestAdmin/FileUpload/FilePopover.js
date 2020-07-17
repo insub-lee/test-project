@@ -17,7 +17,7 @@ const FilePopover = ({ UploadFilesDel, UploadTempFilesDel, dangerDanestAdminSubF
             realFile =>
               realFile && (
                 <li key={realFile.SEQ}>
-                  <a href={`/down/file/${Number(realFile.SEQ)}`}>{realFile.NAME}</a> - {realFile.SIZE} bytes
+                  <a href={`/down/file/${Number(realFile.SEQ)}`}>{realFile.NAME}</a> - {realFile.FILE_SIZE} bytes
                   <DeleteOutlined onClick={() => UploadFilesDel(realFile.SEQ)} />
                 </li>
               ),

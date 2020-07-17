@@ -162,6 +162,7 @@ MultiUserSelectComp.propTypes = {
   parentWorkSeq: PropTypes.number,
   parentTaskSeq: PropTypes.number,
   extraApiData: PropTypes.object,
+  getExtraApiData: PropTypes.func,
 };
 
 export default MultiUserSelectComp;

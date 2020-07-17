@@ -147,6 +147,8 @@ import MdcsKindNameViewComp from 'components/BizBuilder/Field/MdcsKindNameViewCo
 import MsdsHeaderComp from 'components/BizBuilder/Field/MsdsHeaderComp';
 import CustomListSelectComp from 'components/BizBuilder/Field/CustomListSelectComp';
 import MonthPickerComp from 'components/BizBuilder/Field/MonthPickerComp';
+import SelectEducationMemberComp from 'components/BizBuilder/Field/SelectEducationMemberComp';
+import GetEducationMemberComp from 'components/BizBuilder/Field/GetEducationMemberComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/VersionComp': { renderer: property => <VersionComp {...property} /> },
@@ -296,4 +298,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/MsdsHeaderComp': { renderer: property => <MsdsHeaderComp {...property} /> },
   'components/BizBuilder/Field/CustomListSelectComp': { renderer: property => <CustomListSelectComp {...property} /> },
   'components/BizBuilder/Field/MonthPickerComp': { renderer: property => <MonthPickerComp {...property} /> },
+  'components/BizBuilder/Field/SelectEducationMemberComp': { renderer: property => <SelectEducationMemberComp {...property} /> },
+  'components/BizBuilder/Field/GetEducationMemberComp': { renderer: property => <GetEducationMemberComp {...property} /> },
 };

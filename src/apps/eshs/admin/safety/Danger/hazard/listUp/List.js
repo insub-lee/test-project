@@ -54,8 +54,8 @@ class List extends Component {
       {
         key: 'treeSelectData',
         type: 'POST',
-        url: '/api/admin/v1/common/categoryMapList',
-        params: { PARAM: { NODE_ID: 1831 } },
+        url: '/api/admin/v1/common/categoryChildrenListUseYn',
+        params: { PARAM: { NODE_ID: 1831, USE_YN: 'Y' } },
       },
       {
         key: 'codeData',
@@ -254,7 +254,7 @@ class List extends Component {
             />
           </div>
           <div className="btn-area">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.searchList}>
+            <StyledButton className="btn-gray btn-first btn-sm" onClick={this.searchList}>
               검색
             </StyledButton>
           </div>

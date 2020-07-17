@@ -10,6 +10,7 @@ import draggableSymbol from 'images/common/widget-icon-draggable.png';
 import draggableSymbol2 from 'images/common/widget-icon-draggable2.png';
 import draggableSymbol2Over from 'images/common/widget-icon-draggable2-over.png';
 import widgetElmtDel from 'images/common/widget-icon-delete.png';
+import ShareRedIcon from 'images/bizstore/icon-share.png';
 
 const BtnIconNotify = styled.button`
   position: absolute;
@@ -83,4 +84,35 @@ const BtnIconWidgetDel = styled.button`
   background: url(${widgetElmtDel}) no-repeat 50% 50%;
 `;
 
-export { BtnIconNotify, BtnIconSettings, BtnIconReload, BtnIconSeeDetails, BtnIconFind, BtnIconAdd, BtnIconDragSymbol, BtnIconWidgetDel, BtnIconDragSymbol2 };
+/* 공유하기 */
+const BtnRedShare = styled.button`
+  display: inline-block;
+  min-width: 90px;
+  height: 32px;
+  padding: 0 10px 0 30px;
+  border: 0;
+  color: #f85023;
+  font-size: 14px;
+  line-height: 32px;
+  background: #ffffff url(${ShareRedIcon}) no-repeat 7px 50%;
+  cursor: pointer;
+
+  @media only screen and (max-width: 1024px) {
+    height: 25px;
+    padding: 0 5px 0 30px;
+    font-size: 12px;
+    line-height: 1;
+  }
+`;
+export {
+  BtnIconNotify,
+  BtnIconSettings,
+  BtnIconReload,
+  BtnIconSeeDetails,
+  BtnIconFind,
+  BtnIconAdd,
+  BtnIconDragSymbol,
+  BtnIconWidgetDel,
+  BtnIconDragSymbol2,
+  BtnRedShare,
+};

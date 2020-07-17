@@ -85,6 +85,7 @@ class UserSearchModal extends Component {
           onCancel={() => {
             if (typeof modalOnCancel === 'function') {
               modalOnCancel();
+              this.handleModalVisible();
             } else {
               this.onClickRow({ EMP_NO: '', USER_ID: '' });
             }
@@ -96,6 +97,7 @@ class UserSearchModal extends Component {
               onClick={() => {
                 if (typeof modalOnCancel === 'function') {
                   modalOnCancel();
+                  this.handleModalVisible();
                 } else {
                   this.onClickRow({ EMP_NO: '', USER_ID: '' });
                 }

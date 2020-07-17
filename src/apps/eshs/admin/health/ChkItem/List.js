@@ -106,12 +106,12 @@ class List extends Component {
       render: (text, record) => text === 'C' ? '공통' : text === 'M' ? '남자만' : '여자만'
     },
     {
-      title: '필수검진여부',
-      dataIndex: 'ITEM_REQUIRE',
-      key: 'ITEM_REQUIRE',
+      title: '삭제여부',
+      dataIndex: 'IS_DEL',
+      key: 'IS_DEL',
       width: '10%',
       align: 'center',
-      render: (text, record) => text === 'Y' ? '필수검진' : '추가검진'
+      render: (text, record) => text === '0' ? '사용' : '삭제'
     },
   ];
 
