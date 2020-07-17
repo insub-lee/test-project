@@ -67,8 +67,22 @@ class SelectEducationMemberComp extends React.Component {
     );
   };
 
+  handleOnSelectedUserDelete = userId => {
+    this.setState(prevState => {
+      const tempList = prevState.selectedUserList.filter(user => user.USER_ID !== userId);
+      console.debug(prevState.selectedUserList, tempList);
+      return { selectedUserList: tempList };
+    });
+  };
+
+  onInitComplete = userList => {
+    this.setState({
+      selectedUserList: userList,
+    });
+  };
+
   render() {
-    const { handleModalClose, handleUserSelect, handleUserSelectComplete } = this;
+    const { handleModalClose, handleUserSelect, handleUserSelectComplete, handleOnSelectedUserDelete, onInitComplete } = this;
     const { modalVisible, userIdList } = this.state;
     const { visible } = this.props;
 
@@ -83,10 +97,12 @@ class SelectEducationMemberComp extends React.Component {
         </StyledButton>
         <AntdModal title="교육대상자 지정" visible={modalVisible} width="85%" onCancel={handleModalClose} footer={null} destroyOnClose>
           <CustomUserSelect
+            onInitComplete={onInitComplete}
             onCancel={handleModalClose}
             initUserList={userIdList}
             onUserSelectHandler={handleUserSelect}
             onUserSelectedComplete={handleUserSelectComplete}
+            onUserDelete={handleOnSelectedUserDelete}
           />
         </AntdModal>
       </>

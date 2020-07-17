@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Input, Select, message, DatePicker } from 'antd';
+import { Card, Input, Select, message, DatePicker, Modal } from 'antd';
 import moment from 'moment';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
@@ -8,10 +8,14 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import { callBackAfterPost, callBackAfterPut } from 'apps/eshs/common/submitCallbackFunc';
 import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+
+import GetEducationMemberComp from 'components/BizBuilder/Field/GetEducationMemberComp';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const AntdPicker = StyledPicker(DatePicker.RangePicker);
+const AntdModal = StyledAntdModal(Modal);
 class InputPage extends React.Component {
   constructor(props) {
     super(props);
@@ -58,6 +62,7 @@ class InputPage extends React.Component {
           fourthSelection: '',
         },
       },
+      modalVisible: false,
     };
   }
 
@@ -263,7 +268,7 @@ class InputPage extends React.Component {
     return this.setState({ videoId: '' });
   };
 
-  handleDateChange = (date, dateString) => {
+  handleDateChange = date => {
     const [OPEN_DTTM, END_DTTM] = date;
     this.setState({
       OPEN_DTTM,
@@ -272,9 +277,9 @@ class InputPage extends React.Component {
   };
 
   render() {
-    const { handleInputChange, handleSaveClick, handleSelectChange, handleVideoUrlInput } = this;
+    const { handleInputChange, handleSaveClick, handleSelectChange, handleVideoUrlInput, handleModalVisible } = this;
     const { questionsLenght, handleDateChange } = this;
-    const { questions, eduDate, selectedDate, videoId, OPEN_DTTM, END_DTTM } = this.state;
+    const { questions, eduDate, selectedDate, videoId, OPEN_DTTM, END_DTTM, modalVisible } = this.state;
     const { handleModalClose, result, CONFIG } = this.props;
     const isModify = result.questions && result.questions.list && result.questions.list && result.questions.list[0] && result.questions.list[0].EXAM_ID;
     return (
@@ -300,7 +305,7 @@ class InputPage extends React.Component {
           {CONFIG.property.SEQ === 2 ? (
             <div className="selSaveWrapper">
               <p style={{ display: 'inline-block', width: '15%', textAlign: 'center' }}>2차 교육일정</p>
-              <AntdPicker className="ant-picker-mid" onChange={handleDateChange} value={[OPEN_DTTM, END_DTTM]} />
+              <AntdPicker className="ant-picker-mid" onChange={handleDateChange} value={[moment(OPEN_DTTM), moment(END_DTTM)]} />
             </div>
           ) : null}
           <div style={{ marginTop: '30px', marginLeft: '100px', marginBottom: '10px' }}>
@@ -403,6 +408,18 @@ class InputPage extends React.Component {
             </div>
           ))}
           <div style={{ padding: '30px' }}>
+            {CONFIG.property.SEQ === 2 ? (
+              <GetEducationMemberComp
+                visible
+                sagaKey={this.props.sagaKey}
+                getExtraApiData={this.props.getCallDataHandler}
+                rowData={{ WORK_SEQ: this.props.parentWorkSeq, TASK_SEQ: this.props.parentTaskSeq }}
+                extraApiData={this.props.result}
+                buttonWidth="120px"
+                className="btn-primary mr5"
+                selectSecondEducationTarget
+              />
+            ) : null}
             <StyledButton className="btn-primary mr5" onClick={() => handleSaveClick(isModify)}>
               {isModify ? '수정' : '저장'}
             </StyledButton>
