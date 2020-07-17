@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Modal, Select, Spin } from 'antd';
+import { Modal, Select, Spin, DatePicker } from 'antd';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StatusListTable from '../infoTable/statusListTable';
-import FormDataTable from '../infoTable/formDataTable';
-import ExcelDownload from '../excel';
+import DiaryListTable from '../infoTable/diaryListTable';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSelect = StyledSelect(Select);
+const AntdRangePicker = StyledDatePicker(DatePicker.RangePicker);
 const { Option } = Select;
 
 class ChemicalStatusPage extends Component {
@@ -23,21 +24,15 @@ class ChemicalStatusPage extends Component {
       searchAfter: false,
       isSearching: false,
       site: '청주', // 검색조건
+      sTimeStamp: moment()
+        .subtract(1, 'days')
+        .format('YYYYMMDD,09:00'),
+      eTimeStamp: moment().format('YYYYMMDD,09:00'), // 검색조건
       modalType: '',
       modalTitle: '',
       modalVisible: false,
       selectedSite: '',
-      formData: {
-        GONGNO: '',
-        PRODNM: '',
-        GONGAREA: '',
-        GONGINFO: '',
-        FAB_KEYNO: '',
-        FAB_AREA: '',
-        FAB_PROC: '',
-        POINT_CNT: 0,
-        GONGDT: '',
-      },
+      formData: {},
       listData: [],
     };
   }
@@ -46,11 +41,13 @@ class ChemicalStatusPage extends Component {
   handlerSearch = () => {
     this.setState({ isSearching: true });
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
-    const { site } = this.state;
+    const { site, sTimeStamp, eTimeStamp } = this.state;
+    const sTimeStampArr = sTimeStamp.split(',');
+    const eTimeStampArr = eTimeStamp.split(',');
     const apiInfo = {
       key: 'chemiacalStatusList',
       type: 'GET',
-      url: `/api/gcs/v1/common/chemiacal/status?site=${site}`,
+      url: `/api/gcs/v1/common/chemiacal/diary?type=range&site=${site}&sDate=${sTimeStampArr[0]}&sTime=${sTimeStampArr[1]}&eDate=${eTimeStampArr[0]}&eTime=${eTimeStampArr[1]}`,
     };
     getCallDataHandlerReturnRes(id, apiInfo, this.searchCallback);
   };
@@ -72,21 +69,14 @@ class ChemicalStatusPage extends Component {
     let etcData = {};
     switch (type) {
       case 'NEW':
-        title = '사용정보 입력';
-        etcData = {
-          GONGNO: '',
-          PRODNM: '',
-          GONGAREA: '',
-          GONGINFO: '',
-          FAB_KEYNO: '',
-          FAB_AREA: '',
-          FAB_PROC: '',
-          POINT_CNT: 0,
-          GONGDT: '',
-        };
+        title = '신규 등록';
+        etcData = {};
+        break;
+      case 'EXCEL':
+        title = '청주 통합 일일업무 업로드';
         break;
       case 'MODIFY':
-        title = '사용정보 수정';
+        title = '항목 수정';
         etcData = etc;
         break;
       default:
@@ -140,14 +130,14 @@ class ChemicalStatusPage extends Component {
     switch (type) {
       case 'NEW':
         if (!isValid) return;
-        submitHandlerBySaga(id, 'POST', '/api/gcs/v1/common/chemiacal/status', submitData, this.submitFormDataCallback);
+        submitHandlerBySaga(id, 'POST', '/api/gcs/v1/common/chemiacal/diary', submitData, this.submitFormDataCallback);
         break;
       case 'MODIFY':
         if (!isValid) return;
-        submitHandlerBySaga(id, 'PUT', '/api/gcs/v1/common/chemiacal/status', submitData, this.submitFormDataCallback);
+        submitHandlerBySaga(id, 'PUT', '/api/gcs/v1/common/chemiacal/diary', submitData, this.submitFormDataCallback);
         break;
       case 'DELETE':
-        submitHandlerBySaga(id, 'DELETE', '/api/gcs/v1/common/chemiacal/status', submitData, this.submitFormDataCallback);
+        submitHandlerBySaga(id, 'DELETE', '/api/gcs/v1/common/chemiacal/diary', submitData, this.submitFormDataCallback);
         break;
       default:
         break;
@@ -218,24 +208,35 @@ class ChemicalStatusPage extends Component {
     });
   };
 
+  onChangeSearchRange = value => {
+    this.setState({
+      sTimeStamp: value[0].format('YYYYMMDD,hh:mm'),
+      eTimeStamp: value[1].format('YYYYMMDD,hh:mm'),
+    });
+  };
+
   render() {
-    const { site, modalType, modalTitle, modalVisible, formData, listData, isSearching, searchAfter, selectedSite } = this.state;
+    const { site, modalType, modalTitle, modalVisible, formData, listData, isSearching, searchAfter, sTimeStamp, eTimeStamp } = this.state;
+    console.debug('일지관리', this.state);
     return (
       <>
         <StyledCustomSearchWrapper>
           <Spin tip="검색중 ..." spinning={isSearching}>
             <div className="search-input-area">
               <span className="text-label">지역</span>
-              <AntdSelect
-                defaultValue={site}
-                className="select-sm"
-                style={{ width: '100px', marginRight: '10px' }}
-                onChange={val => this.setState({ site: val })}
-                disabled
-              >
+              <AntdSelect defaultValue={site} className="select-sm" style={{ width: '100px' }} onChange={val => this.setState({ site: val })} disabled>
                 <Option value="청주">청주</Option>
                 <Option value="구미">구미</Option>
               </AntdSelect>
+              <span className="text-label">기간</span>
+              <AntdRangePicker
+                className="ant-picker-sm"
+                showTime
+                format="YYYY-MM-DD HH:mm"
+                style={{ marginRight: '10px' }}
+                defaultValue={[moment(sTimeStamp, 'YYYYMMDD,hh:mm'), moment(eTimeStamp, 'YYYYMMDD,hh:mm')]}
+                onChange={value => this.onChangeSearchRange(value)}
+              />
               <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handlerSearch()}>
                 검색
               </StyledButton>
@@ -247,14 +248,19 @@ class ChemicalStatusPage extends Component {
             <div style={{ height: '29px' }} />
           ) : (
             <>
-              <ExcelDownload listData={listData} site={selectedSite} />
-              <StyledButton className="btn-primary btn-sm btn-first ml5" onClick={() => this.handleModal('NEW', true)}>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('EXCEL', true)}>
+                Excel 다운로드
+              </StyledButton>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('EXCEL', true)}>
+                Excel 업로드
+              </StyledButton>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('NEW', true)}>
                 새등록
               </StyledButton>
             </>
           )}
         </StyledButtonWrapper>
-        <StatusListTable listData={listData} handleModal={this.handleModal} />
+        <DiaryListTable listData={listData} handleModal={this.handleModal} />
         <AntdModal
           className="modal-table-pad"
           title={modalTitle}
@@ -266,13 +272,8 @@ class ChemicalStatusPage extends Component {
           onOk={() => this.handleModal('', false)}
           onCancel={() => this.handleModal('', false)}
         >
-          <FormDataTable
-            formData={formData}
-            type={modalType}
-            onChangeFormData={this.onChangeFormData}
-            site={selectedSite}
-            submitFormData={this.submitFormData}
-          />
+          {(modalType === 'NEW' || modalType === 'MODIFY') && <div>1 row upsert</div>}
+          {modalType === 'EXCEL' && <div>엑셀</div>}
         </AntdModal>
       </>
     );

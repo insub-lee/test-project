@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, Modal } from 'antd';
 import StyledAntdTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import InputExamQuestion from 'apps/eshs/admin/safety/periodicalEducation/inputExamQuestion';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
@@ -15,6 +15,7 @@ class List extends React.Component {
       dataSource: [],
       modalVisible: false,
       selectedTaskSeq: -1,
+      selectedExamSeq: -1,
     };
   }
 
@@ -23,12 +24,12 @@ class List extends React.Component {
   }
 
   getDataSource = () => {
-    const { sagaKey: id, getCallDataHandler, profile } = this.props;
+    const { sagaKey: id, getCallDataHandler } = this.props;
     const apiArr = [
       {
         key: 'examList',
         type: 'GET',
-        url: `/api/eshs/v1/common/eduexamresult?USER_ID=${profile.USER_ID}`,
+        url: `/api/eshs/v1/common/eduexamresult`,
       },
     ];
 
@@ -47,33 +48,44 @@ class List extends React.Component {
       title: '연도',
       dataIndex: 'EDU_YEAR',
       render: text => `${text}`,
+      align: 'center',
     },
     {
-      title: '월',
+      title: '교육차수',
       dataIndex: 'EDU_MONTH',
-      render: text => `${text}월`,
+      render: text => `${text}차`,
+      align: 'center',
     },
     {
       title: '시작일',
       dataIndex: 'EDU_INIT',
+      align: 'center',
     },
     {
       title: '종료일',
       dataIndex: 'EDU_END',
+      align: 'center',
     },
     {
-      title: '유효성평가 현황 (1차)',
-      dataIndex: 'FIRST_SCORE',
+      title: '시험차수',
+      dataIndex: 'SEQ',
+      align: 'center',
+      render: text => <span>{text}차</span>,
+    },
+    {
+      title: '유효성평가 현황',
+      dataIndex: 'FIRST_EXAM_RESULT',
+      align: 'center',
     },
     {
       title: '유효성평가 응시',
       render: (text, record) => {
-        switch (record.FIRST_SCORE) {
+        switch (record.FIRST_EXAM_RESULT) {
           case '불합격':
             return <span>불합격</span>;
           case '미응시':
             return (
-              <StyledButton className="btn-primary btn-sm" onClick={() => this.handleModalVisible(record.PARENT_TASK_SEQ)}>
+              <StyledButton className="btn-primary btn-sm" onClick={() => this.handleModalVisible(record.TASK_SEQ, record.SEQ)} style={{ width: '50%' }}>
                 응시
               </StyledButton>
             );
@@ -83,13 +95,15 @@ class List extends React.Component {
             return null;
         }
       },
+      align: 'center',
     },
   ];
 
-  handleModalVisible = taskSeq => {
+  handleModalVisible = (taskSeq, examSeq) => {
     this.setState({
       modalVisible: true,
       selectedTaskSeq: taskSeq,
+      selectedExamSeq: examSeq,
     });
   };
 
@@ -102,7 +116,7 @@ class List extends React.Component {
 
   render() {
     const { columns, handleModalClose, getDataSource } = this;
-    const { dataSource, modalVisible, selectedTaskSeq } = this.state;
+    const { dataSource, modalVisible, selectedTaskSeq, selectedExamSeq } = this.state;
     const { authority, workSeq } = this.props;
     return (
       <>
@@ -114,6 +128,7 @@ class List extends React.Component {
             parentWorkSeq={workSeq}
             parentTaskSeq={selectedTaskSeq}
             getDataSource={getDataSource}
+            seq={selectedExamSeq}
           />
         </AntdModal>
       </>
@@ -124,7 +139,6 @@ class List extends React.Component {
 List.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
-  profile: PropTypes.object,
   result: PropTypes.object,
   authority: PropTypes.arrayOf('string'),
   workSeq: PropTypes.number,

@@ -321,7 +321,7 @@ class ListPage extends React.Component {
               <span className="text-label" style={{ display: 'inline-block', width: '82.55px' }}>
                 지역
               </span>
-              <AntdSelect className="select-mid mr5" onChange={value => handleInputChange('siteId', value)} value={317} style={{ width: '10%' }}>
+              <AntdSelect className="select-mid mr5" onChange={value => handleInputChange('siteId', value)} value={searchValue.siteId} style={{ width: '10%' }}>
                 {siteList.map(site => (
                   <Select.Option value={site.NODE_ID}>{site.NAME_KOR}</Select.Option>
                 ))}
