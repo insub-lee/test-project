@@ -1,9 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import browser from 'browser-detect';
 
-const browserInfo = browser();
-
-export const useResize = (x, y, width, height, onResize) => {
+export const useResize = (x, y, width, height, onResize, id) => {
   const [dragging, setDragging] = useState(false);
   const [initialDragState, setInitialDragState] = useState({
     initX: 0,
@@ -32,25 +29,20 @@ export const useResize = (x, y, width, height, onResize) => {
 
   const onMouseMove = useCallback(
     e => {
-      if (dragging) {
+      const node = document.getElementById(`ant-design-draggable-modal-target-${id}`);
+      if (node && node.className.includes('can-resize')) {
         const { initX, initY, initWidth, mouseDownX, initHeight, mouseDownY } = initialDragState;
         const dx = e.clientX - mouseDownX;
         const dy = e.clientY - mouseDownY;
-        const width = initWidth + dx;
-        const height = initHeight + dy;
-        return onResize({ x: initX, y: initY, width, height });
+        return onResize({ x: initX, y: initY, width: initWidth + dx, height: initHeight + dy });
       }
     },
-    [onResize, initialDragState, dragging],
+    [onResize, initialDragState, id],
   );
 
   useEffect(() => {
-    if (browserInfo.name !== 'ie') {
-      window.addEventListener('mousemove', onMouseMove, { passive: true });
-    }
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-    };
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', onMouseMove);
   }, [onMouseMove]);
 
   useEffect(() => {
@@ -61,5 +53,5 @@ export const useResize = (x, y, width, height, onResize) => {
     return () => window.removeEventListener('mouseup', onMouseUp);
   }, []);
 
-  return { onMouseDown, onMouseMove };
+  return { onMouseDown, dragging };
 };
