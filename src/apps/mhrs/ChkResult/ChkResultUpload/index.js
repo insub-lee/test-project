@@ -11,7 +11,7 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
-import ExcelUpload from '../ExcelUpload';
+import ExcelUpload from 'components/ExcelUpload';
 
 const AntdSelect = StyledSelect(Select);
 
@@ -41,26 +41,41 @@ class Upload extends Component {
   };
   
   onUploadExcel = () => {
-    const { sagaKey, excelUpload, spinningOn, spinningOff, onCancelPopup } = this.props;
+    const { result: { chkTypeList: { categoryMapList } }, sagaKey, excelUpload, spinningOn, spinningOff, onCancelPopup } = this.props;
 
     const { fileInfo, CHK_TYPE_CD_NODE_ID } = this.state;
-    const formData = new FormData();
-    formData.append(fileInfo.uid, fileInfo);
-    formData.append('startRow', 5);
-    formData.append('startCell', 0);
-    formData.append('CHK_TYPE_CD_NODE_ID', CHK_TYPE_CD_NODE_ID);
 
-    const headers = {};
-    spinningOn();
-    excelUpload(sagaKey, '/api/eshs/v1/common/MhrsHealthChkResultExcelUpload', formData, headers, (res) => {
-      spinningOff();
-      if (res && res.result === 1) {
-        message.success(<MessageContent>업로드를 완료하였습니다.</MessageContent>);
-        onCancelPopup();
+    if (fileInfo && Object.keys(fileInfo).length > 0) {
+      const formData = new FormData();
+      formData.append(fileInfo.uid, fileInfo);
+      formData.append('startRow', 5);
+      formData.append('startCell', 0);
+  
+      // 일반재검, 특수재검
+      if (CHK_TYPE_CD_NODE_ID === '001_2' || CHK_TYPE_CD_NODE_ID === '003_2') {
+        const chkCode = CHK_TYPE_CD_NODE_ID.replace('_2', '');
+        const nodeId = categoryMapList.filter(cate => cate.CODE === chkCode)[0].NODE_ID;
+        formData.append('CHK_TYPE_CD_NODE_ID', nodeId);
+        formData.append('CHK_SEQ', '2');
       } else {
-        message.error(<MessageContent>업로드를 실패하였습니다.</MessageContent>);
+        formData.append('CHK_TYPE_CD_NODE_ID', CHK_TYPE_CD_NODE_ID);
+        formData.append('CHK_SEQ', '1');
       }
-    });
+  
+      const headers = {};
+      spinningOn();
+      excelUpload(sagaKey, '/api/eshs/v1/common/MhrsHealthChkResultExcelUpload', formData, headers, (res) => {
+        spinningOff();
+        if (res && res.result === 1) {
+          message.success(<MessageContent>업로드를 완료하였습니다.</MessageContent>);
+          onCancelPopup();
+        } else {
+          message.error(<MessageContent>업로드를 실패하였습니다.</MessageContent>);
+        }
+      });
+    } else {
+      message.info(<MessageContent>엑셀 파일을 선택(또는 추가)해 주세요.</MessageContent>);
+    }
   };
 
   render() {
@@ -80,6 +95,8 @@ class Upload extends Component {
                 <AntdSelect.Option value={cate.NODE_ID}>{cate.NAME_KOR}</AntdSelect.Option>
               ))
             )}
+              <AntdSelect.Option value="001_2">일반재검</AntdSelect.Option>
+              <AntdSelect.Option value="003_2">특수재검</AntdSelect.Option>
             </AntdSelect>
           </div>
         </StyledCustomSearchWrapper>
