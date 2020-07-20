@@ -10,6 +10,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import request from 'utils/request';
 import DiaryListTable from '../infoTable/diaryListTable';
 import ExcelPaser from '../excelParser';
 
@@ -22,6 +23,7 @@ class ChemicalStatusPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isSaving: false,
       searchAfter: false,
       isSearching: false,
       site: '청주', // 검색조건
@@ -91,32 +93,6 @@ class ChemicalStatusPage extends Component {
     });
   };
 
-  // valid check
-  validCheck = formData => {
-    const { GONGNO, PRODNM, GONGAREA, GONGINFO, FAB_KEYNO } = formData;
-    if (GONGNO === '') {
-      message.error(<MessageContent>장치번호는 필수 입력값입니다.</MessageContent>);
-      return false;
-    }
-    if (PRODNM === '') {
-      message.error(<MessageContent>장치명은 필수 입력값입니다.</MessageContent>);
-      return false;
-    }
-    if (GONGAREA === '') {
-      message.error(<MessageContent>위치는 필수 입력값입니다.</MessageContent>);
-      return false;
-    }
-    if (GONGINFO === '') {
-      message.error(<MessageContent>기타정보는 필수 입력값입니다.</MessageContent>);
-      return false;
-    }
-    if (FAB_KEYNO === '') {
-      message.error(<MessageContent>KEY-NO는 필수 입력값입니다.</MessageContent>);
-      return false;
-    }
-    return true;
-  };
-
   // 저장, 수정, 삭제
   submitFormData = type => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
@@ -127,14 +103,11 @@ class ChemicalStatusPage extends Component {
         SITE: selectedSite,
       },
     };
-    const isValid = this.validCheck(formData);
     switch (type) {
-      case 'NEW':
-        if (!isValid) return;
-        submitHandlerBySaga(id, 'POST', '/api/gcs/v1/common/chemiacal/diary', submitData, this.submitFormDataCallback);
+      case 'SAVE':
+        this.saveData();
         break;
       case 'MODIFY':
-        if (!isValid) return;
         submitHandlerBySaga(id, 'PUT', '/api/gcs/v1/common/chemiacal/diary', submitData, this.submitFormDataCallback);
         break;
       case 'DELETE':
@@ -145,57 +118,76 @@ class ChemicalStatusPage extends Component {
     }
   };
 
-  submitFormDataCallback = (id, response) => {
-    const { listData } = this.state;
-    const { result, param, type } = response;
-    if (result === 'fail') {
-      switch (type) {
-        case 'insert':
-          return message.error(<MessageContent>사용정보 저장을 실패하였습니다.</MessageContent>);
-        case 'update':
-          return message.error(<MessageContent>사용정보 수정을 실패하였습니다.</MessageContent>);
-        default:
-          return message.error(<MessageContent>사용정보 삭제에 실패하였습니다.</MessageContent>);
-      }
-    }
-    let nextListData = listData;
-    switch (type) {
-      case 'insert':
-        this.handlerSearch();
-        return message.success(<MessageContent>사용정보를 저장하였습니다.</MessageContent>);
-      case 'update':
-        nextListData = listData.map(item => {
-          const { GONGNO, PRODNM, GONGAREA, GONGINFO, FAB_KEYNO } = param;
-          const { GONGNO: gongno, PRODNM: prodnm, GONGAREA: gongarea, GONGINFO: gongInfo, FAB_KEYNO: fabKeyno } = item;
-          if (GONGNO === gongno && PRODNM === prodnm && GONGAREA === gongarea && GONGINFO === gongInfo && FAB_KEYNO === fabKeyno) {
-            return { ...param };
+  // 업로드한 엑셀 데이터 가져오기
+  getUploadList = list => {
+    const { formData } = this.state;
+    this.setState({
+      formData: {
+        ...formData,
+        list,
+      },
+    });
+  };
+
+  // 일지저장(엑셀)
+  saveData() {
+    const { formData, selectedSite } = this.state;
+    const { list } = formData;
+    this.setState({
+      isSaving: true,
+    });
+    if (list?.length > 0) {
+      const failedList = [];
+      list.forEach((row, rowIndex) => {
+        const payload = {
+          PARAM: {
+            ...row,
+            SITE: selectedSite,
+          },
+        };
+        const result = this.sendSingleData(payload);
+        if (!result) {
+          failedList.push(row);
+        }
+        if (rowIndex === list.length - 1) {
+          if (failedList.length > 0) {
+            message.error(<MessageContent>{`${failedList.length}건의 입력을 실패했습니다.`}</MessageContent>);
+          } else {
+            message.success(<MessageContent>{`${list.length}건의 일지를 등록했습니다.`}</MessageContent>);
           }
-          return item;
-        });
-        this.setState({
-          modalType: '',
-          modalTitle: '',
-          modalVisible: false,
-          listData: nextListData,
-        });
-        return message.success(<MessageContent>사용정보를 수정하였습니다.</MessageContent>);
-      default:
-        nextListData = listData.filter(item => {
-          const { GONGNO, PRODNM, GONGAREA, GONGINFO, FAB_KEYNO } = param;
-          const { GONGNO: gongno, PRODNM: prodnm, GONGAREA: gongarea, GONGINFO: gongInfo, FAB_KEYNO: fabKeyno } = item;
-          if (GONGNO === gongno && PRODNM === prodnm && GONGAREA === gongarea && GONGINFO === gongInfo && FAB_KEYNO === fabKeyno) {
-            return false;
-          }
-          return true;
-        });
-        this.setState({
-          modalType: '',
-          modalTitle: '',
-          modalVisible: false,
-          listData: nextListData,
-        });
-        return message.success(<MessageContent>사용정보를 삭제하였습니다.</MessageContent>);
+        }
+      });
+      this.setState({
+        modalType: '',
+        modalTitle: '',
+        isSaving: false,
+        modalVisible: false,
+      });
+    } else {
+      this.setState({
+        isSaving: false,
+      });
+      message.error(<MessageContent>입력할 식단정보가 없습니다.</MessageContent>);
     }
+  }
+
+  // 일지 저장(1)
+  async sendSingleData(payload) {
+    const { error } = await this.saveDiaryInfo(payload);
+    if (error && error !== '') {
+      return false;
+    }
+    return true;
+  }
+
+  // 일지 저장(2)
+  saveDiaryInfo = async payload => {
+    const result = await request({
+      method: 'POST',
+      url: `/api/gcs/v1/common/chemiacal/diary`,
+      data: payload,
+    });
+    return result;
   };
 
   // formData val Change
@@ -217,8 +209,7 @@ class ChemicalStatusPage extends Component {
   };
 
   render() {
-    const { site, modalType, modalTitle, modalVisible, formData, listData, isSearching, searchAfter, sTimeStamp, eTimeStamp } = this.state;
-    console.debug('일지관리', this.state);
+    const { site, modalType, modalTitle, modalVisible, formData, listData, isSearching, isSaving, searchAfter, sTimeStamp, eTimeStamp } = this.state;
     return (
       <>
         <StyledCustomSearchWrapper>
@@ -255,9 +246,11 @@ class ChemicalStatusPage extends Component {
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('EXCEL', true)}>
                 Excel 업로드
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('NEW', true)}>
-                새등록
-              </StyledButton>
+              {/*
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('NEW', true)}>
+                  새등록
+                </StyledButton>
+              */}
             </>
           )}
         </StyledButtonWrapper>
@@ -274,7 +267,11 @@ class ChemicalStatusPage extends Component {
           onCancel={() => this.handleModal('', false)}
         >
           {(modalType === 'NEW' || modalType === 'MODIFY') && <div>1 row upsert</div>}
-          {modalType === 'EXCEL' && <ExcelPaser />}
+          {modalType === 'EXCEL' && (
+            <Spin tip="저장중..." spinning={isSaving}>
+              <ExcelPaser getUploadList={this.getUploadList} onSave={this.submitFormData} isSaving={isSaving} />
+            </Spin>
+          )}
         </AntdModal>
       </>
     );

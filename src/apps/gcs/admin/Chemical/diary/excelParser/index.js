@@ -194,7 +194,9 @@ class ExcelParser extends Component {
           <p>Excel Drag and Drop 혹은 선택</p>
         </Dragger>
         {children && children}
-        <AntdTable pagination={false} columns={columns} dataSource={list.toJS().reverse()} scroll={{ x: 1600, y: 270 }} />
+        <div className="table_wrap">
+          <AntdTable pagination={false} columns={columns} dataSource={list.toJS().reverse()} scroll={{ x: 1600, y: 270 }} />
+        </div>
         <div className="saveBtnWrap">
           <StyledButton className="btn-primary btn-sm" onClick={() => onSave('SAVE')}>
             저장

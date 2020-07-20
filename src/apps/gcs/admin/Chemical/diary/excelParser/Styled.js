@@ -5,12 +5,16 @@ const Styled = styled.div`
   height: 100%;
 
   .excelDown {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     text-align: right;
   }
 
   .saveBtnWrap {
     text-align: center;
+    margin-top: 10px;
+  }
+
+  .table_wrap {
     margin-top: 10px;
   }
 `;
