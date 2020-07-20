@@ -11,6 +11,7 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import DiaryListTable from '../infoTable/diaryListTable';
+import ExcelPaser from '../excelParser';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSelect = StyledSelect(Select);
@@ -273,7 +274,7 @@ class ChemicalStatusPage extends Component {
           onCancel={() => this.handleModal('', false)}
         >
           {(modalType === 'NEW' || modalType === 'MODIFY') && <div>1 row upsert</div>}
-          {modalType === 'EXCEL' && <div>엑셀</div>}
+          {modalType === 'EXCEL' && <ExcelPaser />}
         </AntdModal>
       </>
     );
