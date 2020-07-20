@@ -5,7 +5,7 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 import ListPage from './page/ListPage';
 
 /*
-    안전지킴이 - 안전작업신청 - 작업중 점검 등록
+    MXlife - 이벤트 참여자 정보
 */
 
 const Styled = styled.div`

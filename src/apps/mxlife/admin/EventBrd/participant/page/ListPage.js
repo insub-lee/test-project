@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Input, DatePicker, Table, Select } from 'antd';
+import { Input, DatePicker, Table } from 'antd';
 import styled from 'styled-components';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import message from 'components/Feedback/message';
-import Group from 'components/BizBuilder/Sketch/Group';
 import MessageContent from 'components/Feedback/message.style2';
 
 const AntdTable = StyledAntdTable(Table);
@@ -29,7 +27,13 @@ class ParticipantList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchValues: {
+        sDate: moment().format('YYYY-MM-DD'),
+        eDate: moment().format('YYYY-MM-DD'),
+        name: '',
+      },
       participantList: [],
+      winnerList: [],
     };
   }
 
@@ -64,8 +68,69 @@ class ParticipantList extends Component {
     });
   };
 
+  onSearch = () => {
+    const { result } = this.props;
+    const { searchValues } = this.state;
+    const { sDate, eDate, name } = searchValues;
+    const listData = result.getParticipantList.list;
+    const start = moment(sDate, 'YYYY-MM-DD');
+    const end = moment(eDate, 'YYYY-MM-DD');
+    const regex = new RegExp(`${name}`, 'gi');
+    const nextParticipantList = listData.filter(item => {
+      const regDate = moment(item.REG_DTTM, 'YYYY-MM-DD');
+      const rangeDate = start < regDate && regDate < end;
+      const regResult = regex.test(item.REG_USER_NAME);
+      if (rangeDate && regResult) return true;
+      return false;
+    });
+    this.setState({
+      participantList: nextParticipantList,
+    });
+  };
+
+  // 당첨자 지정
+  submitFormData = () => {
+    const { sagaKey: id, submitHandlerBySaga, initData } = this.props;
+    const { winnerList } = this.state;
+    const submitData = {
+      PARAM: {
+        type: 'winner',
+        winnerList: winnerList || [],
+        brdId: initData.BRD_ID,
+        brdSeq: initData.EVENT_SEQ,
+      },
+    };
+    submitHandlerBySaga(id, 'PUT', '/api/mxlife/v1/common/comment', submitData, this.submitFormDataCallback);
+  };
+
+  submitFormDataCallback = (id, response) => {
+    const { participantList, winnerList } = this.state;
+    const { result } = response;
+    if (result === 'success') {
+      const nextParticipantList = participantList.map(item => {
+        const isWinner = winnerList.findIndex(winner => winner.COMMENT_SEQ === item.COMMENT_SEQ);
+        if (isWinner === -1)
+          return {
+            ...item,
+            WIN_YN: 'N',
+          };
+        return {
+          ...item,
+          WIN_YN: 'Y',
+        };
+      });
+      this.setState(
+        {
+          participantList: nextParticipantList,
+        },
+        () => message.success(<MessageContent>당첨자 정보를 저장하였습니다.</MessageContent>),
+      );
+    }
+  };
+
   render() {
-    const { participantList } = this.state;
+    const { participantList, searchValues } = this.state;
+    const { sDate, eDate, name } = searchValues;
     const columns = [
       {
         title: 'NO',
@@ -92,29 +157,62 @@ class ParticipantList extends Component {
         dataIndex: 'REG_USER_NAME',
         align: 'center',
       },
+      {
+        title: '당첨여부',
+        dataIndex: 'WIN_YN',
+        align: 'center',
+        render: data => <span>{data === 'Y' ? '당첨' : '미당첨'}</span>,
+      },
     ];
+
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        this.setState({
+          winnerList: selectedRows,
+        });
+      },
+    };
+
     return (
       <>
-        <StyledCustomSearchWrapper>
+        <StyledCustomSearchWrapper style={{ marginBottom: '10px' }}>
           <div className="search-input-area">
-            <AntdDatePicker className="ant-picker-sm" style={{ width: '110px', marginRight: '10px' }} />
-            <AntdDatePicker className="ant-picker-sm" style={{ width: '110px', marginRight: '10px' }} />
-            <AntdInput
-              className="ant-input-sm"
-              // value={formData.WORK_NO}
-              style={{ width: '100px', marginRight: '10px' }}
+            <AntdDatePicker
+              className="ant-picker-sm"
+              defaultValue={moment(sDate, 'YYYY-MM-DD')}
+              style={{ width: '110px', marginRight: '10px' }}
+              onChange={date => this.handleChangeSearchValue('sDate', date.format('YYYY-MM-DD'))}
             />
-            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => console.debug('검색')}>
+            <AntdDatePicker
+              className="ant-picker-sm"
+              defaultValue={moment(eDate, 'YYYY-MM-DD')}
+              style={{ width: '110px', marginRight: '10px' }}
+              onChange={date => this.handleChangeSearchValue('eDate', date.format('YYYY-MM-DD'))}
+            />
+            <AntdInput
+              placeholder="이름 검색"
+              className="ant-input-sm"
+              defaultValue={name || ''}
+              style={{ width: '100px', marginRight: '10px' }}
+              onChange={e => this.handleChangeSearchValue('name', e.target.value)}
+            />
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.onSearch()}>
               검색
             </StyledButton>
           </div>
         </StyledCustomSearchWrapper>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData()}>
+            당첨자 지정
+          </StyledButton>
+        </StyledButtonWrapper>
         <ContentsWrapper>
           <CustomTableStyled>
             <AntdTable
               pagination={false}
               columns={columns}
               dataSource={participantList || []}
+              rowSelection={rowSelection}
               footer={() => <div style={{ textAlign: 'center' }}>{`TOTAL : ${participantList.length === 0 ? 0 : participantList.length} 명`}</div>}
             />
           </CustomTableStyled>
@@ -128,8 +226,8 @@ ParticipantList.propTypes = {
   initData: PropTypes.object,
   sagaKey: PropTypes.string,
   result: PropTypes.object,
-  getCallDataHandler: PropTypes.func,
   getCallDataHandlerReturnRes: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
 };
 
 ParticipantList.defaultProps = {};
