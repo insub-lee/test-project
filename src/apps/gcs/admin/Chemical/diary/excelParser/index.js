@@ -8,7 +8,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import sampleExcelFile from './sapleExcel/통합일일업무.xlsx';
+import sampleExcelFile from './sampleExcel/통합일일업무.xlsx';
 import Styled from './Styled';
 
 const { Dragger } = Upload;
