@@ -464,11 +464,14 @@ class DraftList extends Component {
         <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
-              <Icon type="form" /> 기안함 상신한 문서 : {draftListCnt || 0} 건
+              <Icon type="form" /> 기안함
             </p>
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
+          <span>
+            상신한 문서 : <font style={{ color: '#ff0000' }}>{draftListCnt || 0}</font> 건
+          </span>
           <AntdTable
             key="apps-workflow-user-draft-list"
             columns={this.getTableColumns()}

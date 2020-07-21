@@ -6,6 +6,7 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
+import message from 'components/Feedback/message';
 
 const AntdTextArea = StyledTextarea(Input.TextArea);
 
@@ -50,14 +51,18 @@ class DraftDownLoad extends Component {
 
   onDraftDownLoad = () => {
     const { selectedDRM, OPINION } = this.state;
-    const { sagaKey, submitHandlerBySaga, onCompleteProc, selectedRow, DRAFT_PROCESS } = this.props;
-    const { TITLE, WORK_SEQ, TASK_SEQ } = selectedRow;
-    const draftTitle = `${TITLE} 다운로드신청`;
-    const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
-    const draftData = {
-      DRAFT_PROCESS: { ...DRAFT_PROCESS, DRAFT_TITLE: draftTitle, WORK_SEQ, TASK_SEQ, OPINION, REL_TYPE: 4, DRAFT_DATA: { ...selectedDRM, OPINION } },
-    };
-    submitHandlerBySaga(sagaKey, 'POST', prefixUrl, draftData, onCompleteProc);
+    if (OPINION) {
+      const { sagaKey, submitHandlerBySaga, onCompleteProc, selectedRow, DRAFT_PROCESS } = this.props;
+      const { TITLE, WORK_SEQ, TASK_SEQ } = selectedRow;
+      const draftTitle = `${TITLE} 다운로드신청`;
+      const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
+      const draftData = {
+        DRAFT_PROCESS: { ...DRAFT_PROCESS, DRAFT_TITLE: draftTitle, WORK_SEQ, TASK_SEQ, OPINION, REL_TYPE: 4, DRAFT_DATA: { ...selectedDRM, OPINION } },
+      };
+      submitHandlerBySaga(sagaKey, 'POST', prefixUrl, draftData, onCompleteProc);
+    } else {
+      message.warning('요청사유를 입력하셔야 합니다.');
+    }
   };
 
   render() {
