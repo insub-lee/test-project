@@ -139,14 +139,12 @@ class UnApproveList extends Component {
           />
         </StyledContentsWrapper>
 
-        {viewVisible && (
-          <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
-            <MdcsAppvView {...this.props} />
-            {/* <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+        <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+          <MdcsAppvView {...this.props} />
+          {/* <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
               <MdcsAppvView {...this.props} />
             </AntdModal> */}
-          </AntdModal>
-        )}
+        </AntdModal>
       </>
     );
   }
