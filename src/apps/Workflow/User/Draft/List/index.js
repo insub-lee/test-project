@@ -766,7 +766,6 @@ class DraftList extends Component {
           className="modalWrapper modalTechDoc"
           title="홀드해제 의견"
           width={500}
-          height={400}
           destroyOnClose
           visible={opinionVisible}
           onCancel={() => setOpinionVisible(false)}

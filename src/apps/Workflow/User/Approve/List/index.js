@@ -6,8 +6,6 @@ import moment from 'moment';
 import styled from 'styled-components';
 import BizBuilderBase from 'components/BizBuilderBase';
 import AbrogationMultiModifyDraft from 'apps/Workflow/User/CommonView/abrogationMultiModifyDraft';
-import DraggableModal from 'components/DraggableModal';
-
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
@@ -23,7 +21,7 @@ import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHead
 const { TextArea } = Input;
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledAntdModal(DraggableModal);
+const AntdModal = StyledAntdModal(Modal);
 const StyledWrap = styled.div`
   table.mdcsProcessList {
     width: 100%;
@@ -513,8 +511,7 @@ class ApproveList extends Component {
               <AntdModal
                 className="modalWrapper modalTechDoc"
                 title="내용 보기"
-                initialWidth={680}
-                initialHeight={500}
+                width={680}
                 visible={this.props.viewVisible}
                 destroyOnClose
                 onCancel={this.closeBtnFunc}
@@ -592,8 +589,7 @@ class ApproveList extends Component {
             <AntdModal
               className="modalWrapper modalTechDoc"
               title="표지 보기"
-              initialWidth={900}
-              initialHeight={600}
+              width={900}
               destroyOnClose
               visible={coverView.visible}
               onCancel={this.onCloseCoverView}
@@ -645,8 +641,7 @@ class ApproveList extends Component {
               <AntdModal
                 className="modalWrapper modalTechDoc"
                 title="내용 보기"
-                initialWidth={680}
-                initialHeight={500}
+                width={680}
                 visible={this.props.viewVisible}
                 destroyOnClose
                 onCancel={this.closeBtnFunc}
@@ -766,8 +761,7 @@ class ApproveList extends Component {
             <AntdModal
               className="modalWrapper modalTechDoc modalCustom"
               title="표지 보기"
-              initialWidth={900}
-              initialHeight={600}
+              width={900}
               visible={isAbrogationMultiShow}
               destroyOnClose
               onCancel={this.onCloseAbrogationMultiModal}
@@ -785,8 +779,7 @@ class ApproveList extends Component {
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"
           title="홀드해제 의견"
-          initialWidth={500}
-          initialHeight={240}
+          width={500}
           destroyOnClose
           visible={opinionVisible}
           onCancel={() => setOpinionVisible(false)}
