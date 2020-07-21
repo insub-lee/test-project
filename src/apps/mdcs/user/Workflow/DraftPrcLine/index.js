@@ -67,7 +67,7 @@ class DraftPrcLine extends Component {
             <div className="draftButton">
               {viewType === 'INPUT' && (
                 <StyledButton className="btn-gray btn-sm" onClick={this.handleOpenModal}>
-                  결재선변경
+                  결재선 반영
                 </StyledButton>
               )}
             </div>

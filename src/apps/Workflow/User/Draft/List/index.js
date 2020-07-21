@@ -486,88 +486,86 @@ class DraftList extends Component {
         </StyledContentsWrapper>
         {workPrcProps && workPrcProps.REL_TYPE && workPrcProps.REL_TYPE !== 999 ? (
           <div>
-            {this.props.viewVisible && (
-              <AntdModal
-                className="modalWrapper modalTechDoc"
-                key="draftListKeys"
-                title="내용 보기"
-                width={680}
-                visible={this.props.viewVisible}
-                destroyOnClose
-                onCancel={this.closeBtnFunc}
-                footer={null}
-              >
-                <BizBuilderBase
-                  sagaKey="approveBase_approveView"
-                  viewType="VIEW"
-                  // onCloseModal={this.onCloseModal}
-                  // onChangeForm={this.onChangeForm}
-                  closeBtnFunc={this.closeBtnFunc}
-                  clickCoverView={this.clickCoverView}
-                  onClickModify={this.onClickModify}
-                  workSeq={selectedRow && selectedRow.WORK_SEQ}
-                  taskSeq={selectedRow && selectedRow.TASK_SEQ}
-                  selectedRow={selectedRow}
-                  ViewCustomButtons={({ closeBtnFunc, onClickModify }) => (
-                    <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
-                      {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
-                        <>
-                          <StyledButton className="btn-primary btn-sm mr5" onClick={this.onHoldRelase}>
-                            홀드해제
+            <AntdModal
+              className="modalWrapper modalTechDoc"
+              key="draftListKeys"
+              title="내용 보기"
+              width={680}
+              visible={this.props.viewVisible}
+              destroyOnClose
+              onCancel={this.closeBtnFunc}
+              footer={null}
+            >
+              <BizBuilderBase
+                sagaKey="approveBase_approveView"
+                viewType="VIEW"
+                // onCloseModal={this.onCloseModal}
+                // onChangeForm={this.onChangeForm}
+                closeBtnFunc={this.closeBtnFunc}
+                clickCoverView={this.clickCoverView}
+                onClickModify={this.onClickModify}
+                workSeq={selectedRow && selectedRow.WORK_SEQ}
+                taskSeq={selectedRow && selectedRow.TASK_SEQ}
+                selectedRow={selectedRow}
+                ViewCustomButtons={({ closeBtnFunc, onClickModify }) => (
+                  <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+                    {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
+                      <>
+                        <StyledButton className="btn-primary btn-sm mr5" onClick={this.onHoldRelase}>
+                          홀드해제
+                        </StyledButton>
+                        {profile && profile.USER_ID === selectedRow.DRAFTER_ID && (
+                          <StyledButton className="btn-primary btn-sm mr5" onClick={onClickModify}>
+                            표지수정
                           </StyledButton>
-                          {profile && profile.USER_ID === selectedRow.DRAFTER_ID && (
-                            <StyledButton className="btn-primary btn-sm mr5" onClick={onClickModify}>
-                              표지수정
-                            </StyledButton>
-                          )}
-                        </>
-                      )}
+                        )}
+                      </>
+                    )}
 
-                      <StyledButton className="btn-light btn-sm" onClick={closeBtnFunc}>
-                        닫기
-                      </StyledButton>
-                    </StyledButtonWrapper>
-                  )}
-                />
-
-                {holdReqList && holdReqList.length > 0 && (
-                  <StyledContentsWrapper>
-                    <StyledHtmlTable>
-                      <table className="table-border">
-                        <colgroup>
-                          <col width="10%" />
-                          <col width="10%" />
-                          <col width="10%" />
-                          <col width="55%" />
-                          <col width="15%" />
-                        </colgroup>
-                        <thead>
-                          <tr>
-                            <th>이름</th>
-                            <th>직급</th>
-                            <th>부서</th>
-                            <th>홀드의견</th>
-                            <th style={{ borderRight: 0 }}>요청일</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {holdReqList.map(item => (
-                            <tr>
-                              <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
-                              <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
-                              <td style={{ textAlign: 'center' }}>{item.APPV_DEPT_NAME}</td>
-                              <td>{item.OPINION}</td>
-                              <td style={{ textAlign: 'center' }}>{moment(item.APPV_DTTM).format('YYYY-MM-DD')}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </StyledHtmlTable>
-                  </StyledContentsWrapper>
+                    <StyledButton className="btn-light btn-sm" onClick={closeBtnFunc}>
+                      닫기
+                    </StyledButton>
+                  </StyledButtonWrapper>
                 )}
-              </AntdModal>
-            )}
-            {/* </AntdModal> */}
+              />
+
+              {holdReqList && holdReqList.length > 0 && (
+                <StyledContentsWrapper>
+                  <StyledHtmlTable>
+                    <table className="table-border">
+                      <colgroup>
+                        <col width="10%" />
+                        <col width="10%" />
+                        <col width="10%" />
+                        <col width="55%" />
+                        <col width="15%" />
+                      </colgroup>
+                      <thead>
+                        <tr>
+                          <th>이름</th>
+                          <th>직급</th>
+                          <th>부서</th>
+                          <th>홀드의견</th>
+                          <th style={{ borderRight: 0 }}>요청일</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {holdReqList.map(item => (
+                          <tr>
+                            <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
+                            <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
+                            <td style={{ textAlign: 'center' }}>{item.APPV_DEPT_NAME}</td>
+                            <td>{item.OPINION}</td>
+                            <td style={{ textAlign: 'center' }}>{moment(item.APPV_DTTM).format('YYYY-MM-DD')}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </StyledHtmlTable>
+                </StyledContentsWrapper>
+              )}
+            </AntdModal>
+
             <AntdModal
               className="modalWrapper modalTechDoc"
               title="표지 보기"
