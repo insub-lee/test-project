@@ -611,135 +611,123 @@ class DraftList extends Component {
           </div>
         ) : (
           <div>
-            {/* <AntdModal
+            <AntdModal
               className="modalWrapper modalTechDoc"
-              title="내용 보기"
-              width={modalWidth}
+              title="표준문서 결제"
+              width={800}
               visible={this.props.viewVisible}
               destroyOnClose
               onCancel={this.closeBtnFunc}
               footer={null}
-            > */}
-            {this.props.viewVisible && (
-              <AntdModal
-                className="modalWrapper modalTechDoc"
-                title="표준문서 결제"
-                width={800}
-                visible={this.props.viewVisible}
-                destroyOnClose
-                onCancel={this.closeBtnFunc}
-                footer={null}
-              >
-                <StyledContentsWrapper>
-                  <StyledHtmlTable>
-                    <>
-                      {workPrcProps && (
-                        <table style={{ marginBottom: 20 }}>
-                          <tbody>
-                            <tr>
-                              <th>일괄폐기번호</th>
-                              <td>{workPrcProps.DRAFT_ID}</td>
-                              <th>기안자</th>
-                              <td>{workPrcProps.NAME_KOR}</td>
-                              <th>기안일자</th>
-                              <td>{moment(workPrcProps.REG_DTTM).format('YYYY-MM-DD')}</td>
-                            </tr>
-                            <tr>
-                              <th>제목</th>
-                              <td colSpan={5}>{workPrcProps.DRAFT_TITLE}</td>
-                            </tr>
-                            <tr>
-                              <th>Description of Change</th>
-                              <td colSpan={5}>{workPrcProps.DRAFT_DATA && workPrcProps.DRAFT_DATA.descOfChange}</td>
-                            </tr>
-                            <tr>
-                              <th>Rev. History</th>
-                              <td colSpan={5}>{workPrcProps.DRAFT_DATA && workPrcProps.DRAFT_DATA.revHistory}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      )}
-                      <div className="table-title">폐기대상 문서</div>
+            >
+              <StyledContentsWrapper>
+                <StyledHtmlTable>
+                  <>
+                    {workPrcProps && (
                       <table style={{ marginBottom: 20 }}>
-                        <colgroup>
-                          <col style={{ width: '15%' }} />
-                          <col style={{ width: '10%' }} />
-                          <col style={{ width: '60%' }} />
-                          <col style={{ width: '15%' }} />
-                        </colgroup>
                         <tbody>
                           <tr>
-                            <th>문서번호</th>
-                            <th>개정번호</th>
-                            <th>제목</th>
-                            <th>Effect Date</th>
+                            <th>일괄폐기번호</th>
+                            <td>{workPrcProps.DRAFT_ID}</td>
+                            <th>기안자</th>
+                            <td>{workPrcProps.NAME_KOR}</td>
+                            <th>기안일자</th>
+                            <td>{moment(workPrcProps.REG_DTTM).format('YYYY-MM-DD')}</td>
                           </tr>
-                          {abrogationList &&
-                            abrogationList.map(item => (
-                              <tr className="tr-center">
-                                <td>{item.DOCNUMBER}</td>
-                                <td>{item.VERSION}</td>
-                                <td style={{ textAlign: 'left' }}>{item.TITLE}</td>
-                                <td>{moment(item.END_DTTM).format('YYYY-MM-DD')}</td>
-                              </tr>
-                            ))}
+                          <tr>
+                            <th>제목</th>
+                            <td colSpan={5}>{workPrcProps.DRAFT_TITLE}</td>
+                          </tr>
+                          <tr>
+                            <th>Description of Change</th>
+                            <td colSpan={5}>{workPrcProps.DRAFT_DATA && workPrcProps.DRAFT_DATA.descOfChange}</td>
+                          </tr>
+                          <tr>
+                            <th>Rev. History</th>
+                            <td colSpan={5}>{workPrcProps.DRAFT_DATA && workPrcProps.DRAFT_DATA.revHistory}</td>
+                          </tr>
                         </tbody>
                       </table>
-                      <div className="table-title">결재정보</div>
-                      <StyledWrap>
-                        {draftNode && draftNode.length > 0 && (
-                          <table className="mdcsProcessList">
-                            <thead>
-                              <tr className="mdcsProcessRow">
-                                <th>Preparer</th>
-                                <th>Approver</th>
-                              </tr>
-                            </thead>
-                            <tbody>{draftNode}</tbody>
-                          </table>
-                        )}
-                        {reviewerNode && reviewerNode.length > 0 && (
-                          <table className="mdcsProcessList">
-                            <thead>
-                              <tr className="mdcsProcessRow">
-                                <th colSpan="2">필수 심의권자</th>
-                              </tr>
-                            </thead>
-                            <tbody>{reviewerNode}</tbody>
-                          </table>
-                        )}
-                        {mailReviewerNode && mailReviewerNode.length > 0 && (
-                          <table className="mdcsProcessList">
-                            <thead>
-                              <tr className="mdcsProcessRow">
-                                <th colSpan="2">Mail 심의권자</th>
-                              </tr>
-                            </thead>
-                            <tbody>{mailReviewerNode}</tbody>
-                          </table>
-                        )}
-                      </StyledWrap>
-                      <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
-                        {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
-                          <>
-                            <StyledButton className="btn-primary btn-sm mr5" onClick={this.onHoldRelase}>
-                              홀드해제
-                            </StyledButton>
-                            <StyledButton className="btn-primary btn-sm mr5" onClick={this.onClickModify}>
-                              표지수정
-                            </StyledButton>
-                          </>
-                        )}
-                        <StyledButton className="btn-light btn-sm" onClick={this.closeBtnFunc}>
-                          닫기
-                        </StyledButton>
-                      </StyledButtonWrapper>
-                    </>
-                  </StyledHtmlTable>
-                </StyledContentsWrapper>
-              </AntdModal>
-            )}
-            {/* </AntdModal> */}
+                    )}
+                    <div className="table-title">폐기대상 문서</div>
+                    <table style={{ marginBottom: 20 }}>
+                      <colgroup>
+                        <col style={{ width: '15%' }} />
+                        <col style={{ width: '10%' }} />
+                        <col style={{ width: '60%' }} />
+                        <col style={{ width: '15%' }} />
+                      </colgroup>
+                      <tbody>
+                        <tr>
+                          <th>문서번호</th>
+                          <th>개정번호</th>
+                          <th>제목</th>
+                          <th>Effect Date</th>
+                        </tr>
+                        {abrogationList &&
+                          abrogationList.map(item => (
+                            <tr className="tr-center">
+                              <td>{item.DOCNUMBER}</td>
+                              <td>{item.VERSION}</td>
+                              <td style={{ textAlign: 'left' }}>{item.TITLE}</td>
+                              <td>{moment(item.END_DTTM).format('YYYY-MM-DD')}</td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                    <div className="table-title">결재정보</div>
+                    <StyledWrap>
+                      {draftNode && draftNode.length > 0 && (
+                        <table className="mdcsProcessList">
+                          <thead>
+                            <tr className="mdcsProcessRow">
+                              <th>Preparer</th>
+                              <th>Approver</th>
+                            </tr>
+                          </thead>
+                          <tbody>{draftNode}</tbody>
+                        </table>
+                      )}
+                      {reviewerNode && reviewerNode.length > 0 && (
+                        <table className="mdcsProcessList">
+                          <thead>
+                            <tr className="mdcsProcessRow">
+                              <th colSpan="2">필수 심의권자</th>
+                            </tr>
+                          </thead>
+                          <tbody>{reviewerNode}</tbody>
+                        </table>
+                      )}
+                      {mailReviewerNode && mailReviewerNode.length > 0 && (
+                        <table className="mdcsProcessList">
+                          <thead>
+                            <tr className="mdcsProcessRow">
+                              <th colSpan="2">Mail 심의권자</th>
+                            </tr>
+                          </thead>
+                          <tbody>{mailReviewerNode}</tbody>
+                        </table>
+                      )}
+                    </StyledWrap>
+                    <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+                      {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
+                        <>
+                          <StyledButton className="btn-primary btn-sm mr5" onClick={this.onHoldRelase}>
+                            홀드해제
+                          </StyledButton>
+                          <StyledButton className="btn-primary btn-sm mr5" onClick={this.onClickModify}>
+                            표지수정
+                          </StyledButton>
+                        </>
+                      )}
+                      <StyledButton className="btn-light btn-sm" onClick={this.closeBtnFunc}>
+                        닫기
+                      </StyledButton>
+                    </StyledButtonWrapper>
+                  </>
+                </StyledHtmlTable>
+              </StyledContentsWrapper>
+            </AntdModal>
             <AntdModal
               className="modalWrapper modalTechDoc"
               title="표지 보기"
@@ -782,7 +770,13 @@ class DraftList extends Component {
             </table>
           </StyledHtmlTable>
           <StyledButtonWrapper className="btn-wrap-mt-10 btn-wrap-mb-10 btn-wrap-center">
-            <StyledButton className="btn-primary btn-sm mr5" onClick={this.handleReqApprove}>
+            <StyledButton
+              className="btn-primary btn-sm mr5"
+              onClick={e => {
+                this.handleReqApprove(e);
+                this.closeBtnFunc();
+              }}
+            >
               저장
             </StyledButton>
             <StyledButton className="btn-light btn-sm" onClick={() => setOpinionVisible(false)}>

@@ -34,7 +34,8 @@ const appReducer = (state = initialState, action) => {
       // .set('viewVisible', false)
     }
     case actionTypes.SET_PARTIAL_INIT: {
-      return state.set('selectedRow', fromJS({})).set('opinion', '');
+      return state.set('opinion', '');
+      // .set('selectedRow', fromJS({}))
       // .set('viewVisible', false)
       // .set('opinionVisible', false)
     }

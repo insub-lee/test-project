@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Modal, Button } from 'antd';
+import { Table, Button } from 'antd';
 import moment from 'moment';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
@@ -10,8 +10,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import DraftDownLoad from 'apps/mdcs/Modal/DraftDownLoad';
 import history from 'utils/history';
 import { PAGINATION_OPT_CODE } from 'components/BizBuilder/Common/Constants';
-
-import CoverViewer from '../CoverViewer';
+import { DraggableModal as Modal } from 'components/DraggableModal/AntdDraggableModal';
 
 const AntdModal = StyledAntdModal(Modal);
 const AntdTable = StyledAntdTable(Table);
@@ -24,7 +23,7 @@ const columns = [
     width: '14%',
   },
   { title: 'No.', key: 'DOCNUMBER', width: '11%', dataIndex: 'DOCNUMBER' },
-  { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION' },
+  { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION', render: (text, record) => (record.status === 99 ? 'OBS' : text) },
   { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM', render: (text, record) => moment(text).format('YYYY-MM-DD') },
   { title: 'Title', align: 'left', key: 'TITLE', width: '35%', dataIndex: 'TITLE', ellipsis: true },
   { title: '기안부서', align: 'center', key: 'REG_DEPT_NAME', width: '14%', dataIndex: 'REG_DEPT_NAME', ellipsis: true },
@@ -162,6 +161,7 @@ class SearchList extends Component {
           visible={SearchView.visible}
           footer={null}
           width={800}
+          initialWidth={800}
           onCancel={this.closeBtnFunc}
           onOk={this.closeBtnFunc}
           okButtonProps={null}
@@ -201,6 +201,7 @@ class SearchList extends Component {
           visible={isDownVisible}
           footer={null}
           width={800}
+          initialWidth={800}
           onCancel={this.onCloseDownLoad}
           onOk={this.closeBtnFunc}
           okButtonProps={null}
@@ -222,6 +223,7 @@ class SearchList extends Component {
           visible={coverView.visible}
           footer={null}
           width={800}
+          initialWidth={800}
           okButtonProps={null}
           onCancel={this.onCloseCoverView}
           destroyOnClose

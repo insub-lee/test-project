@@ -41,7 +41,7 @@ import Header from '../components/Header';
 import StyledContainer from './StyledContainer';
 // import UserCategoryMenu from './UserCategoryMenu';
 import ErrorPage from './ErrorPage';
-
+import { DraggableModalProvider } from 'components/DraggableModal/AntdDraggableModal';
 /* Code Split */
 const MenuCategory = Loadable({ loader: () => import('./MenuCategory') });
 // const UserCategoryMenu = Loadable({ loader: () => import('./UserCategoryMenu') });
@@ -482,30 +482,31 @@ class App extends React.Component {
     const visiblePersonalize = false;
     return (
       <ThemeProvider theme={theme}>
-        <Layout className="portalLayout">
-          {/* <HeaderMenu execMenu={this.execMenu} execPage={this.execPage} /> */}
-          {/* SideBar */}
-          <UserCategoryLeftMenu
-            isShow={open}
-            setOpen={this.setOpen}
-            setFixedOpenMenu={this.setFixedOpenMenu}
-            execMenu={this.execMenu}
-            execPage={this.execPage}
-            myMNotiCnt={myMNotiCnt}
-            myHNotiCnt={myHNotiCnt}
-            myMNotiList={myMNotiList}
-            selectedIndex={selectedIndex}
-            menuName={menuName}
-            handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
-            setMyMenuData={setMyMenuData}
-            visible={this.state.visible}
-            setMenuClose={this.setMenuClose}
-            view={view}
-            history={this.props.history}
-            fixedMenu={menuFixedYn === 'Y'}
-            visiblePersonalize={visiblePersonalize}
-          />
-          {/* 
+        <DraggableModalProvider>
+          <Layout className="portalLayout">
+            {/* <HeaderMenu execMenu={this.execMenu} execPage={this.execPage} /> */}
+            {/* SideBar */}
+            <UserCategoryLeftMenu
+              isShow={open}
+              setOpen={this.setOpen}
+              setFixedOpenMenu={this.setFixedOpenMenu}
+              execMenu={this.execMenu}
+              execPage={this.execPage}
+              myMNotiCnt={myMNotiCnt}
+              myHNotiCnt={myHNotiCnt}
+              myMNotiList={myMNotiList}
+              selectedIndex={selectedIndex}
+              menuName={menuName}
+              handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
+              setMyMenuData={setMyMenuData}
+              visible={this.state.visible}
+              setMenuClose={this.setMenuClose}
+              view={view}
+              history={this.props.history}
+              fixedMenu={menuFixedYn === 'Y'}
+              visiblePersonalize={visiblePersonalize}
+            />
+            {/* 
           <UserCategoryMenu
             isShow={open}
             setOpen={this.setOpen}
@@ -526,187 +527,187 @@ class App extends React.Component {
             fixedMenu={menuFixedYn === 'Y'}
           />
           */}
-          <SideMenu>
-            <div className="iconPositon" style={{ marginTop: '20px' }}>
-              {/* <Trigger>
+            <SideMenu>
+              <div className="iconPositon" style={{ marginTop: '20px' }}>
+                {/* <Trigger>
                 <span className="trigger icon icon-menu" onClick={this.setMenuOpen} onKeyDown={this.setMenuOpen} role="button" tabIndex="0" />
                 //<Badge count={myHNotiCnt} overflowCount={99}>
                 //  <Link to="/" className="badgeLink" />
                 //</Badge>
               </Trigger> */}
-            </div>
-            <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="Home">
-                <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goCommonHome()} />
-              </Tooltip>
-            </div>
-            <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="My Home">
-                <BtnMyhome onClick={() => history.push(`/${basicPath.PAGE}/${myHomePageId}`)} />
-              </Tooltip>
-            </div>
-            <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="Home Widget">
-                <Icon type="qrcode" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goHomeWidget(myHomePageId)} />
-              </Tooltip>
-            </div>
-            {visiblePersonalize && (
+              </div>
               <div className="iconPositon" style={{ marginTop: '20px' }}>
-                <Tooltip placement="right" title="App Store">
-                  <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
+                <Tooltip placement="right" title="Home">
+                  <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goCommonHome()} />
                 </Tooltip>
               </div>
-            )}
-            {/* SA BM 권한이 있을 경우에만 노출 되도록 (SA권한 OR BM권한 + 업무그룹담당자 일 경우 업무그룹수정가능) */}
-            {(hasRoleAdmin || hasRoleBizMng || bizGrpMngCnt > 0) && (
               <div className="iconPositon" style={{ marginTop: '20px' }}>
-                <Tooltip placement="right" title="Biz Card">
-                  <Icon type="profile" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />
+                <Tooltip placement="right" title="My Home">
+                  <BtnMyhome onClick={() => history.push(`/${basicPath.PAGE}/${myHomePageId}`)} />
                 </Tooltip>
               </div>
-            )}
-            <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="FileManage">
-                <Icon type="folder" style={{ color: 'white', fontSize: '20px' }} onClick={this.goUserFileManage} />
-              </Tooltip>
-            </div>
-            {/* SA 권한일 경우 관리자용 파일 관리자 메뉴 노출 임시! */}
-            {hasRoleAdmin && (
               <div className="iconPositon" style={{ marginTop: '20px' }}>
-                <Tooltip placement="right" title="FileManage Admin">
-                  <Icon type="tool" style={{ color: 'white', fontSize: '20px' }} onClick={this.goAdminFileManage} />
+                <Tooltip placement="right" title="Home Widget">
+                  <Icon type="qrcode" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goHomeWidget(myHomePageId)} />
                 </Tooltip>
               </div>
-            )}
-          </SideMenu>
-          <MenuCategory open={headerMenuOpen} execMenu={this.execMenu} execPage={this.execPage} setMenuClose={this.setHeaderMenuClose}>
-            <Layout style={this.getLayoutStyle(isDesktop(view))}>
-              <Content style={{}}>
-                <StyledContainer>
-                  <AppWrapper style={{ width: '100%', height: '100%', backgroundColor: '#ffffff' }}>
-                    <Fullscreen
-                      enabled={this.state.isFullscreenEnabled}
-                      onChange={this.setIsFullscreenEnabled}
-                      dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
-                      dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
-                      exitDockItem={handleExitDockItem} // REMOVE DOCK - 확인후 처리
-                      fixDockItem={handleFixDockItem} // REMOVE DOCK - 확인후 처리
-                      unfixDockItem={handleUnfixDockItem} // REMOVE DOCK - 확인후 처리
-                      // 모바일 Dock ContextMenu 플래그 설정
-                      view={view}
-                      setIsCloseToFalse={this.setIsCloseToFalse}
-                      setMyMenuData={setMyMenuData}
-                    >
-                      <div id="child" className={this.getChildDivClassName(setMyMenuData, history, isFullSize)} style={{ height: '100%' }}>
-                        {/* TODO menuLayoutCode, menuCompCode값에 따라 메뉴 타입 (레이아웃 + 컴포넌트 형태) */}
-                        {/* Header */}
-                        <Header
-                          className="portalHeader"
-                          // setOpen={this.setMenuOpen}
-                          execPage={this.execPage}
-                          goCommonHome={this.goCommonHome}
-                          handleClick={this.handleClick}
-                          setMyMenuData={setMyMenuData}
-                          location={history.location}
-                          myHNotiCnt={myHNotiCnt}
-                          managerInfo={managerInfo}
-                          view={view}
-                          hasRoleAdmin={hasRoleAdmin}
-                          headerTitle={headerTitle}
-                          siteId={profile.SITE_ID}
-                        />
-                        <Content
-                          className="portalContent"
-                          style={{
-                            flexShrink: '0',
-                            height: '100%',
-                            // display: routePaths.some(path => history.location.pathname.indexOf(path) === 0) ? 'none' : 'inherit',
-                          }}
-                        >
-                          <Switch>
-                            <Route exact path="/error" component={ErrorPage} />
-                            {/*
+              {visiblePersonalize && (
+                <div className="iconPositon" style={{ marginTop: '20px' }}>
+                  <Tooltip placement="right" title="App Store">
+                    <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
+                  </Tooltip>
+                </div>
+              )}
+              {/* SA BM 권한이 있을 경우에만 노출 되도록 (SA권한 OR BM권한 + 업무그룹담당자 일 경우 업무그룹수정가능) */}
+              {(hasRoleAdmin || hasRoleBizMng || bizGrpMngCnt > 0) && (
+                <div className="iconPositon" style={{ marginTop: '20px' }}>
+                  <Tooltip placement="right" title="Biz Card">
+                    <Icon type="profile" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />
+                  </Tooltip>
+                </div>
+              )}
+              <div className="iconPositon" style={{ marginTop: '20px' }}>
+                <Tooltip placement="right" title="FileManage">
+                  <Icon type="folder" style={{ color: 'white', fontSize: '20px' }} onClick={this.goUserFileManage} />
+                </Tooltip>
+              </div>
+              {/* SA 권한일 경우 관리자용 파일 관리자 메뉴 노출 임시! */}
+              {hasRoleAdmin && (
+                <div className="iconPositon" style={{ marginTop: '20px' }}>
+                  <Tooltip placement="right" title="FileManage Admin">
+                    <Icon type="tool" style={{ color: 'white', fontSize: '20px' }} onClick={this.goAdminFileManage} />
+                  </Tooltip>
+                </div>
+              )}
+            </SideMenu>
+            <MenuCategory open={headerMenuOpen} execMenu={this.execMenu} execPage={this.execPage} setMenuClose={this.setHeaderMenuClose}>
+              <Layout style={this.getLayoutStyle(isDesktop(view))}>
+                <Content style={{}}>
+                  <StyledContainer>
+                    <AppWrapper style={{ width: '100%', height: '100%', backgroundColor: '#ffffff' }}>
+                      <Fullscreen
+                        enabled={this.state.isFullscreenEnabled}
+                        onChange={this.setIsFullscreenEnabled}
+                        dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
+                        dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
+                        exitDockItem={handleExitDockItem} // REMOVE DOCK - 확인후 처리
+                        fixDockItem={handleFixDockItem} // REMOVE DOCK - 확인후 처리
+                        unfixDockItem={handleUnfixDockItem} // REMOVE DOCK - 확인후 처리
+                        // 모바일 Dock ContextMenu 플래그 설정
+                        view={view}
+                        setIsCloseToFalse={this.setIsCloseToFalse}
+                        setMyMenuData={setMyMenuData}
+                      >
+                        <div id="child" className={this.getChildDivClassName(setMyMenuData, history, isFullSize)} style={{ height: '100%' }}>
+                          {/* TODO menuLayoutCode, menuCompCode값에 따라 메뉴 타입 (레이아웃 + 컴포넌트 형태) */}
+                          {/* Header */}
+                          <Header
+                            className="portalHeader"
+                            // setOpen={this.setMenuOpen}
+                            execPage={this.execPage}
+                            goCommonHome={this.goCommonHome}
+                            handleClick={this.handleClick}
+                            setMyMenuData={setMyMenuData}
+                            location={history.location}
+                            myHNotiCnt={myHNotiCnt}
+                            managerInfo={managerInfo}
+                            view={view}
+                            hasRoleAdmin={hasRoleAdmin}
+                            headerTitle={headerTitle}
+                            siteId={profile.SITE_ID}
+                          />
+                          <Content
+                            className="portalContent"
+                            style={{
+                              flexShrink: '0',
+                              height: '100%',
+                              // display: routePaths.some(path => history.location.pathname.indexOf(path) === 0) ? 'none' : 'inherit',
+                            }}
+                          >
+                            <Switch>
+                              <Route exact path="/error" component={ErrorPage} />
+                              {/*
                           <Route
                             exact
                             path={`/${basicPath.PORTAL}/store/appMain/bizManage`}
                             render={props => <UserStore {...props} applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
                           />
                           */}
-                            <Route
-                              path={`/${basicPath.PORTAL}/settings`}
-                              render={() => <UserSetting applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
-                            />
-                            <Route
-                              path={`/${basicPath.PORTAL}/store`}
-                              render={props => (
-                                <UserStore
-                                  {...props}
-                                  execMenu={this.execMenu}
-                                  execPage={this.execPage}
-                                  applySkin={this.applySkin}
-                                  hideExecApps={this.hideExecApps}
-                                />
-                              )}
-                            />
-                            <Route
-                              path={`/${basicPath.PORTAL}/card`}
-                              render={props => (
-                                <UserMenuCard
-                                  {...props}
-                                  execMenu={this.execMenu}
-                                  execPage={this.execPage}
-                                  applySkin={this.applySkin}
-                                  hideExecApps={this.hideExecApps}
-                                />
-                              )}
-                            />
-                            <Route
-                              path={`/${basicPath.APPS}/:PAGE_ID`}
-                              render={() => (
-                                <div id={setMyMenuData.PAGE_ID} className={`app-view ${setMyMenuData.PAGE_ID}`} style={{ height: '100%' }}>
-                                  <AppsRouter
-                                    id={setMyMenuData.PAGE_ID}
-                                    selectedApp={selectedApp}
-                                    setMyMenuData={setMyMenuData}
-                                    setIsSpinnerShow={this.setIsSpinnerShow}
-                                    isPreviewPage={isPreviewPage}
-                                    isUnreadCnt={isUnreadCnt}
-                                    execPage={this.execPage}
+                              <Route
+                                path={`/${basicPath.PORTAL}/settings`}
+                                render={() => <UserSetting applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
+                              />
+                              <Route
+                                path={`/${basicPath.PORTAL}/store`}
+                                render={props => (
+                                  <UserStore
+                                    {...props}
                                     execMenu={this.execMenu}
-                                    show={this.show}
-                                    onReload={this.onReload}
-                                  />
-                                </div>
-                              )}
-                            />
-                            <Route
-                              path={`/${basicPath.PAGE}/:PAGE_ID`}
-                              render={() => (
-                                <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID}>
-                                  <Page
-                                    columns={selectedApp}
-                                    setMyMenuData={setMyMenuData}
-                                    setIsSpinnerShow={this.setIsSpinnerShow}
-                                    isPreviewPage={isPreviewPage}
-                                    isUnreadCnt={isUnreadCnt}
                                     execPage={this.execPage}
-                                    execMenu={this.execMenu}
-                                    show={this.show}
-                                    onReload={this.onReload}
+                                    applySkin={this.applySkin}
+                                    hideExecApps={this.hideExecApps}
                                   />
-                                </div>
-                              )}
-                            />
-                            <Route path={`/${basicPath.PORTAL}/filemanage`} render={() => <UserFileManage />} />
-                            <Route
-                              path={`/${basicPath.PORTAL}/admin/filemanage`}
-                              render={() => (hasRoleAdmin ? <AdminFileManage /> : <Redirect to={{ pathname: '/' }} />)}
-                            />
-                          </Switch>
-                        </Content>
-                      </div>
-                    </Fullscreen>
-                    {/*
+                                )}
+                              />
+                              <Route
+                                path={`/${basicPath.PORTAL}/card`}
+                                render={props => (
+                                  <UserMenuCard
+                                    {...props}
+                                    execMenu={this.execMenu}
+                                    execPage={this.execPage}
+                                    applySkin={this.applySkin}
+                                    hideExecApps={this.hideExecApps}
+                                  />
+                                )}
+                              />
+                              <Route
+                                path={`/${basicPath.APPS}/:PAGE_ID`}
+                                render={() => (
+                                  <div id={setMyMenuData.PAGE_ID} className={`app-view ${setMyMenuData.PAGE_ID}`} style={{ height: '100%' }}>
+                                    <AppsRouter
+                                      id={setMyMenuData.PAGE_ID}
+                                      selectedApp={selectedApp}
+                                      setMyMenuData={setMyMenuData}
+                                      setIsSpinnerShow={this.setIsSpinnerShow}
+                                      isPreviewPage={isPreviewPage}
+                                      isUnreadCnt={isUnreadCnt}
+                                      execPage={this.execPage}
+                                      execMenu={this.execMenu}
+                                      show={this.show}
+                                      onReload={this.onReload}
+                                    />
+                                  </div>
+                                )}
+                              />
+                              <Route
+                                path={`/${basicPath.PAGE}/:PAGE_ID`}
+                                render={() => (
+                                  <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID}>
+                                    <Page
+                                      columns={selectedApp}
+                                      setMyMenuData={setMyMenuData}
+                                      setIsSpinnerShow={this.setIsSpinnerShow}
+                                      isPreviewPage={isPreviewPage}
+                                      isUnreadCnt={isUnreadCnt}
+                                      execPage={this.execPage}
+                                      execMenu={this.execMenu}
+                                      show={this.show}
+                                      onReload={this.onReload}
+                                    />
+                                  </div>
+                                )}
+                              />
+                              <Route path={`/${basicPath.PORTAL}/filemanage`} render={() => <UserFileManage />} />
+                              <Route
+                                path={`/${basicPath.PORTAL}/admin/filemanage`}
+                                render={() => (hasRoleAdmin ? <AdminFileManage /> : <Redirect to={{ pathname: '/' }} />)}
+                              />
+                            </Switch>
+                          </Content>
+                        </div>
+                      </Fullscreen>
+                      {/*
                   {setMyMenuData.APP_YN !== 'Y' && (
                     <Footer
                       style={{
@@ -719,31 +720,31 @@ class App extends React.Component {
                   )}
                   */}
 
-                    <Rodal
-                      className="drillDownCon"
-                      visible={this.state.show}
-                      onClose={this.hide}
-                      animation="slideRight"
-                      showCloseButton={false}
-                      // leaveAnimation="slideLeft"
-                      duration={1000}
-                      customStyles={{
-                        position: 'absolute',
-                        width: 1580,
-                        height: 'calc(100vh - 200px)',
-                        backgroundColor: '#646567',
-                      }}
-                      // height는 태블릿, 모바일에서 하단에 나오는 Dock 높이를 고려해서 계산함
-                    >
-                      {this.state.show && <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} />}
-                    </Rodal>
-                  </AppWrapper>
-                </StyledContainer>
-              </Content>
-            </Layout>
-          </MenuCategory>
-          {/* // REMOVE DOCK - 확인후 처리 (주석??) */}
-          {/* <UserDock
+                      <Rodal
+                        className="drillDownCon"
+                        visible={this.state.show}
+                        onClose={this.hide}
+                        animation="slideRight"
+                        showCloseButton={false}
+                        // leaveAnimation="slideLeft"
+                        duration={1000}
+                        customStyles={{
+                          position: 'absolute',
+                          width: 1580,
+                          height: 'calc(100vh - 200px)',
+                          backgroundColor: '#646567',
+                        }}
+                        // height는 태블릿, 모바일에서 하단에 나오는 Dock 높이를 고려해서 계산함
+                      >
+                        {this.state.show && <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} />}
+                      </Rodal>
+                    </AppWrapper>
+                  </StyledContainer>
+                </Content>
+              </Layout>
+            </MenuCategory>
+            {/* // REMOVE DOCK - 확인후 처리 (주석??) */}
+            {/* <UserDock
             execPage={this.execPage}
             dockAppList={dockAppList}
             isUnfixDockItem={isUnfixDockItem}
@@ -760,7 +761,8 @@ class App extends React.Component {
             setIsCloseToFalse={this.setIsCloseToFalse}
             history={this.props.history}
           /> */}
-        </Layout>
+          </Layout>
+        </DraggableModalProvider>
       </ThemeProvider>
     );
   }
