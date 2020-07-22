@@ -146,7 +146,6 @@ import EshsDangerEvalInSafetyImproveComp from 'components/BizBuilder/Field/EshsD
 import MdcsKindNameViewComp from 'components/BizBuilder/Field/MdcsKindNameViewComp';
 import MsdsHeaderComp from 'components/BizBuilder/Field/MsdsHeaderComp';
 import CustomListSelectComp from 'components/BizBuilder/Field/CustomListSelectComp';
-import ValueChangeTextComp from 'components/BizBuilder/Field/ValueChangeTextComp';
 import MonthPickerComp from 'components/BizBuilder/Field/MonthPickerComp';
 
 export const CompInfo = {
@@ -297,5 +296,4 @@ export const CompInfo = {
   'components/BizBuilder/Field/MsdsHeaderComp': { renderer: property => <MsdsHeaderComp {...property} /> },
   'components/BizBuilder/Field/CustomListSelectComp': { renderer: property => <CustomListSelectComp {...property} /> },
   'components/BizBuilder/Field/MonthPickerComp': { renderer: property => <MonthPickerComp {...property} /> },
-  'components/BizBuilder/Field/ValueChangeTextComp': { renderer: property => <ValueChangeTextComp {...property} /> },
 };
