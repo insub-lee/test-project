@@ -212,8 +212,9 @@ class WorkProcessModal extends Component {
   handleAddUser = (prcRuleId, nodeId, nodeType) => {
     const { prcStep, selectedDeptKeys, deptList, deptList2, selectedUserKeys, deptUserList, tabIdx, selectedNode } = this.state;
     if (nodeId === 107) {
-      const { APPV_MEMBER } = selectedNode;
-      if (APPV_MEMBER.length === 1) {
+      const isMember = prcStep.filter(x => x.STEP === 4).length > 0 ? prcStep.filter(x => x.STEP === 4)[0] : undefined;
+
+      if (isMember && isMember.APPV_MEMBER.length >= 1) {
         message.info('최종승인권자 삭제 후 재설정');
         return;
       }
