@@ -52,7 +52,7 @@ class ChemicalStatusPage extends Component {
     const apiInfo = {
       key: 'chemiacalStatusList',
       type: 'GET',
-      url: `/api/gcs/v1/common/chemiacal/diary?type=range&site=${site}&sDate=${sTimeStampArr[0]}&sTime=${sTimeStampArr[1]}&eDate=${eTimeStampArr[0]}&eTime=${eTimeStampArr[1]}`,
+      url: `/api/gcs/v1/common/gas/diary?type=range&site=${site}&sDate=${sTimeStampArr[0]}&sTime=${sTimeStampArr[1]}&eDate=${eTimeStampArr[0]}&eTime=${eTimeStampArr[1]}`,
     };
     getCallDataHandlerReturnRes(id, apiInfo, this.searchCallback);
   };
@@ -110,10 +110,10 @@ class ChemicalStatusPage extends Component {
         this.saveData();
         break;
       case 'MODIFY':
-        submitHandlerBySaga(id, 'PUT', '/api/gcs/v1/common/chemiacal/diary', submitData);
+        submitHandlerBySaga(id, 'PUT', '/api/gcs/v1/common/gas/diary', submitData);
         break;
       case 'DELETE':
-        submitHandlerBySaga(id, 'DELETE', '/api/gcs/v1/common/chemiacal/diary', submitData);
+        submitHandlerBySaga(id, 'DELETE', '/api/gcs/v1/common/gas/diary', submitData);
         break;
       default:
         break;
@@ -186,7 +186,7 @@ class ChemicalStatusPage extends Component {
   saveDiaryInfo = async payload => {
     const result = await request({
       method: 'POST',
-      url: `/api/gcs/v1/common/chemiacal/diary`,
+      url: `/api/gcs/v1/common/gas/diary`,
       data: payload,
     });
     return result;
@@ -243,7 +243,7 @@ class ChemicalStatusPage extends Component {
           ) : (
             <>
               {listData.length > 0 && <ExcelDown listData={listData} />}
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('EXCEL', true)}>
+              <StyledButton className="btn-primary btn-sm ml5" onClick={() => this.handleModal('EXCEL', true)}>
                 Excel 업로드
               </StyledButton>
             </>
