@@ -56,10 +56,16 @@ class List extends Component {
   isSearch = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const { dateStrings, seq } = this.state;
+
+    // 해당월의 마지막 날짜 구하기
+    let arr = dateStrings.split('-');
+    const date = new Date(Number(arr[0]), Number(arr[1]), 0);
+    const lastDateStr = Moment(date).format('YYYY-MM-DD');
+
     const apiAry = [
       {
         key: 'measure',
-        url: `/api/eshs/v1/common/eshsmeasure?START_DATE=${`${dateStrings}-01`}&&END_DATE=${`${dateStrings}-31`}&&SEQ=${seq}`,
+        url: `/api/eshs/v1/common/eshsmeasure?START_DATE=${`${dateStrings}-01`}&&END_DATE=${lastDateStr}&&SEQ=${seq}`,
         type: 'GET',
       },
     ];
