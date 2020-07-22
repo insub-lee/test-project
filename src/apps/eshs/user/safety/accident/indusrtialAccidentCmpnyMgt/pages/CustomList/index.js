@@ -1,25 +1,29 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm, Button } from 'antd';
+import { Table, Input, Select, Popconfirm } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
-import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
-import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 
 // import Loadable from 'components/Loadable';
 // import Loading from '../Common/Loading';
-
+const AntdSelect = StyledSelect(Select);
+const AntdInput = StyledInput(Input);
 const AntdTable = StyledAntdTable(Table);
-const StyledButton = StyledAntdButton(Button);
 
 class ListPage extends Component {
   constructor(props) {
@@ -30,6 +34,8 @@ class ListPage extends Component {
       isOnRowClick: false,
       rowClickView: 'VIEW',
       StyledWrap: StyledViewDesigner,
+      searchTarget: 'WRK_CMPNY_NM',
+      searchText: '',
     };
   }
 
@@ -114,7 +120,7 @@ class ListPage extends Component {
           width: (widths && widths[idx] && `${widths[idx]}%`) || undefined,
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
           className: node.addonClassName && node.addonClassName.length > 0 ? `${node.addonClassName.toString().replaceAll(',', ' ')}` : '',
-          align: (node.style && node.style.textAlign) || undefined,
+          align: 'center',
         });
       }
     });
@@ -194,6 +200,16 @@ class ListPage extends Component {
     changeViewPage(modifySagaKey, workSeq, record.TASK_SEQ, 'MODIFY');
   };
 
+  onChangeSearchParam = (target, text) => this.setState({ [target]: text });
+
+  getListData = () => {
+    const { sagaKey: id, getListData, changeSearchData, workSeq } = this.props;
+    const { searchTarget, searchText } = this.state;
+
+    changeSearchData(id, 'CUSTOM', searchTarget && searchText ? `AND W.${searchTarget} like '%${searchText}%'` : '');
+    return getListData(id, workSeq);
+  };
+
   render = () => {
     const {
       sagaKey: id,
@@ -228,58 +244,32 @@ class ListPage extends Component {
                 return this.renderList(group, groupIndex);
               }
               return (
-                (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
-                  <StyledSearchWrapper key={group.key}>
-                    {group.useTitle && <GroupTitle title={group.title} />}
-                    <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-                      <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
-                        <table className={`view-designer-table table-${groupIndex}`}>
-                          <tbody>
-                            {group.rows.map((row, rowIndex) => (
-                              <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
-                                {row.cols &&
-                                  row.cols.map((col, colIndex) =>
-                                    col ? (
-                                      <td
-                                        key={col.key}
-                                        {...col}
-                                        comp=""
-                                        colSpan={col.span}
-                                        className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}${
-                                          col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName.toString().replaceAll(',', ' ')}` : ''
-                                        }`}
-                                      >
-                                        <Contents>
-                                          {col.comp &&
-                                            this.renderComp(
-                                              col.comp,
-                                              col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
-                                              true,
-                                              `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
-                                              `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
-                                              group.type === 'searchGroup',
-                                            )}
-                                        </Contents>
-                                      </td>
-                                    ) : (
-                                      ''
-                                    ),
-                                  )}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      {group.type === 'searchGroup' && group.useSearch && (
-                        <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray" onClick={() => getListData(id, workSeq)}>
-                            Search
-                          </StyledButton>
-                        </div>
-                      )}
-                    </Group>
-                  </StyledSearchWrapper>
-                )
+                <StyledCustomSearchWrapper className="search-wrapper-inline">
+                  <div className="search-input-area">
+                    <AntdSelect
+                      defaultValue="WRK_CMPNY_NM"
+                      placeholder="검색구분"
+                      allowClear
+                      className="select-sm"
+                      style={{ width: 150 }}
+                      onChange={val => this.onChangeSearchParam('searchTarget', val)}
+                    >
+                      <AntdSelect.Option value="WRK_CMPNY_NM">업체명</AntdSelect.Option>
+                      <AntdSelect.Option value="BIZ_REG_NO">사업자 등록번호</AntdSelect.Option>
+                    </AntdSelect>
+                    <AntdInput
+                      placeholder="검색어"
+                      allowClear
+                      className="ant-input-sm ant-input-inline mr5"
+                      style={{ width: 150 }}
+                      onChange={e => this.onChangeSearchParam('searchText', e.target.value)}
+                      onPressEnter={this.getListData}
+                    />
+                    <StyledButton className="btn-gray btn-sm" onClick={this.getListData}>
+                      검색
+                    </StyledButton>
+                  </div>
+                </StyledCustomSearchWrapper>
               );
             })}
           </Sketch>

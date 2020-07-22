@@ -12,6 +12,8 @@ import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import request from 'utils/request';
 import DiaryListTable from '../infoTable/diaryListTable';
+import FormDataTable from '../infoTable/formDataTable';
+import ExcelDown from '../excelDown';
 import ExcelPaser from '../excelParser';
 
 const AntdModal = StyledContentsModal(Modal);
@@ -76,7 +78,7 @@ class ChemicalStatusPage extends Component {
         etcData = {};
         break;
       case 'EXCEL':
-        title = '청주 통합 일일업무 업로드';
+        title = '통합 일일업무 업로드';
         break;
       case 'MODIFY':
         title = '항목 수정';
@@ -108,10 +110,10 @@ class ChemicalStatusPage extends Component {
         this.saveData();
         break;
       case 'MODIFY':
-        submitHandlerBySaga(id, 'PUT', '/api/gcs/v1/common/chemiacal/diary', submitData, this.submitFormDataCallback);
+        submitHandlerBySaga(id, 'PUT', '/api/gcs/v1/common/chemiacal/diary', submitData);
         break;
       case 'DELETE':
-        submitHandlerBySaga(id, 'DELETE', '/api/gcs/v1/common/chemiacal/diary', submitData, this.submitFormDataCallback);
+        submitHandlerBySaga(id, 'DELETE', '/api/gcs/v1/common/chemiacal/diary', submitData);
         break;
       default:
         break;
@@ -167,7 +169,7 @@ class ChemicalStatusPage extends Component {
       this.setState({
         isSaving: false,
       });
-      message.error(<MessageContent>입력할 식단정보가 없습니다.</MessageContent>);
+      message.error(<MessageContent>입력할 정보가 없습니다.</MessageContent>);
     }
   }
 
@@ -240,17 +242,10 @@ class ChemicalStatusPage extends Component {
             <div style={{ height: '29px' }} />
           ) : (
             <>
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('EXCEL', true)}>
-                Excel 다운로드
-              </StyledButton>
+              {listData.length > 0 && <ExcelDown listData={listData} />}
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('EXCEL', true)}>
                 Excel 업로드
               </StyledButton>
-              {/*
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('NEW', true)}>
-                  새등록
-                </StyledButton>
-              */}
             </>
           )}
         </StyledButtonWrapper>
@@ -266,7 +261,9 @@ class ChemicalStatusPage extends Component {
           onOk={() => this.handleModal('', false)}
           onCancel={() => this.handleModal('', false)}
         >
-          {(modalType === 'NEW' || modalType === 'MODIFY') && <div>1 row upsert</div>}
+          {(modalType === 'NEW' || modalType === 'MODIFY') && (
+            <FormDataTable formData={formData} onChangeFormData={this.onChangeFormData} submitFormData={this.submitFormData} />
+          )}
           {modalType === 'EXCEL' && (
             <Spin tip="저장중..." spinning={isSaving}>
               <ExcelPaser getUploadList={this.getUploadList} onSave={this.submitFormData} isSaving={isSaving} />

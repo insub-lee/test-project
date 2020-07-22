@@ -370,6 +370,7 @@ class DraftList extends Component {
       setOpinion(opinion);
       reqApprove({});
       setOpinionVisible(false);
+      this.closeBtnFunc();
     }
   };
 
@@ -772,13 +773,7 @@ class DraftList extends Component {
             </table>
           </StyledHtmlTable>
           <StyledButtonWrapper className="btn-wrap-mt-10 btn-wrap-mb-10 btn-wrap-center">
-            <StyledButton
-              className="btn-primary btn-sm mr5"
-              onClick={e => {
-                this.handleReqApprove(e);
-                this.closeBtnFunc();
-              }}
-            >
+            <StyledButton className="btn-primary btn-sm mr5" onClick={this.handleReqApprove}>
               저장
             </StyledButton>
             <StyledButton className="btn-light btn-sm" onClick={() => setOpinionVisible(false)}>
