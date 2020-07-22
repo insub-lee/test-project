@@ -49,9 +49,12 @@ class CustomUserSelectComp extends Component {
   onInitComplete = id => {
     const { result } = this.props;
     const selectedUserList = result.initUserList && result.initUserList.userList;
-    this.setState({
-      selectedUserList,
-    });
+    this.setState(
+      {
+        selectedUserList,
+      },
+      this.props.onInitComplete(selectedUserList),
+    );
   };
 
   onInitUserSelect = () => {
@@ -96,7 +99,17 @@ class CustomUserSelectComp extends Component {
   onCheckUser = e => {
     this.setState(prevState => {
       const { checkUserList } = prevState;
+      const { result } = this.props;
       const idx = checkUserList.findIndex(x => x === e.target.value);
+      const userListInSelectedDept = (result && result.userList && result.userList.list) || [];
+      if (e.target.value === -1 && e.target.checked) {
+        return { checkUserList: userListInSelectedDept.map(user => user.USER_ID).concat(-1) };
+      }
+
+      if (e.target.value === -1 && !e.target.checked) {
+        return { checkUserList: [] };
+      }
+
       if (idx === -1) {
         checkUserList.splice(idx, 0, e.target.value);
       } else if (!e.target.checked) {
@@ -114,7 +127,8 @@ class CustomUserSelectComp extends Component {
     this.setState(prevState => {
       const { selectedUserList } = prevState;
       const resultUserList = selectedUserList !== undefined ? selectedUserList : [];
-      checkUserList.forEach(chkUser => {
+      const checkUserListWithoutSelectAllValue = checkUserList.filter(userId => userId !== -1);
+      checkUserListWithoutSelectAllValue.forEach(chkUser => {
         const idx = resultUserList.findIndex(user => user.USER_ID === chkUser);
         if (idx === -1) {
           const addUser = nUserList.filter(user => user.USER_ID === chkUser).length > 0 ? nUserList.filter(user => user.USER_ID === chkUser)[0] : {};
@@ -174,6 +188,7 @@ class CustomUserSelectComp extends Component {
 
   render() {
     const { treeDataSource, userDataList, result, isWorkBuilder } = this.props;
+    const dataSource = userDataList || (result && result.userList && result.userList.list) || [];
     return (
       <UserSelectWrapper>
         <Row gutter={0}>
@@ -203,12 +218,13 @@ class CustomUserSelectComp extends Component {
                 <List
                   header="사용자 선택"
                   size="small"
-                  dataSource={userDataList || (result && result.userList && result.userList.list)}
+                  // dataSource={dataSource.concat({ NAME_KOR: '전체 보기', USER_ID: -1 })}
+                  dataSource={[{ NAME_KOR: '전체 선택', USER_ID: -1 }, ...dataSource]}
                   bordered
                   renderItem={item => (
                     <List.Item>
                       <Checkbox onChange={this.onCheckUser} checked={this.state.checkUserList.filter(x => item.USER_ID === x).length > 0} value={item.USER_ID}>
-                        {item.NAME_KOR} [ {item.PSTN_NAME_KOR} ]
+                        {item.USER_ID !== -1 ? `${item.NAME_KOR} [ ${item.PSTN_NAME_KOR} ]` : `${item.NAME_KOR}`}
                       </Checkbox>
                     </List.Item>
                   )}
@@ -243,7 +259,7 @@ class CustomUserSelectComp extends Component {
             </div>
           </Col>
         </Row>
-        <StyledButtonWrapper className="btn-wrap-center" style={{ display: isWorkBuilder ? 'none' : 'block' }}>
+        <StyledButtonWrapper className="btn-wrap-center" style={{ display: isWorkBuilder ? 'none' : 'block', paddingTop: '20px', paddingBottom: '20px' }}>
           <StyledButton className="btn-sm btn-gray mr5" onClick={this.onCancelUserSelect}>
             취소
           </StyledButton>

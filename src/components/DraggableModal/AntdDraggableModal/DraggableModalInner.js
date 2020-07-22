@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
+import browser from 'browser-detect';
 
 import { Modal } from 'antd';
 import { ResizeHandle } from './ResizeHandle';
@@ -7,7 +8,7 @@ import { useDrag } from './hooks/useDrag';
 import { usePrevious } from './hooks/usePrevious';
 import { useResize } from './hooks/useResize';
 
-const modalStyle = { margin: 0, paddingBottom: 0, pointerEvents: 'auto' };
+const modalStyle = { margin: 0, paddingBottom: 0, pointerEvents: 'auto', maxHeight: 'calc(100vh - 100px)' };
 
 const DraggableModalInnerNonMemo = ({ id, modalState, dispatch, visible, children, title, initialWidth, initialHeight, ...otherProps }) => {
   // Call on mount and unmount.
@@ -30,7 +31,7 @@ const DraggableModalInnerNonMemo = ({ id, modalState, dispatch, visible, childre
 
   const { zIndex, x, y, width, height } = modalState;
 
-  const style = useMemo(() => ({ ...modalStyle, top: y, left: x, height }), [y, x, height]);
+  const style = useMemo(() => ({ ...modalStyle, top: y, left: x }), [y, x]);
 
   const onFocus = useCallback(() => dispatch({ type: 'focus', id }), [id, dispatch]);
 
@@ -38,21 +39,28 @@ const DraggableModalInnerNonMemo = ({ id, modalState, dispatch, visible, childre
 
   const onResizeWithID = useCallback(args => dispatch({ type: 'resize', id, ...args }), [dispatch, id]);
 
-  const { onMouseDown, onMouseMove } = useDrag(x, y, onDragWithID);
-  const { onMouseDown: onResizeMouseDown, onMouseMove: onResizeMouseMove } = useResize(x, y, width, height, onResizeWithID);
+  const { onMouseDown, dragging } = useDrag(x, y, onDragWithID, id);
+  const { onMouseDown: onResizeMouseDown, dragging: resizing } = useResize(x, y, width, height, onResizeWithID, id);
 
   const titleElement = useMemo(
     () => (
-      <div className="ant-design-draggable-modal-title" onMouseDown={onMouseDown} onMouseMove={onMouseMove} onClick={onFocus}>
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions,jsx-a11y/click-events-have-key-events
+      <div
+        id={`ant-design-draggable-modal-target-${id}`}
+        className={`ant-design-draggable-modal-title ${dragging ? 'can-drag' : ''} ${resizing ? 'can-resize' : ''}`}
+        onMouseDown={onMouseDown}
+        onClick={onFocus}
+        style={{ cursor: 'move' }}
+      >
         {title}
       </div>
     ),
-    [onMouseDown, onMouseMove, onFocus, title],
+    [onMouseDown, onFocus, title, id, dragging, resizing],
   );
 
   return (
     <Modal
-      wrapClassName="ant-design-draggable-modal"
+      wrapClassName={`ant-design-draggable-modal ant-design-modal-${id}`}
       style={style}
       width={width}
       destroyOnClose
@@ -62,10 +70,11 @@ const DraggableModalInnerNonMemo = ({ id, modalState, dispatch, visible, childre
       title={titleElement}
       visible={visible}
       footer={[]}
+      centered={false}
       {...otherProps}
     >
       {children}
-      <ResizeHandle onMouseDown={onResizeMouseDown} onMouseMove={onResizeMouseMove} />
+      <ResizeHandle onMouseDown={onResizeMouseDown} />
     </Modal>
   );
 };

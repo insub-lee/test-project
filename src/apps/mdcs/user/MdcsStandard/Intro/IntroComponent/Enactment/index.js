@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Select } from 'antd';
+import { Select, message } from 'antd';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 
@@ -33,6 +33,9 @@ class Enactment extends Component {
       docNumber: ['M', '', '', '', '-', ''],
       selectedNodeIds: [undefined, undefined, undefined, undefined],
       selectedWorkSeq: 0,
+      stepList02: [],
+      stepList03: [],
+      stepList04: [],
     });
   };
 
@@ -199,8 +202,13 @@ class Enactment extends Component {
       degreeFlag: ModifyType.MAJOR,
       draftMethod: 'insert',
     };
-    this.props.onShowModal(selectedworkSeq, viewChangeSeq, docNumber.join(''), selectedNodeIds[3], 'INPUT', workPrcProps);
-    this.initStateData();
+    const isShow = selectedNodeIds.filter(item => item);
+    if (isShow.length > 3) {
+      this.props.onShowModal(selectedworkSeq, viewChangeSeq, docNumber.join(''), selectedNodeIds[3], 'INPUT', workPrcProps);
+      this.initStateData();
+    } else {
+      message.info('분류체계를 선택해주세요');
+    }
   };
 
   render() {

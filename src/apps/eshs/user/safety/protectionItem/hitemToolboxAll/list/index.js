@@ -218,7 +218,8 @@ class List extends React.Component {
   getDataSource = () => {
     const { setDataSource } = this;
     const { searchValue } = this.state;
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
+    spinningOn();
     const apiArr = [
       {
         key: 'toolboxList',
@@ -231,10 +232,13 @@ class List extends React.Component {
   };
 
   setDataSource = () => {
-    const { result } = this.props;
-    this.setState({
-      dataSource: (result.toolboxList && result.toolboxList.list) || [],
-    });
+    const { result, spinningOff } = this.props;
+    this.setState(
+      {
+        dataSource: (result.toolboxList && result.toolboxList.list) || [],
+      },
+      spinningOff,
+    );
   };
 
   createYearList = () => {
@@ -270,21 +274,19 @@ class List extends React.Component {
     return (
       <>
         <StyledContentsWrapper>
-          <StyledCustomSearchWrapper>
+          <StyledCustomSearchWrapper className="search-wrapper-inline">
             <div className="search-input-area">
-              <span className="text-label">평가 연도</span>
+              <span className="text-label">연도</span>
               <AntdSelect
-                className="select-mid mr5 ml5"
+                className="select-sm mr5 ml5"
                 defaultValue={moment().format('YYYY')}
                 onChange={value => handleSearchChange('chkYear', value)}
-                style={{ width: '10%' }}
+                style={{ width: 100 }}
               >
                 {yearList.map(year => (
                   <Select.Option value={year}>{year}년</Select.Option>
                 ))}
               </AntdSelect>
-            </div>
-            <div className="btn-area">
               <StyledButton className="btn-gray btn-sm mr5" onClick={this.getDataSource}>
                 검색
               </StyledButton>

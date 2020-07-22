@@ -7,8 +7,6 @@ import { Radio, Input, Button, Icon, Select, message, Modal, Table } from 'antd'
 import BizBuilderBase from 'components/BizBuilderBase';
 import UserSelect from 'components/UserSelect';
 import AbrogationMultiModifyDraft from 'apps/Workflow/User/CommonView/abrogationMultiModifyDraft';
-import DraggableModal from 'components/DraggableModal';
-
 import StyledInputView from 'apps/mdcs/styled/StyledInput';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -18,12 +16,11 @@ import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal'
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledTagDraft from 'components/BizBuilder/styled/Tag/StyledTagDraft';
 
-const AntdModal = StyledAntdModal(DraggableModal);
+const AntdModal = StyledAntdModal(Modal);
 const { Option } = Select;
 const { TextArea } = Input;
 const AntdTextArea = StyledTextarea(Input.TextArea);
 const AntdLineTable = StyledAntdTable(Table);
-let timeout;
 
 class MdcsAppvView extends Component {
   // eslint-disable-next-line react/state-in-constructor
@@ -239,7 +236,6 @@ class MdcsAppvView extends Component {
       isDCC,
       isAbrogationMultiShow,
     } = this.state;
-    console.debug('modalWidth', modalWidth);
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -387,7 +383,14 @@ class MdcsAppvView extends Component {
               </StyledButton>
             )}
 
-            <StyledButton key="ok" className="btn-primary mr5 btn-sm" onClick={e => this.handleReqApprove(e, selectedRow.APPV_STATUS)}>
+            <StyledButton
+              key="ok"
+              className="btn-primary mr5 btn-sm"
+              onClick={e => {
+                this.handleReqApprove(e, selectedRow.APPV_STATUS);
+                this.onModalClose();
+              }}
+            >
               승인
             </StyledButton>
             <StyledButton key="close" className="btn-light btn-sm" onClick={this.onModalClose}>
@@ -395,6 +398,7 @@ class MdcsAppvView extends Component {
             </StyledButton>
           </StyledButtonWrapper>
         </StyledHtmlTable>
+
         {selectedRow && selectedRow.REL_TYPE && selectedRow.REL_TYPE !== 999 ? (
           <BizBuilderBase
             sagaKey="approveBase_approveView"
@@ -406,43 +410,46 @@ class MdcsAppvView extends Component {
             ViewCustomButtons={() => false}
           />
         ) : (
-          <>
-            <StyledHtmlTable style={{ padding: '20px 20px 20px' }}>
-              <AntdLineTable
-                columns={this.getTableColumns()}
-                dataSource={DRAFT_DATA.abrogationList !== null ? DRAFT_DATA.abrogationList : []}
-                bordered
-                className="tableWrapper"
-                pagination={false}
-              />
-            </StyledHtmlTable>
-            <AntdModal
-              destroyOnClose
-              style={{ top: '50px' }}
-              initialWidth={900}
-              visible={isAbrogationMultiShow}
-              onCancel={this.onCloseAbrogationMultiModal}
-              footer={null}
-              maskClosable={false}
-            >
-              <StyledInputView>
-                <div className="pop_tit">표준 일괄 폐기</div>
-                <AbrogationMultiModifyDraft
-                  workPrcProps={workPrcProps}
-                  {...this.props}
-                  onAbrogationMultiProcess={this.onAbrogationMultiProcess}
-                  onCloseAbrogationMultiModal={this.onCloseAbrogationMultiModal}
+          DRAFT_DATA &&
+          DRAFT_DATA.abrogationList &&
+          DRAFT_DATA.abrogationList.length > 0 && (
+            <>
+              <StyledHtmlTable style={{ padding: '20px 20px 20px' }}>
+                <AntdLineTable
+                  columns={this.getTableColumns()}
+                  dataSource={DRAFT_DATA.abrogationList !== null ? DRAFT_DATA.abrogationList : []}
+                  bordered
+                  className="tableWrapper"
+                  pagination={false}
                 />
-              </StyledInputView>
-            </AntdModal>
-          </>
+              </StyledHtmlTable>
+              <AntdModal
+                destroyOnClose
+                style={{ top: '50px' }}
+                initialWidth={900}
+                visible={isAbrogationMultiShow}
+                onCancel={this.onCloseAbrogationMultiModal}
+                footer={null}
+                maskClosable={false}
+              >
+                <StyledInputView>
+                  <div className="pop_tit">표준 일괄 폐기</div>
+                  <AbrogationMultiModifyDraft
+                    workPrcProps={workPrcProps}
+                    {...this.props}
+                    onAbrogationMultiProcess={this.onAbrogationMultiProcess}
+                    onCloseAbrogationMultiModal={this.onCloseAbrogationMultiModal}
+                  />
+                </StyledInputView>
+              </AntdModal>
+            </>
+          )
         )}
 
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"
           title="표지 보기"
-          initialWidth={900}
-          initialHeight={600}
+          width={900}
           destroyOnClose
           visible={coverView.visible}
           onCancel={this.onCloseCoverView}
@@ -482,7 +489,7 @@ class MdcsAppvView extends Component {
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"
           title="사용자 선택"
-          initialWidth={1000}
+          width={1000}
           initialHeight={400}
           destroyOnClose
           visible={isUserSelect}

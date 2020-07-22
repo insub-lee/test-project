@@ -7,7 +7,7 @@ class Approve extends Component {
   componentDidMount() {}
 
   render() {
-    return <ApproveBase id={`approveList`} component={List} />
+    return <ApproveBase id="approveList" key="mdcs-approveList" component={List} />;
   }
 }
 

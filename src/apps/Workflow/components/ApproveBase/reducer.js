@@ -20,31 +20,24 @@ const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_APPROVE_LIST: {
       const { list, listCnt } = action;
-      return state
-        .set('approveList', fromJS(list.map(item => ({ ...item, key: `approveList_${item.RESULT_ID}` }))))
-        .set('viewVisible', false)
-        .set('approveListCnt', listCnt);
+      return state.set('approveList', fromJS(list.map(item => ({ ...item, key: `approveList_${item.RESULT_ID}` })))).set('approveListCnt', listCnt);
+      // .set('viewVisible', false)
     }
     case actionTypes.SET_UNAPPROVE_LIST: {
       const { list, listCnt } = action;
-      return state
-        .set('unApproveList', fromJS(list.map(item => ({ ...item, key: `unApproveList_${item.QUE_ID}` }))))
-        .set('viewVisible', false)
-        .set('unApproveListCnt', listCnt);
+      return state.set('unApproveList', fromJS(list.map(item => ({ ...item, key: `unApproveList_${item.QUE_ID}` })))).set('unApproveListCnt', listCnt);
+      // .set('viewVisible', false)
     }
     case actionTypes.SET_DRAFT_LIST: {
       const { list, listCnt } = action;
-      return state
-        .set('draftList', fromJS(list.map(item => ({ ...item, key: `draftList_${item.RESULT_ID}` }))))
-        .set('viewVisible', false)
-        .set('draftListCnt', listCnt);
+      return state.set('draftList', fromJS(list.map(item => ({ ...item, key: `draftList_${item.RESULT_ID}` })))).set('draftListCnt', listCnt);
+      // .set('viewVisible', false)
     }
     case actionTypes.SET_PARTIAL_INIT: {
-      return state
-        .set('viewVisible', false)
-        .set('opinionVisible', false)
-        .set('selectedRow', fromJS({}))
-        .set('opinion', '');
+      return state.set('opinion', '');
+      // .set('selectedRow', fromJS({}))
+      // .set('viewVisible', false)
+      // .set('opinionVisible', false)
     }
     case actionTypes.SET_CUSTOMER_DATABIND: {
       const { list } = action;

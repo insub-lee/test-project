@@ -254,7 +254,7 @@ class List extends Component {
             />
           </div>
           <div className="btn-area">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.searchList}>
+            <StyledButton className="btn-gray btn-first btn-sm" onClick={this.searchList}>
               검색
             </StyledButton>
           </div>

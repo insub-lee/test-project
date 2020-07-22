@@ -13,6 +13,9 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+
 const AntdModal = StyledContentsModal(Modal);
 const AntdSelect = StyledSelect(Select);
 const AntdPicker = StyledPicker(DatePicker);
@@ -62,16 +65,22 @@ class ModalContents extends React.Component {
 
   handleInputChange = (key, value) => {
     const { sagaKey: id, changeFormData } = this.props;
-    const valueObj = { [key]: value };
+    const { requestValue } = this.state;
     changeFormData(id, key, value);
-    this.setRequestValue(valueObj);
+
+    this.setState({
+      requestValue: { ...requestValue, [key]: value },
+    });
   };
 
   handleDateChange = date => {
     const { sagaKey: id, changeFormData } = this.props;
-    const valueObj = { POSTING_DT: date };
+    const { requestValue } = this.state;
+
     changeFormData(id, 'POSTING_DT', date);
-    this.setRequestValue(valueObj);
+    this.setState({
+      requestValue: { ...requestValue, POSTING_DT: date },
+    });
   };
 
   saveAfterFunc = () => {
@@ -81,16 +90,30 @@ class ModalContents extends React.Component {
   };
 
   handleModifyClick = () => {
-    const { saveAfterFunc } = this;
+    const { saveAfterFunc, showMessage } = this;
     const { requestValue } = this.state;
     const { sagaKey: id, submitExtraHandler, rowData } = this.props;
-    submitExtraHandler(id, 'PUT', `/api/eshs/v1/common/protectionerm`, Object.assign(rowData, requestValue), saveAfterFunc);
+    submitExtraHandler(id, 'PUT', `/api/eshs/v1/common/protectionerm`, { ...rowData, ...requestValue }, (afterId, res) => {
+      if (res && res.result > 0) {
+        showMessage('수정되었습니다.');
+        saveAfterFunc();
+      } else {
+        showMessage('수정에 실패하였습니다.');
+      }
+    });
   };
 
   handleDeleteClick = () => {
-    const { saveAfterFunc } = this;
+    const { saveAfterFunc, showMessage } = this;
     const { sagaKey: id, submitExtraHandler, rowData } = this.props;
-    submitExtraHandler(id, 'DELETE', `/api/eshs/v1/common/protectionerm`, rowData, saveAfterFunc);
+    submitExtraHandler(id, 'DELETE', `/api/eshs/v1/common/protectionerm`, rowData, (afterId, res) => {
+      if (res && res.result > 0) {
+        showMessage('삭제되었습니다.');
+        saveAfterFunc();
+      } else {
+        showMessage('삭제에 실패하였습니다.');
+      }
+    });
   };
 
   saveBeforeFunc = () => {
@@ -98,6 +121,8 @@ class ModalContents extends React.Component {
     changeFormData(sagaKey, 'POSTING_DT', moment());
     saveTask(sagaKey, sagaKey, this.saveAfterFunc);
   };
+
+  showMessage = text => message.info(<MessageContent>{text}</MessageContent>);
 
   render() {
     const {

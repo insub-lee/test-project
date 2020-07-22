@@ -461,7 +461,7 @@ const reducer = (state = initialState, action) => {
       if (compIdx > -1) {
         let compItem = compData.get(compIdx);
         compItem = compItem.setIn(['CONFIG', subKey, key], setValue);
-        const compField = compItem.COMP_FIELD;
+        const compField = compItem.get('COMP_FIELD');
         const layerIdxs = compItem.getIn(['CONFIG', 'property', 'layerIdx']);
         const keySet = Object.keys(layerIdxs.toJS());
         if (keySet.length > 0) {
@@ -470,30 +470,9 @@ const reducer = (state = initialState, action) => {
               const viewIdx = compData.findIndex(iNode => iNode.get('COMP_TYPE') === 'VIEW' && iNode.getIn(['CONFIG', 'property', 'layerIdxKey']) === layerKey);
               if (viewIdx > -1) {
                 const keys = layerIdxs.get(layerKey).split('-');
-                if (
-                  compData.getIn([
-                    viewIdx,
-                    'CONFIG',
-                    'property',
-                    'layer',
-                    'groups',
-                    keys[0],
-                    'rows',
-                    keys[1],
-                    'cols',
-                    keys[2],
-                    'comp',
-                    'CONFIG',
-                    subKey,
-                    key,
-                  ]) &&
-                  compData.getIn([viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', 'COMP_FIELD']) ===
-                    compField
-                ) {
-                  compData = compData.setIn(
-                    [viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', 'CONFIG', subKey, key],
-                    setValue,
-                  );
+                const viewKey = [viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp'];
+                if (compData.getIn([...viewKey, 'CONFIG', subKey, key]) && compData.getIn([...viewKey, 'COMP_FIELD']) === compField) {
+                  compData = compData.setIn([...viewKey, 'CONFIG', subKey, key], setValue);
                 }
               }
             }
@@ -504,8 +483,8 @@ const reducer = (state = initialState, action) => {
           .setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp', 'CONFIG', subKey, key], setValue)
           .setIn(['compData', compIdx], compItem);
       }
-      let compItem = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp']);
-      compItem = compItem.setIn(['CONFIG', subKey, key], setValue);
+      // let compItem = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp']);
+      // compItem = compItem.setIn(['CONFIG', subKey, key], setValue);
       return state.setIn(
         ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp', 'CONFIG', subKey, key],
         setValue,
@@ -513,7 +492,7 @@ const reducer = (state = initialState, action) => {
     }
     case actionTypes.CHANGE_VIEW_COMPDATA_REDUCER: {
       const { groupIndex, rowIndex, colIndex, key, value } = action;
-      let compData = state.get('compData');
+      const compData = state.get('compData');
       const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
       const compKey = state.getIn([
         'viewData',
@@ -1065,7 +1044,8 @@ const reducer = (state = initialState, action) => {
           })
           .set('selectedKeys', fromJS([]))
           .set('canMerge', fromJS({ row: false, col: false }))
-          .set('canDivide', fromJS({ row: false, col: false }));
+          .set('canDivide', fromJS({ row: false, col: false }))
+          .set('compData', compList);
       }
       return state;
       // return state
