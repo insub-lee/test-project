@@ -149,6 +149,7 @@ import CustomListSelectComp from 'components/BizBuilder/Field/CustomListSelectCo
 import MonthPickerComp from 'components/BizBuilder/Field/MonthPickerComp';
 import SelectEducationMemberComp from 'components/BizBuilder/Field/SelectEducationMemberComp';
 import GetEducationMemberComp from 'components/BizBuilder/Field/GetEducationMemberComp';
+import ValueChangeTextComp from 'components/BizBuilder/Field/ValueChangeTextComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/VersionComp': { renderer: property => <VersionComp {...property} /> },
@@ -300,4 +301,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/MonthPickerComp': { renderer: property => <MonthPickerComp {...property} /> },
   'components/BizBuilder/Field/SelectEducationMemberComp': { renderer: property => <SelectEducationMemberComp {...property} /> },
   'components/BizBuilder/Field/GetEducationMemberComp': { renderer: property => <GetEducationMemberComp {...property} /> },
+  'components/BizBuilder/Field/ValueChangeTextComp': { renderer: property => <ValueChangeTextComp {...property} /> },
 };

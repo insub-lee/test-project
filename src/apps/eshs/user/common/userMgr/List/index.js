@@ -4,17 +4,19 @@ import { Table, Column, AutoSizer } from 'react-virtualized';
 import { Select, Input } from 'antd';
 import debounce from 'lodash/debounce';
 
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+
 import StyledVirtualizedTable from 'components/BizBuilder/styled/Table/StyledVirtualizedTable';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
-import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
-const { Option } = Select;
-const InputGroup = Input.Group;
-const AntdInputSearch = StyledSearchInput(Input.Search);
 const AntdSelect = StyledSelect(Select);
+const AntdInput = StyledInput(Input);
+const { Option } = Select;
+
 class List extends Component {
   constructor(props) {
     super(props);
@@ -36,7 +38,7 @@ class List extends Component {
   }
 
   getUserData = () => {
-    const { selectedHq } = this.state;
+    const { selectedHq, spinningOn } = this.state;
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiArr = [
       {
@@ -56,26 +58,31 @@ class List extends Component {
   };
 
   changeListData = () => {
-    const { result } = this.props;
+    const { result, spinningOff } = this.props;
     const { selectedHq } = this.state;
-    this.setState({
-      userList: (result.userList && result.userList.users) || [],
-      hqList: (result.deptList && result.deptList.dept && result.deptList.dept.filter(item => item.PRNT_ID === selectedHq)) || [],
-    });
+    this.setState(
+      {
+        userList: (result.userList && result.userList.users) || [],
+        hqList: (result.deptList && result.deptList.dept && result.deptList.dept.filter(item => item.PRNT_ID === selectedHq)) || [],
+      },
+      spinningOff,
+    );
   };
 
   getSearchListData = () => {
-    const { result } = this.props;
-    this.setState({
-      userList: (result.searchUser && result.searchUser.searchResult) || [],
-    });
+    const { result, spinningOff } = this.props;
+    this.setState(
+      {
+        userList: (result.searchUser && result.searchUser.searchResult) || [],
+      },
+      spinningOff,
+    );
   };
 
   handleBaseareaChange = e => {
     this.setState({
       selectedBaseareaCode: e,
     });
-    this.handleFindData();
   };
 
   handleHqChange = e => {
@@ -105,7 +112,6 @@ class List extends Component {
     this.setState({
       selectedDept: e,
     });
-    this.handleFindData();
   };
 
   handleSearchTypeChange = e => {
@@ -118,17 +124,18 @@ class List extends Component {
     this.setState({
       searchValue: e.target.value,
     });
-    this.handleFindData();
   };
 
   handleFindData = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
     const { searchType, searchValue, selectedBaseareaCode, selectedDept } = this.state;
+    spinningOn();
     const apiArr = [
       {
         key: 'searchUser',
         type: 'GET',
-        url: `/api/eshs/v1/common/EshsUserSearch?searchType=${searchType}&keyword=${searchValue}&barea_cd=${selectedBaseareaCode}&dept_cd=${selectedDept}`,
+        url: `/api/eshs/v1/common/EshsUserSearch?searchType=${searchType || ''}&keyword=${searchValue || ''}&barea_cd=${selectedBaseareaCode ||
+          ''}&dept_cd=${selectedDept || ''}`,
       },
     ];
     getCallDataHandler(id, apiArr, this.getSearchListData);
@@ -164,42 +171,48 @@ class List extends Component {
     const { isHqSelect, hqList, deptList, searchValue, userList, selectedDept } = this.state;
     return (
       <>
-        <ContentsWrapper>
-          <StyledSearchWrap>
-            <AntdSelect defaultValue="지역 전체" className="mr5" onChange={this.handleBaseareaChange}>
-              <Option value="">지역 전체</Option>
-              <Option value="CP">청주</Option>
-              <Option value="GP">구미</Option>
-            </AntdSelect>
-            <AntdSelect defaultValue="본부 전체" className="mr5" onChange={this.handleHqChange} style={{ width: '250px' }}>
-              <Option value={900}>본부 전체</Option>
-              {hqList.map(item => (
-                <Option value={item.DEPT_ID}>{item.NAME_KOR}</Option>
-              ))}
-            </AntdSelect>
-            <AntdSelect defaultValue={selectedDept} className="mr5" disabled={!isHqSelect} onChange={this.handleDeptChange} style={{ width: '250px' }}>
-              <Option value="">팀 전체</Option>
-              {deptList.map(item => (
-                <Option value={item.DEPT_CD}>{item.NAME_KOR}</Option>
-              ))}
-            </AntdSelect>
-            <InputGroup className="ant-input-inline mr5" compact style={{ display: 'inline-block', width: '30%' }}>
-              <AntdSelect defaultValue="이름" onChange={this.handleSearchTypeChange} style={{ display: 'inline-block', width: '25%' }}>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper className="search-wrapper-inline">
+            <div className="search-input-area mb10">
+              <AntdSelect placeholder="지역 전체" allowClear className="select-sm mr5" onChange={this.handleBaseareaChange} style={{ width: 150 }}>
+                <Option value="CP">청주</Option>
+                <Option value="GP">구미</Option>
+              </AntdSelect>
+              <AntdSelect defaultValue={900} className="select-sm mr5" onChange={this.handleHqChange} style={{ width: 250 }}>
+                <Option value={900}>본부 전체</Option>
+                {hqList.map(item => (
+                  <Option value={item.DEPT_ID}>{item.NAME_KOR}</Option>
+                ))}
+              </AntdSelect>
+              <AntdSelect
+                className="select-sm mr5"
+                disabled={!isHqSelect}
+                onChange={this.handleDeptChange}
+                style={{ width: 250 }}
+                allowClear
+                placeholder="팀 전체"
+              >
+                {deptList.map(item => (
+                  <Option value={item.DEPT_CD}>{item.NAME_KOR}</Option>
+                ))}
+              </AntdSelect>
+              <AntdSelect defaultValue="name_kor" placeholder="검색구분" className="select-sm" onChange={this.handleSearchTypeChange} style={{ width: 100 }}>
                 <Option value="name_kor">이름</Option>
                 <Option value="emp_no">사번</Option>
               </AntdSelect>
-              <AntdInputSearch
-                className="ant-input-inline mr5"
-                placeholder=" 검색어를 입력하세요"
+              <AntdInput
+                className="ant-input-sm ant-input-inline mr5"
+                placeholder="검색어"
                 onChange={this.handleSearchValueChange}
-                value={searchValue}
-                style={{ width: '70%' }}
+                style={{ width: 150 }}
+                allowClear
+                onPressEnter={this.handleFindData}
               />
-            </InputGroup>
-            <StyledButton className="btn-primary" onClick={this.handleListReset}>
-              검색 초기화
-            </StyledButton>
-          </StyledSearchWrap>
+              <StyledButton className="btn-gray btn-sm" onClick={this.handleFindData}>
+                검색
+              </StyledButton>
+            </div>
+          </StyledCustomSearchWrapper>
           <StyledVirtualizedTable>
             <AutoSizer disableHeight>
               {({ width }) => (
@@ -211,7 +224,7 @@ class List extends Component {
               )}
             </AutoSizer>
           </StyledVirtualizedTable>
-        </ContentsWrapper>
+        </StyledContentsWrapper>
       </>
     );
   }
