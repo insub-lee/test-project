@@ -279,8 +279,8 @@ class Reservation extends Component {
 
   // 저장
   onSave = () => {
-    const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
-    const { reservationInfo, familyInfo, isDelFamilyInfo } = this.state;
+    const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff, isManager } = this.props;
+    const { userInfo, reservationInfo, familyInfo, isDelFamilyInfo } = this.state;
 
     // validation check 필요
     // 검진기관, 검진예약일, 검진항목, 수령지, 전화번호
@@ -293,9 +293,10 @@ class Reservation extends Component {
       onOk() {
         const submitData = {
           PARAM: {
-            reservationInfo: { ...reservationInfo },
+            reservationInfo: { ...reservationInfo, RCV_PHONE: reservationInfo.reservationInfo || userInfo.MOBILE_TEL_NO },
             familyInfo: { ...familyInfo },
             isDelFamilyInfo,
+            isManager: isManager || false,
           },
         };
         spinningOn();
@@ -468,6 +469,19 @@ class Reservation extends Component {
                     <tr>
                       <th>배우자</th>
                       <td colSpan={7}>{userInfo.FAM_NAME}</td>
+                    </tr>
+                    <tr>
+                      <th>주민등록번호</th>
+                      <td>{userInfo.FAM_REGNO && (`${userInfo.FAM_REGNO.substring(0, 6)} - ${userInfo.FAM_REGNO.substring(6, 13)}`)}</td>
+                      <th>전화번호</th>
+                      <td>
+                        <AntdInput
+                          value={familyInfo.RCV_PHONE} className="ant-input-sm"
+                          onChange={e => this.onChangeReservationInfo('RCV_PHONE', e.target.value, 2)}
+                        />
+                      </td>
+                      <th>검진종류</th>
+                      <td colSpan={3}>{familyInfo.CHK_TYPE_CD_NAME}</td>
                     </tr>
                     <tr>
                       <th>검진기관</th>
