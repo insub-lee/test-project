@@ -140,8 +140,11 @@ class InputPage extends React.Component {
       PARENT_TASK_SEQ:
         (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].PARENT_TASK_SEQ) || prevState.PARENT_TASK_SEQ,
       videoId: (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].VIDEO_ID) || '',
-      OPEN_DTTM: (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].OPEN_DTTM) || moment(),
-      END_DTTM: (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].END_DTTM) || moment(),
+      OPEN_DTTM:
+        (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].OPEN_DTTM) ||
+        moment(new Date()).format('YYYY-MM-DD'),
+      END_DTTM:
+        (result.questions && result.questions.list && result.questions.list[0] && result.questions.list[0].END_DTTM) || moment(new Date()).format('YYYY-MM-DD'),
     }));
   };
 
@@ -236,7 +239,6 @@ class InputPage extends React.Component {
     if (questionArr.filter(question => !question.answer).length) {
       return message.error('정답을 모두 입력해주세요.');
     }
-
     const apiArr = {
       PARAM: {
         PARENT_WORK_SEQ,

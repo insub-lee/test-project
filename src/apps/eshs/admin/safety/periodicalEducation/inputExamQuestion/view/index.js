@@ -199,7 +199,7 @@ class ViewPage extends React.Component {
       return message.warn('답을 모두 선택하세요.');
     }
 
-    if (!answers.isWatchwEducationVideo || answers.isWatchwEducationVideo === 'N' || !videoId) {
+    if (videoId && (!answers.isWatchwEducationVideo || answers.isWatchwEducationVideo === 'N')) {
       return message.warn('영상을 모두 시청해주세요.');
     }
 
