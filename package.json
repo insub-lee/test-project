@@ -16,6 +16,7 @@
     "antd": "3.26.16",
     "axios": "^0.18.0",
     "base-64": "^0.1.0",
+    "browser-detect": "^0.2.28",
     "clone": "^1.0.4",
     "console-polyfill": "^0.3.0",
     "core-js": "^3.4.5",

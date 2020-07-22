@@ -323,13 +323,14 @@ export const changeSearchDataByReducer = (id, key, val) => ({
   val,
 });
 
-export const getListDataBySaga = (id, workSeq, conditional, pageIdx, pageCnt) => ({
+export const getListDataBySaga = (id, workSeq, conditional, pageIdx, pageCnt, changeIsLoading) => ({
   type: `${actionTypes.GET_LIST_DATA_SAGA}_${id}`,
   id,
   workSeq,
   conditional,
   pageIdx,
   pageCnt,
+  changeIsLoading,
 });
 
 export const redirectUrl = (id, url) => ({

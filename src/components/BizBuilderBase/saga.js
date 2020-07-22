@@ -183,9 +183,8 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
   }
   yield put(actions.setBuilderModalByReducer(id, isBuilderModal, builderModalSetting, isSaveModalClose));
   if (viewType === 'LIST') {
-    yield put(actions.getListDataBySaga(id, workSeq, conditional));
-  }
-  if (typeof changeIsLoading === 'function') changeIsLoading(false);
+    yield put(actions.getListDataBySaga(id, workSeq, conditional, undefined, undefined, changeIsLoading));
+  } else if (typeof changeIsLoading === 'function') changeIsLoading(false);
 }
 
 function* getExtraApiData({ id, apiArr, callback }) {
@@ -966,7 +965,7 @@ function* getDraftProcess({ id, draftId }) {
   yield put(actions.setDraftProcess(id, draftProcess));
 }
 
-function* getListData({ id, workSeq, conditional, pageIdx, pageCnt }) {
+function* getListData({ id, workSeq, conditional, pageIdx, pageCnt, changeIsLoading }) {
   const searchData = yield select(selectors.makeSelectSearchDataById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
   const whereString = [];
@@ -1020,6 +1019,7 @@ function* getListData({ id, workSeq, conditional, pageIdx, pageCnt }) {
     const { list, listTotalCnt } = responseList;
     yield put(actions.setListDataByReducer(id, list, listTotalCnt));
   }
+  if (typeof changeIsLoading === 'function') changeIsLoading(false);
 }
 
 function* redirectUrl({ id, url }) {

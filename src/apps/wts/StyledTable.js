@@ -28,6 +28,20 @@ const StyledTable = styled.div`
         border: 1px solid rgb(234, 236, 238);
         border-image: initial;
         padding: 10px;
+
+        &.tb_is {
+          padding: 0;
+          
+          input {
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            padding: 0px 10px;
+            background: #fff;
+            border: 0;
+          }
+        }
       }
 
       .bd {

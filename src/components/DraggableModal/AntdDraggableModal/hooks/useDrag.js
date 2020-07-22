@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export const useDrag = (x, y, onDrag) => {
+export const useDrag = (x, y, onDrag, id) => {
   const [dragging, setDragging] = useState(false);
   const [initialDragState, setInitialDragState] = useState({
     initX: 0,
@@ -11,7 +11,6 @@ export const useDrag = (x, y, onDrag) => {
 
   const onMouseDown = useCallback(
     e => {
-      e.preventDefault();
       setInitialDragState({
         initX: x,
         initY: y,
@@ -25,17 +24,21 @@ export const useDrag = (x, y, onDrag) => {
 
   const onMouseMove = useCallback(
     e => {
-      if (dragging) {
+      const node = document.getElementById(`ant-design-draggable-modal-target-${id}`);
+      if (node && node.className.includes('can-drag')) {
         const { initX, mouseDownX, initY, mouseDownY } = initialDragState;
         const dx = e.clientX - mouseDownX;
         const dy = e.clientY - mouseDownY;
-        const x = initX + dx;
-        const y = initY + dy;
-        onDrag({ x, y });
+        onDrag({ x: initX + dx, y: initY + dy });
       }
     },
-    [onDrag, initialDragState, dragging],
+    [onDrag, initialDragState, id],
   );
+
+  useEffect(() => {
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', onMouseMove);
+  }, [onMouseMove]);
 
   useEffect(() => {
     const onMouseUp = () => {
@@ -45,5 +48,5 @@ export const useDrag = (x, y, onDrag) => {
     return () => window.removeEventListener('mouseup', onMouseUp);
   }, []);
 
-  return { onMouseDown, onMouseMove };
+  return { onMouseDown, onMouseMove, dragging };
 };

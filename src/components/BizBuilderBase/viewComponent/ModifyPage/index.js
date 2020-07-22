@@ -40,12 +40,11 @@ class ModifyPage extends Component {
       setProcessRule(id, tempProcessRule);
       setRelType(id, relType);
     } else if (isWorkflowUsed && prcId !== -1) {
+      const { DRAFT_DATA } = workPrcProps;
       const payload = {
         PRC_ID: Number(prcId),
         DRAFT_INFO: draftInfo,
-        DRAFT_DATA: {
-          ...workPrcProps,
-        },
+        DRAFT_DATA,
       };
       getProcessRuleByModify(id, payload);
       setRelType(id, relType);

@@ -5,13 +5,16 @@ const mapObject = (o, f) => Object.assign({}, ...Object.keys(o).map(k => ({ [k]:
 
 export const initialModalsState = {
   maxZIndex: 1000,
-  windowSize: getWindowSize(),
+  windowSize: {
+    width: 800,
+    height: 800,
+  },
   modals: {},
 };
 
 export const initialModalState = {
   x: 0,
-  y: 0,
+  y: 20,
   width: 800,
   height: 800,
   zIndex: 1000,
@@ -46,7 +49,7 @@ const clampResize = (windowWidth, windowHeight, x, y, width, height) => {
 
 export const draggableModalReducer = (state, action) => {
   switch (action.type) {
-    case 'resize':
+    case 'resize': {
       const size = clampResize(state.windowSize.width, state.windowSize.height, action.x, action.y, action.width, action.height);
       return {
         ...state,
@@ -60,6 +63,7 @@ export const draggableModalReducer = (state, action) => {
           },
         },
       };
+    }
     case 'drag':
       return {
         ...state,
@@ -76,8 +80,8 @@ export const draggableModalReducer = (state, action) => {
     case 'show': {
       const modalState = state.modals[action.id];
       const centerX = state.windowSize.width / 2 - modalState.width / 2;
-      const centerY = state.windowSize.height / 2 - modalState.height / 2;
-      console.debug(state.windowSize.width, modalState.width, centerX, state.windowSize.height, modalState.height, centerY);
+      // const centerY = state.windowSize.height / 2 - modalState.height / 2;
+      const centerY = 20;
       const position = clampDrag(state.windowSize.width, state.windowSize.height, centerX, centerY, modalState.width, modalState.height);
       const size = clampResize(state.windowSize.width, state.windowSize.height, position.x, position.y, modalState.width, modalState.height);
       return {
@@ -95,7 +99,7 @@ export const draggableModalReducer = (state, action) => {
         },
       };
     }
-    case 'focus':
+    case 'focus': {
       const modalState = state.modals[action.id];
       return {
         ...state,
@@ -108,6 +112,7 @@ export const draggableModalReducer = (state, action) => {
           },
         },
       };
+    }
     case 'hide': {
       const modalState = state.modals[action.id];
       return {
@@ -121,7 +126,7 @@ export const draggableModalReducer = (state, action) => {
         },
       };
     }
-    case 'mount':
+    case 'mount': {
       const initialState = getInitialModalState(action.intialState);
       return {
         ...state,
@@ -136,13 +141,15 @@ export const draggableModalReducer = (state, action) => {
           },
         },
       };
-    case 'unmount':
+    }
+    case 'unmount': {
       const modalsClone = { ...state.modals };
       delete modalsClone[action.id];
       return {
         ...state,
         modals: modalsClone,
       };
+    }
     case 'windowResize':
       return {
         ...state,

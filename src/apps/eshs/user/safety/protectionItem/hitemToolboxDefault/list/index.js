@@ -313,7 +313,8 @@ class List extends React.Component {
   getDataSource = () => {
     const { setDataSource } = this;
     const { searchValue } = this.state;
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    spinningOn();
     const apiArr = [
       {
         key: 'toolboxList',
@@ -322,17 +323,20 @@ class List extends React.Component {
       },
     ];
 
-    getCallDataHandler(id, apiArr, searchValue.chkYear && searchValue.deptCd ? setDataSource : null);
+    getCallDataHandler(id, apiArr, searchValue.chkYear && searchValue.deptCd ? setDataSource : spinningOff);
   };
 
   setDataSource = () => {
-    const { result } = this.props;
+    const { result, spinningOff } = this.props;
     const tempDataSource = [];
     tempDataSource.push((result.toolboxList && result.toolboxList.list) || {});
-    this.setState({
-      dataSource: tempDataSource,
-      requestValue: (result.toolboxList && result.toolboxList.list) || {},
-    });
+    this.setState(
+      {
+        dataSource: tempDataSource,
+        requestValue: (result.toolboxList && result.toolboxList.list) || {},
+      },
+      spinningOff,
+    );
   };
 
   createYearList = () => {
@@ -399,14 +403,14 @@ class List extends React.Component {
     return (
       <>
         <StyledContentsWrapper>
-          <StyledCustomSearchWrapper>
+          <StyledCustomSearchWrapper className="search-wrapper-inline">
             <div className="search-input-area">
-              <span className="text-label">평가 연도</span>
+              <span className="text-label">연도</span>
               <AntdSelect
-                className="select-mid mr5 ml5"
+                className="select-sm mr5 ml5"
                 defaultValue={moment().format('YYYY')}
                 onChange={value => handleSearchChange('chkYear', value)}
-                style={{ width: '10%' }}
+                style={{ width: 100 }}
               >
                 {yearList.map(year => (
                   <Select.Option value={year}>{year}년</Select.Option>
@@ -414,14 +418,12 @@ class List extends React.Component {
               </AntdSelect>
               <span className="text-label">부서코드</span>
               <AntdSearch
-                className="input-search-mid"
-                style={{ width: '15%' }}
+                className="input-search-sm mr5"
+                style={{ width: 150 }}
                 value={searchValue.deptNm}
                 onClick={handleModalVisible}
                 onSearch={handleModalVisible}
               />
-            </div>
-            <div className="btn-area">
               <StyledButton className="btn-gray btn-sm" onClick={this.getDataSource}>
                 검색
               </StyledButton>

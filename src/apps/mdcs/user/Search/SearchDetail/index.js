@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Radio, Form, Tree, Select, Modal, Input, DatePicker } from 'antd';
+import { Radio, Form, Tree, Select, Input, DatePicker } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
@@ -16,6 +16,7 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import SearchList from './SearchList';
+import { DraggableModal as Modal } from 'components/DraggableModal/AntdDraggableModal';
 
 import BizStd from './BizStd';
 import TechStd from './TechStd';
@@ -262,6 +263,7 @@ class SearchDetail extends Component {
           visible={visible}
           footer={null}
           width={1080}
+          initialWidth={1080}
           onCancel={() => {
             this.setState({ visible: false });
           }}
