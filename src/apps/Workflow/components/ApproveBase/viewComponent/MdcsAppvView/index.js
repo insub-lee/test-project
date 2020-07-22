@@ -53,8 +53,8 @@ class MdcsAppvView extends Component {
 
   componentDidMount() {
     const { id, selectedRow, setSelectedRow, APPV_STATUS, submitHandlerBySaga, profile } = this.props;
-    const { WORK_SEQ, TASK_SEQ, DRAFT_PRC_ID, QUE_ID, STEP } = selectedRow;
-
+    const { WORK_SEQ, TASK_SEQ, DRAFT_PRC_ID, QUE_ID, STEP, DRAFT_ID } = selectedRow;
+    console.debug(selectedRow);
     const appvStatus = selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS == 10 ? 20 : 2;
     const nSelectRow = { ...selectedRow, APPV_STATUS: appvStatus };
     setSelectedRow(nSelectRow);
@@ -70,6 +70,7 @@ class MdcsAppvView extends Component {
         WORK_SEQ,
         TASK_SEQ,
         PARENT_DRAFT_PRC_ID: DRAFT_PRC_ID,
+        DRAFT_ID,
         QUE_ID,
         STEP,
       },
@@ -79,6 +80,7 @@ class MdcsAppvView extends Component {
 
   initDataDelegate = (id, response) => {
     const { procResult, holdHistoryList } = response;
+    console.debug(response);
     this.setState({ procResult, holdHistoryList });
   };
 
@@ -87,17 +89,36 @@ class MdcsAppvView extends Component {
     const isMultiSelect = APPV_STATUS !== 10;
     const nSelectRow = { ...selectedRow, APPV_STATUS: e.target.value };
     setSelectedRow(nSelectRow);
+    if (e.target.value === 5 || e.target.value === 10) {
+      this.setState({ nextApprover: [], userList: [] });
+    }
     this.setState({ isMultiSelect });
   };
 
   handleReqApprove = (e, appvStatus) => {
-    const { opinion } = this.state;
+    const { opinion, nextApprover } = this.state;
     if (((appvStatus === 3 || appvStatus === 30) && !opinion) || opinion === '') {
       message.warning('의견을 작성해주세요');
     } else {
+      if (appvStatus === 5 && nextApprover.length === 0) {
+        message.info('실무자를 선택 해주세요');
+        return;
+      }
+
+      if (appvStatus === 10 && nextApprover.length === 0) {
+        message.info('실무자 결재위임자를 선택 해주세요');
+        return;
+      }
+
+      if (appvStatus === 10 && nextApprover.length > 1) {
+        message.info('실무자 결재위임자는 한명만 선택 가능합니다.');
+        return;
+      }
+
       this.props.setOpinion(opinion);
       this.props.reqApprove(appvStatus);
       this.props.setOpinionVisible(false);
+      this.onModalClose();
     }
   };
 
@@ -307,7 +328,7 @@ class MdcsAppvView extends Component {
                     </div>
                   </td>
                 </tr>
-                <tr style={{ display: procResult.length > 0 ? 'table-row' : 'none' }}>
+                <tr style={{ display: procResult && procResult.length > 0 ? 'table-row' : 'none' }}>
                   <td colSpan={4} style={{ padding: 0, border: 0 }}>
                     <table style={{ width: '100%', borderTop: 0 }}>
                       <colgroup>
@@ -324,15 +345,16 @@ class MdcsAppvView extends Component {
                         <th>검토의견</th>
                         <th style={{ borderRight: 0 }}>검토일</th>
                       </tr>
-                      {procResult.map(item => (
-                        <tr>
-                          <td style={{ textAlign: 'center' }}>{item.DRAFT_USER_NAME}</td>
-                          <td style={{ textAlign: 'center' }}>{item.PSTN_NAME}</td>
-                          <td style={{ textAlign: 'center' }}>{item.APPV_STATUS}</td>
-                          <td>{item.OPINION}</td>
-                          <td style={{ textAlign: 'center' }}>{moment(item.REG_DTTM).format('YYYY-MM-DD')}</td>
-                        </tr>
-                      ))}
+                      {procResult &&
+                        procResult.map(item => (
+                          <tr>
+                            <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
+                            <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
+                            <td style={{ textAlign: 'center' }}>{item.APPV_STATUS === 0 ? '대기' : item.APPV_STATUS === 2 ? '승인' : '부결'}</td>
+                            <td>{item.OPINION}</td>
+                            <td style={{ textAlign: 'center' }}>{item.APPV_DTTM ? moment(item.APPV_DTTM).format('YYYY-MM-DD') : ''}</td>
+                          </tr>
+                        ))}
                     </table>
                   </td>
                 </tr>
@@ -368,8 +390,8 @@ class MdcsAppvView extends Component {
                 <tr style={{ display: REL_TYPE !== 4 ? 'table-row' : 'none' }}>
                   <th>의견 </th>
                   <td colSpan={3}>
-                    {/* <AntdTextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} /> */}
                     <AntdTextArea rows={4} onChange={this.onChangeOpinion} />
+                    {/* <AntdTextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} /> */}
                   </td>
                 </tr>
               </tbody>
@@ -388,7 +410,6 @@ class MdcsAppvView extends Component {
               className="btn-primary mr5 btn-sm"
               onClick={e => {
                 this.handleReqApprove(e, selectedRow.APPV_STATUS);
-                this.onModalClose();
               }}
             >
               승인
