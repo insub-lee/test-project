@@ -48,7 +48,6 @@ function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
 }
 
 function* getUnApproveList({ customUrl, PAGE, PAGE_CNT, relTypes }) {
-  console.debug('customUrl', customUrl);
   let paramRelTypes = relTypes;
   if (!paramRelTypes || paramRelTypes.length === 0) {
     paramRelTypes = yield select(selectors.makeSelectRelTypes());
@@ -100,11 +99,23 @@ function* getUserInfo({ userInfo, callBack }) {
   typeof callBack === 'function' && callBack(JSON.parse(list));
 }
 
-function* successApprove({ message: msg, customUrl, customUrlApprove, customUrlUnApprove, customUrlDraft }) {
+function* successApprove({ message: msg, customUrl, appvType }) {
   message.success(msg, 3);
-  yield put(actions.getApproveList(customUrlApprove || customUrl));
-  yield put(actions.getUnApproveList(customUrlUnApprove || customUrl));
-  yield put(actions.getDraftList(customUrlDraft || customUrl));
+  console.debug('appvType', appvType, customUrl);
+  switch (appvType) {
+    case 'DRAFT':
+      yield put(actions.getDraftList(customUrl));
+      break;
+    case 'APPROVE':
+      yield put(actions.getApproveList(customUrl));
+      break;
+    case 'UNAPPROVE':
+      yield put(actions.getUnApproveList(customUrl));
+      break;
+    default:
+      yield put(actions.getUnApproveList(customUrl));
+      break;
+  }
 }
 
 function* failApprove({ errMsg, customUrl }) {
