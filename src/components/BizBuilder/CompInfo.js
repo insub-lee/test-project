@@ -146,8 +146,8 @@ import EshsDangerEvalInSafetyImproveComp from 'components/BizBuilder/Field/EshsD
 import MdcsKindNameViewComp from 'components/BizBuilder/Field/MdcsKindNameViewComp';
 import MsdsHeaderComp from 'components/BizBuilder/Field/MsdsHeaderComp';
 import CustomListSelectComp from 'components/BizBuilder/Field/CustomListSelectComp';
-import MonthPickerComp from 'components/BizBuilder/Field/MonthPickerComp';
 import ValueChangeTextComp from 'components/BizBuilder/Field/ValueChangeTextComp';
+import MonthPickerComp from 'components/BizBuilder/Field/MonthPickerComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/VersionComp': { renderer: property => <VersionComp {...property} /> },
