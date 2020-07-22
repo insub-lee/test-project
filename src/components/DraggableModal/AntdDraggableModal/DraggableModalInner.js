@@ -50,6 +50,7 @@ const DraggableModalInnerNonMemo = ({ id, modalState, dispatch, visible, childre
         className={`ant-design-draggable-modal-title ${dragging ? 'can-drag' : ''} ${resizing ? 'can-resize' : ''}`}
         onMouseDown={onMouseDown}
         onClick={onFocus}
+        style={{ cursor: 'move' }}
       >
         {title}
       </div>

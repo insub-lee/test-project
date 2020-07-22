@@ -14,7 +14,7 @@ export const initialModalsState = {
 
 export const initialModalState = {
   x: 0,
-  y: 0,
+  y: 20,
   width: 800,
   height: 800,
   zIndex: 1000,
@@ -80,8 +80,8 @@ export const draggableModalReducer = (state, action) => {
     case 'show': {
       const modalState = state.modals[action.id];
       const centerX = state.windowSize.width / 2 - modalState.width / 2;
-      const centerY = state.windowSize.height / 2 - modalState.height / 2;
-      console.debug(state.windowSize.width, modalState.width, centerX, state.windowSize.height, modalState.height, centerY);
+      // const centerY = state.windowSize.height / 2 - modalState.height / 2;
+      const centerY = 20;
       const position = clampDrag(state.windowSize.width, state.windowSize.height, centerX, centerY, modalState.width, modalState.height);
       const size = clampResize(state.windowSize.width, state.windowSize.height, position.x, position.y, modalState.width, modalState.height);
       return {

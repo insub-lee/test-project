@@ -402,6 +402,7 @@ class ApproveList extends Component {
       setOpinion(opinions);
       reqApprove({});
       setOpinionVisible(false);
+      this.closeBtnFunc();
     }
   };
 
@@ -473,7 +474,7 @@ class ApproveList extends Component {
       workPrcProps,
       paginationIdx,
     } = this.state;
-    console.debug('approve', this.props.viewVisible);
+    console.debug('approveList', approveList);
     return (
       <>
         <StyledHeaderWrapper>
@@ -588,6 +589,7 @@ class ApproveList extends Component {
                 workSeq={coverView.workSeq}
                 taskSeq={coverView.taskSeq}
                 viewMetaSeq={coverView.viewMetaSeq}
+                workPrcProps={workPrcProps}
                 onCloseCoverView={this.onCloseCoverView}
                 onCloseModalHandler={this.onCloseCoverView}
                 reloadId="approveBase_approveView"

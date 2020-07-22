@@ -57,6 +57,7 @@ class WorkProcessModal extends Component {
       curDistDeptList: [],
       tabIdx: 1,
       selectedNode: undefined,
+      selectedNodeId: undefined,
     };
   }
 
@@ -252,7 +253,9 @@ class WorkProcessModal extends Component {
       }
       return step;
     });
-    this.setState({ prcStep: tmpPrcStep, selectedDeptKeys: [], selectedUserKeys: [] });
+    const fidx = prcStep.findIndex(f => f.NODE_ID === nodeId);
+    const nSelectedNode = fidx > -1 ? prcStep[fidx] : undefined;
+    this.setState({ prcStep: tmpPrcStep, selectedDeptKeys: [], selectedUserKeys: [], selectedNodeId: nodeId, selectedNode: nSelectedNode });
   };
 
   handleDeleteSelectedUser = (user, nodeId) => {
@@ -364,11 +367,25 @@ class WorkProcessModal extends Component {
     const nodeId = e.target.value;
     const fidx = prcStep.findIndex(f => f.NODE_ID === nodeId);
     const selectedNode = fidx > -1 ? prcStep[fidx] : undefined;
+    console.debug('selectedNode', selectedNode);
     this.setState({ selectedNode });
   };
 
   render() {
-    const { prcStep, prcButton, selectedUserKeys, selectedDeptKeys, deptList, deptList2, deptUserList, rootKey, tabIdx, selectedApprove } = this.state;
+    const {
+      prcStep,
+      prcButton,
+      selectedUserKeys,
+      selectedDeptKeys,
+      deptList,
+      deptList2,
+      deptUserList,
+      rootKey,
+      tabIdx,
+      selectedApprove,
+      selectedNode,
+      selectedNodeId,
+    } = this.state;
     const rowSelection = {
       selectedRowKeys: selectedUserKeys,
       onChange: this.onDeptUserCheck,
@@ -378,9 +395,13 @@ class WorkProcessModal extends Component {
       selectedRowKeys: selectedDeptKeys,
       onChange: this.onDeptCheck,
     };
-
+    console.debug('selectedNode', selectedNode);
     return (
       <StyledWorkProcessModal>
+        <div style={{ fontSize: 12, color: 'rgb(255, 36, 36)', marginBottom: 10, textAlign: 'center' }}>
+          ※ 지정된 심의권자는 자동으로 배포부서에 적용되며, 이외 추가 배포부서는 부서탭 선택 후 배포부서 버튼을 통해 별도 추가 바랍니다.
+          <br /> (순서 : 부서탭 → 부서선택 후 사용자 선택과 동일)
+        </div>
         <Row gutter={0}>
           <Col span={9}>
             <div className="basicWrapper deptWrapper">
@@ -456,7 +477,6 @@ class WorkProcessModal extends Component {
                       style={{ width: '150px', display: item.APPV_STATUS === 2 || item.STEP === 2 ? 'none' : '' }}
                       onClick={() => this.handleAddUser(item.PRC_RULE_ID, item.NODE_ID, item.NODE_TYPE)}
                     >
-                      {console.debug(item)}
                       {item.NODE_NAME_KOR}
                       <Icon type="double-right" />
                     </StyledButton>
@@ -466,7 +486,7 @@ class WorkProcessModal extends Component {
             </div>
           </Col>
           <Col span={10}>
-            <Radio.Group style={{ width: '100%' }} defaultValue={106} onChange={this.onChangeNode}>
+            <Radio.Group style={{ width: '100%' }} defaultValue={106} onChange={this.onChangeNode} value={selectedNodeId || 106}>
               <div className="basicWrapper selectedWrapper">
                 {prcStep.map(item => (
                   <React.Fragment key={`node_${item.NODE_ID}`}>

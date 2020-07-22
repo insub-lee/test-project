@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import history from 'utils/history';
 
-import { Table, Radio, Form, Modal, Input, Select, Checkbox, DatePicker } from 'antd';
+import { Table, Radio, Form, Input, Select, Checkbox, DatePicker } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
 import StyledRadio from 'components/FormStuff/Radio';
@@ -19,6 +19,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
 import DraftDownLoad from 'apps/mdcs/Modal/DraftDownLoad';
+import { DraggableModal as Modal } from 'components/DraggableModal/AntdDraggableModal';
 
 // import DragCustomModal from 'components/DragCustomModal';
 
@@ -43,12 +44,12 @@ const columns = [
     //   }
     // },
   },
-  { title: 'No.', key: 'id', width: '12%', dataIndex: 'id' },
-  { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION' },
+  { title: 'No.', key: 'id', align: 'center', width: '12%', dataIndex: 'id' },
+  { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION', render: (text, record) => (record.status === 99 ? 'OBS' : text) },
   { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM' },
   { title: 'Title', align: 'left', key: 'title', dataIndex: 'title' },
-  { title: '기안부서', key: 'deptName', width: '14%', dataIndex: 'deptName' },
-  { title: '기안자', key: 'name', width: '10%', dataIndex: 'name' },
+  { title: '기안부서', align: 'center', key: 'deptName', width: '14%', dataIndex: 'deptName' },
+  { title: '기안자', align: 'center', key: 'name', width: '10%', dataIndex: 'name' },
 ];
 
 // Table NODE_ID 값
@@ -395,6 +396,7 @@ class SearchBasic extends Component {
             visible={visible}
             footer={null}
             width={1080}
+            initialWidth={1080}
             onCancel={() => {
               this.setState({ visible: false });
             }}
@@ -427,6 +429,7 @@ class SearchBasic extends Component {
             visible={SearchView.visible}
             footer={null}
             width={800}
+            initialWidth={800}
             onCancel={this.closeBtnFunc}
             onOk={this.closeBtnFunc}
             okButtonProps={null}
@@ -469,6 +472,7 @@ class SearchBasic extends Component {
             visible={isDownVisible}
             footer={null}
             width={800}
+            initialWidth={800}
             onCancel={this.onCloseDownLoad}
             onOk={this.closeBtnFunc}
             okButtonProps={null}
@@ -490,6 +494,7 @@ class SearchBasic extends Component {
             visible={coverView.visible}
             footer={null}
             width={800}
+            initialWidth={800}
             okButtonProps={null}
             onCancel={this.onCloseCoverView}
             destroyOnClose
