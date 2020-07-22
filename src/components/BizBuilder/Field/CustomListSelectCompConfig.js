@@ -71,8 +71,8 @@ class ComponentConfig extends Component {
   // 생성된 아이템 선택
   handleClickTextItem = (index, item) => {
     this.setState({
-      formDatafield: item.type,
-      listDatafield: item.text,
+      formDatafield: item.formDatafield,
+      listDatafield: item.listDatafield,
       modifyIndex: index,
       modalVisible: true,
       modalType: 'modify',
@@ -122,7 +122,7 @@ class ComponentConfig extends Component {
       </div>,
       <div className="popoverItem popoverItemInput">
         <span className="spanLabel">추가 formData</span>
-        <Button onClick={() => this.setState({ modalVisible: true })}>텍스트 아이템 추가</Button>
+        <Button onClick={() => this.setState({ modalVisible: true })}>추가 폼데이터 추가</Button>
       </div>,
       <div className="popoverItem popoverItemInput">
         <span className="spanLabel">텍스트</span>

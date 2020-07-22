@@ -339,9 +339,11 @@ class DraftList extends Component {
 
   closeBtnFunc = () => {
     const { getDraftList } = this.props;
+    const { paginationIdx, pageSize } = this.state;
+
     this.props.setViewVisible(false);
     const fixUrl = '/api/workflow/v1/common/approve/DraftListMDCSHandler';
-    getDraftList(fixUrl);
+    getDraftList(fixUrl, paginationIdx, pageSize);
   };
 
   onCloseCoverView = () => {
@@ -387,10 +389,10 @@ class DraftList extends Component {
 
   onClickModifyDoCoverView = () => {
     const { getDraftList } = this.props;
-    const { coverView } = this.state;
+    const { coverView, paginationIdx, pageSize } = this.state;
     this.setState({ coverView: { ...coverView, visible: false } });
     const fixUrl = '/api/workflow/v1/common/approve/DraftListMDCSHandler';
-    getDraftList(fixUrl);
+    getDraftList(fixUrl, paginationIdx, pageSize);
   };
 
   onChangeOpinion = e => {
