@@ -242,7 +242,7 @@ server {
     }
 
     location ~ ^/img/thumb/crop/(.*)/(.*)$ {
-        proxy_pass http://thumbor/unsafe/$1/http://dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:40033/down/thumb/$2;
+        proxy_pass http://thumbor/unsafe/$1/http://prod-bizmicro-portal.marathon.l4lb.thisdcos.directory:40033/down/thumb/$2;
         proxy_connect_timeout 60;
         proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
@@ -254,7 +254,7 @@ server {
     }
 
     location ~ ^/img/thumb/(.*)/(.*)$ {
-        proxy_pass http://thumbor/unsafe/fit-in/$1/filters:fill(auto)/http://dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:40033/down/thumb/$2;
+        proxy_pass http://thumbor/unsafe/fit-in/$1/filters:fill(auto)/http://prod-bizmicro-portal.marathon.l4lb.thisdcos.directory:40033/down/thumb/$2;
         proxy_connect_timeout 60;
         proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
@@ -353,7 +353,7 @@ server {
 # 외부 다운로드 링크 테스트
 server {
 	listen 80;
-	server_name dl-dev.magnachip.com;
+	server_name directdn.magnachip.com;
 	client_max_body_size 1000M;
 	
 	location /share {
