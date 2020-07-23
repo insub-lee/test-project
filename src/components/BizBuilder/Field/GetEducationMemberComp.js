@@ -126,11 +126,7 @@ class GetEducationMemberComp extends React.Component {
       },
     ];
 
-    getExtraApiData(sagaKey, apiArr, this.sendEmailAfter);
-  };
-
-  sendEmailAfter = () => {
-    const { extraApiData } = this.props;
+    getExtraApiData(sagaKey, apiArr, () => message.info(<MessageContent>메일을 전송하였습니다.</MessageContent>));
   };
 
   render() {
