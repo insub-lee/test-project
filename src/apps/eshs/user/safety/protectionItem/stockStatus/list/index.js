@@ -12,6 +12,78 @@ import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
+
+const excelColumns = [
+  {
+    title: '품목',
+    width: 150,
+    field: 'KIND',
+  },
+  {
+    title: '모델',
+    width: 150,
+    field: 'MODEL',
+  },
+  {
+    title: 'Size',
+    width: 100,
+    field: 'SIZE1',
+  },
+  {
+    title: '검정#',
+    width: 120,
+    field: 'APP_NO',
+  },
+  {
+    title: 'Vendor',
+    width: 100,
+    field: 'VENDOR_NM',
+  },
+  {
+    title: '단가',
+    width: 100,
+  },
+  {
+    title: '전월재고',
+    width: 100,
+    field: 'LAST_MONTH_QTY',
+  },
+  {
+    title: '금액',
+    width: 100,
+    field: 'LAST_MONTH_AMT',
+  },
+  {
+    title: '월지급',
+    width: 100,
+    field: 'RELEASE_QTY',
+  },
+  {
+    title: '금액',
+    width: 100,
+    field: 'RELEASE_AMT',
+  },
+  {
+    title: '구매',
+    width: 100,
+    field: 'ENTRY_QTY',
+  },
+  {
+    title: '금액',
+    width: 100,
+    field: 'ENTRY_AMT',
+  },
+  {
+    title: '현재고',
+    width: 100,
+    field: 'STOCK_QTY',
+  },
+  {
+    title: '금액',
+    width: 100,
+    field: 'STOCK_AMT',
+  },
+];
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -39,90 +111,112 @@ class List extends React.Component {
         title: '품목',
         dataIndex: 'KIND',
         key: 'KIND',
+        align: 'center',
       },
       {
         title: '모델',
         dataIndex: 'MODEL',
         key: 'MODEL',
+        align: 'center',
       },
       {
         title: 'SIZE',
         dataIndex: 'SIZE1',
         key: 'SIZE1',
+        align: 'center',
       },
       {
         title: '검정#',
         dataIndex: 'APP_NO',
         key: 'APP_NO',
+        align: 'center',
       },
       {
         title: 'VENDOR',
         dataIndex: 'VENDOR_NM',
         key: 'VENDOR_NM',
+        align: 'center',
       },
       {
         title: '단가',
         dataIndex: searchValue.type.toUpperCase() === 'KIND' ? 'KIND_UNITPRICE' : 'STOCK_UNITPRICE',
         key: searchValue.type.toUpperCase() === 'KIND' ? 'KIND_UNITPRICE' : 'STOCK_UNITPRICE',
         width: '85px',
+        align: 'center',
       },
       {
         title: '전월재고',
+        align: 'center',
+
         children: [
           {
             title: '수량',
             dataIndex: 'LAST_MONTH_QTY',
             key: 'LAST_MONTH_QTY',
+            align: 'center',
           },
           {
             title: '금액',
             dataIndex: 'LAST_MONTH_AMT',
             key: 'LAST_MONTH_AMT',
+            align: 'center',
           },
         ],
       },
       {
         title: '지급',
+        align: 'center',
+
         children: [
           {
             title: '수량',
             dataIndex: 'RELEASE_QTY',
             key: 'RELEASE_QTY',
+            align: 'center',
           },
           {
             title: '금액',
             dataIndex: 'RELEASE_AMT',
             key: 'RELEASE_AMT',
+            align: 'center',
           },
         ],
       },
       {
         title: '구매',
+        align: 'center',
+
         children: [
           {
             title: '수량',
             dataIndex: 'ENTRY_QTY',
             key: 'ENTRY_QTY',
+            align: 'center',
           },
           {
             title: '금액',
             dataIndex: 'ENTRY_AMT',
             key: 'ENTRY_AMT',
+            align: 'center',
           },
         ],
       },
       {
         title: '현재고',
+        align: 'center',
+
         children: [
           {
             title: '수량',
             dataIndex: 'STOCK_QTY',
             key: 'STOCK_QTY',
+            align: 'center',
           },
           {
             title: '금액',
             dataIndex: 'STOCK_AMT',
             key: 'STOCK_AMT',
+            align: 'center',
           },
         ],
       },
@@ -240,22 +334,22 @@ class List extends React.Component {
     return (
       <>
         <StyledContentsWrapper>
-          <StyledCustomSearchWrapper>
-            <div style={{ display: 'inline-block', marginBottom: '10px', width: '40%' }}>
+          <StyledCustomSearchWrapper className="search-wrapper-inline">
+            <div className="search-input-area mb10">
               <AntdSelect
                 defaultValue={searchValue.site}
-                className="select-mid mr5"
+                className="select-sm mr5"
                 onChange={value => handleSearchChange('site', value)}
-                style={{ width: '20%' }}
+                style={{ width: 100 }}
               >
                 <Select.Option value="317">청주</Select.Option>
                 <Select.Option value="318">구미</Select.Option>
               </AntdSelect>
               <AntdSelect
                 defaultValue={searchValue.year}
-                className="select-mid mr5"
+                className="select-sm mr5"
                 onChange={value => handleSearchChange('year', value)}
-                style={{ width: '20%' }}
+                style={{ width: 100 }}
               >
                 {yearList.map(year => (
                   <Select.Option value={year}>{year}년</Select.Option>
@@ -263,9 +357,9 @@ class List extends React.Component {
               </AntdSelect>
               <AntdSelect
                 defaultValue={searchValue.month}
-                className="select-mid mr5"
+                className="select-sm mr5"
                 onChange={value => handleSearchChange('month', value)}
-                style={{ width: '20%' }}
+                style={{ width: 100 }}
               >
                 {monthList.map(month => (
                   <Select.Option value={month}>{month}월</Select.Option>
@@ -273,19 +367,18 @@ class List extends React.Component {
               </AntdSelect>
               <AntdSelect
                 defaultValue={searchValue.type}
-                className="select-mid mr5"
+                className="select-sm mr5"
                 onChange={value => handleSearchChange('type', value)}
-                style={{ width: '20%' }}
+                style={{ width: 100 }}
               >
                 <Select.Option value="kind">품목별</Select.Option>
                 <Select.Option value="unitprice">단가별</Select.Option>
                 <Select.Option value="team">팀선택</Select.Option>
               </AntdSelect>
-            </div>
-            <div>
+
               {isSelectTeam ? (
-                <div style={{ width: '40%', marginBottom: '10px' }}>
-                  <AntdSelect defaultValue="" className="select-mid mr5" onChange={handleHqChange} style={{ width: '35%' }}>
+                <>
+                  <AntdSelect defaultValue="" className="select-sm mr5" onChange={handleHqChange} style={{ width: 150 }}>
                     <Select.Option value="">본부 전체</Select.Option>
                     {headquarterList.map(headquarter => (
                       <Select.Option value={headquarter.DEPT_ID}>{headquarter.NAME_KOR}</Select.Option>
@@ -295,32 +388,45 @@ class List extends React.Component {
                     disabled={!isHeadquarterSelect}
                     defaultValue=""
                     value={searchValue.deptId}
-                    className="select-mid"
+                    className="select-sm"
                     onChange={value => handleSearchChange('deptId', value)}
-                    style={{ width: '60%' }}
+                    style={{ width: 250 }}
                   >
                     {departmentList.map(department => (
                       <Select.Option value={department.DEPT_ID}>{department.NAME_KOR}</Select.Option>
                     ))}
                   </AntdSelect>
-                </div>
+                </>
               ) : null}
-              <div className="btn-area">
-                <StyledButton className="btn-gray btn-sm mr5" onClick={this.getSearchData}>
-                  검색
-                </StyledButton>
-                <ExcelDownloadComp
-                  isBuilder={false}
-                  fileName={`${moment().format('YYYYMMDD')}_화학물질관리 마스터`}
-                  className="testClassName"
-                  btnText="엑셀 다운로드"
-                  sheetName="재고현황"
-                  listData={dataSource}
-                  btnSize="btn-sm"
-                  fields={columns()}
-                  columns={columns()}
-                />
-              </div>
+            </div>
+            <div className="btn-area">
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.getSearchData}>
+                검색
+              </StyledButton>
+              <ExcelDownloadComp
+                isBuilder={false}
+                fileName={`ESH_StockList${moment().format('YYYYMMDD')}`}
+                sheetName={`ESH_StockList${moment().format('YYYYMMDD')}`}
+                className="testClassName"
+                btnText="엑셀 다운로드"
+                listData={dataSource}
+                btnSize="btn-sm"
+                fields={excelColumns.map(item => ({
+                  ...item,
+                  style: {
+                    font: { sz: '12' },
+                    alignment: { vertical: 'center', horizontal: 'center', wrapText: true },
+                  },
+                  field: item.title === '단가' ? (searchValue.type.toUpperCase() === 'KIND' ? 'KIND_UNITPRICE' : 'STOCK_UNITPRICE') : item.field,
+                }))}
+                columns={excelColumns.map(item => ({
+                  ...item,
+                  filter: 'agTextColumnFilter',
+                  width: { wpx: item.width },
+                  style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '', bold: true }, alignment: { vertical: 'center', horizontal: 'center' } },
+                  field: item.title === '단가' ? (searchValue.type.toUpperCase() === 'KIND' ? 'KIND_UNITPRICE' : 'STOCK_UNITPRICE') : item.field,
+                }))}
+              />
             </div>
           </StyledCustomSearchWrapper>
           <div style={{ padding: '10px' }}>

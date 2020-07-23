@@ -79,22 +79,30 @@ class List extends React.Component {
     },
     {
       title: '유효성평가 응시',
-      render: (text, record) => {
-        switch (record.FIRST_EXAM_RESULT) {
-          case '불합격':
-            return <span>불합격</span>;
-          case '미응시':
-            return (
-              <StyledButton className="btn-primary btn-sm" onClick={() => this.handleModalVisible(record.TASK_SEQ, record.SEQ)} style={{ width: '50%' }}>
-                응시
-              </StyledButton>
-            );
-          case '합격':
-            return <span>합격</span>;
-          default:
-            return null;
-        }
-      },
+      render: (text, record) =>
+        // switch (record.FIRST_EXAM_RESULT) {
+        //   case '불합격':
+        //     return <span>불합격</span>;
+        //   case '불합격':
+        //     return <span>불합격</span>;
+        //   case '미응시':
+        //     return (
+        //       <StyledButton className="btn-primary btn-sm" onClick={() => this.handleModalVisible(record.TASK_SEQ, record.SEQ)} style={{ width: '50%' }}>
+        //         응시
+        //       </StyledButton>
+        //     );
+        //   case '합격':
+        //     return <span>합격</span>;
+        //   default:
+        //     return null;
+        // }
+        record.FIRST_EXAM_RESULT === '미응시' ? (
+          <StyledButton className="btn-primary btn-sm" onClick={() => this.handleModalVisible(record.TASK_SEQ, record.SEQ)} style={{ width: '50%' }}>
+            응시
+          </StyledButton>
+        ) : (
+          record.FIRSTeXAM_rESULT
+        ),
       align: 'center',
     },
   ];

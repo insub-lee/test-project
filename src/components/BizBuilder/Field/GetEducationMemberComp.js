@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal, Input, message } from 'antd';
+import { Table, Modal, Input, Popconfirm } from 'antd';
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
@@ -9,6 +9,9 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 const AntdInput = StyledInput(Input);
 const AntdModal = StyledAntdModal(Modal);
@@ -109,15 +112,31 @@ class GetEducationMemberComp extends React.Component {
     this.setState({ KEYWORD: '', modalVisible: false }, this.getUserList);
   };
 
+  sendEmail = () => {
+    const { sagaKey, getExtraApiData } = this.props;
+    const { dataSource, TEST_TO } = this.state;
+
+    const apiArr = [
+      {
+        key: 'sendEmail',
+        url: '/api/eshs/v1/common/eshsEducationSendEmail',
+        type: 'POST',
+        params: { PARAM: { userList: dataSource.map(user => user.EDU_USER_ID), TEST_TO } }, // test용
+        // params: { PARAM: { userList: dataSource.map(user => user.EDU_USER_ID)} },
+      },
+    ];
+
+    getExtraApiData(sagaKey, apiArr, () => message.info(<MessageContent>메일을 전송하였습니다.</MessageContent>));
+  };
+
   render() {
     const { columns } = this;
     const { handleModalVisible, handleModalClose, handleInputChange, getUserList } = this;
-    const { modalVisible, dataSource } = this.state;
+    const { modalVisible, dataSource, TEST_TO } = this.state;
     const { visible } = this.props;
     if (!visible) {
       return null;
     }
-
     return (
       <>
         <StyledButton className={this.props.className || 'btn-primary btn-sm'} onClick={handleModalVisible} style={{ width: this.props.buttonWidth || '100%' }}>
@@ -140,11 +159,31 @@ class GetEducationMemberComp extends React.Component {
                 </StyledButton>
               </div>
             </StyledCustomSearchWrapper>
-            {this.props.selectSecondEducationTarget ? (
+            {dataSource.length && this.props.selectSecondEducationTarget ? (
               <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-                <StyledButton className="btn-gray btn-sm" onClick={() => message.warn('core-addon.redisApiClient')}>
-                  메일 전송
-                </StyledButton>
+                <AntdInput
+                  className="ant-input-sm mr5"
+                  onChange={e => this.setState({ TEST_TO: e.target.value })}
+                  placeholder="테스트 이메일 입력"
+                  allowClear
+                  style={{ width: 200 }}
+                />
+                <Popconfirm
+                  title="메일 전송하시겠습니까?"
+                  onConfirm={() => (TEST_TO ? this.sendEmail() : message.info(<MessageContent>테스트 이메일을 입력하십시오.</MessageContent>))}
+                  okText="보내기"
+                  cancelText="취소"
+                >
+                  <StyledButton className="btn-gray btn-sm">메일 전송</StyledButton>
+                </Popconfirm>
+                {/* <Popconfirm
+                  title="메일 전송하시겠습니까?"
+                  onConfirm={this.sendEmail}
+                  okText="보내기"
+                  cancelText="취소"
+                >
+                  <StyledButton className="btn-gray btn-sm">메일 전송</StyledButton>
+                </Popconfirm> */}
               </StyledButtonWrapper>
             ) : null}
             <AntdTable columns={columns} dataSource={dataSource} />
