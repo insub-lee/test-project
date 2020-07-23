@@ -55,12 +55,16 @@ class LeadBallComp extends Component {
     const { LeadFrame: leadframeList, Ball: ballList } = mapList;
 
     const { LB_TYPE } = formData;
-    const selectedValue = colData.split(',').map(val => Number(val));
+    const selectedValue = colData && colData.split(',').length > 0 ? colData.split(',').map(val => Number(val)) : undefined;
     let selectedItem;
     if (LB_TYPE === 'L') {
-      selectedItem = leadframeList.filter(data => selectedValue.includes(data.NODE_ID)).map(item => ({ title: item.NAME_KOR, value: item.NODE_ID }));
+      selectedItem = leadframeList
+        .filter(data => selectedValue && selectedValue.includes(data.NODE_ID))
+        .map(item => ({ title: item.NAME_KOR, value: item.NODE_ID }));
     } else {
-      selectedItem = ballList.filter(data => selectedValue.includes(data.NODE_ID)).map(item => ({ title: item.NAME_KOR, value: item.NODE_ID }));
+      selectedItem = ballList
+        .filter(data => selectedValue && selectedValue.includes(data.NODE_ID))
+        .map(item => ({ title: item.NAME_KOR, value: item.NODE_ID }));
     }
 
     dataSource = [

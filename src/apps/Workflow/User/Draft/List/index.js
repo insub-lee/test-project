@@ -97,7 +97,7 @@ class DraftList extends Component {
       key: 'APPVGUBUN',
       width: '15%',
       align: 'center',
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
+      render: (text, record) => (record.REL_TYPE === 999 ? '일괄폐기' : text),
     },
     {
       title: '표준번호',
@@ -106,7 +106,7 @@ class DraftList extends Component {
       width: '10%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? record.DRAFT_ID : text),
+      render: (text, record) => (record.REL_TYPE === 999 ? `OBS-${record.DRAFT_ID}` : text),
     },
     {
       title: 'Rev',
@@ -115,7 +115,7 @@ class DraftList extends Component {
       width: '5%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '1' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
+      render: (text, record) => (record.REL_TYPE === 99 ? 'OBS' : record.REL_TYPE === 999 ? '1' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
     },
     {
       title: '표준제목',

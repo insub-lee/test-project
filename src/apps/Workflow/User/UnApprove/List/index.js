@@ -43,7 +43,7 @@ class UnApproveList extends Component {
       key: 'APPVGUBUN',
       width: '15%',
       align: 'center',
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
+      render: (text, record) => (record.REL_TYPE === 999 ? '일괄폐기' : text),
     },
     {
       title: '유형',
@@ -60,7 +60,7 @@ class UnApproveList extends Component {
       width: '10%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? record.DRAFT_ID : text),
+      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? `OBS-${record.DRAFT_ID}` : text),
     },
     {
       title: 'Rev',
