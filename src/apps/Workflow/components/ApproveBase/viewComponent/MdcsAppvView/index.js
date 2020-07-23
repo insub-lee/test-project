@@ -15,6 +15,7 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledTagDraft from 'components/BizBuilder/styled/Tag/StyledTagDraft';
+import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
 
 const AntdModal = StyledAntdModal(Modal);
 const { Option } = Select;
@@ -40,7 +41,6 @@ class MdcsAppvView extends Component {
       isUserSelect: false,
       procResult: [],
       holdHistoryList: [],
-      undefined,
       isMultiSelect: true,
       workPrcProps: undefined,
       isDcc: false,
@@ -257,6 +257,7 @@ class MdcsAppvView extends Component {
       isDCC,
       isAbrogationMultiShow,
     } = this.state;
+    console.debug(this.props);
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -299,7 +300,9 @@ class MdcsAppvView extends Component {
                       defaultValue={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}
                     >
                       <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
-                      <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 30 : 3}>Hold</Radio>
+                      <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 30 : 3}>
+                        {selectedRow.NODE_ID === 114 && selectedRow.CURRENT_STATUS === 5 ? '부결' : 'Hold'}
+                      </Radio>
                       {selectedRow.NODE_ID === 106 && <Radio value={5}>실무자 검토의뢰</Radio>}
                       {selectedRow.NODE_ID === 106 && <Radio value={10}>실무자 결재 권한위임</Radio>}
                     </Radio.Group>
@@ -387,11 +390,17 @@ class MdcsAppvView extends Component {
                     </table>
                   </td>
                 </tr>
-                <tr style={{ display: REL_TYPE !== 4 ? 'table-row' : 'none' }}>
+                <tr
+                  style={{
+                    display:
+                      REL_TYPE === 4 || (selectedRow && selectedRow.APPV_STATUS && (selectedRow.APPV_STATUS === 20 || selectedRow.APPV_STATUS === 2))
+                        ? 'none'
+                        : 'table-row',
+                  }}
+                >
                   <th>의견 </th>
                   <td colSpan={3}>
                     <AntdTextArea rows={4} onChange={this.onChangeOpinion} />
-                    {/* <AntdTextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} /> */}
                   </td>
                 </tr>
               </tbody>
@@ -483,6 +492,7 @@ class MdcsAppvView extends Component {
             taskSeq={coverView.taskSeq}
             viewMetaSeq={coverView.viewMetaSeq}
             workPrcProps={workPrcProps}
+            CustomWorkProcessModal={WorkProcessModal}
             onCloseCoverView={this.onCloseCoverView}
             onCloseModalHandler={this.onCloseCoverView}
             reloadId="approveBase_approveView"

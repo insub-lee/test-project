@@ -34,8 +34,10 @@ class RadioMultiSelector extends Component {
 
   initDataBind = dataList => {
     const { COMP_FIELD, extraApiData, colData } = this.props;
-    const selectedValue = colData.split(',').map(val => Number(val));
-    const selectedItem = dataList.filter(data => selectedValue.includes(data.NODE_ID)).map(item => ({ title: item.NAME_KOR, value: item.NODE_ID }));
+    const selectedValue = colData && colData.split(',').length > 0 ? colData.split(',').map(val => Number(val)) : undefined;
+    const selectedItem = dataList
+      .filter(data => selectedValue && selectedValue.includes(data.NODE_ID))
+      .map(item => ({ title: item.NAME_KOR, value: item.NODE_ID }));
     const isItem = selectedItem.length > 0;
     const dataSource = [
       {
