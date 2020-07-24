@@ -6,11 +6,12 @@ import moment from 'moment';
 import styled from 'styled-components';
 import BizBuilderBase from 'components/BizBuilderBase';
 import AbrogationMultiModifyDraft from 'apps/Workflow/User/CommonView/abrogationMultiModifyDraft';
+import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
+
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
-
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
@@ -592,6 +593,7 @@ class ApproveList extends Component {
                 workPrcProps={workPrcProps}
                 onCloseCoverView={this.onCloseCoverView}
                 onCloseModalHandler={this.onCloseCoverView}
+                CustomWorkProcessModal={WorkProcessModal}
                 reloadId="approveBase_approveView"
                 reloadViewType="VIEW"
                 reloadTaskSeq={selectedRow && selectedRow.TASK_SEQ}
