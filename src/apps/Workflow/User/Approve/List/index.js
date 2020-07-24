@@ -6,11 +6,12 @@ import moment from 'moment';
 import styled from 'styled-components';
 import BizBuilderBase from 'components/BizBuilderBase';
 import AbrogationMultiModifyDraft from 'apps/Workflow/User/CommonView/abrogationMultiModifyDraft';
+import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
+
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
-
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
@@ -92,13 +93,6 @@ class ApproveList extends Component {
   }
 
   getTableColumns = () => [
-    // {
-    //   title: 'No',
-    //   dataIndex: 'RNUM',
-    //   key: 'rnum',
-    //   width: '5%',
-    //   align: 'center',
-    // },
     {
       title: '종류',
       dataIndex: 'APPVGUBUN',
@@ -379,15 +373,19 @@ class ApproveList extends Component {
   };
 
   onClickModify = () => {
-    const { workPrcProps } = this.state;
-    const { REL_TYPE } = workPrcProps;
+    const { selectedRow } = this.props;
+    const { REL_TYPE } = selectedRow;
 
     // 일괄폐기 수정화면
     if (REL_TYPE === 999) {
-      this.setState({ isAbrogationMultiShow: true, workPrcProps: { ...workPrcProps, draftMethod: 'MODIFY' } });
+      this.setState({ isAbrogationMultiShow: true, workPrcProps: { ...selectedRow, draftMethod: 'MODIFY' } });
     } else {
-      const coverView = { workSeq: workPrcProps.WORK_SEQ, taskSeq: workPrcProps.TASK_SEQ, visible: true, viewType: 'MODIFY' };
-      this.setState({ coverView });
+      const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
+      this.setState(prevState => {
+        const { workPrcProps } = prevState;
+        const nWorkPrcProps = { ...selectedRow, draftMethod: 'MODIFY', darft_id: selectedRow.DRAFT_ID };
+        return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
+      });
     }
   };
 
@@ -474,7 +472,7 @@ class ApproveList extends Component {
       workPrcProps,
       paginationIdx,
     } = this.state;
-    console.debug('approveList', approveList);
+
     return (
       <>
         <StyledHeaderWrapper>
@@ -544,9 +542,9 @@ class ApproveList extends Component {
                     <table className="table-border">
                       <colgroup>
                         <col width="10%" />
-                        <col width="10%" />
-                        <col width="10%" />
-                        <col width="55%" />
+                        <col width="15%" />
+                        <col width="20%" />
+                        <col width="40%" />
                         <col width="15%" />
                       </colgroup>
                       <thead>
@@ -592,6 +590,7 @@ class ApproveList extends Component {
                 workPrcProps={workPrcProps}
                 onCloseCoverView={this.onCloseCoverView}
                 onCloseModalHandler={this.onCloseCoverView}
+                CustomWorkProcessModal={WorkProcessModal}
                 reloadId="approveBase_approveView"
                 reloadViewType="VIEW"
                 reloadTaskSeq={selectedRow && selectedRow.TASK_SEQ}

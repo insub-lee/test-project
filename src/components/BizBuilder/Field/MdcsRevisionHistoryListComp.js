@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Table } from 'antd';
 import styled from 'styled-components';
-
+import moment from 'moment';
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 
 const StyledCustomTable = tableComp => styled(tableComp)`
@@ -29,13 +29,14 @@ const columns = [
     key: 'TASK_SEQ',
     width: '10%',
     align: 'center',
+    render: text => (text.split('.').length > 0 ? text.split('.')[0] : text),
   },
   {
     title: 'Date.',
     dataIndex: 'END_DTTM',
     width: '20%',
     align: 'center',
-    // render: text => (text ? text.split(' ')[0] : ''),
+    render: text => moment(text).format('YYYY-MM-DD'),
   },
   {
     title: 'Short Description(Including the Para./clause)',
@@ -62,7 +63,8 @@ class MdcsRevisionHistoryListComp extends Component {
     if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
       if (fieldSelectData[CONFIG.property.compSelectDataKey]) {
         const list = [...fieldSelectData[CONFIG.property.compSelectDataKey]];
-        if (formData.STATUS === 99) {
+        console.debug('formData', formData);
+        if (formData.STATUS === 99 && formData.MIG_YN !== 'Y') {
           const obsItem = {
             COPY_REMARK: formData.OBS_COPY_REMARK,
             DOCNUMBER: formData.DOCNUMBER,
