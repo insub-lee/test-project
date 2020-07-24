@@ -25,6 +25,10 @@ const StyledWrap = styled.div`
     button {
       vertical-align: middle;
     }
+
+    input[type='radio'] {
+      width: 0px;
+    }
   }
 
   .unregistered-code {
@@ -91,8 +95,8 @@ class RadioMaterialComp extends Component {
       }
     }
 
-    const isMeterialView = colData === 'Y' ? true : false;
-    const isVal = colData === 'Y' ? false : true;
+    const isMeterialView = colData === 'Y';
+    const isVal = colData !== 'Y';
     this.setState({ isMeterialView });
     changeValidationData(sagaKey, COMP_FIELD, isVal, '코드를 입력해주세요');
   }
@@ -101,7 +105,7 @@ class RadioMaterialComp extends Component {
     const { sagaKey, processRule, COMP_FIELD, setProcessRule, formData, colData } = this.props;
     const { processRule: prevProcessRule } = prevProps;
     if (prevProps.colData != colData) {
-      const isMeterialView = colData === 'Y' ? true : false;
+      const isMeterialView = colData === 'Y';
       this.setState({ isMeterialView });
     }
     if (processRule.PRC_ID !== prevProcessRule.PRC_ID) {
