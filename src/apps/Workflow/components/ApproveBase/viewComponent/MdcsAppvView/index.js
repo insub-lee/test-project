@@ -54,7 +54,6 @@ class MdcsAppvView extends Component {
   componentDidMount() {
     const { id, selectedRow, setSelectedRow, APPV_STATUS, submitHandlerBySaga, profile } = this.props;
     const { WORK_SEQ, TASK_SEQ, DRAFT_PRC_ID, QUE_ID, STEP, DRAFT_ID } = selectedRow;
-    console.debug(selectedRow);
     const appvStatus = selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS == 10 ? 20 : 2;
     const nSelectRow = { ...selectedRow, APPV_STATUS: appvStatus };
     setSelectedRow(nSelectRow);
@@ -80,7 +79,6 @@ class MdcsAppvView extends Component {
 
   initDataDelegate = (id, response) => {
     const { procResult, holdHistoryList } = response;
-    console.debug(response);
     this.setState({ procResult, holdHistoryList });
   };
 
@@ -145,7 +143,8 @@ class MdcsAppvView extends Component {
       title: '문서번호',
       dataIndex: 'DOCNUMBER',
       key: 'DOCNUMBER',
-      width: '13%',
+      width: '15%',
+      align: 'center',
     },
     {
       title: '개정번호',
@@ -153,6 +152,7 @@ class MdcsAppvView extends Component {
       key: 'VERSION',
       width: '13%',
       align: 'center',
+      render: text => (text.split('.').length > 0 ? text.split('.')[0] : text),
     },
     {
       title: 'Title',
@@ -204,14 +204,14 @@ class MdcsAppvView extends Component {
   onClickModify = () => {
     const { selectedRow } = this.props;
     const { REL_TYPE } = selectedRow;
+
     if (REL_TYPE === 999) {
-      // 일괄폐기 수정화면
-      this.setState({ isAbrogationMultiShow: true, workPrcProps: { ...selectedRow, draftMethod: 'modify' } });
+      this.setState({ isAbrogationMultiShow: true, workPrcProps: { ...selectedRow, draftMethod: 'MODIFY' } });
     } else {
       const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
       this.setState(prevState => {
         const { workPrcProps } = prevState;
-        const nWorkPrcProps = { ...workPrcProps, draftMethod: 'modify', darft_id: selectedRow.DRAFT_ID };
+        const nWorkPrcProps = { ...selectedRow, draftMethod: 'MODIFY', darft_id: selectedRow.DRAFT_ID };
         return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
       });
     }
@@ -257,7 +257,7 @@ class MdcsAppvView extends Component {
       isDCC,
       isAbrogationMultiShow,
     } = this.state;
-    console.debug(this.props);
+    console.debug('미결함 workPrcProps', workPrcProps);
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -457,6 +457,7 @@ class MdcsAppvView extends Component {
                 destroyOnClose
                 style={{ top: '50px' }}
                 initialWidth={900}
+                width={900}
                 visible={isAbrogationMultiShow}
                 onCancel={this.onCloseAbrogationMultiModal}
                 footer={null}
