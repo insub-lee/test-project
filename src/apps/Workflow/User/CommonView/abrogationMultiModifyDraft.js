@@ -28,6 +28,7 @@ class abrogationMultiModifyDraft extends Component {
       DRAFT_TITLE,
       DRAFT_DATA: { descOfChange, revHistory },
     } = workPrcProps;
+    console.debug('workPrcProps', workPrcProps);
     this.setState({ draftTitle: DRAFT_TITLE, descOfChange, revHistory });
     const url = '/api/workflow/v1/common/workprocess/defaultPrcRuleModifyHanlder';
     submitHandlerBySaga(id, 'POST', url, { PARAM: { PRC_ID: 106, DRAFT_INFO: { ...workPrcProps, isMultiAbrogation: true } } }, this.initProcessData);
@@ -115,6 +116,7 @@ class abrogationMultiModifyDraft extends Component {
       DRAFT_TITLE,
       DRAFT_DATA: { descOfChange, revHistory },
     } = workPrcProps;
+    console.debug(workProcess);
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -157,20 +159,22 @@ class abrogationMultiModifyDraft extends Component {
           </div>
         </StyledHtmlTable>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
-          <AntdLineTable
-            columns={this.getTableColumns()}
-            dataSource={
-              workProcess && workProcess.DRAFT_PROCESS && workProcess.DRAFT_PROCESS.DRAFT_DATA.abrogationList !== null
-                ? workProcess.DRAFT_PROCESS.DRAFT_DATA.abrogationList
-                : []
-            }
-            onRow={(record, rowIndex) => ({
-              onClick: e => this.onRowClick(record, rowIndex, e),
-            })}
-            bordered
-            className="tableWrapper"
-            pagination={false}
-          />
+          {workProcess && (
+            <AntdLineTable
+              columns={this.getTableColumns()}
+              dataSource={
+                workProcess && workProcess.DRAFT_PROCESS && workProcess.DRAFT_PROCESS.DRAFT_DATA.abrogationList !== null
+                  ? workProcess.DRAFT_PROCESS.DRAFT_DATA.abrogationList
+                  : []
+              }
+              onRow={(record, rowIndex) => ({
+                onClick: e => this.onRowClick(record, rowIndex, e),
+              })}
+              bordered
+              className="tableWrapper"
+              pagination={false}
+            />
+          )}
         </StyledHtmlTable>
       </>
     );
