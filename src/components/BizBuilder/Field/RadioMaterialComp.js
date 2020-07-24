@@ -25,6 +25,10 @@ const StyledWrap = styled.div`
     button {
       vertical-align: middle;
     }
+
+    input[type='radio'] {
+      width: 0px;
+    }
   }
 
   .unregistered-code {
@@ -190,6 +194,8 @@ class RadioMaterialComp extends Component {
     changeFormData(sagaKey, COMP_FIELD, e.target.value);
     if (e.target.value === 'N') {
       changeValidationData(sagaKey, COMP_FIELD, true, '');
+      changeFormData(sagaKey, 'MATERIAL_TYPE', '');
+      changeFormData(sagaKey, 'MATERIAL_TEXT', '');
       this.setState({ meterialType: undefined, meterialText: undefined, isMeterialView: false });
     } else {
       changeValidationData(sagaKey, COMP_FIELD, false, '코드를 입력해주세요');
