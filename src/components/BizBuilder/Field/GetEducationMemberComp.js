@@ -151,6 +151,7 @@ class GetEducationMemberComp extends React.Component {
                   className="ant-input-mid mr5"
                   onChange={handleInputChange}
                   onPressEnter={getUserList}
+                  allowClear
                   placeholder="검색어를 입력하세요."
                   style={{ width: '20%' }}
                 />
