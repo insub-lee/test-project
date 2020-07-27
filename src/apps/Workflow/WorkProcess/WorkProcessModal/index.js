@@ -371,7 +371,8 @@ class WorkProcessModal extends Component {
     const nodeId = e.target.value;
     const fidx = prcStep.findIndex(f => f.NODE_ID === nodeId);
     const selectedNode = fidx > -1 ? prcStep[fidx] : undefined;
-    this.setState({ selectedNode });
+
+    this.setState({ selectedNode, selectedNodeId: nodeId });
   };
 
   render() {

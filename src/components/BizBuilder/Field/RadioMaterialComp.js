@@ -103,13 +103,18 @@ class RadioMaterialComp extends Component {
     }
     const { MATERIAL_YN, MATERIAL_TYPE, MATERIAL_TEXT } = formData;
     // console.debug(formData, 'MATERIAL_TYPE:', MATERIAL_TYPE, 'MATERIAL_TEXT:', MATERIAL_TEXT);
-    this.setState({
-      isUseMeterial: colData,
-      initMeterialCode: MATERIAL_TYPE && Number(MATERIAL_TYPE),
-      initMeterialText: MATERIAL_TEXT,
-      meterialCode: MATERIAL_TYPE !== '' ? Number(MATERIAL_TYPE) : undefined,
-      meterialText: MATERIAL_TEXT,
-    });
+    this.setState(
+      {
+        isUseMeterial: colData,
+        initMeterialCode: MATERIAL_TYPE && Number(MATERIAL_TYPE),
+        initMeterialText: MATERIAL_TEXT,
+        meterialCode: MATERIAL_TYPE !== '' ? Number(MATERIAL_TYPE) : undefined,
+        meterialText: MATERIAL_TEXT,
+      },
+      () => {
+        this.onVaildationCheck();
+      },
+    );
   }
 
   onVaildationCheck = () => {
@@ -222,7 +227,6 @@ class RadioMaterialComp extends Component {
       this.setState({ errorCodeList });
     } else {
       message.error('코드 확인 불가');
-      this.setState({ isVaildation: true });
     }
   };
 
@@ -252,6 +256,7 @@ class RadioMaterialComp extends Component {
             <AntdInput
               className="mr5 ant-input-xs"
               defaultValue={formData.MATERIAL_TEXT}
+              style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
               onChange={e => {
                 const reg = /[^0-9,]/gi;
                 if (reg.test(e.target.value)) {
