@@ -44,7 +44,7 @@ class DistributeDocView extends Component {
       submitHandlerBySaga,
     } = this.props;
 
-    if (row.FINE_DOWN_CNT <= 0 || row.PASSES_PERIOD > 0) {
+    if (row.FILE_DOWN_CNT <= 0 || row.PASSES_PERIOD > 0) {
       message.info(<MessageContent>다운로드가 불가능합니다.<br /><br />다운로드를 원하시면 재배포 요청하시기 바랍니다.</MessageContent>);
     } else {
       const drmInfo = {
@@ -160,7 +160,7 @@ class DistributeDocView extends Component {
                 <th>발송일</th>
                 <td>{moment(detail.REG_DTTM).format('YYYY-MM-DD HH:mm:ss')}</td>
                 <th>발송자ID</th>
-                <td>{detail.DIST_USER_ID}</td>
+                <td>{detail.DIST_EMP_NO}</td>
               </tr>
               <tr>
                 <th>문서번호</th>
