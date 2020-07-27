@@ -24,6 +24,10 @@ const StyledWrap = styled.div`
     button {
       vertical-align: middle;
     }
+
+    input[type='radio'] {
+      width: 0px;
+    }
   }
 
   .unregistered-code {
@@ -61,17 +65,21 @@ const StyledWrap = styled.div`
 class RadioMaterialComp extends Component {
   constructor(props) {
     super(props);
+    this.onChangeHandlerText = debounce(this.onChangeHandlerText, 300);
     this.state = {
-      mList: undefined,
+      mList: [],
       isUseMeterial: 'Y',
-      meterialCode: undefined,
-      meterialText: undefined,
+      initMeterialCode: undefined,
+      initMeterialText: undefined,
+      meterialCode: '',
+      meterialText: '',
       isVaildation: false,
+      errorCodeList: [],
     };
   }
 
   componentDidMount() {
-    const { fieldSelectData, CONFIG, colData, changeValidationData, COMP_FIELD, sagaKey } = this.props;
+    const { fieldSelectData, CONFIG, colData, changeValidationData, COMP_FIELD, sagaKey, formData } = this.props;
     if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
       if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey].length > 0) {
         this.setState({
@@ -88,51 +96,123 @@ class RadioMaterialComp extends Component {
     if (colData === 'Y') {
       changeValidationData(sagaKey, COMP_FIELD, false, '원자재코드를 입력해주세요');
     }
-    this.setState({ isUseMeterial: colData });
+    const { MATERIAL_YN, MATERIAL_TYPE, MATERIAL_TEXT } = formData;
+    console.debug(formData, 'MATERIAL_TYPE:', MATERIAL_TYPE, 'MATERIAL_TEXT:', MATERIAL_TEXT);
+    this.setState({
+      isUseMeterial: colData,
+      initMeterialCode: MATERIAL_TYPE && Number(MATERIAL_TYPE),
+      initMeterialText: MATERIAL_TEXT,
+      meterialCode: MATERIAL_TYPE !== '' ? Number(MATERIAL_TYPE) : undefined,
+      meterialText: MATERIAL_TEXT,
+    });
   }
+
+  onVaildationCheck = () => {
+    const { changeValidationData, COMP_FIELD, sagaKey } = this.props;
+
+    if (this.state.isUseMeterial === 'Y') {
+      if (!this.state.meterialCode) {
+        changeValidationData(sagaKey, COMP_FIELD, false, '자재코드를 선택해주세요');
+        return;
+      }
+
+      if (!this.state.meterialText) {
+        changeValidationData(sagaKey, COMP_FIELD, false, '자재코드를 입력해주세요');
+        return;
+      }
+
+      if (!this.state.isVaildation) {
+        changeValidationData(sagaKey, COMP_FIELD, false, '유효성체크버튼을 클릭해 주세요.');
+        return;
+      }
+      changeValidationData(sagaKey, COMP_FIELD, true, '');
+    } else {
+      changeValidationData(sagaKey, COMP_FIELD, true, '');
+    }
+  };
 
   componentDidUpdate(prevProps, prevState) {
     const { sagaKey, changeValidationData, COMP_FIELD } = this.props;
     const { isUseMeterial, isVaildation, meterialCode, meterialText } = prevState;
     console.debug('state', prevState, this.state);
-    if (this.state.isUseMeterial !== isUseMeterial || this.state.meterialCode !== meterialCode || this.state.meterialText !== meterialText) {
-      if (this.state.isUseMeterial === 'Y') {
-        console.debug('유효성 체크 진행');
-
-        if (!this.state.meterialCode) {
-          changeValidationData(sagaKey, COMP_FIELD, false, '자재코드를 선택해주세요');
-          return;
-        }
-
-        if (!this.state.meterialText) {
-          changeValidationData(sagaKey, COMP_FIELD, false, '자재코드를 입력해주세요');
-          return;
-        }
-
-        if (!isVaildation) {
-          changeValidationData(sagaKey, COMP_FIELD, false, '정상적인 자재코드인지 유효성체크를 해주세요.');
-          return;
-        }
-
-        changeValidationData(sagaKey, COMP_FIELD, false, '원자재코드를 입력해주세요');
-      } else {
-        console.debug('X 체크 진행');
-        changeValidationData(sagaKey, COMP_FIELD, false, '동과');
-      }
+    if (
+      this.state.isUseMeterial !== isUseMeterial ||
+      this.state.meterialCode !== meterialCode ||
+      this.state.meterialText !== meterialText ||
+      this.state.isVaildation !== isVaildation
+    ) {
+      this.onVaildationCheck();
     }
   }
 
   onChangeIsMeterial = e => {
+    const { sagaKey, changeValidationData, COMP_FIELD, changeFormData } = this.props;
+    const { initMeterialCode, initMeterialText } = this.state;
     this.setState({ isUseMeterial: e.target.value });
+    if (e.target.value === 'N') {
+      changeFormData(sagaKey, 'MATERIAL_TYPE', '');
+      changeFormData(sagaKey, 'MATERIAL_TEXT', '');
+      changeValidationData(sagaKey, COMP_FIELD, true, '');
+    } else {
+      console.debug(initMeterialCode, initMeterialText);
+      changeFormData(sagaKey, 'MATERIAL_TYPE', initMeterialCode);
+      changeFormData(sagaKey, 'MATERIAL_TEXT', initMeterialText);
+      this.setState({ meterialCode: initMeterialCode, meterialText: initMeterialText });
+    }
   };
 
   onSelectMeterialCode = value => {
+    const { changeFormData, sagaKey, COMP_FIELD } = this.props;
     this.setState({ meterialCode: value });
+    changeFormData(sagaKey, 'MATERIAL_TYPE', value);
+  };
+
+  onChangeHandlerText = value => {
+    const { changeFormData, sagaKey, COMP_FIELD } = this.props;
+    this.setState({ meterialText: value });
+    changeFormData(sagaKey, 'MATERIAL_TEXT', value);
+  };
+
+  onClickVaildate = () => {
+    const { sagaKey, submitExtraHandler, COMP_FIELD, fieldSelectData, CONFIG } = this.props;
+    const codeList = fieldSelectData[CONFIG.property.compSelectDataKey];
+    const { meterialCode, meterialText, isUseMeterial, isPass } = this.state;
+    const prefixUrl = '/api/mdcs/v1/common/SAPCallByMeterialCodeHandler';
+    const sfidx = codeList.findIndex(f => f.NODE_ID === meterialCode);
+    const code = codeList[sfidx] && codeList[sfidx].CODE;
+
+    if (isUseMeterial && meterialText && meterialCode && isUseMeterial === 'Y' && meterialText !== '' && meterialCode !== '') {
+      const param = { MATERIAL_TYPE: code, MATERIAL_TEXT: meterialText };
+      submitExtraHandler(sagaKey, 'POST', prefixUrl, param, this.onCallBack, COMP_FIELD);
+    } else {
+      message.error('자재코드를 입력해주세요');
+    }
+  };
+
+  onCallBack = (id, response) => {
+    const { changeValidationData, COMP_FIELD } = this.props;
+    const { matrnList } = response;
+    if (matrnList.length > 0) {
+      const isCheckList = matrnList.filter(f => f.CHECK !== 'Y');
+      const errorCodeList = isCheckList.length > 0 ? isCheckList.map(item => item.MATNR) : [];
+      if (errorCodeList.length > 0) {
+        changeValidationData(id, COMP_FIELD, false, '미등록 코드가 존재합니다.');
+        this.setState({ isValidation: false });
+      } else {
+        this.setState({ isValidation: true });
+        changeValidationData(id, COMP_FIELD, true, '');
+      }
+      this.setState({ errorCodeList });
+    } else {
+      message.error('코드 확인 불가');
+      this.setState({ isVaildation: true });
+    }
   };
 
   render() {
-    const { formData, colData, processRule } = this.props;
-    const { mList, isUseMeterial } = this.state;
+    const { formData, colData, processRule, viewType } = this.props;
+    const { mList, isUseMeterial, initMeterialCode, initMeterialText, meterialCode, meterialText } = this.state;
+    console.debug(initMeterialCode, viewType, formData);
     return (
       <StyledWrap>
         <div className="validity-check-input">
@@ -140,32 +220,50 @@ class RadioMaterialComp extends Component {
             <Radio value="Y">Yes</Radio>
             <Radio value="N">No</Radio>
           </Radio.Group>
-
-          <AntdSelect
-            onChange={this.onSelectMeterialCode}
-            placeholder="자재코드 선택"
-            className="mr5"
-            style={{ width: '180px' }}
-            dropdownRender={menu => <StyledDropdown>{menu}</StyledDropdown>}
-          >
-            {mList}
-          </AntdSelect>
-
-          <AntdInput
-            className="mr5"
-            defaultValue={formData.MATERIAL_TEXT}
-            onChange={e => {
-              const reg = /[^0-9,]/gi;
-              if (reg.test(e.target.value)) {
-                message.success('숫자 ,(comma) 만 사용가능');
-                e.target.value = e.target.value.replace(/[^0-9,]/gi, '');
-              }
-              const vals = e.target.value;
-              this.onChangeHandlerText(vals);
-            }}
-          />
-
-          <StyledButton className="btn-xs btn-light" onClick={this.onClickVaildate}>
+          {viewType === 'INPUT' ? (
+            <AntdSelect
+              onChange={this.onSelectMeterialCode}
+              placeholder="자재코드 선택"
+              className="mr5"
+              style={{ width: '180px', display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
+              dropdownRender={menu => <StyledDropdown>{menu}</StyledDropdown>}
+              defaultValue={initMeterialCode}
+              value={meterialCode === '' ? undefined : meterialCode}
+            >
+              {mList}
+            </AntdSelect>
+          ) : (
+            initMeterialCode && (
+              <AntdSelect
+                onChange={this.onSelectMeterialCode}
+                placeholder="자재코드 선택"
+                className="mr5"
+                style={{ width: '180px', display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
+                dropdownRender={menu => <StyledDropdown>{menu}</StyledDropdown>}
+                defaultValue={initMeterialCode}
+                value={meterialCode}
+              >
+                {mList}
+              </AntdSelect>
+            )
+          )}
+          {isUseMeterial === 'Y' && (
+            <AntdInput
+              className="mr5"
+              style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
+              defaultValue={formData.MATERIAL_TEXT}
+              onChange={e => {
+                const reg = /[^0-9,]/gi;
+                if (reg.test(e.target.value)) {
+                  message.info('숫자 ,(comma) 만 사용가능');
+                  e.target.value = e.target.value.replace(/[^0-9,]/gi, '');
+                }
+                const vals = e.target.value;
+                this.onChangeHandlerText(vals);
+              }}
+            />
+          )}
+          <StyledButton className="btn-xs btn-light" style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }} onClick={this.onClickVaildate}>
             <SearchOutlined />
             유효성체크
           </StyledButton>
