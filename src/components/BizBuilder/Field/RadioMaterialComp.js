@@ -174,6 +174,7 @@ class RadioMaterialComp extends Component {
       changeFormData(sagaKey, 'MATERIAL_TEXT', initMeterialText);
       this.setState({ meterialCode: initMeterialCode, meterialText: initMeterialText });
     }
+    changeFormData(sagaKey, 'COMP_FIELD', e.target.value);
   };
 
   onSelectMeterialCode = value => {
@@ -227,8 +228,6 @@ class RadioMaterialComp extends Component {
   render() {
     const { formData, colData, processRule, viewType } = this.props;
     const { mList, isUseMeterial, initMeterialCode, initMeterialText, meterialCode, meterialText, compKey } = this.state;
-    // console.debug(initMeterialCode, viewType, formData);
-    console.debug('compKey', compKey);
     return (
       <StyledWrap>
         <div className="validity-check-input">
