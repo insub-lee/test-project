@@ -277,6 +277,10 @@ const reducer = (state = initialState, action) => {
       const { id, relType } = action;
       return state.setIn(['bizBuilderBase', id, 'relType'], relType);
     }
+    case actionTypes.SET_VALIDATIONDATA_REDUCER: {
+      const { id, validationData } = action;
+      return state.setIn(['bizBuilderBase', id, 'validationData'], validationData);
+    }
     default:
       return state;
   }
