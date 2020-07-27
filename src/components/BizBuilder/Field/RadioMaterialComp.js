@@ -212,7 +212,6 @@ class RadioMaterialComp extends Component {
   render() {
     const { formData, colData, processRule, viewType } = this.props;
     const { mList, isUseMeterial, initMeterialCode, initMeterialText, meterialCode, meterialText } = this.state;
-    console.debug(initMeterialCode, viewType, formData);
     return (
       <StyledWrap>
         <div className="validity-check-input">
@@ -247,10 +246,23 @@ class RadioMaterialComp extends Component {
               </AntdSelect>
             )
           )}
-          {isUseMeterial === 'Y' && (
+          {viewType === 'INPUT' ? (
             <AntdInput
               className="mr5"
-              style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
+              defaultValue={formData.MATERIAL_TEXT}
+              onChange={e => {
+                const reg = /[^0-9,]/gi;
+                if (reg.test(e.target.value)) {
+                  message.info('숫자 ,(comma) 만 사용가능');
+                  e.target.value = e.target.value.replace(/[^0-9,]/gi, '');
+                }
+                const vals = e.target.value;
+                this.onChangeHandlerText(vals);
+              }}
+            />
+          ) : (
+            <AntdInput
+              className="mr5"
               defaultValue={formData.MATERIAL_TEXT}
               onChange={e => {
                 const reg = /[^0-9,]/gi;
