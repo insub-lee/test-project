@@ -72,8 +72,8 @@ class RadioMaterialComp extends Component {
     this.state = {
       mList: [],
       isUseMeterial: 'Y',
-      initMeterialCode: undefined,
-      initMeterialText: undefined,
+      initMeterialCode: '',
+      initMeterialText: '',
       meterialCode: '',
       meterialText: '',
       isVaildation: false,
@@ -162,6 +162,7 @@ class RadioMaterialComp extends Component {
 
   onChangeIsMeterial = e => {
     const { sagaKey, changeValidationData, COMP_FIELD, changeFormData } = this.props;
+    console.debug('COMP_FIELD', COMP_FIELD);
     const { initMeterialCode, initMeterialText } = this.state;
     this.setState({ isUseMeterial: e.target.value });
     if (e.target.value === 'N') {
@@ -174,7 +175,7 @@ class RadioMaterialComp extends Component {
       changeFormData(sagaKey, 'MATERIAL_TEXT', initMeterialText);
       this.setState({ meterialCode: initMeterialCode, meterialText: initMeterialText });
     }
-    changeFormData(sagaKey, 'COMP_FIELD', e.target.value);
+    changeFormData(sagaKey, COMP_FIELD, e.target.value);
   };
 
   onSelectMeterialCode = value => {
@@ -235,33 +236,18 @@ class RadioMaterialComp extends Component {
             <Radio value="Y">Yes</Radio>
             <Radio value="N">No</Radio>
           </Radio.Group>
-          {viewType === 'INPUT' ? (
-            <AntdSelect
-              onChange={this.onSelectMeterialCode}
-              placeholder="자재코드 선택"
-              className="mr5"
-              style={{ width: '180px', display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
-              dropdownRender={menu => <StyledDropdown>{menu}</StyledDropdown>}
-              defaultValue={initMeterialCode}
-              value={meterialCode === '' ? undefined : meterialCode}
-            >
-              {mList}
-            </AntdSelect>
-          ) : (
-            initMeterialCode && (
-              <AntdSelect
-                onChange={this.onSelectMeterialCode}
-                placeholder="자재코드 선택"
-                className="mr5"
-                style={{ width: '180px', display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
-                dropdownRender={menu => <StyledDropdown>{menu}</StyledDropdown>}
-                defaultValue={initMeterialCode}
-                value={meterialCode}
-              >
-                {mList}
-              </AntdSelect>
-            )
-          )}
+          <AntdSelect
+            onChange={this.onSelectMeterialCode}
+            placeholder="자재코드 선택"
+            className="mr5"
+            style={{ width: '180px', display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
+            dropdownRender={menu => <StyledDropdown>{menu}</StyledDropdown>}
+            defaultValue={initMeterialCode}
+            value={meterialCode === '' ? undefined : meterialCode}
+          >
+            {mList}
+          </AntdSelect>
+
           {viewType === 'INPUT' ? (
             <input
               className="mr5"
