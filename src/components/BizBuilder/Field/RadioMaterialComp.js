@@ -5,6 +5,7 @@ import { debounce } from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
 import message from 'components/Feedback/message';
 import styled from 'styled-components';
+import uuid from 'uuid/v1';
 
 import StyledDropdown from 'components/BizBuilder/styled/Form/StyledDropdown';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
@@ -62,6 +63,8 @@ const StyledWrap = styled.div`
   }
 `;
 
+const getNewKey = () => uuid();
+
 class RadioMaterialComp extends Component {
   constructor(props) {
     super(props);
@@ -75,6 +78,7 @@ class RadioMaterialComp extends Component {
       meterialText: '',
       isVaildation: false,
       errorCodeList: [],
+      compKey: '',
     };
   }
 
@@ -90,6 +94,7 @@ class RadioMaterialComp extends Component {
                 {item.NAME_KOR}
               </Option>
             )),
+          compKey: `biz-builder-field-radio-material-comp-${getNewKey()}`,
         });
       }
     }
@@ -97,7 +102,7 @@ class RadioMaterialComp extends Component {
       changeValidationData(sagaKey, COMP_FIELD, false, '원자재코드를 입력해주세요');
     }
     const { MATERIAL_YN, MATERIAL_TYPE, MATERIAL_TEXT } = formData;
-    console.debug(formData, 'MATERIAL_TYPE:', MATERIAL_TYPE, 'MATERIAL_TEXT:', MATERIAL_TEXT);
+    // console.debug(formData, 'MATERIAL_TYPE:', MATERIAL_TYPE, 'MATERIAL_TEXT:', MATERIAL_TEXT);
     this.setState({
       isUseMeterial: colData,
       initMeterialCode: MATERIAL_TYPE && Number(MATERIAL_TYPE),
@@ -132,9 +137,9 @@ class RadioMaterialComp extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { sagaKey, changeValidationData, COMP_FIELD } = this.props;
+    const { sagaKey, changeValidationData, COMP_FIELD, formData, viewType } = this.props;
     const { isUseMeterial, isVaildation, meterialCode, meterialText } = prevState;
-    console.debug('state', prevState, this.state);
+    // console.debug('state', prevState, this.state);
     if (
       this.state.isUseMeterial !== isUseMeterial ||
       this.state.meterialCode !== meterialCode ||
@@ -142,6 +147,16 @@ class RadioMaterialComp extends Component {
       this.state.isVaildation !== isVaildation
     ) {
       this.onVaildationCheck();
+    }
+
+    if (
+      viewType === 'MODIFY' &&
+      prevProps.formData &&
+      prevProps.formData.MATERIAL_TEXT !== undefined &&
+      formData.MATERIAL_TEXT &&
+      prevProps.formData.MATERIAL_TEXT !== formData.MATERIAL_TEXT
+    ) {
+      this.setState({ compKey: `biz-builder-field-radio-material-comp-${getNewKey()}` });
     }
   }
 
@@ -154,7 +169,7 @@ class RadioMaterialComp extends Component {
       changeFormData(sagaKey, 'MATERIAL_TEXT', '');
       changeValidationData(sagaKey, COMP_FIELD, true, '');
     } else {
-      console.debug(initMeterialCode, initMeterialText);
+      // console.debug(initMeterialCode, initMeterialText);
       changeFormData(sagaKey, 'MATERIAL_TYPE', initMeterialCode);
       changeFormData(sagaKey, 'MATERIAL_TEXT', initMeterialText);
       this.setState({ meterialCode: initMeterialCode, meterialText: initMeterialText });
@@ -211,8 +226,9 @@ class RadioMaterialComp extends Component {
 
   render() {
     const { formData, colData, processRule, viewType } = this.props;
-    const { mList, isUseMeterial, initMeterialCode, initMeterialText, meterialCode, meterialText } = this.state;
-    console.debug(initMeterialCode, viewType, formData);
+    const { mList, isUseMeterial, initMeterialCode, initMeterialText, meterialCode, meterialText, compKey } = this.state;
+    // console.debug(initMeterialCode, viewType, formData);
+    console.debug('compKey', compKey);
     return (
       <StyledWrap>
         <div className="validity-check-input">
@@ -250,6 +266,7 @@ class RadioMaterialComp extends Component {
           {isUseMeterial === 'Y' && (
             <AntdInput
               className="mr5"
+              key={compKey}
               style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
               defaultValue={formData.MATERIAL_TEXT}
               onChange={e => {
