@@ -10,7 +10,6 @@ import StyledDropdown from 'components/BizBuilder/styled/Form/StyledDropdown';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import LabelComp from './LabelComp';
 
 const { Option } = Select;
 const AntdSelect = StyledSelect(Select);
@@ -62,21 +61,17 @@ const StyledWrap = styled.div`
 class RadioMaterialComp extends Component {
   constructor(props) {
     super(props);
-    this.onChangeHandlerText = debounce(this.onChangeHandlerText, 300);
     this.state = {
-      mList: [],
-      isMeterialView: true,
-      isMeterial: 'Y',
-      meterialType: undefined,
+      mList: undefined,
+      isUseMeterial: 'Y',
+      meterialCode: undefined,
       meterialText: undefined,
-      errorCodeList: undefined,
-      isValidation: false,
+      isVaildation: false,
     };
   }
 
   componentDidMount() {
     const { fieldSelectData, CONFIG, colData, changeValidationData, COMP_FIELD, sagaKey } = this.props;
-    const { isValidation } = this.state;
     if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
       if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey].length > 0) {
         this.setState({
@@ -90,198 +85,94 @@ class RadioMaterialComp extends Component {
         });
       }
     }
-
-    const isMeterialView = colData === 'Y' ? true : false;
-    const isVal = colData === 'Y' ? false : true;
-    this.setState({ isMeterialView });
-    changeValidationData(sagaKey, COMP_FIELD, isVal, '코드를 입력해주세요');
+    if (colData === 'Y') {
+      changeValidationData(sagaKey, COMP_FIELD, false, '원자재코드를 입력해주세요');
+    }
+    this.setState({ isUseMeterial: colData });
   }
 
-  componentDidUpdate(prevProps) {
-    const { sagaKey, processRule, COMP_FIELD, setProcessRule, formData, colData } = this.props;
-    const { processRule: prevProcessRule } = prevProps;
-    if (prevProps.colData != colData) {
-      const isMeterialView = colData === 'Y' ? true : false;
-      this.setState({ isMeterialView });
-    }
-    if (processRule.PRC_ID !== prevProcessRule.PRC_ID) {
-      const { DRAFT_DATA } = processRule;
-      const tmpDraftData = { ...DRAFT_DATA, material_yn: 'Y' };
-      const tmpPrcRule = { ...processRule, DRAFT_DATA: tmpDraftData };
-      setProcessRule(sagaKey, tmpPrcRule);
+  componentDidUpdate(prevProps, prevState) {
+    const { sagaKey, changeValidationData, COMP_FIELD } = this.props;
+    const { isUseMeterial, isVaildation, meterialCode, meterialText } = prevState;
+    console.debug('state', prevState, this.state);
+    if (this.state.isUseMeterial !== isUseMeterial || this.state.meterialCode !== meterialCode || this.state.meterialText !== meterialText) {
+      if (this.state.isUseMeterial === 'Y') {
+        console.debug('유효성 체크 진행');
+
+        if (!this.state.meterialCode) {
+          changeValidationData(sagaKey, COMP_FIELD, false, '자재코드를 선택해주세요');
+          return;
+        }
+
+        if (!this.state.meterialText) {
+          changeValidationData(sagaKey, COMP_FIELD, false, '자재코드를 입력해주세요');
+          return;
+        }
+
+        if (!isVaildation) {
+          changeValidationData(sagaKey, COMP_FIELD, false, '정상적인 자재코드인지 유효성체크를 해주세요.');
+          return;
+        }
+
+        changeValidationData(sagaKey, COMP_FIELD, false, '원자재코드를 입력해주세요');
+      } else {
+        console.debug('X 체크 진행');
+        changeValidationData(sagaKey, COMP_FIELD, false, '동과');
+      }
     }
   }
 
-  initDataBind = id => {
-    const {
-      formData,
-      colData,
-      extraApiData: { meterialList },
-    } = this.props;
-    const tempMatList = meterialList.categoryMapList
-      .filter(f => f.LVL > 0)
-      .map(item => (
-        <Option key={item.NODE_ID}>
-          {item.CODE}({item.NAME_KOR})
-        </Option>
-      ));
-    const isMeterialView = colData === 'Y';
-    this.setState({ mList: tempMatList, isMeterialView });
+  onChangeIsMeterial = e => {
+    this.setState({ isUseMeterial: e.target.value });
   };
 
-  onChangeHandler = e => {
-    const { changeFormData, sagaKey, COMP_FIELD, setProcessRule, processRule, changeValidationData } = this.props;
-    const { DRAFT_DATA } = processRule;
-    const tmpDraftData = { ...DRAFT_DATA, material_yn: e.target.value };
-    const tmpPrcRule = { ...processRule, DRAFT_DATA: tmpDraftData };
-    setProcessRule(sagaKey, tmpPrcRule);
-    changeFormData(sagaKey, COMP_FIELD, e.target.value);
-
-    if (e.target.value === 'N') {
-      changeFormData(sagaKey, 'MATERIAL_TYPE', ' ');
-      changeFormData(sagaKey, 'MATERIAL_TEXT', ' ');
-      changeValidationData(sagaKey, COMP_FIELD, true, '유효성 체크를 해주세요');
-    }
-    changeValidationData(sagaKey, COMP_FIELD, false, '유효성 체크를 해주세요');
-    this.setState({ isMeterialView: e.target.value === 'Y' });
-  };
-
-  onSelectChange = value => {
-    const { changeValidationData, changeFormData, sagaKey, COMP_FIELD } = this.props;
-    this.setState({ meterialType: value });
-    changeValidationData(sagaKey, COMP_FIELD, false, '유효성 체크를 해주세요');
-    changeFormData(sagaKey, 'MATERIAL_TYPE', value);
-  };
-
-  onChangeHandlerText = value => {
-    const { changeValidationData, changeFormData, sagaKey, COMP_FIELD } = this.props;
-    this.setState({ meterialText: value });
-    changeValidationData(sagaKey, COMP_FIELD, false, '유효성 체크를 해주세요');
-    changeFormData(sagaKey, 'MATERIAL_TEXT', value);
-  };
-
-  onClickVaildate = () => {
-    const { sagaKey, submitExtraHandler, COMP_FIELD, fieldSelectData, CONFIG } = this.props;
-    const codeList = fieldSelectData[CONFIG.property.compSelectDataKey];
-    const { meterialType, meterialText, isMeterial } = this.state;
-    const prefixUrl = '/api/mdcs/v1/common/SAPCallByMeterialCodeHandler';
-    const sfidx = codeList.findIndex(f => f.NODE_ID === meterialType);
-    const code = codeList[sfidx] && codeList[sfidx].CODE;
-
-    if (isMeterial === 'Y') {
-      if (meterialText && code && meterialText !== ' ' && code !== '') {
-        const param = { MATERIAL_TYPE: code, MATERIAL_TEXT: meterialText };
-        submitExtraHandler(sagaKey, 'POST', prefixUrl, param, this.onCallBack, COMP_FIELD);
-      } else {
-        message.error('자재코드를 입력해주세요');
-      }
-    }
-  };
-
-  onCallBack = (id, response) => {
-    const { changeValidationData, COMP_FIELD } = this.props;
-    const { matrnList } = response;
-    if (matrnList.length > 0) {
-      const isCheckList = matrnList.filter(f => f.CHECK !== 'Y');
-      const errorCodeList = isCheckList.length > 0 ? isCheckList.map(item => item.MATNR) : [];
-      if (errorCodeList.length > 0) {
-        changeValidationData(id, COMP_FIELD, false, '미등록 코드가 존재합니다.');
-        this.setState({ isValidation: false });
-      } else {
-        this.setState({ isValidation: true });
-        changeValidationData(id, COMP_FIELD, true, '');
-      }
-      this.setState({ errorCodeList });
-    } else {
-      message.error('코드 확인 불가');
-    }
-  };
-
-  onIsMeterialCheck = e => {
-    const { changeFormData, changeValidationData, COMP_FIELD, sagaKey } = this.props;
-    this.setState({ isMeterial: e.target.value });
-    changeFormData(sagaKey, COMP_FIELD, e.target.value);
-    if (e.target.value === 'N') {
-      changeValidationData(sagaKey, COMP_FIELD, true, '');
-      changeFormData(sagaKey, 'MATERIAL_TEXT', ' ');
-      changeFormData(sagaKey, 'MATERIAL_TYPE', ' ');
-      this.setState({ meterialType: undefined, meterialText: undefined, isMeterialView: false });
-    } else {
-      changeValidationData(sagaKey, COMP_FIELD, false, '코드를 입력해주세요');
-      this.setState({ isMeterialView: true });
-    }
+  onSelectMeterialCode = value => {
+    this.setState({ meterialCode: value });
   };
 
   render() {
     const { formData, colData, processRule } = this.props;
-    const { errorCodeList } = this.state;
-    console.debug('formData', formData);
-
+    const { mList, isUseMeterial } = this.state;
     return (
       <StyledWrap>
         <div className="validity-check-input">
-          <Radio.Group name="radiogroup" value={colData} onChange={this.onIsMeterialCheck}>
+          <Radio.Group name="radiogroup" value={isUseMeterial} onChange={this.onChangeIsMeterial}>
             <Radio value="Y">Yes</Radio>
             <Radio value="N">No</Radio>
           </Radio.Group>
-          {this.state.isMeterialView && (
-            <AntdSelect
-              value={formData.MATERIAL_TYPE === '' ? undefined : Number(formData.MATERIAL_TYPE)}
-              onChange={this.onSelectChange}
-              placeholder="자재코드 선택"
-              className="mr5"
-              style={{ width: '180px' }}
-              dropdownRender={menu => <StyledDropdown>{menu}</StyledDropdown>}
-            >
-              {this.state.mList}
-            </AntdSelect>
-          )}
-          {this.state.isMeterialView && (
-            <AntdInput
-              className="mr5"
-              defaultValue={formData.MATERIAL_TEXT}
-              onChange={e => {
-                const reg = /[^0-9,]/gi;
-                if (reg.test(e.target.value)) {
-                  message.success('숫자 ,(comma) 만 사용가능');
-                  e.target.value = e.target.value.replace(/[^0-9,]/gi, '');
-                }
-                const vals = e.target.value;
-                this.onChangeHandlerText(vals);
-              }}
-            />
-          )}{' '}
-          {this.state.isMeterialView && (
-            <StyledButton className="btn-xs btn-light" onClick={this.onClickVaildate}>
-              <SearchOutlined />
-              유효성체크
-            </StyledButton>
-          )}
+
+          <AntdSelect
+            onChange={this.onSelectMeterialCode}
+            placeholder="자재코드 선택"
+            className="mr5"
+            style={{ width: '180px' }}
+            dropdownRender={menu => <StyledDropdown>{menu}</StyledDropdown>}
+          >
+            {mList}
+          </AntdSelect>
+
+          <AntdInput
+            className="mr5"
+            defaultValue={formData.MATERIAL_TEXT}
+            onChange={e => {
+              const reg = /[^0-9,]/gi;
+              if (reg.test(e.target.value)) {
+                message.success('숫자 ,(comma) 만 사용가능');
+                e.target.value = e.target.value.replace(/[^0-9,]/gi, '');
+              }
+              const vals = e.target.value;
+              this.onChangeHandlerText(vals);
+            }}
+          />
+
+          <StyledButton className="btn-xs btn-light" onClick={this.onClickVaildate}>
+            <SearchOutlined />
+            유효성체크
+          </StyledButton>
         </div>
-        {errorCodeList && errorCodeList.length > 0 && (
-          <div className="unregistered-code">
-            <div className="title">미등록 코드</div>
-            <div className="code-list">{errorCodeList && errorCodeList.map(item => <div>{item}</div>)}</div>
-          </div>
-        )}
       </StyledWrap>
     );
   }
 }
-
-RadioMaterialComp.propTypes = {
-  extraApiData: PropTypes.objectOf(PropTypes.array),
-};
-
-RadioMaterialComp.defaultProps = {
-  apiArys: [
-    {
-      key: 'meterialList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=28',
-      type: 'GET',
-      params: {},
-    },
-  ],
-};
 
 export default RadioMaterialComp;
