@@ -31,6 +31,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
   const isBuilderModal = !!(builderModalOptIdx > -1);
   let isSaveModalClose = false;
   let builderModalSetting;
+
   if (isBuilderModal) {
     const tempObj = isJSON(work.OPT_INFO[builderModalOptIdx].OPT_VALUE) ? JSON.parse(work.OPT_INFO[builderModalOptIdx].OPT_VALUE) : undefined;
     if (tempObj) {
@@ -47,6 +48,8 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
 
   const viewPageData = yield select(selectors.makeSelectViewPageDataById(id));
   const upperCaseViewType = viewType && viewType.length > 0 ? viewType.toUpperCase() : viewPageData.viewType;
+
+  let validData = {};
   let viewSetData = {};
   let responseFieldSelectData = {};
   if (extraProps) {
@@ -55,6 +58,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
     const { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq } = extraProps;
     const reduxFormData = detailData;
     let viewChangeProcessSeq = -1;
+
     if (reduxFormData && reduxFormData.VIEW_CHANGE_PROCESS_SEQ && reduxFormData.VIEW_CHANGE_PROCESS_SEQ > -1) {
       viewChangeProcessSeq = reduxFormData.VIEW_CHANGE_PROCESS_SEQ;
     } else if (formData && formData.VIEW_CHANGE_PROCESS_SEQ && formData.VIEW_CHANGE_PROCESS_SEQ > -1) {
@@ -100,6 +104,12 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
       if (viewLayerConfig.property && viewLayerConfig.property.layer && viewLayerConfig.property.layer.groups) {
         const fieldSelectDataObject = {};
         const currentLayer = viewLayerConfig.property.layer;
+        let validSort = 0;
+
+        if ((upperCaseViewType === 'INPUT' || upperCaseViewType === 'MODIFY') && taskSeq > -1) {
+          validData = yield select(selectors.makeSelectValidationDataById(id));
+        }
+
         currentLayer.groups.forEach(group => {
           if (group && group.rows && group.rows.length > 0) {
             group.rows.forEach(row => {
@@ -115,6 +125,21 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
                       config: col.comp.CONFIG,
                       COMP_FIELD: col.comp.COMP_FIELD,
                     };
+                  }
+
+                  if (
+                    col &&
+                    col.comp &&
+                    col.comp.COMP_TYPE &&
+                    col.comp.COMP_TYPE === 'FIELD' &&
+                    (upperCaseViewType === 'INPUT' || upperCaseViewType === 'MODIFY')
+                  ) {
+                    if (taskSeq === -1) {
+                      validationData[col.comp.COMP_FIELD].validSort = validSort;
+                    } else {
+                      validData[col.comp.COMP_FIELD].validSort = validSort;
+                    }
+                    validSort++;
                   }
                 });
               }
@@ -176,7 +201,9 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
         responseFieldSelectData,
       ),
     );
+    yield put(actions.setValidationDataByReducer(id, validData));
   }
+
   if (viewType === 'VIEW') {
     const taskFavoriteOptIdx = work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_CODE === TASK_FAVORITE_OPT_CODE && opt.ISUSED === 'Y');
     yield put(actions.setIsTaskFavoriteByReducer(id, !!(taskFavoriteOptIdx > -1)));
@@ -347,14 +374,23 @@ function* tempSaveTask({ id, reloadId, callbackFunc, changeIsLoading, workPrcPro
     if (validKeyList && validKeyList.length > 0) {
       let validFlag = true;
       let validMsg = '';
+      let validSort = 9999;
 
       validKeyList.forEach(node => {
-        if (!validationData[node].flag) {
-          validFlag = validationData[node].flag;
-          validMsg = validationData[node].msg;
+        if (validationData[node].flag === false) {
+          const newValidSort = validationData[node].validSort || 999;
+          if (validSort > newValidSort) {
+            validFlag = validationData[node].flag;
+            validMsg = validationData[node].msg;
+            validSort = newValidSort;
+          }
         } else if (validationData[node].requiredFlag === false) {
-          validFlag = validationData[node].requiredFlag;
-          validMsg = `${validationData[node].requiredMsg}`;
+          const newValidSort = validationData[node].validSort || 999;
+          if (validSort > newValidSort) {
+            validFlag = validationData[node].requiredFlag;
+            validMsg = `${validationData[node].requiredMsg}`;
+            validSort = newValidSort;
+          }
         }
       });
 
@@ -524,14 +560,23 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
     if (validKeyList && validKeyList.length > 0) {
       let validFlag = true;
       let validMsg = '';
+      let validSort = 9999;
 
       validKeyList.forEach(node => {
-        if (!validationData[node].flag) {
-          validFlag = validationData[node].flag;
-          validMsg = validationData[node].msg;
+        if (validationData[node].flag === false) {
+          const newValidSort = validationData[node].validSort || 999;
+          if (validSort > newValidSort) {
+            validFlag = validationData[node].flag;
+            validMsg = validationData[node].msg;
+            validSort = newValidSort;
+          }
         } else if (validationData[node].requiredFlag === false) {
-          validFlag = validationData[node].requiredFlag;
-          validMsg = `${validationData[node].requiredMsg}`;
+          const newValidSort = validationData[node].validSort || 999;
+          if (validSort > newValidSort) {
+            validFlag = validationData[node].requiredFlag;
+            validMsg = `${validationData[node].requiredMsg}`;
+            validSort = newValidSort;
+          }
         }
       });
 
@@ -709,13 +754,23 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc, change
     if (validKeyList && validKeyList.length > 0) {
       let validFlag = true;
       let validMsg = '';
+      let validSort = 9999;
+
       validKeyList.forEach(node => {
-        if (!validationData[node].flag) {
-          validFlag = validationData[node].flag;
-          validMsg = validationData[node].msg;
+        if (validationData[node].flag === false) {
+          const newValidSort = validationData[node].validSort || 999;
+          if (validSort > newValidSort) {
+            validFlag = validationData[node].flag;
+            validMsg = validationData[node].msg;
+            validSort = newValidSort;
+          }
         } else if (validationData[node].requiredFlag === false) {
-          validFlag = validationData[node].requiredFlag;
-          validMsg = `${validationData[node].requiredMsg}`;
+          const newValidSort = validationData[node].validSort || 999;
+          if (validSort > newValidSort) {
+            validFlag = validationData[node].requiredFlag;
+            validMsg = `${validationData[node].requiredMsg}`;
+            validSort = newValidSort;
+          }
         }
       });
 
