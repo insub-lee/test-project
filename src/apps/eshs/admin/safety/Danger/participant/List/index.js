@@ -143,11 +143,13 @@ class List extends Component {
   modalSearch = () => {
     const { sagaKey: id, getExtraApiData } = this.props;
     const { searchType, keyword } = this.state;
+    const apiUrl =
+      searchType && keyword ? `/api/eshs/v1/common/AllEshsUsers?MODAL_SEARCH_TYPE=${searchType}&KEYWORD=${keyword}` : '/api/eshs/v1/common/AllEshsUsers';
     const apiAry = [
       {
         key: 'userModalData',
         type: 'GET',
-        url: `/api/eshs/v1/common/AllEshsUsers?MODAL_SEARCH_TYPE=${searchType}&KEYWORD=${keyword}`,
+        url: apiUrl,
       },
     ];
     getExtraApiData(id, apiAry, this.modalDataSet);
@@ -395,7 +397,7 @@ class List extends Component {
     return (
       <>
         <StyledContentsWrapper>
-          <StyledCustomSearchWrapper>
+          <StyledCustomSearchWrapper className="search-wrapper-inline">
             <div className="search-input-area">
               <span className="text-label">참여 연도</span>
               <AntdSelect className="select-sm mr5" style={{ width: '100px' }} value={formData.DE_YEAR} onChange={value => this.onChange('DE_YEAR', value)}>
@@ -414,7 +416,7 @@ class List extends Component {
               />
               <span className="text-label">사번</span>
               <AntdSearchInput
-                style={{ width: '300px' }}
+                style={{ width: '150px' }}
                 value={formData.EMP_NO}
                 className="input-search-sm ant-search-inline mr5"
                 readOnly
@@ -423,7 +425,7 @@ class List extends Component {
               />
             </div>
             <div className="btn-area">
-              <StyledButton className="btn-greay btn-first btn-sm" onClick={() => getListData(id, 9201)}>
+              <StyledButton className="btn-gray btn-sm" onClick={() => getListData(id, 9201)}>
                 검색
               </StyledButton>
             </div>
@@ -479,7 +481,9 @@ class List extends Component {
                   style={{ width: 600 }}
                   className="ant-input-sm ant-input-inline mr5"
                   placeholder=" 검색어를 입력하세요"
+                  allowClear
                   onChange={e => this.setState({ keyword: e.target.value })}
+                  onPressEnter={this.modalSearch}
                 />
                 <StyledButton className="btn-primary btn-first btn-sm" onClick={this.modalSearch}>
                   검색
