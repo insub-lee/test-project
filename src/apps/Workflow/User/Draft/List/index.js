@@ -541,8 +541,8 @@ class DraftList extends Component {
                       <colgroup>
                         <col width="10%" />
                         <col width="10%" />
-                        <col width="10%" />
-                        <col width="55%" />
+                        <col width="20%" />
+                        <col width="45%" />
                         <col width="15%" />
                       </colgroup>
                       <thead>
