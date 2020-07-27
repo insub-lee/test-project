@@ -457,7 +457,7 @@ upstream wts-common {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10801;
 }
 upstream mxlife-common {
-    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10901;
+    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10710;
 }
 upstream thumbor {
     server dev-biz-thumbor.marathon.l4lb.thisdcos.directory:8000;
