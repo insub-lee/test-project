@@ -264,8 +264,8 @@ class RadioMaterialComp extends Component {
             )
           )}
           {viewType === 'INPUT' ? (
-            <input
-              className="mr5"
+            <AntdInput
+              className="mr5 ant-input-xs"
               defaultValue={formData.MATERIAL_TEXT}
               onChange={e => {
                 const reg = /[^0-9,]/gi;
@@ -278,8 +278,8 @@ class RadioMaterialComp extends Component {
               }}
             />
           ) : (
-            <input
-              className="mr5"
+            <AntdInput
+              className="mr5 ant-input-xs"
               key={compKey}
               style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
               defaultValue={formData.MATERIAL_TEXT}
