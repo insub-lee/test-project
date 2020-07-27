@@ -27,23 +27,31 @@ class RequesterView extends Component {
       empType: 'D',   //EDDS외부업체
       deptId: 0,
       deptName: '',
-      pstnId: 0,
-      pstnName: '',
+      pstnId: 73197,     //직위(과장-고정값)
+      pstnName: '과장',
       dutyId: 73250,  //직책코드(담당-고정값)
       rankId: -1,
     }
   };
 
   componentDidMount() {
-    const { sagaKey, getCallDataHandler, selectedRow } = this.props;
-    const arrApi = [
-      {
-        key: 'requesterView',
-        url: `/api/edds/v1/common/eddsRequest/${selectedRow.REQUEST_ID}`,
-        type: 'GET',
-      },
-    ];
-    getCallDataHandler(sagaKey, arrApi);
+    const { sagaKey, getCallDataHandlerReturnRes, selectedRow } = this.props;
+    const apiInfo = {
+      key: 'requesterView',
+      url: `/api/edds/v1/common/eddsRequest/${selectedRow.REQUEST_ID}`,
+      type: 'GET',
+    }
+    getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, res) => {
+      if (res && res.detail) {
+        this.setState({
+          userInfo: {
+            ...this.state.userInfo,
+            deptId: res.detail.DEPT_ID,
+            deptName: res.detail.DEPT_NAME_KOR,
+          }
+        });
+      }
+    });
   }
 
   onChangeEmpCode = val => {
@@ -52,10 +60,10 @@ class RequesterView extends Component {
 
   onClickApproval = () => {
     const { sagaKey, result: { requesterView: { detail } }, submitHandlerBySaga, onCancelPopup, selectedRow, spinningOn, spinningOff } = this.props;
-    if (this.state.userInfo.deptId !== 0 &&  this.state.userInfo.pstnId !== 0) {
+    if (this.state.userInfo.deptId && this.state.userInfo.deptId !== 0) {
       const userInfo = {
         ...this.state.userInfo,
-        deptName: detail.DEPT_NAME,
+        // deptName: detail.DEPT_NAME,
         empNo: detail.REQUEST_ID,
         nameKor: detail.REQUESTER_NAME,
         email: detail.EMAIL,
@@ -88,7 +96,7 @@ class RequesterView extends Component {
         }
       });
     } else {
-      message.info(<MessageContent>회사와 직위를 선택해주세요.</MessageContent>);
+      message.info(<MessageContent>회사를 선택해주세요.</MessageContent>);
     }
   };
 
@@ -160,7 +168,50 @@ class RequesterView extends Component {
 
   onCancelPstnPopup = () => {
     this.setState({ isPstnShow: false });
-  }
+  };
+
+  onRegistCompany = () => {
+    const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff, result: { requesterView: { detail } }, profile } = this.props;
+    const submitData = {
+      PRNT_ID: 1461,
+      DEPT_CD: detail.COMPANY_NAME,
+      NAME_KOR: detail.COMPANY_NAME,
+      NAME_ENG: detail.COMPANY_NAME,
+      NAME_CHN: detail.COMPANY_NAME,
+      NAME_JPN: detail.COMPANY_NAME,
+      NAME_ETC: detail.COMPANY_NAME,
+      COMP_CD: profile.COMP_CD,
+    };
+
+    const callbackFunc = deptId => {
+      this.setState({
+        userInfo: {
+          ...this.state.userInfo,
+          deptId,
+          deptName: detail.COMPANY_NAME,
+        }
+      });
+    };
+
+    confirm({
+      title: <p>선택할 회사가 없는 경우에만 등록하시기 바랍니다.<br /><br />회사를 등록하시겠습니까?</p>,
+      icon: <ExclamationCircleOutlined />,
+      okText: '등록',
+      cancelText: '취소',
+      onOk() {
+        spinningOn();
+        submitHandlerBySaga(sagaKey, 'POST', `/api/admin/v1/common/registDept`, submitData, (id, res) => {
+          spinningOff();
+          if (res && res.code === 200) {
+            message.info(<MessageContent>등록하였습니다.</MessageContent>);
+            callbackFunc(res.deptId);
+          } else {
+            message.info(<MessageContent>등록에 실패하였습니다.</MessageContent>);
+          }
+        });
+      }
+    });
+  };
 
   render() {
     const { result: { requesterView } } = this.props;
@@ -168,6 +219,8 @@ class RequesterView extends Component {
     if (requesterView && requesterView !== undefined && requesterView.detail !== undefined) {
       detail = requesterView.detail;
     }
+
+    console.debug('### >> ', this.state.userInfo);
 
     return (
       <>
@@ -219,10 +272,19 @@ class RequesterView extends Component {
                 </tr>
                 <tr>
                   <th>회사명</th>
-                  <td>{detail.COMPANY_NAME}</td>
-                  <th>선택회사</th>
                   <td>
-                    <AntdInput value={this.state.userInfo.deptName} className="ant-input-sm" placeholder="회사선택" onClick={this.onClickCompany} readOnly/>
+                    {detail.COMPANY_NAME}
+                    {(!this.state.userInfo.deptId || this.state.userInfo.deptId === 0) && (
+                      <StyledButton className="btn-primary btn-xs ml5" onClick={this.onRegistCompany}>회사등록</StyledButton>
+                    )}
+                  </td>
+                  <th>회사선택</th>
+                  <td>
+                    <AntdInput
+                      value={detail.DEPT_NAME_KOR || this.state.userInfo.deptName}
+                      className="ant-input-sm" placeholder="회사선택" allowClear
+                      onClick={this.onClickCompany} readOnly
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -232,16 +294,17 @@ class RequesterView extends Component {
                 <tr>
                   <th>직위명</th>
                   <td>{detail.PSTN_NAME}</td>
-                  <th>선택직위</th>
+                  <th>전화번호</th>
+                  <td>{detail.PHONE}</td>
+                  {/* <th>선택직위</th>
                   <td>
                     <AntdInput value={this.state.userInfo.pstnName} className="ant-input-sm" placeholder="직위선택" onClick={this.onClickPostion} readOnly/>
-                  </td>
+                  </td> */}
                 </tr>
-                <tr>
+                {/* <tr>
                   <th>전화번호</th>
                   <td colSpan="3">{detail.PHONE}</td>
-                  <td></td>
-                </tr>
+                </tr> */}
                 <tr>
                   <th>이메일</th>
                   <td colSpan="3">{detail.EMAIL}</td>
