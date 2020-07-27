@@ -13,13 +13,12 @@ import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import ListDataTable from '../infoTable/listDataTable';
+import FormDataTable from '../infoTable/formDataTable';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSelect = StyledSelect(Select);
 const AntdDatePicker = StyledDatePicker(DatePicker);
 const AntdInput = StyledInput(Input);
-
-const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
 
 class FlowPage extends Component {
@@ -40,6 +39,7 @@ class FlowPage extends Component {
       modalVisible: false,
       isUpload: false, // 양식을 이용하여 폼데이터 생성이 된 경우에만 true;
       listData: List([]),
+      formData: {},
     };
   }
 
@@ -65,12 +65,23 @@ class FlowPage extends Component {
     });
   };
 
+  // 검색조건 수정
+  onChangeSearchValue = (field, value) => {
+    const { searchValue } = this.state;
+    this.setState({
+      searchValue: {
+        ...searchValue,
+        [field]: value,
+      },
+    });
+  };
+
   // 모달 핸들러
   handleModal = (type, visible) => {
     let title = '';
     switch (type) {
-      case 'EXCEL':
-        title = '유량정보 업로드';
+      case 'NEW':
+        title = '수질측정항목 등록';
         this.setState({
           modalTitle: title,
           modalVisible: visible,
@@ -108,11 +119,12 @@ class FlowPage extends Component {
     }
   };
 
-  onChangeSearchValue = (field, value) => {
-    const { searchValue } = this.state;
+  // 폼데이터 수정
+  onChangeFormData = (field, value) => {
+    const { formData } = this.state;
     this.setState({
-      searchValue: {
-        ...searchValue,
+      formData: {
+        ...formData,
         [field]: value,
       },
     });
@@ -121,7 +133,7 @@ class FlowPage extends Component {
   render() {
     const { searchValue, date, modalTitle, modalVisible, formData, listData, isSearching, isUpload } = this.state;
     const { site, keyword, isUseWater, isWasteWater, isDaily, isDel } = searchValue;
-
+    console.debug('this.state', formData);
     return (
       <>
         <StyledCustomSearchWrapper>
@@ -131,7 +143,6 @@ class FlowPage extends Component {
               <AntdSelect defaultValue={site} className="select-sm" style={{ width: '100px' }} onChange={val => this.setState({ site: val })}>
                 <Option value="청주">청주</Option>
                 <Option value="구미">구미</Option>
-                <Option value="서울">서울</Option>
               </AntdSelect>
               <span className="text-label">측정항목명</span>
               <AntdInput className="ant-input-sm ant-input-inline" style={{ width: '200px' }} defaultValue={keyword} />
@@ -159,7 +170,7 @@ class FlowPage extends Component {
           </Spin>
         </StyledCustomSearchWrapper>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-primary btn-sm ml5" onClick={() => console.debug('모달띄워야함')}>
+          <StyledButton className="btn-primary btn-sm ml5" onClick={() => this.handleModal('NEW', true)}>
             신규등록
           </StyledButton>
         </StyledButtonWrapper>
@@ -167,7 +178,7 @@ class FlowPage extends Component {
         <AntdModal
           className="modal-table-pad"
           title={modalTitle}
-          width="80%"
+          width="55%"
           visible={modalVisible}
           footer={null}
           destroyOnClose
@@ -175,7 +186,7 @@ class FlowPage extends Component {
           onOk={() => this.handleModal('', false)}
           onCancel={() => this.handleModal('', false)}
         >
-          <div>테스트 모달</div>
+          <FormDataTable formData={formData} onChangeFormData={this.onChangeFormData} />
         </AntdModal>
       </>
     );
