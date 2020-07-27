@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { List, Tree, Row, Col, Checkbox, Icon, message, Input } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import UserSelectWrapper from 'components/BizBuilder/styled/Wrapper/UserSelectWrapper';
@@ -204,104 +205,106 @@ class UserSelectComp extends Component {
     const { treeDataSource, userDataList, result } = this.props;
     const { isMulti } = this.state;
     return (
-      <UserSelectWrapper>
-        <Row gutter={0}>
-          <Col span={7}>
-            <div className="basicWrapper treeWrapper">
-              <div className="basicTitle">부서 선택</div>
-              <div className="depthTree">
-                {treeDataSource ? (
-                  <Tree defaultExpandedKeys={[`${getTreeData(treeDataSource)[0].key}`]} onSelect={this.onTreeSelect} treeData={getTreeData(treeDataSource)} />
-                ) : (
-                  result &&
-                  result.deptList &&
-                  result.deptList.result && (
-                    <Tree
-                      defaultExpandedKeys={[`${getTreeData(result.deptList.result)[0].key}`]}
-                      onSelect={this.onTreeSelect}
-                      treeData={getTreeData(result.deptList.result)}
-                    />
-                  )
-                )}
-              </div>
-            </div>
-          </Col>
-          <Col span={7}>
-            <div className="basicWrapper userListWrapper">
-              <div className="userList">
-                <List
-                  header={
-                    <>
-                      {isMulti && (
-                        <Checkbox
-                          style={{ marginRight: 4 }}
-                          onChange={this.onCheckUserAll}
-                          checked={
-                            this.state.checkUserList &&
-                            this.state.checkUserList.length > 0 &&
-                            (this.state.checkUserList || []).length === (userDataList || (result && result.userList && result.userList.list) || []).length
-                          }
-                        />
-                      )}
-                      사용자 선택
-                      <AntdSearchInput
-                        className="input-search-xs"
-                        style={{ width: 130, marginLeft: 10, padding: 0 }}
-                        onPressEnter={e => this.onSearchUserByName(e.target.value)}
-                        onSearch={val => this.onSearchUserByName(val)}
+      <StyledContentsWrapper>
+        <UserSelectWrapper>
+          <Row gutter={0}>
+            <Col span={7}>
+              <div className="basicWrapper treeWrapper">
+                <div className="basicTitle">부서 선택</div>
+                <div className="depthTree">
+                  {treeDataSource ? (
+                    <Tree defaultExpandedKeys={[`${getTreeData(treeDataSource)[0].key}`]} onSelect={this.onTreeSelect} treeData={getTreeData(treeDataSource)} />
+                  ) : (
+                    result &&
+                    result.deptList &&
+                    result.deptList.result && (
+                      <Tree
+                        defaultExpandedKeys={[`${getTreeData(result.deptList.result)[0].key}`]}
+                        onSelect={this.onTreeSelect}
+                        treeData={getTreeData(result.deptList.result)}
                       />
-                    </>
-                  }
+                    )
+                  )}
+                </div>
+              </div>
+            </Col>
+            <Col span={7}>
+              <div className="basicWrapper userListWrapper">
+                <div className="userList">
+                  <List
+                    header={
+                      <>
+                        {isMulti && (
+                          <Checkbox
+                            style={{ marginRight: 4 }}
+                            onChange={this.onCheckUserAll}
+                            checked={
+                              this.state.checkUserList &&
+                              this.state.checkUserList.length > 0 &&
+                              (this.state.checkUserList || []).length === (userDataList || (result && result.userList && result.userList.list) || []).length
+                            }
+                          />
+                        )}
+                        사용자 선택
+                        <AntdSearchInput
+                          className="input-search-xs"
+                          style={{ width: 130, marginLeft: 10, padding: 0 }}
+                          onPressEnter={e => this.onSearchUserByName(e.target.value)}
+                          onSearch={val => this.onSearchUserByName(val)}
+                        />
+                      </>
+                    }
+                    size="small"
+                    dataSource={userDataList || (result && result.userList && result.userList.list)}
+                    bordered
+                    renderItem={item => (
+                      <List.Item>
+                        <Checkbox onChange={this.onCheckUser} checked={this.state.checkUserList.filter(x => item.USER_ID === x).length > 0} value={item.USER_ID}>
+                          {item.NAME_KOR}/{item.DEPT_NAME_KOR}[{item.PSTN_NAME_KOR}]
+                        </Checkbox>
+                      </List.Item>
+                    )}
+                  />
+                </div>
+              </div>
+            </Col>
+            <Col span={3}>
+              <div className="userAddWrapper">
+                <StyledButton className="btn-light btn-sm" onClick={() => this.onSelectedUser()}>
+                  Add
+                  <Icon type="double-right" />
+                </StyledButton>
+              </div>
+            </Col>
+            <Col span={7}>
+              <div className="basicWrapper selectedUserWrapper">
+                <List
+                  header="선택된 사용자"
                   size="small"
-                  dataSource={userDataList || (result && result.userList && result.userList.list)}
+                  dataSource={this.state.selectedUserList}
                   bordered
                   renderItem={item => (
                     <List.Item>
-                      <Checkbox onChange={this.onCheckUser} checked={this.state.checkUserList.filter(x => item.USER_ID === x).length > 0} value={item.USER_ID}>
-                        {item.NAME_KOR}/{item.DEPT_NAME_KOR}[{item.PSTN_NAME_KOR}]
+                      <Checkbox>
+                        {item.NAME_KOR} [ {item.PSTN_NAME_KOR} ] / {item.DEPT_NAME_KOR}
                       </Checkbox>
+                      <Icon type="delete" onClick={() => this.onDelete(item.USER_ID)}></Icon>
                     </List.Item>
                   )}
                 />
               </div>
-            </div>
-          </Col>
-          <Col span={3}>
-            <div className="userAddWrapper">
-              <StyledButton className="btn-light btn-sm" onClick={() => this.onSelectedUser()}>
-                Add
-                <Icon type="double-right" />
-              </StyledButton>
-            </div>
-          </Col>
-          <Col span={7}>
-            <div className="basicWrapper selectedUserWrapper">
-              <List
-                header="선택된 사용자"
-                size="small"
-                dataSource={this.state.selectedUserList}
-                bordered
-                renderItem={item => (
-                  <List.Item>
-                    <Checkbox>
-                      {item.NAME_KOR} [ {item.PSTN_NAME_KOR} ] / {item.DEPT_NAME_KOR}
-                    </Checkbox>
-                    <Icon type="delete" onClick={() => this.onDelete(item.USER_ID)}></Icon>
-                  </List.Item>
-                )}
-              />
-            </div>
-          </Col>
-        </Row>
-        <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-10">
-          <StyledButton className="btn-sm btn-primary mr5" onClick={this.onRegist}>
-            등록
-          </StyledButton>
-          <StyledButton className="btn-sm btn-light" onClick={this.onCancelUserSelect}>
-            취소
-          </StyledButton>
-        </StyledButtonWrapper>
-      </UserSelectWrapper>
+            </Col>
+          </Row>
+          <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-10">
+            <StyledButton className="btn-sm btn-primary mr5" onClick={this.onRegist}>
+              등록
+            </StyledButton>
+            <StyledButton className="btn-sm btn-light" onClick={this.onCancelUserSelect}>
+              취소
+            </StyledButton>
+          </StyledButtonWrapper>
+        </UserSelectWrapper>
+      </StyledContentsWrapper>
     );
   }
 }

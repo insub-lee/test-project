@@ -25,6 +25,10 @@ const StyledWrap = styled.div`
     button {
       vertical-align: middle;
     }
+
+    input[type='radio'] {
+      width: 0px;
+    }
   }
 
   .unregistered-code {
@@ -79,22 +83,31 @@ class RadioMaterialComp extends Component {
     const { isValidation } = this.state;
     if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
       if (fieldSelectData[CONFIG.property.compSelectDataKey] && fieldSelectData[CONFIG.property.compSelectDataKey].length > 0) {
-        const isMeterialView = colData === 'Y';
         this.setState({
           mList: fieldSelectData[CONFIG.property.compSelectDataKey]
             .filter(f => f.LVL !== 0 && f.USE_YN === 'Y')
-            .map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>),
-          isMeterialView,
+            .map(item => (
+              <Option key={item.NODE_ID} value={item.NODE_ID}>
+                {item.NAME_KOR}
+              </Option>
+            )),
         });
       }
     }
-    changeValidationData(sagaKey, COMP_FIELD, isValidation, '코드를 입력해주세요');
+
+    const isMeterialView = colData === 'Y';
+    const isVal = colData !== 'Y';
+    this.setState({ isMeterialView });
+    changeValidationData(sagaKey, COMP_FIELD, isVal, '코드를 입력해주세요');
   }
 
   componentDidUpdate(prevProps) {
-    const { sagaKey, processRule, COMP_FIELD, setProcessRule, formData } = this.props;
+    const { sagaKey, processRule, COMP_FIELD, setProcessRule, formData, colData } = this.props;
     const { processRule: prevProcessRule } = prevProps;
-
+    if (prevProps.colData != colData) {
+      const isMeterialView = colData === 'Y';
+      this.setState({ isMeterialView });
+    }
     if (processRule.PRC_ID !== prevProcessRule.PRC_ID) {
       const { DRAFT_DATA } = processRule;
       const tmpDraftData = { ...DRAFT_DATA, material_yn: 'Y' };
@@ -160,7 +173,7 @@ class RadioMaterialComp extends Component {
     const code = codeList[sfidx] && codeList[sfidx].CODE;
 
     if (isMeterial === 'Y') {
-      if (meterialText && code && meterialText !== '' && code !== '') {
+      if (meterialText && code && meterialText !== ' ' && code !== '') {
         const param = { MATERIAL_TYPE: code, MATERIAL_TEXT: meterialText };
         submitExtraHandler(sagaKey, 'POST', prefixUrl, param, this.onCallBack, COMP_FIELD);
       } else {
@@ -172,16 +185,20 @@ class RadioMaterialComp extends Component {
   onCallBack = (id, response) => {
     const { changeValidationData, COMP_FIELD } = this.props;
     const { matrnList } = response;
-    const isCheckList = matrnList.filter(f => f.CHECK !== 'Y');
-    const errorCodeList = isCheckList.length > 0 ? isCheckList.map(item => item.MATNR) : [];
-    if (errorCodeList.length > 0) {
-      changeValidationData(id, COMP_FIELD, false, '미등록 코드가 존재합니다.');
-      this.setState({ isValidation: false });
+    if (matrnList.length > 0) {
+      const isCheckList = matrnList.filter(f => f.CHECK !== 'Y');
+      const errorCodeList = isCheckList.length > 0 ? isCheckList.map(item => item.MATNR) : [];
+      if (errorCodeList.length > 0) {
+        changeValidationData(id, COMP_FIELD, false, '미등록 코드가 존재합니다.');
+        this.setState({ isValidation: false });
+      } else {
+        this.setState({ isValidation: true });
+        changeValidationData(id, COMP_FIELD, true, '');
+      }
+      this.setState({ errorCodeList });
     } else {
-      this.setState({ isValidation: true });
-      changeValidationData(id, COMP_FIELD, true, '');
+      message.error('코드 확인 불가');
     }
-    this.setState({ errorCodeList });
   };
 
   onIsMeterialCheck = e => {
@@ -190,6 +207,8 @@ class RadioMaterialComp extends Component {
     changeFormData(sagaKey, COMP_FIELD, e.target.value);
     if (e.target.value === 'N') {
       changeValidationData(sagaKey, COMP_FIELD, true, '');
+      changeFormData(sagaKey, 'MATERIAL_TEXT', ' ');
+      changeFormData(sagaKey, 'MATERIAL_TYPE', ' ');
       this.setState({ meterialType: undefined, meterialText: undefined, isMeterialView: false });
     } else {
       changeValidationData(sagaKey, COMP_FIELD, false, '코드를 입력해주세요');
@@ -199,8 +218,9 @@ class RadioMaterialComp extends Component {
 
   render() {
     const { formData, colData, processRule } = this.props;
-
     const { errorCodeList } = this.state;
+    console.debug('formData', formData);
+
     return (
       <StyledWrap>
         <div className="validity-check-input">
@@ -210,7 +230,7 @@ class RadioMaterialComp extends Component {
           </Radio.Group>
           {this.state.isMeterialView && (
             <AntdSelect
-              value={formData.MATERIAL_TYPE}
+              value={formData.MATERIAL_TYPE === '' ? undefined : Number(formData.MATERIAL_TYPE)}
               onChange={this.onSelectChange}
               placeholder="자재코드 선택"
               className="mr5"

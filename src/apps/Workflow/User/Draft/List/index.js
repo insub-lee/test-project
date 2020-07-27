@@ -97,7 +97,7 @@ class DraftList extends Component {
       key: 'APPVGUBUN',
       width: '15%',
       align: 'center',
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
+      render: (text, record) => (record.REL_TYPE === 999 ? '일괄폐기' : text),
     },
     {
       title: '표준번호',
@@ -106,7 +106,7 @@ class DraftList extends Component {
       width: '10%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? record.DRAFT_ID : text),
+      render: (text, record) => (record.REL_TYPE === 999 ? `OBS-${record.DRAFT_ID}` : text),
     },
     {
       title: 'Rev',
@@ -115,7 +115,7 @@ class DraftList extends Component {
       width: '5%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '1' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
+      render: (text, record) => (record.REL_TYPE === 99 ? 'OBS' : record.REL_TYPE === 999 ? '1' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
     },
     {
       title: '표준제목',
@@ -152,7 +152,6 @@ class DraftList extends Component {
     const { isDcc } = this.state;
     const { WORK_SEQ, TASK_SEQ, STEP, PROC_STATUS, APPV_STATUS, DRAFT_DATA, DRAFT_ID } = record;
     const abrogationList = DRAFT_DATA.abrogationList ? record.DRAFT_DATA.abrogationList : [];
-
     this.setState({ currentStatus: APPV_STATUS, abrogationList, workPrcProps: { ...record } });
     this.props.setSelectedRow(record);
     this.props.setViewVisible(true);
@@ -375,15 +374,18 @@ class DraftList extends Component {
   };
 
   onClickModify = () => {
-    const { workPrcProps } = this.state;
-    const { REL_TYPE } = workPrcProps;
+    const { selectedRow } = this.props;
+    const { REL_TYPE } = selectedRow;
 
-    // 일괄폐기 수정화면
     if (REL_TYPE === 999) {
-      this.setState({ isAbrogationMultiShow: true, workPrcProps: { ...workPrcProps, draftMethod: 'MODIFY' } });
+      this.setState({ isAbrogationMultiShow: true, workPrcProps: { ...selectedRow, draftMethod: 'MODIFY' } });
     } else {
-      const coverView = { workSeq: workPrcProps.WORK_SEQ, taskSeq: workPrcProps.TASK_SEQ, visible: true, viewType: 'MODIFY' };
-      this.setState({ coverView });
+      const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
+      this.setState(prevState => {
+        const { workPrcProps } = prevState;
+        const nWorkPrcProps = { ...selectedRow, draftMethod: 'MODIFY', darft_id: selectedRow.DRAFT_ID };
+        return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
+      });
     }
   };
 

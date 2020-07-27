@@ -67,7 +67,7 @@ class WorkProcessModal extends Component {
   };
 
   componentDidMount() {
-    const { getDeptList, processRuleProc } = this.props;
+    const { getDeptList, processRuleProc, selectedRow } = this.props;
     const processStep = fromJS(processRuleProc.DRAFT_PROCESS_STEP).toJS();
     const tmpPrcStep = processStep.filter(f => f.APPV_METHOD === 1 && f.PARENT_PRC_RULE_ID !== 0 && f.NODE_TYPE !== 'NS');
     tmpPrcStep.forEach(item => {
@@ -75,6 +75,9 @@ class WorkProcessModal extends Component {
         this.setState({ selectedNode: item });
       }
     });
+
+    console.debug('selectedRow', selectedRow);
+
     this.setState({ prcStep: tmpPrcStep });
     getDeptList(this.initDeptList);
   }
@@ -368,7 +371,6 @@ class WorkProcessModal extends Component {
     const nodeId = e.target.value;
     const fidx = prcStep.findIndex(f => f.NODE_ID === nodeId);
     const selectedNode = fidx > -1 ? prcStep[fidx] : undefined;
-    console.debug('selectedNode', selectedNode);
     this.setState({ selectedNode });
   };
 
@@ -396,7 +398,6 @@ class WorkProcessModal extends Component {
       selectedRowKeys: selectedDeptKeys,
       onChange: this.onDeptCheck,
     };
-    console.debug('selectedNode', selectedNode);
     return (
       <StyledWorkProcessModal>
         <div style={{ fontSize: 12, color: 'rgb(255, 36, 36)', marginBottom: 10, textAlign: 'center' }}>

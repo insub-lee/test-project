@@ -40,11 +40,9 @@ class ModifyPage extends Component {
       setProcessRule(id, tempProcessRule);
       setRelType(id, relType);
     } else if (isWorkflowUsed && prcId !== -1) {
-      const { DRAFT_DATA } = workPrcProps;
       const payload = {
         PRC_ID: Number(prcId),
-        DRAFT_INFO: draftInfo,
-        DRAFT_DATA,
+        DRAFT_INFO: { ...workPrcProps },
       };
       getProcessRuleByModify(id, payload);
       setRelType(id, relType);
@@ -131,7 +129,9 @@ class ModifyPage extends Component {
           const attachInfo = formData[COMP_FIELD];
           if (attachInfo) {
             const { DETAIL, MOVEFILEAPI } = attachInfo;
-            uploadFileList.push({ COMP_FIELD, isComplete: false, isAttempted: false });
+            if (DETAIL && DETAIL.length > 0) {
+              uploadFileList.push({ COMP_FIELD, isComplete: false, isAttempted: false });
+            }
             this.setState({ uploadFileList }, () => {
               const param = { PARAM: { DETAIL } };
               const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
