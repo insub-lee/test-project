@@ -138,6 +138,27 @@ const reducer = (state = initialState, action) => {
               default:
                 requiredFlag = !!val;
             }
+
+            if (compConfigObject.info.isAttach) {
+              if (val) {
+                if (val.DETAIL && val.DETAIL.length > 0) requiredFlag = true;
+                else requiredFlag = false;
+              } else {
+                requiredFlag = false;
+              }
+            } else if (compConfigObject.info.isClob) {
+              if (val && val.length > 0) {
+                let textCnt = 0;
+                val.forEach(node => {
+                  textCnt += node.DETAIL ? node.DETAIL.length : 0;
+                });
+                if (textCnt > 0) requiredFlag = true;
+                else requiredFlag = false;
+              } else {
+                requiredFlag = false;
+              }
+            }
+
             state = state
               .setIn(['bizBuilderBase', id, 'validationData', key, 'requiredFlag'], requiredFlag)
               .setIn(['bizBuilderBase', id, 'validationData', key, 'requiredMsg'], requiredMsg);
