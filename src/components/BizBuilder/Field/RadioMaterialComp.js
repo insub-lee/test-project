@@ -263,8 +263,22 @@ class RadioMaterialComp extends Component {
               </AntdSelect>
             )
           )}
-          {isUseMeterial === 'Y' && (
-            <AntdInput
+          {viewType === 'INPUT' ? (
+            <input
+              className="mr5"
+              defaultValue={formData.MATERIAL_TEXT}
+              onChange={e => {
+                const reg = /[^0-9,]/gi;
+                if (reg.test(e.target.value)) {
+                  message.info('숫자 ,(comma) 만 사용가능');
+                  e.target.value = e.target.value.replace(/[^0-9,]/gi, '');
+                }
+                const vals = e.target.value;
+                this.onChangeHandlerText(vals);
+              }}
+            />
+          ) : (
+            <input
               className="mr5"
               key={compKey}
               style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
