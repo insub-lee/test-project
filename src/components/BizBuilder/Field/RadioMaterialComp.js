@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Radio, Select, Button } from 'antd';
+import { Radio, Select, Button, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
@@ -14,7 +14,8 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const { Option } = Select;
 const AntdSelect = StyledSelect(Select);
-// const AntdInput = StyledInput(Input);
+const AntdInput = StyledInput(Input);
+
 const StyledWrap = styled.div`
   .validity-check-input {
     input,
@@ -255,7 +256,7 @@ class RadioMaterialComp extends Component {
           </AntdSelect>
 
           {viewType === 'INPUT' ? (
-            <input
+            <AntdInput
               className="mr5 ant-input-xs"
               defaultValue={formData.MATERIAL_TEXT}
               style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
@@ -270,7 +271,7 @@ class RadioMaterialComp extends Component {
               }}
             />
           ) : (
-            <input
+            <AntdInput
               className="mr5 ant-input-xs"
               key={compKey}
               style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
