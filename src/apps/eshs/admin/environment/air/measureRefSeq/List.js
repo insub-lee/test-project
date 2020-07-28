@@ -26,6 +26,9 @@ const AntdRangePicker = StyledDatePicker(RangePicker);
 
 Moment.locale('ko');
 
+// 환경안전팀 전서현 요청 특정 가스만 노출 2020.07.28
+const businessRequestGas = ['HCl', 'HF', 'HCHO', 'Cr', 'Pb', 'Ni', 'NH3', 'Nox', '먼지', 'THC', '벤젠', '페놀'];
+
 class List extends Component {
   constructor(props) {
     super(props);
@@ -58,7 +61,7 @@ class List extends Component {
     const {
       result: { gasType },
     } = this.props;
-    this.setState({ gasList: (gasType && gasType.list) || [] });
+    this.setState({ gasList: (gasType && gasType.list && gasType.list.filter(gas => businessRequestGas.indexOf(gas.GAS_CD) > -1)) || [] });
   };
 
   isSearch = () => {
