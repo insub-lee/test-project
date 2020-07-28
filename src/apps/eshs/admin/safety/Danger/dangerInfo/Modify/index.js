@@ -132,6 +132,23 @@ class ModifyPage extends Component {
     changeFormData(id, 'INFO_DATA', { ...formData.INFO_DATA, [name]: value });
   };
 
+  deleteMeterial = target => {
+    const { sagaKey: id, changeFormData, formData } = this.props;
+
+    const infoData = (formData && formData.INFO_DATA) || {};
+
+    for (let i = 1; i <= 14; i += 1) {
+      if (i >= target) {
+        infoData[`C_NM${i}`] = infoData[`C_NM${i + 1}`];
+        infoData[`C_NAME${i}`] = infoData[`C_NAME${i + 1}`];
+        infoData[`C_GR${i}`] = infoData[`C_GR${i + 1}`];
+      }
+    }
+
+    changeFormData(id, 'INFO_DATA', infoData);
+    this.mySearch();
+  };
+
   selectTreeData = value => {
     const { listData } = this.state;
     const {
@@ -235,6 +252,7 @@ class ModifyPage extends Component {
                 modalData={modalData.list}
                 onChangeData={this.onChangeDetailData}
                 onChangeModal={this.onChangeModal}
+                deleteMeterial={this.deleteMeterial}
               />,
             ],
           }),

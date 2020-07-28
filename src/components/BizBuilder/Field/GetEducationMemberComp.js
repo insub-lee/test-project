@@ -31,13 +31,13 @@ class GetEducationMemberComp extends React.Component {
       title: '부서',
       dataIndex: 'DEPT_NAME_KOR',
       align: 'center',
-      width: '30%',
+      width: '27%',
     },
     {
       title: '성명',
       dataIndex: 'EDU_USER_NAME',
       align: 'center',
-      width: '15%',
+      width: '13%',
     },
     {
       title: '사번',
@@ -49,7 +49,8 @@ class GetEducationMemberComp extends React.Component {
       title: '직책',
       dataIndex: 'PSTN_NAME_KOR',
       align: 'center',
-      width: '10%',
+      width: '15%',
+      render: (text, record) => `${text} [${record.WORK_TY === 'NORM' ? '통상조' : '교대조'}]`,
     },
     {
       title: '1차',

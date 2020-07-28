@@ -51,14 +51,30 @@ class MeterialModal extends Component {
   componentDidMount() {
     const {
       extraApiData: { modalData, modalSelectData },
+      formData,
     } = this.props;
-    console.debug('extraApiData : ', modalData, modalSelectData);
     const nModalSelectData = modalSelectData && modalSelectData.categoryMapList && modalSelectData.categoryMapList.filter(f => f.LVL !== 0);
     const nModalData = modalData && modalData.list;
-    console.debug('nModalSelectData : ', nModalSelectData);
-    console.debug('nModalData : ', nModalData);
 
-    this.setState({ modalData: nModalData, modalSelectData: nModalSelectData });
+    const selectedRowKeys = [];
+    const selectedMeterial = [];
+    const infoData = (formData && formData.INFO_DATA) || {};
+    if (JSON.stringify(infoData) !== '{}') {
+      for (let index = 1; index <= 14; index += 1) {
+        if (infoData[`C_NM${index}`]) {
+          selectedRowKeys.push(infoData[`C_NM${index}`]);
+          const idx = nModalData.findIndex(item => item.MINOR_CD === infoData[`C_NM${index}`]);
+          idx > -1 && selectedMeterial.push(nModalData[idx]);
+        }
+      }
+    }
+
+    this.setState({
+      modalData: nModalData,
+      modalSelectData: nModalSelectData,
+      selectedRowKeys,
+      selectedMeterial,
+    });
   }
 
   onChangeData = (name, value) => {
@@ -85,8 +101,8 @@ class MeterialModal extends Component {
 
   modalInsert = () => {
     const { selectedMeterial } = this.state;
-    const { sagaKey: id, changeFormData, onChangeModal, formData } = this.props;
-    if (selectedMeterial.length < 14) {
+    const { sagaKey: id, changeFormData, onChangeModal } = this.props;
+    if (selectedMeterial.length <= 14) {
       let element;
       for (let index = 0; index < 14; index += 1) {
         element = {
@@ -98,7 +114,8 @@ class MeterialModal extends Component {
           },
         };
       }
-      changeFormData(id, 'INFO_DATA', { ...formData.INFO_DATA, ...element });
+
+      changeFormData(id, 'INFO_DATA', { ...element });
       onChangeModal();
     } else {
       message.warning('화학물질 종류는 최대 14개까지 선택할 수 있습니다.');
