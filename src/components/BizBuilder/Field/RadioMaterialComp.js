@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Radio, Select, Button, Input } from 'antd';
+import { Radio, Select, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
@@ -14,7 +14,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const { Option } = Select;
 const AntdSelect = StyledSelect(Select);
-const AntdInput = StyledInput(Input);
+// const AntdInput = StyledInput(Input);
 const StyledWrap = styled.div`
   .validity-check-input {
     input,
@@ -214,6 +214,7 @@ class RadioMaterialComp extends Component {
   onCallBack = (id, response) => {
     const { changeValidationData, COMP_FIELD } = this.props;
     const { matrnList } = response;
+    console.debug('onCallBack', response);
     if (matrnList.length > 0) {
       const isCheckList = matrnList.filter(f => f.CHECK !== 'Y');
       const errorCodeList = isCheckList.length > 0 ? isCheckList.map(item => item.MATNR) : [];
@@ -222,6 +223,7 @@ class RadioMaterialComp extends Component {
         this.setState({ isValidation: false });
       } else {
         this.setState({ isValidation: true });
+        message.success('사용 가능한 코드 입니다.');
         changeValidationData(id, COMP_FIELD, true, '');
       }
       this.setState({ errorCodeList });
@@ -232,7 +234,7 @@ class RadioMaterialComp extends Component {
 
   render() {
     const { formData, colData, processRule, viewType } = this.props;
-    const { mList, isUseMeterial, initMeterialCode, initMeterialText, meterialCode, meterialText, compKey } = this.state;
+    const { mList, isUseMeterial, initMeterialCode, initMeterialText, meterialCode, meterialText, compKey, errorCodeList } = this.state;
     return (
       <StyledWrap>
         <div className="validity-check-input">
@@ -253,7 +255,7 @@ class RadioMaterialComp extends Component {
           </AntdSelect>
 
           {viewType === 'INPUT' ? (
-            <AntdInput
+            <input
               className="mr5 ant-input-xs"
               defaultValue={formData.MATERIAL_TEXT}
               style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
@@ -268,7 +270,7 @@ class RadioMaterialComp extends Component {
               }}
             />
           ) : (
-            <AntdInput
+            <input
               className="mr5 ant-input-xs"
               key={compKey}
               style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
@@ -288,6 +290,12 @@ class RadioMaterialComp extends Component {
             <SearchOutlined />
             유효성체크
           </StyledButton>
+          {isUseMeterial === 'Y' && errorCodeList && errorCodeList.length > 0 && (
+            <div className="unregistered-code">
+              <div className="title">미등록 코드</div>
+              <div className="code-list">{errorCodeList && errorCodeList.map(item => <div>{item}</div>)}</div>
+            </div>
+          )}
         </div>
       </StyledWrap>
     );
