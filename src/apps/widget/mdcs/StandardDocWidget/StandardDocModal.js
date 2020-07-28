@@ -23,6 +23,8 @@ const StandardDocModal = ({
   listData,
   listVisible,
   closeListBtnFunc,
+  getListData,
+  listCnt,
 }) => (
   <>
     <AntdModal className="modalWrapper modalTechDoc modalCustom" visible={visible} footer={null} width={800} onCancel={closeBtnFunc} destroyOnClose>
@@ -51,7 +53,7 @@ const StandardDocModal = ({
       <>
         <div className="pop_tit">{widgetTitle}</div>
         <div className="pop_con">
-          <ModalList onClickRow={onClickRow} closeBtnFunc={closeListBtnFunc} listData={listData} />
+          <ModalList onClickRow={onClickRow} closeBtnFunc={closeListBtnFunc} listData={listData} getListData={getListData} listCnt={listCnt} />
         </div>
       </>
     </AntdModal>

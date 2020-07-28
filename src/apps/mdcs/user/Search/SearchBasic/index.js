@@ -45,7 +45,14 @@ const columns = [
     // },
   },
   { title: 'No.', key: 'id', align: 'center', width: '12%', dataIndex: 'id' },
-  { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION', render: (text, record) => (record.status === 99 ? 'OBS' : text) },
+  {
+    title: 'REV.',
+    key: 'VERSION',
+    align: 'center',
+    width: '6%',
+    dataIndex: 'VERSION',
+    render: (text, record) => (record.status === 99 ? 'OBS' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
+  },
   { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM' },
   { title: 'Title', align: 'left', key: 'title', dataIndex: 'title' },
   { title: '기안부서', align: 'center', key: 'deptName', width: '14%', dataIndex: 'deptName' },
@@ -142,17 +149,17 @@ class SearchBasic extends Component {
     this.setState({ [key]: value });
   };
 
-  onChangeDate = (type, date, dateStr) => {
+  onChangeDate = (date, type, dateStr) => {
     if (type === 'startDate') {
       this.setState({
         startDateTemp: date,
-        startDate: dateStr,
+        startDate: date,
       });
     }
     if (type === 'endDate') {
       this.setState({
         endDateTemp: date,
-        endDate: dateStr,
+        endDate: date,
       });
     }
   };
