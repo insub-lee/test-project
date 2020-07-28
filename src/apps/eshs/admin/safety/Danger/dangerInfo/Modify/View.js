@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Checkbox } from 'antd';
+import { Input, InputNumber, Select, Checkbox, Icon, Popover } from 'antd';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
@@ -172,7 +172,7 @@ const tagArray = (onChangeData, infoData) => [
   </>,
 ];
 
-const View = ({ processNm, placeNm, divNm, sdivNm, selectData, INFO_DATA, modalData, onChangeData, onChangeModal }) => (
+const View = ({ processNm, placeNm, divNm, sdivNm, selectData, INFO_DATA, modalData, onChangeData, onChangeModal, deleteMeterial }) => (
   <StyledHtmlTable>
     <table>
       <colgroup>
@@ -238,8 +238,9 @@ const View = ({ processNm, placeNm, divNm, sdivNm, selectData, INFO_DATA, modalD
           <th align="center">유해화학물질명</th>
           <th align="center">등급</th>
         </tr>
-        {tagArray(onChangeData, INFO_DATA).map((tag, index) =>
-          INFO_DATA ? (
+        {tagArray(onChangeData, INFO_DATA).map((tag, index) => {
+          const meterial = (modalData && modalData.find(item => item.MINOR_CD === INFO_DATA[`C_NM${index + 1}`])) || {};
+          return INFO_DATA ? (
             <tr>
               <td align="center" colSpan="2">
                 <AntdSelect
@@ -265,17 +266,28 @@ const View = ({ processNm, placeNm, divNm, sdivNm, selectData, INFO_DATA, modalD
                 />
               </td>
               <td align="center">
-                <AntdSearchInput
-                  className="input-search-sm"
-                  defaultValue={
-                    (modalData &&
-                      modalData.find(item => item.MINOR_CD === INFO_DATA[`C_NM${index + 1}`]) &&
-                      modalData.find(item => item.MINOR_CD === INFO_DATA[`C_NM${index + 1}`]).CD_NM) ||
-                    undefined
+                <Popover
+                  content={
+                    <pre>
+                      {JSON.stringify(meterial) !== '{}' &&
+                        `지역 [${(meterial && meterial.REF01_NAME) || ''}]\n물질구분 [${(meterial && meterial.REF02) || ''}]\n물질명 [${(meterial &&
+                          meterial.CD_NM) ||
+                          ''}]`}
+                    </pre>
                   }
-                  readOnly
-                  onClick={onChangeModal}
-                />
+                  title={null}
+                  trigger="hover"
+                >
+                  <AntdSearchInput
+                    className={`input-search-sm ${JSON.stringify(meterial) !== '{}' && 'mr5'}`}
+                    style={{ width: `${JSON.stringify(meterial) === '{}' ? '100%' : '80%'}` }}
+                    defaultValue={(meterial && meterial.CD_NM) || undefined}
+                    readOnly
+                    onClick={onChangeModal}
+                  />
+                </Popover>
+
+                {JSON.stringify(meterial) !== '{}' && <Icon type="delete" onClick={() => deleteMeterial(index + 1)}></Icon>}
               </td>
               <td align="center">
                 <span>{INFO_DATA[`C_GR${index + 1}`] || ''}</span>
@@ -284,8 +296,8 @@ const View = ({ processNm, placeNm, divNm, sdivNm, selectData, INFO_DATA, modalD
             </tr>
           ) : (
             ''
-          ),
-        )}
+          );
+        })}
       </tbody>
     </table>
   </StyledHtmlTable>
@@ -301,6 +313,7 @@ View.propTypes = {
   modalData: PropTypes.array,
   onChangeData: PropTypes.func,
   onChangeModal: PropTypes.func,
+  deleteMeterial: PropTypes.func,
 };
 
 View.defaultProps = {};

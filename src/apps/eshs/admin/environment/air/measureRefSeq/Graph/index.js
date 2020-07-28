@@ -55,11 +55,6 @@ class Graph extends Component {
           })),
         );
     }
-    console.debug('graphList ', graphList);
-    console.debug('refStack ', refStack);
-    console.debug('graphData ', graphData);
-    console.debug('barData ', barData);
-    console.debug('data ', barData && barData.map(i => i.reduce((result, item) => ({ ...result, ...item }), {})));
     return (
       <BarChart
         width={1000}
