@@ -89,7 +89,7 @@ class FlowPage extends Component {
     };
     switch (type) {
       case 'SAVE':
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwflow', submitData);
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwflow', submitData, this.saveCallback);
         break;
       case 'DELETE':
         // submitHandlerBySaga(id, 'DELETE', '/api/gcs/v1/common/gas/diary', submitData);
@@ -97,6 +97,21 @@ class FlowPage extends Component {
       default:
         break;
     }
+  };
+
+  saveCallback = (id, response) => {
+    const { result } = response;
+    if (result < 0) {
+      this.setState({
+        isUpload: false,
+        listData: List([]),
+      });
+      return message.error(<MessageContent>유량정보 등록에 실패하였습니다.</MessageContent>);
+    }
+    this.setState({
+      isUpload: false,
+    });
+    return message.success(<MessageContent>유량정보를 등록하였습니다.</MessageContent>);
   };
 
   // 엑셀파일 등록시 - 추출된 데이터 가져오기 및 모달 닫기
