@@ -315,7 +315,6 @@ const StyledViewDesigner = styled.div`
             min-height: auto;
 
             .ant-select-selection__rendered {
-              line-height: normal;
               margin: 0;
 
               li {
