@@ -44,7 +44,7 @@ class DistributeDocView extends Component {
       submitHandlerBySaga,
     } = this.props;
 
-    if (row.FILE_DOWN_CNT <= 0 || row.PASSES_PERIOD > 0) {
+    if (row.FILE_DOWN_CNT <= 0 || row.PASSES_PERIOD > 30) {
       message.info(<MessageContent>다운로드가 불가능합니다.<br /><br />다운로드를 원하시면 재배포 요청하시기 바랍니다.</MessageContent>);
     } else {
       const drmInfo = {
