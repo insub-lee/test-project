@@ -17,6 +17,7 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import ExcelDownLoad from 'components/ExcelDownLoad';
 
 import DraftDownLoad from 'apps/mdcs/Modal/DraftDownLoad';
 import { DraggableModal as Modal } from 'components/DraggableModal/AntdDraggableModal';
@@ -281,6 +282,10 @@ class SearchBasic extends Component {
     const listDataArr = listData.arr || [];
     const listTotalCnt = listData.cnt || 0;
     const { onClickRow, closeBtnFunc } = this;
+
+    const excelColumns = [{ title: '종류', width: { wpx: 100 }, style: { font: { sz: '' } } }];
+    const fields = [{ field: 'fullPathStr', style: { font: { sz: '12' } } }];
+
     return (
       <StyledSearch>
         <div className="searchPage">
@@ -414,6 +419,18 @@ class SearchBasic extends Component {
           >
             <>
               <StyledContentsWrapper>
+                <ExcelDownLoad
+                  isBuilder={false}
+                  fileName="업무표준다운로드"
+                  className="workerExcelBtn"
+                  title="엑셀받기"
+                  btnSize="btn-sm"
+                  sheetName=""
+                  columns={excelColumns}
+                  fields={fields}
+                  dataUrl="/api/mdcs/v1/common/search"
+                  {...this.props}
+                />
                 <AntdTable
                   columns={columns}
                   size="middle"
