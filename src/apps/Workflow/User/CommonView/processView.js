@@ -97,15 +97,19 @@ class ProcessView extends Component {
     return (
       <div style={{ padding: '20px' }}>
         <StyledHtmlTable>
-          <table>
-            <tr>
-              <th>문서번호</th>
-              <th>Effective Date</th>
-            </tr>
-            <tr>
-              <td>{DOCNUMBER}</td>
-              <td>{END_DTTM} Date</td>
-            </tr>
+          <table className="app-workflow-user-draft-docu">
+            <thead>
+              <tr>
+                <th>문서번호</th>
+                <th>Effective Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="tr-center">
+                <td>{DOCNUMBER}</td>
+                <td>{END_DTTM} Date</td>
+              </tr>
+            </tbody>
           </table>
         </StyledHtmlTable>
         <AntdTable key="apps-workflow-user-draft-list" columns={this.getTableColumns()} dataSource={preViewList} bordered pagination={false}></AntdTable>

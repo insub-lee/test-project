@@ -109,6 +109,16 @@ const StyledHtmlTable = styled.div`
     }
   }
 
+  .app-workflow-user-draft-docu {
+    thead tr th {
+      border: 1px solid #e8e8e8;
+    }
+    tbody tr:last-child td {
+      border: 1px solid #e8e8e8;
+      border-bottom: 0;
+    }
+  }
+
   .ant-checkbox-wrapper {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
