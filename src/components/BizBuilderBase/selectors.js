@@ -247,6 +247,8 @@ const makeSelectListTotalCnt = () =>
 
 const makeSelectRelTypeById = id => createSelector(selectorBizBuilderBase, state => state.getIn(['bizBuilderBase', id, 'relType']) || 1);
 
+const makeSelectListOrderByField = id => createSelector(selectorBizBuilderBase, state => state.getIn(['bizBuilderBase', id, 'listOrderByField']) || '');
+
 // auth
 const makeSelectProfile = () => createSelector(selectAuth, authState => authState.get('profile'));
 
@@ -294,4 +296,5 @@ export {
   makeSelectProfile,
   makeSelectListTotalCnt,
   makeSelectRelTypeById,
+  makeSelectListOrderByField,
 };

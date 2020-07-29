@@ -340,3 +340,16 @@ export const setDataNodeListByReducer = dataNodeList => ({
   type: actionTypes.SET_DATA_NODE_LIST_REDUCER,
   dataNodeList,
 });
+
+export const setOrderByFieldListByReducer = (idx, compField, ordType) => ({
+  type: actionTypes.SET_ORDERBY_FIELD_LIST_REDUCER,
+  idx,
+  compField,
+  ordType,
+});
+
+export const removeOrderByFieldListByReducer = (idx, compField) => ({
+  type: actionTypes.REMOVE_ORDERBY_FIELD_LIST_REDUCER,
+  idx,
+  compField,
+});

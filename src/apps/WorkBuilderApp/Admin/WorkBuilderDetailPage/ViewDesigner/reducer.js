@@ -156,6 +156,7 @@ const initialState = fromJS({
           width: '100%',
           height: '100%',
         },
+        orderByFieldList: [],
       },
       option: {},
     },
@@ -1316,6 +1317,27 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SET_DATA_NODE_LIST_REDUCER: {
       const { dataNodeList } = action;
       return state.set('dataNodeList', fromJS(dataNodeList));
+    }
+    case actionTypes.SET_ORDERBY_FIELD_LIST_REDUCER: {
+      const { idx, compField, ordType } = action;
+
+      const tempData = state.getIn(['viewData', 'CONFIG', 'property', 'orderByFieldList']);
+      const orderByFieldList = tempData ? tempData.toJS() : [];
+
+      if (idx > -1) orderByFieldList[idx] = { compField, ordType };
+      else orderByFieldList.push({ compField, ordType });
+
+      return state.setIn(['viewData', 'CONFIG', 'property', 'orderByFieldList'], fromJS(orderByFieldList));
+    }
+    case actionTypes.REMOVE_ORDERBY_FIELD_LIST_REDUCER: {
+      const { idx, compField } = action;
+
+      const tempData = state.getIn(['viewData', 'CONFIG', 'property', 'orderByFieldList']);
+      const orderByFieldList = tempData ? tempData.toJS() : [];
+
+      if (idx > -1) orderByFieldList.splice(idx, 1);
+
+      return state.setIn(['viewData', 'CONFIG', 'property', 'orderByFieldList'], fromJS(orderByFieldList));
     }
     default:
       return state;

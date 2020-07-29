@@ -101,6 +101,11 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
 
     if (viewLayer && viewLayer.length === 1 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerConfig = JSON.parse(viewLayer[0].CONFIG);
+
+      if (upperCaseViewType === 'LIST' && viewLayerConfig.property.orderByFieldList && viewLayerConfig.property.orderByFieldList.length > 0) {
+        yield put(actions.setListOrderByFieldByReducer(id, viewLayerConfig.property.orderByFieldList));
+      }
+
       if (viewLayerConfig.property && viewLayerConfig.property.layer && viewLayerConfig.property.layer.groups) {
         const fieldSelectDataObject = {};
         const currentLayer = viewLayerConfig.property.layer;
@@ -1023,6 +1028,7 @@ function* getDraftProcess({ id, draftId }) {
 function* getListData({ id, workSeq, conditional, pageIdx, pageCnt, changeIsLoading }) {
   const searchData = yield select(selectors.makeSelectSearchDataById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
+  const listOrderByField = yield select(selectors.makeSelectListOrderByField(id));
   const whereString = [];
   const keySet = Object.keys(searchData);
   keySet.forEach(key => {
@@ -1067,7 +1073,19 @@ function* getListData({ id, workSeq, conditional, pageIdx, pageCnt, changeIsLoad
   const responseList = yield call(
     Axios.post,
     `/api/builder/v1/work/taskList/${workSeq}`,
-    { PARAM: { whereString, PAGE, PAGE_CNT, ISLAST_VER } },
+    {
+      PARAM: {
+        whereString,
+        PAGE,
+        PAGE_CNT,
+        ISLAST_VER,
+        listOrderByField,
+        listOrderByRowNum: listOrderByField
+          .replaceAll(' ASC', ' ||CSA||')
+          .replaceAll(' DESC', ' ASC')
+          .replaceAll(' ||CSA||', ' DESC'),
+      },
+    },
     { BUILDER: 'getTaskList' },
   );
   if (responseList) {
