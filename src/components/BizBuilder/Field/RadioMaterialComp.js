@@ -277,7 +277,7 @@ class RadioMaterialComp extends Component {
           <AntdSelect
             onChange={this.onSelectMeterialCode}
             placeholder="자재코드 선택"
-            className="mr5"
+            className="mr5 select-xs"
             style={{ width: '180px', display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
             dropdownRender={menu => <StyledDropdown>{menu}</StyledDropdown>}
             defaultValue={initMeterialCode}
