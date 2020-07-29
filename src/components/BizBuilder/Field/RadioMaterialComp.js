@@ -14,12 +14,8 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const { Option } = Select;
 const AntdSelect = StyledSelect(Select);
-<<<<<<< HEAD
-// const AntdInput = StyledInput(Input);
-=======
 //const AntdInput = StyledInput(Input);
 
->>>>>>> origin/magnachip
 const StyledWrap = styled.div`
   .validity-check-input {
     input,
