@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Table } from 'antd';
-import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 const AntdTable = StyledAntdTable(Table);
 
 class ProcessView extends Component {
@@ -95,16 +96,18 @@ class ProcessView extends Component {
     const { preViewList, DOCNUMBER, END_DTTM } = this.state;
     return (
       <div style={{ padding: '20px' }}>
-        <table>
-          <tr>
-            <th>문서번호</th>
-            <th>Effective Date</th>
-          </tr>
-          <tr>
-            <td>{DOCNUMBER}</td>
-            <td>{END_DTTM} Date</td>
-          </tr>
-        </table>
+        <StyledHtmlTable>
+          <table>
+            <tr>
+              <th>문서번호</th>
+              <th>Effective Date</th>
+            </tr>
+            <tr>
+              <td>{DOCNUMBER}</td>
+              <td>{END_DTTM} Date</td>
+            </tr>
+          </table>
+        </StyledHtmlTable>
         <AntdTable key="apps-workflow-user-draft-list" columns={this.getTableColumns()} dataSource={preViewList} bordered pagination={false}></AntdTable>
       </div>
     );
