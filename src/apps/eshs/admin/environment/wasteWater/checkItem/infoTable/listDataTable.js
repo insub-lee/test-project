@@ -13,7 +13,7 @@ class ListDataTable extends Component {
   }
 
   render() {
-    const { listData } = this.props;
+    const { listData, onClickListRow } = this.props;
     const columns = [
       {
         title: '측정항목',
@@ -27,14 +27,14 @@ class ListDataTable extends Component {
         dataIndex: 'ITEM_UNIT',
         key: 'ITEM_UNIT',
         align: 'center',
-        width: 50,
+        width: 100,
       },
       {
         title: '사용',
-        dataIndex: 'IS_DEL',
-        key: 'IS_DEL',
+        dataIndex: 'IS_USE',
+        key: 'IS_USE',
         align: 'center',
-        width: 50,
+        width: 40,
       },
       {
         title: '측정값종류',
@@ -52,19 +52,24 @@ class ListDataTable extends Component {
             dataIndex: 'IS_USE_WATER',
             key: 'IS_USE_WATER',
             align: 'center',
-            width: 50,
+            width: 40,
+            render: data => <span>{data === 0 ? '' : 'O'}</span>,
           },
           {
             title: 'Daily',
             dataIndex: 'IS_DAILY',
             key: 'IS_DAILY',
             align: 'center',
+            width: 50,
+            render: data => <span>{data === 0 ? '' : 'O'}</span>,
           },
           {
             title: 'Impurity',
             dataIndex: 'IS_IMPURITY',
             key: 'IS_IMPURITY',
             align: 'center',
+            width: 80,
+            render: data => <span>{data === 0 ? '' : 'O'}</span>,
           },
         ],
       },
@@ -77,54 +82,74 @@ class ListDataTable extends Component {
             dataIndex: 'IS_WASTE_WATER',
             key: 'IS_WASTE_WATER',
             align: 'center',
-            width: 50,
+            width: 40,
+            render: data => <span>{data === 0 ? '' : 'O'}</span>,
           },
           {
             title: '폭기조',
             dataIndex: 'IS_POKGIJO',
             key: 'IS_POKGIJO',
             align: 'center',
+            width: 50,
+            render: data => <span>{data === 0 ? '' : 'O'}</span>,
           },
           {
             title: '유기물',
             dataIndex: 'IS_DERELICT',
             key: 'IS_DERELICT',
             align: 'center',
+            width: 50,
+            render: data => <span>{data === 0 ? '' : 'O'}</span>,
           },
           {
             title: '상한값',
             dataIndex: 'LAW_SPEC_HIGH',
             key: 'LAW_SPEC_HIGH',
             align: 'center',
+            width: 80,
+            render: data => <span>{data.toString()}</span>,
           },
           {
             title: '하한값',
             dataIndex: 'LAW_SPEC_LOW',
             key: 'LAW_SPEC_LOW',
             align: 'center',
+            width: 80,
+            render: data => <span>{data.toString()}</span>,
           },
           {
             title: '기준값',
             dataIndex: 'LAW_SPEC_BASE',
             key: 'LAW_SPEC_BASE',
             align: 'center',
+            width: 80,
+            render: data => <span>{data.toString()}</span>,
           },
         ],
       },
     ];
 
-    return <AntdTable pagination={false} columns={columns} dataSource={listData.toJS()} />;
+    return (
+      <AntdTable
+        bordered
+        pagination={false}
+        columns={columns}
+        dataSource={listData.toJS()}
+        onRow={(record, rowIndex) => ({
+          onClick: () => onClickListRow(rowIndex, record),
+        })}
+      />
+    );
   }
 }
 
 ListDataTable.propTypes = {
   listData: PropTypes.array,
-  handleModal: PropTypes.func,
+  onClickListRow: PropTypes.func,
 };
 
 ListDataTable.defaultProps = {
   listData: [],
-  handleModal: () => false,
 };
 
 export default ListDataTable;
