@@ -283,8 +283,52 @@ class SearchBasic extends Component {
     const listTotalCnt = listData.cnt || 0;
     const { onClickRow, closeBtnFunc } = this;
 
-    const excelColumns = [{ title: '종류', width: { wpx: 100 }, style: { font: { sz: '' } } }];
-    const fields = [{ field: 'fullPathStr', style: { font: { sz: '12' } } }];
+    const excelColumns = [
+      {
+        title: '종류',
+        width: { wpx: 100 },
+        style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+      {
+        title: 'NO',
+        width: { wpx: 100 },
+        style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+      {
+        title: 'REV',
+        width: { wpx: 30 },
+        style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+      {
+        title: 'Effect Date',
+        width: { wpx: 100 },
+        style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+      {
+        title: 'Title',
+        width: { wpx: 300 },
+        style: { alignment: { horizontal: 'left' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+      {
+        title: '기안부서',
+        width: { wpx: 100 },
+        style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+      {
+        title: '기안자',
+        width: { wpx: 100 },
+        style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+    ];
+    const fields = [
+      { field: 'fullPathStr', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+      { field: 'id', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+      { field: 'VERSION', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+      { field: 'END_DTTM', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+      { field: 'title', style: { alignment: { horizontal: 'left' }, font: { sz: '10' } } },
+      { field: 'deptName', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+      { field: 'name', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+    ];
 
     return (
       <StyledSearch>
@@ -423,12 +467,17 @@ class SearchBasic extends Component {
                   isBuilder={false}
                   fileName="업무표준다운로드"
                   className="workerExcelBtn"
-                  title="엑셀받기"
+                  title="Excel 파일로 저장"
                   btnSize="btn-sm"
                   sheetName=""
                   columns={excelColumns}
                   fields={fields}
-                  dataUrl="/api/mdcs/v1/common/search"
+                  submitInfo={{
+                    dataUrl: '/api/mdcs/v1/common/search',
+                    method: 'POST',
+                    submitData: { ...this.state, PAGE: undefined, PAGE_CNT: undefined },
+                    dataSetName: 'arr',
+                  }}
                   {...this.props}
                 />
                 <AntdTable
