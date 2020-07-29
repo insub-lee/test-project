@@ -14,6 +14,7 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import ProcessView from 'apps/Workflow/User/CommonView/processView';
 
 const StyledWrap = styled.div`
   table.mdcsProcessList {
@@ -71,6 +72,7 @@ class DraftList extends Component {
       workPrcProps: undefined,
       paginationIdx: 1,
       pageSize: 10,
+      isPreView: false,
     };
   }
 
@@ -122,6 +124,7 @@ class DraftList extends Component {
       dataIndex: 'DRAFT_TITLE',
       key: 'title',
       ellipsis: true,
+      render: (text, record) => <a onClick={() => this.onRowClick(record)}>{text}</a>,
     },
     {
       title: '기안일',
@@ -137,6 +140,7 @@ class DraftList extends Component {
       key: 'STATUS_NM',
       width: '8%',
       align: 'center',
+      render: (text, record) => <a onClick={() => this.onPrcPreViewClick(record)}>{text}</a>,
     },
     {
       title: '기안자',
@@ -449,6 +453,15 @@ class DraftList extends Component {
       getDraftList(fixUrl, paginationIdx, pageSize);
     });
 
+  onPrcPreViewClick = record => {
+    this.setState({ isPreView: true });
+    this.props.setSelectedRow(record);
+  };
+
+  onClosePreView = () => {
+    this.setState({ isPreView: false });
+  };
+
   render() {
     // const { approveList } = this.props;
     const { draftList, selectedRow, opinionVisible, setOpinionVisible, profile, draftListCnt } = this.props;
@@ -463,6 +476,7 @@ class DraftList extends Component {
       isAbrogationMultiShow,
       workPrcProps,
       paginationIdx,
+      isPreView,
     } = this.state;
     return (
       <>
@@ -481,9 +495,9 @@ class DraftList extends Component {
             key="apps-workflow-user-draft-list"
             columns={this.getTableColumns()}
             dataSource={draftList}
-            onRow={(record, rowIndex) => ({
-              onClick: e => this.onRowClick(record, rowIndex, e),
-            })}
+            // onRow={(record, rowIndex) => ({
+            //   onClick: e => this.onRowClick(record, rowIndex, e),
+            // })}
             bordered
             pagination={{ current: paginationIdx, total: draftListCnt }}
             onChange={pagination => this.setPaginationIdx(pagination.current)}
@@ -782,6 +796,10 @@ class DraftList extends Component {
               닫기
             </StyledButton>
           </StyledButtonWrapper>
+        </AntdModal>
+
+        <AntdModal title="결재정보" width={680} visible={isPreView} destroyOnClose onCancel={this.onClosePreView} footer={null}>
+          <ProcessView {...this.props}></ProcessView>
         </AntdModal>
       </>
     );
