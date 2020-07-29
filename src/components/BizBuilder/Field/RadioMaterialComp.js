@@ -14,12 +14,48 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const { Option } = Select;
 const AntdSelect = StyledSelect(Select);
+<<<<<<< HEAD
 // const AntdInput = StyledInput(Input);
+=======
+//const AntdInput = StyledInput(Input);
+
+>>>>>>> origin/magnachip
 const StyledWrap = styled.div`
   .validity-check-input {
     input,
     select {
       width: 150px;
+    }
+
+    .input {
+      display: inline-block;
+      height: calc(1.47em + 1rem + 2px);
+      padding: 0.5rem 0.875rem;
+      font-size: 0.8125rem;
+      font-weight: 400;
+      line-height: 1.47;
+      color: #495057;
+      background-clip: padding-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+      vertical-align: middle;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.75rem;
+      height: auto;
+      margin-right: 5px;
+
+      &:hover,
+      &:focus {
+        color: #495057;
+        border-color: #636a78;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem transparent;
+      }
+
+      &:disabled {
+        background: #f5f5f5;
+      }
     }
 
     button {
@@ -256,7 +292,7 @@ class RadioMaterialComp extends Component {
 
           {viewType === 'INPUT' ? (
             <input
-              className="mr5 ant-input-xs"
+              className="input"
               defaultValue={formData.MATERIAL_TEXT}
               style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
               onChange={e => {
@@ -271,7 +307,7 @@ class RadioMaterialComp extends Component {
             />
           ) : (
             <input
-              className="mr5 ant-input-xs"
+              className="input"
               key={compKey}
               style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
               defaultValue={formData.MATERIAL_TEXT}
