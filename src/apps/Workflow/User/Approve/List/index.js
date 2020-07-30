@@ -15,6 +15,7 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
+import ProcessView from 'apps/Workflow/User/CommonView/processView';
 
 // import ApproveView from '../ApproveView';
 // import HoldView from '../MdcsAppvView/holdview';
@@ -76,6 +77,7 @@ class ApproveList extends Component {
       workPrcProps: undefined,
       paginationIdx: 1,
       pageSize: 10,
+      isPreView: false,
     };
   }
 
@@ -116,7 +118,12 @@ class ApproveList extends Component {
       width: '9%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 999 ? `OBS-${record.DRAFT_ID}` : text),
+      render: (text, record) =>
+        record.REL_TYPE === 999 ? (
+          <a onClick={() => this.onRowClick(record)}>{`OBS-${record.DRAFT_ID}`}</a>
+        ) : (
+          <a onClick={() => this.onRowClick(record)}>{text}</a>
+        ),
     },
     {
       title: 'Rev',
@@ -132,6 +139,7 @@ class ApproveList extends Component {
       dataIndex: 'DRAFT_TITLE',
       key: 'title',
       ellipsis: true,
+      render: (text, record) => <a onClick={() => this.onRowClick(record)}>{text}</a>,
     },
     {
       title: '결재상태',
@@ -139,6 +147,7 @@ class ApproveList extends Component {
       key: 'APPV_STATUS_NM',
       width: '9%',
       align: 'center',
+      render: (text, record) => <a onClick={() => this.onPrcPreViewClick(record)}>{text}</a>,
     },
     {
       title: '진행상태',
@@ -146,7 +155,14 @@ class ApproveList extends Component {
       key: 'PROC_STATUS',
       width: '9%',
       align: 'center',
-      render: (text, record) => (text === 3 ? '홀드' : text === 2 ? '완료' : '진행중'),
+      render: (text, record) =>
+        text === 3 ? (
+          <a onClick={() => this.onPrcPreViewClick(record)}>홀드</a>
+        ) : text === 2 ? (
+          <a onClick={() => this.onPrcPreViewClick(record)}>완료</a>
+        ) : (
+          <a onClick={() => this.onPrcPreViewClick(record)}>진행중</a>
+        ),
     },
     {
       title: '기안자',
@@ -164,6 +180,15 @@ class ApproveList extends Component {
       render: (text, record) => (text && text.length > 0 ? moment(text).format('YYYY-MM-DD') : text),
     },
   ];
+
+  onPrcPreViewClick = record => {
+    this.setState({ isPreView: true });
+    this.props.setSelectedRow(record);
+  };
+
+  onClosePreView = () => {
+    this.setState({ isPreView: false });
+  };
 
   onHoldRelase = () => {
     const { selectedRow, setSelectedRow, setOpinionVisible } = this.props;
@@ -471,6 +496,7 @@ class ApproveList extends Component {
       isAbrogationMultiShow,
       workPrcProps,
       paginationIdx,
+      isPreView,
     } = this.state;
 
     return (
@@ -487,9 +513,9 @@ class ApproveList extends Component {
             key="apps-workflow-user-approve-list"
             columns={this.getTableColumns()}
             dataSource={approveList}
-            onRow={(record, rowIndex) => ({
-              onClick: e => this.onRowClick(record, rowIndex, e),
-            })}
+            // onRow={(record, rowIndex) => ({
+            //   onClick: e => this.onRowClick(record, rowIndex, e),
+            // })}
             bordered
             pagination={{ current: paginationIdx, total: approveListCnt }}
             onChange={pagination => this.setPaginationIdx(pagination.current)}
@@ -781,6 +807,9 @@ class ApproveList extends Component {
               닫기
             </StyledButton>
           </StyledButtonWrapper>
+        </AntdModal>
+        <AntdModal title="결재정보" width={680} visible={isPreView} destroyOnClose onCancel={this.onClosePreView} footer={null}>
+          <ProcessView {...this.props}></ProcessView>
         </AntdModal>
       </>
     );

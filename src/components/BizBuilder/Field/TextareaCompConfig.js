@@ -23,14 +23,14 @@ class ComponentConfig extends Component {
             <Col span={6}>rowCount 설정</Col>
             <Col span={18}>
               <InputNumber
-                defaultValue={(configInfo && configInfo.property && configInfo.property.rowCount) || 5}
+                defaultValue={configInfo && configInfo.property && configInfo.property.rowCount}
                 onChange={val => this.handleChangeViewCompData('rowCount', val)}
               ></InputNumber>
             </Col>
             <Col span={6}>글자제안</Col>
             <Col span={18}>
               <InputNumber
-                defaultValue={(configInfo && configInfo.property && configInfo.property.limitTextCnt) || 1000}
+                defaultValue={configInfo && configInfo.property && configInfo.property.limitTextCnt}
                 onChange={val => this.handleChangeViewCompData('limitTextCnt', val)}
               ></InputNumber>
             </Col>

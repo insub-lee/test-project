@@ -163,7 +163,7 @@ class UnApproveList extends Component {
             </AntdModal> */}
         </AntdModal>
 
-        <AntdModal title="결재정보" width={680} visible={isPreView} destroyOnClose onCancel={this.onClosePreView}>
+        <AntdModal title="결재정보" width={680} visible={isPreView} destroyOnClose onCancel={this.onClosePreView} footer={null}>
           <ProcessView {...this.props}></ProcessView>
         </AntdModal>
       </>
