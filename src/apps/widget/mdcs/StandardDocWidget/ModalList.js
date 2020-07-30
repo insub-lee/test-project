@@ -3,8 +3,8 @@ import { Table } from 'antd';
 
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-
-const AntdLineTable = StyledLineTable(Table);
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+const AntdLineTable = StyledAntdTable(Table);
 
 const columns = [
   {
@@ -21,11 +21,11 @@ const columns = [
     align: 'center',
     width: '7%',
     dataIndex: 'VERSION',
-    render: (text, record) => (text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
+    render: (text, record) => text.split('.')[0],
   },
   { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM' },
   { title: 'Title', align: 'left', key: 'TITLE', dataIndex: 'TITLE', ellipsis: true },
-  { title: '기안부서', key: 'REG_DEPT_NAME', width: '12%', dataIndex: 'REG_DEPT_NAME', align: 'center' },
+  { title: '기안부서', key: 'REG_DEPT_NAME', width: '15%', dataIndex: 'REG_DEPT_NAME', align: 'center' },
   { title: '기안자', key: 'REG_USER_NAME', width: '8%', dataIndex: 'REG_USER_NAME', align: 'center' },
 ];
 
