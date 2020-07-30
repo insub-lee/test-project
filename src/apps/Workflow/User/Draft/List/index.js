@@ -108,7 +108,12 @@ class DraftList extends Component {
       width: '10%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 999 ? `OBS-${record.DRAFT_ID}` : text),
+      render: (text, record) =>
+        record.REL_TYPE === 999 ? (
+          <a onClick={() => this.onRowClick(record)}>{`OBS-${record.DRAFT_ID}`}</a>
+        ) : (
+          <a onClick={() => this.onRowClick(record)}>{text}</a>
+        ),
     },
     {
       title: 'Rev',
