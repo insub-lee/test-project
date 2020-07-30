@@ -2,7 +2,6 @@ import React from 'react';
 import { Modal } from 'antd';
 
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
-
 import ModalView from './ModalView';
 import ModalList from './ModalList';
 import CoverView from './CoverView';
@@ -52,7 +51,7 @@ const StandardDocModal = ({
     <AntdModal className="modalWrapper modalTechDoc modalCustom" visible={listVisible} footer={null} width={1000} onCancel={closeListBtnFunc} destroyOnClose>
       <>
         <div className="pop_tit">{widgetTitle}</div>
-        <div className="pop_con">
+        <div className="pop_con_pad20">
           <ModalList onClickRow={onClickRow} closeBtnFunc={closeListBtnFunc} listData={listData} getListData={getListData} listCnt={listCnt} />
         </div>
       </>

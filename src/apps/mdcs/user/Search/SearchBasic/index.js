@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import history from 'utils/history';
+import Moment from 'moment';
 
 import { Table, Radio, Form, Input, Select, Checkbox, DatePicker } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
@@ -463,23 +464,24 @@ class SearchBasic extends Component {
           >
             <>
               <StyledContentsWrapper>
-                <ExcelDownLoad
-                  isBuilder={false}
-                  fileName="업무표준다운로드"
-                  className="workerExcelBtn"
-                  title="Excel 파일로 저장"
-                  btnSize="btn-sm"
-                  sheetName=""
-                  columns={excelColumns}
-                  fields={fields}
-                  submitInfo={{
-                    dataUrl: '/api/mdcs/v1/common/search',
-                    method: 'POST',
-                    submitData: { ...this.state, PAGE: undefined, PAGE_CNT: undefined },
-                    dataSetName: 'arr',
-                  }}
-                  {...this.props}
-                />
+                <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
+                  <ExcelDownLoad
+                    isBuilder={false}
+                    fileName={`검색결과 (${Moment().format('YYYYMMDD')})`}
+                    className="workerExcelBtn"
+                    title="Excel 파일로 저장"
+                    btnSize="btn-sm"
+                    sheetName=""
+                    columns={excelColumns}
+                    fields={fields}
+                    submitInfo={{
+                      dataUrl: '/api/mdcs/v1/common/search',
+                      method: 'POST',
+                      submitData: { ...this.state, PAGE: undefined, PAGE_CNT: undefined },
+                      dataSetName: 'arr',
+                    }}
+                  />
+                </div>
                 <AntdTable
                   columns={columns}
                   size="middle"

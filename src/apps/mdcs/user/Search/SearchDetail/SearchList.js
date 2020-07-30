@@ -8,6 +8,8 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import BizBuilderBase from 'components/BizBuilderBase';
 import DraftDownLoad from 'apps/mdcs/Modal/DraftDownLoad';
+import ExcelDownLoad from 'components/ExcelDownLoad';
+
 import history from 'utils/history';
 import { PAGINATION_OPT_CODE } from 'components/BizBuilder/Common/Constants';
 import { DraggableModal as Modal } from 'components/DraggableModal/AntdDraggableModal';
@@ -33,8 +35,55 @@ const columns = [
   },
   { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM', render: (text, record) => moment(text).format('YYYY-MM-DD') },
   { title: 'Title', align: 'left', key: 'TITLE', width: '35%', dataIndex: 'TITLE', ellipsis: true },
-  { title: '기안부서', align: 'center', key: 'REG_DEPT_NAME', width: '14%', dataIndex: 'REG_DEPT_NAME', ellipsis: true },
-  { title: '기안자', key: 'REG_USER_NAME', width: '10%', dataIndex: 'REG_USER_NAME' },
+  { title: '기안부서', align: 'left', key: 'REG_DEPT_NAME', width: '14%', dataIndex: 'REG_DEPT_NAME', ellipsis: true },
+  { title: '기안자', align: 'center', key: 'REG_USER_NAME', width: '10%', dataIndex: 'REG_USER_NAME' },
+];
+
+const excelColumns = [
+  {
+    title: '종류',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: 'NO',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: 'REV',
+    width: { wpx: 30 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: 'Effect Date',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: 'Title',
+    width: { wpx: 300 },
+    style: { alignment: { horizontal: 'left' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '기안부서',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '기안자',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+];
+const fields = [
+  { field: 'NODE_FULLNAME', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'DOCNUMBER', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'VERSION', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'END_DTTM', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'TITLE', style: { alignment: { horizontal: 'left' }, font: { sz: '10' } } },
+  { field: 'REG_DEPT_NAME', style: { alignment: { horizontal: 'left' }, font: { sz: '10' } } },
+  { field: 'REG_USER_NAME', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
 ];
 
 class SearchList extends Component {
@@ -145,10 +194,30 @@ class SearchList extends Component {
     });
 
   render() {
-    const { listData, sagaKey, submitExtraHandler, listTotalCnt } = this.props;
+    console.debug('search detail props', this.props);
+    const { listData, sagaKey, submitExtraHandler, listTotalCnt, conditional, workSeq } = this.props;
     const { SearchView, coverView, isDownVisible, selectedRow, DRAFT_PROCESS, appvMember, paginationIdx } = this.state;
     return (
       <>
+        <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
+          <ExcelDownLoad
+            key="excelDownLoad"
+            isBuilder={false}
+            fileName={`검색결과 (${moment().format('YYYYMMDD')})`}
+            className="workerExcelBtn"
+            title="Excel 파일로 저장"
+            btnSize="btn-sm"
+            sheetName=""
+            columns={excelColumns}
+            fields={fields}
+            submitInfo={{
+              dataUrl: `/api/builder/v1/work/taskList/${workSeq}`,
+              method: 'POST',
+              submitData: { PARAM: { whereString: [conditional] } },
+              dataSetName: 'list',
+            }}
+          />
+        </div>
         <AntdTable
           columns={columns}
           size="middle"
