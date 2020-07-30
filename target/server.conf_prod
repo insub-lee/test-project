@@ -230,6 +230,17 @@ server {
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+    
+    location ~ ^(/api/gcs/v1/common/) {
+            proxy_pass  http://gcs-common;
+            #proxy_connect_timeout 1800;
+            proxy_read_timeout      1800; # default 60
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
 
     location ~ ^(/api/mxlife/v1/common) {
             proxy_pass  http://mxlife-common;
@@ -454,6 +465,9 @@ upstream portal-filemanage {
 }
 upstream wts-common {
     server prod-bizmicro-portal.marathon.l4lb.thisdcos.directory:10801;
+}
+upstream gcs-common {
+    server prod-bizmicro-portal.marathon.l4lb.thisdcos.directory:10810;
 }
 upstream mxlife-common {
     server prod-bizmicro-portal.marathon.l4lb.thisdcos.directory:10710;

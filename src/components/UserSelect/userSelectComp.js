@@ -23,6 +23,7 @@ const AntdSearchInput = StyledSearchInput(Input.Search);
 //   onUserSelectedComplete={this.onUserSelectedComplete}  확인버튼 클릭이벤트
 //   onCancel={this.onCancel} 취소 버튼 이벤트
 //   onUserDelete={this.onUserDelete} 선택된 사용자 삭제 이벤트
+//   userSearchApi={`/api/edds/v1/common/eddsUserSearch`} 사용자명 검색 api(EDDS사용자 검색을 위해서 props 추가) 해당 props 없으면 기본검색사용
 // ></UserSelect>
 
 const getTreeData = deptList =>
@@ -179,10 +180,10 @@ class UserSelectComp extends Component {
   };
 
   onSearchUserByName = val => {
-    const { sagaKey, getCallDataHandlerReturnRes } = this.props;
+    const { sagaKey, getCallDataHandlerReturnRes, userSearchApi } = this.props;
     const apiInfo = {
       key: 'userList',
-      url: `/api/common/v1/account/userSearchList`,
+      url: userSearchApi || `/api/common/v1/account/userSearchList`,
       type: 'POST',
       params: {
         PARAM: { USER_NAME: val },
@@ -248,7 +249,7 @@ class UserSelectComp extends Component {
                         사용자 선택
                         <AntdSearchInput
                           className="input-search-xs"
-                          style={{ width: 130, marginLeft: 10, padding: 0 }}
+                          style={{ width: 110, marginLeft: 10, padding: 0 }}
                           onPressEnter={e => this.onSearchUserByName(e.target.value)}
                           onSearch={val => this.onSearchUserByName(val)}
                         />

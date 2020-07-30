@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import { Table, Modal, Icon, Button, message } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import UserSelect from 'components/UserSelect';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledSelectModal(Modal);
+const AntdModal = StyledAntdModal(Modal);
 
 class List extends Component {
   constructor(props) {
@@ -171,14 +171,20 @@ class List extends Component {
               <UserSelect
                 initUserList={this.state.selectedUserList}
                 // treeDataSource={distDeptList}
-                userDataList={result.userList && result.userList.list}
-                onTreeSelect={this.onTreeSelect}
-                onUserSelectHandler={this.onUserSelect}
+                // userDataList={result.userList && result.userList.list}
+                // onTreeSelect={this.onTreeSelect}
+                // onUserSelectHandler={this.onUserSelect}
                 onUserSelectedComplete={this.onUserSelectedComplete}
                 onCancel={this.onCancel}
               />
             </AntdModal>
-            <AntdTable rowSelection={rowSelection} columns={this.getTableColumns()} dataSource={distDeptList} pagination={false} bordered />
+            <AntdTable
+              rowSelection={rowSelection}
+              columns={this.getTableColumns()}
+              dataSource={distDeptList.map(item => ({ ...item, key: item.DEPT_ID }))}
+              pagination={false}
+              bordered
+            />
           </StyledContentsWrapper>
         </>
       );
