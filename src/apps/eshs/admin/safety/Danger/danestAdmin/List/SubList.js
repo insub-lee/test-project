@@ -28,27 +28,37 @@ const dangerRank = value => {
 
 const SubList = ({ subItem, onChangeAdminSub, onFileUploadTemp, UploadFilesDel, UploadTempFilesDel, dangerDanestAdminSubFile }) => (
   <tr>
-    <td>{subItem.EQUIP_NM}</td>
-    <td>
-      <AntdSelect className="select-xs" defaultValue={Number(subItem.WOKRCND)} onChange={value => onChangeAdminSub('WOKRCND', value, subItem)}>
+    <td align="center">{subItem.EQUIP_NM}</td>
+    <td align="center">
+      <AntdSelect
+        className="select-xs"
+        style={{ width: '100%' }}
+        defaultValue={Number(subItem.WOKRCND)}
+        onChange={value => onChangeAdminSub('WOKRCND', value, subItem)}
+      >
         {/* 작업조건 */}
         <Option value={1}>정상</Option>
         <Option value={2}>비정상</Option>
       </AntdSelect>
       {/* {console.debug('subItem : ', subItem)} */}
     </td>
-    <td>
+    <td align="center">
       <AntdTextArea defaultValue={subItem.DANGFACT} onChange={e => onChangeAdminSub('DANGFACT', e.target.value, subItem)} />
       {/* 작업단계 위험요인 */}
     </td>
-    <td>{subItem.AOT_NM}</td>
+    <td align="center">{subItem.AOT_NM}</td>
     {/* 발생형태 */}
-    <td>
+    <td align="center">
       <AntdTextArea defaultValue={subItem.SAFEACTION} onChange={e => onChangeAdminSub('SAFEACTION', e.target.value, subItem)} />
       {/* 현재 안전조치(대책) */}
     </td>
-    <td>
-      <AntdSelect className="select-xs" defaultValue={Number(subItem.DAN_FREQC)} onChange={value => onChangeAdminSub('DAN_FREQC', value, subItem)}>
+    <td align="center">
+      <AntdSelect
+        className="select-xs"
+        style={{ width: '100%' }}
+        defaultValue={Number(subItem.DAN_FREQC)}
+        onChange={value => onChangeAdminSub('DAN_FREQC', value, subItem)}
+      >
         {/* 위험빈도 */}
         <Option value={1}>1</Option>
         <Option value={2}>2</Option>
@@ -57,8 +67,13 @@ const SubList = ({ subItem, onChangeAdminSub, onFileUploadTemp, UploadFilesDel, 
         <Option value={5}>5</Option>
       </AntdSelect>
     </td>
-    <td>
-      <AntdSelect className="select-xs" defaultValue={Number(subItem.DAN_STRGT)} onChange={value => onChangeAdminSub('DAN_STRGT', value, subItem)}>
+    <td align="center">
+      <AntdSelect
+        className="select-xs"
+        style={{ width: '100%' }}
+        defaultValue={Number(subItem.DAN_STRGT)}
+        onChange={value => onChangeAdminSub('DAN_STRGT', value, subItem)}
+      >
         {/* 위험강도 */}
         <Option value={1}>1</Option>
         <Option value={2}>2</Option>
@@ -67,18 +82,18 @@ const SubList = ({ subItem, onChangeAdminSub, onFileUploadTemp, UploadFilesDel, 
       </AntdSelect>
     </td>
     {/* DAN_LEVEL 위험수준 */}
-    <td>{dangerRank(Number(subItem.DAN_FREQC || 1) * Number(subItem.DAN_STRGT || 1))}</td>
+    <td align="center">{dangerRank(Number(subItem.DAN_FREQC || 1) * Number(subItem.DAN_STRGT || 1))}</td>
     <td>
       <AntdTextArea defaultValue={subItem.AP_IMPROVE} onChange={e => onChangeAdminSub('AP_IMPROVE', e.target.value, subItem)} /> {/* 개선대책 */}
     </td>
-    <td>
+    <td align="center">
       <AntdDatePicker
         defaultValue={subItem.AP_ENDDATE ? moment(subItem.AP_ENDDATE) : moment()}
         onChange={(date, dateString) => onChangeAdminSub('AP_ENDDATE', dateString, subItem)}
       />
       {/* 완료예정일 */}
     </td>
-    <td colSpan={2}>
+    <td colSpan={2} align="center">
       <FileUpload
         subItem={subItem}
         onFileUploadTemp={onFileUploadTemp}

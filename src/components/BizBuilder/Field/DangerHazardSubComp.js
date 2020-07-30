@@ -22,16 +22,114 @@ const AntdModal = StyledModal(Modal);
 
 const { Option } = Select;
 
+const setColumns = (treeData, aotList, aocList, onChangeData) => [
+  {
+    title: '구분',
+    align: 'center',
+    children: [
+      {
+        title: '부서',
+        dataIndex: 'DIV_ID',
+        width: '80px',
+        align: 'center',
+        render: text => treeData && treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+      },
+      {
+        title: '공정(장소)',
+        dataIndex: 'PLACE_ID',
+        width: '80px',
+        align: 'center',
+
+        render: text => treeData && treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+      },
+      {
+        title: '세부공정',
+        dataIndex: 'PROCESS_ID',
+        width: '80px',
+        align: 'center',
+        render: text => treeData && treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+      },
+      {
+        title: '장비(설비)',
+        dataIndex: 'EQUIP_ID',
+        width: '80px',
+        align: 'center',
+        render: text => treeData && treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+      },
+      {
+        title: '위험요인',
+        dataIndex: 'WORK_NM',
+        width: '140px',
+        align: 'center',
+        render: (text, record) => <AntdTextarea value={text} onChange={e => onChangeData('WORK_NM', e.target.value, record)} />,
+      },
+    ],
+  },
+  {
+    title: (
+      <Popover placement="topLeft" title="사고의 발생원인" content={<img src={System} alt="사고의 발생원인" width="800px" height="400px" />} trigger="hover">
+        사고의 발생원인
+      </Popover>
+    ),
+    align: 'center',
+    dataIndex: 'AOC_ID',
+    width: '130px',
+    render: (text, record) => (
+      <AntdSelect
+        mode="multiple"
+        className="select-xs"
+        value={Array.isArray(text) ? text : JSON.parse(text)}
+        onChange={value => onChangeData('AOC_ID', value, record)}
+        style={{ width: '100%' }}
+      >
+        {aocList && aocList.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
+      </AntdSelect>
+    ),
+  },
+  {
+    title: '사고의 발생유형',
+    dataIndex: 'AOT_ID',
+    width: '130px',
+    align: 'center',
+    render: (text, record) => (
+      <>
+        <AntdSelect className="select-xs" style={{ width: '100%' }} value={text} onChange={value => onChangeData('AOT_ID', value, record)}>
+          {aotList && aotList.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
+        </AntdSelect>
+        {Number(text) === 30450 ? (
+          <AntdInput className="ant-input-sm ant-input-inline" value={record.OTHER_CASE} onChange={e => onChangeData('OTHER_CASE', e.target.value, record)} />
+        ) : (
+          ''
+        )}
+      </>
+    ),
+  },
+  {
+    title: 'R/A 실시여부',
+    dataIndex: 'RA_YN',
+    width: '50px',
+    align: 'center',
+    render: (text, record) => (
+      <AntdSelect className="select-xs" value={text} onChange={value => onChangeData('RA_YN', value, record)} style={{ width: '100%' }}>
+        <Option value="Y">Y</Option>
+        <Option value="N">N</Option>
+      </AntdSelect>
+    ),
+  },
+];
+
 class DangerHazardSubComp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       modal: false,
+      columns: [],
+      deleteTempList: [],
     };
   }
 
   componentDidMount() {
-    const { getExtraApiData, sagaKey: id } = this.props;
+    const { getExtraApiData, sagaKey: id, viewPageData } = this.props;
     const apiArray = [
       {
         key: 'codeData',
@@ -56,7 +154,12 @@ class DangerHazardSubComp extends React.Component {
     } = this.props;
     const aotList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30432);
     const aocList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30433);
-    this.setState({ aotList, aocList, treeData: treeData && treeData.categoryMapList });
+    this.setState({
+      aotList,
+      aocList,
+      treeData: treeData && treeData.categoryMapList,
+      columns: setColumns(treeData && treeData.categoryMapList, aotList, aocList, this.onChangeData),
+    });
   };
 
   subList = () => {
@@ -72,16 +175,20 @@ class DangerHazardSubComp extends React.Component {
   };
 
   subListData = () => {
-    const {
-      extraApiData: { hazardSubList },
-      changeFormData,
-      sagaKey: id,
-    } = this.props;
-    changeFormData(id, 'HAZARD_LIST', hazardSubList && hazardSubList.list);
+    const { extraApiData, changeFormData, sagaKey: id } = this.props;
+
+    const subList = (extraApiData && extraApiData.hazardSubList && extraApiData.hazardSubList.list) || [];
+    changeFormData(
+      id,
+      'HAZARD_LIST',
+      subList.map(item => ({ ...item, CHK: 'Y' })),
+    );
+    this.onSelectedRowKeys(subList.map((item, index) => index));
   };
 
   onChangeModal = () => {
     const { modal } = this.state;
+
     this.setState({ modal: !modal });
   };
 
@@ -104,130 +211,60 @@ class DangerHazardSubComp extends React.Component {
   };
 
   deleteList = () => {
-    const { sagaKey: id, changeFormData, formData, submitExtraHandler } = this.props;
-    const { selectedRowKeys } = this.state;
-    const { HAZARD_LIST } = formData;
+    // const { sagaKey: id, changeFormData, formData, submitExtraHandler } = this.props;
+    // const { selectedRowKeys } = this.state;
+    // const { HAZARD_LIST } = formData;
 
-    if (selectedRowKeys && selectedRowKeys.length > 0 && HAZARD_LIST && HAZARD_LIST.length > 0) {
-      const tempList = HAZARD_LIST.filter((selected, index) => selectedRowKeys.findIndex(rowKey => index === rowKey) === -1);
-      const deleteList = HAZARD_LIST.filter((selected, index) => selectedRowKeys.findIndex(rowKey => index === rowKey) !== -1 && selected.REG_NO);
-      const submitData = { PARAM: { DELETE_LIST: deleteList } };
-      if (deleteList && deleteList.length) {
-        submitExtraHandler(id, 'DELETE', `/api/eshs/v1/common/dangerHazard`, submitData, this.subList);
-      }
-      changeFormData(id, 'HAZARD_LIST', tempList);
+    // if (selectedRowKeys && selectedRowKeys.length > 0 && HAZARD_LIST && HAZARD_LIST.length > 0) {
+    //   const tempList = HAZARD_LIST.filter((selected, index) => selectedRowKeys.findIndex(rowKey => index === rowKey) === -1);
+    //   const deleteList = HAZARD_LIST.filter((selected, index) => selectedRowKeys.findIndex(rowKey => index === rowKey) !== -1 && selected.REG_NO);
+    //   const submitData = { PARAM: { DELETE_LIST: deleteList } };
+    //   if (deleteList && deleteList.length) {
+    //     submitExtraHandler(id, 'DELETE', `/api/eshs/v1/common/dangerHazard`, submitData, this.subList);
+    //   }
+    //   changeFormData(id, 'HAZARD_LIST', tempList);
+    //   this.setState({ selectedRowKeys: [] });
+    // } else {
+    //   message.info(<MessageContent>삭제할 항목을 선택해주세요.</MessageContent>);
+    // }
+
+    const { sagaKey: id, setFormData, formData } = this.props;
+
+    const hazardList = (formData && formData.HAZARD_LIST) || [];
+    const deleteTempList = (formData && formData.DELETE_TEMP_LIST) || [];
+    const { selectedRowKeys } = this.state;
+    if (selectedRowKeys && selectedRowKeys.length > 0 && hazardList.length > 0) {
+      setFormData(id, {
+        ...formData,
+        HAZARD_LIST: hazardList.filter(item => item.CHK !== 'Y').map(item => ({ ...item, CHK: 'N' })),
+        DELETE_TEMP_LIST: deleteTempList.concat(hazardList.filter(item => item.CHK === 'Y')),
+      });
       this.setState({ selectedRowKeys: [] });
     } else {
       message.info(<MessageContent>삭제할 항목을 선택해주세요.</MessageContent>);
     }
   };
 
+  onSelectAll = selected => {
+    const { sagaKey: id, changeFormData, formData } = this.props;
+    const { HAZARD_LIST } = formData;
+    changeFormData(
+      id,
+      'HAZARD_LIST',
+      HAZARD_LIST.map(item => ({ ...item, CHK: selected ? 'Y' : 'N' })),
+    );
+  };
+
   render() {
     const { formData, visible, changeFormData, sagaKey: id } = this.props;
-    const { aotList, aocList, selectedRowKeys, treeData } = this.state;
+    const { selectedRowKeys, treeData, columns } = this.state;
     const { HAZARD_LIST } = formData;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectedRowKeys,
+      onSelect: (record, selected) => this.onChangeData('CHK', selected ? 'Y' : 'N', record),
+      onSelectAll: this.onSelectAll,
     };
-    const columns = [
-      {
-        title: '구분',
-        align: 'center',
-        children: treeData
-          ? [
-              {
-                title: '부서',
-                dataIndex: 'DIV_ID',
-                width: '80px',
-                render: text => treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
-              },
-              {
-                title: '공정(장소)',
-                dataIndex: 'PLACE_ID',
-                width: '80px',
-                render: text => treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
-              },
-              {
-                title: '세부공정',
-                dataIndex: 'PROCESS_ID',
-                width: '80px',
-                render: text => treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
-              },
-              {
-                title: '장비(설비)',
-                dataIndex: 'EQUIP_ID',
-                width: '80px',
-                render: text => treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
-              },
-              {
-                title: '위험요인',
-                dataIndex: 'WORK_NM',
-                width: '140px',
-                render: (text, record) => <AntdTextarea value={text} onChange={e => this.onChangeData('WORK_NM', e.target.value, record)} />,
-              },
-            ]
-          : [],
-      },
-      {
-        title: (
-          <Popover
-            placement="topLeft"
-            title="사고의 발생원인"
-            content={<img src={System} alt="사고의 발생원인" width="800px" height="400px" />}
-            trigger="hover"
-          >
-            사고의 발생원인
-          </Popover>
-        ),
-        align: 'center',
-        dataIndex: 'AOC_ID',
-        width: '130px',
-        render: (text, record) => (
-          <AntdSelect
-            mode="multiple"
-            className="select-xs"
-            value={Array.isArray(text) ? text : JSON.parse(text)}
-            onChange={value => this.onChangeData('AOC_ID', value, record)}
-            style={{ width: '100%' }}
-          >
-            {aocList && aocList.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
-          </AntdSelect>
-        ),
-      },
-      {
-        title: '사고의 발생유형',
-        dataIndex: 'AOT_ID',
-        width: '130px',
-        render: (text, record) => (
-          <>
-            <AntdSelect className="select-xs" style={{ width: '100%' }} value={text} onChange={value => this.onChangeData('AOT_ID', value, record)}>
-              {aotList && aotList.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
-            </AntdSelect>
-            {Number(text) === 30450 ? (
-              <AntdInput
-                className="ant-input-sm ant-input-inline"
-                value={record.OTHER_CASE}
-                onChange={e => this.onChangeData('OTHER_CASE', e.target.value, record)}
-              />
-            ) : (
-              ''
-            )}
-          </>
-        ),
-      },
-      {
-        title: 'R/A 실시여부',
-        dataIndex: 'RA_YN',
-        width: '50px',
-        render: (text, record) => (
-          <AntdSelect className="select-xs" value={text} onChange={value => this.onChangeData('RA_YN', value, record)} style={{ width: '100%' }}>
-            <Option value="Y">Y</Option>
-            <Option value="N">N</Option>
-          </AntdSelect>
-        ),
-      },
-    ];
 
     return visible ? (
       <>
@@ -265,7 +302,14 @@ class DangerHazardSubComp extends React.Component {
           destroyOnClose
         >
           {this.state.modal && (
-            <DangerHazardSubModalComp treeData={treeData} sagaKey={id} formData={formData} changeFormData={changeFormData} onChangeModal={this.onChangeModal} />
+            <DangerHazardSubModalComp
+              treeData={treeData}
+              sagaKey={id}
+              formData={formData}
+              changeFormData={changeFormData}
+              onChangeModal={this.onChangeModal}
+              onSelectedRowKeys={this.onSelectedRowKeys}
+            />
           )}
         </AntdModal>
       </>
@@ -284,6 +328,7 @@ DangerHazardSubComp.propTypes = {
   visible: PropTypes.bool,
   changeFormData: PropTypes.func,
   submitExtraHandler: PropTypes.func,
+  setFormData: PropTypes.func,
 };
 
 DangerHazardSubComp.defaultProps = {};

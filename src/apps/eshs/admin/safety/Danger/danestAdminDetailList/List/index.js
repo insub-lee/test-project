@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import DanestAdmin from 'apps/eshs/admin/safety/Danger/danestAdmin';
+import ReAppriseList from 'apps/eshs/admin/safety/Danger/danestAdmin/ReAppriseList';
+
 import moment from 'moment';
 
 import { Modal, Table, DatePicker, Select, TreeSelect } from 'antd';
@@ -19,6 +21,7 @@ import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
 import StyledAntdModal from 'components/BizBuilder/styled//Modal/StyledAntdModal';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -52,6 +55,11 @@ class List extends Component {
     super(props);
     this.state = {
       rangeData: [moment(moment().subtract(1, 'month')).format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')],
+      modalObj: {
+        visible: false,
+        title: '',
+        content: [],
+      },
     };
   }
 
@@ -85,8 +93,9 @@ class List extends Component {
   };
 
   search = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
     const { rangeData, DANGRAD, SDIV_ID, DIV_ID, PLACE_ID, PROCESS_ID, EQUIP_ID } = this.state;
+    spinningOn();
     const apiAry = [
       {
         key: 'dangerDanestAdmin',
@@ -112,8 +121,10 @@ class List extends Component {
   searchData = () => {
     const {
       result: { dangerDanestAdmin },
+      spinningOff,
     } = this.props;
     const list = dangerDanestAdmin && dangerDanestAdmin.list;
+    spinningOff();
     if (list && list.length > 0) {
       this.setState({ list });
     } else {
@@ -121,15 +132,15 @@ class List extends Component {
     }
   };
 
-  onModalChange = () => {
-    const { isModal } = this.state;
-    this.setState({ isModal: !isModal });
-  };
+  // onModalChange = () => {
+  //   const { isModal } = this.state;
+  //   this.setState({ isModal: !isModal });
+  // };
 
-  onClickRow = record => {
-    this.setState({ recordByState: record });
-    this.onModalChange();
-  };
+  // onClickRow = record => {
+  //   this.setState({ recordByState: record });
+  //   this.onModalChange();
+  // };
 
   onChangeTreeSelect = (value, label, extra) => {
     switch (extra && extra.triggerNode && extra.triggerNode.props && extra.triggerNode.props.level) {
@@ -169,7 +180,7 @@ class List extends Component {
       title: '부서',
       dataIndex: 'DIV_NM',
       align: 'center',
-      width: 100,
+      width: 150,
     },
     {
       title: '공정(장소)',
@@ -220,6 +231,17 @@ class List extends Component {
       width: 100,
     },
     {
+      title: '재평가내역',
+      align: 'center',
+      dataIndex: 'HISTORY',
+      render: (text, record) => (
+        <StyledButton className="btn-link btn-sm" onClick={e => this.historyModalVisible(e, record)}>
+          {text}
+        </StyledButton>
+      ),
+      width: 100,
+    },
+    {
       title: '작성자',
       dataIndex: 'REG_USER_NAME',
       align: 'center',
@@ -233,21 +255,66 @@ class List extends Component {
     },
   ];
 
+  historyModalVisible = (event, record) => {
+    event.stopPropagation();
+
+    const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    spinningOn();
+    const apiAry = [
+      {
+        key: 'dangerDanestAdmin',
+        type: 'GET',
+        url: `/api/eshs/v1/common/dangerDanestAdmin?REG_NO=${record.REG_NO}`,
+      },
+    ];
+    getCallDataHandler(id, apiAry, () => {
+      const { result } = this.props;
+      const dangerDanestAdminSubFile = (result && result.dangerDanestAdmin && result.dangerDanestAdmin.fileList) || [];
+      const reAppriseList = (result && result.dangerDanestAdmin && result.dangerDanestAdmin.reAppriseList) || [];
+      spinningOff();
+      this.modalVisible(`재평가 목록 [평가번호 ${record.REG_NO}]`, [
+        <ReAppriseList key="ReAppriseList" reAppriseList={reAppriseList} dangerDanestAdminSubFile={dangerDanestAdminSubFile} />,
+      ]);
+    });
+  };
+
+  modalVisible = (title = '', content = []) => {
+    const {
+      modalObj: { visible },
+    } = this.state;
+
+    return this.setState({
+      modalObj: {
+        visible: !visible,
+        title,
+        content,
+      },
+    });
+  };
+
   render() {
-    const { list, recordByState, nData } = this.state;
+    const { list, nData, modalObj } = this.state;
     return (
       <StyledContentsWrapper>
-        <StyledCustomSearchWrapper>
-          <div className="search-input-area mb10">
+        <StyledCustomSearchWrapper className="search-wrapper-inline">
+          <div className="search-input-area">
             <span className="text-label">등록일</span>
             <AntdRangePicker
-              className="ant-picker-sm"
+              style={{ width: 250 }}
+              className="ant-picker-sm mr5"
               defaultValue={[moment(this.state.rangeData[0], 'YYYY-MM-DD'), moment(this.state.rangeData[1], 'YYYY-MM-DD')]}
               format={['YYYY-MM-DD', 'YYYY-MM-DD']}
+              allowClear={false}
               onChange={(date, dateStrings) => this.dateChange(dateStrings)}
+              onPressEnter={this.search}
             />
-            <span className="text-label">위험등급</span>
-            <AntdSelect style={{ width: 200 }} className="select-sm" placeholder="전체" allowClear onChange={value => this.setState({ DANGRAD: value })}>
+            <AntdSelect
+              style={{ width: 150 }}
+              className="select-sm"
+              placeholder="위험등급 전체"
+              allowClear
+              onChange={value => this.setState({ DANGRAD: value })}
+            >
               <Option value="A">A</Option>
               <Option value="B">B</Option>
               <Option value="C">C</Option>
@@ -255,15 +322,12 @@ class List extends Component {
               <Option value="E">E</Option>
               <Option value="F">F</Option>
             </AntdSelect>
-          </div>
-          <div className="search-input-area mb10">
-            <span className="text-label">분류</span>
             <AntdTreeSelect
-              style={{ width: 361, marginLeft: 11 }}
+              style={{ width: 250, marginLeft: 11 }}
               className="select-sm"
               dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
               treeData={nData || []}
-              placeholder="전체"
+              placeholder="분류 전체"
               allowClear
               onChange={this.onChangeTreeSelect}
             />
@@ -272,6 +336,26 @@ class List extends Component {
             <StyledButton className="btn-gray btn-first btn-sm" onClick={this.search}>
               검색
             </StyledButton>
+            <ExcelDownloadComp
+              isBuilder={false}
+              fileName={`DE_AdminList${moment().format('YYYYMMDD')}`}
+              className="testClassName"
+              btnText="엑셀받기"
+              sheetName={`DE_AdminList${moment().format('YYYYMMDD')}`}
+              listData={list}
+              btnSize="btn-sm btn-first"
+              fields={this.columns.map(item => ({
+                field: item.dataIndex,
+                style: { font: { sz: '12' }, alignment: { vertical: item.excelAlign || 'center', horizontal: item.excelAlign || 'center' } },
+              }))}
+              columns={this.columns.map(item => ({
+                ...item,
+                field: item.dataIndex,
+                filter: 'agTextColumnFilter',
+                width: item.width ? { wpx: item.width * 2 } : { wpx: 150 },
+                style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '', bold: true }, alignment: { vertical: 'center', horizontal: 'center' } },
+              }))}
+            />
           </StyledButtonWrapper>
         </StyledCustomSearchWrapper>
         <AntdTable
@@ -280,15 +364,18 @@ class List extends Component {
           columns={this.columns}
           onRow={record => ({
             onClick: () => {
-              this.onClickRow(record);
+              this.modalVisible('위험성 평가', [
+                <DanestAdmin key="DanestAdmin" improveDanger={{ REG_NO: record.REG_NO, REG_DTTM: record.REG_DTTM, IMPROVE: true }} />,
+              ]);
             },
           })}
           bordered
           // pagination={false}
-          scroll={{ x: 1500, y: 300 }}
+          scroll={{ x: '100%' }}
         />
-        <AntdModal width={1000} visible={this.state.isModal} title="위험성 평가" onCancel={this.onModalChange} destroyOnClose footer={null}>
-          {this.state.isModal && <DanestAdmin improveDanger={{ REG_NO: recordByState.REG_NO, REG_DTTM: recordByState.REG_DTTM, IMPROVE: true }} />}
+        <AntdModal width={1000} visible={modalObj.visible} title={modalObj.title} onCancel={() => this.modalVisible('', [])} footer={null}>
+          {/* {this.state.isModal && <DanestAdmin improveDanger={{ REG_NO: recordByState.REG_NO, REG_DTTM: recordByState.REG_DTTM, IMPROVE: true }} />} */}
+          {modalObj.content}
         </AntdModal>
       </StyledContentsWrapper>
     );
@@ -299,10 +386,14 @@ List.propTypes = {
   getCallDataHandler: PropTypes.func,
   sagaKey: PropTypes.string,
   result: PropTypes.object,
+  spinningOn: PropTypes.func,
+  spinningOff: PropTypes.func,
 };
 
 List.defaultProps = {
   getCallDataHandler: () => {},
+  spinningOn: () => {},
+  spinningOff: () => {},
 };
 
 export default List;

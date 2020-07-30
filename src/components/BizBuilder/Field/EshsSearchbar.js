@@ -1,6 +1,6 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input, Modal } from 'antd';
+import { Input, Modal, Popconfirm } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import CustomList from 'apps/eshs/admin/environment/air/stack/List'; // list custom button 추가 시 변경
 
@@ -75,6 +75,7 @@ class CommonSearchbar extends React.Component {
     const {
       sagaKey: id,
       CONFIG: { property },
+      conditional,
     } = this.props;
     return (
       <BizBuilderBase
@@ -87,6 +88,7 @@ class CommonSearchbar extends React.Component {
         viewType="LIST"
         loadingComplete={this.props.loadingComplete}
         customOnRowClick={this.isModalChange}
+        conditional={conditional}
       />
     );
   };
@@ -97,6 +99,8 @@ class CommonSearchbar extends React.Component {
       sagaKey: id,
       changeViewPage,
       CONFIG: { property },
+      EshsSearchBarInputCustomButtons,
+      EshsSearchBarModifyCustomButtons,
     } = this.props;
     let buttonGruop;
     const useRevision = property.useRevision || 'N';
@@ -104,34 +108,50 @@ class CommonSearchbar extends React.Component {
       case 'INPUT':
         buttonGruop = (
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('S')}>
-              등록
-            </StyledButton>
-            <StyledButton className="btn-light btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-              초기화
-            </StyledButton>
+            {typeof EshsSearchBarInputCustomButtons === 'function' ? (
+              <EshsSearchBarInputCustomButtons {...this.props} onChangeSave={this.onChangeSave} />
+            ) : (
+              <>
+                <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('S')}>
+                  등록
+                </StyledButton>
+                <StyledButton className="btn-light btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+                  초기화
+                </StyledButton>
+              </>
+            )}
           </StyledButtonWrapper>
         );
         break;
       case 'MODIFY':
         buttonGruop = (
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('M')}>
-              저장
-            </StyledButton>
-            <StyledButton className="btn-light btn-first btn-xs" onClick={() => this.onChangeSave('D')}>
-              삭제
-            </StyledButton>
-            {useRevision === 'Y' ? (
-              <StyledButton className="btn-primary btn-first btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
-                신규등록
-              </StyledButton>
+            {typeof EshsSearchBarModifyCustomButtons === 'function' ? (
+              <EshsSearchBarModifyCustomButtons {...this.props} onChangeSave={this.onChangeSave} />
             ) : (
-              ''
+              <>
+                <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('M')}>
+                  저장
+                </StyledButton>
+                <Popconfirm title="정말로 삭제하시겠습니까?" onConfirm={() => this.onChangeSave('D')} okText="Yes" cancelText="No">
+                  <StyledButton className="btn-light btn-first btn-xs">삭제</StyledButton>
+                </Popconfirm>
+
+                {useRevision === 'Y' ? (
+                  <StyledButton
+                    className="btn-primary btn-first btn-xs"
+                    onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}
+                  >
+                    신규등록
+                  </StyledButton>
+                ) : (
+                  ''
+                )}
+                <StyledButton className="btn-light btn-xs mr5" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+                  초기화
+                </StyledButton>
+              </>
             )}
-            <StyledButton className="btn-light btn-xs mr5" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-              초기화
-            </StyledButton>
           </StyledButtonWrapper>
         );
         break;
@@ -186,6 +206,15 @@ CommonSearchbar.propTypes = {
   changeFormData: PropTypes.func,
   loadingComplete: PropTypes.bool,
   saveBeforeProcess: PropTypes.func,
+  EshsSearchBarInputCustomButtons: PropTypes.any,
+  EshsSearchBarModifyCustomButtons: PropTypes.any,
+  conditional: PropTypes.string,
+};
+
+CommonSearchbar.defaultProps = {
+  EshsSearchBarInputCustomButtons: undefined,
+  EshsSearchBarModifyCustomButtons: undefined,
+  conditional: '',
 };
 
 export default CommonSearchbar;
