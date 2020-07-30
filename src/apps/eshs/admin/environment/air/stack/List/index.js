@@ -198,6 +198,7 @@ class ListPage extends Component {
       removeMultiTask,
       isBuilderModal,
       changeBuilderModalState,
+      conditional,
     } = this.props;
     const { isMultiDelete, StyledWrap } = this.state;
 
@@ -263,7 +264,7 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-gray" onClick={() => getListData(id, workSeq)}>
+                          <StyledButton className="btn-gray" onClick={() => getListData(id, workSeq, conditional)}>
                             Search
                           </StyledButton>
                         </div>
@@ -298,6 +299,7 @@ ListPage.propTypes = {
   changeBuilderModalState: PropTypes.func,
   changeViewPage: PropTypes.func,
   customOnRowClick: PropTypes.any,
+  conditional: PropTypes.string,
 };
 
 ListPage.defaultProps = {
@@ -307,6 +309,7 @@ ListPage.defaultProps = {
     },
   },
   customOnRowClick: undefined,
+  conditional: '',
 };
 
 export default ListPage;

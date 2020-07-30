@@ -98,6 +98,7 @@ class List extends Component {
       },
     ];
     this.setState({ changeSelectValue: value }, () => getCallDataHandler(id, apiAry, this.selectCode));
+    this.onReset();
   };
 
   selectCode = () => {
@@ -120,17 +121,30 @@ class List extends Component {
   };
 
   overlabCode = () => {
-    const { listData, code } = this.state;
-    if (code) {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { listData, code, lvl } = this.state;
+    if (code || lvl > 3) {
       const overlab = listData && listData.find(item => item.CODE === this.state.code);
       if (overlab) {
-        message.warning('기존에 동일한 코드가 존재합니다.');
-      } else {
-        this.onChangeData('I');
+        return message.warning('기존에 동일한 코드가 존재합니다.');
       }
-    } else {
-      message.warning('코드를 입력해주세요.');
+      if (lvl > 3) {
+        const apiAry = [
+          {
+            key: 'getCode',
+            type: 'GET',
+            url: '/api/eshs/v1/common/eshsDangerGetWorkStepCode',
+          },
+        ];
+        return getCallDataHandler(id, apiAry, () => {
+          const { result } = this.props;
+          const nextCode = (result && result.getCode && result.getCode.result) || '';
+          this.setState({ code: nextCode }, () => this.onChangeData('I'));
+        });
+      }
+      return this.onChangeData('I');
     }
+    return message.warning('코드를 입력해주세요.');
   };
 
   onChangeData = value => {
@@ -237,7 +251,15 @@ class List extends Component {
         title: `${changeTitle}코드`,
         children: [
           {
-            title: <AntdInput style={{ width: 100 }} className="ant-input-sm" value={code} onChange={e => this.onChangeValue('code', e.target.value)} />,
+            title: (
+              <AntdInput
+                style={{ width: 100 }}
+                className="ant-input-sm"
+                readOnly={lvl > 3}
+                value={code}
+                onChange={e => this.onChangeValue('code', e.target.value)}
+              />
+            ),
             className: 'th-form',
             dataIndex: 'CODE',
             align: 'center',

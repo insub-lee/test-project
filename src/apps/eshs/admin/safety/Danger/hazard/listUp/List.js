@@ -179,29 +179,34 @@ class List extends Component {
           {
             title: '부서',
             dataIndex: 'SDIV_ID',
+            align: 'center',
             width: '8.75%',
             render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '공정(장소)',
             dataIndex: 'PLACE_ID',
+            align: 'center',
             width: '8.75%',
             render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '세부공정',
             dataIndex: 'PROCESS_ID',
+            align: 'center',
             width: '8.75%',
             render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '장비(설비)',
+            align: 'center',
             dataIndex: 'EQUIP_ID',
             width: '8.75%',
             render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '위험요인',
+            align: 'center',
             dataIndex: 'WORK_NM',
             width: '35%',
           },
@@ -223,6 +228,7 @@ class List extends Component {
       {
         title: '사고의 발생유형',
         dataIndex: 'AOT_ID',
+        align: 'center',
         width: '10%',
         render: (text, record) =>
           text === 30450
@@ -232,6 +238,7 @@ class List extends Component {
       {
         title: 'R/A 실시여부',
         dataIndex: 'RA_YN',
+        align: 'center',
         width: '10%',
       },
     ];
