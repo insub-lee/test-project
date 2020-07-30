@@ -55,7 +55,6 @@ class Graph extends Component {
           })),
         );
     }
-
     return (
       <BarChart
         width={1000}

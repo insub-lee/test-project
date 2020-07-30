@@ -53,6 +53,7 @@ class MainWidget extends Component {
             <div className="main-widget-col col-3">
               <StandardDocWidget
                 sagaKey={sagaKey}
+                subKey="mdcsDocFavoriteWidget"
                 submitHandlerBySaga={submitHandlerBySaga}
                 widgetTitle="즐겨찾기"
                 widgetClassName="widget-bookmark"
@@ -62,6 +63,7 @@ class MainWidget extends Component {
             <div className="main-widget-col col-3">
               <StandardDocWidget
                 sagaKey={sagaKey}
+                subKey="mdcsDocViewHistoryWidget"
                 submitHandlerBySaga={submitHandlerBySaga}
                 widgetTitle="내가 본 문서"
                 widgetClassName="widget-view"

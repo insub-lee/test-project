@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import JSONInput from 'react-json-editor-ajrm/index';
-import { Divider, Drawer, Checkbox, Modal } from 'antd';
+import { Divider, Drawer, Checkbox, Modal, Select, message, Button } from 'antd';
 import styled from 'styled-components';
 import { ContextMenu, MenuItem, ContextMenuTrigger, SubMenu } from 'react-contextmenu';
 
@@ -18,6 +18,8 @@ import CompItem from '../CompItem';
 import HiddenComp from '../CompItem/HiddenComp';
 import CompModal from '../CompItem/CompModal';
 import HiddenModal from '../CompItem/HiddenModal';
+
+const { Option } = Select;
 
 const StyledActionBar = styled.div`
   position: relative;
@@ -47,6 +49,21 @@ const getCollect = ({ groupIndex, rowIndex, colIndex }) => ({
   colIndex,
 });
 
+const handleChangeOrderByField = (idx, compField, ordType, orderByFieldList, setOrderByFieldList) => {
+  console.debug(idx, compField, ordType);
+  if (compField) {
+    const fieldIdx = orderByFieldList.findIndex(iNode => iNode.compField === compField);
+    if (fieldIdx > -1) message.warning(`${compField} 필드는 이미 존재합니다.`);
+    else setOrderByFieldList(idx, compField, ordType);
+  } else {
+    setOrderByFieldList(idx, compField, ordType);
+  }
+};
+
+const handleChangeOrderByOrdType = (idx, compField, ordType, orderByFieldList, setOrderByFieldList) => {
+  setOrderByFieldList(idx, compField, ordType);
+};
+
 const StructureDesign = ({
   isShowEditor,
   canMerge,
@@ -63,6 +80,7 @@ const StructureDesign = ({
   compList,
   classNameList,
   dataNodeList,
+  orderByFieldList,
 }) => {
   const [compConfigModal, setCompConfigModal] = useState([false, '', {}, 'COMP']);
   return (
@@ -193,6 +211,43 @@ const StructureDesign = ({
               </Contents>
             </TableGroup>
           </Group>
+          {viewType === 'LIST' && compList && (
+            <div>
+              <div style={{ padding: '10px 0px' }}>
+                목록 정렬순서
+                <Button style={{ marginLeft: '10px' }} onClick={() => action.setOrderByFieldList(-1, undefined, undefined)}>
+                  추가
+                </Button>
+              </div>
+              <div>
+                {orderByFieldList &&
+                  orderByFieldList.map((item, idx) => (
+                    <div key={`biz-builder-listview-order-by-item-${item.compField || ''}-${idx}`} style={{ marginBottom: '4px' }}>
+                      <Select
+                        style={{ width: '240px', marginRight: '10px' }}
+                        placeholder="Select field"
+                        value={item.compField}
+                        onChange={value => handleChangeOrderByField(idx, value, item.ordType, orderByFieldList, action.setOrderByFieldList)}
+                      >
+                        {compList.map(node => (
+                          <Option value={node.COMP_FIELD}>{node.COMP_FIELD}</Option>
+                        ))}
+                      </Select>
+                      <Select
+                        style={{ width: '120px', marginRight: '10px' }}
+                        placeholder="Select type"
+                        value={item.ordType}
+                        onChange={value => handleChangeOrderByOrdType(idx, item.compField, value, orderByFieldList, action.setOrderByFieldList)}
+                      >
+                        <Option value="ASC">오름차순</Option>
+                        <Option value="DESC">내림차순</Option>
+                      </Select>
+                      <Button onClick={() => action.removeOrderByFieldList(idx, item.compField)}>삭제</Button>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
           <ContextMenu id="structure-design-context-menu">
             <SubMenu title="행" preventCloseOnClick>
               <MenuItem onClick={action.addRowToUp}>

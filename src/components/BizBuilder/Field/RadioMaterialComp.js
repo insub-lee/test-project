@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Radio, Select, Button, Input } from 'antd';
+import { Radio, Select, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
@@ -14,12 +14,44 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 const { Option } = Select;
 const AntdSelect = StyledSelect(Select);
-const AntdInput = StyledInput(Input);
+//const AntdInput = StyledInput(Input);
+
 const StyledWrap = styled.div`
   .validity-check-input {
     input,
     select {
       width: 150px;
+    }
+
+    .input {
+      display: inline-block;
+      height: calc(1.47em + 1rem + 2px);
+      padding: 0.5rem 0.875rem;
+      font-size: 0.8125rem;
+      font-weight: 400;
+      line-height: 1.47;
+      color: #495057;
+      background-clip: padding-box;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+      vertical-align: middle;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.75rem;
+      height: auto;
+      margin-right: 5px;
+
+      &:hover,
+      &:focus {
+        color: #495057;
+        border-color: #636a78;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem transparent;
+      }
+
+      &:disabled {
+        background: #f5f5f5;
+      }
     }
 
     button {
@@ -214,6 +246,7 @@ class RadioMaterialComp extends Component {
   onCallBack = (id, response) => {
     const { changeValidationData, COMP_FIELD } = this.props;
     const { matrnList } = response;
+
     if (matrnList.length > 0) {
       const isCheckList = matrnList.filter(f => f.CHECK !== 'Y');
       const errorCodeList = isCheckList.length > 0 ? isCheckList.map(item => item.MATNR) : [];
@@ -222,6 +255,7 @@ class RadioMaterialComp extends Component {
         this.setState({ isValidation: false });
       } else {
         this.setState({ isValidation: true });
+        message.success('사용 가능한 코드 입니다.');
         changeValidationData(id, COMP_FIELD, true, '');
       }
       this.setState({ errorCodeList });
@@ -232,7 +266,7 @@ class RadioMaterialComp extends Component {
 
   render() {
     const { formData, colData, processRule, viewType } = this.props;
-    const { mList, isUseMeterial, initMeterialCode, initMeterialText, meterialCode, meterialText, compKey } = this.state;
+    const { mList, isUseMeterial, initMeterialCode, initMeterialText, meterialCode, meterialText, compKey, errorCodeList } = this.state;
     return (
       <StyledWrap>
         <div className="validity-check-input">
@@ -243,7 +277,7 @@ class RadioMaterialComp extends Component {
           <AntdSelect
             onChange={this.onSelectMeterialCode}
             placeholder="자재코드 선택"
-            className="mr5"
+            className="mr5 select-xs"
             style={{ width: '180px', display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
             dropdownRender={menu => <StyledDropdown>{menu}</StyledDropdown>}
             defaultValue={initMeterialCode}
@@ -253,8 +287,8 @@ class RadioMaterialComp extends Component {
           </AntdSelect>
 
           {viewType === 'INPUT' ? (
-            <AntdInput
-              className="mr5 ant-input-xs"
+            <input
+              className="input"
               defaultValue={formData.MATERIAL_TEXT}
               style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
               onChange={e => {
@@ -268,8 +302,8 @@ class RadioMaterialComp extends Component {
               }}
             />
           ) : (
-            <AntdInput
-              className="mr5 ant-input-xs"
+            <input
+              className="input"
               key={compKey}
               style={{ display: `${isUseMeterial === 'Y' ? '' : 'none'}` }}
               defaultValue={formData.MATERIAL_TEXT}
@@ -288,6 +322,12 @@ class RadioMaterialComp extends Component {
             <SearchOutlined />
             유효성체크
           </StyledButton>
+          {isUseMeterial === 'Y' && errorCodeList && errorCodeList.length > 0 && (
+            <div className="unregistered-code">
+              <div className="title">미등록 코드</div>
+              <div className="code-list">{errorCodeList && errorCodeList.map(item => <div>{item}</div>)}</div>
+            </div>
+          )}
         </div>
       </StyledWrap>
     );

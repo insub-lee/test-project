@@ -321,7 +321,7 @@ class List extends Component {
             </AntdSelect>
           </div>
           <div className="btn-area">
-            <StyledButton className="btn-gray btn-sm" onClick={this.selectCode}>
+            <StyledButton className="btn-gray btn-sm mr5" onClick={this.selectCode}>
               검색
             </StyledButton>
             {listData && listData.length > 0 && <ExcelDownloader dataList={listData} excelNm="작업단계관리" />}

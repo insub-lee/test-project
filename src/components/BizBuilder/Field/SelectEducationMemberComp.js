@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'antd';
 
-import CustomUserSelect from 'components/CustomUserSelect';
+import CustomUserSelect from 'apps/eshs/admin/safety/periodicalEducation/CustomUserSelect';
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';

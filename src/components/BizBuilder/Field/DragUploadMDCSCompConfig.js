@@ -23,8 +23,13 @@ class DragUploadMDCSCompConfig extends Component {
     const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
     const { value } = e.target;
     // changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
-    const {} = configInfo;
     configInfo.property.isUsePDF = value;
+    changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
+  };
+
+  onChangeExt = value => {
+    const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
+    configInfo.property.fileExt = value;
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
   };
 
@@ -44,6 +49,12 @@ class DragUploadMDCSCompConfig extends Component {
                   <Radio value={0}>미사용</Radio>
                   <Radio value={1}>사용</Radio>
                 </Radio.Group>
+              </td>
+            </tr>
+            <tr>
+              <th>허용확장자</th>
+              <td>
+                <Input style={{ width: '100%' }} onChange={e => this.onChangeExt(e.target.value)} defaultValue={property && property.fileExt}></Input>
               </td>
             </tr>
           </tbody>

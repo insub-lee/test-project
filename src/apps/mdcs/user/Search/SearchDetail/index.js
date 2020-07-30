@@ -165,7 +165,7 @@ class SearchDetail extends Component {
                         <AntdInput
                           className="ant-input-sm"
                           onChange={e => {
-                            this.onChangeSearchValue('w.docnumber', ` and w.docnumber like '%${e.target.value}%'`, e.target.value);
+                            this.onChangeSearchValue('w.docnumber', ` and w.docnumber like '%${e.target.value.toUpperCase()}%'`, e.target.value);
                           }}
                           onPressEnter={this.onSearch}
                         />

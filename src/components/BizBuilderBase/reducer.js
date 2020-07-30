@@ -281,6 +281,16 @@ const reducer = (state = initialState, action) => {
       const { id, validationData } = action;
       return state.setIn(['bizBuilderBase', id, 'validationData'], fromJS(validationData));
     }
+    case actionTypes.SET_LIST_ORDER_BY_FIELD_REDUCER: {
+      const { id, orderByFieldList } = action;
+      let listOrderByField = '';
+
+      orderByFieldList.forEach((item, idx) => {
+        if (item.compField) listOrderByField += `${idx === 0 ? '' : ','} A."${item.compField}" ${item.ordType}`;
+      });
+
+      return state.setIn(['bizBuilderBase', id, 'listOrderByField'], listOrderByField);
+    }
     default:
       return state;
   }
