@@ -62,6 +62,7 @@ class DistributeDocView extends Component {
           FILE_ORDER: row.FILE_ORDER,
           DOCNUMBER: row.DOCNUMBER,
           VERSION: row.VERSION,
+          IS_PDF: row.IS_PDF,
         }
       }));
       const url = `/down/eddsfile/${row.FILE_SEQ}/${acl}`;
@@ -105,7 +106,11 @@ class DistributeDocView extends Component {
       title: '파일명',
       dataIndex: 'FILE_NAME',
       key: 'FILE_NAME',
-      render: (text, record) => <li style={{ cursor: 'pointer' }} onClick={() => this.onClickDownload(record)}>{`${record.DOCNUMBER}_${record.VERSION}_${record.FILE_ORDER}.${record.EXT}`}</li>
+      render: (text, record) => (
+        <li style={{ cursor: 'pointer' }} onClick={() => this.onClickDownload(record)}>
+          {`${record.DOCNUMBER}_${record.VERSION}_${record.FILE_ORDER}.${record.EXT}${record.IS_PDF === 1 ? '.pdf': ''}`}
+        </li>
+      ),
     },
     {
       title: '다운가능횟수',
