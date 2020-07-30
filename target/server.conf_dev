@@ -468,7 +468,7 @@ upstream wts-common {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10801;
 }
 upstream gcs-common {
-    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10010;
+    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10810;
 }
 upstream mxlife-common {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10710;
