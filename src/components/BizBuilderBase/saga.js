@@ -49,7 +49,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
   const viewPageData = yield select(selectors.makeSelectViewPageDataById(id));
   const upperCaseViewType = viewType && viewType.length > 0 ? viewType.toUpperCase() : viewPageData.viewType;
 
-  let validData = {};
+  const validData = {};
   let viewSetData = {};
   let responseFieldSelectData = {};
   if (extraProps) {
@@ -110,9 +110,10 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
         const fieldSelectDataObject = {};
         const currentLayer = viewLayerConfig.property.layer;
         let validSort = 1;
+        const modifyValidationData = {};
 
         if ((upperCaseViewType === 'INPUT' || upperCaseViewType === 'MODIFY') && taskSeq > -1) {
-          validData = yield select(selectors.makeSelectValidationDataById(id));
+          modifyValidationData = yield select(selectors.makeSelectValidationDataById(id));
         }
 
         currentLayer.groups.forEach(group => {
@@ -140,9 +141,9 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
                     (upperCaseViewType === 'INPUT' || upperCaseViewType === 'MODIFY')
                   ) {
                     if (taskSeq === -1) {
-                      validationData[col.comp.COMP_FIELD].validSort = validSort;
+                      validData[col.comp.COMP_FIELD] = { ...validationData[col.comp.COMP_FIELD], validSort };
                     } else {
-                      validData[col.comp.COMP_FIELD].validSort = validSort;
+                      validData[col.comp.COMP_FIELD] = { ...modifyValidationData[col.comp.COMP_FIELD], validSort };
                     }
                     validSort++;
                   }
@@ -184,7 +185,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
         viewSetData,
         responseFieldSelectData,
         formData,
-        validationData,
+        validData,
       ),
     );
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
