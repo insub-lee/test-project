@@ -11,7 +11,8 @@ const columns = [
     title: '종류',
     key: 'FULLPATHSTR',
     dataIndex: 'FULLPATHSTR',
-    width: '21%',
+    width: '10%',
+    align: 'center',
     render: (text, row, index) => {
       if (text) {
         return <span>{text.replace(/&gt;/g, ' > ')}</span>;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-
 import { Modal } from 'antd';
 
+import history from 'utils/history';
 import DraftDownLoad from 'apps/mdcs/Modal/DraftDownLoad';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -46,7 +46,7 @@ class ModalView extends Component {
   };
 
   render() {
-    const { viewType, workSeq, taskSeq, closeBtnFunc, clickCoverView, submitHandlerBySaga } = this.props;
+    const { sagaKey, viewType, workSeq, taskSeq, closeBtnFunc, clickCoverView, submitHandlerBySaga } = this.props;
     const { isDownVisible, selectedRow, DRAFT_PROCESS, appvMember } = this.state;
     return (
       <>
@@ -89,10 +89,10 @@ class ModalView extends Component {
           destroyOnClose
         >
           <DraftDownLoad
+            sagaKey={sagaKey}
             selectedRow={selectedRow}
             appvMember={appvMember}
             DRAFT_PROCESS={DRAFT_PROCESS}
-            sagaKey="SearchView"
             submitHandlerBySaga={submitHandlerBySaga}
             onCompleteProc={this.onCompleteProc}
             onCloseDownLoad={this.onCloseDownLoad}
