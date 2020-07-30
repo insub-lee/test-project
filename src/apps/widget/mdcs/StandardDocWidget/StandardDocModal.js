@@ -61,6 +61,8 @@ class StandardDocModal extends Component {
     super(props);
   }
 
+  componentDidMount() {}
+
   render() {
     const {
       viewType,
@@ -79,6 +81,7 @@ class StandardDocModal extends Component {
       getListData,
       listCnt,
     } = this.props;
+
     return (
       <>
         <AntdModal className="modalWrapper modalTechDoc modalCustom" visible={visible} footer={null} width={800} onCancel={closeBtnFunc} destroyOnClose>
