@@ -607,6 +607,10 @@ html {
   background: #ffffff;
 }
 
+body .ant-popover {
+ z-index: 1051;
+}
+
 @media only screen and (max-width: 1760px) {
   .drillDownCon .rodal-dialog {
     width: 100%;
