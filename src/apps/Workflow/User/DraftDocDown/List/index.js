@@ -47,6 +47,7 @@ class DraftDocDown extends Component {
       key: 'VERSION',
       width: '6%',
       align: 'center',
+      render: (text, record) => text.split('.')[0],
     },
     {
       title: '제목',

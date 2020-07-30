@@ -26,6 +26,7 @@ class DraftDownLoad extends Component {
   componentDidMount() {
     const { sagaKey, submitHandlerBySaga } = this.props;
     const prefixUrl = '/api/mdcs/v1/common/drmAclHandler';
+    console.debug('did', this.props);
     submitHandlerBySaga(sagaKey, 'GET', prefixUrl, {}, this.initAclData);
   }
 
@@ -50,6 +51,7 @@ class DraftDownLoad extends Component {
   };
 
   onDraftDownLoad = () => {
+    console.debug('draft', this.state, this.props);
     const { selectedDRM, OPINION } = this.state;
     if (OPINION) {
       const { sagaKey, submitHandlerBySaga, onCompleteProc, selectedRow, DRAFT_PROCESS } = this.props;
@@ -85,7 +87,7 @@ class DraftDownLoad extends Component {
                     <th>표준 번호</th>
                     <td>{selectedRow.DOCNUMBER}</td>
                     <th>개정번호</th>
-                    <td>{selectedRow.VERSION}</td>
+                    <td>{selectedRow.VERSION.split('.')[0]}</td>
                   </tr>
                   <tr>
                     <th>결재자</th>
