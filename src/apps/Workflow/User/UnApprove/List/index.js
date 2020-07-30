@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal, Icon } from 'antd';
+import { Table, Modal, Icon, Button, Anchor } from 'antd';
 
 import moment from 'moment';
 
@@ -9,16 +9,18 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
+import ProcessView from 'apps/Workflow/User/CommonView/processView';
 
 const AntdLineTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
-
+const { Link } = Anchor;
 class UnApproveList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       paginationIdx: 1,
       pageSize: 10,
+      isPreView: false,
     };
   }
 
@@ -49,7 +51,7 @@ class UnApproveList extends Component {
       title: '유형',
       dataIndex: 'NODETYPE',
       key: 'NODETYPE',
-      width: '10%',
+      width: '15%',
       align: 'center',
       render: (text, record) => (record.APPV_USER_ID === record.ORG_APPV_USER_ID ? text : `${text}(위임결재)`),
     },
@@ -76,14 +78,7 @@ class UnApproveList extends Component {
       dataIndex: 'DRAFT_TITLE',
       key: 'title',
       ellipsis: true,
-    },
-
-    {
-      title: '기안자',
-      dataIndex: 'NAME_KOR',
-      key: 'nameKor',
-      width: '10%',
-      align: 'center',
+      render: (text, record) => <a onClick={() => this.onRowClick(record)}>{text}</a>,
     },
     {
       title: '기안일',
@@ -93,9 +88,34 @@ class UnApproveList extends Component {
       align: 'center',
       render: (text, record) => moment(text).format('YYYY-MM-DD'),
     },
+    {
+      title: '상태',
+      dataIndex: 'STATUS',
+      key: 'status',
+      width: '10%',
+      align: 'center',
+      render: (text, record) => <a onClick={() => this.onPrcPreViewClick(record)}>결재중</a>,
+    },
+    {
+      title: '기안자',
+      dataIndex: 'NAME_KOR',
+      key: 'nameKor',
+      width: '10%',
+      align: 'center',
+    },
   ];
 
-  onRowClick = (record, rowIndex, e) => {
+  onPrcPreViewClick = record => {
+    this.setState({ isPreView: true });
+    this.props.setSelectedRow(record);
+  };
+
+  onClosePreView = () => {
+    this.setState({ isPreView: false });
+  };
+
+  onRowClick = record => {
+    console.debug(record);
     this.props.setSelectedRow(record);
     this.props.setViewVisible(true);
   };
@@ -113,9 +133,9 @@ class UnApproveList extends Component {
     });
 
   render() {
-    const { unApproveList, unApproveListCnt, viewVisible } = this.props;
-    const { paginationIdx } = this.state;
-
+    const { unApproveList, unApproveListCnt, viewVisible, selectedRow } = this.props;
+    const { paginationIdx, isPreView } = this.state;
+    console.debug(selectedRow, isPreView);
     return (
       <>
         <StyledHeaderWrapper>
@@ -130,9 +150,6 @@ class UnApproveList extends Component {
             key="apps-workflow-user-unapprove-list"
             columns={this.getTableColumns()}
             dataSource={unApproveList}
-            onRow={(record, rowIndex) => ({
-              onClick: e => this.onRowClick(record, rowIndex, e),
-            })}
             bordered
             pagination={{ current: paginationIdx, total: unApproveListCnt }}
             onChange={pagination => this.setPaginationIdx(pagination.current)}
@@ -144,6 +161,10 @@ class UnApproveList extends Component {
           {/* <AntdModal title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
               <MdcsAppvView {...this.props} />
             </AntdModal> */}
+        </AntdModal>
+
+        <AntdModal title="결재정보" width={680} visible={isPreView} destroyOnClose onCancel={this.onClosePreView}>
+          <ProcessView {...this.props}></ProcessView>
         </AntdModal>
       </>
     );

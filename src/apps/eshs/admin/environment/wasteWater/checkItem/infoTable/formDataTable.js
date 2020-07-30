@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Select, Spin, Input, InputNumber, Checkbox } from 'antd';
+import { Modal, Select, Input, InputNumber, Checkbox } from 'antd';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
@@ -11,6 +11,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import UnitSelectTable from '../unitSelect';
+import ItemSelectTable from '../checkItemSelect';
 import CheckTypeSelect from '../checkTypeSelect';
 
 const AntdInputNumber = StyledInputNumber(InputNumber);
@@ -26,11 +27,9 @@ class formDataTable extends Component {
     super(props);
     this.state = {
       site: '청주',
-      keyword: '',
       modalType: '',
       modalTitle: '',
       modalVisible: false,
-      formData: {},
     };
   }
 
@@ -48,6 +47,14 @@ class formDataTable extends Component {
         break;
       case 'CHECK_TYPE':
         title = '측정값 종류 선택';
+        this.setState({
+          modalType: type,
+          modalTitle: title,
+          modalVisible: visible,
+        });
+        break;
+      case 'ITEM':
+        title = '수질 측정항목 검색';
         this.setState({
           modalType: type,
           modalTitle: title,
@@ -78,6 +85,7 @@ class formDataTable extends Component {
     const { onChangeFormData } = this.props;
     this.setState(
       {
+        modalType: '',
         modalTitle: '',
         modalVisible: false,
       },
@@ -85,43 +93,66 @@ class formDataTable extends Component {
     );
   };
 
-  renderInputNumber = (unitNm, point, field) => {
-    const { formData, onChangeFormData } = this.props;
-    const target = formData.toJS().find(form => form.GROUP_UNIT_NM === unitNm && form.MEASUREMENT_POINT === point);
-    return (
-      <AntdInputNumber
-        className="ant-input-number-sm"
-        value={(target && target[field] && Number(target[field])) || 0}
-        onChange={e => onChangeFormData(unitNm, point, field, e)}
-      />
+  // 측정값 종류 선택
+  onSaveCheckType = checkItems => {
+    const { onChangeFormData } = this.props;
+    this.setState(
+      {
+        modalType: '',
+        modalTitle: '',
+        modalVisible: false,
+      },
+      () => onChangeFormData('CHECK_VALUE_LIST', checkItems),
     );
   };
 
+  onClickCheckItem = record => {
+    const { onChangeAllFormData } = this.props;
+    this.setState({
+      modalType: '',
+      modalTitle: '',
+      modalVisible: false,
+    });
+    onChangeAllFormData(record);
+  };
+
   render() {
-    const { formData, onChangeFormData } = this.props;
-    const { site, keyword, modalType, modalTitle, modalVisible } = this.state;
+    const { formData, onChangeFormData, submitFormData } = this.props;
+    const { site, modalType, modalTitle, modalVisible } = this.state;
     return (
       <>
         <StyledCustomSearchWrapper>
-          <Spin tip="검색중 ..." spinning={false}>
-            <div className="search-input-area">
-              <span className="text-label">지역</span>
-              <AntdSelect className="select-sm" style={{ width: '100px' }} defaultValue={site} onChange={val => this.setState('SITE', val)}>
-                <Option value="청주">청주</Option>
-                <Option value="구미">구미</Option>
-              </AntdSelect>
-              <span className="text-label">측정항목명</span>
-              <AntdSearch className="ant-search-inline input-search-sm" style={{ width: '200px', marginRight: '10px' }} defaultValue={keyword} />
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handlerSearch()}>
-                검색
-              </StyledButton>
-            </div>
-          </Spin>
+          <div className="search-input-area">
+            <span className="text-label">지역</span>
+            <AntdSelect className="select-sm" style={{ width: '100px' }} defaultValue={site} onChange={val => this.setState('SITE', val)}>
+              <Option value="청주">청주</Option>
+              <Option value="구미">구미</Option>
+            </AntdSelect>
+            <span className="text-label">측정항목명</span>
+            <AntdSearch
+              className="ant-search-inline input-search-sm"
+              style={{ width: '200px', marginRight: '10px' }}
+              value={formData.ITEM_CD || ''}
+              onClick={() => this.handleModal('ITEM', true)}
+              onSearch={() => this.handleModal('ITEM', true)}
+            />
+          </div>
         </StyledCustomSearchWrapper>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-primary btn-sm ml5" onClick={() => console.debug('신규등록')}>
-            신규등록
-          </StyledButton>
+          {formData.ITEM_CD && formData.ITEM_CD !== '' ? (
+            <>
+              <StyledButton className="btn-primary btn-sm ml5" onClick={() => submitFormData('MODIFY')}>
+                저장
+              </StyledButton>
+              <StyledButton className="btn-light btn-sm ml5" onClick={() => submitFormData('DELETE')}>
+                삭제
+              </StyledButton>
+            </>
+          ) : (
+            <StyledButton className="btn-primary btn-sm ml5" onClick={() => submitFormData('NEW')}>
+              추가
+            </StyledButton>
+          )}
         </StyledButtonWrapper>
         <StyledHtmlTable>
           <table>
@@ -177,7 +208,7 @@ class formDataTable extends Component {
               </tr>
               <tr>
                 <th colSpan={1}>
-                  <span>항목명</span>
+                  <span>측정대상</span>
                 </th>
                 <td colSpan={5}>
                   <>
@@ -228,11 +259,11 @@ class formDataTable extends Component {
               </tr>
               <tr>
                 <th colSpan={1}>
-                  <span>항목명</span>
+                  <span>측정값 종류</span>
                 </th>
                 <td colSpan={3}>
                   <AntdSearch
-                    value={formData.CHECK_VALUE_LIST || ''}
+                    value={formData.CHECK_VALUE_LIST && formData.CHECK_VALUE_LIST.length > 0 ? `${formData.CHECK_VALUE_LIST.join(', ')}` : ''}
                     className="input-search-sm"
                     style={{ width: '100%' }}
                     onClick={() => this.handleModal('CHECK_TYPE', true)}
@@ -240,10 +271,10 @@ class formDataTable extends Component {
                   />
                 </td>
                 <th colSpan={1}>
-                  <span>단위</span>
+                  <span>사용</span>
                 </th>
                 <td colSpan={1}>
-                  <AntdSelect value={formData.IS_DEL || '0'} className="select-sm" style={{ width: '100%' }}>
+                  <AntdSelect value={formData.IS_USE || '0'} className="select-sm" style={{ width: '100%' }} onChange={e => onChangeFormData('IS_USE', e)}>
                     <Option value="0">사용</Option>
                     <Option value="1">미사용</Option>
                   </AntdSelect>
@@ -259,19 +290,35 @@ class formDataTable extends Component {
                   <span>상한값</span>
                 </th>
                 <td colSpan={1}>
-                  <AntdInputNumber min={0} value={formData.LAW_SPEC_HIGH || 0.0} className="ant-input-number-sm" />
+                  <AntdInputNumber
+                    min={0}
+                    value={formData.LAW_SPEC_HIGH || 0.0}
+                    precision={4}
+                    className="ant-input-number-sm"
+                    onChange={e => onChangeFormData('LAW_SPEC_HIGH', e)}
+                  />
                 </td>
                 <th colSpan={1}>
                   <span>하한값</span>
                 </th>
                 <td colSpan={1}>
-                  <AntdInputNumber value={formData.LAW_SPEC_LOW || 0.0} className="ant-input-number-sm" />
+                  <AntdInputNumber
+                    value={formData.LAW_SPEC_LOW || 0.0}
+                    precision={4}
+                    className="ant-input-number-sm"
+                    onChange={e => onChangeFormData('LAW_SPEC_LOW', e)}
+                  />
                 </td>
                 <th colSpan={1}>
                   <span>기준값</span>
                 </th>
                 <td colSpan={1}>
-                  <AntdInputNumber value={formData.LAW_SPEC_BASE || 0.0} className="ant-input-number-sm" />
+                  <AntdInputNumber
+                    value={formData.LAW_SPEC_BASE || 0.0}
+                    precision={4}
+                    className="ant-input-number-sm"
+                    onChange={e => onChangeFormData('LAW_SPEC_BASE', e)}
+                  />
                 </td>
               </tr>
             </tbody>
@@ -280,7 +327,7 @@ class formDataTable extends Component {
         <AntdModal
           className="modal-table-pad"
           title={modalTitle}
-          width={modalType === 'UNIT' ? '93%' : '40%'}
+          width={modalType === 'UNIT' ? '93%' : '35%'}
           visible={modalVisible}
           footer={null}
           destroyOnClose
@@ -289,7 +336,8 @@ class formDataTable extends Component {
           onCancel={() => this.handleModal('', false)}
         >
           {modalType === 'UNIT' && <UnitSelectTable onClickItem={this.onClickItem} />}
-          {modalType === 'CHECK_TYPE' && <CheckTypeSelect />}
+          {modalType === 'ITEM' && <ItemSelectTable onClickCheckItem={this.onClickCheckItem} />}
+          {modalType === 'CHECK_TYPE' && <CheckTypeSelect onSaveCheckType={this.onSaveCheckType} formData={formData} />}
         </AntdModal>
       </>
     );
@@ -297,11 +345,15 @@ class formDataTable extends Component {
 }
 
 formDataTable.propTypes = {
+  viewType: PropTypes.string,
   formData: PropTypes.array,
+  onChangeAllFormData: PropTypes.func,
   onChangeFormData: PropTypes.func,
+  submitFormData: PropTypes.func,
 };
 
 formDataTable.defaultProps = {
+  viewType: 'NEW',
   formData: [],
 };
 

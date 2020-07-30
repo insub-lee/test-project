@@ -401,9 +401,9 @@ class WorkProcessModal extends Component {
     };
     return (
       <StyledWorkProcessModal>
-        <div style={{ fontSize: 12, color: 'rgb(255, 36, 36)', marginBottom: 10, textAlign: 'center' }}>
-          ※ 지정된 심의권자는 자동으로 배포부서에 적용되며, 이외 추가 배포부서는 부서탭 선택 후 배포부서 버튼을 통해 별도 추가 바랍니다.
-          <br /> (순서 : 부서탭 → 부서선택 후 사용자 선택과 동일)
+        <div style={{ fontSize: 12, color: '#4491e0', marginBottom: 10, textAlign: 'center' }}>
+          ※ 지정된 심의/승인권자의 부서는 자동으로 배포부서에 적용되며,이 외 추가 배포부서는 부서탭 선택 후 배포부서 버튼을 통해 별도 추가 바랍니다.
+          <br /> (순서 : 부서탭 → 부서선택, 사용자 선택과 동일)
         </div>
         <Row gutter={0}>
           <Col span={9}>
@@ -522,7 +522,7 @@ class WorkProcessModal extends Component {
                       ) : (
                         <li>
                           <span>
-                            <WarningOutlined /> 선택 결재정보 없음
+                            <WarningOutlined /> {item.NODE_ID === 110 ? '선택 배포부서 정보없음' : '선택 결재정보 없음'}
                           </span>
                         </li>
                       )}
