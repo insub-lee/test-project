@@ -109,7 +109,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
       if (viewLayerConfig.property && viewLayerConfig.property.layer && viewLayerConfig.property.layer.groups) {
         const fieldSelectDataObject = {};
         const currentLayer = viewLayerConfig.property.layer;
-        let validSort = 0;
+        let validSort = 1;
 
         if ((upperCaseViewType === 'INPUT' || upperCaseViewType === 'MODIFY') && taskSeq > -1) {
           validData = yield select(selectors.makeSelectValidationDataById(id));

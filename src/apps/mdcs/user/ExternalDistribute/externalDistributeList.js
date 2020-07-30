@@ -119,6 +119,7 @@ class ExternalDistributeList extends Component {
       title: 'Title',
       dataIndex: 'TITLE',
       key: 'TITLE',
+      ellipsis: true,
     },
     {
       title: '업체명',

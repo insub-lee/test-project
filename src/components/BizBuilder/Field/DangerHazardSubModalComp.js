@@ -109,7 +109,7 @@ class DangerHazardSubComp extends React.Component {
 
   modalInsert = () => {
     const { selectedRowKeys, listData } = this.state;
-    const { sagaKey: id, changeFormData, formData, onChangeModal } = this.props;
+    const { sagaKey: id, changeFormData, formData, onChangeModal, onSelectedRowKeys } = this.props;
     const { HAZARD_LIST, REG_NO, TASK_SEQ } = formData;
     if (selectedRowKeys && selectedRowKeys.length) {
       const tempList = listData && listData.filter(selectd => selectedRowKeys.findIndex(rowKey => selectd.NODE_ID === rowKey) !== -1);
@@ -123,15 +123,21 @@ class DangerHazardSubComp extends React.Component {
             WORK_NM: undefined,
             AOC_ID: JSON.stringify([]),
             AOT_ID: 30438,
-            RA_YN: undefined,
+            RA_YN: 'Y',
             SEQ: (hazardLastSeq += 1),
             REG_NO,
             TASK_SEQ,
+            CHK: 'Y',
           });
         }
       });
+
+      const rowKeys = [];
+      HAZARD_LIST.concat(realList).forEach((item, index) => item.CHK === 'Y' && rowKeys.push(index));
+
       changeFormData(id, 'HAZARD_LIST', HAZARD_LIST.concat(realList));
       onChangeModal();
+      onSelectedRowKeys(rowKeys);
     } else {
       message.info(<MessageContent>선택된 장비가 없습니다.</MessageContent>);
     }
@@ -215,6 +221,7 @@ DangerHazardSubComp.propTypes = {
   treeData: PropTypes.array,
   changeFormData: PropTypes.func,
   onChangeModal: PropTypes.func,
+  onSelectedRowKeys: PropTypes.func,
 };
 
 DangerHazardSubComp.defaultProps = {};

@@ -36,6 +36,7 @@ class List extends Component {
     super(props);
     this.state = {
       revisionReRendering: true,
+      selectedRecord: {},
     };
   }
 
@@ -83,13 +84,20 @@ class List extends Component {
     this.setState({ isModalReApprise: !isModalReApprise });
   };
 
-  selectedModal = record => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    this.setState({ regNo: record.REG_NO });
-    if (!record.IMPROVE) {
-      this.hazardModal();
-    }
+  selecteRow = record => {
+    this.setState({ selectedRecord: record, regNo: record.REG_NO }, this.hazardModal);
+  };
 
+  selectedModal = record => {
+    const { isModal } = this.state;
+    this.setState({ selectedRecord: record, regNo: record.REG_NO, isModal: record.IMPROVE ? isModal : !isModal }, this.handleSearch);
+  };
+
+  handleSearch = () => {
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
+    const { selectedRecord } = this.state;
+    if (JSON.stringify(selectedRecord) === '{}') return message.info(<MessageContent>등록번호를 먼저 선택해주십시오.</MessageContent>);
+    spinningOn();
     const apiAry = [
       {
         key: 'dangerInfo',
@@ -97,7 +105,7 @@ class List extends Component {
         url: '/api/eshs/v1/common/eshsBuilderCustomSearch/10341',
         params: {
           PARAM: {
-            whereString: [`AND TO_CHAR(W.REG_DTTM , 'YYYY') = '${moment(record.REG_DTTM).format('YYYY')}'`],
+            whereString: [`AND TO_CHAR(W.REG_DTTM , 'YYYY') = '${moment(selectedRecord.REG_DTTM).format('YYYY')}'`],
           },
         },
       },
@@ -107,36 +115,41 @@ class List extends Component {
         url: '/api/eshs/v1/common/eshsBuilderCustomSearch/5262',
         params: {
           PARAM: {
-            whereString: [`AND W.DA_REG_NO = '${record.REG_NO}'`],
+            whereString: [`AND W.DA_REG_NO = '${selectedRecord.REG_NO}'`],
           },
         },
       },
       {
         key: 'dangerDanestAdmin',
         type: 'GET',
-        url: `/api/eshs/v1/common/dangerDanestAdmin?REG_NO=${record.REG_NO}`,
+        url: `/api/eshs/v1/common/dangerDanestAdmin?REG_NO=${selectedRecord.REG_NO}`,
       },
     ];
-    getCallDataHandler(id, apiAry, this.dangerData);
+    return getCallDataHandler(id, apiAry, this.dangerData);
   };
 
   dangerData = () => {
     const {
       result: { dangerInfo, dangerDanestAdmin, safetyImprove },
+      spinningOff,
     } = this.props;
     if (dangerDanestAdmin && dangerDanestAdmin.list && dangerDanestAdmin.list.length <= 0) {
+      spinningOff();
       message.info(<MessageContent>검색된 데이터가 없습니다.</MessageContent>);
     } else {
-      this.setState({
-        dangerInfo: dangerInfo && dangerInfo.list,
-        safetyImprove: (safetyImprove && safetyImprove.list) || [],
-        dangerDanestAdmin: (dangerDanestAdmin && dangerDanestAdmin.list) || [],
-        dangerDanestAdminSub: (dangerDanestAdmin && dangerDanestAdmin.subList) || [],
-        dangerDanestAdminSubFile: (dangerDanestAdmin && dangerDanestAdmin.fileList) || [],
-        reAppriseList: (dangerDanestAdmin && dangerDanestAdmin.reAppriseList) || [],
-        tempfile: [],
-        revisionReRendering: true,
-      });
+      this.setState(
+        {
+          dangerInfo: dangerInfo && dangerInfo.list,
+          safetyImprove: (safetyImprove && safetyImprove.list) || [],
+          dangerDanestAdmin: (dangerDanestAdmin && dangerDanestAdmin.list) || [],
+          dangerDanestAdminSub: (dangerDanestAdmin && dangerDanestAdmin.subList) || [],
+          dangerDanestAdminSubFile: (dangerDanestAdmin && dangerDanestAdmin.fileList) || [],
+          reAppriseList: (dangerDanestAdmin && dangerDanestAdmin.reAppriseList) || [],
+          tempfile: [],
+          revisionReRendering: true,
+        },
+        spinningOff,
+      );
     }
   };
 
@@ -182,11 +195,12 @@ class List extends Component {
   };
 
   updateDanest = daRegNo => {
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
     const { dangerDanestAdmin, dangerDanestAdminSub, tempfile } = this.state;
     const submitFind = dangerDanestAdmin.find(findItem => findItem.DA_REG_NO === daRegNo);
-    const submitFindSub = dangerDanestAdminSub.filter(findItem => findItem.DA_REG_NO === daRegNo);
+    const submitFindSub = dangerDanestAdminSub.filter(findItem => findItem.DA_REG_NO === daRegNo).map(item => ({ ...item, WORK_NM: item.DANGFACT }));
     const submitData = { PARAM: { ...submitFind, DANEST_SUB_LIST: submitFindSub } };
+    spinningOn();
     if (tempfile && tempfile.length) {
       submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', { PARAM: { DETAIL: tempfile } }, (afterId, res) => {
         if (res && res.message === 'success') {
@@ -198,6 +212,7 @@ class List extends Component {
             (key, response) => callBackAfterPut(key, response, this.callbackDataSet),
           );
         } else {
+          spinningOff();
           message.info(<MessageContent>파일저장에 실패하였습니다.</MessageContent>);
         }
       });
@@ -283,7 +298,7 @@ class List extends Component {
             />
           </div>
           <StyledButtonWrapper className="btn-area">
-            <StyledButton className="btn-gray btn-first btn-sm" onClick={this.search}>
+            <StyledButton className="btn-gray btn-first btn-sm" onClick={this.handleSearch}>
               검색
             </StyledButton>
           </StyledButtonWrapper>
@@ -375,7 +390,14 @@ class List extends Component {
         )}
         <AntdModal width={1000} visible={this.state.isModal} title="위험성 평가 검색" onCancel={this.hazardModal} destroyOnClose footer={null}>
           {this.state.isModal && (
-            <BizBuilderBase sagaKey="hazardModal" workSeq={12061} CustomListPage={customList} viewType="LIST" customOnRowClick={this.selectedModal} />
+            <BizBuilderBase
+              sagaKey="hazardModal"
+              workSeq={12061}
+              CustomListPage={customList}
+              viewType="LIST"
+              conditional={`AND W.END_YN = 'Y'`}
+              customOnRowClick={this.selecteRow}
+            />
           )}
         </AntdModal>
       </StyledContentsWrapper>
@@ -389,6 +411,8 @@ List.propTypes = {
   result: PropTypes.object,
   improveDanger: PropTypes.object,
   submitHandlerBySaga: PropTypes.func,
+  spinningOn: PropTypes.func,
+  spinningOff: PropTypes.func,
 };
 
 List.defaultProps = {
