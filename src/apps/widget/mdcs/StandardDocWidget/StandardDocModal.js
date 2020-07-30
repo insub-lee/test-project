@@ -80,15 +80,16 @@ class StandardDocModal extends Component {
       closeListBtnFunc,
       getListData,
       listCnt,
+      subKey,
     } = this.props;
-
+    console.debug('subKey', subKey);
     return (
       <>
         <AntdModal className="modalWrapper modalTechDoc modalCustom" visible={visible} footer={null} width={800} onCancel={closeBtnFunc} destroyOnClose>
           <>
             <div className="pop_tit">{widgetTitle}</div>
             <div className="pop_con">
-              <ModalView viewType={viewType} workSeq={workSeq} taskSeq={taskSeq} closeBtnFunc={closeBtnFunc} clickCoverView={clickCoverView} />
+              <ModalView viewType={viewType} workSeq={workSeq} taskSeq={taskSeq} closeBtnFunc={closeBtnFunc} clickCoverView={clickCoverView} {...this.props} />
             </div>
           </>
         </AntdModal>
@@ -117,7 +118,7 @@ class StandardDocModal extends Component {
           <>
             <div className="pop_tit">{widgetTitle}</div>
             <div className="pop_con_pad20">
-              <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
+              {/* <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
                 <ExcelDownLoad
                   key="excelDownLoad"
                   isBuilder={false}
@@ -128,10 +129,10 @@ class StandardDocModal extends Component {
                   sheetName=""
                   columns={excelColumns}
                   fields={fields}
-                  submitInfo={false}
-                  dataSetBind={listData.map(f => ({ ...f, VERSION: f.VERSION.split('.')[0] }))}
+                  submitInfo={subKey === 'mdcsDocViewHistoryWidget' ? {} : undefined}
+                  dataSetBind={subKey === 'mdcsDocViewHistoryWidget' ? undefined : listData.map(f => ({ ...f, VERSION: f.VERSION.split('.')[0] }))}
                 />
-              </div>
+              </div> */}
               <ModalList onClickRow={onClickRow} closeBtnFunc={closeListBtnFunc} listData={listData} getListData={getListData} listCnt={listCnt} />
             </div>
           </>
