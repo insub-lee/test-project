@@ -51,7 +51,7 @@ class TextareaComp extends React.Component {
           const limtTextCnt = CONFIG && CONFIG.property && CONFIG.property.limitTextCnt;
           if (limtTextCnt !== 0 && e.target.value.length > limtTextCnt) {
             e.target.value = e.target.value.substring(0, limtTextCnt);
-            message.info(`${e.target.value},${limtTextCnt}자 이상 등록하실 수 없습니다.`);
+            message.info(`${limtTextCnt}자 이상 등록하실 수 없습니다.`);
           }
           this.handleOnChange(e.target.value);
         }}
