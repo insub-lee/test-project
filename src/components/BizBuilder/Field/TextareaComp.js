@@ -3,6 +3,7 @@ import React from 'react';
 import { Input, message } from 'antd';
 import { debounce } from 'lodash';
 import uuid from 'uuid/v1';
+import StyledHtmlTextarea from 'components/BizBuilder/styled/HtmlForm/StyledHtmlTextarea';
 
 const { TextArea } = Input;
 const getNewKey = () => uuid();
@@ -40,10 +41,10 @@ class TextareaComp extends React.Component {
     const { compKey } = this.state;
     console.debug('config', CONFIG);
     return visible ? (
-      <textarea
+      <StyledHtmlTextarea
         id={`${sagaKey}_${COMP_FIELD}`}
         key={compKey}
-        className={`ant-textarea${CONFIG.property.className ? ` ${CONFIG.property.className}` : ''}`}
+        className={`html-textarea${CONFIG.property.className ? ` ${CONFIG.property.className}` : ''}`}
         defaultValue={colData || ''}
         placeholder={CONFIG.property.placeholder}
         onChange={e => {
