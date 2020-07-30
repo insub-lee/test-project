@@ -100,6 +100,7 @@ class StandardDocList extends Component {
           closeListBtnFunc={this.closeListBtnFunc}
           getListData={this.getListData}
           listCnt={listCnt}
+          {...this.props}
         />
       </div>
     );
