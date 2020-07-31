@@ -338,7 +338,7 @@ class ListPage extends Component {
                           </StyledButton>
                           {useExcelDownload && isExcelDown && (
                             <ExcelDownloadComp
-                              isBuilder={false}
+                              isBuilder
                               fileName={fileName || 'excel'}
                               className="workerExcelBtn"
                               btnText={btnTex || '엑셀받기'}
@@ -346,6 +346,10 @@ class ListPage extends Component {
                               columns={columns || []}
                               fields={fields || []}
                               listData={listData || []}
+                              viewPageData={viewPageData}
+                              conditional={conditional}
+                              isPagingData={isPagingData}
+                              sagaKey={id}
                             />
                           )}
                         </div>
