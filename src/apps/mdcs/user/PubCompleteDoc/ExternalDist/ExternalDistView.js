@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Row, Col, Select, Button, Table, Input, Modal, Tag } from 'antd';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
@@ -111,21 +111,22 @@ class ExternalDistView extends Component {
       dataIndex: 'DOCNUMBER',
       key: 'DOCNUMBER',
       align: 'center',
-      width: '20%',
+      width: '10%',
     },
     {
       title: 'Rev',
       dataIndex: 'VERSION',
       key: 'VERSION',
       align: 'center',
-      width: '15%',
+      width: '5%',
     },
     {
       title: 'Title',
       dataIndex: 'TITLE',
       key: 'TITLE',
+      ellipsis: true,
     },
-  ]
+  ];
 
   render() {
     const { formData } = this.props;
@@ -141,13 +142,14 @@ class ExternalDistView extends Component {
             // onUserSelectHandler={this.onUserSelect}
             onUserSelectedComplete={this.onUserSelectedComplete}
             onCancel={this.onCancel}
+            deptTitle={`회사 선택`}
             userSearchApi={`/api/edds/v1/common/eddsUserSearch`}
           />
         </AntdModal>
         <StyledContentsWrapper>
           <Row>
             <Col span={24}>
-              <div style={{ backgroundColor: '#bfbfbf', padding: '1.1em .4em 1.1em' }}>
+              <div style={{ backgroundColor: '#bfbfbf', padding: '10px 10px' }}>
                 <span><strong>이 문서 및 도면은 MagnaChip 반도체의 자산이므로 불법 유출시 관계법과 MagnaChip 회사 규정에 의해 처벌함</strong></span>
               </div>
             </Col>
@@ -170,14 +172,14 @@ class ExternalDistView extends Component {
                 <tr>
                   <th>문서정보</th>
                   <th>
-                    수신자 <StyledButton className="btn-gray btn-xs" onClick={this.onUserSelectModal}>검색</StyledButton>
+                    수신자 <StyledButton className="btn-gray btn-xxs" onClick={this.onUserSelectModal}>검색</StyledButton>
                   </th>
                 </tr>
                 <tr>
                   <td rowSpan={3} style={{ verticalAlign: 'top' }}>
                     <AntdTable columns={this.columns} dataSource={formData.docList} pagination={false} bordered />
                   </td>
-                  <td style={{ height: 130, verticalAlign: 'top' }}>
+                  <td style={{ height: 100, verticalAlign: 'top' }}>
                     {formData.selectedUserList && formData.selectedUserList.length > 0 && (
                       formData.selectedUserList.map(user => (
                         <Tag key={`tag_${user.USER_ID}`} closable onClose={e => this.onCloseTag(e, user)}>{`${user.NAME_KOR}(${user.EMAIL})`}</Tag>
@@ -191,7 +193,7 @@ class ExternalDistView extends Component {
                 <tr>
                   <td>
                     <AntdTextArea
-                      placeholder={`E-mail 형식으로 입력(2명이상 입력시 ' ; ' 로 구분)`}
+                      rows={2} placeholder={`E-mail 형식으로 입력(2명이상 입력시 ' ; ' 로 구분)`}
                       onChange={e => this.onChangeFormData('referrer', e.target.value)}
                     />
                   </td>
@@ -202,19 +204,19 @@ class ExternalDistView extends Component {
                 </tr>
                 <tr>
                   <td>
-                    <AntdTextArea rows={8} onChange={e => this.onChangeFormData('distribute_reason', e.target.value)} />
+                    <AntdTextArea rows={2} onChange={e => this.onChangeFormData('distribute_reason', e.target.value)} />
                   </td>
                   <td>
-                    <AntdTextArea rows={8} onChange={e => this.onChangeFormData('comment', e.target.value)} />
+                    <AntdTextArea rows={2} onChange={e => this.onChangeFormData('comment', e.target.value)} />
                   </td>
                 </tr>
               </tbody>
             </table>
           </StyledHtmlTable>
           <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-            <StyledButton className="btn-primary mr5" onClick={this.onExternalDistribute}>외부배포</StyledButton>
-            <StyledButton className="btn-light mr5" onClick={this.props.onExternalDistCancel}>취소</StyledButton>
-            <StyledButton className="btn-light">외부 사용자 등록</StyledButton>
+            <StyledButton className="btn-primary btn-sm mr5" onClick={this.onExternalDistribute}>외부배포</StyledButton>
+            <StyledButton className="btn-light btn-sm mr5" onClick={this.props.onExternalDistCancel}>취소</StyledButton>
+            <StyledButton className="btn-light btn-sm">외부 사용자 등록</StyledButton>
           </StyledButtonWrapper>
         </StyledContentsWrapper>
       </>

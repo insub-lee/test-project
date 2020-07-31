@@ -49,6 +49,7 @@ class PubCompleteDocList extends Component {
       key: 'DOCNUMBER',
       align: 'center',
       width: '10%',
+      render: (text, record) => <a onClick={() => this.onOpenDocInfo(record)}>{text}</a>,
     },
     {
       title: 'Rev',
@@ -62,7 +63,7 @@ class PubCompleteDocList extends Component {
       dataIndex: 'TITLE',
       key: 'TITLE',
       ellipsis: true,
-      render: (text, record) => <a onClick={() => this.onTitleClick(record)}>{text}</a>,
+      render: (text, record) => <a onClick={() => this.onOpenDocInfo(record)}>{text}</a>,
     },
     {
       title: '배포일',
@@ -87,7 +88,7 @@ class PubCompleteDocList extends Component {
     onChange: this.onSelectChange,
   };
 
-  onTitleClick = record => {
+  onOpenDocInfo = record => {
     this.setState({ isShow: true, taskSeq: record.TASK_SEQ, recvId: record.RECV_ID, workSeq: record.WORK_SEQ, pubDocInfo: record });
   };
 
