@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Table, Select, Input, message } from 'antd';
+import { Table, Select, Input } from 'antd';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
@@ -9,6 +9,9 @@ import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContents
 import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import ExcelDownloader from './Excel';
 
 const AntdInput = StyledInput(Input);
@@ -32,7 +35,8 @@ class List extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
+    spinningOn();
     const apiAry = [
       {
         key: 'selectData',
@@ -49,7 +53,7 @@ class List extends Component {
   }
 
   searchData = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
     const apiAry = [
       {
         key: 'dangerList',
@@ -63,11 +67,15 @@ class List extends Component {
   initData = () => {
     const {
       result: { dangerList, selectData },
+      spinningOff,
     } = this.props;
-    this.setState({
-      dangerList: dangerList && dangerList.list,
-      selectData: selectData && selectData.categoryMapList && selectData.categoryMapList.filter(f => f.LVL !== 0),
-    });
+    this.setState(
+      {
+        dangerList: dangerList && dangerList.list,
+        selectData: selectData && selectData.categoryMapList && selectData.categoryMapList.filter(f => f.LVL !== 0),
+      },
+      spinningOff,
+    );
   };
 
   changeValue = (name, value) => {
@@ -79,14 +87,14 @@ class List extends Component {
     const overlab = dangerList.find(item => item.MINOR_CD === minorCd);
 
     if (overlab) {
-      message.warning('중복된 값이 존재합니다.');
+      message.info(<MessageContent>중복된 값이 존재합니다.</MessageContent>);
     } else {
       this.onChangeData('I');
     }
   };
 
   onChangeData = value => {
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
     const { minorCd, cdNm, ref01, ref02, ref03 } = this.state;
 
     const submitData = {
@@ -99,18 +107,44 @@ class List extends Component {
         REF03: ref03,
       },
     };
+
     if (cdNm && minorCd) {
+      spinningOn();
       if (value === 'U') {
-        submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshsDanger`, submitData, this.searchData);
+        submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshsDanger`, submitData, (afterId, res) => {
+          if (res && res.result >= 0) {
+            message.info(<MessageContent>수정되었습니다.</MessageContent>);
+            this.searchData();
+          } else {
+            spinningOff();
+            message.info(<MessageContent>수정에 실패하였습니다.</MessageContent>);
+          }
+        }); // 수정
       } else if (value === 'D' || value === 'R') {
-        submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshsDanger`, submitData, this.searchData);
+        submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshsDanger`, submitData, (afterId, res) => {
+          if (res && res.result >= 0) {
+            message.info(<MessageContent>삭제되었습니다.</MessageContent>);
+            this.searchData();
+          } else {
+            spinningOff();
+            message.info(<MessageContent>삭제에 실패하였습니다.</MessageContent>);
+          }
+        }); // 삭제
       } else if (value === 'I') {
-        submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshsDanger`, submitData, this.searchData);
+        submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshsDanger`, submitData, (afterId, res) => {
+          if (res && res.result >= 0) {
+            message.info(<MessageContent>저장되었습니다.</MessageContent>);
+            this.searchData();
+          } else {
+            spinningOff();
+            message.info(<MessageContent>저장에 실패하였습니다.</MessageContent>);
+          }
+        }); // 등록
       }
     } else if (cdNm) {
-      message.warning('코드를 올바르게 입력하시오.');
+      message.info(<MessageContent>코드를 올바르게 입력하시오.</MessageContent>);
     } else {
-      message.warning('코드명을 올바르게 입력하시오.');
+      message.info(<MessageContent>코드명을 올바르게 입력하시오.</MessageContent>);
     }
     this.onReset();
   };
@@ -284,6 +318,8 @@ List.propTypes = {
   submitHandlerBySaga: PropTypes.func,
   sagaKey: PropTypes.string,
   result: PropTypes.any,
+  spinningOn: PropTypes.func,
+  spinningOff: PropTypes.func,
 };
 
 List.defaultProps = {
