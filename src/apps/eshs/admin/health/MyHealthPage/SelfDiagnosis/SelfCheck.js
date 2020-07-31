@@ -43,6 +43,11 @@ class SelfCheck extends Component {
     setFormData(id, { ...formData, ...profile, SE_DT: now, viewType: 'INPUT' });
   }
 
+  componentWillUnmount() {
+    const { sagaKey: id, removeReduxState } = this.props;
+    removeReduxState(id);
+  }
+
   changeFormData = (target, value) => {
     const { sagaKey: id, changeFormData } = this.props;
     changeFormData(id, target, value);
@@ -77,7 +82,7 @@ class SelfCheck extends Component {
     switch (type) {
       case 'SEARCH':
         if (JSON.stringify(selectRow) === '{}') {
-          msg = '선택된 등록번호가 없습니다.';
+          if (!(formData && formData.SE_NO)) msg = '선택된 등록번호가 없습니다.';
           break;
         }
         this.setState(
@@ -373,7 +378,6 @@ class SelfCheck extends Component {
                 <td>
                   <AntdInput
                     className="ant-input-sm"
-                    className="ant-input-sm"
                     value={formData.GAMMA || ''}
                     maxLength={10}
                     onChange={e => this.changeFormData('GAMMA', e.target.value)}
@@ -462,6 +466,7 @@ SelfCheck.propTypes = {
   spinningOn: PropTypes.func,
   spinningOff: PropTypes.func,
   profile: PropTypes.object,
+  removeReduxState: PropTypes.func,
 };
 SelfCheck.defaultProps = {
   changeFormData: () => {},
@@ -471,6 +476,7 @@ SelfCheck.defaultProps = {
   spinningOn: () => {},
   spinningOff: () => {},
   profile: {},
+  removeReduxState: () => {},
 };
 
 export default SelfCheck;

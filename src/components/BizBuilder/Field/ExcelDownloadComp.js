@@ -123,7 +123,6 @@ class Comp extends Component {
 
   getExcelListAfter = () => {
     const { result, columns, fields, spinningOff } = this.props;
-    spinningOff();
 
     const excelList = (result && result.excelList && result.excelList.list) || [];
 
@@ -138,6 +137,7 @@ class Comp extends Component {
       return res;
     });
 
+    spinningOff();
     return this.setState({ dataSet: [{ columns, data }] }, this.bulderExcelExport);
   };
 

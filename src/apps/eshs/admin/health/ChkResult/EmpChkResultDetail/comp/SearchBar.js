@@ -79,7 +79,7 @@ class SearchBar extends Component {
           {yearSearch && (
             <>
               &nbsp; &nbsp;
-              <span className="text-label">년도</span>
+              <span className="text-label">연도</span>
               &nbsp;
               <AntdSelect
                 className="select-sm mr5"
