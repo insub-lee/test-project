@@ -16,7 +16,7 @@ import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal'
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import ProcessView from 'apps/Workflow/User/CommonView/processView';
-
+import ExcelDownLoad from 'components/ExcelDownLoad';
 // import ApproveView from '../ApproveView';
 // import HoldView from '../MdcsAppvView/holdview';
 
@@ -54,6 +54,60 @@ const StyledWrap = styled.div`
     }
   }
 `;
+
+const excelColumns = [
+  {
+    title: '종류',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '유형',
+    width: { wpx: 120 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '표준번호',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: 'Rev',
+    width: { wpx: 30 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '표준제목',
+    width: { wpx: 300 },
+    style: { alignment: { horizontal: 'left' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '기안일',
+    width: { wpx: 120 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '상태',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '기안자',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+];
+const fields = [
+  { field: 'APPVGUBUN', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'NODETYPE', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'DOCNUMBER', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'VERSION', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } }, format: { type: 'NUMBER' } },
+  { field: 'DRAFT_TITLE', style: { alignment: { horizontal: 'left' }, font: { sz: '10' } } },
+  { field: 'REG_DTTM', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } }, format: { type: 'DATE' } },
+  { field: 'STATUS', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'NAME_KOR', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+];
+
 class ApproveList extends Component {
   constructor(props) {
     super(props);
@@ -509,6 +563,24 @@ class ApproveList extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
+          <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
+            <ExcelDownLoad
+              isBuilder={false}
+              fileName={`검색결과 (${moment().format('YYYYMMDD')})`}
+              className="workerExcelBtn"
+              title="Excel 파일로 저장"
+              btnSize="btn-sm"
+              sheetName=""
+              columns={excelColumns}
+              fields={fields}
+              submitInfo={{
+                dataUrl: '/api/workflow/v1/common/approve/ApproveListMDCSHandler',
+                method: 'POST',
+                submitData: { PARAM: { relTypes: [1, 4, 99, 999], PAGE: undefined, PAGE_CNT: undefined } },
+                dataSetName: 'list',
+              }}
+            />
+          </div>
           <AntdTable
             key="apps-workflow-user-approve-list"
             columns={this.getTableColumns()}

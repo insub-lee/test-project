@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import ReactExport from 'react-data-export';
 
 import { Button } from 'antd';
@@ -31,6 +32,19 @@ class ExcelDownLoadComp extends Component {
       const result = [];
       fields.forEach(fieldInfo => {
         const cell = {};
+        // if (fieldInfo.format) {
+        //   const type = fieldInfo.format.type;
+        //   switch (type) {
+        //     case 'DATE':
+        //       console.debug('type', type, item[fieldInfo.field]);
+        //       cell.value = item[fieldInfo.field] !== undefined && item[fieldInfo.field] !== null ?  item[fieldInfo.field] : '';
+        //       return;
+        //     default:
+        //       return;
+        //   }
+        // } else {
+        //   cell.value = item[fieldInfo.field] !== undefined && item[fieldInfo.field] !== null ? item[fieldInfo.field] : '';
+        // }
         cell.value = item[fieldInfo.field] !== undefined && item[fieldInfo.field] !== null ? item[fieldInfo.field] : '';
         cell.style = fieldInfo.style;
         result.push(cell);
@@ -45,7 +59,6 @@ class ExcelDownLoadComp extends Component {
     const { submitInfo } = this.state;
     if (submitInfo) {
       const { dataUrl, method, submitData } = submitInfo;
-      console.debug('url', dataUrl);
       submitHandlerBySaga(sagaKey, method, dataUrl, submitData, this.initDataBind);
     } else {
       const dataSet = this.makeExcelDataSet(dataSetBind, columns, fields);
