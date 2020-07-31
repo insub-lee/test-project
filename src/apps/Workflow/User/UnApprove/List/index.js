@@ -10,10 +10,64 @@ import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHead
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
 import ProcessView from 'apps/Workflow/User/CommonView/processView';
+import ExcelDownLoad from 'components/ExcelDownLoad';
 
 const AntdLineTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
-const { Link } = Anchor;
+
+const excelColumns = [
+  {
+    title: '종류',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '유형',
+    width: { wpx: 120 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '표준번호',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: 'Rev',
+    width: { wpx: 30 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '표준제목',
+    width: { wpx: 300 },
+    style: { alignment: { horizontal: 'left' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '기안일',
+    width: { wpx: 120 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '상태',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '기안자',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+];
+const fields = [
+  { field: 'APPVGUBUN', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'NODETYPE', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'DOCNUMBER', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'VERSION', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } }, format: { type: 'NUMBER' } },
+  { field: 'DRAFT_TITLE', style: { alignment: { horizontal: 'left' }, font: { sz: '10' } } },
+  { field: 'REG_DTTM', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } }, format: { type: 'DATE' } },
+  { field: 'STATUS', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'NAME_KOR', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+];
+
 class UnApproveList extends Component {
   constructor(props) {
     super(props);
@@ -32,18 +86,11 @@ class UnApproveList extends Component {
   }
 
   getTableColumns = () => [
-    // {
-    //   title: 'No',
-    //   dataIndex: 'RNUM',
-    //   key: 'rnum',
-    //   width: '5%',
-    //   align: 'center',
-    // },
     {
       title: '종류',
       dataIndex: 'APPVGUBUN',
       key: 'APPVGUBUN',
-      width: '15%',
+      width: '10%',
       align: 'center',
       render: (text, record) => (record.REL_TYPE === 999 ? '일괄폐기' : text),
     },
@@ -62,7 +109,14 @@ class UnApproveList extends Component {
       width: '10%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? `OBS-${record.DRAFT_ID}` : text),
+      render: (text, record) =>
+        record.REL_TYPE === 99 ? (
+          <a onClick={() => this.onRowClick(record)}>폐기</a>
+        ) : record.REL_TYPE === 999 ? (
+          <a onClick={() => this.onRowClick(record)}>{`OBS-${record.DRAFT_ID}`}</a>
+        ) : (
+          <a onClick={() => this.onRowClick(record)}>{text}</a>
+        ),
     },
     {
       title: 'Rev',
@@ -135,7 +189,7 @@ class UnApproveList extends Component {
   render() {
     const { unApproveList, unApproveListCnt, viewVisible, selectedRow } = this.props;
     const { paginationIdx, isPreView } = this.state;
-    console.debug(selectedRow, isPreView);
+
     return (
       <>
         <StyledHeaderWrapper>
@@ -145,7 +199,26 @@ class UnApproveList extends Component {
             </p>
           </div>
         </StyledHeaderWrapper>
+
         <StyledContentsWrapper>
+          <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
+            <ExcelDownLoad
+              isBuilder={false}
+              fileName={`검색결과 (${moment().format('YYYYMMDD')})`}
+              className="workerExcelBtn"
+              title="Excel 파일로 저장"
+              btnSize="btn-sm"
+              sheetName=""
+              columns={excelColumns}
+              fields={fields}
+              submitInfo={{
+                dataUrl: '/api/workflow/v1/common/approve/UnApproveListMDCSHandler',
+                method: 'POST',
+                submitData: { PARAM: { relTypes: [1, 4, 99, 999], PAGE: undefined, PAGE_CNT: undefined } },
+                dataSetName: 'list',
+              }}
+            />
+          </div>
           <AntdLineTable
             key="apps-workflow-user-unapprove-list"
             columns={this.getTableColumns()}
