@@ -23,6 +23,7 @@ const AntdSearchInput = StyledSearchInput(Input.Search);
 //   onUserSelectedComplete={this.onUserSelectedComplete}  확인버튼 클릭이벤트
 //   onCancel={this.onCancel} 취소 버튼 이벤트
 //   onUserDelete={this.onUserDelete} 선택된 사용자 삭제 이벤트
+//   deptTitle={`회사 선택`} EDDS외부 사용자 선택시에는 부서 선택이 아닌 회사 선택으로 나와야 해서 props추가, 없으면 default 부서 선택
 //   userSearchApi={`/api/edds/v1/common/eddsUserSearch`} 사용자명 검색 api(EDDS사용자 검색을 위해서 props 추가) 해당 props 없으면 기본검색사용
 // ></UserSelect>
 
@@ -202,8 +203,26 @@ class UserSelectComp extends Component {
     this.setState({ checkUserList });
   };
 
+  onDoubleClickUser = row => {
+    const { isMulti, selectedUserList } = this.state;
+    if (isMulti) {
+      const filterList = selectedUserList.filter(item => item.USER_ID === row.USER_ID);
+      if (filterList.length === 0) {
+        this.setState(prevState => {
+          const { selectedUserList: nUserList } = prevState;
+          nUserList.push(row);
+          return { selectedUserList: nUserList }
+        });
+      }
+    } else {
+      const list = [];
+      list.push(row);
+      this.setState({ selectedUserList: list });
+    }
+  };
+
   render() {
-    const { treeDataSource, userDataList, result } = this.props;
+    const { treeDataSource, userDataList, result, deptTitle } = this.props;
     const { isMulti } = this.state;
     return (
       <StyledContentsWrapper>
@@ -211,7 +230,7 @@ class UserSelectComp extends Component {
           <Row gutter={0}>
             <Col span={7}>
               <div className="basicWrapper treeWrapper">
-                <div className="basicTitle">부서 선택</div>
+                <div className="basicTitle">{deptTitle || `부서 선택`}</div>
                 <div className="depthTree">
                   {treeDataSource ? (
                     <Tree defaultExpandedKeys={[`${getTreeData(treeDataSource)[0].key}`]} onSelect={this.onTreeSelect} treeData={getTreeData(treeDataSource)} />
@@ -261,7 +280,7 @@ class UserSelectComp extends Component {
                     renderItem={item => (
                       <List.Item>
                         <Checkbox onChange={this.onCheckUser} checked={this.state.checkUserList.filter(x => item.USER_ID === x).length > 0} value={item.USER_ID}>
-                          {item.NAME_KOR}/{item.DEPT_NAME_KOR}[{item.PSTN_NAME_KOR}]
+                          <span onDoubleClick={() => this.onDoubleClickUser(item)}>{item.NAME_KOR}/{item.DEPT_NAME_KOR}[{item.PSTN_NAME_KOR}]</span>
                         </Checkbox>
                       </List.Item>
                     )}
@@ -279,20 +298,22 @@ class UserSelectComp extends Component {
             </Col>
             <Col span={7}>
               <div className="basicWrapper selectedUserWrapper">
-                <List
-                  header="선택된 사용자"
-                  size="small"
-                  dataSource={this.state.selectedUserList}
-                  bordered
-                  renderItem={item => (
-                    <List.Item>
-                      <Checkbox>
-                        {item.NAME_KOR} [ {item.PSTN_NAME_KOR} ] / {item.DEPT_NAME_KOR}
-                      </Checkbox>
-                      <Icon type="delete" onClick={() => this.onDelete(item.USER_ID)}></Icon>
-                    </List.Item>
-                  )}
-                />
+                <div className="userList">
+                  <List
+                    header="선택된 사용자"
+                    size="small"
+                    dataSource={this.state.selectedUserList}
+                    bordered
+                    renderItem={item => (
+                      <List.Item>
+                        <Checkbox>
+                          {item.NAME_KOR} [ {item.PSTN_NAME_KOR} ] / {item.DEPT_NAME_KOR}
+                        </Checkbox>
+                        <Icon type="delete" onClick={() => this.onDelete(item.USER_ID)}></Icon>
+                      </List.Item>
+                    )}
+                  />
+                </div>
               </div>
             </Col>
           </Row>
