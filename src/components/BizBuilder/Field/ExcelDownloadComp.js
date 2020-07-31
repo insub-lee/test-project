@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+
+import * as selectors from 'components/BizBuilderBase/selectors';
+
 import PropTypes from 'prop-types';
 import ReactExport from 'react-data-export';
 import { Button } from 'antd';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import { FileExcelOutlined } from '@ant-design/icons';
 
+import BizMicroDevBase from 'components/BizMicroDevBase';
+
 const { ExcelFile } = ReactExport;
 const { ExcelSheet } = ReactExport.ExcelFile;
 const StyledButton = StyledAntdButton(Button);
+
 /*
     엑셀 다운로드 컴포넌트
     개발목적 : builderBase ListPage 내에서 사용되는 엑셀다운로드 버튼 컴포넌트 / DevBase(SI개발) 대응
@@ -34,66 +42,141 @@ const StyledButton = StyledAntdButton(Button);
                           alignment - 정렬 (object)
                           border - 테두리  (object)
 */
-class ExcelDownloadComp extends Component {
-  componentDidMount() {}
 
-  makeExcelDataSet = (columns, fields) => {
+class Comp extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      listData: [],
+      dataSet: [],
+      startDown: false,
+    };
+  }
+
+  componentDidMount() {
     const { listData } = this.props;
-    const data = listData.map(item => {
-      const result = [];
+    this.setState({ listData });
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const prevList = prevState.listData || [];
+    const nextList = nextProps.listData || [];
+
+    const { isPagingData } = nextProps;
+    const columns = nextProps.columns || [];
+    const fields = nextProps.fields || [];
+    if (JSON.stringify(nextList) !== JSON.stringify(prevList) && !isPagingData) {
+      const data = nextList.map(item => {
+        const result = [];
+        fields.forEach(fieldInfo => {
+          const cell = {};
+          cell.value = item[fieldInfo.field] !== undefined && item[fieldInfo.field] !== null ? item[fieldInfo.field] : '';
+          cell.style = fieldInfo.style;
+          result.push(cell);
+        });
+        return result;
+      });
+
+      return { listData: nextList, dataSet: [{ columns, data }] };
+    }
+
+    return { listData: nextList };
+  }
+
+  getExcelList = () => {
+    const { sagaKey: id, searchData, listOrderByField, getCallDataHandler, viewPageData, conditional, spinningOn } = this.props;
+    spinningOn();
+    const workSeq = (viewPageData && viewPageData.workSeq) || 0;
+
+    const whereString = [];
+
+    const keySet = Object.keys(searchData);
+    keySet.forEach(key => {
+      whereString.push(searchData[key]);
+    });
+
+    if (conditional && conditional.length > 0) whereString.push(conditional);
+
+    const apiAry = [
+      {
+        key: 'excelList',
+        url: `/api/builder/v1/work/taskList/${workSeq}`,
+        type: 'POST',
+        params: {
+          PARAM: {
+            whereString,
+            listOrderByField,
+            listOrderByRowNum: listOrderByField
+              .replaceAll(' ASC', ' ||CSA||')
+              .replaceAll(' DESC', ' ASC')
+              .replaceAll(' ||CSA||', ' DESC'),
+          },
+        },
+      },
+    ];
+
+    getCallDataHandler(id, apiAry, this.getExcelListAfter);
+  };
+
+  getExcelListAfter = () => {
+    const { result, columns, fields, spinningOff } = this.props;
+    spinningOff();
+
+    const excelList = (result && result.excelList && result.excelList.list) || [];
+
+    const data = excelList.map(item => {
+      const res = [];
       fields.forEach(fieldInfo => {
         const cell = {};
         cell.value = item[fieldInfo.field] !== undefined && item[fieldInfo.field] !== null ? item[fieldInfo.field] : '';
         cell.style = fieldInfo.style;
-        result.push(cell);
+        res.push(cell);
       });
-      return result;
+      return res;
     });
-    return [{ columns, data }];
+
+    return this.setState({ dataSet: [{ columns, data }] }, this.bulderExcelExport);
   };
 
+  bulderExcelExport = () => this.setState(prevState => ({ startDown: prevState.startDown + 1 }));
+
   render() {
-    const { visible, CONFIG, workInfo, isBuilder, viewPageData, btnSize } = this.props;
-
-    let dataSet = [];
+    const { isBuilder, btnText, fileName, className, sheetName, isPagingData, fields, columns } = this.props;
+    const { dataSet, startDown } = this.state;
+    // BuilderBase 에서 사용시
     if (isBuilder) {
-      dataSet = this.makeExcelDataSet(CONFIG.property.columns, CONFIG.property.fields) || [];
-    } else {
-      dataSet = this.makeExcelDataSet(this.props.columns, this.props.fields) || [];
-    }
+      return fields.length > 0 && columns.length > 0 ? (
+        <>
+          <StyledButton className="btn-img btn-gray btn-sm" onClick={() => (isPagingData ? this.getExcelList() : this.bulderExcelExport())}>
+            <FileExcelOutlined />
+            &nbsp;{btnText}
+          </StyledButton>
 
-    const excelExport = () => (
-      <ExcelFile filename={CONFIG.property.fileName || workInfo.NAME_KOR}>
-        <ExcelSheet dataSet={dataSet} name={(CONFIG.property.sheetName && CONFIG.property.sheetName) || 'Sheet1'} />
-      </ExcelFile>
-    );
-
-    // BuilderBase 에서 사용시 (개발중)
-    if (isBuilder) {
-      return visible && viewPageData.viewType === 'LIST' && CONFIG.property.columns && CONFIG.property.columns.length > 0 ? (
-        <StyledButton className="btn-img btn-gray btn-sm" onClick={() => excelExport()}>
-          <FileExcelOutlined />
-          &nbsp;{CONFIG.property.btnText || '엑셀 다운로드'}
-        </StyledButton>
+          {startDown && (
+            <ExcelFile key={startDown} filename={fileName} hideElement>
+              <ExcelSheet dataSet={dataSet} name={sheetName} />
+            </ExcelFile>
+          )}
+        </>
       ) : (
         ''
       );
     }
 
     // SI 개발에서 사용시
-    return this.props.fields.length > 0 && this.props.columns.length > 0 ? (
+    return fields.length > 0 && columns.length > 0 ? (
       <ExcelFile
-        filename={this.props.fileName}
+        filename={fileName}
         element={
-          <span className={this.props.className}>
+          <span className={className}>
             <StyledButton className="btn-img btn-gray btn-sm">
               <FileExcelOutlined />
-              &nbsp;{this.props.btnText}
+              &nbsp;{btnText}
             </StyledButton>
           </span>
         }
       >
-        <ExcelSheet dataSet={dataSet} name={this.props.sheetName} />
+        <ExcelSheet dataSet={dataSet} name={sheetName} />
       </ExcelFile>
     ) : (
       ''
@@ -101,7 +184,7 @@ class ExcelDownloadComp extends Component {
   }
 }
 
-ExcelDownloadComp.propTypes = {
+Comp.propTypes = {
   CONFIG: PropTypes.any,
   workInfo: PropTypes.object,
   visible: PropTypes.bool,
@@ -116,9 +199,20 @@ ExcelDownloadComp.propTypes = {
   fields: PropTypes.array,
   listData: PropTypes.array, // builder 와 동일한 Props명 사용
   btnSize: PropTypes.string, // 엑셀버튼 크기조정
+
+  // 빌더 리스트 프롭스 추가
+  conditional: PropTypes.string,
+  isPagingData: PropTypes.bool,
+  sagaKey: PropTypes.string,
+  result: PropTypes.object,
+  getCallDataHandler: PropTypes.func,
+  searchData: PropTypes.any,
+  listOrderByField: PropTypes.any,
+  spinningOff: PropTypes.func,
+  spinningOn: PropTypes.func,
 };
 
-ExcelDownloadComp.defaultProps = {
+Comp.defaultProps = {
   // SI 개발 대응 default Props
   isBuilder: true,
   fileName: 'DownloadExcel',
@@ -128,6 +222,33 @@ ExcelDownloadComp.defaultProps = {
   columns: [],
   fields: [],
   listData: [],
+  conditional: '',
+  isPagingData: false,
 };
 
-export default ExcelDownloadComp;
+const ExcelDownloadComp = props => {
+  if (props.isBuilder)
+    return (
+      <div style={{ display: 'inline-block', position: 'absolute' }}>
+        <BizMicroDevBase {...props} component={Comp} sagaKey={`${props.sagaKey}_dev`}></BizMicroDevBase>
+      </div>
+    );
+  return <Comp {...props} />;
+};
+
+ExcelDownloadComp.propTypes = {
+  sagaKey: PropTypes.string,
+};
+
+// 빌더베이스 페이징옵션 선택했을경우
+const mapStateToProps = (state, props) => {
+  if (props.isBuilder && props.isPagingData)
+    return createStructuredSelector({
+      searchData: selectors.makeSelectSearchDataById(props.sagaKey),
+      listOrderByField: selectors.makeSelectListOrderByField(props.sagaKey),
+    });
+
+  return null;
+};
+
+export default connect(mapStateToProps)(ExcelDownloadComp);
