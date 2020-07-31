@@ -91,7 +91,6 @@ class Comp extends Component {
     spinningOn();
     const workSeq = (viewPageData && viewPageData.workSeq) || 0;
 
-    console.debug('여기는 엑셀리스트 다운ㅇㅇㅇㅇ');
     const whereString = [];
 
     const keySet = Object.keys(searchData);
