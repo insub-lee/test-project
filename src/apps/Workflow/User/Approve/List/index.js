@@ -203,21 +203,21 @@ class ApproveList extends Component {
       align: 'center',
       render: (text, record) => <a onClick={() => this.onPrcPreViewClick(record)}>{text}</a>,
     },
-    {
-      title: '진행상태',
-      dataIndex: 'PROC_STATUS',
-      key: 'PROC_STATUS',
-      width: '9%',
-      align: 'center',
-      render: (text, record) =>
-        text === 3 ? (
-          <a onClick={() => this.onPrcPreViewClick(record)}>홀드</a>
-        ) : text === 2 ? (
-          <a onClick={() => this.onPrcPreViewClick(record)}>완료</a>
-        ) : (
-          <a onClick={() => this.onPrcPreViewClick(record)}>진행중</a>
-        ),
-    },
+    // {
+    //   title: '진행상태',
+    //   dataIndex: 'PROC_STATUS',
+    //   key: 'PROC_STATUS',
+    //   width: '9%',
+    //   align: 'center',
+    //   render: (text, record) =>
+    //     text === 3 ? (
+    //       <a onClick={() => this.onPrcPreViewClick(record)}>홀드</a>
+    //     ) : text === 2 ? (
+    //       <a onClick={() => this.onPrcPreViewClick(record)}>완료</a>
+    //     ) : (
+    //       <a onClick={() => this.onPrcPreViewClick(record)}>진행중</a>
+    //     ),
+    // },
     {
       title: '기안자',
       dataIndex: 'NAME_KOR',

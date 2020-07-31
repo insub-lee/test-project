@@ -13,8 +13,51 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import ExcelDownLoad from 'components/ExcelDownLoad';
 
 const AntdTable = StyledAntdTable(Table);
+
+const excelColumns = [
+  {
+    title: '표준번호',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: 'Rev',
+    width: { wpx: 30 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '표준제목',
+    width: { wpx: 300 },
+    style: { alignment: { horizontal: 'left' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '상태',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '기안자',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '결재요청일',
+    width: { wpx: 120 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+];
+const fields = [
+  { field: 'DOCNUMBER', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'VERSION', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } }, format: { type: 'NUMBER' } },
+  { field: 'DRAFT_TITLE', style: { alignment: { horizontal: 'left' }, font: { sz: '10' } } },
+  { field: 'REG_DTTM', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } }, format: { type: 'DATE' } },
+  { field: 'STATUS', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'NAME_KOR', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+];
+
 class DraftDocDown extends Component {
   constructor(props) {
     super(props);
@@ -150,6 +193,24 @@ class DraftDocDown extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
+          <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
+            <ExcelDownLoad
+              isBuilder={false}
+              fileName={`검색결과 (${moment().format('YYYYMMDD')})`}
+              className="workerExcelBtn"
+              title="Excel 파일로 저장"
+              btnSize="btn-sm"
+              sheetName=""
+              columns={excelColumns}
+              fields={fields}
+              submitInfo={{
+                dataUrl: '/api/workflow/v1/common/approve/DraftDocDownList',
+                method: 'POST',
+                submitData: { PARAM: { relTypes: [4] } },
+                dataSetName: 'list',
+              }}
+            />
+          </div>
           <AntdTable
             columns={this.getTableColumns()}
             dataSource={customDataList}
