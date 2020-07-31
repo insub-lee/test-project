@@ -13,6 +13,7 @@ import MessageContent from 'components/Feedback/message.style2';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import DragAntdModal from 'components/DragAntdModal';
+import history from 'utils/history';
 
 import ContentView from './ContentView';
 import ExternalDist from './ExternalDist';
@@ -171,6 +172,7 @@ class PubCompleteDocList extends Component {
       selectedRowKeys: [],
     });
     message.success(<MessageContent>외부배포에 성공하였습니다.</MessageContent>);
+    history.push('/apps/mdcs/user/ExternalDistribute');
   };
 
   onChangeSearchInfo = (key, val) => {
