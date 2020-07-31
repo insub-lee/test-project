@@ -146,7 +146,6 @@ class Comp extends Component {
   render() {
     const { isBuilder, btnText, fileName, className, sheetName, isPagingData, fields, columns } = this.props;
     const { dataSet, startDown } = this.state;
-    console.debug('?????', this.props);
     // BuilderBase 에서 사용시
     if (isBuilder) {
       return fields.length > 0 && columns.length > 0 ? (
