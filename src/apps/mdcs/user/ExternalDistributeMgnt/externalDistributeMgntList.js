@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, Input } from 'antd';
+import { Table, Icon, Input, Modal } from 'antd';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
@@ -9,6 +9,8 @@ import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHead
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import DragAntdModal from 'components/DragAntdModal';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 import DistributeCompany from './DistributeCompany';
 
@@ -44,8 +46,73 @@ class ExternalDistributeMgntList extends Component {
     });
   };
 
-  onClickMail = record => {
-    window.alert('개발중');
+  // 외부배포 재배포
+  onClickMail = row => {
+
+    const recvUserList = [];
+    let referrer = '';
+    
+    recvUserList.push({
+      DEPT_ID: row.RECV_DEPT_ID,
+      DEPT_NAME_KOR: row.RECV_DEPT_NAME,
+      USER_ID: row.RECV_USER_ID1,
+      NAME_KOR: row.RECV_USER_NAME1,
+      DIST_USER_ID: row.DIST_USER_ID,
+      DIST_USER_NAME: row.DIST_USER_NAME,
+    });
+    if (row.RECV_USER_ID2 && row.RECV_USER_ID2 !== '') {
+      recvUserList.push({
+        DEPT_ID: row.RECV_DEPT_ID,
+        DEPT_NAME_KOR: row.RECV_DEPT_NAME,
+        USER_ID: row.RECV_USER_ID2,
+        NAME_KOR: row.RECV_USER_NAME2,
+        DIST_USER_ID: row.DIST_USER_ID,
+        DIST_USER_NAME: row.DIST_USER_NAME,
+      });
+    }
+    if (row.REFERRER_EMAIL1 && row.REFERRER_EMAIL1 !== '') {
+      referrer = row.REFERRER_EMAIL1;
+    }
+    if (row.REFERRER_EMAIL2 && row.REFERRER_EMAIL2 !== '') {
+      referrer = `${referrer};${row.REFERRER_EMAIL2}`;
+    }
+
+    const submitData = {
+      PARAM: {
+        ctrlType: row.CTRL_TYPE,
+        docList: [
+          {
+            DOCNUMBER: row.DOCNUMBER,
+            VERSION: row.VERSION,
+            TITLE: row.TITLE,
+            WORK_SEQ: row.WORK_SEQ,
+            TASK_SEQ: row.TASK_SEQ,
+          }
+        ],
+        selectedUserList: recvUserList,
+        referrer,
+        distribute_reason: row.COMMENT,
+        comment: row.COMMENT,
+      },
+    };
+
+    const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
+    Modal.confirm({
+      title: '재배포 하시겠습니까?',
+      okText: '확인',
+      cancelText: '취소',
+      onOk() {
+        spinningOn();
+        submitHandlerBySaga(sagaKey, 'POST', `/api/mdcs/v1/common/externalDistribute`, submitData, (id, res) => {
+          spinningOff();
+          if (res && res.result > 0) {
+            message.success(<MessageContent>재배포 하였습니다.</MessageContent>);
+          } else {
+            message.error(<MessageContent>재배포에 실패하였습니다.</MessageContent>);
+          }
+        });
+      }
+    });
   };
 
   onClickNew = row => {
@@ -95,14 +162,14 @@ class ExternalDistributeMgntList extends Component {
       dataIndex: 'DOCNUMBER',
       key: 'DOCNUMBER',
       align: 'center',
-      width: '10%',
+      width: '9%',
     },
     {
       title: 'Rev',
       dataIndex: 'VERSION',
       key: 'VERSION',
       align: 'center',
-      width: '5%',
+      width: '4%',
     },
     {
       title: 'Title',
@@ -114,7 +181,7 @@ class ExternalDistributeMgntList extends Component {
       title: '업체명',
       dataIndex: 'RECV_DEPT_NAME',
       key: 'RECV_DEPT_NAME',
-      width: '15%',
+      width: '13%',
       ellipsis: true,
       render: (text, record) => (
         <StyledButton className="btn-link btn-xs" onClick={() => this.onClickDept(record)}>
@@ -153,7 +220,7 @@ class ExternalDistributeMgntList extends Component {
       ellipsis: true,
     },
     {
-      title: 'New',
+      title: 'New Supplier',
       dataIndex: 'DOCNUMBER',
       key: 'new',
       width: '7%',
@@ -164,18 +231,18 @@ class ExternalDistributeMgntList extends Component {
         </StyledButton>
       ),
     },
-    // {
-    //   title: 'Mail',
-    //   dataIndex: 'DOCNUMBER',
-    //   key: 'mail',
-    //   width: '4%',
-    //   align: 'center',
-    //   render: (text, record) => (
-    //     <StyledButton className="btn-link btn-xs" onClick={() => this.onClickMail(record)}>
-    //       <Icon type="mail" />
-    //     </StyledButton>
-    //   ),
-    // },
+    {
+      title: 'Mail',
+      dataIndex: 'DOCNUMBER',
+      key: 'mail',
+      width: '4%',
+      align: 'center',
+      render: (text, record) => (
+        <StyledButton className="btn-link btn-xs" onClick={() => this.onClickMail(record)}>
+          <Icon type="mail" />
+        </StyledButton>
+      ),
+    },
   ];
 
   render() {
@@ -232,6 +299,7 @@ class ExternalDistributeMgntList extends Component {
           <AntdTable
             dataSource={list.map(item => ({ ...item, key: `${item.DOCNUMBER}_${item.RECV_DEPT_ID}` }))}
             columns={this.columns}
+            bordered
           />
         </StyledContentsWrapper>
       </>
