@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { debounce } from 'lodash';
 
 import * as selectors from 'components/BizBuilderBase/selectors';
 
@@ -51,6 +52,8 @@ class Comp extends Component {
       dataSet: [],
       startDown: false,
     };
+
+    this.getExcelList = debounce(() => this.getExcelList, 300);
   }
 
   componentDidMount() {
@@ -238,6 +241,7 @@ const ExcelDownloadComp = props => {
 
 ExcelDownloadComp.propTypes = {
   sagaKey: PropTypes.string,
+  isBuilder: PropTypes.bool,
 };
 
 // 빌더베이스 페이징옵션 선택했을경우
