@@ -45,11 +45,13 @@ class List extends Component {
     this.state = {
       year: Number(moment().year()),
       isModal: false,
+      selectAll: false,
     };
   }
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
+    spinningOn();
     const apiAry = [
       {
         key: 'treeSelectData',
@@ -70,6 +72,7 @@ class List extends Component {
   initData = () => {
     const {
       result: { treeSelectData, codeData },
+      spinningOff,
     } = this.props;
     const tableFindList = treeSelectData && treeSelectData.categoryMapList;
     const nData = (tableFindList && getCategoryMapListAsTree(tableFindList, 1831)) || [];
@@ -80,20 +83,32 @@ class List extends Component {
     for (let i = currentYear - 20; i <= currentYear; i += 1) {
       yearList.push(i.toString());
     }
-    this.setState({ nData, aotList, aocList, tableFindList, yearList });
+    this.setState({ nData, aotList, aocList, tableFindList, yearList }, spinningOff);
   };
 
   searchList = () => {
-    const { levelName, searchValue, year } = this.state;
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    if (levelName && searchValue && year) {
-      const apiAry = [
-        {
-          key: 'listUp',
-          type: 'GET',
-          url: `/api/eshs/v1/common/dangerHazard?${levelName}=${searchValue}&&YEAR=${year}`,
-        },
-      ];
+    const { levelName, searchValue, year, selectAll } = this.state;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
+    spinningOn();
+    if ((levelName && searchValue && year) || selectAll) {
+      let apiAry = [];
+      if (!selectAll) {
+        apiAry = [
+          {
+            key: 'listUp',
+            type: 'GET',
+            url: `/api/eshs/v1/common/dangerHazard?${levelName}=${searchValue}&&YEAR=${year}`,
+          },
+        ];
+      } else {
+        apiAry = [
+          {
+            key: 'listUp',
+            type: 'GET',
+            url: `/api/eshs/v1/common/dangerHazard?YEAR=${year}`,
+          },
+        ];
+      }
       getCallDataHandler(id, apiAry, this.searchData);
     } else {
       message.warning('검색조건이 옳바르지 않습니다.');
@@ -103,6 +118,7 @@ class List extends Component {
   searchData = () => {
     const {
       result: { listUp },
+      spinningOff,
     } = this.props;
     const { aotList, aocList, tableFindList } = this.state;
     if (listUp && listUp.list && listUp.list.length > 0) {
@@ -127,8 +143,9 @@ class List extends Component {
             ? `${aotList && aotList.find(i => i.NODE_ID === item.AOT_ID) && aotList.find(i => i.NODE_ID === item.AOT_ID).NAME_KOR}(${item.OTHER_CASE})`
             : aotList && aotList.find(i => i.NODE_ID === item.AOT_ID) && aotList.find(i => i.NODE_ID === item.AOT_ID).NAME_KOR,
       }));
-      this.setState({ listData: listUp.list, excelData });
+      this.setState({ listData: listUp.list, excelData }, spinningOff);
     } else {
+      spinningOff();
       message.warning('검색 데이터가 없습니다.');
     }
   };
@@ -138,20 +155,27 @@ class List extends Component {
       result: { treeSelectData },
     } = this.props;
     const temp = treeSelectData && treeSelectData.categoryMapList.find(item => item.NODE_ID === value);
+    console.debug('temp', temp);
+    console.debug('value', value);
     switch (temp && temp.LVL) {
       case 3:
-        return this.setState({ levelName: 'SDIV_ID', searchValue: value });
+        return this.setState({ levelName: 'SDIV_ID', searchValue: value, selectAll: false });
       case 4:
-        return this.setState({ levelName: 'DIV_ID', searchValue: value });
+        return this.setState({ levelName: 'DIV_ID', searchValue: value, selectAll: false });
       case 5:
-        return this.setState({ levelName: 'PLACE_ID', searchValue: value });
+        return this.setState({ levelName: 'PLACE_ID', searchValue: value, selectAll: false });
       case 6:
-        return this.setState({ levelName: 'PROCESS_ID', searchValue: value });
+        return this.setState({ levelName: 'PROCESS_ID', searchValue: value, selectAll: false });
       case 7:
-        return this.setState({ levelName: 'EQUIP_ID', searchValue: value });
+        return this.setState({ levelName: 'EQUIP_ID', searchValue: value, selectAll: false });
       default:
-        return '';
+        break;
     }
+    if (value === 1596) {
+      return this.setState({ selectAll: true });
+    }
+
+    return this.setState({ selectAll: false });
   };
 
   onChangeValue = (name, value) => {
@@ -256,7 +280,6 @@ class List extends Component {
               dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
               treeData={nData || []}
               placeholder="Please select"
-              allowClear
               onSelect={value => this.onChangeSelect(value)}
             />
           </div>

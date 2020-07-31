@@ -13,6 +13,7 @@ import MessageContent from 'components/Feedback/message.style2';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import DragAntdModal from 'components/DragAntdModal';
+import history from 'utils/history';
 
 import ContentView from './ContentView';
 import ExternalDist from './ExternalDist';
@@ -49,6 +50,7 @@ class PubCompleteDocList extends Component {
       key: 'DOCNUMBER',
       align: 'center',
       width: '10%',
+      render: (text, record) => <a onClick={() => this.onOpenDocInfo(record)}>{text}</a>,
     },
     {
       title: 'Rev',
@@ -62,7 +64,7 @@ class PubCompleteDocList extends Component {
       dataIndex: 'TITLE',
       key: 'TITLE',
       ellipsis: true,
-      render: (text, record) => <a onClick={() => this.onTitleClick(record)}>{text}</a>,
+      render: (text, record) => <a onClick={() => this.onOpenDocInfo(record)}>{text}</a>,
     },
     {
       title: '배포일',
@@ -87,7 +89,7 @@ class PubCompleteDocList extends Component {
     onChange: this.onSelectChange,
   };
 
-  onTitleClick = record => {
+  onOpenDocInfo = record => {
     this.setState({ isShow: true, taskSeq: record.TASK_SEQ, recvId: record.RECV_ID, workSeq: record.WORK_SEQ, pubDocInfo: record });
   };
 
@@ -170,6 +172,7 @@ class PubCompleteDocList extends Component {
       selectedRowKeys: [],
     });
     message.success(<MessageContent>외부배포에 성공하였습니다.</MessageContent>);
+    history.push('/apps/mdcs/user/ExternalDistribute');
   };
 
   onChangeSearchInfo = (key, val) => {

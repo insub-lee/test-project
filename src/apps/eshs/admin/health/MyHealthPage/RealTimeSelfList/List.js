@@ -332,7 +332,7 @@ class List extends Component {
               />
 
               <StyledButton
-                className="btn-primary btn-sm"
+                className="btn-primary btn-sm ml5"
                 onClick={() =>
                   0 in selectedRows
                     ? this.setState(
