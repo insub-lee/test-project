@@ -18,6 +18,20 @@ const disabledDate = current =>
     .endOf('day')
     .diff(current.startOf('day'), 'days') > 0;
 
+const area = [
+  { value: 'CVD', label: 'CVD' },
+  { value: 'DIFF', label: 'DIFF' },
+  { value: 'DIFF(IMP)', label: 'DIFF(IMP)' },
+  { value: 'DIFF(WET)', label: 'DIFF(WET)' },
+  { value: 'ETCH', label: 'ETCH' },
+  { value: 'LAST(CMP)', label: 'LAST(CMP)' },
+  { value: 'LAST(CVD)', label: 'LAST(CVD)' },
+  { value: 'LAST(ETCH)', label: 'LAST(ETCH)' },
+  { value: 'PHOTO', label: 'PHOTO' },
+  { value: 'END(IMP)', label: 'END(IMP)' },
+  { value: 'END(W검)', label: 'END(W검)' },
+];
+
 class EduProgramFormModal extends React.Component {
   constructor(props) {
     super(props);
@@ -224,6 +238,23 @@ class EduProgramFormModal extends React.Component {
                       </div>
                     </li>
                   )}
+                  {currentEduType === 'job_proc' && (
+                    <li>
+                      <label htmlFor="area" className="title">
+                        AREA
+                      </label>
+                      <select name="area" id="area" defaultValue="">
+                        <option value="" disabled>
+                          AREA를 선택해주세요.
+                        </option>
+                        {area.map(item => (
+                          <option key={item.value} value={item.value}>
+                            {item.label}
+                          </option>
+                        ))}
+                      </select>
+                    </li>
+                  )}
                   {currentEduType === 'job_training' && (
                     <li>
                       <label htmlFor="testType" className="title">
@@ -249,7 +280,7 @@ class EduProgramFormModal extends React.Component {
                         </option>
                         <option value="A">A형</option>
                         <option value="B">B형</option>
-                        <option value="C">C</option>
+                        <option value="C">C형</option>
                       </select>
                     </li>
                   )}
