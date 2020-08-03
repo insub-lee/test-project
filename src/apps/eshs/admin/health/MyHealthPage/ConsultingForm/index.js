@@ -13,7 +13,7 @@ import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
-
+import Upload from './Upload';
 const AntdInput = StyledInput(Input);
 const AntdTextarea = StyledTextarea(Input.TextArea);
 
@@ -24,7 +24,7 @@ class Comp extends Component {
       list: [],
       formData: {
         CONSULTING: 'Y',
-        MAIL: 'N', // 메일발송 미구현
+        MAIL: 'Y', // 메일발송 미구현
       },
     };
   }
@@ -44,37 +44,106 @@ class Comp extends Component {
     });
   }
 
-  changeFormData = (target, value) =>
-    this.setState(prevState => {
-      const { formData } = prevState;
-      return { formData: { ...formData, [target]: value } };
-    });
+  changeFormData = (target, value) => this.setState(prevState => ({ formData: { ...prevState.formData, [target]: value } }));
 
   save = () => {
-    const { sagaKey, submitHandlerBySaga, saveAfter, modalVisible, spinningOn, spinningOff, profile } = this.props;
+    const { sagaKey, submitHandlerBySaga, saveAfter, modalVisible, spinningOn, spinningOff, profile, excelUpload } = this.props;
     const { formData, list } = this.state;
     const content = formData.CONTENT || '';
+    const fileInfo = (formData && formData.file) || {};
     const msg = this.saveBefore();
     const lIdx = list.length;
+    const { MAIL, CONSULTING } = formData;
+    const testTo = (formData && formData.TEST_TO) || '';
     if (msg) return this.showMessage(msg);
 
+    const fileMaxSize = 300 * 1024 * 1024;
+    let fileSize = 0;
+
     spinningOn();
+
+    const submitData = new FormData();
+    if (JSON.stringify(fileInfo) !== '{}') {
+      fileSize = (fileInfo && fileInfo.size) || 0;
+      submitData.append(fileInfo.uid, fileInfo);
+    }
+    submitData.append('CONTENT', content);
+    submitData.append(
+      'LIST',
+      JSON.stringify(list.map(user => user.USER_ID))
+        .replace('[', '(')
+        .replace(']', ')'),
+    );
+    submitData.append('TITLE', (formData && formData.TITLE) || 'ESH 검진상담 메일');
+    submitData.append('TEST_TO', testTo);
+
+    if (MAIL === 'Y') {
+      if (!testTo) {
+        spinningOff();
+        return this.showMessage('테스트용 이메일을 입력하시오');
+      }
+      if (fileSize > fileMaxSize) {
+        spinningOff();
+        return this.showMessage('첨부파일은 최대 300MB까지 전송 가능합니다.');
+      }
+    }
+
+    if (CONSULTING === 'N' && MAIL === 'Y') {
+      return excelUpload(sagaKey, '/api/eshs/v1/common/eshsMyHealthPageAttachEmailSend', submitData, {}, res => {
+        if (res && res.result === 'SUCESS') {
+          this.showMessage('메일이 성공적으로 전송되었습니다.');
+          spinningOff();
+          modalVisible();
+        } else {
+          this.showMessage(res.result);
+          spinningOff();
+        }
+      });
+    }
 
     return submitHandlerBySaga(
       sagaKey,
       'PUT',
       '/api/eshs/v1/common/health/eshsRealTimeSelfList',
-      { PARAM: { ...formData, profile, CONTENT: content ? content.replace(/\n/gi, '<br>').replace(/ /gi, '&nbsp;') : '', list } },
+      {
+        PARAM: {
+          ...formData,
+          profile,
+          CONTENT: content ? content.replace(/\n/gi, '<br>').replace(/ /gi, '&nbsp;') : '',
+          list,
+        },
+      },
       (id, res) => {
         if (res && res.result === lIdx) {
-          this.showMessage('저장하였습니다.');
+          this.showMessage('상담내용이 저장되었습니다.');
+          if (MAIL === 'Y') {
+            return excelUpload(sagaKey, '/api/eshs/v1/common/eshsMyHealthPageAttachEmailSend', submitData, {}, mailRes => {
+              let msg = '';
+              if (mailRes && mailRes.result === 'SUCESS') {
+                spinningOff();
+                modalVisible();
+                saveAfter();
+                msg = '메일이 성공적으로 전송되었습니다.';
+              } else if (mailRes && mailRes.result) {
+                spinningOff();
+                msg = mailRes.result;
+              } else {
+                spinningOff();
+                msg = '메일전송이 실패하였습니다';
+              }
+
+              return this.showMessage(msg);
+            });
+          }
+
           spinningOff();
           saveAfter();
           return modalVisible();
         }
 
         spinningOff();
-        return this.showMessage('저장 실패!');
+        if (MAIL === 'N') return this.showMessage('상담내용 저장이 실패하였습니다.');
+        return this.showMessage('상담내용및 메일전송이 실패하였습니다.');
       },
     );
   };
@@ -132,7 +201,9 @@ class Comp extends Component {
               </tr>
               <tr>
                 <th>첨부파일</th>
-                <td colSpan={3}>메일 발송시 필요.. 메일 미구현으로 보류</td>
+                <td colSpan={3}>
+                  <Upload onChangeFileInfo={file => this.changeFormData('file', file)} />
+                </td>
               </tr>
               <tr>
                 <th>상담등록</th>
@@ -141,7 +212,15 @@ class Comp extends Component {
                 </td>
                 <th>메일발송</th>
                 <td>
-                  <Checkbox checked={formData.MAIL === 'Y'} onChange={e => message.info(<MessageContent>미구현</MessageContent>)} />
+                  <Checkbox checked={formData.MAIL === 'Y'} onChange={e => this.changeFormData('MAIL', e.target.checked ? 'Y' : 'N')} />
+                  {formData.MAIL === 'Y' && (
+                    <AntdInput
+                      className="ant-input-sm ant-input-inline ml5"
+                      placeholder="테스트 이메일"
+                      style={{ width: '70%' }}
+                      onChange={e => this.changeFormData('TEST_TO', e.target.value)}
+                    />
+                  )}
                 </td>
               </tr>
               <tr>
