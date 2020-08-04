@@ -101,7 +101,6 @@ function* getUserInfo({ userInfo, callBack }) {
 
 function* successApprove({ message: msg, customUrl, appvType }) {
   message.success(msg, 3);
-  console.debug('appvType', appvType, customUrl);
   switch (appvType) {
     case 'DRAFT':
       yield put(actions.getDraftList(customUrl));
