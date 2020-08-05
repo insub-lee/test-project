@@ -48,6 +48,7 @@ class MdcsAppvView extends Component {
       isAbrogationMultiShow: false,
       workseq: undefined,
       taskSeq: undefined,
+      isObsCheck: undefined,
     };
   }
 
@@ -128,6 +129,12 @@ class MdcsAppvView extends Component {
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    const { selectedRow } = this.props;
+    if (selectedRow.REL_TYPE === 99) {
+      this.setState({ isObsCheck: true });
+    } else {
+      this.setState({ isObsCheck: false });
+    }
     const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'VIEW' };
     this.setState({ coverView });
   };
@@ -256,8 +263,8 @@ class MdcsAppvView extends Component {
       workPrcProps,
       isDCC,
       isAbrogationMultiShow,
+      isObsCheck,
     } = this.state;
-    console.debug('미결함 workPrcProps', workPrcProps);
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -493,6 +500,7 @@ class MdcsAppvView extends Component {
             taskSeq={coverView.taskSeq}
             viewMetaSeq={coverView.viewMetaSeq}
             workPrcProps={workPrcProps}
+            isObsCheck={isObsCheck}
             CustomWorkProcessModal={WorkProcessModal}
             onCloseCoverView={this.onCloseCoverView}
             onCloseModalHandler={this.onCloseCoverView}

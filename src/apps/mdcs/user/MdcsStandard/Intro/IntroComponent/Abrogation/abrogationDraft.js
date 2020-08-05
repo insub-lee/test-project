@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
-import { Input, Button } from 'antd';
+import { Input, Button, Modal } from 'antd';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+
 const { TextArea } = Input;
+const AntdModal = StyledAntdModal(Modal);
 class AbrogationDraft extends Component {
   constructor(props) {
     super(props);
@@ -14,6 +19,7 @@ class AbrogationDraft extends Component {
       draftWorkProc: undefined,
       descOfChange: undefined,
       revHistory: undefined,
+      coverView: { visible: undefined, workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined },
     };
   }
 
@@ -57,9 +63,24 @@ class AbrogationDraft extends Component {
     onCloseAbrogationModal();
   };
 
+  clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    this.setState({ coverView: { visible: true, workSeq, taskSeq, viewMetaSeq } });
+  };
+
+  onCloseCoverView = () => {
+    this.setState({
+      coverView: {
+        visible: false,
+        workSeq: undefined,
+        taskSeq: undefined,
+        viewMetaSeq: undefined,
+      },
+    });
+  };
+
   render() {
     const { WORK_SEQ, TASK_SEQ } = this.props;
-    const { workProcess } = this.state;
+    const { workProcess, coverView } = this.state;
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -95,7 +116,43 @@ class AbrogationDraft extends Component {
             <Button onClick={this.onCloseModal}>닫기</Button>
           </div>
         </StyledHtmlTable>
-        <BizBuilderBase sagaKey="validateView" workSeq={WORK_SEQ} taskSeq={TASK_SEQ} viewType="VIEW" ViewCustomButtons={() => false} />
+        <BizBuilderBase
+          sagaKey="validateView"
+          workSeq={WORK_SEQ}
+          taskSeq={TASK_SEQ}
+          clickCoverView={this.clickCoverView}
+          viewType="VIEW"
+          ViewCustomButtons={() => false}
+        />
+        <AntdModal
+          className="modalWrapper modalTechDoc"
+          title="표지 보기"
+          visible={coverView.visible}
+          footer={null}
+          width={800}
+          initialWidth={800}
+          okButtonProps={null}
+          onCancel={this.onCloseCoverView}
+          destroyOnClose
+        >
+          <div className="SearchContentLayer">
+            <BizBuilderBase
+              sagaKey="CoverView"
+              viewType="VIEW"
+              workSeq={coverView.workSeq}
+              taskSeq={coverView.taskSeq}
+              viewMetaSeq={coverView.viewMetaSeq}
+              onCloseCoverView={this.onCloseCoverView}
+              ViewCustomButtons={({ onCloseCoverView }) => (
+                <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+                  <StyledButton className="btn-light btn-sm" onClick={onCloseCoverView}>
+                    닫기
+                  </StyledButton>
+                </StyledButtonWrapper>
+              )}
+            />
+          </div>
+        </AntdModal>
       </>
     );
   }
