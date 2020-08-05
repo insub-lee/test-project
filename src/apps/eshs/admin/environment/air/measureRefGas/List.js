@@ -319,10 +319,10 @@ class List extends Component {
         ) : (
           ''
         )}
-        <StyledHtmlTable>
+        <div style={{ overflow: 'auto', msOverflowStyle: 'scrollbar' }}>
           {/* {measureList.length > 0 ? <Graph graphData={measureList} stackList={stackList} selectGubun={selectGubun} gasCd={gasCd} gasWeight={gasWeight} /> : ''} */}
           {measureList.length > 0 ? <LineComp data={chartData} /> : ''}
-        </StyledHtmlTable>
+        </div>
         <AntdModal width={800} visible={this.state.isModal} title="Gas 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
           <AntdTable
             className="table-wrapper"
