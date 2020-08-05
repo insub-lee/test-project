@@ -10,7 +10,9 @@ import { jsonToQueryString } from 'utils/helpers';
 import DatePicker from 'apps/wts/components/DatePicker';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import service from '../service';
+
 import StyledContent from './StyledContent';
+// import EduReportPrintModal from './EduReportPrintModal';
 
 const datePicker = fromJS({
   edudt: {
@@ -40,6 +42,9 @@ class EduReportModal extends React.Component {
     this.updateData = this.updateData.bind(this);
     this.postData = this.postData.bind(this);
     this.saveData = this.saveData.bind(this);
+    this.handleEduReportPrintModal = this.handleEduReportPrintModal.bind(this);
+
+    this.eduReportPrintModal = React.createRef();
   }
 
   handleOpenModal({ readOnly = false, eduPlanInfo, stepLevel, report }) {
@@ -137,8 +142,13 @@ class EduReportModal extends React.Component {
     return false;
   }
 
+  handleEduReportPrintModal() {
+    this.eduReportPrintModal.current.handleOpenModal();
+  }
+
   render() {
     const { isOpen, isLoading, readOnly, report } = this.state;
+    const { eduPlanInfo } = this.props;
     console.debug('# ReadOnly', report);
     let datePickerOption = datePicker.getIn(['edudt', 'values']);
     if (readOnly) {
@@ -169,6 +179,13 @@ class EduReportModal extends React.Component {
             <div className="pop_con">
               <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
                 <StyledCommonForm onSubmit={this.saveData} autoComplete="off">
+                  {readOnly && (
+                    <div className="btn_wrap" style={{ textAlign: 'right', paddingBottom: '10px' }}>
+                      <StyledButton type="button" className="btn-primary btn-xs" onClick={this.handleEduReportPrintModal}>
+                        인쇄 미리보기
+                      </StyledButton>
+                    </div>
+                  )}
                   <ul className="sub_form small2 has_margin">
                     <li>
                       <label className="title" htmlFor="form-curriculum">
@@ -241,6 +258,7 @@ class EduReportModal extends React.Component {
             </div>
           </StyledContent>
         </div>
+        {/* <EduReportPrintModal ref={this.eduReportPrintModal} report={report} eduPlanInfo={eduPlanInfo} /> */}
       </Modal>
     );
   }

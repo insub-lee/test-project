@@ -26,31 +26,7 @@ const curriculumButtonStyle = {
   whiteSpace: 'nowrap',
 };
 
-const getEduTitle = (step, studyType = 'job_common') => {
-  let title = '';
-  switch (step) {
-    case 1:
-      title = '기본교육';
-      break;
-    case 2:
-      title = '품질교육';
-      break;
-    case 3:
-      if (studyType === 'job_common') {
-        title = '직무교육';
-      } else if (studyType === 'job_meter') {
-        title = '계측기';
-      } else if (studyType === 'job_mask') {
-        title = 'MASK';
-      }
-      break;
-    default:
-      break;
-  }
-  return title;
-};
-
-class EduManageModal extends React.Component {
+class EduManageJobReturnModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -116,7 +92,7 @@ class EduManageModal extends React.Component {
   }
 
   handleMentorConfirm(row) {
-    if (window.confirm(`${row.step_level}단계 ${moment(row.edudt, 'YYYYMMDD').format('YYYY.MM.DD')} 내용을 확인하셨습니까?`)) {
+    if (window.confirm(`${moment(row.edudt, 'YYYYMMDD').format('YYYY.MM.DD')} 내용을 확인하셨습니까?`)) {
       const payload = {
         type: 'upddailyReport',
         reportno: row.reportno,
@@ -153,27 +129,8 @@ class EduManageModal extends React.Component {
     }
   }
 
-  handleReadyExamConfirmExtra(planseq, empno, collseq, key, userName) {
-    if (window.confirm(`‘${userName}(${empno})’ 님의 신입/전배 3차(추가) ${key === 'meter_result' ? '계측기' : 'MASK'} 교육을 진행하시겠습니까?`)) {
-      const payload = {
-        type: 'updateEduPlanStep3Extra',
-        empNo: empno,
-        plan_seq: planseq,
-        collseq,
-        [key]: 'S',
-      };
-      this.updateData(payload).then(result => {
-        if (result) {
-          this.initData();
-        } else {
-          alert('처리과정 중 오류가 발생했습니다.');
-        }
-      });
-    }
-  }
-
   handleStepPass(planseq, step, collseq, empno) {
-    if (window.confirm(`${step}단계를 통과 시키겠습니까?`)) {
+    if (window.confirm(`교육을 통과 시키겠습니까?`)) {
       const payload = {
         type: 'passStep',
         plan_seq: planseq,
@@ -181,32 +138,14 @@ class EduManageModal extends React.Component {
         empno,
       };
       const todayMoment = moment(new Date());
-      switch (step) {
-        case 1:
-          payload.step1_eduedt = todayMoment.format('YYYYMMDD');
-          payload.step1_chkdt = todayMoment.format('YYYYMMDD');
-          payload.step1_result = 'O';
-          payload.step2_edusdt = todayMoment.add(1, 'days').format('YYYYMMDD');
-          payload.step_level = 2;
-          break;
-        case 2:
-          payload.step2_eduedt = todayMoment.format('YYYYMMDD');
-          payload.step2_chkdt = todayMoment.format('YYYYMMDD');
-          payload.step2_result = 'O';
-          payload.step3_edusdt = todayMoment.add(1, 'days').format('YYYYMMDD');
-          payload.step_level = 3;
-          break;
-        case 3:
-          payload.step3_eduedt = todayMoment.format('YYYYMMDD');
-          payload.step3_chkdt = todayMoment.format('YYYYMMDD');
-          payload.step3_result = 'O';
-          break;
-        default:
-          break;
-      }
+
+      payload.step3_eduedt = todayMoment.format('YYYYMMDD');
+      payload.step3_chkdt = todayMoment.format('YYYYMMDD');
+      payload.step3_result = 'O';
+
       this.updateData(payload).then(result => {
         if (result) {
-          alert(`${step}단계를 통과했습니다.`);
+          alert(`교육을 통과했습니다.`);
           this.initData();
         } else {
           alert('데이터를 처리하는 과정에서 에러가 발생했습니다.');
@@ -242,7 +181,7 @@ class EduManageModal extends React.Component {
     );
   }
 
-  mentorAcceptTestRenderer(reportAuth, eduPlanInfo, row, length, confirmed, step, planResult) {
+  mentorAcceptTestRenderer(reportAuth, eduPlanInfo, row, length, confirmed, step, planResult, passButton) {
     const { site } = this.props;
     console.debug('@@@ row', row);
     console.debug('@@@ edu plan info', eduPlanInfo);
@@ -254,89 +193,10 @@ class EduManageModal extends React.Component {
               <button
                 type="button"
                 style={{ margin: '10px 0' }}
-                onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_common', eduPlanInfo.area)}
+                onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_return', eduPlanInfo.area)}
               >
-                <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
+                <i className="fa fa-check" /> 직무교육
               </button>
-              {step === 3 && eduPlanInfo.meter_result === '' && eduPlanInfo.mask_result !== 'S' && eduPlanInfo.step3_result !== 'O' && (
-                <>
-                  <StyledButton
-                    type="button"
-                    className="btn-light btn-sm"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleReadyExamConfirmExtra(row.plan_seq, row.empno, eduPlanInfo.collseq, 'meter_result', eduPlanInfo.usrnm)}
-                  >
-                    계측기 평가 시작
-                  </StyledButton>
-                </>
-              )}
-              {step === 3 && eduPlanInfo.meter_result !== 'S' && eduPlanInfo.mask_result === '' && eduPlanInfo.step3_result !== 'O' && (
-                <>
-                  <StyledButton
-                    type="button"
-                    className="btn-light btn-sm"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleReadyExamConfirmExtra(row.plan_seq, row.empno, eduPlanInfo.collseq, 'mask_result', eduPlanInfo.usrnm)}
-                  >
-                    MASK 평가 시작
-                  </StyledButton>
-                </>
-              )}
-              {step === 3 && eduPlanInfo.meter_result !== '' && eduPlanInfo.mask_result !== 'S' && (
-                <>
-                  <br />
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_meter', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_meter')}
-                  </button>
-                </>
-              )}
-              {step === 3 && eduPlanInfo.meter_result !== 'S' && eduPlanInfo.mask_result !== '' && (
-                <>
-                  <br />
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_mask', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_mask')}
-                  </button>
-                </>
-              )}
-              {/* {step === 3 && eduPlanInfo.area.includes('PHOTO') ? (
-                <>
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_common', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
-                  </button>
-                  <br />
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_meter', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_meter')}
-                  </button>
-                  <br />
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_mask', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_mask')}
-                  </button>
-                </>
-              ) : (
-                <button type="button" style={{ margin: '10px 0' }} onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site)}>
-                  <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
-                </button>
-              )} */}
             </td>
             {planResult === 'O' && (
               <td rowSpan={length} style={{ color: '#1fb5ad' }}>
@@ -366,65 +226,10 @@ class EduManageModal extends React.Component {
               <button
                 type="button"
                 style={{ margin: '10px 0' }}
-                onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_common', eduPlanInfo.area)}
+                onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_return', eduPlanInfo.area)}
               >
-                <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
+                <i className="fa fa-check" /> 직무교육
               </button>
-              {step === 3 && eduPlanInfo.meter_result !== '' && eduPlanInfo.mask_result !== 'S' && (
-                <>
-                  <br />
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_meter', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_meter')}
-                  </button>
-                </>
-              )}
-              {step === 3 && eduPlanInfo.meter_result !== 'S' && eduPlanInfo.mask_result !== '' && (
-                <>
-                  <br />
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_mask', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_mask')}
-                  </button>
-                </>
-              )}
-              {/* {step === 3 && eduPlanInfo.area.includes('PHOTO') ? (
-                <>
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_common', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
-                  </button>
-                  <br />
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_meter', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_meter')}
-                  </button>
-                  <br />
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_mask', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_mask')}
-                  </button>
-                </>
-              ) : (
-                <button type="button" style={{ margin: '10px 0' }} onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site)}>
-                  <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
-                </button>
-              )} */}
             </td>
             {planResult === 'O' && (
               <td rowSpan={length} style={{ color: '#1fb5ad' }}>
@@ -451,89 +256,11 @@ class EduManageModal extends React.Component {
               <button
                 type="button"
                 style={{ margin: '10px 0' }}
-                onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_common', eduPlanInfo.area)}
+                onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_return', eduPlanInfo.area)}
               >
-                <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
+                <i className="fa fa-check" /> 직무교육
               </button>
-              {step === 3 && eduPlanInfo.meter_result === '' && eduPlanInfo.mask_result !== 'S' && eduPlanInfo.step3_result !== 'O' && (
-                <>
-                  <StyledButton
-                    type="button"
-                    className="btn-light btn-sm"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleReadyExamConfirmExtra(row.plan_seq, row.empno, eduPlanInfo.collseq, 'meter_result', eduPlanInfo.usrnm)}
-                  >
-                    계측기 평가 시작
-                  </StyledButton>
-                </>
-              )}
-              {step === 3 && eduPlanInfo.meter_result !== 'S' && eduPlanInfo.mask_result === '' && eduPlanInfo.step3_result !== 'O' && (
-                <>
-                  <StyledButton
-                    type="button"
-                    className="btn-light btn-sm"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleReadyExamConfirmExtra(row.plan_seq, row.empno, eduPlanInfo.collseq, 'mask_result', eduPlanInfo.usrnm)}
-                  >
-                    MASK 평가 시작
-                  </StyledButton>
-                </>
-              )}
-              {step === 3 && eduPlanInfo.meter_result !== '' && eduPlanInfo.mask_result !== 'S' && (
-                <>
-                  <br />
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_meter', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_meter')}
-                  </button>
-                </>
-              )}
-              {step === 3 && eduPlanInfo.meter_result !== 'S' && eduPlanInfo.mask_result !== '' && (
-                <>
-                  <br />
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_mask', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_mask')}
-                  </button>
-                </>
-              )}
-              {/* {step === 3 && eduPlanInfo.area.includes('PHOTO') ? (
-                <>
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_common', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
-                  </button>
-                  <br />
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_meter', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_meter')}
-                  </button>
-                  <br />
-                  <button
-                    type="button"
-                    style={{ margin: '10px 0' }}
-                    onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_mask', eduPlanInfo.area)}
-                  >
-                    <i className="fa fa-check" /> {getEduTitle(step, 'job_mask')}
-                  </button>
-                </>
-              ) : (
-                <button type="button" style={{ margin: '10px 0' }} onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site)}>
-                  <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
-                </button>
-              )} */}
+              {passButton}
             </td>
             {planResult === 'O' && (
               <td rowSpan={length} style={{ color: '#1fb5ad' }}>
@@ -603,38 +330,16 @@ class EduManageModal extends React.Component {
 
   eduScheduleRenderer(stepLevel) {
     const { eduPlanInfo } = this.state;
+    console.debug(eduPlanInfo);
     const currentStepLevel = eduPlanInfo.step_level;
-    switch (stepLevel) {
-      case 1:
-        if (currentStepLevel > stepLevel) {
-          return `${moment(eduPlanInfo.step1_edusdt, 'YYYYMMDD').format('YYYY.MM.DD')} ~ ${moment(eduPlanInfo.step1_eduedt, 'YYYYMMDD').format('YYYY.MM.DD')}`;
-        }
-        if (currentStepLevel === stepLevel) {
-          return `${moment(eduPlanInfo.step1_edusdt, 'YYYYMMDD').format('YYYY.MM.DD')} ~ `;
-        }
-        return '-';
 
-      case 2:
-        if (currentStepLevel > stepLevel) {
-          return `${moment(eduPlanInfo.step2_edusdt, 'YYYYMMDD').format('YYYY.MM.DD')} ~ ${moment(eduPlanInfo.step2_eduedt, 'YYYYMMDD').format('YYYY.MM.DD')}`;
-        }
-        if (currentStepLevel === stepLevel) {
-          return `${moment(eduPlanInfo.step2_edusdt, 'YYYYMMDD').format('YYYY.MM.DD')} ~ `;
-        }
-        return '-';
-
-      case 3:
-        if (currentStepLevel > stepLevel) {
-          return `${moment(eduPlanInfo.step3_edusdt, 'YYYYMMDD').format('YYYY.MM.DD')} ~ ${moment(eduPlanInfo.step3_eduedt, 'YYYYMMDD').format('YYYY.MM.DD')}`;
-        }
-        if (currentStepLevel === stepLevel) {
-          return `${moment(eduPlanInfo.step3_edusdt, 'YYYYMMDD').format('YYYY.MM.DD')} ~ `;
-        }
-        return '-';
-
-      default:
-        return '-';
+    if (currentStepLevel > stepLevel) {
+      return `${moment(eduPlanInfo.step3_edusdt, 'YYYYMMDD').format('YYYY.MM.DD')} ~ ${moment(eduPlanInfo.step3_eduedt, 'YYYYMMDD').format('YYYY.MM.DD')}`;
     }
+    if (currentStepLevel === stepLevel) {
+      return `${moment(eduPlanInfo.step3_edusdt, 'YYYYMMDD').format('YYYY.MM.DD')} ~ `;
+    }
+    return '-';
   }
 
   reportTableRowRenderer(step, currentStep, startStep) {
@@ -651,7 +356,6 @@ class EduManageModal extends React.Component {
     if (!report[step] || report[step].length === 0) {
       return (
         <tr className="bd">
-          <td rowSpan={3}>{`${step}단계`}</td>
           <td colSpan={3}>
             {reportAuth === 'user' ? (
               <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleEduReportModal(step)}>
@@ -693,27 +397,6 @@ class EduManageModal extends React.Component {
     // 리포트 및 기타 tr 을 그리는 부분
     const children = report[step].map((row, index) => (
       <tr className="bd" key={row.reportno}>
-        {index === 0 && (
-          <td rowSpan={!confirmed ? report[step].length + 1 : report[step].length}>
-            {`${step}단계`}
-            <br />
-            {index === 0 &&
-              !notReady &&
-              planResult === 'O' &&
-              confirmed &&
-              reportAuth === 'admin' &&
-              currentStep === step &&
-              eduPlanStep[checkIndex].step_pass !== 'O' && (
-                <button
-                  type="button"
-                  style={{ borderBottom: '1px solid black ' }}
-                  onClick={() => this.handleStepPass(row.plan_seq, step, eduPlanInfo.collseq, eduPlanInfo.empno)}
-                >
-                  패스하기
-                </button>
-              )}
-          </td>
-        )}
         <td>{moment(row.edudt, 'YYYYMMDD').format('YYYY.MM.DD')}</td>
         <td>
           <StyledButton type="button" className="btn-light btn-sm" onClick={() => this.handleReviewEduReportModal(row)} style={curriculumButtonStyle}>
@@ -721,7 +404,35 @@ class EduManageModal extends React.Component {
           </StyledButton>
         </td>
         <td>{row.confirm === 'O' ? <i className="fa fa-check" /> : this.mentorConfirmRenderer(reportAuth, row)}</td>
-        {index === 0 && !notReady && this.mentorAcceptTestRenderer(reportAuth, eduPlanInfo, row, report[step].length, confirmed, step, planResult)}
+        {index === 0 &&
+          !notReady &&
+          this.mentorAcceptTestRenderer(
+            reportAuth,
+            eduPlanInfo,
+            row,
+            report[step].length,
+            confirmed,
+            step,
+            planResult,
+            index === 0 &&
+              !notReady &&
+              planResult === 'O' &&
+              confirmed &&
+              reportAuth === 'admin' &&
+              currentStep === step &&
+              eduPlanStep[checkIndex].step_pass !== 'O' && (
+                <>
+                  <br />
+                  <button
+                    type="button"
+                    style={{ borderBottom: '1px solid black ' }}
+                    onClick={() => this.handleStepPass(row.plan_seq, step, eduPlanInfo.collseq, eduPlanInfo.empno)}
+                  >
+                    패스하기
+                  </button>
+                </>
+              ),
+          )}
         {index === 0 && notReady && (
           <td rowSpan={report[step].length + 1} colSpan={2}>
             평가 미대상자
@@ -801,7 +512,7 @@ class EduManageModal extends React.Component {
         <div>
           <StyledContent>
             <div className="pop_tit">
-              신입/전배 사원 교육
+              복직자 교육
               <button type="button" className="icon icon_pclose" onClick={this.handleCloseModal} />
             </div>
             <div className="pop_con">
@@ -859,39 +570,25 @@ class EduManageModal extends React.Component {
                       <tbody>
                         <tr className="bd">
                           <th>교육단계</th>
-                          <th>교육내용</th>
-                          <th>교육기간</th>
-                          <th>교육일정</th>
-                        </tr>
-                        {eduPlanInfo.step1_edusdt && (
-                          <tr className="bd">
-                            <th>1단계 (기본 교육)</th>
-                            <td>HOUSE KEEPING, 청정실 물품 반입 절차, 반도체 용어설명, 환경/안전 교육, 비상대피 훈련 교육</td>
-                            <td>1 ~ 2주 (6~12일)</td>
-                            <td>{this.eduScheduleRenderer(1)}</td>
-                          </tr>
-                        )}
-                        <tr className="bd">
-                          <th>2단계 (품질 교육)</th>
-                          <td>HANDLING 방법 및 실습, CARRIER & BOX 취급 방법, PARTICLE 관리의 중요성, 실수사례교육</td>
-                          <td>1 ~ 2주 (6~12일)</td>
-                          <td>{this.eduScheduleRenderer(2)}</td>
+                          <th>교육시간</th>
                         </tr>
                         <tr className="bd">
-                          <th>3단계 (직무 교육)</th>
-                          <td>JOB의 공정개요 이론, 작업 진행 방법 교육(SPEC), MAIN장치 사용방법 교육, 전산 PDA교육, 기타 이상연락처리 및 JOB특성교육</td>
-                          <td>3 ~ 6주 (18~36일)</td>
-                          <td>{this.eduScheduleRenderer(3)}</td>
+                          <th>휴직 기간이 3개월~1년 미만</th>
+                          <td>16시간 교육</td>
+                        </tr>
+                        <tr className="bd">
+                          <th>휴직 기간이 1년 이상~</th>
+                          <td>40시간 교육</td>
                         </tr>
                         <tr className="bd">
                           <th>TOTAL 교육기간</th>
-                          <td colSpan={4}>5 ~ 10주 (30일 ~ 60일)</td>
+                          <td colSpan={4}>{this.eduScheduleRenderer(3)}</td>
                         </tr>
                       </tbody>
                     </table>
                   </StyledTable>
                   <br />
-                  <div className="sub_form_tit cr">단계별 교육 일정 및 일일레포트</div>
+                  <div className="sub_form_tit cr">교육 일정 및 일일레포트</div>
                   <StyledTable className="ta_wrap">
                     <table className="tb02">
                       {/* <colgroup> */}
@@ -906,18 +603,16 @@ class EduManageModal extends React.Component {
                       {/* </colgroup> */}
                       <colgroup>
                         <col width="10%" />
-                        <col width="10%" />
-                        <col width="20%" />
+                        <col width="26%" />
                         <col width="15%" />
                         <col width="17.5%" />
                         <col width="7.5%" />
-                        <col width="10%" />
-                        <col width="10%" />
+                        <col width="12%" />
+                        <col width="12%" />
                       </colgroup>
                       <tbody>
                         <tr className="bd">
-                          <th rowSpan={2}>단계구분</th>
-                          <th colSpan={3}>단계별 교육 일정 및 일일레포트</th>
+                          <th colSpan={3}>교육 일정 및 일일레포트</th>
                           <th colSpan={2}>평가</th>
                           <th colSpan={2}>멘토 및 반장 의견</th>
                         </tr>
@@ -930,8 +625,6 @@ class EduManageModal extends React.Component {
                           <th>멘토의견</th>
                           <th>반장의견</th>
                         </tr>
-                        {this.reportTableRowRenderer(1, eduPlanInfo.step_level, !!eduPlanInfo.step1_edusdt)}
-                        {this.reportTableRowRenderer(2, eduPlanInfo.step_level, !!eduPlanInfo.step2_edusdt)}
                         {this.reportTableRowRenderer(3, eduPlanInfo.step_level, !!eduPlanInfo.step3_edusdt)}
                       </tbody>
                     </table>
@@ -951,12 +644,12 @@ class EduManageModal extends React.Component {
   }
 }
 
-EduManageModal.propTypes = {
+EduManageJobReturnModal.propTypes = {
   callbackHandler: PropTypes.func,
 };
 
-EduManageModal.defaultProps = {
+EduManageJobReturnModal.defaultProps = {
   callbackHandler: () => false,
 };
 
-export default EduManageModal;
+export default EduManageJobReturnModal;

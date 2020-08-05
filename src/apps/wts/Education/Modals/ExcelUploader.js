@@ -122,10 +122,10 @@ class ExcelUploader extends React.Component {
             case 'job_proc':
               return {
                 key: index,
-                title: row[0],
-                total: row[1],
-                answers: [row[2], row[3], row[4], row[5]],
-                correctAnswer: row[2],
+                title: row[3],
+                total: row[4],
+                answers: [row[5], row[6], row[7], row[8]],
+                correctAnswer: row[5],
               };
             default:
               return {
@@ -141,6 +141,7 @@ class ExcelUploader extends React.Component {
               };
           }
         });
+      console.debug(convertedData);
       this.setState({ data: convertedData });
     };
     if (rABS) {

@@ -15,6 +15,8 @@ import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/Mdc
 import ProcessView from 'apps/Workflow/User/CommonView/processView';
 import ExcelDownLoad from 'components/ExcelDownLoad';
 import BizBuilderBase from 'components/BizBuilderBase';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
 const AntdLineTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);

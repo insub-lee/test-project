@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 
-import { Icon, Spin } from 'antd';
+import { Icon, Spin, Popover } from 'antd';
 import { exportExcel, jsonToQueryString } from 'utils/helpers';
 import Checkbox from 'apps/wts/components/CheckboxGroup/Checkbox';
 // import alertMessage from 'apps/wts/components/Notification/Alert';
@@ -10,9 +10,12 @@ import SendEduMail from '../../Modals/SendEduMail';
 import service from '../../service';
 import Wrapper from './Wrapper';
 import JobEvaluationModal from '../../Modals/JobEvaluation';
-import NewEmployeeTraining from './NewEmployeeTraining';
+// import NewEmployeeTraining from './NewEmployeeTraining';
 import EduAcceptModal from '../../Modals/EduAcceptModal';
 import StyledTable from '../../../StyledTable';
+import EduManageModal from '../../Modals/EduManageModal';
+import EduPlanSingleModal from '../../Modals/EduPlanSingleModal';
+import EduManageJobReturnModal from '../../Modals/EduManageJobReturnModal';
 
 class MainBody extends React.Component {
   constructor(props) {
@@ -23,6 +26,9 @@ class MainBody extends React.Component {
       isLoading: true,
       checkedList: [],
       historyList: [],
+      eduList: [],
+      eduPlanList: [],
+      targets: [],
     };
 
     this.initData = this.initData.bind(this);
@@ -41,11 +47,16 @@ class MainBody extends React.Component {
     this.applyButtonsRenderer = this.applyButtonsRenderer.bind(this);
     this.handleOpenAcceptEdu = this.handleOpenAcceptEdu.bind(this);
     this.applyHistory = this.applyHistory.bind(this);
+    this.handleOpenManageModal = this.handleOpenManageModal.bind(this);
+    this.handleOpenEduPlanModal = this.handleOpenEduPlanModal.bind(this);
 
     this.sendEduMailRef = React.createRef();
     this.jobEvaluationRef = React.createRef();
     this.eduAcceptModal = React.createRef();
     this.eduList = React.createRef();
+    this.eduManageModalRef = React.createRef();
+    this.eduPlanModalRef = React.createRef();
+    this.eduManageJobReturnModalRef = React.createRef();
   }
 
   componentDidMount() {
@@ -82,6 +93,8 @@ class MainBody extends React.Component {
                 });
                 this.setState({ data: nextData, isLoading: true, eduList }, () => {
                   this.applyHistory(empno, currentYear);
+                  this.eduPlanData(empno);
+                  this.getTrainTargets(empno);
                 });
               });
             });
@@ -315,6 +328,77 @@ class MainBody extends React.Component {
     };
   }
 
+  eduPlanData() {
+    const { empno } = this.props;
+    this.fetchEduPlanData(empno).then(({ isError, data }) => {
+      if (isError) {
+        alert('조회하는 과정에서 오류가 발생했습니다.');
+      } else {
+        this.setState({ eduPlanList: data });
+      }
+    });
+  }
+
+  async fetchEduPlanData(empno) {
+    const requestQuery = {
+      type: 'getEduPlanByUsrId',
+      usrId: empno,
+    };
+    const queryString = jsonToQueryString(requestQuery);
+    const { response, error } = await service.manage.get(queryString);
+    if (response && !error) {
+      const { eduPlanList } = response;
+      return {
+        data: eduPlanList,
+        isError: false,
+      };
+    }
+    return {
+      data: [],
+      isError: true,
+    };
+  }
+
+  handleOpenManageModal(planseq) {
+    this.eduManageModalRef.current.handleOpenModal(planseq, 'admin');
+  }
+
+  handleOpenEduPlanModal(selectedUsers) {
+    this.eduPlanModalRef.current.handleOpenModal(selectedUsers);
+  }
+
+  handleOpenManageJobReturnModal(planseq) {
+    this.eduManageJobReturnModalRef.current.handleOpenModal(planseq, 'admin');
+  }
+
+  getTrainTargets(usrId) {
+    this.setState({ isLoading: true }, () => {
+      this.fetchTrainTargetsData(usrId).then(({ data }) => {
+        this.setState({ targets: data, isLoading: false });
+      });
+    });
+  }
+
+  async fetchTrainTargetsData(usrId) {
+    const requestQuery = {
+      type: 'trainTargetList',
+      usrId,
+    };
+    const queryString = jsonToQueryString(requestQuery);
+    const { response, error } = await service.manage.get(queryString);
+    if (response && !error) {
+      const { trainTargetList, insertedTrainTargetList } = response;
+      const insertedTargets = insertedTrainTargetList.map(({ collseq, empno }) => `${collseq}-${empno}`);
+      const filteredData = trainTargetList.filter(({ collseq, empno }) => !insertedTargets.includes(`${collseq}-${empno}`));
+      return {
+        data: filteredData,
+      };
+    }
+    return {
+      data: [],
+    };
+  }
+
   renderSelectableYears() {
     const options = [];
     let maxYear = new Date().getFullYear();
@@ -326,7 +410,7 @@ class MainBody extends React.Component {
   }
 
   applyButtonsRenderer(rowData, target) {
-    const { historyList } = this.state;
+    const { historyList, targets, currentYear, eduPlanList } = this.state;
     const list = rowData.edu ? rowData.edu[target] || [] : [];
     return list.map(edu => {
       const { coll_seq: collSeq, times } = edu;
@@ -342,6 +426,37 @@ class MainBody extends React.Component {
       }
       switch (eduResult) {
         case 'X':
+          if (target === 'job_return') {
+            const targetIdx = targets.findIndex(node => node.study === 'job_return' && node.empno === rowData.empno && node.colldt === currentYear.toString());
+            if (targetIdx > -1) {
+              const targetItem = targets[targetIdx];
+
+              return (
+                <StyledButton
+                  type="button"
+                  className="btn-sm btn-light"
+                  onClick={() => this.handleOpenEduPlanModal([{ ...rowData, type: targetItem.type, collseq: targetItem.collseq, eduType: 'job_return' }])}
+                >
+                  멘토 지정
+                </StyledButton>
+              );
+            }
+
+            const listIdx = eduPlanList.findIndex(node => rowData && node.empno === rowData.empno && node.collseq === collSeq);
+            if (listIdx > -1) {
+              const eduPlan = eduPlanList[listIdx];
+
+              return (
+                <button key={collSeq} type="button" className="cateWrap" onClick={() => this.handleOpenManageJobReturnModal(eduPlan.plan_seq)}>
+                  <span className="cateIcon cate02" />
+                  <span className="cateTxt">
+                    {`${times}차`} <br /> {`(${moment(edu.collecsdt, 'YYYYMMDD').format('MM.DD')} - ${moment(edu.collecedt, 'YYYYMMDD').format('MM.DD')}까지)`}
+                  </span>
+                </button>
+              );
+            }
+          }
+
           return (
             <button
               key={collSeq}
@@ -357,6 +472,19 @@ class MainBody extends React.Component {
             </button>
           );
         case 'O':
+          if (target === 'job_return') {
+            const listIdx = eduPlanList.findIndex(node => rowData && node.empno === rowData.empno && node.collseq === collSeq);
+            if (listIdx > -1) {
+              const eduPlan = eduPlanList[listIdx];
+              return (
+                <button key={collSeq} type="button" className="cateWrap" onClick={() => this.handleOpenManageJobReturnModal(eduPlan.plan_seq)}>
+                  <span className="cateIcon cate01" />
+                  <span className="cateTxt">{`${times}차 (${moment(historyList[targetIndex].eduhisdt, 'YYYYMMDD').format('MM.DD')})`}</span>
+                </button>
+              );
+            }
+          }
+
           return (
             <button
               key={collSeq}
@@ -374,6 +502,71 @@ class MainBody extends React.Component {
       }
     });
   }
+
+  newTrainingButtonsRenderer = rowData => {
+    const { eduList, eduPlanList, currentYear, targets } = this.state;
+    const listIdx = eduPlanList.findIndex(node => node.empno === rowData.empno && rowData);
+    let eduPlan = {};
+    let eduIdx = -1;
+
+    if (listIdx > -1) {
+      eduPlan = eduPlanList[listIdx];
+      eduIdx = eduList.findIndex(node => node.coll_seq === eduPlan.collseq && node.colldt === currentYear.toString());
+    }
+
+    if (listIdx > -1 && eduIdx > -1) {
+      if (eduIdx > -1) {
+        const eduItem = eduList[eduIdx];
+        let eduResult = false;
+        let timeText = '1차';
+        if (eduPlan.step3_result === 'O') {
+          timeText = '3차';
+          eduResult = true;
+        } else if (eduPlan.step2_result === 'O') {
+          timeText = '3차';
+        } else if (eduPlan.step1_result === 'O') {
+          timeText = '2차';
+        }
+
+        if (eduResult) {
+          return (
+            <button key={eduPlan.collseq} type="button" className="cateWrap" onClick={() => this.handleOpenManageModal(eduPlan.plan_seq)}>
+              <span className="cateIcon cate01" />
+              <span className="cateTxt">{`${timeText} (${moment(eduPlan.step3_eduedt, 'YYYYMMDD').format('MM.DD')})`}</span>
+            </button>
+          );
+        }
+        return (
+          <>
+            <button key={eduPlan.collseq} type="button" className="cateWrap" onClick={() => this.handleOpenManageModal(eduPlan.plan_seq)}>
+              <span className="cateIcon cate02" />
+              <span className="cateTxt">
+                {`${timeText}`}
+                <br />
+                {`(${moment(eduItem.collecsdt, 'YYYYMMDD').format('MM.DD')} - ${moment(eduItem.collecedt, 'YYYYMMDD').format('MM.DD')}까지)`}
+              </span>
+            </button>
+          </>
+        );
+      }
+    } else {
+      const targetIdx = targets.findIndex(node => node.study === 'job_training' && node.empno === rowData.empno && node.colldt === currentYear.toString());
+      if (targetIdx > -1) {
+        const target = targets[targetIdx];
+
+        return (
+          <StyledButton
+            type="button"
+            className="btn-sm btn-light"
+            onClick={() => this.handleOpenEduPlanModal([{ ...rowData, type: target.type, collseq: target.collseq }])}
+          >
+            멘토 지정
+          </StyledButton>
+        );
+      }
+    }
+    return '';
+  };
 
   render() {
     const { data, currentYear, isLoading, checkedList } = this.state;
@@ -405,7 +598,7 @@ class MainBody extends React.Component {
               </li>
             </ul>
             <div className="btn_wrap" style={{ position: 'absolute', bottom: '0px', right: '0px', textAlign: 'right' }}>
-              <StyledButton type="button" className="btn-sm btn-gray mr5" onClick={this.reloadData}>
+              <StyledButton type="button" className="btn-sm btn-gray mr5" onClick={this.initData}>
                 재호출
               </StyledButton>
               {/*
@@ -430,18 +623,19 @@ class MainBody extends React.Component {
             </div>
           </div>
           <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
-            <StyledTable className="tb_wrap">
+            <StyledTable className="tb_wrap edu-chief-mainbody-tb-wrap">
               <table className="tb02 tbCateTable">
                 <colgroup>
                   <col width="4%" />
-                  <col width="8.5%" />
-                  <col width="12.5%" />
-                  <col width="12.5%" />
-                  <col width="12.5%" />
-                  <col width="12.5%" />
-                  <col width="12.5%" />
-                  <col width="12.5%" />
-                  <col width="12.5%" />
+                  <col width="8%" />
+                  <col width="11%" />
+                  <col width="11%" />
+                  <col width="11%" />
+                  <col width="11%" />
+                  <col width="11%" />
+                  <col width="11%" />
+                  <col width="11%" />
+                  <col width="11%" />
                 </colgroup>
                 <tbody>
                   <tr className="bd">
@@ -465,6 +659,7 @@ class MainBody extends React.Component {
                     <th>공정 교육</th>
                     <th>청정도 교육</th>
                     <th>복직자 교육</th>
+                    <th>신입/전배 교육</th>
                   </tr>
                   {data.map(rowData => (
                     <tr className="bd" key={rowData.empno}>
@@ -493,6 +688,7 @@ class MainBody extends React.Component {
                       <td>{this.applyButtonsRenderer(rowData, 'job_proc')}</td>
                       <td>{this.applyButtonsRenderer(rowData, 'job_clean')}</td>
                       <td>{this.applyButtonsRenderer(rowData, 'job_return')}</td>
+                      <td>{this.newTrainingButtonsRenderer(rowData)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -507,10 +703,13 @@ class MainBody extends React.Component {
             marginBottom: 40,
           }}
         />
-        <NewEmployeeTraining empno={empno} list={data} site={manInfo.site} />
+        {/* <NewEmployeeTraining empno={empno} list={data} site={manInfo.site} /> */}
         <SendEduMail ref={this.sendEduMailRef} empno={empno} />
         <JobEvaluationModal ref={this.jobEvaluationRef} site={manInfo.site} empno={empno} callbackHandler={this.initData} />
         <EduAcceptModal ref={this.eduAcceptModal} callbackHandler={this.initData} site={manInfo.site} />
+        <EduManageModal ref={this.eduManageModalRef} site={manInfo.site} />
+        <EduPlanSingleModal ref={this.eduPlanModalRef} list={data} empno={empno} site={manInfo.site} callbackHandler={this.initData} />
+        <EduManageJobReturnModal ref={this.eduManageJobReturnModalRef} site={manInfo.site} />
       </Wrapper>
     );
   }
