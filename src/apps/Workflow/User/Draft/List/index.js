@@ -128,6 +128,7 @@ class DraftList extends Component {
       paginationIdx: 1,
       pageSize: 10,
       isPreView: false,
+      isObsCheck: undefined,
     };
   }
 
@@ -396,7 +397,13 @@ class DraftList extends Component {
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    const { selectedRow } = this.props;
     const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'VIEW' };
+    if (selectedRow.REL_TYPE === 99) {
+      this.setState({ isObsCheck: true });
+    } else {
+      this.setState({ isObsCheck: false });
+    }
     this.setState({ coverView });
   };
 
@@ -537,6 +544,7 @@ class DraftList extends Component {
       workPrcProps,
       paginationIdx,
       isPreView,
+      isObsCheck,
     } = this.state;
     return (
       <>
@@ -679,6 +687,7 @@ class DraftList extends Component {
                 workSeq={coverView.workSeq}
                 taskSeq={coverView.taskSeq}
                 viewMetaSeq={coverView.viewMetaSeq}
+                isObsCheck={isObsCheck}
                 CustomWorkProcessModal={WorkProcessModal}
                 workPrcProps={workPrcProps}
                 onCloseCoverView={this.onCloseCoverView}

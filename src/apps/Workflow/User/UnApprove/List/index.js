@@ -110,9 +110,7 @@ class UnApproveList extends Component {
       align: 'center',
       ellipsis: true,
       render: (text, record) =>
-        record.REL_TYPE === 99 ? (
-          <a onClick={() => this.onRowClick(record)}>폐기</a>
-        ) : record.REL_TYPE === 999 ? (
+        record.REL_TYPE === 999 ? (
           <a onClick={() => this.onRowClick(record)}>{`OBS-${record.DRAFT_ID}`}</a>
         ) : (
           <a onClick={() => this.onRowClick(record)}>{text}</a>
@@ -125,7 +123,7 @@ class UnApproveList extends Component {
       width: '5%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '1' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
+      render: (text, record) => (record.REL_TYPE === 99 ? 'OBS' : record.REL_TYPE === 999 ? '1' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
     },
     {
       title: '표준제목',

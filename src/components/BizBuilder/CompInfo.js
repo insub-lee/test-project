@@ -150,8 +150,10 @@ import MonthPickerComp from 'components/BizBuilder/Field/MonthPickerComp';
 import SelectEducationMemberComp from 'components/BizBuilder/Field/SelectEducationMemberComp';
 import GetEducationMemberComp from 'components/BizBuilder/Field/GetEducationMemberComp';
 import ValueChangeTextComp from 'components/BizBuilder/Field/ValueChangeTextComp';
+import MdcsTextAreaViewComp from 'components/BizBuilder/Field/MdcsTextAreaViewComp';
 
 export const CompInfo = {
+  'components/BizBuilder/Field/MdcsTextAreaViewComp': { renderer: property => <MdcsTextAreaViewComp {...property} /> },
   'components/BizBuilder/Field/VersionComp': { renderer: property => <VersionComp {...property} /> },
   'components/BizBuilder/Field/CategorySelectComp': { renderer: property => <CategorySelectComp {...property} /> },
   'components/BizBuilder/Field/CategoryViewComp': { renderer: property => <CategoryViewComp {...property} /> },
