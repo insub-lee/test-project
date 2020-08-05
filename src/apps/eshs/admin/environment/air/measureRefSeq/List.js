@@ -45,7 +45,7 @@ class List extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHandler, refStack } = this.props;
+    const { sagaKey: id, getCallDataHandler, refStack, spinningOn } = this.props;
     const apiAry = [
       {
         key: 'gasType',
@@ -53,6 +53,7 @@ class List extends Component {
         type: 'GET',
       },
     ];
+    spinningOn();
     if (!refStack) {
       this.isSearch();
     }
@@ -62,12 +63,13 @@ class List extends Component {
   initData = () => {
     const {
       result: { gasType },
+      spinningOff,
     } = this.props;
-    this.setState({ gasList: (gasType && gasType.list && gasType.list.filter(gas => businessRequestGas.indexOf(gas.GAS_CD) > -1)) || [] });
+    this.setState({ gasList: (gasType && gasType.list && gasType.list.filter(gas => businessRequestGas.indexOf(gas.GAS_CD) > -1)) || [] }, spinningOff);
   };
 
   isSearch = () => {
-    const { sagaKey: id, getCallDataHandler, refStack } = this.props;
+    const { sagaKey: id, getCallDataHandler, refStack, spinningOff } = this.props;
     const { dateStrings, rangeDateStrings, seq, stackCd } = this.state;
     const setDate = refStack
       ? `START_DATE=${Moment(rangeDateStrings[0]).format('YYYY-MM-01')}&&END_DATE=${Moment(rangeDateStrings[1])
@@ -84,6 +86,7 @@ class List extends Component {
     if (!refStack || (refStack && stackCd)) {
       getCallDataHandler(id, apiAry, this.listData);
     } else {
+      spinningOff();
       message.warning('stack 종류를 먼저 선택해주세요.');
     }
   };
@@ -178,12 +181,17 @@ class List extends Component {
             {},
           ),
         );
+
     return temp;
   };
 
   dataSet = () => {
-    const { refStack } = this.props;
+    const { refStack, spinningOff } = this.props;
     const { measureList, gasList } = this.state;
+    if (!measureList.length) {
+      spinningOff();
+      return message.warning('검색된 데이터가 없습니다.');
+    }
     const hour = measureList && measureList.map(element => Number(element.HOUR_FLOW).toFixed(3));
     const minute = measureList && measureList.map(element => Number(element.MINUTE_FLOW).toFixed(3));
     const temp = this.densityList();
@@ -204,10 +212,10 @@ class List extends Component {
       const acid = this.avg('Acid');
       const toxic = this.avg('Toxic');
       const VOC = this.avg('VOC');
-      this.setState({ gasDensity, hour, minute, acid, toxic, VOC, lineChartData: temp });
+      this.setState({ gasDensity, hour, minute, acid, toxic, VOC, lineChartData: temp }, spinningOff);
     } else {
       const avg = this.avg();
-      this.setState({ gasDensity, hour, minute, avg, lineChartData: temp });
+      this.setState({ gasDensity, hour, minute, avg, lineChartData: temp }, spinningOff);
     }
   };
 
