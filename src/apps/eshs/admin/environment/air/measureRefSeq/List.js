@@ -453,7 +453,7 @@ class List extends Component {
         )}
         <div style={{ overflow: 'auto', msOverflowStyle: 'scrollbar' }}>
           {/* <Graph graphData={measureList} gasList={gasList} selectGubun={selectGubun} refStack={refStack} /> */}
-          {lineChartData.length > 0 && <LineComp data={lineChartData} gasList={gasList} />}
+          {measureList.length > 0 && <LineComp data={lineChartData} gasList={gasList} />}
         </div>
         {refStack ? (
           <AntdModal width={800} visible={this.state.isModal} title="Stack 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
