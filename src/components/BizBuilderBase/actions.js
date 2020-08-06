@@ -399,3 +399,5 @@ export const setRelTypeByReducer = (id, relType) => ({ type: actionTypes.SET_REL
 export const setValidationDataByReducer = (id, validationData) => ({ type: actionTypes.SET_VALIDATIONDATA_REDUCER, id, validationData });
 
 export const setListOrderByFieldByReducer = (id, orderByFieldList) => ({ type: actionTypes.SET_LIST_ORDER_BY_FIELD_REDUCER, id, orderByFieldList });
+
+export const setCallApiExtraPropsByReducer = (id, callApiExtraProps) => ({ type: actionTypes.SET_CALL_API_EXTRA_PROPS_REDUCER, id, callApiExtraProps });
