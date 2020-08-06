@@ -291,6 +291,7 @@ class IntroComponent extends Component {
                 viewChangeSeq={viewChangeSeq}
                 CustomWorkProcessModal={WorkProcessModal}
                 viewType={viewType}
+                isRemoveFile={true}
                 workPrcProps={workPrcProps}
                 onCloseModalHandler={this.onCloseModalHandler}
                 onCloseModal={this.onCloseModal}

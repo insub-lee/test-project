@@ -265,6 +265,7 @@ class MdcsAppvView extends Component {
       isAbrogationMultiShow,
       isObsCheck,
     } = this.state;
+    console.debug('미결함 검토', this.props);
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -282,7 +283,7 @@ class MdcsAppvView extends Component {
                   <td>{selectedRow && moment(selectedRow.REG_DTTM).format('YYYY-MM-DD')}</td>
                 </tr>
                 <tr>
-                  <th style={{ width: '150px' }}>요청사용 </th>
+                  <th style={{ width: '150px' }}>요청사유 </th>
                   <td colSpan={3}>{DRAFT_DATA && DRAFT_DATA.OPINION}</td>
                 </tr>
                 <tr>
@@ -292,6 +293,16 @@ class MdcsAppvView extends Component {
                       <Radio value={2}>Download 권한승인</Radio>
                       <Radio value={9}>Download 권한거부 </Radio>
                     </Radio.Group>
+                  </td>
+                </tr>
+                <tr
+                  style={{
+                    display: selectedRow && selectedRow.APPV_STATUS && selectedRow.APPV_STATUS !== 9 ? 'none' : 'table-row',
+                  }}
+                >
+                  <th>의견 </th>
+                  <td colSpan={3}>
+                    <AntdTextArea rows={4} onChange={this.onChangeOpinion} />
                   </td>
                 </tr>
               </tbody>

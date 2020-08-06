@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Table, Modal, Icon, Button, Input, message } from 'antd';
 import moment from 'moment';
 import styled from 'styled-components';
+import uuid from 'uuid/v1';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
@@ -460,6 +461,22 @@ class DraftList extends Component {
     }
   };
 
+  onClickReDraft = () => {
+    const { selectedRow } = this.props;
+    const { REL_TYPE } = selectedRow;
+
+    if (REL_TYPE === 999) {
+      this.setState({ isAbrogationMultiShow: true, workPrcProps: { ...selectedRow, draftMethod: 'MODIFY' } });
+    } else {
+      const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
+      this.setState(prevState => {
+        const { workPrcProps } = prevState;
+        const nWorkPrcProps = { ...selectedRow, draftMethod: 'REDRAFT', darft_id: selectedRow.DRAFT_ID };
+        return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
+      });
+    }
+  };
+
   onClickModifyDoCoverView = () => {
     const { getDraftList } = this.props;
     const { coverView, paginationIdx, pageSize } = this.state;
@@ -527,6 +544,10 @@ class DraftList extends Component {
 
   onClosePreView = () => {
     this.setState({ isPreView: false });
+  };
+
+  onReload = () => {
+    console.debug('dkdkdkddk');
   };
 
   render() {
@@ -609,24 +630,29 @@ class DraftList extends Component {
                 closeBtnFunc={this.closeBtnFunc}
                 clickCoverView={this.clickCoverView}
                 onClickModify={this.onClickModify}
+                onClickReDraft={this.onClickReDraft}
                 workSeq={selectedRow && selectedRow.WORK_SEQ}
                 taskSeq={selectedRow && selectedRow.TASK_SEQ}
                 selectedRow={selectedRow}
-                ViewCustomButtons={({ closeBtnFunc, onClickModify }) => (
+                ViewCustomButtons={({ closeBtnFunc, onClickModify, onClickReDraft }) => (
                   <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
                     {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
                       <>
+                        {profile && profile.USER_ID === selectedRow.DRAFTER_ID && (
+                          <>
+                            <StyledButton className="btn-primary btn-sm mr5" onClick={onClickModify}>
+                              표지수정
+                            </StyledButton>
+                            <StyledButton className="btn-primary btn-sm mr5" onClick={onClickReDraft}>
+                              재기안
+                            </StyledButton>
+                          </>
+                        )}
                         <StyledButton className="btn-primary btn-sm mr5" onClick={this.onHoldRelase}>
                           홀드해제
                         </StyledButton>
-                        {profile && profile.USER_ID === selectedRow.DRAFTER_ID && (
-                          <StyledButton className="btn-primary btn-sm mr5" onClick={onClickModify}>
-                            표지수정
-                          </StyledButton>
-                        )}
                       </>
                     )}
-
                     <StyledButton className="btn-light btn-sm" onClick={closeBtnFunc}>
                       닫기
                     </StyledButton>
@@ -690,6 +716,7 @@ class DraftList extends Component {
                 isObsCheck={isObsCheck}
                 CustomWorkProcessModal={WorkProcessModal}
                 workPrcProps={workPrcProps}
+                callbackFunc={this.onReload}
                 onCloseCoverView={this.onCloseCoverView}
                 onCloseModalHandler={this.onCloseCoverView}
                 reloadId="approveBase_approveView"
