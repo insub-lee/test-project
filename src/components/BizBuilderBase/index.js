@@ -53,7 +53,10 @@ class BizBuilderBase extends React.Component {
       viewMetaSeq,
       listMetaSeq,
       viewChangeSeq,
+      callApiExtraProps,
+      setCallApiExtraProps,
     } = this.props; // id: widget_id+@
+    if (callApiExtraProps) setCallApiExtraProps(callApiExtraProps);
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
     const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq };
     if (taskSeq !== -1 && viewType === 'REVISION') {
@@ -82,7 +85,12 @@ class BizBuilderBase extends React.Component {
       viewMetaSeq,
       listMetaSeq,
       viewChangeSeq,
+      callApiExtraProps,
+      setCallApiExtraProps,
     } = this.props;
+    if (prevProps.callApiExtraProps && callApiExtraProps && JSON.stringify(callApiExtraProps) !== JSON.stringify(prevProps.callApiExtraProps)) {
+      setCallApiExtraProps(callApiExtraProps);
+    }
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
     const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq };
     if (prevProps.sagaKey !== this.props.sagaKey || (prevProps.viewType && prevProps.viewType !== viewType)) {
@@ -226,6 +234,9 @@ class BizBuilderBase extends React.Component {
       compProps,
       conditional,
       modalTitle,
+      callbackFuncExtraByModal,
+      modalProps,
+      callApiExtraProps,
     } = this.props;
     const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData, isLoading } = this.state;
 
@@ -258,6 +269,9 @@ class BizBuilderBase extends React.Component {
             // ListCustomButtons={CustomButtonsByModal}
             compProps={compProps}
             conditional={conditional}
+            callbackFuncExtra={callbackFuncExtraByModal}
+            modalProps={modalProps}
+            callApiExtraProps={callApiExtraProps}
           />
         </AntdModal>
       </div>
@@ -434,6 +448,7 @@ const mapDispatchToProps = dispatch => ({
   setFormData: (id, formData) => dispatch(actions.setFormDataByReducer(id, formData)),
   setTaskFavorite: (id, workSeq, taskOriginSeq, flag) => dispatch(actions.setTaskFavoriteBySaga(id, workSeq, taskOriginSeq, flag)),
   setRelType: (id, relType) => dispatch(actions.setRelTypeByReducer(id, relType)),
+  setCallApiExtraProps: (id, callApiExtraProps) => dispatch(actions.setCallApiExtraPropsByReducer(id, callApiExtraProps)),
 });
 
 const withReducer = injectReducer({ key: `apps.bizmicro.components.BizBuilderBase`, reducer });

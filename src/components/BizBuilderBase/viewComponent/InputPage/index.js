@@ -176,7 +176,12 @@ class InputPage extends Component {
       changeIsLoading,
       reloadViewType,
       reloadTaskSeq,
+      callbackFuncExtra,
     } = this.props;
+    console.debug('typeof callbackFuncExtra', typeof callbackFuncExtra);
+    if (typeof callbackFuncExtra === 'function') {
+      callbackFuncExtra(this.props);
+    }
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler(id, redirectUrl, 'save');
     }

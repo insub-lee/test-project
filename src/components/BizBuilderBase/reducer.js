@@ -291,6 +291,10 @@ const reducer = (state = initialState, action) => {
 
       return state.setIn(['bizBuilderBase', id, 'listOrderByField'], listOrderByField);
     }
+    case actionTypes.SET_CALL_API_EXTRA_PROPS_REDUCER: {
+      const { id, callApiExtraProps } = action;
+      return state.setIn(['bizBuilderBase', id, 'callApiExtraProps'], fromJS(callApiExtraProps));
+    }
     default:
       return state;
   }
