@@ -19,7 +19,7 @@ const CoverViewComp = ({ CONFIG, colData, formData, clickCoverView }) => {
       }
     }
   }
-
+  console.debug('coverviewinfo', CONFIG);
   return (
     <StyledButton className="btn-gray btn-xxs btn-radius" onClick={() => clickCoverView(WORK_SEQ, TASK_SEQ, viewSeq)}>
       <FileSearchOutlined /> 표지보기
