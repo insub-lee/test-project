@@ -20,9 +20,9 @@ class MsdsIngredientComp extends React.Component {
         { dataIndex: 'WRK_CMPNY_NM', title: 'Vendor', search: true, width: 150, align: 'center' },
       ],
       rightTableColumns: [
-        { dataIndex: 'ITEM_NM', title: 'ITEM', width: 150 },
-        { dataIndex: 'MOLECULAR_FORMULA', title: '분자식', width: 150 },
-        { dataIndex: 'CAS_NO', title: 'CAS-NO', width: 150 },
+        { dataIndex: 'ITEM_NM', title: 'ITEM', width: 150, align: 'center' },
+        { dataIndex: 'MOLECULAR_FORMULA', title: '분자식', width: 150, align: 'center' },
+        { dataIndex: 'CAS_NO', title: 'CAS-NO', width: 150, align: 'center' },
       ],
       applyList: [],
     };
