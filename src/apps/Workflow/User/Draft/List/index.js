@@ -716,7 +716,7 @@ class DraftList extends Component {
                 isObsCheck={isObsCheck}
                 CustomWorkProcessModal={WorkProcessModal}
                 workPrcProps={workPrcProps}
-                callbackFunc={this.onReload}
+                callbackFuncExtra={this.onReload}
                 onCloseCoverView={this.onCloseCoverView}
                 onCloseModalHandler={this.onCloseCoverView}
                 reloadId="approveBase_approveView"
