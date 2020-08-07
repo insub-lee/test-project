@@ -253,6 +253,7 @@ class List extends Component {
   render() {
     const { measureList, gasList, selectGubun, rangeDateStrings, gasDensity, hour, minute, acid, toxic, VOC, avg, lineChartData } = this.state;
     const { refStack } = this.props;
+    console.debug('여기는 props', this.props);
     return (
       <StyledContentsWrapper>
         <StyledCustomSearch className="search-wrapper-inline">
@@ -452,8 +453,11 @@ class List extends Component {
           ''
         )}
         <div style={{ overflow: 'auto', msOverflowStyle: 'scrollbar' }}>
-          {/* <Graph graphData={measureList} gasList={gasList} selectGubun={selectGubun} refStack={refStack} /> */}
-          {measureList.length > 0 && <LineComp data={lineChartData} gasList={gasList} />}
+          {refStack ? (
+            measureList.length > 0 && <LineComp data={lineChartData} gasList={gasList} />
+          ) : (
+            <Graph graphData={measureList} gasList={gasList} selectGubun={selectGubun} refStack={refStack} />
+          )}
         </div>
         {refStack ? (
           <AntdModal width={800} visible={this.state.isModal} title="Stack 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
