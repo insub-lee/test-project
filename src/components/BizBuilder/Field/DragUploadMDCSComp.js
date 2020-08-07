@@ -24,8 +24,7 @@ class DragUploadMDCSComp extends Component {
   }
 
   componentDidMount() {
-    const { WORK_SEQ, COMP_FIELD, COMP_TAG, CONFIG, colData } = this.props;
-    console.debug('did', CONFIG.property.isUsePDF);
+    const { sagaKey, changeFormData, WORK_SEQ, COMP_FIELD, COMP_TAG, CONFIG, colData, isRemoveFile } = this.props;
     const initfiles = {
       WORK_SEQ,
       TASK_SEQ: (colData && colData.TASK_SEQ) || -1,
@@ -36,7 +35,21 @@ class DragUploadMDCSComp extends Component {
       isUsePDF: CONFIG && CONFIG.property && CONFIG.property.isUsePDF,
       extList: CONFIG && CONFIG.property && CONFIG.property.fileExt,
     };
-    this.setState({ fileInfo: initfiles });
+
+    const emptyFiles = {
+      WORK_SEQ: -1,
+      TASK_SEQ: -1,
+      CONT_SEQ: -1,
+      FIELD_NM: undefined,
+      TYPE: undefined,
+      DETAIL: [],
+      isUsePDF: undefined,
+      extList: undefined,
+    };
+    this.setState({ fileInfo: isRemoveFile ? emptyFiles : initfiles });
+    if (isRemoveFile) {
+      changeFormData(sagaKey, COMP_FIELD, isRemoveFile ? emptyFiles : initfiles);
+    }
   }
 
   changeFormDataHanlder = () => {

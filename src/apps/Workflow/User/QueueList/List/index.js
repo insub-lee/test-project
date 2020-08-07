@@ -8,12 +8,12 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
-import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+
 import ProcessView from 'apps/Workflow/User/CommonView/processView';
 import ExcelDownLoad from 'components/ExcelDownLoad';
 import BizBuilderBase from 'components/BizBuilderBase';
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
 const AntdLineTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
@@ -79,6 +79,12 @@ class QueueList extends Component {
       pageSize: 10,
       isPreView: false,
       unApproveList: [],
+      coverView: {
+        visible: false,
+        workSeq: undefined,
+        taskSeq: undefined,
+        viewMetaSeq: undefined,
+      },
     };
   }
 
@@ -119,9 +125,7 @@ class QueueList extends Component {
       align: 'center',
       ellipsis: true,
       render: (text, record) =>
-        record.REL_TYPE === 99 ? (
-          <a onClick={() => this.onRowClick(record)}>폐기</a>
-        ) : record.REL_TYPE === 999 ? (
+        record.REL_TYPE === 999 ? (
           <a onClick={() => this.onRowClick(record)}>{`OBS-${record.DRAFT_ID}`}</a>
         ) : (
           <a onClick={() => this.onRowClick(record)}>{text}</a>
@@ -134,7 +138,7 @@ class QueueList extends Component {
       width: '5%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '1' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
+      render: (text, record) => (record.REL_TYPE === 99 ? 'OBS' : record.REL_TYPE === 999 ? '0' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
     },
     {
       title: '표준제목',
@@ -194,10 +198,31 @@ class QueueList extends Component {
       getUnApproveList(prefixUrl, paginationIdx, pageSize);
     });
 
+  closeBtnFunc = () => {
+    this.props.setViewVisible(false);
+  };
+
+  clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    const { selectedRow } = this.props;
+    const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'VIEW' };
+    if (selectedRow.REL_TYPE === 99) {
+      this.setState({ isObsCheck: true });
+    } else {
+      this.setState({ isObsCheck: false });
+    }
+    this.setState({ coverView });
+  };
+
+  onCloseCoverView = () => {
+    const { coverView } = this.state;
+    const tempCoverView = { ...coverView, visible: false };
+    this.setState({ coverView: tempCoverView });
+  };
+
   render() {
     const { viewVisible, selectedRow } = this.props;
-    const { unApproveList, paginationIdx, isPreView } = this.state;
-    console.debug('selectedRow', selectedRow);
+    const { unApproveList, paginationIdx, isPreView, isObsCheck, coverView } = this.state;
+
     return (
       <>
         <StyledHeaderWrapper>
@@ -250,25 +275,18 @@ class QueueList extends Component {
             <>
               <div className="SearchContentLayer">
                 <BizBuilderBase
-                  sagaKey="SearchView"
+                  sagaKey="approveBase_approveView"
                   viewType="VIEW"
-                  workSeq={selectedRow.workSeq}
-                  taskSeq={selectedRow.taskSeq}
+                  // onCloseModal={this.onCloseModal}
+                  // onChangeForm={this.onChangeForm}
                   closeBtnFunc={this.closeBtnFunc}
                   clickCoverView={this.clickCoverView}
-                  ViewCustomButtons={({ closeBtnFunc, isTaskFavorite, sagaKey, formData, setTaskFavorite }) => (
+                  onClickModify={this.onClickModify}
+                  workSeq={selectedRow && selectedRow.WORK_SEQ}
+                  taskSeq={selectedRow && selectedRow.TASK_SEQ}
+                  selectedRow={selectedRow}
+                  ViewCustomButtons={({ closeBtnFunc }) => (
                     <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
-                      {isTaskFavorite && (
-                        <StyledButton
-                          className="btn-primary btn-sm mr5"
-                          onClick={() => setTaskFavorite(sagaKey, formData.WORK_SEQ, formData.TASK_ORIGIN_SEQ, formData.BUILDER_TASK_FAVORITE || 'N')}
-                        >
-                          {formData.BUILDER_TASK_FAVORITE === 'Y' ? '즐겨찾기 해제' : '즐겨찾기 추가'}
-                        </StyledButton>
-                      )}
-                      <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onClickDownLoad(formData)}>
-                        다운로드 신청
-                      </StyledButton>
                       <StyledButton className="btn-light btn-sm" onClick={closeBtnFunc}>
                         닫기
                       </StyledButton>
@@ -277,6 +295,39 @@ class QueueList extends Component {
                 />
               </div>
             </>
+          </AntdModal>
+          <AntdModal
+            className="modalWrapper modalTechDoc"
+            title="표지 보기"
+            width={900}
+            destroyOnClose
+            visible={coverView.visible}
+            onCancel={this.onCloseCoverView}
+            footer={null}
+          >
+            <BizBuilderBase
+              sagaKey="CoverView"
+              viewType={coverView.viewType}
+              workSeq={coverView.workSeq}
+              taskSeq={coverView.taskSeq}
+              viewMetaSeq={coverView.viewMetaSeq}
+              isObsCheck={isObsCheck}
+              onCloseCoverView={this.onCloseCoverView}
+              onCloseModalHandler={this.onCloseCoverView}
+              reloadId="approveBase_approveView"
+              reloadViewType="VIEW"
+              reloadTaskSeq={selectedRow && selectedRow.TASK_SEQ}
+              ViewCustomButtons={({ onCloseCoverView }) => (
+                <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+                  <StyledButton className="btn-light btn-sm" onClick={onCloseCoverView}>
+                    닫기
+                  </StyledButton>
+                </StyledButtonWrapper>
+              )}
+            />
+          </AntdModal>
+          <AntdModal title="결재정보" width={680} visible={isPreView} destroyOnClose onCancel={this.onClosePreView} footer={null}>
+            <ProcessView {...this.props}></ProcessView>
           </AntdModal>
         </StyledContentsWrapper>
       </>

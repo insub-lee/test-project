@@ -156,10 +156,11 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
         const fieldSelectDataKeySet = Object.keys(fieldSelectDataObject);
         const fieldSelectData = fieldSelectDataKeySet.map(key => fieldSelectDataObject[key]);
         if (fieldSelectData && fieldSelectData.length > 0) {
+          const callApiExtraProps = yield select(selectors.makeSelectCallApiExtraPropsById(id));
           responseFieldSelectData = yield call(
             Axios.post,
             '/api/builder/v1/work/CallApi',
-            { fieldSelectData, formData: taskSeq && taskSeq > 0 ? detailData : formData, WORK_SEQ: workSeq, TASK_SEQ: taskSeq },
+            { fieldSelectData, formData: taskSeq && taskSeq > 0 ? detailData : formData, WORK_SEQ: workSeq, TASK_SEQ: taskSeq, callApiExtraProps },
             { BUILDER: 'getBuilderData' },
           );
         }

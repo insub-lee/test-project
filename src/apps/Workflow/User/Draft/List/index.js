@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Table, Modal, Icon, Button, Input, message } from 'antd';
 import moment from 'moment';
 import styled from 'styled-components';
+import uuid from 'uuid/v1';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
@@ -128,6 +129,7 @@ class DraftList extends Component {
       paginationIdx: 1,
       pageSize: 10,
       isPreView: false,
+      isObsCheck: undefined,
     };
   }
 
@@ -396,7 +398,13 @@ class DraftList extends Component {
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    const { selectedRow } = this.props;
     const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'VIEW' };
+    if (selectedRow.REL_TYPE === 99) {
+      this.setState({ isObsCheck: true });
+    } else {
+      this.setState({ isObsCheck: false });
+    }
     this.setState({ coverView });
   };
 
@@ -448,6 +456,22 @@ class DraftList extends Component {
       this.setState(prevState => {
         const { workPrcProps } = prevState;
         const nWorkPrcProps = { ...selectedRow, draftMethod: 'MODIFY', darft_id: selectedRow.DRAFT_ID };
+        return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
+      });
+    }
+  };
+
+  onClickReDraft = () => {
+    const { selectedRow } = this.props;
+    const { REL_TYPE } = selectedRow;
+
+    if (REL_TYPE === 999) {
+      this.setState({ isAbrogationMultiShow: true, workPrcProps: { ...selectedRow, draftMethod: 'MODIFY' } });
+    } else {
+      const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
+      this.setState(prevState => {
+        const { workPrcProps } = prevState;
+        const nWorkPrcProps = { ...selectedRow, draftMethod: 'REDRAFT', darft_id: selectedRow.DRAFT_ID };
         return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
       });
     }
@@ -522,6 +546,10 @@ class DraftList extends Component {
     this.setState({ isPreView: false });
   };
 
+  onReload = () => {
+    console.debug('dkdkdkddk');
+  };
+
   render() {
     // const { approveList } = this.props;
     const { draftList, selectedRow, opinionVisible, setOpinionVisible, profile, draftListCnt } = this.props;
@@ -537,6 +565,7 @@ class DraftList extends Component {
       workPrcProps,
       paginationIdx,
       isPreView,
+      isObsCheck,
     } = this.state;
     return (
       <>
@@ -601,24 +630,29 @@ class DraftList extends Component {
                 closeBtnFunc={this.closeBtnFunc}
                 clickCoverView={this.clickCoverView}
                 onClickModify={this.onClickModify}
+                onClickReDraft={this.onClickReDraft}
                 workSeq={selectedRow && selectedRow.WORK_SEQ}
                 taskSeq={selectedRow && selectedRow.TASK_SEQ}
                 selectedRow={selectedRow}
-                ViewCustomButtons={({ closeBtnFunc, onClickModify }) => (
+                ViewCustomButtons={({ closeBtnFunc, onClickModify, onClickReDraft }) => (
                   <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
                     {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
                       <>
+                        {profile && profile.USER_ID === selectedRow.DRAFTER_ID && (
+                          <>
+                            <StyledButton className="btn-primary btn-sm mr5" onClick={onClickModify}>
+                              표지수정
+                            </StyledButton>
+                            <StyledButton className="btn-primary btn-sm mr5" onClick={onClickReDraft}>
+                              재기안
+                            </StyledButton>
+                          </>
+                        )}
                         <StyledButton className="btn-primary btn-sm mr5" onClick={this.onHoldRelase}>
                           홀드해제
                         </StyledButton>
-                        {profile && profile.USER_ID === selectedRow.DRAFTER_ID && (
-                          <StyledButton className="btn-primary btn-sm mr5" onClick={onClickModify}>
-                            표지수정
-                          </StyledButton>
-                        )}
                       </>
                     )}
-
                     <StyledButton className="btn-light btn-sm" onClick={closeBtnFunc}>
                       닫기
                     </StyledButton>
@@ -679,8 +713,10 @@ class DraftList extends Component {
                 workSeq={coverView.workSeq}
                 taskSeq={coverView.taskSeq}
                 viewMetaSeq={coverView.viewMetaSeq}
+                isObsCheck={isObsCheck}
                 CustomWorkProcessModal={WorkProcessModal}
                 workPrcProps={workPrcProps}
+                callbackFunc={this.onReload}
                 onCloseCoverView={this.onCloseCoverView}
                 onCloseModalHandler={this.onCloseCoverView}
                 reloadId="approveBase_approveView"

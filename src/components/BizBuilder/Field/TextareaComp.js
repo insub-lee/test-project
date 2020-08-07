@@ -39,7 +39,7 @@ class TextareaComp extends React.Component {
   render() {
     const { CONFIG, colData, readOnly, visible, sagaKey, COMP_FIELD } = this.props;
     const { compKey } = this.state;
-    console.debug('config', CONFIG);
+    console.debug('props', this.props);
     return visible ? (
       <StyledHtmlTextarea
         id={`${sagaKey}_${COMP_FIELD}`}

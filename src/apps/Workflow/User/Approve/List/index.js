@@ -256,12 +256,13 @@ class ApproveList extends Component {
     const { sagaKey, submitHandlerBySaga } = this.props;
     const { isDcc } = this.state;
     const { WORK_SEQ, TASK_SEQ, STEP, PROC_STATUS, APPV_STATUS, DRAFT_DATA, DRAFT_ID } = record;
-    const abrogationList = DRAFT_DATA.abrogationList ? record.DRAFT_DATA.abrogationList : [];
+    console.debug('record', record);
+    const abrogationList = DRAFT_DATA && DRAFT_DATA !== null && DRAFT_DATA.abrogationList ? record.DRAFT_DATA.abrogationList : [];
     this.setState({ currentStatus: APPV_STATUS, abrogationList, workPrcProps: { ...record } });
     this.props.setSelectedRow(record);
     this.props.setViewVisible(true);
 
-    const isAbrogMulti = DRAFT_DATA.isMultiAbrogation ? DRAFT_DATA.isMultiAbrogation : false;
+    const isAbrogMulti = DRAFT_DATA && DRAFT_DATA !== null && DRAFT_DATA.isMultiAbrogation ? DRAFT_DATA.isMultiAbrogation : false;
 
     if (isAbrogMulti) {
       const prefixUrl = '/api/mdcs/v1/common/ProcessResultHandler';
@@ -441,7 +442,13 @@ class ApproveList extends Component {
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    const { selectedRow } = this.props;
     const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'VIEW' };
+    if (selectedRow.REL_TYPE === 99) {
+      this.setState({ isObsCheck: true });
+    } else {
+      this.setState({ isObsCheck: false });
+    }
     this.setState({ coverView });
   };
 
@@ -551,6 +558,7 @@ class ApproveList extends Component {
       workPrcProps,
       paginationIdx,
       isPreView,
+      isObsCheck,
     } = this.state;
 
     return (
@@ -686,6 +694,7 @@ class ApproveList extends Component {
                 taskSeq={coverView.taskSeq}
                 viewMetaSeq={coverView.viewMetaSeq}
                 workPrcProps={workPrcProps}
+                isObsCheck={isObsCheck}
                 onCloseCoverView={this.onCloseCoverView}
                 onCloseModalHandler={this.onCloseCoverView}
                 CustomWorkProcessModal={WorkProcessModal}
