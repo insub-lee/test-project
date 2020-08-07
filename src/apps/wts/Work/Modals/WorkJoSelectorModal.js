@@ -75,6 +75,7 @@ class WorkJoSelectorModal extends React.Component {
         sex: newUser.sex,
         usrNm: newUser.usrnm,
         position: newUser.POSITION,
+        searchSite: newUser.gtext,
       }));
       const payload = {
         users,

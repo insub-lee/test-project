@@ -4,7 +4,7 @@ import Modal from 'rc-dialog';
 import { Icon, Spin } from 'antd';
 
 import StyledEvaluationForm from 'apps/wts/components/CommonStyledElement/StyledEvaluationForm';
-import Button from 'components/Button';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledCommonForm from 'apps/wts/components/CommonStyledElement/StyledCommonForm';
 import StyledRadio from 'apps/wts/components/RadioGroup/StyledRadio';
 import { shuffleArray, jsonToQueryString } from 'utils/helpers';
@@ -250,9 +250,9 @@ class JobProcEduViewer extends React.Component {
                   </StyledEvaluationForm>
                   <div className="btn_wrap">
                     {!(testResult.length > 0) && (
-                      <Button type="submit" size="small" color="primary">
+                      <StyledButton type="submit" className="btn-light btn-xs">
                         제출하기
-                      </Button>
+                      </StyledButton>
                     )}
                   </div>
                 </StyledCommonForm>

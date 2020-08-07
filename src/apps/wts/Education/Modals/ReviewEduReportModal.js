@@ -180,7 +180,7 @@ class ReviewEduReportModal extends React.Component {
                     </li>
                   </ul>
                   <div className="btn_wrap">
-                    <Button type="submit" color="primary" size="small">
+                    <Button htmlType="submit" color="primary" size="small">
                       확인
                     </Button>
                     <Button type="button" color="gray" size="small" onClick={this.handleCloseModal}>
