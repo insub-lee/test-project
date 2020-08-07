@@ -37,14 +37,14 @@ class DragUploadMDCSComp extends Component {
     };
 
     const emptyFiles = {
-      WORK_SEQ: -1,
-      TASK_SEQ: -1,
-      CONT_SEQ: -1,
+      WORK_SEQ,
+      TASK_SEQ: (colData && colData.TASK_SEQ) || -1,
+      CONT_SEQ: (colData && colData.CONT_SEQ) || -1,
       FIELD_NM: undefined,
-      TYPE: undefined,
+      TYPE: COMP_TAG,
       DETAIL: [],
-      isUsePDF: undefined,
-      extList: undefined,
+      isUsePDF: CONFIG && CONFIG.property && CONFIG.property.isUsePDF,
+      extList: CONFIG && CONFIG.property && CONFIG.property.fileExt,
     };
     this.setState({ fileInfo: isRemoveFile ? emptyFiles : initfiles });
     if (isRemoveFile) {
@@ -63,7 +63,7 @@ class DragUploadMDCSComp extends Component {
     const { fileInfo } = this.state;
     const { DETAIL: fileList } = fileInfo;
     const { fileExt, down } = response;
-    console.debug('complete', response, this.state, fileInfo);
+
     let doctype = 'file-unknown';
     switch (fileExt) {
       case 'pdf':
@@ -154,7 +154,7 @@ class DragUploadMDCSComp extends Component {
   };
 
   findExt = (fileName, strExtList) => {
-    if (strExtList !== '') {
+    if (strExtList && strExtList !== '') {
       const posIdx = fileName.lastIndexOf('.');
       const ext = fileName.toUpperCase().substring(posIdx + 1);
       const aryExt = strExtList.toUpperCase().split(',');
