@@ -121,6 +121,7 @@ class DraftDocDown extends Component {
       key: 'STATUS_NM',
       width: '8%',
       align: 'center',
+      render: (text, record) => (record.PROC_STATUS === 9 ? '다운부결' : record.PROC_STATUS === 2 && record.STATUS === 2 ? '다운승인' : '다운신청'),
     },
     {
       title: '기안자',
@@ -251,6 +252,7 @@ class DraftDocDown extends Component {
       contentView,
     } = this.state;
     const { customDataList } = this.props;
+    console.debug(customDataList);
     return (
       <>
         <StyledHeaderWrapper>
