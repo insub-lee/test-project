@@ -240,7 +240,6 @@ class TableTypeSelector extends React.Component {
                     // style={{ width: '100%' }}
                     scroll={{ x: '400px', y: '240px' }}
                     rowKey={`${rowKey}`}
-                    pagination={false}
                     locale={{ emptyText: this.props.noDataText }}
                   ></AntdTable>
                 </td>

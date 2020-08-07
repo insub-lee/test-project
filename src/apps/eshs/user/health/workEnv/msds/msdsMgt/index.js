@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import BizBuilderBase from 'components/BizBuilderBase';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 class MsdsMgt extends Component {
   state = {
@@ -15,6 +17,7 @@ class MsdsMgt extends Component {
       isLoading: false,
     });
   };
+  // message.info(<MessageContent>검진기관을 선택해주세요.</MessageContent>);
 
   render() {
     return (
@@ -39,6 +42,12 @@ class MsdsMgt extends Component {
           ListCustomButtons={() => null}
           customSaveTask={this.state.saveTask}
           customModifyTask={this.state.modifyTask}
+          callbackFuncExtra={({ viewPageData }) => {
+            const viewType = (viewPageData && viewPageData.viewType) || '';
+            if (viewType === 'INPUT') return message.info(<MessageContent>저장되었습니다.</MessageContent>);
+            if (viewType === 'MODIFY') return message.info(<MessageContent>수정되었습니다.</MessageContent>);
+            return undefined;
+          }}
         />
       </>
     );

@@ -183,7 +183,6 @@ class InputPage extends Component {
       reloadTaskSeq,
       callbackFuncExtra,
     } = this.props;
-    console.debug('typeof callbackFuncExtra', typeof callbackFuncExtra);
     if (typeof callbackFuncExtra === 'function') {
       callbackFuncExtra(this.props);
     }
