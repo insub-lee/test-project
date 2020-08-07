@@ -144,7 +144,7 @@ class SearchBar extends Component {
                 수정
               </StyledButton>
               {gubun === 'SW' && (
-                <Popconfirm title="Are you sure delete this task?" onConfirm={() => this.handleSearchBarAction('DELETE')} okText="Yes" cancelText="No">
+                <Popconfirm title="삭제하시겠습니까 ?" onConfirm={() => this.handleSearchBarAction('DELETE')} okText="Yes" cancelText="No">
                   <StyledButton className="btn-light btn-sm">삭제</StyledButton>
                 </Popconfirm>
               )}
