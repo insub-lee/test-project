@@ -38,8 +38,8 @@ class PollInput extends Component {
       RECESS02: '1',
       JOB05: '1',
       JOB06: '0',
-      WORKTIME01:'1',
-      WORKTIME02:'00',
+      WORKTIME01: '1',
+      WORKTIME02: '00',
     },
     questionData: {},
   };
@@ -67,157 +67,150 @@ class PollInput extends Component {
 
   showMessage = text => message.info(<MessageContent>{text}</MessageContent>);
 
-  validationChk = (submitData) => {
+  validationChk = submitData => {
     let msg = '';
-    const userId = submitData && submitData.user_id || '';
-    const job01 = submitData && submitData.JOB01 || '';
-    const q1 = submitData && submitData.Q1 || '';
-    const q2 = submitData && submitData.Q2 || '';
-    const q3 = submitData && submitData.Q3 || '';
-    const q4 = submitData && submitData.Q4 || '';
-    const q5 = submitData && submitData.Q5 || '';
-    const q6 = submitData && submitData.Q6 || '';
-    const q7 = submitData && submitData.Q7 || '';
-    const q8 = submitData && submitData.Q8 || '';
-    const qck = submitData && submitData.QCK || '';
+    const userId = (submitData && submitData.user_id) || '';
+    const job01 = (submitData && submitData.JOB01) || '';
+    const q1 = (submitData && submitData.Q1) || '';
+    const q2 = (submitData && submitData.Q2) || '';
+    const q3 = (submitData && submitData.Q3) || '';
+    const q4 = (submitData && submitData.Q4) || '';
+    const q5 = (submitData && submitData.Q5) || '';
+    const q6 = (submitData && submitData.Q6) || '';
+    const q7 = (submitData && submitData.Q7) || '';
+    const q8 = (submitData && submitData.Q8) || '';
+    const qck = (submitData && submitData.QCK) || '';
 
-    const q11 = submitData && submitData.Q11 || '';
-    const q12 = submitData && submitData.Q12 || '';
-    const q13 = submitData && submitData.Q13 || '';
-    const q14 = submitData && submitData.Q14 || '';
-    const q15 = submitData && submitData.Q15 || '';
-    const q16 = submitData && submitData.Q16 || '';
-    
-    const q21 = submitData && submitData.Q21 || '';
-    const q22 = submitData && submitData.Q22 || '';
-    const q23 = submitData && submitData.Q23 || '';
-    const q24 = submitData && submitData.Q24 || '';
-    const q25 = submitData && submitData.Q25 || '';
-    const q26 = submitData && submitData.Q26 || '';
-  
-    const q31 = submitData && submitData.Q31 || '';
-    const q32 = submitData && submitData.Q32 || '';
-    const q33 = submitData && submitData.Q33 || '';
-    const q34 = submitData && submitData.Q34 || '';
-    const q35 = submitData && submitData.Q35 || '';
-    const q36 = submitData && submitData.Q36 || '';
-   
-    const q41 = submitData && submitData.Q41 || '';
-    const q42 = submitData && submitData.Q42 || '';
-    const q43 = submitData && submitData.Q43 || '';
-    const q44 = submitData && submitData.Q44 || '';
-    const q45 = submitData && submitData.Q45 || '';
-    const q46 = submitData && submitData.Q46 || '';
-    
-    const q51 = submitData && submitData.Q51 || '';
-    const q52 = submitData && submitData.Q52 || '';
-    const q53 = submitData && submitData.Q53 || '';
-    const q54 = submitData && submitData.Q54 || '';
-    const q55 = submitData && submitData.Q55 || '';
-    const q56 = submitData && submitData.Q56 || '';
-    
-    
-    const q61 = submitData && submitData.Q61 || '';
-    const q62 = submitData && submitData.Q62 || '';
-    const q63 = submitData && submitData.Q63 || '';
-    const q64 = submitData && submitData.Q64 || '';
-    const q65 = submitData && submitData.Q65 || '';
-    const q66 = submitData && submitData.Q66 || '';
+    const q11 = (submitData && submitData.Q11) || '';
+    const q12 = (submitData && submitData.Q12) || '';
+    const q13 = (submitData && submitData.Q13) || '';
+    const q14 = (submitData && submitData.Q14) || '';
+    const q15 = (submitData && submitData.Q15) || '';
+    const q16 = (submitData && submitData.Q16) || '';
 
+    const q21 = (submitData && submitData.Q21) || '';
+    const q22 = (submitData && submitData.Q22) || '';
+    const q23 = (submitData && submitData.Q23) || '';
+    const q24 = (submitData && submitData.Q24) || '';
+    const q25 = (submitData && submitData.Q25) || '';
+    const q26 = (submitData && submitData.Q26) || '';
 
-    if(!userId) msg = '사번을 선택해주세요.';
-    else if(!job01) msg = '작업내용을 입력하세요.';
-    else if(!q1) msg = '1번문제에 답해 주십시요.';
-    else if(!q2) msg = '2번문제에 답해 주십시요.';
-    else if(q4 === '2') {
-      if(!q5) msg = '치료 여부를 체크 해주십시요.';
-      else if(!q3) msg = '해당 질환 체크를 해주십시요.';
+    const q31 = (submitData && submitData.Q31) || '';
+    const q32 = (submitData && submitData.Q32) || '';
+    const q33 = (submitData && submitData.Q33) || '';
+    const q34 = (submitData && submitData.Q34) || '';
+    const q35 = (submitData && submitData.Q35) || '';
+    const q36 = (submitData && submitData.Q36) || '';
+
+    const q41 = (submitData && submitData.Q41) || '';
+    const q42 = (submitData && submitData.Q42) || '';
+    const q43 = (submitData && submitData.Q43) || '';
+    const q44 = (submitData && submitData.Q44) || '';
+    const q45 = (submitData && submitData.Q45) || '';
+    const q46 = (submitData && submitData.Q46) || '';
+
+    const q51 = (submitData && submitData.Q51) || '';
+    const q52 = (submitData && submitData.Q52) || '';
+    const q53 = (submitData && submitData.Q53) || '';
+    const q54 = (submitData && submitData.Q54) || '';
+    const q55 = (submitData && submitData.Q55) || '';
+    const q56 = (submitData && submitData.Q56) || '';
+
+    const q61 = (submitData && submitData.Q61) || '';
+    const q62 = (submitData && submitData.Q62) || '';
+    const q63 = (submitData && submitData.Q63) || '';
+    const q64 = (submitData && submitData.Q64) || '';
+    const q65 = (submitData && submitData.Q65) || '';
+    const q66 = (submitData && submitData.Q66) || '';
+
+    if (!userId) msg = '사번을 선택해주세요.';
+    else if (!job01) msg = '작업내용을 입력하세요.';
+    else if (!q1) msg = '1번문제에 답해 주십시요.';
+    else if (!q2) msg = '2번문제에 답해 주십시요.';
+    else if (q4 === '2') {
+      if (!q5) msg = '치료 여부를 체크 해주십시요.';
+      else if (!q3) msg = '해당 질환 체크를 해주십시요.';
     }
 
-    if(msg) return msg;
-    
-    else if(!q4) msg = '3번문제에 답해 주십시요.';
-    else if(q6 === '2'){
-      if(!q7) msg = '해당 부위 체크를 해주십시요.';
+    if (msg) return msg;
+    if (!q4) msg = '3번문제에 답해 주십시요.';
+    else if (q6 === '2') {
+      if (!q7) msg = '해당 부위 체크를 해주십시요.';
     }
 
-    if(msg) return msg;
-
-    else if(!q6) msg = '4번문제에 답해 주십시요.';
-    else if(!q8) msg = '5번문제에 답해 주십시요.';
-    else if(!qck) msg = '통증 여부를 체크 해주세요.';
-    else if(qck === '1'){
-      if(!q11) msg = '손/손목/손가락 통증 부위 체크를 해주십시요.';
-      else if(!q21) msg = '팔/ 팔꿈치 통증 부위 체크를 해주십시요.';
-      else if(!q31) msg = '어깨 통증 부위 체크를 해주십시요.';
-      else if(!q41) msg = '목 통증 부위 체크를 해주십시요.';
-      else if(!q51) msg = '허리 통증 부위 체크를 해주십시요.';
-      else if(!q61) msg = '무릅 통증 부위 체크를 해주십시요.';
-      else if(q11 === '4' && q21 === '4' && q31 === '4' && q41 ==='4' && q51 ==='4' && q61 === '4') msg = '예를 선택하셨으면 통증 부위에 대해 하나 이상은 선택 하셔야 합니다.';
-      else if(q11 !== '4'){
-        if(!q12) msg = '[손/손목/손가락] 통증 지속 기간에 대해 체크 해주십시요.';
-        else if(!q13) msg = '[손/손목/손가락] 아픈 정도에 대해 체크를 해주십시요.';
-        else if(!q14) msg = '[손/손목/손가락] 증상의 주기를 체크 해주십시요.';
-        else if(!q15) msg = '[손/손목/손가락] 지난 1주일 동안에 증상 여부를 체크 해주십시요.';
-        else if(!q16) msg = '[손/손목/손가락] 통증으로인한 조치를 체크 해주십시요.';
+    if (msg) return msg;
+    if (!q6) msg = '4번문제에 답해 주십시요.';
+    else if (!q8) msg = '5번문제에 답해 주십시요.';
+    else if (!qck) msg = '통증 여부를 체크 해주세요.';
+    else if (qck === '1') {
+      if (!q11) msg = '손/손목/손가락 통증 부위 체크를 해주십시요.';
+      else if (!q21) msg = '팔/ 팔꿈치 통증 부위 체크를 해주십시요.';
+      else if (!q31) msg = '어깨 통증 부위 체크를 해주십시요.';
+      else if (!q41) msg = '목 통증 부위 체크를 해주십시요.';
+      else if (!q51) msg = '허리 통증 부위 체크를 해주십시요.';
+      else if (!q61) msg = '무릅 통증 부위 체크를 해주십시요.';
+      else if (q11 === '4' && q21 === '4' && q31 === '4' && q41 === '4' && q51 === '4' && q61 === '4')
+        msg = '예를 선택하셨으면 통증 부위에 대해 하나 이상은 선택 하셔야 합니다.';
+      else if (q11 !== '4') {
+        if (!q12) msg = '[손/손목/손가락] 통증 지속 기간에 대해 체크 해주십시요.';
+        else if (!q13) msg = '[손/손목/손가락] 아픈 정도에 대해 체크를 해주십시요.';
+        else if (!q14) msg = '[손/손목/손가락] 증상의 주기를 체크 해주십시요.';
+        else if (!q15) msg = '[손/손목/손가락] 지난 1주일 동안에 증상 여부를 체크 해주십시요.';
+        else if (!q16) msg = '[손/손목/손가락] 통증으로인한 조치를 체크 해주십시요.';
       }
-      if(msg) return msg;
-
-      else if(q21 !== '4'){
-        if(!q22) msg = '[팔/팔꿈치] 통증 지속 기간에 대해 체크 해주십시요.';
-        else if(!q23) msg = '[팔/팔꿈치] 아픈 정도에 대해 체크를 해주십시요.';
-        else if(!q24) msg = '[팔/팔꿈치] 증상의 주기를 체크 해주십시요.';
-        else if(!q25) msg = '[팔/팔꿈치] 지난 1주일 동안에 증상 여부를 체크 해주십시요.';
-        else if(!q26) msg = '[팔/팔꿈치] 통증으로인한 조치를 체크 해주십시요.';
+      if (msg) return msg;
+      if (q21 !== '4') {
+        if (!q22) msg = '[팔/팔꿈치] 통증 지속 기간에 대해 체크 해주십시요.';
+        else if (!q23) msg = '[팔/팔꿈치] 아픈 정도에 대해 체크를 해주십시요.';
+        else if (!q24) msg = '[팔/팔꿈치] 증상의 주기를 체크 해주십시요.';
+        else if (!q25) msg = '[팔/팔꿈치] 지난 1주일 동안에 증상 여부를 체크 해주십시요.';
+        else if (!q26) msg = '[팔/팔꿈치] 통증으로인한 조치를 체크 해주십시요.';
       }
-      if(msg) return msg;
-
-      else if(q31 !== '4'){
-        if(!q32) msg = '[어깨] 통증 지속 기간에 대해 체크 해주십시요.';
-        else if(!q33) msg = '[어깨] 아픈 정도에 대해 체크를 해주십시요.';
-        else if(!q34) msg = '[어깨] 증상의 주기를 체크 해주십시요.';
-        else if(!q35) msg = '[어깨] 지난 1주일 동안에 증상 여부를 체크 해주십시요.';
-        else if(!q36) msg = '[어깨] 통증으로인한 조치를 체크 해주십시요.';
+      if (msg) return msg;
+      if (q31 !== '4') {
+        if (!q32) msg = '[어깨] 통증 지속 기간에 대해 체크 해주십시요.';
+        else if (!q33) msg = '[어깨] 아픈 정도에 대해 체크를 해주십시요.';
+        else if (!q34) msg = '[어깨] 증상의 주기를 체크 해주십시요.';
+        else if (!q35) msg = '[어깨] 지난 1주일 동안에 증상 여부를 체크 해주십시요.';
+        else if (!q36) msg = '[어깨] 통증으로인한 조치를 체크 해주십시요.';
       }
-      if(msg) return msg;
-
-      else if(q41 !== '4'){
-        if(!q42) msg = '[목] 통증 지속 기간에 대해 체크 해주십시요.';
-        else if(!q43) msg = '[목] 아픈 정도에 대해 체크를 해주십시요.';
-        else if(!q44) msg = '[목] 증상의 주기를 체크 해주십시요.';
-        else if(!q45) msg = '[목] 지난 1주일 동안에 증상 여부를 체크 해주십시요.';
-        else if(!q46) msg = '[목] 통증으로인한 조치를 체크 해주십시요.';
+      if (msg) return msg;
+      if (q41 !== '4') {
+        if (!q42) msg = '[목] 통증 지속 기간에 대해 체크 해주십시요.';
+        else if (!q43) msg = '[목] 아픈 정도에 대해 체크를 해주십시요.';
+        else if (!q44) msg = '[목] 증상의 주기를 체크 해주십시요.';
+        else if (!q45) msg = '[목] 지난 1주일 동안에 증상 여부를 체크 해주십시요.';
+        else if (!q46) msg = '[목] 통증으로인한 조치를 체크 해주십시요.';
       }
-      if(msg) return msg;
-
-      else if(q51 !== '4'){
-        if(!q52) msg = '[허리] 통증 지속 기간에 대해 체크 해주십시요.';
-        else if(!q53) msg = '[허리] 아픈 정도에 대해 체크를 해주십시요.';
-        else if(!q54) msg = '[허리] 증상의 주기를 체크 해주십시요.';
-        else if(!q55) msg = '[허리] 지난 1주일 동안에 증상 여부를 체크 해주십시요.';
-        else if(!q56) msg = '[허리] 통증으로인한 조치를 체크 해주십시요.';
+      if (msg) return msg;
+      if (q51 !== '4') {
+        if (!q52) msg = '[허리] 통증 지속 기간에 대해 체크 해주십시요.';
+        else if (!q53) msg = '[허리] 아픈 정도에 대해 체크를 해주십시요.';
+        else if (!q54) msg = '[허리] 증상의 주기를 체크 해주십시요.';
+        else if (!q55) msg = '[허리] 지난 1주일 동안에 증상 여부를 체크 해주십시요.';
+        else if (!q56) msg = '[허리] 통증으로인한 조치를 체크 해주십시요.';
       }
-      if(msg) return msg;
-
-      else if(q61 !== '4'){
-        if(!q62) msg = '[무릎] 통증 지속 기간에 대해 체크 해주십시요.';
-        else if(!q63) msg = '[무릎] 아픈 정도에 대해 체크를 해주십시요.';
-        else if(!q66) msg = '[무릎] 증상의 주기를 체크 해주십시요.';
-        else if(!q65) msg = '[무릎] 지난 1주일 동안에 증상 여부를 체크 해주십시요.';
-        else if(!q66) msg = '[무릎] 통증으로인한 조치를 체크 해주십시요.';
+      if (msg) return msg;
+      if (q61 !== '4') {
+        if (!q62) msg = '[무릎] 통증 지속 기간에 대해 체크 해주십시요.';
+        else if (!q63) msg = '[무릎] 아픈 정도에 대해 체크를 해주십시요.';
+        else if (!q64) msg = '[무릎] 증상의 주기를 체크 해주십시요.';
+        else if (!q65) msg = '[무릎] 지난 1주일 동안에 증상 여부를 체크 해주십시요.';
+        else if (!q66) msg = '[무릎] 통증으로인한 조치를 체크 해주십시요.';
       }
     }
 
     return msg;
-  }
+  };
+
   save = () => {
     const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
     const { formData, questionData } = this.state;
 
     const submitData = this.setSubmitData(formData, questionData);
     const msg = this.validationChk(submitData);
-    
-    if(msg) return this.showMessage(msg);
+
+    if (msg) return this.showMessage(msg);
 
     spinningOn();
     submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/eshsHealthPoll', { PARAM: submitData }, (id, res) => {
@@ -309,7 +302,9 @@ class PollInput extends Component {
                         customWidth="100%"
                         modalOnCancel={() => {}}
                         onClickRow={record =>
-                          this.setState(prevState => ({ formData: { ...prevState.formData, ...record,user_id:record.USER_ID, ...this.getUserDetail(record.REGNO || '0') } }))
+                          this.setState(prevState => ({
+                            formData: { ...prevState.formData, ...record, user_id: record.USER_ID, ...this.getUserDetail(record.REGNO || '0') },
+                          }))
                         }
                       />
                     </td>
