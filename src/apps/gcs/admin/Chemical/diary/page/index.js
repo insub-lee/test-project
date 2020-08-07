@@ -243,7 +243,7 @@ class ChemicalStatusPage extends Component {
           ) : (
             <>
               {listData.length > 0 && <ExcelDown listData={listData} />}
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('EXCEL', true)}>
+              <StyledButton className="btn-primary btn-sm btn-first" style={{ marginLeft: '5px' }} onClick={() => this.handleModal('EXCEL', true)}>
                 Excel 업로드
               </StyledButton>
             </>

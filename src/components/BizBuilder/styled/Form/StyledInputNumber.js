@@ -62,6 +62,12 @@ const StyledInputNumber = Component => styled(Component)`
     height: auto;
   }
 
+  &.ant-input-number-xxs {
+    padding: 0.1rem 0.4rem;
+    font-size: 0.75rem;
+    height: auto;
+  }
+
   &.ant-input-number-pointer {
     cursor: pointer;
   }
