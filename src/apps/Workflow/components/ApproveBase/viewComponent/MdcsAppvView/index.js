@@ -96,11 +96,17 @@ class MdcsAppvView extends Component {
 
   handleReqApprove = (e, appvStatus) => {
     const { opinion, nextApprover } = this.state;
+    console.debug(opinion, appvStatus);
     if (((appvStatus === 3 || appvStatus === 30) && !opinion) || opinion === '') {
       message.warning('의견을 작성해주세요');
     } else {
       if (appvStatus === 5 && nextApprover.length === 0) {
         message.info('실무자를 선택 해주세요');
+        return;
+      }
+
+      if ((appvStatus === 9 && !opinion) || opinion === '') {
+        message.info('DownLoad 권한 거부에 대한 사유를 작성해 주세요');
         return;
       }
 

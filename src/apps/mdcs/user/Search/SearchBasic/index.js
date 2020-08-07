@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import history from 'utils/history';
 import Moment from 'moment';
 
-import { Table, Radio, Form, Input, Select, Checkbox, DatePicker } from 'antd';
+import { Table, Radio, Form, Input, Select, Checkbox, DatePicker, message } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
 import StyledRadio from 'components/FormStuff/Radio';
@@ -529,7 +529,20 @@ class SearchBasic extends Component {
                           {formData.BUILDER_TASK_FAVORITE === 'Y' ? '즐겨찾기 해제' : '즐겨찾기 추가'}
                         </StyledButton>
                       )}
-                      <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onClickDownLoad(formData)}>
+                      <StyledButton
+                        className="btn-primary btn-sm mr5"
+                        onClick={() => {
+                          const { DOCNUMBER } = formData;
+                          if (DOCNUMBER.split('-').length > 0) {
+                            const prefix = DOCNUMBER.split('-')[0];
+                            if (prefix === 'MBJB') {
+                              message.info('해당 문서는 다운로드 할 수 없습니다.');
+                              return;
+                            }
+                          }
+                          this.onClickDownLoad(formData);
+                        }}
+                      >
                         다운로드 신청
                       </StyledButton>
                       <StyledButton className="btn-light btn-sm" onClick={closeBtnFunc}>
