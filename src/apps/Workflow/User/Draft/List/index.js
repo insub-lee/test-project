@@ -578,7 +578,7 @@ class DraftList extends Component {
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
           <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
-            <span>
+            <span style={{ float: 'left' }}>
               상신한 문서 : <font style={{ color: '#ff0000' }}>{draftListCnt || 0}</font> 건
             </span>
             <ExcelDownLoad
