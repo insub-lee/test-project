@@ -77,6 +77,14 @@ const StyledDatePicker = Component => styled(Component)`
     }
   }
 
+  &.ant-picker-xxs {
+    .ant-input {
+      padding: 0.1rem 0.4rem;
+      font-size: 0.75rem;
+      height: auto;
+    }
+  }
+
   &.ant-picker-pointer {
     cursor: pointer;
   }
