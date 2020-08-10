@@ -96,8 +96,9 @@ class MdcsAppvView extends Component {
 
   handleReqApprove = (e, appvStatus) => {
     const { opinion, nextApprover } = this.state;
-    console.debug(opinion, appvStatus);
-    if (((appvStatus === 3 || appvStatus === 30) && !opinion) || opinion === '') {
+    const { selectedRow } = this.props;
+
+    if (((appvStatus === 3 || appvStatus === 30 || selectedRow.NODE_ID === 114) && !opinion) || opinion === '') {
       message.warning('의견을 작성해주세요');
     } else {
       if (appvStatus === 5 && nextApprover.length === 0) {
@@ -271,7 +272,7 @@ class MdcsAppvView extends Component {
       isAbrogationMultiShow,
       isObsCheck,
     } = this.state;
-    console.debug('미결함 검토', this.props);
+
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -417,7 +418,11 @@ class MdcsAppvView extends Component {
                 <tr
                   style={{
                     display:
-                      REL_TYPE === 4 || (selectedRow && selectedRow.APPV_STATUS && (selectedRow.APPV_STATUS === 20 || selectedRow.APPV_STATUS === 2))
+                      REL_TYPE === 4 ||
+                      (selectedRow &&
+                        selectedRow.NODE_ID !== 114 &&
+                        selectedRow.APPV_STATUS &&
+                        (selectedRow.APPV_STATUS === 20 || selectedRow.APPV_STATUS === 2))
                         ? 'none'
                         : 'table-row',
                   }}

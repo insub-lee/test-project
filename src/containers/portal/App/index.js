@@ -541,16 +541,16 @@ class App extends React.Component {
                   <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goCommonHome()} />
                 </Tooltip>
               </div>
-              <div className="iconPositon" style={{ marginTop: '20px' }}>
+              {/* <div className="iconPositon" style={{ marginTop: '20px' }}>
                 <Tooltip placement="right" title="My Home">
                   <BtnMyhome onClick={() => history.push(`/${basicPath.PAGE}/${myHomePageId}`)} />
                 </Tooltip>
-              </div>
-              <div className="iconPositon" style={{ marginTop: '20px' }}>
+              </div> */}
+              {/* <div className="iconPositon" style={{ marginTop: '20px' }}>
                 <Tooltip placement="right" title="Home Widget">
                   <Icon type="qrcode" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goHomeWidget(myHomePageId)} />
                 </Tooltip>
-              </div>
+              </div> */}
               {visiblePersonalize && (
                 <div className="iconPositon" style={{ marginTop: '20px' }}>
                   <Tooltip placement="right" title="App Store">
