@@ -1,7 +1,8 @@
 import React from 'react';
-import BizBuilderBase from 'components/BizBuilderBase';
-import List from './List';
+// import BizBuilderBase from 'components/BizBuilderBase';
+// import List from './List';
+import CustomInput from './CustomInput';
 
-const ResilienceReservation = () => <BizBuilderBase sagaKey="ResilienceReservation" workSeq={5201} viewType="LIST" CustomListPage={List} />;
+const ResilienceReservation = () => <CustomInput sagaKey="ResilienceReservation" />;
 
 export default ResilienceReservation;

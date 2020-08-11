@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 
@@ -72,9 +72,9 @@ class List extends Component {
             if (record.time === '12:00 ~ 12:30' || record.time === '12:30 ~ 13:00') {
               return <span>점심 휴무</span>;
             }
-
+            const userId = (extraApiData && extraApiData.getUserInfo && extraApiData.getUserInfo.userInfo && extraApiData.getUserInfo.userInfo.USER_ID) || 0;
             if (this.isReserved(record.time) && formData.gender === 'm') {
-              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 2) {
+              if (userId === 1 && this.getBookerInfo(record.time).is_chk === 2) {
                 // 관리자면서 사용확인 안 된 예약
                 return (
                   <div>
@@ -89,7 +89,7 @@ class List extends Component {
                 );
               }
 
-              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 1) {
+              if (userId === 1 && this.getBookerInfo(record.time).is_chk === 1) {
                 // 관리자면서 사용확인된 예약
                 return (
                   <div>
@@ -98,7 +98,7 @@ class List extends Component {
                 );
               }
 
-              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 0) {
+              if (userId === 1 && this.getBookerInfo(record.time).is_chk === 0) {
                 // 관리자면서 노쇼한 예약
                 return (
                   <div>
@@ -107,10 +107,7 @@ class List extends Component {
                 );
               }
 
-              if (
-                extraApiData.getUserInfo.userInfo.user_id === this.getBookerInfo(record.time).reg_user_id &&
-                extraApiData.getUserInfo.userInfo.user_id !== 1
-              ) {
+              if (userId === this.getBookerInfo(record.time).reg_user_id && userId !== 1) {
                 // 예약했지만 관리자가 아니면 취소버튼 나옴
                 return (
                   <div>
@@ -151,9 +148,10 @@ class List extends Component {
             if (record.time === '12:00 ~ 12:30' || record.time === '12:30 ~ 13:00') {
               return <span>점심 휴무</span>;
             }
+            const userId = (extraApiData && extraApiData.getUserInfo && extraApiData.getUserInfo.userInfo && extraApiData.getUserInfo.userInfo.user_id) || 0;
 
             if (this.isReserved(record.time) && formData.gender === 'f') {
-              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 2) {
+              if (userId === 1 && this.getBookerInfo(record.time).is_chk === 2) {
                 // 관리자면서 사용확인 안 된 예약
                 return (
                   <div>
@@ -168,7 +166,7 @@ class List extends Component {
                 );
               }
 
-              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 1) {
+              if (userId === 1 && this.getBookerInfo(record.time).is_chk === 1) {
                 // 관리자면서 사용확인된 예약
                 return (
                   <div>
@@ -177,7 +175,7 @@ class List extends Component {
                 );
               }
 
-              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 0) {
+              if (userId === 1 && this.getBookerInfo(record.time).is_chk === 0) {
                 // 관리자면서 노쇼한 예약
                 return (
                   <div>
@@ -186,10 +184,7 @@ class List extends Component {
                 );
               }
 
-              if (
-                extraApiData.getUserInfo.userInfo.user_id === this.getBookerInfo(record.time).reg_user_id &&
-                extraApiData.getUserInfo.userInfo.user_id !== 1
-              ) {
+              if (userId === this.getBookerInfo(record.time).reg_user_id && userId !== 1) {
                 // 예약했지만 관리자가 아니면 취소버튼 나옴
                 return (
                   <div>
@@ -333,9 +328,9 @@ class List extends Component {
   };
 
   render() {
-    const { changeFormData, getExtraApiData, extraApiData, saveTask, formData, sagaKey } = this.props;
+    const { changeFormData, getExtraApiData, extraApiData, saveTask, formData, sagaKey, changeViewPage, viewPageData } = this.props;
     return (
-      <ContentsWrapper>
+      <StyledContentsWrapper>
         <Input
           changeFormData={changeFormData}
           getExtraApiData={getExtraApiData}
@@ -345,9 +340,11 @@ class List extends Component {
           sagaKey={sagaKey}
           handleGetTimeTable={this.handleGetTimeTable}
           dateChange={this.dateChange}
+          changeViewPage={changeViewPage}
+          viewPageData={viewPageData}
         />
         <AntdTable columns={this.columns} dataSource={this.timeTable} pagination={false} />
-      </ContentsWrapper>
+      </StyledContentsWrapper>
     );
   }
 }

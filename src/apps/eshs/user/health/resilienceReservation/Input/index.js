@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { DatePicker, Popconfirm } from 'antd';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
@@ -215,65 +216,63 @@ class Input extends Component {
     const { userInfo, currentDate, reserveCount, selectedDate, noShowDate } = this.state;
     const { formData } = this.props;
     return (
-      <ContentsWrapper>
-        <div className="tableWrapper">
-          <StyledHtmlTable>
-            <table>
-              <colgroup>
-                <col width="15%" />
-                <col width="18%" />
-                <col width="15%" />
-                <col width="18%" />
-                <col width="15%" />
-                <col width="18%" />
-              </colgroup>
-              <tbody>
-                <tr>
-                  <th>사번</th>
-                  <td>{userInfo.EMP_NO}</td>
-                  <th>이름</th>
-                  <td>{userInfo.NAME}</td>
-                  <th>소속</th>
-                  <td>{userInfo.DEPT}</td>
-                </tr>
-                <tr>
-                  <th>직위</th>
-                  <td>{userInfo.POSITION}</td>
-                  <th>지역</th>
-                  <td>{userInfo.BAREA_CD}</td>
-                  <th>신청일</th>
-                  <td>
-                    <AntdDatePicker
-                      className="ant-picker-xs"
-                      disabledDate={this.disableDate}
-                      defaultValue={moment(currentDate)}
-                      onChange={this.handleOnDateChange}
-                      allowClear={false}
-                      style={{ width: '50%' }}
-                    />
-                    <Popconfirm
-                      title={this.makePopconfirmTitle()}
-                      disabled={
-                        formData.checkedIndex !== undefined &&
-                        !this.isReservedToday() &&
-                        reserveCount < 3 &&
-                        moment(selectedDate).format('w') !==
-                          moment(noShowDate)
-                            .add('1', 'week')
-                            .format('w')
-                      }
-                    >
-                      <StyledButton className="btn-gray btn-xs ml5" onClick={this.handleButtonClick}>
-                        예약
-                      </StyledButton>
-                    </Popconfirm>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </StyledHtmlTable>
-        </div>
-      </ContentsWrapper>
+      <StyledContentsWrapper>
+        <StyledHtmlTable>
+          <table>
+            <colgroup>
+              <col width="15%" />
+              <col width="18%" />
+              <col width="15%" />
+              <col width="18%" />
+              <col width="15%" />
+              <col width="18%" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>사번</th>
+                <td>{userInfo.EMP_NO}</td>
+                <th>이름</th>
+                <td>{userInfo.NAME}</td>
+                <th>소속</th>
+                <td>{userInfo.DEPT}</td>
+              </tr>
+              <tr>
+                <th>직위</th>
+                <td>{userInfo.POSITION}</td>
+                <th>지역</th>
+                <td>{userInfo.BAREA_CD}</td>
+                <th>신청일</th>
+                <td>
+                  <AntdDatePicker
+                    className="ant-picker-xs"
+                    disabledDate={this.disableDate}
+                    defaultValue={moment(currentDate)}
+                    onChange={this.handleOnDateChange}
+                    allowClear={false}
+                    style={{ width: '60%' }}
+                  />
+                  <Popconfirm
+                    title={this.makePopconfirmTitle()}
+                    disabled={
+                      formData.checkedIndex !== undefined &&
+                      !this.isReservedToday() &&
+                      reserveCount < 3 &&
+                      moment(selectedDate).format('w') !==
+                        moment(noShowDate)
+                          .add('1', 'week')
+                          .format('w')
+                    }
+                  >
+                    <StyledButton className="btn-primary btn-sm ml5" onClick={this.handleButtonClick}>
+                      예약
+                    </StyledButton>
+                  </Popconfirm>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </StyledHtmlTable>
+      </StyledContentsWrapper>
     );
   }
 }
