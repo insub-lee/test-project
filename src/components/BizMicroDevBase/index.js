@@ -30,7 +30,7 @@ class BizMicroDevBase extends React.Component {
   render() {
     const { component: Component } = this.props;
     return (
-      <div style={{ height: '100%' }}>
+      <div style={{ ...this.props.style, height: '100%' }}>
         <Spin spinning={this.state.spinning}>
           <Component {...this.props} spinningOn={this.spinningOn} spinningOff={this.spinningOff} />
         </Spin>
