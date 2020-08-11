@@ -3,7 +3,6 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 import SelfCheck from 'apps/eshs/admin/health/MyHealthPage/SelfDiagnosis/SelfCheck';
 
 import PropTypes from 'prop-types';
-
 class SelfDiagnosis extends Component {
   render() {
     const { sagaKey } = this.props;
