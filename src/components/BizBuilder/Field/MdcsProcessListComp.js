@@ -11,8 +11,10 @@ const StyledWrap = styled.div`
       width: 50%;
       border: solid 1px #cccccc;
       padding: 4px;
+      line-height: 100%;
       div {
         display: inline-block;
+        vertical-align: middle;
       }
       .mdcsDeptName {
         width: 30%;
