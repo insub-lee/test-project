@@ -14,6 +14,7 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import SelfEmpResultDetail from 'apps/eshs/admin/health/MyHealthPage/SelfEmpResultDetail';
 import ConsultingForm from 'apps/eshs/admin/health/MyHealthPage/ConsultingForm';
 import ConsultDeleteForm from 'apps/eshs/admin/health/MyHealthPage/ConsultingForm/deleteForm';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -32,6 +33,67 @@ const ConsultStyle = styled.div`
   display: block;
 `;
 
+const excelColumns = [
+  {
+    title: '소속',
+    width: { wpx: 150 },
+    field: 'DEPT_NAME_KOR',
+    filter: 'agTextColumnFilter',
+  },
+  {
+    title: '사번',
+    width: { wpx: 80 },
+    field: 'EMP_NO',
+    filter: 'agTextColumnFilter',
+  },
+  {
+    title: '성명',
+    width: { wpx: 80 },
+    field: 'NAME_KOR',
+    filter: 'agTextColumnFilter',
+  },
+  {
+    title: '검진기관 질환',
+    width: { wpx: 100 },
+    field: 'DISEASE_NM',
+    filter: 'agTextColumnFilter',
+  },
+  {
+    title: '질환등급',
+    width: { wpx: 100 },
+    field: 'DISEASE_GRADE',
+    filter: 'agTextColumnFilter',
+  },
+  {
+    title: '관리등급',
+    width: { wpx: 100 },
+    field: 'RESULT',
+    filter: 'agTextColumnFilter',
+  },
+  {
+    title: '상담일시',
+    width: { wpx: 100 },
+    field: 'REG_DTTM',
+    filter: 'agTextColumnFilter',
+  },
+  {
+    title: '상담내용',
+    width: { wpx: 300 },
+    field: 'CONSULT',
+    filter: 'agTextColumnFilter',
+  },
+];
+
+// const consultRender = rowIndex => document.querySelector(`div[name=consult_${rowIndex}]`);
+// const consultRender = rowIndex => '';
+
+const consultRender = rowIndex => {
+  const consultDiv = document.querySelector(`div[name=consult_${rowIndex}]`);
+  if (consultDiv && typeof consultDiv === 'object') {
+    return consultDiv.textContent.replace(/Untitled/gi, '').replace(/\n$/gm, '');
+  }
+  return '';
+};
 class List extends Component {
   constructor(props) {
     super(props);
@@ -59,6 +121,11 @@ class List extends Component {
       yearList.push(i);
     }
     this.setState({ yearList }, spinningOff);
+  }
+
+  componentWillUnmount() {
+    const { sagaKey: id, removeReduxState } = this.props;
+    removeReduxState(id);
   }
 
   getList = () => {
@@ -217,11 +284,12 @@ class List extends Component {
       title: '내용',
       dataIndex: 'CONSULT',
       rowSpan: 1,
-      render: (text, record) =>
+      render: (text, record, index) =>
         text && (
           <Popover title="상담내용" trigger="hover" content={<div dangerouslySetInnerHTML={{ __html: text }} />}>
             <ConsultStyle
               dangerouslySetInnerHTML={{ __html: text }}
+              name={`consult_${index}`}
               onClick={() =>
                 this.setState(
                   {
@@ -328,9 +396,26 @@ class List extends Component {
               <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>
                 검색
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm mr5" onClick={() => message.info(<MessageContent>미구현</MessageContent>)}>
-                엑셀받기
-              </StyledButton>
+              <div style={{ display: 'inline-block', marginRight: '5px' }}>
+                <ExcelDownloadComp
+                  isBuilder={false}
+                  fileName={`${moment().format('YYYYMMDD')}`}
+                  className="testClassName"
+                  btnText="Excel Download"
+                  sheetName={`${moment().format('YYYYMMDD')}`}
+                  listData={list.map((item, index) => ({ ...item, CONSULT: item.CONSULT ? consultRender(index) : '' }))}
+                  btnSize="btn-sm btn-first"
+                  fields={excelColumns.map(item => ({
+                    ...item,
+                    style: { font: { sz: '12' }, alignment: { vertical: 'center', horizontal: 'center', wrapText: true } },
+                  }))}
+                  columns={excelColumns.map(item => ({
+                    ...item,
+                    style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '', bold: true }, alignment: { vertical: 'center', horizontal: 'center' } },
+                  }))}
+                />
+              </div>
+
               <StyledButton
                 className="btn-primary btn-sm"
                 onClick={() =>
@@ -400,7 +485,7 @@ class List extends Component {
                 </tr>
               </tfoot>
               <tbody>
-                {list.map(item => {
+                {list.map((item, index) => {
                   if (item.SEQ === 1) {
                     return (
                       <tr key={`row_${item.rowKey}`}>
@@ -411,7 +496,7 @@ class List extends Component {
                             rowSpan={col.rowSpan || item.ROWSPAN}
                             className={col.className || ''}
                           >
-                            {typeof col.render === 'function' ? col.render(item[col.dataIndex], item) : item[col.dataIndex]}
+                            {typeof col.render === 'function' ? col.render(item[col.dataIndex], item, index) : item[col.dataIndex]}
                           </td>
                         ))}
                       </tr>
@@ -423,7 +508,7 @@ class List extends Component {
                         if (col.dataIndex === 'REG_DTTM' || col.dataIndex === 'CONSULT') {
                           return (
                             <td key={`col_${item.rowKey}_${idx}`} align={col.align || 'center'} className={col.className || ''}>
-                              {typeof col.render === 'function' ? col.render(item[col.dataIndex], item) : item[col.dataIndex]}
+                              {typeof col.render === 'function' ? col.render(item[col.dataIndex], item, index) : item[col.dataIndex]}
                             </td>
                           );
                         }
@@ -447,6 +532,7 @@ List.propTypes = {
   getCallDataHandler: PropTypes.func,
   spinningOn: PropTypes.func,
   spinningOff: PropTypes.func,
+  removeReduxState: PropTypes.func,
 };
 List.defaultProps = {
   result: {},
@@ -454,6 +540,7 @@ List.defaultProps = {
   getCallDataHandler: () => {},
   spinningOn: () => {},
   spinningOff: () => {},
+  removeReduxState: () => {},
 };
 
 export default List;

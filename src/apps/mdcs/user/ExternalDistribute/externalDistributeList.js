@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Icon, Input } from 'antd';
+import moment from 'moment';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
@@ -8,6 +9,7 @@ import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/Styl
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import ExcelDownload from 'components/ExcelDownLoad';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdInput = StyledInput(Input);
@@ -42,40 +44,6 @@ class ExternalDistributeList extends Component {
     });
   }
 
-  // getColumnSearchProps = dataIndex => ({
-  //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-  //     <div style={{ padding: 8 }}>
-  //       <Input
-  //         ref={node => {
-  //           this.searchInput = node;
-  //         }}
-  //         placeholder="Search "
-  //         value={selectedKeys[0]}
-  //         onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-  //         onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
-  //         style={{ width: 188, marginBottom: 8, display: 'block' }}
-  //       />
-  //       <Button type="primary" onClick={() => this.handleSearch(selectedKeys, confirm)} icon="search" size="small" style={{ width: 90, marginRight: 8 }}>
-  //         Search
-  //       </Button>
-  //       <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-  //         Reset
-  //       </Button>
-  //     </div>
-  //   ),
-  //   filterIcon: filtered => <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />,
-  //   onFilter: (value, record) =>
-  //     record[dataIndex]
-  //       .toString()
-  //       .toLowerCase()
-  //       .includes(value.toLowerCase()),
-  //   onFilterDropdownVisibleChange: visible => {
-  //     if (visible) {
-  //       setTimeout(() => this.searchInput.select());
-  //     }
-  //   },
-  // });
-
   handleSearch = (selectedKeys, confirm) => {
     confirm();
     this.setState({ searchText: selectedKeys[0] });
@@ -101,12 +69,6 @@ class ExternalDistributeList extends Component {
       key: 'DOCNUMBER',
       align: 'center',
       width: '10%',
-      // sorter: (a, b) => {
-      //   if (a.DOCNUMBER === b.DOCNUMBER) return 0;
-      //   if (a.DOCNUMBER > b.DOCNUMBER) return 1;
-      //   if (a.DOCNUMBER < b.DOCNUMBER) return -1;
-      // },
-      // ...this.getColumnSearchProps('DOCNUMBER'),
     },
     {
       title: 'Rev',
@@ -155,6 +117,60 @@ class ExternalDistributeList extends Component {
     },
   ];
 
+  excelColumns = [
+    {
+      title: 'No.',
+      width: { wpx: 100 },
+      style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+    },
+    {
+      title: 'Rev',
+      width: { wpx: 30 },
+      style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+    },
+    {
+      title: 'Title',
+      width: { wpx: 300 },
+      style: { alignment: { horizontal: 'left' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+    },
+    {
+      title: '업체명',
+      width: { wpx: 150 },
+      style: { alignment: { horizontal: 'left' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+    },
+    {
+      title: '수신자',
+      width: { wpx: 100 },
+      style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+    },
+    {
+      title: '배포자',
+      width: { wpx: 100 },
+      style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+    },
+    {
+      title: '배포일',
+      width: { wpx: 100 },
+      style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+    },
+    {
+      title: '열람여부',
+      width: { wpx: 100 },
+      style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+    },
+  ];
+
+  fields = [
+    { field: 'DOCNUMBER', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+    { field: 'VERSION', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+    { field: 'TITLE', style: { alignment: { horizontal: 'left' }, font: { sz: '10' } } },
+    { field: 'RECV_DEPT_NAME', style: { alignment: { horizontal: 'left' }, font: { sz: '10' } } },
+    { field: 'RECV_USER_NAME', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+    { field: 'DIST_USER_NAME', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+    { field: 'REG_DATE', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+    { field: 'STATUS', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  ];
+
   render() {
     const {
       result: { externalDistributeList },
@@ -193,7 +209,20 @@ class ExternalDistributeList extends Component {
                 onChange={e => this.onChangeSearchInfo('RECV_DEPT_NAME', e.target.value)}
                 onPressEnter={this.getList}
               />
-              <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>검색</StyledButton>
+              <ExcelDownload
+                key="excelDownLoad"
+                isBuilder={false}
+                fileName={`외부배포현황 (${moment().format('YYYYMMDD')})`}
+                className="workerExcelBtn"
+                title="Excel 파일로 저장"
+                btnSize="btn-sm"
+                sheetName=""
+                columns={this.excelColumns}
+                fields={this.fields}
+                dataSetBind={list.map(item => ({ ...item, STATUS: item.STATUS === 0 ? '  In progress' : 'Completed' }))}
+                style={{ display: 'inline-block'}}
+              />
             </div>
           </StyledCustomSearchWrapper>
           <AntdTable dataSource={list.map(item => ({ ...item, key: `${item.TRANS_NO}_${item.RECV_USER_ID}` }))} columns={this.columns} bordered />
