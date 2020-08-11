@@ -244,8 +244,7 @@ class EduManageModal extends React.Component {
 
   mentorAcceptTestRenderer(reportAuth, eduPlanInfo, row, length, confirmed, step, planResult) {
     const { site } = this.props;
-    console.debug('@@@ row', row);
-    console.debug('@@@ edu plan info', eduPlanInfo);
+
     switch (reportAuth) {
       case 'mentor': {
         return confirmed ? (

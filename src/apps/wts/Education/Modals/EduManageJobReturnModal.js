@@ -183,8 +183,7 @@ class EduManageJobReturnModal extends React.Component {
 
   mentorAcceptTestRenderer(reportAuth, eduPlanInfo, row, length, confirmed, step, planResult, passButton) {
     const { site } = this.props;
-    console.debug('@@@ row', row);
-    console.debug('@@@ edu plan info', eduPlanInfo);
+
     switch (reportAuth) {
       case 'mentor': {
         return confirmed ? (
@@ -330,7 +329,6 @@ class EduManageJobReturnModal extends React.Component {
 
   eduScheduleRenderer(stepLevel) {
     const { eduPlanInfo } = this.state;
-    console.debug(eduPlanInfo);
     const currentStepLevel = eduPlanInfo.step_level;
 
     if (currentStepLevel > stepLevel) {
