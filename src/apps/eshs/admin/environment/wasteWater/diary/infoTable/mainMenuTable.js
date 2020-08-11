@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Modal, Select, Input, InputNumber, Checkbox, DatePicker } from 'antd';
+import { FormOutlined } from '@ant-design/icons';
+import { Input, InputNumber, DatePicker } from 'antd';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
@@ -10,7 +11,6 @@ import styled from 'styled-components';
 
 const AntdInput = StyledInput(Input);
 const AntdInputNumber = StyledInputNumber(InputNumber);
-const AntdDatePicker = StyledDatePicker(DatePicker);
 
 const Styled = styled.div`
   .menu-table {
@@ -33,8 +33,31 @@ class MainMenuTable extends Component {
     this.state = {};
   }
 
+  getDay = dateStr => {
+    // 0: 일, 1: 월, 2: 화. 3: 수, 4: 목, 5: 금, 6: 토
+    const dayIndex = moment(dateStr, 'YYYY-MM-DD').day();
+    switch (dayIndex) {
+      case 0:
+        return '일요일';
+      case 1:
+        return '월요일';
+      case 2:
+        return '화요일';
+      case 3:
+        return '수요일';
+      case 4:
+        return '목요일';
+      case 5:
+        return '금요일';
+      case 6:
+        return '토요일';
+      default:
+        return '';
+    }
+  };
+
   render() {
-    const { viewType, formData, onChangeFormData, onClickMenu } = this.props;
+    const { viewType, formData, onChangeFormData, onClickMenu, hasData } = this.props;
     return (
       <Styled>
         <StyledHtmlTable>
@@ -50,16 +73,12 @@ class MainMenuTable extends Component {
               <col width="25%" />
             </colgroup>
             <tbody>
-              <tr>
+              <tr className="tr-center">
                 <th>
-                  <span>날짜</span>
+                  <span>요일</span>
                 </th>
                 <td>
-                  {viewType === 'view' && formData.OP_DT ? (
-                    <span>{formData.OP_DT}</span>
-                  ) : (
-                    <AntdDatePicker className="ant-picker-xxs" format="YYYY-MM-DD" style={{ width: '100%' }} value={moment(formData.OP_DT, 'YYYY-MM-DD')} />
-                  )}
+                  <span>{(formData.OP_DT && this.getDay(formData.OP_DT)) || ''}</span>
                 </td>
                 <th>
                   <span>온도</span>
@@ -109,7 +128,7 @@ class MainMenuTable extends Component {
                     onClick={() => onClickMenu('EXHAUST_ACT')}
                     onKeyPress={() => onClickMenu('EXHAUST_ACT')}
                   >
-                    1. 배출시설 가동시간
+                    1. 배출시설 가동시간{hasData.EXHAUST_ACT === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
                   </span>
                 </td>
                 <td>
@@ -170,6 +189,7 @@ class MainMenuTable extends Component {
 
 MainMenuTable.propTypes = {
   viewType: PropTypes.string,
+  hasData: PropTypes.object,
   formData: PropTypes.object,
   onChangeFormData: PropTypes.func,
   onClickMenu: PropTypes.func,
