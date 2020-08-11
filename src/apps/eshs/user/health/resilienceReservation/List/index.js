@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 import { Table, Checkbox, Popconfirm } from 'antd';
 import moment from 'moment';
@@ -11,7 +12,7 @@ import request from 'utils/request';
 
 import Input from '../Input';
 
-const AntdTable = StyledLineTable(Table);
+const AntdTable = StyledAntdTable(Table);
 class List extends Component {
   constructor(props) {
     super(props);
@@ -69,28 +70,28 @@ class List extends Component {
           align: 'center',
           render: (text, record, index) => {
             const { formData, extraApiData } = this.props;
-
+            const userId = (extraApiData && extraApiData.getUserInfo && extraApiData.getUserInfo.userInfo && extraApiData.getUserInfo.userInfo.user_id) || 0;
             if (record.time === '12:00 ~ 12:30' || record.time === '12:30 ~ 13:00') {
               return <span>점심 휴무</span>;
             }
 
             if (this.isReserved(record.time)) {
-              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 2) {
+              if (userId === 1 && this.getBookerInfo(record.time).is_chk === 2) {
                 // 관리자면서 사용확인 안 된 예약
                 return (
                   <div>
                     <span>{this.getBookerInfo(record.time).name_kor}님이 예약</span>
                     <Popconfirm title="취소하시겠습니까?" onConfirm={e => this.handleDelete(e, record.time)}>
-                      <StyledButton className="btn-primary">취소</StyledButton>
+                      <StyledButton className="btn-primary btn-sm ml5">취소</StyledButton>
                     </Popconfirm>
                     <Popconfirm title="확인하시겠습니까?" onConfirm={() => this.handleConfirm(record, 1)}>
-                      <StyledButton className="btn-primary">사용확인</StyledButton>
+                      <StyledButton className="btn-primary btn-sm ml5">사용확인</StyledButton>
                     </Popconfirm>
                   </div>
                 );
               }
 
-              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 1) {
+              if (userId === 1 && this.getBookerInfo(record.time).is_chk === 1) {
                 // 관리자면서 사용확인된 예약
                 return (
                   <div>
@@ -99,7 +100,7 @@ class List extends Component {
                 );
               }
 
-              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 0) {
+              if (userId === 1 && this.getBookerInfo(record.time).is_chk === 0) {
                 // 관리자면서 노쇼한 예약
                 return (
                   <div>
@@ -108,16 +109,13 @@ class List extends Component {
                 );
               }
 
-              if (
-                extraApiData.getUserInfo.userInfo.user_id === this.getBookerInfo(record.time).reg_user_id &&
-                extraApiData.getUserInfo.userInfo.user_id !== 1
-              ) {
+              if (userId === this.getBookerInfo(record.time).reg_user_id && userId !== 1) {
                 // 예약했지만 관리자가 아니면 취소버튼 나옴
                 return (
                   <div>
                     <span>{this.getBookerInfo(record.time).name_kor}님이 예약</span>
                     <Popconfirm title="취소하시겠습니까?" onConfirm={e => this.handleDelete(e, record, index)}>
-                      <StyledButton className="btn-primary">취소</StyledButton>
+                      <StyledButton className="btn-primary btn-sm ml5">취소</StyledButton>
                     </Popconfirm>
                   </div>
                 );
@@ -262,7 +260,7 @@ class List extends Component {
     const { columns, timeTable, handleGetTimeTable, dateChange } = this;
     const { changeFormData, getExtraApiData, extraApiData, saveTask, formData, sagaKey } = this.props;
     return (
-      <ContentsWrapper>
+      <StyledContentsWrapper>
         <Input
           changeFormData={changeFormData}
           getExtraApiData={getExtraApiData}
@@ -274,7 +272,7 @@ class List extends Component {
           dateChange={dateChange}
         />
         <AntdTable columns={columns} bordered dataSource={timeTable} pagination={false} />
-      </ContentsWrapper>
+      </StyledContentsWrapper>
     );
   }
 }
