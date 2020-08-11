@@ -31,7 +31,7 @@ const columns = [
     align: 'center',
     width: '6%',
     dataIndex: 'VERSION',
-    render: (text, record) => (record.status === 99 ? 'OBS' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
+    render: (text, record) => (record.STATUS === 99 ? 'OBS' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
   },
   { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM', render: (text, record) => moment(text).format('YYYY-MM-DD') },
   { title: 'Title', align: 'left', key: 'TITLE', width: '35%', dataIndex: 'TITLE', ellipsis: true },
@@ -194,9 +194,9 @@ class SearchList extends Component {
     });
 
   render() {
-    console.debug('search detail props', this.props);
     const { listData, sagaKey, submitExtraHandler, listTotalCnt, conditional, workSeq } = this.props;
     const { SearchView, coverView, isDownVisible, selectedRow, DRAFT_PROCESS, appvMember, paginationIdx } = this.state;
+    console.debug('search detail props', this.props);
     return (
       <>
         <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
