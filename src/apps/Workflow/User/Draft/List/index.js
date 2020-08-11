@@ -547,7 +547,7 @@ class DraftList extends Component {
   };
 
   onReload = () => {
-    console.debug('dkdkdkddk');
+    this.props.setViewVisible(false);
   };
 
   render() {
@@ -625,8 +625,6 @@ class DraftList extends Component {
               <BizBuilderBase
                 sagaKey="approveBase_approveView"
                 viewType="VIEW"
-                // onCloseModal={this.onCloseModal}
-                // onChangeForm={this.onChangeForm}
                 closeBtnFunc={this.closeBtnFunc}
                 clickCoverView={this.clickCoverView}
                 onClickModify={this.onClickModify}

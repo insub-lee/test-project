@@ -40,7 +40,7 @@ class DragUploadMDCSComp extends Component {
       WORK_SEQ,
       TASK_SEQ: (colData && colData.TASK_SEQ) || -1,
       CONT_SEQ: (colData && colData.CONT_SEQ) || -1,
-      FIELD_NM: undefined,
+      FIELD_NM: COMP_FIELD,
       TYPE: COMP_TAG,
       DETAIL: [],
       isUsePDF: CONFIG && CONFIG.property && CONFIG.property.isUsePDF,
@@ -104,7 +104,6 @@ class DragUploadMDCSComp extends Component {
   customRequest = ({ action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials }) => {
     const { fileInfo } = this.state;
     const { DETAIL: fileList } = fileInfo;
-    console.debug('file', fileInfo);
     const fileItem = {
       isUsePDF: fileInfo.isUsePDF,
       uid: file.uid,

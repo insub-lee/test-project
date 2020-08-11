@@ -61,13 +61,23 @@ class List extends Component {
   onCancelUserSelect = () => this.setState({ isShowUser: false });
 
   onUserSelectedComplete = selectedUserList => {
+    console.debug(selectedUserList);
+    // [73158, 73084]
     this.setState(
       prevState => {
         const { list } = prevState;
         const tempList = [...list];
         selectedUserList.forEach(node => {
           if (tempList.findIndex(iNode => iNode.USER_ID === node.USER_ID) === -1) {
-            tempList.push({ USER_ID: node.USER_ID, EMP_NO: node.EMP_NO, AREA: '', BAY: '', USER_NAME: node.NAME_KOR, DEPT_NAME: node.DEPT_NAME_KOR });
+            tempList.push({
+              USER_ID: node.USER_ID,
+              EMP_NO: node.EMP_NO,
+              AREA: '',
+              BAY: '',
+              USER_NAME: node.NAME_KOR,
+              DEPT_NAME: node.DEPT_NAME_KOR,
+              isNew: true,
+            });
           }
         });
         return { list: tempList };
@@ -143,7 +153,9 @@ class List extends Component {
   };
 
   onRemoveResult = (id, response) => {
-    const { list } = response;
+    const { list, PARAM } = response;
+    const { userList } = PARAM;
+
     this.setState(
       prevState => {
         const { list: prevList } = prevState;
@@ -155,7 +167,8 @@ class List extends Component {
             const tempNode = { ...list[nodeIdx] };
             resultList.push(tempNode);
           } else if (nodeIdx === -1 && !node.AREA) {
-            resultList.push(node);
+            const removeIdx = userList.findIndex(iNode => iNode.USER_ID === node.USER_ID);
+            if (removeIdx === -1) resultList.push(node);
           }
         });
         return { list: resultList, checkedList: [] };
@@ -269,7 +282,7 @@ class List extends Component {
           onCancel={this.onCancelUserSelect}
           footer={[]}
         >
-          <UserSelect onUserSelectedComplete={this.onUserSelectedComplete} onCancel={this.onCancelUserSelect} />
+          <UserSelect onUserSelectedComplete={this.onUserSelectedComplete} onCancel={this.onCancelUserSelect} notSearchDeptIds={[73158, 73084]} />
         </AntdModal>
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"

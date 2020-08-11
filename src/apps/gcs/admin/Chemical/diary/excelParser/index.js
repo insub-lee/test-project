@@ -182,7 +182,7 @@ class ExcelParser extends Component {
         <div className="excelDown">
           <StyledButton className="btn-gray btn-xs">
             <a href={sampleExcelFile} download>
-              식단양식 다운로드
+              양식파일 다운로드
             </a>
           </StyledButton>
         </div>
