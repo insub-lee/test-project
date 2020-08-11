@@ -196,7 +196,7 @@ class SearchList extends Component {
   render() {
     const { listData, sagaKey, submitExtraHandler, listTotalCnt, conditional, workSeq } = this.props;
     const { SearchView, coverView, isDownVisible, selectedRow, DRAFT_PROCESS, appvMember, paginationIdx } = this.state;
-    console.debug('search detail props', this.props);
+
     return (
       <>
         <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
@@ -248,7 +248,6 @@ class SearchList extends Component {
             viewType="VIEW"
             workSeq={SearchView.workSeq}
             taskSeq={SearchView.taskSeq}
-            draftId={SearchView.draftId}
             closeBtnFunc={this.closeBtnFunc}
             clickCoverView={this.clickCoverView}
             ViewCustomButtons={({ closeBtnFunc, isTaskFavorite, sagaKey, formData, setTaskFavorite }) => (
@@ -307,6 +306,7 @@ class SearchList extends Component {
           <BizBuilderBase
             sagaKey="CoverView"
             viewType="VIEW"
+            exDraftId={SearchView.draftId}
             workSeq={coverView.workSeq}
             taskSeq={coverView.taskSeq}
             viewMetaSeq={coverView.viewMetaSeq}

@@ -283,7 +283,7 @@ class SearchBasic extends Component {
     const listDataArr = listData.arr || [];
     const listTotalCnt = listData.cnt || 0;
     const { onClickRow, closeBtnFunc } = this;
-
+    console.debug('searchview', SearchView);
     const excelColumns = [
       {
         title: '종류',

@@ -15,7 +15,8 @@ class MdcsTextAreaViewComp extends React.Component {
 
   componentDidMount() {
     const { sagaKey, COMP_FIELD, colData, isObsCheck, formData } = this.props;
-    if (isObsCheck) {
+    const { STATUS, MIG_YN } = formData;
+    if (isObsCheck || (STATUS === 99 && MIG_YN !== 'Y')) {
       const obsText = formData[`OBS_${COMP_FIELD}`];
       this.setState({ defaultValue: obsText });
     } else {
