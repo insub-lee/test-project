@@ -17,7 +17,8 @@ const Styled = styled.div`
   }
 `;
 
-class MainMenuTable extends Component {
+// 방지시설 가동시간 테이블
+class CleanActTable extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -30,7 +31,7 @@ class MainMenuTable extends Component {
       <Styled>
         <div className="middle-title-wrap">
           <div className="subFormTable-title-wrap" style={{ display: 'inline-block', width: '20%' }}>
-            <span className="subFormTable-title">배출시설 가동시간</span>
+            <span className="subFormTable-title">방지시설 가동시간</span>
           </div>
           <StyledButtonWrapper className="btn-wrap-right" style={{ display: 'inline-block', width: '80%' }}>
             <StyledButton className="btn-primary btn-xs ml5" onClick={() => submitFormData('SAVE_EXHAUST_ACT')}>
@@ -276,7 +277,7 @@ class MainMenuTable extends Component {
   }
 }
 
-MainMenuTable.propTypes = {
+CleanActTable.propTypes = {
   renderData: PropTypes.object,
   formData: PropTypes.array,
   onChangeActFormData: PropTypes.func,
@@ -284,7 +285,7 @@ MainMenuTable.propTypes = {
   submitFormData: PropTypes.func,
 };
 
-MainMenuTable.defaultProps = {
+CleanActTable.defaultProps = {
   formData: [],
   renderData: {
     EXHAUST_ACT_LIST: [],
@@ -292,4 +293,4 @@ MainMenuTable.defaultProps = {
   },
 };
 
-export default MainMenuTable;
+export default CleanActTable;

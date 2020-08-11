@@ -27,36 +27,81 @@ class QualityPage extends Component {
       selectedMenu: '',
       searchDate: moment().format('YYYY-MM-DD'),
       renderData: undefined,
-      mainformData: {
-        GROUP_UNIT_CD: '17', // 회사(매그너칩 고정)
-        OP_DT: moment().format('YYYY-MM-DD'), // 일지날짜
+      hasData: {},
+      mainFormData: {
+        GROUP_UNIT_CD: '017', // 회사(매그너칩 고정)
+        OP_DT: undefined, // 일지날짜
         TEMPERATURE: undefined, // 온도
         WEATHER: undefined, // 날씨
         APPROVAL_STATE: undefined, // 결재상태
         EMP_NO: undefined, // 담당자
       },
-      formData: {},
+      formData: undefined,
     };
   }
 
-  /*
-    handlerSearch = () => {
-      this.setState({ isSearching: true });
-      const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
-      const { searchValue } = this.state;
-      const apiInfo = {
-        key: 'getWWCheckItems',
-        type: 'POST',
-        url: `/api/eshs/v1/common/wwCheckItem`,
-        params: { PARAM: { ...searchValue, type: 'SEARCH' } },
-      };
-      getCallDataHandlerReturnRes(id, apiInfo, this.searchCallback);
+  // 검색버튼 액션 - 각 항목별 저장된 내용이 있는지 가져옴
+  onClickSearch = () => {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const { searchDate } = this.state;
+    const apiInfo = {
+      key: 'getDiaryInfo',
+      type: 'POST',
+      url: `/api/eshs/v1/common/wwDiary`,
+      params: { PARAM: { type: 'GET_DIARY_INFO', search_dt: searchDate } },
     };
-*/
+    getCallDataHandlerReturnRes(id, apiInfo, this.searchCallback);
+  };
+
+  // 검색버튼 콜백 - 선택된 메뉴가 있다면 그 항목의 FormData / RenderData를 읽어옴
+  searchCallback = (id, response) => {
+    const { selectedMenu, mainFormData, searchDate } = this.state;
+    const { DIARY_INFO } = response;
+    this.setState(
+      {
+        mainFormData: {
+          ...mainFormData,
+          OP_DT: searchDate,
+        },
+        hasData: {
+          ...DIARY_INFO,
+        },
+      },
+      () => this.onClickMenu(selectedMenu),
+    );
+  };
+
+  // 저장, 수정, 삭제
+  submitFormData = type => {
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { mainFormData, formData } = this.state;
+    let submitData = {};
+    switch (type) {
+      case 'SAVE_EXHAUST_ACT': // 배출시설 가동시간 저장/수정
+        submitData = {
+          PARAM: {
+            type,
+            GROUP_UNIT_CD: mainFormData.GROUP_UNIT_CD,
+            OP_DT: mainFormData.OP_DT,
+            LIST: formData,
+          },
+        };
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwAct', submitData, this.onClickSearch);
+        break;
+      case 'MODIFY':
+        // submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwCheckItem', submitData, this.updateCallback);
+        break;
+      case 'DELETE':
+        // submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwCheckItem', submitData, this.deleteCallback);
+        break;
+      default:
+        break;
+    }
+  };
 
   onClickMenu = menuName => {
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
-    const { searchDate } = this.state;
+    const { mainFormData } = this.state;
     let apiInfo = {};
     switch (menuName) {
       case 'EXHAUST_ACT':
@@ -64,9 +109,18 @@ class QualityPage extends Component {
           key: 'getExhaustActInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwAct`,
-          params: { PARAM: { type: 'GET_EXHAUST_ACT_INFO', search_dt: searchDate } },
+          params: { PARAM: { type: 'GET_EXHAUST_ACT_INFO', search_dt: mainFormData.OP_DT } },
         };
-        getCallDataHandlerReturnRes(id, apiInfo, this.getDataCallback);
+        getCallDataHandlerReturnRes(id, apiInfo, this.getActDataCallback);
+        break;
+      case 'CLEAN_ACT':
+        apiInfo = {
+          key: 'getCleanActInfo',
+          type: 'POST',
+          url: `/api/eshs/v1/common/wwAct`,
+          params: { PARAM: { type: 'GET_CLEAN_ACT_INFO', search_dt: mainFormData.OP_DT } },
+        };
+        getCallDataHandlerReturnRes(id, apiInfo, this.getActDataCallback);
         break;
       default:
         break;
@@ -76,27 +130,165 @@ class QualityPage extends Component {
     });
   };
 
-  getDataCallback = (id, response) => {
-    const { RENDER_INFO } = response;
+  // 가동시간 Callback;
+  getActDataCallback = (id, response) => {
+    const { TARGET, RENDER_INFO } = response;
+    const { CODE_LIST, ACT_LIST } = RENDER_INFO;
+    const targetCd = `${TARGET}_CD`;
+    let initFormData = ACT_LIST;
+    if (initFormData.length === 0) {
+      initFormData = CODE_LIST.map(item => ({ [targetCd]: item[targetCd] }));
+    }
     this.setState({
       renderData: {
         ...RENDER_INFO,
       },
+      formData: initFormData,
     });
   };
 
   onChangeMainFormData = (field, value) => {
-    const { mainformData } = this.state;
+    const { mainFormData } = this.state;
     this.setState({
-      mainformData: {
-        ...mainformData,
+      mainFormData: {
+        ...mainFormData,
         [field]: value,
       },
     });
   };
 
+  actAllCheck = row => {
+    const {
+      OP_01,
+      OP_02,
+      OP_03,
+      OP_04,
+      OP_05,
+      OP_06,
+      OP_07,
+      OP_08,
+      OP_09,
+      OP_10,
+      OP_11,
+      OP_12,
+      OP_13,
+      OP_14,
+      OP_15,
+      OP_16,
+      OP_17,
+      OP_18,
+      OP_19,
+      OP_20,
+      OP_21,
+      OP_22,
+      OP_23,
+      OP_24,
+    } = row;
+    return (
+      OP_01 === 'Y' &&
+      OP_02 === 'Y' &&
+      OP_03 === 'Y' &&
+      OP_04 === 'Y' &&
+      OP_05 === 'Y' &&
+      OP_06 === 'Y' &&
+      OP_07 === 'Y' &&
+      OP_08 === 'Y' &&
+      OP_09 === 'Y' &&
+      OP_10 === 'Y' &&
+      OP_11 === 'Y' &&
+      OP_12 === 'Y' &&
+      OP_13 === 'Y' &&
+      OP_14 === 'Y' &&
+      OP_15 === 'Y' &&
+      OP_16 === 'Y' &&
+      OP_17 === 'Y' &&
+      OP_18 === 'Y' &&
+      OP_19 === 'Y' &&
+      OP_20 === 'Y' &&
+      OP_21 === 'Y' &&
+      OP_22 === 'Y' &&
+      OP_23 === 'Y' &&
+      OP_24 === 'Y'
+    );
+  };
+
+  // 가동시간 FormChange (단일변경)
+  onChangeActFormData = (target, code, op, val) => {
+    const { formData } = this.state;
+    const value = val === true ? 'Y' : 'N';
+    const targetForm = formData.find(item => item[target] === code);
+
+    let nextTargetForm = {
+      ...targetForm,
+      [op]: value,
+    };
+    const allCheckYn = this.actAllCheck(nextTargetForm);
+    if (allCheckYn) {
+      nextTargetForm = {
+        ...nextTargetForm,
+        OP_ALL: 'Y',
+      };
+    } else {
+      nextTargetForm = {
+        ...nextTargetForm,
+        OP_ALL: 'N',
+      };
+    }
+    const nextFormData = formData.map(item => {
+      if (item[target] === code) {
+        return nextTargetForm;
+      }
+      return item;
+    });
+    this.setState({
+      formData: nextFormData,
+    });
+  };
+
+  // 가동시간 Row 전체 변경
+  onChangeAllActFormData = (target, code, val) => {
+    const { formData } = this.state;
+    const value = val === true ? 'Y' : 'N';
+    const nextFormData = formData.map(item => {
+      if (item[target] === code) {
+        return {
+          ...item,
+          OP_ALL: value,
+          OP_01: value,
+          OP_02: value,
+          OP_03: value,
+          OP_04: value,
+          OP_05: value,
+          OP_06: value,
+          OP_07: value,
+          OP_08: value,
+          OP_09: value,
+          OP_10: value,
+          OP_11: value,
+          OP_12: value,
+          OP_13: value,
+          OP_14: value,
+          OP_15: value,
+          OP_16: value,
+          OP_17: value,
+          OP_18: value,
+          OP_19: value,
+          OP_20: value,
+          OP_21: value,
+          OP_22: value,
+          OP_23: value,
+          OP_24: value,
+        };
+      }
+      return item;
+    });
+    this.setState({
+      formData: nextFormData,
+    });
+  };
+
   render() {
-    const { viewType, selectedMenu, searchDate, renderData, mainformData, formData } = this.state;
+    const { viewType, selectedMenu, searchDate, hasData, renderData, mainFormData, formData } = this.state;
     return (
       <Styled>
         <StyledCustomSearchWrapper>
@@ -119,7 +311,7 @@ class QualityPage extends Component {
                 style={{ width: '120px' }}
                 onChange={(date, str) => this.setState({ searchDate: str })}
               />
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => console.debug('검색')}>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.onClickSearch()}>
                 검색
               </StyledButton>
             </div>
@@ -133,13 +325,31 @@ class QualityPage extends Component {
             결재선 지정
           </StyledButton>
         </StyledButtonWrapper>
-        <div className="menu-table">
-          <MenuTable viewType={viewType} formData={mainformData} onChangeFormData={this.onChangeMainFormData} onClickMenu={this.onClickMenu} />
-        </div>
-        <div className="selected-menu-table">
-          {selectedMenu === 'EXHAUST_ACT' && <ExhaustActTable renderData={renderData} formData={formData} />}
-          {selectedMenu === 'CLEAN_ACT' && <div>방지시설 가동시간</div>}
-        </div>
+        {mainFormData.OP_DT && (
+          <>
+            <div className="menu-table">
+              <MenuTable
+                viewType={viewType}
+                formData={mainFormData}
+                onChangeFormData={this.onChangeMainFormData}
+                onClickMenu={this.onClickMenu}
+                hasData={hasData}
+              />
+            </div>
+            <div className="selected-menu-table">
+              {selectedMenu === 'EXHAUST_ACT' && (
+                <ExhaustActTable
+                  renderData={renderData}
+                  formData={formData}
+                  onChangeActFormData={this.onChangeActFormData}
+                  onChangeAllActFormData={this.onChangeAllActFormData}
+                  submitFormData={this.submitFormData}
+                />
+              )}
+              {selectedMenu === 'CLEAN_ACT' && <div>방지시설 가동시간</div>}
+            </div>
+          </>
+        )}
         <AntdModal
           className="modal-table-pad"
           title="모달임시"
