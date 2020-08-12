@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { debounce } from 'lodash';
-import { Radio, Select, Input, Checkbox, Table, Modal, message } from 'antd';
+import { Radio, Select, Input, Checkbox, Table, Modal } from 'antd';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
@@ -14,6 +14,8 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import { callBackAfterPost } from 'apps/eshs/common/submitCallbackFunc';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import DetailView from './detailView';
 import SelectMedicine from './selectMedicine';
 
@@ -34,6 +36,7 @@ class InputPage extends React.Component {
         SITE_ID: 317,
         MEDICINE_LIST: [],
         IS_WORKDAY: 'Y',
+        PATIENT_CATEGORY_ID: 5,
       },
       selectedRecord: {},
       hasUserInfo: false,
@@ -215,11 +218,12 @@ class InputPage extends React.Component {
 
   handleSearchClick = () => {
     const { requestValue, isCooperator } = this.state;
-    const { sagaKey, getCallDataHandler, submitHandlerBySaga } = this.props;
+    const { sagaKey, getCallDataHandler, submitHandlerBySaga, spinningOn } = this.props;
 
     if (!requestValue.PATIENT_EMP_NO) {
-      return message.warn('사번을 입력해주세요.');
+      return this.showMessage('사번을 입력해주세요.');
     }
+    spinningOn();
 
     if (isCooperator === 'N') {
       // const submitUrl = `/api/eshs/v1/common/health-usage-vaild?EMP_NO=${requestValue.PATIENT_EMP_NO}`;
@@ -239,15 +243,22 @@ class InputPage extends React.Component {
     return getCallDataHandler(sagaKey, apiArr, this.setDataSource);
   };
 
-  userIdValidationCheck = response =>
-    response.userInfo
-      ? this.setState({ hasUserInfo: true, userInfo: response.userInfo }, message.success('검색에 성공했습니다.'))
-      : this.setState({ hasUserInfo: false }, message.warn('검색된 사원이 없습니다.'));
+  userIdValidationCheck = response => {
+    const { spinningOff } = this.props;
+    return response.userInfo
+      ? this.setState({ hasUserInfo: true, userInfo: response.userInfo }, spinningOff)
+      : this.setState({ hasUserInfo: false }, () => {
+          this.showMessage('검색된 사원이 없습니다.');
+
+          spinningOff();
+        });
+  };
 
   setDataSource = () => {
-    const { result } = this.props;
+    const { result, spinningOff } = this.props;
     const patientGender =
       result.userDiagnosisList && result.userDiagnosisList.list && result.userDiagnosisList.list[0] && result.userDiagnosisList.list[0].GENDER;
+    spinningOff();
     this.setState(prevState => ({
       visitDateTime: moment(),
       dataSource: result.userDiagnosisList && result.userDiagnosisList.list,
@@ -257,20 +268,24 @@ class InputPage extends React.Component {
 
   handleSaveClick = () => {
     const { requestValue, visitDateTime } = this.state;
-    const { sagaKey, submitHandlerBySaga } = this.props;
+    const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
     const COMMON_MEDICINE_NODE_ID = 3842;
 
     if (!this.validationCheckBeforeSave()) {
       return null;
     }
 
-    if (requestValue.TREATMENT_ID.includes(COMMON_MEDICINE_NODE_ID) && !requestValue.MEDICINE_LIST.length) {
+    if (requestValue.TREATMENT_ID && requestValue.TREATMENT_ID.includes(COMMON_MEDICINE_NODE_ID) && !requestValue.MEDICINE_LIST.length) {
       return this.setState({ isSelectMedicine: true });
     }
 
+    spinningOn();
     const submitCallbackFunc = () => {
       this.handleSearchClick();
       this.resetRequestValue();
+      this.showMessage('저장되었습니다.');
+
+      spinningOff();
     };
 
     return submitHandlerBySaga(
@@ -278,20 +293,31 @@ class InputPage extends React.Component {
       'POST',
       '/api/eshs/v1/common/health-usage',
       Object.assign(requestValue, { JRNL_DTTM: moment(visitDateTime).unix() }),
-      (key, response) => callBackAfterPost(key, response, submitCallbackFunc),
+      (key, response) => {
+        if (response && response.isInsert === 1) {
+          submitCallbackFunc();
+        } else {
+          spinningOff();
+          this.showMessage('저장에 실패하였습니다.');
+        }
+      },
     );
   };
+
+  showMessage = text => message.info(<MessageContent>{text}</MessageContent>);
 
   validationCheckBeforeSave = () => {
     const { hasUserInfo, isCooperator, requestValue } = this.state;
 
     if (!hasUserInfo && isCooperator === 'N') {
-      message.warn('조회되지 않은 사원입니다.');
+      this.showMessage('조회되지 않은 사원입니다.');
+
       return false;
     }
 
     if (!requestValue.PATIENT_CATEGORY_ID) {
-      message.warn('업무관련성 구분을 선택하세요.');
+      this.showMessage('업무관련성 구분을 선택하세요.');
+
       return false;
     }
 
@@ -300,7 +326,7 @@ class InputPage extends React.Component {
 
   resetRequestValue = () => {
     this.setState(prevState => ({
-      requestValue: { PATIENT_EMP_NO: prevState.requestValue.PATIENT_EMP_NO, SITE_ID: 317, MEDICINE_LIST: [], IS_WORKDAY: 'Y' },
+      requestValue: { PATIENT_EMP_NO: prevState.requestValue.PATIENT_EMP_NO, SITE_ID: 317, MEDICINE_LIST: [], IS_WORKDAY: 'Y', PATIENT_CATEGORY_ID: 5 },
     }));
   };
 

@@ -122,9 +122,9 @@ class DetailView extends React.Component {
     const { detailValue, isDateChange, hasUserInfo } = this.state;
     const { sagaKey, submitHandlerBySaga, isNew } = this.props;
 
-    if (!hasUserInfo) {
-      return message.warn(<MessageContent>사번을 조회해주세요.</MessageContent>);
-    }
+    // if (!hasUserInfo) {
+    //   return message.warn(<MessageContent>사번을 조회해주세요.</MessageContent>);
+    // }
 
     if (!detailValue.IS_WORKDAY) {
       return message.warn(<MessageContent>방문시간을 선택해주세요.</MessageContent>);
