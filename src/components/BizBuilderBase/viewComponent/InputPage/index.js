@@ -134,7 +134,7 @@ class InputPage extends Component {
       // 첨부파일이 없는 경우 체크
       const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
       if (isUploadByPass && isUploadByPass.length === 0) {
-        // this.saveTask(id, reloadId, this.saveTaskAfter);
+        this.saveTask(id, reloadId, this.saveTaskAfter);
       } else {
         attachList.map(attachItem => {
           const { COMP_FIELD } = attachItem;
