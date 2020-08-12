@@ -46,13 +46,15 @@ class MdcsProcessListComp extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey, submitExtraHandler, formData, draftInfo, isObsCheck, fieldSelectData, CONFIG } = this.props;
+    const { sagaKey, submitExtraHandler, formData, draftInfo, isObsCheck, exDraftId } = this.props;
     const { DRAFT_ID, REL_TYPE } = draftInfo;
     const { MIG_YN, OBS_DRAFT_ID } = formData;
-    console.debug('process', this.props);
     let draftId = DRAFT_ID;
     if (isObsCheck && OBS_DRAFT_ID !== 0) {
       draftId = OBS_DRAFT_ID;
+    }
+    if (exDraftId && exDraftId > 0) {
+      draftId = exDraftId;
     }
     const url = '/api/workflow/v1/common/process/ProcessPreviewHandler';
     submitExtraHandler(sagaKey, 'POST', url, { PARAM: { draftId, isMig: MIG_YN } }, this.initDataBind);
@@ -71,18 +73,18 @@ class MdcsProcessListComp extends Component {
       draftNode = [
         <tr key="MdcsProcessListComp-draftList-approveList" className="mdcsProcessRow">
           <td>
-            <div className="mdcsDeptName">{draftList[0].APPV_USER_NAME}</div>
+            <div className="mdcsDeptName">{draftList[0].APPV_DEPT_NAME}</div>
             <div className="mdcsPstnName">{draftList[0].APPV_PSTN_NAME}</div>
-            <div className="mdcsUserName">{draftList[0].APPV_DEPT_NAME}</div>
+            <div className="mdcsUserName">{draftList[0].APPV_USER_NAME}</div>
             <div className="mdcsAppvDttm">{draftList[0].APPV_DTTM}</div>
             <div className="mdcsAppvStatus">
               <Icon type="check-circle" />
             </div>
           </td>
           <td>
-            <div className="mdcsDeptName">{approveList[0].APPV_USER_NAME}</div>
+            <div className="mdcsDeptName">{approveList[0].APPV_DEPT_NAME}</div>
             <div className="mdcsPstnName">{approveList[0].APPV_PSTN_NAME}</div>
-            <div className="mdcsUserName">{approveList[0].APPV_DEPT_NAME}</div>
+            <div className="mdcsUserName">{approveList[0].APPV_USER_NAME}</div>
             <div className="mdcsAppvDttm">{approveList[0].APPV_DTTM}</div>
             <div className="mdcsAppvStatus">
               {approveList[0].APPV_STATUS === 2 || approveList[0].APPV_STATUS === 20 ? (
@@ -112,9 +114,9 @@ class MdcsProcessListComp extends Component {
     reviewerList.forEach((node, idx) => {
       const itemNode = (
         <td>
-          <div className="mdcsDeptName">{node.APPV_USER_NAME}</div>
+          <div className="mdcsDeptName">{node.APPV_DEPT_NAME}</div>
           <div className="mdcsPstnName">{node.APPV_PSTN_NAME}</div>
-          <div className="mdcsUserName">{node.APPV_DEPT_NAME}</div>
+          <div className="mdcsUserName">{node.APPV_USER_NAME}</div>
           <div className="mdcsAppvDttm">{node.APPV_DTTM}</div>
           <div className="mdcsAppvStatus">
             {node.APPV_STATUS === 2 || node.APPV_STATUS === 20 ? <Icon type="check-circle" /> : (draftList[0].APPV_STATUS === 3 && <Icon type="stop" />) || ''}
@@ -144,9 +146,9 @@ class MdcsProcessListComp extends Component {
     mailReviewerList.forEach((node, idx) => {
       const itemNode = (
         <td>
-          <div className="mdcsDeptName">{node.APPV_USER_NAME}</div>
+          <div className="mdcsDeptName">{node.APPV_DEPT_NAME}</div>
           <div className="mdcsPstnName">{node.APPV_PSTN_NAME}</div>
-          <div className="mdcsUserName">{node.APPV_DEPT_NAME}</div>
+          <div className="mdcsUserName">{node.APPV_USER_NAME}</div>
           <div className="mdcsAppvDttm">{node.APPV_DTTM}</div>
           <div className="mdcsAppvStatus">
             {node.APPV_STATUS === 2 || node.APPV_STATUS === 20 ? <Icon type="check-circle" /> : (draftList[0].APPV_STATUS === 3 && <Icon type="stop" />) || ''}

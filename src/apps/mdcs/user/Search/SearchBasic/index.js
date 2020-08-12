@@ -53,7 +53,7 @@ const columns = [
     align: 'center',
     width: '6%',
     dataIndex: 'VERSION',
-    render: (text, record) => (record.STATUS === 99 ? 'OBS' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
+    render: (text, record) => (record.status === 99 ? 'OBS' : text.split('.')[0]),
   },
   { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM' },
   { title: 'Title', align: 'left', key: 'title', dataIndex: 'title' },
@@ -283,7 +283,7 @@ class SearchBasic extends Component {
     const listDataArr = listData.arr || [];
     const listTotalCnt = listData.cnt || 0;
     const { onClickRow, closeBtnFunc } = this;
-
+    console.debug('searchview', SearchView);
     const excelColumns = [
       {
         title: '종류',
