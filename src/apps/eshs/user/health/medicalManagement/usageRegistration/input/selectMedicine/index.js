@@ -172,7 +172,7 @@ class SelectMedicine extends React.Component {
               </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
-          <AntdTable columns={columns} dataSource={dataSource} />
+          <AntdTable columns={columns} dataSource={dataSource} pagination={false} scroll={{ y: 500 }} rowKey="ROWNUM" />
           <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20 btn-wrap-mb-10">
             <StyledButton className="btn-primary btn-sm mr5" onClick={() => handleSelectMedicineComplete(medicineQuantityList)}>
               저장

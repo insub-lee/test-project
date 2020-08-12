@@ -101,7 +101,7 @@ class SelfCheck extends Component {
           sagaKey,
           'POST',
           '/api/eshs/v1/common/health/eshsMyHealthPage',
-          { PARAM: { ...formData, REG_USER_ID: profile.USER_ID } },
+          { PARAM: { ...formData, userId: formData.USER_ID, REG_USER_ID: profile.USER_ID } },
           (id, res) => {
             if (res && res.result > 0) {
               this.showMessage('저장하였습니다.');
@@ -118,7 +118,7 @@ class SelfCheck extends Component {
           sagaKey,
           'PUT',
           '/api/eshs/v1/common/health/eshsMyHealthPage',
-          { PARAM: { ...formData, UPD_USER_ID: profile.USER_ID } },
+          { PARAM: { ...formData, userId: formData.USER_ID, UPD_USER_ID: profile.USER_ID } },
           (id, res) => {
             if (res && res.result > 0) {
               this.showMessage('수정하였습니다.');
