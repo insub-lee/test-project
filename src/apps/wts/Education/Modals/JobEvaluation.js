@@ -62,7 +62,7 @@ class JobEvaluation extends React.Component {
 
   handleOpenModal(type, rowData, collseq, create) {
     const { site } = this.props;
-    this.setState({ isOpen: true, info: rowData, type, create, collseq, isLoading: true }, () => {
+    this.setState({ isOpen: true, info: rowData, type, create, collseq, isLoading: true, comment: '' }, () => {
       const {
         info: { area },
       } = this.state;
@@ -107,6 +107,7 @@ class JobEvaluation extends React.Component {
               isLoading: false,
               handlingResult: info.job_chk_result,
               result: info.job_chk_result,
+              comment: info.comment || '',
             });
           }
         });

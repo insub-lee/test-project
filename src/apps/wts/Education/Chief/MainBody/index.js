@@ -530,7 +530,7 @@ class MainBody extends React.Component {
       let eduPlan;
 
       if (eduList && eduList.length > 0) {
-        eduItem = { ...eduList[0] };
+        // eduItem = { ...eduList[0] };
         const filterEduPlanList = eduPlanList
           .filter(node => eduList.some(sNode => sNode.coll_seq === node.collseq) && node.empno === rowData.empno)
           .sort((a, b) => (a.collseq > b.collseq ? -1 : 1));
