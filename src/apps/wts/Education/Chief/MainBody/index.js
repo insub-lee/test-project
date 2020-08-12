@@ -504,52 +504,9 @@ class MainBody extends React.Component {
   }
 
   newTrainingButtonsRenderer = rowData => {
-    const { eduList, eduPlanList, currentYear, targets } = this.state;
-    const listIdx = eduPlanList.findIndex(node => node.empno === rowData.empno && rowData);
-    let eduPlan = {};
-    let eduIdx = -1;
+    if (rowData.edu && rowData.edu.job_training && rowData.edu.job_training.length > 0) {
+      const { eduPlanList, currentYear, targets } = this.state;
 
-    if (listIdx > -1) {
-      eduPlan = eduPlanList[listIdx];
-      eduIdx = eduList.findIndex(node => node.coll_seq === eduPlan.collseq && node.colldt === currentYear.toString());
-    }
-
-    if (listIdx > -1 && eduIdx > -1) {
-      if (eduIdx > -1) {
-        const eduItem = eduList[eduIdx];
-        let eduResult = false;
-        let timeText = '1차';
-        if (eduPlan.step3_result === 'O') {
-          timeText = '3차';
-          eduResult = true;
-        } else if (eduPlan.step2_result === 'O') {
-          timeText = '3차';
-        } else if (eduPlan.step1_result === 'O') {
-          timeText = '2차';
-        }
-
-        if (eduResult) {
-          return (
-            <button key={eduPlan.collseq} type="button" className="cateWrap" onClick={() => this.handleOpenManageModal(eduPlan.plan_seq)}>
-              <span className="cateIcon cate01" />
-              <span className="cateTxt">{`${timeText} (${moment(eduPlan.step3_eduedt, 'YYYYMMDD').format('MM.DD')})`}</span>
-            </button>
-          );
-        }
-        return (
-          <>
-            <button key={eduPlan.collseq} type="button" className="cateWrap" onClick={() => this.handleOpenManageModal(eduPlan.plan_seq)}>
-              <span className="cateIcon cate02" />
-              <span className="cateTxt">
-                {`${timeText}`}
-                <br />
-                {`(${moment(eduItem.collecsdt, 'YYYYMMDD').format('MM.DD')} - ${moment(eduItem.collecedt, 'YYYYMMDD').format('MM.DD')}까지)`}
-              </span>
-            </button>
-          </>
-        );
-      }
-    } else {
       const targetIdx = targets.findIndex(node => node.study === 'job_training' && node.empno === rowData.empno && node.colldt === currentYear.toString());
       if (targetIdx > -1) {
         const target = targets[targetIdx];
@@ -563,6 +520,62 @@ class MainBody extends React.Component {
             멘토 지정
           </StyledButton>
         );
+      }
+
+      const eduList = [...rowData.edu.job_training.filter(node => node.colldt === currentYear.toString() && node.useyn === 'O')].sort((a, b) =>
+        a.coll_seq > b.coll_seq ? -1 : 1,
+      );
+
+      let eduItem;
+      let eduPlan;
+
+      if (eduList && eduList.length > 0) {
+        eduItem = { ...eduList[0] };
+        const filterEduPlanList = eduPlanList
+          .filter(node => eduList.some(sNode => sNode.coll_seq === node.collseq) && node.empno === rowData.empno)
+          .sort((a, b) => (a.collseq > b.collseq ? -1 : 1));
+
+        if (filterEduPlanList && filterEduPlanList.length > 0) {
+          eduPlan = { ...filterEduPlanList[0] };
+          const listIdx = eduList.findIndex(node => node.coll_seq === eduPlan.collseq);
+          eduItem = eduList[listIdx];
+        }
+      }
+
+      if (eduPlan && eduItem) {
+        if (eduItem) {
+          let eduResult = false;
+          let timeText = '1차';
+          if (eduPlan.step3_result === 'O') {
+            timeText = '3차';
+            eduResult = true;
+          } else if (eduPlan.step2_result === 'O') {
+            timeText = '3차';
+          } else if (eduPlan.step1_result === 'O') {
+            timeText = '2차';
+          }
+
+          if (eduResult) {
+            return (
+              <button key={eduPlan.collseq} type="button" className="cateWrap" onClick={() => this.handleOpenManageModal(eduPlan.plan_seq)}>
+                <span className="cateIcon cate01" />
+                <span className="cateTxt">{`${timeText} (${moment(eduPlan.step3_eduedt, 'YYYYMMDD').format('MM.DD')})`}</span>
+              </button>
+            );
+          }
+          return (
+            <>
+              <button key={eduPlan.collseq} type="button" className="cateWrap" onClick={() => this.handleOpenManageModal(eduPlan.plan_seq)}>
+                <span className="cateIcon cate02" />
+                <span className="cateTxt">
+                  {`${timeText}`}
+                  <br />
+                  {`(${moment(eduItem.collecsdt, 'YYYYMMDD').format('MM.DD')} - ${moment(eduItem.collecedt, 'YYYYMMDD').format('MM.DD')}까지)`}
+                </span>
+              </button>
+            </>
+          );
+        }
       }
     }
     return '';

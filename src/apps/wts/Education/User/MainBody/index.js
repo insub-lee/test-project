@@ -226,20 +226,26 @@ class MainBody extends React.Component {
 
   eduStatusButtonRenderer(type) {
     const { education, data } = this.state;
-
+    console.debug(education[type], data);
     if (!education[type] || education[type].length === 0) {
       return <div style={{ textAlign: 'center' }}>-</div>;
     }
 
     return (
       <>
-        {education[type].map(history =>
-          history.edu_result === 'O' ? (
-            <button type="button" className="cateWrap" style={{ cursor: 'default' }} disabled>
-              <span className={`cateIcon ${history.group_study === 'O' ? 'cate03' : 'cate01'}`} />
-              <span className="cateTxt">{`${history.times}차 (${moment(history.eduhisdt, 'YYYYMMDD').format('MM.DD')})`}</span>
-            </button>
-          ) : (
+        {education[type].map(history => {
+          if (history.edu_result === 'O') {
+            return (
+              <button type="button" className="cateWrap" style={{ cursor: 'default' }} disabled>
+                <span className={`cateIcon ${history.group_study === 'O' ? 'cate03' : 'cate01'}`} />
+                <span className="cateTxt">{`${history.times}차 (${moment(history.eduhisdt, 'YYYYMMDD').format('MM.DD')})`}</span>
+              </button>
+            );
+          }
+
+          const eduPlanIdx = data.findIndex(iNode => iNode.collseq === history.coll_seq);
+          if (type === 'job_return' && eduPlanIdx === -1) return '';
+          return (
             <button
               type="button"
               className="cateWrap"
@@ -248,12 +254,7 @@ class MainBody extends React.Component {
               onClick={() => {
                 if (type === 'job_clean') this.handleCleanEduView(history.coll_seq, history.empno);
                 if (type === 'job_proc') this.handleJobProcEduView(history.coll_seq, history.empno);
-                if (type === 'job_return') {
-                  const eduPlanIdx = data.findIndex(iNode => iNode.collseq === history.coll_seq);
-                  if (eduPlanIdx > -1) {
-                    this.handleEduManageJobReturnModal(data[eduPlanIdx].plan_seq, 'user');
-                  }
-                }
+                if (type === 'job_return' && eduPlanIdx > -1) this.handleEduManageJobReturnModal(data[eduPlanIdx].plan_seq, 'user');
               }}
             >
               <span className="cateIcon cate02" />
@@ -262,8 +263,8 @@ class MainBody extends React.Component {
                 'YYYYMMDD',
               ).format('MM.DD')}까지)`}</span>
             </button>
-          ),
-        )}
+          );
+        })}
       </>
     );
   }
