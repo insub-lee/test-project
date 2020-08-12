@@ -56,6 +56,11 @@ class InputPage extends Component {
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData, changeIsLoading } = this.props;
     const { DETAIL, code } = response;
+    if (code === 500) {
+      message.error('파일 등록 오류');
+      changeIsLoading(false);
+      return;
+    }
     const selectedAttach = formData[etcData];
     const { uploadFileList } = this.state;
     const tmpAttach = { ...selectedAttach, DETAIL };
@@ -101,7 +106,7 @@ class InputPage extends Component {
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
     const { submitExtraHandler, formData, metaList, workInfo, processRule, changeIsLoading } = this.props;
-
+    console.debug('mataList', metaList);
     changeIsLoading(true);
 
     const { uploadFileList } = this.state;
@@ -176,7 +181,11 @@ class InputPage extends Component {
       changeIsLoading,
       reloadViewType,
       reloadTaskSeq,
+      callbackFuncExtra,
     } = this.props;
+    if (typeof callbackFuncExtra === 'function') {
+      callbackFuncExtra(this.props);
+    }
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler(id, redirectUrl, 'save');
     }

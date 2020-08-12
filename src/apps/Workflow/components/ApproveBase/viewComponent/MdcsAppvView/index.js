@@ -48,6 +48,7 @@ class MdcsAppvView extends Component {
       isAbrogationMultiShow: false,
       workseq: undefined,
       taskSeq: undefined,
+      isObsCheck: undefined,
     };
   }
 
@@ -95,11 +96,18 @@ class MdcsAppvView extends Component {
 
   handleReqApprove = (e, appvStatus) => {
     const { opinion, nextApprover } = this.state;
-    if (((appvStatus === 3 || appvStatus === 30) && !opinion) || opinion === '') {
+    const { selectedRow } = this.props;
+
+    if (((appvStatus === 3 || appvStatus === 30 || selectedRow.NODE_ID === 114) && !opinion) || opinion === '') {
       message.warning('의견을 작성해주세요');
     } else {
       if (appvStatus === 5 && nextApprover.length === 0) {
         message.info('실무자를 선택 해주세요');
+        return;
+      }
+
+      if ((appvStatus === 9 && !opinion) || opinion === '') {
+        message.info('DownLoad 권한 거부에 대한 사유를 작성해 주세요');
         return;
       }
 
@@ -128,6 +136,12 @@ class MdcsAppvView extends Component {
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    const { selectedRow } = this.props;
+    if (selectedRow.REL_TYPE === 99) {
+      this.setState({ isObsCheck: true });
+    } else {
+      this.setState({ isObsCheck: false });
+    }
     const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'VIEW' };
     this.setState({ coverView });
   };
@@ -256,8 +270,9 @@ class MdcsAppvView extends Component {
       workPrcProps,
       isDCC,
       isAbrogationMultiShow,
+      isObsCheck,
     } = this.state;
-    console.debug('미결함 workPrcProps', workPrcProps);
+
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -275,7 +290,7 @@ class MdcsAppvView extends Component {
                   <td>{selectedRow && moment(selectedRow.REG_DTTM).format('YYYY-MM-DD')}</td>
                 </tr>
                 <tr>
-                  <th style={{ width: '150px' }}>요청사용 </th>
+                  <th style={{ width: '150px' }}>요청사유 </th>
                   <td colSpan={3}>{DRAFT_DATA && DRAFT_DATA.OPINION}</td>
                 </tr>
                 <tr>
@@ -285,6 +300,16 @@ class MdcsAppvView extends Component {
                       <Radio value={2}>Download 권한승인</Radio>
                       <Radio value={9}>Download 권한거부 </Radio>
                     </Radio.Group>
+                  </td>
+                </tr>
+                <tr
+                  style={{
+                    display: selectedRow && selectedRow.APPV_STATUS && selectedRow.APPV_STATUS !== 9 ? 'none' : 'table-row',
+                  }}
+                >
+                  <th>의견 </th>
+                  <td colSpan={3}>
+                    <AntdTextArea rows={4} onChange={this.onChangeOpinion} />
                   </td>
                 </tr>
               </tbody>
@@ -393,7 +418,11 @@ class MdcsAppvView extends Component {
                 <tr
                   style={{
                     display:
-                      REL_TYPE === 4 || (selectedRow && selectedRow.APPV_STATUS && (selectedRow.APPV_STATUS === 20 || selectedRow.APPV_STATUS === 2))
+                      REL_TYPE === 4 ||
+                      (selectedRow &&
+                        selectedRow.NODE_ID !== 114 &&
+                        selectedRow.APPV_STATUS &&
+                        (selectedRow.APPV_STATUS === 20 || selectedRow.APPV_STATUS === 2))
                         ? 'none'
                         : 'table-row',
                   }}
@@ -493,6 +522,7 @@ class MdcsAppvView extends Component {
             taskSeq={coverView.taskSeq}
             viewMetaSeq={coverView.viewMetaSeq}
             workPrcProps={workPrcProps}
+            isObsCheck={isObsCheck}
             CustomWorkProcessModal={WorkProcessModal}
             onCloseCoverView={this.onCloseCoverView}
             onCloseModalHandler={this.onCloseCoverView}

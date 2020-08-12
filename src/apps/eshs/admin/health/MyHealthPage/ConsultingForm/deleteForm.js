@@ -19,7 +19,7 @@ class Comp extends Component {
 
     return submitHandlerBySaga(sagaKey, 'DELETE', '/api/eshs/v1/common/health/eshsRealTimeSelfList', { PARAM: data }, (id, res) => {
       if (res && res.result === 1) {
-        message.info(<MessageContent>삭제 완료하였습니다.</MessageContent>);
+        message.info(<MessageContent>삭제 되었습니다.</MessageContent>);
         spinningOff();
         saveAfter();
         return modalVisible();

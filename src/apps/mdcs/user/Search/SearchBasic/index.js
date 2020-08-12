@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import history from 'utils/history';
+import Moment from 'moment';
 
-import { Table, Radio, Form, Input, Select, Checkbox, DatePicker } from 'antd';
+import { Table, Radio, Form, Input, Select, Checkbox, DatePicker, message } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
 import StyledRadio from 'components/FormStuff/Radio';
@@ -17,6 +18,7 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import ExcelDownLoad from 'components/ExcelDownLoad';
 
 import DraftDownLoad from 'apps/mdcs/Modal/DraftDownLoad';
 import { DraggableModal as Modal } from 'components/DraggableModal/AntdDraggableModal';
@@ -45,7 +47,14 @@ const columns = [
     // },
   },
   { title: 'No.', key: 'id', align: 'center', width: '12%', dataIndex: 'id' },
-  { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION', render: (text, record) => (record.status === 99 ? 'OBS' : text) },
+  {
+    title: 'REV.',
+    key: 'VERSION',
+    align: 'center',
+    width: '6%',
+    dataIndex: 'VERSION',
+    render: (text, record) => (record.status === 99 ? 'OBS' : text.split('.')[0]),
+  },
   { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM' },
   { title: 'Title', align: 'left', key: 'title', dataIndex: 'title' },
   { title: '기안부서', align: 'center', key: 'deptName', width: '14%', dataIndex: 'deptName' },
@@ -142,17 +151,17 @@ class SearchBasic extends Component {
     this.setState({ [key]: value });
   };
 
-  onChangeDate = (type, date, dateStr) => {
+  onChangeDate = (date, type, dateStr) => {
     if (type === 'startDate') {
       this.setState({
         startDateTemp: date,
-        startDate: dateStr,
+        startDate: date,
       });
     }
     if (type === 'endDate') {
       this.setState({
         endDateTemp: date,
-        endDate: dateStr,
+        endDate: date,
       });
     }
   };
@@ -274,6 +283,54 @@ class SearchBasic extends Component {
     const listDataArr = listData.arr || [];
     const listTotalCnt = listData.cnt || 0;
     const { onClickRow, closeBtnFunc } = this;
+    console.debug('searchview', SearchView);
+    const excelColumns = [
+      {
+        title: '종류',
+        width: { wpx: 100 },
+        style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+      {
+        title: 'NO',
+        width: { wpx: 100 },
+        style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+      {
+        title: 'REV',
+        width: { wpx: 30 },
+        style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+      {
+        title: 'Effect Date',
+        width: { wpx: 100 },
+        style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+      {
+        title: 'Title',
+        width: { wpx: 300 },
+        style: { alignment: { horizontal: 'left' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+      {
+        title: '기안부서',
+        width: { wpx: 100 },
+        style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+      {
+        title: '기안자',
+        width: { wpx: 100 },
+        style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+      },
+    ];
+    const fields = [
+      { field: 'fullPathStr', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+      { field: 'id', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+      { field: 'VERSION', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+      { field: 'END_DTTM', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+      { field: 'title', style: { alignment: { horizontal: 'left' }, font: { sz: '10' } } },
+      { field: 'deptName', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+      { field: 'name', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+    ];
+
     return (
       <StyledSearch>
         <div className="searchPage">
@@ -407,6 +464,24 @@ class SearchBasic extends Component {
           >
             <>
               <StyledContentsWrapper>
+                <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
+                  <ExcelDownLoad
+                    isBuilder={false}
+                    fileName={`검색결과 (${Moment().format('YYYYMMDD')})`}
+                    className="workerExcelBtn"
+                    title="Excel 파일로 저장"
+                    btnSize="btn-sm"
+                    sheetName=""
+                    columns={excelColumns}
+                    fields={fields}
+                    submitInfo={{
+                      dataUrl: '/api/mdcs/v1/common/search',
+                      method: 'POST',
+                      submitData: { ...this.state, PAGE: undefined, PAGE_CNT: undefined },
+                      dataSetName: 'arr',
+                    }}
+                  />
+                </div>
                 <AntdTable
                   columns={columns}
                   size="middle"
@@ -454,7 +529,20 @@ class SearchBasic extends Component {
                           {formData.BUILDER_TASK_FAVORITE === 'Y' ? '즐겨찾기 해제' : '즐겨찾기 추가'}
                         </StyledButton>
                       )}
-                      <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onClickDownLoad(formData)}>
+                      <StyledButton
+                        className="btn-primary btn-sm mr5"
+                        onClick={() => {
+                          const { DOCNUMBER } = formData;
+                          if (DOCNUMBER.split('-').length > 0) {
+                            const prefix = DOCNUMBER.split('-')[0];
+                            if (prefix === 'MBJB') {
+                              message.info('해당 문서는 다운로드 할 수 없습니다.');
+                              return;
+                            }
+                          }
+                          this.onClickDownLoad(formData);
+                        }}
+                      >
                         다운로드 신청
                       </StyledButton>
                       <StyledButton className="btn-light btn-sm" onClick={closeBtnFunc}>

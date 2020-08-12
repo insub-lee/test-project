@@ -14,6 +14,7 @@ import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker
 
 import Moment from 'moment';
 import Graph from './Graph';
+import LineComp from './Graph/LineComp';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -26,6 +27,8 @@ const AntdRangePicker = StyledDatePicker(RangePicker);
 
 Moment.locale('ko');
 
+const avgs = ['Acid', 'Toxic', 'VOC'];
+
 class List extends Component {
   constructor(props) {
     super(props);
@@ -34,11 +37,13 @@ class List extends Component {
       rangeDateStrings: [Moment(Moment().subtract(1, 'years')).format('YYYY-MM'), Moment().format('YYYY-MM')],
       selectGubun: 1,
       isModal: false,
+      chartData: [],
     };
   }
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
+    spinningOn();
     const apiAry = [
       {
         key: 'gasType',
@@ -52,12 +57,14 @@ class List extends Component {
   initData = () => {
     const {
       result: { gasType },
+      spinningOff,
     } = this.props;
-    this.setState({ gasList: (gasType && gasType.list) || [] });
+
+    this.setState({ gasList: (gasType && gasType.list) || [] }, spinningOff);
   };
 
   isSearch = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
     const { rangeDateStrings, gasCd } = this.state;
     const setDate = `START_DATE=${Moment(rangeDateStrings[0]).format('YYYY-MM-01')}&END_DATE=${Moment(rangeDateStrings[1])
       .endOf('month')
@@ -70,6 +77,7 @@ class List extends Component {
       },
     ];
     if (gasCd) {
+      spinningOn();
       getCallDataHandler(id, apiAry, this.listData);
     } else {
       message.warning('GAS 종류를 먼저 선택해주세요.');
@@ -80,14 +88,33 @@ class List extends Component {
     const {
       result: { measure },
     } = this.props;
-    if (measure && measure.list && measure.list.length <= 0) {
+    const measureList = (measure && measure.list) || [];
+    const stackList = (measure && measure.stackList) || [];
+    if (measureList.length <= 0) {
       message.warning('측정된 데이터가 없습니다.');
     }
-    this.setState({ measureList: (measure && measure.list) || [], stackList: (measure && measure.stackList) || [] });
+
+    this.setState({ measureList, stackList }, this.setChartData);
   };
 
   onChangeState = (name, value) => {
-    this.setState({ [name]: value });
+    if (name === 'selectGubun') return this.setState({ [name]: value }, this.setChartData);
+    return this.setState({ [name]: value });
+  };
+
+  setChartData = () => {
+    const { spinningOff } = this.props;
+    const { selectGubun, measureList } = this.state;
+    const gubun = selectGubun === 1 ? 'METRIC' : 'TOTAL';
+    const chartData = measureList.map((item, index) => ({
+      seq: `${item.SEQ}차`,
+      date: item.MEASURE_DT,
+      dataKey: `${item.MEASURE_DT} / ${item.SEQ}차`,
+      Acid: item[`Acid_${gubun}`] || 0,
+      Toxic: item[`Toxic_${gubun}`] || 0,
+      VOD: item[`VOD_${gubun}`] || 0,
+    }));
+    return this.setState({ chartData }, spinningOff);
   };
 
   onChangeModal = () => {
@@ -157,7 +184,7 @@ class List extends Component {
   ];
 
   render() {
-    const { measureList, stackList, gasList, selectGubun, rangeDateStrings, gasWeight, gasCd } = this.state;
+    const { measureList, stackList, gasList, selectGubun, rangeDateStrings, gasWeight, gasCd, chartData } = this.state;
     return (
       <StyledContentsWrapper>
         <StyledCustomSearch className="search-wrapper-inline">
@@ -179,7 +206,14 @@ class List extends Component {
               format={['YYYY-MM', 'YYYY-MM']}
               disabledDate={current => current && current < Moment().endOf('month')}
               onOpenChange={status => {
-                this.setState({ isopen: status });
+                if (rangeDateStrings[1] - rangeDateStrings[0] > 28857600000) {
+                  message.warning('기간은 최대 1년까지 검색가능합니다.');
+                  return this.setState({
+                    rangeDateStrings: [Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[0], 'YYYY-MM').add(11, 'M')],
+                    isopen: status,
+                  });
+                }
+                return this.setState({ isopen: status });
               }}
               onPanelChange={value => {
                 if (value[0] < Moment().endOf('month') && value[1] < Moment().endOf('month')) {
@@ -205,9 +239,12 @@ class List extends Component {
               <table>
                 <colgroup>
                   <col width="150px" />
-                  {stackList.map(() => (
-                    <col width="100px" />
+                  {stackList.map((item, sIdx) => (
+                    <col key={`COL_COL_${sIdx}`} width="100px" />
                   ))}
+                  <col width="100px" />
+                  <col width="100px" />
+                  <col width="100px" />
                 </colgroup>
                 <tbody>
                   <tr>
@@ -215,37 +252,64 @@ class List extends Component {
                     <td colSpan={stackList.length} style={{ textAlign: 'center' }}>
                       {this.state.gasCd}
                     </td>
+                    <td colSpan={avgs.length} style={{ textAlign: 'center' }}>
+                      평균
+                    </td>
                   </tr>
                   <tr>
                     <th>회차</th>
-                    {stackList.map(item => (
-                      <th>{item.STACK_CD}</th>
+                    {stackList.map((item, sIdx) => (
+                      <th key={`COL_THS_${sIdx}`}>{item.STACK_CD}</th>
+                    ))}
+                    {avgs.map((avg, aIdx) => (
+                      <th key={`COL_THA_${aIdx}`}>{avg}</th>
                     ))}
                   </tr>
-                  {measureList.map(item => (
-                    <tr>
-                      <td>{`${item.MEASURE_DT} / ${item.SEQ}차`}</td>
+                  {measureList.map((item, mIdx) => (
+                    <tr key={`ROW_TR_${mIdx}`}>
+                      <td align="center">{`${item.MEASURE_DT} / ${item.SEQ}차`}</td>
                       {selectGubun === 1
-                        ? item.DENSITY.map(gasItem => (
-                            <td>
-                              {stackList.map(stackItem => (stackItem.STACK_CD === JSON.parse(gasItem.value).stack_cd ? JSON.parse(gasItem.value).density : ''))}
-                            </td>
-                          ))
-                        : item.DENSITY.map(gasItem => (
-                            <td>
-                              {stackList.map(stackItem =>
-                                stackItem.STACK_CD === JSON.parse(gasItem.value).stack_cd
-                                  ? this.calculate(
-                                      gasCd,
-                                      JSON.parse(gasItem.value).hour_flow,
-                                      JSON.parse(gasItem.value).density,
-                                      JSON.parse(gasItem.value).work_day,
-                                      gasWeight,
-                                    )
-                                  : '',
-                              )}
-                            </td>
-                          ))}
+                        ? stackList.map((stackItem, index) => {
+                            const idx = item.DENSITY.findIndex(gasItem => JSON.parse(gasItem.value).stack_cd === stackItem.STACK_CD);
+                            if (idx > -1) {
+                              return (
+                                <td key={`STACK_${mIdx}_${index}`} align="center">
+                                  {JSON.parse(item.DENSITY[idx].value).density}
+                                </td>
+                              );
+                            }
+                            return (
+                              <td key={`STACK_${mIdx}_${index}`} align="center">
+                                0
+                              </td>
+                            );
+                          })
+                        : stackList.map((stackItem, index) => {
+                            const idx = item.DENSITY.findIndex(gasItem => JSON.parse(gasItem.value).stack_cd === stackItem.STACK_CD);
+                            if (idx > -1) {
+                              return (
+                                <td key={`STACK_${mIdx}_${index}`} align="center">
+                                  {this.calculate(
+                                    gasCd,
+                                    JSON.parse(item.DENSITY[idx].value).hour_flow,
+                                    JSON.parse(item.DENSITY[idx].value).density,
+                                    JSON.parse(item.DENSITY[idx].value).work_day,
+                                    gasWeight,
+                                  )}
+                                </td>
+                              );
+                            }
+                            return (
+                              <td key={`STACK_${mIdx}_${index}`} align="center">
+                                0
+                              </td>
+                            );
+                          })}
+                      {avgs.map((avg, index) => (
+                        <td align="center" key={`COL_AVG_${index}`}>
+                          {item[`${avg}_${selectGubun === 1 ? 'METRIC' : 'TOTAL'}`]}
+                        </td>
+                      ))}
                     </tr>
                   ))}
                 </tbody>
@@ -255,9 +319,10 @@ class List extends Component {
         ) : (
           ''
         )}
-        <StyledHtmlTable>
-          {measureList.length > 0 ? <Graph graphData={measureList} stackList={stackList} selectGubun={selectGubun} gasCd={gasCd} gasWeight={gasWeight} /> : ''}
-        </StyledHtmlTable>
+        <div style={{ overflow: 'auto', msOverflowStyle: 'scrollbar' }}>
+          {/* {measureList.length > 0 ? <Graph graphData={measureList} stackList={stackList} selectGubun={selectGubun} gasCd={gasCd} gasWeight={gasWeight} /> : ''} */}
+          {measureList.length > 0 ? <LineComp data={chartData} /> : ''}
+        </div>
         <AntdModal width={800} visible={this.state.isModal} title="Gas 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
           <AntdTable
             className="table-wrapper"
@@ -279,6 +344,8 @@ List.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
   result: PropTypes.any,
+  spinningOn: PropTypes.func,
+  spinningOff: PropTypes.func,
 };
 
 List.defaultProps = {};

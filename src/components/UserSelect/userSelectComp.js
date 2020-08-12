@@ -23,6 +23,10 @@ const AntdSearchInput = StyledSearchInput(Input.Search);
 //   onUserSelectedComplete={this.onUserSelectedComplete}  확인버튼 클릭이벤트
 //   onCancel={this.onCancel} 취소 버튼 이벤트
 //   onUserDelete={this.onUserDelete} 선택된 사용자 삭제 이벤트
+//   deptTitle={`회사 선택`} EDDS외부 사용자 선택시에는 부서 선택이 아닌 회사 선택으로 나와야 해서 props추가, 없으면 default 부서 선택
+//   userSearchApi={`/api/edds/v1/common/eddsUserSearch`} 사용자명 검색 api(EDDS사용자 검색을 위해서 props 추가) 해당 props 없으면 기본검색사용
+//   searchDeptIds={[73158, 73084]} 사용자 검색시 허용할 부서 없으면 전체 검색
+//   notSearchDeptIds={[73158, 73084]} 미표시 부서 아이디 없으면 전체 표시
 // ></UserSelect>
 
 const getTreeData = deptList =>
@@ -41,12 +45,18 @@ const getTreeData = deptList =>
     : [];
 
 class UserSelectComp extends Component {
-  state = {
-    deptUserList: [],
-    checkUserList: [],
-    selectedUserList: [],
-    isMulti: true,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      deptUserList: [],
+      checkUserList: [],
+      selectedUserList: [],
+      isMulti: true,
+      treeData: [],
+    };
+
+    this.onInitTreeDataBind = this.onInitTreeDataBind.bind(this);
+  }
 
   onInitComplete = id => {
     const { result } = this.props;
@@ -70,21 +80,46 @@ class UserSelectComp extends Component {
   };
 
   onInitTreeData = () => {
-    const { sagaKey, getCallDataHandler, removeReduxState } = this.props;
-    removeReduxState(sagaKey);
-    const apiAry = [{ key: 'deptList', url: '/api/common/v1/account/deptSelectList', type: 'POST', params: { PARAM: { ROOT_DEPT_ID: 72761 } } }];
-    getCallDataHandler(sagaKey, apiAry);
+    const { sagaKey, submitHandlerBySaga, getCallDataHandler, removeReduxState } = this.props;
+    submitHandlerBySaga(sagaKey, 'POST', '/api/common/v1/account/deptSelectList', { PARAM: { ROOT_DEPT_ID: 72761 } }, this.onInitTreeDataBind);
+    // removeReduxState(sagaKey);
+    // const apiAry = [{ key: 'deptList', url: '/api/common/v1/account/deptSelectList', type: 'POST', params: { PARAM: { ROOT_DEPT_ID: 72761 } } }];
+    // getCallDataHandler(sagaKey, apiAry);
   };
+
+  onInitTreeDataBind(id, response) {
+    if (response) {
+      const { result } = response;
+      if (result.length > 0) {
+        const { notSearchDeptIds } = this.props;
+        const treeData = getTreeData(
+          notSearchDeptIds && notSearchDeptIds.length > 0
+            ? result.filter(node => notSearchDeptIds.findIndex(deptId => deptId === node.DEPT_ID) === -1)
+            : result,
+        );
+        this.setState({ treeData });
+      }
+    }
+  }
 
   componentDidMount() {
     const { initUserList, treeDataSource, isMultiSelect } = this.props;
-    console.debug('initUserList', initUserList, isMultiSelect);
-    this.setState({
-      checkUserList: [],
-      selectedUserList: [],
-      isMulti: isMultiSelect === undefined ? true : isMultiSelect,
-    });
-    !treeDataSource && this.onInitTreeData();
+    if (!treeDataSource) {
+      this.setState({
+        checkUserList: [],
+        selectedUserList: [],
+        isMulti: isMultiSelect === undefined ? true : isMultiSelect,
+      });
+      this.onInitTreeData();
+    } else {
+      this.setState({
+        checkUserList: [],
+        selectedUserList: [],
+        isMulti: isMultiSelect === undefined ? true : isMultiSelect,
+        treeData: getTreeData(treeDataSource),
+      });
+    }
+
     initUserList && this.onInitUserSelect();
   }
 
@@ -179,13 +214,13 @@ class UserSelectComp extends Component {
   };
 
   onSearchUserByName = val => {
-    const { sagaKey, getCallDataHandlerReturnRes } = this.props;
+    const { sagaKey, getCallDataHandlerReturnRes, userSearchApi, searchDeptIds } = this.props;
     const apiInfo = {
       key: 'userList',
-      url: `/api/common/v1/account/userSearchList`,
+      url: userSearchApi || `/api/common/v1/account/userSearchList`,
       type: 'POST',
       params: {
-        PARAM: { USER_NAME: val },
+        PARAM: { USER_NAME: val, DEPT_IDS: searchDeptIds },
       },
     };
     getCallDataHandlerReturnRes(sagaKey, apiInfo, () => {});
@@ -201,30 +236,36 @@ class UserSelectComp extends Component {
     this.setState({ checkUserList });
   };
 
+  onDoubleClickUser = row => {
+    const { isMulti, selectedUserList } = this.state;
+    if (isMulti) {
+      const filterList = selectedUserList.filter(item => item.USER_ID === row.USER_ID);
+      if (filterList.length === 0) {
+        this.setState(prevState => {
+          const { selectedUserList: nUserList } = prevState;
+          nUserList.push(row);
+          return { selectedUserList: nUserList };
+        });
+      }
+    } else {
+      const list = [];
+      list.push(row);
+      this.setState({ selectedUserList: list });
+    }
+  };
+
   render() {
-    const { treeDataSource, userDataList, result } = this.props;
-    const { isMulti } = this.state;
+    const { treeDataSource, userDataList, result, deptTitle } = this.props;
+    const { isMulti, treeData } = this.state;
     return (
       <StyledContentsWrapper>
         <UserSelectWrapper>
           <Row gutter={0}>
             <Col span={7}>
               <div className="basicWrapper treeWrapper">
-                <div className="basicTitle">부서 선택</div>
+                <div className="basicTitle">{deptTitle || `부서 선택`}</div>
                 <div className="depthTree">
-                  {treeDataSource ? (
-                    <Tree defaultExpandedKeys={[`${getTreeData(treeDataSource)[0].key}`]} onSelect={this.onTreeSelect} treeData={getTreeData(treeDataSource)} />
-                  ) : (
-                    result &&
-                    result.deptList &&
-                    result.deptList.result && (
-                      <Tree
-                        defaultExpandedKeys={[`${getTreeData(result.deptList.result)[0].key}`]}
-                        onSelect={this.onTreeSelect}
-                        treeData={getTreeData(result.deptList.result)}
-                      />
-                    )
-                  )}
+                  {treeData && treeData.length > 0 && <Tree defaultExpandedKeys={[`${treeData[0].key}`]} onSelect={this.onTreeSelect} treeData={treeData} />}
                 </div>
               </div>
             </Col>
@@ -248,7 +289,7 @@ class UserSelectComp extends Component {
                         사용자 선택
                         <AntdSearchInput
                           className="input-search-xs"
-                          style={{ width: 130, marginLeft: 10, padding: 0 }}
+                          style={{ width: 110, marginLeft: 10, padding: 0 }}
                           onPressEnter={e => this.onSearchUserByName(e.target.value)}
                           onSearch={val => this.onSearchUserByName(val)}
                         />
@@ -259,8 +300,14 @@ class UserSelectComp extends Component {
                     bordered
                     renderItem={item => (
                       <List.Item>
-                        <Checkbox onChange={this.onCheckUser} checked={this.state.checkUserList.filter(x => item.USER_ID === x).length > 0} value={item.USER_ID}>
-                          {item.NAME_KOR}/{item.DEPT_NAME_KOR}[{item.PSTN_NAME_KOR}]
+                        <Checkbox
+                          onChange={this.onCheckUser}
+                          checked={this.state.checkUserList.filter(x => item.USER_ID === x).length > 0}
+                          value={item.USER_ID}
+                        >
+                          <span onDoubleClick={() => this.onDoubleClickUser(item)}>
+                            {item.NAME_KOR}/{item.DEPT_NAME_KOR}[{item.PSTN_NAME_KOR}]
+                          </span>
                         </Checkbox>
                       </List.Item>
                     )}
@@ -278,20 +325,22 @@ class UserSelectComp extends Component {
             </Col>
             <Col span={7}>
               <div className="basicWrapper selectedUserWrapper">
-                <List
-                  header="선택된 사용자"
-                  size="small"
-                  dataSource={this.state.selectedUserList}
-                  bordered
-                  renderItem={item => (
-                    <List.Item>
-                      <Checkbox>
-                        {item.NAME_KOR} [ {item.PSTN_NAME_KOR} ] / {item.DEPT_NAME_KOR}
-                      </Checkbox>
-                      <Icon type="delete" onClick={() => this.onDelete(item.USER_ID)}></Icon>
-                    </List.Item>
-                  )}
-                />
+                <div className="userList">
+                  <List
+                    header="선택된 사용자"
+                    size="small"
+                    dataSource={this.state.selectedUserList}
+                    bordered
+                    renderItem={item => (
+                      <List.Item>
+                        <Checkbox>
+                          {item.NAME_KOR} [ {item.PSTN_NAME_KOR} ] / {item.DEPT_NAME_KOR}
+                        </Checkbox>
+                        <Icon type="delete" onClick={() => this.onDelete(item.USER_ID)}></Icon>
+                      </List.Item>
+                    )}
+                  />
+                </div>
               </div>
             </Col>
           </Row>

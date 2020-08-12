@@ -31,7 +31,7 @@ const StyledTable = styled.div`
 
         &.tb_is {
           padding: 0;
-          
+
           input {
             width: 100%;
             height: 40px;
@@ -54,6 +54,10 @@ const StyledTable = styled.div`
 
   &.ta_wrap {
     margin-top: 15px;
+  }
+
+  &.edu-chief-mainbody-tb-wrap table.tb02 td {
+    padding: 4px;
   }
 `;
 

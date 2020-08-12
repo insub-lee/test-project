@@ -18,13 +18,13 @@ class DragUploadMDCSComp extends Component {
         TYPE: undefined,
         DETAIL: [],
         isUsePDF: undefined,
+        extList: undefined,
       },
     };
   }
 
   componentDidMount() {
-    const { WORK_SEQ, COMP_FIELD, COMP_TAG, CONFIG, colData } = this.props;
-    console.debug('did', CONFIG.property.isUsePDF);
+    const { sagaKey, changeFormData, WORK_SEQ, COMP_FIELD, COMP_TAG, CONFIG, colData, isRemoveFile } = this.props;
     const initfiles = {
       WORK_SEQ,
       TASK_SEQ: (colData && colData.TASK_SEQ) || -1,
@@ -33,8 +33,23 @@ class DragUploadMDCSComp extends Component {
       TYPE: COMP_TAG,
       DETAIL: colData && colData.DETAIL ? colData.DETAIL : [],
       isUsePDF: CONFIG && CONFIG.property && CONFIG.property.isUsePDF,
+      extList: CONFIG && CONFIG.property && CONFIG.property.fileExt,
     };
-    this.setState({ fileInfo: initfiles });
+
+    const emptyFiles = {
+      WORK_SEQ,
+      TASK_SEQ: (colData && colData.TASK_SEQ) || -1,
+      CONT_SEQ: (colData && colData.CONT_SEQ) || -1,
+      FIELD_NM: COMP_FIELD,
+      TYPE: COMP_TAG,
+      DETAIL: [],
+      isUsePDF: CONFIG && CONFIG.property && CONFIG.property.isUsePDF,
+      extList: CONFIG && CONFIG.property && CONFIG.property.fileExt,
+    };
+    this.setState({ fileInfo: isRemoveFile ? emptyFiles : initfiles });
+    if (isRemoveFile) {
+      changeFormData(sagaKey, COMP_FIELD, isRemoveFile ? emptyFiles : initfiles);
+    }
   }
 
   changeFormDataHanlder = () => {
@@ -48,7 +63,7 @@ class DragUploadMDCSComp extends Component {
     const { fileInfo } = this.state;
     const { DETAIL: fileList } = fileInfo;
     const { fileExt, down } = response;
-    console.debug('complete', response, this.state, fileInfo);
+
     let doctype = 'file-unknown';
     switch (fileExt) {
       case 'pdf':
@@ -89,7 +104,6 @@ class DragUploadMDCSComp extends Component {
   customRequest = ({ action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials }) => {
     const { fileInfo } = this.state;
     const { DETAIL: fileList } = fileInfo;
-    console.debug('file', fileInfo);
     const fileItem = {
       isUsePDF: fileInfo.isUsePDF,
       uid: file.uid,
@@ -138,8 +152,28 @@ class DragUploadMDCSComp extends Component {
     window.location.href = `${file.down}`;
   };
 
+  findExt = (fileName, strExtList) => {
+    if (strExtList && strExtList !== '') {
+      const posIdx = fileName.lastIndexOf('.');
+      const ext = fileName.toUpperCase().substring(posIdx + 1);
+      const aryExt = strExtList.toUpperCase().split(',');
+      return aryExt.includes(ext);
+    }
+    return true;
+  };
+
   beforeUpload = (file, fileList) => {
+    const {
+      fileInfo: { extList },
+    } = this.state;
     const { size, name } = file;
+    const isPossible = this.findExt(name, extList);
+
+    if (!isPossible) {
+      message.error(`${name}는 등록할 수 없는 종류의 문서입니다.`);
+      return false;
+    }
+
     if (size === 0) {
       message.error(`${name} 0 byte 파일은 업로드 할 수 없습니다 `);
       return false;

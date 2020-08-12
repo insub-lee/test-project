@@ -1,13 +1,14 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input, Button, Modal } from 'antd';
+import { Input, Button, Modal, Popconfirm } from 'antd';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
-
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import MsdsSearchList from 'apps/eshs/user/health/workEnv/msdsSearchList'; // 컬럼 사이즈 조절하기 위해
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdModal = StyledAntdModal(Modal);
@@ -43,6 +44,8 @@ class MsdsHeaderComp extends React.Component {
 
   deleteCallBack = () => {
     const { sagaKey: id, changeViewPage, viewPageData } = this.props;
+    message.info(<MessageContent>삭제되었습니다.</MessageContent>);
+
     changeViewPage(id, viewPageData.workSeq, -1, 'INPUT');
   };
 
@@ -116,9 +119,10 @@ class MsdsHeaderComp extends React.Component {
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeSave('M')}>
                 저장
               </StyledButton>
-              <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.onChangeSave('D')}>
-                삭제
-              </StyledButton>
+              <Popconfirm title="정말로 삭제하시겠습니까?" onConfirm={() => this.onChangeSave('D')} okText="Yes" cancelText="No">
+                <StyledButton className="btn-light btn-sm btn-first">삭제</StyledButton>
+              </Popconfirm>
+
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
                 신규등록
               </StyledButton>

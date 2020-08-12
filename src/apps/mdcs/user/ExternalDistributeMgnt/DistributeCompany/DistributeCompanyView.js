@@ -582,7 +582,6 @@ class DistributeCompanyView extends Component {
             </table>
           </StyledHtmlTable>
           <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-            <StyledButton className="btn-light btn-sm mr5" onClick={onCancelPopup} style={{ marginLeft: '8px' }}>닫기</StyledButton>
             {selectedRow.RECV_DEPT_ID === -1 ? (
               <StyledButton className="btn-primary btn-sm" onClick={() => this.onClickSave('POST')}>등록</StyledButton>
             ) : (
@@ -592,6 +591,7 @@ class DistributeCompanyView extends Component {
                 <StyledButton className="btn-light btn-sm" onClick={this.onClickHistory}>history</StyledButton>
               </>
             )}
+            <StyledButton className="btn-light btn-sm mr5" onClick={onCancelPopup} style={{ marginLeft: '8px' }}>닫기</StyledButton>
           </StyledButtonWrapper>
         </StyledContentsWrapper>
       </>

@@ -61,7 +61,11 @@ const StyledModalWrapper = Component => styled(Component)`
         position: relative;
       }
       .pop_con {
-        padding: 24px;
+        padding: 0px;
+      }
+
+      .pop_con_pad20 {
+        padding: 20px;
       }
     }
   }

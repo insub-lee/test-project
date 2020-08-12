@@ -31,6 +31,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
   const isBuilderModal = !!(builderModalOptIdx > -1);
   let isSaveModalClose = false;
   let builderModalSetting;
+
   if (isBuilderModal) {
     const tempObj = isJSON(work.OPT_INFO[builderModalOptIdx].OPT_VALUE) ? JSON.parse(work.OPT_INFO[builderModalOptIdx].OPT_VALUE) : undefined;
     if (tempObj) {
@@ -47,6 +48,8 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
 
   const viewPageData = yield select(selectors.makeSelectViewPageDataById(id));
   const upperCaseViewType = viewType && viewType.length > 0 ? viewType.toUpperCase() : viewPageData.viewType;
+
+  const validData = {};
   let viewSetData = {};
   let responseFieldSelectData = {};
   if (extraProps) {
@@ -55,6 +58,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
     const { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq } = extraProps;
     const reduxFormData = detailData;
     let viewChangeProcessSeq = -1;
+
     if (reduxFormData && reduxFormData.VIEW_CHANGE_PROCESS_SEQ && reduxFormData.VIEW_CHANGE_PROCESS_SEQ > -1) {
       viewChangeProcessSeq = reduxFormData.VIEW_CHANGE_PROCESS_SEQ;
     } else if (formData && formData.VIEW_CHANGE_PROCESS_SEQ && formData.VIEW_CHANGE_PROCESS_SEQ > -1) {
@@ -97,9 +101,21 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
 
     if (viewLayer && viewLayer.length === 1 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerConfig = JSON.parse(viewLayer[0].CONFIG);
+
+      if (upperCaseViewType === 'LIST' && viewLayerConfig.property.orderByFieldList && viewLayerConfig.property.orderByFieldList.length > 0) {
+        yield put(actions.setListOrderByFieldByReducer(id, viewLayerConfig.property.orderByFieldList));
+      }
+
       if (viewLayerConfig.property && viewLayerConfig.property.layer && viewLayerConfig.property.layer.groups) {
         const fieldSelectDataObject = {};
         const currentLayer = viewLayerConfig.property.layer;
+        let validSort = 1;
+        let modifyValidationData = {};
+
+        if ((upperCaseViewType === 'INPUT' || upperCaseViewType === 'MODIFY') && taskSeq > -1) {
+          modifyValidationData = yield select(selectors.makeSelectValidationDataById(id));
+        }
+
         currentLayer.groups.forEach(group => {
           if (group && group.rows && group.rows.length > 0) {
             group.rows.forEach(row => {
@@ -116,6 +132,21 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
                       COMP_FIELD: col.comp.COMP_FIELD,
                     };
                   }
+
+                  if (
+                    col &&
+                    col.comp &&
+                    col.comp.COMP_TYPE &&
+                    col.comp.COMP_TYPE === 'FIELD' &&
+                    (upperCaseViewType === 'INPUT' || upperCaseViewType === 'MODIFY')
+                  ) {
+                    if (taskSeq === -1) {
+                      validData[col.comp.COMP_FIELD] = { ...validationData[col.comp.COMP_FIELD], validSort };
+                    } else {
+                      validData[col.comp.COMP_FIELD] = { ...modifyValidationData[col.comp.COMP_FIELD], validSort };
+                    }
+                    validSort++;
+                  }
                 });
               }
             });
@@ -125,10 +156,11 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
         const fieldSelectDataKeySet = Object.keys(fieldSelectDataObject);
         const fieldSelectData = fieldSelectDataKeySet.map(key => fieldSelectDataObject[key]);
         if (fieldSelectData && fieldSelectData.length > 0) {
+          const callApiExtraProps = yield select(selectors.makeSelectCallApiExtraPropsById(id));
           responseFieldSelectData = yield call(
             Axios.post,
             '/api/builder/v1/work/CallApi',
-            { fieldSelectData, formData: taskSeq && taskSeq > 0 ? detailData : formData, WORK_SEQ: workSeq, TASK_SEQ: taskSeq },
+            { fieldSelectData, formData: taskSeq && taskSeq > 0 ? detailData : formData, WORK_SEQ: workSeq, TASK_SEQ: taskSeq, callApiExtraProps },
             { BUILDER: 'getBuilderData' },
           );
         }
@@ -154,7 +186,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
         viewSetData,
         responseFieldSelectData,
         formData,
-        validationData,
+        validData,
       ),
     );
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
@@ -176,7 +208,9 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
         responseFieldSelectData,
       ),
     );
+    yield put(actions.setValidationDataByReducer(id, validData));
   }
+
   if (viewType === 'VIEW') {
     const taskFavoriteOptIdx = work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_CODE === TASK_FAVORITE_OPT_CODE && opt.ISUSED === 'Y');
     yield put(actions.setIsTaskFavoriteByReducer(id, !!(taskFavoriteOptIdx > -1)));
@@ -347,14 +381,23 @@ function* tempSaveTask({ id, reloadId, callbackFunc, changeIsLoading, workPrcPro
     if (validKeyList && validKeyList.length > 0) {
       let validFlag = true;
       let validMsg = '';
+      let validSort = 9999;
 
       validKeyList.forEach(node => {
-        if (!validationData[node].flag) {
-          validFlag = validationData[node].flag;
-          validMsg = validationData[node].msg;
+        if (validationData[node].flag === false) {
+          const newValidSort = validationData[node].validSort || 999;
+          if (validSort > newValidSort) {
+            validFlag = validationData[node].flag;
+            validMsg = validationData[node].msg;
+            validSort = newValidSort;
+          }
         } else if (validationData[node].requiredFlag === false) {
-          validFlag = validationData[node].requiredFlag;
-          validMsg = `${validationData[node].requiredMsg}`;
+          const newValidSort = validationData[node].validSort || 999;
+          if (validSort > newValidSort) {
+            validFlag = validationData[node].requiredFlag;
+            validMsg = `${validationData[node].requiredMsg}`;
+            validSort = newValidSort;
+          }
         }
       });
 
@@ -524,14 +567,23 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
     if (validKeyList && validKeyList.length > 0) {
       let validFlag = true;
       let validMsg = '';
+      let validSort = 9999;
 
       validKeyList.forEach(node => {
-        if (!validationData[node].flag) {
-          validFlag = validationData[node].flag;
-          validMsg = validationData[node].msg;
+        if (validationData[node].flag === false) {
+          const newValidSort = validationData[node].validSort || 999;
+          if (validSort > newValidSort) {
+            validFlag = validationData[node].flag;
+            validMsg = validationData[node].msg;
+            validSort = newValidSort;
+          }
         } else if (validationData[node].requiredFlag === false) {
-          validFlag = validationData[node].requiredFlag;
-          validMsg = `${validationData[node].requiredMsg}`;
+          const newValidSort = validationData[node].validSort || 999;
+          if (validSort > newValidSort) {
+            validFlag = validationData[node].requiredFlag;
+            validMsg = `${validationData[node].requiredMsg}`;
+            validSort = newValidSort;
+          }
         }
       });
 
@@ -709,13 +761,23 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc, change
     if (validKeyList && validKeyList.length > 0) {
       let validFlag = true;
       let validMsg = '';
+      let validSort = 9999;
+
       validKeyList.forEach(node => {
-        if (!validationData[node].flag) {
-          validFlag = validationData[node].flag;
-          validMsg = validationData[node].msg;
+        if (validationData[node].flag === false) {
+          const newValidSort = validationData[node].validSort || 999;
+          if (validSort > newValidSort) {
+            validFlag = validationData[node].flag;
+            validMsg = validationData[node].msg;
+            validSort = newValidSort;
+          }
         } else if (validationData[node].requiredFlag === false) {
-          validFlag = validationData[node].requiredFlag;
-          validMsg = `${validationData[node].requiredMsg}`;
+          const newValidSort = validationData[node].validSort || 999;
+          if (validSort > newValidSort) {
+            validFlag = validationData[node].requiredFlag;
+            validMsg = `${validationData[node].requiredMsg}`;
+            validSort = newValidSort;
+          }
         }
       });
 
@@ -968,6 +1030,7 @@ function* getDraftProcess({ id, draftId }) {
 function* getListData({ id, workSeq, conditional, pageIdx, pageCnt, changeIsLoading }) {
   const searchData = yield select(selectors.makeSelectSearchDataById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
+  const listOrderByField = yield select(selectors.makeSelectListOrderByField(id));
   const whereString = [];
   const keySet = Object.keys(searchData);
   keySet.forEach(key => {
@@ -1012,7 +1075,19 @@ function* getListData({ id, workSeq, conditional, pageIdx, pageCnt, changeIsLoad
   const responseList = yield call(
     Axios.post,
     `/api/builder/v1/work/taskList/${workSeq}`,
-    { PARAM: { whereString, PAGE, PAGE_CNT, ISLAST_VER } },
+    {
+      PARAM: {
+        whereString,
+        PAGE,
+        PAGE_CNT,
+        ISLAST_VER,
+        listOrderByField,
+        listOrderByRowNum: listOrderByField
+          .replaceAll(' ASC', ' ||CSA||')
+          .replaceAll(' DESC', ' ASC')
+          .replaceAll(' ||CSA||', ' DESC'),
+      },
+    },
     { BUILDER: 'getTaskList' },
   );
   if (responseList) {

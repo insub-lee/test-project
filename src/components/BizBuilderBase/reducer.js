@@ -277,6 +277,24 @@ const reducer = (state = initialState, action) => {
       const { id, relType } = action;
       return state.setIn(['bizBuilderBase', id, 'relType'], relType);
     }
+    case actionTypes.SET_VALIDATIONDATA_REDUCER: {
+      const { id, validationData } = action;
+      return state.setIn(['bizBuilderBase', id, 'validationData'], fromJS(validationData));
+    }
+    case actionTypes.SET_LIST_ORDER_BY_FIELD_REDUCER: {
+      const { id, orderByFieldList } = action;
+      let listOrderByField = '';
+
+      orderByFieldList.forEach((item, idx) => {
+        if (item.compField) listOrderByField += `${idx === 0 ? '' : ','} A."${item.compField}" ${item.ordType}`;
+      });
+
+      return state.setIn(['bizBuilderBase', id, 'listOrderByField'], listOrderByField);
+    }
+    case actionTypes.SET_CALL_API_EXTRA_PROPS_REDUCER: {
+      const { id, callApiExtraProps } = action;
+      return state.setIn(['bizBuilderBase', id, 'callApiExtraProps'], fromJS(callApiExtraProps));
+    }
     default:
       return state;
   }

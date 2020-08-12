@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DragDropContext } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+// import { DragDropContext } from 'react-dnd';
+// import HTML5Backend from 'react-dnd-html5-backend';
 import { AutoSizer } from 'react-virtualized';
-import Scheduler, { SchedulerData, ViewTypes } from 'react-big-scheduler';
+// import Scheduler, { SchedulerData, ViewTypes } from 'react-big-scheduler';
+import Scheduler, { SchedulerData, ViewTypes } from 'components/ReactBigSchedulerWithoutDnD';
 import moment from 'moment';
 import { Icon, Spin } from 'antd';
 import { orderBy } from 'lodash';
-import 'react-big-scheduler/lib/css/style.css';
+// import 'react-big-scheduler/lib/css/style.css';
+import 'components/ReactBigSchedulerWithoutDnD/css/style.css';
 
 import { jsonToQueryString } from 'utils/helpers';
 import StyledScheduler from './StyledScheduler';
@@ -372,4 +374,5 @@ SchedulerView.propTypes = {
   usrNm: PropTypes.string.isRequired,
 };
 
-export default DragDropContext(HTML5Backend)(SchedulerView);
+// export default DragDropContext(HTML5Backend)(SchedulerView);
+export default SchedulerView;

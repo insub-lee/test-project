@@ -162,7 +162,11 @@ class ModifyPage extends Component {
       changeIsLoading,
       reloadViewType,
       reloadTaskSeq,
+      callbackFuncExtra,
     } = this.props;
+    if (typeof callbackFuncExtra === 'function') {
+      callbackFuncExtra(this.props);
+    }
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler();
     }

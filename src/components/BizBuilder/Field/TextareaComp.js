@@ -1,8 +1,9 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input } from 'antd';
+import { Input, message } from 'antd';
 import { debounce } from 'lodash';
 import uuid from 'uuid/v1';
+import StyledHtmlTextarea from 'components/BizBuilder/styled/HtmlForm/StyledHtmlTextarea';
 
 const { TextArea } = Input;
 const getNewKey = () => uuid();
@@ -12,7 +13,6 @@ class TextareaComp extends React.Component {
     super(props);
 
     this.state = { compKey: `textarea-comp___${getNewKey()}` };
-
     this.handleOnChange = debounce(this.handleOnChange, 300);
   }
 
@@ -32,24 +32,29 @@ class TextareaComp extends React.Component {
   }
 
   handleOnChange = value => {
-    const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData } = this.props;
-    // if (CONFIG.property.isRequired) {
-    //   changeValidationData(id, COMP_FIELD, value.trim().length > 0, value.trim().length > 0 ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
-    // }
+    const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData } = this.props;
     changeFormData(id, COMP_FIELD, value);
   };
 
   render() {
     const { CONFIG, colData, readOnly, visible, sagaKey, COMP_FIELD } = this.props;
     const { compKey } = this.state;
+    console.debug('props', this.props);
     return visible ? (
-      <TextArea
+      <StyledHtmlTextarea
         id={`${sagaKey}_${COMP_FIELD}`}
         key={compKey}
-        className={`ant-textarea${CONFIG.property.className ? ` ${CONFIG.property.className}` : ''}`}
+        className={`html-textarea${CONFIG.property.className ? ` ${CONFIG.property.className}` : ''}`}
         defaultValue={colData || ''}
         placeholder={CONFIG.property.placeholder}
-        onChange={e => this.handleOnChange(e.target.value)}
+        onChange={e => {
+          const limtTextCnt = CONFIG && CONFIG.property && CONFIG.property.limitTextCnt;
+          if (limtTextCnt !== 0 && e.target.value.length > limtTextCnt) {
+            e.target.value = e.target.value.substring(0, limtTextCnt);
+            message.info(`${limtTextCnt}자 이상 등록하실 수 없습니다.`);
+          }
+          this.handleOnChange(e.target.value);
+        }}
         readOnly={readOnly || CONFIG.property.readOnly}
         autoSize={false}
         rows={CONFIG.property.rowCount || 5}

@@ -213,6 +213,7 @@ class ViewDesigner extends Component {
                       compList={compList.filter(fNode => fNode.COMP_TYPE === 'FIELD' && !fNode.isRemove) || []}
                       classNameList={classNameList}
                       dataNodeList={dataNodeList}
+                      orderByFieldList={viewData.CONFIG.property.orderByFieldList || []}
                     />
                   </Spin>
                 </div>
@@ -383,6 +384,8 @@ const mapDispatchToProps = dispatch => ({
     changeCompFieldData: (compKey, key, value) => dispatch(actions.changeCompFieldDataByReducer(compKey, key, value)),
     changeHiddenCompData: (compIdx, key, value) => dispatch(actions.changeHiddenCompDatByReducer(compIdx, key, value)),
     submitHandlerBySaga: (httpMethod, apiUrl, submitData, callbackFunc) => dispatch(actions.submitHandlerBySaga(httpMethod, apiUrl, submitData, callbackFunc)),
+    setOrderByFieldList: (idx, compField, ordType) => dispatch(actions.setOrderByFieldListByReducer(idx, compField, ordType)),
+    removeOrderByFieldList: (idx, compField) => dispatch(actions.removeOrderByFieldListByReducer(idx, compField)),
   },
   styleDesignAction: {
     openJsonCodeEditor: () => dispatch(actions.openJsonCodeEditor()),

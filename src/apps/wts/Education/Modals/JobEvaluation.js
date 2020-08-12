@@ -11,6 +11,7 @@ import moment from 'moment';
 import service from '../service';
 import StyledContent from './StyledContent';
 import { template } from '../config';
+import StyledTable from '../../StyledTable';
 
 const textareaStyle = {
   padding: '5px 0 15px 0',
@@ -449,7 +450,7 @@ class JobEvaluation extends React.Component {
               <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
                 <StyledCommonForm onSubmit={this.saveData} autoComplete="off" ref={el => (this.printComponentRef = el)}>
                   <div className="sub_form_tit cr">기본정보</div>
-                  <div className="ta_wrap">
+                  <StyledTable className="tb_wrap">
                     <table className="tb02">
                       <colgroup>
                         <col width="25%" />
@@ -484,7 +485,7 @@ class JobEvaluation extends React.Component {
                         </tr>
                       </tbody>
                     </table>
-                  </div>
+                  </StyledTable>
                   {template[type] && (
                     <>
                       <br />
@@ -495,7 +496,7 @@ class JobEvaluation extends React.Component {
                   <br />
                   <div className="sub_form_tit cr">평가정보</div>
                   {type === 'job_proc' && (
-                    <div className="ta_wrap">
+                    <StyledTable className="ta_wrap">
                       <table className="tb02">
                         <thead>
                           <tr className="bd">
@@ -564,10 +565,10 @@ class JobEvaluation extends React.Component {
                           </tr>
                         </tbody>
                       </table>
-                    </div>
+                    </StyledTable>
                   )}
                   {type !== 'job_proc' && (
-                    <div className="ta_wrap">
+                    <StyledTable className="ta_wrap">
                       <table className="tb02">
                         <colgroup>
                           <col width="40%" />
@@ -693,7 +694,7 @@ class JobEvaluation extends React.Component {
                           </tr>
                         </tbody>
                       </table>
-                    </div>
+                    </StyledTable>
                   )}
                   {type !== 'job_proc' && (
                     <>

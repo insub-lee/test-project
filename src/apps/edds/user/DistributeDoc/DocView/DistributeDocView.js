@@ -44,7 +44,7 @@ class DistributeDocView extends Component {
       submitHandlerBySaga,
     } = this.props;
 
-    if (row.FINE_DOWN_CNT <= 0 || row.PASSES_PERIOD > 0) {
+    if (row.FILE_DOWN_CNT <= 0 || row.PASSES_PERIOD > 30) {
       message.info(<MessageContent>다운로드가 불가능합니다.<br /><br />다운로드를 원하시면 재배포 요청하시기 바랍니다.</MessageContent>);
     } else {
       const drmInfo = {
@@ -62,6 +62,7 @@ class DistributeDocView extends Component {
           FILE_ORDER: row.FILE_ORDER,
           DOCNUMBER: row.DOCNUMBER,
           VERSION: row.VERSION,
+          IS_PDF: row.IS_PDF,
         }
       }));
       const url = `/down/eddsfile/${row.FILE_SEQ}/${acl}`;
@@ -105,7 +106,11 @@ class DistributeDocView extends Component {
       title: '파일명',
       dataIndex: 'FILE_NAME',
       key: 'FILE_NAME',
-      render: (text, record) => <li style={{ cursor: 'pointer' }} onClick={() => this.onClickDownload(record)}>{`${record.DOCNUMBER}_${record.VERSION}_${record.FILE_ORDER}.${record.EXT}`}</li>
+      render: (text, record) => (
+        <li style={{ cursor: 'pointer' }} onClick={() => this.onClickDownload(record)}>
+          {`${record.DOCNUMBER}_${record.VERSION}_${record.FILE_ORDER}.${record.EXT}${record.IS_PDF === 1 ? '.pdf': ''}`}
+        </li>
+      ),
     },
     {
       title: '다운가능횟수',
@@ -160,7 +165,7 @@ class DistributeDocView extends Component {
                 <th>발송일</th>
                 <td>{moment(detail.REG_DTTM).format('YYYY-MM-DD HH:mm:ss')}</td>
                 <th>발송자ID</th>
-                <td>{detail.DIST_USER_ID}</td>
+                <td>{detail.DIST_EMP_NO}</td>
               </tr>
               <tr>
                 <th>문서번호</th>

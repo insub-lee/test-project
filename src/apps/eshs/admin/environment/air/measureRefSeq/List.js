@@ -14,6 +14,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 
 import Moment from 'moment';
 import Graph from './Graph';
+import LineComp from './Graph/LineComp';
 
 const { Option } = Select;
 const { MonthPicker, RangePicker } = DatePicker;
@@ -26,6 +27,9 @@ const AntdRangePicker = StyledDatePicker(RangePicker);
 
 Moment.locale('ko');
 
+// 환경안전팀 전서현 요청 특정 가스만 노출 2020.07.28
+const businessRequestGas = ['HCl', 'HF', 'HCHO', 'Cr', 'Pb', 'Ni', 'NH3', 'Nox', '먼지', 'THC', '벤젠', '페놀'];
+
 class List extends Component {
   constructor(props) {
     super(props);
@@ -36,11 +40,12 @@ class List extends Component {
       seq: 1,
       selectGubun: 1,
       isModal: false,
+      lineChartData: [],
     };
   }
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHandler, refStack } = this.props;
+    const { sagaKey: id, getCallDataHandler, refStack, spinningOn } = this.props;
     const apiAry = [
       {
         key: 'gasType',
@@ -48,6 +53,7 @@ class List extends Component {
         type: 'GET',
       },
     ];
+    spinningOn();
     if (!refStack) {
       this.isSearch();
     }
@@ -57,12 +63,13 @@ class List extends Component {
   initData = () => {
     const {
       result: { gasType },
+      spinningOff,
     } = this.props;
-    this.setState({ gasList: (gasType && gasType.list) || [] });
+    this.setState({ gasList: (gasType && gasType.list && gasType.list.filter(gas => businessRequestGas.indexOf(gas.GAS_CD) > -1)) || [] }, spinningOff);
   };
 
   isSearch = () => {
-    const { sagaKey: id, getCallDataHandler, refStack } = this.props;
+    const { sagaKey: id, getCallDataHandler, refStack, spinningOff } = this.props;
     const { dateStrings, rangeDateStrings, seq, stackCd } = this.state;
     const setDate = refStack
       ? `START_DATE=${Moment(rangeDateStrings[0]).format('YYYY-MM-01')}&&END_DATE=${Moment(rangeDateStrings[1])
@@ -79,6 +86,7 @@ class List extends Component {
     if (!refStack || (refStack && stackCd)) {
       getCallDataHandler(id, apiAry, this.listData);
     } else {
+      spinningOff();
       message.warning('stack 종류를 먼저 선택해주세요.');
     }
   };
@@ -164,6 +172,7 @@ class List extends Component {
           i.reduce(
             (accumulator, currentValue) => ({
               ...accumulator,
+              [`DATE`]: currentValue.MEASURE_DT,
               [currentValue.GAS_CD]:
                 selectGubun === 1
                   ? currentValue.DENSITY
@@ -172,36 +181,41 @@ class List extends Component {
             {},
           ),
         );
+
     return temp;
   };
 
   dataSet = () => {
-    const { refStack } = this.props;
+    const { refStack, spinningOff } = this.props;
     const { measureList, gasList } = this.state;
+    if (!measureList.length) {
+      spinningOff();
+      return message.warning('검색된 데이터가 없습니다.');
+    }
     const hour = measureList && measureList.map(element => Number(element.HOUR_FLOW).toFixed(3));
     const minute = measureList && measureList.map(element => Number(element.MINUTE_FLOW).toFixed(3));
     const temp = this.densityList();
-    const gasDensityList =
-      gasList &&
-      gasList.map(
-        item =>
-          temp &&
-          temp.reduce(
-            (accumulator, currentValue) => ({
-              ...accumulator,
-              [item.GAS_CD]: accumulator[item.GAS_CD] ? accumulator[item.GAS_CD].concat(currentValue[item.GAS_CD] || []) : [currentValue[item.GAS_CD]] || [],
-            }),
-            {},
-          ),
-      );
+    const gasDensity = {};
+
+    gasList &&
+      gasList.forEach(item => {
+        gasDensity[`${item.GAS_CD}_MAX`] = 0;
+        gasDensity[`${item.GAS_CD}_MIN`] = 0;
+        temp &&
+          temp.forEach(gass => {
+            gasDensity[`${item.GAS_CD}_MAX`] = gasDensity[`${item.GAS_CD}_MAX`] < gass[item.GAS_CD] ? gass[item.GAS_CD] : gasDensity[`${item.GAS_CD}_MAX`];
+            gasDensity[`${item.GAS_CD}_MIN`] = gasDensity[`${item.GAS_CD}_MIN`] > gass[item.GAS_CD] ? gass[item.GAS_CD] : gasDensity[`${item.GAS_CD}_MIN`];
+          });
+      });
+
     if (!refStack) {
       const acid = this.avg('Acid');
       const toxic = this.avg('Toxic');
       const VOC = this.avg('VOC');
-      this.setState({ gasDensityList, hour, minute, acid, toxic, VOC });
+      this.setState({ gasDensity, hour, minute, acid, toxic, VOC, lineChartData: temp }, spinningOff);
     } else {
       const avg = this.avg();
-      this.setState({ gasDensityList, hour, minute, avg });
+      this.setState({ gasDensity, hour, minute, avg, lineChartData: temp }, spinningOff);
     }
   };
 
@@ -237,7 +251,7 @@ class List extends Component {
   };
 
   render() {
-    const { measureList, gasList, selectGubun, rangeDateStrings, gasDensityList, hour, minute, acid, toxic, VOC, avg } = this.state;
+    const { measureList, gasList, selectGubun, rangeDateStrings, gasDensity, hour, minute, acid, toxic, VOC, avg, lineChartData } = this.state;
     const { refStack } = this.props;
     return (
       <StyledContentsWrapper>
@@ -262,7 +276,14 @@ class List extends Component {
                 mode={['month', 'month']}
                 format={['YYYY-MM', 'YYYY-MM']}
                 onOpenChange={status => {
-                  this.setState({ isopen: status });
+                  if (rangeDateStrings[1] - rangeDateStrings[0] > 28857600000) {
+                    message.warning('기간은 최대 1년까지 검색가능합니다.');
+                    return this.setState({
+                      rangeDateStrings: [Moment(rangeDateStrings[0], 'YYYY-MM'), Moment(rangeDateStrings[0], 'YYYY-MM').add(11, 'M')],
+                      isopen: status,
+                    });
+                  }
+                  return this.setState({ isopen: status });
                 }}
                 onPanelChange={value => {
                   if (value[0] < Moment().endOf('month') && value[1] < Moment().endOf('month')) {
@@ -304,7 +325,7 @@ class List extends Component {
             )}
           </div>
           <div className="btn-area">
-            <StyledButton className="btn-gray btn-sm" onClick={() => this.isSearch()}>
+            <StyledButton className="btn-gray btn-sm" onClick={this.isSearch}>
               검색
             </StyledButton>
           </div>
@@ -344,60 +365,45 @@ class List extends Component {
                       <td>{Number(JSON.parse(item.GAS[0].value).HOUR_FLOW).toFixed(3)}</td>
                       {selectGubun === 1
                         ? gasList &&
-                          gasList.map(gasType => (
-                            <td>
-                              {item.GAS.map(gasItem => (gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD ? JSON.parse(gasItem.value).DENSITY : undefined))}
-                            </td>
-                          ))
+                          gasList.map(gasType => {
+                            const idx = item.GAS.findIndex(gasItem => JSON.parse(gasItem.value).GAS_CD === gasType.GAS_CD);
+                            if (idx > -1) {
+                              return <td>{JSON.parse(item.GAS[idx].value).DENSITY || 0}</td>;
+                            }
+                            return <td>0</td>;
+                          })
                         : gasList &&
-                          gasList.map(gasType => (
-                            <td>
-                              {item.GAS.map(gasItem =>
-                                gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD
-                                  ? this.calculate(
-                                      gasType.GAS_CD,
-                                      JSON.parse(gasItem.value).HOUR_FLOW,
-                                      JSON.parse(gasItem.value).DENSITY,
-                                      JSON.parse(gasItem.value).WORK_DAY,
-                                      JSON.parse(gasItem.value).GAS_WEIGHT,
-                                    )
-                                  : undefined,
-                              )}
-                            </td>
-                          ))}
+                          gasList.map(gasType => {
+                            const idx = item.GAS.findIndex(gasItem => JSON.parse(gasItem.value).GAS_CD === gasType.GAS_CD);
+
+                            if (idx > -1) {
+                              return (
+                                <td>
+                                  {this.calculate(
+                                    gasType.GAS_CD,
+                                    JSON.parse(item.GAS[idx].value).HOUR_FLOW,
+                                    JSON.parse(item.GAS[idx].value).DENSITY,
+                                    JSON.parse(item.GAS[idx].value).WORK_DAY,
+                                    JSON.parse(item.GAS[idx].value).GAS_WEIGHT,
+                                  )}
+                                </td>
+                              );
+                            }
+                            return <td>0</td>;
+                          })}
                     </tr>
                   ))}
                   <tr>
                     <td colSpan={4}>최고농도(MAX)</td>
                     <td>{Math.max.apply(null, minute)}</td>
                     <td>{Math.max.apply(null, hour)}</td>
-                    {gasList &&
-                      gasList.map(item => (
-                        <td>
-                          {gasDensityList &&
-                            gasDensityList.map(
-                              density =>
-                                density[item.GAS_CD] &&
-                                density[item.GAS_CD].reduce((previous, current) => (Number(previous) > Number(current) ? previous : current)),
-                            )}
-                        </td>
-                      ))}
+                    {gasList && gasList.map(item => <td>{(gasDensity && gasDensity[`${item.GAS_CD}_MAX`]) || 0}</td>)}
                   </tr>
                   <tr>
                     <td colSpan={4}>최저농도(MIN)</td>
                     <td>{Math.min.apply(null, minute)}</td>
                     <td>{Math.min.apply(null, hour)}</td>
-                    {gasList &&
-                      gasList.map(item => (
-                        <td>
-                          {gasDensityList &&
-                            gasDensityList.map(
-                              density =>
-                                density[item.GAS_CD] &&
-                                density[item.GAS_CD].reduce((previous, current) => (Number(previous) > Number(current) ? current : previous)),
-                            )}
-                        </td>
-                      ))}
+                    {gasList && gasList.map(item => <td>{(gasDensity && gasDensity[`${item.GAS_CD}_MIN`]) || 0}</td>)}
                   </tr>
                   {refStack ? (
                     <tr>
@@ -429,7 +435,7 @@ class List extends Component {
                           ))}
                       </tr>
                       <tr>
-                        <td colSpan={5}>VOCs 평균</td>
+                        <td colSpan={5}>VOC 평균</td>
                         <td>{VOC && (VOC.HOUR_FLOW / VOC.LENGTH).toFixed(3)}</td>
                         {gasList &&
                           gasList.map(item => (
@@ -445,9 +451,11 @@ class List extends Component {
         ) : (
           ''
         )}
-        <StyledHtmlTable>
-          <Graph graphData={measureList} gasList={gasList} selectGubun={selectGubun} refStack={refStack} />
-        </StyledHtmlTable>
+        <div style={{ overflow: 'auto', msOverflowStyle: 'scrollbar' }}>
+          {refStack
+            ? measureList.length > 0 && <LineComp data={lineChartData} gasList={gasList} />
+            : measureList.length > 0 && <Graph graphData={measureList} gasList={gasList} selectGubun={selectGubun} refStack={refStack} />}
+        </div>
         {refStack ? (
           <AntdModal width={800} visible={this.state.isModal} title="Stack 정보" onCancel={this.onChangeModal} destroyOnClose footer={[]}>
             <BizBuilderBase

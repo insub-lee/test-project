@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Row, Col, DatePicker, Typography, Popconfirm } from 'antd';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
@@ -74,7 +74,7 @@ class Input extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const { extraApiData, changeFormData, sagaKey: id } = nextProps;
     if (extraApiData.getUserInfo) {
-      if (prevState.userInfo !== extraApiData.getUserInfo) {
+      if (JSON.stringify(prevState.userInfo) !== JSON.stringify(extraApiData.getUserInfo.userInfo)) {
         changeFormData(id, 'gender', extraApiData.getUserInfo.userInfo.GENDER);
         return { userInfo: extraApiData.getUserInfo.userInfo };
       }
@@ -114,7 +114,15 @@ class Input extends Component {
 
   handleButtonClick = () => {
     const { selectedDate, noShowCount, reserveCount, noShowDate } = this.state;
-    const { sagaKey: id, saveTask, formData, handleGetTimeTable } = this.props;
+    const {
+      sagaKey: id,
+      saveTask,
+      formData,
+      handleGetTimeTable,
+      viewPageData: { workSeq },
+      changeViewPage,
+    } = this.props;
+
     if (
       formData.checkedIndex === undefined ||
       this.isReservedToday() ||
@@ -131,7 +139,10 @@ class Input extends Component {
 
     this.makeFormData();
 
-    saveTask(id, id, handleGetTimeTable(moment(selectedDate).format('YYYYMMDD')));
+    saveTask(id, id, () => {
+      handleGetTimeTable(moment(selectedDate).format('YYYYMMDD'));
+      changeViewPage(id, workSeq, -1, 'LIST');
+    });
   };
 
   makeFormData = () => {
@@ -223,99 +234,75 @@ class Input extends Component {
     const { userInfo, currentDate, reserveCount, selectedDate, noShowDate } = this.state;
     const { formData } = this.props;
     return (
-      <ContentsWrapper>
-        <Row gutter={[24, 48]} type="flex" justify="center">
-          <Col span={8}>
-            <Typography.Title level={1} style={{ textAlign: 'center' }}>
-              사용수칙
-            </Typography.Title>
-          </Col>
-        </Row>
-        <Row gutter={[24, 48]} type="flex" justify="center">
-          <Col span={8}>
-            <Typography>
-              1. 건강관리실 내 건강증진실(안마의자)은 <span style={{ color: '#0000ff' }}>남/여 ROOM구분</span>
-            </Typography>
-          </Col>
-        </Row>
-        <Row gutter={[24, 48]} type="flex" justify="center">
-          <Col span={8}>
-            <Typography>2. 운영시간 :월~금 08:30 ~ 17:30 (점심시간 제외 :12:00~13:00) </Typography>
-          </Col>
-        </Row>
-        <Row gutter={[24, 48]} type="flex" justify="center">
-          <Col span={8}>
-            <Typography>3. 일주일 단위로 예약 ☞1인 1일 1회, 1주 3회만 가능</Typography>
-          </Col>
-        </Row>
-        <Row gutter={[24, 48]} type="flex" justify="center">
-          <Col span={8}>
-            <Typography>4. 예약 후 사용하지 못할 시 예약 취소.</Typography>
-          </Col>
-        </Row>
-        <Row gutter={[24, 48]} type="flex" justify="center">
-          <Col span={8}>
-            <Typography style={{ color: '#0000ff' }}>☞ 예약 후 미사용 시 다음주는 예약 불가 </Typography>
-          </Col>
-        </Row>
-        <div className="tableWrapper">
-          <StyledHtmlTable>
-            <table>
-              <colgroup>
-                <col width="15%" />
-                <col width="18%" />
-                <col width="15%" />
-                <col width="18%" />
-                <col width="15%" />
-                <col width="18%" />
-              </colgroup>
-              <tbody>
-                <tr>
-                  <th>사번</th>
-                  <td>{userInfo.EMP_NO}</td>
-                  <th>이름</th>
-                  <td>{userInfo.NAME}</td>
-                  <th>소속</th>
-                  <td>{userInfo.DEPT}</td>
-                </tr>
-                <tr>
-                  <th>직위</th>
-                  <td>{userInfo.POSITION}</td>
-                  <th>지역</th>
-                  <td>{userInfo.BAREA_CD}</td>
-                  <th>신청일</th>
-                  <td>
-                    <AntdDatePicker
-                      className="ant-picker-xs"
-                      disabledDate={this.disableDate}
-                      defaultValue={moment(currentDate)}
-                      onChange={this.handleOnDateChange}
-                      allowClear={false}
-                      style={{ width: '50%' }}
-                    />
-                    <Popconfirm
-                      title={this.makePopconfirmTitle()}
-                      disabled={
-                        formData.checkedIndex !== undefined &&
-                        !this.isReservedToday() &&
-                        reserveCount < 3 &&
-                        moment(selectedDate).format('w') !==
-                          moment(noShowDate)
-                            .add('1', 'week')
-                            .format('w')
-                      }
-                    >
-                      <StyledButton className="btn-gray btn-xs ml5" onClick={this.handleButtonClick}>
-                        예약
-                      </StyledButton>
-                    </Popconfirm>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </StyledHtmlTable>
+      <>
+        <div style={{ paddingBottom: '5px', position: 'relative', textAlign: 'center', width: '100%' }}>
+          <p style={{ fontSize: '18px', fontWeight: '500', color: '#000' }}>사용수칙</p>
+          <ol style={{ textAlign: 'left', marginLeft: '37%' }}>
+            <li style={{ fontSize: '12px', color: '#000' }}>
+              건강관리실 내 건강증진실(안마의자)은 <span style={{ color: '#0000ff' }}>남/여 ROOM구분</span>
+            </li>
+            <li style={{ fontSize: '12px', color: '#000' }}>운영시간 :월~금 08:30 ~ 17:30 (점심시간 제외 :12:00~13:00)</li>
+            <li style={{ fontSize: '12px', color: '#000' }}>일주일 단위로 예약 ☞1인 1일 1회, 1주 3회만 가능</li>
+            <li style={{ fontSize: '12px', color: '#000' }}>예약 후 사용하지 못할 시 예약 취소.</li>
+            <li style={{ fontSize: '12px', listStyleType: 'none', color: '#0000ff' }}>☞ 예약 후 미사용 시 다음주는 예약 불가</li>
+          </ol>
         </div>
-      </ContentsWrapper>
+        <StyledHtmlTable>
+          <table>
+            <colgroup>
+              <col width="15%" />
+              <col width="18%" />
+              <col width="15%" />
+              <col width="18%" />
+              <col width="15%" />
+              <col width="18%" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>사번</th>
+                <td>{userInfo.EMP_NO}</td>
+                <th>이름</th>
+                <td>{userInfo.NAME}</td>
+                <th>소속</th>
+                <td>{userInfo.DEPT}</td>
+              </tr>
+              <tr>
+                <th>직위</th>
+                <td>{userInfo.POSITION}</td>
+                <th>지역</th>
+                <td>{userInfo.BAREA_CD}</td>
+                <th>신청일</th>
+                <td>
+                  <AntdDatePicker
+                    className="ant-picker-xs"
+                    disabledDate={this.disableDate}
+                    defaultValue={moment(currentDate)}
+                    onChange={this.handleOnDateChange}
+                    allowClear={false}
+                    style={{ width: '60%' }}
+                  />
+                  <Popconfirm
+                    title={this.makePopconfirmTitle()}
+                    disabled={
+                      formData.checkedIndex !== undefined &&
+                      !this.isReservedToday() &&
+                      reserveCount < 3 &&
+                      moment(selectedDate).format('w') !==
+                        moment(noShowDate)
+                          .add('1', 'week')
+                          .format('w')
+                    }
+                  >
+                    <StyledButton className="btn-primary btn-sm ml5" onClick={this.handleButtonClick}>
+                      예약
+                    </StyledButton>
+                  </Popconfirm>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </StyledHtmlTable>
+      </>
     );
   }
 }
@@ -329,6 +316,8 @@ Input.propTypes = {
   formData: PropTypes.object,
   handleGetTimeTable: PropTypes.func,
   dateChange: PropTypes.func,
+  viewPageData: PropTypes.object,
+  changeViewPage: PropTypes.func,
 };
 
 export default Input;

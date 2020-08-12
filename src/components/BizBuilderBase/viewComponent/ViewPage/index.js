@@ -27,7 +27,7 @@ class ViewPage extends Component {
 
   componentDidMount() {
     const { sagaKey: id, draftId, workInfo } = this.props;
-
+    console.debug('draftId', draftId);
     if (workInfo.BUILDER_STYLE_PATH) {
       // const StyledWrap = Loadable({
       //   loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
@@ -82,9 +82,9 @@ class ViewPage extends Component {
       return (
         <StyledWrap className={viewPageData.viewType}>
           <Sketch {...bodyStyle}>
-            {draftId !== -1 && <SignLine id={id} draftId={draftId} />}
+            {/* {draftId !== -1 && <SignLine id={id} draftId={draftId} />} */}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
-            {draftId !== -1 && <ApproveHistory draftId={draftId} />}
+            {/* {draftId !== -1 && <ApproveHistory draftId={draftId} />} */}
             {ViewCustomButtons ? (
               <ViewCustomButtons {...this.props} />
             ) : (

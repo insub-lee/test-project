@@ -15,7 +15,8 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
-
+import ProcessView from 'apps/Workflow/User/CommonView/processView';
+import ExcelDownLoad from 'components/ExcelDownLoad';
 // import ApproveView from '../ApproveView';
 // import HoldView from '../MdcsAppvView/holdview';
 
@@ -53,6 +54,60 @@ const StyledWrap = styled.div`
     }
   }
 `;
+
+const excelColumns = [
+  {
+    title: '종류',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '유형',
+    width: { wpx: 120 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '표준번호',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: 'Rev',
+    width: { wpx: 30 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '표준제목',
+    width: { wpx: 300 },
+    style: { alignment: { horizontal: 'left' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '기안일',
+    width: { wpx: 120 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '상태',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '기안자',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+];
+const fields = [
+  { field: 'APPVGUBUN', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'NODETYPE', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'DOCNUMBER', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'VERSION', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } }, format: { type: 'NUMBER' } },
+  { field: 'DRAFT_TITLE', style: { alignment: { horizontal: 'left' }, font: { sz: '10' } } },
+  { field: 'REG_DTTM', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } }, format: { type: 'DATE' } },
+  { field: 'STATUS', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'NAME_KOR', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+];
+
 class ApproveList extends Component {
   constructor(props) {
     super(props);
@@ -76,6 +131,7 @@ class ApproveList extends Component {
       workPrcProps: undefined,
       paginationIdx: 1,
       pageSize: 10,
+      isPreView: false,
     };
   }
 
@@ -116,7 +172,12 @@ class ApproveList extends Component {
       width: '9%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 999 ? `OBS-${record.DRAFT_ID}` : text),
+      render: (text, record) =>
+        record.REL_TYPE === 999 ? (
+          <a onClick={() => this.onRowClick(record)}>{`OBS-${record.DRAFT_ID}`}</a>
+        ) : (
+          <a onClick={() => this.onRowClick(record)}>{text}</a>
+        ),
     },
     {
       title: 'Rev',
@@ -132,6 +193,7 @@ class ApproveList extends Component {
       dataIndex: 'DRAFT_TITLE',
       key: 'title',
       ellipsis: true,
+      render: (text, record) => <a onClick={() => this.onRowClick(record)}>{text}</a>,
     },
     {
       title: '결재상태',
@@ -139,15 +201,23 @@ class ApproveList extends Component {
       key: 'APPV_STATUS_NM',
       width: '9%',
       align: 'center',
+      render: (text, record) => <a onClick={() => this.onPrcPreViewClick(record)}>{text}</a>,
     },
-    {
-      title: '진행상태',
-      dataIndex: 'PROC_STATUS',
-      key: 'PROC_STATUS',
-      width: '9%',
-      align: 'center',
-      render: (text, record) => (text === 3 ? '홀드' : text === 2 ? '완료' : '진행중'),
-    },
+    // {
+    //   title: '진행상태',
+    //   dataIndex: 'PROC_STATUS',
+    //   key: 'PROC_STATUS',
+    //   width: '9%',
+    //   align: 'center',
+    //   render: (text, record) =>
+    //     text === 3 ? (
+    //       <a onClick={() => this.onPrcPreViewClick(record)}>홀드</a>
+    //     ) : text === 2 ? (
+    //       <a onClick={() => this.onPrcPreViewClick(record)}>완료</a>
+    //     ) : (
+    //       <a onClick={() => this.onPrcPreViewClick(record)}>진행중</a>
+    //     ),
+    // },
     {
       title: '기안자',
       dataIndex: 'NAME_KOR',
@@ -165,6 +235,15 @@ class ApproveList extends Component {
     },
   ];
 
+  onPrcPreViewClick = record => {
+    this.setState({ isPreView: true });
+    this.props.setSelectedRow(record);
+  };
+
+  onClosePreView = () => {
+    this.setState({ isPreView: false });
+  };
+
   onHoldRelase = () => {
     const { selectedRow, setSelectedRow, setOpinionVisible } = this.props;
     const APPV_STATUS = selectedRow.PROC_STATUS === 3 ? 4 : 40;
@@ -177,12 +256,13 @@ class ApproveList extends Component {
     const { sagaKey, submitHandlerBySaga } = this.props;
     const { isDcc } = this.state;
     const { WORK_SEQ, TASK_SEQ, STEP, PROC_STATUS, APPV_STATUS, DRAFT_DATA, DRAFT_ID } = record;
-    const abrogationList = DRAFT_DATA.abrogationList ? record.DRAFT_DATA.abrogationList : [];
+    console.debug('record', record);
+    const abrogationList = DRAFT_DATA && DRAFT_DATA !== null && DRAFT_DATA.abrogationList ? record.DRAFT_DATA.abrogationList : [];
     this.setState({ currentStatus: APPV_STATUS, abrogationList, workPrcProps: { ...record } });
     this.props.setSelectedRow(record);
     this.props.setViewVisible(true);
 
-    const isAbrogMulti = DRAFT_DATA.isMultiAbrogation ? DRAFT_DATA.isMultiAbrogation : false;
+    const isAbrogMulti = DRAFT_DATA && DRAFT_DATA !== null && DRAFT_DATA.isMultiAbrogation ? DRAFT_DATA.isMultiAbrogation : false;
 
     if (isAbrogMulti) {
       const prefixUrl = '/api/mdcs/v1/common/ProcessResultHandler';
@@ -362,7 +442,13 @@ class ApproveList extends Component {
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    const { selectedRow } = this.props;
     const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'VIEW' };
+    if (selectedRow.REL_TYPE === 99) {
+      this.setState({ isObsCheck: true });
+    } else {
+      this.setState({ isObsCheck: false });
+    }
     this.setState({ coverView });
   };
 
@@ -471,6 +557,8 @@ class ApproveList extends Component {
       isAbrogationMultiShow,
       workPrcProps,
       paginationIdx,
+      isPreView,
+      isObsCheck,
     } = this.state;
 
     return (
@@ -483,13 +571,31 @@ class ApproveList extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
+          <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
+            <ExcelDownLoad
+              isBuilder={false}
+              fileName={`검색결과 (${moment().format('YYYYMMDD')})`}
+              className="workerExcelBtn"
+              title="Excel 파일로 저장"
+              btnSize="btn-sm"
+              sheetName=""
+              columns={excelColumns}
+              fields={fields}
+              submitInfo={{
+                dataUrl: '/api/workflow/v1/common/approve/ApproveListMDCSHandler',
+                method: 'POST',
+                submitData: { PARAM: { relTypes: [1, 4, 99, 999], PAGE: undefined, PAGE_CNT: undefined } },
+                dataSetName: 'list',
+              }}
+            />
+          </div>
           <AntdTable
             key="apps-workflow-user-approve-list"
             columns={this.getTableColumns()}
             dataSource={approveList}
-            onRow={(record, rowIndex) => ({
-              onClick: e => this.onRowClick(record, rowIndex, e),
-            })}
+            // onRow={(record, rowIndex) => ({
+            //   onClick: e => this.onRowClick(record, rowIndex, e),
+            // })}
             bordered
             pagination={{ current: paginationIdx, total: approveListCnt }}
             onChange={pagination => this.setPaginationIdx(pagination.current)}
@@ -588,6 +694,7 @@ class ApproveList extends Component {
                 taskSeq={coverView.taskSeq}
                 viewMetaSeq={coverView.viewMetaSeq}
                 workPrcProps={workPrcProps}
+                isObsCheck={isObsCheck}
                 onCloseCoverView={this.onCloseCoverView}
                 onCloseModalHandler={this.onCloseCoverView}
                 CustomWorkProcessModal={WorkProcessModal}
@@ -781,6 +888,9 @@ class ApproveList extends Component {
               닫기
             </StyledButton>
           </StyledButtonWrapper>
+        </AntdModal>
+        <AntdModal title="결재정보" width={680} visible={isPreView} destroyOnClose onCancel={this.onClosePreView} footer={null}>
+          <ProcessView {...this.props}></ProcessView>
         </AntdModal>
       </>
     );

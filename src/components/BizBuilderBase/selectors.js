@@ -247,6 +247,13 @@ const makeSelectListTotalCnt = () =>
 
 const makeSelectRelTypeById = id => createSelector(selectorBizBuilderBase, state => state.getIn(['bizBuilderBase', id, 'relType']) || 1);
 
+const makeSelectListOrderByField = id => createSelector(selectorBizBuilderBase, state => state.getIn(['bizBuilderBase', id, 'listOrderByField']) || '');
+
+const makeSelectCallApiExtraPropsById = id =>
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'callApiExtraProps']) !== undefined ? state.getIn(['bizBuilderBase', id, 'callApiExtraProps']).toJS() : {},
+  );
+
 // auth
 const makeSelectProfile = () => createSelector(selectAuth, authState => authState.get('profile'));
 
@@ -294,4 +301,6 @@ export {
   makeSelectProfile,
   makeSelectListTotalCnt,
   makeSelectRelTypeById,
+  makeSelectListOrderByField,
+  makeSelectCallApiExtraPropsById,
 };

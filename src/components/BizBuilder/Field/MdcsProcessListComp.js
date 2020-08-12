@@ -11,17 +11,19 @@ const StyledWrap = styled.div`
       width: 50%;
       border: solid 1px #cccccc;
       padding: 4px;
+      line-height: 100%;
       div {
         display: inline-block;
+        vertical-align: middle;
       }
       .mdcsDeptName {
-        width: 40%;
+        width: 30%;
       }
       .mdcsPstnName {
-        width: 17%;
+        width: 15%;
       }
       .mdcsUserName {
-        width: 18%;
+        width: 30%;
       }
       .mdcsAppvDttm {
         width: 20%;
@@ -44,69 +46,45 @@ class MdcsProcessListComp extends Component {
   }
 
   componentDidMount() {
-    const { fieldSelectData, CONFIG } = this.props;
-
-    if (fieldSelectData && CONFIG.property.compSelectDataKey && CONFIG.property.compSelectDataKey.length > 0) {
-      if (fieldSelectData[CONFIG.property.compSelectDataKey]) {
-        const prcInfo = fieldSelectData[CONFIG.property.compSelectDataKey];
-        this.initDataBind(prcInfo);
-      }
+    const { sagaKey, submitExtraHandler, formData, draftInfo, isObsCheck, exDraftId } = this.props;
+    const { DRAFT_ID, REL_TYPE } = draftInfo;
+    const { MIG_YN, OBS_DRAFT_ID } = formData;
+    let draftId = DRAFT_ID;
+    if (isObsCheck && OBS_DRAFT_ID !== 0) {
+      draftId = OBS_DRAFT_ID;
     }
-    // const { sagaKey, submitExtraHandler, formData } = this.props;
-    // const url = '/api/mdcs/v1/common/ProcessResultHandler';
-    // submitExtraHandler(sagaKey, 'POST', url, { PARAM: { WORK_SEQ: formData.WORK_SEQ, TASK_SEQ: formData.TASK_SEQ } }, this.initData);
+    if (exDraftId && exDraftId > 0) {
+      draftId = exDraftId;
+    }
+    const url = '/api/workflow/v1/common/process/ProcessPreviewHandler';
+    submitExtraHandler(sagaKey, 'POST', url, { PARAM: { draftId, isMig: MIG_YN } }, this.initDataBind);
   }
 
-  initDataBind = response => {
-    const { list, processList } = response;
-    const resultList = [...list];
+  initDataBind = (id, response) => {
+    const { prcPreViewList } = response;
 
-    processList.forEach(item => {
-      if (item.NODE_ID === 107 || item.NODE_ID === 106 || item.NODE_ID === 112) {
-        const appvMemeber = JSON.parse(item.APPV_MEMBER);
-        if (appvMemeber.length > 0) {
-          appvMemeber.forEach(subNode => {
-            const findIdx = list.findIndex(iNode => iNode.NODE_ID === item.NODE_ID && iNode.ORG_APPV_USER_ID === subNode.USER_ID);
-            if (findIdx === -1)
-              resultList.push({
-                NODE_ID: item.NODE_ID,
-                APPV_STATUS: 0,
-                APPV_DTTM: '',
-                DRAFT_USER_NAME: subNode.NAME_KOR,
-                PSTN_NAME: subNode.PSTN_NAME_KOR,
-                DRAFT_DEPT_NAME: subNode.DEPT_NAME_KOR,
-              });
-          });
-        }
-      }
-    });
-
-    const draftList = resultList.filter(fNode => fNode.NODE_ID === 101 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
-    const approveList = resultList.filter(fNode => fNode.NODE_ID === 107 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
-    const reviewerList = resultList.filter(fNode => fNode.NODE_ID === 106 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
-    const mailReviewerList = resultList.filter(fNode => fNode.NODE_ID === 112 && fNode.DRAFT_USER_NAME && fNode.DRAFT_USER_NAME.length > 0);
+    const draftList = prcPreViewList.filter(fNode => fNode.NODE_ID === 101 && fNode.APPV_USER_NAME && fNode.APPV_USER_NAME.length > 0);
+    const approveList = prcPreViewList.filter(fNode => fNode.NODE_ID === 107 && fNode.APPV_USER_NAME && fNode.APPV_USER_NAME.length > 0);
+    const reviewerList = prcPreViewList.filter(fNode => fNode.NODE_ID === 106 && fNode.APPV_USER_NAME && fNode.APPV_USER_NAME.length > 0);
+    const mailReviewerList = prcPreViewList.filter(fNode => fNode.NODE_ID === 112 && fNode.APPV_USER_NAME && fNode.APPV_USER_NAME.length > 0);
 
     let draftNode = [];
     if (draftList && draftList.length > 0 && approveList && approveList.length > 0) {
       draftNode = [
         <tr key="MdcsProcessListComp-draftList-approveList" className="mdcsProcessRow">
           <td>
-            <div className="mdcsDeptName">{draftList[0].DRAFT_DEPT_NAME}</div>
-            <div className="mdcsPstnName">{draftList[0].PSTN_NAME}</div>
-            <div className="mdcsUserName">{draftList[0].DRAFT_USER_NAME}</div>
+            <div className="mdcsDeptName">{draftList[0].APPV_DEPT_NAME}</div>
+            <div className="mdcsPstnName">{draftList[0].APPV_PSTN_NAME}</div>
+            <div className="mdcsUserName">{draftList[0].APPV_USER_NAME}</div>
             <div className="mdcsAppvDttm">{draftList[0].APPV_DTTM}</div>
             <div className="mdcsAppvStatus">
-              {draftList[0].APPV_STATUS === 2 || draftList[0].APPV_STATUS === 20 ? (
-                <Icon type="check-circle" />
-              ) : (
-                (draftList[0].APPV_STATUS === 3 && <Icon type="stop" />) || ''
-              )}
+              <Icon type="check-circle" />
             </div>
           </td>
           <td>
-            <div className="mdcsDeptName">{approveList[0].DRAFT_DEPT_NAME}</div>
-            <div className="mdcsPstnName">{approveList[0].PSTN_NAME}</div>
-            <div className="mdcsUserName">{approveList[0].DRAFT_USER_NAME}</div>
+            <div className="mdcsDeptName">{approveList[0].APPV_DEPT_NAME}</div>
+            <div className="mdcsPstnName">{approveList[0].APPV_PSTN_NAME}</div>
+            <div className="mdcsUserName">{approveList[0].APPV_USER_NAME}</div>
             <div className="mdcsAppvDttm">{approveList[0].APPV_DTTM}</div>
             <div className="mdcsAppvStatus">
               {approveList[0].APPV_STATUS === 2 || approveList[0].APPV_STATUS === 20 ? (
@@ -119,6 +97,7 @@ class MdcsProcessListComp extends Component {
         </tr>,
       ];
     }
+
     const dummyNode = (
       <td>
         <div className="mdcsDeptName"></div>
@@ -128,15 +107,16 @@ class MdcsProcessListComp extends Component {
         <div className="mdcsAppvStatus"></div>
       </td>
     );
+
     const reviewerNode = [];
     let tempNode = [];
     let maxCnt = reviewerList.length;
     reviewerList.forEach((node, idx) => {
       const itemNode = (
         <td>
-          <div className="mdcsDeptName">{node.DRAFT_DEPT_NAME}</div>
-          <div className="mdcsPstnName">{node.PSTN_NAME}</div>
-          <div className="mdcsUserName">{node.DRAFT_USER_NAME}</div>
+          <div className="mdcsDeptName">{node.APPV_DEPT_NAME}</div>
+          <div className="mdcsPstnName">{node.APPV_PSTN_NAME}</div>
+          <div className="mdcsUserName">{node.APPV_USER_NAME}</div>
           <div className="mdcsAppvDttm">{node.APPV_DTTM}</div>
           <div className="mdcsAppvStatus">
             {node.APPV_STATUS === 2 || node.APPV_STATUS === 20 ? <Icon type="check-circle" /> : (draftList[0].APPV_STATUS === 3 && <Icon type="stop" />) || ''}
@@ -147,7 +127,7 @@ class MdcsProcessListComp extends Component {
         if (idx + 1 === maxCnt) {
           tempNode = [itemNode, dummyNode];
           reviewerNode.push(
-            <tr key={`MdcsProcessListComp-reviewerList_${node.RESULT_ID}_${idx}`} className="mdcsProcessRow">
+            <tr key={`MdcsProcessListComp-reviewerList_${idx}`} className="mdcsProcessRow">
               {tempNode}
             </tr>,
           );
@@ -155,7 +135,7 @@ class MdcsProcessListComp extends Component {
       } else {
         tempNode.push(itemNode);
         reviewerNode.push(
-          <tr key={`MdcsProcessListComp-reviewerList_${node.RESULT_ID}_${idx}`} className="mdcsProcessRow">
+          <tr key={`MdcsProcessListComp-reviewerList_${idx}`} className="mdcsProcessRow">
             {tempNode}
           </tr>,
         );
@@ -166,9 +146,9 @@ class MdcsProcessListComp extends Component {
     mailReviewerList.forEach((node, idx) => {
       const itemNode = (
         <td>
-          <div className="mdcsDeptName">{node.DRAFT_DEPT_NAME}</div>
-          <div className="mdcsPstnName">{node.PSTN_NAME}</div>
-          <div className="mdcsUserName">{node.DRAFT_USER_NAME}</div>
+          <div className="mdcsDeptName">{node.APPV_DEPT_NAME}</div>
+          <div className="mdcsPstnName">{node.APPV_PSTN_NAME}</div>
+          <div className="mdcsUserName">{node.APPV_USER_NAME}</div>
           <div className="mdcsAppvDttm">{node.APPV_DTTM}</div>
           <div className="mdcsAppvStatus">
             {node.APPV_STATUS === 2 || node.APPV_STATUS === 20 ? <Icon type="check-circle" /> : (draftList[0].APPV_STATUS === 3 && <Icon type="stop" />) || ''}
@@ -179,7 +159,7 @@ class MdcsProcessListComp extends Component {
         if (idx + 1 === maxCnt) {
           tempNode = [itemNode, dummyNode];
           mailReviewerNode.push(
-            <tr key={`MdcsProcessListComp-mailReviewerList_${node.RESULT_ID}_${idx}`} className="mdcsProcessRow">
+            <tr key={`MdcsProcessListComp-mailReviewerList_${idx}`} className="mdcsProcessRow">
               {tempNode}
             </tr>,
           );
@@ -187,7 +167,7 @@ class MdcsProcessListComp extends Component {
       } else {
         tempNode.push(itemNode);
         mailReviewerNode.push(
-          <tr key={`MdcsProcessListComp-mailReviewerList_${node.RESULT_ID}_${idx}`} className="mdcsProcessRow">
+          <tr key={`MdcsProcessListComp-mailReviewerList_${idx}`} className="mdcsProcessRow">
             {tempNode}
           </tr>,
         );

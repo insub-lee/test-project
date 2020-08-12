@@ -19,6 +19,7 @@ class StandardDocList extends Component {
       },
       listVisible: false,
       modalList: [],
+      listCnt: 0,
     };
   }
 
@@ -42,20 +43,28 @@ class StandardDocList extends Component {
   onClickRow = row => this.setState({ visible: true, viewType: 'VIEW', workSeq: row.WORK_SEQ, taskSeq: row.TASK_SEQ });
 
   onClickList = () => {
-    const { sagaKey, submitHandlerBySaga } = this.props;
+    this.getListData(1, 10);
+  };
+
+  getListData = (PAGE, PAGE_CNT) => {
+    const { sagaKey, subKey, submitHandlerBySaga } = this.props;
     let url = '/api/mdcs/v1/common/docViewHistoryListHanlder';
-    if (sagaKey === 'mdcsDocFavoriteWidget') url = '/api/mdcs/v1/common/docFavoriteListHanlder';
-    submitHandlerBySaga(sagaKey, 'POST', url, { PARAM: {} }, this.initListDataBind);
+    if (subKey === 'mdcsDocFavoriteWidget') url = '/api/mdcs/v1/common/docFavoriteListHanlder';
+    submitHandlerBySaga(sagaKey, 'POST', url, { PARAM: { PAGE, PAGE_CNT } }, this.initListDataBind);
   };
 
   initListDataBind = (sagaKey, response) => {
-    this.setState({ listVisible: true, modalList: response && response.list ? response.list : [] });
+    this.setState({
+      listVisible: true,
+      modalList: response && response.list ? response.list : [],
+      listCnt: response && response.listCnt ? response.listCnt : 0,
+    });
   };
 
   closeListBtnFunc = () => this.setState({ listVisible: false, modalList: [] });
 
   render() {
-    const { visible, viewType, workSeq, taskSeq, coverView, modalList, listVisible } = this.state;
+    const { visible, viewType, workSeq, taskSeq, coverView, modalList, listVisible, listCnt } = this.state;
     const { widgetTitle, widgetClassName, standardDocList } = this.props;
     return (
       <div className={`widget-inner ${widgetClassName}`}>
@@ -89,6 +98,9 @@ class StandardDocList extends Component {
           listVisible={listVisible}
           onClickRow={this.onClickRow}
           closeListBtnFunc={this.closeListBtnFunc}
+          getListData={this.getListData}
+          listCnt={listCnt}
+          {...this.props}
         />
       </div>
     );

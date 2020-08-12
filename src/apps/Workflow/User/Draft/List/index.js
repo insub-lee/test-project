@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Table, Modal, Icon, Button, Input, message } from 'antd';
 import moment from 'moment';
 import styled from 'styled-components';
+import uuid from 'uuid/v1';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
@@ -14,6 +15,8 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import ProcessView from 'apps/Workflow/User/CommonView/processView';
+import ExcelDownLoad from 'components/ExcelDownLoad';
 
 const StyledWrap = styled.div`
   table.mdcsProcessList {
@@ -48,6 +51,60 @@ const StyledWrap = styled.div`
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
 const { TextArea } = Input;
+
+const excelColumns = [
+  {
+    title: '종류',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '유형',
+    width: { wpx: 120 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '표준번호',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: 'Rev',
+    width: { wpx: 30 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '표준제목',
+    width: { wpx: 300 },
+    style: { alignment: { horizontal: 'left' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '기안일',
+    width: { wpx: 120 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '상태',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+  {
+    title: '기안자',
+    width: { wpx: 100 },
+    style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
+  },
+];
+const fields = [
+  { field: 'APPVGUBUN', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'NODETYPE', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'DOCNUMBER', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'VERSION', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } }, format: { type: 'NUMBER' } },
+  { field: 'DRAFT_TITLE', style: { alignment: { horizontal: 'left' }, font: { sz: '10' } } },
+  { field: 'REG_DTTM', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } }, format: { type: 'DATE' } },
+  { field: 'STATUS', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+  { field: 'NAME_KOR', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
+];
+
 class DraftList extends Component {
   constructor(props) {
     super(props);
@@ -71,6 +128,8 @@ class DraftList extends Component {
       workPrcProps: undefined,
       paginationIdx: 1,
       pageSize: 10,
+      isPreView: false,
+      isObsCheck: undefined,
     };
   }
 
@@ -106,7 +165,12 @@ class DraftList extends Component {
       width: '10%',
       align: 'center',
       ellipsis: true,
-      render: (text, record) => (record.REL_TYPE === 999 ? `OBS-${record.DRAFT_ID}` : text),
+      render: (text, record) =>
+        record.REL_TYPE === 999 ? (
+          <a onClick={() => this.onRowClick(record)}>{`OBS-${record.DRAFT_ID}`}</a>
+        ) : (
+          <a onClick={() => this.onRowClick(record)}>{text}</a>
+        ),
     },
     {
       title: 'Rev',
@@ -122,6 +186,7 @@ class DraftList extends Component {
       dataIndex: 'DRAFT_TITLE',
       key: 'title',
       ellipsis: true,
+      render: (text, record) => <a onClick={() => this.onRowClick(record)}>{text}</a>,
     },
     {
       title: '기안일',
@@ -137,6 +202,7 @@ class DraftList extends Component {
       key: 'STATUS_NM',
       width: '8%',
       align: 'center',
+      render: (text, record) => <a onClick={() => this.onPrcPreViewClick(record)}>{text}</a>,
     },
     {
       title: '기안자',
@@ -332,7 +398,13 @@ class DraftList extends Component {
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    const { selectedRow } = this.props;
     const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'VIEW' };
+    if (selectedRow.REL_TYPE === 99) {
+      this.setState({ isObsCheck: true });
+    } else {
+      this.setState({ isObsCheck: false });
+    }
     this.setState({ coverView });
   };
 
@@ -384,6 +456,22 @@ class DraftList extends Component {
       this.setState(prevState => {
         const { workPrcProps } = prevState;
         const nWorkPrcProps = { ...selectedRow, draftMethod: 'MODIFY', darft_id: selectedRow.DRAFT_ID };
+        return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
+      });
+    }
+  };
+
+  onClickReDraft = () => {
+    const { selectedRow } = this.props;
+    const { REL_TYPE } = selectedRow;
+
+    if (REL_TYPE === 999) {
+      this.setState({ isAbrogationMultiShow: true, workPrcProps: { ...selectedRow, draftMethod: 'MODIFY' } });
+    } else {
+      const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
+      this.setState(prevState => {
+        const { workPrcProps } = prevState;
+        const nWorkPrcProps = { ...selectedRow, draftMethod: 'REDRAFT', darft_id: selectedRow.DRAFT_ID };
         return { ...prevState, coverView, workPrcProps: { ...nWorkPrcProps } };
       });
     }
@@ -449,6 +537,19 @@ class DraftList extends Component {
       getDraftList(fixUrl, paginationIdx, pageSize);
     });
 
+  onPrcPreViewClick = record => {
+    this.setState({ isPreView: true });
+    this.props.setSelectedRow(record);
+  };
+
+  onClosePreView = () => {
+    this.setState({ isPreView: false });
+  };
+
+  onReload = () => {
+    this.props.setViewVisible(false);
+  };
+
   render() {
     // const { approveList } = this.props;
     const { draftList, selectedRow, opinionVisible, setOpinionVisible, profile, draftListCnt } = this.props;
@@ -463,6 +564,8 @@ class DraftList extends Component {
       isAbrogationMultiShow,
       workPrcProps,
       paginationIdx,
+      isPreView,
+      isObsCheck,
     } = this.state;
     return (
       <>
@@ -474,16 +577,34 @@ class DraftList extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
-          <span>
-            상신한 문서 : <font style={{ color: '#ff0000' }}>{draftListCnt || 0}</font> 건
-          </span>
+          <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
+            <span style={{ float: 'left' }}>
+              상신한 문서 : <font style={{ color: '#ff0000' }}>{draftListCnt || 0}</font> 건
+            </span>
+            <ExcelDownLoad
+              isBuilder={false}
+              fileName={`검색결과 (${moment().format('YYYYMMDD')})`}
+              className="workerExcelBtn"
+              title="Excel 파일로 저장"
+              btnSize="btn-sm"
+              sheetName=""
+              columns={excelColumns}
+              fields={fields}
+              submitInfo={{
+                dataUrl: '/api/workflow/v1/common/approve/DraftListMDCSHandler',
+                method: 'POST',
+                submitData: { PARAM: { relTypes: [1, 4, 99, 999], PAGE: undefined, PAGE_CNT: undefined } },
+                dataSetName: 'list',
+              }}
+            />
+          </div>
           <AntdTable
             key="apps-workflow-user-draft-list"
             columns={this.getTableColumns()}
             dataSource={draftList}
-            onRow={(record, rowIndex) => ({
-              onClick: e => this.onRowClick(record, rowIndex, e),
-            })}
+            // onRow={(record, rowIndex) => ({
+            //   onClick: e => this.onRowClick(record, rowIndex, e),
+            // })}
             bordered
             pagination={{ current: paginationIdx, total: draftListCnt }}
             onChange={pagination => this.setPaginationIdx(pagination.current)}
@@ -504,29 +625,32 @@ class DraftList extends Component {
               <BizBuilderBase
                 sagaKey="approveBase_approveView"
                 viewType="VIEW"
-                // onCloseModal={this.onCloseModal}
-                // onChangeForm={this.onChangeForm}
                 closeBtnFunc={this.closeBtnFunc}
                 clickCoverView={this.clickCoverView}
                 onClickModify={this.onClickModify}
+                onClickReDraft={this.onClickReDraft}
                 workSeq={selectedRow && selectedRow.WORK_SEQ}
                 taskSeq={selectedRow && selectedRow.TASK_SEQ}
                 selectedRow={selectedRow}
-                ViewCustomButtons={({ closeBtnFunc, onClickModify }) => (
+                ViewCustomButtons={({ closeBtnFunc, onClickModify, onClickReDraft }) => (
                   <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
                     {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
                       <>
+                        {profile && profile.USER_ID === selectedRow.DRAFTER_ID && (
+                          <>
+                            <StyledButton className="btn-primary btn-sm mr5" onClick={onClickModify}>
+                              표지수정
+                            </StyledButton>
+                            <StyledButton className="btn-primary btn-sm mr5" onClick={onClickReDraft}>
+                              재기안
+                            </StyledButton>
+                          </>
+                        )}
                         <StyledButton className="btn-primary btn-sm mr5" onClick={this.onHoldRelase}>
                           홀드해제
                         </StyledButton>
-                        {profile && profile.USER_ID === selectedRow.DRAFTER_ID && (
-                          <StyledButton className="btn-primary btn-sm mr5" onClick={onClickModify}>
-                            표지수정
-                          </StyledButton>
-                        )}
                       </>
                     )}
-
                     <StyledButton className="btn-light btn-sm" onClick={closeBtnFunc}>
                       닫기
                     </StyledButton>
@@ -541,8 +665,8 @@ class DraftList extends Component {
                       <colgroup>
                         <col width="10%" />
                         <col width="10%" />
-                        <col width="10%" />
-                        <col width="55%" />
+                        <col width="20%" />
+                        <col width="45%" />
                         <col width="15%" />
                       </colgroup>
                       <thead>
@@ -587,8 +711,10 @@ class DraftList extends Component {
                 workSeq={coverView.workSeq}
                 taskSeq={coverView.taskSeq}
                 viewMetaSeq={coverView.viewMetaSeq}
+                isObsCheck={isObsCheck}
                 CustomWorkProcessModal={WorkProcessModal}
                 workPrcProps={workPrcProps}
+                callbackFuncExtra={this.onReload}
                 onCloseCoverView={this.onCloseCoverView}
                 onCloseModalHandler={this.onCloseCoverView}
                 reloadId="approveBase_approveView"
@@ -782,6 +908,10 @@ class DraftList extends Component {
               닫기
             </StyledButton>
           </StyledButtonWrapper>
+        </AntdModal>
+
+        <AntdModal title="결재정보" width={680} visible={isPreView} destroyOnClose onCancel={this.onClosePreView} footer={null}>
+          <ProcessView {...this.props}></ProcessView>
         </AntdModal>
       </>
     );

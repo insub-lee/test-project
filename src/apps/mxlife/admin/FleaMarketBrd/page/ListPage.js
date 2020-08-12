@@ -202,7 +202,7 @@ class ListPage extends Component {
     const pageRefresh = (refresh && typeof refresh === 'boolean' && refresh) || false;
     switch (type) {
       case 'view':
-        title = '콘도 정보';
+        title = '벼룩시장 정보';
         item = record;
         break;
       default:

@@ -122,17 +122,17 @@ class ExcelUploader extends React.Component {
             case 'job_proc':
               return {
                 key: index,
-                title: row[0],
-                total: row[1],
-                answers: [row[2], row[3], row[4], row[5]],
-                correctAnswer: row[2],
+                title: row[2],
+                total: row[3],
+                answers: [row[4], row[5], row[6], row[7]],
+                correctAnswer: row[4],
               };
             default:
               return {
                 key: index,
                 title: row[0],
-                theory: row[1] === '○',
-                practice: row[2] === '○',
+                theory: row[1].toUpperCase() === 'Y',
+                practice: row[2].toUpperCase() === 'Y',
                 total: row[3],
                 scoreA: row[3] ? row[4] : '-',
                 scoreB: row[3] ? row[5] : '-',

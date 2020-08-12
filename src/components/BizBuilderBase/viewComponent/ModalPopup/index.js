@@ -15,6 +15,9 @@ const ModalPopup = ({
   ViewCustomButtons,
   compProps,
   conditional,
+  callbackFuncExtra,
+  modalProps,
+  callApiExtraProps,
 }) => (
   <BizBuilderBase
     sagaKey={`BizBuilderModalPopup_${sagaKey}_${workSeq || '-1'}`}
@@ -30,6 +33,9 @@ const ModalPopup = ({
     ViewCustomButtons={ViewCustomButtons}
     compProps={compProps}
     conditional={conditional}
+    callbackFuncExtra={callbackFuncExtra}
+    modalProps={modalProps}
+    callApiExtraProps={callApiExtraProps}
   />
 );
 

@@ -47,7 +47,7 @@ class DocDashBoard extends Component {
       days = data.newDocDays || 30;
     }
     const url = `/api/mdcs/v1/common/mdcsMainDocCountHanlder/${days}`;
-    submitHandlerBySaga(sagaKey, 'POST', url, { PARAM: { WORK_SEQ } }, this.initListDataBind);
+    submitHandlerBySaga(sagaKey, 'POST', url, { PARAM: { WORK_SEQ, NODE_NUM: WORK_SEQ === 1881 ? 3 : 2 } }, this.initListDataBind);
   };
 
   initListDataBind = (sagaKey, response) => {
@@ -177,6 +177,7 @@ class DocDashBoard extends Component {
           onClickRow={this.onClickRow}
           closeListBtnFunc={this.closeListBtnFunc}
           widgetTitle="신규변경 목록"
+          {...this.props}
         />
       </>
     );

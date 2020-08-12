@@ -2,79 +2,109 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
+const calculate = (gasCd, hourFlow, density, workDay, gasWeight) => {
+  let calculateData;
+  switch (gasCd) {
+    case 'HCl':
+    case 'HF':
+    case 'HCHO':
+    case '벤젠':
+    case '페놀':
+    case 'NH3':
+    case 'Sox':
+    case 'Nox':
+    case 'THC':
+      calculateData = ((hourFlow * density) / 22.4 / 1000000) * gasWeight * 24 * workDay;
+      break;
+    case 'Cr':
+    case 'Pb':
+    case 'Ni':
+    case 'As':
+    case '먼지':
+      calculateData = ((hourFlow * density) / 1000000) * 24 * workDay;
+      break;
+    default:
+      calculateData = density;
+      break;
+  }
+  return calculateData;
+};
 class Graph extends Component {
-  // static jsfiddleUrl = 'https://jsfiddle.net/alidingling/30763kr7/';
-  calculate = (gasCd, hourFlow, density, workDay, gasWeight) => {
-    let calculateData;
-    switch (gasCd) {
-      case 'HCl':
-      case 'HF':
-      case 'HCHO':
-      case '벤젠':
-      case '페놀':
-      case 'NH3':
-      case 'Sox':
-      case 'Nox':
-      case 'THC':
-        calculateData = ((hourFlow * density) / 22.4 / 1000000) * gasWeight * 24 * workDay;
-        break;
-      case 'Cr':
-      case 'Pb':
-      case 'Ni':
-      case 'As':
-      case '먼지':
-        calculateData = ((hourFlow * density) / 1000000) * 24 * workDay;
-        break;
-      default:
-        calculateData = density;
-        break;
-    }
-    return calculateData;
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      graphData: [],
+      selectGubun: 1,
+      data: [],
+    };
+  }
 
-  render() {
-    const { graphData, gasList, selectGubun, refStack } = this.props;
-    const graphList = graphData && graphData.map(gasData => gasData && gasData.GAS && gasData.GAS.map(item => JSON.parse(item.value)));
-    let barData;
-    if (selectGubun === 2) {
-      barData =
+  componentDidMount = () => this.setState({ graphData: (this.props && this.props.graphData) || [], selectGubun: this.props.selectGubun });
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const prevGraphData = prevState.graphData || [];
+    const nextGraphData = nextProps.graphData || [];
+    const nextGubun = nextProps.selectGubun || 1;
+    const prevGubun = prevState.selectGubun || 1;
+
+    if (JSON.stringify(prevGraphData) === JSON.stringify(nextGraphData) && prevGubun === nextGubun) return null;
+
+    const graphList = nextGraphData && nextGraphData.map(gasData => gasData && gasData.GAS && gasData.GAS.map(item => JSON.parse(item.value)));
+
+    let data = [];
+    if (nextGubun === 2) {
+      data =
         graphList &&
         graphList.map(temps =>
           temps.map(element => ({
-            name: element[refStack ? 'MEASURE_DT' : 'STACK_CD'],
-            [element.GAS_CD]: this.calculate(element.GAS_CD, element.HOUR_FLOW, element.DENSITY, element.WORK_DAY, element.GAS_WEIGHT),
+            name: element.STACK_CD,
+            subName: element.STACK_CD.substring(3),
+            sub: '',
+            [element.GAS_CD]: calculate(element.GAS_CD, element.HOUR_FLOW, element.DENSITY, element.WORK_DAY, element.GAS_WEIGHT),
           })),
         );
     } else {
-      barData =
+      data =
         graphList &&
         graphList.map(temps =>
           temps.map(element => ({
-            name: element[refStack ? 'MEASURE_DT' : 'STACK_CD'],
+            name: element.STACK_CD,
+            subName: element.STACK_CD.substring(3),
+            sub: '',
             [element.GAS_CD]: element.DENSITY || 0,
           })),
         );
     }
 
+    return { data: data && data.map(i => i.reduce((result, item) => ({ ...result, ...item }), {})), graphData: nextGraphData, selectGubun: nextGubun };
+  }
+
+  render() {
+    const { gasList } = this.props;
+    const { data } = this.state;
     return (
       <BarChart
-        width={1000}
-        height={600}
-        data={barData && barData.map(i => i.reduce((result, item) => ({ ...result, ...item }), {}))}
+        width={1100}
+        height={800}
+        data={data}
         margin={{
-          top: 5,
-          right: 30,
-          left: 20,
+          top: 30,
+          right: 0,
+          left: 0,
           bottom: 5,
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
+        <XAxis xAxisId={0} dataKey="name" hide />
+        <XAxis xAxisId={1} dataKey="subName" interval={1} style={{ fontSize: '0.6rem' }} />
+        <XAxis xAxisId={2} dataKey="sub" label="STACK (FR0 생략)" axisLine={false} tickLine={false} style={{ fontSize: '0.6rem' }} />
         <YAxis />
         <Tooltip />
-        <Legend />
+        <Legend verticalAlign="top" />
         {gasList &&
-          gasList.map((item, index) => <Bar dataKey={item.GAS_CD} stackId="a" fill={`#${Math.floor(((index + 10) / 100) * 16777215).toString(16)}`} />)}
+          gasList.map((item, index) => (
+            <Bar key={item.GAS_CD} dataKey={item.GAS_CD} stackId="a" fill={`#${Math.floor(((index + 10) / 100) * 16777215).toString(16)}`} />
+          ))}
       </BarChart>
     );
   }
@@ -84,9 +114,8 @@ Graph.propTypes = {
   gasList: PropTypes.array,
   graphData: PropTypes.array,
   selectGubun: PropTypes.number,
-  refStack: PropTypes.bool,
 };
 
 Graph.defaultProps = {};
 
-export default React.memo(Graph);
+export default Graph;

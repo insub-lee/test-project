@@ -6,7 +6,7 @@ import PubDocView from './PubDocView';
 class ContentView extends Component {
   render() {
     const { taskSeq, workSeq, pubDocInfo } = this.props;
-    return <BizBuilderBase CustomViewPage={PubDocView} sagaKey="pubDocView" viewType="VIEW" taskSeq={taskSeq} workSeq={workSeq} pubDocInfo={pubDocInfo} />;
+    return <BizBuilderBase sagaKey="pubDocCompleteView" viewType="VIEW" taskSeq={taskSeq} workSeq={workSeq} pubDocInfo={pubDocInfo} ViewCustomButtons={() => false} />;
   }
 }
 

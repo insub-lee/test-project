@@ -153,6 +153,25 @@ class EduManageModal extends React.Component {
     }
   }
 
+  handleReadyExamConfirmExtra(planseq, empno, collseq, key, userName) {
+    if (window.confirm(`‘${userName}(${empno})’ 님의 신입/전배 3차(추가) ${key === 'meter_result' ? '계측기' : 'MASK'} 교육을 진행하시겠습니까?`)) {
+      const payload = {
+        type: 'updateEduPlanStep3Extra',
+        empNo: empno,
+        plan_seq: planseq,
+        collseq,
+        [key]: 'S',
+      };
+      this.updateData(payload).then(result => {
+        if (result) {
+          this.initData();
+        } else {
+          alert('처리과정 중 오류가 발생했습니다.');
+        }
+      });
+    }
+  }
+
   handleStepPass(planseq, step, collseq, empno) {
     if (window.confirm(`${step}단계를 통과 시키겠습니까?`)) {
       const payload = {
@@ -225,14 +244,68 @@ class EduManageModal extends React.Component {
 
   mentorAcceptTestRenderer(reportAuth, eduPlanInfo, row, length, confirmed, step, planResult) {
     const { site } = this.props;
-    console.debug('@@@ row', row, eduPlanInfo);
-    console.debug('@@@ edu plan info', eduPlanInfo);
+
     switch (reportAuth) {
       case 'mentor': {
         return confirmed ? (
           <>
             <td rowSpan={length}>
-              {step === 3 && eduPlanInfo.area.includes('PHOTO') ? (
+              <button
+                type="button"
+                style={{ margin: '10px 0' }}
+                onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_common', eduPlanInfo.area)}
+              >
+                <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
+              </button>
+              {step === 3 && eduPlanInfo.meter_result === '' && eduPlanInfo.mask_result !== 'S' && eduPlanInfo.step3_result !== 'O' && (
+                <>
+                  <StyledButton
+                    type="button"
+                    className="btn-light btn-sm"
+                    style={{ margin: '10px 0' }}
+                    onClick={() => this.handleReadyExamConfirmExtra(row.plan_seq, row.empno, eduPlanInfo.collseq, 'meter_result', eduPlanInfo.usrnm)}
+                  >
+                    계측기 평가 시작
+                  </StyledButton>
+                </>
+              )}
+              {step === 3 && eduPlanInfo.meter_result !== 'S' && eduPlanInfo.mask_result === '' && eduPlanInfo.step3_result !== 'O' && (
+                <>
+                  <StyledButton
+                    type="button"
+                    className="btn-light btn-sm"
+                    style={{ margin: '10px 0' }}
+                    onClick={() => this.handleReadyExamConfirmExtra(row.plan_seq, row.empno, eduPlanInfo.collseq, 'mask_result', eduPlanInfo.usrnm)}
+                  >
+                    MASK 평가 시작
+                  </StyledButton>
+                </>
+              )}
+              {step === 3 && eduPlanInfo.meter_result !== '' && eduPlanInfo.mask_result !== 'S' && (
+                <>
+                  <br />
+                  <button
+                    type="button"
+                    style={{ margin: '10px 0' }}
+                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_meter', eduPlanInfo.area)}
+                  >
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_meter')}
+                  </button>
+                </>
+              )}
+              {step === 3 && eduPlanInfo.meter_result !== 'S' && eduPlanInfo.mask_result !== '' && (
+                <>
+                  <br />
+                  <button
+                    type="button"
+                    style={{ margin: '10px 0' }}
+                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_mask', eduPlanInfo.area)}
+                  >
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_mask')}
+                  </button>
+                </>
+              )}
+              {/* {step === 3 && eduPlanInfo.area.includes('PHOTO') ? (
                 <>
                   <button
                     type="button"
@@ -262,7 +335,7 @@ class EduManageModal extends React.Component {
                 <button type="button" style={{ margin: '10px 0' }} onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site)}>
                   <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
                 </button>
-              )}
+              )} */}
             </td>
             {planResult === 'O' && (
               <td rowSpan={length} style={{ color: '#1fb5ad' }}>
@@ -289,7 +362,38 @@ class EduManageModal extends React.Component {
         return confirmed ? (
           <>
             <td rowSpan={length}>
-              {step === 3 && eduPlanInfo.area.includes('PHOTO') ? (
+              <button
+                type="button"
+                style={{ margin: '10px 0' }}
+                onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_common', eduPlanInfo.area)}
+              >
+                <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
+              </button>
+              {step === 3 && eduPlanInfo.meter_result !== '' && eduPlanInfo.mask_result !== 'S' && (
+                <>
+                  <br />
+                  <button
+                    type="button"
+                    style={{ margin: '10px 0' }}
+                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_meter', eduPlanInfo.area)}
+                  >
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_meter')}
+                  </button>
+                </>
+              )}
+              {step === 3 && eduPlanInfo.meter_result !== 'S' && eduPlanInfo.mask_result !== '' && (
+                <>
+                  <br />
+                  <button
+                    type="button"
+                    style={{ margin: '10px 0' }}
+                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_mask', eduPlanInfo.area)}
+                  >
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_mask')}
+                  </button>
+                </>
+              )}
+              {/* {step === 3 && eduPlanInfo.area.includes('PHOTO') ? (
                 <>
                   <button
                     type="button"
@@ -319,7 +423,7 @@ class EduManageModal extends React.Component {
                 <button type="button" style={{ margin: '10px 0' }} onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site)}>
                   <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
                 </button>
-              )}
+              )} */}
             </td>
             {planResult === 'O' && (
               <td rowSpan={length} style={{ color: '#1fb5ad' }}>
@@ -343,7 +447,62 @@ class EduManageModal extends React.Component {
         return confirmed ? (
           <>
             <td rowSpan={length}>
-              {step === 3 && eduPlanInfo.area.includes('PHOTO') ? (
+              <button
+                type="button"
+                style={{ margin: '10px 0' }}
+                onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site, 'job_common', eduPlanInfo.area)}
+              >
+                <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
+              </button>
+              {step === 3 && eduPlanInfo.meter_result === '' && eduPlanInfo.mask_result !== 'S' && eduPlanInfo.step3_result !== 'O' && (
+                <>
+                  <StyledButton
+                    type="button"
+                    className="btn-light btn-sm"
+                    style={{ margin: '10px 0' }}
+                    onClick={() => this.handleReadyExamConfirmExtra(row.plan_seq, row.empno, eduPlanInfo.collseq, 'meter_result', eduPlanInfo.usrnm)}
+                  >
+                    계측기 평가 시작
+                  </StyledButton>
+                </>
+              )}
+              {step === 3 && eduPlanInfo.meter_result !== 'S' && eduPlanInfo.mask_result === '' && eduPlanInfo.step3_result !== 'O' && (
+                <>
+                  <StyledButton
+                    type="button"
+                    className="btn-light btn-sm"
+                    style={{ margin: '10px 0' }}
+                    onClick={() => this.handleReadyExamConfirmExtra(row.plan_seq, row.empno, eduPlanInfo.collseq, 'mask_result', eduPlanInfo.usrnm)}
+                  >
+                    MASK 평가 시작
+                  </StyledButton>
+                </>
+              )}
+              {step === 3 && eduPlanInfo.meter_result !== '' && eduPlanInfo.mask_result !== 'S' && (
+                <>
+                  <br />
+                  <button
+                    type="button"
+                    style={{ margin: '10px 0' }}
+                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_meter', eduPlanInfo.area)}
+                  >
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_meter')}
+                  </button>
+                </>
+              )}
+              {step === 3 && eduPlanInfo.meter_result !== 'S' && eduPlanInfo.mask_result !== '' && (
+                <>
+                  <br />
+                  <button
+                    type="button"
+                    style={{ margin: '10px 0' }}
+                    onClick={() => this.handleOpenExamModal(row.plan_seq, row.empno, step, site, 'job_mask', eduPlanInfo.area)}
+                  >
+                    <i className="fa fa-check" /> {getEduTitle(step, 'job_mask')}
+                  </button>
+                </>
+              )}
+              {/* {step === 3 && eduPlanInfo.area.includes('PHOTO') ? (
                 <>
                   <button
                     type="button"
@@ -373,7 +532,7 @@ class EduManageModal extends React.Component {
                 <button type="button" style={{ margin: '10px 0' }} onClick={() => this.handleOpenExamCheckModal(row.plan_seq, row.empno, step, site)}>
                   <i className="fa fa-check" /> {getEduTitle(step, 'job_common')}
                 </button>
-              )}
+              )} */}
             </td>
             {planResult === 'O' && (
               <td rowSpan={length} style={{ color: '#1fb5ad' }}>
@@ -525,6 +684,7 @@ class EduManageModal extends React.Component {
     const checkIndex = eduPlanStep.findIndex(eduPlan => eduPlan.step_level === step);
     const confirmed = checkIndex > -1;
     let planResult = '';
+
     if (confirmed) {
       planResult = eduPlanStep[checkIndex].plan_result;
     }
@@ -680,7 +840,7 @@ class EduManageModal extends React.Component {
                         </tr>
                         <tr className="bd">
                           <th>최 종 확 인</th>
-                          <td colSpan={3}>{`${eduPlanInfo.step3_edusdt === 'O' ? '최종합격' : ''}`}</td>
+                          <td colSpan={3}>{`${eduPlanInfo.step3_result === 'O' ? '최종합격' : ''}`}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -782,7 +942,7 @@ class EduManageModal extends React.Component {
         </div>
         <EvaluationFormModal ref={this.evaluationFormModal} callbackHandler={this.initData} site={site} readOnly={['user', 'readonly'].includes(reportAuth)} />
         <EvaluationFormCheckModal ref={this.evaluationFormCheckModal} callbackHandler={this.initData} site={site} />
-        <EduReportModal ref={this.eduReportModal} callbackHandler={this.initData} />
+        <EduReportModal ref={this.eduReportModal} callbackHandler={this.initData} eduPlanInfo={eduPlanInfo} />
         <MentorOpinionModal ref={this.mentorOpinionModal} callbackHandler={this.initData} site={site} />
         <ChiefOpinionModal ref={this.chiefOpinionModal} callbackHandler={this.initData} />
       </Modal>

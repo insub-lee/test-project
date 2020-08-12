@@ -55,6 +55,11 @@ class List extends Component {
     this.setState({ yearList }, spinningOff);
   }
 
+  componentWillUnmount() {
+    const { sagaKey: id, removeReduxState } = this.props;
+    removeReduxState(id);
+  }
+
   getList = () => {
     const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff } = this.props;
     const { searchParam } = this.state;
@@ -332,7 +337,7 @@ class List extends Component {
               />
 
               <StyledButton
-                className="btn-primary btn-sm"
+                className="btn-primary btn-sm ml5"
                 onClick={() =>
                   0 in selectedRows
                     ? this.setState(
@@ -374,6 +379,7 @@ List.propTypes = {
   getCallDataHandler: PropTypes.func,
   spinningOn: PropTypes.func,
   spinningOff: PropTypes.func,
+  removeReduxState: PropTypes.func,
 };
 List.defaultProps = {
   result: {},
@@ -381,6 +387,7 @@ List.defaultProps = {
   getCallDataHandler: () => {},
   spinningOn: () => {},
   spinningOff: () => {},
+  removeReduxState: () => {},
 };
 
 export default List;

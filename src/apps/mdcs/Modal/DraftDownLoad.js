@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Radio, Input } from 'antd';
+import { Radio, Input, notification } from 'antd';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
@@ -26,6 +26,7 @@ class DraftDownLoad extends Component {
   componentDidMount() {
     const { sagaKey, submitHandlerBySaga } = this.props;
     const prefixUrl = '/api/mdcs/v1/common/drmAclHandler';
+    console.debug('did', this.props);
     submitHandlerBySaga(sagaKey, 'GET', prefixUrl, {}, this.initAclData);
   }
 
@@ -51,14 +52,26 @@ class DraftDownLoad extends Component {
 
   onDraftDownLoad = () => {
     const { selectedDRM, OPINION } = this.state;
+
     if (OPINION) {
       const { sagaKey, submitHandlerBySaga, onCompleteProc, selectedRow, DRAFT_PROCESS } = this.props;
       const { TITLE, WORK_SEQ, TASK_SEQ } = selectedRow;
-      const draftTitle = `${TITLE} 다운로드신청`;
+      const draftTitle = `${TITLE}`;
       const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
       const draftData = {
         DRAFT_PROCESS: { ...DRAFT_PROCESS, DRAFT_TITLE: draftTitle, WORK_SEQ, TASK_SEQ, OPINION, REL_TYPE: 4, DRAFT_DATA: { ...selectedDRM, OPINION } },
       };
+      notification['info']({
+        message: '파일 다운로드 신청 진행 프로세스',
+        description: (
+          <>
+            <div>파일다운로드 결과 여부는</div>
+            <div>[팀장결재 완료후] → [파일신청함] 에서</div> <div>확인 가능함</div>
+          </>
+        ),
+        duration: 0,
+        onClick: () => {},
+      });
       submitHandlerBySaga(sagaKey, 'POST', prefixUrl, draftData, onCompleteProc);
     } else {
       message.warning('요청사유를 입력하셔야 합니다.');
@@ -85,7 +98,7 @@ class DraftDownLoad extends Component {
                     <th>표준 번호</th>
                     <td>{selectedRow.DOCNUMBER}</td>
                     <th>개정번호</th>
-                    <td>{selectedRow.VERSION}</td>
+                    <td>{selectedRow.VERSION.split('.')[0]}</td>
                   </tr>
                   <tr>
                     <th>결재자</th>

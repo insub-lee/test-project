@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import uuid from 'uuid/v1';
 import { Tabs, Icon } from 'antd';
 
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
@@ -31,11 +31,11 @@ class SearchTab extends Component {
   };
 
   onTabClick = key => {
-    this.setState({ currentPage: key });
+    this.setState({ currentPage: key, currentKey: uuid() });
   };
 
   render() {
-    const { currentPage } = this.state;
+    const { currentPage, currentKey } = this.state;
     return (
       <StyledSearch>
         <div className="searchTabs">
@@ -49,7 +49,7 @@ class SearchTab extends Component {
               }
               key="BASIC"
             >
-              <SearchBasic {...this.props} />
+              <SearchBasic key={currentKey} {...this.props} />
             </TabPane>
             <TabPane
               tab={
@@ -62,6 +62,7 @@ class SearchTab extends Component {
             >
               {currentPage === 'BIZ' && (
                 <BizMicroDevBase
+                  key={currentKey}
                   rootNodeId={2}
                   currentPage={this.state.currentPage}
                   treeData={this.state.treeData}
@@ -83,6 +84,7 @@ class SearchTab extends Component {
             >
               {currentPage === 'TECH' && (
                 <BizMicroDevBase
+                  key={currentKey}
                   rootNodeId={6}
                   currentPage={this.state.currentPage}
                   treeData={this.state.treeData}
@@ -104,6 +106,7 @@ class SearchTab extends Component {
             >
               {currentPage === 'DW' && (
                 <BizMicroDevBase
+                  key={currentKey}
                   rootNodeId={16}
                   currentPage={this.state.currentPage}
                   treeData={this.state.treeData}
@@ -125,6 +128,7 @@ class SearchTab extends Component {
             >
               {currentPage === 'NPI' && (
                 <BizMicroDevBase
+                  key={currentKey}
                   rootNodeId={0}
                   currentPage={this.state.currentPage}
                   treeData={this.state.treeData}
@@ -146,6 +150,7 @@ class SearchTab extends Component {
             >
               {currentPage === 'TDS' && (
                 <BizMicroDevBase
+                  key={currentKey}
                   rootNodeId={231}
                   currentPage={this.state.currentPage}
                   treeData={this.state.treeData}
@@ -167,6 +172,7 @@ class SearchTab extends Component {
             >
               {currentPage === 'WP' && (
                 <BizMicroDevBase
+                  key={currentKey}
                   rootNodeId={234}
                   currentPage={this.state.currentPage}
                   treeData={this.state.treeData}
