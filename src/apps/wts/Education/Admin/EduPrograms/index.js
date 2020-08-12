@@ -410,7 +410,7 @@ class EduPrograms extends React.Component {
       {
         label: '교육',
         dataKey: 'study',
-        percentWidth: 15,
+        percentWidth: 22,
         headerRenderer: this.headerRenderer,
         cellRenderer: ({ cellData, rowData }) => (
           <span style={{ color: colorSelector(rowData.get('collecsdt'), rowData.get('collecedt')) }}>{this.getTitle(rowData)}</span>
@@ -420,7 +420,7 @@ class EduPrograms extends React.Component {
       {
         label: '구분',
         dataKey: 'group_study',
-        percentWidth: 15,
+        percentWidth: 10,
         headerRenderer: this.headerRenderer,
         cellRenderer: ({ cellData }) => (cellData === 'O' ? '집체교육' : '개별'),
         disableSort: false,
@@ -435,14 +435,14 @@ class EduPrograms extends React.Component {
       {
         label: '시작날짜',
         dataKey: 'collecsdt',
-        percentWidth: 15,
+        percentWidth: 14,
         headerRenderer: this.headerRenderer,
         cellRenderer: ({ cellData }) => moment(cellData, 'YYYYMMDD').format('YYYY.MM.DD'),
       },
       {
         label: '종료날짜',
         dataKey: 'collecedt',
-        percentWidth: 15,
+        percentWidth: 14,
         headerRenderer: this.headerRenderer,
         cellRenderer: ({ cellData }) => moment(cellData, 'YYYYMMDD').format('YYYY.MM.DD'),
         disableSort: false,

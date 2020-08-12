@@ -89,6 +89,27 @@ class ChkMstView extends Component {
     spinningOff();
   };
 
+  onSearchChkList = () => {
+    const { sagaKey, getCallDataHandlerReturnRes, spinningOn , spinningOff, selectedRow } = this.props;
+    const apiInfo = {
+      key: 'chkMstList',
+      url: `/api/eshs/v1/common/health/healthChkReservationMstList`,
+      type: 'POST',
+      params: {
+        PARAM: { SCH_USER_ID: selectedRow.USER_ID, CHK_YEAR: this.state.CHK_YEAR }
+      },
+    };
+    spinningOn();
+    getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, res) => {
+      spinningOff();
+      if (res && res.list) {
+        this.setState({
+          list: res.list,
+        });
+      }
+    });
+  };
+
   render() {
     const { userInfo, list } = this.state;
     const { result } = this.props;
@@ -175,16 +196,16 @@ class ChkMstView extends Component {
           </StyledHtmlTable>
           <StyledCustomSearchWrapper style={{ marginTop: 20 }}>
             <div className="search-input-area">
-              <AntdSelect value={this.state.CHK_YEAR} className="select-sm mr5" style={{ width: 100 }}>
+              <AntdSelect value={this.state.CHK_YEAR} className="select-sm mr5" style={{ width: 100 }} onChange={val => this.setState({ CHK_YEAR: val })}>
               {this.state.yearList && this.state.yearList.map(year => (
                 <AntdSelect.Option value={year}>{`${year}년`}</AntdSelect.Option>
               ))}
               </AntdSelect>
-              <StyledButton className="btn-gray btn-sm mr5" onClick={() => { alert('개발중입니다.'); }}>검색</StyledButton>
-              <StyledButton className="btn-gray btn-sm mr5" onClick={() => { alert('개발중입니다.'); }}>문진표조회</StyledButton>
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.onSearchChkList}>검색</StyledButton>
+              {/* <StyledButton className="btn-gray btn-sm mr5" onClick={() => { alert('개발중입니다.'); }}>문진표조회</StyledButton>
               <StyledButton className="btn-gray btn-sm mr5" onClick={() => { alert('개발중입니다.'); }}>검진결과조회</StyledButton>
               <StyledButton className="btn-primary btn-sm mr5" onClick={() => { alert('개발중입니다.'); }}>검진추가</StyledButton>
-              <StyledButton className="btn-primary btn-sm" onClick={() => { alert('개발중입니다.'); }}>저장</StyledButton>
+              <StyledButton className="btn-primary btn-sm" onClick={() => { alert('개발중입니다.'); }}>저장</StyledButton> */}
             </div> 
           </StyledCustomSearchWrapper>
           {list && list.length > 0 && (

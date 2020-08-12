@@ -159,9 +159,13 @@ class Quota extends Component {
       return false;
     }
 
+    const that = this;
+
     Modal.confirm({
-      title: '예약인원이 있는 날짜는 삭제되지 않습니다.',
+      title: '예약인원이 있는 날짜는 삭제되지 않습니다. 삭제된 내용은 저장시 반영됩니다.',
       icon: <ExclamationCircleOutlined />,
+      okText: '확인',
+      cancelText: '취소',
       onOk() {
         let startDate = new Date(searchInfo.START_DT);
         let endDate = new Date(searchInfo.END_DT);
@@ -172,7 +176,7 @@ class Quota extends Component {
           startDate.setDate(startDate.getDate() + 1);
         }
 
-        this.setState(prevState => {
+        that.setState(prevState => {
           const { quotaList } = prevState;
           return {
             quotaList: quotaList.filter(item => {
@@ -188,7 +192,7 @@ class Quota extends Component {
             }),
           }
         });
-        this.handleSetWeekTotal();
+        that.handleSetWeekTotal();
       }
     });
   };

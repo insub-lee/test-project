@@ -133,7 +133,7 @@ class MainMenuTable extends Component {
                 </td>
                 <td>
                   <span className="menu-span" role="button" tabIndex="0" onClick={() => onClickMenu('CLEAN_ACT')} onKeyPress={() => onClickMenu('CLEAN_ACT')}>
-                    2. 방지시설 가동시간
+                    2. 방지시설 가동시간{hasData.CLEAN_ACT === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
                   </span>
                 </td>
                 <td>

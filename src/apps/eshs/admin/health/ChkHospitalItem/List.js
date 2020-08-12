@@ -155,7 +155,7 @@ class List extends Component {
             dataSource={this.state.list.map(item => ({ ...item, key: item.HOSPITAL_CODE }))}
             bordered={true}
           />
-          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mr-20">
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mr-5">
             <StyledButton className="btn-primary btn-sm" onClick={this.onClickAdd}>등록</StyledButton>
           </StyledButtonWrapper>
         </StyledContentsWrapper>
