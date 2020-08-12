@@ -14,6 +14,7 @@ import StyledStandard from '../../../StyledStandard';
 import service from '../../service';
 import StyledContent from '../../Modals/StyledContent';
 import JobEvaluationReadOnly from '../../Modals/JobEvaluationReadOnly';
+import EduManageJobReturnModal from '../../Modals/EduManageJobReturnModal';
 
 class EduMembersModal extends React.Component {
   constructor(props) {
@@ -41,6 +42,7 @@ class EduMembersModal extends React.Component {
 
     this.jobEvaluationReadOnlyRef = React.createRef();
     this.eduManageModalRef = React.createRef();
+    this.eduManageJobReturnModalRef = React.createRef();
   }
 
   handleOpenModal(collSeq, title, type) {
@@ -168,6 +170,10 @@ class EduMembersModal extends React.Component {
     this.eduManageModalRef.current.handleOpenModal(planseq, reportAuth);
   }
 
+  handleEduManageJobReturn(planseq, reportAuth) {
+    this.eduManageJobReturnModalRef.current.handleOpenModal(planseq, reportAuth);
+  }
+
   onRowClick(rowData) {
     const { type } = this.state;
     const { eduInfo, edu_result: eduResult, plan_seq: planseq } = rowData;
@@ -175,7 +181,8 @@ class EduMembersModal extends React.Component {
       alert('미수료자의 정보는 조회 불가능합니다.');
     } else if (type === 'job_training') {
       this.handleEduManageModal(planseq, 'readonly');
-      console.debug('Job Training!!!');
+    } else if (type === 'job_return') {
+      this.handleEduManageJobReturn(planseq, 'readonly');
     } else {
       const { site, area, workjo, bay, empno, position, usrnm, sex, chk_content: chkContent, study: type, comment } = eduInfo;
       const info = {
@@ -384,6 +391,7 @@ class EduMembersModal extends React.Component {
         </StyledStandard>
         <JobEvaluationReadOnly ref={this.jobEvaluationReadOnlyRef} />
         <EduManageModal ref={this.eduManageModalRef} site={this.props.site} />
+        <EduManageJobReturnModal ref={this.eduManageJobReturnModalRef} site={this.props.site} />
       </Modal>
     );
   }

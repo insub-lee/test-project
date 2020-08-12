@@ -373,11 +373,11 @@ class EduManageJobReturnModal extends React.Component {
     if (!notReady) {
       switch (step) {
         case 3:
-          notReady = report[step].length < 6;
+          notReady = report[step].length < 1;
           break;
         case 1:
         case 2:
-          notReady = report[step].length < 6;
+          notReady = report[step].length < 1;
           break;
         default:
           notReady = true;
