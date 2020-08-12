@@ -14,6 +14,7 @@ import WorkBuilderSysFieldMgr from 'apps/WorkBuilderApp/Admin/WorkBuilderSysFiel
 import WorkBuilderClassNameMgr from 'apps/WorkBuilderApp/Admin/WorkBuilderClassNameMgr';
 import WorkBuilderStyleMgr from 'apps/WorkBuilderApp/Admin/WorkBuilderStyleMgr';
 import WorkBuilderDataNodeMgr from 'apps/WorkBuilderApp/Admin/WorkBuilderDataNodeMgr';
+import TotalBuilderManage from 'apps/WorkBuilderApp/Admin/TotalBuilderManage';
 
 import FileManager from 'apps/FileManager';
 import ProcessMgr from 'apps/Workflow/Admin/ProcessMgr';
@@ -88,6 +89,7 @@ class wrap extends PureComponent {
           <Route path="/admin/adminmain/WorkBuilderClassNameMgr" component={WorkBuilderClassNameMgr} />
           <Route path="/admin/adminmain/WorkBuilderStyleMgr" component={WorkBuilderStyleMgr} />
           <Route path="/admin/adminmain/WorkBuilderDataNodeMgr" component={WorkBuilderDataNodeMgr} />
+          <Route path="/admin/adminmain/TotalBuilderManage" component={TotalBuilderManage} />
           <Route path="/admin/adminmain/daemon" component={DaemonManager} />
           {/* Route 추가시 아래의 Route 위에 추가 하세요 */}
           <Route path="/admin/adminmain/:MENU/" component={Menu} />
