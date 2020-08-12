@@ -13,6 +13,7 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import Styled from './Styled';
 import MenuTable from '../infoTable/mainMenuTable';
 import ExhaustActTable from '../infoTable/exhaustActTable';
+import CleanActTable from '../infoTable/cleanActTable';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSelect = StyledSelect(Select);
@@ -24,10 +25,10 @@ class QualityPage extends Component {
     super(props);
     this.state = {
       viewType: 'input',
-      selectedMenu: '',
-      searchDate: moment().format('YYYY-MM-DD'),
-      renderData: undefined,
-      hasData: {},
+      selectedMenu: '', // 선택된 일지 하위메뉴
+      searchDate: moment().format('YYYY-MM-DD'), // 검색일자
+      renderData: undefined, // 콘텐츠 렌더링에 필요한 데이터
+      hasData: {}, // 검색한 일자의 하위메뉴들에 등록된 데이터 유무 (등록된 데이터가 없을경우 아이콘 출력)
       mainFormData: {
         GROUP_UNIT_CD: '017', // 회사(매그너칩 고정)
         OP_DT: undefined, // 일지날짜
@@ -78,6 +79,17 @@ class QualityPage extends Component {
     let submitData = {};
     switch (type) {
       case 'SAVE_EXHAUST_ACT': // 배출시설 가동시간 저장/수정
+        submitData = {
+          PARAM: {
+            type,
+            GROUP_UNIT_CD: mainFormData.GROUP_UNIT_CD,
+            OP_DT: mainFormData.OP_DT,
+            LIST: formData,
+          },
+        };
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwAct', submitData, this.onClickSearch);
+        break;
+      case 'SAVE_CLEAN_ACT': // 방지시설 가동시간 저장/수정
         submitData = {
           PARAM: {
             type,
@@ -288,7 +300,8 @@ class QualityPage extends Component {
   };
 
   render() {
-    const { viewType, selectedMenu, searchDate, hasData, renderData, mainFormData, formData } = this.state;
+    const { viewType, selectedMenu, searchDate, hasData, renderData, mainFormData, formData, contentsLoaded } = this.state;
+    console.debug('폼데이터', formData);
     return (
       <Styled>
         <StyledCustomSearchWrapper>
@@ -346,7 +359,15 @@ class QualityPage extends Component {
                   submitFormData={this.submitFormData}
                 />
               )}
-              {selectedMenu === 'CLEAN_ACT' && <div>방지시설 가동시간</div>}
+              {selectedMenu === 'CLEAN_ACT' && (
+                <CleanActTable
+                  renderData={renderData}
+                  formData={formData}
+                  onChangeActFormData={this.onChangeActFormData}
+                  onChangeAllActFormData={this.onChangeAllActFormData}
+                  submitFormData={this.submitFormData}
+                />
+              )}
             </div>
           </>
         )}
