@@ -226,7 +226,7 @@ class MainBody extends React.Component {
 
   eduStatusButtonRenderer(type) {
     const { education, data } = this.state;
-    console.debug(education[type], data);
+
     if (!education[type] || education[type].length === 0) {
       return <div style={{ textAlign: 'center' }}>-</div>;
     }
@@ -270,16 +270,31 @@ class MainBody extends React.Component {
   }
 
   newTrainingButtonsRenderer = () => {
+    const { empno } = this.props;
     const { data, education, currentYear } = this.state;
     const { job_training } = education;
 
     if (job_training && job_training.length > 0) {
-      const eduIdx = job_training.findIndex(iNode => iNode.colldt === currentYear.toString());
-      if (eduIdx > -1) {
-        const eduItem = job_training[eduIdx];
-        const eduPlanIdx = data.findIndex(iNode => iNode.collseq === eduItem.collseq);
-        if (eduPlanIdx > -1) {
-          const eduPlan = data[eduPlanIdx];
+      // const eduIdx = job_training.findIndex(iNode => iNode.colldt === currentYear.toString());
+      const eduList = [...job_training.filter(node => node.colldt === currentYear.toString() && node.useyn === 'O')].sort((a, b) =>
+        a.coll_seq > b.coll_seq ? -1 : 1,
+      );
+      if (eduList && eduList.length > 0) {
+        let eduItem;
+        let eduPlan;
+        // const eduPlanIdx = data.findIndex(iNode => iNode.collseq === eduItem.collseq);
+
+        const filterEduPlanList = data
+          .filter(node => eduList.some(sNode => sNode.coll_seq === node.collseq) && node.empno === empno)
+          .sort((a, b) => (a.collseq > b.collseq ? -1 : 1));
+
+        if (filterEduPlanList && filterEduPlanList.length > 0) {
+          eduPlan = { ...filterEduPlanList[0] };
+          const listIdx = eduList.findIndex(node => node.coll_seq === eduPlan.collseq);
+          eduItem = eduList[listIdx];
+        }
+
+        if (eduPlan && eduItem) {
           let eduResult = false;
           let timeText = '1차';
           if (eduPlan.step3_result === 'O') {
