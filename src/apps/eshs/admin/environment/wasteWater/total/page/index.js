@@ -160,15 +160,15 @@ class QualityPage extends Component {
                 <LineChart chartName="SS" xField="TOTAL_MONTH" xFieldNm="기간" yField="SS_TOTAL" yFieldNm="SS_TOTAL" listData={listData || []} />
               </div>
               <div className="chart_wrap">
-                <div className="chart_title">T-N</div>
+                <div className="chart_title">F</div>
                 <LineChart chartName="F" xField="TOTAL_MONTH" xFieldNm="기간" yField="F_TOTAL" yFieldNm="F_TOTAL" listData={listData || []} />
               </div>
               <div className="chart_wrap">
-                <div className="chart_title">T-P</div>
+                <div className="chart_title">T-N</div>
                 <LineChart chartName="TN" xField="TOTAL_MONTH" xFieldNm="기간" yField="TN_TOTAL" yFieldNm="TN_TOTAL" listData={listData || []} />
               </div>
               <div className="chart_wrap">
-                <div className="chart_title">Flow</div>
+                <div className="chart_title">T-P</div>
                 <LineChart chartName="TP" xField="TOTAL_MONTH" xFieldNm="기간" yField="TP_TOTAL" yFieldNm="TP_TOTAL" listData={listData || []} />
               </div>
             </div>

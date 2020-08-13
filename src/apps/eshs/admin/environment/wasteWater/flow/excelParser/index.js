@@ -60,8 +60,11 @@ class ExcelParser extends Component {
       const data = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
       data.shift();
       let convertedData = [];
+      let waterFlowData = {};
       try {
         // 유효데이터 추출
+        // convertData : 유량테이블 / 일지공급원별사용량 테이블 전용 데이터
+        // waterFlowData : 일지 폐수배출량 전용 데이터
         convertedData = data
           .filter(row => this.checkingUnitCOd(row))
           .map(item => ({
@@ -73,12 +76,17 @@ class ExcelParser extends Component {
             FLOW_AMOUNT: item[8],
             INSPECTION_TIME: '',
           }));
+        const waterFlowDataRow = data.find(row => row[1] === 'Magnachip 폐수 총 발생량');
+        waterFlowData = {
+          GUBUN: '폐수발생량(C-2)',
+          USED_AMOUNT: waterFlowDataRow[8],
+        };
       } catch (err) {
         convertedData = [];
         message.error(<MessageContent>표준양식을 사용해 주십시오.</MessageContent>);
       }
       if (getUploadList && typeof getUploadList === 'function') {
-        getUploadList(convertedData);
+        getUploadList(convertedData, waterFlowData);
       }
     };
     if (rABS) {
