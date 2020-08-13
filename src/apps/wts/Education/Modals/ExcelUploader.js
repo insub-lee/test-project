@@ -193,7 +193,7 @@ class ExcelUploader extends React.Component {
         maskAnimation="fade"
         onClose={this.handleCloseModal}
         style={{
-          width: 750,
+          width: 850,
         }}
         bodyStyle={{
           padding: 0,

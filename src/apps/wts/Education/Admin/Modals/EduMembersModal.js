@@ -15,6 +15,7 @@ import service from '../../service';
 import StyledContent from '../../Modals/StyledContent';
 import JobEvaluationReadOnly from '../../Modals/JobEvaluationReadOnly';
 import EduManageJobReturnModal from '../../Modals/EduManageJobReturnModal';
+import SendEduMail from '../../Modals/SendEduMail';
 
 class EduMembersModal extends React.Component {
   constructor(props) {
@@ -39,10 +40,12 @@ class EduMembersModal extends React.Component {
     this.handleFilter = debounce(this.handleFilter.bind(this), 500);
     this.getFilterData = this.getFilterData.bind(this);
     this.onRowClick = this.onRowClick.bind(this);
+    this.handleOpenSendMail = this.handleOpenSendMail.bind(this);
 
     this.jobEvaluationReadOnlyRef = React.createRef();
     this.eduManageModalRef = React.createRef();
     this.eduManageJobReturnModalRef = React.createRef();
+    this.sendEduMailRef = React.createRef();
   }
 
   handleOpenModal(collSeq, title, type) {
@@ -226,8 +229,19 @@ class EduMembersModal extends React.Component {
     };
   }
 
+  handleOpenSendMail() {
+    const filteredData = this.getFilterData();
+    if (filteredData && filteredData.length > 0) {
+      this.sendEduMailRef.current.handleOpenModal(
+        filteredData.filter(node => node.edu_result === 'X').map(row => row.empno),
+        true,
+      );
+    }
+  }
+
   render() {
     const { isOpen, isLoading, title, sortBy, sortDirection, currentArea, currentJo, area } = this.state;
+    const { empno, sagaKey, submitHandlerBySaga } = this.props;
     const columns = [
       {
         label: 'AREA',
@@ -282,6 +296,7 @@ class EduMembersModal extends React.Component {
       },
     ];
     const filteredData = this.getFilterData();
+
     return (
       <Modal
         maskClosable={false}
@@ -339,6 +354,9 @@ class EduMembersModal extends React.Component {
                       />
                     </div>
                     <div style={{ position: 'absolute', padding: '15px 0', textAlign: 'right', top: 0, right: 0 }}>
+                      <StyledButton type="button" className="btn-sm btn-gray mr5" onClick={this.handleOpenSendMail}>
+                        교육 메일
+                      </StyledButton>
                       <StyledButton type="button" className="btn-gray btn-sm" onClick={this.downloadExcel} style={{ marginRight: 10 }}>
                         Excel 다운로드
                       </StyledButton>
@@ -392,6 +410,7 @@ class EduMembersModal extends React.Component {
         <JobEvaluationReadOnly ref={this.jobEvaluationReadOnlyRef} />
         <EduManageModal ref={this.eduManageModalRef} site={this.props.site} />
         <EduManageJobReturnModal ref={this.eduManageJobReturnModalRef} site={this.props.site} />
+        <SendEduMail ref={this.sendEduMailRef} empno={empno} sagaKey={sagaKey} submitHandlerBySaga={submitHandlerBySaga} />
       </Modal>
     );
   }
