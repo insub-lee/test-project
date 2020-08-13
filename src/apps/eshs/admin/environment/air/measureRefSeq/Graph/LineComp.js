@@ -15,18 +15,10 @@ const CustomToolTip = ({ ...props }) => {
         </p>
         {/* 값이 있는 경우 ToolTip 상단에 위치 */}
         {payload
-          .filter(p => p.value !== 0)
+          .filter(p => p.value !== 0 && p.value !== '0')
           .map((p, index) => (
             <p
               key={`tooltip_item_${index}`}
-              style={{ color: p.color, margin: '0px', paddingTop: '4px', paddingBottom: '4px' }}
-            >{`${p.dataKey} : ${p.value}`}</p>
-          ))}
-        {payload
-          .filter(p => p.value === 0)
-          .map((p, index) => (
-            <p
-              key={`tooltip_item_0_${index}`}
               style={{ color: p.color, margin: '0px', paddingTop: '4px', paddingBottom: '4px' }}
             >{`${p.dataKey} : ${p.value}`}</p>
           ))}
