@@ -137,12 +137,16 @@ class MainMenuTable extends Component {
                   </span>
                 </td>
                 <td>
-                  <span className="menu-span">3. 용수공급원별 사용량</span>
+                  <span className="menu-span" role="button" tabIndex="0" onClick={() => onClickMenu('USED_FLOW')} onKeyPress={() => onClickMenu('USED_FLOW')}>
+                    3. 용수공급원별 사용량{hasData.USED_FLOW === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
+                  </span>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <span className="menu-span">4. 폐수 발생량</span>
+                  <span className="menu-span" role="button" tabIndex="0" onClick={() => onClickMenu('WATER_FLOW')} onKeyPress={() => onClickMenu('WATER_FLOW')}>
+                    4. 폐수 발생량{hasData.WATER_FLOW === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
+                  </span>
                 </td>
                 <td>
                   <span className="menu-span">5. Sludge 발생 및 처리량</span>
