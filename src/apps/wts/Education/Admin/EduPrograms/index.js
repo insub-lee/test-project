@@ -470,7 +470,7 @@ class EduPrograms extends React.Component {
       types,
       times,
     } = this.state;
-    const { manInfo } = this.props;
+    const { manInfo, sagaKey, submitHandlerBySaga } = this.props;
     const filteredData = this.getFilterData();
     return (
       <Wrapper>
@@ -567,7 +567,7 @@ class EduPrograms extends React.Component {
               </Spin>
             </div>
           </div>
-          <EduMembersModal ref={this.eduMembers} site={manInfo.site} />
+          <EduMembersModal ref={this.eduMembers} site={manInfo.site} empno={manInfo.empno} sagaKey={sagaKey} submitHandlerBySaga={submitHandlerBySaga} />
           <EduTargetManageModal ref={this.eduTargetManageModal} site={manInfo.site} />
           <GroupManageModal ref={this.groupManageModal} site={manInfo.site} />
           <EduProgramFormModal ref={this.eduProgramFormModalRef} site={manInfo.site} callbackHandler={this.initData} />

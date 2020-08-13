@@ -448,7 +448,7 @@ class MainBody extends React.Component {
                   }}
                 />
                 <div className="title">
-                  <span>신입/전배 사원 교육</span>
+                  <span>신입/전배 사원 교육(멘토)</span>
                 </div>
                 <StyledTable className="tb_wrap">
                   <table className="tb02">
@@ -497,7 +497,7 @@ class MainBody extends React.Component {
                   }}
                 />
                 <div className="title">
-                  <span>복직자 사원 교육</span>
+                  <span>복직자 사원 교육(멘토)</span>
                 </div>
                 <StyledTable className="tb_wrap">
                   <table className="tb02">

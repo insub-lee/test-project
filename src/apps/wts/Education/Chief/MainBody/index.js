@@ -157,7 +157,7 @@ class MainBody extends React.Component {
         this.sendEduMailRef.current.handleOpenModal(data.map(row => row.empno));
         break;
       case 'selected': // 선택된 대상자만 메일
-        this.sendEduMailRef.current.handleOpenModal(checkedList);
+        this.sendEduMailRef.current.handleOpenModal(checkedList.map(row => row.empno));
         break;
       case 'solo': // 솔로
         this.sendEduMailRef.current.handleOpenModal(target);
@@ -583,7 +583,7 @@ class MainBody extends React.Component {
 
   render() {
     const { data, currentYear, isLoading, checkedList } = this.state;
-    const { empno, manInfo } = this.props;
+    const { empno, manInfo, sagaKey, submitHandlerBySaga } = this.props;
     return (
       <Wrapper>
         <div className="title">
@@ -717,7 +717,7 @@ class MainBody extends React.Component {
           }}
         />
         {/* <NewEmployeeTraining empno={empno} list={data} site={manInfo.site} /> */}
-        <SendEduMail ref={this.sendEduMailRef} empno={empno} />
+        <SendEduMail ref={this.sendEduMailRef} empno={empno} sagaKey={sagaKey} submitHandlerBySaga={submitHandlerBySaga} />
         <JobEvaluationModal ref={this.jobEvaluationRef} site={manInfo.site} empno={empno} callbackHandler={this.initData} />
         <EduAcceptModal ref={this.eduAcceptModal} callbackHandler={this.initData} site={manInfo.site} />
         <EduManageModal ref={this.eduManageModalRef} site={manInfo.site} />
