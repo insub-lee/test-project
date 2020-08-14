@@ -37,9 +37,9 @@ class BaseComp extends React.Component {
   }
 
   render() {
-    const { profile } = this.props;
+    const { profile, sagaKey, submitHandlerBySaga } = this.props;
     const { manInfo } = this.state;
-    return manInfo ? <MainBody empno={profile.EMP_NO} manInfo={manInfo} /> : <div />;
+    return manInfo ? <MainBody empno={profile.EMP_NO} manInfo={manInfo} sagaKey={sagaKey} submitHandlerBySaga={submitHandlerBySaga} /> : <div />;
   }
 }
 

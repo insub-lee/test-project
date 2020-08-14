@@ -200,6 +200,7 @@ class DistributeDocList extends Component {
           <AntdTable
             dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))}
             columns={this.columns}
+            bordered
           />
         </StyledContentsWrapper>
       </>

@@ -25,12 +25,14 @@ class FlowPage extends Component {
     super(props);
     this.state = {
       isSearching: false,
+      isSave: false, // 저장중 보여질 로딩
       site: '청주', // 검색조건 지역
       date: moment().format('YYYYMMDD'), // 검색조건 기간
       modalTitle: '',
       modalVisible: false,
       isUpload: false, // 양식을 이용하여 폼데이터 생성이 된 경우에만 true;
       listData: List([]),
+      waterFlowData: {}, // 용폐수 일지 - 폐수량 데이터
     };
   }
 
@@ -80,11 +82,14 @@ class FlowPage extends Component {
   // 저장, 수정, 삭제
   submitFormData = type => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const { listData, date } = this.state;
+    const { listData, date, waterFlowData } = this.state;
+    this.setState({ isSave: true });
     const submitData = {
       PARAM: {
+        GROUP_UNIT_CD: '017',
         DAILY_DT: date,
         LIST: listData,
+        FLOW: waterFlowData,
       },
     };
     switch (type) {
@@ -103,25 +108,28 @@ class FlowPage extends Component {
     const { result } = response;
     if (result < 0) {
       this.setState({
+        isSave: false,
         isUpload: false,
         listData: List([]),
       });
       return message.error(<MessageContent>유량정보 등록에 실패하였습니다.</MessageContent>);
     }
     this.setState({
+      isSave: false,
       isUpload: false,
     });
     return message.success(<MessageContent>유량정보를 등록하였습니다.</MessageContent>);
   };
 
   // 엑셀파일 등록시 - 추출된 데이터 가져오기 및 모달 닫기
-  getUploadList = excelData => {
+  getUploadList = (excelData, waterFlowData) => {
     const isUpload = excelData.length > 0;
     this.setState({
       modalTitle: '',
       modalVisible: false,
       isUpload,
       listData: List(excelData),
+      waterFlowData,
     });
   };
 
@@ -152,9 +160,9 @@ class FlowPage extends Component {
   };
 
   render() {
-    const { site, date, modalTitle, modalVisible, formData, listData, isSearching, isUpload } = this.state;
+    const { site, date, modalTitle, modalVisible, listData, isSearching, isUpload, isSave } = this.state;
     return (
-      <>
+      <Spin tip="유량정보를 저장중입니다." spinning={isSave}>
         <StyledCustomSearchWrapper>
           <Spin tip="검색중 ..." spinning={isSearching}>
             <div className="search-input-area">
@@ -201,7 +209,7 @@ class FlowPage extends Component {
         >
           <ExcelParser getUploadList={this.getUploadList} />
         </AntdModal>
-      </>
+      </Spin>
     );
   }
 }

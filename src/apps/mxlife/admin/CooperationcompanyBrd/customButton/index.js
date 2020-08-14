@@ -6,11 +6,10 @@ import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdBut
 const StyledButton = StyledAntdButton(Button);
 
 export function InputButtons(props) {
-  const { sagaKey, viewPageData, saveBeforeProcess, reloadId } = props;
-  const { workSeq, taskSeq } = viewPageData;
+  const { sagaKey: id, saveBeforeProcess, reloadId } = props;
   return (
     <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-      <StyledButton className="btn-primary btn-sm mr5" onClick={() => saveBeforeProcess(sagaKey, reloadId || sagaKey)}>
+      <StyledButton className="btn-primary btn-sm mr5" onClick={() => saveBeforeProcess(id, reloadId || id)}>
         저장
       </StyledButton>
     </StyledButtonWrapper>

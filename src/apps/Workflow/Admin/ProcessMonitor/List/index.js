@@ -183,6 +183,34 @@ class List extends Component {
     });
   };
 
+  // 재시작
+  onReRequest = row => {
+    const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
+    const submitData = {
+      PARAM: {
+        ...row
+      }
+    };
+
+    Modal.confirm({
+      title: '해당 결재건을 재시작 하시겠습니까?',
+      icon: <ExclamationCircleOutlined />,
+      okText: '확인',
+      cancelText: '취소',
+      onOk() {
+        spinningOn();
+        submitHandlerBySaga(sagaKey, 'POST', `/api/workflow/v1/common/workprocess/quepushtest`, submitData, (id, res) => {
+          spinningOff();
+          if (res) {
+            message.success(<MessageContent>해당 결재건을 재시작하였습니다.</MessageContent>);
+          } else {
+            message.error(<MessageContent>해당 결재건을 재시작에 실패하였습니다.</MessageContent>);
+          }
+        });
+      }
+    });
+  };
+
   getTableColumns = () => [
     {
       title: '결재자',
@@ -201,7 +229,7 @@ class List extends Component {
       title: '재직상태',
       dataIndex: 'STATUS_NAME',
       key: 'STATUS_NAME',
-      width: '7%',
+      width: '6%',
       align: 'center'
     },
     {
@@ -223,12 +251,13 @@ class List extends Component {
       title: 'No.',
       dataIndex: 'DOCNUMBER',
       key: 'DOCNUMBER',
-      width: '20%',
+      width: '22%',
       align: 'center',
       render: (text, record) => (
         <>
           {text}
           <StyledButton className="btn-light btn-xxs ml5" onClick={() => this.onChangeDraftProcess(record)}>결재선 반영</StyledButton>
+          <StyledButton className="btn-light btn-xxs ml5" onClick={() => this.onReRequest(record)}>재시작</StyledButton>
         </>
       ),
     },
@@ -237,7 +266,7 @@ class List extends Component {
       dataIndex: 'VERSION',
       key: 'VERSION',
       align: 'center',
-      width: '5%',
+      width: '4%',
     },
     {
       title: 'Title',
