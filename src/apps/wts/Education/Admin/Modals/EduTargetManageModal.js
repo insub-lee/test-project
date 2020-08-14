@@ -307,7 +307,7 @@ class EduTargetManageModal extends React.Component {
         maskAnimation="fade"
         onClose={this.handleCloseModal}
         style={{
-          width: 800,
+          width: 780,
         }}
         bodyStyle={{
           padding: 0,

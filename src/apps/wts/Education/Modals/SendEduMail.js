@@ -117,7 +117,7 @@ class SendEduMail extends React.Component {
                     확인
                   </StyledButton>
                 </div>
-                {isNotice && <div>※ 미수료자만 발송대상에 포함됩니다.</div>}
+                {isNotice && <div>※ 화면에 표시된 미수료자만 발송대상에 포함됩니다.</div>}
               </StyledCommonForm>
             </div>
           </StyledContent>

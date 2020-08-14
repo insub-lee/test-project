@@ -127,7 +127,7 @@ class MainBody extends React.Component {
 
   handleChangeCurrentYear(e) {
     const { value } = e.target;
-    this.setState({ currentYear: value });
+    this.setState({ currentYear: value }, () => this.initData());
   }
 
   handleOpenAcceptEdu(type) {
@@ -294,7 +294,7 @@ class MainBody extends React.Component {
     const requestQuery = {
       type: 'collectiveEduList',
       searchSite: site,
-      colldt: date,
+      searchDt: date,
     };
     const queryString = jsonToQueryString(requestQuery);
     const { response, error } = await service.manage.get(queryString);
@@ -416,6 +416,7 @@ class MainBody extends React.Component {
       const { coll_seq: collSeq, times } = edu;
       const targetIndex = historyList.findIndex(history => history.coll_seq === edu.coll_seq && history.empno === rowData.empno);
       const eduResult = targetIndex > -1 ? historyList[targetIndex].edu_result : '';
+      console.debug(target, rowData.empno, eduResult);
       if (edu.group_study === 'O') {
         return eduResult === 'O' ? (
           <button key={collSeq} type="button" className="cateWrap" disabled>
