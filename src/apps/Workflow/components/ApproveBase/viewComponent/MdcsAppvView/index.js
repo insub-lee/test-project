@@ -272,7 +272,7 @@ class MdcsAppvView extends Component {
       isAbrogationMultiShow,
       isObsCheck,
     } = this.state;
-
+    console.debug('darftdata', DRAFT_DATA);
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -333,7 +333,9 @@ class MdcsAppvView extends Component {
                     </Radio.Group>
                   </td>
                 </tr>
-
+                <tr>
+                  <td colSpan={3}>일괄 삭제시 comment</td>
+                </tr>
                 <tr
                   style={{
                     display: (selectedRow && selectedRow.APPV_STATUS && selectedRow.APPV_STATUS === 5) || selectedRow.APPV_STATUS === 10 ? 'table-row' : 'none',
