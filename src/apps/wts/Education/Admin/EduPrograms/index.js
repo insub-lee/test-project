@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Spin } from 'antd';
+import { Icon, Spin, Popover } from 'antd';
 import { fromJS } from 'immutable';
 import moment from 'moment';
 
@@ -65,6 +65,8 @@ class EduPrograms extends React.Component {
       edus: [],
       types: [],
       times: [],
+      memberList: [],
+      isPopoverLoading: true,
     };
 
     this.columnsRenderer = this.columnsRenderer.bind(this);
@@ -278,14 +280,16 @@ class EduPrograms extends React.Component {
       );
     } else {
       child.push(
-        <button
-          type="button"
-          key="action-buttons-1"
-          style={{ ...eduButtonStyle, borderColor: '#636a78', color: '#636a78' }}
-          onClick={() => this.handleOpenEduMembers(rowData.get('coll_seq'), title, rowData.get('study'))}
-        >
-          교육인원 조회
-        </button>,
+        <Popover content={this.popoverContent()} onVisibleChange={visible => this.onVisibleChange(rowData.get('coll_seq'), visible)} trigger="hover">
+          <button
+            type="button"
+            key="action-buttons-1"
+            style={{ ...eduButtonStyle, borderColor: '#636a78', color: '#636a78' }}
+            onClick={() => this.handleOpenEduMembers(rowData.get('coll_seq'), title, rowData.get('study'))}
+          >
+            교육인원 조회
+          </button>
+        </Popover>,
       );
     }
     const commonButtons = (
@@ -314,6 +318,104 @@ class EduPrograms extends React.Component {
     return child;
   }
 
+  popoverContent = () => {
+    const { isPopoverLoading, memberList } = this.state;
+    const columns = [
+      {
+        label: '성명',
+        dataKey: 'usrnm',
+        percentWidth: 40,
+        disableSort: true,
+        // headerRenderer: this.headerRenderer,
+      },
+      {
+        label: '사번',
+        dataKey: 'empno',
+        percentWidth: 30,
+        disableSort: true,
+        // headerRenderer: this.headerRenderer,
+      },
+      {
+        label: '교육수료',
+        dataKey: 'edu_result',
+        percentWidth: 30,
+        disableSort: true,
+        // headerRenderer: this.headerRenderer,
+        cellRenderer: ({ cellData }) =>
+          cellData === 'O' ? <span style={{ color: 'rgb(31,181,173)' }}>수료</span> : <span style={{ color: '#ff7f29' }}>미수료</span>,
+      },
+    ];
+    return (
+      <div style={{ width: '240px' }}>
+        <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isPopoverLoading}>
+          <div style={{ overflowX: 'auto' }}>
+            <StyledVirtualized minHeight={getVirtualizedMinHeight(39, 39, memberList.length, 400)} headerHeight={39}>
+              <AutoSizer>
+                {({ height, width }) => (
+                  <Table
+                    width={width}
+                    height={height}
+                    headerHeight={39}
+                    rowHeight={39}
+                    rowCount={memberList.length}
+                    rowGetter={({ index }) => memberList[index]}
+                    headerClassName="virtualized_header"
+                    gridClassName="virtualized_grid"
+                    rowClassName="virtualized_row"
+                    noRowsRenderer={() => (
+                      <div className="virtualized_noData">
+                        <span>{isPopoverLoading ? 'Loading...' : 'No Data'}</span>
+                      </div>
+                    )}
+                  >
+                    {columns.map(column => (
+                      <Column
+                        key={column.dataKey}
+                        {...column}
+                        width={(width * column.percentWidth) / 100}
+                        style={{
+                          ...column.style,
+                          lineHeight: '39px',
+                        }}
+                      />
+                    ))}
+                  </Table>
+                )}
+              </AutoSizer>
+            </StyledVirtualized>
+          </div>
+        </Spin>
+      </div>
+    );
+  };
+
+  onVisibleChange = (collSeq, visible) => {
+    if (visible) {
+      this.setState({ isPopoverLoading: true, memberList: [] }, () => {
+        const { sagaKey, submitHandlerBySaga } = this.props;
+        const requestQuery = {
+          type: 'eduMembers',
+          collseq: collSeq,
+        };
+        const queryString = jsonToQueryString(requestQuery);
+        submitHandlerBySaga(sagaKey, 'GET', `/api/wts/v1/common/EduHisManaged1?${queryString}`, {}, this.onInitDataBind);
+      });
+    }
+  };
+
+  onInitDataBind = (id, response) => {
+    const { eduMembers = [], checkedMembers = [] } = response;
+    const memberList = checkedMembers.map(checkedMember => {
+      const target = eduMembers.find(member => checkedMember.empno === member.empno);
+      return {
+        ...checkedMember,
+        job_chk_result: target ? target.job_chk_result : 'X',
+        eduInfo: target,
+      };
+    });
+    this.setState({ memberList, isPopoverLoading: false });
+  };
+
   handleChangeFilter(e) {
     const { name, value } = e.target;
     this.setState(prevState => {
@@ -327,7 +429,7 @@ class EduPrograms extends React.Component {
     const requestQuery = {
       type: 'collectiveEduList',
       searchSite: site,
-      colldt,
+      searchDt: colldt,
     };
     const queryString = jsonToQueryString(requestQuery);
     const { response, error } = await service.manage.get(queryString);
