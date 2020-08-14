@@ -79,6 +79,7 @@ class abrogationMultiModifyDraft extends Component {
       key: 'VERSION',
       width: '13%',
       align: 'center',
+      render: text => (text.split('.').length > 0 ? text.split('.')[0] : text),
     },
     {
       title: '작성자',

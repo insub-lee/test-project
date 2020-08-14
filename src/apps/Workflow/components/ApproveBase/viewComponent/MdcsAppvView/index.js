@@ -272,7 +272,7 @@ class MdcsAppvView extends Component {
       isAbrogationMultiShow,
       isObsCheck,
     } = this.state;
-
+    console.debug('darftdata', DRAFT_DATA);
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>

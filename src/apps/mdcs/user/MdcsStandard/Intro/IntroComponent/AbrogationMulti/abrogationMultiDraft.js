@@ -76,6 +76,7 @@ class AbrogationMultiDraft extends Component {
       key: 'VERSION',
       width: '13%',
       align: 'center',
+      render: (text, record) => (text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
     },
     {
       title: '작성자',
