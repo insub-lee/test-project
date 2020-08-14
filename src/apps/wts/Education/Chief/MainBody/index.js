@@ -127,7 +127,7 @@ class MainBody extends React.Component {
 
   handleChangeCurrentYear(e) {
     const { value } = e.target;
-    this.setState({ currentYear: value }, () => this.initData());
+    this.setState({ currentYear: value });
   }
 
   handleOpenAcceptEdu(type) {
