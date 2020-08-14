@@ -59,8 +59,8 @@ class PubDocList extends Component {
     },
     {
       title: '배포일',
-      dataIndex: 'END_DTTM',
-      key: 'END_DTTM',
+      dataIndex: 'REG_DTTM',
+      key: 'REG_DTTM',
       width: '10%',
       align: 'center',
       render: (text, record) => moment(text).format('YYYY-MM-DD'),
