@@ -117,7 +117,7 @@ class ExternalDistributeList extends Component {
       key: 'STATUS',
       width: '9%',
       align: 'center',
-      render: (text, record) => (record.STATUS === 0 ? '  In progress' : 'Completed'),
+      render: (text, record) => (record.STATUS === 1 ? '  In progress' : 'Completed'),
     },
   ];
 
@@ -224,7 +224,7 @@ class ExternalDistributeList extends Component {
                 sheetName=""
                 columns={this.excelColumns}
                 fields={this.fields}
-                dataSetBind={list.map(item => ({ ...item, STATUS: item.STATUS === 0 ? '  In progress' : 'Completed' }))}
+                dataSetBind={list.map(item => ({ ...item, STATUS: item.STATUS === 1 ? '  In progress' : 'Completed' }))}
                 style={{ display: 'inline-block'}}
               />
             </div>
