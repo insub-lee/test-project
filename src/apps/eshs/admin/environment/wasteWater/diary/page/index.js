@@ -14,6 +14,7 @@ import Styled from './Styled';
 import MenuTable from '../infoTable/mainMenuTable';
 import ExhaustActTable from '../infoTable/exhaustActTable';
 import CleanActTable from '../infoTable/cleanActTable';
+import FlowTable from '../infoTable/flowTable';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSelect = StyledSelect(Select);
@@ -100,6 +101,24 @@ class QualityPage extends Component {
         };
         submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwAct', submitData, this.onClickSearch);
         break;
+      case 'SAVE_USED_FLOW': // 용수공급원별 사용량 (검침시간 추가 저장)
+        submitData = {
+          PARAM: {
+            type,
+            LIST: formData,
+          },
+        };
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwflow', submitData, this.onClickSearch);
+        break;
+      case 'SAVE_WATER_FLOW': // 폐수발생량 사용량 (검침시간 추가 저장)
+        submitData = {
+          PARAM: {
+            type,
+            LIST: formData,
+          },
+        };
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwflow', submitData, this.onClickSearch);
+        break;
       case 'MODIFY':
         // submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwCheckItem', submitData, this.updateCallback);
         break;
@@ -116,7 +135,7 @@ class QualityPage extends Component {
     const { mainFormData } = this.state;
     let apiInfo = {};
     switch (menuName) {
-      case 'EXHAUST_ACT':
+      case 'EXHAUST_ACT': // 배출시설 가동시간
         apiInfo = {
           key: 'getExhaustActInfo',
           type: 'POST',
@@ -125,7 +144,7 @@ class QualityPage extends Component {
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getActDataCallback);
         break;
-      case 'CLEAN_ACT':
+      case 'CLEAN_ACT': // 방지시설 가동시간
         apiInfo = {
           key: 'getCleanActInfo',
           type: 'POST',
@@ -133,6 +152,24 @@ class QualityPage extends Component {
           params: { PARAM: { type: 'GET_CLEAN_ACT_INFO', search_dt: mainFormData.OP_DT } },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getActDataCallback);
+        break;
+      case 'USED_FLOW': // 용수공급원별 사용량
+        apiInfo = {
+          key: 'getUsedFlowInfo',
+          type: 'POST',
+          url: `/api/eshs/v1/common/wwflow`,
+          params: { PARAM: { type: 'GET_USED_FLOW_INFO', search_dt: mainFormData.OP_DT } },
+        };
+        getCallDataHandlerReturnRes(id, apiInfo, this.getUsedFlowCallback);
+        break;
+      case 'WATER_FLOW': // 폐수발생량
+        apiInfo = {
+          key: 'getWaterFlowInfo',
+          type: 'POST',
+          url: `/api/eshs/v1/common/wwflow`,
+          params: { PARAM: { type: 'GET_WATER_FLOW_INFO', search_dt: mainFormData.OP_DT } },
+        };
+        getCallDataHandlerReturnRes(id, apiInfo, this.getUsedFlowCallback);
         break;
       default:
         break;
@@ -156,6 +193,14 @@ class QualityPage extends Component {
         ...RENDER_INFO,
       },
       formData: initFormData,
+    });
+  };
+
+  // 용수공급원별 사용량 / 폐수발생량 Callback
+  getUsedFlowCallback = (id, response) => {
+    const { RENDER_INFO } = response;
+    this.setState({
+      formData: RENDER_INFO || [],
     });
   };
 
@@ -299,6 +344,32 @@ class QualityPage extends Component {
     });
   };
 
+  // formData ob
+  onChangeFormData = (field, value, key) => {
+    const { formData } = this.state;
+    if (Array.isArray(formData)) {
+      const nextFormData = formData.map((row, rowIndex) => {
+        if (key === rowIndex) {
+          return {
+            ...row,
+            [field]: value,
+          };
+        }
+        return row;
+      });
+      this.setState({
+        formData: nextFormData,
+      });
+    } else {
+      this.setState({
+        formData: {
+          ...formData,
+          [field]: value,
+        },
+      });
+    }
+  };
+
   render() {
     const { viewType, selectedMenu, searchDate, hasData, renderData, mainFormData, formData, contentsLoaded } = this.state;
     console.debug('폼데이터', formData);
@@ -367,6 +438,9 @@ class QualityPage extends Component {
                   onChangeAllActFormData={this.onChangeAllActFormData}
                   submitFormData={this.submitFormData}
                 />
+              )}
+              {(selectedMenu === 'USED_FLOW' || selectedMenu === 'WATER_FLOW') && (
+                <FlowTable formData={formData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeFormData} />
               )}
             </div>
           </>

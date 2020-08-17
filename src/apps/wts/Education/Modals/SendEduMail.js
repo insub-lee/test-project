@@ -14,6 +14,7 @@ class SendEduMail extends React.Component {
       isOpen: false,
       id: '',
       target: '',
+      isNotice: true,
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -21,9 +22,9 @@ class SendEduMail extends React.Component {
     this.submitData = this.submitData.bind(this);
   }
 
-  handleOpenModal(target = []) {
+  handleOpenModal(target = [], isNotice = false) {
     if (target.length > 0) {
-      this.setState({ isOpen: true, target });
+      this.setState({ isOpen: true, target, isNotice });
     } else {
       alert('지정된 대상자가 없습니다.');
     }
@@ -43,10 +44,11 @@ class SendEduMail extends React.Component {
     e.stopPropagation();
     e.preventDefault();
     const { target } = this.state;
-    const { empno } = this.props;
+    const { empno, sagaKey, submitHandlerBySaga } = this.props;
+
     const data = new FormData(e.target);
     const payload = {
-      sysid: 'ESHS',
+      sysid: 'WTS',
       from: empno,
       to: target,
       cc: [],
@@ -55,13 +57,14 @@ class SendEduMail extends React.Component {
     data.forEach((value, key) => {
       payload[key] = value;
     });
-    console.debug('# Mail Form', payload);
+    // console.debug('# Mail Form', payload);
+    submitHandlerBySaga(sagaKey, 'POST', '/api/wts/v1/common/sendEmailByEmpNo', { PARAM: payload }, () => false);
     // Todo - send mail
     // Will Send with origin Contents
   }
 
   render() {
-    const { isOpen } = this.state;
+    const { isOpen, isNotice } = this.state;
     return (
       <Modal
         maskClosable={false}
@@ -70,7 +73,7 @@ class SendEduMail extends React.Component {
         maskAnimation="fade"
         onClose={this.handleCloseModal}
         style={{
-          width: 500,
+          width: 600,
         }}
         bodyStyle={{
           padding: 0,
@@ -97,7 +100,16 @@ class SendEduMail extends React.Component {
                     <label htmlFor="mail-content" className="title">
                       내용
                     </label>
-                    <textarea name="content" id="mail-content" cols="30" rows="10" placeholder="내용을 입력해주세요." required maxLength={500} />
+                    <textarea
+                      name="content"
+                      id="mail-content"
+                      cols="30"
+                      rows="10"
+                      placeholder="내용을 입력해주세요."
+                      required
+                      maxLength={500}
+                      style={{ height: '300px' }}
+                    />
                   </li>
                 </ul>
                 <div className="btn_wrap">
@@ -105,6 +117,7 @@ class SendEduMail extends React.Component {
                     확인
                   </StyledButton>
                 </div>
+                {isNotice && <div>※ 화면에 표시된 미수료자만 발송대상에 포함됩니다.</div>}
               </StyledCommonForm>
             </div>
           </StyledContent>

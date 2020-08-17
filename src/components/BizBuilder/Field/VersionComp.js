@@ -17,9 +17,9 @@ class VersionComp extends Component {
   }
 
   render() {
-    const { colData, CONFIG } = this.props;
+    const { colData, CONFIG, isObsCheck } = this.props;
     const { version } = this.state;
-    return <span className={CONFIG.property.className || ''}>{version}</span>;
+    return <span className={CONFIG.property.className || ''}>{isObsCheck ? 'OBS' : version}</span>;
   }
 }
 

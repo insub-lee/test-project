@@ -118,7 +118,7 @@ class TaskTransfer extends Component {
           <Col span={11}>
             <div className="table-area">
               <div className="taskTransferTitle">
-                <span>폐기 대상 사내표</span>
+                <span>폐기 대상 사내표준</span>
                 <span className="count">{sourceList.length}건</span>
               </div>
               <div className="taskTransferList">
