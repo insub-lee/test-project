@@ -125,32 +125,6 @@ UserSearchModal.propTypes = {
 
 UserSearchModal.defaultProps = {
   onClickRow: () => {},
-  columns: [
-    {
-      title: '사번',
-      align: 'center',
-      dataIndex: 'EMP_NO',
-      width: '20%',
-    },
-    {
-      title: '이름',
-      align: 'center',
-      dataIndex: 'NAME_KOR',
-      width: '20%',
-    },
-    {
-      title: '직위',
-      align: 'center',
-      dataIndex: 'PSTN_NAME_KOR',
-      width: '20%',
-    },
-    {
-      title: '부서명',
-      align: 'left',
-      dataIndex: 'DEPT_NAME_KOR',
-      width: '40%',
-    },
-  ],
   colData: '',
   className: '',
   modalOnCancel: undefined,

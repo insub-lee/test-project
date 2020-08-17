@@ -29,7 +29,7 @@ class LineComp extends Component {
         <Legend verticalAlign="top" />
         <Line type="monotone" dataKey="Acid" stroke="#FF0000" />
         <Line type="monotone" dataKey="Toxic" stroke="#00FF00" />
-        <Line type="monotone" dataKey="VOD" stroke="#0000FF" />
+        <Line type="monotone" dataKey="VOC" stroke="#0000FF" />
       </LineChart>
     );
   }

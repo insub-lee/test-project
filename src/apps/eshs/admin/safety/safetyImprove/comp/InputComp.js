@@ -16,6 +16,7 @@ import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 
 import UserSearchModal from 'apps/eshs/common/userSearchModal';
 import InputTable from 'apps/eshs/admin/safety/safetyImprove/comp/InputTable';
+import SearchList from 'apps/eshs/admin/safety/safetyImprove/comp/SearchList';
 import { fields } from 'apps/eshs/admin/safety/safetyImprove/comp/fields';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
@@ -59,6 +60,9 @@ class InputComp extends Component {
       },
       inputTable: [],
       categoryData: {},
+      selectRow: {},
+      viewType: 'INPUT',
+      modifyBtnFlag: 'F',
     };
   }
 
@@ -76,19 +80,19 @@ class InputComp extends Component {
       {
         key: 'CATEGORY_MM',
         type: 'POST',
-        url: '/api/admin/v1/common/categoryMapList',
+        url: `/api/admin/v1/common/categoryChildrenListUseYn`,
         params: { PARAM: { NODE_ID: 1551, USE_YN: 'Y' } },
       },
       {
         key: 'CATEGORY_EACH_TYPE',
         type: 'POST',
-        url: '/api/admin/v1/common/categoryMapList',
+        url: `/api/admin/v1/common/categoryChildrenListUseYn`,
         params: { PARAM: { NODE_ID: 1552, USE_YN: 'Y' } },
       },
       {
         key: 'CATEGORY_GRADE',
         type: 'POST',
-        url: '/api/admin/v1/common/categoryMapList',
+        url: `/api/admin/v1/common/categoryChildrenListUseYn`,
         params: { PARAM: { NODE_ID: 1561, USE_YN: 'Y' } },
       },
       {
@@ -105,7 +109,10 @@ class InputComp extends Component {
   appStart = () => {
     const { result, profile, spinningOff } = this.props;
 
-    const initFormData = {};
+    const initFormData = {
+      ACP_PIC_FILE: {},
+      PIC_FILE: {},
+    };
     const flds = fields(profile);
 
     for (const name in flds) {
@@ -156,7 +163,7 @@ class InputComp extends Component {
     this.setState(
       {
         initFormData,
-        formData: { initFormData, locLabel: initFormData.LOC ? this.findTreeDataByNodeId(initFormData.LOC) : '' },
+        formData: { ...initFormData, locLabel: initFormData.LOC ? this.findTreeDataByNodeId(initFormData.LOC) : '' },
         inputTable: [
           <InputTable
             key="InputTable"
@@ -165,6 +172,7 @@ class InputComp extends Component {
             setFormData={this.setFormData}
             findTreeDataByNodeId={this.findTreeDataByNodeId}
             categoryData={categoryData}
+            acpTableButtons={this.getAcpTableButtons()}
           />,
         ],
         categoryData,
@@ -186,35 +194,386 @@ class InputComp extends Component {
 
     const fidx = loc.findIndex(item => item.NODE_ID === nodeId);
 
-    return fidx > -1 ? loc[fidx] : undefined;
+    return fidx > -1 ? (loc[fidx].PARENT_NODE_ID === 1533 ? `${loc[fidx].NAME_KOR} 전체` : `${loc[fidx].NAME_KOR}`) : '';
+  };
+
+  save = formData => {
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    return submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsSafetyImprove', { PARAM: formData }, (_, res) => {
+      if (res && res.result === 1) {
+        return this.setState(
+          {
+            formData: {
+              ...res.PARAM,
+              DETAIL_ACP_EMP_NO: res.PARAM && res.PARAM.ACP_EMP_NO,
+              DETAIL_ACP_DEPT_NM: res.PARAM && res.PARAM.ACP_DEPT_NM,
+              DETAIL_ACP_EMP_NM: res.PARAM && res.PARAM.ACP_EMP_NM,
+              DETAIL_ACP_PHONE: res.PARAM && res.PARAM.ACP_PHONE,
+              PIC_FILE_NM: (res.PARAM && res.PARAM.file && res.PARAM.file.fileName) || '',
+            },
+            selectRow: {},
+            viewType: 'MODIFY',
+            inputTable: [],
+          },
+          () =>
+            this.setState(
+              prevState => ({
+                inputTable: [
+                  <InputTable
+                    key="InputTable"
+                    formData={prevState.formData}
+                    changeFormData={this.changeFormData}
+                    setFormData={this.setFormData}
+                    findTreeDataByNodeId={this.findTreeDataByNodeId}
+                    categoryData={prevState.categoryData}
+                    acpTableButtons={this.getAcpTableButtons()}
+                  />,
+                ],
+              }),
+              () => this.showMessage('저장되었습니다.'),
+            ),
+        );
+      }
+      return this.showMessage('저장에 실패하였습니다.');
+    });
+  };
+
+  update = formData => {
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    return submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsSafetyImprove', { PARAM: formData }, (_, res) => {
+      if (res && res.result === 1) {
+        return this.setState(
+          {
+            formData: {
+              ...res.PARAM,
+              DETAIL_ACP_EMP_NO: res.PARAM && res.PARAM.ACP_EMP_NO,
+              DETAIL_ACP_DEPT_NM: res.PARAM && res.PARAM.ACP_DEPT_NM,
+              DETAIL_ACP_EMP_NM: res.PARAM && res.PARAM.ACP_EMP_NM,
+              DETAIL_ACP_PHONE: res.PARAM && res.PARAM.ACP_PHONE,
+              PIC_FILE_NM: (res.PARAM && res.PARAM.file && res.PARAM.file.fileName) || '',
+            },
+            selectRow: {},
+            viewType: 'MODIFY',
+            inputTable: [],
+          },
+          () =>
+            this.setState(
+              prevState => ({
+                inputTable: [
+                  <InputTable
+                    key="InputTable"
+                    formData={prevState.formData}
+                    changeFormData={this.changeFormData}
+                    setFormData={this.setFormData}
+                    findTreeDataByNodeId={this.findTreeDataByNodeId}
+                    categoryData={prevState.categoryData}
+                    acpTableButtons={this.getAcpTableButtons()}
+                  />,
+                ],
+              }),
+              () => this.showMessage('저장되었습니다.'),
+            ),
+        );
+      }
+      return this.showMessage('저장에 실패하였습니다.');
+    });
+  };
+
+  search = () => {
+    const { spinningOn, spinningOff } = this.props;
+    const { selectRow } = this.state;
+    if (JSON.stringify(selectRow) === '{}') return;
+    spinningOn();
+    this.searchBeforeFlagChk(selectRow.REQ_NO, () => {
+      this.setState(
+        {
+          formData: selectRow,
+          selectRow: {},
+          inputTable: [],
+          viewType: 'MODIFY',
+        },
+        () => {
+          this.setState(
+            prevState => ({
+              inputTable: [
+                <InputTable
+                  key="InputTable"
+                  formData={prevState.formData}
+                  changeFormData={this.changeFormData}
+                  setFormData={this.setFormData}
+                  findTreeDataByNodeId={this.findTreeDataByNodeId}
+                  categoryData={prevState.categoryData}
+                  acpTableButtons={this.getAcpTableButtons()}
+                />,
+              ],
+            }),
+            spinningOff,
+          );
+        },
+      );
+    });
+  };
+
+  searchBeforeFlagChk = (reqNo, callBack) => {
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
+
+    spinningOn();
+    const apiAry = [
+      {
+        key: 'FLAG',
+        type: 'GET',
+        url: `/api/eshs/v1/common/eshsSafetyImprove?REQ_NO=${reqNo}`,
+      },
+    ];
+
+    getCallDataHandler(id, apiAry, () => {
+      const { result } = this.props;
+      const modifyBtnFlag = (result && result.FLAG && result.FLAG.flag) || 'F';
+      this.setState(
+        {
+          modifyBtnFlag,
+        },
+        callBack,
+      );
+    });
+  };
+
+  saveBeforeProcess = () => {
+    const { sagaKey: id, submitHandlerBySaga, spinningOn } = this.props;
+    const { formData } = this.state;
+    spinningOn();
+
+    const fileList = [];
+    const picFileFlg = (formData && formData.PIC_FILE && formData.PIC_FILE.newFile) || false;
+    const acpPicFile = (formData && formData.ACP_PIC_FILE && formData.ACP_PIC_FILE.newFile) || false;
+
+    if (picFileFlg) fileList.push(formData.PIC_FILE);
+    if (acpPicFile) fileList.push(formData.ACP_PIC_FILE);
+
+    if (!fileList.length) return this.save(formData);
+
+    return submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', { PARAM: { DETAIL: fileList } }, (_, result) => {
+      if (result && result.message === 'success') {
+        const realFileList = result.DETAIL || [];
+        const seqObj = {};
+        realFileList.forEach(f => (seqObj[f.target] = f.seq));
+        return this.save({ ...formData, ...seqObj });
+      }
+      return this.showMessage('파일저장에 실패하였습니다.');
+    });
+  };
+
+  updateBeforeProcess = () => {
+    const { sagaKey: id, submitHandlerBySaga, spinningOn } = this.props;
+    const { formData } = this.state;
+    spinningOn();
+
+    const fileList = [];
+    const picFileFlg = (formData && formData.PIC_FILE && formData.PIC_FILE.newFile) || false;
+    const acpPicFile = (formData && formData.ACP_PIC_FILE && formData.ACP_PIC_FILE.newFile) || false;
+
+    if (picFileFlg) fileList.push(formData.PIC_FILE);
+    if (acpPicFile) fileList.push(formData.ACP_PIC_FILE);
+
+    if (!fileList.length) return this.update(formData);
+
+    return submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', { PARAM: { DETAIL: fileList } }, (_, result) => {
+      if (result && result.message === 'success') {
+        const realFileList = result.DETAIL || [];
+        const seqObj = {};
+        realFileList.forEach(f => (seqObj[f.target] = f.seq));
+        return this.update({ ...formData, ...seqObj });
+      }
+      return this.showMessage('파일저장에 실패하였습니다.');
+    });
+  };
+
+  reset = () => {
+    const { spinningOn, spinningOff } = this.props;
+    spinningOn();
+    this.setState(
+      prevState => ({
+        formData: prevState.initFormData,
+        inputTable: [],
+        viewType: 'INPUT',
+      }),
+      () =>
+        this.setState(
+          prevState => ({
+            inputTable: [
+              <InputTable
+                key="InputTable"
+                formData={prevState.initFormData}
+                changeFormData={this.changeFormData}
+                setFormData={this.setFormData}
+                findTreeDataByNodeId={this.findTreeDataByNodeId}
+                categoryData={prevState.categoryData}
+              />,
+            ],
+          }),
+          spinningOff,
+        ),
+    );
+  };
+
+  showMessage = text => {
+    const { spinningOff } = this.props;
+    spinningOff();
+    return message.info(<MessageContent>{text}</MessageContent>);
+  };
+
+  changeModalObj = (title = '', visible = false, content = []) => this.setState({ modalObj: { title, visible, content } });
+
+  getAcpTableButtons = () => {
+    const { viewType, modifyBtnFlag } = this.state;
+
+    return [
+      {
+        text: '수신',
+        onClick: () => console.debug('수신'),
+        className: 'btn-gray btn-sm mr5 mr5',
+        visible: viewType !== 'INPUT' || modifyBtnFlag !== 'F',
+      },
+      {
+        text: '저장',
+        onClick: () => console.debug('저장'),
+        className: 'btn-primary btn-sm mr5 mr5',
+        visible: viewType !== 'INPUT',
+      },
+      {
+        text: '조치',
+        onClick: () => console.debug('조치'),
+        className: 'btn-primary btn-sm mr5 mr5',
+        visible: viewType !== 'INPUT',
+      },
+      {
+        text: '요청반송',
+        onClick: () => console.debug('요청반송'),
+        className: 'btn-light btn-sm mr5 mr5',
+        visible: viewType !== 'INPUT',
+      },
+      {
+        text: '전달',
+        onClick: () => console.debug('전달'),
+        className: 'btn-gray btn-sm mr5 mr5',
+        visible: viewType !== 'INPUT',
+      },
+      {
+        text: '인쇄',
+        onClick: () => console.debug('인쇄'),
+        className: 'btn-gray btn-sm mr5 mr5',
+        visible: viewType === 'INPUT',
+      },
+    ];
   };
 
   render() {
-    const { inputTable } = this.state;
+    const { inputTable, formData, modalObj, selectRow, viewType } = this.state;
+    let status = '';
+    switch (String(formData.STTLMNT_STATUS)) {
+      case '0':
+        status = '작성중';
+        break;
+      case '1':
+        status = '요청완료/조치중';
+        break;
+      case '2':
+        status = '조치완료';
+        break;
+      case '3':
+        status = '완료승인';
+        break;
+      case '4':
+        status = '부결';
+        break;
+      case '5':
+        status = '요청반송/재작성';
+        break;
+      default:
+        status = '작성요망';
+        break;
+    }
     return (
-      <StyledContentsWrapper>
-        <StyledCustomSearchWrapper className="search-wrapper-inline">
-          <div className="search-input-area">
-            <AntdSearchInput
-              style={{ width: '150PX' }}
-              className="input-search-sm ant-search-inline mr5"
-              readOnly
-              onClick={this.modalVisible}
-              onChange={this.modalVisible}
-            />
-          </div>
-          <div className="btn-area">
-            <StyledButton className="btn-gray btn-sm mr5">검색</StyledButton>
-            <StyledButton className="btn-primary btn-sm mr5">저장</StyledButton>
-            <StyledButton className="btn-light btn-sm mr5">삭제</StyledButton>
-            <StyledButton className="btn-gray btn-sm mr5">인쇄</StyledButton>
-          </div>
-          <div className="div-comment" style={{ display: 'inline-block' }}>
-            [ 문서상태 : 작성요망 ]
-          </div>
-        </StyledCustomSearchWrapper>
-        {inputTable}
-      </StyledContentsWrapper>
+      <>
+        <StyledContentsWrapper>
+          <StyledCustomSearchWrapper className="search-wrapper-inline">
+            <div className="search-input-area">
+              <AntdSearchInput
+                style={{ width: '150PX' }}
+                value={selectRow.REQ_NO || formData.REQ_NO || undefined}
+                className="input-search-sm ant-search-inline mr5"
+                readOnly
+                onClick={() =>
+                  this.changeModalObj('안전개선 검색', true, [
+                    <SearchList
+                      key="searchList"
+                      modalVisible={() => this.changeModalObj()}
+                      onClickRow={data =>
+                        this.setState({
+                          selectRow: { ...data, PIC_FILE: data.PIC_FILE ? JSON.parse(data.PIC_FILE.value) : undefined },
+                        })
+                      }
+                    />,
+                  ])
+                }
+                onChange={() =>
+                  this.changeModalObj('안전개선 검색', true, [
+                    <SearchList
+                      key="searchList"
+                      modalVisible={() => this.changeModalObj()}
+                      onClickRow={data =>
+                        this.setState({
+                          selectRow: { ...data, PIC_FILE: data.PIC_FILE ? JSON.parse(data.PIC_FILE.value) : undefined },
+                        })
+                      }
+                    />,
+                  ])
+                }
+              />
+            </div>
+            <div className="btn-area">
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.search}>
+                검색
+              </StyledButton>
+              {viewType === 'INPUT' ? (
+                <StyledButton className="btn-primary btn-sm mr5" onClick={this.saveBeforeProcess}>
+                  저장
+                </StyledButton>
+              ) : (
+                <>
+                  <StyledButton className="btn-primary btn-sm mr5" onClick={this.updateBeforeProcess}>
+                    수정
+                  </StyledButton>
+                  <StyledButton className="btn-light btn-sm mr5">삭제</StyledButton>
+                  <StyledButton className="btn-gray btn-sm mr5" onClick={this.reset}>
+                    초기화
+                  </StyledButton>
+                  <StyledButton className="btn-gray btn-sm mr5">인쇄</StyledButton>
+                </>
+              )}
+            </div>
+            <div className="div-comment" style={{ display: 'inline-block' }}>
+              {`[ 문서상태 : ${status} ]`}
+            </div>
+          </StyledCustomSearchWrapper>
+          {inputTable}
+        </StyledContentsWrapper>
+
+        <AntdModal
+          title={modalObj.title || ''}
+          visible={modalObj.visible}
+          width={800}
+          onCancel={() => this.changeModalObj()}
+          footer={
+            <StyledButton className="btn-gray btn-sm mr5" onClick={() => this.changeModalObj()}>
+              닫기
+            </StyledButton>
+          }
+          destroyOnClose
+        >
+          {modalObj.content}
+        </AntdModal>
+      </>
     );
   }
 }
@@ -226,6 +585,7 @@ InputComp.propTypes = {
   spinningOff: PropTypes.func,
   removeReduxState: PropTypes.func,
   profile: PropTypes.object,
+  submitHandlerBySaga: PropTypes.func,
 };
 InputComp.defaultProps = {
   result: {},
@@ -235,6 +595,7 @@ InputComp.defaultProps = {
   spinningOff: () => {},
   removeReduxState: () => {},
   profile: {},
+  submitHandlerBySaga: () => {},
 };
 
 export default InputComp;

@@ -112,7 +112,7 @@ class List extends Component {
       dataKey: `${item.MEASURE_DT} / ${item.SEQ}차`,
       Acid: item[`Acid_${gubun}`] || 0,
       Toxic: item[`Toxic_${gubun}`] || 0,
-      VOD: item[`VOD_${gubun}`] || 0,
+      VOC: item[`VOC_${gubun}`] || 0,
     }));
     return this.setState({ chartData }, spinningOff);
   };
