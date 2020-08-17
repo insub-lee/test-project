@@ -11,6 +11,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
 
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdTreeSelect = StyledTreeSelect(TreeSelect);
@@ -51,6 +52,11 @@ class Comp extends React.Component {
     getCallDataHandler(id, apiAry, this.appStart);
   };
 
+  componentWillUnmount() {
+    const { sagaKey: id, removeReduxState } = this.props;
+    removeReduxState(id);
+  }
+
   appStart = () => {
     const { result, spinningOff } = this.props;
 
@@ -60,15 +66,18 @@ class Comp extends React.Component {
       treeData &&
       treeData
         .filter(item => item.LVL === 7)
-        .map(item => ({
-          ...item,
-          PROCESS_ID: item.PARENT_NODE_ID,
-          PLACE_ID: this.nodeFind('PLACE_ID', item.PARENT_NODE_ID),
-          DIV_ID: this.nodeFind('DIV_ID', item.PARENT_NODE_ID),
-          SDIV_ID: this.nodeFind('SDIV_ID', item.PARENT_NODE_ID),
-          EQUIP_ID: item.NODE_ID,
-          NUM: 1,
-        }));
+        .map(item => {
+          const nodeObj = this.nodeFind(item.PARENT_NODE_ID);
+          nodeObj.EQUIP_ID = item.NODE_ID;
+          nodeObj.EQUIP_NM = item.NAME_KOR;
+          nodeObj.EQUIP_CD = item.CODE;
+          return {
+            ...item,
+            ...nodeObj,
+            NUM: 1,
+          };
+        });
+
     const tempTree =
       treeData &&
       treeData.map(item => {
@@ -94,58 +103,74 @@ class Comp extends React.Component {
     this.setState({ nTreeData, tempList }, spinningOff);
   };
 
-  nodeFind = (name, value) => {
+  nodeFind = nodeId => {
     const { result } = this.props;
     const treeData = (result && result.treeData && result.treeData.categoryMapList) || [];
-    const placeNode = treeData.find(detail => detail.NODE_ID === value) && treeData.find(detail => detail.NODE_ID === value).PARENT_NODE_ID;
-    const divNode = treeData.find(detail => detail.NODE_ID === placeNode) && treeData.find(detail => detail.NODE_ID === placeNode).PARENT_NODE_ID;
-    const sdivNode = treeData.find(detail => detail.NODE_ID === divNode) && treeData.find(detail => detail.NODE_ID === divNode).PARENT_NODE_ID;
-    if (name === 'SDIV_ID') {
-      return sdivNode;
+
+    const processIdx = treeData.findIndex(detail => detail.NODE_ID === nodeId);
+    const placeIdx = processIdx > -1 ? treeData.findIndex(detail => detail.NODE_ID === treeData[processIdx].PARENT_NODE_ID) : -1;
+    const divIdx = placeIdx > -1 ? treeData.findIndex(detail => detail.NODE_ID === treeData[placeIdx].PARENT_NODE_ID) : -1;
+    const sdivIdx = divIdx > -1 ? treeData.findIndex(detail => detail.NODE_ID === treeData[divIdx].PARENT_NODE_ID) : -1;
+
+    const nodeObj = {};
+
+    if (processIdx > -1) {
+      nodeObj.PROCESS_ID = treeData[processIdx].NODE_ID;
+      nodeObj.PROCESS_NM = treeData[processIdx].NAME_KOR;
+      nodeObj.PROCESS_CD = treeData[processIdx].CODE;
     }
-    if (name === 'DIV_ID') {
-      return divNode;
+    if (placeIdx > -1) {
+      nodeObj.PLACE_ID = treeData[placeIdx].NODE_ID;
+      nodeObj.PLACE_NM = treeData[placeIdx].NAME_KOR;
+      nodeObj.PLACE_CD = treeData[placeIdx].CODE;
     }
-    return placeNode;
+    if (divIdx > -1) {
+      nodeObj.DIV_ID = treeData[divIdx].NODE_ID;
+      nodeObj.DIV_NM = treeData[divIdx].NAME_KOR;
+      nodeObj.DIV_CD = treeData[divIdx].CODE;
+    }
+    if (sdivIdx > -1) {
+      nodeObj.SDIV_ID = treeData[sdivIdx].NODE_ID;
+      nodeObj.SDIV_NM = treeData[sdivIdx].NAME_KOR;
+      nodeObj.SDIV_CD = treeData[sdivIdx].CODE;
+    }
+
+    return nodeObj;
   };
 
+  columns = [
+    {
+      title: '부서',
+      dataIndex: 'DIV_NM',
+      align: 'center',
+      width: '25%',
+    },
+    {
+      title: '공정(장소)',
+      dataIndex: 'PLACE_NM',
+      align: 'center',
+      width: '25%',
+    },
+    {
+      title: '세부공정',
+      dataIndex: 'PROCESS_NM',
+      align: 'center',
+      width: '25%',
+    },
+    {
+      title: '장비(설비)',
+      dataIndex: 'EQUIP_NM',
+      align: 'center',
+      width: '25%',
+    },
+  ];
+
   render() {
-    const { result, modalVisible, onClickRow } = this.props;
+    const { modalVisible, onClickRow } = this.props;
     const { nTreeData, listData, tempList } = this.state;
 
-    const treeData = (result && result.treeData && result.treeData.categoryMapList) || [];
-
-    const columns = [
-      {
-        title: '부서',
-        dataIndex: 'DIV_ID',
-        render: text => treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
-        align: 'center',
-        width: '25%',
-      },
-      {
-        title: '공정(장소)',
-        dataIndex: 'PLACE_ID',
-        render: text => treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
-        align: 'center',
-        width: '25%',
-      },
-      {
-        title: '세부공정',
-        dataIndex: 'PROCESS_ID',
-        render: text => treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
-        align: 'center',
-        width: '25%',
-      },
-      {
-        title: '장비(설비)',
-        dataIndex: 'NAME_KOR',
-        align: 'center',
-        width: '25%',
-      },
-    ];
     return (
-      <>
+      <StyledContentsWrapper>
         <StyledCustomSearchWrapper>
           <div className="search-input-area">
             <AntdTreeSelect
@@ -162,34 +187,18 @@ class Comp extends React.Component {
         <AntdTable
           rowKey="NODE_ID"
           key="NODE_ID"
-          columns={columns}
+          columns={this.columns}
           dataSource={listData || []}
           scroll={{ y: 400 }}
           pagination={false}
           onRow={record => ({
             onClick: () => {
-              onClickRow({
-                ...record,
-                SDIV_NM:
-                  treeData.find(item => item.NODE_ID === Number(record.SDIV_ID)) && treeData.find(item => item.NODE_ID === Number(record.SDIV_ID)).NAME_KOR,
-                DIV_NM: treeData.find(item => item.NODE_ID === Number(record.DIV_ID)) && treeData.find(item => item.NODE_ID === Number(record.DIV_ID)).NAME_KOR,
-                PLACE_NM:
-                  treeData.find(item => item.NODE_ID === Number(record.PLACE_ID)) && treeData.find(item => item.NODE_ID === Number(record.PLACE_ID)).NAME_KOR,
-                PROCESS_NM:
-                  treeData.find(item => item.NODE_ID === Number(record.PROCESS_ID)) &&
-                  treeData.find(item => item.NODE_ID === Number(record.PROCESS_ID)).NAME_KOR,
-                EQUIP_NM: record.NAME_KOR,
-              });
+              onClickRow(record);
               modalVisible();
             },
           })}
         />
-        <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-          <StyledButton className="btn-light btn-first btn-sm" onClick={modalVisible}>
-            닫기
-          </StyledButton>
-        </StyledButtonWrapper>
-      </>
+      </StyledContentsWrapper>
     );
   }
 }

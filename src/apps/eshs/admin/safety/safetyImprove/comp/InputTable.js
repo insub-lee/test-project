@@ -14,13 +14,18 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 
-import UserSearchModal from 'apps/eshs/common/userSearchModal';
+import UserSearchModal from 'apps/eshs/common/userSearchModal/ModalContent';
 import DangerHazard from 'apps/eshs/admin/safety/safetyImprove/comp/DangerHazard';
+import AcpEmpComp from 'apps/eshs/admin/safety/safetyImprove/comp/AcpEmpComp';
+import Upload from 'apps/eshs/admin/safety/safetyImprove/comp/Upload';
+
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import moment from 'moment';
+
+const today = moment(new Date()).format('YYYY-MM-DD');
 
 const AntdSearchInput = StyledSearchInput(Input.Search);
 const AntdDatePicker = StyledDatePicker(DatePicker);
@@ -45,28 +50,43 @@ class InputTable extends Component {
   componentDidMount = () => {};
 
   // defaultValue를 사용할수 없는 값..
-  changeTempFormData = (target, value, changeAfter) =>
-    this.setState(prevState => ({ tempFormData: { ...prevState.tempFormData, [target]: value } }), changeAfter);
-
-  changeTempSetFormData = (formData, changeAfter) => this.setState({ tempFormData: formData }, changeAfter);
-
-  changeLocSelect = (target, value, changeAfter) => {
-    const locLabel = this.setLocLabel(value);
-    this.setState(prevState => ({ tempFormData: { ...prevState.tempFormData, [target]: value, locLabel } }), changeAfter);
+  // props로 넘어오는 formData는 부모컴포넌트 랜더시 처음 한번만 넘어옴
+  changeTempFormData = (target, value) => {
+    const { changeFormData } = this.props;
+    return this.setState(
+      prevState => ({ tempFormData: { ...prevState.tempFormData, [target]: value } }),
+      () => changeFormData(target, value),
+    );
   };
 
-  setLocLabel = nodeId => {
-    const { findTreeDataByNodeId } = this.props;
-    const data = findTreeDataByNodeId(nodeId);
-    return data ? (data.PARENT_NODE_ID === 1533 ? `${data.NAME_KOR} 전체` : `${data.NAME_KOR}`) : '';
+  changeTempSetFormData = (formData, callBack) => {
+    const { setFormData } = this.props;
+
+    return this.setState(
+      prevState => ({ tempFormData: { ...prevState.tempFormData, ...formData } }),
+      () => {
+        setFormData(formData);
+        return typeof callBack === 'function' && callBack();
+      },
+    );
+  };
+
+  changeLocSelect = (target, value, changeAfter) => {
+    const { setFormData, findTreeDataByNodeId } = this.props;
+    const LOC_NAME = findTreeDataByNodeId(value);
+    this.setState(
+      prevState => ({ tempFormData: { ...prevState.tempFormData, [target]: value, LOC_NAME } }),
+      () => setFormData({ [target]: value, LOC_NAME }),
+    );
   };
 
   changeModalObj = (title = '', visible = false, content = []) => this.setState({ modalObj: { title, visible, content } });
 
   render() {
-    const { formData, changeFormData, setFormData, categoryData } = this.props;
+    const { formData, changeFormData, categoryData, spinningOn, spinningOff, acpTableButtons } = this.props;
     const { tempFormData, modalObj } = this.state;
-    const locLabel = (tempFormData && tempFormData.locLabel) || '';
+    const locLabel = (tempFormData && tempFormData.LOC_NAME) || '';
+    const status = (formData && formData.STTLMNT_STATUS) || '0';
     return (
       <>
         <StyledHtmlTable>
@@ -115,11 +135,11 @@ class InputTable extends Component {
                 <th>위치</th>
                 <td colSpan={5}>
                   <TreeSelect
-                    style={{ width: '25%' }}
+                    style={{ width: '30%' }}
                     value={tempFormData.LOC || undefined}
                     dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                     treeData={categoryData.LOC}
-                    onChange={value => this.changeLocSelect('LOC', value, () => changeFormData('LOC', value))}
+                    onChange={value => this.changeLocSelect('LOC', value)}
                     allowClear
                   />
                   {locLabel ? <span style={{ paddingLeft: '5px', fontSize: '12px', fontWeight: '500', color: '#0000ff' }}>{locLabel}</span> : ''}
@@ -136,7 +156,7 @@ class InputTable extends Component {
                     {categoryData &&
                       categoryData.MM &&
                       categoryData.MM.map(item => (
-                        <AntdSelect.Option key={item.NODE_ID} value={item.NODE_ID}>
+                        <AntdSelect.Option key={item.NODE_ID} value={item.NAME_KOR}>
                           {item.NAME_KOR}
                         </AntdSelect.Option>
                       ))}
@@ -148,10 +168,10 @@ class InputTable extends Component {
                 <td colSpan={5}>
                   <AntdInput
                     className="ant-input-sm"
-                    style={{ width: '50%' }}
-                    defaultValue={formData.TITLE || undefined}
-                    placeholder="선택"
-                    onChange={e => changeFormData('TITLE', e.target.value)}
+                    style={{ width: '40%' }}
+                    defaultValue={formData.LOC_DETAIL || undefined}
+                    placeholder="상세위치"
+                    onChange={e => changeFormData('LOC_DETAIL', e.target.value)}
                     allowClear
                   />
                   <span style={{ paddingLeft: '5px', fontSize: '12px', fontWeight: '500', color: '#0000ff' }}>
@@ -170,7 +190,7 @@ class InputTable extends Component {
                     {categoryData &&
                       categoryData.EACH_TYPE &&
                       categoryData.EACH_TYPE.map(item => (
-                        <AntdSelect.Option key={item.NODE_ID} value={item.NODE_ID}>
+                        <AntdSelect.Option key={item.NODE_ID} value={item.NAME_KOR}>
                           {item.NAME_KOR}
                         </AntdSelect.Option>
                       ))}
@@ -179,9 +199,70 @@ class InputTable extends Component {
               </tr>
               <tr>
                 <th>조치부서</th>
-                <td colSpan={3}></td>
+                <td colSpan={2}>
+                  <AntdSearchInput
+                    style={{ width: '100%' }}
+                    className="input-search-sm"
+                    value={tempFormData.ACP_DEPT ? `(${tempFormData.ACP_DEPT || ''}) ${tempFormData.ACP_DEPT_NM || ''}` : undefined}
+                    readOnly
+                    placeholder="안전 관계자 선택"
+                    onClick={() =>
+                      this.changeModalObj('안전 관계자', true, [
+                        <AcpEmpComp
+                          key="dangerHazard"
+                          onClickRow={data =>
+                            this.changeTempSetFormData({
+                              ACP_EMP_NO: data.S3_EMP_NO,
+                              ACP_EMP_NM: `${data.S3_NAME} ${data.S3_POSITION}`,
+                              ACP_PHONE: data.S3_TEL,
+                              ACP_DEPT: data.DEPT_CD,
+                              ACP_DEPT_NM: data.DEPT_NAME,
+                            })
+                          }
+                          modalVisible={() => this.changeModalObj()}
+                        />,
+                      ])
+                    }
+                    onChange={() =>
+                      this.changeModalObj('안전 관계자', true, [
+                        <AcpEmpComp
+                          key="dangerHazard"
+                          onClickRow={data =>
+                            this.changeTempSetFormData({
+                              ACP_EMP_NO: data.S3_EMP_NO,
+                              ACP_EMP_NM: `${data.S3_NAME} ${data.S3_POSITION}`,
+                              ACP_PHONE: data.S3_TEL,
+                              ACP_DEPT: data.DEPT_CD,
+                              ACP_DEPT_NM: data.DEPT_NAME,
+                            })
+                          }
+                          modalVisible={() => this.changeModalObj()}
+                        />,
+                      ])
+                    }
+                  />
+                </td>
                 <th>조치자</th>
-                <td></td>
+                <td colSpan={2}>
+                  <AntdInput
+                    className="ant-input-sm mr5"
+                    style={{ width: '40%' }}
+                    value={tempFormData.ACP_EMP_NO || undefined}
+                    placeholder="사번"
+                    onChange={e => this.changeTempFormData('ACP_EMP_NO', e.target.value)}
+                    allowClear
+                  />
+
+                  <AntdInput
+                    className="ant-input-sm"
+                    style={{ width: '55%' }}
+                    value={tempFormData.ACP_EMP_NM || undefined}
+                    placeholder="이름"
+                    // onChange={e => this.changeTempSetFormData({ ACP_EMP_NM: e.target.value, ACP_POSITION: '' })}
+                    onChange={e => this.changeTempFormData('ACP_EMP_NM', e.target.value)}
+                    allowClear
+                  />
+                </td>
                 <th>등급</th>
                 <td>
                   <AntdSelect
@@ -194,7 +275,7 @@ class InputTable extends Component {
                     {categoryData &&
                       categoryData.GRADE &&
                       categoryData.GRADE.map(item => (
-                        <AntdSelect.Option key={item.NODE_ID} value={item.NODE_ID}>
+                        <AntdSelect.Option key={item.NODE_ID} value={item.NAME_KOR}>
                           {item.NAME_KOR}
                         </AntdSelect.Option>
                       ))}
@@ -209,7 +290,7 @@ class InputTable extends Component {
                     allowClear
                     placeholder="선택"
                     className="select-sm"
-                    style={{ width: '20%' }}
+                    style={{ width: '35%' }}
                     onChange={val => this.changeTempFormData('DANGERYN', val, () => changeFormData('DANGERYN', val))}
                   >
                     <AntdSelect.Option value="Y">실시</AntdSelect.Option>
@@ -278,66 +359,12 @@ class InputTable extends Component {
                     disabled={tempFormData.DANGERYN !== 'Y'}
                     onClick={() =>
                       this.changeModalObj('세부공정 선택', true, [
-                        <DangerHazard
-                          key="dangerHazard"
-                          onClickRow={data =>
-                            this.changeTempSetFormData(
-                              {
-                                ...tempFormData,
-                                SDIV_ID: data.SDIV_ID,
-                                DIV_ID: data.DIV_ID,
-                                PLACE_ID: data.PLACE_ID,
-                                PROCESS_ID: data.PROCESS_ID,
-                                EQUIP_ID: data.EQUIP_ID,
-                                SDIV_NM: data.SDIV_NM,
-                                DIV_NM: data.DIV_NM,
-                                PLACE_NM: data.PLACE_NM,
-                                PROCESS_NM: data.PROCESS_NM,
-                                EQUIP_NM: data.EQUIP_NM,
-                              },
-                              setFormData({
-                                SDIV_ID: data.SDIV_ID,
-                                DIV_ID: data.DIV_ID,
-                                PLACE_ID: data.PLACE_ID,
-                                EQUIP_ID: data.EQUIP_ID,
-                                PROCESS_ID: data.PROCESS_ID,
-                              }),
-                            )
-                          }
-                          modalVisible={this.changeModalObj}
-                        />,
+                        <DangerHazard key="dangerHazard" onClickRow={data => this.changeTempSetFormData(data)} modalVisible={() => this.changeModalObj()} />,
                       ])
                     }
                     onChange={() =>
                       this.changeModalObj('세부공정 선택', true, [
-                        <DangerHazard
-                          key="dangerHazard"
-                          onClickRow={data =>
-                            this.changeTempSetFormData(
-                              {
-                                ...tempFormData,
-                                SDIV_ID: data.SDIV_ID,
-                                DIV_ID: data.DIV_ID,
-                                PLACE_ID: data.PLACE_ID,
-                                PROCESS_ID: data.PROCESS_ID,
-                                EQUIP_ID: data.EQUIP_ID,
-                                SDIV_NM: data.SDIV_NM,
-                                DIV_NM: data.DIV_NM,
-                                PLACE_NM: data.PLACE_NM,
-                                PROCESS_NM: data.PROCESS_NM,
-                                EQUIP_NM: data.EQUIP_NM,
-                              },
-                              setFormData({
-                                SDIV_ID: data.SDIV_ID,
-                                DIV_ID: data.DIV_ID,
-                                PLACE_ID: data.PLACE_ID,
-                                EQUIP_ID: data.EQUIP_ID,
-                                PROCESS_ID: data.PROCESS_ID,
-                              }),
-                            )
-                          }
-                          modalVisible={this.changeModalObj}
-                        />,
+                        <DangerHazard key="dangerHazard" onClickRow={data => this.changeTempSetFormData(data)} modalVisible={() => this.changeModalObj()} />,
                       ])
                     }
                   />
@@ -355,12 +382,22 @@ class InputTable extends Component {
               </tr>
               <tr>
                 <th>개선전</th>
-                <td colSpan={7}></td>
+                <td colSpan={7} align="center">
+                  <div style={{ width: '500px', height: '380px', marginTop: '20px' }}>
+                    <Upload
+                      target="PIC"
+                      spinningOn={spinningOn}
+                      spinningOff={spinningOff}
+                      file={tempFormData.PIC ? { fileName: tempFormData.PIC_FILE_NM, seq: tempFormData.PIC } : {}}
+                      changeFormData={file => changeFormData('PIC_FILE', file)}
+                    />
+                  </div>
+                </td>
               </tr>
               <tr>
                 <th>현상</th>
                 <td colSpan={7}>
-                  <AntdTextarea rows={7} />
+                  <AntdTextarea rows={7} onChange={e => changeFormData('COMMENTS', e.target.value)} defaultValue={formData.COMMENTS || undefined} />
                 </td>
               </tr>
             </tbody>
@@ -369,7 +406,19 @@ class InputTable extends Component {
           <StyledCustomSearchWrapper className="search-wrapper-inline">
             <span className="text-label">조치후</span>
             <div className="btn-area">
-              <StyledButton className="btn-gray btn-sm mr5 ml5">인쇄</StyledButton>
+              {/* <StyledButton className="btn-gray btn-sm mr5 ml5">수신</StyledButton>
+              <StyledButton className="btn-primary btn-sm mr5 ml5">저장</StyledButton>
+              <StyledButton className="btn-primary btn-sm mr5 ml5">조치</StyledButton>
+              <StyledButton className="btn-light btn-sm mr5 ml5">요청반송</StyledButton>
+              <StyledButton className="btn-gray btn-sm mr5 ml5">전달</StyledButton>
+              <StyledButton className="btn-gray btn-sm mr5 ml5">인쇄</StyledButton> */}
+              {acpTableButtons
+                .filter(btn => btn.visible)
+                .map((btn, index) => (
+                  <StyledButton key={`btn_${index}`} className={btn.className} onClick={btn.onClick}>
+                    {btn.text}
+                  </StyledButton>
+                ))}
             </div>
           </StyledCustomSearchWrapper>
           <table className="table-border">
@@ -381,24 +430,69 @@ class InputTable extends Component {
             <tbody>
               <tr>
                 <th>완료일</th>
-                <td></td>
-                <td rowSpan={6}></td>
+                <td>
+                  <AntdDatePicker
+                    className="ant-picker"
+                    style={{ width: '100%' }}
+                    defaultValue={formData.ACP_DATE ? moment(formData.ACP_DATE) : moment(today)}
+                    onChange={(date, strDate) => changeFormData('REQ_DT', strDate)}
+                  />
+                </td>
+                <td rowSpan={6} align="center">
+                  <div style={{ width: '500px', height: '380px', marginTop: '20px' }}>
+                    <Upload
+                      target="ACP_PIC"
+                      spinningOn={spinningOn}
+                      spinningOff={spinningOff}
+                      file={tempFormData.ACP_PIC_SEQ ? { fileName: tempFormData.ACP_PIC_FILE_NM, seq: tempFormData.ACP_PIC_SEQ } : {}}
+                      changeFormData={file => changeFormData('ACP_PIC_FILE', file)}
+                    />
+                  </div>
+                </td>
               </tr>
               <tr>
                 <th>담당ENG</th>
-                <td></td>
+                <td>{formData.DETAIL_ACP_EMP_NO && `${formData.DETAIL_ACP_DEPT_NM || ''} / ${formData.DETAIL_ACP_EMP_NM || ''}`}</td>
               </tr>
               <tr>
                 <th>담당TEL</th>
-                <td></td>
+                <td>{formData.DETAIL_ACP_PHONE}</td>
               </tr>
               <tr>
                 <th>조치자</th>
-                <td></td>
+                <td>
+                  <StyledButton
+                    className="btn-primary btn-sm mr5"
+                    onClick={() =>
+                      this.changeModalObj('사원 검색', true, [
+                        <UserSearchModal
+                          key="userSearchModal"
+                          visible
+                          onClickRow={data =>
+                            this.changeTempSetFormData(
+                              {
+                                ACP1_EMP_NO: data.EMP_NO,
+                                ACP1_EMP_NM: `${data.NAME_KOR} ${data.PSTN_NAME_KOR}`,
+                                ACP1_USER_ID: data.USER_ID,
+                                ACP1_PHONE: data.MOBILE_TEL_NO,
+                                ACP1_DEPT_NM: data.DEPT_NAME_KOR,
+                                ACP1_DEPT_ID: data.DEPT_ID,
+                              },
+                              this.changeModalObj,
+                            )
+                          }
+                        />,
+                      ])
+                    }
+                  >
+                    단수지정
+                  </StyledButton>
+                  {tempFormData.ACP1_USER_ID && `${tempFormData.ACP1_DEPT_NM || ''} / ${tempFormData.ACP1_EMP_NO || ''} / ${tempFormData.ACP1_EMP_NM || ''}`}
+                </td>
               </tr>
               <tr>
                 <th>조치TEL</th>
-                <td></td>
+                <td> {tempFormData.ACP1_PHONE || ''}</td>
               </tr>
               <tr>
                 <th>
@@ -407,19 +501,22 @@ class InputTable extends Component {
                   조치내용
                 </th>
                 <td>
-                  <AntdTextarea rows={10} />
+                  <AntdTextarea rows={10} onChange={e => changeFormData('COMMENTS_HTML', e.target.value)} />
                 </td>
               </tr>
             </tbody>
           </table>
         </StyledHtmlTable>
         <AntdModal
-          className="modal-table-pad"
-          title={modalObj.title}
+          title={modalObj.title || ''}
           visible={modalObj.visible}
           width={800}
-          onCancel={this.changeModalObj}
-          footer={null}
+          onCancel={() => this.changeModalObj()}
+          footer={
+            <StyledButton className="btn-gray btn-sm mr5" onClick={() => this.changeModalObj()}>
+              닫기
+            </StyledButton>
+          }
           destroyOnClose
         >
           {modalObj.content}
@@ -434,6 +531,10 @@ InputTable.propTypes = {
   categoryData: PropTypes.object,
   setFormData: PropTypes.func,
   findTreeDataByNodeId: PropTypes.func,
+  spinningOn: PropTypes.func,
+  spinningOff: PropTypes.func,
+
+  acpTableButtons: PropTypes.array,
 };
 InputTable.defaultProps = {
   formData: {},
@@ -448,6 +549,7 @@ InputTable.defaultProps = {
   },
   setFormData: () => {},
   findTreeDataByNodeId: () => {},
+  acpTableButtons: [],
 };
 
 export default InputTable;
