@@ -59,23 +59,26 @@ class Edit extends Component {
   };
 
   onSave = () => {
-    const { sagaKey, submitHandlerBySaga, formData } = this.props;
+    const { sagaKey, submitHandlerBySaga, formData, spinningOn } = this.props;
     const submitData = {
       PARAM: { formData },
     };
+    spinningOn();
     submitHandlerBySaga(sagaKey, 'POST', '/api/mdcs/v1/common/DocApproverManageList', submitData, this.onSaveComplete);
   };
 
   onUpdate = () => {
-    const { sagaKey, submitHandlerBySaga, formData } = this.props;
+    const { sagaKey, submitHandlerBySaga, formData, spinningOn } = this.props;
     const submitData = {
       PARAM: { formData },
     };
+    spinningOn();
     submitHandlerBySaga(sagaKey, 'PUT', '/api/mdcs/v1/common/DocApproverManageList', submitData, this.onSaveComplete);
   };
 
   onSaveComplete = id => {
-    const { getCallDataHandler, apiAry, removeStorageReduxState } = this.props;
+    const { getCallDataHandler, apiAry, removeStorageReduxState, spinningOff } = this.props;
+    spinningOff();
     removeStorageReduxState(id, 'result');
     getCallDataHandler(id, apiAry);
     this.setState({
@@ -87,6 +90,12 @@ class Edit extends Component {
   onCancel = () => {
     const { sagaKey, removeStorageReduxState, changeFormData } = this.props;
     removeStorageReduxState(sagaKey, 'formData');
+    changeFormData(sagaKey, 'actionType', 'I');
+    // this.setState({ isOpenModal: false });
+  };
+
+  onCloseUserSelect = () => {
+    const { sagaKey, removeStorageReduxState, changeFormData } = this.props;
     changeFormData(sagaKey, 'actionType', 'I');
     this.setState({ isOpenModal: false });
   };
@@ -176,7 +185,7 @@ class Edit extends Component {
           <Col span={10}>
             <Input readOnly placeholder="select me" value={formData && formData.APPROVER_NAME} onClick={() => this.setState({ isOpenModal: true })} />
             <Modal visible={this.state.isOpenModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
-              <UserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onUserSelectedComplete}></UserSelect>
+              <UserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onUserSelectedComplete} onCancel={this.onCloseUserSelect}></UserSelect>
             </Modal>
           </Col>
           <Col span={2} className="titleCol">
