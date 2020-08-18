@@ -8,12 +8,14 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import AbrogationMultiModifyDraft from 'apps/Workflow/User/CommonView/abrogationMultiModifyDraft';
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
 
+import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
-import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import ProcessView from 'apps/Workflow/User/CommonView/processView';
 import ExcelDownLoad from 'components/ExcelDownLoad';
@@ -24,6 +26,8 @@ const { TextArea } = Input;
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
+const AntdInput = StyledInput(Input);
+
 const StyledWrap = styled.div`
   table.mdcsProcessList {
     width: 100%;
@@ -67,7 +71,7 @@ const excelColumns = [
     style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
   },
   {
-    title: '표준번호',
+    title: '문서번호',
     width: { wpx: 100 },
     style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
   },
@@ -77,7 +81,7 @@ const excelColumns = [
     style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
   },
   {
-    title: '표준제목',
+    title: '제목',
     width: { wpx: 300 },
     style: { alignment: { horizontal: 'left' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
   },
@@ -132,20 +136,33 @@ class ApproveList extends Component {
       paginationIdx: 1,
       pageSize: 10,
       isPreView: false,
+      DOCNUMBER: '',
+      DOCTITLE: '',
     };
   }
 
   componentDidMount() {
     const { profile, id, getApproveList } = this.props;
-    const { paginationIdx, pageSize } = this.state;
+    // const { paginationIdx, pageSize } = this.state;
     const { ACCOUNT_IDS_DETAIL } = profile;
     const vList = ACCOUNT_IDS_DETAIL && ACCOUNT_IDS_DETAIL.V.split(',');
     const vId = vList.findIndex(v => v === '1221');
     if (vId >= 0) {
       this.setState({ isDcc: true });
     }
+    // const fixUrl = '/api/workflow/v1/common/approve/ApproveListMDCSHandler';
+    // this.props.getApproveList(fixUrl, paginationIdx, pageSize);
+    this.getList();
+  }
+
+  getList = () => {
+    const { id, getApproveList, spinningOn, spinningOff } = this.props;
+    const { paginationIdx, pageSize } = this.state;
     const fixUrl = '/api/workflow/v1/common/approve/ApproveListMDCSHandler';
-    this.props.getApproveList(fixUrl, paginationIdx, pageSize);
+    spinningOn();
+    getApproveList(fixUrl, paginationIdx, pageSize, [], { DOCNUMBER: this.state.DOCNUMBER, DOCTITLE: this.state.DOCTITLE }, () => {
+      spinningOff();
+    });
   }
 
   getTableColumns = () => [
@@ -166,7 +183,7 @@ class ApproveList extends Component {
       render: (text, record) => (record.APPV_USER_ID === record.ORG_APPV_USER_ID ? text : `${text}(위임결재)`),
     },
     {
-      title: '표준번호',
+      title: '문서번호',
       dataIndex: 'DOCNUMBER',
       key: 'DOCNUMBER',
       width: '9%',
@@ -189,7 +206,7 @@ class ApproveList extends Component {
       render: (text, record) => (record.REL_TYPE === 99 ? 'OBS' : record.REL_TYPE === 999 ? '0' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
     },
     {
-      title: '표준제목',
+      title: '제목',
       dataIndex: 'DRAFT_TITLE',
       key: 'title',
       ellipsis: true,
@@ -434,11 +451,12 @@ class ApproveList extends Component {
   };
 
   closeBtnFunc = () => {
-    const { getApproveList } = this.props;
-    const { paginationIdx, pageSize } = this.state;
     this.props.setViewVisible(false);
-    const fixUrl = '/api/workflow/v1/common/approve/ApproveListMDCSHandler';
-    getApproveList(fixUrl, paginationIdx, pageSize);
+    // const { getApproveList } = this.props;
+    // const { paginationIdx, pageSize } = this.state;
+    // const fixUrl = '/api/workflow/v1/common/approve/ApproveListMDCSHandler';
+    // getApproveList(fixUrl, paginationIdx, pageSize);
+    this.getList();
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
@@ -535,11 +553,11 @@ class ApproveList extends Component {
 
   setPaginationIdx = paginationIdx =>
     this.setState({ paginationIdx }, () => {
-      const { getApproveList } = this.props;
-      const { pageSize } = this.state;
-
-      const fixUrl = '/api/workflow/v1/common/approve/ApproveListMDCSHandler';
-      this.props.getApproveList(fixUrl, paginationIdx, pageSize);
+      // const { getApproveList } = this.props;
+      // const { pageSize } = this.state;
+      // const fixUrl = '/api/workflow/v1/common/approve/ApproveListMDCSHandler';
+      // this.props.getApproveList(fixUrl, paginationIdx, pageSize);
+      this.getList();
     });
 
   render() {
@@ -571,24 +589,38 @@ class ApproveList extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
-          <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
-            <ExcelDownLoad
-              isBuilder={false}
-              fileName={`검색결과 (${moment().format('YYYYMMDD')})`}
-              className="workerExcelBtn"
-              title="Excel 파일로 저장"
-              btnSize="btn-sm"
-              sheetName=""
-              columns={excelColumns}
-              fields={fields}
-              submitInfo={{
-                dataUrl: '/api/workflow/v1/common/approve/ApproveListMDCSHandler',
-                method: 'POST',
-                submitData: { PARAM: { relTypes: [1, 4, 99, 999], PAGE: undefined, PAGE_CNT: undefined } },
-                dataSetName: 'list',
-              }}
-            />
-          </div>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <AntdInput
+                className="ant-input-sm mr5" style={{ width: 110 }} allowClear placeholder="문서번호"
+                onChange={e => this.setState({ DOCNUMBER: e.target.value })}
+                onPressEnter={this.getList}
+              />
+              <AntdInput
+                className="ant-input-sm mr5" style={{ width: 110 }} allowClear placeholder="제목"
+                onChange={e => this.setState({ DOCTITLE: e.target.value })}
+                onPressEnter={this.getList}
+              />
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>검색</StyledButton>
+              <ExcelDownLoad
+                isBuilder={false}
+                fileName={`검색결과 (${moment().format('YYYYMMDD')})`}
+                className="workerExcelBtn"
+                title="Excel 파일로 저장"
+                btnSize="btn-sm"
+                sheetName=""
+                columns={excelColumns}
+                fields={fields}
+                submitInfo={{
+                  dataUrl: '/api/workflow/v1/common/approve/ApproveListMDCSHandler',
+                  method: 'POST',
+                  submitData: { PARAM: { relTypes: [1, 4, 99, 999], PAGE: undefined, PAGE_CNT: undefined } },
+                  dataSetName: 'list',
+                }}
+                style={{ display: 'inline-block' }}
+              />
+            </div>
+          </StyledCustomSearchWrapper>
           <AntdTable
             key="apps-workflow-user-approve-list"
             columns={this.getTableColumns()}
