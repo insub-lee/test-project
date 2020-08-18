@@ -9,18 +9,27 @@ import * as actionTypes from './constants';
 import * as actions from './actions';
 import * as selectors from './selectors';
 
-function* getApproveList({ customUrl, PAGE, PAGE_CNT, relTypes }) {
+function* getApproveList({ customUrl, PAGE, PAGE_CNT, relTypes, params, callback }) {
   let paramRelTypes = relTypes;
   if (!paramRelTypes || paramRelTypes.length === 0) {
     paramRelTypes = yield select(selectors.makeSelectRelTypes());
   }
   const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/approveList`, {
-    PARAM: { relTypes: paramRelTypes && paramRelTypes.length > 0 ? paramRelTypes : [1, 99, 999], PAGE: PAGE || 1, PAGE_CNT: PAGE_CNT || 10 },
+    PARAM: {
+      relTypes: paramRelTypes && paramRelTypes.length > 0 ? paramRelTypes : [1, 99, 999],
+      PAGE: PAGE || 1,
+      PAGE_CNT: PAGE_CNT || 10,
+      ...params,
+    },
   });
   if (response) {
     const { list, listCnt } = response;
     yield put(actions.setApproveList(list, listCnt));
     yield put(actions.setPartialInit());
+  }
+
+  if (typeof callback === 'function') {
+    callback(response);
   }
 }
 
@@ -47,33 +56,51 @@ function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
   }
 }
 
-function* getUnApproveList({ customUrl, PAGE, PAGE_CNT, relTypes }) {
+function* getUnApproveList({ customUrl, PAGE, PAGE_CNT, relTypes, params, callback }) {
   let paramRelTypes = relTypes;
   if (!paramRelTypes || paramRelTypes.length === 0) {
     paramRelTypes = yield select(selectors.makeSelectRelTypes());
   }
   const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/unApproveList`, {
-    PARAM: { relTypes: paramRelTypes && paramRelTypes.length > 0 ? paramRelTypes : [1, 4, 99, 999], PAGE: PAGE || 1, PAGE_CNT: PAGE_CNT || 10 },
+    PARAM: {
+      relTypes: paramRelTypes && paramRelTypes.length > 0 ? paramRelTypes : [1, 4, 99, 999],
+      PAGE: PAGE || 1,
+      PAGE_CNT: PAGE_CNT || 10,
+      ...params,
+    },
   });
   if (response) {
     const { list, listCnt } = response;
     yield put(actions.setUnApproveList(list, listCnt));
     yield put(actions.setPartialInit());
   }
+
+  if (typeof callback === 'function') {
+    callback(response);
+  }
 }
 
-function* getDraftList({ customUrl, PAGE, PAGE_CNT, relTypes }) {
+function* getDraftList({ customUrl, PAGE, PAGE_CNT, relTypes, params, callback }) {
   let paramRelTypes = relTypes;
   if (!paramRelTypes || paramRelTypes.length === 0) {
     paramRelTypes = yield select(selectors.makeSelectRelTypes());
   }
   const response = yield call(Axios.post, customUrl || `/api/workflow/v1/common/approve/draftList`, {
-    PARAM: { relTypes: paramRelTypes && paramRelTypes.length > 0 ? paramRelTypes : [1, 99, 999], PAGE: PAGE || 1, PAGE_CNT: PAGE_CNT || 10 },
+    PARAM: {
+      relTypes: paramRelTypes && paramRelTypes.length > 0 ? paramRelTypes : [1, 99, 999],
+      PAGE: PAGE || 1,
+      PAGE_CNT: PAGE_CNT || 10,
+      ...params,
+    },
   });
   if (response) {
     const { list, listCnt } = response;
     yield put(actions.setDraftList(list, listCnt));
     yield put(actions.setPartialInit());
+  }
+
+  if (typeof callback === 'function') {
+    callback(response);
   }
 }
 
