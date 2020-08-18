@@ -14,9 +14,12 @@ const AntdTable = StyledAntdTable(Table);
 const ButtonGroup = Button.Group;
 class List extends Component {
   componentDidMount() {
-    const { id, getCallDataHandler, apiAry, changeFormData } = this.props;
+    const { id, getCallDataHandler, apiAry, changeFormData, spinningOn, spinningOff } = this.props;
     changeFormData(id, 'actionType', 'I');
-    getCallDataHandler(id, apiAry);
+    spinningOn();
+    getCallDataHandler(id, apiAry, () => {
+      spinningOff();
+    });
   }
 
   onMakeFullPath = (fullPath, nodeKey) => {
@@ -86,8 +89,11 @@ class List extends Component {
   };
 
   onComplete = id => {
-    const { getCallDataHandler, apiAry } = this.props;
-    getCallDataHandler(id, apiAry);
+    const { getCallDataHandler, apiAry, spinningOn, spinningOff } = this.props;
+    spinningOn();
+    getCallDataHandler(id, apiAry, () => {
+      spinningOff();
+    });
   };
 
   onRemoveDo = record => {
