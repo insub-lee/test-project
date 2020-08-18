@@ -812,7 +812,7 @@ class ApproveList extends Component {
                           abrogationList.map(item => (
                             <tr className="tr-center">
                               <td>{item.DOCNUMBER}</td>
-                              <td>{item.VERSION}</td>
+                              <td>{item.VERSION.replace('.0', '')}</td>
                               <td style={{ textAlign: 'left' }}>{item.TITLE}</td>
                               <td>{moment(item.END_DTTM).format('YYYY-MM-DD')}</td>
                             </tr>
