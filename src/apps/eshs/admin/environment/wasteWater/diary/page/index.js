@@ -11,10 +11,21 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import Styled from './Styled';
-import MenuTable from '../infoTable/mainMenuTable';
-import ExhaustActTable from '../infoTable/exhaustActTable';
-import CleanActTable from '../infoTable/cleanActTable';
-import FlowTable from '../infoTable/flowTable';
+// 메뉴 콘텐츠
+import MenuTable from '../infoTable/mainMenuTable'; // 배출시설 가동시간
+import ExhaustActTable from '../infoTable/exhaustActTable'; // 방지시설 가동시간
+import CleanActTable from '../infoTable/cleanActTable'; // 용수 공급원별 사용량
+import FlowTable from '../infoTable/flowTable'; // 폐수발생량
+import SludgeTable from '../infoTable/sludgeTable'; // Sludge 발생 및 처리량
+import AdditionTable from '../infoTable/additionTable'; // 원료,첨가제 사용량
+import WattmeterTable from '../infoTable/wattmeterTable'; // 전력사용량
+import UsedChemicalTable from '../infoTable/usedChemicalTable'; // 약품사용량
+import PokgijoTable from '../infoTable/pokgijoTable'; // 폭기조 운전상태
+import CleanRepairTable from '../infoTable/cleanRepairTable'; // 방지시설 유지보수
+import WaterQualCheckTable from '../infoTable/waterQualCheckTable'; // 오염물질 측정 내용
+import CodCheckTable from '../infoTable/codCheckTable'; // 유기물 등 오염물질 자동측정 결과
+// 모달 컨텐츠
+import CleanRepairModal from '../modalContents/cleanRepairModal'; // 방지시설 추가, 수정 모달
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSelect = StyledSelect(Select);
@@ -26,6 +37,12 @@ class QualityPage extends Component {
     super(props);
     this.state = {
       viewType: 'input',
+      modalTitle: '', // 모달제목
+      modalType: '', // 모달타입
+      modalVisible: false, // 모달사용
+      modalData: {}, // 모달데이터 (모달내 컨텐츠에서 사용될 데이터)
+      isSearch: false, // 검색중
+      isSearchMenu: false, // 메뉴에 필요한 데이터 로드 여부
       selectedMenu: '', // 선택된 일지 하위메뉴
       searchDate: moment().format('YYYY-MM-DD'), // 검색일자
       renderData: undefined, // 콘텐츠 렌더링에 필요한 데이터
@@ -46,6 +63,9 @@ class QualityPage extends Component {
   onClickSearch = () => {
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
     const { searchDate } = this.state;
+    this.setState({
+      isSearch: true,
+    });
     const apiInfo = {
       key: 'getDiaryInfo',
       type: 'POST',
@@ -61,6 +81,7 @@ class QualityPage extends Component {
     const { DIARY_INFO } = response;
     this.setState(
       {
+        isSearch: false,
         mainFormData: {
           ...mainFormData,
           OP_DT: searchDate,
@@ -76,7 +97,7 @@ class QualityPage extends Component {
   // 저장, 수정, 삭제
   submitFormData = type => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const { mainFormData, formData } = this.state;
+    const { mainFormData, formData, modalData } = this.state;
     let submitData = {};
     switch (type) {
       case 'SAVE_EXHAUST_ACT': // 배출시설 가동시간 저장/수정
@@ -119,20 +140,40 @@ class QualityPage extends Component {
         };
         submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwflow', submitData, this.onClickSearch);
         break;
-      case 'MODIFY':
-        // submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwCheckItem', submitData, this.updateCallback);
-        break;
-      case 'DELETE':
-        // submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwCheckItem', submitData, this.deleteCallback);
+      case 'SAVE_CLEAN_REPAIR_INFO': // 방지시설 유지보수 정보 저장
+        submitData = {
+          PARAM: {
+            type,
+            GROUP_UNIT_CD: mainFormData.GROUP_UNIT_CD,
+            OP_DT: mainFormData.OP_DT,
+            ...modalData,
+          },
+        };
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwCleanRepair', submitData, this.modalDataSubmitCallback);
         break;
       default:
         break;
     }
   };
 
+  modalDataSubmitCallback = () => {
+    this.setState(
+      {
+        modalType: '',
+        modalVisible: false,
+        modalTitle: '',
+        modalData: {},
+      },
+      () => this.onClickSearch(),
+    );
+  };
+
   onClickMenu = menuName => {
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
     const { mainFormData } = this.state;
+    this.setState({
+      isSearchMenu: false,
+    });
     let apiInfo = {};
     switch (menuName) {
       case 'EXHAUST_ACT': // 배출시설 가동시간
@@ -140,7 +181,7 @@ class QualityPage extends Component {
           key: 'getExhaustActInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwAct`,
-          params: { PARAM: { type: 'GET_EXHAUST_ACT_INFO', search_dt: mainFormData.OP_DT } },
+          params: { PARAM: { type: 'GET_EXHAUST_ACT_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getActDataCallback);
         break;
@@ -149,7 +190,7 @@ class QualityPage extends Component {
           key: 'getCleanActInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwAct`,
-          params: { PARAM: { type: 'GET_CLEAN_ACT_INFO', search_dt: mainFormData.OP_DT } },
+          params: { PARAM: { type: 'GET_CLEAN_ACT_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getActDataCallback);
         break;
@@ -158,18 +199,90 @@ class QualityPage extends Component {
           key: 'getUsedFlowInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwflow`,
-          params: { PARAM: { type: 'GET_USED_FLOW_INFO', search_dt: mainFormData.OP_DT } },
+          params: { PARAM: { type: 'GET_USED_FLOW_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
         };
-        getCallDataHandlerReturnRes(id, apiInfo, this.getUsedFlowCallback);
+        getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
       case 'WATER_FLOW': // 폐수발생량
         apiInfo = {
           key: 'getWaterFlowInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwflow`,
-          params: { PARAM: { type: 'GET_WATER_FLOW_INFO', search_dt: mainFormData.OP_DT } },
+          params: { PARAM: { type: 'GET_WATER_FLOW_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
         };
-        getCallDataHandlerReturnRes(id, apiInfo, this.getUsedFlowCallback);
+        getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
+        break;
+      case 'SLUDGE': // Sludge 처리 시설
+        apiInfo = {
+          key: 'getSludgeInfo',
+          type: 'POST',
+          url: `/api/eshs/v1/common/wwSludge`,
+          params: { PARAM: { type: 'GET_SLUDGE_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+        };
+        getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
+        break;
+      case 'ADDITION': // 원료, 첨가제 사용량
+        apiInfo = {
+          key: 'getAdditionInfo',
+          type: 'POST',
+          url: `/api/eshs/v1/common/wwAddition`,
+          params: { PARAM: { type: 'GET_ADDITION_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+        };
+        getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
+        break;
+      case 'WATTMETER': // 전력 사용량
+        apiInfo = {
+          key: 'getWattmeterInfo',
+          type: 'POST',
+          url: `/api/eshs/v1/common/wwWattmeter`,
+          params: { PARAM: { type: 'GET_WATTMETER_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+        };
+        getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
+        break;
+      case 'USED_CHEMICAL': // 약품 사용량
+        apiInfo = {
+          key: 'getUsedChemicalInfo',
+          type: 'POST',
+          url: `/api/eshs/v1/common/wwUsedChemical`,
+          params: { PARAM: { type: 'GET_USED_CHEMICAL_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+        };
+        getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
+        break;
+      case 'POKGIJO': // 폭기조 운전상태
+        apiInfo = {
+          key: 'getPokgijoInfo',
+          type: 'POST',
+          url: `/api/eshs/v1/common/wwPokgijo`,
+          params: { PARAM: { type: 'GET_POKGIJO_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+        };
+        getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
+        break;
+      case 'CLEAN_REPAIR': // 방지시설 유지보수
+        apiInfo = {
+          key: 'getCleanRepairInfo',
+          type: 'POST',
+          url: `/api/eshs/v1/common/wwCleanRepair`,
+          params: { PARAM: { type: 'GET_CLEAN_REPAIR_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+        };
+        getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
+        break;
+      case 'WATER_QUAL': // 오염물질 측정 내용
+        apiInfo = {
+          key: 'getWaterQualCheckInfo',
+          type: 'POST',
+          url: `/api/eshs/v1/common/wwQualCheck`,
+          params: { PARAM: { type: 'GET_WATER_QUAL_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+        };
+        getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
+        break;
+      case 'COD_CHK': // 유기물 등 오염물질 자동측정 결과
+        apiInfo = {
+          key: 'getCodCheckInfo',
+          type: 'POST',
+          url: `/api/eshs/v1/common/wwCodCheck`,
+          params: { PARAM: { type: 'GET_COD_CHK_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+        };
+        getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
       default:
         break;
@@ -189,6 +302,7 @@ class QualityPage extends Component {
       initFormData = CODE_LIST.map(item => ({ [targetCd]: item[targetCd] }));
     }
     this.setState({
+      isSearchMenu: true,
       renderData: {
         ...RENDER_INFO,
       },
@@ -196,17 +310,26 @@ class QualityPage extends Component {
     });
   };
 
-  // 용수공급원별 사용량 / 폐수발생량 Callback
-  getUsedFlowCallback = (id, response) => {
+  // 메뉴클릭 콜백
+  getListCallback = (id, response) => {
     const { RENDER_INFO } = response;
-    this.setState({
-      formData: RENDER_INFO || [],
-    });
+    if (Array.isArray(RENDER_INFO)) {
+      this.setState({
+        isSearchMenu: true,
+        formData: RENDER_INFO || [],
+      });
+    } else {
+      this.setState({
+        isSearchMenu: true,
+        formData: RENDER_INFO || {},
+      });
+    }
   };
 
   onChangeMainFormData = (field, value) => {
     const { mainFormData } = this.state;
     this.setState({
+      isSearchMenu: true,
       mainFormData: {
         ...mainFormData,
         [field]: value,
@@ -344,9 +467,8 @@ class QualityPage extends Component {
     });
   };
 
-  // formData ob
   onChangeFormData = (field, value, key) => {
-    const { formData } = this.state;
+    const { selectedMenu, formData } = this.state;
     if (Array.isArray(formData)) {
       const nextFormData = formData.map((row, rowIndex) => {
         if (key === rowIndex) {
@@ -360,6 +482,20 @@ class QualityPage extends Component {
       this.setState({
         formData: nextFormData,
       });
+    } else if (selectedMenu === 'COD_CHK') {
+      const nextFormData = {
+        ...formData,
+        [field]: value,
+      };
+      this.setState(
+        {
+          formData: {
+            ...formData,
+            [field]: value,
+          },
+        },
+        () => this.CodChkcalcAvg(nextFormData),
+      );
     } else {
       this.setState({
         formData: {
@@ -370,13 +506,79 @@ class QualityPage extends Component {
     }
   };
 
+  CodChkcalcAvg = formData => {
+    const { CHK_02, CHK_04, CHK_06, CHK_08, CHK_10, CHK_12, CHK_14, CHK_16, CHK_18, CHK_20, CHK_22, CHK_24 } = formData;
+    const sum =
+      (CHK_02 || 0) +
+      (CHK_04 || 0) +
+      (CHK_06 || 0) +
+      (CHK_08 || 0) +
+      (CHK_10 || 0) +
+      (CHK_12 || 0) +
+      (CHK_14 || 0) +
+      (CHK_16 || 0) +
+      (CHK_18 || 0) +
+      (CHK_20 || 0) +
+      (CHK_22 || 0) +
+      (CHK_24 || 0);
+    const avg = sum / 12;
+    this.setState({
+      formData: {
+        ...formData,
+        AVG: avg.toFixed(4),
+      },
+    });
+  };
+
+  onChangeModalFormData = (field, value) => {
+    const { modalData } = this.state;
+    this.setState({
+      modalData: {
+        ...modalData,
+        [field]: value,
+      },
+    });
+  };
+
+  modalHandler = (type, bool, data) => {
+    let title = '';
+    let mdData = {};
+    switch (type) {
+      case 'CLEAN_REPAIR':
+        title = 'Daily Report - 방지시설 유지보수 관리 - 상세';
+        mdData = data || {};
+        break;
+      default:
+        break;
+    }
+    this.setState({
+      modalType: type,
+      modalVisible: bool,
+      modalTitle: title,
+      modalData: mdData,
+    });
+  };
+
   render() {
-    const { viewType, selectedMenu, searchDate, hasData, renderData, mainFormData, formData, contentsLoaded } = this.state;
-    console.debug('폼데이터', formData);
+    const {
+      isSearch,
+      viewType,
+      modalVisible,
+      modalType,
+      modalTitle,
+      modalData,
+      isSearchMenu,
+      selectedMenu,
+      searchDate,
+      hasData,
+      renderData,
+      mainFormData,
+      formData,
+    } = this.state;
     return (
       <Styled>
         <StyledCustomSearchWrapper>
-          <Spin tip="검색중 ..." spinning={false}>
+          <Spin tip="검색중 ..." spinning={isSearch}>
             <div className="search-input-area">
               <span className="text-label">지역</span>
               <AntdSelect defaultValue="청주" className="select-sm" style={{ width: '70px' }} onChange={val => console.debug(val)} disabled>
@@ -421,7 +623,7 @@ class QualityPage extends Component {
               />
             </div>
             <div className="selected-menu-table">
-              {selectedMenu === 'EXHAUST_ACT' && (
+              {selectedMenu === 'EXHAUST_ACT' && isSearchMenu && (
                 <ExhaustActTable
                   renderData={renderData}
                   formData={formData}
@@ -430,7 +632,7 @@ class QualityPage extends Component {
                   submitFormData={this.submitFormData}
                 />
               )}
-              {selectedMenu === 'CLEAN_ACT' && (
+              {selectedMenu === 'CLEAN_ACT' && isSearchMenu && (
                 <CleanActTable
                   renderData={renderData}
                   formData={formData}
@@ -439,24 +641,34 @@ class QualityPage extends Component {
                   submitFormData={this.submitFormData}
                 />
               )}
-              {(selectedMenu === 'USED_FLOW' || selectedMenu === 'WATER_FLOW') && (
+              {(selectedMenu === 'USED_FLOW' || selectedMenu === 'WATER_FLOW') && isSearchMenu && (
                 <FlowTable formData={formData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeFormData} />
               )}
+              {selectedMenu === 'SLUDGE' && isSearchMenu && <SludgeTable formData={formData} />}
+              {selectedMenu === 'ADDITION' && isSearchMenu && <AdditionTable formData={formData} />}
+              {selectedMenu === 'WATTMETER' && isSearchMenu && <WattmeterTable formData={formData} />}
+              {selectedMenu === 'USED_CHEMICAL' && isSearchMenu && <UsedChemicalTable formData={formData} />}
+              {selectedMenu === 'POKGIJO' && isSearchMenu && <PokgijoTable formData={formData} />}
+              {selectedMenu === 'CLEAN_REPAIR' && isSearchMenu && <CleanRepairTable formData={formData} modalHandler={this.modalHandler} />}
+              {selectedMenu === 'WATER_QUAL' && isSearchMenu && <WaterQualCheckTable formData={formData} />}
+              {selectedMenu === 'COD_CHK' && isSearchMenu && <CodCheckTable formData={formData} onChangeFormData={this.onChangeFormData} />}
             </div>
           </>
         )}
         <AntdModal
           className="modal-table-pad"
-          title="모달임시"
+          title={modalTitle}
           width="65%"
-          visible={false}
+          visible={modalVisible}
           footer={null}
           destroyOnClose
           maskClosable={false}
-          onOk={() => this.handleModal('', false)}
-          onCancel={() => this.handleModal('', false)}
+          onOk={() => this.modalHandler('', false)}
+          onCancel={() => this.modalHandler('', false)}
         >
-          <div>모달혹시나</div>
+          {modalType === 'CLEAN_REPAIR' && (
+            <CleanRepairModal formData={modalData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeModalFormData} />
+          )}
         </AntdModal>
       </Styled>
     );

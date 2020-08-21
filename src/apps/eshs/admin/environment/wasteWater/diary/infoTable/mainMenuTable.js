@@ -149,32 +149,60 @@ class MainMenuTable extends Component {
                   </span>
                 </td>
                 <td>
-                  <span className="menu-span">5. Sludge 발생 및 처리량</span>
+                  <span className="menu-span" role="button" tabIndex="0" onClick={() => onClickMenu('SLUDGE')} onKeyPress={() => onClickMenu('SLUDGE')}>
+                    5. Sludge 발생 및 처리량{hasData.SLUDGE === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
+                  </span>
                 </td>
                 <td>
-                  <span className="menu-span">6. 원료 / 첨가제 사용량</span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <span className="menu-span">7. 전력 사용량</span>
-                </td>
-                <td>
-                  <span className="menu-span">8. 약품 사용량</span>
-                </td>
-                <td>
-                  <span className="menu-span">9. 폭기조 운전상태</span>
+                  <span className="menu-span" role="button" tabIndex="0" onClick={() => onClickMenu('ADDITION')} onKeyPress={() => onClickMenu('ADDITION')}>
+                    6. 원료 / 첨가제 사용량{hasData.ADDITION === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
+                  </span>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <span className="menu-span">10. 방지시설 유지보수</span>
+                  <span className="menu-span" role="button" tabIndex="0" onClick={() => onClickMenu('WATTMETER')} onKeyPress={() => onClickMenu('WATTMETER')}>
+                    7. 전력 사용량{hasData.WATTMETER === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
+                  </span>
                 </td>
                 <td>
-                  <span className="menu-span">11. 오염물질 측정 내용</span>
+                  <span
+                    className="menu-span"
+                    role="button"
+                    tabIndex="0"
+                    onClick={() => onClickMenu('USED_CHEMICAL')}
+                    onKeyPress={() => onClickMenu('USED_CHEMICAL')}
+                  >
+                    8. 약품 사용량{hasData.USED_CHEMICAL === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
+                  </span>
                 </td>
                 <td>
-                  <span className="menu-span">12. 유기물 등 오염물질 자동측정 결과</span>
+                  <span className="menu-span" role="button" tabIndex="0" onClick={() => onClickMenu('POKGIJO')} onKeyPress={() => onClickMenu('POKGIJO')}>
+                    9. 폭기조 운전상태{hasData.POKGIJO === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span
+                    className="menu-span"
+                    role="button"
+                    tabIndex="0"
+                    onClick={() => onClickMenu('CLEAN_REPAIR')}
+                    onKeyPress={() => onClickMenu('CLEAN_REPAIR')}
+                  >
+                    10. 방지시설 유지보수{hasData.CLEAN_REPAIR === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
+                  </span>
+                </td>
+                <td>
+                  <span className="menu-span" role="button" tabIndex="0" onClick={() => onClickMenu('WATER_QUAL')} onKeyPress={() => onClickMenu('WATER_QUAL')}>
+                    11. 오염물질 측정 내용{hasData.WATER_QUAL === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
+                  </span>
+                </td>
+                <td>
+                  <span className="menu-span" role="button" tabIndex="0" onClick={() => onClickMenu('COD_CHK')} onKeyPress={() => onClickMenu('COD_CHK')}>
+                    12. 유기물 등 오염물질 자동측정 결과{hasData.COD_CHK === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
+                  </span>
                 </td>
               </tr>
               <tr>

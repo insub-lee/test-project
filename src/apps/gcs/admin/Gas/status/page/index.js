@@ -25,7 +25,6 @@ class GasStatusPage extends Component {
       isSearching: false,
       site: '청주', // 검색조건
       month: moment().format('YYYYMM'),
-      selectedSite: '',
       listData1: [],
       listData2: [],
     };
@@ -48,7 +47,6 @@ class GasStatusPage extends Component {
     const { site } = this.state;
     const { list1, list2 } = response;
     this.setState({
-      selectedSite: site,
       searchAfter: true,
       isSearching: false,
       listData1: list1 || [],
@@ -57,7 +55,7 @@ class GasStatusPage extends Component {
   };
 
   render() {
-    const { site, listData1, listData2, isSearching, searchAfter, selectedSite, month } = this.state;
+    const { site, listData1, listData2, isSearching, searchAfter, month } = this.state;
     return (
       <>
         <StyledCustomSearchWrapper>
