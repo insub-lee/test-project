@@ -1,31 +1,26 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Input, Select, DatePicker, Modal, TreeSelect } from 'antd';
+import { Input, Select, DatePicker, Modal, TreeSelect } from 'antd';
 
-import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
 import UserSearchModal from 'apps/eshs/common/userSearchModal/ModalContent';
 import DangerHazard from 'apps/eshs/admin/safety/safetyImprove/comp/DangerHazard';
 import AcpEmpComp from 'apps/eshs/admin/safety/safetyImprove/comp/AcpEmpComp';
+import DanestAdmin from 'apps/eshs/admin/safety/Danger/danestAdmin';
 import Upload from 'apps/eshs/admin/safety/safetyImprove/comp/Upload';
+import MultiUserSelectComp from 'apps/eshs/admin/safety/safetyImprove/comp/MultiUserSelectComp';
 
-import { getTreeFromFlatData } from 'react-sortable-tree';
-
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
 import moment from 'moment';
-
-const today = moment(new Date()).format('YYYY-MM-DD');
 
 const AntdSearchInput = StyledSearchInput(Input.Search);
 const AntdDatePicker = StyledDatePicker(DatePicker);
@@ -81,6 +76,22 @@ class InputTable extends Component {
   };
 
   changeModalObj = (title = '', visible = false, content = []) => this.setState({ modalObj: { title, visible, content } });
+
+  getMultiUserSelectSendVisible = () => {
+    const { formData, profile } = this.props;
+
+    const userList = formData.MULTI_USERS || [];
+    const acpEmpNo = formData.ACP_EMP_NO || '';
+
+    // 담당 ENG가 접근했을경우
+    const flag1 = acpEmpNo === profile.EMP_NO;
+    // 2차 복수지정자중 수신을한 유저가 있으면 false
+    const flag2 = userList.findIndex(user => user.GUBUN === '2' && user.FINAL_FLAG === '1') === -1;
+    // 1차 복수지정자중 수신을 한 유저가 접근하면 true
+    const flag3 = userList.findIndex(user => user.USER_ID === profile.USER_ID && user.GUBUN === '1' && user.FINAL_FLAG === '1') !== -1;
+
+    return (flag1 && flag2) || flag3;
+  };
 
   render() {
     const { formData, changeFormData, categoryData, spinningOn, spinningOff, acpTableButtons } = this.props;
@@ -217,6 +228,9 @@ class InputTable extends Component {
                               ACP_PHONE: data.S3_TEL,
                               ACP_DEPT: data.DEPT_CD,
                               ACP_DEPT_NM: data.DEPT_NAME,
+                              S1_EMP_NO: data.S1_EMP_NO,
+                              S2_EMP_NO: data.S2_EMP_NO,
+                              S3_EMP_NO: data.S3_EMP_NO,
                             })
                           }
                           modalVisible={() => this.changeModalObj()}
@@ -234,6 +248,9 @@ class InputTable extends Component {
                               ACP_PHONE: data.S3_TEL,
                               ACP_DEPT: data.DEPT_CD,
                               ACP_DEPT_NM: data.DEPT_NAME,
+                              S1_EMP_NO: data.S1_EMP_NO,
+                              S2_EMP_NO: data.S2_EMP_NO,
+                              S3_EMP_NO: data.S3_EMP_NO,
                             })
                           }
                           modalVisible={() => this.changeModalObj()}
@@ -252,7 +269,6 @@ class InputTable extends Component {
                     onChange={e => this.changeTempFormData('ACP_EMP_NO', e.target.value)}
                     allowClear
                   />
-
                   <AntdInput
                     className="ant-input-sm"
                     style={{ width: '55%' }}
@@ -296,7 +312,21 @@ class InputTable extends Component {
                     <AntdSelect.Option value="Y">실시</AntdSelect.Option>
                     <AntdSelect.Option value="N">해당없음</AntdSelect.Option>
                   </AntdSelect>
-                  <span style={{ paddingLeft: '5px', fontSize: '12px', fontWeight: '500', color: '#0000ff' }}>위험성평가 등록번호 개발중</span>
+                  {formData && formData.DA_REG_NO && (
+                    <StyledButton
+                      className="btn-link btn-sm"
+                      onClick={() =>
+                        this.changeModalObj('위험성평가표 등록', true, [
+                          <DanestAdmin
+                            key="DANESTADMIN"
+                            improveDanger={{ IMPROVE: true, REG_DTTM: formData.REQ_DT, REG_NO: formData && formData.DA_REG_NO }}
+                          />,
+                        ])
+                      }
+                    >
+                      <span style={{ paddingLeft: '5px', fontSize: '12px', fontWeight: '500', color: '#0000ff' }}>{formData && formData.DA_REG_NO}</span>
+                    </StyledButton>
+                  )}
                 </td>
                 <th>
                   사고의
@@ -406,12 +436,6 @@ class InputTable extends Component {
           <StyledCustomSearchWrapper className="search-wrapper-inline">
             <span className="text-label">조치후</span>
             <div className="btn-area">
-              {/* <StyledButton className="btn-gray btn-sm mr5 ml5">수신</StyledButton>
-              <StyledButton className="btn-primary btn-sm mr5 ml5">저장</StyledButton>
-              <StyledButton className="btn-primary btn-sm mr5 ml5">조치</StyledButton>
-              <StyledButton className="btn-light btn-sm mr5 ml5">요청반송</StyledButton>
-              <StyledButton className="btn-gray btn-sm mr5 ml5">전달</StyledButton>
-              <StyledButton className="btn-gray btn-sm mr5 ml5">인쇄</StyledButton> */}
               {acpTableButtons
                 .filter(btn => btn.visible)
                 .map((btn, index) => (
@@ -434,8 +458,8 @@ class InputTable extends Component {
                   <AntdDatePicker
                     className="ant-picker"
                     style={{ width: '100%' }}
-                    defaultValue={formData.ACP_DATE ? moment(formData.ACP_DATE) : moment(today)}
-                    onChange={(date, strDate) => changeFormData('REQ_DT', strDate)}
+                    defaultValue={formData.C_DATE ? moment(formData.C_DATE) : undefined}
+                    onChange={(date, strDate) => changeFormData('C_DATE', strDate)}
                   />
                 </td>
                 <td rowSpan={6} align="center">
@@ -444,7 +468,7 @@ class InputTable extends Component {
                       target="ACP_PIC"
                       spinningOn={spinningOn}
                       spinningOff={spinningOff}
-                      file={tempFormData.ACP_PIC_SEQ ? { fileName: tempFormData.ACP_PIC_FILE_NM, seq: tempFormData.ACP_PIC_SEQ } : {}}
+                      file={tempFormData.ACP_PIC ? { fileName: tempFormData.ACP_PIC_FILE_NM, seq: tempFormData.ACP_PIC } : {}}
                       changeFormData={file => changeFormData('ACP_PIC_FILE', file)}
                     />
                   </div>
@@ -460,34 +484,57 @@ class InputTable extends Component {
               </tr>
               <tr>
                 <th>조치자</th>
-                <td>
-                  <StyledButton
-                    className="btn-primary btn-sm mr5"
-                    onClick={() =>
-                      this.changeModalObj('사원 검색', true, [
-                        <UserSearchModal
-                          key="userSearchModal"
-                          visible
-                          onClickRow={data =>
-                            this.changeTempSetFormData(
-                              {
-                                ACP1_EMP_NO: data.EMP_NO,
-                                ACP1_EMP_NM: `${data.NAME_KOR} ${data.PSTN_NAME_KOR}`,
-                                ACP1_USER_ID: data.USER_ID,
-                                ACP1_PHONE: data.MOBILE_TEL_NO,
-                                ACP1_DEPT_NM: data.DEPT_NAME_KOR,
-                                ACP1_DEPT_ID: data.DEPT_ID,
-                              },
-                              this.changeModalObj,
-                            )
-                          }
-                        />,
-                      ])
-                    }
-                  >
-                    단수지정
-                  </StyledButton>
-                  {tempFormData.ACP1_USER_ID && `${tempFormData.ACP1_DEPT_NM || ''} / ${tempFormData.ACP1_EMP_NO || ''} / ${tempFormData.ACP1_EMP_NM || ''}`}
+                <td align="center">
+                  <p>
+                    {tempFormData.ACP1_EMP_NO
+                      ? `${tempFormData.ACP1_DEPT_NM || ''} / ${tempFormData.ACP1_EMP_NO || ''} / ${tempFormData.ACP1_EMP_NM || ''}`
+                      : ''}
+                  </p>
+                  <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+                    <StyledButton
+                      className="btn-primary btn-sm mr5"
+                      onClick={() =>
+                        this.changeModalObj('사원 검색', true, [
+                          <UserSearchModal
+                            key="userSearchModal"
+                            visible
+                            onClickRow={data =>
+                              this.changeTempSetFormData(
+                                {
+                                  ACP1_EMP_NO: data.EMP_NO,
+                                  ACP1_EMP_NM: `${data.NAME_KOR} ${data.PSTN_NAME_KOR}`,
+                                  ACP1_USER_ID: data.USER_ID,
+                                  ACP1_PHONE: data.MOBILE_TEL_NO,
+                                  ACP1_DEPT_NM: data.DEPT_NAME_KOR,
+                                  ACP1_DEPT_ID: data.DEPT_ID,
+                                },
+                                this.changeModalObj,
+                              )
+                            }
+                          />,
+                        ])
+                      }
+                    >
+                      단수지정
+                    </StyledButton>
+
+                    <StyledButton
+                      className="btn-primary btn-sm mr5"
+                      onClick={() =>
+                        this.changeModalObj('복수 지정', true, [
+                          <MultiUserSelectComp
+                            key="MultiUserSelectComp"
+                            userList={formData.MULTI_USERS}
+                            selectedMultiUserSave={this.props.selectedMultiUserSave}
+                            profile={this.props.profile}
+                            btnVisible={this.getMultiUserSelectSendVisible()}
+                          />,
+                        ])
+                      }
+                    >
+                      복수지정
+                    </StyledButton>
+                  </StyledButtonWrapper>
                 </td>
               </tr>
               <tr>
@@ -501,7 +548,7 @@ class InputTable extends Component {
                   조치내용
                 </th>
                 <td>
-                  <AntdTextarea rows={10} onChange={e => changeFormData('COMMENTS_HTML', e.target.value)} />
+                  <AntdTextarea rows={10} defaultValue={formData.ACP_COMMENTS || undefined} onChange={e => changeFormData('ACP_COMMENTS', e.target.value)} />
                 </td>
               </tr>
             </tbody>
@@ -510,7 +557,7 @@ class InputTable extends Component {
         <AntdModal
           title={modalObj.title || ''}
           visible={modalObj.visible}
-          width={800}
+          width={1000}
           onCancel={() => this.changeModalObj()}
           footer={
             <StyledButton className="btn-gray btn-sm mr5" onClick={() => this.changeModalObj()}>
@@ -533,8 +580,9 @@ InputTable.propTypes = {
   findTreeDataByNodeId: PropTypes.func,
   spinningOn: PropTypes.func,
   spinningOff: PropTypes.func,
-
   acpTableButtons: PropTypes.array,
+  selectedMultiUserSave: PropTypes.func,
+  profile: PropTypes.object,
 };
 InputTable.defaultProps = {
   formData: {},
@@ -550,6 +598,8 @@ InputTable.defaultProps = {
   setFormData: () => {},
   findTreeDataByNodeId: () => {},
   acpTableButtons: [],
+  selectedMultiUserSave: () => {},
+  profile: {},
 };
 
 export default InputTable;

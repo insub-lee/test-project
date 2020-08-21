@@ -5,9 +5,6 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-
-import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 
 const AntdTable = StyledAntdTable(Table);
 

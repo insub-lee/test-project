@@ -6,8 +6,6 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
 
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';

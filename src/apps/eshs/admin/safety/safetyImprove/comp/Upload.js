@@ -2,15 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Icon, Upload, Modal } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
 
-import { isJSON } from 'utils/helpers';
-import StyledDragger from 'components/CommonStyled/StyledDragger';
 import StyledButton from 'components/CommonStyled/StyledButton';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
 
 const { Dragger } = Upload;
 const imgExts = ['jpg', 'png', 'gif', 'jpeg'];
