@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input } from 'antd';
+// import { Input } from 'antd';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+// import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import styled from 'styled-components';
 
-const AntdInput = StyledInput(Input);
+// const AntdInput = StyledInput(Input);
 
 const Styled = styled.div`
   .middle-title-wrap {
@@ -20,24 +20,33 @@ const Styled = styled.div`
   }
 `;
 
-// 용수공급원별 사용량 테이블
-class FlowTable extends Component {
+const initFormData = {
+  CLEAN_NM: '',
+  TIME_FROM: '',
+  TIME_TO: '',
+  STATE: '',
+  STATE_AFTER: '',
+  COMMENTS: '',
+};
+
+// 용폐수 - 관리 - 일지 - 방지시설 유지보수 관리
+class WattmeterTable extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   render() {
-    const { formData, submitFormData, onChangeFormData } = this.props;
+    const { formData, modalHandler } = this.props;
     return (
       <Styled>
         <div className="middle-title-wrap">
           <div className="subFormTable-title-wrap" style={{ display: 'inline-block', width: '20%' }}>
-            <span className="subFormTable-title">용수공급원별 사용량</span>
+            <span className="subFormTable-title">방지시설 유지보수</span>
           </div>
           <StyledButtonWrapper className="btn-wrap-right" style={{ display: 'inline-block', width: '80%' }}>
-            <StyledButton className="btn-primary btn-xxs ml5" onClick={() => submitFormData('SAVE_WATER_FLOW')}>
-              검침시간 저장
+            <StyledButton className="btn-primary btn-xxs ml5" onClick={() => modalHandler('CLEAN_REPAIR', true, initFormData)}>
+              추가
             </StyledButton>
           </StyledButtonWrapper>
         </div>
@@ -45,7 +54,8 @@ class FlowTable extends Component {
           <table>
             <colgroup>
               <col width="20%" />
-              <col width="20%" />
+              <col width="10%" />
+              <col width="10%" />
               <col width="20%" />
               <col width="20%" />
               <col width="20%" />
@@ -53,49 +63,50 @@ class FlowTable extends Component {
             <tbody>
               <tr>
                 <th colSpan={1}>
-                  <span>구분</span>
+                  <span>방지시설명</span>
                 </th>
                 <th colSpan={1}>
-                  <span>전일지침</span>
+                  <span>From</span>
                 </th>
                 <th colSpan={1}>
-                  <span>금일지침</span>
+                  <span>To</span>
                 </th>
                 <th colSpan={1}>
-                  <span>사용량(㎥)</span>
+                  <span>고장상태</span>
                 </th>
                 <th colSpan={1}>
-                  <span>검침시간</span>
+                  <span>조치상태</span>
+                </th>
+                <th colSpan={1}>
+                  <span>특기사항</span>
                 </th>
               </tr>
               {formData && formData.length > 0 ? (
-                formData.map((row, index) => (
-                  <tr key={row.GUBUN} className="tr-center">
+                formData.map(row => (
+                  <tr key={row.SEQ} className="tr-center">
                     <th colSpan={1}>
-                      <span>{row.GUBUN}</span>
+                      <span>{row.CLEAN_NM}</span>
                     </th>
                     <td colSpan={1}>
-                      <span>{row.THE_DAY_BEFORE_INDEX}</span>
+                      <span>{row.TIME_FROM}</span>
                     </td>
                     <td colSpan={1}>
-                      <span>{row.THE_DAY_INDEX}</span>
+                      <span>{row.TIME_TO}</span>
                     </td>
                     <td colSpan={1}>
-                      <span>{row.USED_AMOUNT}</span>
+                      <span>{row.STATE}</span>
                     </td>
                     <td colSpan={1}>
-                      <AntdInput
-                        className="ant-input-xxs"
-                        style={{ width: '100%' }}
-                        value={row.INSPECTION_TIME || ''}
-                        onChange={e => onChangeFormData('INSPECTION_TIME', e.target.value, index)}
-                      />
+                      <span>{row.STATE_AFTER}</span>
+                    </td>
+                    <td colSpan={1}>
+                      <span>{row.COMMENTS}</span>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr key="empty" className="tr-center">
-                  <td colSpan={5}>
+                  <td colSpan={6}>
                     <span>조회된 데이터가 없습니다.</span>
                   </td>
                 </tr>
@@ -108,14 +119,13 @@ class FlowTable extends Component {
   }
 }
 
-FlowTable.propTypes = {
+WattmeterTable.propTypes = {
   formData: PropTypes.array,
-  submitFormData: PropTypes.func,
-  onChangeFormData: PropTypes.func,
+  modalHandler: PropTypes.func,
 };
 
-FlowTable.defaultProps = {
+WattmeterTable.defaultProps = {
   formData: [],
 };
 
-export default FlowTable;
+export default WattmeterTable;

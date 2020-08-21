@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input } from 'antd';
+// import { Input } from 'antd';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+// import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+// import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import styled from 'styled-components';
 
-const AntdInput = StyledInput(Input);
+// const AntdInput = StyledInput(Input);
 
 const Styled = styled.div`
   .middle-title-wrap {
@@ -20,25 +20,27 @@ const Styled = styled.div`
   }
 `;
 
-// 용수공급원별 사용량 테이블
-class FlowTable extends Component {
+// 용폐수 - 관리 - 일지 - Sludge 처리 시설
+class SludgeTable extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   render() {
-    const { formData, submitFormData, onChangeFormData } = this.props;
+    const { formData } = this.props;
     return (
       <Styled>
         <div className="middle-title-wrap">
           <div className="subFormTable-title-wrap" style={{ display: 'inline-block', width: '20%' }}>
-            <span className="subFormTable-title">용수공급원별 사용량</span>
+            <span className="subFormTable-title">Sludge처리 시설</span>
           </div>
           <StyledButtonWrapper className="btn-wrap-right" style={{ display: 'inline-block', width: '80%' }}>
-            <StyledButton className="btn-primary btn-xxs ml5" onClick={() => submitFormData('SAVE_WATER_FLOW')}>
-              검침시간 저장
-            </StyledButton>
+            {/* 
+              <StyledButton className="btn-primary btn-xs ml5" onClick={() => submitFormData('SAVE_WATER_FLOW')}>
+                검침시간 저장
+              </StyledButton>
+              */}
           </StyledButtonWrapper>
         </div>
         <StyledHtmlTable>
@@ -53,43 +55,38 @@ class FlowTable extends Component {
             <tbody>
               <tr>
                 <th colSpan={1}>
-                  <span>구분</span>
+                  <span>폐기물품목명</span>
                 </th>
                 <th colSpan={1}>
-                  <span>전일지침</span>
+                  <span>금일발생량</span>
                 </th>
                 <th colSpan={1}>
-                  <span>금일지침</span>
+                  <span>금일처리량</span>
                 </th>
                 <th colSpan={1}>
-                  <span>사용량(㎥)</span>
+                  <span>보관량</span>
                 </th>
                 <th colSpan={1}>
-                  <span>검침시간</span>
+                  <span>함수율</span>
                 </th>
               </tr>
               {formData && formData.length > 0 ? (
-                formData.map((row, index) => (
-                  <tr key={row.GUBUN} className="tr-center">
+                formData.map(row => (
+                  <tr key={row.SLUDGE_CD} className="tr-center">
                     <th colSpan={1}>
-                      <span>{row.GUBUN}</span>
+                      <span>{row.SLUDGE_CD ? row.SLUDGE_NM : ''}</span>
                     </th>
                     <td colSpan={1}>
-                      <span>{row.THE_DAY_BEFORE_INDEX}</span>
+                      <span>{row.GENERATED_AMOUNT}</span>
                     </td>
                     <td colSpan={1}>
-                      <span>{row.THE_DAY_INDEX}</span>
+                      <span>{row.REMOVAL_AMOUNT}</span>
                     </td>
                     <td colSpan={1}>
-                      <span>{row.USED_AMOUNT}</span>
+                      <span>{row.KEEPING_AMOUNT}</span>
                     </td>
                     <td colSpan={1}>
-                      <AntdInput
-                        className="ant-input-xxs"
-                        style={{ width: '100%' }}
-                        value={row.INSPECTION_TIME || ''}
-                        onChange={e => onChangeFormData('INSPECTION_TIME', e.target.value, index)}
-                      />
+                      <span>{row.FUNCTION_RATE}</span>
                     </td>
                   </tr>
                 ))
@@ -108,14 +105,12 @@ class FlowTable extends Component {
   }
 }
 
-FlowTable.propTypes = {
+SludgeTable.propTypes = {
   formData: PropTypes.array,
-  submitFormData: PropTypes.func,
-  onChangeFormData: PropTypes.func,
 };
 
-FlowTable.defaultProps = {
+SludgeTable.defaultProps = {
   formData: [],
 };
 
-export default FlowTable;
+export default SludgeTable;

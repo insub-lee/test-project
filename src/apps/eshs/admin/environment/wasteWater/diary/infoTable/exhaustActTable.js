@@ -33,7 +33,7 @@ class MainMenuTable extends Component {
             <span className="subFormTable-title">배출시설 가동시간</span>
           </div>
           <StyledButtonWrapper className="btn-wrap-right" style={{ display: 'inline-block', width: '80%' }}>
-            <StyledButton className="btn-primary btn-xs ml5" onClick={() => submitFormData('SAVE_EXHAUST_ACT')}>
+            <StyledButton className="btn-primary btn-xxs ml5" onClick={() => submitFormData('SAVE_EXHAUST_ACT')}>
               저장
             </StyledButton>
           </StyledButtonWrapper>

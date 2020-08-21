@@ -29,7 +29,7 @@ class formDataTable extends Component {
   };
 
   render() {
-    const { formData, type, onChangeFormData } = this.props;
+    const { formData, type, onChangeFormData, submitFormData } = this.props;
     return (
       <>
         <StyledHtmlTable>
@@ -159,15 +159,15 @@ class formDataTable extends Component {
         </StyledHtmlTable>
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           {type === 'NEW' ? (
-            <StyledButton className="btn-primary btn-sm btn-first ml5" onClick={() => this.submitFormData('NEW')}>
+            <StyledButton className="btn-primary btn-sm btn-first ml5" onClick={() => submitFormData('NEW')}>
               저장
             </StyledButton>
           ) : (
             <>
-              <StyledButton className="btn-primary btn-sm btn-first ml5" onClick={() => this.submitFormData('MODIFY')}>
+              <StyledButton className="btn-primary btn-sm btn-first ml5" onClick={() => submitFormData('MODIFY')}>
                 저장
               </StyledButton>
-              <StyledButton className="btn-light btn-sm btn-first ml5" onClick={() => this.submitFormData('DELETE')}>
+              <StyledButton className="btn-light btn-sm btn-first ml5" onClick={() => submitFormData('DELETE')}>
                 삭제
               </StyledButton>
             </>
@@ -179,14 +179,13 @@ class formDataTable extends Component {
 }
 
 formDataTable.propTypes = {
-  site: PropTypes.string,
   type: PropTypes.string,
   formData: PropTypes.object,
+  submitFormData: PropTypes.func,
   onChangeFormData: PropTypes.func,
 };
 
 formDataTable.defaultProps = {
-  site: '청주',
   type: '',
   formData: {},
 };
