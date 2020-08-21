@@ -1,13 +1,14 @@
-import React, { Component } from 'react';
-import BizMicroDevBase from 'components/BizMicroDevBase';
+import React from 'react';
 import PropTypes from 'prop-types';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 import InputComp from 'apps/eshs/admin/safety/safetyImprove/comp/InputComp';
-class Input extends Component {
-  render() {
-    return <BizMicroDevBase sagaKey="safetyImproveInput" component={InputComp} />;
-  }
-}
 
-Input.propTypes = {};
-Input.defaultProps = {};
+const Input = ({ reqNo }) => <BizMicroDevBase sagaKey="safetyImproveInput" component={InputComp} reqNo={reqNo} />;
+
+Input.propTypes = {
+  reqNo: PropTypes.string,
+};
+Input.defaultProps = {
+  reqNo: '',
+};
 export default Input;
