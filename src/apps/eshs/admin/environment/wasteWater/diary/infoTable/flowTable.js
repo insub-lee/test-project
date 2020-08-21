@@ -36,7 +36,7 @@ class FlowTable extends Component {
             <span className="subFormTable-title">용수공급원별 사용량</span>
           </div>
           <StyledButtonWrapper className="btn-wrap-right" style={{ display: 'inline-block', width: '80%' }}>
-            <StyledButton className="btn-primary btn-xs ml5" onClick={() => submitFormData('SAVE_WATER_FLOW')}>
+            <StyledButton className="btn-primary btn-xxs ml5" onClick={() => submitFormData('SAVE_WATER_FLOW')}>
               검침시간 저장
             </StyledButton>
           </StyledButtonWrapper>
@@ -68,8 +68,7 @@ class FlowTable extends Component {
                   <span>검침시간</span>
                 </th>
               </tr>
-              {formData &&
-                formData.length > 0 &&
+              {formData && formData.length > 0 ? (
                 formData.map((row, index) => (
                   <tr key={row.GUBUN} className="tr-center">
                     <th colSpan={1}>
@@ -93,7 +92,14 @@ class FlowTable extends Component {
                       />
                     </td>
                   </tr>
-                ))}
+                ))
+              ) : (
+                <tr key="empty" className="tr-center">
+                  <td colSpan={5}>
+                    <span>조회된 데이터가 없습니다.</span>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </StyledHtmlTable>

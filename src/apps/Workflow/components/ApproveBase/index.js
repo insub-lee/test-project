@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import { Spin } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -16,11 +17,26 @@ import * as actions from './actions';
 class ApproveBase extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      spinning: false,
+    }
   }
+
+  spinningOn = () => {
+    this.setState({ spinning: true });
+  };
+
+  spinningOff = () => {
+    this.setState({ spinning: false });
+  };
 
   render() {
     const { component: Component } = this.props;
-    return <Component {...this.props} />;
+    return (
+      <Spin spinning={this.state.spinning}>
+        <Component {...this.props} spinningOn={this.spinningOn} spinningOff={this.spinningOff} />;
+      </Spin>
+    );
   }
 }
 
@@ -84,9 +100,9 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getApproveList: (customUrl, PAGE, PAGE_CNT, relTypes) => dispatch(actions.getApproveList(customUrl, PAGE, PAGE_CNT, relTypes)),
-  getUnApproveList: (customUrl, PAGE, PAGE_CNT, relTypes) => dispatch(actions.getUnApproveList(customUrl, PAGE, PAGE_CNT, relTypes)),
-  getDraftList: (customUrl, PAGE, PAGE_CNT, relTypes) => dispatch(actions.getDraftList(customUrl, PAGE, PAGE_CNT, relTypes)),
+  getApproveList: (customUrl, PAGE, PAGE_CNT, relTypes, params, callback) => dispatch(actions.getApproveList(customUrl, PAGE, PAGE_CNT, relTypes, params, callback)),
+  getUnApproveList: (customUrl, PAGE, PAGE_CNT, relTypes, params, callback) => dispatch(actions.getUnApproveList(customUrl, PAGE, PAGE_CNT, relTypes, params, callback)),
+  getDraftList: (customUrl, PAGE, PAGE_CNT, relTypes, params, callback) => dispatch(actions.getDraftList(customUrl, PAGE, PAGE_CNT, relTypes, params, callback)),
   getCustomDataBind: (httpMethod, rtnUrl, param) => dispatch(actions.getCustomDataBind(httpMethod, rtnUrl, param)),
   submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
     dispatch(actions.submitHandlerBySaga(id, httpMethod, apiUrl, submitData, callbackFunc)),
