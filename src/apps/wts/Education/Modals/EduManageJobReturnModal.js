@@ -110,7 +110,7 @@ class EduManageJobReturnModal extends React.Component {
   }
 
   handleReadyExamConfirm(planseq, empno, step) {
-    if (window.confirm('해당 단계의 평가 수행을 진행하시겠습니까?')) {
+    if (window.confirm('해당 단계의 평가 수행을 진행하시겠습니까?\r\n‘확인’을 선택할 경우, 이전 교육 단계로 돌아갈 수 없습니다. (레포트 작성 불가)')) {
       const payload = {
         type: 'insertPlanEduStep',
         empNo: empno,

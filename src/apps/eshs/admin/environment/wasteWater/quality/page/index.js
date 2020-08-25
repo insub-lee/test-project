@@ -168,7 +168,7 @@ class QualityPage extends Component {
           </Spin>
         </StyledCustomSearchWrapper>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-gray btn-sm ml5" onClick={() => this.handleModal('EXCEL', true)}>
+          <StyledButton className="btn-primary btn-sm ml5" onClick={() => this.handleModal('EXCEL', true)}>
             {`(${waterType}) Excel 업로드`}
           </StyledButton>
         </StyledButtonWrapper>

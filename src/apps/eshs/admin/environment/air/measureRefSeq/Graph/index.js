@@ -29,6 +29,32 @@ const calculate = (gasCd, hourFlow, density, workDay, gasWeight) => {
   }
   return calculateData;
 };
+
+const CustomToolTip = ({ ...props }) => {
+  const { payload = [], active, label } = props;
+  if (active) {
+    return (
+      <div
+        className="recharts-default-tooltip"
+        style={{ margin: '0px', padding: '10px', backgroundColor: 'rgb(255, 255, 255)', border: '1px solid rgb(204, 204, 204)', whiteSpace: 'nowrap' }}
+      >
+        <p className="recharts-tooltip-label" style={{ margin: '0px' }}>
+          {label}
+        </p>
+        {/* 값이 있는 경우 ToolTip 상단에 위치 */}
+        {payload
+          .filter(p => p.value !== 0 && p.value !== '0')
+          .map((p, index) => (
+            <p
+              key={`tooltip_item_${index}`}
+              style={{ color: p.color, margin: '0px', paddingTop: '4px', paddingBottom: '4px' }}
+            >{`${p.dataKey} : ${p.value}`}</p>
+          ))}
+      </div>
+    );
+  }
+  return null;
+};
 class Graph extends Component {
   constructor(props) {
     super(props);
@@ -99,7 +125,7 @@ class Graph extends Component {
         <XAxis xAxisId={1} dataKey="subName" interval={1} style={{ fontSize: '0.6rem' }} />
         <XAxis xAxisId={2} dataKey="sub" label="STACK (FR0 생략)" axisLine={false} tickLine={false} style={{ fontSize: '0.6rem' }} />
         <YAxis />
-        <Tooltip />
+        <Tooltip content={<CustomToolTip />} />
         <Legend verticalAlign="top" />
         {gasList &&
           gasList.map((item, index) => (

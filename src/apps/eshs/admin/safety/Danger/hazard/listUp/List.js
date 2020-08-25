@@ -89,8 +89,8 @@ class List extends Component {
   searchList = () => {
     const { levelName, searchValue, year, selectAll } = this.state;
     const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
-    spinningOn();
     if ((levelName && searchValue && year) || selectAll) {
+      spinningOn();
       let apiAry = [];
       if (!selectAll) {
         apiAry = [
@@ -155,8 +155,6 @@ class List extends Component {
       result: { treeSelectData },
     } = this.props;
     const temp = treeSelectData && treeSelectData.categoryMapList.find(item => item.NODE_ID === value);
-    console.debug('temp', temp);
-    console.debug('value', value);
     switch (temp && temp.LVL) {
       case 3:
         return this.setState({ levelName: 'SDIV_ID', searchValue: value, selectAll: false });

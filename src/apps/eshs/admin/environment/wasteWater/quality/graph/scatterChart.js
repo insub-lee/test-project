@@ -24,6 +24,11 @@ class ScatterChartPage extends Component {
     }
   };
 
+  tickFormat = value => {
+    const formatValue = moment(value, 'YYYYMMDD').format('MM월DD일');
+    return formatValue;
+  };
+
   render() {
     const { chartName, xField, xFieldNm, yField, yFieldNm, listData, menuFixedYn } = this.props;
     const graphListData = this.listDateTypeChange(listData);
@@ -31,7 +36,7 @@ class ScatterChartPage extends Component {
     return (
       <ScatterChart width={boxWidth} height={200}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis type="number" dataKey={`${xField}`} name={`${xFieldNm}`} domain={['dataMin', 'dataMax']} tickCount={3} />
+        <XAxis dataKey={`${xField}`} name={`${xFieldNm}`} tickCount={3} tickFormatter={value => this.tickFormat(value)} />
         <YAxis type="number" dataKey={`${yField}`} name={`${yFieldNm}`} tickCount={5} />
         <Tooltip cursor={{ stroke: '#ff4d4d', strokeWidth: 1 }} formatter={(value, name) => this.valueFormat(value, name)} />
         <Scatter name={`${chartName}`} data={graphListData} fill="#8884d8" />

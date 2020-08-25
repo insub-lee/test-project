@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal, Icon, Button, Input, message } from 'antd';
+import { Table, Modal, Icon, Input, message } from 'antd';
 import moment from 'moment';
 import styled from 'styled-components';
 import uuid from 'uuid/v1';
@@ -12,9 +12,11 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import ProcessView from 'apps/Workflow/User/CommonView/processView';
 import ExcelDownLoad from 'components/ExcelDownLoad';
 
@@ -50,6 +52,7 @@ const StyledWrap = styled.div`
 `;
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
+const AntdInput = StyledInput(Input);
 const { TextArea } = Input;
 
 const excelColumns = [
@@ -64,7 +67,7 @@ const excelColumns = [
     style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
   },
   {
-    title: '표준번호',
+    title: '문서번호',
     width: { wpx: 100 },
     style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
   },
@@ -74,7 +77,7 @@ const excelColumns = [
     style: { alignment: { horizontal: 'center' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
   },
   {
-    title: '표준제목',
+    title: '제목',
     width: { wpx: 300 },
     style: { alignment: { horizontal: 'left' }, font: { sz: '10' }, fill: { patternType: 'solid', fgColor: { rgb: 'CCCCCC' } } },
   },
@@ -134,12 +137,23 @@ class DraftList extends Component {
   }
 
   componentDidMount() {
-    const { getDraftList } = this.props;
+    // const { getDraftList } = this.props;
+    // const { paginationIdx, pageSize } = this.state;
+    // // getDraftList();
+    // const fixUrl = '/api/workflow/v1/common/approve/DraftListMDCSHandler';
+    // getDraftList(fixUrl, paginationIdx, pageSize);
+    // // getCustomDataBind('POST', prefixUrl, { PARAM: { relTypes: [1, 99, 999] } });
+    this.getList();
+  }
+
+  getList = () => {
+    const { getDraftList, spinningOn, spinningOff } = this.props;
     const { paginationIdx, pageSize } = this.state;
-    // getDraftList();
     const fixUrl = '/api/workflow/v1/common/approve/DraftListMDCSHandler';
-    getDraftList(fixUrl, paginationIdx, pageSize);
-    // getCustomDataBind('POST', prefixUrl, { PARAM: { relTypes: [1, 99, 999] } });
+    spinningOn();
+    getDraftList(fixUrl, paginationIdx, pageSize, [], { DOCNUMBER: this.state.DOCNUMBER, DOCTITLE: this.state.DOCTITLE }, () => {
+      spinningOff();
+    });
   }
 
   getTableColumns = () => [
@@ -159,7 +173,7 @@ class DraftList extends Component {
       render: (text, record) => (record.REL_TYPE === 999 ? '일괄폐기' : text),
     },
     {
-      title: '표준번호',
+      title: '문서번호',
       dataIndex: 'DOCNUMBER',
       key: 'DOCNUMBER',
       width: '10%',
@@ -182,7 +196,7 @@ class DraftList extends Component {
       render: (text, record) => (record.REL_TYPE === 99 ? 'OBS' : record.REL_TYPE === 999 ? '1' : text && text.indexOf('.') > -1 ? text.split('.')[0] : text),
     },
     {
-      title: '표준제목',
+      title: '제목',
       dataIndex: 'DRAFT_TITLE',
       key: 'title',
       ellipsis: true,
@@ -530,11 +544,11 @@ class DraftList extends Component {
 
   setPaginationIdx = paginationIdx =>
     this.setState({ paginationIdx }, () => {
-      const { getDraftList } = this.props;
-      const { pageSize } = this.state;
-
-      const fixUrl = '/api/workflow/v1/common/approve/DraftListMDCSHandler';
-      getDraftList(fixUrl, paginationIdx, pageSize);
+      // const { getDraftList } = this.props;
+      // const { pageSize } = this.state;
+      // const fixUrl = '/api/workflow/v1/common/approve/DraftListMDCSHandler';
+      // getDraftList(fixUrl, paginationIdx, pageSize);
+      this.getList();
     });
 
   onPrcPreViewClick = record => {
@@ -577,26 +591,42 @@ class DraftList extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
+          <StyledCustomSearchWrapper>
+            <div className="search-input-area">
+              <AntdInput
+                className="ant-input-sm mr5" style={{ width: 110 }} allowClear placeholder="문서번호"
+                onChange={e => this.setState({ DOCNUMBER: e.target.value })}
+                onPressEnter={this.getList}
+              />
+              <AntdInput
+                className="ant-input-sm mr5" style={{ width: 110 }} allowClear placeholder="제목"
+                onChange={e => this.setState({ DOCTITLE: e.target.value })}
+                onPressEnter={this.getList}
+              />
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>검색</StyledButton>
+              <ExcelDownLoad
+                isBuilder={false}
+                fileName={`검색결과 (${moment().format('YYYYMMDD')})`}
+                className="workerExcelBtn"
+                title="Excel 파일로 저장"
+                btnSize="btn-sm"
+                sheetName=""
+                columns={excelColumns}
+                fields={fields}
+                submitInfo={{
+                  dataUrl: '/api/workflow/v1/common/approve/DraftListMDCSHandler',
+                  method: 'POST',
+                  submitData: { PARAM: { relTypes: [1, 4, 99, 999], PAGE: undefined, PAGE_CNT: undefined } },
+                  dataSetName: 'list',
+                }}
+                style={{ display: 'inline-block' }}
+              />
+            </div>
+          </StyledCustomSearchWrapper>
           <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
             <span style={{ float: 'left' }}>
               상신한 문서 : <font style={{ color: '#ff0000' }}>{draftListCnt || 0}</font> 건
             </span>
-            <ExcelDownLoad
-              isBuilder={false}
-              fileName={`검색결과 (${moment().format('YYYYMMDD')})`}
-              className="workerExcelBtn"
-              title="Excel 파일로 저장"
-              btnSize="btn-sm"
-              sheetName=""
-              columns={excelColumns}
-              fields={fields}
-              submitInfo={{
-                dataUrl: '/api/workflow/v1/common/approve/DraftListMDCSHandler',
-                method: 'POST',
-                submitData: { PARAM: { relTypes: [1, 4, 99, 999], PAGE: undefined, PAGE_CNT: undefined } },
-                dataSetName: 'list',
-              }}
-            />
           </div>
           <AntdTable
             key="apps-workflow-user-draft-list"

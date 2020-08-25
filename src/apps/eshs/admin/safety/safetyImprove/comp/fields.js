@@ -1,0 +1,37 @@
+import moment from 'moment';
+
+const today = moment(new Date()).format('YYYY-MM-DD');
+
+export const fields = profile => ({
+  REQ_NO: { NAME: '발행번호', REQUIRED: false, DEFAULT_VALUE: '', FIELD: 'REQ_NO' },
+  REQ_DT: { NAME: '발행일자', REQUIRED: false, DEFAULT_VALUE: today, FIELD: 'REQ_DT' },
+  C_DATE: { NAME: '완료일', REQUIRED: false, DEFAULT_VALUE: today, FIELD: 'C_DATE' },
+  REQ_DEPT_NAME: { NAME: '요청부서', REQUIRED: false, DEFAULT_VALUE: profile.DEPT_NAME_KOR, FIELD: 'REQ_DEPT_NAME' },
+  REQ_DEPT_CD: { NAME: '요청부서코드', REQUIRED: false, DEFAULT_VALUE: '', FIELD: 'REQ_DEPT_CD' },
+  REQ_DEPT_ID: { NAME: '요청부서ID', REQUIRED: false, DEFAULT_VALUE: profile.DEPT_ID, FIELD: 'REQ_DEPT_ID' },
+  REQ_EMP_NAME: { NAME: '요청자', REQUIRED: false, DEFAULT_VALUE: profile.NAME_KOR, FIELD: 'REQ_EMP_NAME' },
+  REQ_EMP_NO: { NAME: '요청자 사번', REQUIRED: false, DEFAULT_VALUE: profile.EMP_NO, FIELD: 'REQ_EMP_NO' },
+  REQ_USER_ID: { NAME: '요청자 ID', REQUIRED: false, DEFAULT_VALUE: profile.USER_ID, FIELD: 'REQ_EMP_ID' },
+  REQ_PHONE: { NAME: '요청자 전화번호', REQUIRED: false, DEFAULT_VALUE: profile.OFFICE_TEL_NO, FIELD: 'REQ_PHONE' },
+  TITLE: { NAME: '제목', REQUIRED: true, FIELD: 'TITLE', MSG: '제목을 입력하세요.' },
+  LOC: { NAME: '위치', REQUIRED: true, FIELD: 'LOC', MSG: '위치를 선택하세요.' },
+  LOC_DETAIL: { NAME: '상세위치', REQUIRED: false, DEFAULT_VALUE: '', FIELD: 'LOC_DETAIL' },
+  MM: { NAME: '4M', REQUIRED: false, DEFAULT_VALUE: '', FIELD: 'MM' },
+  EACH_TYPE: { NAME: '유형별', REQUIRED: true, DEFAULT_VALUE: '', FIELD: 'EACH_TYPE', MSG: '유형별을 선택하세요.' },
+  ACP_DEPT: { NAME: '조치부서', REQUIRED: true, DEFAULT_VALUE: '', FIELD: 'ACP_DEPT', MSG: '조치부서를 지정하세요.' },
+  ACP_EMP_NO: { NAME: '조치사원', REQUIRED: false, DEFAULT_VALUE: '', FIELD: 'ACP_EMP_NO' },
+  ACP_EMP_NAME: { NAME: '조치사원 이름', REQUIRED: false, DEFAULT_VALUE: '', FIELD: 'ACP_EMP_NAME' },
+  ACP_EMP_ID: { NAME: '조치사원 ID', REQUIRED: false, DEFAULT_VALUE: '', FIELD: 'ACP_EMP_ID' },
+  GRADE: { NAME: '등급', REQUIRED: true, DEFAULT_VALUE: '', FIELD: 'GRADE', MSG: '등급을 선택하세요.' },
+  PIC: { NAME: '개선전 사진', REQUIRED: false, FIELD: 'PIC' },
+  DANGERYN: { NAME: '위험성평가 실시여부', REQUIRED: true, DEFAULT_VALUE: '', FIELD: 'DANGERYN', MSG: '위험성평가 실시 여부를 선택해 주세요.' },
+  DANGERCAUSE: { NAME: '사고의 발생원인', REQUIRED: false, FIELD: 'DANGERCAUSE' },
+  DANGERTYPE: { NAME: '사고의 발생유형', REQUIRED: false, FIELD: 'DANGERTYPE' },
+  SDIV_CD: { NAME: '분류', REQUIRED: false, DEFAULT_VALUE: '', FIELD: 'SDIV_CD' },
+  DIV_CD: { NAME: '부서', REQUIRED: false, DEFAULT_VALUE: '', FIELD: 'DIV_CD' },
+  PLACE_CD: { NAME: '공정(장소)', REQUIRED: false, DEFAULT_VALUE: '', FIELD: 'PLACE_CD' },
+  PROCESS_CD: { NAME: '세부공정', REQUIRED: false, DEFAULT_VALUE: '', FIELD: 'PROCESS_CD' },
+  EQUIP_CD: { NAME: '장비(설비)', REQUIRED: false, DEFAULT_VALUE: '', FIELD: 'EQUIP_CD' },
+  UPD_DT: { NAME: '수정일', REQUIRED: false, DEFAULT_VALUE: today, FIELD: 'UPD_DT' },
+  ACP_DATE: { NAME: '조치일', REQUIRED: false, DEFAULT_VALUE: today, FIELD: 'ACP_DATE' },
+});

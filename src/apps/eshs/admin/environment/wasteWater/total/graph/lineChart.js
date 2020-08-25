@@ -18,7 +18,7 @@ const Styled = styled.div`
 const CustomTooltip = props => {
   if (props.active) {
     const target = props.payload[0];
-    const month = moment(props.label, 'YYYYMM').format('YYYY.MM');
+    const month = moment(props.label, 'YYYYMM').format('YYYY년 MM월');
     return (
       <Styled>
         <div className="custom-tooltip">
@@ -44,14 +44,18 @@ class ScatterChartPage extends Component {
 
   listDateTypeChange = listData => listData.map(item => ({ ...item, WQ_DT: Number(item.WQ_DT) }));
 
-  // <YAxis dataKey={`${yField}`} name={`${yFieldNm}`} domain={['dataMin', 'auto']} />
+  tickFormat = value => {
+    const formatValue = moment(value, 'YYYYMM').format('YY년MM월');
+    return formatValue;
+  };
+
   render() {
     const { xField, yField, xFieldNm, listData, menuFixedYn } = this.props;
     const graphListData = this.listDateTypeChange(listData);
     const boxWidth = menuFixedYn === 'N' ? 620 : 500;
     return (
       <LineChart width={boxWidth} height={200} data={graphListData}>
-        <XAxis dataKey={`${xField}`} name={`${xFieldNm}`} tickCount={3} />
+        <XAxis dataKey={`${xField}`} name={`${xFieldNm}`} tickFormatter={value => this.tickFormat(value)} />
         <YAxis />
         <Tooltip cursor={{ stroke: '#ff4d4d', strokeWidth: 1 }} content={<CustomTooltip />} />
         <Line type="monotone" dataKey={`${yField}`} stroke="#8884d8" activeDot={{ r: 6 }} />

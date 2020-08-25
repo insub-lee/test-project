@@ -183,8 +183,32 @@ class EvaluationFormModal extends React.Component {
     return score >= 90 ? <strong style={{ color: '#1fb5ad' }}>합격</strong> : <strong style={{ color: 'red' }}>불합격</strong>;
   }
 
+  onlyNumber(e) {
+    if (e.keyCode < 48 || e.keyCode > 57) e.returnValue = false;
+  }
+
+  handleChangeTime(index, e) {
+    const { value } = e.target;
+    const numberValue = parseInt(value, 10);
+    const nextValue = isNaN(numberValue) ? '0' : numberValue.toString();
+    e.target.value = nextValue;
+    this.setState(prevState => {
+      const { questions } = prevState;
+      return {
+        questions: questions.setIn([index, 'time'], nextValue),
+      };
+    });
+  }
+
+  getTotalTime(data) {
+    return data
+      .toJS()
+      .map(row => (row.time ? Number(row.time) : 0))
+      .reduce((accumulator, next) => accumulator + next, 0);
+  }
+
   render() {
-    const { isOpen, isLoading, questions, isFinished } = this.state;
+    const { isOpen, isLoading, questions, isFinished, jobType } = this.state;
     const { readOnly } = this.props;
     return (
       <Modal
@@ -231,6 +255,7 @@ class EvaluationFormModal extends React.Component {
                         <col width="40%" />
                         <col width="5%" />
                         <col width="5%" />
+                        {jobType === 'job_return' && <col width="5%" />}
                         <col width="5%" />
                         <col width="5%" />
                         <col width="5%" />
@@ -243,6 +268,7 @@ class EvaluationFormModal extends React.Component {
                           <th rowSpan={2}>평가 항목</th>
                           <th colSpan={2}>평가 구분</th>
                           <th rowSpan={2}>점수 배분</th>
+                          {jobType === 'job_return' && <th rowSpan={2}>교육 시간</th>}
                           <th colSpan={4}>평가 결과</th>
                           <th rowSpan={2}>비고</th>
                         </tr>
@@ -262,6 +288,16 @@ class EvaluationFormModal extends React.Component {
                             <td>{row.get('theory') ? '○' : ''}</td>
                             <td>{row.get('practice') ? '○' : ''}</td>
                             <td>{row.get('total')}</td>
+                            {jobType === 'job_return' && (
+                              <td className="tb_is">
+                                <input
+                                  type="text"
+                                  defaultValue={row.get('time') || 0}
+                                  onKeyPress={this.onlyNumber}
+                                  onChange={e => this.handleChangeTime(index, e)}
+                                />
+                              </td>
+                            )}
                             <td>
                               {row.get('total') && (
                                 <div className="table_radio">
@@ -339,6 +375,7 @@ class EvaluationFormModal extends React.Component {
                         ))}
                         <tr>
                           <td colSpan={4}>T O T A L</td>
+                          {jobType === 'job_return' && <td>{this.getTotalTime(questions)}</td>}
                           <td colSpan={4}>{this.getResultScore()}</td>
                           <td>{this.getFinalResult()}</td>
                         </tr>

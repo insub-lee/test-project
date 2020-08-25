@@ -111,14 +111,14 @@ class ExternalDistView extends Component {
       dataIndex: 'DOCNUMBER',
       key: 'DOCNUMBER',
       align: 'center',
-      width: '10%',
+      width: '20%',
     },
     {
       title: 'Rev',
       dataIndex: 'VERSION',
       key: 'VERSION',
       align: 'center',
-      width: '5%',
+      width: '8%',
     },
     {
       title: 'Title',

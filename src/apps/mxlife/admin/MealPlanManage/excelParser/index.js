@@ -84,24 +84,26 @@ class ExcelParser extends Component {
       data.shift();
       let convertedData = [];
       try {
-        convertedData = data.map(row => {
-          let translatedDate = '';
-          if (typeof row[0] === 'number') {
-            translatedDate = moment(new Date((row[0] - (25567 + 2)) * 86400 * 1000)).format('YYYYMMDD');
-          } else {
-            translatedDate = moment(row[0], 'YYYY-MM-DD').format('YYYYMMDD');
-          }
-          return {
-            day: translatedDate,
-            mealtype: row[1],
-            daydiv: row[2],
-            menu: {
-              list: row[3].split(',').map(word => word.trim()),
-              cal: row[4].toString(),
-            },
-            order: this.orderSelector(row[1], row[2]),
-          };
-        });
+        convertedData = data
+          .map(row => {
+            let translatedDate = '';
+            if (typeof row[0] === 'number') {
+              translatedDate = moment(new Date((row[0] - (25567 + 2)) * 86400 * 1000)).format('YYYYMMDD');
+            } else {
+              translatedDate = moment(row[0], 'YYYY-MM-DD').format('YYYYMMDD');
+            }
+            return {
+              day: translatedDate,
+              mealtype: row[1],
+              daydiv: row[2],
+              menu: {
+                list: row[3].split(',').map(word => word.trim()),
+                cal: row[4].toString(),
+              },
+              order: this.orderSelector(row[1], row[2]),
+            };
+          })
+          .filter((row, index) => index <= 500);
       } catch (err) {
         convertedData = [];
         message.error(<MessageContent>식단양식을 사용해 주십시오.</MessageContent>);
@@ -177,6 +179,7 @@ class ExcelParser extends Component {
             <Icon type="inbox" />
           </p>
           <p>Excel Drag and Drop 혹은 선택</p>
+          <p>최대 500건 까지 등록이 가능합니다.</p>
         </Dragger>
         {children && children}
         <AntdTable pagination={false} columns={columns} dataSource={list.toJS().reverse()} scroll={{ y: 270 }} />

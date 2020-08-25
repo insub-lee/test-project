@@ -15,6 +15,7 @@ const AntdSearchInput = StyledSearchInput(Input.Search);
 
 // Component Attribute 및 Event Method 정리
 // <UserSelect
+//   maxSelected={6}  ** 선택가능한 사용자수 default 9999
 //   initUserList={this.state.selectedUserList}  **초기값 셋팅 int[] USER_ID 배열값
 //   treeDataSource={list} ** 부서정보 Data Bind
 //   onTreeSelect={this.onTreeSelect} ** 부서 선택 이벤트 (이 이벤트에서 비동기 해당 부서원을 DataBind해 Props(userDataList)로 전달하는 기능으로 활용)
@@ -151,9 +152,12 @@ class UserSelectComp extends Component {
   };
 
   onSelectedUser = () => {
-    const { userDataList, result } = this.props;
+    const { userDataList, result, maxSelected } = this.props;
     const { checkUserList, selectedUserList, isMulti } = this.state;
     const nUserList = userDataList || (result && result.userList && result.userList.list);
+
+    if (checkUserList.length + selectedUserList.length > maxSelected) return message.warning(`최대 ${maxSelected}명까지 선택가능합니다.`);
+
     if (isMulti) {
       this.setState(prevState => {
         const { selectedUserList } = prevState;
@@ -361,10 +365,12 @@ UserSelectComp.propTypes = {
   selectedDeptId: PropTypes.number,
   selectedUserList: PropTypes.array,
   initUserList: PropTypes.array,
+  maxSelected: PropTypes.number,
 };
 
 UserSelectComp.defaultProps = {
   selectedDeptId: -1,
+  maxSelected: 9999,
 };
 
 export default UserSelectComp;

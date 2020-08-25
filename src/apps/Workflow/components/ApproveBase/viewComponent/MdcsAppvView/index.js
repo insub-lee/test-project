@@ -333,7 +333,16 @@ class MdcsAppvView extends Component {
                     </Radio.Group>
                   </td>
                 </tr>
-
+                {selectedRow.REL_TYPE === 999 && (
+                  <tr>
+                    <th>폐기사유</th>
+                    <td colSpan={3}>
+                      <pre>
+                        {DRAFT_DATA.descOfChange}
+                      </pre>
+                    </td>
+                  </tr>
+                )}
                 <tr
                   style={{
                     display: (selectedRow && selectedRow.APPV_STATUS && selectedRow.APPV_STATUS === 5) || selectedRow.APPV_STATUS === 10 ? 'table-row' : 'none',
@@ -467,6 +476,7 @@ class MdcsAppvView extends Component {
             selectedRow={selectedRow}
             clickCoverView={this.clickCoverView}
             ViewCustomButtons={() => false}
+            isObsCheck={selectedRow.REL_TYPE === 99 ? true : false}
           />
         ) : (
           DRAFT_DATA &&
