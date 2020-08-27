@@ -16,14 +16,14 @@ class CleanRepairModal extends Component {
   }
 
   render() {
-    const { formData, onChangeFormData, submitFormData } = this.props;
+    const { opDt, formData, onChangeFormData, submitFormData } = this.props;
     console.debug('폼데이터', formData);
     return (
       <>
         <StyledCustomSearchWrapper>
           <div className="search-input-area">
             <span className="text-label">일지 날짜</span>
-            <AntdInput className="ant-input-sm ant-input-inline" style={{ width: '100px', marginRight: '10px' }} value="2020-08-19" />
+            <AntdInput className="ant-input-sm ant-input-inline" style={{ width: '100px', marginRight: '10px' }} value={opDt} />
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => submitFormData('SAVE_CLEAN_REPAIR_INFO')}>
               저장
             </StyledButton>
@@ -128,6 +128,7 @@ class CleanRepairModal extends Component {
   }
 }
 CleanRepairModal.propTypes = {
+  opDt: PropTypes.string,
   formData: PropTypes.object,
   submitFormData: PropTypes.func,
   onChangeFormData: PropTypes.func,

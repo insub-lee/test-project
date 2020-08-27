@@ -25,9 +25,11 @@ import CleanRepairTable from '../infoTable/cleanRepairTable'; // 방지시설 �
 import WaterQualCheckTable from '../infoTable/waterQualCheckTable'; // 오염물질 측정 내용
 import CodCheckTable from '../infoTable/codCheckTable'; // 유기물 등 오염물질 자동측정 결과
 import CheckInfoTable from '../infoTable/checkTable'; // 지도, 검침사항
+import BigoTable from '../infoTable/bigoTable'; // 특이사항, 비고
 // 모달 컨텐츠
 import CleanRepairModal from '../modalContents/cleanRepairModal'; // 방지시설 추가, 수정 모달
-import CheckInfoModal from '../modalContents/checkInfoModal'; // 지도점검사항 추가, 수정 모달
+import CheckInfoModal from '../modalContents/checkInfoModal'; // 지도,점검사항 추가, 수정 모달
+import BigoInfoModal from '../modalContents/bigoInfoModal'; // 특이사항,비고 추가, 수정 모달
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSelect = StyledSelect(Select);
@@ -61,7 +63,7 @@ class QualityPage extends Component {
     };
   }
 
-  // 검색버튼 액션 - 각 항목별 저장된 내용이 있는지 가져옴
+  // 검색버튼 액션 - 일지기본정보 및 각 항목별 저장된 내용이 있는지 가져옴
   onClickSearch = () => {
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
     const { searchDate } = this.state;
@@ -80,12 +82,17 @@ class QualityPage extends Component {
   // 검색버튼 콜백 - 선택된 메뉴가 있다면 그 항목의 FormData / RenderData를 읽어옴
   searchCallback = (id, response) => {
     const { selectedMenu, mainFormData, searchDate } = this.state;
-    const { DIARY_INFO } = response;
+    const { MAIN_INFO, DIARY_INFO } = response;
     this.setState(
       {
         isSearch: false,
         mainFormData: {
           ...mainFormData,
+          TEMPERATURE: (MAIN_INFO && MAIN_INFO.TEMPERATURE) || undefined, // 온도
+          WEATHER: (MAIN_INFO && MAIN_INFO.WEATHER) || undefined, // 날씨
+          APPROVAL_STATE: (MAIN_INFO && MAIN_INFO.APPROVAL_STATE) || undefined, // 결재상태
+          EMP_NO: (MAIN_INFO && MAIN_INFO.EMP_NO) || undefined, // 담당자
+          EMP_NM: (MAIN_INFO && MAIN_INFO.EMP_NM) || undefined, // 담당자명
           OP_DT: searchDate,
         },
         hasData: {
@@ -102,6 +109,15 @@ class QualityPage extends Component {
     const { mainFormData, formData, modalData } = this.state;
     let submitData = {};
     switch (type) {
+      case 'SAVE_MST_INFO': // 일지 기본정보
+        submitData = {
+          PARAM: {
+            ...mainFormData,
+            type,
+          },
+        };
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwDiary', submitData, this.onClickSearch);
+        break;
       case 'SAVE_EXHAUST_ACT': // 배출시설 가동시간 저장/수정
         submitData = {
           PARAM: {
@@ -153,6 +169,30 @@ class QualityPage extends Component {
         };
         submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwCleanRepair', submitData, this.modalDataSubmitCallback);
         break;
+      case 'SAVE_COD_CHK_INFO': // 유기물 등 오염물질 자동측정 결과
+        submitData = {
+          PARAM: {
+            type,
+            GROUP_UNIT_CD: mainFormData.GROUP_UNIT_CD,
+            OP_DT: mainFormData.OP_DT,
+            ...formData,
+            AVG: formData.AVG || 0,
+            CHK_02: formData.CHK_02 || 0,
+            CHK_04: formData.CHK_04 || 0,
+            CHK_06: formData.CHK_06 || 0,
+            CHK_08: formData.CHK_08 || 0,
+            CHK_10: formData.CHK_10 || 0,
+            CHK_12: formData.CHK_12 || 0,
+            CHK_14: formData.CHK_14 || 0,
+            CHK_16: formData.CHK_16 || 0,
+            CHK_18: formData.CHK_18 || 0,
+            CHK_20: formData.CHK_20 || 0,
+            CHK_22: formData.CHK_22 || 0,
+            CHK_24: formData.CHK_24 || 0,
+          },
+        };
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwCodCheck', submitData, this.modalDataSubmitCallback);
+        break;
       case 'SAVE_CHECK_INFO': // 지도,점검사항 저장
         submitData = {
           PARAM: {
@@ -163,6 +203,17 @@ class QualityPage extends Component {
           },
         };
         submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwCheckInfo', submitData, this.modalDataSubmitCallback);
+        break;
+      case 'SAVE_BIGO_INFO': // 특이사항, 비고 저장
+        submitData = {
+          PARAM: {
+            type,
+            GROUP_UNIT_CD: mainFormData.GROUP_UNIT_CD,
+            OP_DT: mainFormData.OP_DT,
+            ...modalData,
+          },
+        };
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwBigo', submitData, this.modalDataSubmitCallback);
         break;
       default:
         break;
@@ -303,6 +354,15 @@ class QualityPage extends Component {
           type: 'POST',
           url: `/api/eshs/v1/common/wwCheckInfo`,
           params: { PARAM: { type: 'GET_CHECK_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+        };
+        getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
+        break;
+      case 'BIGO': // 특이사항 / 비고
+        apiInfo = {
+          key: 'getBigoInfo',
+          type: 'POST',
+          url: `/api/eshs/v1/common/wwBigo`,
+          params: { PARAM: { type: 'GET_BIGO_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -547,7 +607,7 @@ class QualityPage extends Component {
     this.setState({
       formData: {
         ...formData,
-        AVG: avg.toFixed(4),
+        AVG: Number(avg.toFixed(4)),
       },
     });
   };
@@ -572,6 +632,10 @@ class QualityPage extends Component {
         break;
       case 'CHECK_INFO':
         title = 'Daily Report - 지도/점검 관리 ';
+        mdData = data || {};
+        break;
+      case 'BIGO':
+        title = 'Daily Report - 특이사항/비고 관리 ';
         mdData = data || {};
         break;
       default:
@@ -601,6 +665,7 @@ class QualityPage extends Component {
       mainFormData,
       formData,
     } = this.state;
+    console.debug('메인폼', mainFormData);
     return (
       <Styled>
         <StyledCustomSearchWrapper>
@@ -629,21 +694,23 @@ class QualityPage extends Component {
             </div>
           </Spin>
         </StyledCustomSearchWrapper>
-        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-primary btn-sm ml5" onClick={() => console.debug('SAVE', true)}>
-            저장
-          </StyledButton>
-          <StyledButton className="btn-gray btn-sm ml5" onClick={() => console.debug('MPMP', true)}>
-            결재선 지정
-          </StyledButton>
-        </StyledButtonWrapper>
         {mainFormData.OP_DT && (
           <>
+            <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+              <StyledButton className="btn-primary btn-sm ml5" onClick={() => this.submitFormData('SAVE_MST_INFO')}>
+                {hasData.MST > 0 ? '수정' : '저장'}
+              </StyledButton>
+              {hasData.MST > 0 && (
+                <StyledButton className="btn-gray btn-sm ml5" onClick={() => console.debug('MPMP', true)}>
+                  결재선 지정
+                </StyledButton>
+              )}
+            </StyledButtonWrapper>
             <div className="menu-table">
               <MenuTable
                 viewType={viewType}
                 formData={mainFormData}
-                onChangeFormData={this.onChangeMainFormData}
+                onChangeMainFormData={this.onChangeMainFormData}
                 onClickMenu={this.onClickMenu}
                 hasData={hasData}
               />
@@ -677,8 +744,11 @@ class QualityPage extends Component {
               {selectedMenu === 'POKGIJO' && isSearchMenu && <PokgijoTable formData={formData} />}
               {selectedMenu === 'CLEAN_REPAIR' && isSearchMenu && <CleanRepairTable formData={formData} modalHandler={this.modalHandler} />}
               {selectedMenu === 'WATER_QUAL' && isSearchMenu && <WaterQualCheckTable formData={formData} />}
-              {selectedMenu === 'COD_CHK' && isSearchMenu && <CodCheckTable formData={formData} onChangeFormData={this.onChangeFormData} />}
+              {selectedMenu === 'COD_CHK' && isSearchMenu && (
+                <CodCheckTable formData={formData} onChangeFormData={this.onChangeFormData} submitFormData={this.submitFormData} />
+              )}
               {selectedMenu === 'CHECK_INFO' && isSearchMenu && <CheckInfoTable formData={formData} modalHandler={this.modalHandler} />}
+              {selectedMenu === 'BIGO' && isSearchMenu && <BigoTable formData={formData} modalHandler={this.modalHandler} />}
             </div>
           </>
         )}
@@ -694,10 +764,18 @@ class QualityPage extends Component {
           onCancel={() => this.modalHandler('', false)}
         >
           {modalType === 'CLEAN_REPAIR' && (
-            <CleanRepairModal formData={modalData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeModalFormData} />
+            <CleanRepairModal
+              opDt={mainFormData.OP_DT}
+              formData={modalData}
+              submitFormData={this.submitFormData}
+              onChangeFormData={this.onChangeModalFormData}
+            />
           )}
           {modalType === 'CHECK_INFO' && (
-            <CheckInfoModal formData={modalData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeModalFormData} />
+            <CheckInfoModal opDt={mainFormData.OP_DT} formData={modalData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeModalFormData} />
+          )}
+          {modalType === 'BIGO' && (
+            <BigoInfoModal opDt={mainFormData.OP_DT} formData={modalData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeModalFormData} />
           )}
         </AntdModal>
       </Styled>
