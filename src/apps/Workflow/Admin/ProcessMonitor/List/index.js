@@ -143,6 +143,7 @@ class List extends Component {
       this.setState({
         isPrcShow: true,
         processRule: res.DRAFT_PROCESS,
+        selectedRow: row,
       });
     });
   };
@@ -160,7 +161,8 @@ class List extends Component {
       const submitData = {
         DRAFT_PROCESS: {
           PRC_ID: selectedRow.PRC_ID,
-          ...processRule
+          DRAFT_DATA: JSON.parse(selectedRow.DRAFT_DATA),
+          ...processRule,
         }
       }
       Modal.confirm({
