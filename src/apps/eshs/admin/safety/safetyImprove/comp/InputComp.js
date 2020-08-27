@@ -763,7 +763,7 @@ class InputComp extends Component {
                   <StyledButton className="btn-gray btn-sm mr5" onClick={this.reset}>
                     초기화
                   </StyledButton>
-                  {(sttltmntStatus === '5' || sttltmntStatus === '0' || sttltmntStatus === '') &&
+                  {(sttltmntStatus === '5' || sttltmntStatus === '0' || sttltmntStatus === '' || sttltmntStatus === '4') &&
                     (dangerYn !== 'Y' ? (
                       <StyledButton
                         className="btn-primary btn-sm mr5"
