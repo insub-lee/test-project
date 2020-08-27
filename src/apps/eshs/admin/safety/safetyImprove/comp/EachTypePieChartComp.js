@@ -1,9 +1,10 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 const RADIAN = Math.PI / 180;
 
+const CustomTooltip = ({ payload }) => <div>{payload}</div>;
 class EachTypePieChartComp extends React.Component {
   constructor(props) {
     super(props);
@@ -35,15 +36,25 @@ class EachTypePieChartComp extends React.Component {
   };
 
   render() {
+    const { dataKey } = this.props;
     const { data } = this.state;
     return (
       <ResponsiveContainer width="100%" height={350}>
-        <PieChart onMouseOver={item => console.debug('item ', item)}>
-          <Pie data={data} labelLine={false} label={this.renderCustomizedLabel} outerRadius="100%" fill="#8884d8">
+        <PieChart>
+          <Pie
+            data={data}
+            labelLine={false}
+            label={this.renderCustomizedLabel}
+            dataKey={dataKey}
+            // onMouseEnter={e => console.debug('item ', e)}
+            outerRadius="100%"
+            fill="#8884d8"
+          >
             {data.map((entry, index) => (
               <Cell key={`${index}_CELL`} fill={entry.color || ''} />
             ))}
           </Pie>
+          <Tooltip content={<CustomTooltip />} />
         </PieChart>
       </ResponsiveContainer>
     );
@@ -52,10 +63,12 @@ class EachTypePieChartComp extends React.Component {
 
 EachTypePieChartComp.propTypes = {
   data: PropTypes.array,
+  dataKey: PropTypes.string,
 };
 
 EachTypePieChartComp.defaultProps = {
   data: [],
+  dataKey: '',
 };
 
 export default EachTypePieChartComp;

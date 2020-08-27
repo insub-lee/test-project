@@ -31,14 +31,11 @@ const tableRow = [
 ];
 
 const pieChartDatas = [
-  { text: '유형별 발생 건수', dataIndex: 'OCNT', render: (text, record) => ({ ...record, value: text }), labelRender: undefined },
-  { text: '유형별 조치 건수', dataIndex: 'PCNT', render: (text, record) => ({ ...record, value: text }), labelRender: undefined },
+  { text: '유형별 발생 건수', dataIndex: 'OCNT' },
+  { text: '유형별 조치 건수', dataIndex: 'PCNT' },
   {
     text: '유형별 조치율',
     dataIndex: 'PERCENTS',
-    render: (text, record) => ({ ...record, value: Math.round(text * 100) }),
-    // labelRender: value => `${Math.round(value * 100)}%`,
-    labelRender: undefined,
   },
 ];
 
@@ -275,7 +272,7 @@ class EachTypeStatusComp extends Component {
                           style={{ height: '400px', width: '33%', display: 'inline-block', border: '1px solid #e8e8e8', textAlign: 'center', margin: '0 auto' }}
                         >
                           <p style={{ fontSize: '18px', fontWeight: '500', marginTop: '10px' }}>{pieChart.text}</p>
-                          <EachTypePieChartComp data={list.map(item => pieChart.render(item[pieChart.dataIndex], item))} labelRender={pieChart.labelRender} />
+                          <EachTypePieChartComp dataKey={pieChart.dataIndex} data={list} />
                         </div>
                       ))}
                     </div>
