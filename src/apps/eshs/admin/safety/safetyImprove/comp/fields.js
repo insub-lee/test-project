@@ -4,6 +4,7 @@ const today = moment(new Date()).format('YYYY-MM-DD');
 
 export const fields = profile => ({
   REQ_NO: { NAME: '발행번호', REQUIRED: false, DEFAULT_VALUE: '', FIELD: 'REQ_NO' },
+  STTLMNT_STATUS: { NAME: '상태값', REQUIRED: false, DEFAULT_VALUE: '0', FIELD: 'STTLMNT_STATUS' },
   REQ_DT: { NAME: '발행일자', REQUIRED: false, DEFAULT_VALUE: today, FIELD: 'REQ_DT' },
   C_DATE: { NAME: '완료일', REQUIRED: false, DEFAULT_VALUE: today, FIELD: 'C_DATE' },
   REQ_DEPT_NAME: { NAME: '요청부서', REQUIRED: false, DEFAULT_VALUE: profile.DEPT_NAME_KOR, FIELD: 'REQ_DEPT_NAME' },
