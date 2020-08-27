@@ -57,7 +57,7 @@ class MainMenuTable extends Component {
   };
 
   render() {
-    const { viewType, formData, onChangeFormData, onClickMenu, hasData } = this.props;
+    const { viewType, formData, onChangeMainFormData, onClickMenu, hasData } = this.props;
     return (
       <Styled>
         <StyledHtmlTable>
@@ -87,7 +87,12 @@ class MainMenuTable extends Component {
                   {viewType === 'view' && formData.TEMPERATURE ? (
                     <span>{formData.TEMPERATURE}</span>
                   ) : (
-                    <AntdInputNumber className="ant-input-number-xxs" style={{ width: '100%' }} value={formData.TEMPERATURE} />
+                    <AntdInputNumber
+                      className="ant-input-number-xxs"
+                      style={{ width: '100%' }}
+                      value={formData.TEMPERATURE}
+                      onChange={e => onChangeMainFormData('TEMPERATURE', e)}
+                    />
                   )}
                 </td>
                 <th>
@@ -97,13 +102,18 @@ class MainMenuTable extends Component {
                   {viewType === 'view' && formData.WEATHER ? (
                     <span>{formData.WEATHER}</span>
                   ) : (
-                    <AntdInput className="ant-input-xxs" style={{ width: '100%' }} value={formData.WEATHER} />
+                    <AntdInput
+                      className="ant-input-xxs"
+                      style={{ width: '100%' }}
+                      value={formData.WEATHER}
+                      onChange={e => onChangeMainFormData('WEATHER', e.target.value)}
+                    />
                   )}
                 </td>
                 <th>
                   <span>결재</span>
                 </th>
-                <td>{viewType === 'view' && formData.EMP_NM && <span>{`${formData.EMP_NM}(${formData.APPROVAL_STATE})`}</span>}</td>
+                <td>{formData.EMP_NM && <span>{`${formData.EMP_NM}`}</span>}</td>
               </tr>
             </tbody>
           </table>
@@ -211,7 +221,11 @@ class MainMenuTable extends Component {
                     13. 지도 / 점검 사항{hasData.CHECK_INFO === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
                   </span>
                 </td>
-                <td colSpan={1}>14. 특이사항 / 비고</td>
+                <td colSpan={1}>
+                  <span className="menu-span" role="button" tabIndex="0" onClick={() => onClickMenu('BIGO')} onKeyPress={() => onClickMenu('BIGO')}>
+                    14. 특이사항 / 비고{hasData.BIGO === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
+                  </span>
+                </td>
                 <td colSpan={1}></td>
               </tr>
             </tbody>
@@ -226,7 +240,7 @@ MainMenuTable.propTypes = {
   viewType: PropTypes.string,
   hasData: PropTypes.object,
   formData: PropTypes.object,
-  onChangeFormData: PropTypes.func,
+  onChangeMainFormData: PropTypes.func,
   onClickMenu: PropTypes.func,
 };
 

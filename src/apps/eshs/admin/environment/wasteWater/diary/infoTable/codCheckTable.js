@@ -36,7 +36,7 @@ class CodCheckTable extends Component {
             <span className="subFormTable-title">유기물 등 오염물질 자동측정 결과</span>
           </div>
           <StyledButtonWrapper className="btn-wrap-right" style={{ display: 'inline-block', width: '80%' }}>
-            <StyledButton className="btn-primary btn-xxs ml5" onClick={() => submitFormData('SAVE_COD_CHK')}>
+            <StyledButton className="btn-primary btn-xxs ml5" onClick={() => submitFormData('SAVE_COD_CHK_INFO')}>
               저장
             </StyledButton>
           </StyledButtonWrapper>
