@@ -207,9 +207,12 @@ class MainMenuTable extends Component {
               </tr>
               <tr>
                 <td>
-                  <span className="menu-span">13. 지도 / 점검 사항</span>
+                  <span className="menu-span" role="button" tabIndex="0" onClick={() => onClickMenu('CHECK_INFO')} onKeyPress={() => onClickMenu('CHECK_INFO')}>
+                    13. 지도 / 점검 사항{hasData.CHECK_INFO === 0 ? <FormOutlined style={{ marginLeft: '5px', color: '#ff3333' }} /> : ''}
+                  </span>
                 </td>
-                <td colSpan={2}></td>
+                <td colSpan={1}>14. 특이사항 / 비고</td>
+                <td colSpan={1}></td>
               </tr>
             </tbody>
           </table>

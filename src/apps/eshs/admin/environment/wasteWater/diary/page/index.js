@@ -24,8 +24,10 @@ import PokgijoTable from '../infoTable/pokgijoTable'; // 폭기조 운전상태
 import CleanRepairTable from '../infoTable/cleanRepairTable'; // 방지시설 유지보수
 import WaterQualCheckTable from '../infoTable/waterQualCheckTable'; // 오염물질 측정 내용
 import CodCheckTable from '../infoTable/codCheckTable'; // 유기물 등 오염물질 자동측정 결과
+import CheckInfoTable from '../infoTable/checkTable'; // 지도, 검침사항
 // 모달 컨텐츠
 import CleanRepairModal from '../modalContents/cleanRepairModal'; // 방지시설 추가, 수정 모달
+import CheckInfoModal from '../modalContents/checkInfoModal'; // 지도점검사항 추가, 수정 모달
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSelect = StyledSelect(Select);
@@ -150,6 +152,17 @@ class QualityPage extends Component {
           },
         };
         submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwCleanRepair', submitData, this.modalDataSubmitCallback);
+        break;
+      case 'SAVE_CHECK_INFO': // 지도,점검사항 저장
+        submitData = {
+          PARAM: {
+            type,
+            GROUP_UNIT_CD: mainFormData.GROUP_UNIT_CD,
+            OP_DT: mainFormData.OP_DT,
+            ...modalData,
+          },
+        };
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/wwCheckInfo', submitData, this.modalDataSubmitCallback);
         break;
       default:
         break;
@@ -281,6 +294,15 @@ class QualityPage extends Component {
           type: 'POST',
           url: `/api/eshs/v1/common/wwCodCheck`,
           params: { PARAM: { type: 'GET_COD_CHK_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+        };
+        getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
+        break;
+      case 'CHECK_INFO': // 지도 / 점검 사항
+        apiInfo = {
+          key: 'getCheckInfo',
+          type: 'POST',
+          url: `/api/eshs/v1/common/wwCheckInfo`,
+          params: { PARAM: { type: 'GET_CHECK_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -545,7 +567,11 @@ class QualityPage extends Component {
     let mdData = {};
     switch (type) {
       case 'CLEAN_REPAIR':
-        title = 'Daily Report - 방지시설 유지보수 관리 - 상세';
+        title = 'Daily Report - 방지시설 유지보수 관리';
+        mdData = data || {};
+        break;
+      case 'CHECK_INFO':
+        title = 'Daily Report - 지도/점검 관리 ';
         mdData = data || {};
         break;
       default:
@@ -652,6 +678,7 @@ class QualityPage extends Component {
               {selectedMenu === 'CLEAN_REPAIR' && isSearchMenu && <CleanRepairTable formData={formData} modalHandler={this.modalHandler} />}
               {selectedMenu === 'WATER_QUAL' && isSearchMenu && <WaterQualCheckTable formData={formData} />}
               {selectedMenu === 'COD_CHK' && isSearchMenu && <CodCheckTable formData={formData} onChangeFormData={this.onChangeFormData} />}
+              {selectedMenu === 'CHECK_INFO' && isSearchMenu && <CheckInfoTable formData={formData} modalHandler={this.modalHandler} />}
             </div>
           </>
         )}
@@ -668,6 +695,9 @@ class QualityPage extends Component {
         >
           {modalType === 'CLEAN_REPAIR' && (
             <CleanRepairModal formData={modalData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeModalFormData} />
+          )}
+          {modalType === 'CHECK_INFO' && (
+            <CheckInfoModal formData={modalData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeModalFormData} />
           )}
         </AntdModal>
       </Styled>
