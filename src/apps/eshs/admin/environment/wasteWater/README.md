@@ -10,3 +10,4 @@
   - rate : rate (신규)
   - total : 총량
   - wwCode : 코드관리
+  - status : 현황메뉴 그룹
