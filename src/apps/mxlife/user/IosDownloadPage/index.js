@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import AppLogo from './image.512x512.png';
+// import AppLogo from './image.512x512.png';
+import AppLogo from './kflife.png';
 import Styled from './Styled';
 
 class IOSdwonloadPage extends Component {
