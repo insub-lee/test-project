@@ -31,13 +31,14 @@ class CheckListComp extends Component {
       title: 'Rev',
       dataIndex: 'VERSION',
       key: 'VERSION',
-      width: '6%',
+      width: '5%',
       align: 'center',
     },
     {
       title: '제목',
       dataIndex: 'TITLE',
       key: 'TITLE',
+      ellipsis: true,
     },
     {
       title: '상태',
@@ -59,8 +60,9 @@ class CheckListComp extends Component {
       title: '기안부서',
       dataIndex: 'REG_DEPT_NAME',
       key: 'REG_DEPT_NAME',
-      width: '16%',
+      width: '20%',
       align: 'center',
+      ellipsis: true,
     },
     {
       title: '기안자',
