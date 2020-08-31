@@ -38,7 +38,7 @@ class List extends Component {
       series,
     } = this.props;
     const selected = eshsclean && eshsclean.list && eshsclean.list.find(f => f.SELECTED_NODE_ID === series);
-    const imgUrl = `http://192.168.251.14:10197/down/file/${selected && selected.FILE_SEQ}`;
+    const imgUrl = `http://10.100.22.91:10197/down/file/${selected && selected.FILE_SEQ}`;
     const dataSource = treeSelectData && treeSelectData.categoryMapList && treeSelectData.categoryMapList.filter(f => f.PARENT_NODE_ID === series);
     this.setState({ dataSource, imgUrl });
   };
