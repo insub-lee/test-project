@@ -8,6 +8,8 @@ import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumb
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import UserSearchModal from 'apps/eshs/common/userSearchModal';
 import DangerInfoModify from 'apps/eshs/admin/safety/Danger/danestAdmin/DangerInfoModify';
+
+import ImproveView from 'apps/eshs/admin/safety/safetyImprove/Input';
 import BizBuilderBase from 'components/BizBuilderBase';
 
 import moment from 'moment';
@@ -128,17 +130,17 @@ const AdminMain = ({
       <th colSpan="3">위험도</th>
       <th colSpan="2">
         개선계획
-        {safetyImprove && (
+        {formData && formData.IMPROVE_REG_NO ? (
           <>
             <StyledButton className="btn-light btn-first btn-xs ml5" onClick={onSafetyImproveModal}>
-              안전개선 ({safetyImprove.REQ_NO})
+              {`(안전개선:${formData.IMPROVE_REG_NO})`}
             </StyledButton>
-            <AntdModalPad width={1000} visible={safetyImproveModal} title="위험성 평가 검색" onCancel={onSafetyImproveModal} destroyOnClose footer={null}>
-              {safetyImproveModal && (
-                <BizBuilderBase sagaKey="safetyImprove" workSeq={5262} taskSeq={safetyImprove.TASK_SEQ} viewType="MODIFY" ModifyCustomButtons={() => null} />
-              )}
+            <AntdModalPad width={1000} visible={safetyImproveModal} title="안전 개선 요청" onCancel={onSafetyImproveModal} destroyOnClose footer={null}>
+              {safetyImproveModal && <ImproveView reqNo={formData.IMPROVE_REG_NO} />}
             </AntdModalPad>
           </>
+        ) : (
+          ''
         )}
       </th>
       <th colSpan="2" rowSpan="2">
