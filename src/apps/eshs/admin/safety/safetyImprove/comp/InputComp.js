@@ -178,6 +178,11 @@ class InputComp extends Component {
     );
   };
 
+  componentWillUnmount() {
+    const { sagaKey: id, removeReduxState } = this.props;
+    removeReduxState(id);
+  }
+
   changeFormData = (target, value) => this.setState(prevState => ({ formData: { ...prevState.formData, [target]: value } }));
 
   setFormData = nextFormData => this.setState(prevState => ({ formData: { ...prevState.formData, ...nextFormData } }));

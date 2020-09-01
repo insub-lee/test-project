@@ -86,6 +86,11 @@ class PaymentListComp extends Component {
     getCallDataHandler(id, apiAry, spinningOff);
   };
 
+  componentWillUnmount() {
+    const { sagaKey: id, removeReduxState } = this.props;
+    removeReduxState(id);
+  }
+
   changeModalObj = (title = '', visible = false, content = []) => this.setState({ modalObj: { title, visible, content } });
 
   changeSearchParam = (target, value) => this.setState(prevState => ({ searchParam: { ...prevState.searchParam, [target]: value } }));
