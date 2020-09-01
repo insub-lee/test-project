@@ -1,7 +1,7 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-
+import { PieChartTwoTone } from '@ant-design/icons';
 const RADIAN = Math.PI / 180;
 
 class EachTypePieChartComp extends React.Component {
@@ -9,13 +9,23 @@ class EachTypePieChartComp extends React.Component {
     super(props);
     this.state = {
       data: this.props.data || [],
+      visible: false,
     };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const prevData = prevState.data || [];
     const nextData = nextProps.data || [];
-    if (JSON.stringify(prevData) !== JSON.stringify(nextData)) return { data: nextData };
+    const dataKey = nextProps.dataKey || '';
+    if (JSON.stringify(prevData) !== JSON.stringify(nextData)) {
+      let visible = false;
+
+      nextData.forEach(item => {
+        if (item[dataKey] > 0) visible = true;
+      });
+
+      return { data: nextData, visible };
+    }
 
     return null;
   }
@@ -36,17 +46,26 @@ class EachTypePieChartComp extends React.Component {
 
   render() {
     const { dataKey } = this.props;
-    const { data } = this.state;
+    const { data, visible } = this.state;
+
     return (
-      <ResponsiveContainer width="100%" height={350}>
-        <PieChart>
-          <Pie data={data} labelLine={false} label={this.renderCustomizedLabel} dataKey={dataKey} outerRadius="100%" fill="#8884d8">
-            {data.map((entry, index) => (
-              <Cell key={`${index}_CELL`} fill={entry.color || ''} />
-            ))}
-          </Pie>
-        </PieChart>
-      </ResponsiveContainer>
+      <>
+        {visible ? (
+          <ResponsiveContainer width="100%" height={350}>
+            <PieChart>
+              <Pie data={data} labelLine={false} label={this.renderCustomizedLabel} dataKey={dataKey} outerRadius="100%" fill="#8884d8">
+                {data.map((entry, index) => (
+                  <Cell key={`${index}_CELL`} fill={entry.color || ''} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        ) : (
+          <div style={{ width: '100%', height: '350px', marginTop: '150px' }}>
+            <p>조회된 데이터가 없습니다.</p>
+          </div>
+        )}
+      </>
     );
   }
 }
