@@ -13,6 +13,9 @@ import StyledLineTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+
+import WorkProcess from 'apps/Workflow/WorkProcess';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdPicker = StyledPicker(DatePicker);
@@ -25,14 +28,41 @@ class ModalContents extends React.Component {
     this.state = {
       modalVisible: false,
       requestValue: [],
+      processRule: {},
     };
   }
 
   componentDidMount() {
+    this.getProcessData();
     this.getLastReqCd();
     this.setFormData();
     // this.getDataSource();
   }
+
+  getProcessData = () => {
+    const { sagaKey: id, getProcessRule, workInfo, workPrcProps, relType, setRelType } = this.props;
+    const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
+    const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
+    const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
+
+    if (isWorkflowUsed && prcId !== -1) {
+      const payload = {
+        PRC_ID: Number(prcId),
+        DRAFT_DATA: {
+          ...workPrcProps,
+        },
+      };
+      getProcessRule(id, payload);
+      setRelType(id, relType);
+    }
+  };
+
+  setPrcRule = () => {
+    const { extraApiData } = this.props;
+    this.setState({
+      processRule: (extraApiData && extraApiData.prcRule && extraApiData.prcRule.DRAFT_PROCESS) || {},
+    });
+  };
 
   setFormData = () => {
     const { sagaKey, changeFormData, profile } = this.props;
@@ -280,7 +310,23 @@ class ModalContents extends React.Component {
   render() {
     const { handleRowClick, handleSubModalClose, beforeSaveTask, handleListAddClick, handleDateChange } = this;
     const { modalVisible, requestValue } = this.state;
-    const { handleModalClose, isModified, profile, modalDataSource, rowData } = this.props;
+    const {
+      sagaKey: id,
+      viewLayer,
+      workFlowConfig,
+      viewPageData,
+      changeViewPage,
+      workInfo,
+      handleModalClose,
+      isModified,
+      profile,
+      modalDataSource,
+      rowData,
+      setProcessRule,
+      processRule,
+    } = this.props;
+    const { PRC_ID } = processRule;
+
     return (
       <>
         <ContentsWrapper>
@@ -295,24 +341,51 @@ class ModalContents extends React.Component {
                   <col width="20%" />
                   <col width="20%" />
                 </colgroup>
-                <tbody>
-                  <tr>
+                {isModified ? (
+                  <tbody>
+                    <tr>
+                      <th>신청일</th>
+                      <th>신청팀</th>
+                      <th>신청자</th>
+                      <th>결재자</th>
+                      <th>지급요청일</th>
+                    </tr>
+                    <tr>
+                      <td style={{ textAlign: 'center' }}>{isModified ? rowData.REQ_DT : moment().format('YYYY-MM-DD')}</td>
+                      <td style={{ textAlign: 'center' }}>{isModified ? rowData.DEPT_NAME_KOR : profile.DEPT_NAME_KOR}</td>
+                      <td style={{ textAlign: 'center' }}>{isModified ? rowData.NAME_KOR : profile.NAME_KOR}</td>
+                      <td style={{ textAlign: 'center' }}></td>
+                      <td>{isModified ? rowData.TARGET_DT : <AntdPicker className="ant-picker-sm" defaultValue={moment()} onChange={handleDateChange} />}</td>
+                    </tr>
+                  </tbody>
+                ) : (
+                  <tbody>
+                    <tr>
+                      <td colSpan={5}>
+                        {JSON.stringify(processRule) !== '{}' && (
+                          <WorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
+                        )}
+                      </td>
+                    </tr>
+                    {/* <tr>
                     <th>신청일</th>
                     <th>신청팀</th>
                     <th>신청자</th>
                     <th>결재자</th>
                     <th>지급요청일</th>
-                  </tr>
-                  <tr>
-                    <td style={{ textAlign: 'center' }}>{isModified ? rowData.REQ_DT : moment().format('YYYY-MM-DD')}</td>
+                  </tr> */}
+                    <tr>
+                      {/* <td style={{ textAlign: 'center' }}>{isModified ? rowData.REQ_DT : moment().format('YYYY-MM-DD')}</td>
                     <td style={{ textAlign: 'center' }}>{isModified ? rowData.DEPT_NAME_KOR : profile.DEPT_NAME_KOR}</td>
                     <td style={{ textAlign: 'center' }}>{isModified ? rowData.NAME_KOR : profile.NAME_KOR}</td>
-                    <td style={{ textAlign: 'center' }}></td>
-                    <td style={{ textAlign: 'center' }}>
-                      {isModified ? rowData.TARGET_DT : <AntdPicker className="ant-picker-sm" defaultValue={moment()} onChange={handleDateChange} />}
-                    </td>
-                  </tr>
-                </tbody>
+                  <td style={{ textAlign: 'center' }}></td> */}
+                      <th>지급요청일</th>
+                      <td colSpan={4}>
+                        {isModified ? rowData.TARGET_DT : <AntdPicker className="ant-picker-sm" defaultValue={moment()} onChange={handleDateChange} />}
+                      </td>
+                    </tr>
+                  </tbody>
+                )}
               </table>
             </div>
           </StyledHtmlTable>
@@ -356,6 +429,7 @@ ModalContents.propTypes = {
   getExtraApiData: PropTypes.func,
   profile: PropTypes.object,
   modalDataSource: PropTypes.arrayOf('object'),
+  setProcessRule: PropTypes.func,
 };
 
 ModalContents.defatulProps = {

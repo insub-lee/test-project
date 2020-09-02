@@ -294,7 +294,9 @@ class List extends React.Component {
               <AntdInput className="ant-input-mid ant-input-inline" placeholder="품목명" style={{ width: '15%' }} />
             </div>
             <div className="btn-area">
-              <StyledButton className="btn-gray btn-sm">검색</StyledButton>
+              <StyledButton className="btn-gray btn-sm" onClick={this.getDataSource}>
+                검색
+              </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
           <div style={{ padding: '10px' }}>

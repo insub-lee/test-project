@@ -20,6 +20,7 @@ import { debounce } from 'lodash';
 import { callBackAfterPost, callBackAfterPut, callBackAfterDelete } from 'apps/eshs/common/submitCallbackFunc';
 import ImageUploader from 'components/FormStuff/Upload/ImageUploader';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
+
 import CustomTooltip from './customTooltip';
 
 const { Option } = Select;
@@ -326,6 +327,7 @@ class List extends React.Component {
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, inputFooter, viewFooter } = this;
     const { selectedSite, input, visible, columnDefs, rowData, viewType, frameworkComponents, tooltipShowDelay, requestValue } = this.state;
     const { result } = this.props;
+
     return (
       <>
         <StyledContentsWrapper>

@@ -242,7 +242,25 @@ class List extends React.Component {
   render() {
     const { columns, handleSearchChange, handleModalVisible, handleSearchDateChange, handleModalClose, getDataSource, handleHqChange } = this;
     const { dataSource, modalVisible, searchValue, rowData, isModified, headquarterList, departmentList, isHeadquarterSelect, modalDataSource } = this.state;
-    const { sagaKey, changeFormData, formData, viewPageData, saveTask, getExtraApiData, submitExtraHandler, extraApiData, profile } = this.props;
+    const {
+      sagaKey,
+      changeFormData,
+      formData,
+      viewPageData,
+      saveTask,
+      getExtraApiData,
+      submitExtraHandler,
+      extraApiData,
+      profile,
+      setProcessRule,
+      getProcessRule,
+      workflowOpt,
+      workPrcProps,
+      relType,
+      workInfo,
+      setRelType,
+      processRule,
+    } = this.props;
     return (
       <>
         <StyledContentsWrapper>
@@ -318,6 +336,14 @@ class List extends React.Component {
               extraApiData={extraApiData}
               profile={profile}
               modalDataSource={modalDataSource}
+              processRule={processRule}
+              setProcessRule={setProcessRule}
+              getProcessRule={getProcessRule}
+              workflowOpt={workflowOpt}
+              workPrcProps={workPrcProps}
+              relType={relType}
+              setRelType={setRelType}
+              workInfo={workInfo}
             />
           </AntdModal>
         </StyledContentsWrapper>
@@ -336,6 +362,7 @@ List.propTypes = {
   viewPageData: PropTypes.object,
   submitExtraHandler: PropTypes.func,
   profile: PropTypes.object,
+  setProcessRule: PropTypes.func,
 };
 
 List.defaultProps = {
