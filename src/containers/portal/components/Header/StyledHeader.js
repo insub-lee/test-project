@@ -340,14 +340,14 @@ const StyledHeader = styled.header`
         }
 
         .rightBottom {
-          .iconMenuWrapper > li:nth-child(3), .iconMenuWrapper > li:nth-child(4) { display: none; }
+          /* .iconMenuWrapper > li:nth-child(3), .iconMenuWrapper > li:nth-child(4) { display: none; } */
         }
 
         .userInfo { display: none; }
       }
 
       @media only screen and (max-width: 414px) {
-        max-width: 160px;
+        /* max-width: 160px; */
 
         .iconMenuWrapper > li:first-child { max-width: 110px; }
       }

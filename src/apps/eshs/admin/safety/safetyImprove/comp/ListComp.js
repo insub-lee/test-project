@@ -143,6 +143,11 @@ class ListComp extends Component {
     );
   };
 
+  componentWillUnmount() {
+    const { sagaKey: id, removeReduxState } = this.props;
+    removeReduxState(id);
+  }
+
   search = () => {
     const { searchParam } = this.state;
     const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff } = this.props;

@@ -66,56 +66,58 @@ class WorkProcess extends Component {
             </div>
           </div>
           <div style={{ marginBottom: '10px' }}>
-            {filterRule.map(item => (
-              <div className="dataWrapper_mdcs">
-                <Row type="flex">
-                  <Col span={4} className="dataLabel">
-                    <span>{item.NODE_NAME_KOR}</span>
-                  </Col>
-                  <Col span={20} className="dataContents">
-                    {item.APPV_MEMBER.map(user =>
-                      item.NODE_TYPE === 'ND' ? (
-                        <div className="draftInfoBox">
-                          <Icon type="team" />
-                          <span className="infoTxt">{user.DEPT_NAME_KOR}</span>
-                        </div>
-                      ) : (
-                        <div className="draftInfoBox">
-                          <Icon type="user" />
-                          <span className="infoTxt">{`${user.NAME_KOR} (${user.DEPT_NAME_KOR})`}</span>
-                        </div>
-                      ),
-                    )}
-                  </Col>
-                </Row>
-              </div>
-            ))}
+            {filterRule &&
+              filterRule.map(item => (
+                <div className="dataWrapper_mdcs">
+                  <Row type="flex">
+                    <Col span={4} className="dataLabel">
+                      <span>{item.NODE_NAME_KOR}</span>
+                    </Col>
+                    <Col span={20} className="dataContents">
+                      {item.APPV_MEMBER.map(user =>
+                        item.NODE_TYPE === 'ND' ? (
+                          <div className="draftInfoBox">
+                            <Icon type="team" />
+                            <span className="infoTxt">{user.DEPT_NAME_KOR}</span>
+                          </div>
+                        ) : (
+                          <div className="draftInfoBox">
+                            <Icon type="user" />
+                            <span className="infoTxt">{`${user.NAME_KOR} (${user.DEPT_NAME_KOR})`}</span>
+                          </div>
+                        ),
+                      )}
+                    </Col>
+                  </Row>
+                </div>
+              ))}
           </div>
           <div>
-            {this.state.filterItem.map(item => (
-              <div className="dataWrapper_mdcs">
-                <Row type="flex">
-                  <Col span={4} className="dataLabel">
-                    <span>{item.NODE_NAME_KOR}</span>
-                  </Col>
-                  <Col span={20} className="dataContents">
-                    {item.APPV_MEMBER.map(user =>
-                      item.NODE_TYPE === 'ND' ? (
-                        <div className="draftInfoBox">
-                          <Icon type="team" />
-                          <span className="infoTxt">{user.DEPT_NAME_KOR}</span>
-                        </div>
-                      ) : (
-                        <div className="draftInfoBox">
-                          <Icon type="user" />
-                          <span className="infoTxt">{user.NAME_KOR}</span>
-                        </div>
-                      ),
-                    )}
-                  </Col>
-                </Row>
-              </div>
-            ))}
+            {this.state.filterItem &&
+              this.state.filterItem.map(item => (
+                <div className="dataWrapper_mdcs">
+                  <Row type="flex">
+                    <Col span={4} className="dataLabel">
+                      <span>{item.NODE_NAME_KOR}</span>
+                    </Col>
+                    <Col span={20} className="dataContents">
+                      {item.APPV_MEMBER.map(user =>
+                        item.NODE_TYPE === 'ND' ? (
+                          <div className="draftInfoBox">
+                            <Icon type="team" />
+                            <span className="infoTxt">{user.DEPT_NAME_KOR}</span>
+                          </div>
+                        ) : (
+                          <div className="draftInfoBox">
+                            <Icon type="user" />
+                            <span className="infoTxt">{user.NAME_KOR}</span>
+                          </div>
+                        ),
+                      )}
+                    </Col>
+                  </Row>
+                </div>
+              ))}
           </div>
         </div>
         <AntdModal
