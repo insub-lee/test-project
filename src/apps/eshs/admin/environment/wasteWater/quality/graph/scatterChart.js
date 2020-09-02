@@ -13,7 +13,7 @@ class ScatterChartPage extends Component {
     this.state = {};
   }
 
-  listDateTypeChange = listData => listData.map(item => ({ ...item, WQ_DT: Number(item.WQ_DT) }));
+  listDateTypeChange = (listData, yField) => listData.filter(item => item[yField] !== 0).map(item => ({ ...item, WQ_DT: Number(item.WQ_DT) }));
 
   valueFormat = (value, name) => {
     switch (name) {
@@ -31,7 +31,7 @@ class ScatterChartPage extends Component {
 
   render() {
     const { chartName, xField, xFieldNm, yField, yFieldNm, listData, menuFixedYn } = this.props;
-    const graphListData = this.listDateTypeChange(listData);
+    const graphListData = this.listDateTypeChange(listData, yField);
     const boxWidth = menuFixedYn === 'N' ? 620 : 500;
     return (
       <ScatterChart width={boxWidth} height={200}>
