@@ -11,7 +11,6 @@ const Styled = styled.div`
 
   .chart_title {
     text-align: center;
-    padding-left: 10%;
     font-size: 20px;
     font-weight: 600;
   }

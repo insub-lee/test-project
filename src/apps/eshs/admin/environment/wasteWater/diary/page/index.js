@@ -665,19 +665,18 @@ class QualityPage extends Component {
       mainFormData,
       formData,
     } = this.state;
-    console.debug('메인폼', mainFormData);
     return (
       <Styled>
         <StyledCustomSearchWrapper>
           <Spin tip="검색중 ..." spinning={isSearch}>
             <div className="search-input-area">
               <span className="text-label">지역</span>
-              <AntdSelect defaultValue="청주" className="select-sm" style={{ width: '70px' }} onChange={val => console.debug(val)} disabled>
+              <AntdSelect defaultValue="청주" className="select-sm" style={{ width: '70px' }} disabled>
                 <Option value="청주">청주</Option>
                 <Option value="구미">구미</Option>
               </AntdSelect>
               <span className="text-label">구분</span>
-              <AntdSelect defaultValue="매그너칩반도체" className="select-sm" style={{ width: '125px' }} onChange={val => console.debug(val)} disabled>
+              <AntdSelect defaultValue="매그너칩반도체" className="select-sm" style={{ width: '125px' }} disabled>
                 <Option value="매그너칩반도체">매그너칩반도체</Option>
               </AntdSelect>
               <span className="text-label">일자</span>

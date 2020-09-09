@@ -41,7 +41,7 @@ class SignLine extends Component {
       <StyledSignLine>
         <div className="signLineWrapper">
           {signline !== undefined && signline.length > 0 && (
-            <React.Fragment>
+            <>
               <Row gutter={0} type="flex" justify="end" className="table-head">
                 {signline.map(item => (
                   <Col span={3} key={`prcHerder_${item.NODE_ID}_${item.USER_INFO.USER_ID}`}>
@@ -70,7 +70,7 @@ class SignLine extends Component {
                   </Col>
                 ))}
               </Row>
-            </React.Fragment>
+            </>
           )}
         </div>
         <div className="dataWrapper">
@@ -127,13 +127,6 @@ const withSaga = injectSaga({
   saga,
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(SignLine);
+export default compose(withSaga, withReducer, withConnect)(SignLine);

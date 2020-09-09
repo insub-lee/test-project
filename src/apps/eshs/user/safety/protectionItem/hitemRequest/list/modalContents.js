@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import ProtectionItemList from 'apps/eshs/user/safety/protectionItem/protectionItemList';
 
-import { Input, DatePicker, InputNumber, Modal, Table, message } from 'antd';
+import { Input, DatePicker, InputNumber, Modal, Table, message, Popover } from 'antd';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledPicker from 'commonStyled/Form/StyledPicker';
 // import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
@@ -16,6 +16,8 @@ import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContents
 import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
 import WorkProcess from 'apps/Workflow/WorkProcess';
+import SignLine from 'apps/Workflow/SignLine';
+import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdPicker = StyledPicker(DatePicker);
@@ -28,7 +30,7 @@ class ModalContents extends React.Component {
     this.state = {
       modalVisible: false,
       requestValue: [],
-      processRule: {},
+      psrule: {},
     };
   }
 
@@ -55,13 +57,6 @@ class ModalContents extends React.Component {
       getProcessRule(id, payload);
       setRelType(id, relType);
     }
-  };
-
-  setPrcRule = () => {
-    const { extraApiData } = this.props;
-    this.setState({
-      processRule: (extraApiData && extraApiData.prcRule && extraApiData.prcRule.DRAFT_PROCESS) || {},
-    });
   };
 
   setFormData = () => {
@@ -164,27 +159,35 @@ class ModalContents extends React.Component {
     {
       title: '품명',
       align: 'center',
-      width: '15%',
+      width: '10%',
       render: (text, record, index) =>
         this.props.isModified ? (
-          <span>{record.KIND}</span>
+          <Popover content={<span>{record.KIND}</span>} title={null} trigger="hover">
+            <span>{record.KIND}</span>
+          </Popover>
         ) : (
-          <AntdInput
-            className="ant-input-sm"
-            value={(this.state.requestValue[index] && this.state.requestValue[index].KIND) || ''}
-            onClick={() => this.setState({ modalVisible: true, selectedIndex: index })}
-          />
+          <Popover content={<span>{(this.state.requestValue[index] && this.state.requestValue[index].KIND) || ''}</span>} title={null} trigger="hover">
+            <AntdInput
+              className="ant-input-sm"
+              value={(this.state.requestValue[index] && this.state.requestValue[index].KIND) || ''}
+              onClick={() => this.setState({ modalVisible: true, selectedIndex: index })}
+            />
+          </Popover>
         ),
     },
     {
       title: '모델',
       align: 'center',
-      width: '15%',
+      width: '10%',
       render: (text, record, index) =>
         this.props.isModified ? (
-          <span>{record.MODEL}</span>
+          <Popover content={<span>{record.MODEL}</span>} title={null} trigger="hover">
+            <span>{record.MODEL}</span>
+          </Popover>
         ) : (
-          <AntdInput className="ant-input-sm" value={(this.state.requestValue[index] && this.state.requestValue[index].MODEL) || ''} />
+          <Popover content={<span>{(this.state.requestValue[index] && this.state.requestValue[index].MODEL) || ''}</span>} title={null} trigger="hover">
+            <AntdInput className="ant-input-sm" value={(this.state.requestValue[index] && this.state.requestValue[index].MODEL) || ''} />
+          </Popover>
         ),
     },
     {
@@ -217,33 +220,42 @@ class ModalContents extends React.Component {
     {
       title: '신청사유',
       align: 'center',
-      width: '20%',
+      width: this.props.isModified ? '13%' : '30%',
       render: (text, record, index) =>
         this.props.isModified ? (
-          <span>{record.REQ_COMMENTS}</span>
+          <Popover content={<span>{record.REQ_COMMENTS}</span>} title={null} trigger="hover">
+            <span>{record.REQ_COMMENTS}</span>
+          </Popover>
         ) : (
-          <AntdInput
-            className="ant-input-sm"
-            maxLength={500}
-            value={this.state.requestValue[index] && this.state.requestValue[index].REQ_COMMENTS}
-            onChange={e => this.handleRequestChange('REQ_COMMENTS', e.target.value, index)}
-          />
+          <Popover content={<span>{this.state.requestValue[index] && this.state.requestValue[index].REQ_COMMENTS}</span>} title={null} trigger="focus">
+            <AntdInput
+              className="ant-input-sm"
+              maxLength={500}
+              value={this.state.requestValue[index] && this.state.requestValue[index].REQ_COMMENTS}
+              onChange={e => this.handleRequestChange('REQ_COMMENTS', e.target.value, index)}
+            />
+          </Popover>
         ),
     },
     {
       title: '사용장소',
       align: 'center',
-      width: '20%',
+      width: this.props.isModified ? '10%' : '20%',
+
       render: (text, record, index) =>
         this.props.isModified ? (
-          <span>{record.PLACE}</span>
+          <Popover content={<span>{record.PLACE}</span>} title={null} trigger="hover">
+            <span>{record.PLACE}</span>
+          </Popover>
         ) : (
-          <AntdInput
-            className="ant-input-sm"
-            maxLength={500}
-            value={this.state.requestValue[index] && this.state.requestValue[index].PLACE}
-            onChange={e => this.handleRequestChange('PLACE', e.target.value, index)}
-          />
+          <Popover content={<span>{this.state.requestValue[index] && this.state.requestValue[index].PLACE}</span>} title={null} trigger="focus">
+            <AntdInput
+              className="ant-input-sm"
+              maxLength={500}
+              value={this.state.requestValue[index] && this.state.requestValue[index].PLACE}
+              onChange={e => this.handleRequestChange('PLACE', e.target.value, index)}
+            />
+          </Popover>
         ),
     },
     this.props.isModified
@@ -251,6 +263,7 @@ class ModalContents extends React.Component {
           title: '출고수량',
           dataIndex: '',
           align: 'center',
+          width: '7%',
         }
       : {
           width: 0,
@@ -260,6 +273,7 @@ class ModalContents extends React.Component {
           title: '출고일',
           dataIndex: '',
           align: 'center',
+          width: '10%',
         }
       : {
           width: 0,
@@ -269,6 +283,7 @@ class ModalContents extends React.Component {
           title: '상태',
           dataIndex: 'CONF_STATUS',
           align: 'center',
+          width: '10%',
         }
       : {
           width: 0,
@@ -278,6 +293,12 @@ class ModalContents extends React.Component {
           title: 'Comment',
           dataIndex: 'CONF_COMMENTS',
           align: 'center',
+          width: '10%',
+          render: (text, record) => (
+            <Popover content={<span>{text || ''}</span>} title={null} trigger="hover">
+              <span>{text || ''}</span>
+            </Popover>
+          ),
         }
       : {
           title: '',
@@ -319,100 +340,87 @@ class ModalContents extends React.Component {
       workInfo,
       handleModalClose,
       isModified,
+      result,
       profile,
       modalDataSource,
       rowData,
       setProcessRule,
       processRule,
+      getProcessRule,
+      relType,
+      setRelType,
     } = this.props;
-    const { PRC_ID } = processRule;
 
     return (
-      <>
-        <ContentsWrapper>
-          {/* <div className="tableWrapper"> */}
-          <StyledHtmlTable>
-            <div style={{ padding: '10px' }}>
-              <table>
-                <colgroup>
-                  <col width="20%" />
-                  <col width="20%" />
-                  <col width="20%" />
-                  <col width="20%" />
-                  <col width="20%" />
-                </colgroup>
-                {isModified ? (
-                  <tbody>
-                    <tr>
-                      <th>신청일</th>
-                      <th>신청팀</th>
-                      <th>신청자</th>
-                      <th>결재자</th>
-                      <th>지급요청일</th>
-                    </tr>
-                    <tr>
-                      <td style={{ textAlign: 'center' }}>{isModified ? rowData.REQ_DT : moment().format('YYYY-MM-DD')}</td>
-                      <td style={{ textAlign: 'center' }}>{isModified ? rowData.DEPT_NAME_KOR : profile.DEPT_NAME_KOR}</td>
-                      <td style={{ textAlign: 'center' }}>{isModified ? rowData.NAME_KOR : profile.NAME_KOR}</td>
-                      <td style={{ textAlign: 'center' }}></td>
-                      <td>{isModified ? rowData.TARGET_DT : <AntdPicker className="ant-picker-sm" defaultValue={moment()} onChange={handleDateChange} />}</td>
-                    </tr>
-                  </tbody>
-                ) : (
-                  <tbody>
-                    <tr>
-                      <td colSpan={5}>
-                        {JSON.stringify(processRule) !== '{}' && (
-                          <WorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
-                        )}
-                      </td>
-                    </tr>
-                    {/* <tr>
-                    <th>신청일</th>
-                    <th>신청팀</th>
-                    <th>신청자</th>
-                    <th>결재자</th>
-                    <th>지급요청일</th>
-                  </tr> */}
-                    <tr>
-                      {/* <td style={{ textAlign: 'center' }}>{isModified ? rowData.REQ_DT : moment().format('YYYY-MM-DD')}</td>
-                    <td style={{ textAlign: 'center' }}>{isModified ? rowData.DEPT_NAME_KOR : profile.DEPT_NAME_KOR}</td>
-                    <td style={{ textAlign: 'center' }}>{isModified ? rowData.NAME_KOR : profile.NAME_KOR}</td>
-                  <td style={{ textAlign: 'center' }}></td> */}
-                      <th>지급요청일</th>
-                      <td colSpan={4}>
-                        {isModified ? rowData.TARGET_DT : <AntdPicker className="ant-picker-sm" defaultValue={moment()} onChange={handleDateChange} />}
-                      </td>
-                    </tr>
-                  </tbody>
-                )}
-              </table>
+      <ContentsWrapper>
+        {/* {JSON.stringify(processRule) !== '{}' && <WorkProcess id={id} PRC_ID={109} processRule={processRule} setProcessRule={setProcessRule} />} */}
+        <CustomWorkProcess
+          id={id}
+          PRC_ID={109}
+          colLength={5}
+          relType={relType}
+          setRelType={setRelType}
+          setProcessRule={setProcessRule}
+          processRule={processRule}
+          viewType="INPUT"
+          CustomRow={[
+            <tr>
+              <th>신청일</th>
+              <td colSpan={4}>{isModified ? rowData.REQ_DT : moment().format('YYYY-MM-DD')}</td>
+            </tr>,
+            <tr>
+              <th>지급요청일</th>
+              <td colSpan={4}>
+                {isModified ? rowData.TARGET_DT : <AntdPicker className="ant-picker-sm" defaultValue={moment()} onChange={handleDateChange} />}
+              </td>
+            </tr>,
+          ]}
+        />
+        <CustomWorkProcess
+          id={id}
+          relType={relType}
+          setRelType={setRelType}
+          PRC_ID={109}
+          setProcessRule={setProcessRule}
+          processRule={processRule}
+          draftId={rowData.DRAFT_ID}
+          viewType="VIEW"
+          colLength={5}
+          CustomRow={[
+            <tr>
+              <th>신청일</th>
+              <td colSpan={4}>{isModified ? rowData.REQ_DT : moment().format('YYYY-MM-DD')}</td>
+            </tr>,
+            <tr>
+              <th>지급요청일</th>
+              <td colSpan={4}>
+                {isModified ? rowData.TARGET_DT : <AntdPicker className="ant-picker-sm" defaultValue={moment()} onChange={handleDateChange} />}
+              </td>
+            </tr>,
+          ]}
+        />
+        <div style={{ padding: '10px' }}>
+          {isModified ? null : (
+            <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+              <StyledButton className="btn-gray btn-sm" onClick={handleListAddClick}>
+                추가
+              </StyledButton>
             </div>
-          </StyledHtmlTable>
-          {/* </div> */}
-          <div style={{ padding: '10px' }}>
-            {isModified ? null : (
-              <div style={{ textAlign: 'right', marginBottom: '10px' }}>
-                <StyledButton className="btn-gray btn-sm" onClick={handleListAddClick}>
-                  추가
-                </StyledButton>
-              </div>
-            )}
-            <AntdTable columns={this.columns} dataSource={isModified ? modalDataSource : requestValue} pagination={false} />
-          </div>
-          <div style={{ textAlign: 'center', padding: '10px' }}>
-            <StyledButton className="btn-primary mr5" onClick={isModified ? () => console.debug('@@@@@@PRINT@@@@@@@') : beforeSaveTask}>
-              {isModified ? '인쇄' : '저장'}
-            </StyledButton>
-            <StyledButton className="btn-light" onClick={handleModalClose}>
-              취소
-            </StyledButton>
-          </div>
-          <AntdModal visible={modalVisible} title="보호구 목록" onCancel={handleSubModalClose} footer={null} width="80%">
-            <ProtectionItemList handleRowClick={handleRowClick} />
-          </AntdModal>
-        </ContentsWrapper>
-      </>
+          )}
+          <AntdTable columns={this.columns} dataSource={isModified ? modalDataSource : requestValue} pagination={false} />
+        </div>
+        <div style={{ textAlign: 'center', padding: '10px' }}>
+          <StyledButton className="btn-primary mr5" onClick={isModified ? () => console.debug('@@@@@@PRINT@@@@@@@') : beforeSaveTask}>
+            {isModified ? '인쇄' : '저장'}
+          </StyledButton>
+          <StyledButton className="btn-light" onClick={handleModalClose}>
+            취소
+          </StyledButton>
+        </div>
+        <AntdModal visible={modalVisible} title="보호구 목록" onCancel={handleSubModalClose} footer={null} width="80%">
+          <ProtectionItemList handleRowClick={handleRowClick} />
+        </AntdModal>
+      </ContentsWrapper>
     );
   }
 }
