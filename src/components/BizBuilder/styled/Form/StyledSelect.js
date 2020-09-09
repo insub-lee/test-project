@@ -85,6 +85,11 @@ const StyledSelect = Component => styled(Component)`
         background: #f5f5f5;
       }
     }
+
+    &.ant-select-inline {
+      display: inline-block;
+      vertical-align: middle;
+    }
   }
 `;
 
