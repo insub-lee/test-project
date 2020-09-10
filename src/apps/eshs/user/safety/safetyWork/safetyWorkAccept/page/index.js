@@ -72,6 +72,12 @@ class SafetyWorkMain extends Component {
     };
   }
 
+  componentDidMount = () => {
+    const { workNo } = this.props;
+
+    if (workNo) return this.handleGetSafetyWork(workNo);
+  };
+
   handleGetSafetyWork = workNo => {
     const { formData } = this.state;
     const searchWorkNo = workNo || formData.WORK_NO;
@@ -220,6 +226,7 @@ class SafetyWorkMain extends Component {
 SafetyWorkMain.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandlerReturnRes: PropTypes.func,
+  workNo: PropTypes.string,
 };
 
 export default SafetyWorkMain;

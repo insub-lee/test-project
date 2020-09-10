@@ -60,11 +60,14 @@ class SafetyWorkSearch extends Component {
   getSafetyWorkCallback = () => {
     const { result } = this.props;
     const safetyWorks = (result && result.getSafetyWorkList && result.getSafetyWorkList.safetyWorkList) || [];
-    if (safetyWorks.length === 0) {
-      message.error(<MessageContent>검색된 안전작업이 없습니다.</MessageContent>);
-      return;
-    }
-    this.setState({
+    if (safetyWorks.length === 0)
+      return this.setState(
+        {
+          isSearching: false,
+        },
+        () => message.error(<MessageContent>검색된 안전작업이 없습니다.</MessageContent>),
+      );
+    return this.setState({
       isSearching: false,
       safetyWorkList: safetyWorks,
     });
