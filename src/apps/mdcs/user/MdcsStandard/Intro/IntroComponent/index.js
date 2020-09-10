@@ -200,7 +200,7 @@ class IntroComponent extends Component {
                   <dt>사내 표준 기안 Flow</dt>
                   <dd>
                     <img src={draftImg1} alt="사내 표준 기안 Flow" /> * 문의사항 발생시 표준관리실로 문의하시기 바랍니다.
-                    <br /> MDCS 총괄 박영미 (청주)4951
+                    <br /> MDCS 총괄 김헌석 (청주)3865
                   </dd>
                 </dl>
               </div>
@@ -291,7 +291,7 @@ class IntroComponent extends Component {
                 viewChangeSeq={viewChangeSeq}
                 CustomWorkProcessModal={WorkProcessModal}
                 viewType={viewType}
-                isRemoveFile={true}
+                isRemoveFile
                 workPrcProps={workPrcProps}
                 onCloseModalHandler={this.onCloseModalHandler}
                 onCloseModal={this.onCloseModal}
