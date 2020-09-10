@@ -2,9 +2,9 @@
 
 # folder
   - checkItem :수질측정항목
-  - clean :
+  - clean : 방지시설
   - diary : 일지
-  - exhaust : 
+  - exhaust : 배출시설
   - flow : 유량
   - quality : 수질
   - rate : rate (신규)

@@ -178,7 +178,7 @@ class ExcelParser extends Component {
     ];
 
     return (
-      <Styled className="mealRegModalCotents">
+      <Styled className="mealRegModalCotents" onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
         <div className="excelDown">
           <StyledButton className="btn-gray btn-xs">
             <a href={sampleExcelFile} download>

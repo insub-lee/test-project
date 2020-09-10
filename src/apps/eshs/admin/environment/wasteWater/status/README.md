@@ -1,5 +1,5 @@
 ###### 현황 (status) 설명 #####
 
 # folder
-  - waterQual : 수질
+  - actInfo : 처리장별 가동시간 현황
   - waterFlow : 유량
