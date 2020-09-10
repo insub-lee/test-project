@@ -96,7 +96,7 @@ class ExcelParser extends Component {
   render() {
     const { month } = this.state;
     return (
-      <Styled className="mealRegModalCotents">
+      <Styled className="mealRegModalCotents" onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
         <div style={{ width: '50%', display: 'inline-block' }}>
           <AntdMonthPicker
             className="ant-picker-sm"
