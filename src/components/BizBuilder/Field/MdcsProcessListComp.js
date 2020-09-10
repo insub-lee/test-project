@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Icon } from 'antd';
+import moment from 'moment';
 import styled from 'styled-components';
 
 const StyledWrap = styled.div`
@@ -48,7 +49,7 @@ class MdcsProcessListComp extends Component {
   componentDidMount() {
     const { sagaKey, submitExtraHandler, formData, draftInfo, isObsCheck, exDraftId } = this.props;
     const { DRAFT_ID, REL_TYPE } = draftInfo;
-    const { MIG_YN, OBS_DRAFT_ID } = formData;
+    const { MIG_YN, OBS_DRAFT_ID, REG_DTTM } = formData;
     let draftId = DRAFT_ID;
     if (isObsCheck && OBS_DRAFT_ID !== 0) {
       draftId = OBS_DRAFT_ID;
@@ -56,8 +57,15 @@ class MdcsProcessListComp extends Component {
     if (exDraftId && exDraftId > 0) {
       draftId = exDraftId;
     }
+
+    // 추가로직 (기본값 Mig = N)
+    let isMig = MIG_YN === '' ? 'N' : 'Y';
+    // 현행화 20년 9월 1일 이후에 등록된 결재프로세스일 경우 isMig = N
+    if (REG_DTTM >= moment('20200901', 'YYYYMMDD')) {
+      isMig = 'N';
+    }
     const url = '/api/workflow/v1/common/process/ProcessPreviewHandler';
-    submitExtraHandler(sagaKey, 'POST', url, { PARAM: { draftId, isMig: MIG_YN } }, this.initDataBind);
+    submitExtraHandler(sagaKey, 'POST', url, { PARAM: { draftId, isMig } }, this.initDataBind);
   }
 
   initDataBind = (id, response) => {
@@ -178,6 +186,7 @@ class MdcsProcessListComp extends Component {
 
   render() {
     const { draftNode, reviewerNode, mailReviewerNode } = this.state;
+    console.debug('모든프롭스', this.props);
     return (
       <StyledWrap>
         {draftNode && draftNode.length > 0 && (
