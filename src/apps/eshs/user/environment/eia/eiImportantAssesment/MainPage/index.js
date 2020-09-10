@@ -158,7 +158,7 @@ class MainPage extends Component {
       sagaKey,
       'POST',
       '/api/workflow/v1/common/workprocess/draft',
-      { DRAFT_PROCESS: { ...prcRule, REL_TYPE: 200, REL_KEY: materialData.REQ_NO } },
+      { DRAFT_PROCESS: { ...prcRule, REL_TYPE: 100, REL_KEY: materialData.REQ_NO } },
       this.fileMoveToReal,
     );
   };
