@@ -15,6 +15,8 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess';
+import { getProcessRule, getDraftProcessRule, ESHS_REL_TYPE } from 'apps/eshs/common/getWorkProcessRule';
 import WorkerSearch from '../../workerMgt/Search';
 import CustomListPage from '../../pledge/pages/ListPage';
 import SafetyEdu from '../../safetyEdu';
@@ -80,11 +82,13 @@ class SafetyWorkMain extends Component {
         FINAL_OK_EMP_NM: '', // 최종결재자 사번
         REQUEST_DT: moment().format('YYYY-MM-DD'),
       },
+      processRule: {},
     };
   }
 
   componentDidMount() {
     const { sagaKey, getCallDataHandler, profile } = this.props;
+    console.debug('ESHS_REL_TYPE ', ESHS_REL_TYPE);
     const apiArr = [
       {
         /* 거래처전체리스트 : /api/eshs/v1/common/EshsCmpnyList/null/null */
@@ -147,8 +151,11 @@ class SafetyWorkMain extends Component {
     getCallDataHandlerReturnRes(id, apiInfo, this.getSafetyWorkCallback);
   };
 
-  getSafetyWorkCallback = (id, response) => {
-    const searchSafetyWork = (response && response.safetyWork) || {};
+  getSafetyWorkCallback = () => {
+    const { result, prcId: PRC_ID } = this.props;
+
+    const searchSafetyWork = (result && result.getSafetyWork && result.getSafetyWork.safetyWork) || {};
+
     if (!searchSafetyWork.WORK_NO) {
       message.error(<MessageContent>요청하신 작업정보를 찾을 수 없습니다.</MessageContent>);
     }
@@ -159,6 +166,23 @@ class SafetyWorkMain extends Component {
         REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
         SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
         UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
+        processRule: {},
+      },
+    });
+  };
+
+  saveProcessRule = () => {
+    const { sagaKey, submitHandlerBySaga, relKey, relKey2 } = this.props;
+    const { processRule, formData } = this.state;
+
+    submitHandlerBySaga(sagaKey, 'POST', '/api/workflow/v1/common/workprocess/draft', {
+      DRAFT_PROCESS: {
+        ...processRule,
+        REL_TYPE: ESHS_REL_TYPE,
+        DRAFT_DATA: {},
+        REL_KEY: relKey,
+        REL_KEY2: formData[relKey2],
+        DRAFT_TITLE: formData.TITLE,
       },
     });
   };
@@ -265,6 +289,9 @@ class SafetyWorkMain extends Component {
       case 'riskAssessment':
         title = '위험성평가표 목록';
         break;
+      case 'workProcess':
+        title = '결재선';
+        break;
       default:
         break;
     }
@@ -339,7 +366,7 @@ class SafetyWorkMain extends Component {
           WORK_NO: record.WORK_NO,
         },
       },
-      () => this.handleGetSafetyWork(),
+      this.handleGetSafetyWork,
     );
   };
 
@@ -694,8 +721,8 @@ class SafetyWorkMain extends Component {
   };
 
   render() {
-    const { modalType, modalTitle, modalVisible, formData } = this.state;
-    const { result } = this.props;
+    const { modalType, modalTitle, modalVisible, formData, processRule } = this.state;
+    const { result, prcId: PRC_ID } = this.props;
     const eshsSwtbEquip = (result && result.getSwtbEquipList && result.getSwtbEquipList.list) || [];
     return (
       <Styled>
@@ -726,6 +753,11 @@ class SafetyWorkMain extends Component {
               <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('UPDATE')}>
                 수정
               </StyledButton>
+              {formData.STTLMNT_STATUS === '0' && (
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={this.saveProcessRule}>
+                  상신
+                </StyledButton>
+              )}
               <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.submitFormData('DELETE')}>
                 삭제
               </StyledButton>
@@ -747,6 +779,9 @@ class SafetyWorkMain extends Component {
               </StyledButton>
             </>
           )}
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('workProcess', true)}>
+            결재선
+          </StyledButton>
         </StyledButtonWrapper>
         <ContentsWrapper>
           <SafetyWorkInfo
@@ -849,6 +884,22 @@ class SafetyWorkMain extends Component {
           {modalType === 'riskAssessment' && (
             <BizBuilderBase sagaKey="riskAssessment" workSeq={12061} viewType="LIST" listMetaSeq={14561} customOnRowClick={this.selectRiskAssessment} />
           )}
+          {modalType === 'workProcess' && (
+            <>
+              <CustomWorkProcess
+                processRule={processRule}
+                PRC_ID={PRC_ID}
+                draftId={formData.DRAFT_ID || -1}
+                viewType={formData.DRAFT_ID ? 'VIEW' : 'INPUT'}
+                setProcessRule={(_, prcRule) => this.setState({ processRule: prcRule })}
+              />
+              <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+                <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.handleModal('', false)}>
+                  닫기
+                </StyledButton>
+              </StyledButtonWrapper>
+            </>
+          )}
         </AntdModal>
       </Styled>
     );
@@ -857,8 +908,11 @@ class SafetyWorkMain extends Component {
 
 SafetyWorkMain.propTypes = {
   // type - number
+  prcId: PropTypes.number,
   // type - string
   sagaKey: PropTypes.string,
+  relKey: PropTypes.string,
+  relKey2: PropTypes.string,
   // type - object
   result: PropTypes.object,
   profile: PropTypes.object,
