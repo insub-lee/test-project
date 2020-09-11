@@ -61,7 +61,7 @@ class MdcsProcessListComp extends Component {
     // 추가로직 (기본값 Mig = N)
     let isMig = MIG_YN === '' ? 'N' : 'Y';
     // 현행화 20년 9월 1일 이후에 등록된 결재프로세스일 경우 isMig = N
-    if (REG_DTTM >= moment('20200901', 'YYYYMMDD')) {
+    if (REG_DTTM && moment(REG_DTTM) >= moment('20200901', 'YYYYMMDD')) {
       isMig = 'N';
     }
     const url = '/api/workflow/v1/common/process/ProcessPreviewHandler';
