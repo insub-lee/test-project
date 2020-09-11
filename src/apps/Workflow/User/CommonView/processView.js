@@ -52,7 +52,16 @@ class ProcessView extends Component {
       key: 'APPV_STATUS',
       width: '11%',
       align: 'center',
-      render: (text, record) => (text === '2' ? '승인' : text === '3' ? '홀드' : '대기'),
+      render: text => {
+        switch (text) {
+          case 2:
+            return '승인';
+          case 3:
+            return '홀드';
+          default:
+            return '대기';
+        }
+      },
     },
     {
       title: '결재일',

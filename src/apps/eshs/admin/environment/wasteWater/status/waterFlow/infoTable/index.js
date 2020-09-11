@@ -44,7 +44,7 @@ class WaterFlowStatusTable extends Component {
         },
       },
       {
-        title: 'Key-Foundry 반도체',
+        title: 'Magnachip 반도체',
         width: '70%',
         children: [
           {
