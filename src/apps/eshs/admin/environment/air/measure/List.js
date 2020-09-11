@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { DatePicker, Select, message, Button } from 'antd';
+import { DatePicker, Select, message, Button, Modal } from 'antd';
 import { FileExcelOutlined } from '@ant-design/icons';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
@@ -10,15 +10,17 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledCustomSearch from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-
 import Moment from 'moment';
+import ExcelParser from './excelParser';
 
 const { Option } = Select;
 const { MonthPicker } = DatePicker;
 
 const AntdSelect = StyledSelect(Select);
 const AntdMonthPicker = StyledDatePicker(MonthPicker);
+const AntdModal = StyledContentsModal(Modal);
 const AntdButton = StyledAntdButton(Button);
 
 Moment.locale('ko');
@@ -29,36 +31,39 @@ class List extends Component {
     this.state = {
       measureList: [],
       dateStrings: Moment().format('YYYY-MM'),
+      gasList: ['HCl', 'HF', 'HCHO', 'Cr', 'Pb', 'Ni', 'As', '벤젠', '페놀', 'NH3', 'Sox', 'Nox', '먼지', 'THC', '악취'],
       seq: 1,
       selectGubun: 1,
+      modalTitle: '',
+      modalVisible: false,
     };
   }
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    const apiAry = [
-      {
-        key: 'gasType',
-        url: '/api/eshs/v1/common/eshsgastype',
-        type: 'GET',
-      },
-    ];
-    this.isSearch();
-    getCallDataHandler(id, apiAry, this.initData);
+    // const { sagaKey: id, getCallDataHandler } = this.props;
+    // const apiAry = [
+    //   {
+    //     key: 'gasType',
+    //     url: '/api/eshs/v1/common/eshsgastype',
+    //     type: 'GET',
+    //   },
+    // ];
+    // this.isSearch();
+    // getCallDataHandler(id, apiAry, this.initData);
   }
 
-  initData = () => {
-    const { result } = this.props;
-    const gasList = result && result.gasType && result.gasType.list;
-    this.setState({ gasList });
-  };
+  // initData = () => {
+  //   const { result } = this.props;
+  //   const gasList = result && result.gasType && result.gasType.list;
+  //   this.setState({ gasList });
+  // };
 
   isSearch = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const { dateStrings, seq } = this.state;
 
     // 해당월의 마지막 날짜 구하기
-    let arr = dateStrings.split('-');
+    const arr = dateStrings.split('-');
     const date = new Date(Number(arr[0]), Number(arr[1]), 0);
     const lastDateStr = Moment(date).format('YYYY-MM-DD');
 
@@ -115,8 +120,28 @@ class List extends Component {
     return calculateData;
   };
 
+  // 모달 핸들러
+  handleModal = (type, visible) => {
+    let title = '';
+    switch (type) {
+      case 'EXCEL':
+        title = '대기측정결과 업로드';
+        this.setState({
+          modalTitle: title,
+          modalVisible: visible,
+        });
+        break;
+      default:
+        this.setState({
+          modalTitle: title,
+          modalVisible: visible,
+        });
+        break;
+    }
+  };
+
   render() {
-    const { measureList, gasList, selectGubun } = this.state;
+    const { measureList, gasList, selectGubun, modalTitle, modalVisible } = this.state;
 
     return (
       <StyledContentsWrapper>
@@ -139,7 +164,7 @@ class List extends Component {
                 onChange={(date, dateStrings) => this.dateChange(dateStrings)}
               />
             </div>
-            <span className="text-label">측정회차(월)</span>
+            <span className="text-label">측정회차</span>
             <AntdSelect className="select-sm" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
               <Option value={1} key="seq">
                 1
@@ -156,9 +181,9 @@ class List extends Component {
           </div>
         </StyledCustomSearch>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <AntdButton className="btn-gray btn-xs" onClick={() => message.info('개발 중 입니다.')}>
+          <AntdButton className="btn-gray btn-xs" onClick={() => this.handleModal('EXCEL', true)}>
             <FileExcelOutlined />
-            엑셀 올리기
+            엑셀 업로드
           </AntdButton>
         </StyledButtonWrapper>
         {measureList ? (
@@ -172,7 +197,7 @@ class List extends Component {
                   <th style={{ position: 'sticky', top: 0 }}>측정일자</th>
                   <th style={{ position: 'sticky', top: 0 }}>분당 배출량</th>
                   <th style={{ position: 'sticky', top: 0 }}>시간당 배출량</th>
-                  {gasList && gasList.map(item => <th style={{ position: 'sticky', top: 0 }}>{item.GAS_CD}</th>)}
+                  {gasList && gasList.map(item => <th style={{ position: 'sticky', top: 0 }}>{item}</th>)}
                 </tr>
                 {measureList.map(item => (
                   <tr>
@@ -180,7 +205,7 @@ class List extends Component {
                     <td>{item.STACK_CD}</td>
                     <td>{item.IS_MEASURE}</td>
                     <td>{item.MEASURE_DT}</td>
-                    <td>{item.MINUTE_FLOW}</td>
+                    <td>{item.MINUTE_FLOW.toFixed(2)}</td>
                     <td>{item.HOUR_FLOW}</td>
                     <>
                       {selectGubun === 1 ? (
@@ -189,7 +214,7 @@ class List extends Component {
                             gasList.map(gasType => (
                               <td>
                                 {item.GAS.map(gasItem => (
-                                  <>{gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD ? JSON.parse(gasItem.value).DENSITY : undefined}</>
+                                  <>{gasType === JSON.parse(gasItem.value).GAS_CD ? JSON.parse(gasItem.value).DENSITY : undefined}</>
                                 ))}
                               </td>
                             ))}
@@ -201,9 +226,9 @@ class List extends Component {
                               <td>
                                 {item.GAS.map(gasItem => (
                                   <>
-                                    {gasType.GAS_CD === JSON.parse(gasItem.value).GAS_CD
+                                    {gasType === JSON.parse(gasItem.value).GAS_CD
                                       ? this.calculate(
-                                          gasType.GAS_CD,
+                                          gasType,
                                           item.HOUR_FLOW,
                                           JSON.parse(gasItem.value).DENSITY,
                                           item.WORK_DAY,
@@ -225,6 +250,19 @@ class List extends Component {
         ) : (
           ''
         )}
+        <AntdModal
+          className="modal-table-pad"
+          title={modalTitle}
+          width="40%"
+          visible={modalVisible}
+          footer={null}
+          destroyOnClose
+          maskClosable={false}
+          onOk={() => this.handleModal('', false)}
+          onCancel={() => this.handleModal('', false)}
+        >
+          <ExcelParser getUploadList={this.getUploadList} />
+        </AntdModal>
       </StyledContentsWrapper>
     );
   }
