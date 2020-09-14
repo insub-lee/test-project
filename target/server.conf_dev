@@ -38,7 +38,7 @@
             #expires off;
     }
     
-            location ~ ^(/api/common/v1/auth/login) {
+    location ~ ^(/api/common/v1/auth/login) {
             proxy_pass  http://portal-auth;
             proxy_connect_timeout 60;
             proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
