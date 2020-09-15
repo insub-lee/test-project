@@ -267,7 +267,12 @@ class WorkProcessModal extends Component {
     const tempPrcStep = prcStep.map(step => {
       if (step.NODE_ID === nodeId) {
         const { APPV_MEMBER: appvList } = step;
-        const idx = appvList.findIndex(f => f.USER_ID === user.USER_ID);
+        let idx = -1;
+        if (nodeId === 110) {
+          idx = appvList.findIndex(f => f.DEPT_ID === user.DEPT_ID);
+        } else {
+          idx = appvList.findIndex(f => f.USER_ID === user.USER_ID);
+        }
         if (idx > -1) appvList.splice(idx, 1);
       }
       return step;
@@ -338,7 +343,7 @@ class WorkProcessModal extends Component {
     const { NODE_TYPE } = selectedNode;
     if (NODE_TYPE === 'ND') {
       this.setState({ selectedDeptKeys: [DEPT_ID] }, () => {
-        //handler
+        // handler
         const prcRuleId = selectedNode.PRC_RULE_ID;
         const nodeId = selectedNode.NODE_ID;
         const nodeType = selectedNode.NODE_TYPE;
@@ -355,7 +360,7 @@ class WorkProcessModal extends Component {
     const { NODE_TYPE } = selectedNode;
     if (NODE_TYPE !== 'ND') {
       this.setState({ selectedUserKeys: [USER_ID] }, () => {
-        //handler
+        // handler
         const prcRuleId = selectedNode.PRC_RULE_ID;
         const nodeId = selectedNode.NODE_ID;
         const nodeType = selectedNode.NODE_TYPE;
