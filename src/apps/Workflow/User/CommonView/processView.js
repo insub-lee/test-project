@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Table } from 'antd';
-
+import moment from 'moment';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 const AntdTable = StyledAntdTable(Table);
@@ -82,13 +82,18 @@ class ProcessView extends Component {
     const { submitHandlerBySaga, selectedRow } = this.props;
     const { DRAFT_ID } = selectedRow;
     const {
-      result: { MIG_YN, DOCNUMBER, END_DTTM },
+      result: { REG_DTTM, MIG_YN, DOCNUMBER, END_DTTM },
     } = response;
     this.setState({ DOCNUMBER, END_DTTM });
+    let isMig = MIG_YN === '' ? 'N' : 'Y';
+    // 현행화 20년 9월 1일 이후에 등록된 결재프로세스일 경우 isMig = N
+    if (REG_DTTM && moment(REG_DTTM) >= moment('20200901', 'YYYYMMDD')) {
+      isMig = 'N';
+    }
     const submitParam = {
       PARAM: {
         draftId: DRAFT_ID,
-        isMig: MIG_YN,
+        isMig,
       },
     };
     const fixUrl = '/api/workflow/v1/common/process/ProcessPreviewHandler';
