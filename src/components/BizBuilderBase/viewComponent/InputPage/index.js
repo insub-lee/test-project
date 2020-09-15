@@ -27,11 +27,13 @@ class InputPage extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getProcessRule, workInfo, workPrcProps, relType, setRelType } = this.props;
+    const { sagaKey: id, getProcessRule, workInfo, workPrcProps, relType, setRelType, formData } = this.props;
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
-
+    // 기존 결재 정보가 존재할 경우, 기존 결재정보를 가져오기 위해 OBS_DRAFT_ID를 가져옴 || 없을 경우 -1
+    const obsDraftId = formData.OBS_DRAFT_ID || -1;
+    const isRevision = formData.IS_REVISION || false;
     if (workInfo.BUILDER_STYLE_PATH) {
       // const StyledWrap = Loadable({
       //   loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
@@ -40,12 +42,13 @@ class InputPage extends Component {
       const StyledWrap = DefaultStyleInfo(workInfo.BUILDER_STYLE_PATH);
       this.setState({ StyledWrap });
     }
-
     if (isWorkflowUsed && prcId !== -1) {
       const payload = {
         PRC_ID: Number(prcId),
         DRAFT_DATA: {
           ...workPrcProps,
+          obsDraftId,
+          isRevision,
         },
       };
       getProcessRule(id, payload);

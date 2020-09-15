@@ -48,12 +48,13 @@ class ExcelParser extends Component {
     let WORK_DAY = 0;
     data.forEach((row, index) => {
       console.debug(`row-${index}`, row);
+      const stack = row[1];
+      // 월간일수 설정
       if (index === 1) {
-        const { workDay } = row[21];
+        const workDay = row[21];
         WORK_DAY = workDay;
       }
     });
-    console.debug('workDay', WORK_DAY);
     return [];
   };
 
