@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { DatePicker, Select, message, Button, Modal } from 'antd';
+import { DatePicker, Select, Button, Modal } from 'antd';
 import { FileExcelOutlined } from '@ant-design/icons';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
@@ -12,6 +12,8 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import Moment from 'moment';
 import ExcelParser from './excelParser';
 
@@ -29,6 +31,7 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isUpload: false,
       measureList: [],
       dateStrings: Moment().format('YYYY-MM'),
       gasList: ['HCl', 'HF', 'HCHO', 'Cr', 'Pb', 'Ni', 'As', '벤젠', '페놀', 'NH3', 'Sox', 'Nox', '먼지', 'THC', '악취'],
@@ -38,25 +41,6 @@ class List extends Component {
       modalVisible: false,
     };
   }
-
-  componentDidMount() {
-    // const { sagaKey: id, getCallDataHandler } = this.props;
-    // const apiAry = [
-    //   {
-    //     key: 'gasType',
-    //     url: '/api/eshs/v1/common/eshsgastype',
-    //     type: 'GET',
-    //   },
-    // ];
-    // this.isSearch();
-    // getCallDataHandler(id, apiAry, this.initData);
-  }
-
-  // initData = () => {
-  //   const { result } = this.props;
-  //   const gasList = result && result.gasType && result.gasType.list;
-  //   this.setState({ gasList });
-  // };
 
   isSearch = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
@@ -140,8 +124,38 @@ class List extends Component {
     }
   };
 
+  // 엑셀파일 등록시 - 추출된 데이터 가져오기 및 모달 닫기
+  getUploadList = (arr1, arr2) => {
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    this.setState({ isUpload: true });
+    const submitData = {
+      PARAM: {
+        type: 'EXCEL',
+        EXCEL_DATA1: arr1,
+        EXCEL_DATA2: arr2,
+      },
+    };
+    submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsmeasure', submitData, this.uploadExcelCallback);
+  };
+
+  uploadExcelCallback = (id, response) => {
+    const { result } = response;
+    if (result === -1) {
+      this.setState({
+        isUpload: false,
+      });
+      return message.error(<MessageContent>대기측정결과 저장에 실패하였습니다.</MessageContent>);
+    }
+    this.setState({
+      modalTitle: '',
+      modalVisible: false,
+      isUpload: false,
+    });
+    return message.success(<MessageContent>대기측정결과가 저장되었습니다.</MessageContent>);
+  };
+
   render() {
-    const { measureList, gasList, selectGubun, modalTitle, modalVisible } = this.state;
+    const { measureList, gasList, selectGubun, modalTitle, modalVisible, isUpload } = this.state;
 
     return (
       <StyledContentsWrapper>
@@ -261,7 +275,7 @@ class List extends Component {
           onOk={() => this.handleModal('', false)}
           onCancel={() => this.handleModal('', false)}
         >
-          <ExcelParser getUploadList={this.getUploadList} />
+          <ExcelParser getUploadList={this.getUploadList} isUpload={isUpload} />
         </AntdModal>
       </StyledContentsWrapper>
     );
@@ -271,6 +285,7 @@ class List extends Component {
 List.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
   result: PropTypes.any,
 };
 
