@@ -73,8 +73,8 @@ class CustomSelectSearchComp extends React.Component {
     } = this.props;
     const { searchType, searchText, selectList } = this.state;
     return (
-      <>
-        <AntdSelect
+      <div style={{ display: 'flex' }}>
+        <Select
           placeholder={placeholder || '검색구분'}
           style={{ width: '100px' }}
           onChange={value => {
@@ -88,15 +88,15 @@ class CustomSelectSearchComp extends React.Component {
               {item.NAME_KOR}
             </Option>
           ))}
-        </AntdSelect>
-        <AntdInput
+        </Select>
+        <Input
           style={{ width: '100px', marginLeft: '5px' }}
           readOnly={!searchType}
           placeholder="검색어"
           onChange={e => this.handleOnChange('searchText', e.target.value)}
-          className="ant-input-sm mr5 ant-input-block"
+          className="ant-input-sm"
         />
-      </>
+      </div>
     );
   }
 }

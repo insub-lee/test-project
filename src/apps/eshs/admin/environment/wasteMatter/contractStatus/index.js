@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
-
+import CustomList from 'apps/eshs/admin/environment/wasteMatter/contractStatus/CustomList';
 class ContractStatus extends Component {
   componentDidMount() {}
 
@@ -20,7 +20,9 @@ class ContractStatus extends Component {
         listMetaSeq={4761}
         taskSeq={-1}
         viewType="LIST"
+        CustomListPage={CustomList}
         loadingComplete={this.loadingComplete}
+        conditional={`AND W.SITE = '716'`}
       />
     );
   }
