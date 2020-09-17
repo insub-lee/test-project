@@ -115,15 +115,14 @@ class GetEducationMemberComp extends React.Component {
 
   sendEmail = () => {
     const { sagaKey, getExtraApiData } = this.props;
-    const { dataSource, TEST_TO } = this.state;
+    const { dataSource } = this.state;
 
     const apiArr = [
       {
         key: 'sendEmail',
         url: '/api/eshs/v1/common/eshsEducationSendEmail',
         type: 'POST',
-        params: { PARAM: { userList: dataSource.map(user => user.EDU_USER_ID), TEST_TO } }, // test용
-        // params: { PARAM: { userList: dataSource.map(user => user.EDU_USER_ID)} },
+        params: { PARAM: { userList: dataSource.filter(user => user.PERSG !== '3').map(user => user.EDU_USER_ID) } }, // 퇴직자 제외
       },
     ];
 
@@ -163,29 +162,9 @@ class GetEducationMemberComp extends React.Component {
             </StyledCustomSearchWrapper>
             {dataSource.length && this.props.selectSecondEducationTarget ? (
               <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-                <AntdInput
-                  className="ant-input-sm mr5"
-                  onChange={e => this.setState({ TEST_TO: e.target.value })}
-                  placeholder="테스트 이메일 입력"
-                  allowClear
-                  style={{ width: 200 }}
-                />
-                <Popconfirm
-                  title="메일 전송하시겠습니까?"
-                  onConfirm={() => (TEST_TO ? this.sendEmail() : message.info(<MessageContent>테스트 이메일을 입력하십시오.</MessageContent>))}
-                  okText="보내기"
-                  cancelText="취소"
-                >
+                <Popconfirm title="메일 전송하시겠습니까?" onConfirm={this.sendEmail} okText="보내기" cancelText="취소">
                   <StyledButton className="btn-gray btn-sm">메일 전송</StyledButton>
                 </Popconfirm>
-                {/* <Popconfirm
-                  title="메일 전송하시겠습니까?"
-                  onConfirm={this.sendEmail}
-                  okText="보내기"
-                  cancelText="취소"
-                >
-                  <StyledButton className="btn-gray btn-sm">메일 전송</StyledButton>
-                </Popconfirm> */}
               </StyledButtonWrapper>
             ) : null}
             <AntdTable columns={columns} dataSource={dataSource} />
