@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, message } from 'antd';
+import { Table, Icon, message, Modal } from 'antd';
 import moment from 'moment';
 
 import BizBuilderBase from 'components/BizBuilderBase';
@@ -12,8 +12,11 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import { columns } from 'apps/eshs/common/Workflow/common/Columns';
 
 const AntdTable = StyledAntdTable(Table);
+const AntdModal = StyledAntdModal(Modal);
 
 class ApproveList extends Component {
   constructor(props) {
@@ -24,6 +27,10 @@ class ApproveList extends Component {
       workPrcProps: undefined,
       paginationIdx: 1,
       pageSize: 10,
+      modalObj: {
+        visible: false,
+        content: [],
+      },
     };
   }
 
@@ -35,67 +42,69 @@ class ApproveList extends Component {
     this.props.getApproveList(fixUrl, paginationIdx, pageSize, relTypes);
   }
 
-  getTableColumns = () => [
-    // {
-    //   title: 'No',
-    //   dataIndex: 'RNUM',
-    //   key: 'rnum',
-    //   width: '5%',
-    //   align: 'center',
-    // },
-    {
-      title: '종류',
-      dataIndex: 'APPVGUBUN',
-      key: 'APPVGUBUN',
-      width: '15%',
-      align: 'center',
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
-    },
-    {
-      title: '유형',
-      dataIndex: 'NODETYPE',
-      key: 'NODETYPE',
-      width: '9%',
-      align: 'center',
-      render: (text, record) => (record.APPV_USER_ID === record.ORG_APPV_USER_ID ? text : `${text}(위임결재)`),
-    },
-    {
-      title: '표준제목',
-      dataIndex: 'DRAFT_TITLE',
-      key: 'title',
-      ellipsis: true,
-    },
-    {
-      title: '결재상태',
-      dataIndex: 'APPV_STATUS_NM',
-      key: 'APPV_STATUS_NM',
-      width: '9%',
-      align: 'center',
-    },
-    {
-      title: '진행상태',
-      dataIndex: 'PROC_STATUS',
-      key: 'PROC_STATUS',
-      width: '9%',
-      align: 'center',
-      render: (text, record) => (text === 3 ? '홀드' : text === 2 ? '완료' : '진행중'),
-    },
-    {
-      title: '기안자',
-      dataIndex: 'NAME_KOR',
-      key: 'nameKor',
-      width: '10%',
-      align: 'center',
-    },
-    {
-      title: '결재일',
-      dataIndex: 'APPV_DTTM',
-      key: 'appv_dttm',
-      width: '10%',
-      align: 'center',
-      render: (text, record) => (text && text.length > 0 ? moment(text).format('YYYY-MM-DD') : text),
-    },
-  ];
+  handleModal = (visible = false, content = []) => this.setState({ modalObj: { visible, content } });
+
+  // getTableColumns = () => [
+  //   // {
+  //   //   title: 'No',
+  //   //   dataIndex: 'RNUM',
+  //   //   key: 'rnum',
+  //   //   width: '5%',
+  //   //   align: 'center',
+  //   // },
+  //   {
+  //     title: '종류',
+  //     dataIndex: 'APPVGUBUN',
+  //     key: 'APPVGUBUN',
+  //     width: '15%',
+  //     align: 'center',
+  //     render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
+  //   },
+  //   {
+  //     title: '유형',
+  //     dataIndex: 'NODETYPE',
+  //     key: 'NODETYPE',
+  //     width: '9%',
+  //     align: 'center',
+  //     render: (text, record) => (record.APPV_USER_ID === record.ORG_APPV_USER_ID ? text : `${text}(위임결재)`),
+  //   },
+  //   {
+  //     title: '표준제목',
+  //     dataIndex: 'DRAFT_TITLE',
+  //     key: 'title',
+  //     ellipsis: true,
+  //   },
+  //   {
+  //     title: '결재상태',
+  //     dataIndex: 'APPV_STATUS_NM',
+  //     key: 'APPV_STATUS_NM',
+  //     width: '9%',
+  //     align: 'center',
+  //   },
+  //   {
+  //     title: '진행상태',
+  //     dataIndex: 'PROC_STATUS',
+  //     key: 'PROC_STATUS',
+  //     width: '9%',
+  //     align: 'center',
+  //     render: (text, record) => (text === 3 ? '홀드' : text === 2 ? '완료' : '진행중'),
+  //   },
+  //   {
+  //     title: '기안자',
+  //     dataIndex: 'NAME_KOR',
+  //     key: 'nameKor',
+  //     width: '10%',
+  //     align: 'center',
+  //   },
+  //   {
+  //     title: '결재일',
+  //     dataIndex: 'APPV_DTTM',
+  //     key: 'appv_dttm',
+  //     width: '10%',
+  //     align: 'center',
+  //     render: (text, record) => (text && text.length > 0 ? moment(text).format('YYYY-MM-DD') : text),
+  //   },
+  // ];
 
   onRowClick = (record, rowIndex, e) => {
     const { WORK_SEQ, TASK_SEQ, STEP, PROC_STATUS, APPV_STATUS, DRAFT_DATA, DRAFT_ID } = record;
@@ -123,7 +132,7 @@ class ApproveList extends Component {
 
   render() {
     const { approveList, approveListCnt, selectedRow } = this.props;
-    const { currentStatus, draftNode, workPrcProps, paginationIdx } = this.state;
+    const { currentStatus, draftNode, workPrcProps, paginationIdx, modalObj } = this.state;
 
     return (
       <>
@@ -137,7 +146,7 @@ class ApproveList extends Component {
         <StyledContentsWrapper>
           <AntdTable
             key="apps-wasteMatter-workflow-user-approve-list"
-            columns={this.getTableColumns()}
+            columns={columns(this.handleModal)}
             dataSource={approveList}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
@@ -148,7 +157,7 @@ class ApproveList extends Component {
           />
         </StyledContentsWrapper>
         <div>
-          {this.props.viewVisible && (
+          {/* {this.props.viewVisible && (
             <DraggableModal key="wasteMatter-approveListKeys" title="내용보기" visible={this.props.viewVisible}>
               <BizBuilderBase
                 sagaKey="wasteMatter-approveBase_approveView"
@@ -168,7 +177,10 @@ class ApproveList extends Component {
                 )}
               />
             </DraggableModal>
-          )}
+          )} */}
+          {/* <AntdModal width={850} visible={modalObj.visible} title="기결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
+            {modalObj.content}
+          </AntdModal> */}
         </div>
       </>
     );

@@ -124,7 +124,7 @@ class CustomWorkProcess extends Component {
                 ? filterRule &&
                   filterRule.map((item, rowIndex) => (
                     <tr key={rowIndex}>
-                      <th>{item.NODE_NAME_KOR}</th>
+                      <th>{item.NAME_KOR}</th>
                       <td colSpan={colLength - 1}>
                         {item.APPV_MEMBER.map((user, colIndex) =>
                           item.NODE_TYPE === 'ND' ? (
@@ -148,7 +148,7 @@ class CustomWorkProcess extends Component {
                     .filter(item => item.VIEW_TYPE === 1)
                     .map((item, rowIndex) => (
                       <tr key={rowIndex}>
-                        <th>{item.NODE_NAME_KOR}</th>
+                        <th>{item.NAME_KOR}</th>
                         <td colSpan={colLength - 1}>
                           {item.APPV_MEMBER.map((user, colIndex) =>
                             item.NODE_TYPE === 'ND' ? (

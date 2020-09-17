@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon } from 'antd';
+import { Table, Icon, Modal } from 'antd';
 
 import moment from 'moment';
 
@@ -9,7 +9,13 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 
 import DraggableModal from 'components/DraggableModal';
-import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
+// import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
+import EshsAppView from 'apps/eshs/common/Workflow/EshsAppView';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+
+import { columns } from 'apps/eshs/common/Workflow/common/Columns';
+const AntdTable = StyledAntdTable(Table);
+const AntdModal = StyledAntdModal(Modal);
 
 const AntdLineTable = StyledAntdTable(Table);
 
@@ -19,6 +25,10 @@ class UnApproveList extends Component {
     this.state = {
       paginationIdx: 1,
       pageSize: 10,
+      modalObj: {
+        visible: false,
+        content: [],
+      },
     };
   }
 
@@ -30,53 +40,55 @@ class UnApproveList extends Component {
     getUnApproveList(prefixUrl, paginationIdx, pageSize, relTypes);
   }
 
-  getTableColumns = () => [
-    // {
-    //   title: 'No',
-    //   dataIndex: 'RNUM',
-    //   key: 'rnum',
-    //   width: '5%',
-    //   align: 'center',
-    // },
-    {
-      title: '종류',
-      dataIndex: 'APPVGUBUN',
-      key: 'APPVGUBUN',
-      width: '15%',
-      align: 'center',
-      render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
-    },
-    {
-      title: '유형',
-      dataIndex: 'NODETYPE',
-      key: 'NODETYPE',
-      width: '10%',
-      align: 'center',
-      render: (text, record) => (record.APPV_USER_ID === record.ORG_APPV_USER_ID ? text : `${text}(위임결재)`),
-    },
-    {
-      title: '제목',
-      dataIndex: 'DRAFT_TITLE',
-      key: 'title',
-      ellipsis: true,
-    },
+  handleModal = (visible = false, content = []) => this.setState({ modalObj: { visible, content } });
 
-    {
-      title: '기안자',
-      dataIndex: 'NAME_KOR',
-      key: 'nameKor',
-      width: '10%',
-      align: 'center',
-    },
-    {
-      title: '기안일',
-      dataIndex: 'REG_DTTM',
-      key: 'regDttm',
-      width: '10%',
-      align: 'center',
-      render: (text, record) => moment(text).format('YYYY-MM-DD'),
-    },
-  ];
+  // getTableColumns = () => [
+  //   // {
+  //   //   title: 'No',
+  //   //   dataIndex: 'RNUM',
+  //   //   key: 'rnum',
+  //   //   width: '5%',
+  //   //   align: 'center',
+  //   // },
+  //   {
+  //     title: '종류',
+  //     dataIndex: 'APPVGUBUN',
+  //     key: 'APPVGUBUN',
+  //     width: '15%',
+  //     align: 'center',
+  //     render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
+  //   },
+  //   {
+  //     title: '유형',
+  //     dataIndex: 'NODETYPE',
+  //     key: 'NODETYPE',
+  //     width: '10%',
+  //     align: 'center',
+  //     render: (text, record) => (record.APPV_USER_ID === record.ORG_APPV_USER_ID ? text : `${text}(위임결재)`),
+  //   },
+  //   {
+  //     title: '제목',
+  //     dataIndex: 'DRAFT_TITLE',
+  //     key: 'title',
+  //     ellipsis: true,
+  //   },
+
+  //   {
+  //     title: '기안자',
+  //     dataIndex: 'NAME_KOR',
+  //     key: 'nameKor',
+  //     width: '10%',
+  //     align: 'center',
+  //   },
+  //   {
+  //     title: '기안일',
+  //     dataIndex: 'REG_DTTM',
+  //     key: 'regDttm',
+  //     width: '10%',
+  //     align: 'center',
+  //     render: (text, record) => moment(text).format('YYYY-MM-DD'),
+  //   },
+  // ];
 
   onRowClick = (record, rowIndex, e) => {
     this.props.setSelectedRow(record);
@@ -97,7 +109,7 @@ class UnApproveList extends Component {
 
   render() {
     const { unApproveList, unApproveListCnt, viewVisible } = this.props;
-    const { paginationIdx } = this.state;
+    const { paginationIdx, modalObj } = this.state;
 
     return (
       <>
@@ -111,7 +123,7 @@ class UnApproveList extends Component {
         <StyledContentsWrapper>
           <AntdLineTable
             key="apps-workflow-user-unapprove-list"
-            columns={this.getTableColumns()}
+            columns={columns(this.handleModal)}
             dataSource={unApproveList}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
@@ -122,11 +134,16 @@ class UnApproveList extends Component {
           />
         </StyledContentsWrapper>
 
-        {viewVisible && (
+        {/* {viewVisible && (
           <DraggableModal key="upApproveListKeys" title="표준문서 결재" visible={viewVisible}>
             <MdcsAppvView {...this.props} />
-          </DraggableModal>
-        )}
+            </DraggableModal>
+          )} */}
+
+        <AntdModal width={850} visible={modalObj.visible} title="미결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
+          <EshsAppView {...this.props} />
+          {modalObj.content}
+        </AntdModal>
       </>
     );
   }
