@@ -12,6 +12,7 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import DeptSelect from 'components/DeptSelect';
 import moment from 'moment';
 
+const currentYear = moment().format('YYYY');
 const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
 const AntdModal = StyledAntdModal(Modal);
@@ -22,7 +23,7 @@ class List extends React.Component {
     this.state = {
       dataSource: [],
       searchValue: {
-        chkYear: '',
+        chkYear: currentYear,
         deptCd: '',
         // chkYear: '2015',
         // deptCd: 'MN3T',
@@ -331,10 +332,6 @@ class List extends React.Component {
     },
   ];
 
-  componentDidMount() {
-    this.getDataSource();
-  }
-
   getDataSource = () => {
     const { setDataSource } = this;
     const { searchValue } = this.state;
@@ -347,13 +344,14 @@ class List extends React.Component {
       },
     ];
 
-    getExtraApiData(id, apiArr, searchValue.chkYear && searchValue.deptCd ? setDataSource : null);
+    getExtraApiData(id, apiArr, searchValue.chkYear && searchValue.deptCd ? setDataSource : () => {});
   };
 
   setDataSource = () => {
     const { extraApiData } = this.props;
+    const list = (extraApiData && extraApiData.toolboxList && extraApiData.toolboxList.list) || [];
     this.setState({
-      dataSource: (extraApiData.toolboxList && extraApiData.toolboxList.list) || [],
+      dataSource: list[0] === null ? [] : list,
     });
   };
 
@@ -388,26 +386,19 @@ class List extends React.Component {
   };
 
   handleDeptSelect = dept => {
-    const { getDataSource } = this;
     const deptInfo = { deptCd: dept.DEPT_CD, deptNm: dept.NAME_KOR };
-    this.setState(
-      prevState => ({
-        searchValue: Object.assign(prevState.searchValue, deptInfo),
-        modalVisible: false,
-      }),
-      getDataSource,
-    );
+    this.setState(prevState => ({
+      searchValue: Object.assign(prevState.searchValue, deptInfo),
+      modalVisible: false,
+    }));
     // this.setState({ modalVisible: false }, this.handleSearchChange('deptCd', dept.DEPT_CD));
   };
 
   handleInputChange = (key, id, value) => {
     const valueObj = { [id + key.substring(1)]: { DETAIL_ID: id, COLUMN: key, VALUE: value } };
-    this.setState(
-      prevState => ({
-        requestValue: Object.assign(prevState.requestValue, valueObj),
-      }),
-      this.getDataSource,
-    );
+    this.setState(prevState => ({
+      requestValue: Object.assign(prevState.requestValue, valueObj),
+    }));
   };
 
   handleOnSaveClick = () => {
@@ -471,7 +462,7 @@ class List extends React.Component {
               <span className="text-label">연도</span>
               <AntdSelect
                 className="select-sm mr5 ml5"
-                defaultValue={moment().format('YYYY')}
+                defaultValue={currentYear}
                 onChange={value => handleSearchYearChange('chkYear', value)}
                 style={{ width: 100 }}
               >
