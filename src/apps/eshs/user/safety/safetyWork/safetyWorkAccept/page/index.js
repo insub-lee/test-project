@@ -159,28 +159,33 @@ class SafetyWorkMain extends Component {
   };
 
   render() {
+    const { isWorkFlow } = this.props;
     const { modalType, modalTitle, modalVisible, formData } = this.state;
     return (
       <>
-        <StyledCustomSearchWrapper>
-          <div className="search-input-area">
-            <span className="text-label">작업번호</span>
-            <AntdSearch
-              className="ant-search-inline input-search-mid mr5"
-              onClick={() => this.handleModal('safetyWork', true)}
-              value={formData.WORK_NO}
-              style={{ width: '200px', marginRight: '10px' }}
-            />
-            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
-              검색
-            </StyledButton>
-          </div>
-        </StyledCustomSearchWrapper>
-        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => alert('수정 관리자')}>
-            수정 [관리자]
-          </StyledButton>
-        </StyledButtonWrapper>
+        {!isWorkFlow && (
+          <>
+            <StyledCustomSearchWrapper>
+              <div className="search-input-area">
+                <span className="text-label">작업번호</span>
+                <AntdSearch
+                  className="ant-search-inline input-search-mid mr5"
+                  onClick={() => this.handleModal('safetyWork', true)}
+                  value={formData.WORK_NO}
+                  style={{ width: '200px', marginRight: '10px' }}
+                />
+                <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
+                  검색
+                </StyledButton>
+              </div>
+            </StyledCustomSearchWrapper>
+            <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => alert('수정 관리자')}>
+                수정 [관리자]
+              </StyledButton>
+            </StyledButtonWrapper>
+          </>
+        )}
         <SafetyWorkInfo
           formData={formData}
           handleModal={this.handleModal}
@@ -227,6 +232,7 @@ SafetyWorkMain.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandlerReturnRes: PropTypes.func,
   workNo: PropTypes.string,
+  isWorkFlow: PropTypes.bool,
 };
 
 export default SafetyWorkMain;
