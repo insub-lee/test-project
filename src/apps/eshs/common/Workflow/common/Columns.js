@@ -15,7 +15,22 @@ export const columns = handleModal => [
     key: 'APPVGUBUN',
     width: '15%',
     align: 'center',
-    render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
+    render: (text, record) => {
+      let label = '';
+      switch (record.REL_TYPE) {
+        case 99:
+          label = '폐기';
+          break;
+        case 999:
+          label = '일괄폐기';
+          break;
+        default:
+          label = text;
+          break;
+      }
+      if (!label) label = record.REL_KEY;
+      return label;
+    },
   },
   {
     title: '제목',
@@ -23,7 +38,7 @@ export const columns = handleModal => [
     key: 'title',
     ellipsis: true,
     render: (text, record) => (
-      <StyledButton className="btn-link btn-sm" onClick={() => handleModal(true, [<SafetyWorkView workNo={record.REL_KEY2} />])}>
+      <StyledButton className="btn-link btn-sm" onClick={() => handleModal(true, [<SafetyWorkView workNo={record.REL_KEY2} isWorkFlow />])}>
         {text}
       </StyledButton>
     ),
@@ -38,8 +53,8 @@ export const columns = handleModal => [
   },
   {
     title: '상태',
-    dataIndex: 'STATUS_NM',
-    key: 'STATUS_NM',
+    dataIndex: 'STATUS',
+    key: 'STATUS',
     width: '8%',
     align: 'center',
   },

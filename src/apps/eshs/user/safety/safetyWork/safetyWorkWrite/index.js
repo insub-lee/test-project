@@ -9,7 +9,7 @@ import safetyWorkWrite from './page';
 
 const safetyWork = () => (
   <Styeld>
-    <BizMicroDevBase component={safetyWorkWrite} relKey="EHS_SWTB_SAFETY_WORK" relKey2="WORK_NO" sagaKey="safetyWork" prcId={110} />
+    <BizMicroDevBase component={safetyWorkWrite} relKey="안전작업허가" relKey2="WORK_NO" sagaKey="safetyWork" prcId={110} />
   </Styeld>
 );
 
