@@ -1,5 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Input, Button, Checkbox, Popconfirm } from 'antd';
 
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
@@ -169,7 +170,7 @@ class ItemTable extends Component {
   };
 
   render() {
-    const { formData } = this.props;
+    const { formData, handleModal } = this.props;
     const { rowSelections } = this.state;
     const searchFlag = (formData && formData.searchFlag) || false;
     const itemList = (formData && formData.itemList) || [];
@@ -190,7 +191,7 @@ class ItemTable extends Component {
           />
           {!searchFlag && (
             <>
-              <StyledButton className="btn-gray btn-sm ml5 mr5" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
+              <StyledButton className="btn-gray btn-sm ml5 mr5" onClick={() => handleModal('EXCEL_UPLOAD', true)}>
                 Excel Upload
               </StyledButton>
               <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.handleAction('SAVE')}>
@@ -321,5 +322,13 @@ class ItemTable extends Component {
     );
   }
 }
-ItemTable.defaultProps = {};
+
+ItemTable.propTypes = {
+  handleModal: PropTypes.func,
+};
+
+ItemTable.defaultProps = {
+  handleModal: () => false,
+};
+
 export default ItemTable;
