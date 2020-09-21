@@ -1,5 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Input, Checkbox, Popconfirm, Popover } from 'antd';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -188,7 +189,7 @@ class ItemTable extends Component {
   };
 
   render() {
-    const { formData } = this.props;
+    const { formData, handleModal } = this.props;
     const { rowSelections } = this.state;
     const searchFlag = (formData && formData.searchFlag) || false;
     const itemList = (formData && formData.itemList) || [];
@@ -209,15 +210,15 @@ class ItemTable extends Component {
           />
           {!searchFlag && (
             <>
-              <StyledButton className="btn-gray btn-sm mr5 ml5" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
+              <StyledButton className="btn-gray btn-sm ml5" onClick={() => handleModal('EXCEL_UPLOAD', true)}>
                 Excel Upload
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm m5" onClick={() => this.handleAction('SAVE')}>
+              <StyledButton className="btn-primary btn-sm ml5" onClick={() => this.handleAction('SAVE')}>
                 추가
               </StyledButton>
               {btnOk && (
                 <>
-                  <StyledButton className="btn-primary btn-sm m5" onClick={() => this.handleAction('UPDATE')}>
+                  <StyledButton className="btn-primary btn-sm ml5" onClick={() => this.handleAction('UPDATE')}>
                     수정
                   </StyledButton>
                   <Popconfirm
@@ -226,9 +227,9 @@ class ItemTable extends Component {
                     okText="확인"
                     cancelText="취소"
                   >
-                    <StyledButton className="btn-light btn-sm mr5">삭제</StyledButton>
+                    <StyledButton className="btn-light btn-sm ml5">삭제</StyledButton>
                   </Popconfirm>
-                  <StyledButton className="btn-light btn-sm" onClick={() => this.handleAction('RESET')}>
+                  <StyledButton className="btn-light btn-sm ml5" onClick={() => this.handleAction('RESET')}>
                     Reset
                   </StyledButton>
                 </>
@@ -479,5 +480,13 @@ class ItemTable extends Component {
     );
   }
 }
-ItemTable.defaultProps = {};
+
+ItemTable.propTypes = {
+  handleModal: PropTypes.func,
+};
+
+ItemTable.defaultProps = {
+  handleModal: () => false,
+};
+
 export default ItemTable;
