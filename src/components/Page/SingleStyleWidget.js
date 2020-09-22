@@ -31,7 +31,7 @@ const SingleStyleWidget = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty,
       .noWidgetWrapper {
@@ -210,7 +210,7 @@ const SingleStyleWidget = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty,
       .noWidgetWrapper {
@@ -389,7 +389,7 @@ const SingleStyleWidget = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty,
       .noWidgetWrapper {
@@ -568,7 +568,7 @@ const SingleStyleWidget = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty,
       .noWidgetWrapper {
@@ -747,7 +747,7 @@ const SingleStyleWidget = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty,
       .noWidgetWrapper {
@@ -926,7 +926,7 @@ const SingleStyleWidget = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty,
       .noWidgetWrapper {
@@ -1105,7 +1105,7 @@ const SingleStyleWidget = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty,
       .noWidgetWrapper {
@@ -1284,7 +1284,7 @@ const SingleStyleWidget = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty,
       .noWidgetWrapper {
