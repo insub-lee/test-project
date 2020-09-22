@@ -207,15 +207,15 @@ class ItemTable extends Component {
 
     switch (approvalStatus) {
       case 'REVIEWING':
-        statusMsg = '현재 결재중입니다. 검토자만 수정할 수 있습니다.';
+        statusMsg = '(결재중) 검토자만 수정할 수 있습니다.';
         btnOk = true; // 검토자만 권한 추가시 수정
         break;
       case 'DOING':
-        statusMsg = '현재 결재중입니다. 수정할 수 없습니다.';
+        statusMsg = '(결재중) 수정할 수 없습니다.';
         btnOk = false;
         break;
       case 'COMPLETE':
-        statusMsg = '결재가 완료되었습니다. 조회만 할 수 있습니다.';
+        statusMsg = '(결재완료) 조회만 할 수 있습니다.';
         btnOk = false;
         break;
       case 'NOTHING':
