@@ -37,13 +37,13 @@ import themes from '../../../config/themes';
 
 import AppWrapper from './AppWrapper';
 import Header from '../components/Header';
-// import MenuCategory from './MenuCategory';
+import MenuCategory from './MenuCategory';
 import StyledContainer from './StyledContainer';
 // import UserCategoryMenu from './UserCategoryMenu';
 import ErrorPage from './ErrorPage';
 import { DraggableModalProvider } from 'components/DraggableModal/AntdDraggableModal';
 /* Code Split */
-const MenuCategory = Loadable({ loader: () => import('./MenuCategory') });
+// const MenuCategory = Loadable({ loader: () => import('./MenuCategory') });
 // const UserCategoryMenu = Loadable({ loader: () => import('./UserCategoryMenu') });
 const UserCategoryLeftMenu = Loadable({ loader: () => import('./UserCategoryLeftMenu') });
 const UserMenuCard = Loadable({ loader: () => import('./UserMenuCard') });
