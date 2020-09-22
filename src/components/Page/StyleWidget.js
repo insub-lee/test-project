@@ -29,7 +29,7 @@ const WidgetWrapper = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty, .noWidgetWrapper {
         .noWCIcon {
@@ -233,7 +233,7 @@ const WidgetWrapper = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty, .noWidgetWrapper {
         .noWCIcon {
@@ -408,7 +408,7 @@ const WidgetWrapper = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty, .noWidgetWrapper {
         .noWCIcon {
@@ -583,7 +583,7 @@ const WidgetWrapper = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty, .noWidgetWrapper {
         .noWCIcon {
@@ -757,7 +757,7 @@ const WidgetWrapper = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty, .noWidgetWrapper {
         .noWCIcon {
@@ -931,7 +931,7 @@ const WidgetWrapper = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty, .noWidgetWrapper {
         .noWCIcon {
@@ -1104,7 +1104,7 @@ const WidgetWrapper = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty, .noWidgetWrapper {
         .noWCIcon {
@@ -1277,7 +1277,7 @@ const WidgetWrapper = styled.div`
       }
     }
     .widgetBody {
-      background: transparent !important;
+      background: #ffffff !important;
       //내용없음(공통)
       .react-grid-Empty, .noWidgetWrapper {
         .noWCIcon {

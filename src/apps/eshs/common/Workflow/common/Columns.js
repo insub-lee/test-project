@@ -13,7 +13,7 @@ export const columns = handleModal => [
     title: '종류',
     dataIndex: 'APPVGUBUN',
     key: 'APPVGUBUN',
-    width: '15%',
+    width: '20%',
     align: 'center',
     render: (text, record) => {
       let label = '';
@@ -36,6 +36,7 @@ export const columns = handleModal => [
     title: '제목',
     dataIndex: 'DRAFT_TITLE',
     key: 'title',
+    width: '50%',
     ellipsis: true,
     render: (text, record) => (
       <StyledButton className="btn-link btn-sm" onClick={() => handleModal(true, [<SafetyWorkView workNo={record.REL_KEY2} isWorkFlow />])}>
@@ -47,7 +48,7 @@ export const columns = handleModal => [
     title: '기안일',
     dataIndex: 'REG_DTTM',
     key: 'regDttm',
-    width: '8%',
+    width: '10%',
     align: 'center',
     render: (text, record) => moment(text).format('YYYY-MM-DD'),
   },
@@ -55,8 +56,22 @@ export const columns = handleModal => [
     title: '상태',
     dataIndex: 'STATUS',
     key: 'STATUS',
-    width: '8%',
+    width: '10%',
     align: 'center',
+    render: (text, record) => {
+      const { APPV_STATUS_NM } = record;
+      if (APPV_STATUS_NM && APPV_STATUS_NM !== '') {
+        return <span>{APPV_STATUS_NM}</span>;
+      }
+      switch (text) {
+        case 1:
+          return <span>결재중</span>;
+        case 2:
+          return <span>결재완료</span>;
+        default:
+          return <span>결재중</span>;
+      }
+    },
   },
   {
     title: '기안자',
