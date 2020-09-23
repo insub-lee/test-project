@@ -2,11 +2,30 @@ import moment from 'moment';
 import React from 'react';
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import BizBuilderBase from 'components/BizBuilderBase';
 
 /* view  --start--*/
 import SafetyWorkView from 'apps/eshs/user/safety/safetyWork/safetyWorkAccept'; // 안전작업허가 view
 
 /* view  --end--*/
+
+const getView = record => {
+  // builder view 생성
+  switch (record.WORK_SEQ) {
+    case -1:
+      return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record.WORK_SEQ} taskSeq={record.TASK_SEQ} viewType="VIEW" />];
+    default:
+      break;
+  }
+
+  //  SI view 생성
+  switch (record.REL_KEY) {
+    case '안전작업허가':
+      return [<SafetyWorkView workNo={record.REL_KEY2} isWorkFlow />];
+    default:
+      return [];
+  }
+};
 
 export const columns = handleModal => [
   {
@@ -39,7 +58,7 @@ export const columns = handleModal => [
     width: '50%',
     ellipsis: true,
     render: (text, record) => (
-      <StyledButton className="btn-link btn-sm" onClick={() => handleModal(true, [<SafetyWorkView workNo={record.REL_KEY2} isWorkFlow />])}>
+      <StyledButton className="btn-link btn-sm" onClick={() => handleModal(true, getView(record))}>
         {text}
       </StyledButton>
     ),
