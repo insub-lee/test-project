@@ -42,54 +42,6 @@ class UnApproveList extends Component {
 
   handleModal = (visible = false, content = []) => this.setState({ modalObj: { visible, content } });
 
-  // getTableColumns = () => [
-  //   // {
-  //   //   title: 'No',
-  //   //   dataIndex: 'RNUM',
-  //   //   key: 'rnum',
-  //   //   width: '5%',
-  //   //   align: 'center',
-  //   // },
-  //   {
-  //     title: '종류',
-  //     dataIndex: 'APPVGUBUN',
-  //     key: 'APPVGUBUN',
-  //     width: '15%',
-  //     align: 'center',
-  //     render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
-  //   },
-  //   {
-  //     title: '유형',
-  //     dataIndex: 'NODETYPE',
-  //     key: 'NODETYPE',
-  //     width: '10%',
-  //     align: 'center',
-  //     render: (text, record) => (record.APPV_USER_ID === record.ORG_APPV_USER_ID ? text : `${text}(위임결재)`),
-  //   },
-  //   {
-  //     title: '제목',
-  //     dataIndex: 'DRAFT_TITLE',
-  //     key: 'title',
-  //     ellipsis: true,
-  //   },
-
-  //   {
-  //     title: '기안자',
-  //     dataIndex: 'NAME_KOR',
-  //     key: 'nameKor',
-  //     width: '10%',
-  //     align: 'center',
-  //   },
-  //   {
-  //     title: '기안일',
-  //     dataIndex: 'REG_DTTM',
-  //     key: 'regDttm',
-  //     width: '10%',
-  //     align: 'center',
-  //     render: (text, record) => moment(text).format('YYYY-MM-DD'),
-  //   },
-  // ];
-
   onRowClick = (record, rowIndex, e) => {
     this.props.setSelectedRow(record);
     this.props.setViewVisible(true);
@@ -122,8 +74,8 @@ class UnApproveList extends Component {
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
           <AntdLineTable
-            key="apps-workflow-user-unapprove-list"
-            columns={columns(this.handleModal)}
+            key="QUE_ID"
+            columns={columns(this.handleModal, 'UNAPPROVE')}
             dataSource={unApproveList}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
@@ -133,12 +85,6 @@ class UnApproveList extends Component {
             onChange={pagination => this.setPaginationIdx(pagination.current)}
           />
         </StyledContentsWrapper>
-
-        {/* {viewVisible && (
-          <DraggableModal key="upApproveListKeys" title="표준문서 결재" visible={viewVisible}>
-            <MdcsAppvView {...this.props} />
-            </DraggableModal>
-          )} */}
 
         <AntdModal width={850} visible={modalObj.visible} title="미결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
           <EshsAppView {...this.props} />
