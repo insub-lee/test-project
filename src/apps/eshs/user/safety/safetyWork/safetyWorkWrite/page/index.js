@@ -182,15 +182,14 @@ class SafetyWorkMain extends Component {
       REL_KEY: relKey,
       REL_KEY2: formData[relKey2],
       DRAFT_TITLE: formData.TITLE,
-    }).then(draftProcess => {
-      if (JSON.stringify(draftProcess) === '{}') return message.info(<MessageContent>결재요청에 실패하였습니다.</MessageContent>);
-      return this.setState(
-        {
-          processRule: draftProcess,
+    }).then(draftId => {
+      if (draftId) {
+        return this.setState({
+          formData: { ...formData, DRAFT_ID: draftId },
           tempProcessRule: {},
-        },
-        () => message.info(<MessageContent>결재 요청이 완료되었습니다.</MessageContent>),
-      );
+        });
+      }
+      return false;
     });
   };
 
