@@ -91,7 +91,8 @@ class QueueList extends Component {
   componentDidMount() {
     const { sagaKey, submitHandlerBySaga } = this.props;
     const { paginationIdx, pageSize } = this.state;
-    const prefixUrl = '/api/workflow/v1/common/approve/UnApproveListMDCSHandler';
+    // const prefixUrl = '/api/workflow/v1/common/approve/UnApproveListMDCSHandler',
+    const prefixUrl = '/api/workflow/v1/common/approve/PgApproveListMDCSHandler';
     submitHandlerBySaga(sagaKey, 'POST', prefixUrl, { PARAM: { relTypes: [1, 4, 99, 999], ISALL: 'true' } }, this.initDataBind);
   }
 
@@ -194,7 +195,8 @@ class QueueList extends Component {
     this.setState({ paginationIdx }, () => {
       const { pageSize } = this.state;
       const { getUnApproveList } = this.props;
-      const prefixUrl = '/api/workflow/v1/common/approve/UnApproveListMDCSHandler';
+      // const prefixUrl = '/api/workflow/v1/common/approve/UnApproveListMDCSHandler',
+      const prefixUrl = '/api/workflow/v1/common/approve/PgApproveListMDCSHandler';
       getUnApproveList(prefixUrl, paginationIdx, pageSize);
     });
 
@@ -245,7 +247,8 @@ class QueueList extends Component {
               columns={excelColumns}
               fields={fields}
               submitInfo={{
-                dataUrl: '/api/workflow/v1/common/approve/UnApproveListMDCSHandler',
+                // dataUrl: '/api/workflow/v1/common/approve/UnApproveListMDCSHandler',
+                dataUrl: '/api/workflow/v1/common/approve/PgApproveListMDCSHandler',
                 method: 'POST',
                 submitData: { PARAM: { relTypes: [1, 4, 99, 999], ISALL: 'true', PAGE: undefined, PAGE_CNT: undefined } },
                 dataSetName: 'list',
