@@ -27,12 +27,12 @@ const getView = record => {
   }
 };
 
-export const columns = handleModal => [
+export const columns = (handleModal, type) => [
   {
     title: '종류',
     dataIndex: 'APPVGUBUN',
     key: 'APPVGUBUN',
-    width: '20%',
+    width: '15%',
     align: 'center',
     render: (text, record) => {
       let label = '';
@@ -52,10 +52,16 @@ export const columns = handleModal => [
     },
   },
   {
+    title: '유형',
+    width: type === 'DRAFT' ? '0%' : '15%',
+    align: 'center',
+    render: (text, record) => (type === 'DRAFT' ? '' : record && record.RULE_CONFIG && record.RULE_CONFIG.Label) || '',
+  },
+  {
     title: '제목',
     dataIndex: 'DRAFT_TITLE',
     key: 'title',
-    width: '50%',
+    width: type === 'DRAFT' ? '50%' : '40%',
     ellipsis: true,
     render: (text, record) => (
       <StyledButton className="btn-link btn-sm" onClick={() => handleModal(true, getView(record))}>
@@ -80,15 +86,15 @@ export const columns = handleModal => [
     render: (text, record) => {
       const { APPV_STATUS_NM } = record;
       if (APPV_STATUS_NM && APPV_STATUS_NM !== '') {
-        return <span>{APPV_STATUS_NM}</span>;
+        return APPV_STATUS_NM;
       }
       switch (text) {
         case 1:
-          return <span>결재중</span>;
+          return '결재중';
         case 2:
-          return <span>결재완료</span>;
+          return '결재완료';
         default:
-          return <span>결재중</span>;
+          return '결재중';
       }
     },
   },

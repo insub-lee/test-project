@@ -40,45 +40,6 @@ class DraftList extends Component {
 
   handleModal = (visible = false, content = []) => this.setState({ modalObj: { visible, content } });
 
-  // getTableColumns = () => [
-  //   {
-  //     title: '종류',
-  //     dataIndex: 'APPVGUBUN',
-  //     key: 'APPVGUBUN',
-  //     width: '15%',
-  //     align: 'center',
-  //     render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
-  //   },
-  //   {
-  //     title: '제목',
-  //     dataIndex: 'DRAFT_TITLE',
-  //     key: 'title',
-  //     ellipsis: true,
-  //   },
-  //   {
-  //     title: '기안일',
-  //     dataIndex: 'REG_DTTM',
-  //     key: 'regDttm',
-  //     width: '8%',
-  //     align: 'center',
-  //     render: (text, record) => moment(text).format('YYYY-MM-DD'),
-  //   },
-  //   {
-  //     title: '상태',
-  //     dataIndex: 'STATUS_NM',
-  //     key: 'STATUS_NM',
-  //     width: '8%',
-  //     align: 'center',
-  //   },
-  //   {
-  //     title: '기안자',
-  //     dataIndex: 'NAME_KOR',
-  //     key: 'NAME_KOR',
-  //     width: '10%',
-  //     align: 'center',
-  //   },
-  // ];
-
   onRowClick = (record, rowIndex, e) => {
     const { sagaKey, submitHandlerBySaga } = this.props;
     const { isDcc } = this.state;
@@ -108,8 +69,8 @@ class DraftList extends Component {
 
   render() {
     // const { approveList } = this.props;
-    const { draftList, selectedRow, opinionVisible, setOpinionVisible, profile, draftListCnt } = this.props;
-    const { workPrcProps, paginationIdx, modalObj } = this.state;
+    const { draftList, draftListCnt } = this.props;
+    const { paginationIdx, modalObj } = this.state;
     return (
       <>
         <StyledHeaderWrapper>
@@ -121,8 +82,8 @@ class DraftList extends Component {
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
           <AntdTable
-            key="apps-workflow-user-draft-list"
-            columns={columns(this.handleModal)}
+            key="QUE_ID"
+            columns={columns(this.handleModal, 'DRAFT')}
             dataSource={draftList}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
@@ -133,25 +94,6 @@ class DraftList extends Component {
           />
         </StyledContentsWrapper>
         <div>
-          {/* {this.props.viewVisible && (
-            <DraggableModal key="draftListKeys" title="내용보기" visible={this.props.viewVisible}>
-              <BizBuilderBase
-                sagaKey="approveBase_approveView"
-                viewType="VIEW"
-                closeBtnFunc={this.closeBtnFunc}
-                workSeq={selectedRow && selectedRow.WORK_SEQ}
-                taskSeq={selectedRow && selectedRow.TASK_SEQ}
-                selectedRow={selectedRow}
-                ViewCustomButtons={({ closeBtnFunc }) => (
-                  <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
-                    <StyledButton className="btn-light btn-sm" onClick={closeBtnFunc}>
-                      닫기
-                    </StyledButton>
-                  </StyledButtonWrapper>
-                )}
-              />
-            </DraggableModal>
-          )} */}
           <AntdModal width={850} visible={modalObj.visible} title="기안함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
             {modalObj.content}
           </AntdModal>
