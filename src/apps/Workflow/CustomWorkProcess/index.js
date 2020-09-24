@@ -1,27 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { createStructuredSelector } from 'reselect';
 
-import { Row, Col, Modal, Icon } from 'antd';
+import { Modal, Icon } from 'antd';
 
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 
 import BuilderProcessModal from 'apps/Workflow/WorkProcess/BuilderProcessModal';
 import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
-import StyledWorkProcess from 'apps/Workflow/WorkProcess/StyledWorkProcess';
-import SelectApprovePage from 'apps/mdcs/user/Workflow/SelectApprovePage';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 
-import reducer from 'apps/Workflow/SignLine/reducer';
-import saga from 'apps/Workflow/SignLine/saga';
-import * as selectors from 'apps/Workflow/SignLine/selectors';
-import * as actions from 'apps/Workflow/SignLine/actions';
-import injectReducer from 'utils/injectReducer';
-import injectSaga from 'utils/injectSaga';
-import request from 'utils/request';
+import { getDraftProcessRule, getProcessRule } from 'apps/eshs/common/workProcessRule';
+
 const AntdModal = StyledSelectModal(Modal);
 
 const draftInfoStyle = {
@@ -38,18 +28,19 @@ const draftInfoStyle = {
 class CustomWorkProcess extends Component {
   state = {
     processRule: {},
+    draftPrcRule: {},
     filterRule: [],
     filterItem: [],
     modalVisible: false,
   };
 
   componentDidMount() {
-    const { viewType, draftId, getDraftPrcRule, PRC_ID, relType, processRule } = this.props;
+    const { viewType, draftId, PRC_ID, relType, processRule } = this.props;
 
     if (viewType === 'INPUT') {
       // processRule 없을경우 PRC_ID SI환경
       if (JSON.stringify(processRule) === '{}') {
-        this.getProcessRule(PRC_ID).then(res => {
+        getProcessRule(PRC_ID).then(res => {
           const { DRAFT_PROCESS_STEP } = res;
           const filterRule = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
           const filterItem = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
@@ -63,19 +54,9 @@ class CustomWorkProcess extends Component {
         this.setState({ processRule, filterRule, filterItem });
       }
     } else if (draftId !== -1) {
-      getDraftPrcRule(draftId);
+      getDraftProcessRule(draftId).then(draftPrcRule => this.setState({ draftPrcRule }));
     }
   }
-
-  getProcessRule = async prcId => {
-    const result = await request({
-      method: 'POST',
-      url: '/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder',
-      data: { PARAM: { PRC_ID: prcId } },
-      json: true,
-    });
-    return (result.response && result.response.DRAFT_PROCESS) || {};
-  };
 
   handleOpenModal = () => {
     this.setState({ modalVisible: true });
@@ -94,9 +75,8 @@ class CustomWorkProcess extends Component {
   };
 
   render() {
-    const { viewType, draftPrcRule, colLength, CustomRow } = this.props;
-    const { processRule, modalVisible, filterRule } = this.state;
-
+    const { viewType, colLength, CustomRow } = this.props;
+    const { processRule, modalVisible, filterRule, draftPrcRule } = this.state;
     return (
       <ContentsWrapper>
         <StyledHtmlTable>
@@ -124,7 +104,7 @@ class CustomWorkProcess extends Component {
                 ? filterRule &&
                   filterRule.map((item, rowIndex) => (
                     <tr key={rowIndex}>
-                      <th>{item.NAME_KOR}</th>
+                      <th>{(item && item.RULE_CONFIG && item.RULE_CONFIG.Label) || item.NAME_KOR}</th>
                       <td colSpan={colLength - 1}>
                         {item.APPV_MEMBER.map((user, colIndex) =>
                           item.NODE_TYPE === 'ND' ? (
@@ -148,7 +128,7 @@ class CustomWorkProcess extends Component {
                     .filter(item => item.VIEW_TYPE === 1)
                     .map((item, rowIndex) => (
                       <tr key={rowIndex}>
-                        <th>{item.NAME_KOR}</th>
+                        <th>{(item && item.RULE_CONFIG && item.RULE_CONFIG.Label) || item.NAME_KOR}</th>
                         <td colSpan={colLength - 1}>
                           {item.APPV_MEMBER.map((user, colIndex) =>
                             item.NODE_TYPE === 'ND' ? (
@@ -216,24 +196,4 @@ CustomWorkProcess.defaultProps = {
   CustomRow: [],
 };
 
-const mapStateToProps = createStructuredSelector({
-  draftPrcRule: selectors.makeSelectDraftPrcRule(),
-});
-
-const mapDispatchToProps = dispatch => ({
-  getDraftPrcRule: draftId => dispatch(actions.getDraftPrcRule(draftId)),
-});
-
-const withReducer = injectReducer({
-  key: 'apps.WorkFlow.SignLine.reducer',
-  reducer,
-});
-
-const withSaga = injectSaga({
-  key: 'apps.WorkFlow.SignLine.saga',
-  saga,
-});
-
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
-
-export default compose(withSaga, withReducer, withConnect)(CustomWorkProcess);
+export default CustomWorkProcess;
