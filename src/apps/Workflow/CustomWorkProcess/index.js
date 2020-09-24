@@ -10,7 +10,6 @@ import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 
-import request from 'utils/request';
 import { getDraftProcessRule, getProcessRule } from 'apps/eshs/common/workProcessRule';
 
 const AntdModal = StyledSelectModal(Modal);
