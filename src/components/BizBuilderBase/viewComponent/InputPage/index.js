@@ -32,7 +32,7 @@ class InputPage extends Component {
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
     // 기존 결재 정보가 존재할 경우, 기존 결재정보를 가져오기 위해 OBS_DRAFT_ID를 가져옴 || 없을 경우 -1
-    const obsDraftId = formData.OBS_DRAFT_ID || -1;
+    const taskPrevSeq = formData.TASK_PREV_SEQ || -1;
     const isRevision = formData.IS_REVISION || false;
     if (workInfo.BUILDER_STYLE_PATH) {
       // const StyledWrap = Loadable({
@@ -47,7 +47,7 @@ class InputPage extends Component {
         PRC_ID: Number(prcId),
         DRAFT_DATA: {
           ...workPrcProps,
-          obsDraftId,
+          taskPrevSeq,
           isRevision,
         },
       };
