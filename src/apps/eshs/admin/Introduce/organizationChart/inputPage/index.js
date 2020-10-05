@@ -21,6 +21,6 @@ const InputCustomButtons = props => {
     소개 - 조직도 등록
 */
 
-const organizationChart = () => <BizBuilderBase sagaKey="organizationChart_input" viewType="INPUT" workSeq={15481} InputCustomButtons={InputCustomButtons} />;
+const organizationChart = () => <BizBuilderBase sagaKey="organizationChart_input" viewType="INPUT" workSeq={15501} InputCustomButtons={InputCustomButtons} />;
 
 export default organizationChart;
