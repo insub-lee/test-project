@@ -317,7 +317,12 @@ class InputPage extends Component {
               tempSaveBeforeProcess={this.tempSaveBeforeProcess}
             />
             {InputCustomButtons ? (
-              <InputCustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} tempSaveBeforeProcess={this.tempSaveBeforeProcess} />
+              <InputCustomButtons
+                {...this.props}
+                saveBeforeProcess={this.saveBeforeProcess}
+                saveTask={this.saveTask}
+                tempSaveBeforeProcess={this.tempSaveBeforeProcess}
+              />
             ) : (
               <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
                 <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.tempSaveBeforeProcess(id, reloadId || id, this.tempSaveTask)}>
