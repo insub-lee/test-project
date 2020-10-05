@@ -12,7 +12,7 @@ class WasteWaterDiary extends Component {
   render() {
     return (
       <Styled>
-        <BizMicroDevBase sagaKey="waste_water_diary" component={DiaryPage} />
+        <BizMicroDevBase sagaKey="waste_water_diary" component={DiaryPage} relKey="용폐수일지" relKey2="OP_DT" prcId={111} />
       </Styled>
     );
   }

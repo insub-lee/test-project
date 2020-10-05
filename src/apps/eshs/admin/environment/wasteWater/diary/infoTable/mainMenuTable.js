@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { FormOutlined } from '@ant-design/icons';
-import { Input, InputNumber, DatePicker } from 'antd';
+import { Input, InputNumber } from 'antd';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 import styled from 'styled-components';
 

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import * as routesSelectors from '../../../common/Routes/selectors';
+import * as selectors from '../selectors';
 import Menu from './Menu';
 
 const styleObj = {
@@ -95,7 +96,12 @@ class MenuCategory extends React.Component {
   };
 
   render() {
-    const { open, commonMenuTreeData, rootPageInfo, execMenu, execPage, children } = this.props;
+    const { open, commonMenuTreeData, rootPageInfo, execMenu, execPage, children, headerTitle, view, setMyMenuData } = this.props;
+    const { PAGE_ID } = setMyMenuData;
+    const eshsHomeYn = headerTitle === '환경안전보건 통합시스템' && (view === 'Desktop' || view === 'DesktopNarrow') && PAGE_ID === 401;
+    if (eshsHomeYn) {
+      styleObj.content.bottom = 55;
+    }
     return (
       <div>
         <Sidebar
@@ -121,16 +127,25 @@ MenuCategory.propTypes = {
   execPage: PropTypes.func.isRequired,
   setMenuClose: PropTypes.func.isRequired,
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+  headerTitle: PropTypes.string, // ESHS - 홈 - footer 추가 props
+  view: PropTypes.string, // ESHS - 홈 - footer 추가 props
+  setMyMenuData: PropTypes.object, // ESHS - 홈 - footer 추가 props
 };
 
 MenuCategory.defaultProps = {
   children: null,
   rootPageInfo: {},
+  headerTitle: '',
+  view: '',
+  setMyMenuData: {},
 };
 
 const mapStateToProps = createStructuredSelector({
   commonMenuTreeData: routesSelectors.makeCommonMenuTree(),
   rootPageInfo: routesSelectors.makeSelectRootPageInfo(),
+  view: selectors.makeSelectView(), // ESHS - 홈 - footer 추가 관련 셀렉터 추가
+  setMyMenuData: selectors.makeSelectMyMenuData(), // ESHS - 홈 - footer 추가 관련 셀렉터 추가
+  headerTitle: routesSelectors.makeSelectHeaderTitle(), // ESHS - 홈 - footer 추가 관련 셀렉터 추가
 });
 
 const withConnect = connect(mapStateToProps);
