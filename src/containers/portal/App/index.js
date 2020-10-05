@@ -25,6 +25,7 @@ import * as routesSelector from 'containers/common/Routes/selectors';
 import * as authSelector from 'containers/common/Auth/selectors';
 import Fullscreen from 'components/Fullscreen';
 import SideMenu from 'components/SideMenu';
+import { DraggableModalProvider } from 'components/DraggableModal/AntdDraggableModal';
 import Trigger from './Trigger';
 import { BtnMyhome } from './UserStore/components/uielements/buttons.style';
 
@@ -37,11 +38,11 @@ import themes from '../../../config/themes';
 
 import AppWrapper from './AppWrapper';
 import Header from '../components/Header';
+import QuickLinkBar from '../components/QuickLinkBar';
 // import MenuCategory from './MenuCategory';
 import StyledContainer from './StyledContainer';
 // import UserCategoryMenu from './UserCategoryMenu';
 import ErrorPage from './ErrorPage';
-import { DraggableModalProvider } from 'components/DraggableModal/AntdDraggableModal';
 /* Code Split */
 const MenuCategory = Loadable({ loader: () => import('./MenuCategory') });
 // const UserCategoryMenu = Loadable({ loader: () => import('./UserCategoryMenu') });
@@ -425,7 +426,6 @@ class App extends React.Component {
   getLayoutStyle = desktopMode =>
     desktopMode
       ? {
-          // height: '100%',
           marginLeft: this.getLayoutMarginLeft(),
           marginRight: this.getLayoutMarginRight(),
           transition: 'margin-left 0.3s ease-out 0s',
@@ -708,18 +708,17 @@ class App extends React.Component {
                         </div>
                       </Fullscreen>
                       {/*
-                  {setMyMenuData.APP_YN !== 'Y' && (
-                    <Footer
-                      style={{
-                        background: 'transparent',
-                      }}
-                      dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
-                      dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
-                      view={view}
-                    />
-                  )}
-                  */}
-
+                          {setMyMenuData.APP_YN !== 'Y' && (
+                            <Footer
+                              style={{
+                                background: 'transparent',
+                              }}
+                              dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
+                              dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
+                              view={view}
+                            />
+                          )}
+                      */}
                       <Rodal
                         className="drillDownCon"
                         visible={this.state.show}
@@ -743,6 +742,8 @@ class App extends React.Component {
                 </Content>
               </Layout>
             </MenuCategory>
+            {/* ESHS - 퀵링크 - 데스크탑일경우에만 노출 */}
+            {isDesktop(view) && setMyMenuData.PAGE_ID === 401 && <QuickLinkBar menuFixedYn={menuFixedYn} style={{ flexShrink: '0' }} />}
             {/* // REMOVE DOCK - 확인후 처리 (주석??) */}
             {/* <UserDock
             execPage={this.execPage}
