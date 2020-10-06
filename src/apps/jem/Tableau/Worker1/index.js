@@ -3,8 +3,7 @@ import TableConnector from '../components/TableConnector';
 
 const Worker1 = () => (
   <div>
-    근무자 분석
-    <TableConnector menuId="JEM30" />
+    <TableConnector menuId="JEM30" host="03__/03_" />
   </div>
 );
 

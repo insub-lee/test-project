@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import tableau from 'tableau-api';
-
-import { jsonToQueryString } from 'utils/helpers';
+import 'tableau-api';
+import request from 'utils/request';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -13,73 +13,62 @@ const Wrapper = styled.div`
   left: 0;
   height: 795px;
   width: 1366px;
-`
+`;
 
-class TableConnector extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      token: null,
-      hostUrl: '',
-      hasError: false,
+const TableConnector = ({ host }) => {
+  // Ticket 관련 각종 에러 발생시 에러 메세지 화면에 노출
+  const [viewError, setViewError] = useState(false);
+  // Get Ticket
+  useEffect(() => {
+    const getTicket = async () => {
+      const { response, error } = await request({
+        url: '/api/jem/tableau/getTicket',
+      });
+      return { response, error };
     };
-    this.fetchToken = this.fetchToken.bind(this);
-    this.fetchData = this.fetchData.bind(this);
-    this.initViz = this.initViz.bind(this);
-  }
 
-  componentDidMount() {
-    const { menuId } = this.props;
-    const queryString = jsonToQueryString({ mnuId: menuId });
-    // this.fetchToken(queryString).then(response => {
-    //   if (response.result) {
-    //     const { token } = response;
-    //     this.setState({ token, hasError: false }, () => {
-    //       this.fetchData(queryString).then(dataResponse => {
-    //         if (dataResponse.result) {
-    //           const { data } = dataResponse;
-    //           const { hosturl } = data;
-    //           this.setState({ hostUrl: hosturl }, () => {
-    //             this.initViz(token, hosturl);
-    //           });
-    //         } else {
-    //           this.setState({ hasError: true });
-    //         }
-    //       })
-    //     })
-    //   }
-    // })
-  }
+    getTicket()
+      .then(({ response, error }) => {
+        if (response && !error) {
+          const { ticket, userId, userName } = response;
+          if (ticket) {
+            const trustedTicket = `/trusted/${ticket}`;
+            const shareUrl = `http://10.100.22.103${trustedTicket}/views/${host}`;
+            // const shareUrl = `http://10.100.22.103/views/${host}`;
+            const options = {
+              hideTabs: true,
+              hideToolbar: false,
+              width: '100%',
+              height: '100%',
+              P_NO: userId,
+              P_NAME: userName,
+            };
+            const vizContainer = document.getElementById('vizContainer');
+            if (vizContainer) {
+              const viz = new window.tableau.Viz(vizContainer, shareUrl, options);
+            }
+          }
+        } else {
+          console.debug('No Authorize');
+          setViewError(true);
+        }
+      })
+      .catch(error => {
+        console.debug('Fail', error);
+        setViewError(true);
+      });
+  }, [host]);
 
-  async fetchToken(payload) {
-    return { result: false, token: null };
-  }
+  return (
+    <div>
+      <Wrapper id="vizContainer" style={{ width: '100%', height: '100%' }} />
+      {viewError && <p style={{ padding: 50 }}>네트워크상 에러로 인해 조회 불가능합니다.</p>}
+    </div>
+  );
+};
 
-  async fetchData(queryString) {
-    return { result: false };
-  }
-
-  initViz(ticket, hostUrl) {
-    const trustedTicket = `/trusted/${ticket}`;
-    const shareUrl = `http://192.168.251.12${trustedTicket}/views/${hostUrl}`;
-    const options = {
-      hideTabs: true,
-      hideToolbar: false,
-      // P_NO: , userId
-      // P_NAME: , userName
-      width: '100%',
-      height: '100%',
-    }
-    const viz = new window.tableau.Viz(this.vizContainer, shareUrl, options);
-  }
-
-  render() {
-    return (
-      <div>
-        <Wrapper ref={div => this.vizContainer = div}/>
-      </div>
-    );
-  }
-}
+TableConnector.propTypes = {
+  host: PropTypes.string.isRequired,
+};
 
 export default TableConnector;
