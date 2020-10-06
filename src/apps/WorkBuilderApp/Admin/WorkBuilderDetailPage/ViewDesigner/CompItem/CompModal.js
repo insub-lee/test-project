@@ -200,7 +200,7 @@ class CompModal extends Component {
   };
 
   render() {
-    const { configType, configProps, compPoolList, groups, onCloseModal, classNameList, action, dataNodeList } = this.props;
+    const { configType, configProps, compPoolList, groups, onCloseModal, classNameList, action, dataNodeList, compList } = this.props;
     const { viewType, groupType, groupIndex, rowIndex, colIndex } = configProps;
     const { comp, addonClassName } = groups[groupIndex].rows[rowIndex].cols[colIndex];
     const { submitHandlerBySaga } = action;
@@ -517,7 +517,9 @@ class CompModal extends Component {
               </div>
             )}
             {ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC] && (
-              <div>{ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC].renderer({ ...configProps, configInfo: comp.CONFIG, submitHandlerBySaga })}</div>
+              <div>
+                {ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC].renderer({ ...configProps, configInfo: comp.CONFIG, submitHandlerBySaga, compList })}
+              </div>
             )}
           </div>
         </div>

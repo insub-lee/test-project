@@ -182,6 +182,9 @@ class DragUploadComp extends Component {
       if (FILTER_EXTENSION === 'Y') {
         if (this.extensionChecker(name)) {
           this.customRequest(value);
+        } else {
+          const { changeIsLoading } = this.props;
+          changeIsLoading(false);
         }
       } else {
         this.customRequest(value);

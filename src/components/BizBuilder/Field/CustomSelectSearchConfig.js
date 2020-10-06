@@ -75,22 +75,35 @@ class ComponentConfig extends Component {
   }
 
   configStart = response => {
-    const { compData } = this.props;
+    // const { compData, compList } = this.props;
+    const { compData, compList } = this.props;
+
+    // compData기준 사용중인 COMP_FIELD 리스트
+    const filterValues = compData.map(({ COMP_FIELD }) => COMP_FIELD);
+
+    // compList기준 compData에 없는 COMP_FILED 리스트
+    const filteredCompList = compList.filter(({ COMP_FIELD }) => !filterValues.includes(COMP_FIELD));
+
+    const nextCompData = [...compData, ...filteredCompList];
+
     const joinList = (response && response.list && response.list.filter(r => r.OPT_SEQ === 5)) || [];
+
     if (0 in joinList) {
       const joinData = JSON.parse(joinList[0].OPT_VALUE);
 
       joinData.forEach(j => {
         const data = { FIELD_TYPE: j.JOIN_TYPE };
         j.COLUMN_INFO.forEach(c => {
-          compData.push({ ...data, COMP_FIELD: c.ID, NAME_KOR: c.ALIAS });
+          nextCompData.push({ ...data, COMP_FIELD: c.ID, NAME_KOR: c.ALIAS });
         });
       });
     }
 
+    console.debug('@ comp', nextCompData);
+
     this.handleChangeViewCompData(
       'compData',
-      compData.filter(c => c.FIELD_TYPE),
+      nextCompData.filter(c => c.FIELD_TYPE),
     );
   };
 
@@ -106,6 +119,7 @@ class ComponentConfig extends Component {
   };
 
   render() {
+    console.debug('@@ Props! where    ', this.props);
     const {
       configInfo,
       configInfo: {
