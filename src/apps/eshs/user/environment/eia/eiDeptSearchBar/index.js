@@ -126,6 +126,7 @@ class DeptSearchBar extends Component {
       const { saveBeforeProcess } = this.props;
       // 완료시 ImportantAssesment 입력후 저장이 안된경우 저장후 완료처리
       saveBeforeProcess();
+      // 환경영향평가 결재 TEST중
       submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiImportantAssesment', { ...materialData, itemList });
     }
 
@@ -133,7 +134,7 @@ class DeptSearchBar extends Component {
   };
 
   render() {
-    const { formData, result, id } = this.props;
+    const { formData, result, id, deptSearchBarVisible } = this.props;
     const { years } = this.state;
     const deptList = (result && result.deptList && result.deptList.result) || [];
     const myDept = (formData && formData.myDept) || {};
@@ -141,7 +142,7 @@ class DeptSearchBar extends Component {
     const eiMaterialCnt = (formData && formData.materialCnt) || 0;
     const searchFlag = (formData && formData.searchFlag) || false;
     const itemList = (formData && formData.itemList) || [];
-    return (
+    return deptSearchBarVisible ? (
       <StyledCustomSearchWrapper className="search-wrapper-inline">
         <div className="search-input-area">
           <span className="text-label">평가년도</span>
@@ -184,6 +185,8 @@ class DeptSearchBar extends Component {
           <DeptModal deptList={deptList || []} handleModalRowClick={this.handleModalRowClick} handleModal={this.handleModal}></DeptModal>
         </AntdModal>
       </StyledCustomSearchWrapper>
+    ) : (
+      ''
     );
   }
 }
@@ -193,10 +196,12 @@ DeptSearchBar.propTypes = {
   result: PropTypes.object,
   searchData: PropTypes.object,
   saveBeforeProcess: PropTypes.func,
+  deptSearchBarVisible: PropTypes.bool,
 };
 DeptSearchBar.defaultProps = {
   getCallDataHandler: () => {},
   result: {},
+  deptSearchBarVisible: true,
   saveBeforeProcess: () => {},
   searchData: {},
 };
