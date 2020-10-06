@@ -10,6 +10,7 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import { saveProcessRule, getProcessRule } from 'apps/eshs/common/workProcessRule';
 
 import JournalManagement from 'apps/eshs/user/health/medicalManagement/journalManangement';
 import message from 'components/Feedback/message';
@@ -46,15 +47,17 @@ class List extends Component {
         modalVisible: false,
       },
       columns: [],
+      processRule: {},
     };
   }
 
   componentDidMount() {
-    const { spinningOn } = this.props;
+    const { spinningOn, prcId } = this.props;
 
     spinningOn();
 
     this.getInitData();
+    getProcessRule(prcId, processRule => this.setState({ processRule }));
   }
 
   getInitData = () => {
@@ -74,6 +77,12 @@ class List extends Component {
         url: `/api/eshs/v1/common/health/eshsHealthJrnlList`,
         type: 'POST',
         params: { PARAM: { ...searchParam } },
+      },
+      {
+        key: 'vGroups',
+        url: `/api/eshs/v1/common/vgroupChildrenListByGrpIdHandler`,
+        type: 'POST',
+        params: { PARAM: { GRP_ID: 88421 } }, // 의료일지 심의권자 가상그룹
       },
     ];
 
@@ -104,19 +113,80 @@ class List extends Component {
   };
 
   handleAction = actionType => {
-    const { sagaKey, submitHandlerBySaga, profile, spinningOn, spinningOff } = this.props;
-    const { searchParam } = this.state;
+    const { sagaKey, submitHandlerBySaga, result, relKey, profile, spinningOn, spinningOff } = this.props;
+    const { searchParam, processRule } = this.state;
+
+    const list = (result && result.List && result.List.list) || [];
+    const workAreaList = (result && result.workAreaList && result.workAreaList.categoryMapList) || [];
+    const vGroupList = (result && result.vGroups && result.vGroups.vGroupList) || [];
+
+    const approVal = {
+      APP1_EMPNO: null,
+      APP1_USER_ID: null,
+      APP2_EMPNO: null,
+      APP2_USER_ID: null,
+    };
+    // GRP_ID === 88422 1차 결재자
+    const firstApprovalIdx = vGroupList.findIndex(group => group.GRP_ID === 88422);
+    // GRP_ID === 88423 2차 결재자
+    const secondApprovalIdx = vGroupList.findIndex(group => group.GRP_ID === 88423);
+    processRule &&
+      processRule.DRAFT_PROCESS_STEP &&
+      processRule.DRAFT_PROCESS_STEP.forEach((step, index) => {
+        switch (step.STEP) {
+          case 2:
+            if (JSON.stringify(vGroupList[firstApprovalIdx].USERS.value) !== '[]') {
+              const approvalList = JSON.parse(vGroupList[firstApprovalIdx].USERS.value);
+              approVal.APP1_EMPNO = approvalList[0].EMP_NO;
+              approVal.APP1_USER_ID = approvalList[0].USER_ID;
+              step.APPV_MEMBER = [{ USER_ID: approvalList[0].USER_ID, DEPT_ID: approvalList[0].DEPT_ID, NAME_KOR: approvalList[0].NAME_KOR }];
+            }
+            break;
+          case 3:
+            debugger;
+            return console.debug('vGroupList[secondApprovalIdx].USERS.value', vGroupList[secondApprovalIdx].USERS.value);
+            // if (JSON.stringify(vGroupList[secondApprovalIdx].USERS.value) !== '[]') {
+            //   const approvalList = JSON.parse(vGroupList[secondApprovalIdx].USERS.value);
+            //   approVal.APP2_EMPNO = approvalList[0].EMP_NO;
+            //   approVal.APP2_USER_ID = approvalList[0].USER_ID;
+            //   step.APPV_MEMBER = [{ USER_ID: approvalList[0].USER_ID, DEPT_ID: approvalList[0].DEPT_ID, NAME_KOR: approvalList[0].NAME_KOR }];
+            // }
+            break;
+          default:
+            break;
+        }
+      });
+    return null;
     const submitData = {
       PARAM: {
         ...searchParam,
+        ...approVal,
         EMP_NO: profile.EMP_NO,
         USER_ID: profile.USER_ID,
       },
     };
 
+    let siteName = '';
+
     spinningOn();
     switch (actionType) {
       case 'SANGSIN':
+        list
+          .filter(item => item.APP_STATUS === '0' && item.CREATE_USER_ID === profile.USER_ID)
+          .forEach((item, index) => {
+            if (!index) {
+              siteName = workAreaList[workAreaList.findIndex(site => site.NODE_ID === item.SITE_NODE_ID)].NAME_KOR;
+            }
+            const submitProcessRule = {
+              ...processRule,
+              REL_KEY: relKey,
+              REL_KEY2: `${item.SITE_NODE_ID}_${item.JRNL_DT}`,
+              DRAFT_DATA: {},
+              DRAFT_TITLE: `[${siteName}] ${item.JRNL_DT}`,
+            };
+
+            saveProcessRule(submitProcessRule, () => {}, false);
+          });
         submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/eshsHealthJrnlStatusUpdate', submitData, (id, res) => {
           spinningOff();
           if (res && res.result > 0) {
@@ -165,9 +235,12 @@ class List extends Component {
       modalObj: { modalVisible },
     } = this.state;
     if (modalVisible) {
-      return this.setState({
-        modalObj: { modalContent: [], modalTitle: '', modalVisible: !modalVisible },
-      });
+      return this.setState(
+        {
+          modalObj: { modalContent: [], modalTitle: '', modalVisible: !modalVisible },
+        },
+        this.getList,
+      );
     }
     return this.setState({
       modalObj: {
