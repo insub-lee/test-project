@@ -186,7 +186,6 @@ class MdcsProcessListComp extends Component {
 
   render() {
     const { draftNode, reviewerNode, mailReviewerNode } = this.state;
-    console.debug('모든프롭스', this.props);
     return (
       <StyledWrap>
         {draftNode && draftNode.length > 0 && (

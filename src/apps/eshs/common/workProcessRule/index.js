@@ -28,23 +28,36 @@ export const getDraftProcessRule = async DRAFT_ID => {
 export const saveProcessRule = async processRule => {
   const processStep = (processRule && processRule.DRAFT_PROCESS_STEP) || [];
   let msg = '';
-  if (!processStep.length) return message.info(<MessageContent>결재 정보가 없습니다.</MessageContent>);
-
+  if (!processStep.length) {
+    message.info(<MessageContent>결재 정보가 없습니다.</MessageContent>);
+    return false;
+  }
   const ruleCheckList = processStep.filter(rule => rule.ISREQUIRED === 1);
   ruleCheckList.some(rule => {
     if (rule.APPV_MEMBER.length === 0) {
-      msg = `${rule.NAME_KOR} 단계의 결재를 선택해 주세요`;
+      msg = `${(rule && rule.RULE_CONFIG && rule.RULE_CONFIG.Label) || rule.NAME_KOR} 단계의 결재를 선택해 주세요`;
     }
     return msg;
   });
 
-  if (msg) return message.info(<MessageContent>{msg}</MessageContent>);
-
+  if (msg) {
+    message.info(<MessageContent>{msg}</MessageContent>);
+    return false;
+  }
   const result = await request({
     method: 'POST',
     url: '/api/workflow/v1/common/workprocess/draft',
     data: { DRAFT_PROCESS: { ...processRule, REL_TYPE: ESH_REL_TYPE } },
     json: true,
+  }).then(({ response }) => {
+    const draftId = (response && response.draftProcess && response.draftProcess.DRAFT_ID) || undefined;
+    if (draftId) {
+      message.info(<MessageContent>결재 요청이 완료되었습니다.</MessageContent>);
+      return draftId;
+    }
+    message.info(<MessageContent>결재요청에 실패하였습니다.</MessageContent>);
+    return draftId;
   });
-  return (result.response && result.response.draftProcess) || {};
+
+  return result;
 };

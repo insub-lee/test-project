@@ -4,17 +4,12 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import List from 'apps/eshs/user/pages/ListPage';
 
 class EshSystemLaw extends Component {
-  state = {
-    isLoading: true,
-  };
-
-  componentDidMount() {}
-
-  // isOpenModalChange = taskSeq => {
-  //   this.setState({
-  //     isOpenModal: true,
-  //   });
-  // };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true,
+    };
+  }
 
   loadingComplete = () => {
     this.setState({
@@ -23,16 +18,7 @@ class EshSystemLaw extends Component {
   };
 
   render() {
-    return (
-      <BizBuilderBase
-        sagaKey="EshSystemLaw"
-        workSeq={1853}
-        viewType="LIST"
-        loadingComplete={this.loadingComplete}
-        // isOpenModalChange={this.isOpenModalChange}
-        // CustomListPage={List}
-      />
-    );
+    return <BizBuilderBase sagaKey="EshSystemLaw" workSeq={1853} viewType="LIST" loadingComplete={this.loadingComplete} />;
   }
 }
 

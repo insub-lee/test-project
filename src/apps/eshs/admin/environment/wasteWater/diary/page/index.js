@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Modal, Select, Spin, DatePicker } from 'antd';
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
 import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess'; // 결재선 지정
+import { saveProcessRule } from 'apps/eshs/common/workProcessRule'; // 결재선 저장함수
 import Styled from './Styled';
 // 메뉴 콘텐츠
 import MenuTable from '../infoTable/mainMenuTable'; // 배출시설 가동시간
@@ -58,8 +58,11 @@ class QualityPage extends Component {
         WEATHER: undefined, // 날씨
         APPROVAL_STATE: undefined, // 결재상태
         EMP_NO: undefined, // 담당자
+        DRAFT_ID: -1,
       },
       formData: undefined,
+      processRule: {}, // 결재 프로세스 룰
+      tempProcessRule: {},
     };
   }
 
@@ -93,6 +96,7 @@ class QualityPage extends Component {
           APPROVAL_STATE: (MAIN_INFO && MAIN_INFO.APPROVAL_STATE) || undefined, // 결재상태
           EMP_NO: (MAIN_INFO && MAIN_INFO.EMP_NO) || undefined, // 담당자
           EMP_NM: (MAIN_INFO && MAIN_INFO.EMP_NM) || undefined, // 담당자명
+          DRAFT_ID: (MAIN_INFO && MAIN_INFO.DRAFT_ID) || -1, // 담당자명
           OP_DT: searchDate,
         },
         hasData: {
@@ -549,6 +553,7 @@ class QualityPage extends Component {
     });
   };
 
+  // 폼데이터 변경
   onChangeFormData = (field, value, key) => {
     const { selectedMenu, formData } = this.state;
     if (Array.isArray(formData)) {
@@ -588,6 +593,7 @@ class QualityPage extends Component {
     }
   };
 
+  // 평균값 계산
   CodChkcalcAvg = formData => {
     const { CHK_02, CHK_04, CHK_06, CHK_08, CHK_10, CHK_12, CHK_14, CHK_16, CHK_18, CHK_20, CHK_22, CHK_24 } = formData;
     const sum =
@@ -612,6 +618,7 @@ class QualityPage extends Component {
     });
   };
 
+  // 모달내 폼데이터 수정
   onChangeModalFormData = (field, value) => {
     const { modalData } = this.state;
     this.setState({
@@ -622,6 +629,7 @@ class QualityPage extends Component {
     });
   };
 
+  // 모달 핸들러
   modalHandler = (type, bool, data) => {
     let title = '';
     let mdData = {};
@@ -638,6 +646,10 @@ class QualityPage extends Component {
         title = 'Daily Report - 특이사항/비고 관리 ';
         mdData = data || {};
         break;
+      case 'WORK_PROCESS':
+        title = '결재선 지정';
+        mdData = data || {};
+        break;
       default:
         break;
     }
@@ -646,6 +658,26 @@ class QualityPage extends Component {
       modalVisible: bool,
       modalTitle: title,
       modalData: mdData,
+    });
+  };
+
+  saveProcessRule = () => {
+    const { relKey, relKey2 } = this.props;
+    const { processRule, formData } = this.state;
+    saveProcessRule({
+      ...processRule,
+      DRAFT_DATA: {},
+      REL_KEY: relKey,
+      REL_KEY2: formData[relKey2],
+      DRAFT_TITLE: formData.TITLE,
+    }).then(draftId => {
+      if (draftId) {
+        return this.setState({
+          formData: { ...formData, DRAFT_ID: draftId },
+          tempProcessRule: {},
+        });
+      }
+      return false;
     });
   };
 
@@ -664,7 +696,9 @@ class QualityPage extends Component {
       renderData,
       mainFormData,
       formData,
+      processRule,
     } = this.state;
+    const { prcId: PRC_ID } = this.props;
     return (
       <Styled>
         <StyledCustomSearchWrapper>
@@ -700,9 +734,16 @@ class QualityPage extends Component {
                 {hasData.MST > 0 ? '수정' : '저장'}
               </StyledButton>
               {hasData.MST > 0 && (
-                <StyledButton className="btn-gray btn-sm ml5" onClick={() => console.debug('MPMP', true)}>
-                  결재선 지정
-                </StyledButton>
+                <>
+                  {mainFormData.APPROVAL_STATE === '0' && (
+                    <StyledButton className="btn-primary btn-sm ml5" onClick={this.saveProcessRule}>
+                      상신
+                    </StyledButton>
+                  )}
+                  <StyledButton className="btn-gray btn-sm ml5" onClick={() => this.modalHandler('WORK_PROCESS', true)}>
+                    결재선 지정
+                  </StyledButton>
+                </>
               )}
             </StyledButtonWrapper>
             <div className="menu-table">
@@ -776,6 +817,35 @@ class QualityPage extends Component {
           {modalType === 'BIGO' && (
             <BigoInfoModal opDt={mainFormData.OP_DT} formData={modalData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeModalFormData} />
           )}
+          {modalType === 'WORK_PROCESS' && (
+            <>
+              <CustomWorkProcess
+                processRule={processRule}
+                PRC_ID={PRC_ID}
+                draftId={mainFormData.DRAFT_ID || -1}
+                viewType={mainFormData.DRAFT_ID ? 'VIEW' : 'INPUT'}
+                setProcessRule={(_, prcRule) => this.setState({ tempProcessRule: prcRule })}
+              />
+              <StyledButtonWrapper className="btn-wrap-center btn-wrap-mb-10">
+                <StyledButton
+                  className="btn-primary btn-xxs btn-first"
+                  onClick={() =>
+                    this.setState(
+                      prevState => ({
+                        processRule: prevState.tempProcessRule,
+                      }),
+                      () => this.modalHandler('', false),
+                    )
+                  }
+                >
+                  저장
+                </StyledButton>
+                <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.modalHandler('', false)}>
+                  닫기
+                </StyledButton>
+              </StyledButtonWrapper>
+            </>
+          )}
         </AntdModal>
       </Styled>
     );
@@ -783,7 +853,10 @@ class QualityPage extends Component {
 }
 
 QualityPage.propTypes = {
+  prcId: PropTypes.number,
   sagaKey: PropTypes.string,
+  relKey: PropTypes.string,
+  relKey2: PropTypes.string,
   getCallDataHandlerReturnRes: PropTypes.func,
   submitHandlerBySaga: PropTypes.func,
 };

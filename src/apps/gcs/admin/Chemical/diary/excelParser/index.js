@@ -7,7 +7,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import sampleExcelFile from './sampleExcel/통합일일업무.xlsx';
+import sampleExcelFile from './sampleExcel/통합일일업무(양식).xlsx';
 import Styled from './Styled';
 
 const { Dragger } = Upload;
@@ -44,20 +44,27 @@ class ExcelParser extends Component {
       data.shift();
       let convertedData = [];
       try {
-        convertedData = data.map(row => ({
-          OCCURDT: row[0],
-          FAB: row[1],
-          GONGNO: row[2],
-          PRODNM: row[3],
-          UPTIME: row[4],
-          DOWNTIME: row[5],
-          PROBLEM: row[6],
-          MEASURE: row[7],
-          DAMAGE: row[8],
-          OWNID: row[9],
-          BIGO: row[10],
-          EQUIPNOTI: row[11],
-        }));
+        convertedData = data
+          .filter(item => {
+            if (item[0] !== '') {
+              return true;
+            }
+            return false;
+          })
+          .map(row => ({
+            OCCURDT: row[0],
+            FAB: row[1],
+            GONGNO: row[2],
+            PRODNM: row[3],
+            UPTIME: row[4],
+            DOWNTIME: row[5],
+            PROBLEM: row[6],
+            MEASURE: row[7],
+            DAMAGE: row[8],
+            OWNID: row[9],
+            BIGO: row[10],
+            EQUIPNOTI: row[11],
+          }));
       } catch (err) {
         convertedData = [];
         message.error(<MessageContent>표준양식을 사용해 주십시오.</MessageContent>);

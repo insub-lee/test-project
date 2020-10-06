@@ -13,6 +13,7 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess';
 import { columns } from 'apps/eshs/common/Workflow/common/Columns';
 
 const AntdTable = StyledAntdTable(Table);
@@ -44,68 +45,6 @@ class ApproveList extends Component {
 
   handleModal = (visible = false, content = []) => this.setState({ modalObj: { visible, content } });
 
-  // getTableColumns = () => [
-  //   // {
-  //   //   title: 'No',
-  //   //   dataIndex: 'RNUM',
-  //   //   key: 'rnum',
-  //   //   width: '5%',
-  //   //   align: 'center',
-  //   // },
-  //   {
-  //     title: '종류',
-  //     dataIndex: 'APPVGUBUN',
-  //     key: 'APPVGUBUN',
-  //     width: '15%',
-  //     align: 'center',
-  //     render: (text, record) => (record.REL_TYPE === 99 ? '폐기' : record.REL_TYPE === 999 ? '일괄폐기' : text),
-  //   },
-  //   {
-  //     title: '유형',
-  //     dataIndex: 'NODETYPE',
-  //     key: 'NODETYPE',
-  //     width: '9%',
-  //     align: 'center',
-  //     render: (text, record) => (record.APPV_USER_ID === record.ORG_APPV_USER_ID ? text : `${text}(위임결재)`),
-  //   },
-  //   {
-  //     title: '표준제목',
-  //     dataIndex: 'DRAFT_TITLE',
-  //     key: 'title',
-  //     ellipsis: true,
-  //   },
-  //   {
-  //     title: '결재상태',
-  //     dataIndex: 'APPV_STATUS_NM',
-  //     key: 'APPV_STATUS_NM',
-  //     width: '9%',
-  //     align: 'center',
-  //   },
-  //   {
-  //     title: '진행상태',
-  //     dataIndex: 'PROC_STATUS',
-  //     key: 'PROC_STATUS',
-  //     width: '9%',
-  //     align: 'center',
-  //     render: (text, record) => (text === 3 ? '홀드' : text === 2 ? '완료' : '진행중'),
-  //   },
-  //   {
-  //     title: '기안자',
-  //     dataIndex: 'NAME_KOR',
-  //     key: 'nameKor',
-  //     width: '10%',
-  //     align: 'center',
-  //   },
-  //   {
-  //     title: '결재일',
-  //     dataIndex: 'APPV_DTTM',
-  //     key: 'appv_dttm',
-  //     width: '10%',
-  //     align: 'center',
-  //     render: (text, record) => (text && text.length > 0 ? moment(text).format('YYYY-MM-DD') : text),
-  //   },
-  // ];
-
   onRowClick = (record, rowIndex, e) => {
     const { WORK_SEQ, TASK_SEQ, STEP, PROC_STATUS, APPV_STATUS, DRAFT_DATA, DRAFT_ID } = record;
     this.setState({ currentStatus: APPV_STATUS, workPrcProps: { ...record } });
@@ -132,8 +71,7 @@ class ApproveList extends Component {
 
   render() {
     const { approveList, approveListCnt, selectedRow } = this.props;
-    const { currentStatus, draftNode, workPrcProps, paginationIdx, modalObj } = this.state;
-
+    const { paginationIdx, modalObj } = this.state;
     return (
       <>
         <StyledHeaderWrapper>
@@ -145,8 +83,8 @@ class ApproveList extends Component {
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
           <AntdTable
-            key="apps-wasteMatter-workflow-user-approve-list"
-            columns={columns(this.handleModal)}
+            key="QUE_ID"
+            columns={columns(this.handleModal, 'APPROVE')}
             dataSource={approveList}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
@@ -156,32 +94,12 @@ class ApproveList extends Component {
             onChange={pagination => this.setPaginationIdx(pagination.current)}
           />
         </StyledContentsWrapper>
-        <div>
-          {/* {this.props.viewVisible && (
-            <DraggableModal key="wasteMatter-approveListKeys" title="내용보기" visible={this.props.viewVisible}>
-              <BizBuilderBase
-                sagaKey="wasteMatter-approveBase_approveView"
-                viewType="VIEW"
-                onCloseModal={this.onCloseModal}
-                onChangeForm={this.onChangeForm}
-                closeBtnFunc={this.closeBtnFunc}
-                workSeq={selectedRow && selectedRow.WORK_SEQ}
-                taskSeq={selectedRow && selectedRow.TASK_SEQ}
-                selectedRow={selectedRow}
-                ViewCustomButtons={({ closeBtnFunc, onClickModify }) => (
-                  <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
-                    <StyledButton className="btn-light btn-sm" onClick={closeBtnFunc}>
-                      닫기
-                    </StyledButton>
-                  </StyledButtonWrapper>
-                )}
-              />
-            </DraggableModal>
-          )} */}
-          {/* <AntdModal width={850} visible={modalObj.visible} title="기결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
-            {modalObj.content}
-          </AntdModal> */}
-        </div>
+
+        <AntdModal width={850} visible={modalObj.visible} title="기결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
+          <CustomWorkProcess PRC_ID={selectedRow.PRC_ID} draftId={selectedRow.DRAFT_ID || -1} viewType="VIEW" />
+          {modalObj.content}
+        </AntdModal>
+        <div></div>
       </>
     );
   }

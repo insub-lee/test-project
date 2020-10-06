@@ -50,7 +50,7 @@ class LawModal extends Component {
 
   initData = list => {
     this.setState({
-      data: list.filter(f => f.STATUS === '사용중'),
+      data: (list && list.filter(f => f.STATUS === '사용중')) || [],
     });
   };
 
