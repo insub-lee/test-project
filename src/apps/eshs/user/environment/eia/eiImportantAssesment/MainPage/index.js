@@ -5,6 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import { message } from 'antd';
 import * as selectors from 'containers/common/Auth/selectors';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import { saveProcessRule, getProcessRule } from 'apps/eshs/common/workProcessRule';
 
 import DeptSearchBar from '../../eiDeptSearchBar';
 import ItemTable from '../ItemTable';
@@ -94,23 +95,10 @@ class MainPage extends Component {
     );
   };
 
-  saveBeforeProcess = () => {
-    const { sagaKey, getCallDataHandler } = this.props;
-    const apiAry = [
-      {
-        key: 'prcRule',
-        type: 'POST',
-        url: '/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder',
-        params: { PARAM: { PRC_ID: 104 } },
-      },
-    ];
+  saveBeforeProcess = () => getProcessRule(this.props.prcId, this.saveProcessRule);
 
-    getCallDataHandler(sagaKey, apiAry, this.setPrcRule);
-  };
-
-  setPrcRule = () => {
-    const { sagaKey, submitHandlerBySaga, result, formData } = this.props;
-    const prcRule = (result && result.prcRule && result.prcRule.DRAFT_PROCESS) || {};
+  saveProcessRule = prcRule => {
+    const { sagaKey, submitHandlerBySaga, formData, relKey, relKey2 } = this.props;
     const materialData = (formData && formData.materialData) || {};
     /* 
       청주 검토자 GRP_ID 84381
@@ -154,12 +142,22 @@ class MainPage extends Component {
         }
       });
 
-    submitHandlerBySaga(
-      sagaKey,
-      'POST',
-      '/api/workflow/v1/common/workprocess/draft',
-      { DRAFT_PROCESS: { ...prcRule, REL_TYPE: 100, REL_KEY: materialData.REQ_NO } },
-      this.fileMoveToReal,
+    saveProcessRule(
+      {
+        ...prcRule,
+        REL_KEY: relKey,
+        REL_KEY2: materialData[relKey2],
+        DRAFT_DATA: {},
+        DRAFT_TITLE: `${materialData.FROM_DEPT_NM} [ ${materialData.FROM_BUILDING_NM} ][ ${materialData.TO_BUILDING_NM} ]`,
+      },
+      draftId => {
+        if (draftId) {
+          // 환경영향평가 결재 TEST중
+          console.debug(`saveProcessRule after defatId [ ${draftId} ]`);
+          return this.fileMoveToReal();
+        }
+        return false;
+      },
     );
   };
 
@@ -169,9 +167,10 @@ class MainPage extends Component {
     const materialData = (formData && formData.materialData) || '';
     const itemList = (formData && formData.itemList) || [];
     if (!uploadFileList.length) {
-      submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/eshsEiImportantAssesment', { ...materialData, itemList }, this.updateComplete);
-      return;
+      console.debug('file 없음 formData -- ', formData);
+      return submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/eshsEiImportantAssesment', { ...materialData, itemList }, this.updateComplete);
     }
+    console.debug('file 있음 formData -- ', formData);
     const param = { PARAM: { DETAIL: uploadFileList } };
     const apiAry = [
       {
@@ -184,14 +183,14 @@ class MainPage extends Component {
     this.setState({
       uploadFileList: [],
     });
-    getCallDataHandler(sagaKey, apiAry, this.fileUploadComplete);
+
+    getCallDataHandler(sagaKey, apiAry, () => this.fileUploadComplete(formData));
   };
 
-  fileUploadComplete = () => {
-    const { sagaKey, result, formData, submitHandlerBySaga } = this.props;
+  fileUploadComplete = (formData = this.props.formData) => {
+    const { sagaKey, result, submitHandlerBySaga } = this.props;
     const materialData = (formData && formData.materialData) || '';
     const realFileList = (result && result.realFile && result.realFile.DETAIL) || [];
-
     const itemList =
       (formData &&
         formData.itemList.map(i => {

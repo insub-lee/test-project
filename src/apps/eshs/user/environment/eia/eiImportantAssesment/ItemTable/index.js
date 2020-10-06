@@ -17,10 +17,11 @@ const AntdModal = StyledContentsModal(Modal);
 const appIconUploadArea = {
   position: 'relative',
   display: 'inlineBlock',
-  width: '180',
+  width: '100%',
   height: '50PX',
   background: '#f3f3f3',
   borderStyle: 'dashed',
+  textAlign: 'center',
 };
 
 class ItemTable extends Component {
@@ -147,10 +148,10 @@ class ItemTable extends Component {
             <col width="7%" />
             <col width="7%" />
             <col width="7%" />
+            <col width="8%" />
+            <col width="8%" />
             <col width="7%" />
-            <col width="7%" />
-            <col width="7%" />
-            <col width="17%" />
+            <col width="15%" />
           </colgroup>
           <thead>
             <tr>
@@ -343,19 +344,30 @@ class ItemTable extends Component {
                     <div style={appIconUploadArea}>
                       <Upload
                         onFileUploaded={obj => onFileUploaded(obj, item.SEQ)}
-                        multiple={false} // default true
-                        width={150}
+                        multiple={false}
+                        width="100%"
                         height={32}
                         borderStyle="none"
                         serviceEnv="dev"
                         serviceKey="KEY"
                       >
                         <span>Upload</span>
-                        <div style={{ width: '100%', height: '100%', textAlign: 'center' }}>
+                        <div
+                          style={{
+                            height: '100%',
+                            textAlign: 'center',
+                            width: '90%',
+                            textOverflow: 'ellipsis',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
                           {item.FILE_SEQ && (
-                            <a onClick={e => this.handleDown(e, item.FILE_SEQ, item.FILE_TYPE)} download>
-                              {item.FILE_NAME}
-                            </a>
+                            <Popover content={<span> {item.FILE_NAME}</span>} title={null} trigger="hover">
+                              <a onClick={e => this.handleDown(e, item.FILE_SEQ, item.FILE_TYPE)} download>
+                                {item.FILE_NAME}
+                              </a>
+                            </Popover>
                           )}
                         </div>
                       </Upload>
