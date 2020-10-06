@@ -5,14 +5,16 @@ import MessageContent from 'components/Feedback/message.style2';
 
 export const ESH_REL_TYPE = 100;
 
-export const getProcessRule = async PRC_ID => {
+export const getProcessRule = async (PRC_ID, callBack) => {
   const result = await request({
     method: 'POST',
     url: '/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder',
     data: { PARAM: { PRC_ID } },
     json: true,
   });
-  return (result.response && result.response.DRAFT_PROCESS) || {};
+  return typeof callBack === 'function'
+    ? callBack((result.response && result.response.DRAFT_PROCESS) || {})
+    : (result.response && result.response.DRAFT_PROCESS) || {};
 };
 
 export const getDraftProcessRule = async DRAFT_ID => {
@@ -25,7 +27,7 @@ export const getDraftProcessRule = async DRAFT_ID => {
   return (result.response && result.response.draftPrcRule) || {};
 };
 
-export const saveProcessRule = async processRule => {
+export const saveProcessRule = async (processRule, callBack, messageFlag = true) => {
   const processStep = (processRule && processRule.DRAFT_PROCESS_STEP) || [];
   let msg = '';
   if (!processStep.length) {
@@ -52,11 +54,13 @@ export const saveProcessRule = async processRule => {
   }).then(({ response }) => {
     const draftId = (response && response.draftProcess && response.draftProcess.DRAFT_ID) || undefined;
     if (draftId) {
-      message.info(<MessageContent>결재 요청이 완료되었습니다.</MessageContent>);
-      return draftId;
+      if (messageFlag) message.info(<MessageContent>결재 요청이 완료되었습니다.</MessageContent>);
+      return callBack(draftId);
+      // return draftId;
     }
-    message.info(<MessageContent>결재요청에 실패하였습니다.</MessageContent>);
-    return draftId;
+    if (messageFlag) message.info(<MessageContent>결재요청에 실패하였습니다.</MessageContent>);
+    return callBack(draftId);
+    // return draftId;
   });
 
   return result;

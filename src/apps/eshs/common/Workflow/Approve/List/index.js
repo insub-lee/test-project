@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, message, Modal } from 'antd';
+import { Table, Icon, message, Modal, Spin } from 'antd';
 import moment from 'moment';
 
 import BizBuilderBase from 'components/BizBuilderBase';
@@ -26,6 +26,7 @@ class ApproveList extends Component {
       currentStatus: undefined,
       draftNode: undefined,
       workPrcProps: undefined,
+      loading: false,
       paginationIdx: 1,
       pageSize: 10,
       modalObj: {
@@ -69,6 +70,10 @@ class ApproveList extends Component {
       this.props.getApproveList(fixUrl, paginationIdx, pageSize, relTypes);
     });
 
+  spinningOn = () => this.setState({ loading: true });
+
+  spinningOff = () => this.setState({ loading: false });
+
   render() {
     const { approveList, approveListCnt, selectedRow } = this.props;
     const { paginationIdx, modalObj } = this.state;
@@ -84,7 +89,7 @@ class ApproveList extends Component {
         <StyledContentsWrapper>
           <AntdTable
             key="QUE_ID"
-            columns={columns(this.handleModal, 'APPROVE')}
+            columns={columns(this.handleModal, 'APPROVE', this.spinningOn, this.spinningOff)}
             dataSource={approveList}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
@@ -95,9 +100,9 @@ class ApproveList extends Component {
           />
         </StyledContentsWrapper>
 
-        <AntdModal width={850} visible={modalObj.visible} title="기결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
+        <AntdModal width={1000} visible={modalObj.visible} title="기결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
           <CustomWorkProcess PRC_ID={selectedRow.PRC_ID} draftId={selectedRow.DRAFT_ID || -1} viewType="VIEW" />
-          {modalObj.content}
+          <Spin spinning={this.state.loading}>{modalObj.content}</Spin>
         </AntdModal>
         <div></div>
       </>
