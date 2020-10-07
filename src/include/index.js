@@ -13,9 +13,9 @@ window.$ = $;
 
 /* hide console when use production level */
 function noConsole() {}
-if (process.env.NODE_ENV === 'production') {
-  console.log = noConsole;
-  console.error = noConsole;
-  console.warn = noConsole;
-  console.debug = noConsole;
-}
+// if (process.env.NODE_ENV === 'production') {
+//   console.log = noConsole;
+//   console.error = noConsole;
+//   console.warn = noConsole;
+//   console.debug = noConsole;
+// }
