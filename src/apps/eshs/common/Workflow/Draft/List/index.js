@@ -94,7 +94,7 @@ class DraftList extends Component {
           />
         </StyledContentsWrapper>
         <div>
-          <AntdModal width={850} visible={modalObj.visible} title="기안함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
+          <AntdModal width="75%" visible={modalObj.visible} title="기안함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
             {modalObj.content}
           </AntdModal>
         </div>

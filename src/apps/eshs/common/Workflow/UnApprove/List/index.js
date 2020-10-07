@@ -86,7 +86,7 @@ class UnApproveList extends Component {
           />
         </StyledContentsWrapper>
 
-        <AntdModal width={850} visible={modalObj.visible} title="미결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
+        <AntdModal width="75%" visible={modalObj.visible} title="미결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
           <EshsAppView {...this.props} />
           {modalObj.content}
         </AntdModal>

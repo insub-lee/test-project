@@ -6,6 +6,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 
 /* view  --start--*/
 import SafetyWorkView from 'apps/eshs/user/safety/safetyWork/safetyWorkAccept'; // 안전작업허가 view
+import WasteWaterDiaryView from 'apps/eshs/admin/environment/wasteWater/diary/view'; // 용폐수일지 view
 
 /* view  --end--*/
 
@@ -22,6 +23,8 @@ const getView = record => {
   switch (record.REL_KEY) {
     case '안전작업허가':
       return [<SafetyWorkView workNo={record.REL_KEY2} isWorkFlow />];
+    case '용폐수일지':
+      return [<WasteWaterDiaryView opDt={record.REL_KEY2} />];
     default:
       return [];
   }
