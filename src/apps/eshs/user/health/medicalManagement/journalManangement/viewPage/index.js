@@ -14,6 +14,10 @@ import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import { callBackAfterPost } from 'apps/eshs/common/submitCallbackFunc';
+import { saveProcessRule, getProcessRule } from 'apps/eshs/common/workProcessRule';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+
 import PastTable from './PastTable';
 import LatelyTable from './LatelyTable';
 
@@ -52,6 +56,12 @@ class ViewPage extends React.Component {
         url: `/api/admin/v1/common/categoryMapList`,
         type: 'POST',
         params: { PARAM: { NODE_ID: SITE_NODE_ID } },
+      },
+      {
+        key: 'vGroups',
+        url: `/api/eshs/v1/common/vgroupChildrenListByGrpIdHandler`,
+        type: 'POST',
+        params: { PARAM: { GRP_ID: 88421 } }, // 의료일지 심의권자 가상그룹
       },
     ];
 
@@ -142,14 +152,104 @@ class ViewPage extends React.Component {
   handleTypeChange = value =>
     value === 'L' ? this.setState({ isShowLately: true }, this.getLatelyDataSource) : this.setState({ isShowLately: false }, this.getPastDataSource);
 
-  handleSaveClick = () => {
+  handleAction = type => {
     const { searchValue, isShowLately } = this.state;
-    const { sagaKey, submitHandlerBySaga } = this.props;
+    const { sagaKey, submitHandlerBySaga, relKey, prcId, profile, result, spinningOn, spinningOff } = this.props;
+    spinningOn();
+    switch (type) {
+      case 'SAVE':
+        submitHandlerBySaga(sagaKey, 'POST', `/api/eshs/v1/common/health/eshs-health-journal`, searchValue, (key, response) =>
+          callBackAfterPost(key, response, isShowLately ? this.getLatelyDataSource : this.getPastDataSource),
+        );
+        break;
+      case 'SANGSIN': {
+        let siteName = '';
+        const vGroupList = (result && result.vGroups && result.vGroups.vGroupList) || [];
+        const siteList = (result && result.siteList && result.siteList.categoryMapList) || [];
+        siteName = siteList[siteList.findIndex(site => site.NODE_ID === searchValue.SITE_NODE_ID)].NAME_KOR;
 
-    submitHandlerBySaga(sagaKey, 'POST', `/api/eshs/v1/common/health/eshs-health-journal`, searchValue, (key, response) =>
-      callBackAfterPost(key, response, isShowLately ? this.getLatelyDataSource : this.getPastDataSource),
-    );
+        const submitData = {
+          TO_DATE: searchValue.JRNL_DT,
+          FROM_DATE: searchValue.JRNL_DT,
+          USER_ID: profile.USER_ID,
+          EMP_NO: profile.EMP_NO,
+          SITE_ID: searchValue.SITE_NODE_ID,
+          SYSTEM_CD: '1',
+          APP1_EMPNO: null,
+          APP1_USER_ID: null,
+          APP2_EMPNO: null,
+          APP2_USER_ID: null,
+        };
+
+        // 의료일지 process를 불러온다.
+        getProcessRule(prcId, processRule => {
+          // GRP_ID === 88422 1차 결재자
+          const firstApprovalIdx = vGroupList.findIndex(group => group.GRP_ID === 88422);
+          // GRP_ID === 88423 2차 결재자
+          const secondApprovalIdx = vGroupList.findIndex(group => group.GRP_ID === 88423);
+
+          // 의료일지 결재자 가상그룹에서 결재자정보를 processRule에 채워줌
+          processRule &&
+            processRule.DRAFT_PROCESS_STEP &&
+            processRule.DRAFT_PROCESS_STEP.forEach((step, index) => {
+              switch (step.STEP) {
+                case 2:
+                  if (vGroupList[firstApprovalIdx].USERS.value !== '[]') {
+                    const approvalList = JSON.parse(vGroupList[firstApprovalIdx].USERS.value);
+                    submitData.APP1_EMPNO = approvalList[0].EMP_NO;
+                    submitData.APP1_USER_ID = approvalList[0].USER_ID;
+                    step.APPV_MEMBER = [{ USER_ID: approvalList[0].USER_ID, DEPT_ID: approvalList[0].DEPT_ID, NAME_KOR: approvalList[0].NAME_KOR }];
+                  }
+                  break;
+                case 3:
+                  if (vGroupList[secondApprovalIdx].USERS.value !== '[]') {
+                    const approvalList = JSON.parse(vGroupList[secondApprovalIdx].USERS.value);
+                    submitData.APP2_EMPNO = approvalList[0].EMP_NO;
+                    submitData.APP2_USER_ID = approvalList[0].USER_ID;
+                    step.APPV_MEMBER = [{ USER_ID: approvalList[0].USER_ID, DEPT_ID: approvalList[0].DEPT_ID, NAME_KOR: approvalList[0].NAME_KOR }];
+                  }
+                  break;
+                default:
+                  break;
+              }
+            });
+
+          const submitProcessRule = {
+            ...processRule,
+            REL_KEY: relKey,
+            REL_KEY2: `${searchValue.SITE_NODE_ID}_${searchValue.JRNL_DT}`,
+            DRAFT_DATA: {},
+            DRAFT_TITLE: `[${siteName}] ${searchValue.JRNL_DT}`,
+          };
+          // 상신
+          return saveProcessRule(
+            submitProcessRule,
+            () =>
+              // 상신후 의료일지 상태값 update
+              submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/health/eshsHealthJrnlStatusUpdate', { PARAM: submitData }, (id, res) => {
+                if (res && res.result > 0) {
+                  return this.setState(
+                    prevState => ({
+                      dataObject: { ...prevState.dataObject, APP_STATUS: '0A' },
+                    }),
+                    () => this.showMessage(`상신 되었습니다.`),
+                  );
+                }
+                return this.showMessage('상신에 실패하였습니다. 다시 시도해주십시오.');
+              }),
+            false,
+          );
+        });
+
+        break;
+      }
+      default:
+        break;
+    }
+    spinningOff();
   };
+
+  showMessage = text => message.info(<MessageContent>{text}</MessageContent>);
 
   render() {
     const {
@@ -160,9 +260,20 @@ class ViewPage extends React.Component {
       handleModalClose,
       handleTypeChange,
       getLatelyDataSource,
-      handleSaveClick,
+      handleAction,
     } = this;
     const { siteList, dataObject, searchValue, useBedPatient, modalVisible, isShowLately } = this.state;
+    const { profile } = this.props;
+    const appStatus = (dataObject && dataObject.APP_STATUS) || '';
+    const createUserId = (dataObject && dataObject.CREATE_USER_ID) || '';
+    /* 
+      APP_STATUS  결재상태
+      '', null - 미저장 (저장버튼 사용 가능)
+      0 - 저장
+      0A - 상신
+      1A - 1차승인
+      2A - 완료 
+    */
     return (
       <>
         <StyledContentsWrapper>
@@ -173,7 +284,7 @@ class ViewPage extends React.Component {
                 className="select-mid mr5"
                 value={searchValue.SITE_NODE_ID}
                 onChange={value => handleInputChange('SITE_NODE_ID', value)}
-                style={{ width: '7%' }}
+                style={{ width: '10%' }}
               >
                 {siteList.map(site => (
                   <Select.Option value={site.NODE_ID}>{site.NAME_KOR}</Select.Option>
@@ -182,7 +293,7 @@ class ViewPage extends React.Component {
               <span className="text-label">날짜</span>
               <AntdPicker allowClear={false} className="ant-picker-mid mr5" value={moment(searchValue.JRNL_DT)} onChange={handleDateChange} />
               <span className="text-label">구분</span>
-              <AntdSelect className="select-mid mr5" defaultValue="L" onChange={handleTypeChange} style={{ width: '10%' }}>
+              <AntdSelect className="select-mid mr5" defaultValue="L" onChange={handleTypeChange} style={{ width: '13%' }}>
                 <Select.Option value="P">과거 일지</Select.Option>
                 <Select.Option value="L">최근 일지</Select.Option>
               </AntdSelect>
@@ -192,14 +303,19 @@ class ViewPage extends React.Component {
               <StyledButton className="btn-gray btn-sm mr5" onClick={handleModalVisible}>
                 목록
               </StyledButton>
+              {!appStatus && (
+                <StyledButton className="btn-primary btn-sm mr5" onClick={() => handleAction('SAVE')}>
+                  저장
+                </StyledButton>
+              )}
+              {appStatus === '0' && String(profile.USER_ID) === createUserId && (
+                <StyledButton className="btn-primary btn-sm mr5" onClick={() => handleAction('SANGSIN')}>
+                  상신
+                </StyledButton>
+              )}
+              {/* <StyledButton className="btn-gray btn-sm">완료통보</StyledButton>  현재 미사용 */}
             </div>
           </StyledCustomSearchWrapper>
-          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-            <StyledButton className="btn-primary btn-sm mr5" onClick={handleSaveClick}>
-              저장
-            </StyledButton>
-            <StyledButton className="btn-gray btn-sm">완료통보</StyledButton>
-          </StyledButtonWrapper>
           {isShowLately ? (
             <LatelyTable dataObject={dataObject} useBedPatient={useBedPatient} />
           ) : (

@@ -16,6 +16,7 @@ import EiMaterial from 'apps/eshs/user/environment/eia/eiMaterial'; // 원부재
 import EiStatement from 'apps/eshs/user/environment/eia/eiStatement'; // 환경영향평가서
 import EiImportantAssesment from 'apps/eshs/user/environment/eia/eiImportantAssesment'; // 중대환경영향등록부
 /* 환경영향평가  --end--*/
+import JournalManagement from 'apps/eshs/user/health/medicalManagement/journalManangement'; // 의료일지
 
 /* view  --end--*/
 
@@ -125,6 +126,9 @@ const getView = (record, spinningOn, spinningOff, handleModal) => {
           </StyledButtonWrapper>
         </div>,
       ];
+    case '의료일지':
+      const relArray = record.REL_KEY2.split('_');
+      return [<JournalManagement SITE_NODE_ID={relArray[0] ? Number(relArray[0]) : null} JRNL_DT={relArray[1]} />];
     default:
       return [];
   }
