@@ -45,7 +45,7 @@ class PollInput extends Component {
       },
       questionData: {},
     };
-  };
+  }
 
   setSelectOption = (keyPrefix, textSuffix, startNum, endNum, increase) => {
     const options = [];

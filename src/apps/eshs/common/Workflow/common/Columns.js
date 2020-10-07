@@ -10,15 +10,12 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 /* view  --start--*/
 import SafetyWorkView from 'apps/eshs/user/safety/safetyWork/safetyWorkAccept'; // 안전작업허가 view
-<<<<<<< src/apps/eshs/common/Workflow/common/Columns.js
 import WasteWaterDiaryView from 'apps/eshs/admin/environment/wasteWater/diary/view'; // 용폐수일지 view
-=======
 /* 환경영향평가  --start--*/
 import EiMaterial from 'apps/eshs/user/environment/eia/eiMaterial'; // 원부재료
 import EiStatement from 'apps/eshs/user/environment/eia/eiStatement'; // 환경영향평가서
 import EiImportantAssesment from 'apps/eshs/user/environment/eia/eiImportantAssesment'; // 중대환경영향등록부
 /* 환경영향평가  --end--*/
->>>>>>> src/apps/eshs/common/Workflow/common/Columns.js
 
 /* view  --end--*/
 
