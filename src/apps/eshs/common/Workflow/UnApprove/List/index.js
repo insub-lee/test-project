@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, Modal } from 'antd';
+import { Table, Icon, Modal, Spin } from 'antd';
 
 import moment from 'moment';
 
@@ -25,6 +25,7 @@ class UnApproveList extends Component {
     this.state = {
       paginationIdx: 1,
       pageSize: 10,
+      loading: false,
       modalObj: {
         visible: false,
         content: [],
@@ -59,6 +60,10 @@ class UnApproveList extends Component {
       getUnApproveList(prefixUrl, paginationIdx, pageSize, relTypes);
     });
 
+  spinningOn = () => this.setState({ loading: true });
+
+  spinningOff = () => this.setState({ loading: false });
+
   render() {
     const { unApproveList, unApproveListCnt, viewVisible } = this.props;
     const { paginationIdx, modalObj } = this.state;
@@ -75,7 +80,7 @@ class UnApproveList extends Component {
         <StyledContentsWrapper>
           <AntdLineTable
             key="QUE_ID"
-            columns={columns(this.handleModal, 'UNAPPROVE')}
+            columns={columns(this.handleModal, 'UNAPPROVE', this.spinningOn, this.spinningOff)}
             dataSource={unApproveList}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
@@ -86,9 +91,9 @@ class UnApproveList extends Component {
           />
         </StyledContentsWrapper>
 
-        <AntdModal width="75%" visible={modalObj.visible} title="미결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
+        <AntdModal width={1000} visible={modalObj.visible} title="미결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
           <EshsAppView {...this.props} />
-          {modalObj.content}
+          <Spin spinning={this.state.loading}>{modalObj.content}</Spin>
         </AntdModal>
       </>
     );

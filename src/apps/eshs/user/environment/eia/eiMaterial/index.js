@@ -5,13 +5,14 @@ import MainPage from './MainPage';
 
 class eiMaterial extends Component {
   render() {
-    const { searchData } = this.props;
-    return <BizMicroDevBase component={MainPage} sagaKey="eiMaterial" searchData={searchData} />;
+    const { searchData, deptSearchBarVisible } = this.props;
+    return <BizMicroDevBase component={MainPage} sagaKey="eiMaterial" searchData={searchData} deptSearchBarVisible={deptSearchBarVisible} />;
   }
 }
 
 eiMaterial.propTypes = {
   searchData: PropTypes.object,
+  deptSearchBarVisible: PropTypes.bool,
 };
 
 eiMaterial.defaultProps = {

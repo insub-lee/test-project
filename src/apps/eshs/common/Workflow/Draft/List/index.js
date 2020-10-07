@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, Button, message, Modal } from 'antd';
+import { Table, Icon, Button, message, Modal, Spin } from 'antd';
 import moment from 'moment';
 
 import BizBuilderBase from 'components/BizBuilderBase';
@@ -23,6 +23,7 @@ class DraftList extends Component {
       workPrcProps: undefined,
       paginationIdx: 1,
       pageSize: 10,
+      loading: false,
       modalObj: {
         visible: false,
         content: [],
@@ -67,6 +68,10 @@ class DraftList extends Component {
       getDraftList(fixUrl, paginationIdx, pageSize, relTypes);
     });
 
+  spinningOn = () => this.setState({ loading: true });
+
+  spinningOff = () => this.setState({ loading: false });
+
   render() {
     // const { approveList } = this.props;
     const { draftList, draftListCnt } = this.props;
@@ -83,7 +88,7 @@ class DraftList extends Component {
         <StyledContentsWrapper>
           <AntdTable
             key="QUE_ID"
-            columns={columns(this.handleModal, 'DRAFT')}
+            columns={columns(this.handleModal, 'DRAFT', this.spinningOn, this.spinningOff)}
             dataSource={draftList}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
@@ -94,8 +99,8 @@ class DraftList extends Component {
           />
         </StyledContentsWrapper>
         <div>
-          <AntdModal width="75%" visible={modalObj.visible} title="기안함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
-            {modalObj.content}
+          <AntdModal width={1000} visible={modalObj.visible} title="기안함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
+            <Spin spinning={this.state.loading}>{modalObj.content}</Spin>
           </AntdModal>
         </div>
       </>

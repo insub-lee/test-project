@@ -11,7 +11,7 @@ class JrnlStatsList extends Component {
 
   render() {
     const { sagaKey, customOnRowClick, saveBtn } = this.props;
-    return <BizMicroDevBase sagaKey={sagaKey} component={List} />;
+    return <BizMicroDevBase sagaKey={sagaKey} component={List} relKey="의료일지" prcId={112} />;
   }
 }
 
