@@ -4,7 +4,7 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 import ViewPage from './viewPage';
 
 const JournalManagement = ({ SITE_NODE_ID, JRNL_DT }) => (
-  <BizMicroDevBase sagaKey="JournalManagement" component={ViewPage} SITE_NODE_ID={SITE_NODE_ID} JRNL_DT={JRNL_DT} />
+  <BizMicroDevBase sagaKey="JournalManagement" component={ViewPage} SITE_NODE_ID={SITE_NODE_ID} JRNL_DT={JRNL_DT} relKey="의료일지" prcId={112} />
 );
 
 JournalManagement.propTypes = {
