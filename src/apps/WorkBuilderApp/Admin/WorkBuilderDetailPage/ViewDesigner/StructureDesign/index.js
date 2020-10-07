@@ -159,6 +159,7 @@ const StructureDesign = ({
                                   viewType={viewType}
                                   groupType={group.type}
                                   action={action}
+                                  compList={compList}
                                   compPoolList={compPoolList}
                                   setCompConfigModal={(cFlag, cType, cProp, modalType) => setCompConfigModal([cFlag, cType, cProp, modalType])}
                                 />
@@ -347,6 +348,7 @@ const StructureDesign = ({
             action={action}
             compPoolList={compPoolList}
             compGroupList={compGroupList}
+            compList={compList}
             groups={groups}
             classNameList={classNameList}
             onCloseModal={() => setCompConfigModal([false, '', {}, 'COMP'])}

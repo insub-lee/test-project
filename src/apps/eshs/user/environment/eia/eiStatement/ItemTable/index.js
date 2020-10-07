@@ -7,7 +7,7 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import moment from 'moment';
 
 import { excelStyle } from 'apps/eshs/user/environment/eia/excelStyle';
@@ -208,17 +208,17 @@ class ItemTable extends Component {
         <table className="table-border">
           <colgroup>
             <col width="5%" />
-            <col width="10%" />
+            <col width="11%" />
+            <col width="7%" />
+            <col width="6%" />
+            <col width="7%" />
+            <col width="8%" />
+            <col width="9%" />
+            <col width="8%" />
             <col width="7%" />
             <col width="7%" />
-            <col width="7%" />
-            <col width="7%" />
-            <col width="8%" />
-            <col width="8%" />
-            <col width="8%" />
-            <col width="8%" />
-            <col width="10%" />
-            <col width="8%" />
+            <col width="9%" />
+            <col width="9%" />
             <col width="7%" />
           </colgroup>
           <thead>
@@ -277,22 +277,38 @@ class ItemTable extends Component {
               </th>
               <th className="th-pointer">
                 <Popover content={<img src={popoverContent.Eee2} alt="투입배출관리(D)" style={{ width: 526, height: 162 }} />} title={null}>
-                  <span className="popoverTitle">투입배출관리(D)</span>
+                  <span className="popoverTitle">
+                    투입배출관리
+                    <br />
+                    (D)
+                  </span>
                 </Popover>
               </th>
               <th className="th-pointer">
                 <Popover content={<img src={popoverContent.Eee3} alt="개선계획서(E)" style={{ width: 473, height: 106 }} />} title={null}>
-                  <span className="popoverTitle">개선계획서(E)</span>
+                  <span className="popoverTitle">
+                    개선계획서
+                    <br />
+                    (E)
+                  </span>
                 </Popover>
               </th>
               <th className="th-pointer">
                 <Popover content={<img src={popoverContent.Eee4} alt="문서화(F)" style={{ width: 585, height: 138 }} />} title={null}>
-                  <span className="popoverTitle">문서화(F)</span>
+                  <span className="popoverTitle">
+                    문서화
+                    <br />
+                    (F)
+                  </span>
                 </Popover>
               </th>
               <th className="th-pointer">
                 <Popover content={<img src={popoverContent.Eee5} alt="발생주기(G)" style={{ width: 254, height: 107 }} />} title={null}>
-                  <span className="popoverTitle">발생주기(G)</span>
+                  <span className="popoverTitle">
+                    발생주기
+                    <br />
+                    (G)
+                  </span>
                 </Popover>
               </th>
               <th>
@@ -348,7 +364,7 @@ class ItemTable extends Component {
                 </td>
                 <td>
                   <AntdSelect
-                    className="selectMid"
+                    className="select-sm"
                     defaultValue={item.MANAGE_INPUT_OUPUT || '1'}
                     onChange={value => this.handleSelectOnChange(value, 'MANAGE_INPUT_OUPUT', item.SEQ)}
                   >
@@ -360,7 +376,7 @@ class ItemTable extends Component {
                 </td>
                 <td>
                   <AntdSelect
-                    className="selectMid"
+                    className="select-sm"
                     defaultValue={item.IMPROVEMENT_PLAN_REPORT || '0'}
                     onChange={value => this.handleSelectOnChange(value, 'IMPROVEMENT_PLAN_REPORT', item.SEQ)}
                   >
@@ -370,7 +386,7 @@ class ItemTable extends Component {
                 </td>
                 <td>
                   <AntdSelect
-                    className="selectMid"
+                    className="select-sm"
                     defaultValue={item.DOCUMENTATION || '0'}
                     onChange={value => this.handleSelectOnChange(value, 'DOCUMENTATION', item.SEQ)}
                   >
@@ -380,7 +396,7 @@ class ItemTable extends Component {
                 </td>
                 <td>
                   <AntdSelect
-                    className="selectMid"
+                    className="select-sm"
                     defaultValue={item.HAPPEN_PULSE || '1'}
                     onChange={value => this.handleSelectOnChange(value, 'HAPPEN_PULSE', item.SEQ)}
                   >

@@ -269,17 +269,17 @@ class ItemTable extends Component {
         </StyledButtonWrapper>
         <table className="table-border">
           <colgroup>
-            <col width="4%" />
-            <col width="4%" />
+            <col width="3%" />
+            <col width="5%" />
             <col width="6%" />
-            <col width="8%" />
+            <col width="11%" />
             <col width="16%" />
             <col width="16%" />
             <col width="9%" />
             <col width="9%" />
             <col width="9%" />
             <col width="9%" />
-            <col width="14%" />
+            <col width="11%" />
           </colgroup>
           <thead>
             <tr>

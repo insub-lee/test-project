@@ -77,10 +77,10 @@ class MainPage extends Component {
   };
 
   render() {
-    const { formData } = this.props;
+    const { formData, deptSearchBarVisible } = this.props;
     return (
       <StyledContentsWrapper>
-        <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+        <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} deptSearchBarVisible={deptSearchBarVisible} />
         <div>
           <MaterialTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
         </div>

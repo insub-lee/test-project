@@ -176,21 +176,40 @@ class SafetyWorkMain extends Component {
     const { relKey, relKey2 } = this.props;
     const { processRule, formData } = this.state;
 
-    saveProcessRule({
-      ...processRule,
-      DRAFT_DATA: {},
-      REL_KEY: relKey,
-      REL_KEY2: formData[relKey2],
-      DRAFT_TITLE: formData.TITLE,
-    }).then(draftId => {
-      if (draftId) {
-        return this.setState({
-          formData: { ...formData, DRAFT_ID: draftId },
-          tempProcessRule: {},
-        });
-      }
-      return false;
-    });
+    saveProcessRule(
+      {
+        ...processRule,
+        DRAFT_DATA: {},
+        REL_KEY: relKey,
+        REL_KEY2: formData[relKey2],
+        DRAFT_TITLE: formData.TITLE,
+      },
+      draftId => {
+        if (draftId) {
+          return this.setState({
+            formData: { ...formData, DRAFT_ID: draftId },
+            tempProcessRule: {},
+          });
+        }
+        return false;
+      },
+    );
+
+    // saveProcessRule({
+    //   ...processRule,
+    //   DRAFT_DATA: {},
+    //   REL_KEY: relKey,
+    //   REL_KEY2: formData[relKey2],
+    //   DRAFT_TITLE: formData.TITLE,
+    // }).then(draftId => {
+    //   if (draftId) {
+    //     return this.setState({
+    //       formData: { ...formData, DRAFT_ID: draftId },
+    //       tempProcessRule: {},
+    //     });
+    //   }
+    //   return false;
+    // });
   };
 
   // 안전교육 수료자 가져오기

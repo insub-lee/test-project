@@ -25,24 +25,27 @@ const AntInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 
 class PollInput extends Component {
-  state = {
-    formData: {
-      POYEAR: currentYear,
-      SEX: '1',
-      JOBYEAR01: '1',
-      JOBYEAR02: '0',
-      ISMATE: '1',
-      JOB02: '1',
-      JOB03: '0',
-      RECESS01: '5',
-      RECESS02: '1',
-      JOB05: '1',
-      JOB06: '0',
-      WORKTIME01: '1',
-      WORKTIME02: '00',
-    },
-    questionData: {},
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      formData: {
+        POYEAR: currentYear,
+        SEX: '1',
+        JOBYEAR01: '1',
+        JOBYEAR02: '0',
+        ISMATE: '1',
+        JOB02: '1',
+        JOB03: '0',
+        RECESS01: '5',
+        RECESS02: '1',
+        JOB05: '1',
+        JOB06: '0',
+        WORKTIME01: '1',
+        WORKTIME02: '00',
+      },
+      questionData: {},
+    };
+  }
 
   setSelectOption = (keyPrefix, textSuffix, startNum, endNum, increase) => {
     const options = [];
