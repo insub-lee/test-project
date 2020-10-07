@@ -10,6 +10,7 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
 /* view  --start--*/
 import SafetyWorkView from 'apps/eshs/user/safety/safetyWork/safetyWorkAccept'; // 안전작업허가 view
+import WasteWaterDiaryView from 'apps/eshs/admin/environment/wasteWater/diary/view'; // 용폐수일지 view
 /* 환경영향평가  --start--*/
 import EiMaterial from 'apps/eshs/user/environment/eia/eiMaterial'; // 원부재료
 import EiStatement from 'apps/eshs/user/environment/eia/eiStatement'; // 환경영향평가서
@@ -30,6 +31,8 @@ const getView = (record, spinningOn, spinningOff, handleModal) => {
 
   //  SI view 생성
   switch (record.REL_KEY) {
+    case '용폐수일지':
+      return [<WasteWaterDiaryView opDt={record.REL_KEY2} />];
     case '안전작업허가':
       return [<SafetyWorkView workNo={record.REL_KEY2} isWorkFlow key="안전작업허가 VIEW" />];
     case '환경영향평가':

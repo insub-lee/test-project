@@ -24,12 +24,12 @@ const QuickLinkBar = props => (
     <div className="eshs-quicklink">
       <span className="eshs-quicklink-title">정부기관 및 관공서 관련사이트</span>
       <AntdSelect
-        placeholder="보건 - Health Site"
+        placeholder="환경 - Enviroment Site"
         className="select-xs ant-select-inline"
         style={{ width: '25%', marginRight: '10px' }}
         onChange={value => quickLinkSelect(value)}
       >
-        {site.healthSite.map(item => {
+        {site.EnvSite.map(item => {
           const { value, childSite } = item;
           return (
             <AntdSelect.OptGroup label={value}>
@@ -62,12 +62,12 @@ const QuickLinkBar = props => (
         })}
       </AntdSelect>
       <AntdSelect
-        placeholder="환경 - Enviroment Site"
+        placeholder="보건 - Health Site"
         className="select-xs ant-select-inline"
         style={{ width: '25%', marginRight: '10px' }}
         onChange={value => quickLinkSelect(value)}
       >
-        {site.EnvSite.map(item => {
+        {site.healthSite.map(item => {
           const { value, childSite } = item;
           return (
             <AntdSelect.OptGroup label={value}>
