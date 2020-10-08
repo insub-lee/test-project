@@ -130,30 +130,42 @@ class List extends Component {
     const firstApprovalIdx = vGroupList.findIndex(group => group.GRP_ID === 88422);
     // GRP_ID === 88423 2차 결재자
     const secondApprovalIdx = vGroupList.findIndex(group => group.GRP_ID === 88423);
-    processRule &&
-      processRule.DRAFT_PROCESS_STEP &&
-      processRule.DRAFT_PROCESS_STEP.forEach((step, index) => {
-        switch (step.STEP) {
-          case 2:
-            if (vGroupList[firstApprovalIdx].USERS.value !== '[]') {
-              const approvalList = JSON.parse(vGroupList[firstApprovalIdx].USERS.value);
-              approVal.APP1_EMPNO = approvalList[0].EMP_NO;
-              approVal.APP1_USER_ID = approvalList[0].USER_ID;
-              step.APPV_MEMBER = [{ USER_ID: approvalList[0].USER_ID, DEPT_ID: approvalList[0].DEPT_ID, NAME_KOR: approvalList[0].NAME_KOR }];
-            }
-            break;
-          case 3:
-            if (vGroupList[secondApprovalIdx].USERS.value !== '[]') {
-              const approvalList = JSON.parse(vGroupList[secondApprovalIdx].USERS.value);
-              approVal.APP2_EMPNO = approvalList[0].EMP_NO;
-              approVal.APP2_USER_ID = approvalList[0].USER_ID;
-              step.APPV_MEMBER = [{ USER_ID: approvalList[0].USER_ID, DEPT_ID: approvalList[0].DEPT_ID, NAME_KOR: approvalList[0].NAME_KOR }];
-            }
-            break;
-          default:
-            break;
-        }
-      });
+    processRule?.DRAFT_PROCESS_STEP?.forEach((step, index) => {
+      switch (step.STEP) {
+        case 2:
+          if (vGroupList[firstApprovalIdx]?.USERS?.value !== '[]') {
+            const approvalList = JSON.parse(vGroupList[firstApprovalIdx].USERS.value);
+            approVal.APP1_EMPNO = approvalList[0]?.EMP_NO;
+            approVal.APP1_USER_ID = approvalList[0]?.USER_ID;
+            step.APPV_MEMBER = [
+              {
+                USER_ID: approvalList[0]?.USER_ID,
+                DEPT_ID: approvalList[0]?.DEPT_ID,
+                NAME_KOR: approvalList[0]?.NAME_KOR,
+                DEPT_NAME_KOR: approvalList[0]?.DEPT_NAME_KOR,
+              },
+            ];
+          }
+          break;
+        case 3:
+          if (vGroupList[secondApprovalIdx]?.USERS?.value !== '[]') {
+            const approvalList = JSON.parse(vGroupList[secondApprovalIdx]?.USERS?.value);
+            approVal.APP2_EMPNO = approvalList[0]?.EMP_NO;
+            approVal.APP2_USER_ID = approvalList[0]?.USER_ID;
+            step.APPV_MEMBER = [
+              {
+                USER_ID: approvalList[0]?.USER_ID,
+                DEPT_ID: approvalList[0]?.DEPT_ID,
+                NAME_KOR: approvalList[0]?.NAME_KOR,
+                DEPT_NAME_KOR: approvalList[0]?.DEPT_NAME_KOR,
+              },
+            ];
+          }
+          break;
+        default:
+          break;
+      }
+    });
     const submitData = {
       PARAM: {
         ...searchParam,
@@ -169,7 +181,7 @@ class List extends Component {
     switch (actionType) {
       case 'SANGSIN':
         list
-          .filter(item => item.APP_STATUS === '0' && item.CREATE_USER_ID === profile.USER_ID)
+          .filter(item => item.APP_STATUS === '0' && item?.CREATE_USER_ID === profile.USER_ID)
           .forEach((item, index) => {
             if (!index) {
               siteName = workAreaList[workAreaList.findIndex(site => site.NODE_ID === item.SITE_NODE_ID)].NAME_KOR;
