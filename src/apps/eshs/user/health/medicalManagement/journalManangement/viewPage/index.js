@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select, DatePicker, Modal, Input } from 'antd';
+import { Select, DatePicker, Modal, Input, Popconfirm } from 'antd';
 import moment from 'moment';
 
 import UsageManagement from 'apps/eshs/user/health/medicalManagement/usageManagement';
@@ -43,6 +43,8 @@ class ViewPage extends React.Component {
   }
 
   componentDidMount() {
+    const { spinningOn } = this.props;
+    spinningOn();
     this.getInitData();
     this.getLatelyDataSource();
   }
@@ -77,10 +79,10 @@ class ViewPage extends React.Component {
 
   getPastDataSource = () => {
     const { searchValue } = this.state;
-    const { sagaKey, getCallDataHandler } = this.props;
+    const { sagaKey, getCallDataHandler, spinningOn } = this.props;
     const apiUrl = '/api/eshs/v1/common/health-usage-journal-past';
     const queryString = new URLSearchParams(searchValue).toString();
-
+    spinningOn();
     const apiArr = [
       {
         key: 'dataSource',
@@ -98,21 +100,22 @@ class ViewPage extends React.Component {
   };
 
   setDataSource = () => {
-    const { result } = this.props;
+    const { result, spinningOff } = this.props;
     this.setState(prevState => {
       const tempList = (result.dataSource && result.dataSource.list) || [];
       const useBedPatient = (result.useBedPatient && result.useBedPatient.list) || [];
       const dataObject = {};
       tempList.map(item => Object.assign(dataObject, { [item.KEY]: item.VALUE }));
       return { dataObject, useBedPatient, searchValue: Object.assign(prevState.searchValue, { NOTE: dataObject.NOTE }) };
-    });
+    }, spinningOff);
   };
 
   getLatelyDataSource = () => {
     const { searchValue } = this.state;
-    const { sagaKey, getCallDataHandler } = this.props;
+    const { sagaKey, getCallDataHandler, spinningOn } = this.props;
     const apiUrl = '/api/eshs/v1/common/health-usage-journal-lately';
     const queryString = new URLSearchParams(searchValue).toString();
+    spinningOn();
     const apiArr = [
       {
         key: 'dataSource',
@@ -198,7 +201,14 @@ class ViewPage extends React.Component {
                     const approvalList = JSON.parse(vGroupList[firstApprovalIdx].USERS.value);
                     submitData.APP1_EMPNO = approvalList[0].EMP_NO;
                     submitData.APP1_USER_ID = approvalList[0].USER_ID;
-                    step.APPV_MEMBER = [{ USER_ID: approvalList[0].USER_ID, DEPT_ID: approvalList[0].DEPT_ID, NAME_KOR: approvalList[0].NAME_KOR }];
+                    step.APPV_MEMBER = [
+                      {
+                        USER_ID: approvalList[0].USER_ID,
+                        DEPT_ID: approvalList[0].DEPT_ID,
+                        NAME_KOR: approvalList[0].NAME_KOR,
+                        DEPT_NAME_KOR: approvalList[0].DEPT_NAME_KOR,
+                      },
+                    ];
                   }
                   break;
                 case 3:
@@ -206,7 +216,14 @@ class ViewPage extends React.Component {
                     const approvalList = JSON.parse(vGroupList[secondApprovalIdx].USERS.value);
                     submitData.APP2_EMPNO = approvalList[0].EMP_NO;
                     submitData.APP2_USER_ID = approvalList[0].USER_ID;
-                    step.APPV_MEMBER = [{ USER_ID: approvalList[0].USER_ID, DEPT_ID: approvalList[0].DEPT_ID, NAME_KOR: approvalList[0].NAME_KOR }];
+                    step.APPV_MEMBER = [
+                      {
+                        USER_ID: approvalList[0].USER_ID,
+                        DEPT_ID: approvalList[0].DEPT_ID,
+                        NAME_KOR: approvalList[0].NAME_KOR,
+                        DEPT_NAME_KOR: approvalList[0].DEPT_NAME_KOR,
+                      },
+                    ];
                   }
                   break;
                 default:
@@ -274,6 +291,9 @@ class ViewPage extends React.Component {
       1A - 1차승인
       2A - 완료 
     */
+
+    console.debug('appStatus ', appStatus);
+    console.debug('dataObject ', dataObject);
     return (
       <>
         <StyledContentsWrapper>
@@ -304,14 +324,14 @@ class ViewPage extends React.Component {
                 목록
               </StyledButton>
               {!appStatus && (
-                <StyledButton className="btn-primary btn-sm mr5" onClick={() => handleAction('SAVE')}>
-                  저장
-                </StyledButton>
+                <Popconfirm title="저장하시겠습니까?" onConfirm={() => handleAction('SAVE')} okText="Yes" cancelText="No">
+                  <StyledButton className="btn-primary btn-sm mr5">저장</StyledButton>
+                </Popconfirm>
               )}
               {appStatus === '0' && String(profile.USER_ID) === createUserId && (
-                <StyledButton className="btn-primary btn-sm mr5" onClick={() => handleAction('SANGSIN')}>
-                  상신
-                </StyledButton>
+                <Popconfirm title="상신하시겠습니까?" onConfirm={() => handleAction('SANGSIN')} okText="Yes" cancelText="No">
+                  <StyledButton className="btn-primary btn-sm mr5">상신</StyledButton>
+                </Popconfirm>
               )}
               {/* <StyledButton className="btn-gray btn-sm">완료통보</StyledButton>  현재 미사용 */}
             </div>

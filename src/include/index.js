@@ -1,3 +1,4 @@
+/* load css in here one time but must check */
 import * as $ from 'jquery';
 import 'antd/dist/antd.min.css';
 import 'xeicon/xeicon.min.css';

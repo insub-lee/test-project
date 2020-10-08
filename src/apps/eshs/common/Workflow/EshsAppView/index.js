@@ -130,7 +130,7 @@ class EshsAppView extends Component {
 
   onModalClose = () => {
     const { getUnApproveList } = this.props;
-    const prefixUrl = '/api/workflow/v1/common/approve/UnApproveListMDCSHandler';
+    const prefixUrl = '/api/workflow/v1/common/approve/unApproveList';
     getUnApproveList(prefixUrl);
     this.props.setViewVisible(false);
   };

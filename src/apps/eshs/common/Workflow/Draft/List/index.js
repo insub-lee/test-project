@@ -11,6 +11,7 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess';
 
 import { columns } from 'apps/eshs/common/Workflow/common/Columns';
 const AntdTable = StyledAntdTable(Table);
@@ -74,7 +75,7 @@ class DraftList extends Component {
 
   render() {
     // const { approveList } = this.props;
-    const { draftList, draftListCnt } = this.props;
+    const { draftList, draftListCnt, selectedRow } = this.props;
     const { paginationIdx, modalObj } = this.state;
     return (
       <>
@@ -100,6 +101,8 @@ class DraftList extends Component {
         </StyledContentsWrapper>
         <div>
           <AntdModal width={1000} visible={modalObj.visible} title="기안함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
+            <CustomWorkProcess PRC_ID={selectedRow.PRC_ID} draftId={selectedRow.DRAFT_ID || -1} viewType="VIEW" />
+
             <Spin spinning={this.state.loading}>{modalObj.content}</Spin>
           </AntdModal>
         </div>
