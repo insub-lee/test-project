@@ -92,7 +92,7 @@ class UnApproveList extends Component {
         </StyledContentsWrapper>
 
         <AntdModal width={1000} visible={modalObj.visible} title="미결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
-          <EshsAppView {...this.props} />
+          <EshsAppView {...this.props} setViewVisible={this.handleModal} />
           <Spin spinning={this.state.loading}>{modalObj.content}</Spin>
         </AntdModal>
       </>
