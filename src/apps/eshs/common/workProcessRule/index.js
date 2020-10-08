@@ -27,29 +27,39 @@ export const getDraftProcessRule = async DRAFT_ID => {
   return (result.response && result.response.draftPrcRule) || {};
 };
 
-export const saveProcessRule = async (processRule, callBack, messageFlag = true) => {
+export const saveProcessRule = async (processRule, callBack = () => {}, messageFlag = true) => {
   const processStep = (processRule && processRule.DRAFT_PROCESS_STEP) || [];
   let msg = '';
   if (!processStep.length) {
     message.info(<MessageContent>결재 정보가 없습니다.</MessageContent>);
     return false;
   }
-  const ruleCheckList = processStep.filter(rule => rule.ISREQUIRED === 1);
-  ruleCheckList.some(rule => {
-    if (rule.APPV_MEMBER.length === 0) {
-      msg = `${(rule && rule.RULE_CONFIG && rule.RULE_CONFIG.Label) || rule.NAME_KOR} 단계의 결재를 선택해 주세요`;
-    }
-    return msg;
-  });
+  processStep
+    .filter(step => step.ISREQUIRED === 1)
+    .some(step => {
+      if (!(0 in step?.APPV_MEMBER)) {
+        msg = `${(step && step.RULE && step.RULE_CONFIG.Label) || step.NAME_KOR} 단계의 결재를 선택해 주세요`;
+      }
+      return msg;
+    });
 
   if (msg) {
     message.info(<MessageContent>{msg}</MessageContent>);
     return false;
   }
+  /* process에서 결재 불필요로 체크, 결재자정보가 없을경우 결재STEP에서 제외 로직 */
+  /* 결재 필수체크(0) 불필요이고 결재자정보가 없고 NODE_ID(ESHS결재자(135), 프로세스 종료(113))가 아닐경우 STEP에서 제외 */
+  const processStepWithOutNullApprover = processStep
+    .filter(step => !(step.ISREQUIRED === 0 && !(0 in step?.APPV_MEMBER) && step.NODE_ID !== 135 && step.NODE_ID !== 113))
+    .map((step, index, filterArray) => {
+      if (step.NODE_ID === 135) return step; // ESHS결재자 노드일경우 STEP정보 그대로
+      return { ...step, STEP: index + 1, PARENT_PRC_RULE_ID: filterArray[index - 1].PRC_RULE_ID };
+    });
+
   const result = await request({
     method: 'POST',
     url: '/api/workflow/v1/common/workprocess/draft',
-    data: { DRAFT_PROCESS: { ...processRule, REL_TYPE: ESH_REL_TYPE } },
+    data: { DRAFT_PROCESS: { ...processRule, DRAFT_PROCESS_STEP: processStepWithOutNullApprover, REL_TYPE: ESH_REL_TYPE } },
     json: true,
   }).then(({ response }) => {
     const draftId = (response && response.draftProcess && response.draftProcess.DRAFT_ID) || undefined;
