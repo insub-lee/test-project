@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import moment from 'moment';
+import Table from 'rc-table';
 
 import GlobalStyle from '../../../components/GlobalStyle';
 import Spin from '../../../components/AntdSpinner';

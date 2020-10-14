@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import moment from 'moment';
 
 const location = [
@@ -17,7 +17,6 @@ const type = [
   { value: 'action', text: '조치현황' },
   { value: 'registration', text: '등록건수현황' },
 ];
-
 const useHooks = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [startDate, setStartDate] = useState(() =>
@@ -165,7 +164,6 @@ const useHooks = () => {
     data: [],
   });
   const [registTrendInfo, setRegistTrendInfo] = useState({ isLoaded: false, labels: [], datasets: [] });
-
   const optionTerm = {
     label: '등록기간',
     values: [
@@ -173,7 +171,6 @@ const useHooks = () => {
       { name: 'endDate', value: endDate },
     ],
   };
-
   const handleReportDown = () => {};
 
   const enableExpandedView = () => {};

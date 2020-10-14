@@ -1,7 +1,6 @@
 import React from 'react';
 
 import GlobalStyle from '../../../components/GlobalStyle';
-import Spin from '../../../components/AntdSpinner';
 import TitleContainerWithSub from '../../../components/TitleContainerWithSub';
 import DatePicker from '../../../components/FormPreview/DatePicker';
 import StyledCommonForm from '../../../components/CommonStyledElement/StyledCommonForm';
