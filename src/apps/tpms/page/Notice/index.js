@@ -17,6 +17,7 @@ import Button from '../../components/Button';
 import { ModalHugger } from '../../components/ModalHugger';
 
 import usePostList from '../../hooks/usePostList';
+import { useModalController } from '../../hooks/useModalController';
 
 /**
  * TPMS - 공지사항
@@ -53,6 +54,11 @@ const Notice = () => {
     action: { submitSearchQuery, pageHandler, pageSizeHandler },
   } = usePostList({ brdid: 'brd00000000000000002' });
 
+  const {
+    modalStatus,
+    actions: { closeModal, openModal },
+  } = useModalController(['REG', 'MOD', 'DEL', 'INQ']);
+
   const columns = useMemo(
     () => [
       {
@@ -75,7 +81,7 @@ const Notice = () => {
         key: 'title',
         width: '45%',
         render: (title, record) => (
-          <button type="button" onClick={() => console.debug(record)}>
+          <button type="button" onClick={() => openModal('INQ')}>
             {record.isReply && (
               <>
                 <span className="icon icon_reply" />
@@ -115,7 +121,6 @@ const Notice = () => {
     [],
   );
 
-  const [openModal, setOpenModal] = useState(false);
   return (
     <>
       <div className="tpms-view">
@@ -139,9 +144,9 @@ const Notice = () => {
                   </form>
                 </StyledSearch>
                 <div className="btn_wrap" />
-                <button type="button" onClick={() => setOpenModal(true)}>
+                <Button color="primary" size="big" onClick={() => openModal('REG')}>
                   등록하기
-                </button>
+                </Button>
               </div>
               <Table
                 columns={columns}
@@ -159,15 +164,59 @@ const Notice = () => {
       </div>
       <ModalHugger
         width={850}
-        visible={openModal}
+        visible={modalStatus.REG}
         title="등록하기"
         footer={
-          <Button color="primary" size="big" onClick={() => setOpenModal(false)}>
+          <Button color="primary" size="big" onClick={() => closeModal('REG')}>
             확인하기
           </Button>
         }
-        onCancel={() => setOpenModal(false)}
-      ></ModalHugger>
+        onCancel={() => closeModal('REG')}
+      >
+        REGREGREGREGREGREGREGREGREGREG
+      </ModalHugger>
+
+      <ModalHugger
+        width={850}
+        visible={modalStatus.MOD}
+        title="수정하기"
+        footer={
+          <Button color="primary" size="big" onClick={() => closeModal('MOD')}>
+            확인하기
+          </Button>
+        }
+        onCancel={() => closeModal('MOD')}
+      >
+        MODMODMODMODMODMODMODMOD
+      </ModalHugger>
+
+      <ModalHugger
+        width={300}
+        visible={modalStatus.DEL}
+        title="삭제하기"
+        footer={
+          <Button color="primary" size="big" onClick={() => closeModal('DEL')}>
+            확인하기
+          </Button>
+        }
+        onCancel={() => closeModal('DEL')}
+      >
+        DELDELDELDELDELDELDEL
+      </ModalHugger>
+
+      <ModalHugger
+        width={850}
+        visible={modalStatus.INQ}
+        title="조회니까 일단 보류"
+        footer={
+          <Button color="primary" size="big" onClick={() => closeModal('INQ')}>
+            확인하기
+          </Button>
+        }
+        onCancel={() => closeModal('INQ')}
+      >
+        INQINQINQINQINQINQINQINQ
+      </ModalHugger>
     </>
   );
 };

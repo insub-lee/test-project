@@ -15,7 +15,7 @@ export const ModalHugger = ({ closable, maskClosable, modalClassName, visible, o
       closable={closable}
       title={title}
       visible={visible}
-      onCancel={() => onCancel()}
+      onCancel={onCancel}
       centered
       destroyOnClose
       maskClosable={maskClosable}
