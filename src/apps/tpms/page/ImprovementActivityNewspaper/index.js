@@ -14,6 +14,8 @@ import StyledHeader from '../../components/Tableboard/StyledHeader';
 import StyledHeaderCell from '../../components/Tableboard/StyledHeaderCell';
 import StyledTable from '../../components/Tableboard/StyledTable';
 
+import usePostList from '../../hooks/usePostList';
+
 /**
  * TPMS - 개선활동신문고
  *
@@ -39,13 +41,6 @@ const componentsStyle = {
     row: StyledBodyRow,
     cell: StyledBodyCell,
   },
-};
-
-// Todo - should move to useBuilderBase
-const pagination = {
-  current: 1,
-  pageSize: 10,
-  total: 0,
 };
 
 const columns = [
@@ -107,42 +102,49 @@ const columns = [
   },
 ];
 
-const ImprovementActivityNewspaper = () => (
-  <div className="tpms-view">
-    <TitleContainer title="개선활동신문고" nav={nav}>
-      <StyledWrapper>
-        <div className="view_top">
-          <StyledSearch>
-            <form
-              autoComplete="off"
-              className="page"
-              name="form-name"
-              onSubmit={e => {
-                e.stopPropagation();
-                e.preventDefault();
-              }}
-            >
-              <select name="category">
-                {categories.map(category => (
-                  <option key={category.text} value={category.value}>
-                    {category.text}
-                  </option>
-                ))}
-              </select>
-              <input type="text" className="input" name="text" />
-              <button type="submit" className="icon icon_search_white">
-                검색
-              </button>
-            </form>
-          </StyledSearch>
-          <div className="btn_wrap" />
-        </div>
-        <Table columns={columns} rowKey="postno" rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')} components={componentsStyle} />
-        <Pagination {...pagination} groupSize={10} pageHandler={() => {}} pageSizeHandler={() => {}} />
-      </StyledWrapper>
-    </TitleContainer>
-    <GlobalStyle />
-  </div>
-);
+const ImprovementActivityNewspaper = () => {
+  const {
+    isLoading,
+    isError,
+    data,
+    pagination,
+    action: { submitSearchQuery, pageHandler, pageSizeHandler },
+  } = usePostList({ brdid: 'brd00000000000000005' });
+  return (
+    <div className="tpms-view">
+      <TitleContainer title="개선활동신문고" nav={nav}>
+        <StyledWrapper>
+          <div className="view_top">
+            <StyledSearch>
+              <form autoComplete="off" className="page" name="form-name" onSubmit={submitSearchQuery}>
+                <select name="category">
+                  {categories.map(category => (
+                    <option key={category.text} value={category.value}>
+                      {category.text}
+                    </option>
+                  ))}
+                </select>
+                <input type="text" className="input" name="text" />
+                <button type="submit" className="icon icon_search_white">
+                  검색
+                </button>
+              </form>
+            </StyledSearch>
+            <div className="btn_wrap" />
+          </div>
+          <Table
+            columns={columns}
+            data={data}
+            rowKey="postno"
+            rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
+            components={componentsStyle}
+          />
+          <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
+        </StyledWrapper>
+      </TitleContainer>
+      <GlobalStyle />
+    </div>
+  );
+};
 
 export default ImprovementActivityNewspaper;

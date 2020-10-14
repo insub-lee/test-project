@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import moment from 'moment';
 import Table from 'rc-table';
 
@@ -11,6 +11,8 @@ import StyledHeader from '../../../components/Tableboard/StyledHeader';
 import StyledHeaderCell from '../../../components/Tableboard/StyledHeaderCell';
 import StyledTable from '../../../components/Tableboard/StyledTable';
 
+import useSignList from '../../../hooks/useSignList';
+
 /**
  * TPMS - 개선활동 - 등록/진행 - 임시저장함
  *
@@ -19,13 +21,6 @@ import StyledTable from '../../../components/Tableboard/StyledTable';
  */
 
 const nav = [{ title: 'TPMS' }, { title: '개선활동' }, { title: '등록/진행' }, { title: '임시저장함' }];
-
-// Todo - should move to useBuilderBase
-const pagination = {
-  current: 1,
-  pageSize: 10,
-  total: 0,
-};
 
 const columns = [
   {
@@ -111,14 +106,28 @@ const componentsStyle = {
   },
 };
 
-const TempTable = () => (
-  <div className="tpms-view">
-    <ExpandableTitleContainer title="개선활동 - 등록/진행" nav={nav} useCount count={0}>
-      <Table columns={columns} rowKey="postno" rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')} components={componentsStyle} />
-      <Pagination {...pagination} groupSize={10} pageHandler={() => {}} pageSizeHandler={() => {}} />
-    </ExpandableTitleContainer>
-    <GlobalStyle />
-  </div>
-);
+const TempTable = () => {
+  const {
+    data,
+    isError,
+    pagination,
+    action: { pageHandler, pageSizeHandler },
+  } = useSignList({ sysid: 'TPMS', mnuid: 'TPMS1020' });
+  return (
+    <div className="tpms-view">
+      <ExpandableTitleContainer title="개선활동 - 등록/진행" nav={nav} useCount count={0}>
+        <Table
+          columns={columns}
+          data={data}
+          rowKey="rownum"
+          rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
+          components={componentsStyle}
+        />
+        <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
+      </ExpandableTitleContainer>
+      <GlobalStyle />
+    </div>
+  );
+};
 
 export default TempTable;

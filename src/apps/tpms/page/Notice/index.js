@@ -15,6 +15,14 @@ import StyledHeaderCell from '../../components/Tableboard/StyledHeaderCell';
 import StyledTable from '../../components/Tableboard/StyledTable';
 import { ModalRegister, Title } from '../../components/ModalRegister';
 
+import usePostList from '../../hooks/usePostList';
+
+/**
+ * TPMS - 공지사항
+ *
+ * @returns {*}
+ * @constructor
+ */
 const nav = [{ title: 'TPMS' }, { title: '공지사항' }];
 const categories = [
   { value: 'all', text: '전체' },
@@ -33,13 +41,6 @@ const componentsStyle = {
     row: StyledBodyRow,
     cell: StyledBodyCell,
   },
-};
-
-// Todo - should move to useBuilderBase
-const pagination = {
-  current: 1,
-  pageSize: 10,
-  total: 0,
 };
 
 const columns = [
@@ -101,33 +102,23 @@ const columns = [
   },
 ];
 
-/**
- * TPMS - 공지사항
- *
- * 모달 4개
- * 수정, 삭제, 등록, 게시글 850
- *
- * @returns {*}
- * @constructor
- */
 const Notice = () => {
   const [openRegModal, setOpenRegModal] = useState(true);
-  // const modalWidth = window.visualViewport.width * 0.8;
+
+  const {
+    isLoading,
+    isError,
+    data,
+    pagination,
+    action: { submitSearchQuery, pageHandler, pageSizeHandler },
+  } = usePostList({ brdid: 'brd00000000000000002' });
   return (
     <div className="tpms-view">
       <TitleContainer title="공지사항" nav={nav}>
         <StyledWrapper>
           <div className="view_top">
             <StyledSearch>
-              <form
-                autoComplete="off"
-                className="page"
-                name="form-name"
-                onSubmit={e => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                }}
-              >
+              <form autoComplete="off" className="page" name="form-name" onSubmit={submitSearchQuery}>
                 <select name="category">
                   {categories.map(category => (
                     <option key={category.text} value={category.value}>
@@ -139,21 +130,18 @@ const Notice = () => {
                 <button type="submit" className="icon icon_search_white">
                   검색
                 </button>
-                <button type="button" onClick={() => setOpenRegModal(true)}>
-                  등록
-                </button>
               </form>
             </StyledSearch>
             <div className="btn_wrap" />
           </div>
-          <button type="button">수정</button>
-          <button type="button">삭제</button>
-          <button type="button">게시글</button>
-          <button type="button" onClick={() => setOpenRegModal(true)}>
-            등록
-          </button>
-          <Table columns={columns} rowKey="postno" rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')} components={componentsStyle} />
-          <Pagination {...pagination} groupSize={10} pageHandler={() => {}} pageSizeHandler={() => {}} />
+          <Table
+            columns={columns}
+            data={data}
+            rowKey="postno"
+            rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
+            components={componentsStyle}
+          />
+          <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
           <Modal
             width={1024}
             footer={null}

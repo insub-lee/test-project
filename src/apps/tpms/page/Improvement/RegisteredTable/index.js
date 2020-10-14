@@ -12,6 +12,8 @@ import StyledHeaderCell from '../../../components/Tableboard/StyledHeaderCell';
 import StyledTable from '../../../components/Tableboard/StyledTable';
 import StatusIcon from '../StatusIcon';
 
+import useSignList from '../../../hooks/useSignList';
+
 /**
  * TPMS - 개선활동 - 등록/진행 - 등록함
  *
@@ -20,13 +22,6 @@ import StatusIcon from '../StatusIcon';
  */
 
 const nav = [{ title: 'TPMS' }, { title: '개선활동' }, { title: '등록/진행' }, { title: '등록함' }];
-
-// Todo - should move to useBuilderBase
-const pagination = {
-  current: 1,
-  pageSize: 10,
-  total: 0,
-};
 
 const columns = [
   {
@@ -154,14 +149,28 @@ const componentsStyle = {
   },
 };
 
-const RecordList = () => (
-  <div className="tpms-view">
-    <ExpandableTitleContainer title="등록함" nav={nav} useCount count={0}>
-      <Table columns={columns} rowKey="postno" rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')} components={componentsStyle} />
-      <Pagination {...pagination} groupSize={10} pageHandler={() => {}} pageSizeHandler={() => {}} />
-    </ExpandableTitleContainer>
-    <GlobalStyle />
-  </div>
-);
+const RecordList = () => {
+  const {
+    data,
+    isError,
+    pagination,
+    action: { pageHandler, pageSizeHandler },
+  } = useSignList({ sysid: 'TPMS', mnuid: 'TPMS1030' });
+  return (
+    <div className="tpms-view">
+      <ExpandableTitleContainer title="등록함" nav={nav} useCount count={0}>
+        <Table
+          columns={columns}
+          data={data}
+          rowKey="rownum"
+          rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
+          components={componentsStyle}
+        />
+        <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
+      </ExpandableTitleContainer>
+      <GlobalStyle />
+    </div>
+  );
+};
 
 export default RecordList;
