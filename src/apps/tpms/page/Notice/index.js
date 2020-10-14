@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Table from 'rc-table';
 import moment from 'moment';
-import { Modal } from 'antd';
 
 import GlobalStyle from '../../components/GlobalStyle';
 import TitleContainer from '../../components/TitleContainer';
@@ -146,22 +145,17 @@ const Notice = () => {
             components={componentsStyle}
           />
           <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
-          <Modal
-            className="registerModal"
-            width="80%"
+          <ModalHugger
+            width={850}
+            visible={openModal}
+            title="등록하기"
             footer={
               <Button color="primary" size="big" onClick={() => setOpenModal(false)}>
                 확인하기
               </Button>
             }
-            closable={false}
-            visible={openModal}
             onCancel={() => setOpenModal(false)}
-            centered
-            destroyOnClose
-          >
-            <ModalHugger node={<>FILL ME UP!</>} />
-          </Modal>
+          ></ModalHugger>
         </StyledWrapper>
       </TitleContainer>
       <GlobalStyle />
