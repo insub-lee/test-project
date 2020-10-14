@@ -149,7 +149,6 @@ const TempTable = () => {
             rowKey="rownum"
             rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
             components={componentsStyle}
-            onRowClick={(record, index) => console.debug(record, index)}
           />
           <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
         </Spin>

@@ -12,7 +12,7 @@ const TitleContainer = ({ title, nav, children, noPadding, noBackground }) => (
       <div className="navigation">
         <span className="icon icon_home">HOME</span>
         {nav.map(item => (
-          <React.Fragment key={item.link}>
+          <React.Fragment key={item.title}>
             <span style={{ margin: '0 6px' }}>/</span>
             <span style={{ color: '#777777' }}>{item.title}</span>
             {/*
