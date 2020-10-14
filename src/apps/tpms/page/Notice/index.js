@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Table from 'rc-table';
 import moment from 'moment';
+import { Modal } from 'antd';
 
 import GlobalStyle from '../../components/GlobalStyle';
 import TitleContainer from '../../components/TitleContainer';
@@ -12,6 +13,8 @@ import StyledBodyRow from '../../components/Tableboard/StyledBodyRow';
 import StyledHeader from '../../components/Tableboard/StyledHeader';
 import StyledHeaderCell from '../../components/Tableboard/StyledHeaderCell';
 import StyledTable from '../../components/Tableboard/StyledTable';
+import Button from '../../components/Button';
+import { ModalHugger } from '../../components/ModalHugger';
 
 import usePostList from '../../hooks/usePostList';
 
@@ -101,6 +104,8 @@ const columns = [
 ];
 
 const Notice = () => {
+  const [openModal, setOpenModal] = useState(false);
+
   const {
     isLoading,
     isError,
@@ -129,6 +134,9 @@ const Notice = () => {
               </form>
             </StyledSearch>
             <div className="btn_wrap" />
+            <button type="button" onClick={() => setOpenModal(true)}>
+              등록하기
+            </button>
           </div>
           <Table
             columns={columns}
@@ -138,6 +146,22 @@ const Notice = () => {
             components={componentsStyle}
           />
           <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
+          <Modal
+            className="registerModal"
+            width="80%"
+            footer={
+              <Button color="primary" size="big" onClick={() => setOpenModal(false)}>
+                확인하기
+              </Button>
+            }
+            closable={false}
+            visible={openModal}
+            onCancel={() => setOpenModal(false)}
+            centered
+            destroyOnClose
+          >
+            <ModalHugger node={<>FILL ME UP!</>} />
+          </Modal>
         </StyledWrapper>
       </TitleContainer>
       <GlobalStyle />
