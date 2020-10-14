@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Table from 'rc-table';
 import moment from 'moment';
-import { Modal, Button } from 'antd';
+import { Modal } from 'antd';
 
 import GlobalStyle from '../../components/GlobalStyle';
 import TitleContainer from '../../components/TitleContainer';
@@ -13,7 +13,8 @@ import StyledBodyRow from '../../components/Tableboard/StyledBodyRow';
 import StyledHeader from '../../components/Tableboard/StyledHeader';
 import StyledHeaderCell from '../../components/Tableboard/StyledHeaderCell';
 import StyledTable from '../../components/Tableboard/StyledTable';
-import { ModalRegister, Title } from '../../components/ModalRegister';
+import Button from '../../components/Button';
+import { ModalHugger } from '../../components/ModalHugger';
 
 import usePostList from '../../hooks/usePostList';
 
@@ -103,7 +104,7 @@ const columns = [
 ];
 
 const Notice = () => {
-  const [openRegModal, setOpenRegModal] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
 
   const {
     isLoading,
@@ -133,6 +134,9 @@ const Notice = () => {
               </form>
             </StyledSearch>
             <div className="btn_wrap" />
+            <button type="button" onClick={() => setOpenModal(true)}>
+              등록하기
+            </button>
           </div>
           <Table
             columns={columns}
@@ -143,15 +147,20 @@ const Notice = () => {
           />
           <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
           <Modal
-            width={1024}
-            footer={null}
-            title={<Title title="등록하기" />}
-            visible={openRegModal}
-            onCancel={() => setOpenRegModal(false)}
+            className="registerModal"
+            width="80%"
+            footer={
+              <Button color="primary" size="big" onClick={() => setOpenModal(false)}>
+                확인하기
+              </Button>
+            }
+            closable={false}
+            visible={openModal}
+            onCancel={() => setOpenModal(false)}
             centered
             destroyOnClose
           >
-            <ModalRegister closeModal={setOpenRegModal} />
+            <ModalHugger node={<>FILL ME UP!</>} />
           </Modal>
         </StyledWrapper>
       </TitleContainer>
