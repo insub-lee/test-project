@@ -75,7 +75,7 @@ class CustomWorkProcess extends Component {
   };
 
   render() {
-    const { viewType, colLength, CustomRow } = this.props;
+    const { viewType, colLength, CustomRow, statusVisible } = this.props;
     const { processRule, modalVisible, filterRule, draftPrcRule } = this.state;
     return (
       <ContentsWrapper>
@@ -83,7 +83,7 @@ class CustomWorkProcess extends Component {
           <table>
             <colgroup>
               {[...Array(colLength)].map((_, i) =>
-                i === 0 ? <col key={`col_${i}`} width="10%" /> : <col key={`col_${i}`} width={`${90 / colLength - 1}%`} />,
+                i === 0 ? <col key={`col_${i}`} width="15%" /> : <col key={`col_${i}`} width={`${85 / colLength - 1}%`} />,
               )}
             </colgroup>
             <tbody>
@@ -128,7 +128,7 @@ class CustomWorkProcess extends Component {
                     .filter(item => item.VIEW_TYPE === 1)
                     .map((item, rowIndex) => (
                       <tr key={rowIndex}>
-                        <th>{(item && item.RULE_CONFIG && item.RULE_CONFIG.Label) || item.NAME_KOR}</th>
+                        <th>{`${item?.RULE_CONFIG?.Label || item?.NAME_KOR}`}</th>
                         <td colSpan={colLength - 1}>
                           {item.APPV_MEMBER.map((user, colIndex) =>
                             item.NODE_TYPE === 'ND' ? (
@@ -143,6 +143,14 @@ class CustomWorkProcess extends Component {
                               </div>
                             ),
                           )}
+                          {statusVisible &&
+                            (item.APPV_STATUS === 2 ? (
+                              <span style={{ color: 'red' }}>(결재완료)</span>
+                            ) : item.APPV_STATUS === 9 ? (
+                              <span style={{ color: 'red' }}>(부결)</span>
+                            ) : (
+                              <span style={{ color: 'red' }}>(결재중)</span>
+                            ))}
                         </td>
                       </tr>
                     ))}
@@ -185,6 +193,7 @@ CustomWorkProcess.propTypes = {
   getDraftPrcRule: PropTypes.func,
   colLength: PropTypes.number,
   CustomRow: PropTypes.array,
+  statusVisible: PropTypes.bool,
 };
 
 CustomWorkProcess.defaultProps = {
@@ -194,6 +203,7 @@ CustomWorkProcess.defaultProps = {
   draftId: -1,
   colLength: 3,
   CustomRow: [],
+  statusVisible: false,
 };
 
 export default CustomWorkProcess;

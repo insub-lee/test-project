@@ -19,18 +19,24 @@ class MainPage extends Component {
     };
   }
 
-  handleSearchOnClick = () => {
+  handleSearchOnClick = (reqNo = undefined) => {
     const { sagaKey, getCallDataHandler, formData, spinningOn } = this.props;
     const chkYear = (formData && formData.CHK_YEAR) || '0';
     const deptId = (formData && formData.searchRow && formData.searchRow.DEPT_ID) || (formData && formData.myDept && formData.myDept.DEPT_ID) || '0';
 
     spinningOn();
     const apiAry = [
-      {
-        key: 'materialData',
-        type: 'GET',
-        url: `/api/eshs/v1/common/EshsGetEiMaterial/${chkYear}/${deptId}`,
-      },
+      reqNo
+        ? {
+            key: 'materialData',
+            type: 'GET',
+            url: `/api/eshs/v1/common/EshsGetEiMaterial?REQ_NO=${reqNo}`,
+          }
+        : {
+            key: 'materialData',
+            type: 'GET',
+            url: `/api/eshs/v1/common/EshsGetEiMaterial?CHK_YEAR=${chkYear}&FROM_DEPT_ID=${deptId}`,
+          },
     ];
     getCallDataHandler(sagaKey, apiAry, this.handleSetMaterial);
   };
@@ -113,29 +119,37 @@ class MainPage extends Component {
       prcRule.DRAFT_PROCESS_STEP.forEach((step, index) => {
         switch (index) {
           case 1:
-            step.APPV_MEMBER = [
-              { USER_ID: materialData.TO_USER_ID, DEPT_ID: materialData.TO_DEPT_ID, DEPT_NAME_KOR: materialData.TO_DEPT_NM, NAME_KOR: materialData.TO_EMP_NM },
-            ];
+            if (materialData?.TO_USER_ID)
+              step.APPV_MEMBER = [
+                {
+                  USER_ID: materialData.TO_USER_ID,
+                  DEPT_ID: materialData.TO_DEPT_ID,
+                  DEPT_NAME_KOR: materialData.TO_DEPT_NM,
+                  NAME_KOR: materialData.TO_EMP_NM,
+                },
+              ];
             break;
           case 2:
-            step.APPV_MEMBER = [
-              {
-                USER_ID: materialData.FROM_DEPT_MANAGER_ID,
-                DEPT_ID: materialData.FROM_DEPT_ID,
-                DEPT_NAME_KOR: materialData.FROM_DEPT_NM,
-                NAME_KOR: materialData.FROM_DEPT_MANAGER_NM,
-              },
-            ];
+            if (materialData?.FROM_DEPT_MANAGER_ID)
+              step.APPV_MEMBER = [
+                {
+                  USER_ID: materialData.FROM_DEPT_MANAGER_ID,
+                  DEPT_ID: materialData.FROM_DEPT_ID,
+                  DEPT_NAME_KOR: materialData.FROM_DEPT_NM,
+                  NAME_KOR: materialData.FROM_DEPT_MANAGER_NM,
+                },
+              ];
             break;
           case 3:
-            step.APPV_MEMBER = [
-              {
-                USER_ID: materialData.TO_DEPT_MANAGER_ID,
-                DEPT_ID: materialData.TO_DEPT_ID,
-                DEPT_NAME_KOR: materialData.TO_DEPT_NM,
-                NAME_KOR: materialData.TO_DEPT_MANAGER_NM,
-              },
-            ];
+            if (materialData?.TO_DEPT_MANAGER_ID)
+              step.APPV_MEMBER = [
+                {
+                  USER_ID: materialData.TO_DEPT_MANAGER_ID,
+                  DEPT_ID: materialData.TO_DEPT_ID,
+                  DEPT_NAME_KOR: materialData.TO_DEPT_NM,
+                  NAME_KOR: materialData.TO_DEPT_MANAGER_NM,
+                },
+              ];
             break;
           default:
             break;
@@ -152,8 +166,6 @@ class MainPage extends Component {
       },
       draftId => {
         if (draftId) {
-          // 환경영향평가 결재 TEST중
-          console.debug(`saveProcessRule after defatId [ ${draftId} ]`);
           return this.fileMoveToReal();
         }
         return false;
@@ -218,9 +230,9 @@ class MainPage extends Component {
     const { formData } = this.props;
     return (
       <StyledContentsWrapper>
-        <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} saveBeforeProcess={this.saveBeforeProcess} />
+        <DeptSearchBar {...this.props} handleSearchOnClick={reqNo => this.handleSearchOnClick(reqNo)} saveBeforeProcess={this.saveBeforeProcess} />
         <div>
-          <MaterialTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+          <MaterialTable {...this.props} handleSearchOnClick={reqNo => this.handleSearchOnClick(reqNo)} />
         </div>
         <div>
           <ItemTable {...this.props} onFileUploaded={this.onFileUploaded} saveBeforeProcess={this.fileMoveToReal} />
