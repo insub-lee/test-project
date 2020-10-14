@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import request from 'utils/request';
 
 export default ({ sysid, mnuid }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
   const [isError, setIsError] = useState(false);
   const [pagination, setPagination] = useState({
@@ -29,6 +30,7 @@ export default ({ sysid, mnuid }) => {
       pageSize: pagination.pageSize || 10,
     };
 
+    setIsLoading(true);
     fetchList(requestQuery)
       .then(({ response, error }) => {
         if (response && !error) {
@@ -43,10 +45,12 @@ export default ({ sysid, mnuid }) => {
           setCurrentTotal(0);
           setIsError(true);
         }
+        setIsLoading(false);
       })
       .catch(error => {
         console.debug('@ Load Fail : ', error);
         setIsError(true);
+        setIsLoading(false);
       });
   }, [sysid, mnuid, pagination]);
 
@@ -60,6 +64,7 @@ export default ({ sysid, mnuid }) => {
 
   return {
     data,
+    isLoading,
     isError,
     pagination: {
       ...pagination,

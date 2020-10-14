@@ -56,13 +56,13 @@ export default ({ brdid }) => {
           setCurrentTotal(0);
           setIsError(true);
         }
+        setIsLoading(false);
       })
       .catch(error => {
         console.debug('@ Load Fail : ', error);
         setIsError(true);
+        setIsLoading(false);
       });
-
-    setIsLoading(false);
   }, [brdid, pagination, currentYear, search]);
 
   const submitSearchQuery = useCallback(e => {

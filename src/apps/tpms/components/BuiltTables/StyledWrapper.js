@@ -23,30 +23,30 @@ const StyledWrapper = styled.div`
     text-align: center;
   }
 
-  .rc-table-thead {
-    th {
-      font-size: 15px;
-      padding: 12px 14px 11px 14px;
-      text-align: center;
-      font-weight: 400;
-    }
-  }
-
-  .rc-table-tbody {
-    td {
-      font-size: 15px;
-      padding: 11px 14px;
-      text-align: center;
-      color: #555555;
-
-      > button {
-        color: #555555;
-      }
-    }
-
-    .rc-table-expanded-row > td {
-      padding: 0;
-    }
+  //.rc-table-thead {
+  //  th {
+  //    font-size: 15px;
+  //    padding: 12px 14px 11px 14px;
+  //    text-align: center;
+  //    font-weight: 400;
+  //  }
+  //}
+  //
+  //.rc-table-tbody {
+  //  td {
+  //    font-size: 15px;
+  //    padding: 11px 14px;
+  //    text-align: center;
+  //    color: #555555;
+  //
+  //    > button {
+  //      color: #555555;
+  //    }
+  //  }
+  //
+  //  .rc-table-expanded-row > td {
+  //    padding: 0;
+  //  }
   }
 
   .icon.icon_reply {
