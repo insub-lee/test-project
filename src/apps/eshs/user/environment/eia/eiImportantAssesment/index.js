@@ -5,7 +5,7 @@ import MainPage from './MainPage';
 
 class eiImportantAssesment extends Component {
   render() {
-    const { searchData, deptSearchBarVisible } = this.props;
+    const { searchData, deptSearchBarVisible, reqNo } = this.props;
     return (
       <BizMicroDevBase
         component={MainPage}
@@ -16,6 +16,7 @@ class eiImportantAssesment extends Component {
         relKey="환경영향평가"
         relKey2="REQ_NO"
         prcId={104}
+        reqNo={reqNo}
       />
     );
   }
@@ -24,9 +25,11 @@ class eiImportantAssesment extends Component {
 eiImportantAssesment.propTypes = {
   searchData: PropTypes.object,
   deptSearchBarVisible: PropTypes.bool,
+  reqNo: PropTypes.string,
 };
 
 eiImportantAssesment.defaultProps = {
   searchData: {},
+  reqNo: undefined,
 };
 export default eiImportantAssesment;
