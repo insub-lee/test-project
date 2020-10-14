@@ -21,6 +21,7 @@ import JournalManagement from 'apps/eshs/user/health/medicalManagement/journalMa
 /* view  --end--*/
 
 const getView = (record, spinningOn, spinningOff, handleModal) => {
+  console.debug('record @@@ ', record);
   // builder view 생성
   switch (record.WORK_SEQ) {
     case -1:
@@ -42,27 +43,27 @@ const getView = (record, spinningOn, spinningOff, handleModal) => {
             <StyledButton
               className="btn-light btn-sm mr5"
               onClick={() => {
-                spinningOn();
-                getCallData('POST', '/api/eshs/v1/common/eshsEiMaterialApprovalList', { REL_KEY2: record.REL_KEY2 }, result => {
-                  spinningOff();
-                  handleModal(true, [
-                    <div key="환경영향평가 SUB VIEW">
-                      <EiMaterial searchData={result && result.list && result.list[0]} deptSearchBarVisible={false} />
-                      <div style={{ margin: '20px', height: '50px' }} key="환경영향평가 VIEW">
-                        <StyledButtonWrapper className="btn-wrap-center">
-                          <StyledButton
-                            className="btn-light btn-sm mr5"
-                            onClick={() => {
-                              handleModal(true, getView(record, spinningOn, spinningOff, handleModal));
-                            }}
-                          >
-                            뒤로
-                          </StyledButton>
-                        </StyledButtonWrapper>
-                      </div>
-                    </div>,
-                  ]);
-                });
+                // spinningOn();
+                // getCallData('GET', `/api/eshs/v1/common/EshsGetEiMaterial?REQ_NO=${record?.REL_KEY2}`, {}, result => {
+                // spinningOff();
+                handleModal(true, [
+                  <div key="환경영향평가 SUB VIEW">
+                    <EiMaterial reqNo={record.REL_KEY2} deptSearchBarVisible={false} />
+                    <div style={{ margin: '20px', height: '50px' }} key="환경영향평가 VIEW">
+                      <StyledButtonWrapper className="btn-wrap-center">
+                        <StyledButton
+                          className="btn-light btn-sm mr5"
+                          onClick={() => {
+                            handleModal(true, getView(record, spinningOn, spinningOff, handleModal));
+                          }}
+                        >
+                          뒤로
+                        </StyledButton>
+                      </StyledButtonWrapper>
+                    </div>
+                  </div>,
+                ]);
+                // });
               }}
             >
               원부재료
@@ -70,27 +71,27 @@ const getView = (record, spinningOn, spinningOff, handleModal) => {
             <StyledButton
               className="btn-light btn-sm mr5"
               onClick={() => {
-                spinningOn();
-                getCallData('POST', '/api/eshs/v1/common/eshsEiMaterialApprovalList', { REL_KEY2: record.REL_KEY2 }, result => {
-                  spinningOff();
-                  handleModal(true, [
-                    <div key="환경영향평가 SUB VIEW">
-                      <EiStatement searchData={result && result.list && result.list[0]} deptSearchBarVisible={false} />
-                      <div style={{ margin: '20px', height: '50px' }} key="환경영향평가 VIEW">
-                        <StyledButtonWrapper className="btn-wrap-center">
-                          <StyledButton
-                            className="btn-light btn-sm mr5"
-                            onClick={() => {
-                              handleModal(true, getView(record, spinningOn, spinningOff, handleModal));
-                            }}
-                          >
-                            뒤로
-                          </StyledButton>
-                        </StyledButtonWrapper>
-                      </div>
-                    </div>,
-                  ]);
-                });
+                // spinningOn();
+                // getCallData('GET', `/api/eshs/v1/common/EshsGetEiMaterial?REQ_NO=${record?.REL_KEY2}`, {}, result => {
+                //   spinningOff();
+                handleModal(true, [
+                  <div key="환경영향평가 SUB VIEW">
+                    <EiStatement reqNo={record.REL_KEY2} deptSearchBarVisible={false} />
+                    <div style={{ margin: '20px', height: '50px' }} key="환경영향평가 VIEW">
+                      <StyledButtonWrapper className="btn-wrap-center">
+                        <StyledButton
+                          className="btn-light btn-sm mr5"
+                          onClick={() => {
+                            handleModal(true, getView(record, spinningOn, spinningOff, handleModal));
+                          }}
+                        >
+                          뒤로
+                        </StyledButton>
+                      </StyledButtonWrapper>
+                    </div>
+                  </div>,
+                ]);
+                // });
               }}
             >
               환경영향평가서
@@ -98,27 +99,27 @@ const getView = (record, spinningOn, spinningOff, handleModal) => {
             <StyledButton
               className="btn-light btn-sm mr5"
               onClick={() => {
-                spinningOn();
-                getCallData('POST', '/api/eshs/v1/common/eshsEiMaterialApprovalList', { REL_KEY2: record.REL_KEY2 }, result => {
-                  spinningOff();
-                  handleModal(true, [
-                    <div key="환경영향평가 SUB VIEW">
-                      <EiImportantAssesment searchData={result && result.list && result.list[0]} deptSearchBarVisible={false} />
-                      <div style={{ margin: '20px', height: '50px' }} key="환경영향평가 VIEW">
-                        <StyledButtonWrapper className="btn-wrap-center">
-                          <StyledButton
-                            className="btn-light btn-sm mr5"
-                            onClick={() => {
-                              handleModal(true, getView(record, spinningOn, spinningOff, handleModal));
-                            }}
-                          >
-                            뒤로
-                          </StyledButton>
-                        </StyledButtonWrapper>
-                      </div>
-                    </div>,
-                  ]);
-                });
+                // spinningOn();
+                // getCallData('GET', `/api/eshs/v1/common/EshsGetEiMaterial?REQ_NO=${record?.REL_KEY2}`, {}, result => {
+                //   spinningOff();
+                handleModal(true, [
+                  <div key="환경영향평가 SUB VIEW">
+                    <EiImportantAssesment reqNo={record.REL_KEY2} deptSearchBarVisible={false} />
+                    <div style={{ margin: '20px', height: '50px' }} key="환경영향평가 VIEW">
+                      <StyledButtonWrapper className="btn-wrap-center">
+                        <StyledButton
+                          className="btn-light btn-sm mr5"
+                          onClick={() => {
+                            handleModal(true, getView(record, spinningOn, spinningOff, handleModal));
+                          }}
+                        >
+                          뒤로
+                        </StyledButton>
+                      </StyledButtonWrapper>
+                    </div>
+                  </div>,
+                ]);
+                // });
               }}
             >
               중대환경영향등록부
@@ -142,6 +143,7 @@ const getCallData = async (method, url, param, callBack) => {
     json: true,
   });
 
+  console.debug('@@@@@@@@@@@@@@ ', result);
   return typeof callBack === 'function' ? callBack(result && result.response) : result && result.response;
 };
 
@@ -203,7 +205,7 @@ export const columns = (handleModal, type, spinningOn, spinningOff) => [
     align: 'center',
     render: (text, record) => {
       const { APPV_STATUS_NM } = record;
-      if (APPV_STATUS_NM && APPV_STATUS_NM !== '') {
+      if (APPV_STATUS_NM) {
         return APPV_STATUS_NM;
       }
       switch (text) {
@@ -211,6 +213,8 @@ export const columns = (handleModal, type, spinningOn, spinningOff) => [
           return '결재중';
         case 2:
           return '결재완료';
+        case 9:
+          return '부결';
         default:
           return '결재중';
       }

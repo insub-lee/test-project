@@ -28,6 +28,7 @@ export const getDraftProcessRule = async DRAFT_ID => {
 };
 
 export const saveProcessRule = async (processRule, callBack = () => {}, messageFlag = true) => {
+  console.debug('saveProcessRule ', processRule);
   const processStep = (processRule && processRule.DRAFT_PROCESS_STEP) || [];
   let msg = '';
   if (!processStep.length) {
@@ -38,7 +39,7 @@ export const saveProcessRule = async (processRule, callBack = () => {}, messageF
     .filter(step => step.ISREQUIRED === 1)
     .some(step => {
       if (!(0 in step?.APPV_MEMBER)) {
-        msg = `${(step && step.RULE && step.RULE_CONFIG.Label) || step.NAME_KOR} 단계의 결재를 선택해 주세요`;
+        msg = `${step?.RULE_CONFIG?.Label || step.NAME_KOR} 단계의 결재를 선택해 주세요`;
       }
       return msg;
     });
