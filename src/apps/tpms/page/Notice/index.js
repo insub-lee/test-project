@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Table from 'rc-table';
 import moment from 'moment';
 
@@ -13,6 +13,8 @@ import StyledBodyRow from '../../components/Tableboard/StyledBodyRow';
 import StyledHeader from '../../components/Tableboard/StyledHeader';
 import StyledHeaderCell from '../../components/Tableboard/StyledHeaderCell';
 import StyledTable from '../../components/Tableboard/StyledTable';
+import Button from '../../components/Button';
+import { ModalHugger } from '../../components/ModalHugger';
 
 import usePostList from '../../hooks/usePostList';
 
@@ -113,43 +115,60 @@ const Notice = () => {
     [],
   );
 
+  const [openModal, setOpenModal] = useState(false);
   return (
-    <div className="tpms-view">
-      <TitleContainer title="공지사항" nav={nav}>
-        <Spin spinning={isLoading}>
-          <StyledWrapper>
-            <div className="view_top">
-              <StyledSearch>
-                <form autoComplete="off" className="page" name="form-name" onSubmit={submitSearchQuery}>
-                  <select name="category">
-                    {categories.map(category => (
-                      <option key={category.text} value={category.value}>
-                        {category.text}
-                      </option>
-                    ))}
-                  </select>
-                  <input type="text" className="input" name="text" />
-                  <button type="submit" className="icon icon_search_white">
-                    검색
-                  </button>
-                </form>
-              </StyledSearch>
-              <div className="btn_wrap" />
-            </div>
-            <Table
-              columns={columns}
-              data={data}
-              rowKey="postno"
-              rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
-              components={componentsStyle}
-              onRowClick={(record, index) => console.debug(record, index)}
-            />
-            <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
-          </StyledWrapper>
-        </Spin>
-      </TitleContainer>
-      <GlobalStyle />
-    </div>
+    <>
+      <div className="tpms-view">
+        <TitleContainer title="공지사항" nav={nav}>
+          <Spin spinning={isLoading}>
+            <StyledWrapper>
+              <div className="view_top">
+                <StyledSearch>
+                  <form autoComplete="off" className="page" name="form-name" onSubmit={submitSearchQuery}>
+                    <select name="category">
+                      {categories.map(category => (
+                        <option key={category.text} value={category.value}>
+                          {category.text}
+                        </option>
+                      ))}
+                    </select>
+                    <input type="text" className="input" name="text" />
+                    <button type="submit" className="icon icon_search_white">
+                      검색
+                    </button>
+                  </form>
+                </StyledSearch>
+                <div className="btn_wrap" />
+                <button type="button" onClick={() => setOpenModal(true)}>
+                  등록하기
+                </button>
+              </div>
+              <Table
+                columns={columns}
+                data={data}
+                rowKey="postno"
+                rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
+                components={componentsStyle}
+                onRowClick={(record, index) => console.debug(record, index)}
+              />
+              <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
+            </StyledWrapper>
+          </Spin>
+        </TitleContainer>
+        <GlobalStyle />
+      </div>
+      <ModalHugger
+        width={850}
+        visible={openModal}
+        title="등록하기"
+        footer={
+          <Button color="primary" size="big" onClick={() => setOpenModal(false)}>
+            확인하기
+          </Button>
+        }
+        onCancel={() => setOpenModal(false)}
+      ></ModalHugger>
+    </>
   );
 };
 
