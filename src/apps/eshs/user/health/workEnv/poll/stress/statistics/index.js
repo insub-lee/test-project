@@ -3,7 +3,7 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 import PropTypes from 'prop-types';
 import View from './View';
 
-// 근골격계설문 통계
+// 직무스트레스 설문조사 통계
 const Statistics = props => {
   const { sagaKey } = props;
   return <BizMicroDevBase sagaKey={sagaKey} component={View} />;
@@ -14,7 +14,7 @@ Statistics.propTypes = {
 };
 
 Statistics.defaultProps = {
-  sagaKey: 'muscle_poll_Statistics',
+  sagaKey: 'stress_poll_statistics',
 };
 
 export default Statistics;

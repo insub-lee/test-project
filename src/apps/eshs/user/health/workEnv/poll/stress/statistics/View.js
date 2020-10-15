@@ -1,886 +1,484 @@
 import React, { Component } from 'react';
+import { Select } from 'antd';
 import PropTypes from 'prop-types';
-import { Input, Modal, Select } from 'antd';
-
-import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
-import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
-import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
-
-import Styled from 'apps/eshs/user/health/ChkReservation/Questionnaire/Styled';
-import DeptSelect from 'components/DeptSelect';
-
-import moment from 'moment';
-import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
-
-const AntdModal = StyledAntdModal(Modal);
-const currentYear = moment(new Date()).format('YYYY');
+import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
+import Styled from './Styled';
 
 const AntdSelect = StyledSelect(Select);
-const AntdSearch = StyledSearchInput(Input.Search);
+const { Option } = Select;
 
-const questions = [
-  {
-    title: (
-      <p className="question-txt">
-        <span className="question-num">1. </span>규칙적인 <b>(한번에 30분 이상, 1주일에 적어도 2-3회 이상)</b> 여가 및 취미활동을 하고 계시는 곳에 표시(√)하여
-        주십시오.
-      </p>
-    ),
-    field: 'Q1',
-    questions: [
-      { text: '컴퓨터 관련 활동', SEQ: '1' },
-      { text: '악기연주 (피아노, 바이올린등)', SEQ: '2' },
-      { text: '뜨개질, 자수', SEQ: '3' },
-      { text: '붓글씨', SEQ: '4' },
-      { text: '테니스/배드민턴/스쿼시', SEQ: '5' },
-      { text: '촉구/족구/농구/스키', SEQ: '6' },
-      { text: '해당사항 없음', SEQ: '7' },
-    ],
-  },
-  {
-    title: (
-      <p className="question-txt">
-        <span className="question-num">2. </span>귀하의 하루 평균 가사노동시간(밥하기, 빨래하기, 청소하기, 2살 미만의 아이 돌보기 등)은 얼마나 됩니까?
-      </p>
-    ),
-    field: 'Q2',
-    questions: [
-      { text: '거의 하지 않는다', SEQ: '1' },
-      { text: '1시간 미만', SEQ: '2' },
-      { text: '1-2시간', SEQ: '3' },
-      { text: '2-3시간', SEQ: '4' },
-      { text: '3시간 이상', SEQ: '5' },
-    ],
-  },
-  {
-    title: (
-      <p className="question-txt">
-        <span className="question-num">3. </span>귀하는 의사로부터 다음과 같은 질병에 대해 진단을 받은 적이 있습니까? (해당 질병에 체크)
-      </p>
-    ),
-    field: 'Q4',
-    questions: [
-      { text: '아니오', SEQ: '1' },
-      { text: '예', SEQ: '2' },
-    ],
-    children: [
-      {
-        title: <p className="question-txt">'예'인 경우 현재 상태는 ?</p>,
-        field: 'Q5',
-        questions: [
-          { text: '완치', SEQ: '1' },
-          { text: '치료나 관찰 중', SEQ: '2' },
-        ],
-      },
-      {
-        title: <p className="question-txt">보기</p>,
-        field: 'Q3',
-        questions: [
-          { text: '류마티스 관절염', SEQ: '1' },
-          { text: '당뇨병', SEQ: '2' },
-          { text: '루프스병', SEQ: '3' },
-          { text: '통풍', SEQ: '4' },
-          { text: '알콜중독', SEQ: '5' },
-        ],
-      },
-    ],
-  },
-  {
-    title: (
-      <p className="question-txt">
-        <span className="question-num">4. </span>과거에 운동 중 혹은 사고로 (교통사고, 넘어짐 추락 등) 인해 손/손가락/손목, 팔/팔꿈치, 어깨, 목, 허리, 무릎
-        부의를 다친 적이 있습니까?
-      </p>
-    ),
-    field: 'Q6',
-    questions: [
-      { text: '아니오', SEQ: '1' },
-      { text: '예', SEQ: '2' },
-    ],
-    children: [
-      {
-        title: <p className="question-txt">'예'인 경우 상해 부위는 ?</p>,
-        field: 'Q7',
-        questions: [
-          { text: '손/손가락/손목', SEQ: '1' },
-          { text: '팔/팔꿈치', SEQ: '2' },
-          { text: '어깨', SEQ: '3' },
-          { text: '목', SEQ: '4' },
-          { text: '허리', SEQ: '5' },
-          { text: '무릎', SEQ: '6' },
-        ],
-      },
-    ],
-  },
-  {
-    title: (
-      <p className="question-txt">
-        <span className="question-num">5. </span>현재 하고 계시는 일의 작업강도 (육체적 부담 정도)는 어느 정도라고 생각하십니까?
-      </p>
-    ),
-    field: 'Q8',
-    questions: [
-      { text: '전혀 힘들지 않다', SEQ: '1' },
-      { text: '견딜만 하다', SEQ: '2' },
-      { text: '약간 힘들다', SEQ: '3' },
-      { text: '매우 힘들다', SEQ: '4' },
-    ],
-  },
-];
-
-const acheQuestions = [
-  {
-    title: '1. 해당 되는 통증 부위는?',
-    fields: ['Q11', 'Q21', 'Q31', 'Q41', 'Q51', 'Q61'],
-    questions: [
-      { text: '왼쪽', SEQ: '1' },
-      { text: '오른쪽', SEQ: '2' },
-      { text: '양쪽', SEQ: '3' },
-      { text: '없음', SEQ: '4' },
-    ],
-  },
-  {
-    title: (
-      <>
-        2. 한번 아프기 시작하면 통증 기간은 <b>얼마동안</b> 지속됩니까?
-      </>
-    ),
-    fields: ['Q12', 'Q22', 'Q32', 'Q42', 'Q52', 'Q62'],
-    questions: [
-      { text: '1일 미만', SEQ: '1' },
-      { text: '1일 - 1주일', SEQ: '2' },
-      { text: '1주일 - 1달', SEQ: '3' },
-      { text: '1달 - 6개월', SEQ: '4' },
-      { text: '6개월 이상', SEQ: '5' },
-    ],
-  },
-  {
-    title: (
-      <>
-        3. 그 때의 아픈 정도는 <b>어느정도</b> 입니까?
-        <br />
-        (보기를 참고하여 체크해 주십시오)
-      </>
-    ),
-    fields: ['Q13', 'Q23', 'Q33', 'Q43', 'Q53', 'Q63'],
-    questions: [
-      { text: '통증 없음', SEQ: '1' },
-      { text: '약한 통증', SEQ: '2' },
-      { text: '중간 통증', SEQ: '3' },
-      { text: '심한 통증', SEQ: '4' },
-      { text: '매우심한 통증', SEQ: '5' },
-    ],
-  },
-  {
-    title: (
-      <>
-        4. <b>지난 1년 동안</b> 이러한 증상을 얼마나 자주 경혐하였습니까?
-      </>
-    ),
-    fields: ['Q14', 'Q24', 'Q34', 'Q44', 'Q54', 'Q64'],
-    questions: [
-      { text: '6개월에 1번', SEQ: '1' },
-      { text: '2-3달에 1번', SEQ: '2' },
-      { text: '1달에 1번', SEQ: '3' },
-      { text: '1주일에 1번', SEQ: '4' },
-      { text: '매일', SEQ: '5' },
-    ],
-  },
-  {
-    title: (
-      <>
-        5. <b>지난 1주일</b> 동안 에도 그러한 증상이 있었습니까?
-      </>
-    ),
-    fields: ['Q15', 'Q25', 'Q35', 'Q45', 'Q55', 'Q65'],
-    questions: [
-      { text: '예', SEQ: '1' },
-      { text: '아니오', SEQ: '2' },
-    ],
-  },
-  {
-    title: (
-      <>
-        6. <b>지난 1년 동안</b> 그러한 통증으로 인해 어떤 일이 있었습니까?
-      </>
-    ),
-    fields: ['Q16', 'Q26', 'Q36', 'Q46', 'Q56', 'Q66'],
-    questions: [
-      {
-        text: (
-          <>
-            병원 혹은
-            <br />
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;한의원 치료
-          </>
-        ),
-        SEQ: '1',
-      },
-      { text: '약국 치료', SEQ: '2' },
-      { text: '병가, 산재', SEQ: '3' },
-      { text: '부서전환', SEQ: '4' },
-      { text: '해당사항없음', SEQ: '5' },
-    ],
-  },
-];
-
-const parts = ['손/손목/손가락', '팔/팔꿈치', '어깨', '목', '허리', '무릅'];
-
-const excelColumns = [
-  {
-    title: '문제',
-    field: 'QUESTION',
-    width: { wpx: 100 },
-  },
-  {
-    title: '보기1',
-    field: 'Q1',
-    width: { wpx: 100 },
-  },
-  {
-    title: '보가2',
-    field: 'Q2',
-    width: { wpx: 100 },
-  },
-  {
-    title: '보기3',
-    field: 'Q3',
-    width: { wpx: 100 },
-  },
-  {
-    title: '보기4',
-    field: 'Q4',
-    width: { wpx: 100 },
-  },
-  {
-    title: '보기5',
-    field: 'Q5',
-    width: { wpx: 100 },
-  },
-  {
-    title: '보기6',
-    field: 'Q6',
-    width: { wpx: 100 },
-  },
-  {
-    title: '보기7',
-    field: 'Q7',
-    width: { wpx: 100 },
-  },
-];
-
-const excelPersonColumns = [
-  {
-    title: '사번',
-    field: 'EMPNO',
-    width: { wpx: 100 },
-  },
-  {
-    title: '성명',
-    field: 'EMPNAME',
-    width: { wpx: 100 },
-  },
-  {
-    title: '부서',
-    field: 'DEPT_NM',
-    width: { wpx: 200 },
-  },
-  {
-    title: '공정',
-    field: 'DEPT02',
-    width: { wpx: 100 },
-  },
-  {
-    title: '작업내용',
-    field: 'JOB01',
-    width: { wpx: 300 },
-  },
-  {
-    title: '1문제',
-    field: 'Q1',
-    width: { wpx: 100 },
-  },
-  {
-    title: '2문제',
-    field: 'Q2',
-    width: { wpx: 100 },
-  },
-  {
-    title: '3-1문제',
-    field: 'Q3',
-    width: { wpx: 100 },
-  },
-  {
-    title: '3-2문제',
-    field: 'Q4',
-    width: { wpx: 100 },
-  },
-  {
-    title: '3-3문제',
-    field: 'Q5',
-    width: { wpx: 100 },
-  },
-  {
-    title: '4-1문제',
-    field: 'Q6',
-    width: { wpx: 100 },
-  },
-  {
-    title: '4-2문제',
-    field: 'Q7',
-    width: { wpx: 100 },
-  },
-  {
-    title: '5문제',
-    field: 'Q8',
-    width: { wpx: 100 },
-  },
-  {
-    title: 'CK(통증여부)',
-    field: 'QCK',
-    width: { wpx: 100 },
-  },
-  {
-    title: '손/손목/손가락-1문제',
-    field: 'Q11',
-    width: { wpx: 200 },
-  },
-  {
-    title: '1-2문제',
-    field: 'Q12',
-    width: { wpx: 100 },
-  },
-  {
-    title: '1-3문제',
-    field: 'Q13',
-    width: { wpx: 100 },
-  },
-  {
-    title: '1-4문제',
-    field: 'Q14',
-    width: { wpx: 100 },
-  },
-  {
-    title: '1-5문제',
-    field: 'Q15',
-    width: { wpx: 100 },
-  },
-  {
-    title: '1-6문제',
-    field: 'Q16',
-    width: { wpx: 100 },
-  },
-  {
-    title: '팔/ 팔꿈치-1문제',
-    field: 'Q21',
-    width: { wpx: 200 },
-  },
-  {
-    title: '2-2문제',
-    field: 'Q22',
-    width: { wpx: 100 },
-  },
-  {
-    title: '2-3문제',
-    field: 'Q23',
-    width: { wpx: 100 },
-  },
-  {
-    title: '2-4문제',
-    field: 'Q24',
-    width: { wpx: 100 },
-  },
-  {
-    title: '2-5문제',
-    field: 'Q25',
-    width: { wpx: 100 },
-  },
-  {
-    title: '2-6문제',
-    field: 'Q26',
-    width: { wpx: 100 },
-  },
-  {
-    title: '어깨-1문제',
-    field: 'Q31',
-    width: { wpx: 200 },
-  },
-  {
-    title: '3-2문제',
-    field: 'Q32',
-    width: { wpx: 100 },
-  },
-  {
-    title: '3-3문제',
-    field: 'Q33',
-    width: { wpx: 100 },
-  },
-  {
-    title: '3-4문제',
-    field: 'Q34',
-    width: { wpx: 100 },
-  },
-  {
-    title: '3-5문제',
-    field: 'Q35',
-    width: { wpx: 100 },
-  },
-  {
-    title: '3-6문제',
-    field: 'Q36',
-    width: { wpx: 100 },
-  },
-  {
-    title: '목-1문제',
-    field: 'Q41',
-    width: { wpx: 200 },
-  },
-  {
-    title: '4-2문제',
-    field: 'Q42',
-    width: { wpx: 100 },
-  },
-  {
-    title: '4-3문제',
-    field: 'Q43',
-    width: { wpx: 100 },
-  },
-  {
-    title: '4-4문제',
-    field: 'Q44',
-    width: { wpx: 100 },
-  },
-  {
-    title: '4-5문제',
-    field: 'Q45',
-    width: { wpx: 100 },
-  },
-  {
-    title: '4-6문제',
-    field: 'Q46',
-    width: { wpx: 100 },
-  },
-  {
-    title: '허리-1문제',
-    field: 'Q51',
-    width: { wpx: 200 },
-  },
-  {
-    title: '5-2문제',
-    field: 'Q52',
-    width: { wpx: 100 },
-  },
-  {
-    title: '5-3문제',
-    field: 'Q53',
-    width: { wpx: 100 },
-  },
-  {
-    title: '5-4문제',
-    field: 'Q54',
-    width: { wpx: 100 },
-  },
-  {
-    title: '5-5문제',
-    field: 'Q55',
-    width: { wpx: 100 },
-  },
-  {
-    title: '5-6문제',
-    field: 'Q56',
-    width: { wpx: 100 },
-  },
-  {
-    title: '무릎-1문제',
-    field: 'Q61',
-    width: { wpx: 200 },
-  },
-  {
-    title: '6-2문제',
-    field: 'Q62',
-    width: { wpx: 100 },
-  },
-  {
-    title: '6-3문제',
-    field: 'Q63',
-    width: { wpx: 100 },
-  },
-  {
-    title: '6-4문제',
-    field: 'Q64',
-    width: { wpx: 100 },
-  },
-  {
-    title: '6-5문제',
-    field: 'Q65',
-    width: { wpx: 100 },
-  },
-  {
-    title: '6-6문제',
-    field: 'Q66',
-    width: { wpx: 100 },
-  },
-];
-
-const excelListSort = [
-  { target: 'Q1', text: '1' },
-  { target: 'Q2', text: '2' },
-  { target: 'Q3', text: '3-1' },
-  { target: 'Q4', text: '3-2' },
-  { target: 'Q5', text: '3-3' },
-  { target: 'Q6', text: '4-1' },
-  { target: 'Q7', text: '4-2' },
-  { target: 'Q8', text: '5' },
-  { target: 'QCK', text: 'qck' },
-  { target: 'Q11', text: 'q11' },
-  { target: 'Q12', text: 'q12' },
-  { target: 'Q13', text: 'q13' },
-  { target: 'Q14', text: 'q14' },
-  { target: 'Q15', text: 'q15' },
-  { target: 'Q16', text: 'q16' },
-  { target: 'Q21', text: 'q21' },
-  { target: 'Q22', text: 'q22' },
-  { target: 'Q23', text: 'q23' },
-  { target: 'Q24', text: 'q24' },
-  { target: 'Q25', text: 'q25' },
-  { target: 'Q26', text: 'q26' },
-  { target: 'Q31', text: 'q31' },
-  { target: 'Q32', text: 'q32' },
-  { target: 'Q33', text: 'q33' },
-  { target: 'Q34', text: 'q34' },
-  { target: 'Q35', text: 'q35' },
-  { target: 'Q36', text: 'q36' },
-  { target: 'Q41', text: 'q41' },
-  { target: 'Q42', text: 'q42' },
-  { target: 'Q43', text: 'q43' },
-  { target: 'Q44', text: 'q44' },
-  { target: 'Q45', text: 'q45' },
-  { target: 'Q46', text: 'q46' },
-  { target: 'Q51', text: 'q51' },
-  { target: 'Q52', text: 'q52' },
-  { target: 'Q53', text: 'q53' },
-  { target: 'Q54', text: 'q54' },
-  { target: 'Q55', text: 'q55' },
-  { target: 'Q56', text: 'q56' },
-  { target: 'Q61', text: 'q61' },
-  { target: 'Q62', text: 'q62' },
-  { target: 'Q63', text: 'q63' },
-  { target: 'Q64', text: 'q64' },
-  { target: 'Q65', text: 'q65' },
-  { target: 'Q66', text: 'q66' },
-];
-
-class View extends Component {
+class StressView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchParam: {
-        CHK_YEAR: currentYear,
-        DEPT_ID: '',
-      },
-      statistics: {},
-      yearList: [],
-      excelList: [],
-      excelPersonList: [],
-      modalVisible: false,
-      selectdDept: {
-        DEPT_ID: 72761,
-      },
+      isload: false,
+      selectedPoll: -1,
+      formData: {},
     };
   }
 
   componentDidMount() {
-    const yearList = [];
-    for (let i = currentYear; i >= 1998; i--) {
-      yearList.push(i);
-    }
-    this.setState({ yearList }, this.getSearchData);
+    const { spinningOn } = this.props;
+    spinningOn();
+    this.init();
   }
 
-  getSearchData = () => {
-    const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff } = this.props;
-    const { searchParam, selectedDept } = this.state;
-    spinningOn();
-    const deptId = (selectedDept && selectedDept.DEPT_ID) || null;
-    const chkYear = (searchParam && searchParam.CHK_YEAR) || currentYear;
-    const apiAry = [
-      {
-        key: 'statistics',
-        url: `/api/eshs/v1/common/health/eshsHealthPoll?CHK_YEAR=${chkYear}&DEPT_ID=${deptId}`,
-        type: 'GET',
+  // 첫 진입시
+  init = () => {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    this.setState({ isload: false });
+    const apiInfo = {
+      key: 'getStressPollResult',
+      type: 'POST',
+      url: `/api/eshs/v1/common/healthPollMgt`,
+      params: { PARAM: { type: 'GET_STRESS_SURVEY_RESULT_INIT' } },
+    };
+    getCallDataHandlerReturnRes(id, apiInfo, this.checkOpenServeyCallback);
+  };
+
+  checkOpenServeyCallback = (id, response) => {
+    const { spinningOff } = this.props;
+    const { list, info } = response;
+    const surveydata = this.setSurveyData(info);
+    this.setState({
+      pollList: list || [],
+      selectedPoll: (list && list[0] && list[0].POSEQ) || -1,
+      formData: {
+        ...surveydata,
       },
-    ];
-    return getCallDataHandler(id, apiAry, () => {
-      const { result } = this.props;
-      const statistics = (result && result.statistics && result.statistics.result) || {};
-      const excelPersonList = (result && result.statistics && result.statistics.list) || [];
+    });
+    this.setState({ isload: true });
+    spinningOff();
+  };
 
-      const parseStatistics = {};
-      const excelList = [];
-      let target = '';
-      for (target in statistics) {
-        if (target === 'TOTAL') {
-          parseStatistics[target] = statistics[target];
-        } else {
-          parseStatistics[target] = statistics[target] && statistics[target].value && JSON.parse(statistics[target].value);
-        }
-      }
+  setSurveyData = info => {
+    const result = {
+      ...info,
+      DEPT: (info.DEPT && JSON.parse(info.DEPT.value)) || [],
+      BIS_FROM: (info.BIS_FROM && JSON.parse(info.BIS_FROM.value)) || [],
+      JOB_TYPE: (info.JOB_TYPE && JSON.parse(info.JOB_TYPE.value)) || [],
+      WORKTIME: (info.WORKTIME && JSON.parse(info.WORKTIME.value)) || [],
+      GENDER: (info.GENDER && JSON.parse(info.GENDER.value)) || [],
+    };
+    for (let i = 1; i <= 43; i += 1) {
+      const key = `Q${i}`;
+      result[key] = (info[key] && JSON.parse(info[key].value)) || [];
+    }
+    return result;
+  };
 
-      excelListSort.forEach(item => {
-        if (parseStatistics[item.target]) {
-          const excelRow = {};
-          parseStatistics[item.target].forEach(question => {
-            excelRow[`Q${question.SEQ}`] = question.CNT;
-          });
-          excelRow.QUESTION = item.text;
-          excelList.push(excelRow);
-        } else {
-          excelList.push({ QUESTION: item.text, Q1: '0', Q2: '0', Q3: '0', Q4: '0', Q5: '0', Q6: '0', Q7: '0' });
-        }
-      });
+  // 검색버튼
+  onSearch = () => {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const { selectedPoll } = this.state;
+    if (selectedPoll === -1 || selectedPoll === '') return false;
+    const apiInfo = {
+      key: 'getStressPollResult',
+      type: 'POST',
+      url: `/api/eshs/v1/common/healthPollMgt`,
+      params: { PARAM: { type: 'GET_STRESS_SURVEY_RESULT', POSEQ: selectedPoll } },
+    };
+    return getCallDataHandlerReturnRes(id, apiInfo, this.onSearchCallback);
+  };
 
-      this.setState({ statistics: parseStatistics, excelList, excelPersonList, searchParam: { ...searchParam, ...selectedDept } }, spinningOff);
+  onSearchCallback = (id, response) => {
+    const { info } = response;
+    const surveydata = this.setSurveyData(info);
+    this.setState({
+      formData: {
+        ...surveydata,
+      },
     });
   };
 
-  customSpan = (text, field, seq) => {
-    const { statistics } = this.state;
-    let idx = -1;
-    if (statistics[field]) {
-      idx = statistics[field].findIndex(q => q.SEQ === seq);
-    }
-    return (
-      <span style={{ paddingRight: '8px', paddingLeft: '8px' }}>
-        {text}
-        {idx > -1 ? (
-          <span style={{ paddingLeft: '5px', color: 'red' }}>{`${statistics[field][idx].CNT}명`}</span>
-        ) : (
-          <span style={{ paddingLeft: '5px', color: 'red' }}>0명</span>
-        )}
-      </span>
-    );
-  };
+  // 기본 조사 통계
+  setStressBasic = data => (
+    <>
+      {data.length > 0 ? (
+        data.map(item => (
+          <p>
+            {item.TYPE} : {item.COUNT} 명
+          </p>
+        ))
+      ) : (
+        <p>설문조사 통계 결과가 없습니다.</p>
+      )}
+    </>
+  );
 
-  handleModalVisible = () => {
-    this.setState(prevState => ({ modalVisible: !prevState.modalVisible }));
-  };
-
-  onChangeSearchParam = (target, value) => this.setState(prevState => ({ searchParam: { ...prevState.searchParam, [target]: value } }));
+  // 직무 스트레스 평가 통계
+  setSurveyResult = (key, data) => (
+    <>
+      <td>{data.length > 0 ? (data.find(item => item.TYPE === '1') && data.find(item => item.TYPE === '1').COUNT) || 0 : 0} 명</td>
+      <td>{data.length > 0 ? (data.find(item => item.TYPE === '2') && data.find(item => item.TYPE === '2').COUNT) || 0 : 0} 명</td>
+      <td>{data.length > 0 ? (data.find(item => item.TYPE === '3') && data.find(item => item.TYPE === '3').COUNT) || 0 : 0} 명</td>
+      <td>{data.length > 0 ? (data.find(item => item.TYPE === '4') && data.find(item => item.TYPE === '4').COUNT) || 0 : 0} 명</td>
+    </>
+  );
 
   render() {
-    const { yearList, statistics, excelList, modalVisible, selectedDept, searchParam, excelPersonList } = this.state;
-    const deptName = (selectedDept && selectedDept.NAME_KOR) || 'MAGNACHIP반도체';
-    const searchDept = (searchParam && searchParam.NAME_KOR) || 'MAGNACHIP반도체';
+    const { isload, formData, pollList } = this.state;
+    if (!isload) return '';
     return (
       <Styled>
-        <StyledContentsWrapper>
-          <div style={{ padding: '10px 20px', position: 'relative' }}>
-            <p style={{ fontSize: '18px', fontWeight: '500', color: '#000' }}>근골격계질환 증상에 관한 문진표 통계</p>
+        <StyledCustomSearchWrapper>
+          <div className="search-input-area">
+            <AntdSelect
+              defaultValue={(pollList[0] && pollList[0].POSEQ) || -1}
+              placehoder="조회하실 설문을 선택해 주십시오"
+              className="select-sm mr5"
+              style={{ width: 350 }}
+              onChange={val => this.setState({ selectedPoll: val })}
+            >
+              {pollList.map(item => (
+                <Option value={item.POSEQ}>{`${item.POYEAR} - ${item.POTYPE} :: ${item.SDATE} ~ ${item.EDATE}`}</Option>
+              ))}
+            </AntdSelect>
+            <StyledButton className="btn-gray btn-sm" onClick={this.onSearch}>
+              검색
+            </StyledButton>
           </div>
-          <StyledCustomSearchWrapper className="search-wrapper-inline">
-            <div className="search-input-area">
-              <AntdSelect
-                defaultValue={currentYear}
-                className="select-sm mr5"
-                style={{ width: 100 }}
-                onChange={val => this.onChangeSearchParam('CHK_YEAR', val)}
-              >
-                {yearList.map(year => (
-                  <AntdSelect.Option key={year} value={year}>{`${year}년`}</AntdSelect.Option>
-                ))}
-              </AntdSelect>
-              <AntdSearch
-                className="input-search-sm mr5"
-                style={{ width: 250 }}
-                value={deptName}
-                onClick={this.handleModalVisible}
-                onSearch={this.handleModalVisible}
-              />
-            </div>
-            <div className="btn-area">
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={this.getSearchData}>
-                검색
-              </StyledButton>
-              <div style={{ display: 'inline-block', marginRight: '5px' }}>
-                <ExcelDownloadComp
-                  isBuilder={false}
-                  fileName={`Poll_total_${moment().format('YYYYMMDD')}`}
-                  className="testClassName"
-                  btnText="전체통계 엑셀받기"
-                  sheetName={`Poll_total_${moment().format('YYYYMMDD')}`}
-                  listData={excelList}
-                  btnSize="btn-sm btn-first mr5"
-                  fields={excelColumns.map(item => ({
-                    ...item,
-                    style: { font: { sz: '12' }, alignment: { vertical: 'center', horizontal: 'center' } },
-                  }))}
-                  columns={excelColumns.map(item => ({
-                    ...item,
-                    style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '', bold: true }, alignment: { vertical: 'center', horizontal: 'center' } },
-                  }))}
-                />
-              </div>
-              <div style={{ display: 'inline-block', marginRight: '5px' }}>
-                <ExcelDownloadComp
-                  isBuilder={false}
-                  fileName={`Poll_person_${moment().format('YYYYMMDD')}`}
-                  className="testClassName"
-                  btnText="개인별통계 엑셀받기"
-                  sheetName={`Poll_person_${moment().format('YYYYMMDD')}`}
-                  listData={excelPersonList}
-                  btnSize="btn-sm btn-first mr5"
-                  fields={excelPersonColumns.map(item => ({
-                    ...item,
-                    style: { font: { sz: '12' }, alignment: { vertical: 'center', horizontal: 'center' } },
-                  }))}
-                  columns={excelPersonColumns.map(item => ({
-                    ...item,
-                    style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '', bold: true }, alignment: { vertical: 'center', horizontal: 'center' } },
-                  }))}
-                />
-              </div>
-            </div>
-            <div className="div-comment" style={{ display: 'inline-block', marginLeft: '5px' }}>
-              {searchDept} 설문참여자 : {statistics.TOTAL || 0}명
-            </div>
-          </StyledCustomSearchWrapper>
-          <div className="examination-area">
-            {questions.map((q, index) => (
-              <div key={`QUESTION_DIV_${index}`} className="question-item">
-                {q.title}
-                <div className="question-article">
-                  {q.questions.map(detailQ => (
-                    <>{this.customSpan(detailQ.text, q.field, detailQ.SEQ)}</>
-                  ))}
-                </div>
-                {q.children && (
-                  <div className="question-article">
-                    {q.children.map(qc => (
-                      <>
-                        {qc.title}
-                        {qc.questions.map(qcq => (
-                          <>{this.customSpan(qcq.text, qc.field, qcq.SEQ)}</>
-                        ))}
-                      </>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          <div style={{ display: 'inline-block' }}>
-            <div className="examination-area" style={{ float: 'left', width: '90%' }}>
-              <div className="question-item">
-                <p className="add-title">
-                  Ⅱ. 지난 1년 동안 손/손가락/손목, 팔/팔꿈치, 어깨, 허리, 무릎 중 어느 한 부위 에서라도 귀하의 직업과 관련하여 통증이나 불편함(통증,쑤시는 느낌,
-                  뻣뻣함, 화끈거리는 느낌, 무감각 혹은 찌릿찌릿함 등)을 느끼신 적이 있습니까?(오른쪽 그림을 참고하십시오)
-                </p>
-                <div className="question-article">
-                  {this.customSpan('예', 'QCK', '1')}
-                  {this.customSpan('아니오', 'QCK', '2')}
-                </div>
-              </div>
-            </div>
-            <div style={{ float: 'right', width: '10%' }}></div>
-          </div>
-          <div className="examination-area">
-            <div className="question-item">
-              <table className="question-table">
-                <colgroup>
-                  <col style={{ width: '16%' }} />
-                  {parts.map((p, index) => (
-                    <col key={`COL_PART_${index}`} style={{ width: `${86 / parts.length}%` }} />
-                  ))}
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th>구분</th>
-                    {parts.map((p, index) => (
-                      <th key={`TH_PART_${index}`}>{p}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {acheQuestions.map((ache, rowIdx) => {
-                    if (rowIdx === 3) {
-                      return (
-                        <>
-                          <tr>
-                            <th colSpan={2}>☞ 보기 : 아픈 정도에 대한 기준</th>
-                            <th colSpan={parts.length - 1} style={{ textAlign: 'left' }}>
-                              ■ 통 증 없 음 : 전혀 안 아프다.
-                              <br />
-                              ■ 약 한 통 증 : 약간 불편한 정도이나 작업에 열중할 때는 못 느낀다.
-                              <br />
-                              ■ 중 간 통 증 : 작업 중 통증이 있으나, 귀가 후 휴식을 취하면 괜찮다.
-                              <br />
-                              ■ 심 한 통 증 : 작업 중 통증이 비교적 심하고, 귀가 후에도 통증이 계속된다.
-                              <br />
-                              ■ 매우 심한 통증 : 통증 때문에 작업은 물론 일상생활을 하기가 어렵다.
-                              <br />
-                            </th>
-                          </tr>
-                          <tr key={`TR_ACHE_${rowIdx}`}>
-                            <th style={{ textAlign: 'left' }}>{ache.title}</th>
-                            {ache.fields.map((field, colIdx) => (
-                              <td key={`TD_field_${rowIdx}_${colIdx}`} style={{ textAlign: 'left' }}>
-                                {ache.questions.map((question, qIdx) => (
-                                  <p>{this.customSpan(question.text, field, question.SEQ)}</p>
-                                ))}
-                              </td>
-                            ))}
-                          </tr>
-                        </>
-                      );
-                    }
-                    return (
-                      <tr key={`TR_ACHE_${rowIdx}`}>
-                        <th style={{ textAlign: 'left' }}>{ache.title}</th>
-                        {ache.fields.map((field, colIdx) => (
-                          <td key={`TD_field_${rowIdx}_${colIdx}`} style={{ textAlign: 'left' }}>
-                            {ache.questions.map((question, qIdx) => {
-                              if (field === 'Q41' || field === 'Q51') {
-                                if (question.SEQ === '3' || question.SEQ === '4') {
-                                  return <p>{this.customSpan(question.SEQ === '3' ? '있음' : '없음', field, question.SEQ)}</p>;
-                                }
-                                return null;
-                              }
-                              return <p>{this.customSpan(question.text, field, question.SEQ)}</p>;
-                            })}
-                          </td>
-                        ))}
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </StyledContentsWrapper>
-        <AntdModal visible={modalVisible} title="부서 선택" onCancel={this.handleModalVisible} footer={null}>
-          <DeptSelect
-            onCancel={this.handleModalVisible}
-            onComplete={dept => this.setState({ selectedDept: dept }, this.handleModalVisible)}
-            rootDeptChange
-            defaultRootDeptId={72761}
-          />
-        </AntdModal>
+        </StyledCustomSearchWrapper>
+        <h3 className="sub_title">I. 기본 조사 통계</h3>
+        <StyledHtmlTable>
+          <table>
+            <colgroup>
+              <col width="10%" />
+              <col width="10%" />
+              <col width="80%" />
+            </colgroup>
+            <tbody>
+              <tr className="tr-center">
+                <th rowSpan={7}>
+                  <p>기 본 조 사</p>
+                  <p>통 계</p>
+                </th>
+                <th>조사기간</th>
+                <td className="td-left">
+                  <p>{`${formData.SDATE} ~ ${formData.EDATE}`}</p>
+                </td>
+              </tr>
+              <tr className="tr-center">
+                <th>총 응답인원</th>
+                <td className="td-left">
+                  <p>{formData.RESPONDENTS || 0} 명</p>
+                </td>
+              </tr>
+              <tr className="tr-center">
+                <th>부서</th>
+                <td className="td-left">{this.setStressBasic(formData.DEPT || [])}</td>
+              </tr>
+              <tr className="tr-center">
+                <th>직종</th>
+                <td className="td-left">{this.setStressBasic(formData.JOB_TYPE || [])}</td>
+              </tr>
+              <tr className="tr-center">
+                <th>근속년수</th>
+                <td className="td-left">{this.setStressBasic(formData.WORKTIME || [])}</td>
+              </tr>
+              <tr className="tr-center">
+                <th>성별</th>
+                <td className="td-left">{this.setStressBasic(formData.GENDER || [])}</td>
+              </tr>
+              <tr className="tr-center">
+                <th>주요업무형태</th>
+                <td className="td-left">{this.setStressBasic(formData.BIS_FROM || [])}</td>
+              </tr>
+            </tbody>
+          </table>
+        </StyledHtmlTable>
+        <h3 className="sub_title">II. 직무 스트레스 평가통계</h3>
+        <StyledHtmlTable>
+          <table>
+            <colgroup>
+              <col width="5%" />
+              <col width="5%" />
+              <col width="50%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+              <col width="10%" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>범주</th>
+                <th>번호</th>
+                <th>항목</th>
+                <th>전혀 그렇지 않다</th>
+                <th>그렇지 않다</th>
+                <th>그렇다</th>
+                <th>매우 그렇다</th>
+              </tr>
+              <tr className="tr-center">
+                <td rowSpan={3}>
+                  <p>물 리</p>
+                  <p>환 경</p>
+                </td>
+                <td>1</td>
+                <td className="td-left">근무 장소가 깨끗하고 쾌적하다</td>
+                {this.setSurveyResult('q1', formData.Q1)}
+              </tr>
+              <tr className="tr-center">
+                <td>2</td>
+                <td className="td-left">내 일은 위험하며 사고를 당할 가능성이 있다</td>
+                {this.setSurveyResult('q2', formData.Q2)}
+              </tr>
+              <tr className="tr-center">
+                <td>3</td>
+                <td className="td-left">내 업무는 불편한 자세로 오랫동안 일을 해야한다</td>
+                {this.setSurveyResult('q3', formData.Q3)}
+              </tr>
+              <tr className="tr-center">
+                <td rowSpan={8}>
+                  <p>직 무</p>
+                  <p>요 구</p>
+                </td>
+                <td>4</td>
+                <td className="td-left">나는 일이 많아 항상 시간에 쫓기며 일하게 된다</td>
+                {this.setSurveyResult('q4', formData.Q4)}
+              </tr>
+              <tr className="tr-center">
+                <td>5</td>
+                <td className="td-left">현재 하던 일을 끝내기 전에 다른 일을 하도록 지시 받는다</td>
+                {this.setSurveyResult('q5', formData.Q5)}
+              </tr>
+              <tr className="tr-center">
+                <td>6</td>
+                <td className="td-left">업무량이 현저하게 증가하였다</td>
+                {this.setSurveyResult('q6', formData.Q6)}
+              </tr>
+              <tr className="tr-center">
+                <td>7</td>
+                <td className="td-left">나는 동료나 부하직원을 돌보고 책임져야 할 부담을 안고 있다</td>
+                {this.setSurveyResult('q7', formData.Q7)}
+              </tr>
+              <tr className="tr-center">
+                <td>8</td>
+                <td className="td-left">내 업무는 장시간 동안 집중력이 요구된다</td>
+                {this.setSurveyResult('q8', formData.Q8)}
+              </tr>
+              <tr className="tr-center">
+                <td>9</td>
+                <td className="td-left">업무 수행 중에 충분한 휴식(짬)이 주어진다</td>
+                {this.setSurveyResult('q9', formData.Q9)}
+              </tr>
+              <tr className="tr-center">
+                <td>10</td>
+                <td className="td-left">일이 많아서 직장과 가정에 다 잘하기가 힘들다</td>
+                {this.setSurveyResult('q10', formData.Q10)}
+              </tr>
+              <tr className="tr-center">
+                <td>11</td>
+                <td className="td-left">여러 가지 일을 동시에 해야 한다</td>
+                {this.setSurveyResult('q11', formData.Q11)}
+              </tr>
+              <tr className="tr-center">
+                <td rowSpan={5}>
+                  <p>직 무</p>
+                  <p>자 율</p>
+                </td>
+                <td>12</td>
+                <td className="td-left">내 업무는 창의력을 필요로 한다</td>
+                {this.setSurveyResult('q12', formData.Q12)}
+              </tr>
+              <tr className="tr-center">
+                <td>13</td>
+                <td className="td-left">업보관련사항(업보의 일정,업무량,회의시간 등)이 예고없이 갑작스럽게 정해지거나 바뀐다</td>
+                {this.setSurveyResult('q13', formData.Q13)}
+              </tr>
+              <tr className="tr-center">
+                <td>14</td>
+                <td className="td-left">내 업무를 수행하기 위해서는 높은 수준의 기술이나 지식이 필요하다</td>
+                {this.setSurveyResult('q14', formData.Q14)}
+              </tr>
+              <tr className="tr-center">
+                <td>15</td>
+                <td className="td-left">작업시간, 업무 수행 과정에서 나에게 결정권한이 주어지며 영향력을 행사할 수 있다</td>
+                {this.setSurveyResult('q15', formData.Q15)}
+              </tr>
+              <tr className="tr-center">
+                <td>16</td>
+                <td className="td-left">나의 업무량과 작업스케줄을 스스로 조절 할 수 있다</td>
+                {this.setSurveyResult('q16', formData.Q16)}
+              </tr>
+              <tr className="tr-center">
+                <td rowSpan={4}>
+                  <p>관 계</p>
+                  <p>갈 등</p>
+                </td>
+                <td>17</td>
+                <td className="td-left">나의 상사는 업무를 완료하는데 도움을 준다</td>
+                {this.setSurveyResult('q17', formData.Q17)}
+              </tr>
+              <tr className="tr-center">
+                <td>18</td>
+                <td className="td-left">나의 동료는 업무를 완료하는데 도움을 준다</td>
+                {this.setSurveyResult('q18', formData.Q18)}
+              </tr>
+              <tr className="tr-center">
+                <td>19</td>
+                <td className="td-left">직장에서 내가 힘들 때 내가 힘들다는 것을 알아주고 이해해 주는 사람이 있다</td>
+                {this.setSurveyResult('q19', formData.Q19)}
+              </tr>
+              <tr className="tr-center">
+                <td>20</td>
+                <td className="td-left">직장생활의 고충을 함께 나눌 동료가 있다</td>
+                {this.setSurveyResult('q20', formData.Q20)}
+              </tr>
+              <tr className="tr-center">
+                <td rowSpan={6}>
+                  <p>직 무</p>
+                  <p>불안정</p>
+                </td>
+                <td>21</td>
+                <td className="td-left">지금의 직장을 옮겨도 나에게 적합한 새로운 일을 쉽게 찾을 수 있다</td>
+                {this.setSurveyResult('q21', formData.Q21)}
+              </tr>
+              <tr className="tr-center">
+                <td>22</td>
+                <td className="td-left">현재의 직장을 그만두더라도 현재 수준만큼의 직업(직장)을 쉽게 구할 수 있다</td>
+                {this.setSurveyResult('q22', formData.Q22)}
+              </tr>
+              <tr className="tr-center">
+                <td>23</td>
+                <td className="td-left">직장사정이 불안하여 미래가 불확실하다</td>
+                {this.setSurveyResult('q23', formData.Q23)}
+              </tr>
+              <tr className="tr-center">
+                <td>24</td>
+                <td className="td-left">나의 직업은 실직하거나 해고당할 염려가 없다</td>
+                {this.setSurveyResult('q24', formData.Q24)}
+              </tr>
+              <tr className="tr-center">
+                <td>25</td>
+                <td className="td-left">앞으로 2년 동안 현재의 내 직업을 잃을 가능성이 있다</td>
+                {this.setSurveyResult('q25', formData.Q25)}
+              </tr>
+              <tr className="tr-center">
+                <td>26</td>
+                <td className="td-left">나의 근무조건이나 상황에 바람직하지 못한 변화(예: 구조조정 등)가 있었거나 있을 것으로 예상된다</td>
+                {this.setSurveyResult('q26', formData.Q26)}
+              </tr>
+              <tr className="tr-center">
+                <td rowSpan={7}>
+                  <p>조 직</p>
+                  <p>체 계</p>
+                </td>
+                <td>27</td>
+                <td className="td-left">우리 직장은 근무평가, 인사제도(승진, 부서배치 등)는 공정하고 합리적이다</td>
+                {this.setSurveyResult('q27', formData.Q27)}
+              </tr>
+              <tr className="tr-center">
+                <td>28</td>
+                <td className="td-left">업무 수행에 필요한 인원, 공간, 시설, 장비, 훈련 등의 지원이 잘 이루어지고 있다</td>
+                {this.setSurveyResult('q28', formData.Q28)}
+              </tr>
+              <tr className="tr-center">
+                <td>29</td>
+                <td className="td-left">우리 부서와 타부서 간에는 마찰이 없고 업무 협조가 잘 이루어진다</td>
+                {this.setSurveyResult('q29', formData.Q29)}
+              </tr>
+              <tr className="tr-center">
+                <td>30</td>
+                <td className="td-left">우리 부서와 타부서 간에는 마찰이 없고 업무 협조가 잘 이루어진다</td>
+                {this.setSurveyResult('q30', formData.Q30)}
+              </tr>
+              <tr className="tr-center">
+                <td>31</td>
+                <td className="td-left">일에대한 나의 생각을 반영할 수 있는 기회와 통로가 있다</td>
+                {this.setSurveyResult('q31', formData.Q31)}
+              </tr>
+              <tr className="tr-center">
+                <td>32</td>
+                <td className="td-left">나의 경력개발과 승진은 무난히 잘 될 것으로 예상된다</td>
+                {this.setSurveyResult('q32', formData.Q32)}
+              </tr>
+              <tr className="tr-center">
+                <td>33</td>
+                <td className="td-left">내 현재 직위는 나의 교육 및 경력에 비추어 볼 때 적절하다</td>
+                {this.setSurveyResult('q33', formData.Q33)}
+              </tr>
+              <tr className="tr-center">
+                <td rowSpan={6}>
+                  <p>보 상</p>
+                  <p>부적절</p>
+                </td>
+                <td>34</td>
+                <td className="td-left">나의 직업은 내가 평소 기대했던 것이 미치지 못한다</td>
+                {this.setSurveyResult('q34', formData.Q34)}
+              </tr>
+              <tr className="tr-center">
+                <td>35</td>
+                <td className="td-left">나의 모든 노력과 업적을 고려할 때 내 봉급/수입은 적절하다</td>
+                {this.setSurveyResult('q35', formData.Q35)}
+              </tr>
+              <tr className="tr-center">
+                <td>36</td>
+                <td className="td-left">나의 모든 노력과 업적을 고려할 때 나는 직장에서 적절하게 존중과 신임을 받고 있다</td>
+                {this.setSurveyResult('q36', formData.Q36)}
+              </tr>
+              <tr className="tr-center">
+                <td>37</td>
+                <td className="td-left">나는 지금 하는 일에 흥미를 느낀다</td>
+                {this.setSurveyResult('q37', formData.Q37)}
+              </tr>
+              <tr className="tr-center">
+                <td>38</td>
+                <td className="td-left">내 사정이 앞으로 더 좋아질 것을 생각하면 힘든 줄 모르고 일하게 된다</td>
+                {this.setSurveyResult('q38', formData.Q38)}
+              </tr>
+              <tr className="tr-center">
+                <td>39</td>
+                <td className="td-left">나의 능력을 개발하고 발휘할 수 있는 기회가 주어진다</td>
+                {this.setSurveyResult('q39', formData.Q39)}
+              </tr>
+              <tr className="tr-center">
+                <td rowSpan={4}>
+                  <p>직 장</p>
+                  <p>문 화</p>
+                </td>
+                <td>40</td>
+                <td className="td-left">회식자리가 불편하다</td>
+                {this.setSurveyResult('q40', formData.Q40)}
+              </tr>
+              <tr className="tr-center">
+                <td>41</td>
+                <td className="td-left">나는 기준이나 일관성이 없는 상태로 업무지시를 받는다</td>
+                {this.setSurveyResult('q41', formData.Q41)}
+              </tr>
+              <tr className="tr-center">
+                <td>42</td>
+                <td className="td-left">직장의 분위기가 권위적이고 수직적이다</td>
+                {this.setSurveyResult('q42', formData.Q42)}
+              </tr>
+              <tr className="tr-center">
+                <td>43</td>
+                <td className="td-left">남성, 여성이라는 성적인 차이 때문에 불이익을 받는다</td>
+                {this.setSurveyResult('q43', formData.Q43)}
+              </tr>
+            </tbody>
+          </table>
+        </StyledHtmlTable>
       </Styled>
     );
   }
 }
 
-View.propTypes = {
+StressView.propTypes = {
   sagaKey: PropTypes.string,
-  getCallDataHandler: PropTypes.func,
+  getCallDataHandlerReturnRes: PropTypes.func,
   spinningOn: PropTypes.func,
   spinningOff: PropTypes.func,
-  result: PropTypes.object,
 };
 
-View.defaultProps = {};
+StressView.defaultProps = {
+  sagaKey: '',
+  getCallDataHandlerReturnRes: () => false,
+  spinningOn: () => false,
+  spinningOff: () => false,
+};
 
-export default View;
+export default StressView;
