@@ -54,11 +54,11 @@ class DeptSearchBar extends Component {
   };
 
   handleAppStart = () => {
-    const { result, profile, id, changeFormData, handleSearchOnClick } = this.props;
+    const { result, profile, id, changeFormData, handleSearchOnClick, reqNo = undefined } = this.props;
     const deptList = (result && result.deptList && result.deptList.result) || [];
     const myDept = deptList.find(d => d.DEPT_ID === profile.DEPT_ID);
     changeFormData(id, 'myDept', myDept);
-    handleSearchOnClick();
+    handleSearchOnClick(reqNo);
   };
 
   handleModal = () => {
@@ -124,10 +124,9 @@ class DeptSearchBar extends Component {
       });
     } else if (id === 'eiImportantAssesment') {
       const { saveBeforeProcess } = this.props;
-      // 완료시 ImportantAssesment 입력후 저장이 안된경우 저장후 완료처리
+      // 환경영향평가 상신
       saveBeforeProcess();
-      // 환경영향평가 결재 TEST중
-      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiImportantAssesment', { ...materialData, itemList });
+      // submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiImportantAssesment', { ...materialData, itemList });
     }
 
     handleSearchOnClick();
@@ -136,12 +135,14 @@ class DeptSearchBar extends Component {
   render() {
     const { formData, result, id, deptSearchBarVisible } = this.props;
     const { years } = this.state;
-    const deptList = (result && result.deptList && result.deptList.result) || [];
-    const myDept = (formData && formData.myDept) || {};
-    const searchRow = (formData && formData.searchRow) || {};
-    const eiMaterialCnt = (formData && formData.materialCnt) || 0;
-    const searchFlag = (formData && formData.searchFlag) || false;
-    const itemList = (formData && formData.itemList) || [];
+    const deptList = result?.deptList?.result || [];
+    const myDept = formData?.myDept || {};
+    const searchRow = formData?.searchRow || {};
+    const eiMaterialCnt = formData?.materialCnt || 0;
+    const searchFlag = formData?.searchFlag || false;
+    const itemList = formData?.itemList || [];
+    const materialData = formData?.materialData || {};
+
     return deptSearchBarVisible ? (
       <StyledCustomSearchWrapper className="search-wrapper-inline">
         <div className="search-input-area">
@@ -175,7 +176,8 @@ class DeptSearchBar extends Component {
           <StyledButton className="btn-gray btn-sm mr5" onClick={this.handleDeptSearch}>
             검색
           </StyledButton>
-          {eiMaterialCnt > 0 && itemList.length > 0 && !searchFlag && (
+          {/* 중대환경영향평가에 등록된 데이터가 있고, 로그인한 유저와 등록하려는 부서가 같고, 상신이 안된 문서만 완료 가능 */}
+          {eiMaterialCnt > 0 && itemList.length > 0 && !searchFlag && !materialData?.DRAFT_ID && (
             <Popconfirm title="완료하시겠습니까?" onConfirm={this.handleFinsh} okText="확인" cancelText="취소">
               <StyledButton className="btn-primary btn-sm">완료</StyledButton>
             </Popconfirm>

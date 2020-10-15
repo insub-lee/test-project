@@ -196,19 +196,24 @@ class ItemTable extends Component {
   };
 
   render() {
-    const { formData, handleModal } = this.props;
+    const {
+      formData,
+      handleModal,
+      profile: { USER_ID },
+    } = this.props;
     const { rowSelections } = this.state;
-    const searchFlag = (formData && formData.searchFlag) || false;
-    const itemList = (formData && formData.itemList) || [];
-    const itemData = (formData && formData.itemData) || {};
-    let btnOk = itemList.length >= 1;
-    const approvalStatus = (formData && formData.materialData && formData.materialData.STATUS) || '';
+    const searchFlag = formData?.searchFlag || false;
+    const itemList = formData?.itemList || [];
+    const itemData = formData?.itemData || {};
+    let btnOk = true;
+    const approvalStatus = formData?.materialData?.STATUS || '';
     let statusMsg = '';
+    const toUserId = formData?.materialData?.TO_USER_ID || null;
 
     switch (approvalStatus) {
       case 'REVIEWING':
         statusMsg = '(결재중) 검토자만 수정할 수 있습니다.';
-        btnOk = true; // 검토자만 권한 추가시 수정
+        btnOk = USER_ID === toUserId;
         break;
       case 'DOING':
         statusMsg = '(결재중) 수정할 수 없습니다.';
@@ -238,7 +243,7 @@ class ItemTable extends Component {
             fields={createExcelData(materialItemColumnDefs, 'FIELD', 'field')}
             columns={materialItemColumnDefs.map(item => ({ ...item, ...excelStyle }))}
           />
-          {!searchFlag && (
+          {!searchFlag && btnOk && (
             <>
               <StyledButton className="btn-gray btn-sm mr5 ml5" onClick={() => handleModal('EXCEL_UPLOAD', true)}>
                 Excel Upload

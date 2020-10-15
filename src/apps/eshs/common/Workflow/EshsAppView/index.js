@@ -130,7 +130,7 @@ class EshsAppView extends Component {
 
   onModalClose = () => {
     const { getUnApproveList } = this.props;
-    const prefixUrl = '/api/workflow/v1/common/approve/UnApproveListMDCSHandler';
+    const prefixUrl = '/api/workflow/v1/common/approve/unApproveList';
     getUnApproveList(prefixUrl);
     this.props.setViewVisible(false);
   };
@@ -257,7 +257,7 @@ class EshsAppView extends Component {
 
   render() {
     const { selectedRow } = this.props;
-    const { DRAFT_DATA, REL_TYPE } = selectedRow;
+    const { DRAFT_DATA, REL_TYPE, REL_KEY } = selectedRow;
     const {
       modalWidth,
       coverView,
@@ -281,13 +281,9 @@ class EshsAppView extends Component {
               <tr>
                 <th style={{ width: '150px' }}>결재방법 </th>
                 <td colSpan={3}>
-                  <Radio.Group onChange={this.onChange} defaultValue={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>
-                    <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
-                    <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 30 : 3}>
-                      {selectedRow.NODE_ID === 114 && selectedRow.CURRENT_STATUS === 5 ? '부결' : 'Hold'}
-                    </Radio>
-                    {selectedRow.NODE_ID === 106 && <Radio value={5}>실무자 검토의뢰</Radio>}
-                    {selectedRow.NODE_ID === 106 && <Radio value={10}>실무자 결재 권한위임</Radio>}
+                  <Radio.Group onChange={this.onChange} defaultValue={selectedRow?.CURRENT_STATUS === 10 ? 20 : 2}>
+                    <Radio value={selectedRow?.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
+                    {REL_KEY === '환경영향평가' && <Radio value={9}>부결</Radio>}
                   </Radio.Group>
                 </td>
               </tr>
@@ -299,7 +295,7 @@ class EshsAppView extends Component {
                   </td>
                 </tr>
               )}
-              <tr
+              {/* <tr
                 style={{
                   display: (selectedRow && selectedRow.APPV_STATUS && selectedRow.APPV_STATUS === 5) || selectedRow.APPV_STATUS === 10 ? 'table-row' : 'none',
                 }}
@@ -320,7 +316,7 @@ class EshsAppView extends Component {
                       ))}
                   </div>
                 </td>
-              </tr>
+              </tr> */}
               <tr style={{ display: procResult && procResult.length > 0 ? 'table-row' : 'none' }}>
                 <td colSpan={4} style={{ padding: 0, border: 0 }}>
                   <table style={{ width: '100%', borderTop: 0 }}>
@@ -343,7 +339,7 @@ class EshsAppView extends Component {
                         <tr>
                           <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
                           <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
-                          <td style={{ textAlign: 'center' }}>{item.APPV_STATUS === 0 ? '대기' : item.APPV_STATUS === 2 ? '승인' : '부결'}</td>
+                          <td style={{ textAlign: 'center' }}>{item.APPV_STATUS === 2 ? '승인' : '부결'}</td>
                           <td>{item.OPINION}</td>
                           <td style={{ textAlign: 'center' }}>{item.APPV_DTTM ? moment(item.APPV_DTTM).format('YYYY-MM-DD') : ''}</td>
                         </tr>
@@ -382,11 +378,7 @@ class EshsAppView extends Component {
               </tr>
               <tr
                 style={{
-                  display:
-                    REL_TYPE === 4 ||
-                    (selectedRow && selectedRow.NODE_ID !== 114 && selectedRow.APPV_STATUS && (selectedRow.APPV_STATUS === 20 || selectedRow.APPV_STATUS === 2))
-                      ? 'none'
-                      : 'table-row',
+                  display: selectedRow?.APPV_STATUS === 9 ? 'table-row' : 'none',
                 }}
               >
                 <th>의견 </th>

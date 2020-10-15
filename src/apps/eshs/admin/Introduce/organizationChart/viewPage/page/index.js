@@ -14,11 +14,12 @@ class ViewPage extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const { sagaKey: id, getCallDataHandlerReturnRes, orgType } = this.props;
     const apiInfo = {
       key: 'getOrganizationChart',
-      type: 'GET',
+      type: 'POST',
       url: `/api/eshs/v1/common/organizationChart`,
+      params: { PARAM: { type: orgType } },
     };
     getCallDataHandlerReturnRes(id, apiInfo, this.initCallback);
   }
@@ -61,6 +62,7 @@ class ViewPage extends Component {
   }
 }
 ViewPage.propTypes = {
+  orgType: PropTypes.string,
   sagaKey: PropTypes.string,
   getCallDataHandlerReturnRes: PropTypes.func,
 };

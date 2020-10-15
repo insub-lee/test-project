@@ -98,16 +98,21 @@ class ItemTable extends Component {
   };
 
   render() {
-    const { formData, onFileUploaded } = this.props;
-    const searchFlag = (formData && formData.searchFlag) || false;
-    const itemList = (formData && formData.itemList) || [];
+    const {
+      formData,
+      onFileUploaded,
+      profile: { USER_ID },
+    } = this.props;
+    const searchFlag = formData?.searchFlag || false;
+    const itemList = formData?.itemList || [];
     let btnOk = itemList.length >= 1;
-    const approvalStatus = (formData && formData.materialData && formData.materialData.STATUS) || '';
+    const approvalStatus = formData?.materialData?.STATUS || '';
+    const toUserId = formData?.materialData?.TO_USER_ID || null;
     let statusMsg = '';
     switch (approvalStatus) {
       case 'REVIEWING':
         statusMsg = '(결재중) 검토자만 수정할 수 있습니다.';
-        btnOk = true; // 검토자만 권한 추가시 수정
+        btnOk = USER_ID === toUserId;
         break;
       case 'DOING':
         statusMsg = '(결재중) 수정할 수 없습니다.';
