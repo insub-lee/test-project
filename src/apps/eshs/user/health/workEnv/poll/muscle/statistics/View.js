@@ -12,9 +12,9 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 import Styled from 'apps/eshs/user/health/ChkReservation/Questionnaire/Styled';
 import DeptSelect from 'components/DeptSelect';
 
-import PollImg from 'apps/eshs/user/health/workEnv/poll/InputPage/poll.gif';
 import moment from 'moment';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
+import PollImg from '../survey/poll.gif';
 
 const AntdModal = StyledAntdModal(Modal);
 const currentYear = moment(new Date()).format('YYYY');
