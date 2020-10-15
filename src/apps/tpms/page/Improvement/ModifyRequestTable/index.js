@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import moment from 'moment';
 import Table from 'rc-table';
 
+import Button from 'apps/tpms/components/Button';
 import GlobalStyle from '../../../components/GlobalStyle';
 import Spin from '../../../components/AntdSpinner';
 import ExpandableTitleContainer from '../../../components/ExpandableTitleContainer';
@@ -11,8 +12,13 @@ import StyledBodyRow from '../../../components/Tableboard/StyledBodyRow';
 import StyledHeader from '../../../components/Tableboard/StyledHeader';
 import StyledHeaderCell from '../../../components/Tableboard/StyledHeaderCell';
 import StyledTable from '../../../components/Tableboard/StyledTable';
+import StyledModalTitle from '../../../components/CommonStyledElement/StyledModalTitle';
+import { ModalHugger } from '../../../components/ModalHugger';
+import Detail from './Detail';
 
 import useSignList from '../../../hooks/useSignList';
+import { useModalController } from '../../../hooks/useModalController';
+import useAuth from '../../../hooks/useAuth';
 
 /**
  * TPMS - 개선활동 - 등록/진행 - 수정요청함
@@ -36,6 +42,8 @@ const componentsStyle = {
 };
 
 const ModifyRequestTable = () => {
+  const { authInfo, isError: isAuthError } = useAuth();
+
   const {
     data,
     isLoading,
@@ -43,6 +51,13 @@ const ModifyRequestTable = () => {
     pagination,
     action: { pageHandler, pageSizeHandler },
   } = useSignList({ sysid: 'TPMS', mnuid: 'TPMS1040' });
+
+  const {
+    modalStatus,
+    actions: { openModal, closeModal },
+  } = useModalController(['INFO', 'SEND']);
+
+  const [currentRecord, setCurrentRecord] = useState(null);
 
   const columns = useMemo(
     () => [
@@ -61,7 +76,8 @@ const ModifyRequestTable = () => {
           <button
             type="button"
             onClick={() => {
-              console.debug(row.rownum);
+              setCurrentRecord(row);
+              openModal('INFO');
             }}
           >
             {value}
@@ -77,7 +93,8 @@ const ModifyRequestTable = () => {
           <button
             type="button"
             onClick={() => {
-              console.debug(row.rownum);
+              setCurrentRecord(row);
+              openModal('INFO');
             }}
           >
             {value}
@@ -134,21 +151,55 @@ const ModifyRequestTable = () => {
   );
 
   return (
-    <div className="tpms-view">
-      <ExpandableTitleContainer title="개선활동 - 등록/진행" nav={nav} useCount count={pagination.total}>
-        <Spin spinning={isLoading}>
-          <Table
-            columns={columns}
-            data={data}
-            rowKey="rownum"
-            rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
-            components={componentsStyle}
-          />
-          <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
-        </Spin>
-      </ExpandableTitleContainer>
-      <GlobalStyle />
-    </div>
+    <>
+      <div className="tpms-view">
+        <ExpandableTitleContainer title="개선활동 - 등록/진행" nav={nav} useCount count={pagination.total}>
+          <Spin spinning={isLoading}>
+            <Table
+              columns={columns}
+              data={data}
+              rowKey="rownum"
+              rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
+              components={componentsStyle}
+            />
+            <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
+          </Spin>
+        </ExpandableTitleContainer>
+        <GlobalStyle />
+      </div>
+      <ModalHugger
+        width={850}
+        visible={modalStatus.INFO}
+        title={
+          <StyledModalTitle>
+            <span className="big">Project ID</span>
+            <span className="line" />
+            <span className="small">{currentRecord?.PRJ_ID || ''}</span>
+          </StyledModalTitle>
+        }
+        footer={
+          <Button color="primary" size="big" onClick={() => closeModal('INFO')}>
+            확인하기
+          </Button>
+        }
+        onCancel={() => closeModal('INFO')}
+      >
+        <Detail info={currentRecord} />
+      </ModalHugger>
+      <ModalHugger
+        width={850}
+        visible={modalStatus.SEND}
+        title="등록하기"
+        footer={
+          <Button color="primary" size="big" onClick={() => closeModal('SEND')}>
+            확인하기
+          </Button>
+        }
+        onCancel={() => closeModal('SEND')}
+      >
+        SEND
+      </ModalHugger>
+    </>
   );
 };
 

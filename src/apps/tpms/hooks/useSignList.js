@@ -54,7 +54,9 @@ export default ({ sysid, mnuid }) => {
       });
   }, [sysid, mnuid, pagination]);
 
-  const pageHandler = useCallback(page => setPagination(prevState => ({ ...prevState, current: page })), []);
+  const pageHandler = useCallback(page => {
+    setPagination(prevState => ({ ...prevState, current: page }));
+  }, []);
 
   const pageSizeHandler = useCallback(e => {
     const { value = 10 } = e.target;

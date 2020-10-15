@@ -5,7 +5,7 @@ import { Spin, Icon } from 'antd';
 const antIcon = <Icon type="loading" style={{ fontSize: 50 }} spin />;
 
 const Spinner = ({ spinning, children, size }) => (
-  <Spin spinning={spinning} delay={500} indicator={antIcon} size={size}>
+  <Spin spinning={spinning} indicator={antIcon} size={size}>
     {children}
   </Spin>
 );

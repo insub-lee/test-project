@@ -8,6 +8,7 @@ import 'moment/locale/ko';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'react-datepicker/dist/react-datepicker.min.css';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 window.jQuery = $;
 window.$ = $;
