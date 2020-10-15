@@ -2,10 +2,11 @@
  *
  * @param formJson - 화면에 그릴 아이템들에 대한 리스트
  * @param content - Json으로 구성된 뷰에 대한 정보
+ * @param readOnly - Json으로 구성된 뷰에 대한 정보
  * @returns {[]}
  */
-export default (formJson = [], content = {}) =>
-  formJson
+export default (formJson = [], content = {}, readOnly = true) => {
+  const contents = formJson
     .filter(item => {
       if (item.type === 'uploader') {
         return content[`${item.option.name}_FILE_PATH`] !== undefined && content[`${item.option.name}_FILE`] !== undefined;
@@ -23,7 +24,7 @@ export default (formJson = [], content = {}) =>
             option: {
               ...item.option,
               files: [],
-              readOnly: true,
+              readOnly,
             },
           };
         }
@@ -37,7 +38,7 @@ export default (formJson = [], content = {}) =>
           option: {
             ...item.option,
             files,
-            readOnly: true,
+            readOnly,
           },
         };
       }
@@ -51,7 +52,7 @@ export default (formJson = [], content = {}) =>
               ...valueItem,
               selected: valueItem.value === content[item.option.name],
             })),
-            readOnly: true,
+            readOnly,
           },
         };
       }
@@ -60,7 +61,36 @@ export default (formJson = [], content = {}) =>
         option: {
           ...item.option,
           value: content[item.option.name],
-          readOnly: true,
+          readOnly,
         },
       };
     });
+
+  if (content.reply) {
+    contents.push({
+      seq: contents.length,
+      type: 'richTextEditor',
+      option: {
+        label: '내용',
+        name: 'reply',
+        readOnly,
+        required: true,
+        value: content.reply,
+      },
+    });
+  }
+  if (content.status) {
+    contents.push({
+      seq: contents.length,
+      type: 'text',
+      option: {
+        label: '상태',
+        name: 'status',
+        readOnly,
+        required: true,
+        value: content.status,
+      },
+    });
+  }
+  return contents;
+};
