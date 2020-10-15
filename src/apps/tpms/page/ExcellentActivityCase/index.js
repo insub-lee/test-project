@@ -17,6 +17,7 @@ import StyledBodyRow from '../../components/Tableboard/StyledBodyRow';
 import StyledBodyCell from '../../components/Tableboard/StyledBodyCell';
 
 import usePostList from '../../hooks/usePostList';
+import useModalController from '../../hooks/useModalController';
 
 /**
  * TPMS - 우수활동사례

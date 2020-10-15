@@ -8,6 +8,8 @@ import BtnWrap from './BtnWrap';
 import StyledFormView from '../../../components/CommonStyledElement/StyledFormView';
 import { StyledTextField, StyledCheckbox, StyledRadio, StyledSelect, StyledTextArea } from '../../../components/CommonStyledElement/StyledFormItem';
 
+import useHooks from './useHooks';
+
 /**
  * TPMS - 개선활동 - 등록/진행 - 신규등록
  *
@@ -17,7 +19,7 @@ import { StyledTextField, StyledCheckbox, StyledRadio, StyledSelect, StyledTextA
 const nav = [{ title: 'TPMS' }, { title: '개선활동' }, { title: '등록/진행' }, { title: '신규등록' }];
 
 const Registration = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading } = useHooks({ usrnm: '' });
   return (
     <div className="tpms-view">
       <ExpandableTitleContainer title="개선활동 - 등록/진행" nav={nav}>
