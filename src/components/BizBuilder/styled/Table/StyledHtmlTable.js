@@ -58,6 +58,9 @@ const StyledHtmlTable = styled.div`
             }
           }
         }
+        .td-left {
+          text-align: left !important;
+        }
         &.tr-center td {
           text-align: center;
         }
