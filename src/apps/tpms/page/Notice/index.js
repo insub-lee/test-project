@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import Table from 'rc-table';
 import moment from 'moment';
 
@@ -18,7 +18,12 @@ import { ModalHugger } from '../../components/ModalHugger';
 
 import usePostList from '../../hooks/usePostList';
 import { useModalController } from '../../hooks/useModalController';
+import { InquiryBody, InquiryTitle } from './Inquiry';
+import { ModifyBody } from './Modify';
+import { DeleteBody } from './Delete';
+import { Register, RegisterBody } from './Register';
 
+import { formJson } from './formJson';
 /**
  * TPMS - 공지사항
  *
@@ -55,8 +60,9 @@ const Notice = () => {
   } = usePostList({ brdid: 'brd00000000000000002' });
 
   const {
+    processedContent,
     modalStatus,
-    actions: { closeModal, openModal },
+    actions: { closeModal, openModal, processRecord, closeAll },
   } = useModalController(['REG', 'MOD', 'DEL', 'INQ']);
 
   const columns = useMemo(
@@ -81,7 +87,13 @@ const Notice = () => {
         key: 'title',
         width: '45%',
         render: (title, record) => (
-          <button type="button" onClick={() => openModal('INQ')}>
+          <button
+            type="button"
+            onClick={() => {
+              processRecord(record);
+              openModal('INQ');
+            }}
+          >
             {record.isReply && (
               <>
                 <span className="icon icon_reply" />
@@ -143,10 +155,11 @@ const Notice = () => {
                     </button>
                   </form>
                 </StyledSearch>
-                <div className="btn_wrap" />
-                <Button color="primary" size="big" onClick={() => openModal('REG')}>
-                  등록하기
-                </Button>
+                <div className="btn_wrap">
+                  <Button color="primary" size="big" onClick={() => openModal('REG')}>
+                    등록하기
+                  </Button>
+                </div>
               </div>
               <Table
                 columns={columns}
@@ -166,13 +179,13 @@ const Notice = () => {
         visible={modalStatus.REG}
         title="등록하기"
         footer={
-          <Button color="primary" size="big" onClick={() => closeModal('REG')}>
+          <Button color="primary" size="big" onClick={() => closeAll()}>
             확인하기
           </Button>
         }
         onCancel={() => closeModal('REG')}
       >
-        REGREGREGREGREGREGREGREGREGREG
+        <RegisterBody formJson={formJson} content={processedContent} />
       </ModalHugger>
 
       <ModalHugger
@@ -180,41 +193,41 @@ const Notice = () => {
         visible={modalStatus.MOD}
         title="수정하기"
         footer={
-          <Button color="primary" size="big" onClick={() => closeModal('MOD')}>
+          <Button color="primary" size="big" onClick={() => closeAll()}>
             확인하기
           </Button>
         }
         onCancel={() => closeModal('MOD')}
       >
-        MODMODMODMODMODMODMODMOD
+        <ModifyBody formJson={formJson} content={processedContent} />
       </ModalHugger>
 
       <ModalHugger
         width={300}
         visible={modalStatus.DEL}
-        title="삭제하기"
+        title="비밀번호 입력"
         footer={
-          <Button color="primary" size="big" onClick={() => closeModal('DEL')}>
+          <Button color="primary" size="big" onClick={() => closeAll()}>
             확인하기
           </Button>
         }
         onCancel={() => closeModal('DEL')}
       >
-        DELDELDELDELDELDELDEL
+        <DeleteBody formJson={formJson} content={processedContent} />
       </ModalHugger>
 
       <ModalHugger
         width={850}
         visible={modalStatus.INQ}
-        title="조회니까 일단 보류"
+        title={<InquiryTitle closeModal={closeModal} openModal={openModal} formJson={formJson} content={processedContent} />}
         footer={
-          <Button color="primary" size="big" onClick={() => closeModal('INQ')}>
+          <Button color="primary" size="big" onClick={() => closeAll()}>
             확인하기
           </Button>
         }
         onCancel={() => closeModal('INQ')}
       >
-        INQINQINQINQINQINQINQINQ
+        <InquiryBody formJson={formJson} content={processedContent} />
       </ModalHugger>
     </>
   );
