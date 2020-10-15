@@ -21,7 +21,7 @@ import { useModalController } from '../../hooks/useModalController';
 import { InquiryBody, InquiryTitle } from './Inquiry';
 import { ModifyBody } from './Modify';
 import { DeleteBody } from './Delete';
-import { Register, RegisterBody } from './Register';
+import { RegisterBody } from './Register';
 
 import { formJson } from './formJson';
 /**
