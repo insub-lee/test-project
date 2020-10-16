@@ -701,7 +701,7 @@ class View extends Component {
         excelPersonList,
         searchParam: {
           ...searchParam,
-          DEPT_NM: selectedDept.NAME_KOR,
+          DEPT_NM: selectedDept?.NAME_KOR || 'MAGNACHIP반도체',
         },
       },
       () => this.props.spinningOff(),
