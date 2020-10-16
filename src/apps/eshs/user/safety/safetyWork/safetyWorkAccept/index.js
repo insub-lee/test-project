@@ -10,7 +10,15 @@ import safetyWorkAceeptPage from './page';
 
 const safetyWorkView = ({ workNo, isWorkFlow }) => (
   <Styeld>
-    <BizMicroDevBase component={safetyWorkAceeptPage} sagaKey="safetyWork_accept" workNo={workNo} isWorkFlow={isWorkFlow} />
+    <BizMicroDevBase
+      component={safetyWorkAceeptPage}
+      sagaKey="safetyWork_accept"
+      workNo={workNo}
+      isWorkFlow={isWorkFlow}
+      prcId={113}
+      relKey="안전작업허가(운전부서)"
+      relKey2="WORK_NO"
+    />
   </Styeld>
 );
 

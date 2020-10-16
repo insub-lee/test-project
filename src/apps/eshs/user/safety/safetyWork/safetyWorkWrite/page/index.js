@@ -16,7 +16,7 @@ import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess';
-import { saveProcessRule } from 'apps/eshs/common/workProcessRule';
+import { saveProcessRule, getProcessRule } from 'apps/eshs/common/workProcessRule';
 import WorkerSearch from '../../workerMgt/Search';
 import CustomListPage from '../../pledge/pages/ListPage';
 import SafetyEdu from '../../safetyEdu';
@@ -84,6 +84,7 @@ class SafetyWorkMain extends Component {
       },
       processRule: {},
       tempProcessRule: {},
+      appvLineText: '',
     };
   }
 
@@ -118,33 +119,38 @@ class SafetyWorkMain extends Component {
 
   initForm = () => {
     const { formData } = this.state;
-    const { result } = this.props;
+    const { result, workNo } = this.props;
     const deptMasterList = (result && result.getDeptMasterList && result.getDeptMasterList.deptMasterList) || [];
     const myInfo = (result && result.getMyInfo && result.getMyInfo.myInfo) || {};
-    this.setState({
-      deptMasterList,
-      formData: {
-        ...formData,
-        REQ_CMPNY_CD: myInfo.CMPNY_CD,
-        REQ_DEPT_CD: myInfo.DEPT_CD,
-        REQ_EMP_NO: myInfo.EMP_NO,
-        REQ_CMPNY_NM: myInfo.CMPNY_NM,
-        REQ_DEPT_NM: myInfo.DEPT_NM,
-        REQ_EMP_NM: myInfo.EMP_NM,
+    this.setState(
+      {
+        deptMasterList,
+        formData: {
+          ...formData,
+          REQ_CMPNY_CD: myInfo.CMPNY_CD,
+          REQ_DEPT_CD: myInfo.DEPT_CD,
+          REQ_EMP_NO: myInfo.EMP_NO,
+          REQ_CMPNY_NM: myInfo.CMPNY_NM,
+          REQ_DEPT_NM: myInfo.DEPT_NM,
+          REQ_EMP_NM: myInfo.EMP_NM,
+        },
       },
-    });
+      () => (workNo ? this.handleGetSafetyWork(workNo) : undefined),
+    );
   };
 
-  handleGetSafetyWork = () => {
+  handleGetSafetyWork = workNo => {
     const { formData } = this.state;
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
     const type = 'searchOne';
+    const searchWorkNo = workNo || formData?.WORK_NO || '';
+
     const apiInfo = {
       key: 'getSafetyWork',
       type: 'GET',
-      url: `/api/eshs/v1/common/safetyWork?type=${type}&keyword=${formData.WORK_NO}`,
+      url: `/api/eshs/v1/common/safetyWork?type=${type}&keyword=${searchWorkNo}`,
     };
-    if (formData.WORK_NO === '') {
+    if (!searchWorkNo) {
       message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 검색하십시오.</MessageContent>);
       return;
     }
@@ -154,12 +160,21 @@ class SafetyWorkMain extends Component {
   getSafetyWorkCallback = () => {
     const { result, prcId: PRC_ID } = this.props;
 
-    const searchSafetyWork = (result && result.getSafetyWork && result.getSafetyWork.safetyWork) || {};
+    const searchSafetyWork = result?.getSafetyWork?.safetyWork || {};
 
     if (!searchSafetyWork.WORK_NO) {
-      message.error(<MessageContent>요청하신 작업정보를 찾을 수 없습니다.</MessageContent>);
+      return message.error(<MessageContent>요청하신 작업정보를 찾을 수 없습니다.</MessageContent>);
     }
-    this.setState({
+    const appLine = searchSafetyWork?.APP_LINE || [];
+    let appvLineText = '';
+    if (1 in appLine) {
+      appLine.forEach(appv => {
+        if (appv.STEP === 1) appvLineText += `${appv.PROCESS_NAME}:담당:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
+        if (appv.STEP === 2) appvLineText += `, 1차:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME}) `;
+      });
+    }
+
+    return this.setState({
       formData: {
         ...searchSafetyWork,
         FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
@@ -169,7 +184,54 @@ class SafetyWorkMain extends Component {
       },
       processRule: {},
       tempProcessRule: {},
+      appvLineText,
     });
+    // return getProcessRule(PRC_ID, prcRule => {
+    //   const { DRAFT_PROCESS_STEP } = prcRule;
+
+    //   DRAFT_PROCESS_STEP.forEach(step => {
+    //     switch (step?.STEP) {
+    //       case 3:
+    //         // 운전부서 담당자
+    //         if (searchSafetyWork?.APP_LINE?.EXM_USER_ID)
+    //           step.APPV_MEMBER = [
+    //             {
+    //               USER_ID: searchSafetyWork?.APP_LINE?.EXM_USER_ID,
+    //               DEPT_ID: searchSafetyWork?.APP_LINE?.EXM_DEPT_ID,
+    //               DEPT_NAME_KOR: searchSafetyWork?.APP_LINE?.EXM_DEPT_NAME_KOR,
+    //               NAME_KOR: searchSafetyWork?.APP_LINE?.EXM_NAME_KOR,
+    //             },
+    //           ];
+    //         break;
+    //       case 4:
+    //         // 운전부서 검토자
+    //         if (searchSafetyWork?.APP_LINE?.FINAL_USER_ID)
+    //           step.APPV_MEMBER = [
+    //             {
+    //               USER_ID: searchSafetyWork?.APP_LINE?.FINAL_USER_ID,
+    //               DEPT_ID: searchSafetyWork?.APP_LINE?.FINAL_DEPT_ID,
+    //               DEPT_NAME_KOR: searchSafetyWork?.APP_LINE?.FINAL_DEPT_NAME_KOR,
+    //               NAME_KOR: searchSafetyWork?.APP_LINE?.FINAL_NAME_KOR,
+    //             },
+    //           ];
+    //         break;
+    //       default:
+    //         break;
+    //     }
+    //   });
+
+    //   return this.setState({
+    //     formData: {
+    //       ...searchSafetyWork,
+    //       FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
+    //       REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
+    //       SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
+    //       UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
+    //     },
+    //     processRule: { ...prcRule },
+    //     tempProcessRule: {},
+    //   });
+    // });
   };
 
   saveProcessRule = () => {
@@ -182,7 +244,7 @@ class SafetyWorkMain extends Component {
         DRAFT_DATA: {},
         REL_KEY: relKey,
         REL_KEY2: formData[relKey2],
-        DRAFT_TITLE: formData.TITLE,
+        DRAFT_TITLE: `${formData.TITLE}(작업번호:${formData[relKey2]})`,
       },
       draftId => {
         if (draftId) {
@@ -391,7 +453,7 @@ class SafetyWorkMain extends Component {
           WORK_NO: record.WORK_NO,
         },
       },
-      this.handleGetSafetyWork,
+      () => this.handleGetSafetyWork,
     );
   };
 
@@ -746,68 +808,87 @@ class SafetyWorkMain extends Component {
   };
 
   render() {
-    const { modalType, modalTitle, modalVisible, formData, processRule } = this.state;
-    const { result, prcId: PRC_ID } = this.props;
+    const { modalType, modalTitle, modalVisible, formData, processRule, appvLineText } = this.state;
+    const {
+      result,
+      prcId: PRC_ID,
+      profile: { EMP_NO },
+      isWorkFlow,
+    } = this.props;
     const eshsSwtbEquip = (result && result.getSwtbEquipList && result.getSwtbEquipList.list) || [];
     return (
       <Styled>
-        <StyledCustomSearchWrapper>
-          <div className="search-input-area">
-            <span className="text-label">작업번호</span>
-            <AntdSearch
-              className="ant-search-inline input-search-mid mr5"
-              onClick={() => this.handleModal('safetyWork', true)}
-              value={formData.WORK_NO}
-              style={{ width: '200px' }}
-            />
-            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
-              검색
-            </StyledButton>
-          </div>
-        </StyledCustomSearchWrapper>
-        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          {formData.WORK_NO === '' ? (
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('ADD')}>
-              추가
-            </StyledButton>
-          ) : (
-            <>
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('ADD')}>
-                작업번호 신규 생성
+        {!isWorkFlow && (
+          <>
+            <StyledCustomSearchWrapper>
+              <div style={{ height: '30px' }}>
+                <div className="search-input-area" style={{ float: 'left' }}>
+                  <span className="text-label">작업번호</span>
+                  <AntdSearch
+                    className="ant-search-inline input-search-mid mr5"
+                    onClick={() => this.handleModal('safetyWork', true)}
+                    value={formData.WORK_NO}
+                    style={{ width: '200px' }}
+                  />
+                  <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
+                    검색
+                  </StyledButton>
+                </div>
+                <div style={{ float: 'right' }}>
+                  <span className="text-label">{appvLineText}</span>
+                </div>
+              </div>
+            </StyledCustomSearchWrapper>
+            <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+              {formData.WORK_NO === '' ? (
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('ADD')}>
+                  추가
+                </StyledButton>
+              ) : (
+                <>
+                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('ADD')}>
+                    작업번호 신규 생성
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('UPDATE')}>
+                    수정
+                  </StyledButton>
+                  {/* 문서상태 저장,  신청부결 상태 결재선 지정, 상신가능 */}
+                  {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_SUPERVISOR_EMP_NO === EMP_NO && (
+                    <StyledButton className="btn-primary btn-sm btn-first" onClick={this.saveProcessRule}>
+                      상신
+                    </StyledButton>
+                  )}
+                  <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.submitFormData('DELETE')}>
+                    삭제
+                  </StyledButton>
+                </>
+              )}
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174228)}>
+                안전교육 서약서
               </StyledButton>
-              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('UPDATE')}>
-                수정
-              </StyledButton>
-              {formData.STTLMNT_STATUS === '0' && (
-                <StyledButton className="btn-primary btn-sm btn-first" onClick={this.saveProcessRule}>
-                  상신
+              {formData.SITE === '청주' && (
+                <>
+                  <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174229)}>
+                    (청주) 중량물 작업계획서
+                  </StyledButton>
+                  <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174231)}>
+                    (청주) 밀폐공간 체크리스트
+                  </StyledButton>
+                  <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174230)}>
+                    (청주) 안전계획/절차서
+                  </StyledButton>
+                </>
+              )}
+              {/* 문서상태 저장,  신청부결 상태 결재선 지정, 상신가능 */}
+              {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_SUPERVISOR_EMP_NO === EMP_NO && (
+                <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('workProcess', true)}>
+                  결재선
                 </StyledButton>
               )}
-              <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.submitFormData('DELETE')}>
-                삭제
-              </StyledButton>
-            </>
-          )}
-          <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174228)}>
-            안전교육 서약서
-          </StyledButton>
-          {formData.SITE === '청주' && (
-            <>
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174229)}>
-                (청주) 중량물 작업계획서
-              </StyledButton>
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174231)}>
-                (청주) 밀폐공간 체크리스트
-              </StyledButton>
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174230)}>
-                (청주) 안전계획/절차서
-              </StyledButton>
-            </>
-          )}
-          <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('workProcess', true)}>
-            결재선
-          </StyledButton>
-        </StyledButtonWrapper>
+            </StyledButtonWrapper>
+          </>
+        )}
+
         <ContentsWrapper>
           <SafetyWorkInfo
             formData={formData}
@@ -914,8 +995,8 @@ class SafetyWorkMain extends Component {
               <CustomWorkProcess
                 processRule={processRule}
                 PRC_ID={PRC_ID}
-                draftId={formData.DRAFT_ID || -1}
-                viewType={formData.DRAFT_ID ? 'VIEW' : 'INPUT'}
+                draftId={formData.REQUEST_DRAFT_ID || -1}
+                viewType={formData.REQUEST_DRAFT_ID ? 'VIEW' : 'INPUT'}
                 setProcessRule={(_, prcRule) => this.setState({ tempProcessRule: prcRule })}
               />
               <StyledButtonWrapper className="btn-wrap-center btn-wrap-mb-10">
@@ -958,6 +1039,7 @@ SafetyWorkMain.propTypes = {
   getCallDataHandler: PropTypes.func,
   submitHandlerBySaga: PropTypes.func,
   getCallDataHandlerReturnRes: PropTypes.func,
+  isWorkFlow: PropTypes.bool,
 };
 
 export default SafetyWorkMain;
