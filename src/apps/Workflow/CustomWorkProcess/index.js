@@ -175,6 +175,7 @@ class CustomWorkProcess extends Component {
               visible={modalVisible}
               onComplete={this.onProcessRuleComplete}
               onCloseModal={this.handleCloseModal}
+              customBtnText
             />
           )}
         </AntdModal>
