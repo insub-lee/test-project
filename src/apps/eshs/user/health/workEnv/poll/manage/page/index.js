@@ -179,21 +179,21 @@ class FlowPage extends Component {
     const { type, result } = response;
     switch (type) {
       case 'ADD':
-        if (result === 1) {
+        if (result > 0) {
           this.handleModal('', false);
           this.handlerSearch();
           return message.success(<MessageContent>설문을 추가하였습니다.</MessageContent>);
         }
         return message.error(<MessageContent>설문 추가에 실패하였습니다.</MessageContent>);
       case 'UPDATE':
-        if (result === 1) {
+        if (result > 0) {
           this.handleModal('', false);
           this.handlerSearch();
           return message.success(<MessageContent>설문을 수정하였습니다.</MessageContent>);
         }
         return message.error(<MessageContent>설문 수정에 실패하였습니다.</MessageContent>);
       case 'DELETE':
-        if (result === 1) {
+        if (result > 0) {
           this.handleModal('', false);
           this.handlerSearch();
           return message.success(<MessageContent>설문정보를 삭제하였습니다.</MessageContent>);

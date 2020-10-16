@@ -7,9 +7,9 @@ import BizBuilderBase from 'components/BizBuilderBase';
 
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-
 /* view  --start--*/
-import SafetyWorkView from 'apps/eshs/user/safety/safetyWork/safetyWorkAccept'; // 안전작업허가 view
+import SafetyWorkView from 'apps/eshs/user/safety/safetyWork/safetyWorkAccept'; // 안전작업허가(운전부서) view
+import SafetyWorkWrite from 'apps/eshs/user/safety/safetyWork/safetyWorkWrite'; // 안전작업허가(작업부서) view
 import WasteWaterDiaryView from 'apps/eshs/admin/environment/wasteWater/diary/view'; // 용폐수일지 view
 /* 환경영향평가  --start--*/
 import EiMaterial from 'apps/eshs/user/environment/eia/eiMaterial'; // 원부재료
@@ -23,19 +23,21 @@ import JournalManagement from 'apps/eshs/user/health/medicalManagement/journalMa
 const getView = (record, spinningOn, spinningOff, handleModal) => {
   console.debug('record @@@ ', record);
   // builder view 생성
-  switch (record.WORK_SEQ) {
+  switch (record?.WORK_SEQ) {
     case -1:
-      return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record.WORK_SEQ} taskSeq={record.TASK_SEQ} viewType="VIEW" />];
+      return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" />];
     default:
       break;
   }
 
   //  SI view 생성
-  switch (record.REL_KEY) {
+  switch (record?.REL_KEY) {
     case '용폐수일지':
-      return [<WasteWaterDiaryView opDt={record.REL_KEY2} />];
-    case '안전작업허가':
-      return [<SafetyWorkView workNo={record.REL_KEY2} isWorkFlow key="안전작업허가 VIEW" />];
+      return [<WasteWaterDiaryView opDt={record?.REL_KEY2} />];
+    case '안전작업허가(작업부서)':
+      return [<SafetyWorkWrite workNo={record?.REL_KEY2} isWorkFlow key="안전작업허가 VIEW" />];
+    case '안전작업허가(운전부서)':
+      return [<SafetyWorkView workNo={record?.REL_KEY2} isWorkFlow key="안전작업허가 VIEW" />];
     case '환경영향평가':
       return [
         <div style={{ margin: '20px', height: '50px' }} key="환경영향평가 VIEW">
@@ -48,7 +50,7 @@ const getView = (record, spinningOn, spinningOff, handleModal) => {
                 // spinningOff();
                 handleModal(true, [
                   <div key="환경영향평가 SUB VIEW">
-                    <EiMaterial reqNo={record.REL_KEY2} deptSearchBarVisible={false} />
+                    <EiMaterial reqNo={record?.REL_KEY2} deptSearchBarVisible={false} />
                     <div style={{ margin: '20px', height: '50px' }} key="환경영향평가 VIEW">
                       <StyledButtonWrapper className="btn-wrap-center">
                         <StyledButton
@@ -76,7 +78,7 @@ const getView = (record, spinningOn, spinningOff, handleModal) => {
                 //   spinningOff();
                 handleModal(true, [
                   <div key="환경영향평가 SUB VIEW">
-                    <EiStatement reqNo={record.REL_KEY2} deptSearchBarVisible={false} />
+                    <EiStatement reqNo={record?.REL_KEY2} deptSearchBarVisible={false} />
                     <div style={{ margin: '20px', height: '50px' }} key="환경영향평가 VIEW">
                       <StyledButtonWrapper className="btn-wrap-center">
                         <StyledButton
@@ -104,7 +106,7 @@ const getView = (record, spinningOn, spinningOff, handleModal) => {
                 //   spinningOff();
                 handleModal(true, [
                   <div key="환경영향평가 SUB VIEW">
-                    <EiImportantAssesment reqNo={record.REL_KEY2} deptSearchBarVisible={false} />
+                    <EiImportantAssesment reqNo={record?.REL_KEY2} deptSearchBarVisible={false} />
                     <div style={{ margin: '20px', height: '50px' }} key="환경영향평가 VIEW">
                       <StyledButtonWrapper className="btn-wrap-center">
                         <StyledButton
@@ -144,7 +146,7 @@ const getCallData = async (method, url, param, callBack) => {
   });
 
   console.debug('@@@@@@@@@@@@@@ ', result);
-  return typeof callBack === 'function' ? callBack(result && result.response) : result && result.response;
+  return typeof callBack === 'function' ? callBack(result?.response) : result?.response;
 };
 
 export const columns = (handleModal, type, spinningOn, spinningOff) => [
@@ -156,7 +158,7 @@ export const columns = (handleModal, type, spinningOn, spinningOff) => [
     align: 'center',
     render: (text, record) => {
       let label = '';
-      switch (record.REL_TYPE) {
+      switch (record?.REL_TYPE) {
         case 99:
           label = '폐기';
           break;
@@ -167,7 +169,7 @@ export const columns = (handleModal, type, spinningOn, spinningOff) => [
           label = text;
           break;
       }
-      if (!label) label = record.REL_KEY;
+      if (!label) label = record?.REL_KEY;
       return label;
     },
   },
@@ -175,7 +177,7 @@ export const columns = (handleModal, type, spinningOn, spinningOff) => [
     title: '유형',
     width: type === 'DRAFT' ? '0%' : '15%',
     align: 'center',
-    render: (text, record) => (type === 'DRAFT' ? '' : record && record.RULE_CONFIG && record.RULE_CONFIG.Label) || '',
+    render: (text, record) => (type === 'DRAFT' ? '' : record?.RULE_CONFIG?.Label) || '',
   },
   {
     title: '제목',

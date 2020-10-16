@@ -171,6 +171,7 @@ class BuilderProcessModal extends Component {
   };
 
   render() {
+    const { customBtnText } = this.props;
     const { prcStep, selectedUserKeys, selectedDeptKeys, deptList, deptUserList, rootKey } = this.state;
     const rowSelection = {
       selectedRowKeys: selectedUserKeys,
@@ -233,7 +234,7 @@ class BuilderProcessModal extends Component {
                       style={{ width: '150px' }}
                       onClick={() => this.handleAddUser(item.PRC_RULE_ID, item.NODE_ID, item.NODE_TYPE)}
                     >
-                      {item.NODE_NAME_KOR}
+                      {customBtnText ? item?.RULE_CONFIG?.Label : item.NODE_NAME_KOR}
                       <Icon type="double-right" />
                     </StyledButton>
                   </li>
@@ -248,7 +249,7 @@ class BuilderProcessModal extends Component {
                   <h4>
                     <AuditOutlined />
                     {'  '}
-                    {item.NODE_NAME_KOR}
+                    {customBtnText ? item?.RULE_CONFIG?.Label : item.NODE_NAME_KOR}
                   </h4>
                   <ul>
                     {item.APPV_MEMBER.length > 0 ? (
@@ -305,6 +306,7 @@ BuilderProcessModal.propTypes = {
   getDeptList: PropTypes.func,
   getDeptUserList: PropTypes.func,
   initDeptUserList: PropTypes.func,
+  customBtnText: PropTypes.bool, // true : RULE_CONFIG에서 Label값을 꺼내 버튼 text로 채움, false : NODE_NAME_KOR
 };
 
 BuilderProcessModal.defaultProps = {
@@ -312,6 +314,7 @@ BuilderProcessModal.defaultProps = {
   processRule: {},
   deptList: [],
   deptUserList: [],
+  customBtnText: false,
 };
 
 const mapStateToProps = createStructuredSelector({

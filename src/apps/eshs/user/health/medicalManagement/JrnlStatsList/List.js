@@ -130,6 +130,7 @@ class List extends Component {
     const firstApprovalIdx = vGroupList.findIndex(group => group.GRP_ID === 88422);
     // GRP_ID === 88423 2차 결재자
     const secondApprovalIdx = vGroupList.findIndex(group => group.GRP_ID === 88423);
+
     processRule &&
       processRule.DRAFT_PROCESS_STEP &&
       processRule.DRAFT_PROCESS_STEP.forEach((step, index) => {

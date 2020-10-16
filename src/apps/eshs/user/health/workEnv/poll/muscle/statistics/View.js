@@ -17,9 +17,8 @@ import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import PollImg from '../survey/poll.gif';
 
 const AntdModal = StyledAntdModal(Modal);
-const currentYear = moment(new Date()).format('YYYY');
-
 const AntdSelect = StyledSelect(Select);
+const { Option } = Select;
 const AntdSearch = StyledSearchInput(Input.Search);
 
 const questions = [
@@ -578,73 +577,135 @@ class View extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoaded: false,
+      pollList: [],
+      selectedPoll: -1,
       searchParam: {
-        CHK_YEAR: currentYear,
+        POSEQ: -1,
         DEPT_ID: '',
       },
       statistics: {},
-      yearList: [],
       excelList: [],
       excelPersonList: [],
       modalVisible: false,
-      selectdDept: {
-        DEPT_ID: 72761,
-      },
     };
   }
 
   componentDidMount() {
-    const yearList = [];
-    for (let i = currentYear; i >= 1998; i--) {
-      yearList.push(i);
-    }
-    this.setState({ yearList }, this.getSearchData);
+    this.init();
   }
 
+  // 첫 진입시
+  init = () => {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const apiInfo = {
+      key: 'getMusclePollResult',
+      type: 'POST',
+      url: `/api/eshs/v1/common/healthPollMgt`,
+      params: { PARAM: { type: 'GET_MUSCLE_SURVEY_RESULT_INIT' } },
+    };
+    getCallDataHandlerReturnRes(id, apiInfo, this.initCallback);
+  };
+
+  initCallback = (id, response) => {
+    const { pollList, result, list } = response;
+    const statistics = (result && result) || {};
+    const excelPersonList = (list && list) || [];
+
+    const parseStatistics = {};
+    const excelList = [];
+    let target = '';
+    for (target in statistics) {
+      if (target === 'TOTAL') {
+        parseStatistics[target] = statistics[target];
+      } else {
+        parseStatistics[target] = statistics[target] && statistics[target].value && JSON.parse(statistics[target].value);
+      }
+    }
+
+    excelListSort.forEach(item => {
+      if (parseStatistics[item.target]) {
+        const excelRow = {};
+        parseStatistics[item.target].forEach(question => {
+          excelRow[`Q${question.SEQ}`] = question.CNT;
+        });
+        excelRow.QUESTION = item.text;
+        excelList.push(excelRow);
+      } else {
+        excelList.push({ QUESTION: item.text, Q1: '0', Q2: '0', Q3: '0', Q4: '0', Q5: '0', Q6: '0', Q7: '0' });
+      }
+    });
+
+    this.setState({
+      isLoaded: true,
+      pollList: (pollList && pollList) || [],
+      selectedPoll: (pollList && pollList[0] && pollList[0].POSEQ) || -1,
+      searchParam: {
+        POSEQ: (pollList && pollList[0] && pollList[0].POSEQ) || -1,
+      },
+      statistics: parseStatistics,
+      excelList,
+      excelPersonList,
+    });
+  };
+
   getSearchData = () => {
-    const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    const { sagaKey: id, getCallDataHandlerReturnRes, spinningOn } = this.props;
     const { searchParam, selectedDept } = this.state;
     spinningOn();
-    const deptId = (selectedDept && selectedDept.DEPT_ID) || null;
-    const chkYear = (searchParam && searchParam.CHK_YEAR) || currentYear;
-    const apiAry = [
-      {
-        key: 'statistics',
-        url: `/api/eshs/v1/common/health/eshsHealthPoll?CHK_YEAR=${chkYear}&DEPT_ID=${deptId}`,
-        type: 'GET',
-      },
-    ];
-    return getCallDataHandler(id, apiAry, () => {
-      const { result } = this.props;
-      const statistics = (result && result.statistics && result.statistics.result) || {};
-      const excelPersonList = (result && result.statistics && result.statistics.list) || [];
+    const deptId = (selectedDept && `${selectedDept.DEPT_ID}`) || null;
+    const poSeq = (searchParam && searchParam.POSEQ) || -1;
+    const apiInfo = {
+      key: 'getMusclePollResult',
+      type: 'POST',
+      url: `/api/eshs/v1/common/healthPollMgt`,
+      params: { PARAM: { type: 'GET_MUSCLE_SURVEY_RESULT', POSEQ: poSeq, DEPT_ID: deptId } },
+    };
+    getCallDataHandlerReturnRes(id, apiInfo, this.searchCallback);
+  };
 
-      const parseStatistics = {};
-      const excelList = [];
-      let target = '';
-      for (target in statistics) {
-        if (target === 'TOTAL') {
-          parseStatistics[target] = statistics[target];
-        } else {
-          parseStatistics[target] = statistics[target] && statistics[target].value && JSON.parse(statistics[target].value);
-        }
+  searchCallback = (id, response) => {
+    const { searchParam, selectedDept } = this.state;
+    const { result, list } = response;
+    const statistics = (result && result) || {};
+    const excelPersonList = (list && list) || [];
+
+    const parseStatistics = {};
+    const excelList = [];
+    let target = '';
+    for (target in statistics) {
+      if (target === 'TOTAL') {
+        parseStatistics[target] = statistics[target];
+      } else {
+        parseStatistics[target] = statistics[target] && statistics[target].value && JSON.parse(statistics[target].value);
       }
+    }
 
-      excelListSort.forEach(item => {
-        if (parseStatistics[item.target]) {
-          const excelRow = {};
-          parseStatistics[item.target].forEach(question => {
-            excelRow[`Q${question.SEQ}`] = question.CNT;
-          });
-          excelRow.QUESTION = item.text;
-          excelList.push(excelRow);
-        } else {
-          excelList.push({ QUESTION: item.text, Q1: '0', Q2: '0', Q3: '0', Q4: '0', Q5: '0', Q6: '0', Q7: '0' });
-        }
-      });
-
-      this.setState({ statistics: parseStatistics, excelList, excelPersonList, searchParam: { ...searchParam, ...selectedDept } }, spinningOff);
+    excelListSort.forEach(item => {
+      if (parseStatistics[item.target]) {
+        const excelRow = {};
+        parseStatistics[item.target].forEach(question => {
+          excelRow[`Q${question.SEQ}`] = question.CNT;
+        });
+        excelRow.QUESTION = item.text;
+        excelList.push(excelRow);
+      } else {
+        excelList.push({ QUESTION: item.text, Q1: '0', Q2: '0', Q3: '0', Q4: '0', Q5: '0', Q6: '0', Q7: '0' });
+      }
     });
+
+    this.setState(
+      {
+        statistics: parseStatistics,
+        excelList,
+        excelPersonList,
+        searchParam: {
+          ...searchParam,
+          DEPT_NM: selectedDept.NAME_KOR,
+        },
+      },
+      () => this.props.spinningOff(),
+    );
   };
 
   customSpan = (text, field, seq) => {
@@ -672,31 +733,35 @@ class View extends Component {
   onChangeSearchParam = (target, value) => this.setState(prevState => ({ searchParam: { ...prevState.searchParam, [target]: value } }));
 
   render() {
-    const { yearList, statistics, excelList, modalVisible, selectedDept, searchParam, excelPersonList } = this.state;
-    const deptName = (selectedDept && selectedDept.NAME_KOR) || 'MAGNACHIP반도체';
-    const searchDept = (searchParam && searchParam.NAME_KOR) || 'MAGNACHIP반도체';
+    const { statistics, excelList, modalVisible, isLoaded, searchParam, excelPersonList, pollList, selectedPoll, selectedDept } = this.state;
+    const searchDept = (selectedDept && selectedDept.NAME_KOR) || 'MAGNACHIP반도체';
+    if (!isLoaded) return '';
+    if (isLoaded && selectedPoll === -1)
+      return (
+        <div style={{ width: '100%', textAlign: 'center', padding: '50px' }}>
+          <span style={{ fontWeight: 600, fontSize: 20 }}>조회된 설문조사 통계데이터가 없습니다.</span>
+        </div>
+      );
     return (
       <Styled>
         <StyledContentsWrapper>
-          <div style={{ padding: '10px 20px', position: 'relative' }}>
-            <p style={{ fontSize: '18px', fontWeight: '500', color: '#000' }}>근골격계질환 증상에 관한 문진표 통계</p>
-          </div>
           <StyledCustomSearchWrapper className="search-wrapper-inline">
             <div className="search-input-area">
               <AntdSelect
-                defaultValue={currentYear}
+                defaultValue={(searchParam && searchParam.POSEQ) || -1}
                 className="select-sm mr5"
-                style={{ width: 100 }}
-                onChange={val => this.onChangeSearchParam('CHK_YEAR', val)}
+                style={{ width: 350 }}
+                onChange={val => this.onChangeSearchParam('POSEQ', val)}
               >
-                {yearList.map(year => (
-                  <AntdSelect.Option key={year} value={year}>{`${year}년`}</AntdSelect.Option>
+                <Option value={-1}>설문조사 선택</Option>
+                {pollList.map(item => (
+                  <Option value={item.POSEQ}>{`${item.POYEAR} - ${item.POTYPE} :: ${item.SDATE} ~ ${item.EDATE}`}</Option>
                 ))}
               </AntdSelect>
               <AntdSearch
-                className="input-search-sm mr5"
+                className="input-search-sm"
                 style={{ width: 250 }}
-                value={deptName}
+                value={searchDept}
                 onClick={this.handleModalVisible}
                 onSearch={this.handleModalVisible}
               />
@@ -745,7 +810,7 @@ class View extends Component {
               </div>
             </div>
             <div className="div-comment" style={{ display: 'inline-block', marginLeft: '5px' }}>
-              {searchDept} 설문참여자 : {statistics.TOTAL || 0}명
+              {searchParam.DEPT_NM || 'MAGNACHIP반도체'} 설문참여자 : {statistics.TOTAL || 0}명
             </div>
           </StyledCustomSearchWrapper>
           <div className="examination-area">
@@ -882,6 +947,7 @@ View.propTypes = {
   spinningOn: PropTypes.func,
   spinningOff: PropTypes.func,
   result: PropTypes.object,
+  getCallDataHandlerReturnRes: PropTypes.func,
 };
 
 View.defaultProps = {};

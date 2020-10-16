@@ -283,7 +283,9 @@ class EshsAppView extends Component {
                 <td colSpan={3}>
                   <Radio.Group onChange={this.onChange} defaultValue={selectedRow?.CURRENT_STATUS === 10 ? 20 : 2}>
                     <Radio value={selectedRow?.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
-                    {REL_KEY === '환경영향평가' && <Radio value={9}>부결</Radio>}
+                    {(REL_KEY === '환경영향평가' || REL_KEY === '안전작업허가(작업부서)' || REL_KEY === '안전작업허가(운전부서)') && (
+                      <Radio value={9}>부결</Radio>
+                    )}
                   </Radio.Group>
                 </td>
               </tr>
@@ -295,28 +297,6 @@ class EshsAppView extends Component {
                   </td>
                 </tr>
               )}
-              {/* <tr
-                style={{
-                  display: (selectedRow && selectedRow.APPV_STATUS && selectedRow.APPV_STATUS === 5) || selectedRow.APPV_STATUS === 10 ? 'table-row' : 'none',
-                }}
-              >
-                <th style={{ width: '150px' }}>선택된 실무자 </th>
-                <td colSpan={3}>
-                  <StyledButton onClick={this.onClickUserSelect} className="btn-gray btn-xs">
-                    <Icon type="search" style={{ marginRight: '5px' }} />
-                    실무자검색
-                  </StyledButton>
-                  <div>
-                    {nextApprover &&
-                      nextApprover.map(user => (
-                        <StyledTagDraft>
-                          <Icon type="user" />
-                          <span className="infoTxt">{`${user.NAME_KOR} (${user.DEPT_NAME_KOR})`}</span>
-                        </StyledTagDraft>
-                      ))}
-                  </div>
-                </td>
-              </tr> */}
               <tr style={{ display: procResult && procResult.length > 0 ? 'table-row' : 'none' }}>
                 <td colSpan={4} style={{ padding: 0, border: 0 }}>
                   <table style={{ width: '100%', borderTop: 0 }}>
@@ -381,7 +361,7 @@ class EshsAppView extends Component {
                   display: selectedRow?.APPV_STATUS === 9 ? 'table-row' : 'none',
                 }}
               >
-                <th>의견 </th>
+                <th>부결 의견</th>
                 <td colSpan={3}>
                   <AntdTextArea rows={4} onChange={this.onChangeOpinion} />
                 </td>
@@ -404,98 +384,6 @@ class EshsAppView extends Component {
             </StyledButton>
           </StyledButtonWrapper>
         </StyledHtmlTable>
-
-        {/* {selectedRow && selectedRow.REL_TYPE && selectedRow.REL_TYPE !== 999 ? (
-          <BizBuilderBase
-            sagaKey="approveBase_approveView"
-            viewType="VIEW"
-            workSeq={selectedRow && selectedRow.WORK_SEQ}
-            taskSeq={selectedRow && selectedRow.TASK_SEQ}
-            selectedRow={selectedRow}
-            clickCoverView={this.clickCoverView}
-            ViewCustomButtons={() => false}
-            isObsCheck={selectedRow.REL_TYPE === 99}
-          />
-        ) : (
-          DRAFT_DATA &&
-          DRAFT_DATA.abrogationList &&
-          DRAFT_DATA.abrogationList.length > 0 && (
-            <>
-              <StyledHtmlTable style={{ padding: '20px 20px 20px' }}>
-                <AntdLineTable
-                  columns={this.getTableColumns()}
-                  dataSource={DRAFT_DATA.abrogationList !== null ? DRAFT_DATA.abrogationList : []}
-                  bordered
-                  className="tableWrapper"
-                  pagination={false}
-                />
-              </StyledHtmlTable>
-              <AntdModal
-                destroyOnClose
-                style={{ top: '50px' }}
-                initialWidth={900}
-                width={900}
-                visible={isAbrogationMultiShow}
-                onCancel={this.onCloseAbrogationMultiModal}
-                footer={null}
-                maskClosable={false}
-              >
-                <StyledInputView>
-                  <div className="pop_tit">표준 일괄 폐기</div>
-                  <AbrogationMultiModifyDraft
-                    workPrcProps={workPrcProps}
-                    {...this.props}
-                    onAbrogationMultiProcess={this.onAbrogationMultiProcess}
-                    onCloseAbrogationMultiModal={this.onCloseAbrogationMultiModal}
-                  />
-                </StyledInputView>
-              </AntdModal>
-            </>
-          )
-        )} */}
-
-        {/* <AntdModal
-          className="modalWrapper modalTechDoc modalCustom"
-          title="표지 보기"
-          width={900}
-          destroyOnClose
-          visible={coverView.visible}
-          onCancel={this.onCloseCoverView}
-          footer={[]}
-        >
-          <BizBuilderBase
-            sagaKey="CoverView"
-            viewType={coverView.viewType}
-            workSeq={coverView.workSeq}
-            taskSeq={coverView.taskSeq}
-            viewMetaSeq={coverView.viewMetaSeq}
-            workPrcProps={workPrcProps}
-            isObsCheck={isObsCheck}
-            CustomWorkProcessModal={WorkProcessModal}
-            onCloseCoverView={this.onCloseCoverView}
-            onCloseModalHandler={this.onCloseCoverView}
-            reloadId="approveBase_approveView"
-            reloadViewType="VIEW"
-            reloadTaskSeq={selectedRow && selectedRow.TASK_SEQ}
-            ViewCustomButtons={({ onCloseCoverView }) => (
-              <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                <StyledButton className="btn-light" onClick={onCloseCoverView}>
-                  닫기
-                </StyledButton>
-              </div>
-            )}
-            ModifyCustomButtons={({ onCloseCoverView, saveBeforeProcess, sagaKey, reloadId }) => (
-              <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                <StyledButton className="btn-primary btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
-                  저장
-                </StyledButton>
-                <StyledButton className="btn-light" onClick={onCloseCoverView}>
-                  닫기
-                </StyledButton>
-              </div>
-            )}
-          />
-        </AntdModal> */}
       </>
     );
   }
