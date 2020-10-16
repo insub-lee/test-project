@@ -34,7 +34,7 @@ class ApproveBase extends Component {
     const { component: Component } = this.props;
     return (
       <Spin spinning={this.state.spinning}>
-        <Component {...this.props} spinningOn={this.spinningOn} spinningOff={this.spinningOff} />;
+        <Component {...this.props} spinningOn={this.spinningOn} spinningOff={this.spinningOff} />
       </Spin>
     );
   }

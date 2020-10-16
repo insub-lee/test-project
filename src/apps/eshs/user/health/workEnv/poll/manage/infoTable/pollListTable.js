@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import styled from 'styled-components';
 import { Table } from 'antd';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 
 const AntdTable = StyledAntdTable(Table);
+
+const Styled = styled.div`
+  .answerUser_wrap:hover {
+    font-weight: 600;
+    color: #2a81da;
+  }
+`;
 
 // 설문조사 리스트 테이블
 class PollListTable extends Component {
@@ -23,45 +30,108 @@ class PollListTable extends Component {
         key: 'POYEAR',
         dataIndex: 'POYEAR',
         align: 'center',
+        render: (data, record) => (
+          <div
+            role="button"
+            tabIndex="0"
+            style={{ width: '100%', height: '100%' }}
+            onClick={() => handleModal('UPDATE', true, record)}
+            onKeyPress={() => handleModal('UPDATE', true, record)}
+          >
+            <span>{data}</span>
+          </div>
+        ),
       },
       {
         title: '설문 구분',
         key: 'POTYPE',
         dataIndex: 'POTYPE',
         align: 'center',
+        render: (data, record) => (
+          <div
+            role="button"
+            tabIndex="0"
+            style={{ width: '100%', height: '100%' }}
+            onClick={() => handleModal('UPDATE', true, record)}
+            onKeyPress={() => handleModal('UPDATE', true, record)}
+          >
+            <span>{data}</span>
+          </div>
+        ),
       },
       {
         title: '설문 일정',
         key: 'POLL_',
         align: 'center',
-        render: (data, record) => `${record.SDATE} / ${record.EDATE}`,
+        render: (data, record) => (
+          <div
+            role="button"
+            tabIndex="0"
+            style={{ width: '100%', height: '100%' }}
+            onClick={() => handleModal('UPDATE', true, record)}
+            onKeyPress={() => handleModal('UPDATE', true, record)}
+          >
+            <span>{`${record.SDATE} ~ ${record.EDATE}`}</span>
+          </div>
+        ),
       },
       {
         title: '상태',
         key: 'STATUS',
+        dataIndex: 'STATUS',
         align: 'center',
         render: (data, record) => {
-          const { SDATE, EDATE } = record;
-          const now = moment();
-          const sDate = SDATE && moment(SDATE, 'YYYY-MM-DD');
-          const eDate = (EDATE && moment(EDATE, 'YYYY-MM-DD')) || undefined;
-          const status = now >= sDate && (eDate ? now <= eDate : true);
-          if (status) {
-            return '진행중';
+          let status = '';
+          switch (data) {
+            case 'WAIT':
+              status = '진행예정';
+              break;
+            case 'OPEN':
+              status = '진행중';
+              break;
+            case 'CLOSE':
+              status = '종료';
+              break;
+            default:
+              break;
           }
-          return '종료';
+          return (
+            <div
+              role="button"
+              tabIndex="0"
+              style={{ width: '100%', height: '100%' }}
+              onClick={() => handleModal('UPDATE', true, record)}
+              onKeyPress={() => handleModal('UPDATE', true, record)}
+            >
+              <span>{status}</span>
+            </div>
+          );
         },
       },
       {
-        title: '응답 현황',
+        title: '응답인원',
         key: 'RESPONDENTS',
         dataIndex: 'RESPONDENTS',
         align: 'center',
-        render: data => `응답 ${data}명`,
+        render: (data, record) => (
+          <div
+            className="answerUser_wrap"
+            role="button"
+            tabIndex="0"
+            style={{ width: '100%', height: '100%' }}
+            onClick={() => handleModal('DETAIL', true, record)}
+            onKeyPress={() => handleModal('DETAIL', true, record)}
+          >
+            <span className="answerUser">{`${data}명`}</span>
+          </div>
+        ),
       },
     ];
-
-    return <AntdTable pagination={false} columns={columns} dataSource={listData} />;
+    return (
+      <Styled>
+        <AntdTable pagination={false} columns={columns} dataSource={listData} />
+      </Styled>
+    );
   }
 }
 
