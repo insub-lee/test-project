@@ -14,8 +14,17 @@ import StyledBodyRow from '../../components/Tableboard/StyledBodyRow';
 import StyledHeader from '../../components/Tableboard/StyledHeader';
 import StyledHeaderCell from '../../components/Tableboard/StyledHeaderCell';
 import StyledTable from '../../components/Tableboard/StyledTable';
+import Button from '../../components/Button';
+
+import { ModalHugger } from '../../components/ModalHugger';
 
 import usePostList from '../../hooks/usePostList';
+import { useModalController } from '../../hooks/useModalController';
+import { InquiryBody, InquiryTitle } from './Inquiry';
+import { ModifyBody } from './Modify';
+import { DeleteBody } from './Delete';
+import { RegisterBody } from './Register';
+import { formjson } from './formJson';
 
 /**
  * TPMS - 개선활동신문고
@@ -53,6 +62,12 @@ const ImprovementActivityNewspaper = () => {
     action: { submitSearchQuery, pageHandler, pageSizeHandler },
   } = usePostList({ brdid: 'brd00000000000000005' });
 
+  const {
+    processedContent,
+    modalStatus,
+    actions: { closeModal, openModal, processRecord, closeAll },
+  } = useModalController(['REG', 'MOD', 'DEL', 'INQ']);
+
   const columns = useMemo(
     () => [
       {
@@ -75,7 +90,14 @@ const ImprovementActivityNewspaper = () => {
         key: 'title',
         width: '45%',
         render: (title, record) => (
-          <button type="button" onClick={() => console.debug(record)}>
+          <button
+            type="button"
+            onClick={() => {
+              console.debug(record);
+              processRecord(record);
+              openModal('INQ');
+            }}
+          >
             {record.isReply && (
               <>
                 <span className="icon icon_reply" />
@@ -116,41 +138,102 @@ const ImprovementActivityNewspaper = () => {
   );
 
   return (
-    <div className="tpms-view">
-      <TitleContainer title="개선활동신문고" nav={nav}>
-        <Spin spinning={isLoading}>
-          <StyledWrapper>
-            <div className="view_top">
-              <StyledSearch>
-                <form autoComplete="off" className="page" name="form-name" onSubmit={submitSearchQuery}>
-                  <select name="category">
-                    {categories.map(category => (
-                      <option key={category.text} value={category.value}>
-                        {category.text}
-                      </option>
-                    ))}
-                  </select>
-                  <input type="text" className="input" name="text" />
-                  <button type="submit" className="icon icon_search_white">
-                    검색
-                  </button>
-                </form>
-              </StyledSearch>
-              <div className="btn_wrap" />
-            </div>
-            <Table
-              columns={columns}
-              data={data}
-              rowKey="postno"
-              rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
-              components={componentsStyle}
-            />
-            <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
-          </StyledWrapper>
-        </Spin>
-      </TitleContainer>
-      <GlobalStyle />
-    </div>
+    <>
+      <div className="tpms-view">
+        <TitleContainer title="개선활동신문고" nav={nav}>
+          <Spin spinning={isLoading}>
+            <StyledWrapper>
+              <div className="view_top">
+                <StyledSearch>
+                  <form autoComplete="off" className="page" name="form-name" onSubmit={submitSearchQuery}>
+                    <select name="category">
+                      {categories.map(category => (
+                        <option key={category.text} value={category.value}>
+                          {category.text}
+                        </option>
+                      ))}
+                    </select>
+                    <input type="text" className="input" name="text" />
+                    <button type="submit" className="icon icon_search_white">
+                      검색
+                    </button>
+                  </form>
+                </StyledSearch>
+                <div className="btn_wrap">
+                  <Button color="primary" size="big" onClick={() => openModal('REG')}>
+                    등록하기
+                  </Button>
+                </div>
+              </div>
+              <Table
+                columns={columns}
+                data={data}
+                rowKey="postno"
+                rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
+                components={componentsStyle}
+              />
+              <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
+            </StyledWrapper>
+          </Spin>
+        </TitleContainer>
+        <GlobalStyle />
+      </div>
+      <ModalHugger
+        width={850}
+        visible={modalStatus.REG}
+        title="등록하기"
+        footer={
+          <Button color="primary" size="big" onClick={() => closeAll()}>
+            확인하기
+          </Button>
+        }
+        onCancel={() => closeModal('REG')}
+      >
+        <RegisterBody formJson={formjson} content={processedContent} />
+      </ModalHugger>
+
+      <ModalHugger
+        width={850}
+        visible={modalStatus.MOD}
+        title="수정하기"
+        footer={
+          <Button color="primary" size="big" onClick={() => closeAll()}>
+            확인하기
+          </Button>
+        }
+        onCancel={() => closeModal('MOD')}
+      >
+        <ModifyBody formJson={formjson} content={processedContent} />
+      </ModalHugger>
+
+      <ModalHugger
+        width={300}
+        visible={modalStatus.DEL}
+        title="비밀번호 입력"
+        footer={
+          <Button color="primary" size="big" onClick={() => closeAll()}>
+            확인하기
+          </Button>
+        }
+        onCancel={() => closeModal('DEL')}
+      >
+        <DeleteBody formJson={formjson} content={processedContent} />
+      </ModalHugger>
+
+      <ModalHugger
+        width={850}
+        visible={modalStatus.INQ}
+        title={<InquiryTitle closeModal={closeModal} openModal={openModal} formJson={formjson} content={processedContent} />}
+        footer={
+          <Button color="primary" size="big" onClick={() => closeAll()}>
+            확인하기
+          </Button>
+        }
+        onCancel={() => closeModal('INQ')}
+      >
+        <InquiryBody formJson={formjson} content={processedContent} />
+      </ModalHugger>
+    </>
   );
 };
 

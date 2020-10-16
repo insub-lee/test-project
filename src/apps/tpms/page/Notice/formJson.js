@@ -5,7 +5,6 @@ export const formJson = [
   { type: 'uploader', option: { label: '파일첨부', name: 'uploader-attach' }, seq: 3 },
 ];
 
-
 export const content = {
   title: 'Inform일지 Inform일지 Inform일지 Inform일지 Inform일지 ',
   'textarea-1539755684624':

@@ -63,7 +63,7 @@ const Notice = () => {
     processedContent,
     modalStatus,
     actions: { closeModal, openModal, processRecord, closeAll },
-  } = useModalController(['REG', 'MOD', 'DEL', 'INQ']);
+  } = useModalController(['REG', 'MOD', 'DEL', 'INQ', 'REP']);
 
   const columns = useMemo(
     () => [
@@ -90,6 +90,7 @@ const Notice = () => {
           <button
             type="button"
             onClick={() => {
+              console.debug(record);
               processRecord(record);
               openModal('INQ');
             }}
@@ -157,7 +158,7 @@ const Notice = () => {
                 </StyledSearch>
                 <div className="btn_wrap">
                   <Button color="primary" size="big" onClick={() => openModal('REG')}>
-                    등록하기
+                    등록하기1
                   </Button>
                 </div>
               </div>
