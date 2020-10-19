@@ -328,7 +328,7 @@ class PollInput extends Component {
                   공개되지 않고 비밀로 보장되오니 <b>다른 사람과 절대 상의하지 말고</b> 본인이 생각하는 것을 솔직하게 기입해 주시기 바랍니다.
                 </p>
                 <p>
-                  ○ 신체 부위별 증상의 물음에는{' '}
+                  ○ 신체 부위별 증상의 물음에는
                   <b>'어제 운동을 하여 아프다', '감기로 아프다', 등과 같이 일시적이거나 직업과 관련이 없는 증상은 기입하지 마십시오.</b>
                 </p>
                 <p>
@@ -341,33 +341,42 @@ class PollInput extends Component {
                   <table className="question-table">
                     <colgroup>
                       <col style={{ width: '15%' }} />
+                      <col style={{ width: '10%' }} />
+                      <col style={{ width: '30%' }} />
                       <col style={{ width: '15%' }} />
-                      <col style={{ width: '15%' }} />
-                      <col style={{ width: '25%' }} />
-                      <col style={{ width: '15%' }} />
-                      <col style={{ width: '15%' }} />
+                      <col style={{ width: '30%' }} />
                     </colgroup>
                     <tbody>
                       <tr>
-                        <th>사번</th>
-                        <td>{formData.EMP_NO}</td>
+                        <th rowSpan={4}>기본정보</th>
                         <th>이름</th>
                         <td>{formData.NAME_KOR}</td>
-                        <th>연령</th>
-                        <td>{`만 ${(formData && formData.AGE) || ''}세`}</td>
+                        <th>사번</th>
+                        <td>{formData.EMP_NO}</td>
                       </tr>
                       <tr>
+                        <th>연령</th>
+                        <td>{`만 ${(formData && formData.AGE) || ''}세`}</td>
                         <th>성별</th>
-                        <td colSpan={2}>
+                        <td>
                           <Radio.Group value={(formData && formData.SEX) || '1'} onChange={e => this.changeFormData('SEX', e.target.value)}>
                             <Radio value="1">남</Radio>
                             <Radio value="2">여</Radio>
                           </Radio.Group>
                         </td>
+                      </tr>
+                      <tr>
+                        <th>결혼 여부</th>
+                        <td>
+                          <Radio.Group defaultValue="1" onChange={e => this.changeFormData('ISMATE', e.target.value)}>
+                            <Radio value="1">미혼</Radio>
+                            <Radio value="2">결혼</Radio>
+                          </Radio.Group>
+                        </td>
                         <th>현직장 경력</th>
-                        <td colSpan={2}>
+                        <td>
                           <AntdSelect
-                            className="select-sm mr5"
+                            className="select-xs mr5"
                             style={{ width: 100 }}
                             defaultValue="1"
                             onChange={value => this.changeFormData('JOBYEAR01', value)}
@@ -375,7 +384,7 @@ class PollInput extends Component {
                             {this.setSelectOption('JOBYEAR', '년', 1, 40, 1)}
                           </AntdSelect>
                           <AntdSelect
-                            className="select-sm mr5"
+                            className="select-xs mr5"
                             style={{ width: 100 }}
                             defaultValue="0"
                             onChange={value => this.changeFormData('JOBYEAR02', value)}
@@ -386,48 +395,41 @@ class PollInput extends Component {
                         </td>
                       </tr>
                       <tr>
-                        <th>부서/직무</th>
+                        <th>부서</th>
                         <td>{(formData && formData.DEPT_NAME_KOR) || ''}</td>
+                        <th>직무</th>
                         <td>{(formData && formData.STLTX) || ''}</td>
-                        <th>결혼 여부</th>
-                        <td colSpan={2}>
-                          <Radio.Group defaultValue="1" onChange={e => this.changeFormData('ISMATE', e.target.value)}>
-                            <Radio value="1">미혼</Radio>
-                            <Radio value="2">결혼</Radio>
-                          </Radio.Group>
-                        </td>
                       </tr>
                       <tr>
-                        <th rowSpan={2}>
+                        <th rowSpan={4}>
                           현재 하고 있는 일<br />
                           (구체적으로)
                         </th>
                         <th>작업내용</th>
-                        <td colSpan={4}>
+                        <td colSpan={3}>
                           <AntInput
-                            className="ant-input-xxs ant-input-inline"
+                            className="ant-input-xs ant-input-inline"
                             style={{ width: '100%' }}
                             onChange={e => this.changeFormData('JOB01', e.target.value)}
                           />
                         </td>
                       </tr>
                       <tr>
-                        <th>일하고 있는 기간</th>
-                        <td colSpan={4}>
-                          <AntdSelect className="select-sm mr5" style={{ width: 100 }} defaultValue="1" onChange={value => this.changeFormData('JOB02', value)}>
+                        <th>근무기간</th>
+                        <td colSpan={3}>
+                          <AntdSelect className="select-xs mr5" style={{ width: 100 }} defaultValue="1" onChange={value => this.changeFormData('JOB02', value)}>
                             {this.setSelectOption('JOB02', '년', 1, 40, 1)}
                           </AntdSelect>
-                          <AntdSelect className="select-sm mr5" style={{ width: 100 }} defaultValue="0" onChange={value => this.changeFormData('JOB03', value)}>
+                          <AntdSelect className="select-xs mr5" style={{ width: 100 }} defaultValue="0" onChange={value => this.changeFormData('JOB03', value)}>
                             {this.setSelectOption('JOB03', '개월', 0, 11, 1)}
                           </AntdSelect>
-                          동안 하고 있음
                         </td>
                       </tr>
                       <tr>
-                        <th>1일 근무시간</th>
-                        <td>
+                        <th>일 근무시간</th>
+                        <td colSpan={3}>
                           <AntdSelect
-                            className="select-sm mr5"
+                            className="select-xs mr5"
                             style={{ width: 100 }}
                             defaultValue="1"
                             onChange={value => this.changeFormData('WORKTIME01', value)}
@@ -435,28 +437,29 @@ class PollInput extends Component {
                             {this.setSelectOption('WORKTIME01', '시간', 1, 12, 1)}
                           </AntdSelect>
                         </td>
-                        <th colSpan={2}>작업 중 휴식시간(식사시간 제외)</th>
-                        <td colSpan={2}>
-                          1일
+                      </tr>
+                      <tr>
+                        <th>작업 중 휴식시간</th>
+                        <td>
                           <AntdSelect
-                            className="select-sm mr5 ml5"
+                            className="select-xs mr5 ml5"
                             style={{ width: 100 }}
                             defaultValue="5"
                             onChange={value => this.changeFormData('RECESS01', value)}
                           >
                             {this.setSelectOption('RECESS01', '분', 5, 25, 5)}
-                            <AntdSelect.Option value="30">30분 이상</AntdSelect.Option>
+                            <AntdSelect.Option value="30">30분 이상 휴식</AntdSelect.Option>
                           </AntdSelect>
                           <AntdSelect
-                            className="select-sm mr5"
+                            className="select-xs mr5"
                             style={{ width: 100 }}
                             defaultValue="1"
                             onChange={value => this.changeFormData('RECESS02', value)}
                           >
                             {this.setSelectOption('RECESS02', '회', 1, 9, 1)}
-                            <AntdSelect.Option value="10">10회 이상</AntdSelect.Option>
+                            <AntdSelect.Option value="10">10회 이상 휴식</AntdSelect.Option>
                           </AntdSelect>
-                          휴식
+                          (식사시간 제외, 1일 기준)
                         </td>
                       </tr>
                       <tr>
@@ -466,24 +469,23 @@ class PollInput extends Component {
                           전에 했던 일
                         </th>
                         <th>작업내용</th>
-                        <td colSpan={4}>
+                        <td colSpan={3}>
                           <AntInput
-                            className="ant-input-xxs ant-input-inline"
+                            className="ant-input-xs ant-input-inline"
                             style={{ width: '100%' }}
                             onChange={e => this.changeFormData('JOB04', e.target.value)}
                           />
                         </td>
                       </tr>
                       <tr>
-                        <th>일했던 기간</th>
-                        <td colSpan={4}>
-                          <AntdSelect className="select-sm mr5" style={{ width: 100 }} defaultValue="1" onChange={value => this.changeFormData('JOB05', value)}>
+                        <th>근무기간</th>
+                        <td colSpan={3}>
+                          <AntdSelect className="select-xs mr5" style={{ width: 100 }} defaultValue="1" onChange={value => this.changeFormData('JOB05', value)}>
                             {this.setSelectOption('JOB05', '년', 1, 40, 1)}
                           </AntdSelect>
-                          <AntdSelect className="select-sm mr5" style={{ width: 100 }} defaultValue="0" onChange={value => this.changeFormData('JOB06', value)}>
+                          <AntdSelect className="select-xs mr5" style={{ width: 100 }} defaultValue="0" onChange={value => this.changeFormData('JOB06', value)}>
                             {this.setSelectOption('JOB06', '개월', 0, 11, 1)}
                           </AntdSelect>
-                          동안 했음
                         </td>
                       </tr>
                     </tbody>
