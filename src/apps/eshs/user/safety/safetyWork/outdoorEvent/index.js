@@ -19,6 +19,9 @@ const outdoorEvent = () => (
     InputCustomButtons={emptyButtons}
     ListCustomButtons={emptyButtons}
     ModifyCustomButtons={emptyButtons}
+    relKey="야외행사신청"
+    relKey2="DOC_NO"
+    prcId={114}
   />
 );
 
