@@ -1,27 +1,28 @@
-import {useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import service from '../utils/service';
 
 export const usePost = ({ brdid }) => {
   const formRef = useRef();
   const url = '/apigate/v1/portal/post';
 
-  const formData = new FormData(formRef.current);
-  const formJson = {};
-  const content = {};
-  let files = [];
-  let result = false;
-
-  formData.forEach((value, key) => {
-    if (key.indexOf('_UPLOADED_FILES') > -1) {
-      files = value || [];
-    } else if (key.indexOf('textarea-') > -1) {
-      content[key] = value;
-    } else {
-      formJson[key] = value;
-    }
-  });
-
   const sendPost = async selectedRecord => {
+    const formData = new FormData(formRef.current);
+    const formJson = {};
+    const content = {};
+    let files = [];
+    let result = false;
+
+    formData.forEach((value, key) => {
+      if (key.indexOf('_UPLOADED_FILES') > -1) {
+        files = value || [];
+      } else if (key.indexOf('textarea-') > -1) {
+        content[key] = value;
+      } else {
+        formJson[key] = value;
+      }
+    });
+    console.debug('formJson: ', formJson);
+
     const { pwd, title } = formJson;
 
     const data = {
@@ -41,8 +42,23 @@ export const usePost = ({ brdid }) => {
   };
 
   const deletePost = async selectedRecord => {
-    const { pwd } = formJson;
+    const formData = new FormData(formRef.current);
+    const formJson = {};
+    const content = {};
+    let files = [];
+    let result = false;
 
+    formData.forEach((value, key) => {
+      if (key.indexOf('_UPLOADED_FILES') > -1) {
+        files = value || [];
+      } else if (key.indexOf('textarea-') > -1) {
+        content[key] = value;
+      } else {
+        formJson[key] = value;
+      }
+    });
+    const { pwd } = formJson;
+    console.debug('formJson: ', formJson);
     const data = {
       pwd,
       brdid,
