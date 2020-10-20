@@ -5,6 +5,7 @@ import getJsonObject from '../utils/getJsonObject';
 export const useModalController = (keys = []) => {
   const [modalStatus, setModalStatus] = useState(() => keys.reduce((acc, cur) => ({ ...acc, [cur]: false }), {}));
   const [processedContent, setContentAndFormJson] = useState({});
+  const [selectedRecord, setSelectedRecord] = useState([]);
 
   const openModal = key => setModalStatus(prevState => ({ ...prevState, [key]: true }));
 
@@ -13,17 +14,20 @@ export const useModalController = (keys = []) => {
   const closeAll = () => setModalStatus(prevState => Object.keys(prevState).reduce((acc, cur) => ({ ...acc, [cur]: false }), {}));
 
   const processRecord = record => {
+    setSelectedRecord(record);
     setContentAndFormJson(getJsonObject(record?.content));
   };
 
   return {
     modalStatus,
     processedContent,
+    selectedRecord,
     actions: {
       openModal,
       closeAll,
       closeModal,
       processRecord,
+      setSelectedRecord,
     },
   };
 };
