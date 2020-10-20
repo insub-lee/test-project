@@ -1,7 +1,5 @@
 import React from 'react';
-// import Modal from 'react-Modal';
 import Modal from 'rc-dialog';
-import { debounce } from 'lodash';
 import TreeView from 'react-treeview';
 import Table from 'react-virtualized/dist/es/Table/Table';
 import Column from 'react-virtualized/dist/es/Table/Column';
@@ -299,7 +297,7 @@ class EmployeeSelectorModal extends React.Component {
         maskAnimation="fade"
         onClose={this.handleClose}
         style={{
-          width: 880,
+          width: 1000,
         }}
         bodyStyle={{
           padding: 0,
@@ -389,13 +387,13 @@ class EmployeeSelectorModal extends React.Component {
                       </ul>
                     </div>
                   </div>
+                  <div className="btn_wrap" style={{ width: '100%', paddingBottom: 20, textAlign: 'center' }}>
+                    <Button type="button" color="primary" onClick={this.handleSubmit} size="small">
+                      선택하기
+                    </Button>
+                  </div>
                 </Wrapper>
               </div>
-            </div>
-            <div className="btn_wrap" style={{ paddingBottom: 20 }}>
-              <Button type="button" color="primary" onClick={this.handleSubmit} size="small">
-                선택하기
-              </Button>
             </div>
           </StyledContent>
         </div>

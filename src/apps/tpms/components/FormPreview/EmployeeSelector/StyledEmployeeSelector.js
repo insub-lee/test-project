@@ -65,7 +65,7 @@ const StyledEmployeeSelecotr = styled.div`
 
             & > button {
               position: absolute;
-              top: 8px;
+              //top: 8px;
               right: 10px;
 
               & > .fa-times:before {

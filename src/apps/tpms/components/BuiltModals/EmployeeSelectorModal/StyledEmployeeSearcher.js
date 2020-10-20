@@ -6,7 +6,7 @@ const StyledEmployeeSearcher = styled.div`
   flex-wrap: wrap;
   justify-content: flex-start;
   align-content: flex-start;
-  max-width: 824px;
+  max-width: 900px;
   margin: auto;
   height: auto;
 
@@ -73,11 +73,11 @@ const StyledEmployeeSearcher = styled.div`
 
     &.selector_view {
       display: flex;
-      width: 550px;
+      width: 630px;
 
       & > .selectable_table {
         display: inline-block;
-        width: calc(100% - 150px);
+        width: calc(100% - 200px);
 
         .ReactVirtualized__Table__headerRow {
           border-bottom: 2px solid #dadada;
@@ -103,7 +103,7 @@ const StyledEmployeeSearcher = styled.div`
 
       & > .selected_list {
         display: inline-block;
-        width: 150px;
+        width: 200px;
         border-left: 1px solid #dadada;
 
         .column {
@@ -133,7 +133,6 @@ const StyledEmployeeSearcher = styled.div`
             text-align: left;
             min-height: 0;
             width: auto;
-            line-height: 1.2;
             padding: 10px;
             background-color: #f0f0f0;
 

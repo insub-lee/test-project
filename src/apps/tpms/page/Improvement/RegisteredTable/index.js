@@ -44,7 +44,7 @@ const componentsStyle = {
 
 const RecordList = () => {
   /* need info, dpCd */
-  const { authInfo, isError: isAuthError } = useAuth();
+  const { authInfo, isError: isAuthError, isLoading: isAuthLoading } = useAuth();
 
   const {
     data,

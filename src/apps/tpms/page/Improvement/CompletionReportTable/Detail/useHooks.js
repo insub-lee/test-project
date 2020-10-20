@@ -1,7 +1,16 @@
-import { useMemo } from 'react';
+import { useRef, useState, useMemo, useCallback } from 'react';
 import moment from 'moment';
+import request from 'utils/request';
 
-export default ({ info, dpCd = '' }) => {
+import parseFiles from '../../../../utils/parseFiles';
+import alertMessage from '../../../../components/Notification/Alert';
+
+export default ({ info, dpCd = '', callback = () => {} }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const formRef = useRef(null);
+  const dropModalRef = useRef(null);
+
   const defaultFormData = useMemo(() => {
     const { ctqLabel, yvalLabel, baselinevalLabel, targetvalLabel, remarkLabel } =
       info.PRJ_TYPE === 'W'
@@ -599,7 +608,84 @@ export default ({ info, dpCd = '' }) => {
     ];
   }, [info, dpCd]);
 
+  const postData = useCallback(async payload => {
+    const url = '/apigate/v1/portal/sign/task';
+    const { response, error } = await request({
+      url,
+      method: 'POST',
+      data: payload,
+    });
+    return { response, error };
+  }, []);
+
+  const submitForm = e => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const formData = new FormData(e.target);
+    const payload = {};
+    formData.forEach((value, key) => {
+      payload[key] = value;
+    });
+
+    const signref = JSON.parse(payload.user_selector_0 || '[]').map(user => user.usrid);
+    const { files } = parseFiles(payload);
+    const items = JSON.parse(payload.equip_selector).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
+
+    if (info.signPrclistInfo.some(item => item.sign === '완료 반려')) {
+      payload.mnuid = 'TPMS1040';
+    }
+
+    payload.items = items;
+    payload.signref = signref;
+    payload.files = files;
+
+    console.debug('>>>>> payload', payload);
+    if (files.length < 1 || !payload.ATTACH_FILE || !payload.ATTACH_FILE_PATH) {
+      alertMessage.alert('완료 파일 첨부는 필수 입니다.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    postData(payload)
+      .then(({ response, error }) => {
+        if (response && !error) {
+          const { insertyn } = response;
+          if (insertyn && callback) callback();
+        } else {
+          setIsError(true);
+          alertMessage.alert('Server Error');
+        }
+      })
+      .catch(() => {
+        setIsError(true);
+        alertMessage.alert('Server Error');
+      });
+
+    setIsLoading(false);
+  };
+
+  const openDropModal = () => {
+    const formData = new FormData(formRef.current);
+    const formJson = {};
+    formData.forEach((value, key) => {
+      formJson[key] = value;
+    });
+    const signref = JSON.parse(formJson.user_selector_0 || '[]').map(user => user.usrid);
+
+    const { files } = parseFiles(formJson);
+    const { IMPROVE_CONTENT, SUCCESS_REASON, ATTACH_FILE_PATH, ATTACH_FILE } = formJson;
+    const payload = { IMPROVE_CONTENT, SUCCESS_REASON, ATTACH_FILE_PATH, ATTACH_FILE, signref, files };
+    dropModalRef.current.handleOpen(payload);
+  };
+
   return {
+    isLoading,
+    isError,
+    formRef,
+    dropModalRef,
     defaultFormData,
+    actions: { submitForm, openDropModal },
   };
 };

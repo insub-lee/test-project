@@ -4,6 +4,7 @@ import request from 'utils/request';
 const initialState = {
   authInfo: null,
   isError: false,
+  isLoading: true,
 };
 
 const reducer = (state = initialState, action) => {
@@ -20,6 +21,10 @@ const reducer = (state = initialState, action) => {
         authInfo: null,
         isError: true,
       };
+    case 'ENABLE_LOADING':
+      return { ...state, isLoading: true };
+    case 'DISABLE_LOADING':
+      return { ...state, isLoading: false };
     default:
       return state;
   }
@@ -27,7 +32,7 @@ const reducer = (state = initialState, action) => {
 
 /* Session 정보 통해 TPMS용 유저 정보를 가져온다. */
 export default () => {
-  const [{ authInfo, isError }, dispatch] = useReducer(reducer, initialState);
+  const [{ authInfo, isError, isLoading }, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -37,6 +42,7 @@ export default () => {
       });
       return { response, error };
     };
+    dispatch({ type: 'ENABLE_LOADING' });
     fetchUser()
       .then(({ response, error }) => {
         if (response && !error) {
@@ -57,10 +63,12 @@ export default () => {
           type: 'SET_ERROR',
         });
       });
+    dispatch({ type: 'DISABLE_LOADING' });
   }, []);
 
   return {
     authInfo,
     isError,
+    isLoading,
   };
 };

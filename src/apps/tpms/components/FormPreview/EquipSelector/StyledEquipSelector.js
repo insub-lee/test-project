@@ -46,11 +46,12 @@ const StyledEquipSelector = styled.div`
 
         & > button {
           position: absolute;
-          top: 8px;
+          //top: 8px;
+          line-height: 30px;
           right: 10px;
 
           & > .fa-times:before {
-            color: #ccc;
+            color: #000000;
           }
 
           &.close {

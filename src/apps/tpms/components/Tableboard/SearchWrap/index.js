@@ -38,7 +38,7 @@ class SearchWrap extends React.Component {
           }}
         >
           {boardId === 'brd00000000000000007' ? (
-            <select name="yearCategory" style={{ float: 'left' }} onChange={this.handleChangeYear}>
+            <select className="search-select" name="yearCategory" style={{ float: 'left' }} onChange={this.handleChangeYear}>
               {yearCategory.map(category => (
                 <option key={category.text} value={category.value}>
                   {category.text}
@@ -50,7 +50,7 @@ class SearchWrap extends React.Component {
           )}
 
           {locationCategories && (
-            <select name="locationCategories">
+            <select className="search-select" name="locationCategories">
               {locationCategories.map(category => (
                 <option key={category.text} value={category.value}>
                   {category.text}
@@ -59,7 +59,7 @@ class SearchWrap extends React.Component {
             </select>
           )}
           {complaneCategories && (
-            <select name="complaneCategories">
+            <select className="search-select" name="complaneCategories">
               {complaneCategories.map(category => (
                 <option key={category.text} value={category.value}>
                   {category.text}
@@ -68,7 +68,7 @@ class SearchWrap extends React.Component {
             </select>
           )}
 
-          <select name="category">
+          <select className="search-select" name="category">
             {categories.map(category => (
               <option key={category.text} value={category.value}>
                 {category.text}

@@ -162,6 +162,30 @@ const StyledContent = styled.div`
       }
     }
 
+    select {
+      appearance: none;
+      border-width: 0px;
+      border-top-style: initial;
+      border-right-style: initial;
+      border-left-style: initial;
+      border-top-color: initial;
+      border-right-color: initial;
+      border-left-color: initial;
+      border-image: initial;
+      border-radius: 0px;
+      width: 100%;
+      color: rgb(85, 85, 85);
+      vertical-align: middle;
+      border-bottom-style: solid;
+      border-bottom-color: rgb(217, 224, 231);
+      font-size: 13px;
+      height: 48px;
+      line-height: 48px;
+      background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAYCAYAAAAPtVbGAAAAu0lEQVRIie2WsQ3CMBBFn1EqhqDPBlRAi2+IjIIY6lxDxwa0iIKKmjY0FxRFTmQLufNvrC+f79lXfNk9Xu+ewmpsdQUZ/apg858qpELKqZnbCKob4G7We5FrpGYPBLOtF3nGes2+xA60Qz9rmA1YhIxAMgLtIoDjEgDAWXYtxkpQPQBq9gSch3vExjhRnwSZgNbAJxEAOdnlRS5AZ7ZLBACJ4xorqG69yC21npxx/aEa9RVSUEMKF/0WfQG+mErmooDh3gAAAABJRU5ErkJggg==)
+        right 10px center no-repeat rgb(231, 231, 231);
+      padding-left: 10px;
+    }
+
     .btn_wrap {
       font-size: 0;
       text-align: center;

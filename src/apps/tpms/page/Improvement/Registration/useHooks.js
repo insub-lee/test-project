@@ -632,7 +632,7 @@ export default ({ usrnm, dpcd }) => {
     isLoading,
     isRedirect,
     savedTemp,
-    currentFormJson,
+    formJson: currentFormJson(),
     actions: {
       submitForm,
       saveTemp,

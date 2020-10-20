@@ -9,7 +9,7 @@ const StyledSearch = styled.div`
     text-align: center;
     font-size: 0;
 
-    & select {
+    & select.search-select {
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;
