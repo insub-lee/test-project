@@ -6,12 +6,12 @@ import { ModalWrapper, Wrapper } from './Wrapper';
 
 const StyledModal = ModalWrapper(Modal);
 
-export const ModalHugger = ({ closable, maskClosable, modalClassName, visible, onCancel, width, footer, title, children }) => (
+export const ModalHugger = ({ closable, maskClosable, modalClassName, visible, onCancel, width, title, children }) => (
   <Wrapper>
     <StyledModal
       className={modalClassName}
       width={width}
-      footer={footer}
+      footer={null}
       closable={closable}
       title={title}
       visible={visible}
