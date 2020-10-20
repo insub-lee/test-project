@@ -15,9 +15,18 @@ import StyledHeader from '../../components/Tableboard/StyledHeader';
 import StyledHeaderCell from '../../components/Tableboard/StyledHeaderCell';
 import StyledBodyRow from '../../components/Tableboard/StyledBodyRow';
 import StyledBodyCell from '../../components/Tableboard/StyledBodyCell';
+import { ModalHugger } from '../../components/ModalHugger';
+import Button from '../../components/Button';
 
 import usePostList from '../../hooks/usePostList';
-import useModalController from '../../hooks/useModalController';
+import { useModalController } from '../../hooks/useModalController';
+import useAuth from '../../hooks/useAuth';
+
+import { InquiryBody, InquiryTitle } from './Inquiry';
+import { ModifyBody } from './Modify';
+import { DeleteBody } from './Delete';
+import { RegisterBody } from './Register';
+import { formJson } from './formJson';
 
 /**
  * TPMS - 우수활동사례
@@ -52,15 +61,25 @@ const yearCategory = [];
 for (let i = curYear; i >= endYear; i -= 1) {
   yearCategory.push({ value: i, text: `${i}년` });
 }
+const brdid = 'brd00000000000000007';
 
 const ExcellentActivityCase = () => {
+  const { authInfo, isError: isAuthError } = useAuth();
+
   const {
     isLoading,
     isError,
     data,
     pagination,
     action: { submitSearchQuery, pageHandler, pageSizeHandler },
-  } = usePostList({ brdid: 'brd00000000000000007' });
+  } = usePostList({ brdid });
+
+  const {
+    processedContent,
+    modalStatus,
+    selectedRecord,
+    actions: { closeModal, openModal, processRecord, closeAll },
+  } = useModalController(['REG', 'MOD', 'DEL', 'INQ']);
 
   const columns = useMemo(
     () => [
@@ -84,7 +103,13 @@ const ExcellentActivityCase = () => {
         key: 'title',
         width: '45%',
         render: (title, record) => (
-          <button type="button" onClick={() => console.debug(record)}>
+          <button
+            type="button"
+            onClick={() => {
+              processRecord(record);
+              openModal('INQ');
+            }}
+          >
             {record.isReply && (
               <>
                 <span className="icon icon_reply" />
@@ -123,50 +148,83 @@ const ExcellentActivityCase = () => {
     ],
     [],
   );
-
+  const essential = {
+    brdid,
+    formJson,
+    content: processedContent,
+    selectedRecord,
+    successCallback: () => {
+      closeAll();
+      pageHandler(1);
+    },
+    closeModal,
+    openModal,
+    // authInfo,
+  };
   return (
-    <div className="tpms-view">
-      <TitleContainer title="우수활동사례" nav={nav}>
-        <Spin spinning={isLoading}>
-          <StyledWrapper>
-            <div className="view_top">
-              <StyledSearch>
-                <form autoComplete="off" className="page" name="form-name" onSubmit={submitSearchQuery}>
-                  <select className="yearCategory" name="yearCategory" onChange={() => {}}>
-                    {yearCategory.map(category => (
-                      <option key={category.text} value={category.value}>
-                        {category.text}
-                      </option>
-                    ))}
-                  </select>
-                  <select name="category">
-                    {categories.map(category => (
-                      <option key={category.text} value={category.value}>
-                        {category.text}
-                      </option>
-                    ))}
-                  </select>
-                  <input type="text" className="input" name="text" />
-                  <button type="submit" className="icon icon_search_white">
-                    검색
-                  </button>
-                </form>
-              </StyledSearch>
-              <div className="btn_wrap" />
-            </div>
-            <Table
-              columns={columns}
-              data={data}
-              rowKey="postno"
-              rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
-              components={componentsStyle}
-            />
-            <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
-          </StyledWrapper>
-        </Spin>
-      </TitleContainer>
-      <GlobalStyle />
-    </div>
+    <>
+      <div className="tpms-view">
+        <TitleContainer title="우수활동사례" nav={nav}>
+          <Spin spinning={isLoading}>
+            <StyledWrapper>
+              <div className="view_top">
+                <StyledSearch>
+                  <form autoComplete="off" className="page" name="form-name" onSubmit={submitSearchQuery}>
+                    <select className="yearCategory" name="yearCategory" onChange={() => {}}>
+                      {yearCategory.map(category => (
+                        <option key={category.text} value={category.value}>
+                          {category.text}
+                        </option>
+                      ))}
+                    </select>
+                    <select name="category">
+                      {categories.map(category => (
+                        <option key={category.text} value={category.value}>
+                          {category.text}
+                        </option>
+                      ))}
+                    </select>
+                    <input type="text" className="input" name="text" />
+                    <button type="submit" className="icon icon_search_white">
+                      검색
+                    </button>
+                  </form>
+                </StyledSearch>
+                <div className="btn_wrap">
+                  <Button color="primary" size="big" onClick={() => openModal('REG')}>
+                    등록하기
+                  </Button>
+                </div>
+              </div>
+              <Table
+                columns={columns}
+                data={data}
+                rowKey="postno"
+                rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
+                components={componentsStyle}
+              />
+              <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
+            </StyledWrapper>
+          </Spin>
+        </TitleContainer>
+        <GlobalStyle />
+      </div>
+      <ModalHugger className="REG" width={850} visible={modalStatus.REG} title="등록하기" onCancel={() => closeModal('REG')}>
+        <RegisterBody {...essential} />
+      </ModalHugger>
+
+      <ModalHugger className="MOD" width={850} visible={modalStatus.MOD} title="수정하기" onCancel={() => closeModal('MOD')}>
+        <ModifyBody {...essential} />
+      </ModalHugger>
+
+      <ModalHugger className="DEL" width={300} visible={modalStatus.DEL} title="비밀번호 입력" onCancel={() => closeModal('DEL')}>
+        <DeleteBody {...essential} />
+      </ModalHugger>
+
+      <ModalHugger className="INQ" width={850} visible={modalStatus.INQ} title={<InquiryTitle {...essential} />} onCancel={() => closeModal('INQ')}>
+        <InquiryBody {...essential} />
+      </ModalHugger>
+    </>
   );
 };
 

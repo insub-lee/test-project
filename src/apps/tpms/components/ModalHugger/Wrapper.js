@@ -33,6 +33,34 @@ export const ModalWrapper = Component => styled(Component)`
       text-align: center;
     }
   }
+
+  .pop_con {
+    padding: 10px 30px;
+    position: relative;
+    background-color: #ffffff;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    form {
+      input[type='text'],
+      input[type='password'] {
+        border: 0px;
+        border-bottom: 1px solid #d9e0e7;
+        font-size: 15px;
+        height: 45px;
+        line-height: 45px;
+        color: #555;
+        vertical-align: middle;
+        margin-bottom: 20px !important;
+      }
+
+      .ant-modal-footer {
+        border-top: 0;
+        padding: 0px 15px 10px;
+        text-align: center;
+      }
+    }
+  }
 `;
 
 export const Wrapper = styled.div`

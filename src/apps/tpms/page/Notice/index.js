@@ -19,13 +19,11 @@ import { ModalHugger } from '../../components/ModalHugger';
 import usePostList from '../../hooks/usePostList';
 import { useModalController } from '../../hooks/useModalController';
 import useAuth from '../../hooks/useAuth';
-import { usePost } from '../../hooks/usePost';
 
 import { InquiryBody, InquiryTitle } from './Inquiry';
 import { ModifyBody } from './Modify';
 import { DeleteBody } from './Delete';
 import { RegisterBody } from './Register';
-
 import { formJson } from './formJson';
 /**
  * TPMS - 공지사항
@@ -58,11 +56,6 @@ const Notice = () => {
   const { authInfo, isError: isAuthError } = useAuth();
 
   const {
-    action: { sendPost: register },
-    formRef,
-  } = usePost({ brdid });
-
-  const {
     isLoading,
     isError,
     data,
@@ -73,8 +66,9 @@ const Notice = () => {
   const {
     processedContent,
     modalStatus,
+    selectedRecord,
     actions: { closeModal, openModal, processRecord, closeAll },
-  } = useModalController(['REG', 'MOD', 'DEL', 'INQ', 'REP']);
+  } = useModalController(['REG', 'MOD', 'DEL', 'INQ']);
 
   const columns = useMemo(
     () => [
@@ -101,7 +95,6 @@ const Notice = () => {
           <button
             type="button"
             onClick={() => {
-              console.debug(record);
               processRecord(record);
               openModal('INQ');
             }}
@@ -145,6 +138,20 @@ const Notice = () => {
     [],
   );
 
+  const essential = {
+    brdid,
+    formJson,
+    content: processedContent,
+    selectedRecord,
+    successCallback: () => {
+      closeAll();
+      pageHandler(1);
+    },
+    closeModal,
+    openModal,
+    // authInfo,
+  };
+
   return (
     <>
       <div className="tpms-view">
@@ -186,71 +193,20 @@ const Notice = () => {
         </TitleContainer>
         <GlobalStyle />
       </div>
-      <ModalHugger
-        width={850}
-        visible={modalStatus.REG}
-        title="등록하기"
-        footer={
-          <Button
-            color="primary"
-            size="big"
-            onClick={() => {
-              register().then(({ result }) => {
-                if (result) {
-                  closeAll();
-                  pageHandler(0);
-                }
-              });
-            }}
-          >
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('REG')}
-      >
-        <RegisterBody formJson={formJson} formRef={formRef} content={processedContent} />
+      <ModalHugger className="REG" width={850} visible={modalStatus.REG} title="등록하기" onCancel={() => closeModal('REG')}>
+        <RegisterBody {...essential} />
       </ModalHugger>
 
-      <ModalHugger
-        width={850}
-        visible={modalStatus.MOD}
-        title="수정하기"
-        footer={
-          <Button color="primary" size="big" onClick={() => closeAll()}>
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('MOD')}
-      >
-        <ModifyBody formJson={formJson} content={processedContent} />
+      <ModalHugger className="MOD" width={850} visible={modalStatus.MOD} title="수정하기" onCancel={() => closeModal('MOD')}>
+        <ModifyBody {...essential} />
       </ModalHugger>
 
-      <ModalHugger
-        width={300}
-        visible={modalStatus.DEL}
-        title="비밀번호 입력"
-        footer={
-          <Button color="primary" size="big" onClick={() => closeAll()}>
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('DEL')}
-      >
-        <DeleteBody formJson={formJson} content={processedContent} />
+      <ModalHugger className="DEL" width={300} visible={modalStatus.DEL} title="비밀번호 입력" onCancel={() => closeModal('DEL')}>
+        <DeleteBody {...essential} />
       </ModalHugger>
 
-      <ModalHugger
-        width={850}
-        visible={modalStatus.INQ}
-        title={<InquiryTitle closeModal={closeModal} openModal={openModal} formJson={formJson} content={processedContent} />}
-        footer={
-          <Button color="primary" size="big" onClick={() => closeAll()}>
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('INQ')}
-      >
-        <InquiryBody formJson={formJson} content={processedContent} />
+      <ModalHugger className="INQ" width={850} visible={modalStatus.INQ} title={<InquiryTitle {...essential} />} onCancel={() => closeModal('INQ')}>
+        <InquiryBody {...essential} />
       </ModalHugger>
     </>
   );
