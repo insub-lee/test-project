@@ -1,27 +1,96 @@
-import { useState, useRef } from 'react';
-import service from '../utils/service';
+import { useRef } from 'react';
+import request from 'utils/request';
+
+const url = '/apigate/v1/portal/post';
 
 export const usePost = ({ brdid }) => {
-  const formRef = useRef();
-  const url = '/apigate/v1/portal/post';
+  const modifyPost = async (args, selectedRecord) => {
+    const formData = new FormData(args);
+    const formJson = {};
+    let pwd = '';
 
-  const sendPost = async selectedRecord => {
-    const formData = new FormData(formRef.current);
+    formData.forEach((value, key) => {
+      if (key === 'pwd') {
+        pwd = value;
+      } else {
+        formJson[key] = value;
+      }
+    });
+
+    const { title } = formJson;
+
+    const data = {
+      brdid,
+      pwd,
+      title,
+      content: { ...formJson },
+    };
+    data.hpostno = selectedRecord?.hpostno;
+    data.postno = parseInt(selectedRecord?.postno || 0, 10);
+
+    const { response, error } = await request({
+      url,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method: 'PUT',
+      data,
+    });
+
+    return { response, error };
+  };
+
+  const RegPost = async args => {
+    const formData = new FormData(args);
+    const formJson = {};
+    let pwd = '';
+
+    formData.forEach((value, key) => {
+      if (key === 'pwd') {
+        pwd = value;
+      } else {
+        formJson[key] = value;
+      }
+    });
+
+    console.debug('formJson: ', formJson);
+
+    const { title } = formJson;
+
+    const data = {
+      brdid,
+      pwd,
+      title,
+      content: { ...formJson },
+    };
+
+    const { response, error } = await request({
+      url,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method: 'POST',
+      data,
+    });
+
+    return { response, error };
+  };
+
+  const ReplyPost = async (args, selectedRecord) => {
+    const formData = new FormData(args);
     const formJson = {};
     const content = {};
     let files = [];
-    let result = false;
 
     formData.forEach((value, key) => {
       if (key.indexOf('_UPLOADED_FILES') > -1) {
         files = value || [];
       } else if (key.indexOf('textarea-') > -1) {
-        content[key] = value;
+        content.reply = value;
       } else {
         formJson[key] = value;
       }
     });
-    console.debug('formJson: ', formJson);
 
     const { pwd, title } = formJson;
 
@@ -33,51 +102,51 @@ export const usePost = ({ brdid }) => {
       files,
     };
 
-    const { response, error } = await service.board.post(url, data);
-    if (response && !error) {
-      const { insertyn } = response;
-      result = insertyn;
-    }
-    return { result, error };
+    data.hpostno = selectedRecord?.postno;
+    data.postgrp = selectedRecord?.postgrp;
+
+    const { response, error } = await request({
+      url,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method: 'POST',
+      data,
+    });
+
+    return { response, error };
   };
 
-  const deletePost = async selectedRecord => {
-    const formData = new FormData(formRef.current);
-    const formJson = {};
-    const content = {};
-    let files = [];
-    let result = false;
+  const deletePost = async (args, selectedRecord) => {
+    const formData = new FormData(args);
+    const data = { brdid };
 
-    formData.forEach((value, key) => {
-      if (key.indexOf('_UPLOADED_FILES') > -1) {
-        files = value || [];
-      } else if (key.indexOf('textarea-') > -1) {
-        content[key] = value;
-      } else {
-        formJson[key] = value;
+    data.postno = selectedRecord?.postno;
+
+    formData.forEach((val, key) => {
+      if (key === 'pwd') {
+        data.pwd = val;
       }
     });
-    const { pwd } = formJson;
-    console.debug('formJson: ', formJson);
-    const data = {
-      pwd,
-      brdid,
-      postno: selectedRecord?.postno,
-    };
 
-    const { response, error } = await service.board.delete(url, data);
-    if (response && !error) {
-      const { deleteyn } = response;
-      result = deleteyn;
-    }
-    return { result, error };
+    const { response, error } = await request({
+      url,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method: 'DELETE',
+      data,
+    });
+
+    return { response, error };
   };
 
   return {
-    formRef,
     action: {
-      sendPost,
+      RegPost,
       deletePost,
+      ReplyPost,
+      modifyPost,
     },
   };
 };
