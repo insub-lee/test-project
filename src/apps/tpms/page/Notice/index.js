@@ -18,6 +18,9 @@ import { ModalHugger } from '../../components/ModalHugger';
 
 import usePostList from '../../hooks/usePostList';
 import { useModalController } from '../../hooks/useModalController';
+import useAuth from '../../hooks/useAuth';
+import { usePost } from '../../hooks/usePost';
+
 import { InquiryBody, InquiryTitle } from './Inquiry';
 import { ModifyBody } from './Modify';
 import { DeleteBody } from './Delete';
@@ -50,14 +53,22 @@ const componentsStyle = {
   },
 };
 
+const brdid = 'brd00000000000000002';
 const Notice = () => {
+  const { authInfo, isError: isAuthError } = useAuth();
+
+  const {
+    action: { sendPost: register },
+    formRef,
+  } = usePost({ brdid });
+
   const {
     isLoading,
     isError,
     data,
     pagination,
     action: { submitSearchQuery, pageHandler, pageSizeHandler },
-  } = usePostList({ brdid: 'brd00000000000000002' });
+  } = usePostList({ brdid });
 
   const {
     processedContent,
@@ -158,7 +169,7 @@ const Notice = () => {
                 </StyledSearch>
                 <div className="btn_wrap">
                   <Button color="primary" size="big" onClick={() => openModal('REG')}>
-                    등록하기1
+                    등록하기
                   </Button>
                 </div>
               </div>
@@ -180,13 +191,24 @@ const Notice = () => {
         visible={modalStatus.REG}
         title="등록하기"
         footer={
-          <Button color="primary" size="big" onClick={() => closeAll()}>
+          <Button
+            color="primary"
+            size="big"
+            onClick={() => {
+              register().then(({ result }) => {
+                if (result) {
+                  closeAll();
+                  pageHandler(0);
+                }
+              });
+            }}
+          >
             확인하기
           </Button>
         }
         onCancel={() => closeModal('REG')}
       >
-        <RegisterBody formJson={formJson} content={processedContent} />
+        <RegisterBody formJson={formJson} formRef={formRef} content={processedContent} />
       </ModalHugger>
 
       <ModalHugger

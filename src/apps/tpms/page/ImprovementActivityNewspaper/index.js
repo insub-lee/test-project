@@ -20,11 +20,15 @@ import { ModalHugger } from '../../components/ModalHugger';
 
 import usePostList from '../../hooks/usePostList';
 import { useModalController } from '../../hooks/useModalController';
+import useAuth from '../../hooks/useAuth';
+import { usePost } from '../../hooks/usePost';
+
 import { InquiryBody, InquiryTitle } from './Inquiry';
 import { ModifyBody } from './Modify';
 import { DeleteBody } from './Delete';
 import { RegisterBody } from './Register';
-import { formjson } from './formJson';
+import { ReplyBody } from './Reply';
+import { formJson } from './formJson';
 
 /**
  * TPMS - 개선활동신문고
@@ -52,21 +56,29 @@ const componentsStyle = {
     cell: StyledBodyCell,
   },
 };
-
+const brdid = 'brd00000000000000005';
 const ImprovementActivityNewspaper = () => {
+  const { authInfo, isError: isAuthError } = useAuth();
+
+  const {
+    formRef,
+    action: { sendPost, deletePost },
+  } = usePost({ brdid });
+
   const {
     isLoading,
     isError,
     data,
     pagination,
     action: { submitSearchQuery, pageHandler, pageSizeHandler },
-  } = usePostList({ brdid: 'brd00000000000000005' });
+  } = usePostList({ brdid });
 
   const {
     processedContent,
     modalStatus,
+    selectedRecord,
     actions: { closeModal, openModal, processRecord, closeAll },
-  } = useModalController(['REG', 'MOD', 'DEL', 'INQ']);
+  } = useModalController(['REG', 'MOD', 'DEL', 'INQ', 'REP']);
 
   const columns = useMemo(
     () => [
@@ -93,12 +105,11 @@ const ImprovementActivityNewspaper = () => {
           <button
             type="button"
             onClick={() => {
-              console.debug(record);
               processRecord(record);
               openModal('INQ');
             }}
           >
-            {record.isReply && (
+            {record.hpostno > 0 && (
               <>
                 <span className="icon icon_reply" />
                 &nbsp;&nbsp;
@@ -183,13 +194,49 @@ const ImprovementActivityNewspaper = () => {
         visible={modalStatus.REG}
         title="등록하기"
         footer={
-          <Button color="primary" size="big" onClick={() => closeAll()}>
+          <Button
+            color="primary"
+            size="big"
+            onClick={() => {
+              sendPost('REG').then(({ result }) => {
+                if (result) {
+                  closeAll();
+                  pageHandler(1);
+                }
+              });
+            }}
+          >
             확인하기
           </Button>
         }
         onCancel={() => closeModal('REG')}
       >
-        <RegisterBody formJson={formjson} content={processedContent} />
+        <RegisterBody formJson={formJson} formRef={formRef} content={processedContent} />
+      </ModalHugger>
+
+      <ModalHugger
+        width={850}
+        visible={modalStatus.REP}
+        title="등록하기"
+        footer={
+          <Button
+            color="primary"
+            size="big"
+            onClick={() => {
+              sendPost(selectedRecord).then(({ result }) => {
+                if (result) {
+                  closeAll();
+                  pageHandler(1);
+                }
+              });
+            }}
+          >
+            확인하기
+          </Button>
+        }
+        onCancel={() => closeModal('REP')}
+      >
+        <ReplyBody formRef={formRef} formJson={formJson} content={processedContent} />
       </ModalHugger>
 
       <ModalHugger
@@ -203,7 +250,7 @@ const ImprovementActivityNewspaper = () => {
         }
         onCancel={() => closeModal('MOD')}
       >
-        <ModifyBody formJson={formjson} content={processedContent} />
+        <ModifyBody formRef={formRef} formJson={formJson} content={processedContent} />
       </ModalHugger>
 
       <ModalHugger
@@ -211,19 +258,30 @@ const ImprovementActivityNewspaper = () => {
         visible={modalStatus.DEL}
         title="비밀번호 입력"
         footer={
-          <Button color="primary" size="big" onClick={() => closeAll()}>
+          <Button
+            color="primary"
+            size="big"
+            onClick={() => {
+              deletePost(selectedRecord).then(({ result }) => {
+                if (result) {
+                  closeAll();
+                  pageHandler(1);
+                }
+              });
+            }}
+          >
             확인하기
           </Button>
         }
         onCancel={() => closeModal('DEL')}
       >
-        <DeleteBody formJson={formjson} content={processedContent} />
+        <DeleteBody formRef={formRef} />
       </ModalHugger>
 
       <ModalHugger
         width={850}
         visible={modalStatus.INQ}
-        title={<InquiryTitle closeModal={closeModal} openModal={openModal} formJson={formjson} content={processedContent} />}
+        title={<InquiryTitle closeModal={closeModal} openModal={openModal} formJson={formJson} content={processedContent} />}
         footer={
           <Button color="primary" size="big" onClick={() => closeAll()}>
             확인하기
@@ -231,7 +289,7 @@ const ImprovementActivityNewspaper = () => {
         }
         onCancel={() => closeModal('INQ')}
       >
-        <InquiryBody formJson={formjson} content={processedContent} />
+        <InquiryBody formJson={formJson} content={processedContent} />
       </ModalHugger>
     </>
   );

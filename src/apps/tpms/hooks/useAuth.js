@@ -32,12 +32,11 @@ export default () => {
   useEffect(() => {
     const fetchUser = async () => {
       const url = '/apigate/v1/portal/auth/userInfo';
-      const { response, error } = request({
+      const { response, error } = await request({
         url,
       });
       return { response, error };
     };
-
     fetchUser()
       .then(({ response, error }) => {
         if (response && !error) {
