@@ -1,7 +1,15 @@
-import { useMemo } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import moment from 'moment';
+import request from 'utils/request';
 
-export default ({ info, dpCd = '' }) => {
+import alertMessage from '../../../../components/Notification/Alert';
+import parseFiles from '../../../../utils/parseFiles';
+
+export default ({ info, dpCd = '', callback = () => {} }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const dropModalRef = useRef(null);
+
   const defaultFormData = useMemo(() => {
     const { ctqLabel, yvalLabel, baselinevalLabel, targetvalLabel, remarkLabel } =
       info.PRJ_TYPE === 'W'
@@ -366,7 +374,7 @@ export default ({ info, dpCd = '' }) => {
           maxLength: 450,
           readOnly: info.phase > 1,
         },
-        seq: defaultFormData.length + 1,
+        seq: formData.length + 1,
       });
       formData.push({
         type: 'single-uploader',
@@ -378,7 +386,7 @@ export default ({ info, dpCd = '' }) => {
           fileName: info.DEFINE_ATTACH_FILE,
           readOnly: info.phase > 1,
         },
-        seq: defaultFormData.length + 1,
+        seq: formData.length + 1,
       });
       if (info.DEFINE_APPROVAL_DATE) {
         formData.push({
@@ -560,7 +568,129 @@ export default ({ info, dpCd = '' }) => {
     return formData;
   }, [info, dpCd]);
 
+  const sendData = useCallback(async options => {
+    const { response, error } = await request(options);
+    return { response, error };
+  }, []);
+
+  const submitForm = e => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const formData = new FormData(e.target);
+    const formJson = {};
+    formData.forEach((value, key) => {
+      formJson[key] = value;
+    });
+    const { files } = parseFiles(formJson);
+    const { signlineno, signno, docno, sysid, mnuid } = formJson;
+    const payload = {
+      signlineno,
+      signno,
+      docno,
+      sysid,
+      mnuid,
+      files,
+    };
+    switch (info.phase) {
+      case 1:
+        payload.DEFINE_LEADER_COMMENT = formJson.DEFINE_LEADER_COMMENT;
+        payload.DEFINE_ATTACH_FILE_PATH = formJson.DEFINE_ATTACH_FILE_PATH;
+        payload.DEFINE_ATTACH_FILE = formJson.DEFINE_ATTACH_FILE;
+        break;
+      case 2:
+        payload.MEASURE_LEADER_COMMENT = formJson.MEASURE_LEADER_COMMENT;
+        payload.MEASURE_ATTACH_FILE_PATH = formJson.MEASURE_ATTACH_FILE_PATH;
+        payload.MEASURE_ATTACH_FILE = formJson.MEASURE_ATTACH_FILE;
+        break;
+      case 3:
+        payload.ANALYZE_LEADER_COMMENT = formJson.ANALYZE_LEADER_COMMENT;
+        payload.ANALYZE_ATTACH_FILE_PATH = formJson.ANALYZE_ATTACH_FILE_PATH;
+        payload.ANALYZE_ATTACH_FILE = formJson.ANALYZE_ATTACH_FILE;
+        break;
+      case 4:
+        payload.IMPROVE_LEADER_COMMENT = formJson.IMPROVE_LEADER_COMMENT;
+        payload.IMPROVE_ATTACH_FILE_PATH = formJson.IMPROVE_ATTACH_FILE_PATH;
+        payload.IMPROVE_ATTACH_FILE = formJson.IMPROVE_ATTACH_FILE;
+        break;
+      case 5:
+        payload.CONTROL_LEADER_COMMENT = formJson.CONTROL_LEADER_COMMENT;
+        payload.CONTROL_ATTACH_FILE_PATH = formJson.CONTROL_ATTACH_FILE_PATH;
+        payload.CONTROL_ATTACH_FILE = formJson.CONTROL_ATTACH_FILE;
+        break;
+      default:
+        payload.noUse = true;
+        break;
+    }
+
+    if (info.phase === 1 && (!payload.DEFINE_ATTACH_FILE_PATH || !payload.DEFINE_ATTACH_FILE)) {
+      alertMessage.alert('현상파악 파일 첨부는 필수 입니다.');
+      return;
+    }
+
+    if (info.phase === 2 && (!payload.MEASURE_ATTACH_FILE_PATH || !payload.MEASURE_ATTACH_FILE)) {
+      alertMessage.alert('원인분석 파일 첨부는 필수 입니다.');
+      return;
+    }
+
+    if (info.phase === 3 && (!payload.ANALYZE_ATTACH_FILE_PATH || !payload.ANALYZE_ATTACH_FILE)) {
+      alertMessage.alert('대책수립 파일 첨부는 필수 입니다.');
+      return;
+    }
+
+    if (info.phase === 4 && (!payload.IMPROVE_ATTACH_FILE_PATH || !payload.IMPROVE_ATTACH_FILE)) {
+      alertMessage.alert('개선 파일 첨부는 필수 입니다.');
+      return;
+    }
+
+    if (info.phase === 5 && (!payload.CONTROL_ATTACH_FILE_PATH || !payload.CONTROL_ATTACH_FILE)) {
+      alertMessage.alert('완료/공유 파일 첨부는 필수 입니다.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    if (!payload.noUse) {
+      const options = {
+        url: '/apigate/v1/portal/sign/task',
+        method: 'POST',
+        data: payload,
+      };
+
+      sendData(options)
+        .then(({ response, error }) => {
+          if (response && !error) {
+            const { insertyn } = response;
+            if (insertyn && callback) callback();
+          } else {
+            setIsError(true);
+            alertMessage.alert('현재 등록 하실 수 있는 상태가 아닙니다.');
+          }
+        })
+        .catch(() => {
+          setIsError(true);
+          alertMessage.alert('현재 등록 하실 수 있는 상태가 아닙니다.');
+        });
+    } else {
+      alertMessage.alert('현재 등록 하실 수 있는 상태가 아닙니다.');
+    }
+
+    setIsLoading(false);
+  };
+
+  const openDropModal = () => {
+    const payload = {};
+    dropModalRef.current.handleOpen(payload);
+  };
+
   return {
+    isLoading,
+    isError,
     defaultFormData,
+    dropModalRef,
+    actions: {
+      submitForm,
+      openDropModal,
+    },
   };
 };

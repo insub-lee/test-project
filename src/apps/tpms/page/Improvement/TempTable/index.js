@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import moment from 'moment';
 import Table from 'rc-table';
 
-import Button from 'apps/tpms/components/Button';
 import GlobalStyle from '../../../components/GlobalStyle';
 import Spin from '../../../components/AntdSpinner';
 import ExpandableTitleContainer from '../../../components/ExpandableTitleContainer';
@@ -171,7 +170,7 @@ const TempTable = () => {
         <GlobalStyle />
       </div>
       <ModalHugger
-        width={850}
+        width={1250}
         visible={modalStatus.INFO}
         title={
           <StyledModalTitle>
@@ -180,58 +179,18 @@ const TempTable = () => {
             <span className="small">{currentRecord?.PRJ_ID || ''}</span>
           </StyledModalTitle>
         }
-        footer={[
-          <Button color="primary" size="big" onClick={() => closeModal('INFO')}>
-            제출하기
-          </Button>,
-          <Button color="primary" size="big" onClick={() => closeModal('INFO')}>
-            저장하기
-          </Button>,
-          <Button color="primary" size="big" onClick={() => closeModal('INFO')}>
-            삭제
-          </Button>,
-        ]}
+        footer={null}
         onCancel={() => closeModal('INFO')}
       >
         <Detail info={currentRecord} />
       </ModalHugger>
-      <ModalHugger
-        width={850}
-        visible={modalStatus.SEND}
-        title="등록하기"
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('SEND')}>
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('SEND')}
-      >
+      <ModalHugger width={1250} visible={modalStatus.SEND} title="등록하기" footer={null} onCancel={() => closeModal('SEND')}>
         SEND
       </ModalHugger>
-      <ModalHugger
-        width={850}
-        visible={modalStatus.SAVE}
-        title="등록하기"
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('SAVE')}>
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('SAVE')}
-      >
+      <ModalHugger width={1250} visible={modalStatus.SAVE} title="등록하기" footer={null} onCancel={() => closeModal('SAVE')}>
         SAVE
       </ModalHugger>
-      <ModalHugger
-        width={850}
-        visible={modalStatus.DELETE}
-        title="등록하기"
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('DELETE')}>
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('DELETE')}
-      >
+      <ModalHugger width={1250} visible={modalStatus.DELETE} title="등록하기" footer={null} onCancel={() => closeModal('DELETE')}>
         DELETE
       </ModalHugger>
     </>

@@ -19,7 +19,8 @@ export default ({ info, dpCd = '' }) => {
             targetvalLabel: '적용 대상',
             remarkLabel: '비고',
           };
-    return [
+
+    const formData = [
       {
         type: 'text',
         classname: 'improve_form std width50 flCustom',
@@ -35,6 +36,7 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'text',
+        // classname: 'half mr',
         classname: 'improve_form std width50 frCustom',
         option: {
           label: 'Project Leader',
@@ -48,6 +50,7 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'equip-selector',
+        // classname: 'half ml',
         classname: 'improve_form std customColorDiv',
         option: {
           label: '장비모델명',
@@ -67,28 +70,30 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'radio-group',
-        classname: 'improve_form ex',
+        // classname: 'half mr',
+        classname: 'improve_form std',
         option: {
           label: 'Project Type',
           name: 'PRJ_TYPE',
+          readOnly: true,
           values: [
             {
               label: '개별개선',
               value: 'G',
-              checked: info.PRJ_TYPE === 'G',
               readOnly: true,
+              checked: info.PRJ_TYPE === 'G',
             },
             {
               label: 'TFT',
               value: 'T',
-              checked: info.PRJ_TYPE === 'T',
               readOnly: true,
+              checked: info.PRJ_TYPE === 'T',
             },
             {
               label: 'Wafer Loss',
               value: 'W',
-              checked: info.PRJ_TYPE === 'W',
               readOnly: true,
+              checked: info.PRJ_TYPE === 'W',
             },
           ],
         },
@@ -96,12 +101,12 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'select',
+        // classname: 'half ml',
         classname: 'improve_form std width50 flCustom',
         option: {
           label: 'Level',
           name: 'PRJ_LEVEL',
           disabled: true,
-          readOnly: true,
           values: [
             { label: '본부', value: '1', selected: info.PRJ_LEVEL === '1' },
             { label: '담당', value: '2', selected: info.PRJ_LEVEL === '2' },
@@ -113,12 +118,12 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'select',
+        // classname: 'half mr',
         classname: 'improve_form std width50 frCustom marginNone',
         option: {
           label: 'Performance Type',
           name: 'PERFORM_TYPE',
           disabled: true,
-          readOnly: true,
           values: [
             {
               label: 'Cost',
@@ -156,8 +161,10 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'textarea',
+        // classname: 'half ml',
         classname: 'improve_form width20 flCustom',
         option: {
+          // label: 'KPI',
           label: ctqLabel,
           name: 'CTQ',
           placeholder: '',
@@ -170,8 +177,10 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'textarea',
+        // classname: 'half mr',
         classname: 'improve_form width20 flCustom',
         option: {
+          // label: 'AS-IS',
           label: yvalLabel,
           name: 'Y_VAL',
           placeholder: '',
@@ -184,8 +193,10 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'textarea',
+        // classname: 'half ml',
         classname: 'improve_form width20 flCustom',
         option: {
+          // label: 'Target',
           label: baselinevalLabel,
           name: 'BASELINE_VAL',
           placeholder: '',
@@ -198,8 +209,10 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'textarea',
+        // classname: 'half mr',
         classname: 'improve_form width20 flCustom',
         option: {
+          // label: 'Customer(Team)',
           label: targetvalLabel,
           name: 'TARGET_VAL',
           placeholder: '',
@@ -212,8 +225,10 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'textarea',
+        // classname: 'half ml',
         classname: 'improve_form width20 flCustom marginNone',
         option: {
+          // label: 'Remark',
           label: remarkLabel,
           name: 'REMARK',
           placeholder: '',
@@ -226,8 +241,10 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'textarea',
+        // classname: 'half mr',
         classname: 'improve_form width50 flCustom',
         option: {
+          // label: 'Background of the project',
           label: '프로젝트를 시작하게 된 배경 ',
           name: 'PRJ_BACK_DESC',
           placeholder: '',
@@ -240,8 +257,10 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'textarea',
+        // classname: 'half ml',
         classname: 'improve_form width50 frCustom',
         option: {
+          // label: 'Problem / Improvement',
           label: '문제점/개선',
           name: 'PROBLEM_DESC',
           placeholder: '',
@@ -254,8 +273,10 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'textarea',
+        // classname: 'half mr',
         classname: 'improve_form width50 flCustom',
         option: {
+          // label: 'HOW TO SOLVE',
           label: '해결 방법',
           name: 'HOW_TO_DESC',
           placeholder: '',
@@ -268,8 +289,10 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'textarea',
+        // classname: 'half ml',
         classname: 'improve_form width50 frCustom',
         option: {
+          // label: 'SCOPE',
           label: '범위',
           name: 'SCOPE_DESC',
           placeholder: '',
@@ -282,6 +305,7 @@ export default ({ info, dpCd = '' }) => {
       },
       {
         type: 'date-picker-group',
+        // classname: 'half mr half-end',
         classname: 'improve_form ex width50 flCustom',
         option: {
           label: '스케줄',
@@ -292,13 +316,15 @@ export default ({ info, dpCd = '' }) => {
               values: [
                 {
                   name: 'START_DATE',
-                  value: info.START_DATE ? moment(info.START_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info.START_DATE ? moment(info.START_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
                   readOnly: true,
+                  required: true,
                 },
                 {
                   name: 'DEFINE_DUE_DATE',
-                  value: info.DEFINE_DUE_DATE ? moment(info.DEFINE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info.DEFINE_DUE_DATE ? moment(info.DEFINE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
                   readOnly: true,
+                  required: true,
                 },
               ],
             },
@@ -310,6 +336,7 @@ export default ({ info, dpCd = '' }) => {
                   name: 'MEASURE_DUE_DATE',
                   value: info.MEASURE_DUE_DATE ? moment(info.MEASURE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
                   readOnly: true,
+                  required: true,
                 },
               ],
             },
@@ -321,6 +348,7 @@ export default ({ info, dpCd = '' }) => {
                   name: 'ANALYZE_DUE_DATE',
                   value: info.ANALYZE_DUE_DATE ? moment(info.ANALYZE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
                   readOnly: true,
+                  required: true,
                 },
               ],
             },
@@ -332,6 +360,7 @@ export default ({ info, dpCd = '' }) => {
                   name: 'IMPROVE_DUE_DATE',
                   value: info.IMPROVE_DUE_DATE ? moment(info.IMPROVE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
                   readOnly: true,
+                  required: true,
                 },
               ],
             },
@@ -343,6 +372,7 @@ export default ({ info, dpCd = '' }) => {
                   name: 'CONTROL_DUE_DATE',
                   value: info.CONTROL_DUE_DATE ? moment(info.CONTROL_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
                   readOnly: true,
+                  required: true,
                 },
               ],
             },
@@ -350,47 +380,58 @@ export default ({ info, dpCd = '' }) => {
         },
         seq: 16,
       },
-      {
+    ];
+
+    if (info.phase > 1 || info.status.substr(0, 2) === '완료') {
+      formData.push({
         type: 'textarea',
+        // classname: 'half mr mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Define 리더 코멘트',
           label: '현상파악 리더 코멘트',
           name: 'DEFINE_LEADER_COMMENT',
           placeholder: '코멘트를 남겨주세요.',
           value: info.DEFINE_LEADER_COMMENT,
           required: true,
-          maxLength: 450,
           readOnly: true,
+          maxLength: 450,
         },
-        seq: 17,
-      },
-      {
+        seq: formData.length + 1,
+      });
+      formData.push({
         type: 'single-uploader',
+        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Define 파일첨부',
           label: '현상파악 파일첨부',
           name: 'DEFINE_ATTACH',
           filePath: info.DEFINE_ATTACH_FILE_PATH,
           fileName: info.DEFINE_ATTACH_FILE,
           readOnly: true,
         },
-        seq: 18,
-      },
-      {
-        type: 'textarea',
+      });
+      formData.push({
+        type: 'text',
+        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Define 완료일자',
           label: '현상파악 완료일자',
           name: 'DEFINE_APPROVAL_DATE',
-          value: info.DEFINE_APPROVAL_DATE ? moment(info.CONTROL_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          value: info.DEFINE_APPROVAL_DATE ? moment(info.DEFINE_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
           readOnly: true,
         },
-        seq: 19,
-      },
-      {
+      });
+    }
+    if (info.phase > 2 || info.status.substr(0, 2) === '완료') {
+      formData.push({
         type: 'textarea',
+        // classname: 'half mr mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Measure 리더 코멘트',
           label: '원인분석 리더 코멘트',
           name: 'MEASURE_LEADER_COMMENT',
           placeholder: '코멘트를 남겨주세요.',
@@ -399,35 +440,41 @@ export default ({ info, dpCd = '' }) => {
           readOnly: true,
           maxLength: 450,
         },
-        seq: 20,
-      },
-      {
+        seq: formData.length + 1,
+      });
+      formData.push({
         type: 'single-uploader',
+        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Measure 파일첨부',
           label: '원인분석 파일첨부',
           name: 'MEASURE_ATTACH',
           filePath: info.MEASURE_ATTACH_FILE_PATH,
           fileName: info.MEASURE_ATTACH_FILE,
           readOnly: true,
         },
-        seq: 21,
-      },
-      {
+      });
+      formData.push({
         type: 'text',
+        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Measure 완료일자',
           label: '원인분석 완료일자',
           name: 'MEASURE_APPROVAL_DATE',
           value: info.MEASURE_APPROVAL_DATE ? moment(info.MEASURE_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
           readOnly: true,
         },
-        seq: 22,
-      },
-      {
+      });
+    }
+    if (info.phase > 3 || info.status.substr(0, 2) === '완료') {
+      formData.push({
         type: 'textarea',
+        // classname: 'half mr mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Analyze 리더 코멘트',
           label: '대책수립 리더 코멘트',
           name: 'ANALYZE_LEADER_COMMENT',
           placeholder: '코멘트를 남겨주세요.',
@@ -436,35 +483,41 @@ export default ({ info, dpCd = '' }) => {
           readOnly: true,
           maxLength: 450,
         },
-        seq: 23,
-      },
-      {
+        seq: formData.length + 1,
+      });
+      formData.push({
         type: 'single-uploader',
+        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Analyze 파일첨부',
           label: '대책수립 파일첨부',
           name: 'ANALYZE_ATTACH',
           filePath: info.ANALYZE_ATTACH_FILE_PATH,
           fileName: info.ANALYZE_ATTACH_FILE,
           readOnly: true,
         },
-        seq: 24,
-      },
-      {
+      });
+      formData.push({
         type: 'text',
+        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Analyze 완료일자',
           label: '대책수립 완료일자',
           name: 'ANALYZE_APPROVAL_DATE',
           value: info.ANALYZE_APPROVAL_DATE ? moment(info.ANALYZE_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
           readOnly: true,
         },
-        seq: 25,
-      },
-      {
+      });
+    }
+    if (info.phase > 4 || info.status.substr(0, 2) === '완료') {
+      formData.push({
         type: 'textarea',
+        // classname: 'half mr mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Improve 리더 코멘트',
           label: '개선 리더 코멘트',
           name: 'IMPROVE_LEADER_COMMENT',
           placeholder: '코멘트를 남겨주세요.',
@@ -473,35 +526,41 @@ export default ({ info, dpCd = '' }) => {
           readOnly: true,
           maxLength: 450,
         },
-        seq: 26,
-      },
-      {
+        seq: formData.length + 1,
+      });
+      formData.push({
         type: 'single-uploader',
+        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Improve 파일첨부',
           label: '개선 파일첨부',
           name: 'IMPROVE_ATTACH',
           filePath: info.IMPROVE_ATTACH_FILE_PATH,
           fileName: info.IMPROVE_ATTACH_FILE,
           readOnly: true,
         },
-        seq: 27,
-      },
-      {
+      });
+      formData.push({
         type: 'text',
+        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Improve 완료일자',
           label: '개선 완료일자',
           name: 'IMPROVE_APPROVAL_DATE',
           value: info.IMPROVE_APPROVAL_DATE ? moment(info.IMPROVE_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
           readOnly: true,
         },
-        seq: 28,
-      },
-      {
+      });
+    }
+    if (info.status.substr(0, 2) === '완료') {
+      formData.push({
         type: 'textarea',
+        // classname: 'half mr mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Control 리더 코멘트',
           label: '완료/공유 리더 코멘트',
           name: 'CONTROL_LEADER_COMMENT',
           placeholder: '코멘트를 남겨주세요.',
@@ -510,93 +569,81 @@ export default ({ info, dpCd = '' }) => {
           readOnly: true,
           maxLength: 450,
         },
-        seq: 29,
-      },
-      {
+        seq: formData.length + 1,
+      });
+      formData.push({
         type: 'single-uploader',
+        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Control 파일첨부',
           label: '완료/공유 파일첨부',
           name: 'CONTROL_ATTACH',
           filePath: info.CONTROL_ATTACH_FILE_PATH,
           fileName: info.CONTROL_ATTACH_FILE,
           readOnly: true,
         },
-        seq: 30,
-      },
-      {
+      });
+      formData.push({
         type: 'text',
+        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
+          // label: 'Control 완료일자',
           label: '완료/공유 완료일자',
           name: 'CONTROL_APPROVAL_DATE',
           value: info.CONTROL_APPROVAL_DATE ? moment(info.CONTROL_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
           readOnly: true,
         },
-        seq: 31,
-      },
-      {
+      });
+    }
+    if (info.status.substr(0, 2) === '완료') {
+      formData.push({
         type: 'textarea',
+        // classname: 'mb',
         classname: 'improve_form std',
         option: {
           label: '개선사항',
           name: 'IMPROVE_CONTENT',
           placeholder: '개선사항을 남겨주세요.',
           value: info.IMPROVE_CONTENT,
+          readOnly: true,
           required: true,
           maxLength: 450,
         },
-        seq: 32,
-      },
-      {
+        seq: formData.length + 1,
+      });
+      formData.push({
         type: 'textarea',
+        // classname: 'mb',
         classname: 'improve_form std',
         option: {
           label: '성공요인',
           name: 'SUCCESS_REASON',
           placeholder: '성공요인을 남겨주세요.',
           value: info.SUCCESS_REASON,
+          readOnly: true,
           required: true,
           maxLength: 450,
         },
-        seq: 33,
-      },
-      {
-        type: 'employee-selector',
-        option: {
-          label: 'Sharing',
-          onlySingle: true,
-          values: [
-            {
-              key: 1,
-              label: '',
-              values: info.member
-                ? info.member.map(item => ({
-                    emrno: item.usrid,
-                    usrnm: item.usrnm,
-                    jgnm: item.jgnm || '',
-                    usrid: item.usrid,
-                  }))
-                : [],
-              type: 'MULTI',
-              initdpcd: dpCd || '',
-            },
-          ],
-        },
-        seq: 34,
-      },
-      {
+        seq: formData.length + 1,
+      });
+      formData.push({
         type: 'single-uploader',
+        // classname: 'mb',
         classname: 'improve_form std',
         option: {
           label: '완료 파일첨부',
           name: 'ATTACH',
           filePath: info.ATTACH_FILE_PATH,
           fileName: info.ATTACH_FILE,
+          readOnly: true,
         },
-        seq: 35,
-      },
-    ];
+        seq: formData.length + 1,
+      });
+    }
+
+    return formData;
   }, [info, dpCd]);
 
   return {

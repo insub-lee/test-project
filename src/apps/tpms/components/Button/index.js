@@ -30,6 +30,15 @@ const defaultSize = css`
   padding: 0 20px;
   height: 35px;
   border-radius: 35px;
+
+  &:focus,
+  &:active {
+    font-size: 16px;
+    font-weight: 400;
+    padding: 0 20px;
+    height: 35px;
+    border-radius: 35px;
+  }
 `;
 
 const smallSize = css`
@@ -38,6 +47,15 @@ const smallSize = css`
   padding: 0 16px;
   height: 30px;
   border-radius: 30px;
+
+  &:focus,
+  &:active {
+    font-size: 16px;
+    font-weight: 400;
+    padding: 0 20px;
+    height: 35px;
+    border-radius: 35px;
+  }
 `;
 
 const hover = css`

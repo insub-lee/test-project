@@ -23,14 +23,15 @@ const Registration = () => {
   const {
     isLoading,
     formJson,
+    formRef,
     actions: { submitForm, saveTemp },
-  } = useHooks({ usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '' });
+  } = useHooks({ usrid: authInfo?.empNo || '', usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '' });
 
   return (
     <div className="tpms-view">
       <ExpandableTitleContainer title="개선활동 - 등록/진행" nav={nav}>
         <Spin spinning={isAuthLoading || isLoading}>
-          <form autoComplete="off" onSubmit={submitForm}>
+          <form ref={formRef} autoComplete="off" onSubmit={submitForm}>
             <input type="hidden" name="PRJ_LEADER_DEPT_CODE" />
             <input type="hidden" name="PRJ_LEADER_DEPT_NAME" />
             <input type="hidden" name="PRJ_LEADER" />

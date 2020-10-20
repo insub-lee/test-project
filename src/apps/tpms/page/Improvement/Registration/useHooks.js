@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import moment from 'moment';
 
 import request from 'utils/request';
@@ -319,12 +319,13 @@ const defaultFormData = [
   },
 ];
 
-export default ({ usrnm, dpcd }) => {
+export default ({ usrid, usrnm, dpcd }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isRedirect, setIsRedirect] = useState(false);
   const [savedTemp, setSavedTemp] = useState(false);
   const [currentPositionLeader, setCurrentPositionLeader] = useState('');
   const [currentProjectType, setCurrentProjectType] = useState('');
+  const formRef = useRef(null);
 
   const postTask = useCallback(async payload => {
     const { response, error } = await request({
@@ -358,7 +359,7 @@ export default ({ usrnm, dpcd }) => {
   const selectCurrentPrjType = type => setCurrentProjectType(type);
 
   const selectSelectors = lvl => {
-    if (lvl.toString() === '3') {
+    if (lvl?.toString() === '3') {
       setIsLoading(true);
       getPositionLeaders()
         .then(({ response, error }) => {
@@ -490,12 +491,11 @@ export default ({ usrnm, dpcd }) => {
     const preferSignLine = [];
     preferSignLine.push(JSON.parse(payload.user_selector_0 || '[]'));
     preferSignLine.push(JSON.parse(payload.user_selector_1 || '[]'));
-    const { profile } = this.props;
     if (preferSignLine[0].length < 1 || preferSignLine[1].length < 1) {
       alertMessage.alert('최종결재권자 또는 1차결재권자가 미설정되었습니다.');
     } else if (preferSignLine[0][0].emrno === preferSignLine[1][0].emrno) {
       alertMessage.alert('최종결재권자와 1차결재권자가 동일합니다.');
-    } else if (preferSignLine[0][0].emrno === profile.usrid || preferSignLine[1][0].emrno === profile.usrid) {
+    } else if (preferSignLine[0][0].emrno === usrid || preferSignLine[1][0].emrno === usrid) {
       alertMessage.alert('기안자와 결재권자가 동일합니다.');
     } else {
       const signline = [];
@@ -516,7 +516,7 @@ export default ({ usrnm, dpcd }) => {
         return;
       }
 
-      if (signref.includes(profile.usrid)) {
+      if (signref.includes(usrid)) {
         alertMessage.alert('자신을 팀원으로 설정 할 수 없습니다.');
         return;
       }
@@ -546,6 +546,7 @@ export default ({ usrnm, dpcd }) => {
       payload.signline = signline;
       payload.signref = signref;
       payload.items = items;
+      payload.tempyn = 'N';
       payload.sysid = 'TPMS';
       payload.mnuid = 'TPMS1010';
 
@@ -567,8 +568,8 @@ export default ({ usrnm, dpcd }) => {
     }
   };
 
-  const saveTemp = tempyn => {
-    const formData = new FormData(this.formRef.current);
+  const saveTemp = () => {
+    const formData = new FormData(formRef.current);
     const payload = {};
     formData.forEach((value, key) => {
       payload[key] = value;
@@ -607,7 +608,7 @@ export default ({ usrnm, dpcd }) => {
     payload.signline = signline;
     payload.signref = signref;
     payload.items = items;
-    payload.tempyn = tempyn;
+    payload.tempyn = 'Y';
     payload.sysid = 'TPMS';
     payload.mnuid = 'TPMS1010';
 
@@ -632,6 +633,7 @@ export default ({ usrnm, dpcd }) => {
     isLoading,
     isRedirect,
     savedTemp,
+    formRef,
     formJson: currentFormJson(),
     actions: {
       submitForm,

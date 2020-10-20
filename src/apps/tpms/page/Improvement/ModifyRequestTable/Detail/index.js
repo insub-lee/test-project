@@ -6,13 +6,22 @@ import SignProcessList from '../../SignProcessList';
 import FormView from '../../../../components/FormPreview/FormView';
 import BtnWrap from '../../BtnWrap';
 import Button from '../../../../components/Button';
+import ApproveFormWrapper from '../../ApproveFormWrapper';
 
 import useHooks from './useHooks';
 import useAuth from '../../../../hooks/useAuth';
 
+const teamTexterRenderer = (index, item) => (
+  <>
+    <span style={{ border: 0, marginRight: 20 }}>{`${item.usrid} ${item.usrnm ? item.usrnm : '퇴직자'}`}</span>
+    {(index + 1) % 5 === 0 && <br />}
+  </>
+);
+
 const Detail = ({ info, usrid, dpcd, dpnm }) => {
   const { authInfo, isError: isAuthError, isLoading: isAuthLoading } = useAuth();
   const {
+    isLoading,
     defaultFormData,
     sharingSelector,
     actions: { submitData },
@@ -30,7 +39,7 @@ const Detail = ({ info, usrid, dpcd, dpnm }) => {
 
   return (
     <div>
-      <Spin spinning={isAuthLoading}>
+      <Spin spinning={isAuthLoading || isLoading}>
         <SignProcessList list={info.signPrclistInfo} />
         <form autoComplete="off" onSubmit={submitData}>
           <input type="hidden" name="docno" value={info.docno} />
@@ -48,7 +57,7 @@ const Detail = ({ info, usrid, dpcd, dpnm }) => {
           <input type="hidden" name="PRJ_LEADER_DEPT_CODE" value={dpcd || ''} />
           <input type="hidden" name="PRJ_LEADER_DEPT_NAME" value={dpnm || ''} />
           <FormView datas={defaultFormData} noBoarder isImprove />
-          <div className="approveFormWrapper">
+          <ApproveFormWrapper>
             <div className="approveFormRow">
               <span className="approveFormLabel">기안자</span>
               <p className="approveFormValue">
@@ -70,7 +79,21 @@ const Detail = ({ info, usrid, dpcd, dpnm }) => {
               </p>
             </div>
             {info.status.substr(0, 2) === '완료' && <FormView datas={sharingSelector} noBoarder noPadding />}
-          </div>
+          </ApproveFormWrapper>
+          {info.status.substr(0, 2) === '완료' ? (
+            <FormView datas={sharingSelector} noBoarder noPadding />
+          ) : (
+            <ApproveFormWrapper>
+              <span className="approveFormLabel">팀원</span>
+              <p className="approveFormValue">{info.member ? info.member.map((item, index) => teamTexterRenderer(index, item)) : ''}</p>
+              <span className="approveFormLabel" style={{ marginTop: 10 }}>
+                공유
+              </span>
+              <p className="approveFormValue" style={{ marginTop: 10 }}>
+                {info.teamsharing ? info.teamsharing.map((item, index) => teamTexterRenderer(index, item)) : ''}
+              </p>
+            </ApproveFormWrapper>
+          )}
           <BtnWrap>
             <Button type="submit" color="primary">
               제출하기

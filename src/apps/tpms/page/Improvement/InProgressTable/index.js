@@ -178,7 +178,7 @@ const InProgressTable = () => {
         <GlobalStyle />
       </div>
       <ModalHugger
-        width={850}
+        width={1250}
         visible={modalStatus.INFO}
         title={
           <StyledModalTitle>
@@ -187,39 +187,15 @@ const InProgressTable = () => {
             <span className="small">{currentRecord?.PRJ_ID || ''}</span>
           </StyledModalTitle>
         }
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('INFO')}>
-            확인하기
-          </Button>
-        }
+        footer={null}
         onCancel={() => closeModal('INFO')}
       >
         <Detail info={currentRecord} />
       </ModalHugger>
-      <ModalHugger
-        width={850}
-        visible={modalStatus.SAVE}
-        title="등록하기"
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('SAVE')}>
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('SAVE')}
-      >
+      <ModalHugger width={1250} visible={modalStatus.SAVE} title="등록하기" footer={null} onCancel={() => closeModal('SAVE')}>
         SAVE
       </ModalHugger>
-      <ModalHugger
-        width={850}
-        visible={modalStatus.DROP}
-        title="등록하기"
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('DROP')}>
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('DROP')}
-      >
+      <ModalHugger width={1250} visible={modalStatus.DROP} title="등록하기" footer={null} onCancel={() => closeModal('DROP')}>
         DROP
       </ModalHugger>
     </>

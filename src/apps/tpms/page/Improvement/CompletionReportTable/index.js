@@ -185,30 +185,10 @@ const CompletionReportTable = () => {
       >
         <Detail info={currentRecord} />
       </ModalHugger>
-      <ModalHugger
-        width={850}
-        visible={modalStatus.SAVE}
-        title="등록하기"
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('SAVE')}>
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('SAVE')}
-      >
+      <ModalHugger width={1250} visible={modalStatus.SAVE} title="등록하기" footer={null} onCancel={() => closeModal('SAVE')}>
         SAVE
       </ModalHugger>
-      <ModalHugger
-        width={850}
-        visible={modalStatus.DROP}
-        title="등록하기"
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('DROP')}>
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('DROP')}
-      >
+      <ModalHugger width={1250} visible={modalStatus.DROP} title="등록하기" footer={null} onCancel={() => closeModal('DROP')}>
         DROP
       </ModalHugger>
     </>

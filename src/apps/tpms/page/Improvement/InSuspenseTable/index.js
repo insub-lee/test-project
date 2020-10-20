@@ -177,7 +177,7 @@ const InSuspenseTable = () => {
         <GlobalStyle />
       </div>
       <ModalHugger
-        width={850}
+        width={1250}
         visible={modalStatus.INFO}
         title={
           <StyledModalTitle>
@@ -186,39 +186,15 @@ const InSuspenseTable = () => {
             <span className="small">{currentRecord?.PRJ_ID || ''}</span>
           </StyledModalTitle>
         }
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('INFO')}>
-            확인하기
-          </Button>
-        }
+        footer={null}
         onCancel={() => closeModal('INFO')}
       >
         <Detail info={currentRecord} />
       </ModalHugger>
-      <ModalHugger
-        width={850}
-        visible={modalStatus.ACCEPT}
-        title="등록하기"
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('ACCEPT')}>
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('ACCEPT')}
-      >
+      <ModalHugger width={1250} visible={modalStatus.ACCEPT} title="등록하기" footer={null} onCancel={() => closeModal('ACCEPT')}>
         ACCEPT
       </ModalHugger>
-      <ModalHugger
-        width={850}
-        visible={modalStatus.REJECT}
-        title="등록하기"
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('REJECT')}>
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('REJECT')}
-      >
+      <ModalHugger width={1250} visible={modalStatus.REJECT} title="등록하기" footer={null} onCancel={() => closeModal('REJECT')}>
         REJECT
       </ModalHugger>
     </>

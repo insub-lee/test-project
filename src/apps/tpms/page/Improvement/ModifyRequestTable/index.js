@@ -168,7 +168,7 @@ const ModifyRequestTable = () => {
         <GlobalStyle />
       </div>
       <ModalHugger
-        width={850}
+        width={1250}
         visible={modalStatus.INFO}
         title={
           <StyledModalTitle>
@@ -177,26 +177,12 @@ const ModifyRequestTable = () => {
             <span className="small">{currentRecord?.PRJ_ID || ''}</span>
           </StyledModalTitle>
         }
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('INFO')}>
-            확인하기
-          </Button>
-        }
+        footer={null}
         onCancel={() => closeModal('INFO')}
       >
         <Detail info={currentRecord} />
       </ModalHugger>
-      <ModalHugger
-        width={850}
-        visible={modalStatus.SEND}
-        title="등록하기"
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('SEND')}>
-            확인하기
-          </Button>
-        }
-        onCancel={() => closeModal('SEND')}
-      >
+      <ModalHugger width={1250} visible={modalStatus.SEND} title="등록하기" footer={null} onCancel={() => closeModal('SEND')}>
         SEND
       </ModalHugger>
     </>

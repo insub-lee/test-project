@@ -1,7 +1,27 @@
-import { useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import moment from 'moment';
 
-export default ({ info, dpCd = '' }) => {
+import request from 'utils/request';
+
+import alertMessage from '../../../../components/Notification/Alert';
+import parseFiles from '../../../../utils/parseFiles';
+
+const dateValidateChecker = momentDates => {
+  let result = false;
+  const message = '스케줄을 확인하세요. (이전 스케줄 날짜보다 빠를 수 없습니다.)';
+  result = !momentDates.some((momentDate, index) => {
+    if (index === 0) {
+      return false;
+    }
+    return momentDate.diff(momentDates[index - 1]) < 0;
+  });
+  return { result, message };
+};
+
+export default ({ info, dpCd = '', callback = () => {} }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
   const defaultFormData = useMemo(() => {
     const { ctqLabel, yvalLabel, baselinevalLabel, targetvalLabel, remarkLabel } =
       info.PRJ_TYPE === 'W'
@@ -30,7 +50,7 @@ export default ({ info, dpCd = '' }) => {
           placeholder: '',
           value: info.PRJ_TITLE,
           required: true,
-          readOnly: true,
+          readOnly: false,
         },
         seq: 1,
       },
@@ -62,7 +82,7 @@ export default ({ info, dpCd = '' }) => {
                 model: itemValues[3],
               };
             }) || [],
-          readOnly: true,
+          readOnly: false,
         },
         seq: 3,
       },
@@ -164,7 +184,7 @@ export default ({ info, dpCd = '' }) => {
           value: info.CTQ,
           required: true,
           maxLength: 450,
-          readOnly: true,
+          readOnly: false,
         },
         seq: 7,
       },
@@ -178,7 +198,7 @@ export default ({ info, dpCd = '' }) => {
           value: info.Y_VAL,
           required: true,
           maxLength: 450,
-          readOnly: true,
+          readOnly: false,
         },
         seq: 8,
       },
@@ -192,7 +212,7 @@ export default ({ info, dpCd = '' }) => {
           value: info.BASELINE_VAL,
           required: true,
           maxLength: 450,
-          readOnly: true,
+          readOnly: false,
         },
         seq: 9,
       },
@@ -206,7 +226,7 @@ export default ({ info, dpCd = '' }) => {
           value: info.TARGET_VAL,
           required: true,
           maxLength: 450,
-          readOnly: true,
+          readOnly: false,
         },
         seq: 10,
       },
@@ -220,7 +240,7 @@ export default ({ info, dpCd = '' }) => {
           value: info.REMARK,
           required: true,
           maxLength: 450,
-          readOnly: true,
+          readOnly: false,
         },
         seq: 11,
       },
@@ -234,7 +254,7 @@ export default ({ info, dpCd = '' }) => {
           value: info.PRJ_BACK_DESC,
           required: true,
           maxLength: 450,
-          readOnly: true,
+          readOnly: false,
         },
         seq: 12,
       },
@@ -248,7 +268,7 @@ export default ({ info, dpCd = '' }) => {
           value: info.PROBLEM_DESC,
           required: true,
           maxLength: 450,
-          readOnly: true,
+          readOnly: false,
         },
         seq: 13,
       },
@@ -262,7 +282,7 @@ export default ({ info, dpCd = '' }) => {
           value: info.HOW_TO_DESC,
           required: true,
           maxLength: 450,
-          readOnly: true,
+          readOnly: false,
         },
         seq: 14,
       },
@@ -276,7 +296,7 @@ export default ({ info, dpCd = '' }) => {
           value: info.SCOPE_DESC,
           required: true,
           maxLength: 450,
-          readOnly: true,
+          readOnly: false,
         },
         seq: 15,
       },
@@ -293,13 +313,13 @@ export default ({ info, dpCd = '' }) => {
                 {
                   name: 'START_DATE',
                   value: info.START_DATE ? moment(info.START_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
-                  readOnly: true,
+                  readOnly: false,
                   required: true,
                 },
                 {
                   name: 'DEFINE_DUE_DATE',
                   value: info.DEFINE_DUE_DATE ? moment(info.DEFINE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
-                  readOnly: true,
+                  readOnly: false,
                   required: true,
                 },
               ],
@@ -311,7 +331,7 @@ export default ({ info, dpCd = '' }) => {
                 {
                   name: 'MEASURE_DUE_DATE',
                   value: info.MEASURE_DUE_DATE ? moment(info.MEASURE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: true,
+                  readOnly: false,
                   required: true,
                 },
               ],
@@ -323,7 +343,7 @@ export default ({ info, dpCd = '' }) => {
                 {
                   name: 'ANALYZE_DUE_DATE',
                   value: info.ANALYZE_DUE_DATE ? moment(info.ANALYZE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: true,
+                  readOnly: false,
                   required: true,
                 },
               ],
@@ -335,7 +355,7 @@ export default ({ info, dpCd = '' }) => {
                 {
                   name: 'IMPROVE_DUE_DATE',
                   value: info.IMPROVE_DUE_DATE ? moment(info.IMPROVE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: true,
+                  readOnly: false,
                   required: true,
                 },
               ],
@@ -347,7 +367,7 @@ export default ({ info, dpCd = '' }) => {
                 {
                   name: 'CONTROL_DUE_DATE',
                   value: info.CONTROL_DUE_DATE ? moment(info.CONTROL_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: true,
+                  readOnly: false,
                   required: true,
                 },
               ],
@@ -563,7 +583,7 @@ export default ({ info, dpCd = '' }) => {
           name: 'IMPROVE_CONTENT',
           placeholder: '개선사항을 남겨주세요.',
           value: info.IMPROVE_CONTENT,
-          readOnly: true,
+          readOnly: false,
           required: true,
           maxLength: 450,
         },
@@ -577,7 +597,7 @@ export default ({ info, dpCd = '' }) => {
           name: 'SUCCESS_REASON',
           placeholder: '성공요인을 남겨주세요.',
           value: info.SUCCESS_REASON,
-          readOnly: true,
+          readOnly: false,
           required: true,
           maxLength: 450,
         },
@@ -591,7 +611,7 @@ export default ({ info, dpCd = '' }) => {
           name: 'ATTACH',
           filePath: info.ATTACH_FILE_PATH,
           fileName: info.ATTACH_FILE,
-          readOnly: true,
+          readOnly: false,
         },
         seq: formData.length + 1,
       });
@@ -627,12 +647,92 @@ export default ({ info, dpCd = '' }) => {
     [info],
   );
 
+  const postData = useCallback(async payload => {
+    const url = '/apigate/v1/portal/sign/task';
+    const { response, error } = request({
+      url,
+      method: 'POST',
+      data: payload,
+    });
+
+    return { response, error };
+  }, []);
+
   const submitData = e => {
     e.preventDefault();
     e.stopPropagation();
+
+    console.debug('@@@ submitData ???');
+
+    const formData = new FormData(e.target);
+    const payload = {};
+    formData.forEach((value, key) => {
+      payload[key] = value;
+    });
+
+    const { DEFINE_DUE_DATE, MEASURE_DUE_DATE, ANALYZE_DUE_DATE, IMPROVE_DUE_DATE, CONTROL_DUE_DATE } = payload;
+    const dueDates = [
+      moment(moment(DEFINE_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(MEASURE_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(ANALYZE_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(IMPROVE_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(CONTROL_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+    ];
+    const signref = JSON.parse(formData.user_selector_0 || '[]').map(user => user.usrid);
+    const { files } = parseFiles(formData);
+    const items = JSON.parse(payload.equip_selector).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
+    if (items.length < 1) {
+      alertMessage.alert('선택된 장비가 없습니다.');
+      return;
+    }
+    if (
+      !payload.START_DATE ||
+      !payload.DEFINE_DUE_DATE ||
+      !payload.MEASURE_DUE_DATE ||
+      !payload.ANALYZE_DUE_DATE ||
+      !payload.IMPROVE_DUE_DATE ||
+      !payload.CONTROL_DUE_DATE
+    ) {
+      alertMessage.alert('스케줄 날짜가 미설정 되었습니다.');
+      return;
+    }
+
+    const validatedDueDates = dateValidateChecker(dueDates);
+    if (!validatedDueDates.result) {
+      alertMessage.alert(validatedDueDates.message);
+      return;
+    }
+
+    payload.items = items;
+    payload.mnuid = 'TPMS1040';
+    payload.signref = signref;
+    payload.files = files;
+
+    setIsLoading(true);
+
+    postData(payload)
+      .then(({ response, error }) => {
+        if (response && !error) {
+          const { insertyn } = response;
+          if (insertyn && callback) {
+            callback();
+          }
+          alertMessage.notice('등록하였습니다.');
+        } else {
+          setIsError(true);
+          alertMessage.alert('등록이 실패했습니다.');
+        }
+      })
+      .catch(() => {
+        setIsError(true);
+      });
+
+    setIsLoading(false);
   };
 
   return {
+    isLoading,
+    isError,
     defaultFormData,
     sharingSelector,
     actions: {

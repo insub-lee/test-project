@@ -218,7 +218,7 @@ const RecordList = () => {
         <GlobalStyle />
       </div>
       <ModalHugger
-        width={850}
+        width={1250}
         visible={modalStatus.INFO}
         title={
           <StyledModalTitle>
@@ -227,11 +227,7 @@ const RecordList = () => {
             <span className="small">{currentRecord?.PRJ_ID || ''}</span>
           </StyledModalTitle>
         }
-        footer={
-          <Button color="primary" size="big" onClick={() => closeModal('INFO')}>
-            확인하기
-          </Button>
-        }
+        footer={null}
         onCancel={() => closeModal('INFO')}
       >
         <Detail info={currentRecord} />

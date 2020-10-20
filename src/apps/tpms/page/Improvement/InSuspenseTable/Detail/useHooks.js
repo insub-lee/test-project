@@ -358,7 +358,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       },
     ];
 
-    // 미결 상태에 따른 추가 진행 요소
     if (info.status && info.status.substr(0, 2).includes('Drop')) {
       formData.push({
         type: 'textarea',
@@ -377,7 +376,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
     if (info.status && info.status.substr(0, 2).includes('완료')) {
       formData.push({
         type: 'textarea',
-        // classname: 'half mr mb',
         classname: 'improve_form std',
         option: {
           label: '현상파악 리더 코멘트',
@@ -391,7 +389,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'single-uploader',
-        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
           label: '현상파악 파일첨부',
@@ -404,7 +401,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'text',
-        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
           label: '현상파악 완료일자',
@@ -416,7 +412,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'textarea',
-        // classname: 'half mr mb',
         classname: 'improve_form std',
         option: {
           label: '원인분석 리더 코멘트',
@@ -430,7 +425,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'single-uploader',
-        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
           label: '원인분석 파일첨부',
@@ -443,7 +437,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'text',
-        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
           label: '원인분석 완료일자',
@@ -455,7 +448,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'textarea',
-        // classname: 'half mr mb',
         classname: 'improve_form std',
         option: {
           label: '대책수립 리더 코멘트',
@@ -469,7 +461,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'single-uploader',
-        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
           label: '대책수립 파일첨부',
@@ -482,7 +473,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'text',
-        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
           label: '대책수립 완료일자',
@@ -494,7 +484,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'textarea',
-        // classname: 'half mr mb',
         classname: 'improve_form std',
         option: {
           label: '개선 리더 코멘트',
@@ -508,7 +497,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'single-uploader',
-        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
           label: '개선 파일첨부',
@@ -521,7 +509,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'text',
-        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
           label: '개선 완료일자',
@@ -533,7 +520,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'textarea',
-        // classname: 'half mr mb',
         classname: 'improve_form std',
         option: {
           label: '완료/공유 리더 코멘트',
@@ -547,7 +533,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'single-uploader',
-        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
           label: '완료/공유 파일첨부',
@@ -560,7 +545,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'text',
-        // classname: 'quater ml mb',
         classname: 'improve_form std',
         option: {
           label: '완료/공유 완료일자',
@@ -572,7 +556,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'textarea',
-        // classname: 'mb',
         classname: 'improve_form std',
         option: {
           label: '개선사항',
@@ -586,7 +569,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'textarea',
-        // classname: 'mb',
         classname: 'improve_form std',
         option: {
           label: '성공요인',
@@ -600,7 +582,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       });
       formData.push({
         type: 'single-uploader',
-        // classname: 'mb',
         classname: 'improve_form std',
         option: {
           label: '완료 파일첨부',
@@ -612,6 +593,23 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         seq: formData.length + 1,
       });
     }
+
+    formData.push({
+      type: 'textarea',
+      classname: `improve_form ${
+        info.status.substr(0, 2).includes('완료') || info.status.substr(0, 2).includes('Drop') ? 'std' : 'ex width50 frCustom customColorDiv02 textareaHeight'
+      }`,
+      option: {
+        label: '의견',
+        name: 'signlinememo',
+        placeholder: '의견을 작성해 주세요.',
+        value: '',
+        required: true,
+        maxLength: 450,
+      },
+      seq: formData.length + 1,
+    });
+
     return formData;
   }, [info, dpCd]);
 
