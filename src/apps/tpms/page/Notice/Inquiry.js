@@ -11,10 +11,24 @@ export const InquiryBody = ({ formJson = [], content = {} }) => {
 
   const filteredData = data.filter(item => item?.option?.name !== 'title');
 
-  return <FormView datas={filteredData} noBoarder smallView />;
+  return (
+    <>
+      <FormView datas={filteredData} noBoarder smallView />
+      <div className="ant-modal-footer">
+        <Button color="primary" size="big" onClick={() => {}}>
+          닫기
+        </Button>
+      </div>
+    </>
+  );
 };
-
-export const InquiryTitle = ({ formJson = [], content = {}, openModal }) => {
+/**
+ * 답변일 경우 답변 버튼 숨김 처리
+ * 답변이 있을 경우 삭제버튼 숨김 처리
+ * 답변인 경우 답변버튼 숨김
+ * @param {*} param0
+ */
+export const InquiryTitle = ({ content = {}, openModal }) => {
   return (
     <TitleWrapper>
       <div className="header">
@@ -40,10 +54,13 @@ export const InquiryTitle = ({ formJson = [], content = {}, openModal }) => {
 };
 
 InquiryBody.propTypes = { formJson: PropTypes.array, content: PropTypes.object };
-InquiryBody.defaultProps = { formJson: [{}], content: {} };
+InquiryBody.defaultProps = { formJson: [], content: {} };
 
-InquiryTitle.propTypes = { formJson: PropTypes.array, content: PropTypes.object, openModal: PropTypes.func };
-InquiryTitle.defaultProps = { formJson: [{}], content: {}, openModal: () => {} };
+InquiryTitle.propTypes = { content: PropTypes.object, openModal: PropTypes.func };
+InquiryTitle.defaultProps = {
+  content: {},
+  openModal: () => {},
+};
 
 const TitleWrapper = styled.div`
   display: flex;
