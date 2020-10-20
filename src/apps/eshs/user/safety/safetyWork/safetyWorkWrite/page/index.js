@@ -16,7 +16,7 @@ import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess';
-import { saveProcessRule, getProcessRule } from 'apps/eshs/common/workProcessRule';
+import { saveProcessRule } from 'apps/eshs/common/workProcessRule';
 import WorkerSearch from '../../workerMgt/Search';
 import CustomListPage from '../../pledge/pages/ListPage';
 import SafetyEdu from '../../safetyEdu';
@@ -39,6 +39,7 @@ class SafetyWorkMain extends Component {
       modalTitle: '',
       modalVisible: false,
       deptMasterList: [],
+      dgubunList: [],
       formData: {
         // ------------------------------------------------------------------------ SWTB_SFAETY_WORK - 안전작업 정보
         WORK_NO: '', //                 작업번호        (String, 13)
@@ -113,6 +114,12 @@ class SafetyWorkMain extends Component {
         type: 'GET',
         url: `/api/eshs/v1/common/EshsUserSearch?searchType=deptMasterList`,
       },
+      {
+        key: 'getDgubunList',
+        type: 'POST',
+        url: `/api/admin/v1/common/categoryMapList`,
+        params: { PARAM: { NODE_ID: 32483 } },
+      },
     ];
     getCallDataHandler(sagaKey, apiArr, this.initForm);
   }
@@ -122,9 +129,12 @@ class SafetyWorkMain extends Component {
     const { result, workNo } = this.props;
     const deptMasterList = (result && result.getDeptMasterList && result.getDeptMasterList.deptMasterList) || [];
     const myInfo = (result && result.getMyInfo && result.getMyInfo.myInfo) || {};
+    const categoryMapList = (result && result.getDgubunList && result.getDgubunList.categoryMapList) || [];
+    const dgubunList = categoryMapList.filter(item => item.LVL === 3 && item.USE_YN === 'Y');
     this.setState(
       {
         deptMasterList,
+        dgubunList,
         formData: {
           ...formData,
           REQ_CMPNY_CD: myInfo.CMPNY_CD,
@@ -632,8 +642,8 @@ class SafetyWorkMain extends Component {
           WRK_CMPNY_NM: '',
           WLOC: '',
           WGUBUN: '신규',
-          SITE: '청주',
-          DGUBUN: 'C-1',
+          SITE: '구미',
+          DGUBUN: 'F3',
           FROM_DT: '',
           TO_DT: '',
           FROM_TIME: '09',
@@ -808,7 +818,7 @@ class SafetyWorkMain extends Component {
   };
 
   render() {
-    const { modalType, modalTitle, modalVisible, formData, processRule, appvLineText } = this.state;
+    const { modalType, modalTitle, modalVisible, formData, processRule, appvLineText, dgubunList } = this.state;
     const {
       result,
       prcId: PRC_ID,
@@ -866,19 +876,15 @@ class SafetyWorkMain extends Component {
               <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174228)}>
                 안전교육 서약서
               </StyledButton>
-              {formData.SITE === '청주' && (
-                <>
-                  <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174229)}>
-                    (청주) 중량물 작업계획서
-                  </StyledButton>
-                  <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174231)}>
-                    (청주) 밀폐공간 체크리스트
-                  </StyledButton>
-                  <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174230)}>
-                    (청주) 안전계획/절차서
-                  </StyledButton>
-                </>
-              )}
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174229)}>
+                중량물 작업계획서
+              </StyledButton>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174231)}>
+                밀폐공간 체크리스트
+              </StyledButton>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174230)}>
+                안전작업 관리 계획서(샘플)
+              </StyledButton>
               {/* 문서상태 저장,  신청부결 상태 결재선 지정, 상신가능 */}
               {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_SUPERVISOR_EMP_NO === EMP_NO && (
                 <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('workProcess', true)}>
@@ -896,6 +902,7 @@ class SafetyWorkMain extends Component {
             handleChangeFormData={this.handleChangeFormData}
             handleWorkCategory={this.handleWorkCategory}
             handleChangeAttach={this.handleChangeAttach}
+            dgubunList={dgubunList} // 지식분류체계 DGUBUN(작업동) 코드 리스트
             fileList={this.state.fileList || []}
           />
           <div className="middleTitle">
