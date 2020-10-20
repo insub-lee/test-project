@@ -24,8 +24,13 @@ const getView = (record, spinningOn, spinningOff, handleModal) => {
   console.debug('record @@@ ', record);
   // builder view 생성
   switch (record?.WORK_SEQ) {
-    case -1:
-      return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" />];
+    case 4821:
+      // 야외행사승인신청 view 같은 builder 결재 2개
+      if (record?.REL_KEY === '야외행사신청')
+        return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" />];
+      if (record?.REL_KEY === '야외행사승인')
+        return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewMetaSeq={5108} viewType="VIEW" />];
+      return [];
     default:
       break;
   }
@@ -145,7 +150,6 @@ const getCallData = async (method, url, param, callBack) => {
     json: true,
   });
 
-  console.debug('@@@@@@@@@@@@@@ ', result);
   return typeof callBack === 'function' ? callBack(result?.response) : result?.response;
 };
 
@@ -157,20 +161,16 @@ export const columns = (handleModal, type, spinningOn, spinningOff) => [
     width: '15%',
     align: 'center',
     render: (text, record) => {
-      let label = '';
       switch (record?.REL_TYPE) {
         case 99:
-          label = '폐기';
-          break;
+          return '폐기';
         case 999:
-          label = '일괄폐기';
-          break;
+          return '일괄폐기';
+        case 100: // ESHS 전용 REL_TYPE
+          return record?.REL_KEY;
         default:
-          label = text;
-          break;
+          return text;
       }
-      if (!label) label = record?.REL_KEY;
-      return label;
     },
   },
   {

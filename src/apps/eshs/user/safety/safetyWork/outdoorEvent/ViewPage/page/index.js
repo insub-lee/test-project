@@ -14,6 +14,7 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
+import { getDraftProcessRule } from 'apps/eshs/common/workProcessRule';
 
 // 야외행사 수립 승인 커스텀 페이지 (MODIFY)
 
@@ -28,11 +29,13 @@ class ModifyPage extends Component {
       uploadFileList: [],
       StyledWrap: StyledViewDesigner,
       modalVisible: false,
+      applyAppLine: '', // 신청팀 결재라인 text
+      approvalAppLine: '', // 승인팀 결재라인 text
     };
   }
 
   componentDidMount() {
-    const { sagaKey: id, getProcessRuleByModify, workInfo, workPrcProps, draftInfo } = this.props;
+    const { sagaKey: id, getProcessRuleByModify, workInfo, workPrcProps, draftInfo, formData } = this.props;
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
@@ -46,17 +49,37 @@ class ModifyPage extends Component {
       this.setState({ StyledWrap });
     }
 
-    if (isWorkflowUsed && prcId !== -1) {
-      const payload = {
-        PRC_ID: Number(prcId),
-        DRAFT_INFO: draftInfo,
-        DRAFT_DATA: {
-          ...workPrcProps,
-        },
-      };
-      getProcessRuleByModify(id, payload);
-    }
+    if (formData?.APPLY_DRAFT_ID)
+      getDraftProcessRule(formData.APPLY_DRAFT_ID, ({ processStepUsers }) =>
+        this.setState({
+          applyAppLine: this.createAppLine(processStepUsers, 'apply'),
+        }),
+      );
+    if (formData?.APPROVAL_DRAFT_ID)
+      getDraftProcessRule(formData.APPROVAL_DRAFT_ID, ({ processStepUsers }) =>
+        this.setState({
+          approvalAppLine: this.createAppLine(processStepUsers, 'approval'),
+        }),
+      );
   }
+
+  createAppLine = (stepUsers, type) => {
+    let appLine = '';
+    if (0 in stepUsers && type === 'apply') {
+      appLine = '신청 :';
+    }
+    if (0 in stepUsers && type === 'approval') {
+      appLine = ' / 승인 :';
+    }
+    stepUsers.forEach((user, index) => {
+      if (index) {
+        appLine += ',';
+      }
+      appLine += ` ${user?.RULE_CONFIG?.Label} ${user?.USER_INFO?.NAME_KOR}(${user.APPV_STATUS === 2 ? '승' : user.APPV_STATUS === 9 ? '부' : ''})`;
+    });
+
+    return appLine;
+  };
 
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
@@ -235,7 +258,7 @@ class ModifyPage extends Component {
       saveBeforeProcess,
     } = this.props;
 
-    const { StyledWrap, modalVisible } = this.state;
+    const { StyledWrap, modalVisible, applyAppLine, approvalAppLine } = this.state;
 
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -247,15 +270,20 @@ class ModifyPage extends Component {
           <StyledWrap className={viewPageData.viewType}>
             <Sketch {...bodyStyle}>
               <StyledCustomSearchWrapper>
-                <div className="search-input-area">
-                  <span className="text-label">신청번호</span>
-                  <AntdSearch
-                    className="ant-search-inline input-search-mid mr5"
-                    onClick={() => this.searchModalHandler(true)}
-                    onSearch={() => this.searchModalHandler(true)}
-                    value={(formData.DOC_NO && formData.DOC_NO) || ''}
-                    style={{ width: '200px' }}
-                  />
+                <div style={{ height: '30px' }}>
+                  <div className="search-input-area" style={{ float: 'left' }}>
+                    <span className="text-label">신청번호</span>
+                    <AntdSearch
+                      className="ant-search-inline input-search-mid mr5"
+                      onClick={() => this.searchModalHandler(true)}
+                      onSearch={() => this.searchModalHandler(true)}
+                      value={(formData.DOC_NO && formData.DOC_NO) || ''}
+                      style={{ width: '200px' }}
+                    />
+                  </div>
+                  <div style={{ float: 'right' }}>
+                    <span className="text-label">{`${applyAppLine}${approvalAppLine}`}</span>
+                  </div>
                 </div>
               </StyledCustomSearchWrapper>
               <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
