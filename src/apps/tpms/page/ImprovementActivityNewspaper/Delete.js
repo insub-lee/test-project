@@ -1,40 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 
-export const DeleteBody = ({ formRef }) => (
-  <Wrapper>
+import Button from '../../components/Button';
+// import alertMessage from '../../components/Notification/Alert';
+
+import { usePost } from '../../hooks/usePost';
+
+export const DeleteBody = ({ brdid, selectedRecord, successCallback }) => {
+  const {
+    action: { deletePost },
+  } = usePost({ brdid });
+  return (
     <div className="pop_con">
-      <form ref={formRef} autoComplete="off" onSubmit={e => e.preventDefault()}>
-        <input type="password" placeholder="비밀번호를 입력해 주세요." name="pwd" />
+      <form
+        autoComplete="off"
+        onSubmit={e => {
+          deletePost(e.target, selectedRecord).then(({ response, error }) => {
+            if (response && !error) {
+              const { result } = response;
+              if (result) {
+                successCallback();
+              } else {
+                window.alert('비밀번호가 틀렸습니다.');
+                // alertMessage.alert('비밀번호가 틀렸습니다.');
+              }
+            }
+          });
+          e.preventDefault();
+        }}
+      >
+        <input required type="password" placeholder="비밀번호를 입력해 주세요." name="pwd" />
+        <div className="ant-modal-footer">
+          <Button type="submit" color="primary" size="big">
+            닫기
+          </Button>
+        </div>
       </form>
     </div>
-  </Wrapper>
-);
+  );
+};
 
-DeleteBody.propTypes = {};
-DeleteBody.defaultProps = {};
-
-const Wrapper = styled.div`
-  .pop_con {
-    padding: 10px 30px;
-    position: relative;
-    background-color: #ffffff;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-
-    form {
-      input[type='text'],
-      input[type='password'] {
-        border: 0px;
-        border-bottom: 1px solid #d9e0e7;
-        font-size: 15px;
-        height: 45px;
-        line-height: 45px;
-        color: #555;
-        vertical-align: middle;
-        margin-bottom: 20px !important;
-      }
-    }
-  }
-`;
+DeleteBody.propTypes = { brdid: PropTypes.string, selectedRecord: PropTypes.object, successCallback: PropTypes.func };
+DeleteBody.defaultProps = { brdid: '', selectedRecord: {}, successCallback: () => {} };
