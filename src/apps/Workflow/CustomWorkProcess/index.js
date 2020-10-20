@@ -148,9 +148,7 @@ class CustomWorkProcess extends Component {
                               <span style={{ color: 'red' }}>(결재완료)</span>
                             ) : item.APPV_STATUS === 9 ? (
                               <span style={{ color: 'red' }}>(부결)</span>
-                            ) : (
-                              <span style={{ color: 'red' }}>(결재중)</span>
-                            ))}
+                            ) : null)}
                         </td>
                       </tr>
                     ))}

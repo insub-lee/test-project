@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Button, message, Modal, Input, Popconfirm } from 'antd';
 import { isJSON } from 'utils/helpers';
 import View from 'components/BizBuilder/PageComp/view';
-import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
@@ -15,6 +14,8 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import MessageContent from 'components/Feedback/message.style2';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { DefaultStyleInfo } from 'components/BizBuilder/DefaultStyleInfo';
+import { saveProcessRule, getDraftProcessRule } from 'apps/eshs/common/workProcessRule';
+import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess';
 
 // 야외행사 수립 신청 - Modify 페이지 커스텀
 
@@ -29,11 +30,16 @@ class ModifyPage extends Component {
       modalVisible: false,
       uploadFileList: [],
       StyledWrap: StyledViewDesigner,
+      workProcessModalVisivle: false,
+      processRule: {},
+      tempProcessRule: {},
+      applyAppLine: '', // 신청팀 결재라인 text
+      approvalAppLine: '', // 승인팀 결재라인 text
     };
   }
 
   componentDidMount() {
-    const { sagaKey: id, getProcessRuleByModify, workInfo, workPrcProps, draftInfo } = this.props;
+    const { sagaKey: id, workInfo, workPrcProps, draftInfo, formData } = this.props;
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
@@ -43,17 +49,37 @@ class ModifyPage extends Component {
       this.setState({ StyledWrap });
     }
 
-    if (isWorkflowUsed && prcId !== -1) {
-      const payload = {
-        PRC_ID: Number(prcId),
-        DRAFT_INFO: draftInfo,
-        DRAFT_DATA: {
-          ...workPrcProps,
-        },
-      };
-      getProcessRuleByModify(id, payload);
-    }
+    if (formData?.APPLY_DRAFT_ID)
+      getDraftProcessRule(formData.APPLY_DRAFT_ID, ({ processStepUsers }) =>
+        this.setState({
+          applyAppLine: this.createAppLine(processStepUsers, 'apply'),
+        }),
+      );
+    if (formData?.APPROVAL_DRAFT_ID)
+      getDraftProcessRule(formData.APPROVAL_DRAFT_ID, ({ processStepUsers }) =>
+        this.setState({
+          approvalAppLine: this.createAppLine(processStepUsers, 'approval'),
+        }),
+      );
   }
+
+  createAppLine = (stepUsers, type) => {
+    let appLine = '';
+    if (0 in stepUsers && type === 'apply') {
+      appLine = '신청 :';
+    }
+    if (0 in stepUsers && type === 'approval') {
+      appLine = ' / 승인 :';
+    }
+    stepUsers.forEach((user, index) => {
+      if (index) {
+        appLine += ',';
+      }
+      appLine += ` ${user?.RULE_CONFIG?.Label} ${user?.USER_INFO?.NAME_KOR}(${user.APPV_STATUS === 2 ? '승' : user.APPV_STATUS === 9 ? '부' : ''})`;
+    });
+
+    return appLine;
+  };
 
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
@@ -229,48 +255,66 @@ class ModifyPage extends Component {
 
   customPageMove = () => false;
 
+  handleWorkProcessModal = visible => this.setState({ workProcessModalVisivle: visible });
+
+  saveProcessRule = () => {
+    const { relKey, relKey2, formData } = this.props;
+    const { processRule } = this.state;
+
+    saveProcessRule({
+      ...processRule,
+      DRAFT_DATA: {},
+      REL_KEY: relKey,
+      REL_KEY2: formData[relKey2],
+      DRAFT_TITLE: `${formData?.EVENT_NM}(신청번호:${formData[relKey2]})`,
+      TASK_SEQ: formData?.TASK_SEQ,
+      WORK_SEQ: formData?.WORK_SEQ,
+    });
+  };
+
   render = () => {
     const {
       sagaKey: id,
       viewLayer,
       workFlowConfig,
-      processRule,
-      setProcessRule,
       viewPageData,
       changeViewPage,
       isBuilderModal,
       ModifyCustomButtons,
       workInfo,
-      CustomWorkProcess,
-      CustomWorkProcessModal,
       reloadId,
       formData,
       deleteTask,
       workSeq,
       taskSeq,
+      prcId: PRC_ID,
+      profile,
     } = this.props;
 
-    const { StyledWrap, modalVisible } = this.state;
-
-    const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
+    const { StyledWrap, modalVisible, workProcessModalVisivle, processRule, tempProcessRule, applyAppLine, approvalAppLine } = this.state;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
-      const { PRC_ID } = processRule;
       return (
         <>
           <StyledWrap className={viewPageData.viewType}>
             <Sketch {...bodyStyle}>
               <StyledCustomSearchWrapper>
-                <div className="search-input-area">
-                  <span className="text-label">신청번호</span>
-                  <AntdSearch
-                    className="ant-search-inline input-search-mid mr5"
-                    onClick={() => this.searchModalHandler(true)}
-                    onSearch={() => this.searchModalHandler(true)}
-                    value={(formData.DOC_NO && formData.DOC_NO) || ''}
-                    style={{ width: '200px' }}
-                  />
+                <div style={{ height: '30px' }}>
+                  <div className="search-input-area" style={{ float: 'left' }}>
+                    <span className="text-label">신청번호</span>
+                    <AntdSearch
+                      className="ant-search-inline input-search-mid mr5"
+                      onClick={() => this.searchModalHandler(true)}
+                      onSearch={() => this.searchModalHandler(true)}
+                      value={(formData.DOC_NO && formData.DOC_NO) || ''}
+                      style={{ width: '200px' }}
+                    />
+                  </div>
+
+                  <div style={{ float: 'right' }}>
+                    <span className="text-label">{`${applyAppLine}${approvalAppLine}`}</span>
+                  </div>
                 </div>
               </StyledCustomSearchWrapper>
               <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
@@ -288,17 +332,17 @@ class ModifyPage extends Component {
                 >
                   <StyledButton className="btn-light mr5 btn-sm">삭제</StyledButton>
                 </Popconfirm>
+                {(formData?.APP_STATUS === '0' || formData?.APP_STATUS === '2F') && formData?.REG_USER_ID === profile?.USER_ID && (
+                  <>
+                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.saveProcessRule()}>
+                      상신
+                    </StyledButton>
+                    <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleWorkProcessModal(true)}>
+                      결재선
+                    </StyledButton>
+                  </>
+                )}
               </StyledButtonWrapper>
-              {isWorkflowUsed && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
-                <WorkProcess
-                  id={id}
-                  CustomWorkProcess={CustomWorkProcess}
-                  CustomWorkProcessModal={CustomWorkProcessModal}
-                  PRC_ID={PRC_ID}
-                  processRule={processRule}
-                  setProcessRule={setProcessRule}
-                />
-              )}
               <View key={`${id}_${viewPageData.viewType}`} {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
               {ModifyCustomButtons ? (
                 <ModifyCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
@@ -334,6 +378,35 @@ class ModifyPage extends Component {
                 customOnRowClick={this.customRowOnclick}
               />
             )}
+          </AntdModal>
+          <AntdModal title="결재선" width="60%" visible={workProcessModalVisivle} footer={null} onCancel={() => this.handleWorkProcessModal(false)}>
+            <>
+              <CustomWorkProcess
+                processRule={processRule}
+                PRC_ID={PRC_ID}
+                draftId={formData?.APPLY_DRAFT_ID || -1}
+                viewType={formData?.APPLY_DRAFT_ID ? 'VIEW' : 'INPUT'}
+                setProcessRule={(_, prcRule) => this.setState({ tempProcessRule: prcRule })}
+              />
+              <StyledButtonWrapper className="btn-wrap-center btn-wrap-mb-10" style={{ paddingBottom: '10px' }}>
+                <StyledButton
+                  className="btn-primary btn-sm btn-first"
+                  onClick={() =>
+                    this.setState(
+                      prevState => ({
+                        processRule: prevState.tempProcessRule,
+                      }),
+                      () => this.handleWorkProcessModal(false),
+                    )
+                  }
+                >
+                  저장
+                </StyledButton>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleWorkProcessModal(false)}>
+                  닫기
+                </StyledButton>
+              </StyledButtonWrapper>
+            </>
           </AntdModal>
         </>
       );

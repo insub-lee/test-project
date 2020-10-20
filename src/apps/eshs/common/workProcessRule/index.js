@@ -12,24 +12,21 @@ export const getProcessRule = async (PRC_ID, callBack) => {
     data: { PARAM: { PRC_ID } },
     json: true,
   });
-  return typeof callBack === 'function'
-    ? callBack((result.response && result.response.DRAFT_PROCESS) || {})
-    : (result.response && result.response.DRAFT_PROCESS) || {};
+  return typeof callBack === 'function' ? callBack(result?.response?.DRAFT_PROCESS || {}) : result?.response?.DRAFT_PROCESS || {};
 };
 
-export const getDraftProcessRule = async DRAFT_ID => {
+export const getDraftProcessRule = async (DRAFT_ID, callBack) => {
   const result = await request({
     method: 'POST',
     url: '/api/workflow/v1/common/workprocess/draftPrcRuleHanlder',
     data: { PARAM: { DRAFT_ID } },
     json: true,
   });
-  return (result.response && result.response.draftPrcRule) || {};
+  return typeof callBack === 'function' ? callBack(result?.response?.draftPrcRule || {}) : result?.response?.draftPrcRule || {};
 };
 
 export const saveProcessRule = async (processRule, callBack = () => {}, messageFlag = true) => {
-  console.debug('saveProcessRule ', processRule);
-  const processStep = (processRule && processRule.DRAFT_PROCESS_STEP) || [];
+  const processStep = processRule?.DRAFT_PROCESS_STEP || [];
   let msg = '';
   if (!processStep.length) {
     message.info(<MessageContent>결재 정보가 없습니다.</MessageContent>);
@@ -63,7 +60,7 @@ export const saveProcessRule = async (processRule, callBack = () => {}, messageF
     data: { DRAFT_PROCESS: { ...processRule, DRAFT_PROCESS_STEP: processStepWithOutNullApprover, REL_TYPE: ESH_REL_TYPE } },
     json: true,
   }).then(({ response }) => {
-    const draftId = (response && response.draftProcess && response.draftProcess.DRAFT_ID) || undefined;
+    const draftId = response?.draftProcess?.DRAFT_ID;
     if (draftId) {
       if (messageFlag) message.info(<MessageContent>결재 요청이 완료되었습니다.</MessageContent>);
       return callBack(draftId);
