@@ -283,9 +283,7 @@ class EshsAppView extends Component {
                 <td colSpan={3}>
                   <Radio.Group onChange={this.onChange} defaultValue={selectedRow?.CURRENT_STATUS === 10 ? 20 : 2}>
                     <Radio value={selectedRow?.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
-                    {(REL_KEY === '환경영향평가' || REL_KEY === '안전작업허가(작업부서)' || REL_KEY === '안전작업허가(운전부서)') && (
-                      <Radio value={9}>부결</Radio>
-                    )}
+                    {selectedRow?.RULE_CONFIG?.RejectBtn && <Radio value={9}>부결</Radio>}
                   </Radio.Group>
                 </td>
               </tr>
