@@ -39,17 +39,17 @@ export const InquiryTitle = ({ formJson = [], content = {}, openModal }) => {
   );
 };
 
-InquiryBody.propTypes = { formJson: PropTypes.object, content: PropTypes.object };
+InquiryBody.propTypes = { formJson: PropTypes.array, content: PropTypes.object };
 InquiryBody.defaultProps = { formJson: [{}], content: {} };
 
-InquiryTitle.propTypes = { formJson: PropTypes.object, content: PropTypes.object, openModal: PropTypes.func };
+InquiryTitle.propTypes = { formJson: PropTypes.array, content: PropTypes.object, openModal: PropTypes.func };
 InquiryTitle.defaultProps = { formJson: [{}], content: {}, openModal: () => {} };
 
 const TitleWrapper = styled.div`
   display: flex;
 
   .header {
-    width: 78%;
+    width: 66%;
 
     span {
       display: inline-block;
@@ -72,9 +72,9 @@ const TitleWrapper = styled.div`
     }
   }
 
-  .btn_grp {
+  .btn_wrap {
     display: flex;
-    width: 18%;
-    justify-content: space-between;
+    width: 30%;
+    justify-content: flex-end;
   }
 `;

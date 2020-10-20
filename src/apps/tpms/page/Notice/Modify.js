@@ -10,6 +10,6 @@ export const ModifyBody = ({ formJson = [], content = {} }) => {
   return <FormView datas={data} noBoarder smallView />;
 };
 
-ModifyBody.propTypes = { formJson: PropTypes.object, content: PropTypes.object };
+ModifyBody.propTypes = { formJson: PropTypes.array, content: PropTypes.object };
 
 ModifyBody.defaultProps = { formJson: [{}], content: {} };
