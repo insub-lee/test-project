@@ -57,8 +57,12 @@ class List extends Component {
 
   // Visible Modal Control Func
   handleModal = (type, bool) => {
+    if (type === 'insert' && bool) {
+      const { searchValue } = this.state;
+      if (searchValue.WRK_CMPNY_NM === '') return message.error(<MessageContent>거래처를 먼저 선택하십시오.</MessageContent>);
+    }
     if (!bool) this.resetFormData();
-    this.setState({
+    return this.setState({
       modalType: type,
       modalVisible: bool,
     });
@@ -353,7 +357,7 @@ class List extends Component {
         <AntdModal
           className="modal-table-pad"
           title={this.setModalTitle(modalType)}
-          width={modalType === 'search' ? '60%' : '500px'}
+          width={modalType === 'search' ? '820px' : '500px'}
           visible={modalVisible}
           footer={null}
           destroyOnClose

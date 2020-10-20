@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select, Table, Spin } from 'antd';
+import moment from 'moment';
+import { Input, Select, Table, Spin, DatePicker } from 'antd';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
@@ -9,12 +10,16 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import Styled from './Styled';
 
 const { Option } = Select;
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
 const AntdTable = StyledAntdTable(Table);
+const AntdDatePicker = StyledPicker(DatePicker);
+
+const currentDate = moment(new Date()).format('YYYY-MM-DD');
 
 class SafetyWorkSearch extends Component {
   constructor(props) {
@@ -22,6 +27,8 @@ class SafetyWorkSearch extends Component {
     this.state = {
       site: '전체',
       searchType: 'WORK_NO',
+      sDate: currentDate,
+      eDate: currentDate,
       keyword: '',
       safetyWorkList: [],
       isSearching: false,
@@ -31,7 +38,7 @@ class SafetyWorkSearch extends Component {
   componentDidMount() {}
 
   handleGetSafetyWorkList = () => {
-    const { site, searchType, keyword } = this.state;
+    const { site, searchType, keyword, sDate, eDate } = this.state;
     const { sagaKey: id, getCallDataHandler } = this.props;
     this.setState({
       isSearching: true,
@@ -51,7 +58,7 @@ class SafetyWorkSearch extends Component {
       {
         key: 'getSafetyWorkList',
         type: 'GET',
-        url: `/api/eshs/v1/common/safetyWork?type=${type}&searchType=${searchType}&site=${site}&keyword=${keyword}`,
+        url: `/api/eshs/v1/common/safetyWork?type=${type}&searchType=${searchType}&site=${site}&keyword=${keyword}&sDate=${sDate}&eDate=${eDate}`,
       },
     ];
     getCallDataHandler(id, apiArr, this.getSafetyWorkCallback);
@@ -74,31 +81,47 @@ class SafetyWorkSearch extends Component {
   };
 
   render() {
-    const { rowSelect } = this.props;
-    const { site, searchType, keyword, safetyWorkList, isSearching } = this.state;
+    const { rowSelect, uesdSearchType } = this.props;
+    const { site, searchType, keyword, safetyWorkList, isSearching, sDate, eDate } = this.state;
     const columns = [
       {
         title: '작업번호',
         dataIndex: 'WORK_NO',
-        width: '20%',
         align: 'center',
       },
       {
         title: '지역',
         dataIndex: 'SITE',
-        width: '10%',
         align: 'center',
       },
       {
         title: '주작업',
         dataIndex: 'WCATEGORY',
-        width: '20%',
         align: 'center',
       },
       {
         title: '작업명',
         dataIndex: 'TITLE',
-        width: '50%',
+        align: 'center',
+      },
+      {
+        title: '작업장소',
+        dataIndex: 'WLOC',
+        align: 'center',
+      },
+      {
+        title: '작업업체',
+        dataIndex: 'WRK_CMPNY_NM',
+        align: 'center',
+      },
+      {
+        title: '주관회사',
+        dataIndex: 'REQ_CMPNY_NM',
+        align: 'center',
+      },
+      {
+        title: '주관부서',
+        dataIndex: 'REQ_DEPT_NM',
         align: 'center',
       },
     ];
@@ -113,15 +136,35 @@ class SafetyWorkSearch extends Component {
                 <Option value="청주">청주</Option>
                 <Option value="구미">구미</Option>
               </AntdSelect>
-              <span className="text-label">검색구분</span>
-              <AntdSelect className="select-xs" style={{ width: '100px' }} value={searchType} onChange={val => this.setState({ searchType: val })}>
-                <Option value="WORK_NO">작업번호</Option>
-                <Option value="WGUBUN">작업구분</Option>
-                <Option value="TITLE">작업명</Option>
-                <Option value="WCATEGORY">주작업</Option>
-                <Option value="WLOC">작업장소</Option>
-                <Option value="WRK_CMPNY_NM">작업업체</Option>
-              </AntdSelect>
+              {uesdSearchType ? (
+                <>
+                  <span className="text-label">검색구분</span>
+                  <AntdSelect className="select-xs" style={{ width: '100px' }} value={searchType} onChange={val => this.setState({ searchType: val })}>
+                    <Option value="WORK_NO">작업번호</Option>
+                    <Option value="WGUBUN">작업구분</Option>
+                    <Option value="TITLE">작업명</Option>
+                    <Option value="WCATEGORY">주작업</Option>
+                    <Option value="WLOC">작업장소</Option>
+                    <Option value="WRK_CMPNY_NM">작업업체</Option>
+                  </AntdSelect>
+                </>
+              ) : (
+                ''
+              )}
+              <span className="text-label">작업기간</span>
+              <AntdDatePicker
+                defaultValue={moment(sDate, 'YYYY-MM-DD')}
+                className="ant-picker-xs mr5"
+                style={{ width: 110 }}
+                onChange={date => this.setState({ sDate: date.format('YYYY-MM-DD') })}
+              />
+              <span> ~ </span>
+              <AntdDatePicker
+                defaultValue={moment(eDate, 'YYYY-MM-DD')}
+                className="ant-picker-xs mr5"
+                style={{ width: 110 }}
+                onChange={date => this.setState({ eDate: date.format('YYYY-MM-DD') })}
+              />
               <span className="text-label">검색어</span>
               <AntdInput
                 className="ant-input-xs ant-input-inline"
@@ -151,14 +194,15 @@ class SafetyWorkSearch extends Component {
 }
 
 SafetyWorkSearch.propTypes = {
-  // type - number
-  // type - string
   sagaKey: PropTypes.string,
-  // type - object
   result: PropTypes.object,
-  // type - func
   getCallDataHandler: PropTypes.func,
   rowSelect: PropTypes.func,
+  uesdSearchType: PropTypes.bool,
+};
+
+SafetyWorkSearch.defaultProps = {
+  uesdSearchType: true,
 };
 
 export default SafetyWorkSearch;
