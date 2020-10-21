@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Button from '../../components/Button';
 import FormView from '../../components/FormPreview/FormView';
 import makeContent from '../../utils/makeContents';
+import { usePost } from '../../hooks/usePost';
 
-export const InquiryBody = ({ formJson = [], content = {} }) => {
+export const InquiryBody = ({ formJson = [], content = {}, brdid, selectedRecord }) => {
+  const {
+    action: { readPost },
+  } = usePost({ brdid });
+
+  useEffect(() => {
+    readPost(selectedRecord);
+  }, []);
   const data = makeContent(formJson, content, true);
 
   const filteredData = data.filter(item => item?.option?.name !== 'title');
