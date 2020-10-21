@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
-import moment from 'moment';
-import Table from 'rc-table';
+import React from 'react';
 
+import FormView from '../../../components/FormPreview/FormView';
+import Button from '../../../components/Button';
 import GlobalStyle from '../../../components/GlobalStyle';
 import Spin from '../../../components/AntdSpinner';
-import ExpandableTitleContainer from '../../../components/ExpandableTitleContainer';
+import TitleContainerWithSub from '../../../components/TitleContainerWithSub';
+import RecordListDetail from './RecordListDetail';
+import StyledForm from './StyledForm';
+import useHooks from './useHooks';
+import useAuth from '../../../hooks/useAuth';
 
 /**
  * TPMS - 개선활동 - REPORT - 실적리스트
@@ -16,12 +20,36 @@ import ExpandableTitleContainer from '../../../components/ExpandableTitleContain
 const nav = [{ title: 'TPMS' }, { title: '개선활동' }, { title: 'REPORT' }, { title: '실적리스트' }];
 
 const RecordList = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const { authInfo, isError: isAuthError, isLoading: isAuthLoading } = useAuth();
+  const {
+    isLoading,
+    showDetail,
+    requestQuery,
+    listFormData,
+    actions: { submitData },
+  } = useHooks();
   return (
     <div className="tpms-view">
-      <ExpandableTitleContainer title="개선활동 - 실적조회" nav={nav} useCollapsed>
-        <Spin spinning={isLoading}>실적리스트</Spin>
-      </ExpandableTitleContainer>
+      <Spin spinning={isAuthLoading || isLoading}>
+        <TitleContainerWithSub
+          title="개선활동 - REPORT"
+          nav={nav}
+          useCollapsed
+          mainbody={
+            <StyledForm onSubmit={submitData}>
+              <FormView datas={listFormData} noBoarder noPadding />
+              <div className="btn_wrap">
+                <Button type="submit" color="primary">
+                  검색하기
+                </Button>
+              </div>
+            </StyledForm>
+          }
+          subbody={
+            showDetail && <RecordListDetail enableFixView={() => {}} disableFixView={() => {}} requestQuery={requestQuery} userid={authInfo?.empNo || ''} />
+          }
+        />
+      </Spin>
       <GlobalStyle />
     </div>
   );

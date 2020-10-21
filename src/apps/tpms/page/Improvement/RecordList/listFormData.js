@@ -52,7 +52,7 @@ export default [
       label: 'Project Level',
       name: 'projectLevel',
       values: [
-        { label: '본부', value: '1' },
+        { label: '본부', value: '1', checked: false },
         { label: '담당', value: '2' },
         { label: '팀', value: '3' },
         { label: 'Part', value: '4' },

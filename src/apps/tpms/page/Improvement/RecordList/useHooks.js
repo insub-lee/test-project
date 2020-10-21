@@ -3,7 +3,7 @@ import moment from 'moment';
 
 import request from 'utils/request';
 import alertMessage from '../../../components/Notification/Alert';
-import initReportFormData from './reportFormData';
+import initListFormData from './listFormData';
 
 export default () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -52,11 +52,13 @@ export default () => {
     setShowDetail(true);
   };
 
-  const reportFormData = () => {
-    const formData = initReportFormData;
+  const listFormData = () => {
+    const formData = initListFormData;
+
     delete formData[0].option;
     delete formData[1].option;
     delete formData[2].option;
+
     formData[0].option = {
       label: '등록기간',
       values: [
@@ -68,6 +70,7 @@ export default () => {
       label: '기준일자',
       values: [{ name: 'stdDate', value: stdDate }],
     };
+
     formData[2].option = {
       label: '본부',
       name: 'headQuarts',
@@ -78,6 +81,7 @@ export default () => {
         },
       ],
     };
+
     return formData;
   };
 
@@ -114,7 +118,7 @@ export default () => {
     setIsLoading(false);
 
     return () => {
-      const prjlvl = initReportFormData[4].option.values;
+      const prjlvl = initListFormData[4].option.values;
       prjlvl[0].checked = false;
       prjlvl[1].checked = false;
       prjlvl[2].checked = false;
@@ -131,7 +135,7 @@ export default () => {
     requestQuery,
     headQuartsLabel,
     headQuartsValue,
-    reportFormData: reportFormData(),
+    listFormData: listFormData(),
     actions: {
       submitData,
     },

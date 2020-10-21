@@ -194,8 +194,6 @@ const RecordReportDetail = ({ requestQuery, usrid, enableFixView, disableFixView
                     <td>{totProgress4}</td>
                     <td>{totProgress5}</td>
                   </tr>
-                  {console.debug('@ list : ', list)}
-                  {console.debug('@ tooltipList : ', tooltipList)}
                   {list.map((item, rowIndex) => (
                     <tr className="bd" key={item.dpnm}>
                       {getDpnmGroup(list, item, rowIndex)}
@@ -222,17 +220,14 @@ const RecordReportDetail = ({ requestQuery, usrid, enableFixView, disableFixView
                                 id={`${rowIndex}_${index}`}
                                 type="dark"
                                 afterShow={
-                                  tooltipList.length > 0 &&
-                                  (index > 8 ? !tooltipList?.[rowIndex]?.[index - 3]?.checked : !tooltipList?.[rowIndex]?.[index]?.checked)
+                                  tooltipList.length > 0 && (index > 8 ? !tooltipList[rowIndex][index - 3].checked : !tooltipList[rowIndex][index].checked)
                                     ? () => handleTooltip(count.key, count.dpcd, rowIndex, index)
                                     : null
                                 }
                               >
                                 <Spin
                                   indicator={<Icon type="loading" spin style={{ color: 'white' }} />}
-                                  spinning={
-                                    index > 8 ? tooltipList?.[rowIndex]?.[index - 3]?.isLoading || true : tooltipList?.[rowIndex]?.[index]?.isLoading || true
-                                  }
+                                  spinning={index > 8 ? tooltipList?.[rowIndex]?.[index - 3]?.isLoading : tooltipList?.[rowIndex]?.[index]?.isLoading}
                                 >
                                   {index > 8 ? (
                                     <ul style={{ minHeight: 50, textAlign: 'left' }}>

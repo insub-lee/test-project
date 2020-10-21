@@ -222,6 +222,8 @@ export default ({ usrid, requestQuery, enableFixView, disableFixView }) => {
   }, []);
 
   const handleTooltip = (cntdiv, dpcd, rowIndex, colIndex) => {
+    console.debug('@ handle tool tip');
+
     setTooltipList(prevState => {
       const nextTooltipList = [...prevState];
       if (colIndex > 8) {
@@ -271,7 +273,7 @@ export default ({ usrid, requestQuery, enableFixView, disableFixView }) => {
               nextList[rowIndex][colIndex].isLoading = false;
               nextList[rowIndex][colIndex].list = responseList;
             }
-            return { nextList };
+            return nextList;
           });
         } else {
           setTooltipList(prevState => {
@@ -285,7 +287,7 @@ export default ({ usrid, requestQuery, enableFixView, disableFixView }) => {
               nextList[rowIndex][colIndex].isLoading = false;
               nextList[rowIndex][colIndex].list = [];
             }
-            return { nextList };
+            return nextList;
           });
           alertMessage.alert('Server Error');
         }
@@ -344,7 +346,30 @@ export default ({ usrid, requestQuery, enableFixView, disableFixView }) => {
   }, [list]);
 
   const loadModal = (cntdiv, dpcd, rowIndex, colIndex) => {
-    fetchTooltipData({ cntdiv, dpcd, rowIndex, colIndex })
+    const { startDate, endDate, stdDate, projectType, prjLvValues } = requestQuery;
+
+    const curtDate = moment().format('YYYYMMDD');
+
+    const startDt = startDate
+      ? startDate.replace(/\./gi, '')
+      : moment(curtDate, 'YYYYMMDD')
+          .add(-1, 'year')
+          .format('YYYYMMDD');
+    const endDt = endDate ? endDate.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
+    const stdDt = stdDate ? stdDate.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
+
+    const requestQuery2 = {
+      type: 'devprjlist',
+      sdd: startDt,
+      edd: endDt,
+      stdd: stdDt,
+      prjtype: projectType === '' ? undefined : projectType,
+      prjlvl: prjLvValues ? prjLvValues.toString() : undefined,
+      cntdiv,
+      dpcd,
+    };
+
+    fetchTooltipData(requestQuery2)
       .then(({ response, error }) => {
         if (response && !error) {
           const { list: responseList } = response;
