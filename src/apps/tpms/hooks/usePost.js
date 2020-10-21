@@ -1,9 +1,28 @@
 import { useRef } from 'react';
 import request from 'utils/request';
+import parseFiles from '../utils/parseFiles';
 
 const url = '/apigate/v1/portal/post';
 
 export const usePost = ({ brdid }) => {
+  const readPost = async selectedRecord => {
+    const data = {
+      brdid,
+      type: 'view',
+      postno: selectedRecord?.postno,
+    };
+
+    const { response, error } = await request({
+      url,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method: 'GET',
+      params: data,
+    });
+
+    return { response, error };
+  };
   const modifyPost = async (args, selectedRecord) => {
     const formData = new FormData(args);
     const formJson = {};
@@ -53,8 +72,6 @@ export const usePost = ({ brdid }) => {
       }
     });
 
-    console.debug('formJson: ', formJson);
-
     const { title } = formJson;
 
     const data = {
@@ -63,7 +80,13 @@ export const usePost = ({ brdid }) => {
       title,
       content: { ...formJson },
     };
-
+    if (brdid === 'brd00000000000000007') {
+      const { nextContent, files } = parseFiles(formJson);
+      data.title = nextContent.title;
+      data.content = nextContent;
+      data.year = nextContent.year;
+      data.files = files;
+    }
     const { response, error } = await request({
       url,
       headers: {
@@ -147,6 +170,7 @@ export const usePost = ({ brdid }) => {
       deletePost,
       ReplyPost,
       modifyPost,
+      readPost,
     },
   };
 };

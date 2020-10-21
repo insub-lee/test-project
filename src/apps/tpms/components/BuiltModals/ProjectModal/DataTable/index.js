@@ -144,7 +144,7 @@ class DataTable extends React.Component {
           rowKey="postno"
           rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
           components={components}
-          onRowClick={(record, index) => this.handleRowClick(record, index)}
+          // onRowClick={(record, index) => this.handleRowClick(record, index)}
         />
         <Pagination {...pagination} groupSize={10} pageHandler={this.pageHandler} pageSizeHandler={this.pageSizeHandler} />
       </StyledTableWrapper>
