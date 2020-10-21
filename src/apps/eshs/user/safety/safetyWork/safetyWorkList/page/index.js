@@ -221,7 +221,6 @@ class SafetyWorkList extends Component {
       {
         title: '작업번호',
         dataIndex: 'WORK_NO',
-        width: '10%',
         align: 'center',
         render: value => (
           <span
@@ -238,7 +237,6 @@ class SafetyWorkList extends Component {
       {
         title: '신청상태',
         dataIndex: 'STTLMNT_STATUS',
-        width: '5%',
         align: 'center',
         render: value => {
           switch (value) {
@@ -264,62 +262,69 @@ class SafetyWorkList extends Component {
       {
         title: '작업상태',
         dataIndex: 'WORK_STATUS',
-        width: '5%',
         align: 'center',
       },
       {
         title: '주작업',
         dataIndex: 'WCATEGORY',
-        width: '5%',
         align: 'center',
       },
       {
         title: '보충작업',
         dataIndex: 'SUB_WCATEGORY',
-        width: '10%',
-        align: 'center',
-      },
-      {
-        title: '발주사',
-        dataIndex: 'REQ_CMPNY_NM',
-        width: '10%',
         align: 'center',
       },
       {
         title: '주관팀',
         dataIndex: 'REQ_DEPT_NM',
-        width: '10%',
+        align: 'center',
+      },
+      {
+        title: '담당자',
+        dataIndex: 'REQ_EMP_NM',
         align: 'center',
       },
       {
         title: '업체',
         dataIndex: 'WRK_CMPNY_NM',
-        width: '10%',
+        align: 'center',
+      },
+      {
+        title: '감독관',
+        dataIndex: 'REQ_SUPERVISOR_EMP_NM',
         align: 'center',
       },
       {
         title: '작업일',
         dataIndex: 'FROM_DT',
-        width: '10%',
         align: 'center',
       },
       {
         title: '작업시간',
         dataIndex: 'WORK_TIME',
-        width: '5%',
         align: 'center',
+        render: (data, record) => `${record.FROM_TIME}시 ~ ${record.TO_TIME}시`,
       },
       {
         title: '작업명',
         dataIndex: 'TITLE',
-        width: '10%',
+        align: 'center',
+      },
+      {
+        title: '작업명',
+        dataIndex: 'DGUBUN',
         align: 'center',
       },
       {
         title: '작업장소',
         dataIndex: 'WLOC',
-        width: '10%',
         align: 'center',
+      },
+      {
+        title: '작업인원',
+        dataIndex: 'WORKERS',
+        align: 'center',
+        render: data => `${data} 명`,
       },
     ];
     return (
@@ -628,7 +633,6 @@ SafetyWorkList.propTypes = {
   viewPage: PropTypes.string,
   sagaKey: PropTypes.string,
   result: PropTypes.object,
-  profile: PropTypes.object,
   getCallDataHandler: PropTypes.func,
   getCallDataHandlerReturnRes: PropTypes.func,
 };

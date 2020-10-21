@@ -62,7 +62,7 @@ class SafetyWorkInfo extends Component {
   };
 
   render() {
-    const { handleModal, formData, handleChangeFormData, handleWorkCategory, handleChangeAttach } = this.props;
+    const { handleModal, formData, handleChangeFormData, handleWorkCategory, handleChangeAttach, dgubunList } = this.props;
     const fromTimes = ['09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'];
     const toTimes = ['10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'];
     return (
@@ -97,8 +97,9 @@ class SafetyWorkInfo extends Component {
                   </th>
                   <td colSpan={8}>
                     <AntdSelect className="select-xs" style={{ width: '200px' }} value={formData.SITE} onChange={value => handleChangeFormData('SITE', value)}>
-                      <Option value="청주">청주</Option>
                       <Option value="구미">구미</Option>
+                      <Option value="청주">청주</Option>
+                      <Option value="서울">서울</Option>
                     </AntdSelect>
                   </td>
                 </tr>
@@ -306,16 +307,9 @@ class SafetyWorkInfo extends Component {
                       value={formData.DGUBUN}
                       onChange={value => handleChangeFormData('DGUBUN', value)}
                     >
-                      <Option value="C-1">C-1</Option>
-                      <Option value="C-2">C-2</Option>
-                      <Option value="R">R</Option>
-                      <Option value="청주기타">청주기타</Option>
-                      <Option value="F1동">F1동</Option>
-                      <Option value="F3동">F3동</Option>
-                      <Option value="A1동">A1동</Option>
-                      <Option value="D.I동">D.I동</Option>
-                      <Option value="기숙사동">기숙사동</Option>
-                      <Option value="구미기타">구미기타</Option>
+                      {dgubunList.map(item => (
+                        <Option value={item.CODE}>{item.NAME_KOR}</Option>
+                      ))}
                     </AntdSelect>
                   </td>
                   <th colSpan={2}>
@@ -405,8 +399,11 @@ SafetyWorkInfo.propTypes = {
   handleChangeFormData: PropTypes.func,
   handleWorkCategory: PropTypes.func,
   handleChangeAttach: PropTypes.func,
+  dgubunList: PropTypes.array,
 };
 
-SafetyWorkInfo.defaultProps = {};
+SafetyWorkInfo.defaultProps = {
+  dgubunList: [],
+};
 
 export default SafetyWorkInfo;

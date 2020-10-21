@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import BizBuilderBase from 'components/BizBuilderBase';
-import { Data } from 'react-data-grid-addons';
 import CustomInput from './pages/CustomInput';
 import CustomModify from './pages/CustomModify';
 

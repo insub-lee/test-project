@@ -1,12 +1,12 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input, Select, message } from 'antd';
+import { Input, Select } from 'antd';
 import { debounce } from 'lodash';
-import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
+// import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+// import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 
-const AntdSelect = StyledSelect(Select);
-const AntdInput = StyledInput(Input);
+// const AntdSelect = StyledSelect(Select);
+// const AntdInput = StyledInput(Input);
 const { Option } = Select;
 
 class CustomSelectSearchComp extends React.Component {
@@ -71,17 +71,17 @@ class CustomSelectSearchComp extends React.Component {
         property: { placeholder },
       },
     } = this.props;
-    const { searchType, searchText, selectList } = this.state;
+    const { searchType, selectList } = this.state;
     return (
-      <div style={{ display: 'flex' }}>
+      <div className={CONFIG.property.className || ''} style={{ display: 'flex' }}>
         <Select
           placeholder={placeholder || '검색구분'}
-          style={{ width: '100px' }}
+          style={{ width: '20%' }}
           onChange={value => {
             this.handleOnChange('searchType', value);
           }}
           disabled={readOnly || CONFIG.property.readOnly}
-          className="select-sm"
+          className="select-mid"
         >
           {selectList.map(item => (
             <Option key={`select_${item.COMP_FIELD}`} value={`${item.COMP_FIELD}`}>
@@ -90,11 +90,11 @@ class CustomSelectSearchComp extends React.Component {
           ))}
         </Select>
         <Input
-          style={{ width: '100px', marginLeft: '5px' }}
+          style={{ width: '80%', marginLeft: '5px' }}
           readOnly={!searchType}
           placeholder="검색어"
           onChange={e => this.handleOnChange('searchText', e.target.value)}
-          className="ant-input-sm"
+          className="ant-input-mid"
         />
       </div>
     );
@@ -103,11 +103,8 @@ class CustomSelectSearchComp extends React.Component {
 
 CustomSelectSearchComp.propTypes = {
   COMP_FIELD: PropTypes.any,
-  NAME_KOR: PropTypes.string,
   CONFIG: PropTypes.any,
-  changeFormData: PropTypes.func,
   sagaKey: PropTypes.string,
-  changeValidationData: PropTypes.any,
   readOnly: PropTypes.any,
   changeSearchData: PropTypes.any,
 };
