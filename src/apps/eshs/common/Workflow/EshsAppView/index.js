@@ -98,34 +98,15 @@ class EshsAppView extends Component {
     const { opinion, nextApprover } = this.state;
     const { selectedRow } = this.props;
 
-    if (((appvStatus === 3 || appvStatus === 30 || selectedRow.NODE_ID === 114) && !opinion) || opinion === '') {
-      message.warning('의견을 작성해주세요');
-    } else {
-      if (appvStatus === 5 && nextApprover.length === 0) {
-        message.info('실무자를 선택 해주세요');
-        return;
-      }
-
-      if ((appvStatus === 9 && !opinion) || opinion === '') {
-        message.info('DownLoad 권한 거부에 대한 사유를 작성해 주세요');
-        return;
-      }
-
-      if (appvStatus === 10 && nextApprover.length === 0) {
-        message.info('실무자 결재위임자를 선택 해주세요');
-        return;
-      }
-
-      if (appvStatus === 10 && nextApprover.length > 1) {
-        message.info('실무자 결재위임자는 한명만 선택 가능합니다.');
-        return;
-      }
-
-      this.props.setOpinion(opinion);
-      this.props.reqApprove(appvStatus);
-      this.props.setOpinionVisible(false);
-      this.onModalClose();
+    if (appvStatus === 9 && !opinion) {
+      message.info('부결사유를 입력 해주세요.');
+      return;
     }
+
+    this.props.setOpinion(opinion);
+    this.props.reqApprove(appvStatus);
+    this.props.setOpinionVisible(false);
+    this.onModalClose();
   };
 
   onModalClose = () => {

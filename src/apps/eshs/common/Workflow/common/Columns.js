@@ -21,18 +21,24 @@ import JournalManagement from 'apps/eshs/user/health/medicalManagement/journalMa
 /* view  --end--*/
 
 const getView = (record, spinningOn, spinningOff, handleModal) => {
-  console.debug('record @@@ ', record);
   // builder view 생성
-  switch (record?.WORK_SEQ) {
-    case 4821:
-      // 야외행사승인신청 view 같은 builder 결재 2개
-      if (record?.REL_KEY === '야외행사신청')
+  if (record?.WORK_SEQ) {
+    switch (record?.WORK_SEQ) {
+      case 4821:
+        // 야외행사승인신청 view 같은 builder 결재 2개
+        if (record?.REL_KEY === '야외행사신청')
+          return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewMetaSeq={5108} viewType="VIEW" />];
+        if (record?.REL_KEY === '야외행사승인')
+          return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" />];
+        return [];
+      case 4981:
+        return [
+          // 폐기물 처리 요청서
+          <BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" viewCustomButtons={() => []} />,
+        ];
+      default:
         return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" />];
-      if (record?.REL_KEY === '야외행사승인')
-        return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewMetaSeq={5108} viewType="VIEW" />];
-      return [];
-    default:
-      break;
+    }
   }
 
   //  SI view 생성
