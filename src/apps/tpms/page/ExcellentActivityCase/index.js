@@ -177,7 +177,7 @@ const ExcellentActivityCase = () => {
                         </option>
                       ))}
                     </select>
-                    <select name="category">
+                    <select className="search-select" name="category">
                       {categories.map(category => (
                         <option key={category.text} value={category.value}>
                           {category.text}

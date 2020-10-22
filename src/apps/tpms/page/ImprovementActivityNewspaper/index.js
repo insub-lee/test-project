@@ -165,7 +165,7 @@ const ImprovementActivityNewspaper = () => {
               <div className="view_top">
                 <StyledSearch>
                   <form autoComplete="off" className="page" name="form-name" onSubmit={submitSearchQuery}>
-                    <select name="category">
+                    <select className="search-select" name="category">
                       {categories.map(category => (
                         <option key={category.text} value={category.value}>
                           {category.text}
