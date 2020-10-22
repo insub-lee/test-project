@@ -11,8 +11,21 @@ class TakeOut extends Component {
     });
   };
 
+  emptyButtons = () => [];
+
   render() {
-    return <BizBuilderBase sagaKey="takeOut" workSeq={4781} viewType="INPUT" loadingComplete={this.loadingComplete} />;
+    return (
+      <BizBuilderBase
+        sagaKey="takeOut"
+        workSeq={4781}
+        viewType="INPUT"
+        loadingComplete={this.loadingComplete}
+        InputCustomButtons={this.emptyButtons}
+        ModifyCustomButtons={this.emptyButtons}
+        ViewCustomButtons={this.emptyButtons}
+        ListCustomButtons={this.emptyButtons}
+      />
+    );
   }
 }
 
