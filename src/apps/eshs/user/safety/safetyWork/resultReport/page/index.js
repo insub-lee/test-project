@@ -1,21 +1,15 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Modal, Button, Select, Spin } from 'antd';
+import { Button, Select, Spin } from 'antd';
 import styled from 'styled-components';
-import BizMicroDevBase from 'components/BizMicroDevBase';
-import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
-import StyledModalWrapper from 'commonStyled/EshsStyled/Modal/StyledSelectModal';
 import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
-import IngCheckViewer from '../../ingCheck';
 import SafetyWorkReport from '../safetyWorkReport';
 import Styled from './Styled';
 
-const AntdModal = StyledModalWrapper(Modal);
 const StyledButton = StyledAntdButton(Button);
 const AntdSelect = StyledSelect(Select);
 
@@ -32,10 +26,6 @@ class ResultReportPage extends Component {
     super(props);
     this.state = {
       isSearching: false,
-      modalType: '',
-      modalTitle: '',
-      modalVisible: false,
-      selectedWork: '',
       searchValues: {
         SITE: '청주',
         YEAR: moment().format('YYYY'),
@@ -88,32 +78,6 @@ class ResultReportPage extends Component {
     });
   };
 
-  // 모달 핸들러
-  handleModal = (type, visible, workNo) => {
-    let title = '';
-    const selectedWork = workNo || '';
-    switch (type) {
-      case 'supervisor':
-        title = '감독자 선택';
-        break;
-      case 'cmpny':
-        title = '작업업체 선택';
-        break;
-      case 'ingCheckView':
-        title = '안전작업 점검 상세정보';
-        break;
-      default:
-        break;
-    }
-
-    this.setState({
-      modalType: type,
-      modalTitle: title,
-      modalVisible: visible,
-      selectedWork,
-    });
-  };
-
   // state searchValue 변경
   handleChangeSearchValue = (field, value) => {
     const { searchValues } = this.state;
@@ -143,7 +107,7 @@ class ResultReportPage extends Component {
   };
 
   render() {
-    const { modalType, modalTitle, modalVisible, searchValues, selectedWork, reportData, isSearching } = this.state;
+    const { searchValues, reportData, isSearching } = this.state;
     return (
       <Styled>
         <StyledSearchWrapper>
@@ -186,31 +150,6 @@ class ResultReportPage extends Component {
             <SafetyWorkReport searchValues={searchValues} reportData={reportData} />
           </CustomTableStyled>
         </ContentsWrapper>
-        <AntdModal
-          title={modalTitle}
-          width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '70%'}
-          visible={modalVisible}
-          footer={null}
-          onOk={() => this.handleModal('', false)}
-          onCancel={() => this.handleModal('', false)}
-        >
-          {modalType === 'cmpny' && (
-            <EshsCmpnyComp
-              sagaKey={this.props.sagaKey}
-              getExtraApiData={this.props.getCallDataHandler}
-              extraApiData={this.props.result}
-              colData={searchValues.WRK_CMPNY_CD}
-              directSearchTable
-              visible
-              CONFIG={{ property: { isRequired: false, GUBUN: 'SW' } }}
-              changeFormData={() => false}
-              COMP_FIELD="WRK_CMPNY_CD"
-              eshsCmpnyCompResult={(cmpnyInfo, field) => this.handleCmpnySelect(cmpnyInfo, field)}
-            />
-          )}
-          {modalType === 'safetyWork' && <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />}
-          {modalType === 'ingCheckView' && <IngCheckViewer workNo={selectedWork} pageType="modal" />}
-        </AntdModal>
       </Styled>
     );
   }
@@ -218,8 +157,6 @@ class ResultReportPage extends Component {
 
 ResultReportPage.propTypes = {
   sagaKey: PropTypes.string,
-  result: PropTypes.object,
-  getCallDataHandler: PropTypes.func,
   getCallDataHandlerReturnRes: PropTypes.func,
 };
 

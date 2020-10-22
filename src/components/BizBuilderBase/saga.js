@@ -1027,17 +1027,18 @@ function* getDraftProcess({ id, draftId }) {
   yield put(actions.setDraftProcess(id, draftProcess));
 }
 
-function* getListData({ id, workSeq, conditional, pageIdx, pageCnt, changeIsLoading }) {
+function* getListData({ id, workSeq, conditional, pageIdx, pageCnt, changeIsLoading, useWhereString }) {
   const searchData = yield select(selectors.makeSelectSearchDataById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
   const listOrderByField = yield select(selectors.makeSelectListOrderByField(id));
   const whereString = [];
-  const keySet = Object.keys(searchData);
-  keySet.forEach(key => {
-    whereString.push(searchData[key]);
-  });
-
-  if (conditional && conditional.length > 0) whereString.push(conditional);
+  if (!useWhereString && useWhereString !== false) {
+    const keySet = Object.keys(searchData);
+    keySet.forEach(key => {
+      whereString.push(searchData[key]);
+    });
+    if (conditional && conditional.length > 0) whereString.push(conditional);
+  }
 
   let PAGE;
   let PAGE_CNT;

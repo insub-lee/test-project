@@ -2,8 +2,11 @@ import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, TreeSelect, Select, DatePicker } from 'antd';
 import { debounce } from 'lodash';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import moment from 'moment';
 
+const AntdSelect = StyledSelect(Select);
+const AntdTreeSelect = StyledSelect(TreeSelect);
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 
@@ -105,13 +108,13 @@ class TextComp extends React.Component {
           );
         case 'SELECT':
           return (
-            <Select
+            <AntdSelect
               allowClear
               style={{ width: '100%', marginRight: 10 }}
               onChange={value => {
                 this.handleOnChangeSearch(value);
               }}
-              className={CONFIG.property.className || ''}
+              className={CONFIG.property.className || 'select-sm'}
               placeholder={CONFIG.property.searchPlaceholder || CONFIG.property.placeholder}
             >
               {searchSelectData &&
@@ -120,17 +123,17 @@ class TextComp extends React.Component {
                     {item.NAME_KOR}
                   </Option>
                 ))}
-            </Select>
+            </AntdSelect>
           );
         case 'TREESELECT':
           return (
-            <TreeSelect
+            <AntdTreeSelect
               allowClear
               style={{ width: '100%' }}
               dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
               treeData={searchTreeData}
               onChange={value => this.handleOnChangeSearch(value)}
-              className={CONFIG.property.className || ''}
+              className={CONFIG.property.className || 'select-sm'}
               placeholder={CONFIG.property.searchPlaceholder || CONFIG.property.placeholder}
             />
           );

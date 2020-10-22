@@ -323,7 +323,7 @@ export const changeSearchDataByReducer = (id, key, val) => ({
   val,
 });
 
-export const getListDataBySaga = (id, workSeq, conditional, pageIdx, pageCnt, changeIsLoading) => ({
+export const getListDataBySaga = (id, workSeq, conditional, pageIdx, pageCnt, changeIsLoading, useWhereString) => ({
   type: `${actionTypes.GET_LIST_DATA_SAGA}_${id}`,
   id,
   workSeq,
@@ -331,6 +331,7 @@ export const getListDataBySaga = (id, workSeq, conditional, pageIdx, pageCnt, ch
   pageIdx,
   pageCnt,
   changeIsLoading,
+  useWhereString,
 });
 
 export const redirectUrl = (id, url) => ({
