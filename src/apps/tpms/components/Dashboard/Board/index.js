@@ -89,15 +89,6 @@ class Board extends React.Component {
     if (response && !error) {
       const content = JSON.parse(response.brdInfo.view.content);
       const contents = makeContents(formJson, content);
-      console.debug('>>> contents', formJson, contents);
-      // const contents = formJson.map(item => ({
-      //   ...item,
-      //   option: {
-      //     ...item.option,
-      //     value: content[item.option.name],
-      //     readOnly: true,
-      //   },
-      // }));
       this.setState(prevState => ({
         isLoadingContents: true,
         detail: prevState.detail.set('contents', fromJS(contents)),

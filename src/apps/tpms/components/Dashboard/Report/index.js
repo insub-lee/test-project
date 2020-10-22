@@ -94,6 +94,7 @@ class Report extends Component {
     return (
       <StyledReport bgColor={report.bgColor}>
         <div className={`main_banner ${report.bgClass}`}>
+          {/*
           <Link to={linkSelector(report.icon)}>
             <span className="report_icon">
               <img src={icons[report.icon]} alt={title} className="report_img" />
@@ -105,9 +106,18 @@ class Report extends Component {
               <span className="report_num_com">건</span>
             </span>
           </Link>
-          {/*
-          <Links links={list} title={title} />
           */}
+          <Link to={report.to}>
+            <span className="report_icon">
+              <img src={icons[report.icon]} alt={title} className="report_img" />
+            </span>
+            <span className="report_tit">{`${noTitle ? '' : title}`}</span>
+            <span className="report_en">{report.enTitle}</span>
+            <span className="report_num">
+              {number}
+              <span className="report_num_com">건</span>
+            </span>
+          </Link>
         </div>
       </StyledReport>
     );
@@ -125,6 +135,7 @@ Report.propTypes = {
     title: PropTypes.string,
     enTitle: PropTypes.string,
     num: PropTypes.number,
+    to: PropTypes.string,
   }),
   onSetting: PropTypes.bool,
   noTitle: PropTypes.bool,
@@ -141,6 +152,7 @@ Report.defaultProps = {
     title: '',
     enTitle: '',
     num: 0,
+    to: '',
   },
   onSetting: false,
   noTitle: false,

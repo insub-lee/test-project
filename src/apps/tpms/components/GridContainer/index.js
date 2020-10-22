@@ -5,6 +5,7 @@ const SortableGridExWrapper = styled.div`
     min-height: calc(100vh - 93px);
     padding: 18px 20px;
     overflow: hidden;
+    background: rgb(239, 243, 248);
 
     & > div {
       float: left;

@@ -10,7 +10,7 @@ const StyledReport = styled.div`
     color: white;
     border-radius: 5px;
     padding: 20px;
-    background: ${({ bgColor }) => (bgColor.trim() !== '' ? `${bgColor} !important` : '#59b0e3')};
+    background: ${({ bgColor }) => (bgColor?.trim() !== '' ? `${bgColor} !important` : '#59b0e3')};
     &.bg01 {
       background: #59b0e3;
 
