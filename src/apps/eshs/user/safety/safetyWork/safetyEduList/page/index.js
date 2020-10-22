@@ -5,6 +5,7 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import UserSelect from 'components/UserSelect';
@@ -13,6 +14,7 @@ import SearchSafetyEduInfo from '../searchEduInfo';
 import EduListTable from '../../safetyEdu/SafetyEduList';
 import EduMgtView from '../../safetyEdu/EduMgt/viewPage';
 import Styled from './Styled';
+import ExcelDownload from '../Excel';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdTable = StyledLineTable(Table);
@@ -87,17 +89,17 @@ class workerTrByPersonalPage extends Component {
   onSearchCallback = (id, response) => {
     const listData = response.list || [];
     if (listData.length === 0) {
-      this.setState({
-        isSearching: false,
-      },
-        () => message.error(<MessageContent>검색결과가 없습니다.</MessageContent>)
-      )
+      this.setState(
+        {
+          isSearching: false,
+        },
+        () => message.error(<MessageContent>검색결과가 없습니다.</MessageContent>),
+      );
     }
     this.setState({
       isSearching: false,
       SafetyEduConditionList: response.list,
-    }
-    );
+    });
   };
 
   // 모달 핸들러
@@ -317,6 +319,9 @@ class workerTrByPersonalPage extends Component {
             resetSearchValue={this.resetSearchValue}
           />
         </Spin>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          {SafetyEduConditionList && SafetyEduConditionList.length > 0 && <ExcelDownload listData={SafetyEduConditionList} />}
+        </StyledButtonWrapper>
         <ContentsWrapper>
           <div style={{ marginTop: '10px' }}>
             <AntdTable columns={columns} dataSource={SafetyEduConditionList} />

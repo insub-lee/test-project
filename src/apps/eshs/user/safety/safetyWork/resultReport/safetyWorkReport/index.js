@@ -51,25 +51,25 @@ class SafetyWorkReport extends Component {
                 <td colSpan={14}>
                   1) 작업별 현황 및 위반율
                   <br />
-                  &nbsp;&nbsp;&nbsp;- 작업허가 : {`${workByMonth}`} 건
+                  &nbsp;&nbsp;&nbsp;- {`${month}월 `} 작업허가 : {`${workByMonth}`} 건
                   <br />
-                  &nbsp;&nbsp;&nbsp;- 안전위반율 : {`${penaltyByMonth}`} %
+                  &nbsp;&nbsp;&nbsp;- {`${month}월 `} 안전위반율 : {`${penaltyByMonth}`} %
                 </td>
               </tr>
               <tr>
                 <th style={{ width: '100px' }}>작업구분</th>
-                <th style={{ width: '90px' }}>1월</th>
-                <th style={{ width: '90px' }}>2월</th>
-                <th style={{ width: '90px' }}>3월</th>
-                <th style={{ width: '90px' }}>4월</th>
-                <th style={{ width: '90px' }}>5월</th>
-                <th style={{ width: '90px' }}>6월</th>
-                <th style={{ width: '90px' }}>7월</th>
-                <th style={{ width: '90px' }}>8월</th>
-                <th style={{ width: '90px' }}>9월</th>
-                <th style={{ width: '90px' }}>10월</th>
-                <th style={{ width: '90px' }}>11월</th>
-                <th style={{ width: '90px' }}>12월</th>
+                <th>1월</th>
+                <th>2월</th>
+                <th>3월</th>
+                <th>4월</th>
+                <th>5월</th>
+                <th>6월</th>
+                <th>7월</th>
+                <th>8월</th>
+                <th>9월</th>
+                <th>10월</th>
+                <th>11월</th>
+                <th>12월</th>
                 <th style={{ width: '90px' }}>Total</th>
               </tr>
               {workResult.length === 0 ? (
@@ -80,18 +80,18 @@ class SafetyWorkReport extends Component {
                 workResult.map(work => (
                   <tr style={{ textAlign: 'center' }}>
                     <td>{work.NAME_TYPE}</td>
-                    <td>{work.January}</td>
-                    <td>{work.February}</td>
-                    <td>{work.March}</td>
-                    <td>{work.April}</td>
-                    <td>{work.May}</td>
-                    <td>{work.June}</td>
-                    <td>{work.July}</td>
-                    <td>{work.August}</td>
-                    <td>{work.September}</td>
-                    <td>{work.October}</td>
-                    <td>{work.November}</td>
-                    <td>{work.December}</td>
+                    <td>{Number(month) >= 1 ? work.January || 0 : '-'}</td>
+                    <td>{Number(month) >= 2 ? work.February || 0 : '-'}</td>
+                    <td>{Number(month) >= 3 ? work.March || 0 : '-'}</td>
+                    <td>{Number(month) >= 4 ? work.April || 0 : '-'}</td>
+                    <td>{Number(month) >= 5 ? work.May || 0 : '-'}</td>
+                    <td>{Number(month) >= 6 ? work.June || 0 : '-'}</td>
+                    <td>{Number(month) >= 7 ? work.July || 0 : '-'}</td>
+                    <td>{Number(month) >= 8 ? work.August || 0 : '-'}</td>
+                    <td>{Number(month) >= 9 ? work.September || 0 : '-'}</td>
+                    <td>{Number(month) >= 10 ? work.October || 0 : '-'}</td>
+                    <td>{Number(month) >= 11 ? work.November || 0 : '-'}</td>
+                    <td>{Number(month) === 12 ? work.December || 0 : '-'}</td>
                     <td>{work.WORK_TOTAL}</td>
                   </tr>
                 ))
@@ -101,18 +101,18 @@ class SafetyWorkReport extends Component {
               </tr>
               <tr style={{ textAlign: 'center' }}>
                 <th style={{ width: '100px' }}>구분</th>
-                <th style={{ width: '90px' }}>1월</th>
-                <th style={{ width: '90px' }}>2월</th>
-                <th style={{ width: '90px' }}>3월</th>
-                <th style={{ width: '90px' }}>4월</th>
-                <th style={{ width: '90px' }}>5월</th>
-                <th style={{ width: '90px' }}>6월</th>
-                <th style={{ width: '90px' }}>7월</th>
-                <th style={{ width: '90px' }}>8월</th>
-                <th style={{ width: '90px' }}>9월</th>
-                <th style={{ width: '90px' }}>10월</th>
-                <th style={{ width: '90px' }}>11월</th>
-                <th style={{ width: '90px' }}>12월</th>
+                <th>1월</th>
+                <th>2월</th>
+                <th>3월</th>
+                <th>4월</th>
+                <th>5월</th>
+                <th>6월</th>
+                <th>7월</th>
+                <th>8월</th>
+                <th>9월</th>
+                <th>10월</th>
+                <th>11월</th>
+                <th>12월</th>
                 <th style={{ width: '90px' }}>Total</th>
               </tr>
               {Object.keys(workerResult).length === 0 ? (
@@ -124,18 +124,18 @@ class SafetyWorkReport extends Component {
               ) : (
                 <tr style={{ textAlign: 'center' }}>
                   <td>작업인원</td>
-                  <td>{workerResult.January}</td>
-                  <td>{workerResult.February}</td>
-                  <td>{workerResult.March}</td>
-                  <td>{workerResult.April}</td>
-                  <td>{workerResult.May}</td>
-                  <td>{workerResult.June}</td>
-                  <td>{workerResult.July}</td>
-                  <td>{workerResult.August}</td>
-                  <td>{workerResult.September}</td>
-                  <td>{workerResult.October}</td>
-                  <td>{workerResult.November}</td>
-                  <td>{workerResult.December}</td>
+                  <td>{Number(month) >= 1 ? workerResult.January || 0 : '-'}</td>
+                  <td>{Number(month) >= 2 ? workerResult.February || 0 : '-'}</td>
+                  <td>{Number(month) >= 3 ? workerResult.March || 0 : '-'}</td>
+                  <td>{Number(month) >= 4 ? workerResult.April || 0 : '-'}</td>
+                  <td>{Number(month) >= 5 ? workerResult.May || 0 : '-'}</td>
+                  <td>{Number(month) >= 6 ? workerResult.June || 0 : '-'}</td>
+                  <td>{Number(month) >= 7 ? workerResult.July || 0 : '-'}</td>
+                  <td>{Number(month) >= 8 ? workerResult.August || 0 : '-'}</td>
+                  <td>{Number(month) >= 9 ? workerResult.September || 0 : '-'}</td>
+                  <td>{Number(month) >= 10 ? workerResult.October || 0 : '-'}</td>
+                  <td>{Number(month) >= 11 ? workerResult.November || 0 : '-'}</td>
+                  <td>{Number(month) >= 12 ? workerResult.December || 0 : '-'}</td>
                   <td>{workerResult.WORKER_TOTAL}</td>
                 </tr>
               )}

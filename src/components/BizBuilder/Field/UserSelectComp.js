@@ -39,19 +39,26 @@ class UserSelectComp extends React.Component {
   };
 
   // custom search 예제
-  handleOnChangeSearch = value => {
-    const { sagaKey, COMP_FIELD, changeSearchData } = this.props;
-    const searchText =
-      value.length > 0
-        ? `AND W.${COMP_FIELD} LIKE '%${value}%' AND W.${COMP_FIELD}1 LIKE '%${value}%' AND W.${COMP_FIELD}2 LIKE '%${value}%' AND W.${COMP_FIELD}3 LIKE '%${value}%'`
-        : '';
-    changeSearchData(sagaKey, COMP_FIELD, searchText);
-  };
+  /*
+    handleOnChangeSearch = value => {
+      const { sagaKey, COMP_FIELD, changeSearchData } = this.props;
+      const searchText =
+        value.length > 0
+          ? `AND W.${COMP_FIELD} LIKE '%${value}%' AND W.${COMP_FIELD}1 LIKE '%${value}%' AND W.${COMP_FIELD}2 LIKE '%${value}%' AND W.${COMP_FIELD}3 LIKE '%${value}%'`
+          : '';
+      changeSearchData(sagaKey, COMP_FIELD, searchText);
+    };
+  */
 
   // custom search 예제
   handleOnChangeSearch = value => {
-    const { sagaKey, COMP_FIELD, changeSearchData } = this.props;
-    const searchText = value.length > 0 ? `AND W.${COMP_FIELD} LIKE '%${value}%'` : '';
+    const { sagaKey, COMP_FIELD, changeSearchData, workInfo } = this.props;
+    const { WORK_SEQ, WORK_ID } = workInfo;
+    let searchText = value.length > 0 ? `AND W.${COMP_FIELD} LIKE '%${value}%'` : '';
+    // 안전작업허가, 안전작업자료(페이지 내 커스텀 검색)
+    if (WORK_SEQ === 8361 || WORK_ID === 'SWTB_SAFETY_WORK_FILE') {
+      searchText = value.length > 0 ? `AND W.${COMP_FIELD} in (select EMP_NO from fr_user where NAME_KOR like '%${value}%')` : '';
+    }
     changeSearchData(sagaKey, COMP_FIELD, searchText);
   };
 
@@ -61,7 +68,7 @@ class UserSelectComp extends React.Component {
       if (CONFIG.property.searchType !== 'CUSTOM') {
         return searchCompRenderer(this.props);
       }
-      return <Input onChange={e => this.handleOnChangeSearch(e.target.value)} className={CONFIG.property.className || ''} />;
+      return <Input onChange={e => this.handleOnChangeSearch(e.target.value)} className={CONFIG.property.className || ''} defaultValue="" />;
     }
 
     return visible ? (
@@ -92,11 +99,13 @@ class UserSelectComp extends React.Component {
 }
 
 UserSelectComp.propTypes = {
+  workInfo: PropTypes.object,
   sagaKey: PropTypes.string,
   COMP_FIELD: PropTypes.any,
   CONFIG: PropTypes.any,
   changeFormData: PropTypes.any,
   colData: PropTypes.any,
+  changeSearchData: PropTypes.func,
 };
 
 export default UserSelectComp;
