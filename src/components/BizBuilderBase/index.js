@@ -436,8 +436,8 @@ const mapDispatchToProps = dispatch => ({
   setViewPageData: (id, workSeq, taskSeq, viewType) => dispatch(actions.setViewPageDataByReducer(id, workSeq, taskSeq, viewType)),
   setViewType: (id, viewType) => dispatch(actions.setViewTypeByReducer(id, viewType)),
   changeSearchData: (id, key, val) => dispatch(actions.changeSearchDataByReducer(id, key, val)),
-  getListData: (id, workSeq, conditional, pageIdx, pageCnt, changeIsLoading) =>
-    dispatch(actions.getListDataBySaga(id, workSeq, conditional, pageIdx, pageCnt, changeIsLoading)),
+  getListData: (id, workSeq, conditional, pageIdx, pageCnt, changeIsLoading, useWhereString) =>
+    dispatch(actions.getListDataBySaga(id, workSeq, conditional, pageIdx, pageCnt, changeIsLoading, useWhereString)),
   redirectUrl: (id, url) => dispatch(actions.redirectUrl(id, url)),
   destroyReducer: id => dispatch(actions.destroyReducerByReducer(id)),
   setListSelectRowKeys: (id, list) => dispatch(actions.setListSelectRowKeysByReducer(id, list)),

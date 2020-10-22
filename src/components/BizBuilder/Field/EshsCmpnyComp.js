@@ -204,7 +204,7 @@ class EshsCmpnyComp extends React.Component {
 
   render() {
     const { CONFIG, visible, readOnly, searchWidth, directSearchTable } = this.props;
-    const { cmpnyModal, cmpny_nm, list, searchList, listType, cursor, cmpnyInfo, searchText, searchType } = this.state;
+    const { cmpnyModal, cmpny_cd, cmpny_nm, list, searchList, listType, cursor, cmpnyInfo, searchText, searchType } = this.state;
     const gubun = (this.props && this.props.CONFIG && this.props.CONFIG.property && this.props.CONFIG.property.GUBUN) || 'SQ';
     let cmpnyList = [];
     if (listType === 'search') {
@@ -279,7 +279,7 @@ class EshsCmpnyComp extends React.Component {
               onClick={this.handleModalVisible}
             />
             {/* <Button shape="circle" icon="search" onClick={this.handleModalVisible} /> */}
-            &nbsp; <span>{cmpny_nm}</span>
+            &nbsp; <span>{cmpny_cd && cmpny_cd !== '' ? cmpny_nm : ''}</span>
             <AntdModal
               title="Vandor 검색"
               visible={cmpnyModal}

@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import { TreeSelect } from 'antd';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+
+const AntdTreeSelect = StyledSelect(TreeSelect);
 
 const getCategoryMapListAsTree = (flatData, flag, viewLang, rootkey) =>
   getTreeFromFlatData({
@@ -99,19 +102,24 @@ class TreeSelectComp extends Component {
             {readOnly || CONFIG.property.readOnly ? (
               <span>{categoryData && categoryData.NAME_KOR}</span>
             ) : (
-              <TreeSelect
+              <AntdTreeSelect
                 style={{ width: '100%' }}
                 value={colData === 0 || (typeof colData === 'string' && colData.trim() === '') ? undefined : colData}
                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                 treeData={categoryData}
                 onChange={value => this.onChangeHandler(value)}
                 placeholder={placeholder}
-                className={CONFIG.property.className || ''}
+                className={CONFIG.property.className || 'select-xs'}
               />
             )}
           </>
         ) : (
-          <TreeSelect style={{ width: '100%' }} value={undefined} placeholder="TreeSelect" className={CONFIG.property.className || ''}></TreeSelect>
+          <AntdTreeSelect
+            style={{ width: '100%' }}
+            value={undefined}
+            placeholder="TreeSelect"
+            className={CONFIG.property.className || 'select-xs'}
+          ></AntdTreeSelect>
         )}
       </>
     ) : (
