@@ -109,9 +109,7 @@ class InputPage extends Component {
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
     const { submitExtraHandler, formData, metaList, workInfo, processRule, changeIsLoading } = this.props;
-    console.debug('mataList', metaList);
     changeIsLoading(true);
-
     const { uploadFileList } = this.state;
     const { OPT_INFO } = workInfo;
     // workflow 결재 체크 하기
