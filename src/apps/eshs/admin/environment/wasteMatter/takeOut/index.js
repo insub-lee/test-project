@@ -24,6 +24,9 @@ class TakeOut extends Component {
         ModifyCustomButtons={this.emptyButtons}
         ViewCustomButtons={this.emptyButtons}
         ListCustomButtons={this.emptyButtons}
+        relKey="반출증관리"
+        relKey2="TAKEOUT_CD"
+        prcId={116}
       />
     );
   }
