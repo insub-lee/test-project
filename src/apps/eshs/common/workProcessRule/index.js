@@ -5,6 +5,16 @@ import MessageContent from 'components/Feedback/message.style2';
 
 export const ESH_REL_TYPE = 100;
 
+const getStatusName = status => {
+  switch (status) {
+    case 2:
+      return '승';
+    case 9:
+      return '부';
+    default:
+      return '';
+  }
+};
 export const getProcessRule = async (PRC_ID, callBack) => {
   const result = await request({
     method: 'POST',
@@ -23,6 +33,32 @@ export const getDraftProcessRule = async (DRAFT_ID, callBack) => {
     json: true,
   });
   return typeof callBack === 'function' ? callBack(result?.response?.draftPrcRule || {}) : result?.response?.draftPrcRule || {};
+};
+
+export const getAppLineText = async (DRAFT_ID, callBack) => {
+  if (!DRAFT_ID) {
+    return typeof callBack === 'function' ? callBack('') : '';
+  }
+  const result = await request({
+    method: 'POST',
+    url: '/api/workflow/v1/common/workprocess/draftPrcRuleHanlder',
+    data: { PARAM: { DRAFT_ID } },
+    json: true,
+  });
+
+  const users = result?.response?.draftPrcRule?.processStepUsers || [];
+  let appLineText = '';
+  if (0 in users) {
+    users.forEach((user, index) => {
+      if (index) {
+        appLineText += `, ${user?.RULE_CONFIG?.Label || ''}:${user?.USER_INFO?.NAME_KOR || ''}(${getStatusName(user?.APPV_STATUS)})`;
+      } else {
+        appLineText += `${user?.RULE_CONFIG?.Label || ''}:${user?.USER_INFO?.NAME_KOR || ''}(${getStatusName(user?.APPV_STATUS)})`;
+      }
+    });
+  }
+
+  return typeof callBack === 'function' ? callBack(appLineText) : appLineText;
 };
 
 export const saveProcessRule = async (processRule, callBack = () => {}, messageFlag = true) => {

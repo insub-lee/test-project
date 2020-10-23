@@ -32,8 +32,9 @@ const getView = (record, spinningOn, spinningOff, handleModal) => {
           return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" />];
         return [];
       case 4981:
+      case 4781:
         return [
-          // 폐기물 처리 요청서
+          // 폐기물 처리 요청서, 반출증관리
           <BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" viewCustomButtons={() => []} />,
         ];
       default:

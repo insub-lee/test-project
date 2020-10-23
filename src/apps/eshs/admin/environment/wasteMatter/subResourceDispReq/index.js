@@ -62,8 +62,8 @@ class SubResourceDispReq extends Component {
       return [];
     }
 
-    // 문서상태가 저장(0) and 문서작성자와 로그인한사람이 같을 경우
-    const flag1 = (formData?.APP_STATUS === '0' && formData?.REG_USER_ID === profile?.USER_ID) || false;
+    // 문서상태가 (저장(0) OR 부결(4F)) and 문서작성자와 로그인한사람이 같을 경우
+    const flag1 = ((formData?.APP_STATUS === '0' || formData?.APP_STATUS === '2F') && formData?.REG_USER_ID === profile?.USER_ID) || false;
     // 문서상태 결재중
     const flag2 = formData?.APP_STATUS !== '0';
     // 문서상태 결재완료(4A)

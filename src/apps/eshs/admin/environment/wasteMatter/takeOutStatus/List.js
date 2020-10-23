@@ -36,6 +36,7 @@ class List extends Component {
       takeOutList: [],
       taskSeq: -1,
       modal: false,
+      appStatus: undefined,
     };
   }
 
@@ -46,9 +47,10 @@ class List extends Component {
   }
 
   searchData = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    const { dateStrings, itemCd, site } = this.state;
-    const params = `FROM_DATE=${dateStrings[0] || ''}&TO_DATE=${dateStrings[1] || ''}&ITEM_CD=${itemCd || ''}&SITE=${site}`;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
+    const { dateStrings, itemCd, site, appStatus } = this.state;
+    let params = `FROM_DATE=${dateStrings[0] || ''}&TO_DATE=${dateStrings[1] || ''}&ITEM_CD=${itemCd || ''}&SITE=${site}`;
+    if (appStatus) params += `&APP_STATUS=${appStatus}`;
     const apiAry = [
       {
         key: 'TakeOutList',
@@ -56,12 +58,13 @@ class List extends Component {
         type: 'GET',
       },
     ];
+    spinningOn();
     getCallDataHandler(id, apiAry, this.searchDataSet);
   };
 
   searchDataSet = () => {
-    const { result } = this.props;
-    this.setState({ takeOutList: result && result.TakeOutList && result.TakeOutList.list });
+    const { result, spinningOff } = this.props;
+    this.setState({ takeOutList: result && result.TakeOutList && result.TakeOutList.list }, spinningOff);
   };
 
   selectedRecord = record => {
@@ -132,12 +135,24 @@ class List extends Component {
                 format={['YYYY-MM-DD', 'YYYY-MM-DD']}
                 onChange={(date, dateStrings) => this.dateChange(dateStrings)}
               />
-              <AntdSelect className="select-sm mr5" value={0}>
-                <Option value={0}>결제 해결후 사용</Option>
+              <AntdSelect
+                className="select-sm mr5"
+                style={{ width: 130 }}
+                placeholder="결재 상태 전체"
+                allowClear
+                onChange={val => this.setState({ appStatus: val })}
+              >
+                <Option value="0">저장</Option>
+                <Option value="1">신청상신</Option>
+                <Option value="2A">신청승인</Option>
+                <Option value="2F">신청부결</Option>
+                <Option value="3">허가상신</Option>
+                <Option value="4A">허가승인</Option>
+                <Option value="4F">허가부결</Option>
               </AntdSelect>
-              <AntdSelect className="select-sm" value={0}>
-                <Option value={0}>결제 해결후 사용</Option>
-              </AntdSelect>
+              {/* <AntdSelect className="select-sm" value={0}>
+                <Option value={0}>결재 해결후 사용</Option>
+              </AntdSelect> */}
             </div>
             <div className="btn-area">
               <StyledButton className="btn-gray btn-sm" onClick={this.searchData}>
@@ -162,10 +177,10 @@ class List extends Component {
             footer={() => <span>{`${takeOutList && takeOutList.length} 건`}</span>}
           />
         </StyledContentsWrapper>
-        <AntdModal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={null}>
+        <AntdModal title="반출증 관리 조회" visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={null}>
           {this.state.modal && this.renderBuilder()}
         </AntdModal>
-        <AntdModal visible={this.state.itemModal} width={800} height={600} onCancel={this.handleItemModalVisible} footer={null}>
+        <AntdModal title="품목 검색" visible={this.state.itemModal} width={800} height={600} onCancel={this.handleItemModalVisible} footer={null}>
           {this.state.itemModal && (
             <AntdTable
               rowKey={nSiteItem && nSiteItem.ITEM_CD}
@@ -191,17 +206,43 @@ List.propTypes = {
   result: PropTypes.any,
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
+  spinningOn: PropTypes.func,
+  spinningOff: PropTypes.func,
 };
 
 List.defaultProps = {
   getCallDataHandler: () => {},
   columns: [
-    { dataIndex: 'TAKEOUT_CD', title: '반출증번호' },
-    { dataIndex: 'ITEM_NM', title: '품목명' },
-    { dataIndex: 'PRICE_WEIGH', title: '반출량' },
-    { dataIndex: 'STATUS', title: '결제상태' },
-    { dataIndex: 'TAKEOUT_DT', title: '반출일자' },
-    { dataIndex: 'WRK_CMPNY_NM', title: '운반업체' },
+    { dataIndex: 'TAKEOUT_CD', title: '반출증번호', align: 'center' },
+    { dataIndex: 'ITEM_NM', title: '품목명', align: 'center' },
+    { dataIndex: 'PRICE_WEIGH', title: '반출량', align: 'center' },
+    {
+      dataIndex: 'APP_STATUS',
+      title: '결제상태',
+      align: 'center',
+      render: (text, record) => {
+        switch (text) {
+          case '0':
+            return '저장';
+          case '1':
+            return '신청상신';
+          case '2A':
+            return '신청승인';
+          case '2F':
+            return '신청부결';
+          case '3':
+            return '허가상신';
+          case '4A':
+            return '허가승인';
+          case '4F':
+            return '허가부결';
+          default:
+            return '';
+        }
+      },
+    },
+    { dataIndex: 'TAKEOUT_DT', title: '반출일자', align: 'center' },
+    { dataIndex: 'WRK_CMPNY_NM', title: '운반업체', align: 'center' },
   ],
   itemColumns: [
     {
