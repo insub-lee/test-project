@@ -8,8 +8,8 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess'; // 결재선 지정
-import { saveProcessRule } from 'apps/eshs/common/workProcessRule'; // 결재선 저장함수
+import { saveProcessRule, getAppLineText } from 'apps/eshs/common/workProcessRule'; // 결재선 저장함수
+import AppLine from 'apps/eshs/common/Workflow/AppLineBtn';
 import Styled from './Styled';
 // 메뉴 콘텐츠
 import MenuTable from '../infoTable/mainMenuTable'; // 배출시설 가동시간
@@ -58,11 +58,11 @@ class QualityPage extends Component {
         WEATHER: undefined, // 날씨
         APPROVAL_STATE: undefined, // 결재상태
         EMP_NO: undefined, // 담당자
-        DRAFT_ID: -1,
+        DRAFT_ID: undefined,
+        APP_LINE_TEXT: '',
       },
       formData: undefined,
       processRule: {}, // 결재 프로세스 룰
-      tempProcessRule: {},
     };
   }
 
@@ -72,6 +72,7 @@ class QualityPage extends Component {
     const { searchDate } = this.state;
     this.setState({
       isSearch: true,
+      processRule: {},
     });
     const apiInfo = {
       key: 'getDiaryInfo',
@@ -91,19 +92,26 @@ class QualityPage extends Component {
         isSearch: false,
         mainFormData: {
           ...mainFormData,
-          TEMPERATURE: (MAIN_INFO && MAIN_INFO.TEMPERATURE) || undefined, // 온도
-          WEATHER: (MAIN_INFO && MAIN_INFO.WEATHER) || undefined, // 날씨
-          APPROVAL_STATE: (MAIN_INFO && MAIN_INFO.APPROVAL_STATE) || undefined, // 결재상태
-          EMP_NO: (MAIN_INFO && MAIN_INFO.EMP_NO) || undefined, // 담당자
-          EMP_NM: (MAIN_INFO && MAIN_INFO.EMP_NM) || undefined, // 담당자명
-          DRAFT_ID: (MAIN_INFO && MAIN_INFO.DRAFT_ID) || -1, // 담당자명
+          TEMPERATURE: MAIN_INFO?.TEMPERATURE, // 온도
+          WEATHER: MAIN_INFO?.WEATHER, // 날씨
+          APPROVAL_STATE: MAIN_INFO?.APPROVAL_STATE, // 결재상태
+          EMP_NO: MAIN_INFO?.EMP_NO, // 담당자
+          EMP_NM: MAIN_INFO?.EMP_NM, // 담당자명
+          DRAFT_ID: MAIN_INFO?.DRAFT_ID, // 담당자명
           OP_DT: searchDate,
         },
         hasData: {
           ...DIARY_INFO,
         },
       },
-      () => this.onClickMenu(selectedMenu),
+      () => {
+        this.onClickMenu(selectedMenu);
+        getAppLineText(MAIN_INFO?.DRAFT_ID, appLineText =>
+          this.setState(prevState => ({
+            mainFormData: { ...prevState.mainFormData, APP_LINE_TEXT: appLineText },
+          })),
+        );
+      },
     );
   };
 
@@ -646,10 +654,6 @@ class QualityPage extends Component {
         title = 'Daily Report - 특이사항/비고 관리 ';
         mdData = data || {};
         break;
-      case 'WORK_PROCESS':
-        title = '결재선 지정';
-        mdData = data || {};
-        break;
       default:
         break;
     }
@@ -663,22 +667,21 @@ class QualityPage extends Component {
 
   saveProcessRule = () => {
     const { relKey, relKey2 } = this.props;
-    const { processRule, formData } = this.state;
-    saveProcessRule({
-      ...processRule,
-      DRAFT_DATA: {},
-      REL_KEY: relKey,
-      REL_KEY2: formData[relKey2],
-      DRAFT_TITLE: formData.TITLE,
-    }).then(draftId => {
-      if (draftId) {
-        return this.setState({
-          formData: { ...formData, DRAFT_ID: draftId },
-          tempProcessRule: {},
+    const { mainFormData, processRule } = this.state;
+    saveProcessRule(
+      {
+        ...processRule,
+        REL_KEY: relKey,
+        REL_KEY2: `${mainFormData[relKey2]}`,
+        DRAFT_DATA: {},
+        DRAFT_TITLE: `${mainFormData[relKey2]}`,
+      },
+      DRAFT_ID => {
+        this.setState({
+          mainFormData: { ...mainFormData, APPROVAL_STATE: '0A', DRAFT_ID },
         });
-      }
-      return false;
-    });
+      },
+    );
   };
 
   render() {
@@ -730,19 +733,22 @@ class QualityPage extends Component {
         {mainFormData.OP_DT && (
           <>
             <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-              <StyledButton className="btn-primary btn-sm ml5" onClick={() => this.submitFormData('SAVE_MST_INFO')}>
+              <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.submitFormData('SAVE_MST_INFO')}>
                 {hasData.MST > 0 ? '수정' : '저장'}
               </StyledButton>
               {hasData.MST > 0 && (
                 <>
                   {mainFormData.APPROVAL_STATE === '0' && (
-                    <StyledButton className="btn-primary btn-sm ml5" onClick={this.saveProcessRule}>
+                    <StyledButton className="btn-primary btn-sm mr5" onClick={this.saveProcessRule}>
                       상신
                     </StyledButton>
                   )}
-                  <StyledButton className="btn-gray btn-sm ml5" onClick={() => this.modalHandler('WORK_PROCESS', true)}>
-                    결재선 지정
-                  </StyledButton>
+                  <AppLine
+                    prcId={PRC_ID}
+                    processRule={processRule}
+                    setProcessRule={prcRule => this.setState({ processRule: prcRule })}
+                    draftId={mainFormData?.DRAFT_ID}
+                  />
                 </>
               )}
             </StyledButtonWrapper>
@@ -816,35 +822,6 @@ class QualityPage extends Component {
           )}
           {modalType === 'BIGO' && (
             <BigoInfoModal opDt={mainFormData.OP_DT} formData={modalData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeModalFormData} />
-          )}
-          {modalType === 'WORK_PROCESS' && (
-            <>
-              <CustomWorkProcess
-                processRule={processRule}
-                PRC_ID={PRC_ID}
-                draftId={mainFormData.DRAFT_ID || -1}
-                viewType={mainFormData.DRAFT_ID ? 'VIEW' : 'INPUT'}
-                setProcessRule={(_, prcRule) => this.setState({ tempProcessRule: prcRule })}
-              />
-              <StyledButtonWrapper className="btn-wrap-center btn-wrap-mb-10">
-                <StyledButton
-                  className="btn-primary btn-xxs btn-first"
-                  onClick={() =>
-                    this.setState(
-                      prevState => ({
-                        processRule: prevState.tempProcessRule,
-                      }),
-                      () => this.modalHandler('', false),
-                    )
-                  }
-                >
-                  저장
-                </StyledButton>
-                <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.modalHandler('', false)}>
-                  닫기
-                </StyledButton>
-              </StyledButtonWrapper>
-            </>
           )}
         </AntdModal>
       </Styled>
