@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import iconDate from 'apps/tpms/images/icon_date.png';
 import iconRadio from 'apps/tpms/images/icon_radio.png';
+import iconSelect from 'apps/tpms/images/icon_select.png';
 
 const StyledForm = styled.form`
   .sub_form {
@@ -11,6 +12,9 @@ const StyledForm = styled.form`
     .radio {
       display: inline-block;
       line-height: 48px;
+      & > div {
+        padding: 0 12px 0 0;
+      }
     }
 
     .radio input[type='radio'] {
@@ -43,28 +47,43 @@ const StyledForm = styled.form`
       background: url(${iconRadio}) no-repeat center;
     }
 
+    .fl {
+      float: left !important;
+    }
+
+    .fr {
+      float: right !important;
+    }
+
     & > li {
-      display: inline-block;
       position: relative;
-      min-height: 48px;
+      min-height: 49px;
       padding-left: 250px;
-      margin-bottom: 3px;
+      margin-bottom: 10px;
       font-size: 15px;
       clear: both;
-      margin-top: 10px;
 
-      &.clear-both:after {
-        clear: both;
+      &.flCustom {
+        float: left;
       }
 
-      .w100 {
-        width: 100%;
+      &.frCustom {
+        float: right;
       }
 
-      .radio {
-        div {
-          padding: 0px 12px 0px 0px;
-        }
+      &.width50 {
+        width: calc(50% - 20px);
+        clear: none;
+      }
+
+      &.width33 {
+        width: calc(32% - 20px);
+        clear: none;
+        margin-right: 58px;
+      }
+
+      &.marginNone {
+        margin-right: 0;
       }
     }
 
@@ -109,10 +128,10 @@ const StyledForm = styled.form`
     }
 
     .icon_date {
-      width: 20px;
+      width: 40px;
       height: 46px;
-      background: url(${iconDate}) no-repeat center;
-      border-bottom: 1px solid #d9e0e7;
+      background: #e7e7e7 url(${iconDate}) no-repeat right 10px center;
+      border-bottom: 0px solid #d9e0e7;
       vertical-align: bottom;
       margin-top: 0;
     }
@@ -139,29 +158,15 @@ const StyledForm = styled.form`
   }
 
   .btn_wrap {
-    margin-top: 30px;
+    padding-top: 30px;
     font-size: 0;
     text-align: center;
     overflow: hidden;
+    clear: both;
   }
 
   .w25 {
     width: 25% !important;
-  }
-
-  .marginNone {
-    margin-right: 0px !important;
-  }
-
-  .w30 {
-    width: calc(30% - 20px) !important;
-    clear: none !important;
-    margin-right: 58px !important;
-  }
-
-  .w50 {
-    width: calc(50% - 20px) !important;
-    clear: none !important;
   }
 
   .w40 {
@@ -170,6 +175,67 @@ const StyledForm = styled.form`
 
   .w70 {
     width: 70% !important;
+  }
+
+  .ant-select-selection--single,
+  .ant-select-selection {
+    vertical-align: middle;
+    font-size: 15px;
+    border-color: #d9d9d9;
+    vertical-align: middle;
+    font-size: 15px;
+    border: 0px;
+    box-shadow: none;
+    background: rgb(231, 231, 231);
+    height: 48px;
+    border-radius: 0px;
+
+    &:hover,
+    &:focus,
+    &:active {
+      border-color: #d9d9d9;
+    }
+    box-shadow: none;
+    .ant-select-selection__rendered {
+      line-height: 48px;
+    }
+  }
+
+  .ant-select-focused,
+  .ant-select-open {
+    .ant-select-selection--single,
+    .ant-select-selection {
+      vertical-align: middle;
+      font-size: 15px;
+      border-color: #d9d9d9;
+      vertical-align: middle;
+      font-size: 15px;
+      border: 0px;
+      box-shadow: none;
+      background: rgb(231, 231, 231);
+      height: 48px;
+      border-radius: 0px;
+
+      &:hover,
+      &:focus,
+      &:active {
+        border-color: #d9d9d9;
+      }
+      box-shadow: none;
+
+      .ant-select-selection__rendered {
+        line-height: 48px;
+      }
+    }
+  }
+
+  @media screen and (max-width: 1710px) {
+    .sub_form.small2 > li {
+      &.width33 {
+        width: 100%;
+        float: none;
+      }
+    }
   }
 
   @media screen and (max-width: 1260px) {
@@ -199,7 +265,15 @@ const StyledForm = styled.form`
     .sub_form > li > .title {
       position: relative;
       display: block;
-      line-height: 80px;
+    }
+    .sub_form > li > div.title {
+      margin-bottom: 15px;
+    }
+    .sub_form.small2 > li {
+      &.width50 {
+        width: 100%;
+        float: none;
+      }
     }
   }
 

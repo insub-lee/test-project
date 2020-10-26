@@ -32,7 +32,7 @@ export const ReportDetail = ({ requestQuery }) => {
     data,
     isExpanded,
     pagination,
-    action: { setIsExpanded },
+    action: { setIsExpanded, pageHandler, pageSizeHandler },
   } = useHooks({ requestQuery });
 
   const components = {
@@ -90,16 +90,10 @@ export const ReportDetail = ({ requestQuery }) => {
       title: 'Project 명',
       dataIndex: 'project_title',
       width: '15%',
-      render: (value, row) => (
+      render: (item, row) => (
         <div style={{ textAlign: 'left' }}>
-          <button
-            type="button"
-            style={{ color: 'blue' }}
-            onClick={() => {
-              projectInfoModalOpen(row.project_id);
-            }}
-          >
-            {value}
+          <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(row.project_id)}>
+            {item}
           </button>
         </div>
       ),
@@ -115,13 +109,7 @@ export const ReportDetail = ({ requestQuery }) => {
       dataIndex: 'project_id',
       width: '10%',
       render: (prjId, row) => (
-        <button
-          type="button"
-          style={{ color: 'blue' }}
-          onClick={() => {
-            projectInfoModalOpen(prjId);
-          }}
-        >
+        <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(prjId)}>
           {row.project_id}
         </button>
       ),
@@ -144,13 +132,21 @@ export const ReportDetail = ({ requestQuery }) => {
       title: '단계별진척현황',
       dataIndex: 'progressstep',
       width: '10%',
-      render: (value, row, index) => <StepSelector level={value} row={row} index={index} />,
+      render: (value, row, index) => (
+        <StepSelector
+          level={value === undefined && row.progresslistyn === 'Y' ? 0 : value}
+          row={row}
+          index={index}
+          isDrop={row.status.status === 'dropyn'}
+          isFinish={row.status.status === 'finishyn'}
+        />
+      ),
     },
     {
-      title: '현황',
+      title: '비고',
       dataIndex: 'delayyn',
       width: '10%',
-      render: item => <div style={{ textAlign: 'center' }}>{item === 'Y' ? '지연' : '정상'}</div>,
+      render: item => <div style={{ textAlign: 'center' }}>{item === 'Y' ? '지연' : ''}</div>,
     },
   ];
   return (
@@ -254,16 +250,7 @@ export const ReportDetail = ({ requestQuery }) => {
               rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
               components={components}
             />
-            <Pagination
-              {...pagination.toJS()}
-              groupSize={10}
-              pageHandler={() => {
-                // this.pageHandler;
-              }}
-              pageSizeHandler={() => {
-                // this.pageSizeHandler;
-              }}
-            />
+            <Pagination {...pagination.toJS()} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
           </StyledTableWrapper>
           <ProjectInfoModal ref={projectInfoModalRef} />
         </div>

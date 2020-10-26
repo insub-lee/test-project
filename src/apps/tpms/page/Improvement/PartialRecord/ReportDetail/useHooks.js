@@ -13,8 +13,10 @@ export const useHooks = ({ requestQuery }) => {
   const [data, setData] = useState(fromJS([]));
 
   useEffect(() => {
-    fetchTableData();
-  }, []);
+    if (Object.keys(requestQuery).length > 0) {
+      fetchTableData();
+    }
+  }, [requestQuery, pagination]);
 
   const statusSelectorWithComponent = item => {
     const result = {
@@ -53,7 +55,7 @@ export const useHooks = ({ requestQuery }) => {
     return result;
   };
 
-  const fetchTableData = async (isInit, brdId) => {
+  const fetchTableData = async () => {
     const { startDate, endDate, projectType, prjLvValues, part, team, status, fab, area, keyno, model } = requestQuery;
 
     const curtDate = moment().format('YYYYMMDD');
@@ -66,7 +68,7 @@ export const useHooks = ({ requestQuery }) => {
 
     const requestQuery2 = {
       type: 'departlist',
-      currentPage: isInit ? 1 : pagination.get('current'),
+      currentPage: pagination.get('current'),
       pageSize: pagination.get('pageSize'),
       mnuId: 'list',
       sysid: 'TPMS',
@@ -100,12 +102,21 @@ export const useHooks = ({ requestQuery }) => {
         loaded: false,
       }));
       setData(fromJS(nextList));
-      setPagination(pagination.set('total', response.pagination.total));
+      setPagination(pagination.set('total', response.pagination.total).set('current', pagination.get('current')));
     } else {
       console.debug(error);
       alertMessage.alert('Server Error');
     }
   };
 
-  return { isExpanded, pagination, data, action: { setIsExpanded } };
+  const pageHandler = page => {
+    setPagination(pagination.set('current', page));
+  };
+
+  const pageSizeHandler = e => {
+    const pageSize = parseInt(e.target.value, 10);
+    setPagination(pagination.set('pageSize', pageSize).set('current', 1));
+  };
+
+  return { isExpanded, pagination, data, action: { setIsExpanded, pageHandler, pageSizeHandler } };
 };

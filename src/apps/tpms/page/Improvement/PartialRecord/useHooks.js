@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import moment from 'moment';
 import request from 'utils/request';
 
@@ -6,6 +6,8 @@ import alertMessage from '../../../components/Notification/Alert';
 import jsonToQueryString from '../../../utils/jsonToQueryString';
 
 export const useHooks = () => {
+  const expandableContainerRef = useRef();
+
   const [isLoading, setIsLoading] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const [selectorFab, setSelectorFab] = useState([]);
@@ -39,12 +41,7 @@ export const useHooks = () => {
   useEffect(() => {
     fetchSelectorKeyno();
     fetchselectorModel();
-  }, [fab]);
-
-  useEffect(() => {
-    fetchSelectorKeyno();
-    fetchselectorModel();
-  }, [area]);
+  }, [fab, area]);
 
   const [headQuarts, setHeadQuarts] = useState([{ value: '', text: '' }]);
   const [part, setPart] = useState([{ value: 0, text: '' }]);
@@ -352,12 +349,11 @@ export const useHooks = () => {
     }
 
     // todo fix
-    // this.expandableContainerRef.current.toggleCollapsed();
-    // this.expandableContainerRef.current.disableExpanded();
+    expandableContainerRef.current.toggleCollapsed();
+    expandableContainerRef.current.disableExpanded();
     // this.props.disableExpandedView();
     setShowDetail(true);
   };
-
 
   return {
     isLoading,
@@ -373,6 +369,7 @@ export const useHooks = () => {
     showDetail,
     headQuarts,
     searchType,
+    expandableContainerRef,
     detailRequestQuery,
     status,
     action: { submitData, fetchTeam, setFab, setArea },

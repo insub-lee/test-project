@@ -3,8 +3,8 @@ import request from 'utils/request';
 
 const initialState = {
   authInfo: null,
-  isError: false,
-  isLoading: true,
+  isError: true,
+  isLoading: false,
 };
 
 const reducer = (state = initialState, action) => {
