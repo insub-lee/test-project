@@ -52,7 +52,7 @@ const InProgressTable = () => {
 
   const {
     modalStatus,
-    actions: { openModal, closeModal },
+    actions: { openModal, closeModal, closeAll },
   } = useModalController(['INFO', 'SAVE', 'DROP']);
 
   const [currentRecord, setCurrentRecord] = useState(null);
@@ -190,12 +190,18 @@ const InProgressTable = () => {
         footer={null}
         onCancel={() => closeModal('INFO')}
       >
-        <Detail info={currentRecord} />
+        <Detail
+          info={currentRecord}
+          callback={() => {
+            closeAll();
+            pageHandler(1);
+          }}
+        />
       </ModalHugger>
       <ModalHugger width={1250} visible={modalStatus.SAVE} title="등록하기" footer={null} onCancel={() => closeModal('SAVE')}>
         SAVE
       </ModalHugger>
-      <ModalHugger width={1250} visible={modalStatus.DROP} title="등록하기" footer={null} onCancel={() => closeModal('DROP')}>
+      <ModalHugger width={1250} visible={modalStatus.DROP} title="DROP" footer={null} onCancel={() => closeModal('DROP')}>
         DROP
       </ModalHugger>
     </>

@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Redirect } from 'react-router-dom';
 import GlobalStyle from '../../../components/GlobalStyle';
 import Spin from '../../../components/AntdSpinner';
 import ExpandableTitleContainer from '../../../components/ExpandableTitleContainer';
@@ -24,17 +25,22 @@ const Registration = () => {
     isLoading,
     formJson,
     formRef,
+    isRedirect,
     actions: { submitForm, saveTemp },
   } = useHooks({ usrid: authInfo?.empNo || '', usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '' });
+
+  if (isRedirect) {
+    return <Redirect to="/apps/tpms/page/Improvement/RegisteredTable" />;
+  }
 
   return (
     <div className="tpms-view">
       <ExpandableTitleContainer title="개선활동 - 등록/진행" nav={nav}>
         <Spin spinning={isAuthLoading || isLoading}>
           <form ref={formRef} autoComplete="off" onSubmit={submitForm}>
-            <input type="hidden" name="PRJ_LEADER_DEPT_CODE" />
-            <input type="hidden" name="PRJ_LEADER_DEPT_NAME" />
-            <input type="hidden" name="PRJ_LEADER" />
+            <input type="hidden" name="PRJ_LEADER_DEPT_CODE" value={authInfo?.userRoleInfoList?.[0]?.dpcd || ''} />
+            <input type="hidden" name="PRJ_LEADER_DEPT_NAME" value={authInfo?.userRoleInfoList?.[0]?.dpnm || ''} />
+            <input type="hidden" name="PRJ_LEADER" value={authInfo?.empNo || ''} />
             <FormView datas={formJson} noBoarder noPadding isImprove />
             <BtnWrap>
               <Button type="submit" color="primary" disabled={isLoading}>

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 
 import Spin from '../../../../components/AntdSpinner';
 import FormView from '../../../../components/FormPreview/FormView';
@@ -9,15 +10,21 @@ import BtnWrap from '../../BtnWrap';
 import useHooks from './useHooks';
 import useAuth from '../../../../hooks/useAuth';
 
-const Detail = ({ info, callback }) => {
+const Detail = ({ info, closeAll, callback }) => {
   const { authInfo, isError: isAuthError, isLoading: isAuthLoading } = useAuth();
   const {
     isLoading,
     isError,
     formRef,
+    isRedirect,
     formData,
     actions: { submitForm, saveTemp, deleteTemp },
   } = useHooks({ info, usrid: authInfo?.empNo || '', usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '', callback });
+
+  if (isRedirect) {
+    return <Redirect to="/apps/tpms/page/Improvement/RegisteredTable" />;
+  }
+
   return (
     <div>
       <Spin spinning={isAuthLoading || isLoading}>

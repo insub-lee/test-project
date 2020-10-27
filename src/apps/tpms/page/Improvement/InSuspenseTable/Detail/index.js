@@ -9,14 +9,14 @@ import Button from '../../../../components/Button';
 import useHooks from './useHooks';
 import useAuth from '../../../../hooks/useAuth';
 
-const Detail = ({ info }) => {
+const Detail = ({ info, callback }) => {
   const { authInfo, isError: isAuthError, isLoading: isAuthLoading } = useAuth();
 
   const {
     formRef,
     defaultFormData,
     actions: { accept, reject },
-  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '' });
+  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '', callback });
   return (
     <div>
       <Spin spinning={isAuthLoading}>
@@ -42,10 +42,12 @@ const Detail = ({ info }) => {
 
 Detail.propTypes = {
   info: PropTypes.object,
+  callback: PropTypes.func,
 };
 
 Detail.defaultProps = {
   info: {},
+  callback: () => {},
 };
 
 export default Detail;
