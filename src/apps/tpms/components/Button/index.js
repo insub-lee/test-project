@@ -16,12 +16,26 @@ const grayColor = css`
   color: #fff;
   background: #636a78;
   border: 1px solid #636a78;
+
+  &:focus,
+  &:active {
+    color: #fff;
+    background: #636a78;
+    border: 1px solid #636a78;
+  }
 `;
 
 const grayVer2Color = css`
   color: #fff;
   background: #bbb;
   border: 1px solid #bbb;
+
+  &:focus,
+  &:active {
+    color: #fff;
+    background: #bbb;
+    border: 1px solid #bbb;
+  }
 `;
 
 const defaultSize = css`
@@ -50,11 +64,11 @@ const smallSize = css`
 
   &:focus,
   &:active {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
-    padding: 0 20px;
-    height: 35px;
-    border-radius: 35px;
+    padding: 0 16px;
+    height: 30px;
+    border-radius: 30px;
   }
 `;
 
