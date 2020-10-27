@@ -82,5 +82,7 @@ module.exports = {
     'redux-saga/yield-effects': 2,
     'require-yield': 0,
     'linebreak-style': 0,
+    'react/jsx-props-no-spreading': 0,
+    'no-restricted-globals': 0,
   },
 };
