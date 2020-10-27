@@ -4,14 +4,14 @@ import Modal from 'rc-dialog';
 import moment from 'moment';
 import { Icon, Spin } from 'antd';
 
-import StyledModalContent from 'apps/tpms/components/CommonStyledElement/StyledModalContent';
-import StyledCommonForm from 'apps/tpms/components/CommonStyledElement/StyledCommonForm';
-// import LoadingOverlayWrapper from 'components/LoadingOverlayWrapper';
-
-import ALinkButton from 'apps/tpms/components/ALinkButton';
-
-import SignPrcListInfo from 'apps/tpms/components/SignPrcListInfo';
 import request from 'utils/request';
+
+import StyledModalContent from '../../../../components/CommonStyledElement/StyledModalContent';
+import StyledCommonForm from '../../../../components/CommonStyledElement/StyledCommonForm';
+
+import ALinkButton from '../../../../components/ALinkButton';
+
+import SignPrcListInfo from '../../../../components/SignPrcListInfo';
 import StyledProjectInfoModal from './StyledProjectInfoModal';
 import SignItemAddon from './SignItemAddon';
 

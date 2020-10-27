@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import iconDate from 'apps/tpms/images/icon_date.png';
-import iconRadio from 'apps/tpms/images/icon_radio.png';
-import iconSelect from 'apps/tpms/images/icon_select.png';
+import iconDate from '../../../images/icon_date.png';
+import iconRadio from '../../../images/icon_radio.png';
+import iconSelect from '../../../images/icon_select.png';
 
 const StyledForm = styled.form`
   .sub_form {

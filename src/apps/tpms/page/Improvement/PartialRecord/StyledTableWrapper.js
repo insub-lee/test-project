@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import iconReply from 'apps/tpms/images/icon_reply.png';
-import iconIng1 from 'apps/tpms/images/icon_ing1.png';
-import iconIng2 from 'apps/tpms/images/icon_ing2.png';
-import iconIng3 from 'apps/tpms/images/icon_ing3.png';
-import iconIng4 from 'apps/tpms/images/icon_ing4.png';
-import iconIng5 from 'apps/tpms/images/icon_ing5.png';
-import iconIng6 from 'apps/tpms/images/icon_ing6.png';
+import iconReply from '../../../images/icon_reply.png';
+import iconIng1 from '../../../images/icon_ing1.png';
+import iconIng2 from '../../../images/icon_ing2.png';
+import iconIng3 from '../../../images/icon_ing3.png';
+import iconIng4 from '../../../images/icon_ing4.png';
+import iconIng5 from '../../../images/icon_ing5.png';
+import iconIng6 from '../../../images/icon_ing6.png';
 
 const StyledTableWrapper = styled.div`
   padding: 30px;
