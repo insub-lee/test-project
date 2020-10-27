@@ -342,8 +342,8 @@ export const useHooks = () => {
     requestQuery.areaLabel = areaLabel;
     requestQuery.keynoLabel = keynoLabel;
     requestQuery.modelLabel = modelLabel;
+    requestQuery.searchKey = new Date().getTime();
 
-    console.debug('Partial_requestQuery', requestQuery);
     if (requestQuery !== {}) {
       setDetailRequestQuery(requestQuery);
     }

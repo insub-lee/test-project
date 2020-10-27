@@ -18,6 +18,7 @@ const dateValidateChecker = momentDates => {
 
 /** !!!! Danger!!!!! * */
 export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
+  const [isRedirect, setIsRedirect] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isLvl3, setIsLvl3] = useState(false);
@@ -637,7 +638,7 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         data: payload,
       };
 
-      setIsLoading(true);
+      isRedirect(true);
 
       sendData(options)
         .then(({ response, error }) => {
@@ -645,6 +646,7 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
             const { insertyn } = response;
             if (insertyn) {
               callback();
+              setIsRedirect(true);
               alertMessage.notice('개선활동을 신규 등록하였습니다.');
             }
           } else {
@@ -657,7 +659,7 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
           setIsError(true);
         });
 
-      setIsLoading(false);
+      isRedirect(false);
     }
   };
 
@@ -714,7 +716,7 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
       data: payload,
     };
 
-    setIsLoading(true);
+    // isRedirect(true);
 
     sendData(options)
       .then(({ response, error }) => {
@@ -734,7 +736,7 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         alertMessage.alert('임시 저장이 실패했습니다.');
       });
 
-    setIsLoading(false);
+    // isRedirect(false);
   };
 
   // 임시저장 삭제
@@ -783,6 +785,7 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
   return {
     isLoading,
     isError,
+    isRedirect,
     formRef,
     formData: getCurrentFormJson(),
     actions: { submitForm, saveTemp, deleteTemp },

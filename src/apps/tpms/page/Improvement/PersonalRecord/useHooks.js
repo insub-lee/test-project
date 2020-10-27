@@ -184,7 +184,8 @@ export const useHooks = ({ authInfo, isAuthLoading, isAuthError }) => {
     requestQuery.keynoLabel = keynoLabel;
     requestQuery.modelLabel = modelLabel;
     requestQuery.userInfo = label;
-    console.debug('Personal_requestQuery', requestQuery);
+    requestQuery.searchKey = new Date().getTime();
+    
     if (requestQuery !== {}) {
       setDetailRequestQuery(requestQuery);
     }

@@ -51,7 +51,7 @@ const InSuspenseTable = () => {
 
   const {
     modalStatus,
-    actions: { openModal, closeModal },
+    actions: { openModal, closeModal, closeAll },
   } = useModalController(['INFO', 'ACCEPT', 'REJECT']);
 
   const [currentRecord, setCurrentRecord] = useState(null);
@@ -189,7 +189,13 @@ const InSuspenseTable = () => {
         footer={null}
         onCancel={() => closeModal('INFO')}
       >
-        <Detail info={currentRecord} />
+        <Detail
+          info={currentRecord}
+          callback={() => {
+            closeAll();
+            pageHandler(1);
+          }}
+        />
       </ModalHugger>
       <ModalHugger width={1250} visible={modalStatus.ACCEPT} title="등록하기" footer={null} onCancel={() => closeModal('ACCEPT')}>
         ACCEPT

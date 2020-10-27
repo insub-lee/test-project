@@ -443,6 +443,7 @@ export default ({ usrid, usrnm, dpcd }) => {
     });
 
   const submitForm = e => {
+    const { debug } = console;
     e.preventDefault();
     e.stopPropagation();
     const formData = new FormData(e.target);
@@ -459,6 +460,8 @@ export default ({ usrid, usrnm, dpcd }) => {
     const items = JSON.parse(payload.equip_selector).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
     if (items.length < 1) {
       alertMessage.alert('선택된 장비가 없습니다.');
+      debug('선택된 장비가 없습니다.');
+
       return;
     }
     if (
@@ -485,6 +488,7 @@ export default ({ usrid, usrnm, dpcd }) => {
     const validatedDueDates = dateValidateChecker(dueDates);
     if (!validatedDueDates.result) {
       alertMessage.alert(validatedDueDates.message);
+      debug(validatedDueDates.message);
       return;
     }
 
@@ -493,10 +497,13 @@ export default ({ usrid, usrnm, dpcd }) => {
     preferSignLine.push(JSON.parse(payload.user_selector_1 || '[]'));
     if (preferSignLine[0].length < 1 || preferSignLine[1].length < 1) {
       alertMessage.alert('최종결재권자 또는 1차결재권자가 미설정되었습니다.');
+      debug('최종결재권자 또는 1차결재권자가 미설정되었습니다.');
     } else if (preferSignLine[0][0].emrno === preferSignLine[1][0].emrno) {
       alertMessage.alert('최종결재권자와 1차결재권자가 동일합니다.');
+      debug('최종결재권자와 1차결재권자가 동일합니다.');
     } else if (preferSignLine[0][0].emrno === usrid || preferSignLine[1][0].emrno === usrid) {
       alertMessage.alert('기안자와 결재권자가 동일합니다.');
+      debug('기안자와 결재권자가 동일합니다.');
     } else {
       const signline = [];
       signline.push({
@@ -513,21 +520,29 @@ export default ({ usrid, usrnm, dpcd }) => {
       const signref = JSON.parse(payload.user_selector_2 || '[]').map(user => user.usrid);
       if (signref.length < 1) {
         alertMessage.alert('팀원이 미설정 되었습니다.');
+        debug('팀원이 미설정 되었습니다.');
+
         return;
       }
 
       if (signref.includes(usrid)) {
         alertMessage.alert('자신을 팀원으로 설정 할 수 없습니다.');
+        debug('자신을 팀원으로 설정 할 수 없습니다.');
+
         return;
       }
 
       if (signref.includes(preferSignLine[0][0].usrid)) {
         alertMessage.alert('1차결재권자를 팀원으로 설정 할 수 없습니다.');
+        debug('1차결재권자를 팀원으로 설정 할 수 없습니다.');
+
         return;
       }
 
       if (signref.includes(preferSignLine[1][0].usrid)) {
         alertMessage.alert('최종결재권자를 팀원으로 설정 할 수 없습니다.');
+        debug('최종결재권자를 팀원으로 설정 할 수 없습니다.');
+
         return;
       }
 
@@ -555,14 +570,17 @@ export default ({ usrid, usrnm, dpcd }) => {
         .then(({ response, error }) => {
           if (response && !error) {
             alertMessage.notice('개선활동을 신규 등록하였습니다.');
+            debug('개선활동을 신규 등록하였습니다.');
             setIsRedirect(true);
           } else {
             alertMessage.alert('개선활등을 신규 등록에 실패했습니다.');
+            debug('개선활등을 신규 등록에 실패했습니다.');
             console.debug(error);
           }
         })
         .catch(() => {
           alertMessage.alert('개선활등을 신규 등록에 실패했습니다.');
+          debug('개선활등을 신규 등록에 실패했습니다.');
         });
       setIsLoading(false);
     }

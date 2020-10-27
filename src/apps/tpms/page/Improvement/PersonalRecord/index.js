@@ -167,7 +167,13 @@ const PersonalRecord = () => {
           }
           subbody={
             showDetail && (
-              <PersonalReportDetail enableFixView={() => {}} disableFixView={() => {}} requestQuery={detailRequestQuery} userid={authInfo?.empNo || ''} />
+              <PersonalReportDetail
+                key={detailRequestQuery?.searchKey}
+                enableFixView={() => {}}
+                disableFixView={() => {}}
+                requestQuery={detailRequestQuery}
+                userid={authInfo?.empNo || ''}
+              />
             )
           }
         />

@@ -205,7 +205,15 @@ const PartialRecord = () => {
             </StyledForm>
           }
           subbody={
-            showDetail && <ReportDetail enableFixView={() => {}} disableFixView={() => {}} requestQuery={detailRequestQuery} userid={authInfo?.empNo || ''} />
+            showDetail && (
+              <ReportDetail
+                key={detailRequestQuery?.searchKey}
+                enableFixView={() => {}}
+                disableFixView={() => {}}
+                requestQuery={detailRequestQuery}
+                userid={authInfo?.empNo || ''}
+              />
+            )
           }
         />
       </Spin>

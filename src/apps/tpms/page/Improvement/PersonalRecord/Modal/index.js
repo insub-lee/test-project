@@ -11,7 +11,7 @@ import StyledCommonForm from 'apps/tpms/components/CommonStyledElement/StyledCom
 import ALinkButton from 'apps/tpms/components/ALinkButton';
 
 import SignPrcListInfo from 'apps/tpms/components/SignPrcListInfo';
-import service from '../service';
+import request from 'utils/request';
 import StyledProjectInfoModal from './StyledProjectInfoModal';
 import SignItemAddon from './SignItemAddon';
 
@@ -84,7 +84,13 @@ class ProjectInfoModal extends React.Component {
   async fetchData(prjId) {
     this.setState({ isLoading: true });
     const url = `/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=PROJECT&prj_id=${prjId}`;
-    const { response, error } = await service.board.get(url);
+    const { response, error } = await request({
+      url,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method: 'GET',
+    });
     if (response && !error) {
       const { list } = response;
       const { signitemPrc1, signitemPrc2, signitemPrc3, teamsharing, member, signPrclistInfo, EQUIPMENTS } = list;
