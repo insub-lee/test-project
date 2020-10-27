@@ -56,7 +56,7 @@ class FroalaRichTextEditor extends React.Component {
         uuid: getMeta(),
       }),
     };
-    config.imageUploadURL = `/upload/file?conserveYm=29991231&sysId=${process.env.REACT_APP_SYSTEM_ID}&uid=${uuid()}`;
+    config.imageUploadURL = `/upload/files?conserveYm=29991231&sysId=${process.env.REACT_APP_SYSTEM_ID}&uid=${uuid()}`;
     config.events = {
       'froalaEditor.image.uploaded': function(e, editor, response) {
         // console.debug('# Uploaded', response, JSON.parse(response));

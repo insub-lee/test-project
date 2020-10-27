@@ -79,10 +79,34 @@ class Uploader extends React.Component {
       //   .catch(() => ({ error }));
       const { response, error } = await service.post(queryString, formData);
       if (response && !error) {
-        const { docNm, extension, down, link, seq, uid, docNo } = response;
+        // const { docNm, extension, down, link, seq, uid, docNo } = response;
+        const files = response.map(({ code, fileName, fileType, fileExt, size, fileSize, seq, img, link, down }) => ({
+          docNm: fileName,
+          extension: fileExt,
+          down,
+          link,
+          seq,
+          uid: seq,
+          docNo: seq,
+        }));
+        // [
+        //   {
+        //     code: 300,
+        //     fileName: '1.PNG',
+        //     fileType: 2,
+        //     fileExt: 'png',
+        //     size: 33685,
+        //     fileSize: 33685,
+        //     seq: '303588',
+        //     img: '/img/thumb/0x0/303588',
+        //     link: '/img/thumb/200x200/303588',
+        //     down: '/down/file/303588',
+        //   },
+        // ];
         this.setState(
           {
-            uploaded: [{ docNm, extension, down, link, seq, uid, docNo }],
+            // uploaded: [{ docNm, extension, down, link, seq, uid, docNo }],
+            uploaded: files,
           },
           () => handleUpload(true),
         );
@@ -105,7 +129,7 @@ class Uploader extends React.Component {
         <section>
           <div className="dropzone">
             {!option.readOnly ? (
-              <React.Fragment>
+              <>
                 <Dropzone onDrop={this.onDrop} multiple={false} maxSize={100000000} accept={extensionsStr}>
                   <p>Drag and drop file</p>
                 </Dropzone>
@@ -131,7 +155,7 @@ class Uploader extends React.Component {
                     </li>
                   ))}
                 </ul>
-              </React.Fragment>
+              </>
             ) : (
               <ul>
                 {option.filePath !== undefined && option.fileName !== undefined && (

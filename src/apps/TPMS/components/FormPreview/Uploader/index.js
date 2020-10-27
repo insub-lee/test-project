@@ -113,23 +113,55 @@ class Uploader extends React.Component {
     //   .catch(() => ({ error }));
     const { response, error } = await service.post(queryString, formData);
     if (response && !error) {
-      const { docNo, docNm, extension, down, link, seq, uid } = response;
+      // const { docNo, docNm, extension, down, link, seq, uid } = response;
+      const tempFiles = response.map(({ code, fileName, fileType, fileExt, size, fileSize, seq, img, link, down }) => ({
+        docNo: seq,
+        docNm: fileName,
+        extension: fileExt,
+        down,
+        link: down,
+        seq,
+        uid: seq,
+        id: seq,
+        name: fileName,
+        code,
+        fileType,
+        size,
+        fileSize,
+        img,
+      }));
       this.setState(prevState => {
         const { uploaded, files } = prevState;
+        // uploaded.push(tempFiles);
+        // files.push(tempFiles);
         // uploaded.push({ docNm, extension, down, link, seq, uid });
-        uploaded.push({
-          docNo,
-          docNm,
-          extension,
-          link: down,
-          seq,
-          uid,
-          name: docNm,
-        });
-        files.push(response);
+        // [
+        //   {
+        //     code: 300,
+        //     fileName: '1.PNG',
+        //     fileType: 2,
+        //     fileExt: 'png',
+        //     size: 33685,
+        //     fileSize: 33685,
+        //     seq: '303595',
+        //     img: '/img/thumb/0x0/303595',
+        //     link: '/img/thumb/200x200/303595',
+        //     down: '/down/file/303595',
+        //   },
+        // ];
+        // uploaded.push({
+        //   docNo,
+        //   docNm,
+        //   extension,
+        //   link: down,
+        //   seq,
+        //   uid,
+        //   name: docNm,
+        // });
+        // files.push(response);
         return {
-          uploaded,
-          files,
+          uploaded: [...uploaded, ...tempFiles],
+          files: [...files, ...tempFiles],
         };
       });
     } else {

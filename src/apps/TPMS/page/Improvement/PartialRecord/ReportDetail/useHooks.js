@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { fromJS } from 'immutable';
 import moment from 'moment';
-
-import alertMessage from 'apps/tpms/components/Notification/Alert';
+import download from 'js-file-download';
 
 import request from 'utils/request';
-import jsonToQueryString from 'apps/tpms/utils/jsonToQueryString';
+
+import alertMessage from '../../../../components/Notification/Alert';
+import jsonToQueryString from '../../../../utils/jsonToQueryString';
 
 export const useHooks = ({ requestQuery }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -118,5 +119,57 @@ export const useHooks = ({ requestQuery }) => {
     setPagination(pagination.set('pageSize', pageSize).set('current', 1));
   };
 
-  return { isExpanded, pagination, data, action: { setIsExpanded, pageHandler, pageSizeHandler } };
+  const handleReportDown = async () => {
+    // const { pagination } = this.state;
+    const { startDate, endDate, projectType, prjLvValues, part, team, status, fab, area, keyno, model } = requestQuery;
+
+    const curtDate = moment().format('YYYYMMDD');
+    const startDt = startDate
+      ? startDate.replace(/\./gi, '')
+      : moment(curtDate, 'YYYYMMDD')
+          .add(-1, 'year')
+          .format('YYYYMMDD');
+    const endDt = endDate ? endDate.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
+
+    const requestQuery2 = {
+      type: 'departlist',
+      // currentPage: isInit ? 1 : pagination.get('current'),
+      // pageSize: pagination.get('pageSize'),
+      mnuId: 'list',
+      sysid: 'TPMS',
+      sdd: startDt,
+      edd: endDt,
+      prjtype: projectType === '' ? undefined : projectType,
+      prjlvl: prjLvValues,
+      partcd: part === 'all' ? undefined : part,
+      teamcd: team === 'all' ? undefined : team,
+      status: status === 'all' ? undefined : status,
+      fab,
+      area,
+      keyno,
+      model,
+    };
+    const queryString = jsonToQueryString(requestQuery2);
+    const { response, error } = await request({
+      url: `/apigate/v1/portal/sign/report/down?${queryString}`,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      responseType: 'blob',
+      method: 'GET',
+    });
+
+    if (response && !error) {
+      console.debug(response);
+      const date = moment().format('YYYYMMDDHHmmss');
+      // const fileName = `recordReport_${date}_${profile.usrid}`;
+      const fileName = `partialRecord_${date}`;
+      download(response, `${fileName}.xls`);
+    } else {
+      console.debug(error);
+      alertMessage.alert('Server Error');
+    }
+  };
+
+  return { isExpanded, pagination, data, action: { setIsExpanded, pageHandler, pageSizeHandler, handleReportDown } };
 };

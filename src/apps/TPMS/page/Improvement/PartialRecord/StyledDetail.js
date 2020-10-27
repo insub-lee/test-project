@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import iconBig from 'apps/tpms/images/icon_arr_big.png';
-import iconSmall from 'apps/tpms/images/icon_arr_small.png';
+import iconBig from '../../../images/icon_arr_big.png';
+import iconSmall from '../../../images/icon_arr_small.png';
 
 const StyledDetail = styled.div`
   padding: 20px 0;

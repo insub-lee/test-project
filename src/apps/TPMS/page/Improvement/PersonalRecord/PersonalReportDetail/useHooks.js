@@ -3,10 +3,11 @@ import { fromJS } from 'immutable';
 import moment from 'moment';
 import download from 'js-file-download';
 
-import alertMessage from 'apps/tpms/components/Notification/Alert';
-
 import request from 'utils/request';
-import jsonToQueryString from 'apps/tpms/utils/jsonToQueryString';
+
+import alertMessage from '../../../../components/Notification/Alert';
+
+import jsonToQueryString from '../../../../utils/jsonToQueryString';
 
 export const useHooks = ({ requestQuery }) => {
   const projectInfoModalRef = useRef();

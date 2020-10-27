@@ -2,23 +2,23 @@ import React, { useRef } from 'react';
 import Table from 'rc-table';
 import moment from 'moment';
 
-import GridContainer from 'apps/tpms/components/GridContainer';
-import GridBox from 'apps/tpms/components/Dashboard/GridBox';
-import SignTotal from 'apps/tpms/components/Dashboard/BuiltChart/SignTotal';
-import MonthlyTransition from 'apps/tpms/components/Dashboard/BuiltChart/MonthlyTransition';
-import Pagination from 'apps/tpms/components/Tableboard/Pagination';
-import StyledTable from 'apps/tpms/components/Tableboard/StyledTable';
-import StyledHeader from 'apps/tpms/components/Tableboard/StyledHeader';
-import StyledHeaderCell from 'apps/tpms/components/Tableboard/StyledHeaderCell';
-import StyledBodyRow from 'apps/tpms/components/Tableboard/StyledBodyRow';
-import StyledBodyCell from 'apps/tpms/components/Tableboard/StyledBodyCell';
-import Button from 'apps/tpms/components/Button';
+import GridContainer from '../../../../components/GridContainer';
+import GridBox from '../../../../components/Dashboard/GridBox';
+import SignTotal from '../../../../components/Dashboard/BuiltChart/SignTotal';
+import MonthlyTransition from '../../../../components/Dashboard/BuiltChart/MonthlyTransition';
+import Pagination from '../../../../components/Tableboard/Pagination';
+import StyledTable from '../../../../components/Tableboard/StyledTable';
+import StyledHeader from '../../../../components/Tableboard/StyledHeader';
+import StyledHeaderCell from '../../../../components/Tableboard/StyledHeaderCell';
+import StyledBodyRow from '../../../../components/Tableboard/StyledBodyRow';
+import StyledBodyCell from '../../../../components/Tableboard/StyledBodyCell';
+import Button from '../../../../components/Button';
 import {
   StepSelector,
   ProjectLevelSelector,
   // ProjectTypeSelector,
   // PerformTypeSelector,
-} from 'apps/tpms/page/Improvement/CommonSelectors';
+} from '../../CommonSelectors';
 
 import ProjectInfoModal from '../../PersonalRecord/Modal';
 import { useHooks } from './useHooks';
@@ -32,7 +32,7 @@ export const ReportDetail = ({ requestQuery }) => {
     data,
     isExpanded,
     pagination,
-    action: { setIsExpanded, pageHandler, pageSizeHandler },
+    action: { setIsExpanded, pageHandler, pageSizeHandler, handleReportDown },
   } = useHooks({ requestQuery });
 
   const components = {
@@ -191,7 +191,7 @@ export const ReportDetail = ({ requestQuery }) => {
               color="gray"
               size="small"
               onClick={() => {
-                // this.handleReportDown;
+                handleReportDown();
               }}
             >
               엑셀

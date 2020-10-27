@@ -18,6 +18,7 @@ import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 
 import UUID from 'uuid-js';
 
+import { getMeta } from 'utils/request';
 import defaultConfig from './froalaEditorConfig';
 import StyledFroalaEditor from './StyledFroalaEditor';
 
@@ -45,29 +46,45 @@ class FroalaRichTextEditor extends React.Component {
     });
   }
 
+  // upload res
+  // {
+  //   code: 300,
+  //   fileName: '1.PNG',
+  //   fileType: 2,
+  //   fileExt: 'png',
+  //   size: 33685,
+  //   fileSize: 33685,
+  //   seq: '303631',
+  //   img: '/img/thumb/0x0/303631',
+  //   link: '/img/thumb/200x200/303631',
+  //   down: '/down/file/303631',
+  // };
+
   render() {
     const { contents, uploaded } = this.state;
     const { name, readOnly, placeholder } = this.props;
     const { handleUploadedState } = this;
     const config = { ...Object.freeze(defaultConfig) };
     // Todo TPMS - Upload To Base64
-    // config.placeholderText = placeholder || '';
-    // config.requestHeaders = {
-    //   META: JSON.stringify({
-    //     uuid: getUUID(),
-    //   }),
-    // };
-    // config.imageUploadURL = `/upload/file?conserveYm=29991231&sysId=${process.env.REACT_APP_SYSTEM_ID}&uid=${UUID.create(1).toString()}`;
-    // config.events = {
-    //   'froalaEditor.image.uploaded': function(e, editor, response) {
-    //     // console.debug('# Uploaded', response, JSON.parse(response));
-    //   },
-    //   'froalaEditor.image.inserted': function(e, editor, $img, response) {
-    //     console.debug('$img : ', $img, response);
-    //     // Todo - insert file docNo to state
-    //     handleUploadedState(JSON.parse(response).docNo);
-    //   },
-    // };
+    config.placeholderText = placeholder || '';
+    config.requestHeaders = {
+      META: JSON.stringify(getMeta()),
+    };
+    config.imageUploadURL = `/upload/files?conserveYm=29991231&sysId=TPMS&uid=${UUID.create(1).toString()}`;
+    config.events = {
+      // 'froalaEditor.image.uploaded': function(e, editor, response) {
+      //   console.debug('# Uploaded', response, JSON.parse(response));
+      // },
+      'froalaEditor.image.inserted': function(e, editor, $img, response) {
+        console.debug('$img : ', $img, response, JSON.parse(response));
+
+        // Todo - insert file docNo to state
+        handleUploadedState(JSON.parse(response)?.seq || '');
+      },
+      // 'froalaEditor.image.beforeUpload': function(e, editor, response) {
+      //   console.debug('# beforeUpload', response, JSON.parse(response));
+      // },
+    };
     return (
       <StyledFroalaEditor>
         {readOnly ? (
