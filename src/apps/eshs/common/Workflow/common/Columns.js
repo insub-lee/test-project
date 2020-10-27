@@ -17,7 +17,8 @@ import EiStatement from 'apps/eshs/user/environment/eia/eiStatement'; // 환경�
 import EiImportantAssesment from 'apps/eshs/user/environment/eia/eiImportantAssesment'; // 중대환경영향등록부
 /* 환경영향평가  --end--*/
 import JournalManagement from 'apps/eshs/user/health/medicalManagement/journalManangement'; // 의료일지
-
+// D:\magnachip\bizmicro-portal-front\src\apps\eshs\user\safety\protectionItem\hitemRequest\list\PaymentModal.js
+import HitemPaymentView from 'apps/eshs/user/safety/protectionItem/hitemRequest/list/PaymentModal';
 /* view  --end--*/
 
 const getView = (record, spinningOn, spinningOff, handleModal) => {
@@ -35,8 +36,10 @@ const getView = (record, spinningOn, spinningOff, handleModal) => {
       case 4781:
         return [
           // 폐기물 처리 요청서, 반출증관리
-          <BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" viewCustomButtons={() => []} />,
+          <BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" ViewCustomButtons={() => []} />,
         ];
+      case 11441:
+        return [<HitemPaymentView sagaKey="WORK_PROCESS_VIEW" taskSeq={record?.TASK_SEQ} />];
       default:
         return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" />];
     }

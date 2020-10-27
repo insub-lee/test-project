@@ -50,11 +50,11 @@ class List extends React.Component {
   }
 
   getDataSource = () => {
-    const { setDataSource } = this;
     const { startDate, endDate, type, deptId } = this.state.searchValue;
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
+    spinningOn();
     const params = `?&START_DATE=${startDate}&END_DATE=${endDate}&TYPE=${type}&DEPT_ID=${deptId}`;
-    const apiArr = [
+    const apiAry = [
       {
         key: 'dataSource',
         url: `/api/eshs/v1/common/protection-req${params}`,
@@ -62,20 +62,22 @@ class List extends React.Component {
       },
     ];
 
-    getCallDataHandler(id, apiArr, setDataSource);
-  };
-
-  setDataSource = () => {
-    const { extraApiData } = this.props;
-    this.setState({
-      dataSource: (extraApiData.dataSource && extraApiData.dataSource.list) || [],
+    return getCallDataHandler(id, apiAry, () => {
+      const { result, spinningOff } = this.props;
+      return this.setState(
+        {
+          dataSource: result?.dataSource?.list || [],
+        },
+        spinningOff,
+      );
     });
   };
 
   getDepartmentList = () => {
     const { setDeraptmentList } = this;
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
     const headquarterId = 72761;
+    spinningOn();
     const apiArr = [
       {
         key: 'deptList',
@@ -88,14 +90,17 @@ class List extends React.Component {
   };
 
   setDeraptmentList = headquarterId => {
-    const { extraApiData } = this.props;
-    this.setState({
-      headquarterList: (extraApiData.deptList && extraApiData.deptList.dept && extraApiData.deptList.dept.filter(dept => dept.PRNT_ID === headquarterId)) || [],
-    });
+    const { result, spinningOff } = this.props;
+    this.setState(
+      {
+        headquarterList: (result.deptList && result.deptList.dept && result.deptList.dept.filter(dept => dept.PRNT_ID === headquarterId)) || [],
+      },
+      spinningOff,
+    );
   };
 
   handleHqChange = headquarterId => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
     if (!headquarterId) {
       return this.setState(prevState => ({
         isHeadquarterSelect: false,
@@ -110,15 +115,19 @@ class List extends React.Component {
         url: `/api/eshs/v1/common/EshsHqAndDeptList?DEPT_ID=${headquarterId}`,
       },
     ];
+    spinningOn();
     return getCallDataHandler(id, apiArr, this.setDeptList);
   };
 
   setDeptList = () => {
-    const { extraApiData } = this.props;
-    this.setState(prevState => ({
-      departmentList: (extraApiData.deptListUnderHq && extraApiData.deptListUnderHq.dept) || [],
-      searchValue: Object.assign(prevState.searchValue, { deptId: '' }),
-    }));
+    const { result, spinningOff } = this.props;
+    this.setState(
+      prevState => ({
+        departmentList: (result.deptListUnderHq && result.deptListUnderHq.dept) || [],
+        searchValue: Object.assign(prevState.searchValue, { deptId: '' }),
+      }),
+      spinningOff,
+    );
   };
 
   columns = [
@@ -127,60 +136,70 @@ class List extends React.Component {
       dataIndex: 'DEPT_NAME_KOR',
       key: 'DEPT_NAME_KOR',
       width: '10%',
+      align: 'center',
     },
     {
       title: '품목',
       dataIndex: 'KIND',
       key: 'KIND',
       width: '10%',
+      align: 'center',
     },
     {
       title: '모델',
       dataIndex: 'MODEL',
       key: 'MODEL',
       width: '10%',
+      align: 'center',
     },
     {
       title: '사이즈',
       dataIndex: 'SIZE1',
       key: 'SIZE1',
       width: '10%',
+      align: 'center',
     },
     {
       title: '신청수량',
       dataIndex: 'QTY',
       key: 'QTY',
       width: '10%',
+      align: 'center',
     },
     {
       title: '지급요청일',
       dataIndex: 'TARGET_DT',
       key: 'TARGET_DT',
       width: '10%',
+      align: 'center',
     },
     {
       title: '지급수량',
       dataIndex: '',
       key: '',
       width: '10%',
+      align: 'center',
     },
     {
       title: '지급일',
       dataIndex: '',
       key: '',
       width: '10%',
+      align: 'center',
     },
     {
       title: '지급상태',
       dataIndex: 'CONF_STATUS',
       key: 'CONF_STATUS',
       width: '10%',
+      align: 'center',
     },
     {
       title: '신청사유',
       dataIndex: 'REQ_COMMENTS',
       key: 'REQ_COMMENTS',
       width: '10%',
+      align: 'center',
     },
   ];
 
@@ -220,7 +239,8 @@ class List extends React.Component {
   };
 
   handleRowClick = record => {
-    const { sagaKey, getCallDataHandler } = this.props;
+    const { sagaKey, getCallDataHandler, spinningOn } = this.props;
+    spinningOn();
     const apiArr = [
       {
         key: 'reqDetails',
@@ -233,19 +253,22 @@ class List extends React.Component {
   };
 
   setModalDataSource = record => {
-    const { extraApiData } = this.props;
-    this.setState({
-      rowData: record,
-      modalVisible: true,
-      isModified: true,
-      modalDataSource: (extraApiData.reqDetails && extraApiData.reqDetails.list) || [],
-    });
+    const { result, spinningOff } = this.props;
+    this.setState(
+      {
+        rowData: record,
+        modalVisible: true,
+        isModified: true,
+        modalDataSource: (result.reqDetails && result.reqDetails.list) || [],
+      },
+      spinningOff,
+    );
   };
 
   render() {
     const { columns, handleSearchChange, handleModalVisible, handleSearchDateChange, handleModalClose, getDataSource, handleHqChange } = this;
     const { dataSource, modalVisible, searchValue, rowData, isModified, headquarterList, departmentList, isHeadquarterSelect, modalDataSource } = this.state;
-    const { sagaKey, changeFormData, formData, viewPageData, saveTask, getCallDataHandler, submitHandlerBySaga, extraApiData, profile } = this.props;
+    const { sagaKey, changeFormData, formData, viewPageData, saveTask, getCallDataHandler, submitHandlerBySaga, result, profile } = this.props;
     return (
       <>
         <StyledContentsWrapper>
@@ -323,7 +346,7 @@ class List extends React.Component {
             isModified={isModified}
             getCallDataHandler={getCallDataHandler}
             submitHandlerBySaga={submitHandlerBySaga}
-            extraApiData={extraApiData}
+            result={result}
             profile={profile}
             modalDataSource={modalDataSource}
           />
@@ -336,20 +359,23 @@ class List extends React.Component {
 List.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
-  extraApiData: PropTypes.object,
+  result: PropTypes.object,
   changeFormData: PropTypes.func,
   saveTask: PropTypes.func,
   formData: PropTypes.object,
   viewPageData: PropTypes.object,
   submitHandlerBySaga: PropTypes.func,
   profile: PropTypes.object,
+  spinningOn: PropTypes.func,
+  spinningOff: PropTypes.func,
 };
 
 List.defaultProps = {
-  sagaKey: '',
   getCallDataHandler: null,
-  extraApiData: null,
+  result: null,
   changeFormData: null,
+  spinningOn: () => {},
+  spinningOff: () => {},
 };
 
 export default List;

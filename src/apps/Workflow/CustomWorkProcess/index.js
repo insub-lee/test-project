@@ -54,7 +54,11 @@ class CustomWorkProcess extends Component {
         this.setState({ processRule, filterRule, filterItem });
       }
     } else if (draftId !== -1) {
-      getDraftProcessRule(draftId).then(draftPrcRule => this.setState({ draftPrcRule }));
+      console.debug('draftId @@@ ', draftId);
+      getDraftProcessRule(draftId, draftPrcRule => {
+        console.debug('@@@@@@@@@@@@@@@@@@ ', draftPrcRule);
+        this.setState({ draftPrcRule });
+      });
     }
   }
 
@@ -75,8 +79,9 @@ class CustomWorkProcess extends Component {
   };
 
   render() {
-    const { viewType, colLength, CustomRow, statusVisible } = this.props;
+    const { viewType, colLength, CustomRow, statusVisible, appLineBtnVisible } = this.props;
     const { processRule, modalVisible, filterRule, draftPrcRule } = this.state;
+
     return (
       <ContentsWrapper>
         <StyledHtmlTable>
@@ -93,7 +98,7 @@ class CustomWorkProcess extends Component {
                   {viewType === 'INPUT' ? '결재선 지정' : '결재선'}
                 </td>
                 <td align="right">
-                  {viewType === 'INPUT' && (
+                  {viewType === 'INPUT' && appLineBtnVisible && (
                     <StyledButton className="btn-gray btn-sm" onClick={this.handleOpenModal}>
                       결재선반영
                     </StyledButton>
@@ -104,7 +109,7 @@ class CustomWorkProcess extends Component {
                 ? filterRule &&
                   filterRule.map((item, rowIndex) => (
                     <tr key={rowIndex}>
-                      <th>{(item && item.RULE_CONFIG && item.RULE_CONFIG.Label) || item.NAME_KOR}</th>
+                      <th>{item?.RULE_CONFIG?.Label || item?.NAME_KOR || ''}</th>
                       <td colSpan={colLength - 1}>
                         {item.APPV_MEMBER.map((user, colIndex) =>
                           item.NODE_TYPE === 'ND' ? (
@@ -128,7 +133,7 @@ class CustomWorkProcess extends Component {
                     .filter(item => item.VIEW_TYPE === 1)
                     .map((item, rowIndex) => (
                       <tr key={rowIndex}>
-                        <th>{`${item?.RULE_CONFIG?.Label || item?.NAME_KOR}`}</th>
+                        <th>{`${item?.RULE_CONFIG?.Label || item?.NAME_KOR || ''}`}</th>
                         <td colSpan={colLength - 1}>
                           {item.APPV_MEMBER.map((user, colIndex) =>
                             item.NODE_TYPE === 'ND' ? (
@@ -193,6 +198,7 @@ CustomWorkProcess.propTypes = {
   colLength: PropTypes.number,
   CustomRow: PropTypes.array,
   statusVisible: PropTypes.bool,
+  appLineBtnVisible: PropTypes.bool,
 };
 
 CustomWorkProcess.defaultProps = {
@@ -203,6 +209,7 @@ CustomWorkProcess.defaultProps = {
   colLength: 3,
   CustomRow: [],
   statusVisible: false,
+  appLineBtnVisible: true,
 };
 
 export default CustomWorkProcess;
