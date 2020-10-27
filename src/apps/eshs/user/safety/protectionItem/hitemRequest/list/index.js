@@ -12,8 +12,8 @@ import StyledPicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import { getProcessRule } from 'apps/eshs/common/workProcessRule';
 import ModalContents from './modalContents';
-
 const AntdModal = StyledAntdModal(Modal);
 const AntdSelect = StyledSelect(Select);
 const AntdTable = StyledAntdTable(Table);
@@ -204,6 +204,7 @@ class List extends React.Component {
   handleModalVisible = () => {
     this.setState({
       modalVisible: true,
+      rowData: {},
     });
   };
 
@@ -217,7 +218,7 @@ class List extends React.Component {
   };
 
   handleRowClick = record => {
-    const { sagaKey, getExtraApiData } = this.props;
+    const { sagaKey, getExtraApiData, prcId } = this.props;
     const apiArr = [
       {
         key: 'reqDetails',
@@ -226,7 +227,15 @@ class List extends React.Component {
       },
     ];
 
-    getExtraApiData(sagaKey, apiArr, () => this.setModalDataSource(record));
+    // 여기서 record에 draft_id없을경우 processRule 가져와서 record안에 넣어줘
+
+    if (record?.DRAFT_ID) {
+      getExtraApiData(sagaKey, apiArr, () => this.setModalDataSource(record));
+    } else {
+      getProcessRule(prcId, prcRule => {
+        getExtraApiData(sagaKey, apiArr, () => this.setModalDataSource({ ...record, processRule: prcRule }));
+      });
+    }
   };
 
   setModalDataSource = record => {
@@ -239,8 +248,19 @@ class List extends React.Component {
     });
   };
 
+  handleChangeRowData = rowData => this.setState({ rowData });
+
   render() {
-    const { columns, handleSearchChange, handleModalVisible, handleSearchDateChange, handleModalClose, getDataSource, handleHqChange } = this;
+    const {
+      columns,
+      handleSearchChange,
+      handleModalVisible,
+      handleSearchDateChange,
+      handleModalClose,
+      getDataSource,
+      handleHqChange,
+      handleChangeRowData,
+    } = this;
     const { dataSource, modalVisible, searchValue, rowData, isModified, headquarterList, departmentList, isHeadquarterSelect, modalDataSource } = this.state;
     const {
       sagaKey,
@@ -260,6 +280,10 @@ class List extends React.Component {
       workInfo,
       setRelType,
       processRule,
+      prcId,
+      relKey,
+      relKey2,
+      workSeq,
     } = this.props;
     return (
       <>
@@ -323,6 +347,7 @@ class List extends React.Component {
             <ModalContents
               sagaKey={sagaKey}
               changeFormData={changeFormData}
+              handleChangeRowData={handleChangeRowData}
               formData={formData}
               viewPageData={viewPageData}
               handleModalVisible={handleModalVisible}
@@ -336,14 +361,10 @@ class List extends React.Component {
               extraApiData={extraApiData}
               profile={profile}
               modalDataSource={modalDataSource}
-              processRule={processRule}
-              setProcessRule={setProcessRule}
-              getProcessRule={getProcessRule}
-              workflowOpt={workflowOpt}
-              workPrcProps={workPrcProps}
-              relType={relType}
-              setRelType={setRelType}
-              workInfo={workInfo}
+              prcId={prcId}
+              relKey={relKey}
+              relKey2={relKey2}
+              workSeq={workSeq}
             />
           </AntdModal>
         </StyledContentsWrapper>
