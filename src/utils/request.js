@@ -26,10 +26,12 @@ const request = options => {
     },
   };
   console.debug('>>>> optionWithMeta', optionWithMeta);
+
   const onSuccess = response => {
     console.debug('Request Successful', response);
     return response.data;
   };
+
   const onError = error => {
     console.error('Request Failed:', error.config);
     if (error.response) {

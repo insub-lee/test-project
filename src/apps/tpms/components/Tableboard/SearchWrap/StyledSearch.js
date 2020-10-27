@@ -1,0 +1,96 @@
+import styled from 'styled-components';
+
+import iconSelect from '../../../images/icon_select.png';
+import iconSearchW from '../../../images/icon_search_white.png';
+
+const StyledSearch = styled.div`
+  form {
+    position: relative;
+    text-align: center;
+    font-size: 0;
+
+    & select.search-select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border: 0;
+      border-radius: 0;
+      color: #555;
+      vertical-align: middle;
+      border-bottom: 1px solid #d9e0e7;
+      font-size: 15px;
+      height: 48px;
+      line-height: 48px;
+      background: white url(${iconSelect}) no-repeat right center;
+      width: 150px;
+      margin-right: 30px;
+      padding-left: 10px;
+    }
+
+    input {
+      border: 0;
+      border-radius: 0;
+      background: 0;
+      width: 100%;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 100%;
+    }
+
+    & .input {
+      border-bottom: 1px solid #d9e0e7;
+      font-size: 15px;
+      height: 48px;
+      line-height: 48px;
+      color: #555;
+      vertical-align: middle;
+      width: 390px;
+      margin-right: 30px;
+    }
+
+    .icon {
+      text-indent: -9999px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .icon_search_white {
+      width: 40px;
+      height: 40px;
+      background: #636a78 url(${iconSearchW}) no-repeat center;
+      border-radius: 100%;
+    }
+
+    .yearCategory {
+      position: absolute;
+      left: 0;
+    }
+
+    @media screen and (max-width: 1260px) {
+      position: relative;
+      padding-right: 75px;
+      text-align: left;
+
+      select {
+        width: 26%;
+        margin-right: 3%;
+        vertical-align: bottom;
+      }
+
+      .input {
+        width: 64%;
+        margin-right: 0;
+        vertical-align: bottom;
+      }
+
+      .icon_search_white {
+        position: absolute;
+        right: 0;
+        top: 10px;
+      }
+    }
+  }
+`;
+
+export default StyledSearch;
