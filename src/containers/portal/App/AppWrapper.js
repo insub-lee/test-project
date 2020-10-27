@@ -26,8 +26,10 @@ const AppWrapper = styled.div`
   }
 
   //풀스크린 활성화 된 상태
+  // 2020-10-08 기존 Active시 테마코드로 백그라운드 처리되는거 WHITE로 임시 처리 
   .FullScreen.Active {
-    background: ${props => props.theme.portalContentBackground};
+    // background: ${props => props.theme.portalContentBackground};
+    background: #fff;
     overflow-x: hidden;
 
     .portalContent {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { Table, Popconfirm, Button, Modal } from 'antd';
 import { isJSON } from 'utils/helpers';
 import BizBuilderBase from 'components/BizBuilderBase';
@@ -70,10 +71,6 @@ class ListPage extends Component {
     let isPagingData = false;
 
     if (workInfo.BUILDER_STYLE_PATH) {
-      // const StyledWrap = Loadable({
-      //   loader: () => import(`commonStyled/${workInfo.BUILDER_STYLE_PATH}`),
-      //   loading: Loading,
-      // });
       const StyledWrap = DefaultStyleInfo(workInfo.BUILDER_STYLE_PATH);
       this.setState({ StyledWrap });
     }
@@ -175,15 +172,39 @@ class ListPage extends Component {
     }
     cols.forEach((node, idx) => {
       if (node.comp && node.comp.COMP_FIELD) {
-        columns.push({
-          dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
-          title: node.comp.CONFIG.property.HEADER_NAME_KOR,
-          // width: (node.style && node.style.width) || undefined,
-          width: (widths && widths[idx] && `${widths[idx]}%`) || undefined,
-          render: (text, record) => this.renderCompRow(node.comp, text, record, true),
-          className: node.addonClassName && node.addonClassName.length > 0 ? `${node.addonClassName.toString().replaceAll(',', ' ')}` : '',
-          align: (node.style && node.style.textAlign) || undefined,
-        });
+        if (node.comp.NAME_KOR === 'WORK_START_DATE' || node.comp.NAME_KOR === 'WORK_END_DATE' || node.comp.NAME_KOR === 'WORK_MONEY') {
+          columns.push({
+            dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
+            title: node.comp.CONFIG.property.HEADER_NAME_KOR,
+            // width: (node.style && node.style.width) || undefined,
+            width: (widths && widths[idx] && `${widths[idx]}%`) || undefined,
+            render: (text, record) => this.renderCompRow(node.comp, text, record, true),
+            className: node.addonClassName && node.addonClassName.length > 0 ? `${node.addonClassName.toString().replaceAll(',', ' ')}` : '',
+            align: (node.style && node.style.textAlign) || undefined,
+            sorter: (a, b) => {
+              switch (node.comp.NAME_KOR || '') {
+                case 'WORK_START_DATE':
+                  return moment(a.WORK_START_DATE) - moment(b.WORK_START_DATE);
+                case 'WORK_END_DATE':
+                  return moment(a.WORK_END_DATE) - moment(b.WORK_END_DATE);
+                case 'WORK_MONEY':
+                  return Number(a.WORK_MONEY) - Number(b.WORK_MONEY);
+                default:
+                  return false;
+              }
+            },
+          });
+        } else {
+          columns.push({
+            dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
+            title: node.comp.CONFIG.property.HEADER_NAME_KOR,
+            // width: (node.style && node.style.width) || undefined,
+            width: (widths && widths[idx] && `${widths[idx]}%`) || undefined,
+            render: (text, record) => this.renderCompRow(node.comp, text, record, true),
+            className: node.addonClassName && node.addonClassName.length > 0 ? `${node.addonClassName.toString().replaceAll(',', ' ')}` : '',
+            align: (node.style && node.style.textAlign) || undefined,
+          });
+        }
       }
     });
     return columns;
@@ -242,6 +263,13 @@ class ListPage extends Component {
     this.modalHandler('viewTask', true, record.TASK_SEQ);
   };
 
+  saverAfterCallbackFunc = () => {
+    const { pageSize } = this.state;
+    const { sagaKey, workSeq, conditional, getListData } = this.props;
+    getListData(sagaKey, workSeq, conditional, 1, pageSize, undefined, false);
+    this.modalHandler('', false);
+  };
+
   renderModalContents = () => {
     const { selectedTaskSeq, modalType } = this.state;
     const { workSeq, sagaKey, CustomButtons } = this.props;
@@ -257,7 +285,7 @@ class ListPage extends Component {
             onCloseModalHandler={() => this.modalHandler('', false)}
             baseSagaKey={sagaKey}
             useExcelDownload={false}
-            saveTaskAfterCallbackFunc={() => this.modalHandler('', false)}
+            saveTaskAfterCallbackFunc={() => this.saverAfterCallbackFunc()}
           />
         );
       case 'viewTask':
@@ -271,6 +299,7 @@ class ListPage extends Component {
             onCloseModalHandler={() => this.modalHandler('', false)}
             baseSagaKey={sagaKey}
             ViewCustomButtons={CustomButtons?.ViewPageButtons}
+            callbackFuncExtra={() => this.saverAfterCallbackFunc()}
           />
         );
       default:

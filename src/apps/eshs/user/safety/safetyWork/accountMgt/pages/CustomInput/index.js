@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button, message } from 'antd';
-
+import { message } from 'antd';
 import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
-import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
@@ -215,7 +213,9 @@ class CustomInput extends Component {
               listMetaSeq={listMetaSeq}
               gubun={gubun}
             />
-            <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
+            <div style={{ marginTop: '20px' }}>
+              <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
+            </div>
           </Sketch>
         </StyledViewDesigner>
       );

@@ -54,7 +54,11 @@ class CustomWorkProcess extends Component {
         this.setState({ processRule, filterRule, filterItem });
       }
     } else if (draftId !== -1) {
-      getDraftProcessRule(draftId).then(draftPrcRule => this.setState({ draftPrcRule }));
+      console.debug('draftId @@@ ', draftId);
+      getDraftProcessRule(draftId, draftPrcRule => {
+        console.debug('@@@@@@@@@@@@@@@@@@ ', draftPrcRule);
+        this.setState({ draftPrcRule });
+      });
     }
   }
 
@@ -75,15 +79,16 @@ class CustomWorkProcess extends Component {
   };
 
   render() {
-    const { viewType, colLength, CustomRow } = this.props;
+    const { viewType, colLength, CustomRow, statusVisible, appLineBtnVisible } = this.props;
     const { processRule, modalVisible, filterRule, draftPrcRule } = this.state;
+
     return (
       <ContentsWrapper>
         <StyledHtmlTable>
           <table>
             <colgroup>
               {[...Array(colLength)].map((_, i) =>
-                i === 0 ? <col key={`col_${i}`} width="10%" /> : <col key={`col_${i}`} width={`${90 / colLength - 1}%`} />,
+                i === 0 ? <col key={`col_${i}`} width="15%" /> : <col key={`col_${i}`} width={`${85 / colLength - 1}%`} />,
               )}
             </colgroup>
             <tbody>
@@ -93,7 +98,7 @@ class CustomWorkProcess extends Component {
                   {viewType === 'INPUT' ? '결재선 지정' : '결재선'}
                 </td>
                 <td align="right">
-                  {viewType === 'INPUT' && (
+                  {viewType === 'INPUT' && appLineBtnVisible && (
                     <StyledButton className="btn-gray btn-sm" onClick={this.handleOpenModal}>
                       결재선반영
                     </StyledButton>
@@ -104,7 +109,7 @@ class CustomWorkProcess extends Component {
                 ? filterRule &&
                   filterRule.map((item, rowIndex) => (
                     <tr key={rowIndex}>
-                      <th>{(item && item.RULE_CONFIG && item.RULE_CONFIG.Label) || item.NAME_KOR}</th>
+                      <th>{item?.RULE_CONFIG?.Label || item?.NAME_KOR || ''}</th>
                       <td colSpan={colLength - 1}>
                         {item.APPV_MEMBER.map((user, colIndex) =>
                           item.NODE_TYPE === 'ND' ? (
@@ -128,7 +133,7 @@ class CustomWorkProcess extends Component {
                     .filter(item => item.VIEW_TYPE === 1)
                     .map((item, rowIndex) => (
                       <tr key={rowIndex}>
-                        <th>{(item && item.RULE_CONFIG && item.RULE_CONFIG.Label) || item.NAME_KOR}</th>
+                        <th>{`${item?.RULE_CONFIG?.Label || item?.NAME_KOR || ''}`}</th>
                         <td colSpan={colLength - 1}>
                           {item.APPV_MEMBER.map((user, colIndex) =>
                             item.NODE_TYPE === 'ND' ? (
@@ -143,6 +148,12 @@ class CustomWorkProcess extends Component {
                               </div>
                             ),
                           )}
+                          {statusVisible &&
+                            (item.APPV_STATUS === 2 ? (
+                              <span style={{ color: 'red' }}>(결재완료)</span>
+                            ) : item.APPV_STATUS === 9 ? (
+                              <span style={{ color: 'red' }}>(부결)</span>
+                            ) : null)}
                         </td>
                       </tr>
                     ))}
@@ -167,6 +178,7 @@ class CustomWorkProcess extends Component {
               visible={modalVisible}
               onComplete={this.onProcessRuleComplete}
               onCloseModal={this.handleCloseModal}
+              customBtnText
             />
           )}
         </AntdModal>
@@ -185,6 +197,8 @@ CustomWorkProcess.propTypes = {
   getDraftPrcRule: PropTypes.func,
   colLength: PropTypes.number,
   CustomRow: PropTypes.array,
+  statusVisible: PropTypes.bool,
+  appLineBtnVisible: PropTypes.bool,
 };
 
 CustomWorkProcess.defaultProps = {
@@ -194,6 +208,8 @@ CustomWorkProcess.defaultProps = {
   draftId: -1,
   colLength: 3,
   CustomRow: [],
+  statusVisible: false,
+  appLineBtnVisible: true,
 };
 
 export default CustomWorkProcess;

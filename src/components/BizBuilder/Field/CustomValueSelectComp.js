@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-
 import { Select } from 'antd';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 
+const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
 const init = { value: null, text: null };
 function CustomValueSelectComp(props) {
@@ -77,8 +78,8 @@ function CustomValueSelectComp(props) {
       {(viewPageData && viewPageData.viewType === 'VIEW') || (viewPageData.viewType === 'LIST' && !isSearch) || readOnly ? (
         <span className={CONFIG.property.className || ''}>{viewText}</span>
       ) : (
-        <Select
-          className={CONFIG.property.className || ''}
+        <AntdSelect
+          className={CONFIG.property.className || 'select-xs ant-select-inline'}
           onChange={value => valueHandler(values, value)}
           style={{ width: '100%' }}
           value={colData ? values.findIndex(item => item.value === colData) : defaultValue.text}
@@ -88,7 +89,7 @@ function CustomValueSelectComp(props) {
               {text}
             </Option>
           ))}
-        </Select>
+        </AntdSelect>
       )}
     </>
   );

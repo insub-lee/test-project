@@ -1,6 +1,6 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input, Button, Modal, Table, DatePicker } from 'antd';
+import { Input, Button, Modal, Table, DatePicker, Popconfirm } from 'antd';
 import moment from 'moment';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
@@ -11,9 +11,13 @@ import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+
+import { saveProcessRule, getProcessRule } from 'apps/eshs/common/workProcessRule';
+import AppLine from 'apps/eshs/common/Workflow/AppLineBtn';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -29,6 +33,7 @@ class TakeOutSearchComp extends React.Component {
       modalList: [],
       dates: [moment(), moment()],
       dateStrings: [moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')],
+      processRule: {},
     };
   }
 
@@ -196,45 +201,139 @@ class TakeOutSearchComp extends React.Component {
   };
 
   ButtonRender() {
-    const { viewPageData, sagaKey: id, changeViewPage } = this.props;
-    let buttonGruop;
-    switch (viewPageData && viewPageData.viewType.toUpperCase()) {
+    const { prcId: PRC_ID, viewPageData, sagaKey: id, changeViewPage, formData, profile } = this.props;
+    const viewType = (viewPageData && viewPageData.viewType.toUpperCase()) || '';
+    // let buttonGruop;
+    let buttonsRef = [];
+
+    // 문서상태 저장(0) AND 작성자 = 로그인한사람
+    const flag1 = viewType === 'MODIFY' && formData?.APP_STATUS === '0' && formData?.REG_USER_ID === profile?.USER_ID;
+    switch (viewType) {
       case 'INPUT':
-        buttonGruop = (
-          <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('S')}>
-              등록
-            </StyledButton>
-            <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-              Reset
-            </StyledButton>
-          </StyledButtonWrapper>
-        );
+        buttonsRef = [
+          {
+            text: '등록',
+            onClick: () => this.onChangeSave('S'),
+            className: 'btn-primary btn-sm mr5',
+            visible: true,
+            popconfirm: false,
+            message: '',
+          },
+          {
+            text: 'Reset',
+            onClick: () => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT'),
+            className: 'btn-light btn-sm',
+            visible: true,
+            popconfirm: false,
+            message: '',
+          },
+        ];
         break;
       case 'MODIFY':
-        buttonGruop = (
-          <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-sm mr5" onClick={() => this.onChangeSave('M')}>
-              저장
-            </StyledButton>
-            <StyledButton className="btn-primary btn-sm mr5" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
-              신규등록
-            </StyledButton>
-            <StyledButton className="btn-light btn-sm mr5" onClick={() => this.onChangeSave('D')}>
-              삭제
-            </StyledButton>
-            <StyledButton className="btn-light btn-sm" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-              Reset
-            </StyledButton>
-          </StyledButtonWrapper>
-        );
+        buttonsRef = [
+          {
+            text: '수정',
+            onClick: () => this.onChangeSave('M'),
+            className: 'btn-primary btn-sm mr5',
+            visible: flag1,
+            popconfirm: true,
+            message: '수정하시겠습니까?',
+          },
+          {
+            text: '신규등록',
+            onClick: () => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION'),
+            className: 'btn-primary btn-sm mr5',
+            visible: true,
+            popconfirm: false,
+            message: '',
+          },
+          {
+            text: '삭제',
+            onClick: () => this.onChangeSave('D'),
+            className: 'btn-light btn-sm mr5',
+            visible: flag1,
+            popconfirm: true,
+            message: '삭제하시겠습니까?',
+          },
+          {
+            text: 'Reset',
+            onClick: () => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT'),
+            className: 'btn-light btn-sm mr5',
+            visible: true,
+            popconfirm: false,
+            message: '',
+          },
+          {
+            text: '완료',
+            onClick: () =>
+              getProcessRule(PRC_ID, prcRule => {
+                const { DRAFT_PROCESS_STEP } = prcRule;
+                // 상신시 바로 결재 완료처리
+                DRAFT_PROCESS_STEP[0].RULE_CONFIG.APP_STATUS = '4A';
+                this.saveProcessRule(prcRule);
+              }),
+            className: 'btn-primary btn-sm mr5',
+            visible: flag1,
+            popconfirm: true,
+            message: '완료하시겠습니까?',
+          },
+          {
+            text: '상신',
+            onClick: () => this.saveProcessRule(),
+            className: 'btn-primary btn-sm mr5',
+            visible: flag1,
+            popconfirm: true,
+            message: '완료하시겠습니까?',
+          },
+        ];
+        break;
+      case 'VIEW':
         break;
       default:
-        buttonGruop = '';
         break;
     }
-    return buttonGruop;
+    const customButtons = buttonsRef
+      .filter(btn => btn.visible)
+      .map((btn, index) => {
+        if (btn?.popconfirm) {
+          return (
+            <Popconfirm key={`CUSTOMBUTTON_${index}`} title={btn?.message} onConfirm={btn?.onClick} okText="Yes" cancelText="No">
+              <StyledButton className={btn?.className}>{btn?.text}</StyledButton>
+            </Popconfirm>
+          );
+        }
+        return (
+          <StyledButton key={`CUSTOMBUTTON_${index}`} className={btn?.className} onClick={btn?.onClick}>
+            {btn?.text}
+          </StyledButton>
+        );
+      });
+    if (flag1)
+      customButtons.push(
+        <AppLine
+          prcId={PRC_ID}
+          processRule={this.state.processRule}
+          setProcessRule={prcRule => this.setState({ processRule: prcRule })}
+          draftId={formData?.DRAFT_ID}
+        />,
+      );
+
+    return customButtons;
   }
+
+  saveProcessRule = (prcRule = this.state.processRule) => {
+    const { relKey, relKey2, formData } = this.props;
+
+    saveProcessRule({
+      ...prcRule,
+      DRAFT_DATA: {},
+      REL_KEY: relKey,
+      REL_KEY2: formData[relKey2],
+      DRAFT_TITLE: `관리번호(${formData[relKey2]})`,
+      TASK_SEQ: formData?.TASK_SEQ,
+      WORK_SEQ: formData?.WORK_SEQ,
+    });
+  };
 
   render() {
     const { CONFIG, visible, colData, viewPageData, sagaKey: id, changeViewPage } = this.props;
@@ -248,7 +347,8 @@ class TakeOutSearchComp extends React.Component {
           onClick={this.handleModalVisible}
           onSearch={this.handleModalVisible}
         />
-        {this.ButtonRender()}
+        <StyledButtonWrapper className="btn-wrap-inline">{this.ButtonRender()}</StyledButtonWrapper>
+
         <AntdModal title="반출증번호 검색" visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
           {this.state.modal && this.modalTableRender()}
         </AntdModal>

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Select } from 'antd';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 
+const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
 
 // const SelectYearComp = props => {
@@ -51,18 +53,18 @@ const SelectYearComp = ({ CONFIG, changeFormData, sagaKey: id, COMP_FIELD, NAME_
   };
 
   return visible ? (
-    <Select
+    <AntdSelect
       defaultValue={colData !== '' ? colData : CONFIG.property.defaultYear}
       onChange={isSearch ? onSearchHandler : onChangeHandler}
       style={{ width: '100%', marginRight: 10 }}
-      className={CONFIG.property.className || ''}
+      className={CONFIG.property.className || 'select-xs ant-select-inline'}
     >
       {yearRange.map(year => (
         <Option key={year} value={year} style={{ height: 30 }}>
           {`${year}년`}
         </Option>
       ))}
-    </Select>
+    </AntdSelect>
   ) : (
     ''
   );

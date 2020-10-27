@@ -11,8 +11,24 @@ class TakeOut extends Component {
     });
   };
 
+  emptyButtons = () => [];
+
   render() {
-    return <BizBuilderBase sagaKey="takeOut" workSeq={4781} viewType="INPUT" loadingComplete={this.loadingComplete} />;
+    return (
+      <BizBuilderBase
+        sagaKey="takeOut"
+        workSeq={4781}
+        viewType="INPUT"
+        loadingComplete={this.loadingComplete}
+        InputCustomButtons={this.emptyButtons}
+        ModifyCustomButtons={this.emptyButtons}
+        ViewCustomButtons={this.emptyButtons}
+        ListCustomButtons={this.emptyButtons}
+        relKey="반출증관리"
+        relKey2="TAKEOUT_CD"
+        prcId={116}
+      />
+    );
   }
 }
 

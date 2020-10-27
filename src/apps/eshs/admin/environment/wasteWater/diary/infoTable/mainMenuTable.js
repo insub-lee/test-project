@@ -112,7 +112,9 @@ class MainMenuTable extends Component {
                 <th>
                   <span>결재</span>
                 </th>
-                <td>{formData.EMP_NM && <span>{`${formData.EMP_NM}`}</span>}</td>
+                <td>
+                  <span>{`${formData?.APP_LINE_TEXT || ''}`}</span>
+                </td>
               </tr>
             </tbody>
           </table>

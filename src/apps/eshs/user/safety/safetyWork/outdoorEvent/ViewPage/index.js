@@ -16,6 +16,9 @@ const outdoorEvent = () => (
     modifyMetaSeq={12921}
     CustomModifyPage={ModifyPage}
     ModifyCustomButtons={ModifyCustomButtons}
+    relKey="야외행사승인"
+    relKey2="DOC_NO"
+    prcId={115}
   />
 );
 

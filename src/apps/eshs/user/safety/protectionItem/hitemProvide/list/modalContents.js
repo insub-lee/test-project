@@ -43,7 +43,7 @@ class ModalContents extends React.Component {
   };
 
   getLastReqCd = () => {
-    const { sagaKey: id, getExtraApiData } = this.props;
+    const { sagaKey: id, getCallDataHandler } = this.props;
     const apiArr = [
       {
         key: 'lastReqCd',
@@ -52,7 +52,7 @@ class ModalContents extends React.Component {
       },
     ];
 
-    getExtraApiData(id, apiArr, this.setReqCd);
+    getCallDataHandler(id, apiArr, this.setReqCd);
   };
 
   setReqCd = () => {
@@ -336,7 +336,7 @@ ModalContents.propTypes = {
   isModified: PropTypes.bool,
   submitHandlerBySaga: PropTypes.func,
   result: PropTypes.object,
-  getExtraApiData: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   profile: PropTypes.object,
   modalDataSource: PropTypes.arrayOf('object'),
 };

@@ -23,6 +23,7 @@ class List extends Component {
     super(props);
     this.state = {
       changeSelectValue: '',
+      keyword: '',
       name: '',
       code: '',
       selectBoxData: [],
@@ -90,11 +91,30 @@ class List extends Component {
     });
   };
 
+  // 코드종류 변경
   selectCode = () => {
     const { result } = this.props;
     const { changeSelectValue } = this.state;
     if (changeSelectValue) {
       const listData = result && result.apiData && result.apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3);
+      const pullpath = result && result.apiData && result.apiData.categoryMapList.find(x => x.NODE_ID === changeSelectValue);
+      this.setState({ listData, pullpath: pullpath && pullpath.FULLPATH, nodeOrdinal: pullpath && pullpath.NODE_ORDINAL });
+    } else {
+      message.warning('코드 구분을 선택해주세요.');
+    }
+  };
+
+  // 검색버튼
+  searchCode = () => {
+    const { result } = this.props;
+    const { changeSelectValue, keyword } = this.state;
+    if (changeSelectValue) {
+      const listData =
+        result &&
+        result.apiData &&
+        result.apiData.categoryMapList
+          .filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3)
+          .filter(x => x.NAME_KOR.includes(keyword) || x.CODE.includes(keyword));
       const pullpath = result && result.apiData && result.apiData.categoryMapList.find(x => x.NODE_ID === changeSelectValue);
       this.setState({ listData, pullpath: pullpath && pullpath.FULLPATH, nodeOrdinal: pullpath && pullpath.NODE_ORDINAL });
     } else {
@@ -207,6 +227,13 @@ class List extends Component {
     });
   };
 
+  // Input 키 누를 때 - 엔터키
+  handleKeyPress = e => {
+    if (e.key === 'Enter') {
+      this.searchCode();
+    }
+  };
+
   render() {
     const { selectBoxData, listData, excelData, excelNm, code, name, useYN } = this.state;
     const columns = [
@@ -234,6 +261,8 @@ class List extends Component {
             render: item => <span>{item === 'Y' ? '사용중' : '삭제'}</span>,
           },
         ],
+        sorter: (a, b) => (a.USE_YN === 'Y' ? 1 : 2) - (b.USE_YN === 'Y' ? 1 : 2),
+        sortDirections: ['descend', 'ascend'],
       },
       {
         title: '코드',
@@ -247,6 +276,12 @@ class List extends Component {
             align: 'left',
           },
         ],
+        sorter: (a, b) => {
+          const checkNum = Number.isNaN(a.CODE);
+          if (checkNum) return Number(a.CODE) - Number(b.CODE);
+          return a.CODE.length - b.CODE.length;
+        },
+        sortDirections: ['descend', 'ascend'],
       },
       {
         align: 'left',
@@ -282,6 +317,8 @@ class List extends Component {
             align: 'left',
           },
         ],
+        sorter: (a, b) => a.NAME_KOR.length - b.NAME_KOR.length,
+        sortDirections: ['descend', 'ascend'],
       },
     ];
     return (
@@ -294,9 +331,17 @@ class List extends Component {
               </Option>
               {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
             </AntdSelect>
+            <AntdInput
+              className="ant-input-sm ant-input-inline ml5"
+              defaultValue=""
+              placeHolder="코드 or 코드명 입력"
+              style={{ width: '300px' }}
+              onKeyPress={this.handleKeyPress}
+              onChange={e => this.setState({ keyword: e.target.value })}
+            />
           </div>
           <div className="btn-area">
-            <StyledButton className="btn-gray mr5 btn-sm" onClick={this.selectCode}>
+            <StyledButton className="btn-gray mr5 btn-sm" onClick={this.searchCode}>
               검색
             </StyledButton>
           </div>

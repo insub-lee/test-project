@@ -15,6 +15,7 @@ import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import message from 'components/Feedback/message';
 import Group from 'components/BizBuilder/Sketch/Group';
+import DeptSelect from 'components/DeptSelect';
 import MessageContent from 'components/Feedback/message.style2';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import IngCheckViewer from '../../ingCheck';
@@ -52,7 +53,6 @@ class SafetyWorkList extends Component {
         START_CHECK_DT: '', // 점검기간(START)
         END_CHECK_DT: '', // 점검기간(END)
       },
-      safetyWorks: [],
       ingCheckList: [],
     };
   }
@@ -77,9 +77,10 @@ class SafetyWorkList extends Component {
   onSearchCallback = (id, response) => {
     const result = response.list;
     if (result.length > 0) {
+      const setResult = this.setListDataForMagnachip(result);
       this.setState({
         isSearching: false,
-        ingCheckList: result,
+        ingCheckList: setResult,
       });
       return;
     }
@@ -92,19 +93,56 @@ class SafetyWorkList extends Component {
     );
   };
 
+  // 검색데이터 가공 (구미요청사항)
+  setListDataForMagnachip = list => {
+    const result = [];
+    // 전체리스트
+    list.forEach(item => {
+      const cmpny = {
+        WORK_NO: item.WORK_NO,
+        TARGET_NM: item.WRK_CMPNY_NM,
+        REQ_EMP_NM: item.REQ_EMP_NM,
+        WORK_DESC: item.WORK_DESC,
+        PT: item.WRK_CMPNY_PT,
+        TOTAL_PT: (item.WRK_CMPNY_PT || 0) + (item.REQ_CMPNY_PT || 0),
+        CHECK_STATUS: item.CHECK_STATUS,
+        CHECK_DT: item.CHECK_DT,
+      };
+      const team = {
+        WORK_NO: item.WORK_NO,
+        TARGET_NM: item.REQ_DEPT_NM,
+        REQ_EMP_NM: item.REQ_EMP_NM,
+        WORK_DESC: item.WORK_DESC,
+        PT: item.REQ_CMPNY_PT,
+        TOTAL_PT: (item.WRK_CMPNY_PT || 0) + (item.REQ_CMPNY_PT || 0),
+        CHECK_STATUS: item.CHECK_STATUS,
+        CHECK_DT: item.CHECK_DT,
+      };
+      // 작업업체, 주관부서(팀) 순서로 넣어줌
+      result.push(cmpny);
+      result.push(team);
+    });
+
+    // 요청된 리스트 형태로 return
+    return result;
+  };
+
   // 모달 핸들러
   handleModal = (type, visible, workNo) => {
     let title = '';
     const selectedWork = workNo || '';
     switch (type) {
-      case 'supervisor':
-        title = '감독자 선택';
+      case 'safetyWork':
+        title = '안전작업 검색';
         break;
       case 'cmpny':
         title = '작업업체 선택';
         break;
       case 'ingCheckView':
         title = '안전작업 점검 상세정보';
+        break;
+      case 'dept':
+        title = '작업부서 선택';
         break;
       default:
         break;
@@ -147,6 +185,21 @@ class SafetyWorkList extends Component {
     });
   };
 
+  // 작업부서 선택시
+  handleSafetyWorkDeptSelect = dept => {
+    const { searchValues } = this.state;
+    this.setState({
+      modalType: '',
+      modalTitle: '',
+      modalVisible: false,
+      searchValues: {
+        ...searchValues,
+        REQ_DEPT_CD: dept.DEPT_CD,
+        REQ_DEPT_NM: dept.NAME_KOR,
+      },
+    });
+  };
+
   // state searchValue 변경
   handleChangeSearchValue = (field, value) => {
     const { searchValues } = this.state;
@@ -159,79 +212,130 @@ class SafetyWorkList extends Component {
   };
 
   render() {
-    const { modalType, modalTitle, modalVisible, searchValues, safetyWorks, selectedWork, ingCheckList, isSearching } = this.state;
+    const { modalType, modalTitle, modalVisible, searchValues, selectedWork, ingCheckList, isSearching } = this.state;
     const columns = [
       {
         title: '작업번호',
         dataIndex: 'WORK_NO',
         align: 'center',
-        render: value => (
-          <span
-            onClick={() => this.handleModal('ingCheckView', true, value)}
-            role="button"
-            tabIndex="0"
-            onKeyPress={() => this.handleModal('ingCheckView', true, value)}
-            style={{ cursor: 'pointer', color: '#1fb5ad' }}
-          >
-            {value}
-          </span>
-        ),
+        render: (value, row, index) => {
+          const obj = {
+            children: (
+              <span
+                onClick={() => this.handleModal('ingCheckView', true, value)}
+                role="button"
+                tabIndex="0"
+                onKeyPress={() => this.handleModal('ingCheckView', true, value)}
+                style={{ cursor: 'pointer', color: '#1fb5ad' }}
+              >
+                {value}
+              </span>
+            ),
+            props: {},
+          };
+          if (index % 2 === 0) {
+            obj.props.rowSpan = 2;
+          } else {
+            obj.props.rowSpan = 0;
+          }
+          return obj;
+        },
       },
       {
-        title: '작업업체',
-        children: [
-          {
-            title: '업체명',
-            dataIndex: 'WRK_CMPNY_NM',
-            key: 'WRK_CMPNY_NM',
-            align: 'center',
-          },
-          {
-            title: '벌점',
-            dataIndex: 'WRK_CMPNY_PT',
-            key: 'WRK_CMPNY_PT',
-            align: 'center',
-          },
-        ],
+        title: '팀 / 업체명',
+        dataIndex: 'TARGET_NM',
+        align: 'center',
+        render: value => <span>{value || ''}</span>,
       },
       {
-        title: '발주팀',
-        children: [
-          {
-            title: '발주사',
-            dataIndex: 'REQ_CMPNY_NM',
-            key: 'REQ_CMPNY_NM',
-            align: 'center',
-          },
-          {
-            title: '팀명',
-            dataIndex: 'REQ_DEPT_NM',
-            key: 'REQ_DEPT_NM',
-            align: 'center',
-          },
-          {
-            title: '벌점',
-            dataIndex: 'REQ_CMPNY_PT',
-            key: 'REQ_CMPNY_PT',
-            align: 'center',
-          },
-        ],
+        title: '담당자',
+        dataIndex: 'REQ_EMP_NM',
+        align: 'center',
+        render: (value, row, index) => {
+          const obj = {
+            children: value,
+            props: {},
+          };
+          if (index % 2 === 0) {
+            obj.props.rowSpan = 2;
+          } else {
+            obj.props.rowSpan = 0;
+          }
+          return obj;
+        },
       },
       {
-        title: '주작업',
-        dataIndex: 'WCATEGORY',
+        title: '작업내용',
+        dataIndex: 'WORK_DESC',
+        align: 'center',
+        render: (value, row, index) => {
+          const obj = {
+            children: value,
+            props: {},
+          };
+          if (index % 2 === 0) {
+            obj.props.rowSpan = 2;
+          } else {
+            obj.props.rowSpan = 0;
+          }
+          return obj;
+        },
+      },
+      {
+        title: '벌점',
+        dataIndex: 'PT',
         align: 'center',
       },
       {
         title: '점검일',
         dataIndex: 'CHECK_DT',
         align: 'center',
-        render: value => <span>{moment(value).format('YYYY-MM-DD')}</span>,
+        render: (value, row, index) => {
+          const obj = {
+            children: <span>{moment(value).format('YYYY-MM-DD')}</span>,
+            props: {},
+          };
+          if (index % 2 === 0) {
+            obj.props.rowSpan = 2;
+          } else {
+            obj.props.rowSpan = 0;
+          }
+          return obj;
+        },
       },
       {
         title: '점검결과',
         dataIndex: 'CHECK_STATUS',
         align: 'center',
+        render: (value, row, index) => {
+          const obj = {
+            children: value,
+            props: {},
+          };
+          if (index % 2 === 0) {
+            obj.props.rowSpan = 2;
+          } else {
+            obj.props.rowSpan = 0;
+          }
+          return obj;
+        },
+      },
+      {
+        title: '누적벌점(팀+업체)',
+        dataIndex: 'TOTAL_PT',
+        align: 'center',
+        render: (value, row, index) => {
+          const obj = {
+            children: value,
+            props: {},
+          };
+          if (index % 2 === 0) {
+            obj.props.rowSpan = 2;
+          } else {
+            obj.props.rowSpan = 0;
+          }
+          return obj;
+        },
       },
     ];
     return (
@@ -243,66 +347,35 @@ class SafetyWorkList extends Component {
                 <table className="view-designer-table table-0">
                   <tbody>
                     <tr className="view-designer-row">
-                      <td className="view-designer-col view-designer-label">
+                      <td className="view-designer-col view-designer-label" style={{ width: '100px', textAlign: 'center' }}>
                         <span>작업번호</span>
                       </td>
                       <td className="view-designer-col">
                         <div>
                           <AntdSearch
                             className="ant-search-inline input-search-xs mr5"
-                            style={{ width: '50%' }}
+                            style={{ width: '100%' }}
                             value={searchValues.WORK_NO}
                             onChange={e => this.handleChangeSearchValue('WORK_NO', e.target.value)}
                             onSearch={() => this.handleModal('safetyWork', true)}
                           />
                         </div>
                       </td>
-                      <td className="view-designer-col view-designer-label">
-                        <span>발주회사</span>
-                      </td>
-                      <td className="view-designer-col">
-                        <div>
-                          <AntdSearch
-                            className="ant-search-inline input-search-xs mr5"
-                            style={{ width: '50%' }}
-                            value={searchValues.REQ_CMPNY_CD}
-                            onClick={() => this.handleModal('', false)}
-                            onSearch={() => this.handleModal('', false)}
-                          />
-                        </div>
-                      </td>
-                      <td className="view-designer-col view-designer-label">
+                      <td className="view-designer-col view-designer-label" style={{ width: '100px', textAlign: 'center' }}>
                         <span>주관팀</span>
                       </td>
                       <td className="view-designer-col">
                         <div>
                           <AntdSearch
                             className="ant-search-inline input-search-xs mr5"
-                            style={{ width: '50%' }}
-                            value={searchValues.REQ_DEPT_CD}
-                            onClick={() => this.handleModal('', false)}
-                            onSearch={() => this.handleModal('', false)}
+                            style={{ width: '100%' }}
+                            value={searchValues.REQ_DEPT_NM || ''}
+                            onClick={() => this.handleModal('dept', true)}
+                            onSearch={() => this.handleModal('dept', true)}
                           />
                         </div>
                       </td>
-                    </tr>
-                    <tr className="view-designer-row">
-                      <td className="view-designer-col view-designer-label">
-                        <span>작업업체</span>
-                      </td>
-                      <td className="view-designer-col">
-                        <div>
-                          <AntdSearch
-                            className="ant-search-inline input-search-xs mr5"
-                            style={{ width: '50%' }}
-                            value={searchValues.WRK_CMPNY_CD}
-                            onClick={() => this.handleModal('cmpny', true)}
-                            onSearch={() => this.handleModal('cmpny', true)}
-                          />
-                          {searchValues.WRK_CMPNY_NM !== '' && <span>{searchValues.WRK_CMPNY_NM}</span>}
-                        </div>
-                      </td>
-                      <td className="view-designer-col view-designer-label">
+                      <td className="view-designer-col view-designer-label" style={{ width: '100px', textAlign: 'center' }}>
                         <span>점검기간</span>
                       </td>
                       <td className="view-designer-col">
@@ -333,6 +406,20 @@ class SafetyWorkList extends Component {
                             }}
                           />
                         </div>
+                      </td>
+                    </tr>
+                    <tr className="view-designer-row">
+                      <td className="view-designer-col view-designer-label" style={{ width: '100px', textAlign: 'center' }}>
+                        <span>작업업체</span>
+                      </td>
+                      <td className="view-designer-col">
+                        <AntdSearch
+                          className="ant-search-inline input-search-xs mr5"
+                          style={{ width: '100%' }}
+                          value={searchValues.WRK_CMPNY_NM || ''}
+                          onClick={() => this.handleModal('cmpny', true)}
+                          onSearch={() => this.handleModal('cmpny', true)}
+                        />
                       </td>
                     </tr>
                   </tbody>
@@ -380,8 +467,20 @@ class SafetyWorkList extends Component {
               eshsCmpnyCompResult={(cmpnyInfo, field) => this.handleCmpnySelect(cmpnyInfo, field)}
             />
           )}
-          {modalType === 'safetyWork' && <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />}
+          {modalType === 'safetyWork' && (
+            <div style={{ padding: '20px' }}>
+              <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />
+            </div>
+          )}
           {modalType === 'ingCheckView' && <IngCheckViewer workNo={selectedWork} pageType="modal" />}
+          {modalType === 'dept' && (
+            <DeptSelect
+              onCancel={() => this.handleModal('', false)}
+              onComplete={dept => this.handleSafetyWorkDeptSelect(dept)}
+              rootDeptChange
+              defaultRootDeptId={72761}
+            />
+          )}
         </AntdModal>
       </Styled>
     );

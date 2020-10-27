@@ -98,39 +98,20 @@ class EshsAppView extends Component {
     const { opinion, nextApprover } = this.state;
     const { selectedRow } = this.props;
 
-    if (((appvStatus === 3 || appvStatus === 30 || selectedRow.NODE_ID === 114) && !opinion) || opinion === '') {
-      message.warning('의견을 작성해주세요');
-    } else {
-      if (appvStatus === 5 && nextApprover.length === 0) {
-        message.info('실무자를 선택 해주세요');
-        return;
-      }
-
-      if ((appvStatus === 9 && !opinion) || opinion === '') {
-        message.info('DownLoad 권한 거부에 대한 사유를 작성해 주세요');
-        return;
-      }
-
-      if (appvStatus === 10 && nextApprover.length === 0) {
-        message.info('실무자 결재위임자를 선택 해주세요');
-        return;
-      }
-
-      if (appvStatus === 10 && nextApprover.length > 1) {
-        message.info('실무자 결재위임자는 한명만 선택 가능합니다.');
-        return;
-      }
-
-      this.props.setOpinion(opinion);
-      this.props.reqApprove(appvStatus);
-      this.props.setOpinionVisible(false);
-      this.onModalClose();
+    if (appvStatus === 9 && !opinion) {
+      message.info('부결사유를 입력 해주세요.');
+      return;
     }
+
+    this.props.setOpinion(opinion);
+    this.props.reqApprove(appvStatus);
+    this.props.setOpinionVisible(false);
+    this.onModalClose();
   };
 
   onModalClose = () => {
     const { getUnApproveList } = this.props;
-    const prefixUrl = '/api/workflow/v1/common/approve/UnApproveListMDCSHandler';
+    const prefixUrl = '/api/workflow/v1/common/approve/unApproveList';
     getUnApproveList(prefixUrl);
     this.props.setViewVisible(false);
   };
@@ -257,7 +238,7 @@ class EshsAppView extends Component {
 
   render() {
     const { selectedRow } = this.props;
-    const { DRAFT_DATA, REL_TYPE } = selectedRow;
+    const { DRAFT_DATA, REL_TYPE, REL_KEY } = selectedRow;
     const {
       modalWidth,
       coverView,
@@ -281,13 +262,9 @@ class EshsAppView extends Component {
               <tr>
                 <th style={{ width: '150px' }}>결재방법 </th>
                 <td colSpan={3}>
-                  <Radio.Group onChange={this.onChange} defaultValue={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>
-                    <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
-                    <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 30 : 3}>
-                      {selectedRow.NODE_ID === 114 && selectedRow.CURRENT_STATUS === 5 ? '부결' : 'Hold'}
-                    </Radio>
-                    {selectedRow.NODE_ID === 106 && <Radio value={5}>실무자 검토의뢰</Radio>}
-                    {selectedRow.NODE_ID === 106 && <Radio value={10}>실무자 결재 권한위임</Radio>}
+                  <Radio.Group onChange={this.onChange} defaultValue={selectedRow?.CURRENT_STATUS === 10 ? 20 : 2}>
+                    <Radio value={selectedRow?.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
+                    {selectedRow?.RULE_CONFIG?.RejectBtn && <Radio value={9}>부결</Radio>}
                   </Radio.Group>
                 </td>
               </tr>
@@ -299,28 +276,6 @@ class EshsAppView extends Component {
                   </td>
                 </tr>
               )}
-              <tr
-                style={{
-                  display: (selectedRow && selectedRow.APPV_STATUS && selectedRow.APPV_STATUS === 5) || selectedRow.APPV_STATUS === 10 ? 'table-row' : 'none',
-                }}
-              >
-                <th style={{ width: '150px' }}>선택된 실무자 </th>
-                <td colSpan={3}>
-                  <StyledButton onClick={this.onClickUserSelect} className="btn-gray btn-xs">
-                    <Icon type="search" style={{ marginRight: '5px' }} />
-                    실무자검색
-                  </StyledButton>
-                  <div>
-                    {nextApprover &&
-                      nextApprover.map(user => (
-                        <StyledTagDraft>
-                          <Icon type="user" />
-                          <span className="infoTxt">{`${user.NAME_KOR} (${user.DEPT_NAME_KOR})`}</span>
-                        </StyledTagDraft>
-                      ))}
-                  </div>
-                </td>
-              </tr>
               <tr style={{ display: procResult && procResult.length > 0 ? 'table-row' : 'none' }}>
                 <td colSpan={4} style={{ padding: 0, border: 0 }}>
                   <table style={{ width: '100%', borderTop: 0 }}>
@@ -343,7 +298,7 @@ class EshsAppView extends Component {
                         <tr>
                           <td style={{ textAlign: 'center' }}>{item.APPV_USER_NAME}</td>
                           <td style={{ textAlign: 'center' }}>{item.APPV_PSTN_NAME}</td>
-                          <td style={{ textAlign: 'center' }}>{item.APPV_STATUS === 0 ? '대기' : item.APPV_STATUS === 2 ? '승인' : '부결'}</td>
+                          <td style={{ textAlign: 'center' }}>{item.APPV_STATUS === 2 ? '승인' : '부결'}</td>
                           <td>{item.OPINION}</td>
                           <td style={{ textAlign: 'center' }}>{item.APPV_DTTM ? moment(item.APPV_DTTM).format('YYYY-MM-DD') : ''}</td>
                         </tr>
@@ -382,14 +337,10 @@ class EshsAppView extends Component {
               </tr>
               <tr
                 style={{
-                  display:
-                    REL_TYPE === 4 ||
-                    (selectedRow && selectedRow.NODE_ID !== 114 && selectedRow.APPV_STATUS && (selectedRow.APPV_STATUS === 20 || selectedRow.APPV_STATUS === 2))
-                      ? 'none'
-                      : 'table-row',
+                  display: selectedRow?.APPV_STATUS === 9 ? 'table-row' : 'none',
                 }}
               >
-                <th>의견 </th>
+                <th>부결 의견</th>
                 <td colSpan={3}>
                   <AntdTextArea rows={4} onChange={this.onChangeOpinion} />
                 </td>
@@ -412,98 +363,6 @@ class EshsAppView extends Component {
             </StyledButton>
           </StyledButtonWrapper>
         </StyledHtmlTable>
-
-        {/* {selectedRow && selectedRow.REL_TYPE && selectedRow.REL_TYPE !== 999 ? (
-          <BizBuilderBase
-            sagaKey="approveBase_approveView"
-            viewType="VIEW"
-            workSeq={selectedRow && selectedRow.WORK_SEQ}
-            taskSeq={selectedRow && selectedRow.TASK_SEQ}
-            selectedRow={selectedRow}
-            clickCoverView={this.clickCoverView}
-            ViewCustomButtons={() => false}
-            isObsCheck={selectedRow.REL_TYPE === 99}
-          />
-        ) : (
-          DRAFT_DATA &&
-          DRAFT_DATA.abrogationList &&
-          DRAFT_DATA.abrogationList.length > 0 && (
-            <>
-              <StyledHtmlTable style={{ padding: '20px 20px 20px' }}>
-                <AntdLineTable
-                  columns={this.getTableColumns()}
-                  dataSource={DRAFT_DATA.abrogationList !== null ? DRAFT_DATA.abrogationList : []}
-                  bordered
-                  className="tableWrapper"
-                  pagination={false}
-                />
-              </StyledHtmlTable>
-              <AntdModal
-                destroyOnClose
-                style={{ top: '50px' }}
-                initialWidth={900}
-                width={900}
-                visible={isAbrogationMultiShow}
-                onCancel={this.onCloseAbrogationMultiModal}
-                footer={null}
-                maskClosable={false}
-              >
-                <StyledInputView>
-                  <div className="pop_tit">표준 일괄 폐기</div>
-                  <AbrogationMultiModifyDraft
-                    workPrcProps={workPrcProps}
-                    {...this.props}
-                    onAbrogationMultiProcess={this.onAbrogationMultiProcess}
-                    onCloseAbrogationMultiModal={this.onCloseAbrogationMultiModal}
-                  />
-                </StyledInputView>
-              </AntdModal>
-            </>
-          )
-        )} */}
-
-        {/* <AntdModal
-          className="modalWrapper modalTechDoc modalCustom"
-          title="표지 보기"
-          width={900}
-          destroyOnClose
-          visible={coverView.visible}
-          onCancel={this.onCloseCoverView}
-          footer={[]}
-        >
-          <BizBuilderBase
-            sagaKey="CoverView"
-            viewType={coverView.viewType}
-            workSeq={coverView.workSeq}
-            taskSeq={coverView.taskSeq}
-            viewMetaSeq={coverView.viewMetaSeq}
-            workPrcProps={workPrcProps}
-            isObsCheck={isObsCheck}
-            CustomWorkProcessModal={WorkProcessModal}
-            onCloseCoverView={this.onCloseCoverView}
-            onCloseModalHandler={this.onCloseCoverView}
-            reloadId="approveBase_approveView"
-            reloadViewType="VIEW"
-            reloadTaskSeq={selectedRow && selectedRow.TASK_SEQ}
-            ViewCustomButtons={({ onCloseCoverView }) => (
-              <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                <StyledButton className="btn-light" onClick={onCloseCoverView}>
-                  닫기
-                </StyledButton>
-              </div>
-            )}
-            ModifyCustomButtons={({ onCloseCoverView, saveBeforeProcess, sagaKey, reloadId }) => (
-              <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                <StyledButton className="btn-primary btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
-                  저장
-                </StyledButton>
-                <StyledButton className="btn-light" onClick={onCloseCoverView}>
-                  닫기
-                </StyledButton>
-              </div>
-            )}
-          />
-        </AntdModal> */}
       </>
     );
   }

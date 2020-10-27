@@ -15,16 +15,22 @@ class MainPage extends Component {
     this.state = {};
   }
 
-  handleSearchOnClick = () => {
+  handleSearchOnClick = (reqNo = undefined) => {
     const { id, getCallDataHandler, formData, spinningOn } = this.props;
     const chkYear = (formData && formData.CHK_YEAR) || '0';
     const deptId = (formData && formData.searchRow && formData.searchRow.DEPT_ID) || (formData && formData.myDept && formData.myDept.DEPT_ID) || '0';
     const apiAry = [
-      {
-        key: 'materialData',
-        type: 'GET',
-        url: `/api/eshs/v1/common/EshsGetEiMaterial/${chkYear}/${deptId}`,
-      },
+      reqNo
+        ? {
+            key: 'materialData',
+            type: 'GET',
+            url: `/api/eshs/v1/common/EshsGetEiMaterial?REQ_NO=${reqNo}`,
+          }
+        : {
+            key: 'materialData',
+            type: 'GET',
+            url: `/api/eshs/v1/common/EshsGetEiMaterial?CHK_YEAR=${chkYear}&FROM_DEPT_ID=${deptId}`,
+          },
     ];
     spinningOn();
     getCallDataHandler(id, apiAry, this.handleSetMaterial);
@@ -80,12 +86,12 @@ class MainPage extends Component {
     const { formData, deptSearchBarVisible } = this.props;
     return (
       <StyledContentsWrapper>
-        <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} deptSearchBarVisible={deptSearchBarVisible} />
+        <DeptSearchBar {...this.props} handleSearchOnClick={reqNo => this.handleSearchOnClick(reqNo)} deptSearchBarVisible={deptSearchBarVisible} />
         <div>
-          <MaterialTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+          <MaterialTable {...this.props} handleSearchOnClick={reqNo => this.handleSearchOnClick(reqNo)} />
         </div>
         <div>
-          <ItemTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+          <ItemTable {...this.props} handleSearchOnClick={reqNo => this.handleSearchOnClick(reqNo)} />
         </div>
       </StyledContentsWrapper>
     );

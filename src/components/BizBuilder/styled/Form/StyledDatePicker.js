@@ -53,6 +53,9 @@ const StyledDatePicker = Component => styled(Component)`
   &.mr5 {
     margin-right: 5px;
   }
+  &.ml5 {
+    margin-left: 5px;
+  }
   &.ant-picker-mid {
     .ant-input {
       padding: 0.4rem 0.875rem;
