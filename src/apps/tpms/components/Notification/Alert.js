@@ -1,5 +1,6 @@
 import React from 'react';
 import Notification from 'rc-notification';
+import 'rc-notification/assets/index.css';
 
 let notification = null;
 Notification.newInstance({}, n => {
@@ -26,6 +27,7 @@ function alertMessage(message) {
     closable: true,
     maxCount: 1,
     // duration: null,
+    style: { right: '50%' },
   });
 }
 
