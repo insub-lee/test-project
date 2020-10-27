@@ -170,7 +170,7 @@ const ExcellentActivityCase = () => {
               <div className="view_top">
                 <StyledSearch>
                   <form autoComplete="off" className="page" name="form-name" onSubmit={submitSearchQuery}>
-                    <select className="yearCategory" name="yearCategory" onChange={() => {}}>
+                    <select className="yearCategory search-select" name="yearCategory" onChange={() => {}}>
                       {yearCategory.map(category => (
                         <option key={category.text} value={category.value}>
                           {category.text}

@@ -32,7 +32,7 @@ export const ReportDetail = ({ requestQuery }) => {
     data,
     isExpanded,
     pagination,
-    action: { setIsExpanded, pageHandler, pageSizeHandler },
+    action: { setIsExpanded, pageHandler, pageSizeHandler, handleReportDown },
   } = useHooks({ requestQuery });
 
   const components = {
@@ -191,7 +191,7 @@ export const ReportDetail = ({ requestQuery }) => {
               color="gray"
               size="small"
               onClick={() => {
-                // this.handleReportDown;
+                handleReportDown();
               }}
             >
               엑셀
