@@ -68,7 +68,6 @@ ScatterChartPage.propTypes = {
   xField: PropTypes.string,
   xFieldNm: PropTypes.string,
   yField: PropTypes.string,
-  yFieldNm: PropTypes.string,
   listData: PropTypes.array,
   menuFixedYn: PropTypes.string,
 };
@@ -77,7 +76,6 @@ ScatterChartPage.defaultProps = {
   xField: '',
   xFieldNm: '',
   yField: '',
-  yFieldNm: '',
   listData: [],
 };
 
