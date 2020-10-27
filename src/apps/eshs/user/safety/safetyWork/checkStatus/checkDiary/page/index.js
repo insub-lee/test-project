@@ -91,6 +91,12 @@ class SafetyWorkList extends Component {
     const { listData, isSearching } = this.state;
     const columns = [
       {
+        title: '작업일',
+        dataIndex: 'FROM_DT',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
         title: '작업번호',
         dataIndex: 'WORK_NO',
         align: 'center',

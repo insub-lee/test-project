@@ -107,7 +107,6 @@ class QualityPage extends Component {
 
   render() {
     const { isSearching, waterType, sMonth, eMonth, modalTitle, modalVisible, listData } = this.state;
-    console.debug('스텟확인', this.state);
     return (
       <Styled>
         <StyledCustomSearchWrapper>
