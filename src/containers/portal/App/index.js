@@ -567,13 +567,19 @@ class App extends React.Component {
                   </Tooltip>
                 </div>
               )}
-              <div className="iconPositon" style={{ marginTop: '20px' }}>
-                <Tooltip placement="right" title="FileManage">
-                  <Icon type="folder" style={{ color: 'white', fontSize: '20px' }} onClick={this.goUserFileManage} />
-                </Tooltip>
-              </div>
-              {/* SA 권한일 경우 관리자용 파일 관리자 메뉴 노출 임시! */}
-              {hasRoleAdmin && (
+              {/* 2020-10-27 : EDDS 에선 파일매니저 노출 X */}
+              {profile.SITE_ID !== 141 && (
+                <div className="iconPositon" style={{ marginTop: '20px' }}>
+                  <Tooltip placement="right" title="FileManage">
+                    <Icon type="folder" style={{ color: 'white', fontSize: '20px' }} onClick={this.goUserFileManage} />
+                  </Tooltip>
+                </div>
+              )}
+              {/* 
+                  SA 권한일 경우 관리자용 파일 관리자 메뉴 노출 임시! 
+                  2020-10-27 : EDDS 에선 파일매니저 노출 X
+              */}
+              {hasRoleAdmin && profile.SITE_ID !== 141 && (
                 <div className="iconPositon" style={{ marginTop: '20px' }}>
                   <Tooltip placement="right" title="FileManage Admin">
                     <Icon type="tool" style={{ color: 'white', fontSize: '20px' }} onClick={this.goAdminFileManage} />

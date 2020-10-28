@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import ProtectionItemList from 'apps/eshs/user/safety/protectionItem/protectionItemList';
 
-import { Input, DatePicker, InputNumber, Modal, Table, message, Popover } from 'antd';
+import { Input, DatePicker, InputNumber, Modal, Table, message, Popover, Popconfirm } from 'antd';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledPicker from 'commonStyled/Form/StyledPicker';
 // import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
@@ -14,6 +14,7 @@ import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdMo
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import ContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { saveProcessRule } from 'apps/eshs/common/workProcessRule';
 
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import SignLine from 'apps/Workflow/SignLine';
@@ -30,34 +31,14 @@ class ModalContents extends React.Component {
     this.state = {
       modalVisible: false,
       requestValue: [],
-      psrule: {},
     };
   }
 
   componentDidMount() {
-    this.getProcessData();
     this.getLastReqCd();
     this.setFormData();
     // this.getDataSource();
   }
-
-  getProcessData = () => {
-    const { sagaKey: id, getProcessRule, workInfo, workPrcProps, relType, setRelType } = this.props;
-    const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
-    const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
-    const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
-
-    if (isWorkflowUsed && prcId !== -1) {
-      const payload = {
-        PRC_ID: Number(prcId),
-        DRAFT_DATA: {
-          ...workPrcProps,
-        },
-      };
-      getProcessRule(id, payload);
-      setRelType(id, relType);
-    }
-  };
 
   setFormData = () => {
     const { sagaKey, changeFormData, profile } = this.props;
@@ -328,6 +309,20 @@ class ModalContents extends React.Component {
     return saveTask(id, id, this.saveAfterFunc);
   };
 
+  saveProcessRule = () => {
+    const { rowData, relKey, relKey2, workSeq } = this.props;
+
+    saveProcessRule({
+      ...rowData?.processRule,
+      DRAFT_DATA: {},
+      REL_KEY: relKey,
+      REL_KEY2: rowData[relKey2],
+      DRAFT_TITLE: `신청번호(${rowData[relKey2]})`,
+      TASK_SEQ: rowData?.TASK_SEQ,
+      WORK_SEQ: workSeq,
+    });
+  };
+
   render() {
     const { handleRowClick, handleSubModalClose, beforeSaveTask, handleListAddClick, handleDateChange } = this;
     const { modalVisible, requestValue } = this.state;
@@ -344,61 +339,56 @@ class ModalContents extends React.Component {
       profile,
       modalDataSource,
       rowData,
-      setProcessRule,
-      processRule,
-      getProcessRule,
-      relType,
-      setRelType,
+      prcId,
+      handleChangeRowData,
     } = this.props;
-
+    const appFlag = (rowData?.APP_STATUS === '저장' && rowData?.REG_USER_ID === profile?.USER_ID) || false;
     return (
       <ContentsWrapper>
-        {/* {JSON.stringify(processRule) !== '{}' && <WorkProcess id={id} PRC_ID={109} processRule={processRule} setProcessRule={setProcessRule} />} */}
-        <CustomWorkProcess
-          id={id}
-          PRC_ID={109}
-          colLength={5}
-          relType={relType}
-          setRelType={setRelType}
-          setProcessRule={setProcessRule}
-          processRule={processRule}
-          viewType="INPUT"
-          CustomRow={[
-            <tr>
-              <th>신청일</th>
-              <td colSpan={4}>{isModified ? rowData.REQ_DT : moment().format('YYYY-MM-DD')}</td>
-            </tr>,
-            <tr>
-              <th>지급요청일</th>
-              <td colSpan={4}>
-                {isModified ? rowData.TARGET_DT : <AntdPicker className="ant-picker-sm" defaultValue={moment()} onChange={handleDateChange} />}
-              </td>
-            </tr>,
-          ]}
-        />
-        <CustomWorkProcess
-          id={id}
-          relType={relType}
-          setRelType={setRelType}
-          PRC_ID={109}
-          setProcessRule={setProcessRule}
-          processRule={processRule}
-          draftId={rowData.DRAFT_ID}
-          viewType="VIEW"
-          colLength={5}
-          CustomRow={[
-            <tr>
-              <th>신청일</th>
-              <td colSpan={4}>{isModified ? rowData.REQ_DT : moment().format('YYYY-MM-DD')}</td>
-            </tr>,
-            <tr>
-              <th>지급요청일</th>
-              <td colSpan={4}>
-                {isModified ? rowData.TARGET_DT : <AntdPicker className="ant-picker-sm" defaultValue={moment()} onChange={handleDateChange} />}
-              </td>
-            </tr>,
-          ]}
-        />
+        {isModified ? (
+          <CustomWorkProcess
+            PRC_ID={prcId}
+            colLength={5}
+            setProcessRule={(_, prcRule) => handleChangeRowData({ ...rowData, processRule: prcRule })}
+            processRule={rowData?.processRule}
+            draftId={rowData?.DRAFT_ID || -1}
+            viewType={rowData?.DRAFT_ID ? 'VIEW' : 'INPUT'}
+            appLineBtnVisible={isModified}
+            CustomRow={[
+              <tr>
+                <th>신청일</th>
+                <td colSpan={4}>{isModified ? rowData.REQ_DT : moment().format('YYYY-MM-DD')}</td>
+              </tr>,
+              <tr>
+                <th>지급요청일</th>
+                <td colSpan={4}>{rowData?.TARGET_DT || ''}</td>
+              </tr>,
+            ]}
+          />
+        ) : (
+          <StyledHtmlTable>
+            <table className="table-border">
+              <colgroup>
+                <col width="25" />
+                <col width="25" />
+                <col width="25" />
+                <col width="25" />
+              </colgroup>
+              <thead></thead>
+              <tbody>
+                <tr>
+                  <th>신청일</th>
+                  <td>{moment().format('YYYY-MM-DD')}</td>
+                  <th>지급요청일</th>
+                  <td>
+                    <AntdPicker className="ant-picker-sm" defaultValue={moment()} onChange={handleDateChange} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <br />
+          </StyledHtmlTable>
+        )}
         <div style={{ padding: '10px' }}>
           {isModified ? null : (
             <div style={{ textAlign: 'right', marginBottom: '10px' }}>
@@ -410,11 +400,16 @@ class ModalContents extends React.Component {
           <AntdTable columns={this.columns} dataSource={isModified ? modalDataSource : requestValue} pagination={false} />
         </div>
         <div style={{ textAlign: 'center', padding: '10px' }}>
-          <StyledButton className="btn-primary mr5" onClick={isModified ? () => console.debug('@@@@@@PRINT@@@@@@@') : beforeSaveTask}>
+          <StyledButton className="btn-primary btn-sm mr5" onClick={isModified ? () => console.debug('@@@@@@PRINT@@@@@@@') : beforeSaveTask}>
             {isModified ? '인쇄' : '저장'}
           </StyledButton>
-          <StyledButton className="btn-light" onClick={handleModalClose}>
-            취소
+          {appFlag && (
+            <Popconfirm title="상신하시겠습니까?" onConfirm={this.saveProcessRule} okText="Yes" cancelText="No">
+              <StyledButton className="btn-primary btn-sm mr5">상신</StyledButton>
+            </Popconfirm>
+          )}
+          <StyledButton className="btn-light  btn-sm mr5" onClick={handleModalClose}>
+            닫기
           </StyledButton>
         </div>
         <AntdModal visible={modalVisible} title="보호구 목록" onCancel={handleSubModalClose} footer={null} width="80%">
@@ -437,14 +432,18 @@ ModalContents.propTypes = {
   getExtraApiData: PropTypes.func,
   profile: PropTypes.object,
   modalDataSource: PropTypes.arrayOf('object'),
-  setProcessRule: PropTypes.func,
+  prcId: PropTypes.number,
+  relKey: PropTypes.string,
+  relKey2: PropTypes.string,
+  handleChangeRowData: PropTypes.func,
 };
 
-ModalContents.defatulProps = {
+ModalContents.defaultProps = {
   handleModalClose: null,
   saveTask: null,
   getDataSource: null,
   isModified: false,
+  handleChangeRowData: () => undefined,
 };
 
 export default ModalContents;
