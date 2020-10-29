@@ -61,6 +61,35 @@ class UserView extends Component {
     });
   };
 
+  onInitPwd = record => {
+    const { id: sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
+
+    const submitData = {
+      PARAM: {
+        NAME: record.NAME_KOR,
+        EMAIL: record.EMAIL,
+      },
+    };
+
+    Modal.confirm({
+      title: `[${record.NAME_KOR}]님의 비밀번호를 초기화 하시겠습니까?`,
+      icon: <ExclamationCircleOutlined />,
+      okText: 'OK',
+      cancelText: 'Cancel',
+      onOk() {
+        spinningOn();
+        submitHandlerBySaga(sagaKey, 'POST', `/api/edds/v1/common/eddsInitPwd`, submitData, (id, res) => {
+          if (res && res.result > 0) {
+            message.info(<MessageContent>비밀번호 초기화 후 메일로 발송하였습니다.</MessageContent>);
+          } else {
+            message.info(<MessageContent>비밀번호 초기화에 실패하였습니다.</MessageContent>);
+          }
+          spinningOff();
+        });
+      },
+    });
+  };
+
   render() {
     const { formData: detail } = this.props;
 
@@ -83,7 +112,9 @@ class UserView extends Component {
                     <th>사용자명</th>
                     <td>
                       <AntdInput
-                        value={detail.NAME_KOR} className="ant-input-xs" style={{ width: '25%'}}
+                        value={detail.NAME_KOR}
+                        className="ant-input-xs"
+                        style={{ width: '25%' }}
                         onChange={e => this.onChangeFormData('NAME_KOR', e.target.value)}
                       />
                     </td>
@@ -104,7 +135,9 @@ class UserView extends Component {
                     <th>전화번호</th>
                     <td>
                       <AntdInput
-                        value={detail.MOBILE_TEL_NO} className="ant-input-xs" style={{ width: '30%' }}
+                        value={detail.MOBILE_TEL_NO}
+                        className="ant-input-xs"
+                        style={{ width: '30%' }}
                         onChange={e => this.onChangeFormData('MOBILE_TEL_NO', e.target.value)}
                       />
                     </td>
@@ -113,12 +146,24 @@ class UserView extends Component {
                     <th>이메일</th>
                     <td>{detail.EMAIL}</td>
                   </tr>
-                </tbody>  
+                  <tr>
+                    <th>비밀번호 초기화</th>
+                    <td>
+                      <StyledButton className="btn-xs btn-light" onClick={() => this.onInitPwd(detail)}>
+                        비밀번호 초기화
+                      </StyledButton>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </StyledTable>
             <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-              <StyledButton className="btn-light btn-sm mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
-              <StyledButton className="btn-primary btn-sm" onClick={this.onClickUpdate}>수정</StyledButton>
+              <StyledButton className="btn-light btn-sm mr5" onClick={this.props.onCancelPopup}>
+                닫기
+              </StyledButton>
+              <StyledButton className="btn-primary btn-sm" onClick={this.onClickUpdate}>
+                수정
+              </StyledButton>
             </StyledButtonWrapper>
           </>
         )}
