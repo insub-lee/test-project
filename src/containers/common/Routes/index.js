@@ -17,6 +17,8 @@ import 'utils/momentLang';
 import { basicPath } from 'containers/common/constants';
 import * as authSelector from 'containers/common/Auth/selectors';
 import * as routesSelector from 'containers/common/Routes/selectors';
+import SignUp from 'apps/edds/user/SignUp';
+import InitPwd from 'apps/edds/user/InitPwd';
 import reducer from './reducer';
 import saga from './saga';
 import * as actions from './actions';
@@ -24,7 +26,6 @@ import * as authActions from '../Auth/actions';
 import SignIn from '../Auth/index';
 import RestrictedRoute from './RestrictedRoute';
 import routes from './routes';
-import SignUp from 'apps/edds/user/SignUp';
 
 // 포탈에서 앱을 실행했을 때 사용되는 경로
 // getLoaddata 함수가 실행되야함
@@ -57,7 +58,7 @@ class PublicRoutes extends Component {
     console.debug('@@@ location', this.props.location);
     // const url = locState ? locState.from.pathname : '/';
     // const search = locState ? locState.from.search : '';
-    if (pathname !== '/signup') {
+    if (pathname !== '/signup' && pathname !== '/initpwd') {
       boot(pathname + search, pathname);
     }
   }
@@ -196,6 +197,7 @@ class PublicRoutes extends Component {
         <Switch>
           <Route path="/signin" component={SignIn} />
           <Route path="/signup" component={SignUp} />
+          <Route path="/initpwd" component={InitPwd} />
           {routes.map(route => (
             <RestrictedRoute {...route} isLoggedIn={isLoggedIn} profile={profile} />
           ))}

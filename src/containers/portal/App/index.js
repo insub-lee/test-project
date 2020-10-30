@@ -749,8 +749,10 @@ class App extends React.Component {
                 </Content>
               </Layout>
             </MenuCategory>
-            {/* ESHS - 퀵링크 - 데스크탑일경우에만 노출 */}
-            {isDesktop(view) && setMyMenuData.PAGE_ID === 401 && <QuickLinkBar menuFixedYn={menuFixedYn} style={{ flexShrink: '0' }} />}
+            {/* ESHS - 퀵링크 - 데스크탑환경, PAGE_ID = 401, SITE = ESHS 일경우에만 노출 */}
+            {isDesktop(view) && setMyMenuData.PAGE_ID === 401 && profile.SITE_ID === 21 && (
+              <QuickLinkBar menuFixedYn={menuFixedYn} style={{ flexShrink: '0' }} />
+            )}
             {/* // REMOVE DOCK - 확인후 처리 (주석??) */}
             {/* <UserDock
             execPage={this.execPage}
