@@ -54,9 +54,9 @@ class NoaccidentListPage extends Component {
 
   setInfo = listData => {
     let WORK_HOURS_SUM_1 = 0; // 구미 총근무시간 (합계)
-    let WORK_HOURS_SUM_2 = 0; // 청주 총근무시간 (합계)
-    let WORK_HOURS_SUM_3 = 0; // 서울 총근무시간 (합계)
-    let TOTAL_HOURS_SUM = 0; // 구미, 청주, 서울 총근무시간 (합계)
+    let WORK_HOURS_SUM_2 = 0; // 서울 총근무시간 (합계)
+    let WORK_HOURS_SUM_3 = 0; // 청주 총근무시간 (합계)
+    let TOTAL_HOURS_SUM = 0; // 구미, 서울, 청주 총근무시간 (합계)
 
     listData.forEach(row => {
       WORK_HOURS_SUM_1 += row.WORK_HOURS_1;

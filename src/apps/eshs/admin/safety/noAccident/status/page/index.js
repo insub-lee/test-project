@@ -63,7 +63,7 @@ class NoaccidentManagePage extends Component {
 
   initCallback = (id, response) => {
     const { result } = response;
-    const list = this.setList(result);
+    const list = result ? this.setList(result) : [];
     this.setState({
       info: result || {},
       list,
@@ -100,13 +100,21 @@ class NoaccidentManagePage extends Component {
         </StyledCustomSearchWrapper>
         <div style={{ width: '100%', position: 'relative', display: 'flex' }}>
           <div className="chart_wrap" style={{ ddisplay: 'inline-block', width: '50%', padding: '5px' }}>
-            <BarChart width={boxWidth} height={350} data={list}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="AREA" />
-              <YAxis />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="RATE" fill="#8884d8" barSize={20} />
-            </BarChart>
+            {list && list.length > 0 ? (
+              <BarChart width={boxWidth} height={350} data={list}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="AREA" />
+                <YAxis />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="RATE" fill="#8884d8" barSize={20} />
+              </BarChart>
+            ) : (
+              <div style={{ width: '100%', textAlign: 'center', padding: '50px' }}>
+                <span style={{ fontWeight: 600, fontSize: 20 }}>그래프에 필요한</span>
+                <br />
+                <span style={{ fontWeight: 600, fontSize: 20 }}>데이터가 없습니다.</span>
+              </div>
+            )}
           </div>
           <div style={{ display: 'inline-block', width: '50%', padding: '5px' }}>
             <StyledHtmlTable>
@@ -122,12 +130,12 @@ class NoaccidentManagePage extends Component {
                     <td className="check">
                       <h4 className="fw600 mb5">&#8251; 무재해 시작일</h4>
                       <p>구미 : {`${info.NO_ACCIDENT_DT_1 || '데이터가 없습니다'}`}</p>
-                      <p>청주 : {`${info.NO_ACCIDENT_DT_2 || '데이터가 없습니다'}`}</p>
-                      <p>서울 : {`${info.NO_ACCIDENT_DT_3 || '데이터가 없습니다'}`}</p>
+                      <p>청주 : {`${info.NO_ACCIDENT_DT_3 || '데이터가 없습니다'}`}</p>
+                      <p>서울 : {`${info.NO_ACCIDENT_DT_2 || '데이터가 없습니다'}`}</p>
                       <h4 className="fw600 mt20 mb5">&#8251; 최근 사고일</h4>
                       <p>구미 : {`${info.ACCIDENT_DT_1 || '사고기록이 없습니다'}`}</p>
-                      <p>청주 : {`${info.ACCIDENT_DT_2 || '사고기록이 없습니다'}`}</p>
-                      <p>서울 : {`${info.ACCIDENT_DT_3 || '사고기록이 없습니다'}`}</p>
+                      <p>청주 : {`${info.ACCIDENT_DT_3 || '사고기록이 없습니다'}`}</p>
+                      <p>서울 : {`${info.ACCIDENT_DT_2 || '사고기록이 없습니다'}`}</p>
                     </td>
                   </tr>
                 </tbody>
