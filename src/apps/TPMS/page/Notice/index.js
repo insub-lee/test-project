@@ -2,6 +2,7 @@ import React, { useMemo, useEffect, useState } from 'react';
 import Table from 'rc-table';
 import moment from 'moment';
 
+import { useBizBuilderBase } from 'hooks/useBizBuilderBase';
 import GlobalStyle from '../../components/GlobalStyle';
 import Spin from '../../components/AntdSpinner';
 import TitleContainer from '../../components/TitleContainer';
@@ -54,6 +55,8 @@ const componentsStyle = {
 const brdid = 'brd00000000000000002';
 const Notice = () => {
   const { authInfo, isError: isAuthError } = useAuth();
+
+  const { info } = useBizBuilderBase({ work_seq: 15961 });
 
   const {
     isLoading,
