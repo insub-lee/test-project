@@ -3,7 +3,7 @@ import TableConnector from '../components/TableConnector';
 
 const Worker2 = () => (
   <div>
-    <TableConnector menuId="JEM70" host="03__/03_" />
+    <TableConnector menuId="JEM70" host="03__0/03_" />
   </div>
 );
 
