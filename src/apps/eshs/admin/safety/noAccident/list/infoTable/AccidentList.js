@@ -25,18 +25,30 @@ class RawWaterTable extends Component {
         dataIndex: 'WORK_HOURS_1',
         key: 'WORK_HOURS_1',
         align: 'center',
+        render: data => {
+          if (data) return data;
+          return 0;
+        },
       },
       {
         title: '청주',
         dataIndex: 'WORK_HOURS_3',
         key: 'WORK_HOURS_3',
         align: 'center',
+        render: data => {
+          if (data) return data;
+          return 0;
+        },
       },
       {
         title: '서울',
         dataIndex: 'WORK_HOURS_2',
         key: 'WORK_HOURS_2',
         align: 'center',
+        render: data => {
+          if (data) return data;
+          return 0;
+        },
       },
       {
         title: '합계',
