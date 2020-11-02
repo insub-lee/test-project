@@ -16,8 +16,17 @@ import Button from '../../../components/Button';
 import Spin from '../../../components/Spin';
 import RegistAreaModal from './RegistModal';
 
+import { ModalHugger } from '../../../components/ModalHugger';
+
 import usePostList from '../../../hooks/usePostList';
+import { useModalController } from '../../../hooks/useModalController';
 import useHooks from './useHooks';
+
+import { InquiryBody, InquiryTitle } from './Inquiry';
+import { ModifyBody } from './Modify';
+import { DeleteBody } from './Delete';
+import { ReplyBody } from './Reply';
+import { formJson } from './formJson';
 
 /**
  * TPMS - 개선요청활동(생산) - 개선요청활동 게시판
@@ -47,6 +56,7 @@ const componentsStyle = {
   },
 };
 
+const brdid = 'brd00000000000000024';
 const InfoTable = () => {
   const {
     isLoading,
@@ -55,61 +65,105 @@ const InfoTable = () => {
     data,
     pagination,
     action: { submitSearchQuery, pageHandler, pageSizeHandler },
-  } = usePostList({ brdid: 'brd00000000000000024' });
+  } = usePostList({ brdid });
+
+  const {
+    modalStatus,
+    processedContent,
+    selectedRecord,
+    actions: { openModal, closeAll, closeModal, processRecord },
+  } = useModalController(['INQ', 'MOD', 'DEL', 'REP']);
 
   const {
     registAreaModalRef,
     columns,
     actions: { handleOpenRegistModal, deleteCheckedList },
-  } = useHooks({ data });
+  } = useHooks({
+    data,
+    openModal,
+    callback: pageHandler,
+    processRecord,
+  });
+
+  const essential = {
+    brdid,
+    formJson,
+    content: processedContent,
+    selectedRecord,
+    successCallback: () => {
+      closeAll();
+      pageHandler(1);
+    },
+    closeModal,
+    openModal,
+    // authInfo,
+  };
 
   return (
-    <div className="tpms-view">
-      <TitleContainer title="개선요청활동 게시판" nav={nav}>
-        <Spin spinning={isLoading}>
-          <StyledWrapper>
-            <div className="view_top">
-              <div className="btn_wrap_left">
-                <Button type="button" color="primary" onClick={deleteCheckedList} disabled={checkedList.length < 1}>
-                  선택 삭제
-                </Button>
+    <>
+      <div className="tpms-view">
+        <TitleContainer title="개선요청활동 게시판" nav={nav}>
+          <Spin spinning={isLoading}>
+            <StyledWrapper>
+              <div className="view_top">
+                <div className="btn_wrap_left">
+                  <Button type="button" color="primary" onClick={deleteCheckedList} disabled={checkedList?.length < 1}>
+                    선택 삭제
+                  </Button>
+                </div>
+                <StyledSearch>
+                  <form autoComplete="off" className="page" name="form-name" onSubmit={submitSearchQuery}>
+                    <select name="category" className="search-select">
+                      {categories.map(category => (
+                        <option key={category.text} value={category.value}>
+                          {category.text}
+                        </option>
+                      ))}
+                    </select>
+                    <input type="text" className="input" name="text" />
+                    <button type="submit" className="icon icon_search_white">
+                      검색
+                    </button>
+                  </form>
+                </StyledSearch>
+                <div className="btn_wrap">
+                  <Button type="button" color="primary" onClick={handleOpenRegistModal}>
+                    엑셀 업로드
+                  </Button>
+                </div>
+                <div className="btn_wrap" />
               </div>
-              <StyledSearch>
-                <form autoComplete="off" className="page" name="form-name" onSubmit={submitSearchQuery}>
-                  <select name="category" className="search-select">
-                    {categories.map(category => (
-                      <option key={category.text} value={category.value}>
-                        {category.text}
-                      </option>
-                    ))}
-                  </select>
-                  <input type="text" className="input" name="text" />
-                  <button type="submit" className="icon icon_search_white">
-                    검색
-                  </button>
-                </form>
-              </StyledSearch>
-              <div className="btn_wrap">
-                <Button type="button" color="primary" onClick={handleOpenRegistModal}>
-                  엑셀 업로드
-                </Button>
-              </div>
-              <div className="btn_wrap" />
-            </div>
-            <Table
-              columns={columns}
-              data={data}
-              rowKey="postno"
-              rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
-              components={componentsStyle}
-            />
-            <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
-          </StyledWrapper>
-        </Spin>
-      </TitleContainer>
-      <GlobalStyle />
-      <RegistAreaModal ref={registAreaModalRef} callback={() => {}} />
-    </div>
+              <Table
+                columns={columns}
+                data={data}
+                rowKey="postno"
+                rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
+                components={componentsStyle}
+              />
+              <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
+            </StyledWrapper>
+          </Spin>
+        </TitleContainer>
+        <GlobalStyle />
+        <RegistAreaModal ref={registAreaModalRef} callback={() => {}} />
+      </div>
+
+      <ModalHugger className="REG" width={850} visible={modalStatus.REG} title="답변하기" onCancel={() => closeModal('REP')}>
+        <ReplyBody />
+      </ModalHugger>
+
+      <ModalHugger className="MOD" width={850} visible={modalStatus.MOD} title="수정하기" onCancel={() => closeModal('MOD')}>
+        <ModifyBody />
+      </ModalHugger>
+
+      <ModalHugger className="DEL" width={300} visible={modalStatus.DEL} title="비밀번호 입력" onCancel={() => closeModal('DEL')}>
+        <DeleteBody />
+      </ModalHugger>
+
+      <ModalHugger className="INQ" width={850} visible={modalStatus.INQ} title={<InquiryTitle />} onCancel={() => closeModal('INQ')}>
+        <InquiryBody />
+      </ModalHugger>
+    </>
   );
 };
 
