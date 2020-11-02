@@ -33,7 +33,7 @@ const InfoByArea = () => {
     registData,
     total,
     registTrendInfo,
-    action: { handleReportDown, enableExpandedView, disableExpandedView },
+    action: { handleReportDown, enableExpandedView, disableExpandedView, submitData },
   } = useHooks();
 
   return (
@@ -42,7 +42,7 @@ const InfoByArea = () => {
         title="개선요청활동(생산)"
         nav={nav}
         mainbody={
-          <StyledCommonForm onSubmit={() => {}} autoComplete="off">
+          <StyledCommonForm onSubmit={submitData} autoComplete="off">
             <ul className="sub_form small2">
               <li className="half fl">
                 <label className="title" htmlFor="location">

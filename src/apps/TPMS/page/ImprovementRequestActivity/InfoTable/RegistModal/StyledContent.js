@@ -54,6 +54,11 @@ const StyledContent = styled.div`
         }
       }
     }
+    .btn_wrap {
+      font-size: 0;
+      text-align: center;
+      overflow: hidden;
+    }
   }
 
   .ReactVirtualized__Table {
