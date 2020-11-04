@@ -19,6 +19,8 @@ import EiImportantAssesment from 'apps/eshs/user/environment/eia/eiImportantAsse
 import JournalManagement from 'apps/eshs/user/health/medicalManagement/journalManangement'; // 의료일지
 // D:\magnachip\bizmicro-portal-front\src\apps\eshs\user\safety\protectionItem\hitemRequest\list\PaymentModal.js
 import HitemPaymentView from 'apps/eshs/user/safety/protectionItem/hitemRequest/list/PaymentModal';
+import ImproveView from 'apps/eshs/admin/safety/safetyImprove/Input'; // 안전개선
+
 /* view  --end--*/
 
 const getView = (record, spinningOn, spinningOff, handleModal) => {
@@ -147,6 +149,8 @@ const getView = (record, spinningOn, spinningOff, handleModal) => {
     case '의료일지':
       const relArray = record.REL_KEY2.split('_');
       return [<JournalManagement SITE_NODE_ID={relArray[0] ? Number(relArray[0]) : null} JRNL_DT={relArray[1]} />];
+    case '안전개선 요청':
+      return [<ImproveView key={record?.REL_KEY2} reqNo={record?.REL_KEY2} />];
     default:
       return [];
   }

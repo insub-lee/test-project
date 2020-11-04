@@ -11,6 +11,7 @@ import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHead
 import DraggableModal from 'components/DraggableModal';
 // import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
 import EshsAppView from 'apps/eshs/common/Workflow/EshsAppView';
+import SafetyAppView from 'apps/eshs/common/Workflow/EshsAppView/SafetyAppView';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import { columns } from 'apps/eshs/common/Workflow/common/Columns';
@@ -65,7 +66,7 @@ class UnApproveList extends Component {
   spinningOff = () => this.setState({ loading: false });
 
   render() {
-    const { unApproveList, unApproveListCnt, viewVisible } = this.props;
+    const { unApproveList, unApproveListCnt, viewVisible, selectedRow } = this.props;
     const { paginationIdx, modalObj } = this.state;
 
     return (
@@ -91,8 +92,12 @@ class UnApproveList extends Component {
           />
         </StyledContentsWrapper>
 
-        <AntdModal width={1000} visible={modalObj.visible} title="미결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
-          <EshsAppView {...this.props} setViewVisible={this.handleModal} />
+        <AntdModal width={1100} visible={modalObj.visible} title="미결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
+          {selectedRow?.REL_KEY === '안전개선 요청' ? (
+            <SafetyAppView {...this.props} setViewVisible={this.handleModal} />
+          ) : (
+            <EshsAppView {...this.props} setViewVisible={this.handleModal} />
+          )}
           <Spin spinning={this.state.loading}>{modalObj.content}</Spin>
         </AntdModal>
       </>
