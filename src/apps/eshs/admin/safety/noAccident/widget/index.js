@@ -24,7 +24,7 @@ class NoaccidentWidget extends Component {
       url: `/api/eshs/v1/common/noAccident`,
       data: { PARAM: { type: 'GET_STATUS' } },
     }).then(({ response }) => {
-      if (response?.result !== null) {
+      if (response?.result) {
         const { result } = response;
         this.initCallback(result);
       }
@@ -52,32 +52,35 @@ class NoaccidentWidget extends Component {
               <Row>
                 <Col span={6} order={1}>
                   <Divider orientation="left" className="site">
-                    {info.AREA_1}
+                    {info.AREA_1 || ''}
                   </Divider>
                   <div className="noacc-status">
-                    <p>{`시작일 : ${info.NO_ACCIDENT_DT_1}`}</p>
-                    <p>{`달성시간 : ${info.TOTAL_1} 시간`}</p>
-                    <p>{`달성률 : ${info.RATE_1} %`}</p>
+                    <p className="weight500">
+                      <span className="total-cnt">{`${info.TOTAL_1 || '-'}시간`}</span> 달성
+                    </p>
+                    <p className="weight500">{`달성률 : ${info.RATE_1 || '-'} %`}</p>
                   </div>
                 </Col>
                 <Col span={6} order={2}>
                   <Divider orientation="left" className="site">
-                    {info.AREA_3}
+                    {info.AREA_3 || ''}
                   </Divider>
                   <div className="noacc-status">
-                    <p>{`시작일 : ${info.NO_ACCIDENT_DT_3}`}</p>
-                    <p>{`달성시간 : ${info.TOTAL_3} 시간`}</p>
-                    <p>{`달성률 : ${info.RATE_3} %`}</p>
+                    <p className="weight500">
+                      <span className="total-cnt">{`${info.TOTAL_3 || '-'}시간`}</span> 달성
+                    </p>
+                    <p className="weight500">{`달성률 : ${info.RATE_3 || '-'} %`}</p>
                   </div>
                 </Col>
                 <Col span={6} order={3}>
                   <Divider orientation="left" className="site">
-                    {info.AREA_2}
+                    {info.AREA_2 || ''}
                   </Divider>
                   <div className="noacc-status">
-                    <p>{`시작일 : ${info.NO_ACCIDENT_DT_2}`}</p>
-                    <p>{`달성시간 : ${info.TOTAL_2} 시간`}</p>
-                    <p>{`달성률 : ${info.RATE_2} %`}</p>
+                    <p className="weight500">
+                      <span className="total-cnt">{`${info.TOTAL_2 || '-'}시간`}</span> 달성
+                    </p>
+                    <p className="weight500">{`달성률 : ${info.RATE_2 || '-'} %`}</p>
                   </div>
                 </Col>
                 <Col span={6} order={4}>
@@ -105,9 +108,9 @@ class NoaccidentWidget extends Component {
               </a>
             </Divider>
             <div className="noacc-status">
-              <p className="line-p">{`구미 : ${info.TOTAL_1} 시간 | ${info.RATE_1} % 달성`}</p>
-              <p className="line-p">{`청주 : ${info.TOTAL_3} 시간 | ${info.RATE_3} % 달성`}</p>
-              <p className="line-p">{`서울 : ${info.TOTAL_2} 시간 | ${info.RATE_2} % 달성`}</p>
+              <p className="line-p">{`구미 : ${info.TOTAL_1 || '-'} 시간 | ${info.RATE_1 || '-'} % 달성`}</p>
+              <p className="line-p">{`청주 : ${info.TOTAL_3 || '-'} 시간 | ${info.RATE_3 || '-'} % 달성`}</p>
+              <p className="line-p">{`서울 : ${info.TOTAL_2 || '-'} 시간 | ${info.RATE_2 || '-'} % 달성`}</p>
             </div>
             <div className="foot-contents">
               <h1>안전은 생명입니다.</h1>
