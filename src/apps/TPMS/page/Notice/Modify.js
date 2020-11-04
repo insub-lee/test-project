@@ -5,13 +5,10 @@ import Button from '../../components/Button';
 import FormView from '../../components/FormPreview/FormView';
 import makeContent from '../../utils/makeContents';
 
-import { usePost } from '../../hooks/usePost';
+import { useBoard } from '../../hooks/useBoard';
 
-export const ModifyBody = ({ formJson = [], content = {}, brdid, selectedRecord, successCallback }) => {
+export const ModifyBody = ({ formJson = [], content = {}, modifyPost, selectedRecord, successCallback }) => {
   const data = makeContent(formJson, { ...content, pwd: '' }, false);
-  const {
-    action: { modifyPost },
-  } = usePost({ brdid });
 
   return (
     <form

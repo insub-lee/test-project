@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import Button from '../../components/Button';
 // import alertMessage from '../../components/Notification/Alert';
 
-import { usePost } from '../../hooks/usePost';
+import { useBoard } from '../../hooks/useBoard';
 
 export const DeleteBody = ({ brdid, selectedRecord, successCallback }) => {
   const {
     action: { deletePost },
-  } = usePost({ brdid });
+  } = useBoard({ boardCode: '' });
   return (
     <div className="pop_con">
       <form
@@ -18,6 +18,7 @@ export const DeleteBody = ({ brdid, selectedRecord, successCallback }) => {
           deletePost(e.target, selectedRecord).then(({ response, error }) => {
             if (response && !error) {
               const { result } = response;
+              console.log('### response:', response);
               if (result) {
                 successCallback();
               } else {

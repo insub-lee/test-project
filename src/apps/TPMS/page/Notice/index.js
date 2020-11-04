@@ -2,7 +2,6 @@ import React, { useMemo, useEffect, useState } from 'react';
 import Table from 'rc-table';
 import moment from 'moment';
 
-import { useBizBuilderBase } from 'hooks/useBizBuilderBase';
 import GlobalStyle from '../../components/GlobalStyle';
 import Spin from '../../components/AntdSpinner';
 import TitleContainer from '../../components/TitleContainer';
@@ -17,15 +16,18 @@ import StyledTable from '../../components/Tableboard/StyledTable';
 import Button from '../../components/Button';
 import { ModalHugger } from '../../components/ModalHugger';
 
-import usePostList from '../../hooks/usePostList';
+// import usePostList from '../../hooks/usePostList';
 import { useModalController } from '../../hooks/useModalController';
 import useAuth from '../../hooks/useAuth';
+import { useBoard } from '../../hooks/useBoard';
 
 import { InquiryBody, InquiryTitle } from './Inquiry';
 import { ModifyBody } from './Modify';
 import { DeleteBody } from './Delete';
 import { RegisterBody } from './Register';
 import { formJson } from './formJson';
+
+import { notice } from '../../utils/boardCode';
 /**
  * TPMS - 공지사항
  *
@@ -52,19 +54,19 @@ const componentsStyle = {
   },
 };
 
-const brdid = 'brd00000000000000002';
+// const brdid = 'brd00000000000000002';
+// const workSeq = 15961;
 const Notice = () => {
   const { authInfo, isError: isAuthError } = useAuth();
 
-  const { info } = useBizBuilderBase({ work_seq: 15961 });
-
   const {
-    isLoading,
     isError,
     data,
     pagination,
-    action: { submitSearchQuery, pageHandler, pageSizeHandler },
-  } = usePostList({ brdid });
+    currentTotal,
+    isLoading,
+    action: { pageHandler, pageSizeHandler, updateViewCount, regPost, deletePost, modifyPost, submitSearchQuery },
+  } = useBoard({ boardCode: notice });
 
   const {
     processedContent,
@@ -77,32 +79,27 @@ const Notice = () => {
     () => [
       {
         title: 'NO',
-        dataIndex: 'postno',
-        key: 'postno',
+        dataIndex: 'task_seq',
+        key: 'task_seq',
         width: '5%',
-        render: (postno, record) => (record.hpostno > 0 ? '' : postno),
-      },
-      {
-        title: 'Rev',
-        dataIndex: 'updcnt',
-        key: 'updcnt',
-        width: '5%',
-        render: (updcnt, record) => (record.hpostno > 0 ? '' : updcnt),
+        // eslint-disable-next-line camelcase
+        render: (task_seq, record) => (record?.parentno > 0 ? '' : task_seq),
       },
       {
         title: '제목',
         dataIndex: 'title',
         key: 'title',
-        width: '45%',
+        width: '50%',
         render: (title, record) => (
           <button
             type="button"
             onClick={() => {
               processRecord(record);
+              updateViewCount(record?.task_seq);
               openModal('INQ');
             }}
           >
-            {record.isReply && (
+            {record.PARENTNO > 0 && (
               <>
                 <span className="icon icon_reply" />
                 &nbsp;&nbsp;
@@ -114,27 +111,27 @@ const Notice = () => {
       },
       {
         title: '소속',
-        dataIndex: 'deptnm',
-        key: 'deptnm',
+        dataIndex: 'reg_dept_name',
+        key: 'reg_dept_name',
         width: '10%',
       },
       {
         title: '작성자',
-        dataIndex: 'regnm',
-        key: 'regnm',
+        dataIndex: 'reg_user_name',
+        key: 'reg_user_name',
         width: '10%',
       },
       {
         title: '작성일',
-        dataIndex: 'regdt',
-        key: 'regdt',
+        dataIndex: 'reg_dttm',
+        key: 'reg_dttm',
         width: '10%',
         render: regdt => moment(regdt).format('YYYY.MM.DD'),
       },
       {
         title: '조회',
-        dataIndex: 'readcnt',
-        key: 'readcnt',
+        dataIndex: 'view_count',
+        key: 'view_count',
         width: '5%',
       },
     ],
@@ -142,16 +139,19 @@ const Notice = () => {
   );
 
   const essential = {
-    brdid,
     formJson,
     content: processedContent,
     selectedRecord,
+    boardCode: notice,
     successCallback: () => {
       closeAll();
       pageHandler(1);
     },
     closeModal,
     openModal,
+    regPost,
+    deletePost,
+    modifyPost,
     // authInfo,
   };
 
