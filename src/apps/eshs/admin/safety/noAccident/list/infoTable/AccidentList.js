@@ -12,46 +12,44 @@ class RawWaterTable extends Component {
   }
 
   render() {
-    const { listData, info } = this.props;
+    const { listData } = this.props;
     const columns = [
       {
-        title: '연도-월',
-        dataIndex: 'WORK_MONTH',
-        key: 'WORK_MONTH',
+        title: '기간',
+        dataIndex: 'WORK_DT',
+        key: 'WORK_DT',
         align: 'center',
       },
       {
-        title: '구미',
-        dataIndex: 'WORK_HOURS_1',
-        key: 'WORK_HOURS_1',
+        title: '지역',
+        dataIndex: 'SITE',
+        key: 'SITE',
+        align: 'center',
+      },
+      {
+        title: '분기',
+        dataIndex: 'WORK_QUARTER',
+        key: 'WORK_QUARTER',
+        align: 'center',
+      },
+      {
+        title: '재해발생여부',
+        dataIndex: 'ACCIDENT_YN',
+        key: 'ACCIDENT_YN',
         align: 'center',
         render: data => {
-          if (data) return data;
-          return 0;
+          if (data === 0) return '미발생';
+          return '발생';
         },
       },
       {
-        title: '청주',
-        dataIndex: 'WORK_HOURS_3',
-        key: 'WORK_HOURS_3',
+        title: '근무시간',
+        dataIndex: 'WORK_HOURS',
+        key: 'WORK_HOURS',
         align: 'center',
-        render: data => {
-          if (data) return data;
-          return 0;
-        },
       },
       {
-        title: '서울',
-        dataIndex: 'WORK_HOURS_2',
-        key: 'WORK_HOURS_2',
-        align: 'center',
-        render: data => {
-          if (data) return data;
-          return 0;
-        },
-      },
-      {
-        title: '합계',
+        title: '누적시간',
         dataIndex: 'TOTAL_HOURS',
         key: 'TOTAL_HOURS',
         align: 'center',
@@ -63,12 +61,8 @@ class RawWaterTable extends Component {
         columns={columns}
         dataSource={listData}
         footer={() => (
-          <div style={{ textAlign: 'left' }}>
-            <h3>무재해시간 검색결과 내 합계</h3>
-            <p>&#8251; 구미(총 근무시간) : {`${info.WORK_HOURS_SUM_1}`}</p>
-            <p>&#8251; 청주(총 근무시간) : {`${info.WORK_HOURS_SUM_3}`}</p>
-            <p>&#8251; 서울(총 근무시간) : {`${info.WORK_HOURS_SUM_2}`}</p>
-            <p>&#8251; 총 근무시간(구미, 청주, 서울) : {`${info.TOTAL_HOURS_SUM}`}</p>
+          <div style={{ textAlign: 'center' }}>
+            <span>총 {listData.length} 건</span>
           </div>
         )}
       />
@@ -78,12 +72,10 @@ class RawWaterTable extends Component {
 
 RawWaterTable.propTypes = {
   listData: PropTypes.array,
-  info: PropTypes.object,
 };
 
 RawWaterTable.defaultProps = {
   listData: [],
-  info: {},
 };
 
 export default RawWaterTable;

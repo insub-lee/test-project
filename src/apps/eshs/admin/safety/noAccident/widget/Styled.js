@@ -13,12 +13,19 @@ const Styled = styled.div`
     border: 2px solid #b5bdcb;
   }
 
+  .weight500 {
+    font-weight: 500;
+    .total-cnt {
+      color: rgb(10, 155, 101);
+    }
+  }
+
   .noacc-status {
-    padding-left: 15px;
+    padding-left: 20px;
   }
 
   .foot-contents {
-    margin-top: 35px;
+    margin-top: 50px;
     text-align: center;
   }
 
