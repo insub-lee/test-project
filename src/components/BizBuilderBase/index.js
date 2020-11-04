@@ -143,8 +143,28 @@ class BizBuilderBase extends React.Component {
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData({ ...formData, [key]: val });
   };
 
-  changeBuilderModalState = (isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData) =>
-    this.setState({ isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData });
+  getModalTitle = builderModalViewType => {
+    const { modalTitle, inputModalTitle, viewModalTitle } = this.props;
+    let result = modalTitle || '';
+    switch (builderModalViewType.toUpperCase()) {
+      case 'INPUT':
+        result = inputModalTitle || '';
+        break;
+      case 'VIEW':
+        result = viewModalTitle || '';
+        break;
+      default:
+        result = '';
+        break;
+    }
+    return result;
+  };
+
+  changeBuilderModalState = (isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData) => {
+    console.debug('확인', builderModalViewType);
+    const modalTitle = this.getModalTitle(builderModalViewType);
+    this.setState({ isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData, modalTitle });
+  };
 
   changeIsLoading = flag => this.setState({ isLoading: flag });
 
@@ -233,13 +253,11 @@ class BizBuilderBase extends React.Component {
       ViewCustomButtonsByModal,
       compProps,
       conditional,
-      modalTitle,
       callbackFuncExtraByModal,
       modalProps,
       callApiExtraProps,
     } = this.props;
-    const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData, isLoading } = this.state;
-
+    const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData, isLoading, modalTitle } = this.state;
     return (
       <div>
         <Spin size="large" spinning={isLoading}>
@@ -252,7 +270,7 @@ class BizBuilderBase extends React.Component {
           maskClosable={false}
           visible={isShowBuilderModal}
           {...builderModalSetting}
-          title={modalTitle || <span style={{ color: '#4491e0' }}>-</span>}
+          title={modalTitle === '' ? <span style={{ color: '#4491e0' }}>-</span> : <span>{modalTitle}</span>}
           onCancel={() => this.changeBuilderModalState(false, 'INPUT', -1, -1)}
         >
           <ModalPopup
@@ -332,6 +350,9 @@ BizBuilderBase.propTypes = {
   ListCustomButtonsByModal: PropTypes.func,
   getFileDownload: PropTypes.func,
   setFormData: PropTypes.func,
+  modalTitle: PropTypes.string,
+  inputModalTitle: PropTypes.string,
+  viewModalTitle: PropTypes.string,
 };
 
 BizBuilderBase.defaultProps = {

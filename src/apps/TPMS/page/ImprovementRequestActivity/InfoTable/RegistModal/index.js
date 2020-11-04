@@ -4,8 +4,8 @@ import Modal from 'rc-dialog';
 
 import XLSX from 'xlsx';
 import { Spin, Icon } from 'antd';
-import Button from 'components/Button';
 import { SheetJSFT } from 'utils/helpers';
+import Button from '../../../../components/Button';
 import alertMessage from '../../../../components/Notification/Alert';
 
 import StyledContent from './StyledContent';
@@ -89,7 +89,7 @@ class RegistAreaModal extends React.Component {
   }
 
   handleOpen(callback) {
-    console.debug('@@ callback');
+    console.debug('@@ callback :', callback);
     this.setState({
       isOpen: true,
       list: fromJS([]),
@@ -194,7 +194,7 @@ class RegistAreaModal extends React.Component {
     formData.append('pwd', '1');
     this.sendSingleData(formData).then(resultCnt => {
       console.debug('@@ result', resultCnt);
-      if (resultCnt > -1) {
+      if (resultCnt > -1) { 
         alertMessage.notice('입력이 성공했습니다.');
       } else if (resultCnt === -1) {
         alertMessage.alert(`사번과 이름이 일치하지 않거나 존재하지 않는 사번입니다. `);

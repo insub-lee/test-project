@@ -1091,6 +1091,21 @@ function* getListData({ id, workSeq, conditional, pageIdx, pageCnt, changeIsLoad
     },
     { BUILDER: 'getTaskList' },
   );
+
+  console.debug('### getListData:', {
+    PARAM: {
+      whereString,
+      PAGE,
+      PAGE_CNT,
+      ISLAST_VER,
+      listOrderByField,
+      listOrderByRowNum: listOrderByField
+        .replaceAll(' ASC', ' ||CSA||')
+        .replaceAll(' DESC', ' ASC')
+        .replaceAll(' ||CSA||', ' DESC'),
+    },
+  });
+
   if (responseList) {
     const { list, listTotalCnt } = responseList;
     yield put(actions.setListDataByReducer(id, list, listTotalCnt));

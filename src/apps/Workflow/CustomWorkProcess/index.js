@@ -18,6 +18,7 @@ const draftInfoStyle = {
   background: '#ffffff',
   border: '1px solid #dadada',
   marginRight: '5px',
+  marginTop: '5px',
   borderRadius: '5px',
   textAlign: 'center',
   padding: '3px 10px',
@@ -144,7 +145,9 @@ class CustomWorkProcess extends Component {
                             ) : (
                               <div key={`${rowIndex}_${colIndex}`} style={draftInfoStyle}>
                                 <Icon type="user" />
-                                <span className="infoTxt">{`${user.NAME_KOR} (${user.DEPT_NAME_KOR})`}</span>
+                                <span className="infoTxt">{`${user?.COMMENT ? `${user.COMMENT}: ` : ''}${user?.NAME_KOR || ''} ${
+                                  user?.DEPT_NAME_KOR ? `(${user.DEPT_NAME_KOR})` : ''
+                                }`}</span>
                               </div>
                             ),
                           )}

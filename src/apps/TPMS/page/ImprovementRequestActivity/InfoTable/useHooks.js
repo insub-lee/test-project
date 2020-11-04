@@ -4,7 +4,7 @@ import moment from 'moment';
 import request from 'utils/request';
 import alertMessage from '../../../components/Notification/Alert';
 
-export default ({ data = [] }) => {
+export default ({ data = [], openModal = () => {}, callback = () => {}, processRecord }) => {
   const registAreaModalRef = useRef(null);
 
   const [checkedList, setCheckedList] = useState([]);
@@ -41,6 +41,7 @@ export default ({ data = [] }) => {
 
   // Todo - Get Status Column
   const getStatusColumn = (hpostno, clsyn, rejectyn) => {
+    console.debug('hpostno, clsyn, rejectyn:', hpostno, clsyn, rejectyn);
     let status = '';
     if (hpostno > 0 && clsyn !== null) {
       status = '완료';
@@ -86,7 +87,9 @@ export default ({ data = [] }) => {
   };
 
   const handleOpenRegistModal = () => {
-    registAreaModalRef.current.handleOpen(() => {});
+    registAreaModalRef.current.handleOpen(() => {
+      callback(1);
+    });
   };
 
   const columns = [
@@ -156,7 +159,7 @@ export default ({ data = [] }) => {
           <button
             type="button"
             onClick={() => {
-              console.debug('Open Modal Please~');
+              openModal('INQ');
             }}
           >
             {record.hpostno > 0 && (
@@ -166,7 +169,7 @@ export default ({ data = [] }) => {
               </>
             )}
             {title}
-            <span className="tooltiptext">{getToolTipText(record.content, record.hpostno)}</span>
+            <span className="tooltiptext">{getToolTipText(record?.content, record?.hpostno)}</span>
           </button>
         </div>
       ),
@@ -176,7 +179,7 @@ export default ({ data = [] }) => {
       dataIndex: 'hpostno',
       key: 'hpostno',
       width: '5%',
-      render: (hpostno, record) => getStatusColumn(hpostno, record.clsyn, record.rejectyn),
+      render: (hpostno, record) => getStatusColumn(hpostno, record?.clsyn, record?.rejectyn),
     },
   ];
 

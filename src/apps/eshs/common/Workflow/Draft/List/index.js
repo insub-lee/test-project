@@ -100,7 +100,7 @@ class DraftList extends Component {
           />
         </StyledContentsWrapper>
         <div>
-          <AntdModal width={1000} visible={modalObj.visible} title="기안함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
+          <AntdModal width={1100} visible={modalObj.visible} title="기안함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
             <CustomWorkProcess PRC_ID={selectedRow.PRC_ID} draftId={selectedRow.DRAFT_ID || -1} viewType="VIEW" statusVisible />
 
             <Spin spinning={this.state.loading}>{modalObj.content}</Spin>

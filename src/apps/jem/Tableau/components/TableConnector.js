@@ -14,7 +14,7 @@ const Wrapper = styled.div`
   height: 795px;
   width: 1366px;
 `;
-
+// 03__0/03_
 const TableConnector = ({ host }) => {
   // Ticket 관련 각종 에러 발생시 에러 메세지 화면에 노출
   const [viewError, setViewError] = useState(false);
@@ -31,9 +31,11 @@ const TableConnector = ({ host }) => {
       .then(({ response, error }) => {
         if (response && !error) {
           const { ticket, userId, userName } = response;
+          console.log('@@@ :', ticket, userId, userName, host);
           if (ticket) {
             const trustedTicket = `/trusted/${ticket}`;
-            const shareUrl = `http://10.100.22.103${trustedTicket}/views/${host}`;
+            // const shareUrl = `http://10.100.22.103${trustedTicket}/views/${host}`;
+            const shareUrl = `${window.location.protocol}//tableau.magnachip.com${trustedTicket}/views/${host}`;
             // const shareUrl = `http://10.100.22.103/views/${host}`;
             const options = {
               hideTabs: true,
@@ -43,9 +45,12 @@ const TableConnector = ({ host }) => {
               P_NO: userId,
               P_NAME: userName,
             };
+
             const vizContainer = document.getElementById('vizContainer');
+            console.log('2 :', vizContainer, shareUrl, options);
             if (vizContainer) {
               const viz = new window.tableau.Viz(vizContainer, shareUrl, options);
+              console.log('333 : ', viz);
             }
           }
         } else {

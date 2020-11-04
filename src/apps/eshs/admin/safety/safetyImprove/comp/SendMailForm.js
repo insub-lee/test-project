@@ -83,13 +83,13 @@ class Comp extends Component {
             <tbody>
               <tr>
                 <th>메일발송 종류</th>
-                <td style={{ borderRight: 'none' }} align="center">
+                <td style={{ borderRight: 'none' }} align="left">
                   <Radio.Group defaultValue={formData.FLAG} onChange={e => this.changeFormData('FLAG', e.target.value)}>
                     <Radio value="1"> 발행번호 및 Login버튼 포함</Radio>
                     <Radio value="2"> 추가전달사항만</Radio>
                   </Radio.Group>
                 </td>
-                <td align="center">
+                <td align="right">
                   <StyledButton className="btn-primary btn-sm" onClick={this.send}>
                     보내기
                   </StyledButton>
