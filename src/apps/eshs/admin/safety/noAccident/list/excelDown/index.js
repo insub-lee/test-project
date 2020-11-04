@@ -21,8 +21,8 @@ class Excel extends Component {
     const fields = [
       { field: 'WORK_MONTH', style: { font: { sz: '12' } } },
       { field: 'WORK_HOURS_1', style: { font: { sz: '12' } } },
-      { field: 'WORK_HOURS_2', style: { font: { sz: '12' } } },
       { field: 'WORK_HOURS_3', style: { font: { sz: '12' } } },
+      { field: 'WORK_HOURS_2', style: { font: { sz: '12' } } },
       { field: 'TOTAL_HOURS', style: { font: { sz: '12' } } },
     ];
 

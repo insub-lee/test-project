@@ -10,6 +10,16 @@ class NoAccidentStatus extends Component {
 
   renderRow = formData => {
     const jsx = [];
+
+    if (Object.entries(formData).length === 0) {
+      jsx.push(
+        <tr className="tr-center">
+          <td colSpan={5}>데이터가 없습니다.</td>
+        </tr>,
+      );
+      return jsx;
+    }
+
     for (let i = 1; i < 4; i += 1) {
       jsx.push(
         <tr className="tr-center">
@@ -54,7 +64,7 @@ class NoAccidentStatus extends Component {
                 <span>달성배수</span>
               </th>
             </tr>
-            {info && this.renderRow(info)}
+            {this.renderRow(info)}
           </tbody>
         </table>
       </StyledHtmlTable>

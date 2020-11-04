@@ -109,7 +109,7 @@ export const useHooks = () => {
 
       if (response && !error) {
         const { deptInfo } = response;
-        setHeadQuarts([{ value: deptInfo.dpcd, text: deptInfo.dpnm }]);
+        setHeadQuarts([{ value: deptInfo?.dpcd, text: deptInfo?.dpnm }]);
       } else {
         console.debug(error);
         alertMessage.alert('Server Error');

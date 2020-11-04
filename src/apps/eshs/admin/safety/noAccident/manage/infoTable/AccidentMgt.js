@@ -17,7 +17,6 @@ class AccidentMgt extends Component {
 
   render() {
     const { formData, onChangeFormData } = this.props;
-    console.debug('폼', formData);
     return (
       <StyledHtmlTable>
         <table>
@@ -57,7 +56,7 @@ class AccidentMgt extends Component {
                       style={{ width: '100%' }}
                       defaultValue={item.ACCIDENT_DT !== '' ? moment(item.ACCIDENT_DT, 'YYYY-MM-DD') : undefined}
                       format="YYYY-MM-DD"
-                      onChange={(date, strDate) => this.changeFormData('SE_DT', strDate)}
+                      onChange={(date, strDate) => onChangeFormData(index, 'ACCIDENT_DT', strDate)}
                     />
                   </td>
                 </tr>

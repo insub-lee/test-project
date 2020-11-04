@@ -37,8 +37,6 @@ class EddsSignUp extends Component {
     const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
     const { chkAgree1, chkAgree2, signUpData } = this.state;
 
-    console.debug('signupdata >> ', signUpData);
-
     if (chkAgree1 !== 'Y' || chkAgree2 != 'Y') {
       message.info(
         <MessageContent>

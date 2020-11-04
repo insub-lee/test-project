@@ -60,7 +60,7 @@ class UserProfile extends Component {
   };
 
   render() {
-    const { profile } = this.props;
+    const { profile, siteId } = this.props;
     const { show } = this.state;
     return (
       <div>
@@ -70,11 +70,13 @@ class UserProfile extends Component {
             content={
               <div>
                 <ul className="userProfileMenuList">
-                  <li>
-                    <Button onClick={() => this.handleClickToMoveToSite(profile, 'org')} type="button" className="highlight icon-info">
-                      {intlObj.get(messages.userProfile)}
-                    </Button>
-                  </li>
+                  {siteId !== 141 && (
+                    <li>
+                      <Button onClick={() => this.handleClickToMoveToSite(profile, 'org')} type="button" className="highlight icon-info">
+                        {intlObj.get(messages.userProfile)}
+                      </Button>
+                    </li>
+                  )}
                   <li>
                     <Button onClick={() => this.handleClickToMoveToSite(profile, 'set')} type="button" className="icon-settings">
                       환경설정
@@ -111,6 +113,7 @@ class UserProfile extends Component {
 UserProfile.propTypes = {
   profile: PropTypes.object.isRequired,
   execPage: PropTypes.func,
+  siteId: PropTypes.number,
 };
 
 UserProfile.defaultProps = {

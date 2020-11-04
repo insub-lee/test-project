@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import Table from 'rc-table';
-import moment from 'moment';
 
 import GlobalStyle from '../../../components/GlobalStyle';
 import TitleContainer from '../../../components/TitleContainer';
@@ -14,6 +13,20 @@ import StyledHeader from '../../../components/Tableboard/StyledHeader';
 import StyledHeaderCell from '../../../components/Tableboard/StyledHeaderCell';
 import StyledTable from '../../../components/Tableboard/StyledTable';
 import Button from '../../../components/Button';
+import Spin from '../../../components/Spin';
+import RegistAreaModal from './RegistModal';
+
+import { ModalHugger } from '../../../components/ModalHugger';
+
+import usePostList from '../../../hooks/usePostList';
+import { useModalController } from '../../../hooks/useModalController';
+import useHooks from './useHooks';
+
+import { InquiryBody, InquiryTitle } from './Inquiry';
+import { ModifyBody } from './Modify';
+import { DeleteBody } from './Delete';
+import { ReplyBody } from './Reply';
+import { formJson } from './formJson';
 
 /**
  * TPMS - 개선요청활동(생산) - 개선요청활동 게시판
@@ -43,170 +56,114 @@ const componentsStyle = {
   },
 };
 
-// Todo - should move to useBuilderBase
-const pagination = {
-  current: 1,
-  pageSize: 10,
-  total: 0,
-};
-
+const brdid = 'brd00000000000000024';
 const InfoTable = () => {
-  const [checkList, setCheckList] = useState([]);
+  const {
+    isLoading,
+    isError,
+    checkedList,
+    data,
+    pagination,
+    action: { submitSearchQuery, pageHandler, pageSizeHandler },
+  } = usePostList({ brdid });
 
-  // Todo - Toggle All
-  const handleChangeAll = () => setCheckList(prevState => []);
+  const {
+    modalStatus,
+    processedContent,
+    selectedRecord,
+    actions: { openModal, closeAll, closeModal, processRecord },
+  } = useModalController(['INQ', 'MOD', 'DEL', 'REP']);
 
-  // Todo - Toggle one
-  const handelChangeCheck = postno =>
-    setCheckList(prevState => (prevState.includes(postno) ? [...prevState, postno] : prevState.filter(value => value !== postno)));
+  const {
+    registAreaModalRef,
+    columns,
+    actions: { handleOpenRegistModal, deleteCheckedList },
+  } = useHooks({
+    data,
+    openModal,
+    callback: pageHandler,
+    processRecord,
+  });
 
-  // Todo - Get Type Column
-  const getTypeColumn = (hpostno, record) => '완료';
-
-  // Todo - Get ToolTip Text
-  const getToolTipText = (content, hpostno) => '본 내용이 나와야 한다...';
-
-  // Todo - Get Status Column
-  const getStatusColumn = (hpostno, clsyn, rejectyn) => {
-    let status = '';
-    if (hpostno > 0 && clsyn !== null) {
-      status = '완료';
-    } else if (hpostno > 0 && rejectyn !== null) {
-      status = '불가';
-    }
-    return status;
+  const essential = {
+    brdid,
+    formJson,
+    content: processedContent,
+    selectedRecord,
+    successCallback: () => {
+      closeAll();
+      pageHandler(1);
+    },
+    closeModal,
+    openModal,
+    // authInfo,
   };
 
-  const columns = [
-    {
-      title: (
-        <div className="checkbox">
-          <input
-            type="checkbox"
-            id="change-all-checkbox"
-            // checked={data.filter(row => !(row.hpostno > 0)).length === checkedList.length}
-            onChange={handleChangeAll}
-          />
-          <label htmlFor="change-all-checkbox">
-            <span />
-          </label>
-        </div>
-      ),
-      dataIndex: 'postno',
-      key: 'postno',
-      width: '5%',
-      // render: (postno, record) => this.getCheckBox(postno, record, checkedList),
-      render: (postno, record) => {
-        if (record.hpostno > 0) return '';
-        return (
-          <div className="checkbox">
-            <input type="checkbox" id={`checkbox-${postno}`} checked={checkList.includes(postno)} onChange={() => handelChangeCheck(postno)} />
-            <label htmlFor={`checkbox-${postno}`}>
-              <span />
-            </label>
-          </div>
-        );
-      },
-    },
-    {
-      title: '요청일',
-      dataIndex: 'regdt',
-      key: 'regdt',
-      width: '10%',
-      render: regdt => moment(regdt).format('YYYY.MM.DD'),
-    },
-    {
-      title: '소속',
-      dataIndex: 'deptnm',
-      key: 'deptnm',
-      width: '10%',
-    },
-    {
-      title: '요청자',
-      dataIndex: 'regnm',
-      key: 'regnm',
-      width: '10%',
-    },
-    {
-      title: '분류',
-      dataIndex: 'postno',
-      key: 'postno',
-      width: '5%',
-      render: (hpostno, record) => getTypeColumn(hpostno, record),
-    },
-    {
-      title: '개선요청사항',
-      dataIndex: 'title',
-      key: 'title',
-      width: '45%',
-      render: (title, record) => (
-        <div className="tooltip">
-          {record.isReply && (
-            <>
-              <span className="icon icon_reply" />
-              &nbsp;&nbsp;
-            </>
-          )}
-          {title}
-          <span className="tooltiptext">{getToolTipText(record.content, record.hpostno)}</span>
-        </div>
-      ),
-    },
-    {
-      title: '상태',
-      dataIndex: 'hpostno',
-      key: 'hpostno',
-      width: '5%',
-      render: (hpostno, record) => getStatusColumn(hpostno, record.clsyn, record.rejectyn),
-    },
-  ];
-
   return (
-    <div className="tpms-view">
-      <TitleContainer title="개선요청활동 게시판" nav={nav}>
-        <StyledWrapper>
-          <div className="view_top">
-            <div className="btn_wrap_left">
-              <Button type="button" color="primary" onClick={() => {}}>
-                전체 삭제
-              </Button>
-            </div>
-            <StyledSearch>
-              <form
-                autoComplete="off"
-                className="page"
-                name="form-name"
-                onSubmit={e => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                }}
-              >
-                <select name="category">
-                  {categories.map(category => (
-                    <option key={category.text} value={category.value}>
-                      {category.text}
-                    </option>
-                  ))}
-                </select>
-                <input type="text" className="input" name="text" />
-                <button type="submit" className="icon icon_search_white">
-                  검색
-                </button>
-              </form>
-            </StyledSearch>
-            <div className="btn_wrap">
-              <Button type="button" color="primary" onClick={() => {}}>
-                엑셀 업로드
-              </Button>
-            </div>
-            <div className="btn_wrap" />
-          </div>
-          <Table columns={columns} rowKey="postno" rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')} components={componentsStyle} />
-          <Pagination {...pagination} groupSize={10} pageHandler={() => {}} pageSizeHandler={() => {}} />
-        </StyledWrapper>
-      </TitleContainer>
-      <GlobalStyle />
-    </div>
+    <>
+      <div className="tpms-view">
+        <TitleContainer title="개선요청활동 게시판" nav={nav}>
+          <Spin spinning={isLoading}>
+            <StyledWrapper>
+              <div className="view_top">
+                <div className="btn_wrap_left">
+                  <Button type="button" color="primary" onClick={deleteCheckedList} disabled={checkedList?.length < 1}>
+                    선택 삭제
+                  </Button>
+                </div>
+                <StyledSearch>
+                  <form autoComplete="off" className="page" name="form-name" onSubmit={submitSearchQuery}>
+                    <select name="category" className="search-select">
+                      {categories.map(category => (
+                        <option key={category.text} value={category.value}>
+                          {category.text}
+                        </option>
+                      ))}
+                    </select>
+                    <input type="text" className="input" name="text" />
+                    <button type="submit" className="icon icon_search_white">
+                      검색
+                    </button>
+                  </form>
+                </StyledSearch>
+                <div className="btn_wrap">
+                  <Button type="button" color="primary" onClick={handleOpenRegistModal}>
+                    엑셀 업로드
+                  </Button>
+                </div>
+                <div className="btn_wrap" />
+              </div>
+              <Table
+                columns={columns}
+                data={data}
+                rowKey="postno"
+                rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
+                components={componentsStyle}
+              />
+              <Pagination {...pagination} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
+            </StyledWrapper>
+          </Spin>
+        </TitleContainer>
+        <GlobalStyle />
+        <RegistAreaModal ref={registAreaModalRef} callback={() => {}} />
+      </div>
+
+      <ModalHugger className="REG" width={850} visible={modalStatus.REG} title="답변하기" onCancel={() => closeModal('REP')}>
+        <ReplyBody />
+      </ModalHugger>
+
+      <ModalHugger className="MOD" width={850} visible={modalStatus.MOD} title="수정하기" onCancel={() => closeModal('MOD')}>
+        <ModifyBody />
+      </ModalHugger>
+
+      <ModalHugger className="DEL" width={300} visible={modalStatus.DEL} title="비밀번호 입력" onCancel={() => closeModal('DEL')}>
+        <DeleteBody />
+      </ModalHugger>
+
+      <ModalHugger className="INQ" width={850} visible={modalStatus.INQ} title={<InquiryTitle />} onCancel={() => closeModal('INQ')}>
+        <InquiryBody />
+      </ModalHugger>
+    </>
   );
 };
 

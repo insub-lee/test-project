@@ -74,8 +74,8 @@ const Header = ({
           <li className="rightBottom">
             <ul className="iconMenuWrapper">
               <li>
-                <UserSearch />
-                {/* 구성원검색 */}
+                {/* 구성원검색 - EDDS는 미노출하도록 설정 2020-11-02 */}
+                {siteId !== 141 && <UserSearch />}
               </li>
               {hasRoleAdmin && (
                 <li>
@@ -85,8 +85,8 @@ const Header = ({
                 </li>
               )}
               <li>
-                <AlarmPopover />
-                {/* 알림 */}
+                {/* 알림 - EDDS는 미노출하도록 설정 2020-11-02 */}
+                {siteId !== 141 && <AlarmPopover />}
               </li>
               {/*
                 <li>
@@ -104,7 +104,7 @@ const Header = ({
                 {/* 풀스크린 버튼 */}
               </li>
               <li>
-                <UserProfile execPage={execPage} />
+                <UserProfile execPage={execPage} siteId={siteId} />
                 {/* 프로필 */}
               </li>
             </ul>
@@ -126,6 +126,7 @@ Header.propTypes = {
   hasRoleAdmin: PropTypes.bool,
   location: PropTypes.object,
   headerTitle: PropTypes.string,
+  siteId: PropTypes.number,
 };
 
 Header.defaultProps = {
