@@ -17,6 +17,7 @@ import DanestAdmin from 'apps/eshs/admin/safety/Danger/danestAdmin';
 
 import { fields } from 'apps/eshs/admin/safety/safetyImprove/comp/fields';
 import { getTreeFromFlatData } from 'react-sortable-tree';
+import { saveProcessRule, getProcessRule } from 'apps/eshs/common/workProcessRule';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -255,29 +256,19 @@ class InputComp extends Component {
     const { sagaKey: id, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
     return submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsSafetyImprove', { PARAM: formData }, (_, res) => {
       if (res && res.result === 1) {
-        return this.formTableReload(
-          {
-            ...res.PARAM,
-            DETAIL_ACP_EMP_NO: res.PARAM && res.PARAM.ACP_EMP_NO,
-            DETAIL_ACP_DEPT_NM: res.PARAM && res.PARAM.ACP_DEPT_NM,
-            DETAIL_ACP_EMP_NM: res.PARAM && res.PARAM.ACP_EMP_NM,
-            DETAIL_ACP_PHONE: res.PARAM && res.PARAM.ACP_PHONE,
-            DA_REG_NO: (res.PARAM && res.PARAM.DA_REG_NO) || '',
-            DA_TASK_SEQ: (res.PARAM && res.PARAM.DA_TASK_SEQ) || undefined,
-          },
-          'MODIFY',
-          () => {
-            this.showMessage('저장되었습니다.');
-            if (formData.DANGERYN === 'Y')
-              return this.changeModalObj('위험성평가표 등록', true, [
-                <DanestAdmin
-                  key="DANESTADMIN_SAVE_AFTER"
-                  improveDanger={{ IMPROVE: true, REG_DTTM: res.PARAM.REQ_DT, REG_NO: res.PARAM && res.PARAM.DA_REG_NO }}
-                />,
-              ]);
-            return null;
-          },
-        );
+        this.showMessage('저장되었습니다.');
+
+        if (formData.DANGERYN === 'Y') {
+          this.search(res?.PARAM?.REQ_NO);
+          return this.changeModalObj('위험성평가표 등록', true, [
+            <DanestAdmin
+              key="DANESTADMIN_SAVE_AFTER"
+              improveDanger={{ IMPROVE: true, REG_DTTM: res.PARAM.REQ_DT, REG_NO: res.PARAM && res.PARAM.DA_REG_NO }}
+            />,
+          ]);
+        }
+
+        return this.search(res?.PARAM?.REQ_NO);
       }
       return this.showMessage('저장에 실패하였습니다.');
     });
@@ -299,24 +290,18 @@ class InputComp extends Component {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     return submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsSafetyImprove', { PARAM: formData }, (_, res) => {
       if (res && res.result === 1) {
-        return this.formTableReload(
-          {
-            ...res.PARAM,
-            DETAIL_ACP_EMP_NO: res.PARAM && res.PARAM.ACP_EMP_NO,
-            DETAIL_ACP_DEPT_NM: res.PARAM && res.PARAM.ACP_DEPT_NM,
-            DETAIL_ACP_EMP_NM: res.PARAM && res.PARAM.ACP_EMP_NM,
-            DETAIL_ACP_PHONE: res.PARAM && res.PARAM.ACP_PHONE,
-          },
-          'MODIFY',
-          () => this.showMessage('수정되었습니다.'),
-        );
+        this.showMessage('수정되었습니다.');
+
+        return this.search(res?.PARAM?.REQ_NO);
       }
       return this.showMessage('수정에 실패하였습니다.');
     });
   };
 
-  formTableReload = (formData = this.state.formData, viewType = 'INPUT', callBackFunc = () => {}) =>
-    this.setState(
+  formTableReload = (formData = this.state.formData, viewType = 'INPUT', callBackFunc = () => {}) => {
+    const { profile } = this.props;
+
+    return this.setState(
       {
         formData,
         viewType,
@@ -343,8 +328,9 @@ class InputComp extends Component {
           callBackFunc,
         ),
     );
+  };
 
-  search = (reqNo = (this.state.selectRow && this.state.selectRow.REQ_NO) || '') => {
+  search = (reqNo = this?.state?.selectRow?.REQ_NO || '') => {
     const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff } = this.props;
 
     if (!reqNo) return;
@@ -426,7 +412,16 @@ class InputComp extends Component {
     const saveStatus = (formData && formData.SAVE_STATUS) || ''; // SUB TABLE 의 저장상태
     // const acp1EmpNo = (formData && formData.ACP1_EMP_NO) || ''; // 조치자
     const userFlag = Number(matchUserFlag) <= 2; // 로그인한 유저가 안전 책임자, 유지자, 담당자, 조치자에 속함
-    const sFlag = (sttlmnyStatus !== '2' && sttlmnyStatus !== '3') || false;
+    const sFlag = sttlmnyStatus === '1' || false;
+    /*  
+          문서상태
+    			 '0' = '작성중'
+					 '1' = '요청완료/조치중'
+					 '2' = '조치완료'
+					 '3' = '완료승인'
+					 '4' = '부결'
+					 '5' = '요청반송/재작성'
+    */
     return [
       {
         text: '수신',
@@ -449,36 +444,35 @@ class InputComp extends Component {
         // 로그인한 유저가 안전 책임자, 유지자, 담당자, 조치자에 속하고 문서 상태가 조치완료, 완료 승인이 아닌경우 사용가능
         // visible: viewType !== 'INPUT', // test
       },
-      {
-        text: '조치',
-        onClick: () => this.handleDetailAction('ADD'),
-        className: 'btn-primary btn-sm mr5 mr5',
-        visible: viewType !== 'INPUT' && userFlag && sFlag && saveStatus === '1', // real
-        // 로그인한 유저가 안전 책임자, 유지자, 담당자, 조치자에 속하고 문서 상태가 조치완료, 완료 승인이 아닌경우 사용가능
-        // visible: viewType !== 'INPUT', // test
-      },
-      {
-        text: '요청반송',
-        onClick: () =>
-          this.changeModalObj('요청 반송', true, [
-            <MasureRefuse
-              key="MasureRefuse"
-              formData={{ REQ_NO: formData.REQ_NO, TARGET_USER: formData.REQ_EMP_NAME, TARGET_DEPT: formData.REQ_DEPT_NAME, CONTENT: '' }}
-              send={REFUSEINFO => this.handleDetailAction('REFUSE', { ...formData, REFUSEINFO })}
-            />,
-          ]),
-        className: 'btn-light btn-sm mr5 mr5',
-        visible: viewType !== 'INPUT' && sFlag && userFlag, // real
-        // 로그인한 유저가 안전 책임자, 유지자, 담당자, 조치자에 속하고 문서 상태가 조치완료, 완료 승인이 아닌경우 사용가능
-        // visible: viewType !== 'INPUT', // test
-      },
+      // {
+      //   text: '조치', // workflow에서 처리
+      //   onClick: () => this.handleDetailAction('ADD'),
+      //   className: 'btn-primary btn-sm mr5 mr5',
+      //   visible: viewType !== 'INPUT' && userFlag && sFlag && saveStatus === '1', // real
+      //   // 로그인한 유저가 안전 책임자, 유지자, 담당자, 조치자에 속하고 문서 상태가 요청완료/조치중 이고 조치후 데이터가 저장된 상태이면 사용가능
+      //   // visible: viewType !== 'INPUT', // test
+      // },
+      // {
+      //   text: '요청반송', // workflow에서 처리
+      //   onClick: () =>
+      //     this.changeModalObj('요청 반송', true, [
+      //       <MasureRefuse
+      //         key="MasureRefuse"
+      //         formData={{ REQ_NO: formData.REQ_NO, TARGET_USER: formData.REQ_EMP_NAME, TARGET_DEPT: formData.REQ_DEPT_NAME, CONTENT: '' }}
+      //         send={REFUSEINFO => this.handleDetailAction('REFUSE', { ...formData, REFUSEINFO })}
+      //       />,
+      //     ]),
+      //   className: 'btn-light btn-sm mr5 mr5',
+      //   visible: viewType !== 'INPUT' && sFlag && userFlag, // real
+      //   // 로그인한 유저가 안전 책임자, 유지자, 담당자, 조치자에 속하고 문서 상태가 요청완료/조치중 이면 사용가능
+      //   // visible: viewType !== 'INPUT', // test
+      // },
       {
         text: '전달',
         onClick: () => this.handleDetailAction('FORWARD'),
         className: 'btn-gray btn-sm mr5 mr5',
         visible: viewType !== 'INPUT' && sFlag && userFlag, // real
-        // 로그인한 유저가 안전 책임자, 유지자, 담당자, 조치자에 속하고 문서 상태가 조치완료, 완료 승인이 아닌경우 사용가능
-
+        // 로그인한 유저가 안전 책임자, 유지자, 담당자, 조치자에 속하고 문서 상태가 요청완료/조치중 이면 사용가능
         // visible: viewType !== 'INPUT', // test
       },
       {
@@ -531,7 +525,8 @@ class InputComp extends Component {
         apiData.param = { PARAM: formData };
         apiData.callBackFunc = (_, res) => {
           if (res && res.result >= 1) {
-            return this.formTableReload(formData, 'MODIFY', () => this.showMessage('저장되었습니다.'));
+            this.showMessage('저장되었습니다.');
+            return this.search(res?.PARAM?.REQ_NO);
           }
           return this.showMessage('요청에 실패하였습니다. 다시 시도해주십시오');
         };
@@ -613,6 +608,127 @@ class InputComp extends Component {
         }
         return this.showMessage('요청에 실패하였습니다. 다시 시도해주십시오');
       },
+    );
+  };
+
+  saveProcessRule = () => {
+    const { prcId, relKey, relKey2, result, profile } = this.props;
+    const { formData } = this.state;
+    const appLine = result?.detail?.appLine;
+
+    if (!appLine) return this.showMessage('결재자 정보가 없습니다.');
+
+    return getProcessRule(prcId, prcRule => {
+      const DRAFT_PROCESS_STEP = prcRule?.DRAFT_PROCESS_STEP || [];
+      DRAFT_PROCESS_STEP.forEach(step => {
+        switch (step?.RULE_CONFIG?.Label) {
+          case '조치부서 담당자':
+            if (appLine?.S1_USER_ID) {
+              step.APPV_MEMBER.push({
+                USER_ID: appLine?.S1_USER_ID,
+                DEPT_ID: appLine?.DEPT_ID,
+                DEPT_NAME_KOR: appLine?.DEPT_NAME,
+                NAME_KOR: appLine?.S1_NAME,
+                COMMENT: '안전 책임자',
+                IS_DEL: 'N',
+              });
+            }
+            if (appLine?.S2_USER_ID) {
+              step.APPV_MEMBER.push({
+                USER_ID: appLine?.S2_USER_ID,
+                DEPT_ID: appLine?.DEPT_ID,
+                DEPT_NAME_KOR: appLine?.DEPT_NAME,
+                NAME_KOR: appLine?.S2_NAME,
+                COMMENT: '안전 유지자',
+                IS_DEL: 'N',
+              });
+            }
+            if (appLine?.S3_USER_ID) {
+              step.APPV_MEMBER.push({
+                USER_ID: appLine?.S3_USER_ID,
+                DEPT_ID: appLine?.DEPT_ID,
+                DEPT_NAME_KOR: appLine?.DEPT_NAME,
+                NAME_KOR: appLine?.S3_NAME,
+                COMMENT: '안전 담당자',
+                IS_DEL: 'N',
+              });
+            }
+            break;
+          case '점검자':
+            // 점검자 = 기안자
+            if (profile?.USER_ID) {
+              step.APPV_MEMBER = [
+                {
+                  USER_ID: profile?.USER_ID,
+                  DEPT_ID: profile?.DEPT_ID,
+                  DEPT_NAME_KOR: profile?.DEPT_NAME_KOR,
+                  NAME_KOR: profile?.NAME_KOR,
+                  PSTN_NAME_KOR: profile?.PSTN_NAME_KOR,
+                },
+              ];
+            }
+            break;
+          default:
+            break;
+        }
+      });
+
+      saveProcessRule({ ...prcRule, REL_KEY: relKey, REL_KEY2: formData[relKey2], DRAFT_DATA: {}, DRAFT_TITLE: formData?.TITLE || '' }, draftId => {
+        if (draftId) {
+          return this.setState({
+            formData: { ...formData, STTLMNT_STATUS: '1' },
+          });
+        }
+        return null;
+      });
+    });
+  };
+
+  getSaveProcessConfirmMessage = () => {
+    const { result, profile } = this.props;
+    const { formData } = this.state;
+    const appLine = result?.detail?.appLine;
+
+    const arr = [
+      {
+        label: '안전 책임자',
+        USER_ID: appLine?.S1_USER_ID,
+        DEPT_ID: appLine?.DEPT_ID,
+        DEPT_NAME_KOR: appLine?.DEPT_NAME,
+        NAME_KOR: appLine?.S1_NAME,
+        PSTN_NAME_KOR: appLine?.S1_POSITION,
+      },
+      {
+        label: '안전 유지자',
+        USER_ID: appLine?.S2_USER_ID,
+        DEPT_ID: appLine?.DEPT_ID,
+        DEPT_NAME_KOR: appLine?.DEPT_NAME,
+        NAME_KOR: appLine?.S2_NAME,
+        PSTN_NAME_KOR: appLine?.S2_POSITION,
+      },
+      {
+        label: '안전 담당자',
+        USER_ID: appLine?.S3_USER_ID,
+        DEPT_ID: appLine?.DEPT_ID,
+        DEPT_NAME_KOR: appLine?.DEPT_NAME,
+        NAME_KOR: appLine?.S3_NAME,
+        PSTN_NAME_KOR: appLine?.S3_POSITION,
+      },
+      {
+        label: '점검자',
+        USER_ID: profile?.USER_ID,
+        DEPT_ID: profile?.DEPT_ID,
+        DEPT_NAME_KOR: profile?.DEPT_NAME_KOR,
+        NAME_KOR: profile?.NAME_KOR,
+        PSTN_NAME_KOR: profile?.PSTN_NAME_KOR,
+      },
+    ];
+
+    return (
+      <pre>
+        {`발행번호[${formData?.REQ_NO}] 상신하시겠습니까?\n------- 결재선 -------`}
+        {arr.filter(approval => approval?.USER_ID).map(approval => `\n${approval?.label}(${approval?.NAME_KOR} ${approval?.PSTN_NAME_KOR})`)}
+      </pre>
     );
   };
 
@@ -713,7 +829,7 @@ class InputComp extends Component {
                       <StyledButton className="btn-light btn-sm mr5">삭제</StyledButton>
                     </Popconfirm>
                   )}
-                  {sttltmntStatus === '2' && (
+                  {/* {sttltmntStatus === '2' && ( // workflow에서 처리
                     <Popover
                       content={
                         <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
@@ -754,7 +870,7 @@ class InputComp extends Component {
                       }
                       title={
                         <div style={{ width: '300px', textAlign: 'center' }}>
-                          <b>결제</b>
+                          <b>결재</b>
                         </div>
                       }
                       trigger="click"
@@ -763,11 +879,16 @@ class InputComp extends Component {
                     >
                       <StyledButton className="btn-primary btn-sm mr5">완료</StyledButton>
                     </Popover>
-                  )}
+                  )} */}
 
                   <StyledButton className="btn-gray btn-sm mr5" onClick={this.reset}>
                     초기화
                   </StyledButton>
+                  {sttltmntStatus === '0' && formData.REQ_USER_ID === profile.USER_ID && (
+                    <Popconfirm title={this.getSaveProcessConfirmMessage()} onConfirm={this.saveProcessRule} okText="Yes" cancelText="No">
+                      <StyledButton className="btn-primary btn-sm mr5">상신</StyledButton>
+                    </Popconfirm>
+                  )}
                   {(sttltmntStatus === '5' || sttltmntStatus === '0' || sttltmntStatus === '' || sttltmntStatus === '4') &&
                     (dangerYn !== 'Y' ? (
                       <StyledButton
@@ -790,6 +911,7 @@ class InputComp extends Component {
                         />
                       </div>
                     ))}
+                  {/* 현재 문서상태가 작성중이면서 접속한 사람의 사번과 같다면 삭제가능 */}
                 </>
               )}
             </div>
@@ -799,7 +921,6 @@ class InputComp extends Component {
           </StyledCustomSearchWrapper>
           {inputTable}
         </StyledContentsWrapper>
-
         <AntdModal
           title={modalObj.title || ''}
           visible={modalObj.visible}
@@ -828,6 +949,9 @@ InputComp.propTypes = {
   profile: PropTypes.object,
   submitHandlerBySaga: PropTypes.func,
   reqNo: PropTypes.string,
+  prcId: PropTypes.number,
+  relKey: PropTypes.string,
+  relKey2: PropTypes.string,
 };
 InputComp.defaultProps = {
   result: {},
@@ -839,6 +963,9 @@ InputComp.defaultProps = {
   profile: {},
   submitHandlerBySaga: () => {},
   reqNo: '',
+  prcId: undefined,
+  relKey: undefined,
+  relKey2: undefined,
 };
 
 export default InputComp;

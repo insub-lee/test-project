@@ -61,7 +61,7 @@ class MasureRefuse extends React.Component {
                 <tr>
                   <th colSpan={2} align="center">
                     <StyledButton className="btn-gray btn-sm mr5" onClick={() => send(this.state.content)}>
-                      보내기
+                      반송
                     </StyledButton>
                   </th>
                 </tr>
