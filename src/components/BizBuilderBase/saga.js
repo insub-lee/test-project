@@ -217,7 +217,15 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
   }
   yield put(actions.setBuilderModalByReducer(id, isBuilderModal, builderModalSetting, isSaveModalClose));
   if (viewType === 'LIST') {
-    yield put(actions.getListDataBySaga(id, workSeq, conditional, undefined, undefined, changeIsLoading));
+    // Pagination 옵션에 부가옵션 추가 (row 10 ~ 100, 10단위 지정가능) - jeongHyun - 2020.11.04
+    const paginactionOptIdx = work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_CODE === PAGINATION_OPT_CODE && opt.ISUSED === 'Y');
+    if (paginactionOptIdx > -1) {
+      const paginationOpt = work.OPT_INFO[paginactionOptIdx];
+      const paginationOptValue = JSON.parse(paginationOpt.OPT_VALUE);
+      yield put(actions.getListDataBySaga(id, workSeq, conditional, 1, paginationOptValue?.PAGE_CNT || 10, changeIsLoading));
+    } else {
+      yield put(actions.getListDataBySaga(id, workSeq, conditional, undefined, undefined, changeIsLoading));
+    }
   } else if (typeof changeIsLoading === 'function') changeIsLoading(false);
 }
 

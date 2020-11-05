@@ -63,6 +63,7 @@ class ListPage extends Component {
     let columns = [];
     let fields = [];
     let isPagingData = false;
+    let pageSize = 10;
 
     if (workInfo.BUILDER_STYLE_PATH) {
       // const StyledWrap = Loadable({
@@ -101,10 +102,13 @@ class ListPage extends Component {
             fields = columnInfo.fields || [];
           }
         }
-        if (opt.OPT_CODE === PAGINATION_OPT_CODE && opt.ISUSED === 'Y') isPagingData = true;
-        // todo page size option
+        if (opt.OPT_CODE === PAGINATION_OPT_CODE && opt.ISUSED === 'Y') {
+          const paginationOptValue = JSON.parse(opt.OPT_VALUE);
+          pageSize = paginationOptValue?.PAGE_CNT || 10;
+          isPagingData = true;
+        }
       });
-      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView, isExcelDown, btnTex, fileName, sheetName, columns, fields, isPagingData });
+      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView, isExcelDown, btnTex, fileName, sheetName, columns, fields, isPagingData, pageSize });
     }
   };
 
@@ -213,7 +217,7 @@ class ListPage extends Component {
 
   renderList = (group, groupIndex) => {
     const { listData, listSelectRowKeys, workInfo, customOnRowClick, listTotalCnt } = this.props;
-    const { isMultiDelete, isOnRowClick, paginationIdx } = this.state;
+    const { isMultiDelete, isOnRowClick, paginationIdx, pageSize } = this.state;
     const columns = this.setColumns(group.rows[0].cols, group.widths || []);
     let rowSelection = false;
     let onRow = false;
@@ -243,7 +247,7 @@ class ListPage extends Component {
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
             onRow={onRow}
-            pagination={{ current: paginationIdx, total: listTotalCnt }}
+            pagination={{ current: paginationIdx, total: listTotalCnt, pageSize }}
             onChange={pagination => this.setPaginationIdx(pagination.current)}
           />
         </Group>

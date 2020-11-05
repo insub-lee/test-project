@@ -15,6 +15,8 @@ import SafetyAppView from 'apps/eshs/common/Workflow/EshsAppView/SafetyAppView';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import { columns } from 'apps/eshs/common/Workflow/common/Columns';
+import SearchBar from 'apps/eshs/common/Workflow/common/SearchBar';
+
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
 
@@ -26,23 +28,31 @@ class UnApproveList extends Component {
     this.state = {
       paginationIdx: 1,
       pageSize: 10,
+      modalLoading: false,
       loading: false,
       modalObj: {
         visible: false,
         content: [],
+        title: '',
       },
+      searchParam: {},
     };
   }
 
   componentDidMount() {
-    const { getUnApproveList, relTypes, setRelTypes } = this.props;
-    const { paginationIdx, pageSize } = this.state;
-    const prefixUrl = undefined;
-    setRelTypes(relTypes);
-    getUnApproveList(prefixUrl, paginationIdx, pageSize, relTypes);
+    this.getList();
   }
 
-  handleModal = (visible = false, content = []) => this.setState({ modalObj: { visible, content } });
+  getList = (params = this.state?.searchParam) => {
+    const { profile, id, getUnApproveList, relTypes, setRelTypes } = this.props;
+    const { paginationIdx, pageSize } = this.state;
+    setRelTypes(relTypes);
+    const fixUrl = '/api/workflow/v1/common/approve/unApproveListESHS';
+    this.spinningOn();
+    this.props.getUnApproveList(fixUrl, paginationIdx, pageSize, relTypes, params, _ => this.setState({ searchParam: params }, this.spinningOff));
+  };
+
+  handleModal = (visible = false, content = [], title = '미결함') => this.setState({ modalObj: { visible, content, title } });
 
   onRowClick = (record, rowIndex, e) => {
     this.props.setSelectedRow(record);
@@ -53,13 +63,11 @@ class UnApproveList extends Component {
     this.props.setViewVisible(false);
   };
 
-  setPaginationIdx = paginationIdx =>
-    this.setState({ paginationIdx }, () => {
-      const { pageSize } = this.state;
-      const { getUnApproveList, relTypes } = this.props;
-      const prefixUrl = undefined;
-      getUnApproveList(prefixUrl, paginationIdx, pageSize, relTypes);
-    });
+  setPaginationIdx = paginationIdx => this.setState({ paginationIdx }, () => this.getList());
+
+  modalSpinningOn = () => this.setState({ modalLoading: true });
+
+  modalSpinningOff = () => this.setState({ modalLoading: false });
 
   spinningOn = () => this.setState({ loading: true });
 
@@ -70,7 +78,7 @@ class UnApproveList extends Component {
     const { paginationIdx, modalObj } = this.state;
 
     return (
-      <>
+      <Spin spinning={this.state.loading}>
         <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
@@ -79,9 +87,15 @@ class UnApproveList extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
+          <SearchBar spinningOn={this.spinningOn} spinningOff={this.spinningOff} getList={params => this.getList(params)} />
+          <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
+            <span style={{ float: 'left' }}>
+              결재할 문서 : <font style={{ color: '#ff0000' }}>{unApproveListCnt || 0}</font> 건
+            </span>
+          </div>
           <AntdLineTable
             key="QUE_ID"
-            columns={columns(this.handleModal, 'UNAPPROVE', this.spinningOn, this.spinningOff)}
+            columns={columns(this.handleModal, 'UNAPPROVE', this.modalSpinningOn, this.modalSpinningOff)}
             dataSource={unApproveList}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
@@ -92,15 +106,15 @@ class UnApproveList extends Component {
           />
         </StyledContentsWrapper>
 
-        <AntdModal width={1100} visible={modalObj.visible} title="미결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
+        <AntdModal width={1100} visible={modalObj.visible} title={modalObj.title} onCancel={() => this.handleModal()} destroyOnClose footer={null}>
           {selectedRow?.REL_KEY === '안전개선 요청' ? (
             <SafetyAppView {...this.props} setViewVisible={this.handleModal} />
           ) : (
             <EshsAppView {...this.props} setViewVisible={this.handleModal} />
           )}
-          <Spin spinning={this.state.loading}>{modalObj.content}</Spin>
+          <Spin spinning={this.state.modalLoading}>{modalObj.content}</Spin>
         </AntdModal>
-      </>
+      </Spin>
     );
   }
 }
