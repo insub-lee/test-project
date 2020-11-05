@@ -12,6 +12,7 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess';
+import SearchBar from 'apps/eshs/common/Workflow/common/SearchBar';
 
 import { columns } from 'apps/eshs/common/Workflow/common/Columns';
 const AntdTable = StyledAntdTable(Table);
@@ -24,23 +25,32 @@ class DraftList extends Component {
       workPrcProps: undefined,
       paginationIdx: 1,
       pageSize: 10,
+      modalLoading: false,
       loading: false,
       modalObj: {
         visible: false,
         content: [],
+        title: '',
+        width: 0,
       },
+      searchParam: {},
     };
   }
 
   componentDidMount() {
-    const { getDraftList, relTypes, setRelTypes } = this.props;
-    const { paginationIdx, pageSize } = this.state;
-    const fixUrl = undefined;
-    setRelTypes(relTypes);
-    getDraftList(fixUrl, paginationIdx, pageSize, relTypes);
+    this.getList();
   }
 
-  handleModal = (visible = false, content = []) => this.setState({ modalObj: { visible, content } });
+  getList = (params = this.state?.searchParam) => {
+    const { profile, id, getDraftList, relTypes, setRelTypes } = this.props;
+    const { paginationIdx, pageSize } = this.state;
+    const fixUrl = '/api/workflow/v1/common/approve/draftListESHS';
+    setRelTypes(relTypes);
+    this.spinningOn();
+    this.props.getDraftList(fixUrl, paginationIdx, pageSize, relTypes, params, _ => this.setState({ searchParam: params }, this.spinningOff));
+  };
+
+  handleModal = (visible = false, content = [], title = '기안함', width = 1100) => this.setState({ modalObj: { visible, content, title, width } });
 
   onRowClick = (record, rowIndex, e) => {
     const { sagaKey, submitHandlerBySaga } = this.props;
@@ -53,21 +63,15 @@ class DraftList extends Component {
   };
 
   closeBtnFunc = () => {
-    const { getDraftList, relTypes } = this.props;
-    const { paginationIdx, pageSize } = this.state;
     this.props.setViewVisible(false);
-    const fixUrl = undefined;
-    getDraftList(fixUrl, paginationIdx, pageSize, relTypes);
+    this.getList();
   };
 
-  setPaginationIdx = paginationIdx =>
-    this.setState({ paginationIdx }, () => {
-      const { getDraftList, relTypes } = this.props;
-      const { pageSize } = this.state;
+  setPaginationIdx = paginationIdx => this.setState({ paginationIdx }, () => this.getList());
 
-      const fixUrl = undefined;
-      getDraftList(fixUrl, paginationIdx, pageSize, relTypes);
-    });
+  modalSpinningOn = () => this.setState({ modalLoading: true });
+
+  modalSpinningOff = () => this.setState({ modalLoading: false });
 
   spinningOn = () => this.setState({ loading: true });
 
@@ -78,7 +82,7 @@ class DraftList extends Component {
     const { draftList, draftListCnt, selectedRow } = this.props;
     const { paginationIdx, modalObj } = this.state;
     return (
-      <>
+      <Spin spinning={this.state.loading}>
         <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
@@ -87,9 +91,15 @@ class DraftList extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
+          <SearchBar spinningOn={this.spinningOn} spinningOff={this.spinningOff} getList={params => this.getList(params)} />
+          <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
+            <span style={{ float: 'left' }}>
+              상신한 문서 : <font style={{ color: '#ff0000' }}>{draftListCnt || 0}</font> 건
+            </span>
+          </div>
           <AntdTable
             key="QUE_ID"
-            columns={columns(this.handleModal, 'DRAFT', this.spinningOn, this.spinningOff)}
+            columns={columns(this.handleModal, 'DRAFT', this.modalSpinningOn, this.modalSpinningOff)}
             dataSource={draftList}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
@@ -99,14 +109,11 @@ class DraftList extends Component {
             onChange={pagination => this.setPaginationIdx(pagination.current)}
           />
         </StyledContentsWrapper>
-        <div>
-          <AntdModal width={1100} visible={modalObj.visible} title="기안함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
-            <CustomWorkProcess PRC_ID={selectedRow.PRC_ID} draftId={selectedRow.DRAFT_ID || -1} viewType="VIEW" statusVisible />
-
-            <Spin spinning={this.state.loading}>{modalObj.content}</Spin>
-          </AntdModal>
-        </div>
-      </>
+        <AntdModal width={modalObj.width} visible={modalObj.visible} title={modalObj.title} onCancel={() => this.handleModal()} destroyOnClose footer={null}>
+          {modalObj?.title === '기안함' && <CustomWorkProcess PRC_ID={selectedRow.PRC_ID} draftId={selectedRow.DRAFT_ID || -1} viewType="VIEW" statusVisible />}
+          <Spin spinning={this.state.modalLoading}>{modalObj.content}</Spin>
+        </AntdModal>
+      </Spin>
     );
   }
 }
