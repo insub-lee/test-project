@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
-import { Table, Input, message, TreeSelect, Select } from 'antd';
+import { Table, Input, message, TreeSelect, Select, Spin } from 'antd';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
@@ -33,6 +33,7 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoaded: false,
       changeSelectValue: '',
       name: '',
       code: '',
@@ -41,6 +42,7 @@ class List extends Component {
       nodeOrdinal: '',
       nodeId: '',
       useType: '',
+      nData: [],
     };
   }
 
@@ -60,31 +62,20 @@ class List extends Component {
   };
 
   initDataApi = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    const apiAry = [
-      {
-        key: 'treeSelectData',
-        type: 'POST',
-        url: '/api/admin/v1/common/categoryMapList',
-        params: { PARAM: { NODE_ID: 1831 } },
-      },
-    ];
-    getCallDataHandler(id, apiAry, this.initData);
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const apiInfo = {
+      key: 'treeSelectData',
+      type: 'POST',
+      url: '/api/admin/v1/common/categoryMapList',
+      params: { PARAM: { NODE_ID: 1831, USE_YN: 'Y', MAX_LVL: 6 } },
+    };
+    getCallDataHandlerReturnRes(id, apiInfo, this.initDataApiCallback);
   };
 
-  initData = () => {
-    const {
-      result: { treeSelectData },
-    } = this.props;
-    const nData =
-      (treeSelectData &&
-        treeSelectData.categoryMapList &&
-        getCategoryMapListAsTree(
-          treeSelectData.categoryMapList.filter(f => f.USE_YN === 'Y' && f.LVL !== 7),
-          1831,
-        )) ||
-      [];
-    this.setState({ nData });
+  initDataApiCallback = (id, response) => {
+    const { categoryMapList } = response;
+    const treeData = (categoryMapList && getCategoryMapListAsTree(categoryMapList, 1831)) || [];
+    this.setState({ isLoaded: true, nData: treeData });
   };
 
   onChangeSelect = value => {
@@ -204,7 +195,7 @@ class List extends Component {
   };
 
   render() {
-    const { nData, useType, listData, code, name, useYN, desciption, lvl } = this.state;
+    const { nData, useType, listData, code, name, useYN, desciption, lvl, isLoaded } = this.state;
     let changeTitle;
     switch (lvl) {
       case 3:
@@ -325,43 +316,45 @@ class List extends Component {
     ];
     return (
       <ContentsWrapper>
-        <StyledCustomSearch className="search-wrapper-inline">
-          <div className="search-input-area">
-            <AntdTreeSelect
-              style={{ width: '300px' }}
-              className="mr5 select-sm"
-              defultValue={this.state.changeSelectValue}
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-              treeData={nData || []}
-              placeholder="Please select"
-              onChange={value => this.onChangeSelect(value)}
-            />
-            <AntdSelect className="select-sm mr5" onChange={value => this.onChangeValue('useType', value)} value={useType}>
-              <Option value="">전체</Option>
-              <Option value="Y">사용</Option>
-              <Option value="N">미사용</Option>
-            </AntdSelect>
-          </div>
-          <div className="btn-area">
-            <StyledButton className="btn-gray btn-sm mr5" onClick={this.selectCode}>
-              검색
-            </StyledButton>
-            {listData && listData.length > 0 && <ExcelDownloader dataList={listData} excelNm="작업단계관리" />}
-          </div>
-        </StyledCustomSearch>
-        <AntdLineTable
-          rowKey="NODE_ID"
-          key="NODE_ID"
-          columns={columns}
-          dataSource={listData || []}
-          bordered
-          onRow={record => ({
-            onClick: () => {
-              this.selectedRecord(record);
-            },
-          })}
-          footer={() => <span>{`${listData && listData.length} 건`}</span>}
-        />
+        <Spin spinning={!isLoaded} tip="Data Loading...">
+          <StyledCustomSearch className="search-wrapper-inline">
+            <div className="search-input-area">
+              <AntdTreeSelect
+                style={{ width: '300px' }}
+                className="mr5 select-sm"
+                defultValue={this.state.changeSelectValue}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                treeData={nData}
+                placeholder="Please select"
+                onChange={value => this.onChangeSelect(value)}
+              />
+              <AntdSelect className="select-sm mr5" onChange={value => this.onChangeValue('useType', value)} value={useType}>
+                <Option value="">전체</Option>
+                <Option value="Y">사용</Option>
+                <Option value="N">미사용</Option>
+              </AntdSelect>
+            </div>
+            <div className="btn-area">
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.selectCode}>
+                검색
+              </StyledButton>
+              {listData && listData.length > 0 && <ExcelDownloader dataList={listData} excelNm="작업단계관리" />}
+            </div>
+          </StyledCustomSearch>
+          <AntdLineTable
+            rowKey="NODE_ID"
+            key="NODE_ID"
+            columns={columns}
+            dataSource={listData || []}
+            bordered
+            onRow={record => ({
+              onClick: () => {
+                this.selectedRecord(record);
+              },
+            })}
+            footer={() => <span>{`${listData && listData.length} 건`}</span>}
+          />
+        </Spin>
       </ContentsWrapper>
     );
   }
@@ -371,11 +364,13 @@ List.propTypes = {
   sagaKey: PropTypes.string,
   submitHandlerBySaga: PropTypes.func,
   getCallDataHandler: PropTypes.func,
+  getCallDataHandlerReturnRes: PropTypes.func,
   result: PropTypes.any,
 };
 
 List.defaultProps = {
-  getCallDataHandler: () => {},
+  getCallDataHandler: () => false,
+  getCallDataHandlerReturnRes: () => false,
 };
 
 export default List;
