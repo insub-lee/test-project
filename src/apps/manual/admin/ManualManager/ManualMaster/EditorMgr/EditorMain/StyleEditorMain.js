@@ -16,11 +16,11 @@ const StyleEditorMain = styled.div`
     .editorComponent.on {
       border-color: rgba(15, 156, 238, 0.37);
     }
-    /* .fr-wrapper {
+    .fr-wrapper {
       > div:first-child {
         display: none;
       }
-    } */
+    }
     .fr-box.fr-basic .fr-wrapper {
       border: 0;
     }
