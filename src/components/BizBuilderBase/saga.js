@@ -221,7 +221,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
     const paginactionOptIdx = work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_CODE === PAGINATION_OPT_CODE && opt.ISUSED === 'Y');
     if (paginactionOptIdx > -1) {
       const paginationOpt = work.OPT_INFO[paginactionOptIdx];
-      const paginationOptValue = JSON.parse(paginationOpt.OPT_VALUE);
+      const paginationOptValue = isJSON(paginationOpt.OPT_VALUE) ? JSON.parse(paginationOpt.OPT_VALUE) : { PAGE_CNT: 10 };
       yield put(actions.getListDataBySaga(id, workSeq, conditional, 1, paginationOptValue?.PAGE_CNT || 10, changeIsLoading));
     } else {
       yield put(actions.getListDataBySaga(id, workSeq, conditional, undefined, undefined, changeIsLoading));
