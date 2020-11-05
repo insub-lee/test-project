@@ -8,6 +8,7 @@ import OnRowClickSetting from './onRowClickSetting';
 import ExcelDownloadSetting from './excelDownloadSetting';
 import DeleteDataListSetting from './deleteDataListSetting';
 import RevisionSetting from './revisionSetting';
+import PaginationSetting from './paginationSetting';
 
 export const OptionInfos = {
   procsetting: { renderer: property => <ProcSetting {...property} /> },
@@ -19,4 +20,5 @@ export const OptionInfos = {
   excelDownloadSetting: { renderer: property => <ExcelDownloadSetting {...property} /> },
   deleteDataListSetting: { renderer: property => <DeleteDataListSetting {...property} /> },
   revisionSetting: { renderer: property => <RevisionSetting {...property} /> },
+  paginationSetting: { renderer: property => <PaginationSetting {...property} /> },
 };
