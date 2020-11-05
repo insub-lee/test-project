@@ -1,6 +1,8 @@
 import moment from 'moment';
 import React from 'react';
 
+import { Tooltip } from 'antd';
+
 import request from 'utils/request';
 
 import BizBuilderBase from 'components/BizBuilderBase';
@@ -20,6 +22,7 @@ import JournalManagement from 'apps/eshs/user/health/medicalManagement/journalMa
 // D:\magnachip\bizmicro-portal-front\src\apps\eshs\user\safety\protectionItem\hitemRequest\list\PaymentModal.js
 import HitemPaymentView from 'apps/eshs/user/safety/protectionItem/hitemRequest/list/PaymentModal';
 import ImproveView from 'apps/eshs/admin/safety/safetyImprove/Input'; // 안전개선
+import HistoryModal from 'apps/eshs/common/Workflow/common/HistoryModal';
 
 /* view  --end--*/
 
@@ -191,18 +194,27 @@ export const columns = (handleModal, type, spinningOn, spinningOff) => [
     title: '유형',
     width: type === 'DRAFT' ? '0%' : '15%',
     align: 'center',
-    render: (text, record) => (type === 'DRAFT' ? '' : record?.RULE_CONFIG?.Label) || '',
+    render: (text, record) => {
+      if (type !== 'DRAFT') return record?.RULE_CONFIG?.Label || '';
+      return '';
+    },
   },
   {
     title: '제목',
     dataIndex: 'DRAFT_TITLE',
     key: 'title',
-    width: type === 'DRAFT' ? '50%' : '40%',
+    width: '40%',
     ellipsis: true,
     render: (text, record) => (
-      <StyledButton className="btn-link btn-sm" onClick={() => handleModal(true, getView(record, spinningOn, spinningOff, handleModal))}>
-        {text}
-      </StyledButton>
+      <Tooltip placement="bottom" title={text}>
+        <StyledButton
+          className="btn-link btn-sm"
+          style={{ textOverflow: 'ellipsis', overflow: 'hidden', width: '100%', whiteSpace: 'nowrap' }}
+          onClick={() => handleModal(true, getView(record, spinningOn, spinningOff, handleModal))}
+        >
+          <span>{text}</span>
+        </StyledButton>
+      </Tooltip>
     ),
   },
   {
@@ -242,5 +254,21 @@ export const columns = (handleModal, type, spinningOn, spinningOff) => [
     key: 'NAME_KOR',
     width: '10%',
     align: 'center',
+  },
+  {
+    title: type === 'DRAFT' ? 'history' : '',
+    width: type === 'DRAFT' ? '10%' : '0%',
+    align: 'center',
+    render: (text, record) => {
+      if (type !== 'DRAFT') return '';
+      return (
+        <StyledButton
+          className="btn-link btn-sm"
+          onClick={() => handleModal(true, [<HistoryModal record={record} spinningOn={spinningOn} spinningOff={spinningOff} />], 'history', 700)}
+        >
+          history
+        </StyledButton>
+      );
+    },
   },
 ];

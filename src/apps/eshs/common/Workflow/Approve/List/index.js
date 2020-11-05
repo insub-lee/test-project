@@ -15,6 +15,7 @@ import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHead
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess';
 import { columns } from 'apps/eshs/common/Workflow/common/Columns';
+import SearchBar from 'apps/eshs/common/Workflow/common/SearchBar';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
@@ -26,6 +27,7 @@ class ApproveList extends Component {
       currentStatus: undefined,
       draftNode: undefined,
       workPrcProps: undefined,
+      modalLoading: false,
       loading: false,
       paginationIdx: 1,
       pageSize: 10,
@@ -33,16 +35,23 @@ class ApproveList extends Component {
         visible: false,
         content: [],
       },
+      searchParam: {},
     };
   }
 
   componentDidMount() {
+    this.getList();
+  }
+
+  getList = (params = this.state?.searchParam) => {
     const { profile, id, getApproveList, relTypes, setRelTypes } = this.props;
     const { paginationIdx, pageSize } = this.state;
-    const fixUrl = undefined;
+    const fixUrl = '/api/workflow/v1/common/approve/approveListESHS';
     setRelTypes(relTypes);
-    this.props.getApproveList(fixUrl, paginationIdx, pageSize, relTypes);
-  }
+    this.spinningOn();
+
+    this.props.getApproveList(fixUrl, paginationIdx, pageSize, relTypes, params, _ => this.setState({ searchParam: params }, this.spinningOff));
+  };
 
   handleModal = (visible = false, content = []) => this.setState({ modalObj: { visible, content } });
 
@@ -54,21 +63,15 @@ class ApproveList extends Component {
   };
 
   closeBtnFunc = () => {
-    const { getApproveList, relTypes } = this.props;
-    const { paginationIdx, pageSize } = this.state;
     this.props.setViewVisible(false);
-    const fixUrl = undefined;
-    getApproveList(fixUrl, paginationIdx, pageSize, relTypes);
+    this.getList();
   };
 
-  setPaginationIdx = paginationIdx =>
-    this.setState({ paginationIdx }, () => {
-      const { getApproveList, relTypes } = this.props;
-      const { pageSize } = this.state;
+  setPaginationIdx = paginationIdx => this.setState({ paginationIdx }, () => this.getList());
 
-      const fixUrl = undefined;
-      this.props.getApproveList(fixUrl, paginationIdx, pageSize, relTypes);
-    });
+  modalSpinningOn = () => this.setState({ modalLoading: true });
+
+  modalSpinningOff = () => this.setState({ modalLoading: false });
 
   spinningOn = () => this.setState({ loading: true });
 
@@ -78,7 +81,7 @@ class ApproveList extends Component {
     const { approveList, approveListCnt, selectedRow } = this.props;
     const { paginationIdx, modalObj } = this.state;
     return (
-      <>
+      <Spin spinning={this.state.loading}>
         <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
@@ -87,9 +90,15 @@ class ApproveList extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
+          <SearchBar spinningOn={this.spinningOn} spinningOff={this.spinningOff} getList={params => this.getList(params)} />
+          <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
+            <span style={{ float: 'left' }}>
+              결재한 문서 : <font style={{ color: '#ff0000' }}>{approveListCnt || 0}</font> 건
+            </span>
+          </div>
           <AntdTable
             key="QUE_ID"
-            columns={columns(this.handleModal, 'APPROVE', this.spinningOn, this.spinningOff)}
+            columns={columns(this.handleModal, 'APPROVE', this.modalSpinningOn, this.modalSpinningOff)}
             dataSource={approveList}
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
@@ -102,10 +111,9 @@ class ApproveList extends Component {
 
         <AntdModal width={1100} visible={modalObj.visible} title="기결함" onCancel={() => this.handleModal()} destroyOnClose footer={null}>
           <CustomWorkProcess PRC_ID={selectedRow.PRC_ID} draftId={selectedRow.DRAFT_ID || -1} viewType="VIEW" />
-          <Spin spinning={this.state.loading}>{modalObj.content}</Spin>
+          <Spin spinning={this.state.modalLoading}>{modalObj.content}</Spin>
         </AntdModal>
-        <div></div>
-      </>
+      </Spin>
     );
   }
 }
