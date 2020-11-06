@@ -51,7 +51,7 @@ class SafetyWorkMain extends Component {
         WLOC: '', //                    작업장소        (String, 100)
         WGUBUN: '신규', //              작업구분        (String, 4)   [신규, 변경, 이설, 철거, 기타]
         SITE: '청주', //                지역            (String, 4)   [이천, 청주, 구미]
-        DGUBUN: 'C-1', //               작업동          (String, 50)  [C-1, C-2, R, 청주기타, F1동, F3동, A1동, D.I동, 기숙사동, 구미기타]
+        DGUBUN: 'F3동', //               작업동          (String, 50)  [C-1, C-2, R, 청주기타, F1동, F3동, A1동, D.I동, 기숙사동, 구미기타]
         FROM_DT: '', //                 허가 요청날짜   (Date)
         TO_DT: '', //                   허가 요청날짜   (Date)
         FROM_TIME: '09', //               허가 요청시간   (String, 2)

@@ -5,15 +5,13 @@ import FormView from '../../components/FormPreview/FormView';
 import ProjectFormModal from '../../components/BuiltModals/ProjectModal';
 import Button from '../../components/Button';
 
-import { usePost } from '../../hooks/usePost';
-
 /**
  * call Search API
  * Open Modal
  * Render choosed Project
  *
  */
-export const RegisterBody = ({ formJson = [], brdid, selectedRecord, successCallback }) => {
+export const RegisterBody = ({ formJson = [], regPost, selectedRecord, successCallback }) => {
   const [searchText, setSearchText] = useState('');
   const [modifiedFormJson, setModifiedFormJson] = useState(formJson);
   const [proejctData, setProejctData] = useState({});
@@ -44,9 +42,6 @@ export const RegisterBody = ({ formJson = [], brdid, selectedRecord, successCall
     }
   };
 
-  const {
-    action: { RegPost },
-  } = usePost({ brdid });
   return (
     <>
       <div className="pop_con" style={{ padding: '0px' }}>
@@ -54,7 +49,7 @@ export const RegisterBody = ({ formJson = [], brdid, selectedRecord, successCall
           autoComplete="off"
           onSubmit={e => {
             e.preventDefault();
-            RegPost(e.target, selectedRecord).then(({ response, error }) => {
+            regPost(e.target, selectedRecord).then(({ response, error }) => {
               if (response && !error) {
                 const { insertyn } = response;
                 if (insertyn) {
@@ -134,6 +129,6 @@ export const RegisterBody = ({ formJson = [], brdid, selectedRecord, successCall
   );
 };
 
-RegisterBody.propTypes = { formJson: PropTypes.array, brdid: PropTypes.string, selectedRecord: PropTypes.object, successCallback: PropTypes.func };
+RegisterBody.propTypes = { formJson: PropTypes.array, regPost: PropTypes.func, selectedRecord: PropTypes.object, successCallback: PropTypes.func };
 
-RegisterBody.defaultProps = { formJson: [], brdid: '', selectedRecord: {}, successCallback: () => {} };
+RegisterBody.defaultProps = { formJson: [], regPost: () => {}, selectedRecord: {}, successCallback: () => {} };

@@ -35,7 +35,7 @@ class GasManagePage extends Component {
       modalTitle: '',
       modalVisible: false,
       modalData: {},
-      site: '청주',
+      site: '구미',
       viewInfo: 'month',
       searchViewInfo: '',
       searchMonth: moment().format('YYYYMM'),

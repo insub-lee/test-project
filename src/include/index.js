@@ -1,5 +1,5 @@
 /* load css in here one time but must check */
-import * as $ from 'jquery';
+import $ from 'jquery';
 import 'antd/dist/antd.min.css';
 import 'xeicon/xeicon.min.css';
 import 'font-awesome/css/font-awesome.min.css';

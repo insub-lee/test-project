@@ -5,13 +5,10 @@ import Button from '../../components/Button';
 import FormView from '../../components/FormPreview/FormView';
 import makeContent from '../../utils/makeContents';
 
-import { usePost } from '../../hooks/usePost';
+import { useBoard } from '../../hooks/useBoard';
 
-export const ModifyBody = ({ formJson = [], content = {}, brdid, selectedRecord, successCallback }) => {
+export const ModifyBody = ({ formJson = [], content = {}, modifyPost, selectedRecord, successCallback }) => {
   const data = makeContent(formJson, { ...content, pwd: '' }, false);
-  const {
-    action: { modifyPost },
-  } = usePost({ brdid });
 
   return (
     <form
@@ -44,9 +41,9 @@ export const ModifyBody = ({ formJson = [], content = {}, brdid, selectedRecord,
 ModifyBody.propTypes = {
   formJson: PropTypes.array,
   content: PropTypes.object,
-  brdid: PropTypes.string,
   selectedRecord: PropTypes.object,
   successCallback: PropTypes.func,
+  modifyPost: PropTypes.func,
 };
 
-ModifyBody.defaultProps = { formJson: [], content: {}, brdid: '', selectedRecord: {}, successCallback: () => {} };
+ModifyBody.defaultProps = { formJson: [], content: {}, selectedRecord: {}, successCallback: () => {}, modifyPost: () => {} };
