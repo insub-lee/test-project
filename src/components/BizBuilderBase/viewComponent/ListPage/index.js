@@ -103,7 +103,7 @@ class ListPage extends Component {
           }
         }
         if (opt.OPT_CODE === PAGINATION_OPT_CODE && opt.ISUSED === 'Y') {
-          const paginationOptValue = JSON.parse(opt.OPT_VALUE);
+          const paginationOptValue = isJSON(opt.OPT_VALUE) ? JSON.parse(opt.OPT_VALUE) : { PAGE_CNT: 10 };
           pageSize = paginationOptValue?.PAGE_CNT || 10;
           isPagingData = true;
         }
