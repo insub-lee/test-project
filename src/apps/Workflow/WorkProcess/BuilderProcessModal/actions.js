@@ -33,3 +33,15 @@ export const submitHandlerBySaga = (id, httpMethod, apiUrl, submitData, callback
   submitData,
   callbackFunc,
 });
+
+export const getUserListByName = (payload, callbackFunc) => ({
+  type: actionTypes.GET_USER_LIST_BY_NAME,
+  payload,
+  callbackFunc,
+});
+
+export const getDeptListByName = (payload, callbackFunc) => ({
+  type: actionTypes.GET_DEPT_LIST_BY_NAME,
+  payload,
+  callbackFunc,
+});
