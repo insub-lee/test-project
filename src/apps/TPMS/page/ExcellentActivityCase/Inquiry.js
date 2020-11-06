@@ -5,18 +5,9 @@ import styled from 'styled-components';
 import Button from '../../components/Button';
 import FormView from '../../components/FormPreview/FormView';
 import makeContent from '../../utils/makeContents';
-import { usePost } from '../../hooks/usePost';
 
-export const InquiryBody = ({ formJson = [], content = {}, brdid, selectedRecord }) => {
-  const {
-    action: { readPost },
-  } = usePost({ brdid });
-
+export const InquiryBody = ({ formJson = [], content = {} }) => {
   const data = makeContent(formJson, content, true);
-
-  useEffect(() => {
-    readPost(selectedRecord);
-  }, []);
 
   const filteredData = data.filter(item => item?.option?.name !== 'title' && item?.option?.name !== 'year');
 
