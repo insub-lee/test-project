@@ -18,7 +18,7 @@ export const formJson = [
     },
     seq: 1,
   },
-  { type: 'richTextEditor', option: { label: '내용', name: 'textarea-1542189210177', placeholder: '내용을 입력하세요.', value: '', required: true }, seq: 2 },
+  { type: 'richTextEditor', option: { label: '내용', name: 'textarea', placeholder: '내용을 입력하세요.', value: '', required: true }, seq: 2 },
   { type: 'password', option: { label: '비밀번호', name: 'pwd', placeholder: '비밀번호를 입력해주세요.', value: '', required: true }, seq: 3 },
   { type: 'uploader', option: { label: '파일첨부', name: 'uploader-attach' }, seq: 4 },
 ];

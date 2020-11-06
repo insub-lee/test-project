@@ -5,17 +5,8 @@ import styled from 'styled-components';
 import Button from '../../components/Button';
 import FormView from '../../components/FormPreview/FormView';
 import makeContent from '../../utils/makeContents';
-import { usePost } from '../../hooks/usePost';
 
-export const InquiryBody = ({ formJson = [], content = {}, brdid, selectedRecord }) => {
-  const {
-    action: { readPost },
-  } = usePost({ brdid });
-
-  useEffect(() => {
-    readPost(selectedRecord);
-  }, []);
-
+export const InquiryBody = ({ formJson = [], content = {} }) => {
   const data = makeContent(formJson, content, true);
 
   const filteredData = data.filter(item => item?.option?.name !== 'title');
@@ -38,8 +29,8 @@ export const InquiryBody = ({ formJson = [], content = {}, brdid, selectedRecord
  * @param {*} param0
  */
 export const InquiryTitle = ({ content = {}, openModal, selectedRecord }) => {
-  const isReply = (selectedRecord?.hpostno || 0) > 0;
-  const haveReply = (selectedRecord?.child_postno || 0) > 0;
+  const isReply = (selectedRecord?.parentno || 0) > 0;
+  const haveReply = (selectedRecord?.childrenno || 0) > 0;
   return (
     <TitleWrapper>
       <div className="header">
@@ -76,8 +67,8 @@ export const InquiryTitle = ({ content = {}, openModal, selectedRecord }) => {
   );
 };
 
-InquiryBody.propTypes = { formJson: PropTypes.array, content: PropTypes.object };
-InquiryBody.defaultProps = { formJson: [], content: {} };
+InquiryBody.propTypes = { formJson: PropTypes.array, content: PropTypes.object, readPost: PropTypes.func, selectedRecord: PropTypes.object };
+InquiryBody.defaultProps = { formJson: [], content: {}, readPost: () => {}, selectedRecord: {} };
 
 InquiryTitle.propTypes = { content: PropTypes.object, openModal: PropTypes.func, selectedRecord: PropTypes.object };
 InquiryTitle.defaultProps = {
