@@ -18,7 +18,7 @@ import Button from '../../components/Button';
 
 import { ModalHugger } from '../../components/ModalHugger';
 
-import usePostList from '../../hooks/usePostList';
+import { useBoard } from '../../hooks/useBoard';
 import { useModalController } from '../../hooks/useModalController';
 import useAuth from '../../hooks/useAuth';
 
@@ -28,6 +28,7 @@ import { DeleteBody } from './Delete';
 import { RegisterBody } from './Register';
 import { ReplyBody } from './Reply';
 import { formJson } from './formJson';
+import { news } from '../../utils/boardCode';
 
 /**
  * TPMS - 개선활동신문고
@@ -55,17 +56,17 @@ const componentsStyle = {
     cell: StyledBodyCell,
   },
 };
-const brdid = 'brd00000000000000005';
+// const brdid = 'brd00000000000000005';
 const ImprovementActivityNewspaper = () => {
   const { authInfo, isError: isAuthError } = useAuth();
 
   const {
-    isLoading,
     isError,
     data,
     pagination,
-    action: { submitSearchQuery, pageHandler, pageSizeHandler },
-  } = usePostList({ brdid });
+    isLoading,
+    action: { pageHandler, pageSizeHandler, updateViewCount, regPost, deletePost, modifyPost, submitSearchQuery, replyPost },
+  } = useBoard({ boardCode: news });
 
   const {
     processedContent,
@@ -78,32 +79,27 @@ const ImprovementActivityNewspaper = () => {
     () => [
       {
         title: 'NO',
-        dataIndex: 'postno',
-        key: 'postno',
+        dataIndex: 'task_seq',
+        key: 'task_seq',
         width: '5%',
-        render: (postno, record) => (record.hpostno > 0 ? '' : postno),
-      },
-      {
-        title: 'Rev',
-        dataIndex: 'updcnt',
-        key: 'updcnt',
-        width: '5%',
-        render: (updcnt, record) => (record.hpostno > 0 ? '' : updcnt),
+        // eslint-disable-next-line camelcase
+        render: (task_seq, record) => (record?.parentno > 0 ? '' : task_seq),
       },
       {
         title: '제목',
         dataIndex: 'title',
         key: 'title',
-        width: '45%',
+        width: '50%',
         render: (title, record) => (
           <button
             type="button"
             onClick={() => {
               processRecord(record);
+              updateViewCount(record?.task_seq);
               openModal('INQ');
             }}
           >
-            {record.hpostno > 0 && (
+            {record.parentno > 0 && (
               <>
                 <span className="icon icon_reply" />
                 &nbsp;&nbsp;
@@ -115,27 +111,27 @@ const ImprovementActivityNewspaper = () => {
       },
       {
         title: '소속',
-        dataIndex: 'deptnm',
-        key: 'deptnm',
+        dataIndex: 'reg_dept_name',
+        key: 'reg_dept_name',
         width: '10%',
       },
       {
         title: '작성자',
-        dataIndex: 'regnm',
-        key: 'regnm',
+        dataIndex: 'reg_user_name',
+        key: 'reg_user_name',
         width: '10%',
       },
       {
         title: '작성일',
-        dataIndex: 'regdt',
-        key: 'regdt',
+        dataIndex: 'reg_dttm',
+        key: 'reg_dttm',
         width: '10%',
         render: regdt => moment(regdt).format('YYYY.MM.DD'),
       },
       {
         title: '조회',
-        dataIndex: 'readcnt',
-        key: 'readcnt',
+        dataIndex: 'view_count',
+        key: 'view_count',
         width: '5%',
       },
     ],
@@ -143,7 +139,6 @@ const ImprovementActivityNewspaper = () => {
   );
 
   const essential = {
-    brdid,
     formJson,
     content: processedContent,
     selectedRecord,
@@ -153,14 +148,17 @@ const ImprovementActivityNewspaper = () => {
     },
     closeModal,
     openModal,
-    // authInfo,
+    regPost,
+    deletePost,
+    modifyPost,
+    replyPost,
   };
 
   return (
     <>
       <div className="tpms-view">
         <TitleContainer title="개선활동신문고" nav={nav}>
-          <Spin spinning={isLoading}>
+          <Spin spinning={isLoading || isAuthError}>
             <StyledWrapper>
               <div className="view_top">
                 <StyledSearch>
