@@ -15,6 +15,8 @@ import { getTreeFromFlatData } from 'react-sortable-tree';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledAntdPointTable from 'components/BizBuilder/styled/Table/StyledAntdPointTable';
 import StyledWorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal/StyledWorkProcessModal';
+import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
+
 import * as DraftNode from 'apps/Workflow/WorkFlowBase/Nodes/Constants/approveconst';
 import reducer from './reducer';
 import saga from './saga';
@@ -22,6 +24,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 
 const AntdPointTable = StyledAntdPointTable(Table);
+const AntdSearchInput = StyledSearchInput(Input.Search);
 
 const getTreeData = deptList =>
   deptList.length > 0
@@ -50,6 +53,7 @@ class BuilderProcessModal extends Component {
       deptUserList: [],
       visible: false,
       curDistDeptList: [],
+      tabIdx: 1,
     };
   }
 
@@ -87,19 +91,55 @@ class BuilderProcessModal extends Component {
     this.setState({ selectedUserKeys });
   };
 
-  getColumns = () => [
-    {
-      title: '사용자 정보',
-      dataIndex: 'USER_ID',
-      key: 'USER_ID',
-      render: (text, record) => (
-        <span>
-          <UserOutlined />
-          {`${record.NAME_KOR}/${record.PSTN_NAME_KOR}`}
-        </span>
-      ),
-    },
-  ];
+  getColumns = () => {
+    let columns = [
+      {
+        title: '사용자 정보',
+        dataIndex: 'USER_ID',
+        key: 'USER_ID',
+        render: (text, record) => (
+          <span>
+            <UserOutlined />
+            {`${record.NAME_KOR}/${record.PSTN_NAME_KOR}`}
+          </span>
+        ),
+      },
+    ];
+
+    if (this.state.tabIdx === 1) {
+      columns = [
+        {
+          title: '사용자 정보',
+          dataIndex: 'USER_ID',
+          key: 'USER_ID',
+          align: 'left',
+          children: [
+            {
+              title: (
+                <AntdSearchInput
+                  placeholder="사용자 검색"
+                  className="input-search-sm"
+                  onSearch={val => this.onSearchUser(val)}
+                  onPressEnter={e => this.onSearchUser(e.target.value)}
+                />
+              ),
+              dataIndex: 'USER_ID',
+              align: 'left',
+              width: 150,
+              ellipsis: true,
+              render: (text, record) => (
+                <span>
+                  <UserOutlined />
+                  {`${record.NAME_KOR} ${record.PSTN_ID !== -1 ? record.PSTN_NAME_KOR : ''}/${record.DEPT_NAME_KOR}`}
+                </span>
+              ),
+            },
+          ],
+        },
+      ];
+    }
+    return columns;
+  };
 
   handleCloseModal = () => {
     this.setState({ visible: false });
@@ -170,9 +210,33 @@ class BuilderProcessModal extends Component {
     this.setState({ prcStep: tempPrcStep });
   };
 
+  onSearchUser = val => {
+    if (!val || val === '' || val.length === 0) {
+      this.setState({ deptUserList: [] });
+      return false;
+    }
+    const { getUserListByName } = this.props;
+    const payload = {
+      USER_NAME: val,
+    };
+
+    getUserListByName(payload, response => {
+      this.setState({ deptUserList: response.list }, () => {});
+    });
+  };
+
+  onClickTab = tabIdx => {
+    this.setState({
+      tabIdx,
+      deptUserList: [],
+      selectedUserKeys: [],
+      selectedDeptKeys: [],
+    });
+  };
+
   render() {
     const { customBtnText } = this.props;
-    const { prcStep, selectedUserKeys, selectedDeptKeys, deptList, deptUserList, rootKey } = this.state;
+    const { prcStep, selectedUserKeys, selectedDeptKeys, deptList, deptUserList, rootKey, tabIdx } = this.state;
     const rowSelection = {
       selectedRowKeys: selectedUserKeys,
       onChange: this.onDeptUserCheck,
@@ -183,26 +247,26 @@ class BuilderProcessModal extends Component {
           <Col span={7}>
             <div className="basicWrapper deptWrapper">
               <div className="tabButtonWrapper">
-                <Button className="on">전체</Button>
-                <Button>사용자</Button>
-                <Button>부서</Button>
+                <Button className={tabIdx === 0 ? 'on' : ''} onClick={() => this.onClickTab(0)}>
+                  전체
+                </Button>
+                <Button className={tabIdx === 1 ? 'on' : ''} onClick={() => this.onClickTab(1)}>
+                  사용자
+                </Button>
               </div>
               <div className="tabContentsWrapper">
-                <div className="deptTree">
-                  {deptList.length > 0 && (
-                    <>
-                      {/* <Search style={{ margin: '2px' }} placeholder="부서검색" onChange={this.onChangeSearch} onPressEnter={this.onPressEnterSearch} /> */}
-                      <Tree
-                        checkable
-                        autoExpandParent={false}
-                        defaultExpandedKeys={rootKey}
-                        checkedKeys={selectedDeptKeys}
-                        onSelect={this.onTreeNodeSelect}
-                        onCheck={this.onTreeNodeCheck}
-                        treeData={getTreeData(deptList)}
-                        onExpand={this.onExpand}
-                      />
-                    </>
+                <div className="deptTree" style={{ display: `${tabIdx !== 0 ? 'none' : ''}` }}>
+                  {tabIdx === 0 && deptList.length > 0 && (
+                    <Tree
+                      checkable
+                      autoExpandParent={false}
+                      defaultExpandedKeys={rootKey}
+                      checkedKeys={selectedDeptKeys}
+                      onSelect={this.onTreeNodeSelect}
+                      onCheck={this.onTreeNodeCheck}
+                      treeData={getTreeData(deptList)}
+                      onExpand={this.onExpand}
+                    />
                   )}
                 </div>
                 <div className="userList">
@@ -217,7 +281,8 @@ class BuilderProcessModal extends Component {
                     pagination={false}
                     size="small"
                     // scroll
-                    scroll={{ y: 220 }}
+                    scroll={{ y: tabIdx === 1 ? 395 : 220 }}
+                    className={`${tabIdx === 1 ? 'non-top-border' : ''} page-custom`}
                   />
                 </div>
               </div>
@@ -248,7 +313,6 @@ class BuilderProcessModal extends Component {
                 <React.Fragment key={`node_${item.NODE_ID}`}>
                   <h4>
                     <AuditOutlined />
-                    {'  '}
                     {customBtnText ? item?.RULE_CONFIG?.Label : item.NODE_NAME_KOR}
                   </h4>
                   <ul>
@@ -328,6 +392,8 @@ const mapDispatchToProps = dispatch => ({
   initDeptUserList: () => dispatch(actions.initDeptUserList()),
   submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
     dispatch(actions.submitHandlerBySaga(id, httpMethod, apiUrl, submitData, callbackFunc)),
+  getUserListByName: (payload, callbackFunc) => dispatch(actions.getUserListByName(payload, callbackFunc)),
+  getDeptListByName: (payload, callbackFunc) => dispatch(actions.getDeptListByName(payload, callbackFunc)),
 });
 
 const withReducer = injectReducer({
