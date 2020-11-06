@@ -9,8 +9,10 @@ import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StatusListTable1 from '../infoTable/statusListTable1';
 import StatusListTable2 from '../infoTable/statusListTable2';
+import StatusListTable3 from '../infoTable/statusListTable3';
 import C2F6Excel from '../excel/C2F6Excel';
 import CF4Excel from '../excel/CF4Excel';
+import C3F8Excel from '../excel/C3F8Excel';
 
 const { MonthPicker } = DatePicker;
 const AntdMonthPicker = StyledDatePicker(MonthPicker);
@@ -23,10 +25,11 @@ class GasStatusPage extends Component {
     this.state = {
       searchAfter: false,
       isSearching: false,
-      site: '청주', // 검색조건
+      site: '구미', // 검색조건
       month: moment().format('YYYYMM'),
       listData1: [],
       listData2: [],
+      listData3: [],
     };
   }
 
@@ -44,18 +47,18 @@ class GasStatusPage extends Component {
   };
 
   searchCallback = (id, response) => {
-    const { site } = this.state;
-    const { list1, list2 } = response;
+    const { list1, list2, list3 } = response;
     this.setState({
       searchAfter: true,
       isSearching: false,
-      listData1: list1 || [],
-      listData2: list2 || [],
+      listData1: (list1 && list1.length > 2 && list1) || [],
+      listData2: (list2 && list2.length > 2 && list2) || [],
+      listData3: (list3 && list3.length > 2 && list3) || [],
     });
   };
 
   render() {
-    const { site, listData1, listData2, isSearching, searchAfter, month } = this.state;
+    const { site, listData1, listData2, listData3, isSearching, searchAfter, month } = this.state;
     return (
       <>
         <StyledCustomSearchWrapper>
@@ -88,8 +91,11 @@ class GasStatusPage extends Component {
               <div style={{ display: 'inline-block', marginRight: '5px' }}>
                 <C2F6Excel listData={listData1} />
               </div>
-              <div style={{ display: 'inline-block' }}>
+              <div style={{ display: 'inline-block', marginRight: '5px' }}>
                 <CF4Excel listData={listData2} />
+              </div>
+              <div style={{ display: 'inline-block' }}>
+                <C3F8Excel listData={listData3} />
               </div>
             </>
           )}
@@ -99,8 +105,11 @@ class GasStatusPage extends Component {
             <div style={{ marginBottom: '20px' }}>
               <StatusListTable1 listData={listData1} handleModal={this.handleModal} />
             </div>
-            <div>
+            <div style={{ marginBottom: '20px' }}>
               <StatusListTable2 listData={listData2} handleModal={this.handleModal} />
+            </div>
+            <div>
+              <StatusListTable3 listData={listData3} handleModal={this.handleModal} />
             </div>
           </>
         )}

@@ -14,8 +14,6 @@ class Excel extends Component {
       { title: 'Gas 명', width: { wpx: 100 }, style: { font: { sz: '' } } },
       { title: 'Gas Cabinet', width: { wpx: 200 }, style: { font: { sz: '' } } },
       { title: 'KDK', width: { wpx: 100 }, style: { font: { sz: '' } } },
-      { title: 'KSC', width: { wpx: 100 }, style: { font: { sz: '' } } },
-      { title: 'MAT', width: { wpx: 100 }, style: { font: { sz: '' } } },
       { title: '합계', width: { wpx: 100 }, style: { font: { sz: '' } } },
     ];
 
@@ -23,17 +21,15 @@ class Excel extends Component {
       { field: 'prodnm', style: { font: { sz: '12' } } },
       { field: 'cabino', style: { font: { sz: '12' } } },
       { field: 'kdk', style: { font: { sz: '12' } } },
-      { field: 'ksc', style: { font: { sz: '12' } } },
-      { field: 'mat', style: { font: { sz: '12' } } },
       { field: 'total', style: { font: { sz: '12' } } },
     ];
 
     return (
       <ExcelDownloadComp
         isBuilder={false}
-        fileName="C2F6_Gas_status"
-        btnText="C2F6 Excel"
-        btnSize="btn-sm mr5"
+        fileName="C3F8_Gas_status"
+        btnText="C3F8 Excel"
+        btnSize="btn-sm"
         columns={columns}
         fields={fields}
         listData={listData}
@@ -43,7 +39,6 @@ class Excel extends Component {
 }
 
 Excel.propTypes = {
-  site: PropTypes.string,
   listData: PropTypes.array,
 };
 

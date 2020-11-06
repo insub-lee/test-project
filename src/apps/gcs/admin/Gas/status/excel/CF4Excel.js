@@ -21,7 +21,7 @@ class Excel extends Component {
     ];
 
     const fields = [
-      { field: 'pordnm', style: { font: { sz: '12' } } },
+      { field: 'prodnm', style: { font: { sz: '12' } } },
       { field: 'cabino', style: { font: { sz: '12' } } },
       { field: 'kdk', style: { font: { sz: '12' } } },
       { field: 'ksc', style: { font: { sz: '12' } } },
