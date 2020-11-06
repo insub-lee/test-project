@@ -13,11 +13,11 @@ import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsMod
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
-import AccCmpnyInputPage from 'apps/eshs/user/safety/accident/indusrtialAccidentCmpnyMgt';
+// import AccCmpnyInputPage from 'apps/eshs/user/safety/accident/indusrtialAccidentCmpnyMgt';
+import AccCmpnyInputPage from 'apps/eshs/user/safety/accident/indusrtialAccidentAccessRecord/AccidentCmpnyInput';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 import { debounce } from 'lodash';
 import NothGateCmpnyModal from '../NothGateCmpnyModal';
-
 const AntdLineTable = StyledAntdTable(Table);
 
 const { Option } = Select;
@@ -193,7 +193,7 @@ class List extends Component {
         accCmpnyInputPage: [
           <AccCmpnyInputPage
             inputMetaSeq={8921}
-            initFormData={record}
+            formData={record}
             saveAfter={() =>
               this.setState(
                 {
@@ -203,6 +203,7 @@ class List extends Component {
                 this.handleOnSearch,
               )
             }
+            modalClose={() => this.setState({ accCmpnyInputPage: [], accCmpnyModal: false })}
           />,
         ],
         accCmpnyModal: !accCmpnyModal,
