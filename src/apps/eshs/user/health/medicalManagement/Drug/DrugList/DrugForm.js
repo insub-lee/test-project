@@ -53,7 +53,7 @@ class Comp extends Component {
       case 'MODIFY':
         if (!drug) {
           spinningOff();
-          return this.messageShow('품목을 입력해주십시오.');
+          return this.showMessage('품목을 입력해주십시오.');
         }
         submitHandlerBySaga(sagaKey, 'PUT', '/api/eshs/v1/common/health/eshsHealthMedicine', submitData, (id, res) => {
           spinningOff();

@@ -68,7 +68,7 @@ class Comp extends Component {
               }
             : { ...initData },
       },
-      type === 'INSERT' ? () => getCallDataHandler(id, apiAry, spinningOff) : spinningOff(),
+      () => getCallDataHandler(id, apiAry, spinningOff),
     );
   };
 
@@ -413,19 +413,15 @@ class Comp extends Component {
             </StyledButton>
           </StyledButtonWrapper>
         </div>
-        {type === 'INSERT' && (
-          <>
-            <AntdTable
-              rowKey="TASK_SEQ"
-              columns={this.columns}
-              onRow={(record, rowIndex) => ({
-                onClick: () => this.setState(prevState => ({ formData: { ...prevState.formData, ...record } })),
-              })}
-              dataSource={nothGateCmpnyList || []}
-              bordered
-            />
-          </>
-        )}
+        <AntdTable
+          rowKey="TASK_SEQ"
+          columns={this.columns}
+          onRow={(record, rowIndex) => ({
+            onClick: () => this.setState(prevState => ({ formData: { ...prevState.formData, ...record } })),
+          })}
+          dataSource={nothGateCmpnyList || []}
+          bordered
+        />
       </StyledContentsWrapper>
     );
   }
