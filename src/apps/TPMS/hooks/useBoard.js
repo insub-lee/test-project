@@ -1,8 +1,9 @@
+/* eslint-disable camelcase */
 import { useState, useCallback, useEffect } from 'react';
 import request from '../../../utils/request';
 
 const url = `/apigate/v2/portal/board`;
-
+const workSeq = '15961';
 export const useBoard = ({ boardCode }) => {
   const [isError, setIsError] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
@@ -122,6 +123,7 @@ export const useBoard = ({ boardCode }) => {
   const deletePost = async (args, selectedRecord) => {
     const formData = new FormData(args);
     const formJson = {};
+
     let pwd = '';
 
     formData.forEach((value, key) => {
@@ -141,45 +143,96 @@ export const useBoard = ({ boardCode }) => {
       data: {
         pwd,
         task_seq: selectedRecord?.task_seq,
+        parentno: selectedRecord?.parentno,
       },
     });
     return { response, error };
   };
 
+  const fileProcess = async tempFile => {
+    let taskSeq = '0';
+    let realFile = '';
+    const temp = await request({
+      url: `/api/builder/v1/work/taskCreate/${workSeq}`,
+      data: {},
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method: 'POST',
+    });
+    const { response: response1, error: error1 } = temp;
+    if (response1 && !error1) {
+      taskSeq = response1?.PARAM?.TASK_SEQ;
+    }
+
+    const moveFileToReal = await request({
+      url: `/upload/moveFileToReal`,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method: 'POST',
+      data: { PARAM: { DETAIL: JSON.parse(tempFile) } },
+    });
+    const { response: fileResponse, error: fileError } = moveFileToReal;
+    if (!fileError) {
+      const { DETAIL } = fileResponse;
+      realFile = DETAIL;
+    }
+    console.debug('###  taskSeq, realFile : ', taskSeq, realFile);
+    return { taskSeq, realFile };
+  };
   const regPost = async args => {
     const formData = new FormData(args);
     const formJson = {};
+    let tempFile = '';
+    let taskSeq = '0';
     let pwd = '';
+    let realFile = '';
 
     formData.forEach((value, key) => {
       if (key === 'pwd') {
         pwd = value;
+      } else if (key === 'uploader-attach_FILE_DETAIL') {
+        tempFile = value;
       } else {
         formJson[key] = value;
       }
     });
 
-    const { title } = formJson;
+    // uploader-attach_DCONO: "4403:::4404"
+    // uploader-attach_FILE: "jesus.PNG:::capture4.png"
+    // uploader-attach_FILE_PATH: "/down/file/4403:::/down/file/4404"
+    // uploader-attach_UPLOADED_FILES: "[{"docNo":"4403","seq":"4403"},{"docNo":"4404","seq":"4404"}]"
+    console.debug('### doubleData :', formJson);
 
+    fileProcess(tempFile).then(({ taskSeq: seq, realFile: real }) => {
+      console.debug('real: ', real);
+      taskSeq = seq;
+      let DCONO = formJson['uploader-attach_DCONO'].split(':::');
+      let attach_file = formJson['uploader-attach_FILE'].split(':::');
+      let attach_file_path = formJson['uploader-attach_FILE_PATH'].split(':::');
+      let attach_uploaded_files = formJson['uploader-attach_UPLOADED_FILES'].split(':::');
+      console.debug('#### data : ', DCONO, attach_file, attach_file_path, attach_uploaded_files);
+
+      real.forEach(({ docNo, docNm, extension, down, link, seq, uid, id, name, code, fileType, size, fileSize, position }, idx) => {
+        DCONO[idx] = DCONO[idx].replaceAll(docNo, seq);
+        attach_file_path[idx] = attach_file_path[idx].replaceAll(docNo, seq);
+        attach_uploaded_files[idx] = attach_uploaded_files[idx].replaceAll(docNo, seq);
+      });
+      console.debug('#### data : ', DCONO, attach_file, attach_file_path, attach_uploaded_files);
+    });
+
+    const { title } = formJson;
     const data = {
       pwd,
       title,
       content: { ...formJson },
       boardCode,
-
-      //   reg_user_name:NAME_KOR,
-      //     reg_dept_id,
-      //     reg_dept_name,
+      task_seq: taskSeq,
     };
-    // if (brdid === 'brd00000000000000007') {
-    //   const { nextContent, files } = parseFiles(formJson);
-    //   data.title = nextContent.title;
-    //   data.content = nextContent;
-    //   data.year = nextContent.year;
-    //   data.files = files;
-    // }
-    const { response, error } = await request({
-      url,
+
+    const regResponse = await request({
+      url: `${url}/register`,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
@@ -187,7 +240,7 @@ export const useBoard = ({ boardCode }) => {
       data,
     });
 
-    return { response, error };
+    return regResponse;
   };
 
   const submitSearchQuery = useCallback(e => {
@@ -204,6 +257,45 @@ export const useBoard = ({ boardCode }) => {
     setCurrentYear(yearCategory);
   }, []);
 
+  const replyPost = async (args, selectedRecord) => {
+    const formData = new FormData(args);
+    const formJson = {};
+    const content = {};
+    let files = [];
+
+    formData.forEach((value, key) => {
+      if (key.indexOf('_UPLOADED_FILES') > -1) {
+        files = value || [];
+      } else if (key.indexOf('textarea') > -1) {
+        content.reply = value;
+      } else {
+        formJson[key] = value;
+      }
+    });
+
+    const { title, pwd } = formJson;
+
+    const data = {
+      pwd,
+      title,
+      files,
+      content: { ...content, title },
+      parentno: selectedRecord?.task_seq,
+      boardCode,
+    };
+
+    const { response, error } = await request({
+      url: `${url}/reply`,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method: 'POST',
+      data,
+    });
+
+    return { response, error };
+  };
+
   return {
     isError,
     isLoading,
@@ -212,7 +304,6 @@ export const useBoard = ({ boardCode }) => {
       ...pagination,
       total: currentTotal,
     },
-    currentTotal,
-    action: { pageHandler, pageSizeHandler, updateViewCount, modifyPost, deletePost, regPost, submitSearchQuery },
+    action: { replyPost, pageHandler, pageSizeHandler, updateViewCount, modifyPost, deletePost, regPost, submitSearchQuery },
   };
 };

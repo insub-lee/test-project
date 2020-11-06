@@ -41,9 +41,9 @@ export const ModifyBody = ({ formJson = [], content = {}, modifyPost, selectedRe
 ModifyBody.propTypes = {
   formJson: PropTypes.array,
   content: PropTypes.object,
-  brdid: PropTypes.string,
   selectedRecord: PropTypes.object,
   successCallback: PropTypes.func,
+  modifyPost: PropTypes.func,
 };
 
-ModifyBody.defaultProps = { formJson: [], content: {}, brdid: '', selectedRecord: {}, successCallback: () => {} };
+ModifyBody.defaultProps = { formJson: [], content: {}, selectedRecord: {}, successCallback: () => {}, modifyPost: () => {} };

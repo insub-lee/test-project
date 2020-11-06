@@ -63,7 +63,6 @@ const Notice = () => {
     isError,
     data,
     pagination,
-    currentTotal,
     isLoading,
     action: { pageHandler, pageSizeHandler, updateViewCount, regPost, deletePost, modifyPost, submitSearchQuery },
   } = useBoard({ boardCode: notice });
@@ -152,14 +151,13 @@ const Notice = () => {
     regPost,
     deletePost,
     modifyPost,
-    // authInfo,
   };
 
   return (
     <>
       <div className="tpms-view">
         <TitleContainer title="공지사항" nav={nav}>
-          <Spin spinning={isLoading}>
+          <Spin spinning={isLoading || isAuthError}>
             <StyledWrapper>
               <div className="view_top">
                 <StyledSearch>

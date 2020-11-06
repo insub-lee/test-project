@@ -6,10 +6,7 @@ import Button from '../../components/Button';
 
 import { useBoard } from '../../hooks/useBoard';
 
-export const DeleteBody = ({ brdid, selectedRecord, successCallback }) => {
-  const {
-    action: { deletePost },
-  } = useBoard({ boardCode: '' });
+export const DeleteBody = ({ brdid, selectedRecord, successCallback, deletePost }) => {
   return (
     <div className="pop_con">
       <form
@@ -41,5 +38,5 @@ export const DeleteBody = ({ brdid, selectedRecord, successCallback }) => {
   );
 };
 
-DeleteBody.propTypes = { brdid: PropTypes.string, selectedRecord: PropTypes.object, successCallback: PropTypes.func };
-DeleteBody.defaultProps = { brdid: '', selectedRecord: {}, successCallback: () => {} };
+DeleteBody.propTypes = { brdid: PropTypes.string, selectedRecord: PropTypes.object, successCallback: PropTypes.func, deletePost: PropTypes.func };
+DeleteBody.defaultProps = { brdid: '', selectedRecord: {}, successCallback: () => {}, deletePost: () => {} };
