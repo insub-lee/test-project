@@ -290,8 +290,8 @@ class SafetyWorkList extends Component {
         align: 'center',
       },
       {
-        title: '감독관',
-        dataIndex: 'REQ_SUPERVISOR_EMP_NM',
+        title: '감독자',
+        dataIndex: 'CHARGE_WORKER_NM',
         align: 'center',
       },
       {
@@ -311,7 +311,7 @@ class SafetyWorkList extends Component {
         align: 'center',
       },
       {
-        title: '작업명',
+        title: '작업동',
         dataIndex: 'DGUBUN',
         align: 'center',
       },

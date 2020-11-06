@@ -14,6 +14,7 @@ import ExcelDown from '../excelDown';
 const { MonthPicker } = DatePicker;
 const { Option } = Select;
 const AntdMonthPicker = StyledDatePicker(MonthPicker);
+const AntdDatePicker = StyledDatePicker(DatePicker);
 const AntdSelect = StyledSelect(Select);
 
 class NoaccidentListPage extends Component {
@@ -141,19 +142,17 @@ class NoaccidentListPage extends Component {
         return (
           <>
             <span className="text-label">기간</span>
-            <AntdMonthPicker
+            <AntdDatePicker
               className="ant-picker-sm mr5"
               defaultValue={moment(SDATE, 'YYYY-MM-DD')}
-              mode="day"
               format="YYYY-MM-DD"
               onChange={(date, str) => this.setState({ SDATE: str })}
             />
             ~
-            <AntdMonthPicker
+            <AntdDatePicker
               className="ant-picker-sm"
               style={{ marginLeft: '5px' }}
               defaultValue={moment(EDATE, 'YYYY-MM-DD')}
-              mode="day"
               format="YYYY-MM-DD"
               onChange={(date, str) => this.setState({ EDATE: str })}
             />
