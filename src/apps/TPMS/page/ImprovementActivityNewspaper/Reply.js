@@ -5,14 +5,14 @@ import FormView from '../../components/FormPreview/FormView';
 import makeContent from '../../utils/makeContents';
 import Button from '../../components/Button';
 
-import { usePost } from '../../hooks/usePost';
-
 export const ReplyBody = ({ formJson = [], content = {}, replyPost, selectedRecord, successCallback }) => {
   const data = makeContent(formJson, { ...content, pwd: '' }, false);
-
+  console.debug('data :', data);
   data.forEach(e => {
     if (e.option.name === 'title') {
       e.option.value = `답변:${e.option.value}`;
+    } else if (e.option.name === 'uploader-attach') {
+      e.option.files = [];
     } else {
       e.option.value = '';
     }

@@ -11,6 +11,7 @@ export const RegisterBody = ({ formJson = [], successCallback, regPost }) => {
       onSubmit={e => {
         e.preventDefault();
         regPost(e.target).then(({ response, error }) => {
+          console.debug('### REG: ', response, error);
           if (response && !error) {
             const { insertyn } = response;
             if (insertyn) {

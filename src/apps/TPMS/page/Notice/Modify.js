@@ -5,8 +5,6 @@ import Button from '../../components/Button';
 import FormView from '../../components/FormPreview/FormView';
 import makeContent from '../../utils/makeContents';
 
-import { useBoard } from '../../hooks/useBoard';
-
 export const ModifyBody = ({ formJson = [], content = {}, modifyPost, selectedRecord, successCallback }) => {
   const data = makeContent(formJson, { ...content, pwd: '' }, false);
 
@@ -17,12 +15,13 @@ export const ModifyBody = ({ formJson = [], content = {}, modifyPost, selectedRe
         e.preventDefault();
 
         modifyPost(e.target, selectedRecord).then(({ response, error }) => {
+          console.debug('### MOD: ', response, error);
           if (response && !error) {
-            const { updateyn, error: errorMsg } = response;
+            const { updateyn } = response;
             if (updateyn) {
               successCallback();
             } else {
-              window.alert(errorMsg);
+              window.alert('수정 실패');
             }
           }
         });
