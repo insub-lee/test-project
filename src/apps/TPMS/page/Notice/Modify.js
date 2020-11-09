@@ -15,7 +15,6 @@ export const ModifyBody = ({ formJson = [], content = {}, modifyPost, selectedRe
         e.preventDefault();
 
         modifyPost(e.target, selectedRecord).then(({ response, error }) => {
-          console.debug('### MOD: ', response, error);
           if (response && !error) {
             const { updateyn } = response;
             if (updateyn) {
