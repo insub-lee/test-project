@@ -28,7 +28,7 @@ class ChemicalStatusPage extends Component {
       isSaving: false,
       searchAfter: false,
       isSearching: false,
-      site: '청주', // 검색조건
+      site: '구미', // 검색조건
       sTimeStamp: moment()
         .subtract(1, 'days')
         .format('YYYYMMDD,09:00'),

@@ -4,18 +4,14 @@ import PropTypes from 'prop-types';
 import FormView from '../../components/FormPreview/FormView';
 import Button from '../../components/Button';
 
-import { usePost } from '../../hooks/usePost';
-
-export const RegisterBody = ({ formJson = [], brdid, selectedRecord, successCallback }) => {
-  const {
-    action: { RegPost },
-  } = usePost({ brdid });
+export const RegisterBody = ({ formJson = [], successCallback, regPost }) => {
   return (
     <form
       autoComplete="off"
       onSubmit={e => {
         e.preventDefault();
-        RegPost(e.target, selectedRecord).then(({ response, error }) => {
+        regPost(e.target).then(({ response, error }) => {
+          console.debug('### REG: ', response, error);
           if (response && !error) {
             const { insertyn } = response;
             if (insertyn) {
@@ -37,6 +33,6 @@ export const RegisterBody = ({ formJson = [], brdid, selectedRecord, successCall
   );
 };
 
-RegisterBody.propTypes = { formJson: PropTypes.array, brdid: PropTypes.string, selectedRecord: PropTypes.object, successCallback: PropTypes.func };
+RegisterBody.propTypes = { formJson: PropTypes.array, regPost: PropTypes.func, successCallback: PropTypes.func };
 
-RegisterBody.defaultProps = { formJson: [], brdid: '', selectedRecord: {}, successCallback: () => {} };
+RegisterBody.defaultProps = { formJson: [], regPost: () => {}, successCallback: () => {} };

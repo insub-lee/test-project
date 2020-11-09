@@ -58,6 +58,7 @@ class WorkProcessModal extends Component {
       tabIdx: 1,
       selectedNode: undefined,
       selectedNodeId: undefined,
+      searchUser: undefined,
     };
   }
 
@@ -133,6 +134,8 @@ class WorkProcessModal extends Component {
                   className="input-search-sm"
                   onSearch={val => this.onSearchUser(val)}
                   onPressEnter={e => this.onSearchUser(e.target.value)}
+                  onChange={e => this.setState({ searchUser: e?.target?.value })}
+                  value={this.state?.searchUser}
                 />
               ),
               dataIndex: 'USER_ID',
@@ -323,6 +326,7 @@ class WorkProcessModal extends Component {
         if (response.list.length === 1) {
           const record = response.list[0];
           this.onUserDoubleClick(record);
+          this.setState({ searchUser: undefined });
         }
       });
     });

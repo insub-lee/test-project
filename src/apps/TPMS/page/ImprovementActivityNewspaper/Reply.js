@@ -5,17 +5,13 @@ import FormView from '../../components/FormPreview/FormView';
 import makeContent from '../../utils/makeContents';
 import Button from '../../components/Button';
 
-import { usePost } from '../../hooks/usePost';
-
-export const ReplyBody = ({ formJson = [], content = {}, brdid, selectedRecord, successCallback }) => {
-  const {
-    action: { ReplyPost },
-  } = usePost({ brdid });
+export const ReplyBody = ({ formJson = [], content = {}, replyPost, selectedRecord, successCallback }) => {
   const data = makeContent(formJson, { ...content, pwd: '' }, false);
-
   data.forEach(e => {
     if (e.option.name === 'title') {
       e.option.value = `답변:${e.option.value}`;
+    } else if (e.option.name === 'uploader-attach') {
+      e.option.files = [];
     } else {
       e.option.value = '';
     }
@@ -26,7 +22,7 @@ export const ReplyBody = ({ formJson = [], content = {}, brdid, selectedRecord, 
       autoComplete="off"
       onSubmit={e => {
         e.preventDefault();
-        ReplyPost(e.target, selectedRecord).then(({ response, error }) => {
+        replyPost(e.target, selectedRecord).then(({ response, error }) => {
           if (response && !error) {
             const { insertyn } = response;
             if (insertyn) {
@@ -49,11 +45,11 @@ export const ReplyBody = ({ formJson = [], content = {}, brdid, selectedRecord, 
 };
 
 ReplyBody.propTypes = {
-  brdid: PropTypes.string,
   formJson: PropTypes.array,
   content: PropTypes.object,
   selectedRecord: PropTypes.array,
   successCallback: PropTypes.func,
+  replyPost: PropTypes.func,
 };
 
-ReplyBody.defaultProps = { brdid: '', formJson: [], content: {}, selectedRecord: [], successCallback: () => {} };
+ReplyBody.defaultProps = { replyPost: () => {}, formJson: [], content: {}, selectedRecord: [], successCallback: () => {} };

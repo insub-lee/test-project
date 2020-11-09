@@ -2,7 +2,8 @@ import request from 'utils/request';
 
 const post = (queryString, payload) =>
   request({
-    url: `/upload/files?${queryString}`,
+    // url: `/upload/files?${queryString}`,
+    url: `/upload`,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },

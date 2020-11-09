@@ -5,25 +5,22 @@ import styled from 'styled-components';
 import Button from '../../components/Button';
 import FormView from '../../components/FormPreview/FormView';
 import makeContent from '../../utils/makeContents';
-import { usePost } from '../../hooks/usePost';
 
-export const InquiryBody = ({ formJson = [], content = {}, brdid, selectedRecord }) => {
-  const {
-    action: { readPost },
-  } = usePost({ brdid });
-
-  useEffect(() => {
-    readPost(selectedRecord);
-  }, []);
+export const InquiryBody = ({ formJson = [], content = {}, closeModal = () => {} }) => {
   const data = makeContent(formJson, content, true);
-
   const filteredData = data.filter(item => item?.option?.name !== 'title');
 
   return (
     <>
       <FormView datas={filteredData} noBoarder smallView />
       <div className="ant-modal-footer">
-        <Button color="primary" size="big" onClick={() => {}}>
+        <Button
+          color="primary"
+          size="big"
+          onClick={() => {
+            closeModal('INQ');
+          }}
+        >
           닫기
         </Button>
       </div>
@@ -61,8 +58,8 @@ export const InquiryTitle = ({ content = {}, openModal }) => {
   );
 };
 
-InquiryBody.propTypes = { formJson: PropTypes.array, content: PropTypes.object };
-InquiryBody.defaultProps = { formJson: [], content: {} };
+InquiryBody.propTypes = { formJson: PropTypes.array, content: PropTypes.object, closeModal: PropTypes.func };
+InquiryBody.defaultProps = { formJson: [], content: {}, closeModal: () => {} };
 
 InquiryTitle.propTypes = { content: PropTypes.object, openModal: PropTypes.func };
 InquiryTitle.defaultProps = {

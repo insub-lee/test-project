@@ -72,18 +72,14 @@ class FroalaRichTextEditor extends React.Component {
     };
     config.imageUploadURL = `/upload/files?conserveYm=29991231&sysId=TPMS&uid=${UUID.create(1).toString()}`;
     config.events = {
-      // 'froalaEditor.image.uploaded': function(e, editor, response) {
-      //   console.debug('# Uploaded', response, JSON.parse(response));
-      // },
-      'froalaEditor.image.inserted': function(e, editor, $img, response) {
-        console.debug('$img : ', $img, response, JSON.parse(response));
-
-        // Todo - insert file docNo to state
-        handleUploadedState(JSON.parse(response)?.seq || '');
+      'froalaEditor.image.uploaded': function(e, editor, response) {
+        // console.debug('# Uploaded', response, JSON.parse(response));
       },
-      // 'froalaEditor.image.beforeUpload': function(e, editor, response) {
-      //   console.debug('# beforeUpload', response, JSON.parse(response));
-      // },
+      'froalaEditor.image.inserted': function(e, editor, $img, response) {
+        console.debug('$img : ', $img, response);
+        // Todo - insert file docNo to state
+        handleUploadedState(JSON.parse(response).docNo);
+      },
     };
     return (
       <StyledFroalaEditor>

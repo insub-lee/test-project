@@ -4,12 +4,7 @@ import PropTypes from 'prop-types';
 import Button from '../../components/Button';
 // import alertMessage from '../../components/Notification/Alert';
 
-import { usePost } from '../../hooks/usePost';
-
-export const DeleteBody = ({ brdid, selectedRecord, successCallback }) => {
-  const {
-    action: { deletePost },
-  } = usePost({ brdid });
+export const DeleteBody = ({ selectedRecord, deletePost, successCallback }) => {
   return (
     <div className="pop_con">
       <form
@@ -40,5 +35,5 @@ export const DeleteBody = ({ brdid, selectedRecord, successCallback }) => {
   );
 };
 
-DeleteBody.propTypes = { brdid: PropTypes.string, selectedRecord: PropTypes.object, successCallback: PropTypes.func };
-DeleteBody.defaultProps = { brdid: '', selectedRecord: {}, successCallback: () => {} };
+DeleteBody.propTypes = { deletePost: PropTypes.func, selectedRecord: PropTypes.object, successCallback: PropTypes.func };
+DeleteBody.defaultProps = { deletePost: () => {}, selectedRecord: {}, successCallback: () => {} };

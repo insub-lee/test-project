@@ -82,7 +82,7 @@ class HistoryModal extends Component {
       width: '10%',
       align: 'center',
       render: (text, record) => {
-        if (text === 2) return <font style={{ color: 'blue' }}>승인</font>;
+        if (text === 2 || text === 0) return <font style={{ color: 'blue' }}>승인</font>;
         return <font style={{ color: 'red' }}>부결</font>;
       },
     },
