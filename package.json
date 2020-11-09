@@ -38,7 +38,7 @@
     "immutable": "^4.0.0-rc.12",
     "intl": "^1.2.5",
     "invariant": "^2.2.2",
-    "jquery": "^3.3.1",
+    "jquery": "3.5.1",
     "js-file-download": "^0.4.12",
     "lodash": "^4.17.20",
     "moment": "^2.27.0",
