@@ -1,10 +1,11 @@
 import * as actionTypes from './constants';
 
-export const getCustomDataBind = (httpMethod, rtnUrl, param) => ({
+export const getCustomDataBind = (httpMethod, rtnUrl, param, callBack) => ({
   type: actionTypes.GET_CUSTOMER_DATABIND,
   httpMethod,
   rtnUrl,
   param,
+  callBack,
 });
 
 export const setCustomDataBind = list => ({

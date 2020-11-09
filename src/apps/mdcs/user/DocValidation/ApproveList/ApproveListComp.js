@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Table, Modal, message } from 'antd';
+import { Icon, Table, Modal, message, Spin } from 'antd';
 import moment from 'moment';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
@@ -8,6 +8,7 @@ import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHead
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import BizBuilderBase from 'components/BizBuilderBase';
+import SearchBar from '../SearchBar';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
@@ -21,6 +22,10 @@ class ApproveListComp extends Component {
       workSeq: undefined,
       taskSeq: undefined,
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
+      searchParam: {
+        REL_TYPE: 2,
+      },
+      loading: false,
     };
   }
 
@@ -78,15 +83,21 @@ class ApproveListComp extends Component {
   ];
 
   componentDidMount() {
-    const { id, submitHandlerBySaga } = this.props;
-    const rtnUrl = '/api/workflow/v1/common/approve/ValidateCompleteListHandler';
-    submitHandlerBySaga(id, 'POST', rtnUrl, { PARAM: { REL_TYPE: 2 } }, this.initData);
+    this.getList();
   }
 
-  initData = (id, response) => {
-    const { list } = response;
-    this.setState({ list });
+  getList = (params = this.state?.searchParam) => {
+    const { id, submitHandlerBySaga } = this.props;
+    const rtnUrl = '/api/workflow/v1/common/approve/ValidateCompleteListHandler';
+    this.spinningOn();
+    submitHandlerBySaga(id, 'POST', rtnUrl, { PARAM: { REL_TYPE: 2, ...params } }, (_, res) =>
+      this.setState({ list: res?.list, searchParam: { REL_TYPE: 2, ...params } }, this.spinningOff),
+    );
   };
+
+  spinningOn = () => this.setState({ loading: true });
+
+  spinningOff = () => this.setState({ loading: false });
 
   onRowClick = (record, rowIndex, e) => {
     this.setState({ visible: true, workSeq: record.WORK_SEQ, taskSeq: record.TASK_SEQ, taskOrginSeq: record.TASK_ORIGIN_SEQ, title: record.TITLE });
@@ -110,7 +121,7 @@ class ApproveListComp extends Component {
   render() {
     const { list, workSeq, taskSeq, visible, coverView } = this.state;
     return (
-      <>
+      <Spin spinning={this.state.loading}>
         <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
@@ -119,6 +130,7 @@ class ApproveListComp extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
+          <SearchBar getList={params => this.getList(params)} />
           <AntdTable
             columns={this.getTableColumns()}
             dataSource={list}
@@ -164,7 +176,7 @@ class ApproveListComp extends Component {
             />
           </AntdModal>
         </StyledContentsWrapper>
-      </>
+      </Spin>
     );
   }
 }

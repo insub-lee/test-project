@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Table, Modal, message } from 'antd';
+import { Icon, Table, Modal, message, Spin } from 'antd';
 import { fromJS } from 'immutable';
 import moment from 'moment';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
@@ -9,6 +9,7 @@ import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHead
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import BizBuilderBase from 'components/BizBuilderBase';
 
+import SearchBar from '../SearchBar';
 import ApproveView from './approveView';
 
 const AntdTable = StyledAntdTable(Table);
@@ -22,6 +23,8 @@ class ApproveReqListComp extends Component {
       workSeq: undefined,
       taskSeq: undefined,
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
+      searchParam: {},
+      loading: false,
     };
   }
 
@@ -79,10 +82,19 @@ class ApproveReqListComp extends Component {
   ];
 
   componentDidMount() {
+    this.getList();
+  }
+
+  getList = (params = this.state?.searchParam) => {
     const { getCustomDataBind } = this.props;
     const rtnUrl = '/api/workflow/v1/common/approve/ValidateReqListHandler';
-    getCustomDataBind('POST', rtnUrl, {});
-  }
+    this.spinningOn();
+    getCustomDataBind('POST', rtnUrl, { PARAM: params }, () => this.setState({ searchParam: params }, this.spinningOff));
+  };
+
+  spinningOn = () => this.setState({ loading: true });
+
+  spinningOff = () => this.setState({ loading: false });
 
   onRowClick = (record, rowIndex, e) => {
     this.props.setSelectedRow(record);
@@ -97,7 +109,7 @@ class ApproveReqListComp extends Component {
     const { workSeq, taskSeq, visible, coverView } = this.state;
     const { customDataList } = this.props;
     return (
-      <>
+      <Spin spinning={this.state.loading}>
         <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
@@ -106,6 +118,7 @@ class ApproveReqListComp extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
+          <SearchBar getList={params => this.getList(params)} />
           <AntdTable
             columns={this.getTableColumns()}
             dataSource={customDataList}
@@ -118,7 +131,7 @@ class ApproveReqListComp extends Component {
             <ApproveView {...this.props} WORK_SEQ={workSeq} TASK_SEQ={taskSeq} onValidateProcess={this.onValidateProcess} onModalClose={this.onModalClose} />
           </AntdModal>
         </StyledContentsWrapper>
-      </>
+      </Spin>
     );
   }
 }

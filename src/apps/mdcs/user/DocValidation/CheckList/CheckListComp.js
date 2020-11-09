@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Table, Modal, message } from 'antd';
+import { Icon, Table, Modal, message, Spin } from 'antd';
 import moment from 'moment';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
@@ -8,6 +8,7 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import ValidationView from './validationView';
+import SearchBar from '../SearchBar';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
@@ -16,6 +17,8 @@ class CheckListComp extends Component {
     super(props);
     this.state = {
       visible: false,
+      searchParam: {},
+      loading: false,
     };
   }
 
@@ -74,10 +77,19 @@ class CheckListComp extends Component {
   ];
 
   componentDidMount() {
+    this.getList();
+  }
+
+  getList = (params = this.state?.searchParam) => {
     const { getCustomDataBind } = this.props;
     const rtnUrl = '/api/mdcs/v1/common/MdcsDocValidationListHandler';
-    getCustomDataBind('POST', rtnUrl, {});
-  }
+    this.spinningOn();
+    getCustomDataBind('POST', rtnUrl, { PARAM: params }, () => this.setState({ searchParam: params }, this.spinningOff));
+  };
+
+  spinningOn = () => this.setState({ loading: true });
+
+  spinningOff = () => this.setState({ loading: false });
 
   onRowClick = (record, rowIndex, e) => {
     this.setState({ visible: true, workSeq: record.WORK_SEQ, taskSeq: record.TASK_SEQ, taskOrginSeq: record.TASK_ORIGIN_SEQ, title: record.TITLE });
@@ -112,10 +124,8 @@ class CheckListComp extends Component {
   };
 
   onCompleteProc = () => {
-    const { getCustomDataBind } = this.props;
     this.onModalClose();
-    const rtnUrl = '/api/mdcs/v1/common/MdcsDocValidationListHandler';
-    getCustomDataBind('POST', rtnUrl, {});
+    this.getList();
     message.success('유효성 결재 요청완료');
   };
 
@@ -123,7 +133,7 @@ class CheckListComp extends Component {
     const { visible, workSeq, taskSeq, taskOrginSeq, title, isShowProcess } = this.state;
     const { customDataList } = this.props;
     return (
-      <>
+      <Spin spinning={this.state.loading}>
         <StyledHeaderWrapper>
           <div className="pageTitle">
             <p>
@@ -132,6 +142,7 @@ class CheckListComp extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
+          <SearchBar getList={params => this.getList(params)} />
           <AntdTable
             columns={this.getTableColumns()}
             dataSource={customDataList}
@@ -153,7 +164,7 @@ class CheckListComp extends Component {
             />
           </AntdModal>
         </StyledContentsWrapper>
-      </>
+      </Spin>
     );
   }
 }

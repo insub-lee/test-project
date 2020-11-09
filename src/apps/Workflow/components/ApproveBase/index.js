@@ -19,7 +19,7 @@ class ApproveBase extends Component {
     super(props);
     this.state = {
       spinning: false,
-    }
+    };
   }
 
   spinningOn = () => {
@@ -100,10 +100,13 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getApproveList: (customUrl, PAGE, PAGE_CNT, relTypes, params, callback) => dispatch(actions.getApproveList(customUrl, PAGE, PAGE_CNT, relTypes, params, callback)),
-  getUnApproveList: (customUrl, PAGE, PAGE_CNT, relTypes, params, callback) => dispatch(actions.getUnApproveList(customUrl, PAGE, PAGE_CNT, relTypes, params, callback)),
-  getDraftList: (customUrl, PAGE, PAGE_CNT, relTypes, params, callback) => dispatch(actions.getDraftList(customUrl, PAGE, PAGE_CNT, relTypes, params, callback)),
-  getCustomDataBind: (httpMethod, rtnUrl, param) => dispatch(actions.getCustomDataBind(httpMethod, rtnUrl, param)),
+  getApproveList: (customUrl, PAGE, PAGE_CNT, relTypes, params, callback) =>
+    dispatch(actions.getApproveList(customUrl, PAGE, PAGE_CNT, relTypes, params, callback)),
+  getUnApproveList: (customUrl, PAGE, PAGE_CNT, relTypes, params, callback) =>
+    dispatch(actions.getUnApproveList(customUrl, PAGE, PAGE_CNT, relTypes, params, callback)),
+  getDraftList: (customUrl, PAGE, PAGE_CNT, relTypes, params, callback) =>
+    dispatch(actions.getDraftList(customUrl, PAGE, PAGE_CNT, relTypes, params, callback)),
+  getCustomDataBind: (httpMethod, rtnUrl, param, callBack) => dispatch(actions.getCustomDataBind(httpMethod, rtnUrl, param, callBack)),
   submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
     dispatch(actions.submitHandlerBySaga(id, httpMethod, apiUrl, submitData, callbackFunc)),
   setSelectedRow: row => dispatch(actions.setSelectedRow(row)),
