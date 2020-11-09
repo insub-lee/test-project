@@ -89,35 +89,54 @@ export const useBoard = ({ boardCode }) => {
   const modifyPost = async (args, selectedRecord) => {
     const formData = new FormData(args);
     const formJson = {};
+    let tempFile = '';
+    let taskSeq = 0;
     let pwd = '';
 
     formData.forEach((value, key) => {
       if (key === 'pwd') {
         pwd = value;
+      } else if (key === 'uploader-attach_FILE_DETAIL') {
+        tempFile = value;
       } else {
         formJson[key] = value;
       }
     });
 
-    const { title } = formJson;
+    return fileProcess(tempFile)
+      .then(({ taskSeq: seq, realFile: real }) => {
+        taskSeq = seq;
 
-    const data = {
-      pwd,
-      title,
-      content: { ...formJson },
-    };
-    data.parentno = selectedRecord?.parentno;
-    data.task_seq = parseInt(selectedRecord?.task_seq || 0, 10);
+        real.forEach(({ docNo, docNm, extension, down, link, seq, uid, id, name, code, fileType, size, fileSize, position }, idx) => {
+          formJson['uploader-attach_DCONO'] = formJson['uploader-attach_DCONO'].replaceAll(docNo, seq);
+          formJson['uploader-attach_FILE_PATH'] = formJson['uploader-attach_FILE_PATH'].replaceAll(docNo, seq);
+          formJson['uploader-attach_UPLOADED_FILES'] = formJson['uploader-attach_UPLOADED_FILES'].replaceAll(docNo, seq);
+        });
+        console.debug('### after fileProcess :', formJson);
+      })
+      .then(async () => {
+        if (taskSeq > 0) {
+          const { title } = formJson;
 
-    const { response, error } = await request({
-      url,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-      method: 'PUT',
-      data,
-    });
-    return { response, error };
+          const data = {
+            pwd,
+            title,
+            content: { ...formJson },
+          };
+          data.parentno = selectedRecord?.parentno;
+          data.task_seq = parseInt(selectedRecord?.task_seq || 0, 10);
+          const regResponse = await request({
+            url,
+            headers: {
+              'Access-Control-Allow-Origin': '*',
+            },
+            method: 'PUT',
+            data,
+          });
+
+          return regResponse;
+        }
+      });
   };
 
   const deletePost = async (args, selectedRecord) => {
@@ -150,7 +169,7 @@ export const useBoard = ({ boardCode }) => {
   };
 
   const fileProcess = async tempFile => {
-    let taskSeq = '0';
+    let taskSeq = 0;
     let realFile = '';
     const temp = await request({
       url: `/api/builder/v1/work/taskCreate/${workSeq}`,
@@ -173,21 +192,22 @@ export const useBoard = ({ boardCode }) => {
       method: 'POST',
       data: { PARAM: { DETAIL: JSON.parse(tempFile) } },
     });
-    const { response: fileResponse, error: fileError } = moveFileToReal;
-    if (!fileError) {
-      const { DETAIL } = fileResponse;
-      realFile = DETAIL;
+    const { response: response2, error: error2 } = moveFileToReal;
+    if (!error2) {
+      const { DETAIL } = response2;
+      if (DETAIL instanceof Array) {
+        realFile = DETAIL;
+      } else {
+        realFile = [];
+      }
     }
-    console.debug('###  taskSeq, realFile : ', taskSeq, realFile);
     return { taskSeq, realFile };
   };
   const regPost = async args => {
     const formData = new FormData(args);
     const formJson = {};
     let tempFile = '';
-    let taskSeq = '0';
     let pwd = '';
-    let realFile = '';
 
     formData.forEach((value, key) => {
       if (key === 'pwd') {
@@ -199,48 +219,38 @@ export const useBoard = ({ boardCode }) => {
       }
     });
 
-    // uploader-attach_DCONO: "4403:::4404"
-    // uploader-attach_FILE: "jesus.PNG:::capture4.png"
-    // uploader-attach_FILE_PATH: "/down/file/4403:::/down/file/4404"
-    // uploader-attach_UPLOADED_FILES: "[{"docNo":"4403","seq":"4403"},{"docNo":"4404","seq":"4404"}]"
-    console.debug('### doubleData :', formJson);
+    let taskSeq = 0;
+    return fileProcess(tempFile)
+      .then(({ taskSeq: seq, realFile: real }) => {
+        taskSeq = seq;
 
-    fileProcess(tempFile).then(({ taskSeq: seq, realFile: real }) => {
-      console.debug('real: ', real);
-      taskSeq = seq;
-      let DCONO = formJson['uploader-attach_DCONO'].split(':::');
-      let attach_file = formJson['uploader-attach_FILE'].split(':::');
-      let attach_file_path = formJson['uploader-attach_FILE_PATH'].split(':::');
-      let attach_uploaded_files = formJson['uploader-attach_UPLOADED_FILES'].split(':::');
-      console.debug('#### data : ', DCONO, attach_file, attach_file_path, attach_uploaded_files);
+        real.forEach(({ docNo, seq: fileSeq }) => {
+          formJson['uploader-attach_DCONO'] = formJson['uploader-attach_DCONO'].replaceAll(docNo, fileSeq);
+          formJson['uploader-attach_FILE_PATH'] = formJson['uploader-attach_FILE_PATH'].replaceAll(docNo, fileSeq);
+          formJson['uploader-attach_UPLOADED_FILES'] = formJson['uploader-attach_UPLOADED_FILES'].replaceAll(docNo, fileSeq);
+        });
+        console.debug('### after fileProcess :', formJson);
+      })
+      .then(async () => {
+        const { title } = formJson;
+        const data = {
+          pwd,
+          title,
+          content: { ...formJson },
+          boardCode,
+          task_seq: taskSeq,
+        };
+        const regResponse = await request({
+          url: `${url}/register`,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+          method: 'POST',
+          data,
+        });
 
-      real.forEach(({ docNo, docNm, extension, down, link, seq, uid, id, name, code, fileType, size, fileSize, position }, idx) => {
-        DCONO[idx] = DCONO[idx].replaceAll(docNo, seq);
-        attach_file_path[idx] = attach_file_path[idx].replaceAll(docNo, seq);
-        attach_uploaded_files[idx] = attach_uploaded_files[idx].replaceAll(docNo, seq);
+        return regResponse;
       });
-      console.debug('#### data : ', DCONO, attach_file, attach_file_path, attach_uploaded_files);
-    });
-
-    const { title } = formJson;
-    const data = {
-      pwd,
-      title,
-      content: { ...formJson },
-      boardCode,
-      task_seq: taskSeq,
-    };
-
-    const regResponse = await request({
-      url: `${url}/register`,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-      method: 'POST',
-      data,
-    });
-
-    return regResponse;
   };
 
   const submitSearchQuery = useCallback(e => {
@@ -260,40 +270,60 @@ export const useBoard = ({ boardCode }) => {
   const replyPost = async (args, selectedRecord) => {
     const formData = new FormData(args);
     const formJson = {};
-    const content = {};
-    let files = [];
+    // const content = {};
+    let tempFile = '';
+
+    // formData.forEach((value, key) => {
+    //   if (key.indexOf('_UPLOADED_FILES') > -1) {
+    //     files = value || [];
+    //   } else if (key.indexOf('textarea') > -1) {
+    //     content.reply = value;
+    //   } else {
+    //     formJson[key] = value;
+    //   }
+    // });
 
     formData.forEach((value, key) => {
-      if (key.indexOf('_UPLOADED_FILES') > -1) {
-        files = value || [];
-      } else if (key.indexOf('textarea') > -1) {
-        content.reply = value;
+      if (key === 'uploader-attach_FILE_DETAIL') {
+        tempFile = value;
       } else {
         formJson[key] = value;
       }
     });
 
-    const { title, pwd } = formJson;
+    let taskSeq = 0;
+    return fileProcess(tempFile)
+      .then(({ taskSeq: seq, realFile: real }) => {
+        taskSeq = seq;
 
-    const data = {
-      pwd,
-      title,
-      files,
-      content: { ...content, title },
-      parentno: selectedRecord?.task_seq,
-      boardCode,
-    };
+        real.forEach(({ docNo, seq: fileSeq }) => {
+          formJson['uploader-attach_DCONO'] = formJson['uploader-attach_DCONO'].replaceAll(docNo, fileSeq);
+          formJson['uploader-attach_FILE_PATH'] = formJson['uploader-attach_FILE_PATH'].replaceAll(docNo, fileSeq);
+          formJson['uploader-attach_UPLOADED_FILES'] = formJson['uploader-attach_UPLOADED_FILES'].replaceAll(docNo, fileSeq);
+        });
+        console.debug('### after fileProcess :', formJson);
+      })
+      .then(async () => {
+        const { title, pwd } = formJson;
+        const data = {
+          pwd,
+          title,
+          content: { ...formJson },
+          parentno: selectedRecord?.task_seq,
+          task_seq: taskSeq,
+          boardCode,
+        };
+        const regResponse = await request({
+          url: `${url}/reply`,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+          },
+          method: 'POST',
+          data,
+        });
 
-    const { response, error } = await request({
-      url: `${url}/reply`,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-      method: 'POST',
-      data,
-    });
-
-    return { response, error };
+        return regResponse;
+      });
   };
 
   return {
