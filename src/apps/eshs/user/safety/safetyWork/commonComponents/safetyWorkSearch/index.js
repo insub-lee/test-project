@@ -87,11 +87,19 @@ class SafetyWorkSearch extends Component {
       {
         title: '작업번호',
         dataIndex: 'WORK_NO',
+        width: '10%',
         align: 'center',
       },
       {
         title: '지역',
         dataIndex: 'SITE',
+        width: '5%',
+        align: 'center',
+      },
+      {
+        title: '구분',
+        dataIndex: 'WGUBUN',
+        width: '5%',
         align: 'center',
       },
       {
@@ -102,21 +110,25 @@ class SafetyWorkSearch extends Component {
       {
         title: '작업명',
         dataIndex: 'TITLE',
+        ellipsis: true,
         align: 'center',
       },
       {
         title: '작업장소',
         dataIndex: 'WLOC',
+        ellipsis: true,
         align: 'center',
       },
       {
         title: '작업업체',
         dataIndex: 'WRK_CMPNY_NM',
+        ellipsis: true,
         align: 'center',
       },
       {
         title: '주관회사',
         dataIndex: 'REQ_CMPNY_NM',
+        width: '10%',
         align: 'center',
       },
       {
@@ -136,6 +148,20 @@ class SafetyWorkSearch extends Component {
                 <Option value="청주">청주</Option>
                 <Option value="구미">구미</Option>
               </AntdSelect>
+              <span className="text-label">작업기간</span>
+              <AntdDatePicker
+                defaultValue={moment(sDate, 'YYYY-MM-DD')}
+                className="ant-picker-xs mr5"
+                style={{ width: 110 }}
+                onChange={date => this.setState({ sDate: date.format('YYYY-MM-DD') })}
+              />
+              <span> ~ </span>
+              <AntdDatePicker
+                defaultValue={moment(eDate, 'YYYY-MM-DD')}
+                className="ant-picker-xs mr5"
+                style={{ width: 110 }}
+                onChange={date => this.setState({ eDate: date.format('YYYY-MM-DD') })}
+              />
               {uesdSearchType ? (
                 <>
                   <span className="text-label">검색구분</span>
@@ -151,26 +177,13 @@ class SafetyWorkSearch extends Component {
               ) : (
                 ''
               )}
-              <span className="text-label">작업기간</span>
-              <AntdDatePicker
-                defaultValue={moment(sDate, 'YYYY-MM-DD')}
-                className="ant-picker-xs mr5"
-                style={{ width: 110 }}
-                onChange={date => this.setState({ sDate: date.format('YYYY-MM-DD') })}
-              />
-              <span> ~ </span>
-              <AntdDatePicker
-                defaultValue={moment(eDate, 'YYYY-MM-DD')}
-                className="ant-picker-xs mr5"
-                style={{ width: 110 }}
-                onChange={date => this.setState({ eDate: date.format('YYYY-MM-DD') })}
-              />
               <span className="text-label">검색어</span>
               <AntdInput
                 className="ant-input-xs ant-input-inline"
                 value={keyword}
                 onChange={e => this.setState({ keyword: e.target.value })}
                 style={{ width: '200px' }}
+                onPressEnter={this.handleGetSafetyWorkList}
               />
               <StyledButton className="btn-gray btn-xs btn-first" onClick={() => this.handleGetSafetyWorkList()} style={{ marginLeft: '10px' }}>
                 검색

@@ -36,6 +36,7 @@ class SafetyWorkList extends Component {
       searchValues: {
         SITE: '구미',
         SDATE: currentDate,
+        EDATE: currentDate,
       },
       listData: [],
     };
@@ -189,6 +190,13 @@ class SafetyWorkList extends Component {
                 style={{ width: 125 }}
                 defaultValue={moment(currentDate, 'YYYY-MM-DD')}
                 onChange={date => this.onChangeSearchValue('SDATE', moment(date).format('YYYY-MM-DD'))}
+              />
+              <span styled={{ margin: '0px 10px 0px 10px', width: '10%' }}> ~ </span>
+              <AntdDatePicker
+                className="ant-picker-sm"
+                style={{ width: 125 }}
+                defaultValue={moment(currentDate, 'YYYY-MM-DD')}
+                onChange={date => this.onChangeSearchValue('EDATE', moment(date).format('YYYY-MM-DD'))}
               />
               <StyledButton className="btn-gray btn-sm btn-first ml5" onClick={() => this.onSearch()}>
                 검색
