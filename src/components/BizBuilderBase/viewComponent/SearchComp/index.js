@@ -59,6 +59,20 @@ class TextComp extends React.Component {
     }
   };
 
+  makeDatePickerDefaultValue = dateSearchDefaultType => {
+    const { CONFIG } = this.props;
+    switch (dateSearchDefaultType) {
+      case 'sysdate': {
+        return moment();
+      }
+      case 'custom': {
+        return (CONFIG.property.dateSearchDefaultValue && moment(CONFIG.property.dateSearchDefaultValue), 'YYYY-MM-DD') || moment();
+      }
+      default:
+        return undefined;
+    }
+  };
+
   handleOnChangeSearch = value => {
     const { sagaKey, COMP_FIELD, changeSearchData, CONFIG } = this.props;
     let searchText = '';
@@ -66,10 +80,17 @@ class TextComp extends React.Component {
       let searchVal = '';
       switch (CONFIG.property.searchDataType) {
         case 'STRING':
-          searchVal = `'${value}'`;
+          if (CONFIG.property.searchType === 'DATE') {
+            searchVal = moment(value).format(CONFIG.property.dateSearchFormat || 'YYYY-MM-DD');
+          } else {
+            searchVal = `'${value}'`;
+          }
           break;
         case 'NUMBER':
           searchVal = value;
+          break;
+        case 'DATE':
+          searchVal = moment(value).format('YYYY-MM-DD');
           break;
         case 'DATETIME':
           searchVal = value.map((val, index) =>
@@ -81,6 +102,42 @@ class TextComp extends React.Component {
       switch (CONFIG.property.searchCondition) {
         case '=':
           searchText = `AND W.${COMP_FIELD} = ${searchVal}`;
+          break;
+        case '>=':
+          if (CONFIG.property.searchDataType === 'STRING') {
+            searchText = `AND W.${COMP_FIELD} = ${searchVal}`;
+          } else if (CONFIG.property.searchDataType === 'DATE') {
+            searchText = `AND W.${COMP_FIELD} >= to_date('${searchVal}', 'YYYY-MM-DD')`;
+          } else {
+            searchText = `AND W.${COMP_FIELD} >= '${searchVal}'`;
+          }
+          break;
+        case '<=':
+          if (CONFIG.property.searchDataType === 'STRING') {
+            searchText = `AND W.${COMP_FIELD} = ${searchVal}`;
+          } else if (CONFIG.property.searchDataType === 'DATE') {
+            searchText = `AND W.${COMP_FIELD} <= to_date('${searchVal}', 'YYYY-MM-DD')`;
+          } else {
+            searchText = `AND W.${COMP_FIELD} <= '${searchVal}'`;
+          }
+          break;
+        case '>':
+          if (CONFIG.property.searchDataType === 'STRING') {
+            searchText = `AND W.${COMP_FIELD} = ${searchVal}`;
+          } else if (CONFIG.property.searchDataType === 'DATE') {
+            searchText = `AND W.${COMP_FIELD} > to_date('${searchVal}', 'YYYY-MM-DD')`;
+          } else {
+            searchText = `AND W.${COMP_FIELD} > '${searchVal}'`;
+          }
+          break;
+        case '<':
+          if (CONFIG.property.searchDataType === 'STRING') {
+            searchText = `AND W.${COMP_FIELD} = ${searchVal}`;
+          } else if (CONFIG.property.searchDataType === 'DATE') {
+            searchText = `AND W.${COMP_FIELD} < to_date('${searchVal}', 'YYYY-MM-DD')`;
+          } else {
+            searchText = `AND W.${COMP_FIELD} < '${searchVal}'`;
+          }
           break;
         case 'LIKE':
           searchText = `AND W.${COMP_FIELD} LIKE '%${value}%'`;
@@ -96,6 +153,7 @@ class TextComp extends React.Component {
 
   render() {
     const { CONFIG, isSearch, searchTreeData, searchSelectData } = this.props;
+    if (CONFIG.property.searchType === 'DATE') console.debug(CONFIG.property.searchCondition);
     if (isSearch) {
       switch (CONFIG.property.searchType) {
         case 'INPUT':
@@ -135,6 +193,16 @@ class TextComp extends React.Component {
               onChange={value => this.handleOnChangeSearch(value)}
               className={CONFIG.property.className || 'select-sm'}
               placeholder={CONFIG.property.searchPlaceholder || CONFIG.property.placeholder}
+            />
+          );
+        case 'DATE':
+          return (
+            <DatePicker
+              style={{ width: '100%' }}
+              defaultValue={this.makeDatePickerDefaultValue(CONFIG.property.dateSearchDefaultType || 'default')}
+              format="YYYY-MM-DD"
+              onChange={value => this.handleOnChangeSearch(value)}
+              className={CONFIG.property.className || ''}
             />
           );
         case 'RANGEDATE':

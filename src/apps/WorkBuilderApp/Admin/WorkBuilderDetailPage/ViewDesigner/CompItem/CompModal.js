@@ -309,6 +309,7 @@ class CompModal extends Component {
                   <Option value="INPUT">Input</Option>
                   <Option value="SELECT">Select</Option>
                   <Option value="TREESELECT">Tree Select</Option>
+                  <Option value="DATE">Date</Option>
                   <Option value="RANGEDATE">Range Date</Option>
                   <Option value="CUSTOM">Custom</Option>
                 </Select>
@@ -327,7 +328,7 @@ class CompModal extends Component {
                   <Option value=">">&gt;</Option>
                   <Option value="<">&lt;</Option>
                   <Option value="LIKE">Like</Option>
-                  <Option value="BETWEEN">Between</Option>
+                  {comp.CONFIG.property.searchType !== 'DATE' && <Option value="BETWEEN">Between</Option>}
                 </Select>
               </div>
               <div className="popoverItem popoverItemInput">
@@ -349,7 +350,8 @@ class CompModal extends Component {
                     onChange={value => this.handleChangeViewConfig('searchDataType', value, 'property')}
                   >
                     <Option value="STRING">String</Option>
-                    <Option value="NUMBER">Number</Option>
+                    {comp.CONFIG.property.searchType !== 'DATE' && <Option value="NUMBER">Number</Option>}
+                    {comp.CONFIG.property.searchType === 'DATE' && <Option value="DATE">Date</Option>}
                   </Select>
                 )}
               </div>
@@ -362,6 +364,38 @@ class CompModal extends Component {
                   onChange={e => this.handleChangeViewConfig('searchPlaceholder', e.target.value, 'property')}
                 />
               </div>
+              {// Date Picker 사용시 SearchType 이 String일 경우 추가 설정값(포맷)을 받도록 추가
+              comp && comp.CONFIG && comp.CONFIG.property && comp.CONFIG.property.searchType === 'DATE' && (
+                <>
+                  {comp.CONFIG.property.searchDataType === 'STRING' && (
+                    <div className="popoverItem popoverItemInput">
+                      <span className="spanLabel">Format 설정</span>
+                      <Select
+                        placeholder="Date Format 지정"
+                        style={{ width: '100%' }}
+                        defaultValue={comp.CONFIG.property.dateSearchFormat || 'YYYY-MM-DD'}
+                        onChange={value => this.handleChangeViewConfig('dateSearchFormat', value, 'property')}
+                      >
+                        <Option value="YYYY-MM-DD">YYYY-MM-DD</Option>
+                        <Option value="YYYYMMDD">YYYYMMDD</Option>
+                      </Select>
+                    </div>
+                  )}
+                  <div className="popoverItem popoverItemInput">
+                    <span className="spanLabel">검색 기본값 설정</span>
+                    <Select
+                      placeholder="기본값을 선택하십시오."
+                      style={{ width: '100%' }}
+                      defaultValue={comp.CONFIG.property.dateSearchDefaultType || 'default'}
+                      onChange={value => this.handleChangeViewConfig('dateSearchDefaultType', value, 'property')}
+                    >
+                      <Option value="default">Default</Option>
+                      <Option value="sysdate">Sysdate</Option>
+                      <Option value="custom">Custom</Option>
+                    </Select>
+                  </div>
+                </>
+              )}
               {comp &&
                 comp.CONFIG &&
                 comp.CONFIG.property &&

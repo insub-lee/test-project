@@ -482,7 +482,7 @@ class SafetyWorkMain extends Component {
             <PenaltyItem penaltyItem={penaltyItem || []} rowSelect={this.handleRowSeletePenaltyItem} onSave={this.handleSavePenaltyItems} />
           )}
           {modalType === 'safetyWork' && (
-            <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} uesdSearchType={false} />
+            <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} uesdSearchType />
           )}
           {modalType === 'userSelect' && <UserSelect onUserSelectHandler={undefined} onUserSelectedComplete={this.onSelectedComplete} onCancel={undefined} />}
         </AntdModal>

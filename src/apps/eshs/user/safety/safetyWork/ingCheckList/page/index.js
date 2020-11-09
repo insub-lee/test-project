@@ -469,7 +469,7 @@ class SafetyWorkList extends Component {
           )}
           {modalType === 'safetyWork' && (
             <div style={{ padding: '20px' }}>
-              <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />
+              <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} uesdSearchType />
             </div>
           )}
           {modalType === 'ingCheckView' && <IngCheckViewer workNo={selectedWork} pageType="modal" />}
