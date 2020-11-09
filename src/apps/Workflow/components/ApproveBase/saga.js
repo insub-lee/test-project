@@ -33,7 +33,7 @@ function* getApproveList({ customUrl, PAGE, PAGE_CNT, relTypes, params, callback
   }
 }
 
-function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
+function* getCustomDataBind({ httpMethod, rtnUrl, param, callBack }) {
   let httpMethodInfo = Axios.put;
   switch (httpMethod.toUpperCase()) {
     case 'POST':
@@ -53,6 +53,10 @@ function* getCustomDataBind({ httpMethod, rtnUrl, param }) {
   if (response) {
     const { list } = response;
     yield put(actions.setCustomDataBind(list));
+  }
+
+  if (typeof callBack === 'function') {
+    callBack(response);
   }
 }
 
