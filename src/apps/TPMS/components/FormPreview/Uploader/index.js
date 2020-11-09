@@ -113,8 +113,9 @@ class Uploader extends React.Component {
     //   .catch(() => ({ error }));
     const { response, error } = await service.post(queryString, formData);
     if (response && !error) {
-      // const { docNo, docNm, extension, down, link, seq, uid } = response;
-      const tempFiles = response.map(({ code, fileName, fileType, fileExt, size, fileSize, seq, img, link, down }) => ({
+      const { code, down, fileExt, fileName, fileSize, fileType, seq, size } = response;
+
+      const temp = {
         docNo: seq,
         docNm: fileName,
         extension: fileExt,
@@ -128,40 +129,15 @@ class Uploader extends React.Component {
         fileType,
         size,
         fileSize,
-        img,
-      }));
+      };
       this.setState(prevState => {
         const { uploaded, files } = prevState;
-        // uploaded.push(tempFiles);
-        // files.push(tempFiles);
-        // uploaded.push({ docNm, extension, down, link, seq, uid });
-        // [
-        //   {
-        //     code: 300,
-        //     fileName: '1.PNG',
-        //     fileType: 2,
-        //     fileExt: 'png',
-        //     size: 33685,
-        //     fileSize: 33685,
-        //     seq: '303595',
-        //     img: '/img/thumb/0x0/303595',
-        //     link: '/img/thumb/200x200/303595',
-        //     down: '/down/file/303595',
-        //   },
-        // ];
-        // uploaded.push({
-        //   docNo,
-        //   docNm,
-        //   extension,
-        //   link: down,
-        //   seq,
-        //   uid,
-        //   name: docNm,
-        // });
-        // files.push(response);
+        uploaded.push(temp);
+        files.push(temp);
+
         return {
-          uploaded: [...uploaded, ...tempFiles],
-          files: [...files, ...tempFiles],
+          uploaded: [...uploaded],
+          files: [...files],
         };
       });
     } else {
@@ -213,6 +189,7 @@ class Uploader extends React.Component {
                 <input type="hidden" name={`${preName}_FILE_PATH`} value={uploaded.map(file => file.link).join(':::')} />
                 <input type="hidden" name={`${preName}_FILE`} value={uploaded.map(file => `${file.name}`).join(':::')} />
                 <input type="hidden" name={`${preName}_DCONO`} value={uploaded.map(file => `${file.docNo}`).join(':::')} />
+                <input type="hidden" name={`${preName}_FILE_DETAIL`} value={JSON.stringify(uploaded)} />
                 <ul className="upload_list">
                   {uploaded.length === 0 && <li>첨부 파일이 없습니다.</li>}
                   {uploaded.map((file, index) => (
