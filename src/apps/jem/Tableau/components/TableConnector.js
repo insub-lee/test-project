@@ -35,7 +35,7 @@ const TableConnector = ({ host }) => {
           if (ticket) {
             const trustedTicket = `/trusted/${ticket}`;
             // const shareUrl = `http://10.100.22.103${trustedTicket}/views/${host}`;
-            const shareUrl = `${window.location.protocol}//tableau.magnachip.com${trustedTicket}/views/${host}`;
+            const shareUrl = `http//tableau.magnachip.com${trustedTicket}/views/${host}`;
             // const shareUrl = `http://10.100.22.103/views/${host}`;
             const options = {
               hideTabs: true,
