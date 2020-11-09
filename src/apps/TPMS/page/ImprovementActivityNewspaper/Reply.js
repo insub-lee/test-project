@@ -7,7 +7,6 @@ import Button from '../../components/Button';
 
 export const ReplyBody = ({ formJson = [], content = {}, replyPost, selectedRecord, successCallback }) => {
   const data = makeContent(formJson, { ...content, pwd: '' }, false);
-  console.debug('data :', data);
   data.forEach(e => {
     if (e.option.name === 'title') {
       e.option.value = `답변:${e.option.value}`;
