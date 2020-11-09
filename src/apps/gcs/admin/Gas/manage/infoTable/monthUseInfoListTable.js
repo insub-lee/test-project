@@ -565,16 +565,16 @@ class MonthUseInfoListTable extends Component {
         children: [
           {
             title: '사용수량',
-            dataIndex: 'CHEMDISCHARGEY',
-            key: 'CHEMDISCHARGEY',
+            dataIndex: 'GASDISCHARGEY',
+            key: 'GASDISCHARGEY',
             width: '80px',
             align: 'center',
             render: (data, record) => renderCell(data, record),
           },
           {
             title: '사용량',
-            dataIndex: 'CHEMUSAGEY',
-            key: 'CHEMUSAGEY',
+            dataIndex: 'GASUSAGEY',
+            key: 'GASUSAGEY',
             width: '80px',
             align: 'center',
             render: (data, record) => renderCell(data, record),

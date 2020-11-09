@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Modal, Select, DatePicker, Spin } from 'antd';
+import { Modal, Select, DatePicker, Spin, Input } from 'antd';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -9,6 +9,7 @@ import StyledContentsModal from 'components/BizBuilder/styled/Modal/StyledAntdMo
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import MonthUseInfoListTable from '../infoTable/monthUseInfoListTable';
 import DayUseInfoListTable from '../infoTable/dayUseInfoListTable';
@@ -25,6 +26,7 @@ const { MonthPicker } = DatePicker;
 const AntdMonthPicker = StyledDatePicker(MonthPicker);
 const AntdModal = StyledContentsModal(Modal);
 const AntdSelect = StyledSelect(Select);
+const AntdInput = StyledInput(Input);
 
 class GasManagePage extends Component {
   constructor(props) {
@@ -37,6 +39,8 @@ class GasManagePage extends Component {
       modalData: {},
       site: '구미',
       viewInfo: 'month',
+      searchType: 'search_cabino',
+      searchValue: '',
       searchViewInfo: '',
       searchMonth: moment().format('YYYYMM'),
       listData: [], // 검색된 사용정보
@@ -49,11 +53,11 @@ class GasManagePage extends Component {
   handlerSearch = () => {
     this.setState({ isSearching: true });
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
-    const { viewInfo, site, searchMonth } = this.state;
+    const { viewInfo, site, searchMonth, searchType, searchValue } = this.state;
     const apiInfo = {
       key: 'chemiacalManageList',
       type: 'GET',
-      url: `/api/gcs/v1/common/gas/manage?type=${viewInfo}&site=${site}&month=${searchMonth}`,
+      url: `/api/gcs/v1/common/gas/manage?type=${viewInfo}&site=${site}&month=${searchMonth}&searchType=${searchType}&keyword=${searchValue}`,
     };
     getCallDataHandlerReturnRes(id, apiInfo, this.searchCallback);
   };
@@ -113,7 +117,20 @@ class GasManagePage extends Component {
   };
 
   render() {
-    const { modalType, modalTitle, modalVisible, modalData, searchMonth, site, viewInfo, listData, isSearching, searchViewInfo } = this.state;
+    const {
+      modalType,
+      modalTitle,
+      modalVisible,
+      modalData,
+      searchMonth,
+      site,
+      viewInfo,
+      listData,
+      isSearching,
+      searchViewInfo,
+      searchType,
+      searchValue,
+    } = this.state;
     return (
       <>
         <StyledCustomSearchWrapper>
@@ -142,6 +159,26 @@ class GasManagePage extends Component {
                 <Option value="day">일간 데이터</Option>
                 <Option value="sensor">가스누출 감지기 정보</Option>
               </AntdSelect>
+              <span className="text-label">검색구분</span>
+              <AntdSelect
+                value={searchType}
+                className="select-sm"
+                style={{ width: '150px', marginRight: '2px' }}
+                onChange={val => this.setState({ searchType: val })}
+              >
+                <Option value="search_cabino">Cabinet번호</Option>
+                <Option value="search_prodnm">가스명</Option>
+                <Option value="search_cabiarea">위치</Option>
+                <Option value="search_cabisensor">감지기번호</Option>
+              </AntdSelect>
+              <AntdInput
+                className="ant-input-sm mr5"
+                placeholder="검색어"
+                style={{ width: 200 }}
+                value={searchValue}
+                onChange={e => this.setState({ searchValue: e.target.value })}
+                onPressEnter={this.handlerSearch}
+              />
               <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handlerSearch()}>
                 검색
               </StyledButton>
