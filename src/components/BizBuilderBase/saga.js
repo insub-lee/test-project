@@ -25,7 +25,7 @@ import * as selectors from './selectors';
 function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, conditional, changeWorkflowFormData, detailData }) {
   if (taskSeq === -1) yield put(actions.removeReduxState(id));
   const response = yield call(Axios.get, `/api/builder/v1/work/workBuilder/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
-  const { work, metaList, formData, validationData, apiList, viewProcessList } = response;
+  const { work, metaList, formData, validationData, apiList, viewProcessList, overlabFieldList } = response;
   const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
   const builderModalOptIdx = work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_SEQ === BUILDER_MODAL_OPT_SEQ && opt.ISUSED === 'Y');
   const isBuilderModal = !!(builderModalOptIdx > -1);
@@ -187,6 +187,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
         responseFieldSelectData,
         formData,
         validData,
+        overlabFieldList,
       ),
     );
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
@@ -206,6 +207,9 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
         viewProcessList,
         viewSetData,
         responseFieldSelectData,
+        undefined,
+        undefined,
+        overlabFieldList,
       ),
     );
     yield put(actions.setValidationDataByReducer(id, validData));
@@ -568,6 +572,7 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
   const processRule = yield select(selectors.makeSelectProcessRuleById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
   const extraApiList = yield select(selectors.makeSelectApiListById(id));
+  const overlabFieldList = yield select(selectors.makeSelectOverlabFieldListById(id));
   const relType = yield select(selectors.makeSelectRelTypeById(id));
 
   if (validationData) {
@@ -598,6 +603,31 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
       if (!validFlag) {
         message.error(<MessageContent>{validMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
         if (typeof changeIsLoading === 'function') changeIsLoading(false);
+        return;
+      }
+    }
+  }
+
+  // 지정컬럼의 데이터를 확인하여 중복된 내용이 있을경우 saveTask 하지 못하도록 하는 OPT
+  if (overlabFieldList && overlabFieldList.length > 0) {
+    const overlabCheckResponse = yield call(
+      Axios.post,
+      '/api/builder/v1/work/overlabChk',
+      {
+        PARAM: {
+          ...formData,
+          WORK_SEQ: workSeq,
+          OVERLAB_FIELDS: overlabFieldList,
+        },
+      },
+      {
+        BUILDER: 'callApiBySaveBuilderOpt',
+      },
+    );
+    if (overlabCheckResponse) {
+      const { result } = overlabCheckResponse;
+      if (result > 0) {
+        message.error(<MessageContent>기존 데이터에 동일한 값이 존재하여 등록이 불가합니다.</MessageContent>);
         return;
       }
     }

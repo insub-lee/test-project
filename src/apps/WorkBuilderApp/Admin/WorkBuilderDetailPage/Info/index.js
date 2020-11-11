@@ -58,6 +58,7 @@ class Info extends Component {
       info: { workInfo, processList, optList, styleList },
       history,
     } = this.props;
+    const status = (workInfo && workInfo.STATUS && workInfo.STATUS) || 0;
     return (
       <Wrapper>
         <div>
@@ -182,7 +183,7 @@ class Info extends Component {
             <div className="item-title">옵션</div>
             <div className="item-cont">
               <ul>
-                {optList &&
+                {/* optList &&
                   optList.map(opt => (
                     <li key={`buiderDetailOption_${opt.OPT_SEQ}`}>
                       <div>
@@ -205,7 +206,37 @@ class Info extends Component {
                           })}
                       </div>
                     </li>
-                  ))}
+                )) */}
+                {optList &&
+                  optList.map(opt => {
+                    // 생성되지않은 상태일 경우 OLC 옵션 미노출, 그외에 빌더 옵션은 노출
+                    if (status === 0 && opt.OPT_CODE === 'OLC') {
+                      return '';
+                    }
+                    return (
+                      <li key={`buiderDetailOption_${opt.OPT_SEQ}`}>
+                        <div>
+                          <Switch
+                            onChange={checked => this.onOptionChange(checked, opt)}
+                            checked={!!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(idx => idx.OPT_SEQ === opt.OPT_SEQ) !== -1)}
+                            checkedChildren={<Icon type="check" />}
+                            unCheckedChildren={<Icon type="close" />}
+                          />{' '}
+                          <span>{opt.OPT_NAME}</span>
+                          {workInfo &&
+                            workInfo.OPT_INFO &&
+                            workInfo.OPT_INFO.findIndex(idx => idx.OPT_SEQ === opt.OPT_SEQ) !== -1 &&
+                            OptionInfos[opt.OPT_APP_SETTING_SRC] &&
+                            OptionInfos[opt.OPT_APP_SETTING_SRC].renderer({
+                              ...this.props,
+                              onSaveClick: this.onSaveClick,
+                              optSeq: opt.OPT_SEQ,
+                              optConfig: workInfo.OPT_INFO.filter(idx => idx.OPT_SEQ === opt.OPT_SEQ)[0],
+                            })}
+                        </div>
+                      </li>
+                    );
+                  })}
               </ul>
             </div>
           </div>
