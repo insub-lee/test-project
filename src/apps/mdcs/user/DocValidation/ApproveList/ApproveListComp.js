@@ -26,6 +26,7 @@ class ApproveListComp extends Component {
         REL_TYPE: 2,
       },
       loading: false,
+      pageSize: 10,
     };
   }
 
@@ -130,7 +131,7 @@ class ApproveListComp extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
-          <SearchBar getList={params => this.getList(params)} />
+          <SearchBar getList={params => this.getList(params)} onChangePageSize={pageSize => this.setState({ pageSize })} />
           <AntdTable
             columns={this.getTableColumns()}
             dataSource={list}
@@ -138,6 +139,7 @@ class ApproveListComp extends Component {
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
+            pagination={{ pageSize: this.state?.pageSize }}
           />
           <AntdModal title="유효성 점검" visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
             <BizBuilderBase
