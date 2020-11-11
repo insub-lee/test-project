@@ -25,6 +25,7 @@ class ApproveReqListComp extends Component {
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
       searchParam: {},
       loading: false,
+      pageSize: 10,
     };
   }
 
@@ -118,7 +119,7 @@ class ApproveReqListComp extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
-          <SearchBar getList={params => this.getList(params)} />
+          <SearchBar getList={params => this.getList(params)} onChangePageSize={pageSize => this.setState({ pageSize })} />
           <AntdTable
             columns={this.getTableColumns()}
             dataSource={customDataList}
@@ -126,6 +127,7 @@ class ApproveReqListComp extends Component {
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
+            pagination={{ pageSize: this.state?.pageSize }}
           />
           <AntdModal title="유효성 점검" visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
             <ApproveView {...this.props} WORK_SEQ={workSeq} TASK_SEQ={taskSeq} onValidateProcess={this.onValidateProcess} onModalClose={this.onModalClose} />

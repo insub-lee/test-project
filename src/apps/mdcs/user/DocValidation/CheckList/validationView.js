@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Radio, Button, Modal } from 'antd';
+import { Radio, Button, Modal, Popconfirm } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
@@ -66,6 +66,19 @@ class ValidationView extends Component {
     this.setState({ workProcess: { DRAFT_PROCESS: { ...processRule } } });
   };
 
+  getValueName = () => {
+    switch (this.state?.selectedValue) {
+      case 1:
+        return '유효';
+      case 2:
+        return '개정';
+      case 3:
+        return '폐기';
+      default:
+        return '';
+    }
+  };
+
   render() {
     const { WORK_SEQ, TASK_SEQ, onModalClose, onShowProces } = this.props;
     const { selectedValue, coverView, workProcess } = this.state;
@@ -98,9 +111,12 @@ class ValidationView extends Component {
           </table>
         </StyledHtmlTable>
         <div style={{ textAlign: 'center', marginTop: '10px' }} className="btn-group">
-          <Button type="primary" style={{ marginRight: '5px' }} onClick={this.onClickEvent}>
-            확인
-          </Button>
+          <Popconfirm title={`유효성 점검[${this.getValueName()}] 상신하시겠습니까?`} onConfirm={this.onClickEvent} okText="Yes" cancelText="No">
+            <Button type="primary" style={{ marginRight: '5px' }}>
+              확인
+            </Button>
+          </Popconfirm>
+
           <Button onClick={this.onCloseModal}>닫기</Button>
         </div>
 

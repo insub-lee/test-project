@@ -135,6 +135,11 @@ class List extends Component {
     });
   };
 
+  componentWillUnmount() {
+    const { sagaKey: id, removeReduxState } = this.props;
+    removeReduxState(id);
+  }
+
   handleNothGateModalVisible = (title, type, initData = {}) => {
     const { nothGateModal } = this.state;
     const { visible } = nothGateModal;

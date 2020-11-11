@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Table, Modal, message, Spin } from 'antd';
+import { Icon, Table, Modal, Spin } from 'antd';
 import moment from 'moment';
 
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import ValidationView from './validationView';
+import BatchValidationView from './batchValidationView';
 import SearchBar from '../SearchBar';
 
 const AntdTable = StyledAntdTable(Table);
@@ -16,9 +20,16 @@ class CheckListComp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: false,
+      modalObj: {
+        visible: false,
+        title: '',
+        content: [],
+      },
       searchParam: {},
+      selectedRowKeys: [],
+      selectedRows: [],
       loading: false,
+      pageSize: 10,
     };
   }
 
@@ -91,15 +102,30 @@ class CheckListComp extends Component {
 
   spinningOff = () => this.setState({ loading: false });
 
-  onRowClick = (record, rowIndex, e) => {
-    this.setState({ visible: true, workSeq: record.WORK_SEQ, taskSeq: record.TASK_SEQ, taskOrginSeq: record.TASK_ORIGIN_SEQ, title: record.TITLE });
-  };
+  onRowClick = (record, rowIndex, e) =>
+    this.handleModal(true, '유효성 점검', [
+      <ValidationView
+        {...this.props}
+        WORK_SEQ={record?.WORK_SEQ}
+        TASK_SEQ={record?.TASK_SEQ}
+        TASK_ORIGIN_SEQ={record?.TASK_ORIGIN_SEQ}
+        TITLE={record?.TITLE}
+        onShowProces={this.state.isShowProcess}
+        onValidateProcess={this.onValidateProcess}
+        onModalClose={() => this.handleModal()}
+      />,
+    ]);
 
-  onModalClose = () => {
-    this.setState({ visible: false });
-  };
+  handleModal = (visible = false, title = '', content = []) =>
+    this.setState({
+      modalObj: {
+        visible,
+        title,
+        content,
+      },
+    });
 
-  onValidateProcess = (validate, workProcess, workSeq, taskSeq, orginTaskSeq) => {
+  onValidateProcess = (validate, workProcess, callBack) => {
     const { id, submitHandlerBySaga } = this.props;
     let isByPass = true;
     const { DRAFT_PROCESS } = workProcess;
@@ -119,18 +145,20 @@ class CheckListComp extends Component {
     const nWorkProcess = { ...DRAFT_PROCESS, DRAFT_DATA: nDraftData };
     if (isByPass) {
       const fixUrl = '/api/workflow/v1/common/workprocess/draft';
-      submitHandlerBySaga(id, 'POST', fixUrl, { DRAFT_PROCESS: nWorkProcess }, this.onCompleteProc);
+      submitHandlerBySaga(id, 'POST', fixUrl, { DRAFT_PROCESS: nWorkProcess }, typeof callBack === 'function' ? callBack() : this.onCompleteProc());
     }
   };
 
   onCompleteProc = () => {
-    this.onModalClose();
+    this.handleModal();
     this.getList();
-    message.success('유효성 결재 요청완료');
+    this.showMessage('유효성 결재 요청완료');
   };
 
+  showMessage = text => message.info(<MessageContent>{text}</MessageContent>);
+
   render() {
-    const { visible, workSeq, taskSeq, taskOrginSeq, title, isShowProcess } = this.state;
+    const { modalObj } = this.state;
     const { customDataList } = this.props;
     return (
       <Spin spinning={this.state.loading}>
@@ -142,26 +170,50 @@ class CheckListComp extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
-          <SearchBar getList={params => this.getList(params)} />
+          <SearchBar
+            getList={params => this.getList(params)}
+            customButtons={[
+              <StyledButton
+                className="btn-primary btn-sm mr5"
+                key="BATCHVALIDATIONVIEW"
+                onClick={() => {
+                  if (0 in this.state?.selectedRows) {
+                    return this.handleModal(true, '유효성 점검 일괄 결재', [
+                      <BatchValidationView
+                        {...this.props}
+                        onShowProces={this.state.isShowProcess}
+                        onValidateProcess={this.onValidateProcess}
+                        onCompleteProc={this.onCompleteProc}
+                        onModalClose={() => this.handleModal()}
+                        selectedRows={this.state?.selectedRows}
+                      />,
+                    ]);
+                  }
+                  return this.showMessage('선택된 결재건이 없습니다.');
+                }}
+              >
+                일괄 결재
+              </StyledButton>,
+            ]}
+            onChangePageSize={pageSize => this.setState({ pageSize })}
+          />
           <AntdTable
             columns={this.getTableColumns()}
             dataSource={customDataList}
+            rowKey="TASK_SEQ"
             onRow={(record, rowIndex) => ({
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
+            rowSelection={{
+              columnWidth: '3%',
+              selectedRowKeys: this.state?.selectedRowKeys || [],
+              onChange: (selectedRowKeys, selectedRows) => this.setState({ selectedRowKeys, selectedRows }),
+            }}
             bordered
+            pagination={{ pageSize: this.state?.pageSize }}
           />
-          <AntdModal title="유효성 점검" visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
-            <ValidationView
-              {...this.props}
-              WORK_SEQ={workSeq}
-              TASK_SEQ={taskSeq}
-              TASK_ORIGIN_SEQ={taskOrginSeq}
-              TITLE={title}
-              onShowProces={isShowProcess}
-              onValidateProcess={this.onValidateProcess}
-              onModalClose={this.onModalClose}
-            />
+          <AntdModal title={modalObj?.title} visible={modalObj?.visible} width={680} destroyOnClose onCancel={() => this.handleModal()} footer={[]}>
+            {modalObj?.content}
           </AntdModal>
         </StyledContentsWrapper>
       </Spin>
@@ -169,6 +221,8 @@ class CheckListComp extends Component {
   }
 }
 
-CheckListComp.propTypes = {};
+CheckListComp.propTypes = {
+  customDataList: PropTypes.array,
+};
 
 export default CheckListComp;

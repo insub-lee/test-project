@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import request from 'utils/request';
 
 import { Icon, Input, Select } from 'antd';
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
-
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
 
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
@@ -32,44 +27,62 @@ class SearchBar extends Component {
   chageSearchParam = (target, value = '') => this.setState(prevState => ({ searchParam: { ...prevState?.searchParam, [target]: value } }));
 
   render() {
-    const { getList } = this.props;
+    const { getList, customButtons, onChangePageSize } = this.props;
     const { searchParam } = this.state;
     return (
-      <StyledCustomSearchWrapper className="search-wrapper-inline">
-        <div className="search-input-area mb10">
-          <AntdInput
-            className="ant-input-sm mr5"
-            style={{ width: 120 }}
-            allowClear
-            placeholder="No"
-            onChange={e => this.chageSearchParam('DOCNUMBER', e?.target?.value)}
-            onPressEnter={() => getList(searchParam)}
-          />
-          <AntdInput
-            className="ant-input-sm mr5"
-            style={{ width: 200 }}
-            allowClear
-            placeholder="제목"
-            onChange={e => this.chageSearchParam('DRAFT_TITLE', e?.target?.value)}
-            onPressEnter={() => getList(searchParam)}
-          />
+      <>
+        <StyledCustomSearchWrapper className="search-wrapper-inline">
+          <div className="search-input-area">
+            <AntdInput
+              className="ant-input-sm mr5"
+              style={{ width: 120 }}
+              allowClear
+              placeholder="No"
+              onChange={e => this.chageSearchParam('DOCNUMBER', e?.target?.value)}
+              onPressEnter={() => getList(searchParam)}
+            />
+            <AntdInput
+              className="ant-input-sm mr5"
+              style={{ width: 200 }}
+              allowClear
+              placeholder="제목"
+              onChange={e => this.chageSearchParam('DRAFT_TITLE', e?.target?.value)}
+              onPressEnter={() => getList(searchParam)}
+            />
+          </div>
+          <div className="btn-area">
+            <StyledButton className="btn-gray btn-sm mr5" onClick={() => getList(searchParam)}>
+              검색
+            </StyledButton>
+            {customButtons}
+          </div>
+        </StyledCustomSearchWrapper>
+        <div style={{ width: '100%', height: '30px', textAlign: 'right' }}>
+          <div style={{ float: 'left', marginBottom: '10px' }}>
+            <AntdSelect defaultValue={10} className="select-sm" style={{ width: 100 }} onChange={val => onChangePageSize(val)}>
+              <AntdSelect.Option value={10}>10 / page</AntdSelect.Option>
+              <AntdSelect.Option value={20}>20 / page</AntdSelect.Option>
+              <AntdSelect.Option value={30}>30 / page</AntdSelect.Option>
+              <AntdSelect.Option value={40}>40 / page</AntdSelect.Option>
+              <AntdSelect.Option value={50}>50 / page</AntdSelect.Option>
+            </AntdSelect>
+          </div>
         </div>
-        <div className="btn-area">
-          <StyledButton className="btn-primary btn-sm" onClick={() => getList(searchParam)}>
-            검색
-          </StyledButton>
-        </div>
-      </StyledCustomSearchWrapper>
+      </>
     );
   }
 }
 
 SearchBar.propTypes = {
   getList: PropTypes.func,
+  customButtons: PropTypes.array,
+  onChangePageSize: PropTypes.func,
 };
 
 SearchBar.defaultProps = {
   getList: () => {},
+  customButtons: [],
+  onChangePageSize: () => false,
 };
 
 export default SearchBar;
