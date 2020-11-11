@@ -22,7 +22,7 @@ class ChemicalStatusPage extends Component {
     this.state = {
       searchAfter: false,
       isSearching: false,
-      site: '청주', // 검색조건
+      site: '구미', // 검색조건
       modalType: '',
       modalTitle: '',
       modalVisible: false,
@@ -233,8 +233,8 @@ class ChemicalStatusPage extends Component {
                 onChange={val => this.setState({ site: val })}
                 disabled
               >
-                <Option value="청주">청주</Option>
                 <Option value="구미">구미</Option>
+                <Option value="청주">청주</Option>
               </AntdSelect>
               <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handlerSearch()}>
                 검색

@@ -27,7 +27,7 @@ class ResultReportPage extends Component {
     this.state = {
       isSearching: false,
       searchValues: {
-        SITE: '청주',
+        SITE: '구미',
         YEAR: moment().format('YYYY'),
         MONTH: '01',
       },
