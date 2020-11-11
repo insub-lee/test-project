@@ -625,9 +625,19 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
       },
     );
     if (overlabCheckResponse) {
-      const { result } = overlabCheckResponse;
-      if (result > 0) {
-        message.error(<MessageContent>기존 데이터에 동일한 값이 존재하여 등록이 불가합니다.</MessageContent>);
+      const {
+        result: { overlabCnt, overlabFields, overlabFieldSize },
+      } = overlabCheckResponse;
+      if (overlabCnt > 0) {
+        let msg = '';
+        overlabFields.forEach((item, index) => {
+          if (overlabFieldSize === index + 1) {
+            msg += `${item.FIELD_VALUE} 값이 일치하는 데이터가 있습니다.`;
+          } else {
+            msg += `${item.FIELD_VALUE}, `;
+          }
+        });
+        message.error(<MessageContent>{msg}</MessageContent>);
         return;
       }
     }
