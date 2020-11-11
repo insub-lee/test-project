@@ -18,6 +18,7 @@ class SearchBar extends Component {
       searchParam: {
         DRAFT_TITLE: '',
         DOCNUMBER: '',
+        CHECKTYPE: '',
       },
     };
   }
@@ -27,7 +28,7 @@ class SearchBar extends Component {
   chageSearchParam = (target, value = '') => this.setState(prevState => ({ searchParam: { ...prevState?.searchParam, [target]: value } }));
 
   render() {
-    const { getList, customButtons, onChangePageSize } = this.props;
+    const { getList, customButtons, onChangePageSize, typeSearch } = this.props;
     const { searchParam } = this.state;
     return (
       <>
@@ -49,6 +50,21 @@ class SearchBar extends Component {
               onChange={e => this.chageSearchParam('DRAFT_TITLE', e?.target?.value)}
               onPressEnter={() => getList(searchParam)}
             />
+            {typeSearch ? (
+              <AntdSelect
+                placeholder="점검"
+                className="select-sm mr5"
+                style={{ width: 100 }}
+                onChange={val => this.chageSearchParam('CHECKTYPE', val)}
+                allowClear
+              >
+                <AntdSelect.Option value="Y">유효</AntdSelect.Option>
+                <AntdSelect.Option value="R">개정</AntdSelect.Option>
+                <AntdSelect.Option value="O">폐기</AntdSelect.Option>
+              </AntdSelect>
+            ) : (
+              ''
+            )}
           </div>
           <div className="btn-area">
             <StyledButton className="btn-gray btn-sm mr5" onClick={() => getList(searchParam)}>
@@ -77,12 +93,14 @@ SearchBar.propTypes = {
   getList: PropTypes.func,
   customButtons: PropTypes.array,
   onChangePageSize: PropTypes.func,
+  typeSearch: PropTypes.bool, // 점검 상태별 검색 visible
 };
 
 SearchBar.defaultProps = {
   getList: () => {},
   customButtons: [],
   onChangePageSize: () => false,
+  typeSearch: true,
 };
 
 export default SearchBar;

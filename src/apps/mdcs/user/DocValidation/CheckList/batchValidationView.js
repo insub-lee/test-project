@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Radio, Button, Popconfirm, Table, Spin } from 'antd';
+import { Radio, Button, Popconfirm, Table, Spin, DatePicker } from 'antd';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import BuilderProcessModal from 'apps/Workflow/WorkProcess/BuilderProcessModal';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
+const AntdDatePicker = StyledDatePicker(DatePicker);
 const AntdTable = StyledAntdTable(Table);
 
 // eslint-disable-next-line react/prefer-stateless-function
@@ -20,6 +24,7 @@ class batchValidationView extends Component {
       workProcess: {},
       selectedRows: this.props?.selectedRows,
       loading: false,
+      revDate: undefined,
     };
   }
 
@@ -45,7 +50,9 @@ class batchValidationView extends Component {
 
   onClickEvent = () => {
     const { onValidateProcess, onCompleteProc } = this.props;
-    const { selectedValue, selectedRows, workProcess } = this.state;
+    const { selectedValue, selectedRows, workProcess, revDate } = this.state;
+    if (selectedValue === 2 && !revDate) return this.showMessage('개정일을 확인하십시오.');
+
     this.spinningOn();
 
     const lastIdx = selectedRows.lastIndex;
@@ -57,9 +64,9 @@ class batchValidationView extends Component {
 
       if (index === lastIdx) {
         this.spinningOff();
-        return onValidateProcess(selectedValue, { DRAFT_PROCESS: draftProcess }, onCompleteProc);
+        return onValidateProcess(selectedValue, revDate, { DRAFT_PROCESS: draftProcess }, onCompleteProc);
       }
-      return onValidateProcess(selectedValue, { DRAFT_PROCESS: draftProcess }, () => undefined);
+      return onValidateProcess(selectedValue, revDate, { DRAFT_PROCESS: draftProcess }, () => undefined);
     });
   };
 
@@ -108,15 +115,17 @@ class batchValidationView extends Component {
 
   spinningOff = () => this.setState({ loading: false });
 
+  showMessage = text => message.info(<MessageContent>{text}</MessageContent>);
+
   render() {
     const { onModalClose } = this.props;
-    const { selectedValue, workProcess, selectedRows } = this.state;
+    const { selectedValue, workProcess, selectedRows, revDate } = this.state;
 
     return (
       <Spin spinning={this.state.loading}>
         <StyledContentsWrapper>
           <StyledHtmlTable>
-            {selectedValue === 1 && workProcess && workProcess.DRAFT_PROCESS && (
+            {workProcess && workProcess.DRAFT_PROCESS && (
               <WorkProcess
                 id="work"
                 CustomWorkProcessModal={BuilderProcessModal}
@@ -135,6 +144,19 @@ class batchValidationView extends Component {
                       <Radio value={2}>개정</Radio>
                       <Radio value={3}>폐기</Radio>
                     </Radio.Group>
+                  </td>
+                </tr>
+                <tr style={{ display: selectedValue === 2 ? 'table-row' : 'none' }}>
+                  <th style={{ width: '150px' }}>개정일</th>
+                  <td>
+                    <AntdDatePicker
+                      className="ant-picker-sm mr5"
+                      format="YYYY-MM-DD"
+                      style={{ width: '125px' }}
+                      onChange={(date, str) => this.setState({ revDate: str })}
+                      allowClear={false}
+                      disabled={false}
+                    />
                   </td>
                 </tr>
               </tbody>

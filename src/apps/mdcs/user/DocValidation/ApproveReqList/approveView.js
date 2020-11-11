@@ -69,7 +69,7 @@ class ApproveView extends Component {
   };
 
   render() {
-    const { WORK_SEQ, TASK_SEQ, onModalClose } = this.props;
+    const { WORK_SEQ, TASK_SEQ, onModalClose, REV_DATE, CHECKTYPE } = this.props;
     const { selectedValue, coverView } = this.state;
     return (
       <>
@@ -80,10 +80,14 @@ class ApproveView extends Component {
                 <th style={{ width: '150px' }}>유효성 점검 </th>
                 <td>
                   <Radio.Group defaultValue={selectedValue} onChange={this.onSelectRadio}>
-                    <Radio value={2}>유효</Radio>
+                    <Radio value={2}>승인</Radio>
                     <Radio value={9}>부결</Radio>
                   </Radio.Group>
                 </td>
+              </tr>
+              <tr style={{ display: CHECKTYPE === 'R' ? 'table-row' : 'none' }}>
+                <th style={{ width: '150px' }}>개정일</th>
+                <td>{REV_DATE}</td>
               </tr>
             </tbody>
           </table>

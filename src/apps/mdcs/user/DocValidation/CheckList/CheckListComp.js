@@ -125,7 +125,7 @@ class CheckListComp extends Component {
       },
     });
 
-  onValidateProcess = (validate, workProcess, callBack) => {
+  onValidateProcess = (validate, revDate, workProcess, callBack) => {
     const { id, submitHandlerBySaga } = this.props;
     let isByPass = true;
     const { DRAFT_PROCESS } = workProcess;
@@ -141,7 +141,7 @@ class CheckListComp extends Component {
       });
     }
     const { DRAFT_DATA } = DRAFT_PROCESS;
-    const nDraftData = { ...DRAFT_DATA, validateType: validate };
+    const nDraftData = { ...DRAFT_DATA, validateType: validate, revDate };
     const nWorkProcess = { ...DRAFT_PROCESS, DRAFT_DATA: nDraftData };
     if (isByPass) {
       const fixUrl = '/api/workflow/v1/common/workprocess/draft';
@@ -196,6 +196,7 @@ class CheckListComp extends Component {
               </StyledButton>,
             ]}
             onChangePageSize={pageSize => this.setState({ pageSize })}
+            typeSearch={false}
           />
           <AntdTable
             columns={this.getTableColumns()}

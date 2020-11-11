@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Radio, Button, Modal, Popconfirm } from 'antd';
+import { Radio, Button, Modal, Popconfirm, DatePicker } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import BuilderProcessModal from 'apps/Workflow/WorkProcess/BuilderProcessModal';
 import WorkProcess from 'apps/Workflow/WorkProcess';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+
+const AntdDatePicker = StyledDatePicker(DatePicker);
 const AntdModal = StyledContentsModal(Modal);
 // eslint-disable-next-line react/prefer-stateless-function
 class ValidationView extends Component {
@@ -19,6 +24,7 @@ class ValidationView extends Component {
       selectedValue: 1,
       workProcess: {},
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
+      revDate: undefined,
     };
   }
 
@@ -41,9 +47,10 @@ class ValidationView extends Component {
   };
 
   onClickEvent = () => {
-    const { onValidateProcess, WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ } = this.props;
-    const { selectedValue, workProcess } = this.state;
-    onValidateProcess(selectedValue, workProcess, WORK_SEQ, TASK_SEQ, TASK_ORIGIN_SEQ);
+    const { onValidateProcess } = this.props;
+    const { selectedValue, workProcess, revDate } = this.state;
+    if (selectedValue === 2 && !revDate) return this.showMessage('개정일을 확인하십시오.');
+    onValidateProcess(selectedValue, revDate, workProcess);
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
@@ -79,6 +86,8 @@ class ValidationView extends Component {
     }
   };
 
+  showMessage = text => message.info(<MessageContent>{text}</MessageContent>);
+
   render() {
     const { WORK_SEQ, TASK_SEQ, onModalClose, onShowProces } = this.props;
     const { selectedValue, coverView, workProcess } = this.state;
@@ -86,7 +95,7 @@ class ValidationView extends Component {
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
-          {selectedValue === 1 && workProcess && workProcess.DRAFT_PROCESS && (
+          {workProcess && workProcess.DRAFT_PROCESS && (
             <WorkProcess
               id="work"
               CustomWorkProcessModal={BuilderProcessModal}
@@ -105,6 +114,21 @@ class ValidationView extends Component {
                     <Radio value={2}>개정</Radio>
                     <Radio value={3}>폐기</Radio>
                   </Radio.Group>
+                </td>
+              </tr>
+              <tr style={{ display: selectedValue === 2 ? 'table-row' : 'none' }}>
+                <th style={{ width: '150px' }}>개정일</th>
+                <td>
+                  <AntdDatePicker
+                    className="ant-picker-sm mr5"
+                    format="YYYY-MM-DD"
+                    style={{ width: '125px' }}
+                    placeholder=""
+                    onChange={(date, str) => this.setState({ revDate: str })}
+                    allowClear={false}
+                    disabled={false}
+                    readOnly={false}
+                  />
                 </td>
               </tr>
             </tbody>
