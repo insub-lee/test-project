@@ -25,7 +25,7 @@ import * as selectors from './selectors';
 function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsLoading, conditional, changeWorkflowFormData, detailData }) {
   if (taskSeq === -1) yield put(actions.removeReduxState(id));
   const response = yield call(Axios.get, `/api/builder/v1/work/workBuilder/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
-  const { work, metaList, formData, validationData, apiList, viewProcessList } = response;
+  const { work, metaList, formData, validationData, apiList, viewProcessList, overlabFieldList } = response;
   const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
   const builderModalOptIdx = work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_SEQ === BUILDER_MODAL_OPT_SEQ && opt.ISUSED === 'Y');
   const isBuilderModal = !!(builderModalOptIdx > -1);
@@ -187,6 +187,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
         responseFieldSelectData,
         formData,
         validData,
+        overlabFieldList,
       ),
     );
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
@@ -206,6 +207,9 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, changeIsL
         viewProcessList,
         viewSetData,
         responseFieldSelectData,
+        undefined,
+        undefined,
+        overlabFieldList,
       ),
     );
     yield put(actions.setValidationDataByReducer(id, validData));
@@ -568,7 +572,9 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
   const processRule = yield select(selectors.makeSelectProcessRuleById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
   const extraApiList = yield select(selectors.makeSelectApiListById(id));
+  const overlabFieldList = yield select(selectors.makeSelectOverlabFieldListById(id));
   const relType = yield select(selectors.makeSelectRelTypeById(id));
+  const metaList = yield select(selectors.makeSelectMetaListById(id));
 
   if (validationData) {
     const validKeyList = Object.keys(validationData);
@@ -598,6 +604,43 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
       if (!validFlag) {
         message.error(<MessageContent>{validMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
         if (typeof changeIsLoading === 'function') changeIsLoading(false);
+        return;
+      }
+    }
+  }
+
+  // 지정컬럼의 데이터를 확인하여 중복된 내용이 있을경우 saveTask 하지 못하도록 하는 OPT
+  if (overlabFieldList && overlabFieldList.length > 0) {
+    const overlabCheckResponse = yield call(
+      Axios.post,
+      '/api/builder/v1/work/overlabChk',
+      {
+        PARAM: {
+          ...formData,
+          WORK_SEQ: workSeq,
+          OVERLAB_FIELDS: overlabFieldList,
+        },
+      },
+      {
+        BUILDER: 'callApiBySaveBuilderOpt',
+      },
+    );
+    if (overlabCheckResponse) {
+      const {
+        result: { overlabCnt, overlabFields, overlabFieldSize },
+      } = overlabCheckResponse;
+      const fieldMetaList = metaList.filter(meta => meta.COMP_TYPE === 'FIELD');
+      if (overlabCnt > 0) {
+        let msg = '';
+        overlabFields.forEach((item, index) => {
+          const target = fieldMetaList.find(fieldMeta => fieldMeta.COMP_FIELD === item.FIELD_NAME);
+          if (overlabFieldSize === index + 1) {
+            msg += `${item.FIELD_VALUE}(${target.NAME_KOR}) 값이 일치하는 데이터가 있습니다.`;
+          } else {
+            msg += `${item.FIELD_VALUE}(${target.NAME_KOR}), `;
+          }
+        });
+        message.error(<MessageContent>{msg}</MessageContent>);
         return;
       }
     }

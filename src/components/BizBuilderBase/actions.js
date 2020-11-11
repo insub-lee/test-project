@@ -29,6 +29,7 @@ export const setBuilderData = (
   fieldSelectData,
   formData,
   validationData,
+  overlabFieldList,
 ) => ({
   type: actionTypes.SET_BUILDER_DATA,
   id,
@@ -46,6 +47,7 @@ export const setBuilderData = (
   fieldSelectData,
   formData,
   validationData,
+  overlabFieldList,
 });
 
 export const getExtraApiData = (id, apiArr, callback) => ({
