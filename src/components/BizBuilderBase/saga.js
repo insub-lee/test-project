@@ -574,6 +574,7 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
   const extraApiList = yield select(selectors.makeSelectApiListById(id));
   const overlabFieldList = yield select(selectors.makeSelectOverlabFieldListById(id));
   const relType = yield select(selectors.makeSelectRelTypeById(id));
+  const metaList = yield select(selectors.makeSelectMetaListById(id));
 
   if (validationData) {
     const validKeyList = Object.keys(validationData);
@@ -628,13 +629,15 @@ function* saveTask({ id, reloadId, callbackFunc, changeIsLoading }) {
       const {
         result: { overlabCnt, overlabFields, overlabFieldSize },
       } = overlabCheckResponse;
+      const fieldMetaList = metaList.filter(meta => meta.COMP_TYPE === 'FIELD');
       if (overlabCnt > 0) {
         let msg = '';
         overlabFields.forEach((item, index) => {
+          const target = fieldMetaList.find(fieldMeta => fieldMeta.COMP_FIELD === item.FIELD_NAME);
           if (overlabFieldSize === index + 1) {
-            msg += `${item.FIELD_VALUE} 값이 일치하는 데이터가 있습니다.`;
+            msg += `${item.FIELD_VALUE}(${target.NAME_KOR}) 값이 일치하는 데이터가 있습니다.`;
           } else {
-            msg += `${item.FIELD_VALUE}, `;
+            msg += `${item.FIELD_VALUE}(${target.NAME_KOR}), `;
           }
         });
         message.error(<MessageContent>{msg}</MessageContent>);

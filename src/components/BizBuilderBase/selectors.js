@@ -48,6 +48,12 @@ const makeSelectMetaList = () =>
     (state, id) => (state.getIn(['bizBuilderBase', id, 'metaList']) !== undefined ? state.getIn(['bizBuilderBase', id, 'metaList']).toJS() : []),
   );
 
+// 여기
+const makeSelectMetaListById = id =>
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'metaList']) !== undefined ? state.getIn(['bizBuilderBase', id, 'metaList']).toJS() : [],
+  );
+
 const makeSelectFormData = () =>
   createSelector(
     selectorBizBuilderBase,
@@ -310,4 +316,5 @@ export {
   makeSelectListOrderByField,
   makeSelectCallApiExtraPropsById,
   makeSelectOverlabFieldListById,
+  makeSelectMetaListById,
 };
