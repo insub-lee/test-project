@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
-import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import styled from 'styled-components';
+
+const CustomTableStyled = styled.div`
+  .ant-table-column-title {
+    font-size: 12px;
+  }
+`;
 
 class SafetyWorkReport extends Component {
   constructor(props) {
@@ -13,22 +19,22 @@ class SafetyWorkReport extends Component {
     const { reportData } = this.props;
     const { workByMonth, penaltyByMonth, workerByMonth, workResult, workerResult, penaltyResult, year, month } = reportData;
     return (
-      <ContentsWrapper>
+      <CustomTableStyled>
         <StyledHtmlTable>
-          <table>
+          <table style={{ borderTop: '1px solid #888' }}>
             <tbody>
               <tr style={{ textAlign: 'center' }}>
-                <td colSpan={10} rowSpan={4}>
-                  <span style={{ fontSize: 35 }}>공사업체 안전작업 관리 현황 보고</span>
+                <td colSpan={10} rowSpan={4} style={{ width: '60%' }}>
+                  <span style={{ fontSize: 20 }}>공사업체 안전작업 관리 현황 보고</span>
                   <br />
-                  {year && year !== '' && month && month !== '' && <span style={{ fontSize: 35 }}>{`${year}년 ${month}월`}</span>}
+                  {year && year !== '' && month && month !== '' && <span style={{ fontSize: 20 }}>{`${year}년 ${month}월`}</span>}
                 </td>
-                <td rowSpan={2} style={{ width: '90px' }}>
+                <td rowSpan={2} style={{ width: '10%' }}>
                   결<br />재
                 </td>
-                <td style={{ width: '90px' }}>기안/접수</td>
-                <td style={{ width: '90px' }}>검토</td>
-                <td style={{ width: '90px' }}>승인/전결</td>
+                <td style={{ width: '10%' }}>기안/접수</td>
+                <td style={{ width: '10%' }}>검토</td>
+                <td style={{ width: '10%' }}>승인/전결</td>
               </tr>
               <tr style={{ height: '80px' }}>
                 <td></td>
@@ -36,17 +42,37 @@ class SafetyWorkReport extends Component {
                 <td></td>
               </tr>
               <tr style={{ textAlign: 'center' }}>
-                <td style={{ width: '90px' }}>직위/성명</td>
+                <td style={{ width: '10%' }}>직위/성명</td>
                 <td></td>
                 <td></td>
                 <td></td>
               </tr>
               <tr style={{ textAlign: 'center' }}>
-                <td style={{ width: '90px' }}>일자</td>
+                <td style={{ width: '10%' }}>일자</td>
                 <td></td>
                 <td></td>
                 <td></td>
               </tr>
+            </tbody>
+          </table>
+          <table style={{ borderTop: '0px solid #888' }}>
+            <colgroup>
+              <col width="15%" />
+              <col width="calc(85% / 13)" />
+              <col width="calc(85% / 13)" />
+              <col width="calc(85% / 13)" />
+              <col width="calc(85% / 13)" />
+              <col width="calc(85% / 13)" />
+              <col width="calc(85% / 13)" />
+              <col width="calc(85% / 13)" />
+              <col width="calc(85% / 13)" />
+              <col width="calc(85% / 13)" />
+              <col width="calc(85% / 13)" />
+              <col width="calc(85% / 13)" />
+              <col width="calc(85% / 13)" />
+              <col width="calc(85% / 13)" />
+            </colgroup>
+            <tbody>
               <tr style={{ height: '40px' }}>
                 <td colSpan={14}>
                   1) 작업별 현황 및 위반율
@@ -57,7 +83,7 @@ class SafetyWorkReport extends Component {
                 </td>
               </tr>
               <tr>
-                <th style={{ width: '100px' }}>작업구분</th>
+                <th>작업구분</th>
                 <th>1월</th>
                 <th>2월</th>
                 <th>3월</th>
@@ -70,7 +96,7 @@ class SafetyWorkReport extends Component {
                 <th>10월</th>
                 <th>11월</th>
                 <th>12월</th>
-                <th style={{ width: '90px' }}>Total</th>
+                <th>Total</th>
               </tr>
               {workResult.length === 0 ? (
                 <tr style={{ textAlign: 'center' }}>
@@ -100,7 +126,7 @@ class SafetyWorkReport extends Component {
                 <td colSpan={14}>2) 작업인원 현황 : {workerByMonth} 명</td>
               </tr>
               <tr style={{ textAlign: 'center' }}>
-                <th style={{ width: '100px' }}>구분</th>
+                <th>구분</th>
                 <th>1월</th>
                 <th>2월</th>
                 <th>3월</th>
@@ -113,7 +139,7 @@ class SafetyWorkReport extends Component {
                 <th>10월</th>
                 <th>11월</th>
                 <th>12월</th>
-                <th style={{ width: '90px' }}>Total</th>
+                <th>Total</th>
               </tr>
               {Object.keys(workerResult).length === 0 ? (
                 <tr>
@@ -170,7 +196,7 @@ class SafetyWorkReport extends Component {
             </tbody>
           </table>
         </StyledHtmlTable>
-      </ContentsWrapper>
+      </CustomTableStyled>
     );
   }
 }
