@@ -152,7 +152,7 @@ class ApproveListComp extends Component {
   };
 
   render() {
-    const { list, workSeq, taskSeq, visible, coverView, checkType, REV_DATE } = this.state;
+    const { list, workSeq, taskSeq, visible, coverView, checkType, revDate } = this.state;
     return (
       <Spin spinning={this.state.loading}>
         <StyledHeaderWrapper>
@@ -179,7 +179,7 @@ class ApproveListComp extends Component {
                 <tbody>
                   <tr>
                     <th style={{ width: '180px' }}>개정일</th>
-                    <td>{REV_DATE}</td>
+                    <td>{revDate}</td>
                   </tr>
                 </tbody>
               </table>
