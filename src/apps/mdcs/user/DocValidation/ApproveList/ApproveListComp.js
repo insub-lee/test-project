@@ -8,6 +8,7 @@ import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHead
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import BizBuilderBase from 'components/BizBuilderBase';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import SearchBar from '../SearchBar';
 
 const AntdTable = StyledAntdTable(Table);
@@ -21,11 +22,14 @@ class ApproveListComp extends Component {
       visible: false,
       workSeq: undefined,
       taskSeq: undefined,
+      checkType: undefined,
+      revDate: undefined,
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
       searchParam: {
         REL_TYPE: 2,
       },
       loading: false,
+      pageSize: 10,
     };
   }
 
@@ -43,6 +47,14 @@ class ApproveListComp extends Component {
       key: 'VERSION',
       width: '6%',
       align: 'center',
+    },
+    {
+      title: '점검',
+      dataIndex: 'CHECKTYPE',
+      key: 'CHECKTYPE',
+      width: '6%',
+      align: 'center',
+      render: text => this.getCheckName(text),
     },
     {
       title: '제목',
@@ -100,7 +112,15 @@ class ApproveListComp extends Component {
   spinningOff = () => this.setState({ loading: false });
 
   onRowClick = (record, rowIndex, e) => {
-    this.setState({ visible: true, workSeq: record.WORK_SEQ, taskSeq: record.TASK_SEQ, taskOrginSeq: record.TASK_ORIGIN_SEQ, title: record.TITLE });
+    this.setState({
+      visible: true,
+      workSeq: record.WORK_SEQ,
+      taskSeq: record.TASK_SEQ,
+      taskOrginSeq: record.TASK_ORIGIN_SEQ,
+      title: record.TITLE,
+      checkType: record?.CHECKTYPE,
+      revDate: record?.REV_DATE,
+    });
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
@@ -118,8 +138,21 @@ class ApproveListComp extends Component {
     this.setState({ visible: false });
   };
 
+  getCheckName = (type = this.state?.checkType) => {
+    switch (type) {
+      case 'Y':
+        return '유효';
+      case 'R':
+        return '개정';
+      case 'O':
+        return '폐기';
+      default:
+        return '';
+    }
+  };
+
   render() {
-    const { list, workSeq, taskSeq, visible, coverView } = this.state;
+    const { list, workSeq, taskSeq, visible, coverView, checkType, revDate } = this.state;
     return (
       <Spin spinning={this.state.loading}>
         <StyledHeaderWrapper>
@@ -130,7 +163,7 @@ class ApproveListComp extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
-          <SearchBar getList={params => this.getList(params)} />
+          <SearchBar getList={params => this.getList(params)} onChangePageSize={pageSize => this.setState({ pageSize })} />
           <AntdTable
             columns={this.getTableColumns()}
             dataSource={list}
@@ -138,8 +171,19 @@ class ApproveListComp extends Component {
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
+            pagination={{ pageSize: this.state?.pageSize }}
           />
-          <AntdModal title="유효성 점검" visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+          <AntdModal title={`유효성 점검[${this.getCheckName()}]`} visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+            <StyledHtmlTable style={{ padding: '20px 20px 0', display: checkType === 'R' ? '' : 'none' }}>
+              <table>
+                <tbody>
+                  <tr>
+                    <th style={{ width: '180px' }}>개정일</th>
+                    <td>{revDate}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </StyledHtmlTable>
             <BizBuilderBase
               sagaKey="approveReqView"
               workSeq={workSeq}

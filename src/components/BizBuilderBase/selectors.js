@@ -48,6 +48,12 @@ const makeSelectMetaList = () =>
     (state, id) => (state.getIn(['bizBuilderBase', id, 'metaList']) !== undefined ? state.getIn(['bizBuilderBase', id, 'metaList']).toJS() : []),
   );
 
+// 여기
+const makeSelectMetaListById = id =>
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'metaList']) !== undefined ? state.getIn(['bizBuilderBase', id, 'metaList']).toJS() : [],
+  );
+
 const makeSelectFormData = () =>
   createSelector(
     selectorBizBuilderBase,
@@ -257,6 +263,12 @@ const makeSelectCallApiExtraPropsById = id =>
 // auth
 const makeSelectProfile = () => createSelector(selectAuth, authState => authState.get('profile'));
 
+// 필드 중복값을 확인할 필드리스트 []
+const makeSelectOverlabFieldListById = id =>
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'overlabFieldList']) !== undefined ? state.getIn(['bizBuilderBase', id, 'overlabFieldList']).toJS() : [],
+  );
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -303,4 +315,6 @@ export {
   makeSelectRelTypeById,
   makeSelectListOrderByField,
   makeSelectCallApiExtraPropsById,
+  makeSelectOverlabFieldListById,
+  makeSelectMetaListById,
 };

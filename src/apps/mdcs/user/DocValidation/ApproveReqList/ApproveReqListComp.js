@@ -22,9 +22,12 @@ class ApproveReqListComp extends Component {
       visible: false,
       workSeq: undefined,
       taskSeq: undefined,
+      revDate: undefined,
+      checkType: undefined,
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
       searchParam: {},
       loading: false,
+      pageSize: 10,
     };
   }
 
@@ -44,11 +47,18 @@ class ApproveReqListComp extends Component {
       align: 'center',
     },
     {
+      title: '점검',
+      dataIndex: 'CHECKTYPE',
+      key: 'CHECKTYPE',
+      width: '6%',
+      align: 'center',
+      render: text => this.getCheckName(text),
+    },
+    {
       title: '제목',
       dataIndex: 'DRAFT_TITLE',
       key: 'DRAFT_TITLE',
     },
-
     {
       title: 'Effect Date',
       dataIndex: 'END_DTTM',
@@ -98,15 +108,36 @@ class ApproveReqListComp extends Component {
 
   onRowClick = (record, rowIndex, e) => {
     this.props.setSelectedRow(record);
-    this.setState({ visible: true, workSeq: record.WORK_SEQ, taskSeq: record.TASK_SEQ, taskOrginSeq: record.TASK_ORIGIN_SEQ, title: record.TITLE });
+    this.setState({
+      visible: true,
+      workSeq: record.WORK_SEQ,
+      taskSeq: record.TASK_SEQ,
+      taskOrginSeq: record.TASK_ORIGIN_SEQ,
+      title: record.TITLE,
+      revDate: record?.REV_DATE,
+      checkType: record?.CHECKTYPE,
+    });
   };
 
   onModalClose = () => {
     this.setState({ visible: false });
   };
 
+  getCheckName = (type = this.state?.checkType) => {
+    switch (type) {
+      case 'Y':
+        return '유효';
+      case 'R':
+        return '개정';
+      case 'O':
+        return '폐기';
+      default:
+        return '';
+    }
+  };
+
   render() {
-    const { workSeq, taskSeq, visible, coverView } = this.state;
+    const { workSeq, taskSeq, visible, coverView, revDate, checkType } = this.state;
     const { customDataList } = this.props;
     return (
       <Spin spinning={this.state.loading}>
@@ -118,7 +149,7 @@ class ApproveReqListComp extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
-          <SearchBar getList={params => this.getList(params)} />
+          <SearchBar getList={params => this.getList(params)} onChangePageSize={pageSize => this.setState({ pageSize })} />
           <AntdTable
             columns={this.getTableColumns()}
             dataSource={customDataList}
@@ -126,9 +157,18 @@ class ApproveReqListComp extends Component {
               onClick: e => this.onRowClick(record, rowIndex, e),
             })}
             bordered
+            pagination={{ pageSize: this.state?.pageSize }}
           />
-          <AntdModal title="유효성 점검" visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
-            <ApproveView {...this.props} WORK_SEQ={workSeq} TASK_SEQ={taskSeq} onValidateProcess={this.onValidateProcess} onModalClose={this.onModalClose} />
+          <AntdModal title={`유효성 점검[${this.getCheckName()}]`} visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+            <ApproveView
+              {...this.props}
+              REV_DATE={revDate}
+              WORK_SEQ={workSeq}
+              TASK_SEQ={taskSeq}
+              CHECKTYPE={checkType}
+              onValidateProcess={this.onValidateProcess}
+              onModalClose={this.onModalClose}
+            />
           </AntdModal>
         </StyledContentsWrapper>
       </Spin>

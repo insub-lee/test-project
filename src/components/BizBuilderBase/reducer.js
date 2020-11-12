@@ -43,6 +43,7 @@ const reducer = (state = initialState, action) => {
         fieldSelectData,
         formData,
         validationData,
+        overlabFieldList,
       } = action;
 
       if (formData && validationData) {
@@ -72,6 +73,7 @@ const reducer = (state = initialState, action) => {
         .setIn(['bizBuilderBase', id, 'viewPageData', 'taskSeq'], taskSeq)
         .setIn(['bizBuilderBase', id, 'viewPageData', 'viewType'], viewType)
         .setIn(['bizBuilderBase', id, 'fieldSelectData'], fromJS(fieldSelectData || {}))
+        .setIn(['bizBuilderBase', id, 'overlabFieldList'], fromJS(overlabFieldList || []))
         .setIn(['bizBuilderBase', id, 'isLoading'], false);
     }
     case actionTypes.SET_PROCESS_RULE: {

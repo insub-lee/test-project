@@ -28,7 +28,7 @@ class ChemicalStatusPage extends Component {
       isSaving: false,
       searchAfter: false,
       isSearching: false,
-      site: '청주', // 검색조건
+      site: '구미', // 검색조건
       sTimeStamp: moment()
         .subtract(1, 'days')
         .format('YYYYMMDD,09:00'),
@@ -219,8 +219,8 @@ class ChemicalStatusPage extends Component {
             <div className="search-input-area">
               <span className="text-label">지역</span>
               <AntdSelect defaultValue={site} className="select-sm" style={{ width: '100px' }} onChange={val => this.setState({ site: val })} disabled>
-                <Option value="청주">청주</Option>
                 <Option value="구미">구미</Option>
+                <Option value="청주">청주</Option>
               </AntdSelect>
               <span className="text-label">기간</span>
               <AntdRangePicker

@@ -11,12 +11,23 @@ class BusinessNumberComp extends React.Component {
   }
 
   handleOnChange = value => {
-    const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData } = this.props;
+    const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData, gubun } = this.props;
     if (CONFIG.property.isRequired) {
       changeValidationData(id, COMP_FIELD, value.trim().length > 0, value.trim().length > 0 ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
 
-      if (!this.handleBusinessNumberCheck(value.replace(/-/gi, ''))) {
-        changeValidationData(id, COMP_FIELD, false, '사업자번호등록번호가 맞지 않습니다');
+      if (gubun === 'SW') {
+        if (isNaN(value)) {
+          changeValidationData(id, COMP_FIELD, false, '10자리의 숫자만 입력해주십시오.');
+        } else if (value.length !== 10) {
+          changeValidationData(id, COMP_FIELD, false, '사업자등록번호는 10자리의 숫자로 입력해주십시오.');
+        } else if (!this.handleBusinessNumberCheck(value)) {
+          changeValidationData(id, COMP_FIELD, false, '사업자번호등록번호가 맞지 않습니다');
+        }
+      }
+      if (gubun !== 'SW') {
+        if (!this.handleBusinessNumberCheck(value)) {
+          changeValidationData(id, COMP_FIELD, false, '사업자번호등록번호가 맞지 않습니다');
+        }
       }
     }
     changeFormData(id, COMP_FIELD, value);

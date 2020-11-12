@@ -9,6 +9,7 @@ import ExcelDownloadSetting from './excelDownloadSetting';
 import DeleteDataListSetting from './deleteDataListSetting';
 import RevisionSetting from './revisionSetting';
 import PaginationSetting from './paginationSetting';
+import OverlapChkSetting from './overlapChkSetting';
 
 export const OptionInfos = {
   procsetting: { renderer: property => <ProcSetting {...property} /> },
@@ -21,4 +22,5 @@ export const OptionInfos = {
   deleteDataListSetting: { renderer: property => <DeleteDataListSetting {...property} /> },
   revisionSetting: { renderer: property => <RevisionSetting {...property} /> },
   paginationSetting: { renderer: property => <PaginationSetting {...property} /> },
+  overlapChkSetting: { renderer: property => <OverlapChkSetting {...property} /> },
 };
