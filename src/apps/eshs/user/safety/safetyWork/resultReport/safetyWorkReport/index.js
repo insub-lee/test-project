@@ -170,9 +170,9 @@ class SafetyWorkReport extends Component {
               </tr>
               <tr>
                 <th>작업일자</th>
-                <th colSpan={2}>업체명</th>
+                <th colSpan={4}>업체명</th>
                 <th colSpan={4}>작업내용</th>
-                <th colSpan={7}>위반사항</th>
+                <th colSpan={5}>위반사항</th>
               </tr>
               {year === '' && month === '' && (
                 <tr style={{ textAlign: 'center' }}>
@@ -187,9 +187,9 @@ class SafetyWorkReport extends Component {
                 penaltyResult.map(penalty => (
                   <tr style={{ textAlign: 'center' }}>
                     <td>{penalty.WORK_DATE}</td>
-                    <td colSpan={2}>{penalty.WRK_CMPNY_NM}</td>
+                    <td colSpan={4}>{penalty.WRK_CMPNY_NM}</td>
                     <td colSpan={4}>{penalty.WORK_DESC}</td>
-                    <td colSpan={7}>{penalty.CHECK_CONTENT}</td>
+                    <td colSpan={5}>{penalty.CHECK_CONTENT}</td>
                   </tr>
                 ))
               )}
