@@ -19,13 +19,9 @@ class ContentsPrint extends Component {
 
     switch (type) {
       case 'custom':
-        return <footer>{CusotmFooter}</footer>;
+        return CusotmFooter;
       case 'magnachip':
-        return (
-          <footer>
-            <img src={magnachipLogo} alt="MagnaChip" />
-          </footer>
-        );
+        return <img src={magnachipLogo} alt="MagnaChip" />;
       case 'keyfoundry':
         return '키파운드리';
       default:
@@ -40,20 +36,22 @@ class ContentsPrint extends Component {
   reactToPrintContent = () => this.printContents;
 
   render() {
-    const { children, useFooter, footerType, handleBeforePrint, handleAfterPrint } = this.props;
+    const { buttonName, children, useFooter, footerType, handleBeforePrint, handleAfterPrint } = this.props;
     return (
       <>
         <ReactToPrint
           removeAfterPrint
-          trigger={() => <StyledButton className="btn-primary btn-sm btn-first">인쇄</StyledButton>}
+          trigger={() => <StyledButton className="btn-gray btn-sm btn-first">{buttonName}</StyledButton>}
           content={this.reactToPrintContent}
           onAfterPrint={handleAfterPrint}
           onBeforePrint={handleBeforePrint}
         />
         <div style={{ display: 'none' }}>
           <PrintStyled ref={this.setComponentRef}>
-            {children && children}
-            {useFooter && this.renderFooter(footerType)}
+            <div>
+              <section>{children && children}</section>
+              {useFooter ? <footer>{this.renderFooter(footerType)}</footer> : ''}
+            </div>
           </PrintStyled>
         </div>
       </>
@@ -62,6 +60,7 @@ class ContentsPrint extends Component {
 }
 
 ContentsPrint.propTypes = {
+  buttonName: PropTypes.string,
   children: PropTypes.any,
   useFooter: PropTypes.bool,
   footerType: PropTypes.string,
@@ -71,6 +70,7 @@ ContentsPrint.propTypes = {
 };
 
 ContentsPrint.defaultProps = {
+  buttonName: '인쇄',
   children: undefined,
   useFooter: true,
   footerType: 'default',

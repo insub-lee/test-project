@@ -12,16 +12,20 @@ const printStyled = styled.div`
     body {
       height: initial !important;
       overflow: initial !important;
+      padding-bottom: 20mm !important;
       -webkit-print-color-adjust: exact;
     }
   }
 
   @media print {
-    .page-break {
-      display: block;
-      page-break-before: auto;
+    table {
+      font-size: 9px !important;
+      td {
+        page-break-before: always;
+      }
     }
     footer {
+      page-break-after: always;
       display: block !important;
       position: fixed;
       bottom: 0;
@@ -30,7 +34,7 @@ const printStyled = styled.div`
   }
 
   @page {
-    size: A4;
+    size: auto;
     margin: 15mm;
   }
 `;
