@@ -5,13 +5,15 @@ import FormView from '../../../components/FormPreview/FormView';
 import makeContent from '../../../utils/makeContents';
 import Button from '../../../components/Button';
 
-import { usePost } from '../../../hooks/usePost';
-
-export const ReplyBody = ({ formJson = [], content = {}, brdid, selectedRecord, successCallback }) => {
-  const {
-    action: { ReplyPost },
-  } = usePost({ brdid });
-  const data = makeContent(formJson, { ...content, pwd: '' }, false);
+export const ReplyBody = ({ formJson = [], content = {}, replyPost, selectedRecord, successCallback }) => {
+  const data = makeContent(
+    formJson,
+    {
+      ...content,
+      pwd: '',
+    },
+    false,
+  );
 
   data.forEach(e => {
     if (e.option.name === 'title') {
@@ -20,13 +22,25 @@ export const ReplyBody = ({ formJson = [], content = {}, brdid, selectedRecord, 
       e.option.value = '';
     }
   });
-
+  data.push({
+    seq: formJson.length + 1,
+    type: 'select',
+    option: {
+      label: '상태',
+      name: 'status',
+      values: [
+        { label: '완료', value: '완료' },
+        { label: '불가', value: '불가' },
+        { label: '조치중', value: '조치중' },
+      ],
+    },
+  });
   return (
     <form
       autoComplete="off"
       onSubmit={e => {
         e.preventDefault();
-        ReplyPost(e.target, selectedRecord).then(({ response, error }) => {
+        replyPost(e.target, selectedRecord).then(({ response, error }) => {
           if (response && !error) {
             const { insertyn } = response;
             if (insertyn) {
@@ -49,11 +63,11 @@ export const ReplyBody = ({ formJson = [], content = {}, brdid, selectedRecord, 
 };
 
 ReplyBody.propTypes = {
-  brdid: PropTypes.string,
+  replyPost: PropTypes.func,
   formJson: PropTypes.array,
   content: PropTypes.object,
   selectedRecord: PropTypes.array,
   successCallback: PropTypes.func,
 };
 
-ReplyBody.defaultProps = { brdid: '', formJson: [], content: {}, selectedRecord: [], successCallback: () => {} };
+ReplyBody.defaultProps = { replyPost: () => {}, formJson: [], content: {}, selectedRecord: [], successCallback: () => {} };
