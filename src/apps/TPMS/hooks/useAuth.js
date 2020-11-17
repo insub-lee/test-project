@@ -36,7 +36,7 @@ export default () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const url = '/apigate/v1/portal/auth/userInfo';
+      const url = '/api/tpms/v1/common/auth/userInfo';
       const { response, error } = await request({
         url,
       });
