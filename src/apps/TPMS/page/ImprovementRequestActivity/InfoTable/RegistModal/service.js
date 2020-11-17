@@ -11,7 +11,8 @@ const status = {
     }),
   post: payload =>
     request({
-      url: '/apigate/v1/portal/sign/report/up',
+      // url: '/apigate/v1/portal/sign/report/up',
+      url: '/api/tpms/v1/common/board/detail',
       headers: {
         'Access-Control-Allow-Origin': '*',
         'content-type': 'multipart/form-data',
