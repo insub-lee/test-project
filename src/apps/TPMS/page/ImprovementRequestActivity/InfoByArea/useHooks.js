@@ -180,6 +180,10 @@ const useHooks = () => {
 
   const disableExpandedView = () => {};
 
+  const submitData = e => {
+    e.preverDefault();
+  };
+
   return {
     isLoading,
     location,
@@ -196,6 +200,7 @@ const useHooks = () => {
       handleReportDown,
       enableExpandedView,
       disableExpandedView,
+      submitData,
     },
   };
 };
