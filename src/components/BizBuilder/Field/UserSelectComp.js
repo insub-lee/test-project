@@ -63,7 +63,12 @@ class UserSelectComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, readOnly, colData, isSearch, searchCompRenderer, viewType, formData, COMP_FIELD } = this.props;
+    const { sagaKey: id, CONFIG, visible, readOnly, colData, isSearch, searchCompRenderer, viewType, formData, COMP_FIELD } = this.props;
+    let inputValue = formData[COMP_FIELD.replace('NO', 'NAME')] ? `${formData[COMP_FIELD.replace('NO', 'NAME')]}(${colData})` : colData;
+    if (id === 'outdoorEvent') {
+      inputValue = formData[COMP_FIELD.replace('NO', 'NM')] ? `${formData[COMP_FIELD.replace('NO', 'NM')]}(${colData})` : colData;
+    }
+
     if (isSearch && visible) {
       if (CONFIG.property.searchType !== 'CUSTOM') {
         return searchCompRenderer(this.props);
@@ -82,7 +87,7 @@ class UserSelectComp extends React.Component {
             <Input
               readOnly
               placeholder="select me"
-              value={formData[COMP_FIELD.replace('NO', 'NAME')] ? `${formData[COMP_FIELD.replace('NO', 'NAME')]}(${colData})` : colData}
+              value={inputValue}
               onClick={() => this.setState({ isOpenModal: true })}
               className={CONFIG.property.className || ''}
             />
