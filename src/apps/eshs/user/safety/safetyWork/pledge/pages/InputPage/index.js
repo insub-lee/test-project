@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -26,7 +25,6 @@ class InputPage extends Component {
     super(props);
     this.state = {
       initLoading: true,
-      modalType: '',
       modalVisible: false,
     };
   }
@@ -49,16 +47,7 @@ class InputPage extends Component {
 
   // 기존 SaveTaskAfter
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const {
-      onCloseModalHandler,
-      changeViewPage,
-      isBuilderModal,
-      reloadId,
-      isSaveModalClose,
-      changeBuilderModalStateByParent,
-      workInfo,
-      redirectUrl,
-    } = this.props;
+    const { onCloseModalHandler, changeViewPage, isBuilderModal, reloadId, isSaveModalClose, changeBuilderModalStateByParent, redirectUrl } = this.props;
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler(id, redirectUrl);
     }
@@ -102,9 +91,8 @@ class InputPage extends Component {
     changeViewPage(id, workSeq, -1, 'INPUT');
   };
 
-  handleModalVisible = (type, bool) => {
+  handleModalVisible = bool => {
     this.setState({
-      modalType: type,
       modalVisible: bool,
     });
   };
@@ -112,7 +100,7 @@ class InputPage extends Component {
   handleListRowClick = record => {
     const { sagaKey: id, workSeq, getDetailData } = this.props;
     getDetailData(id, workSeq, record.TASK_SEQ, 'MODIFY');
-    this.handleModalVisible('', false);
+    this.handleModalVisible(false);
   };
 
   render = () => {
@@ -158,7 +146,7 @@ class InputPage extends Component {
                   <span className="text-label">서약서코드</span>
                   <AntdSearch
                     className="ant-search-inline input-search-mid mr5"
-                    onClick={() => this.handleModalVisible('searchPledge', true)}
+                    onClick={() => this.handleModalVisible(true)}
                     value={(formData.PLEDGE_NO && formData.PLEDGE_NO) || ''}
                     style={{ width: '200px' }}
                   />
@@ -187,8 +175,8 @@ class InputPage extends Component {
             width="70%"
             visible={modalVisible}
             footer={null}
-            onOk={() => this.handleModalVisible('', false)}
-            onCancel={() => this.handleModalVisible('', false)}
+            onOk={() => this.handleModalVisible(false)}
+            onCancel={() => this.handleModalVisible(false)}
           >
             <BizBuilderBase
               key={`${id}_search`}
@@ -209,6 +197,7 @@ class InputPage extends Component {
 
 InputPage.propTypes = {
   sagaKey: PropTypes.string,
+  reloadId: PropTypes.string,
   workFlowConfig: PropTypes.object,
   workPrcProps: PropTypes.object,
   viewLayer: PropTypes.array,
@@ -225,6 +214,11 @@ InputPage.propTypes = {
   setFormData: PropTypes.func,
   responseData: PropTypes.object,
   modifyTaskBySeq: PropTypes.func,
+  changeViewPage: PropTypes.func,
+  changeBuilderModalStateByParent: PropTypes.func,
+  redirectUrl: PropTypes.func,
+  isBuilderModal: PropTypes.bool,
+  isSaveModalClose: PropTypes.bool,
 };
 
 InputPage.defaultProps = {

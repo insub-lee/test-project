@@ -57,6 +57,7 @@ import EshsDangerEvalInSafetyImproveConfig from 'components/BizBuilder/Field/Esh
 import CustomListSelectCompConfig from 'components/BizBuilder/Field/CustomListSelectCompConfig';
 import MonthPickerCompConfig from 'components/BizBuilder/Field/MonthPickerCompConfig';
 import ValueTextCompConfig from 'components/BizBuilder/Field/ValueTextCompConfig';
+import UserInfoLabelCompConfig from 'components/BizBuilder/Field/UserInfoLabelCompConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/DragUploadMDCSCompConfig': { renderer: property => <DragUploadMDCSCompConfig {...property} /> },
@@ -116,4 +117,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/CustomListSelectCompConfig': { renderer: property => <CustomListSelectCompConfig {...property} /> },
   'components/BizBuilder/Field/MonthPickerCompConfig': { renderer: property => <MonthPickerCompConfig {...property} /> },
   'components/BizBuilder/Field/ValueTextCompConfig': { renderer: property => <ValueTextCompConfig {...property} /> },
+  'components/BizBuilder/Field/UserInfoLabelCompConfig': { renderer: property => <UserInfoLabelCompConfig {...property} /> },
 };
