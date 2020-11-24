@@ -9,6 +9,14 @@ const deptTree = {
       },
       method: 'GET',
     }),
+  getV2: () =>
+    request({
+      url: '/api/tpms/v1/common/searchInfo?type=deptList',
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method: 'GET',
+    }),
 };
 
 const users = {
