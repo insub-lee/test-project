@@ -18,9 +18,11 @@ import RegistAreaModal from './RegistModal';
 
 import { ModalHugger } from '../../../components/ModalHugger';
 
-import usePostList from '../../../hooks/usePostList';
 import { useModalController } from '../../../hooks/useModalController';
 import useHooks from './useHooks';
+import useAuth from '../../../hooks/useAuth';
+import { useBoard } from '../../../hooks/useBoard';
+import { request } from '../../../utils/boardCode';
 
 import { InquiryBody, InquiryTitle } from './Inquiry';
 import { ModifyBody } from './Modify';
@@ -56,16 +58,16 @@ const componentsStyle = {
   },
 };
 
-const brdid = 'brd00000000000000024';
 const InfoTable = () => {
+  const { authInfo, isError: isAuthError } = useAuth();
+
   const {
-    isLoading,
     isError,
-    checkedList,
     data,
     pagination,
-    action: { submitSearchQuery, pageHandler, pageSizeHandler },
-  } = usePostList({ brdid });
+    isLoading,
+    action: { pageHandler, pageSizeHandler, updateViewCount, regPost, deletePost, modifyPost, replyPost, submitSearchQuery },
+  } = useBoard({ boardCode: request });
 
   const {
     modalStatus,
@@ -77,26 +79,34 @@ const InfoTable = () => {
   const {
     registAreaModalRef,
     columns,
+    checkedList,
     actions: { handleOpenRegistModal, deleteCheckedList },
   } = useHooks({
     data,
     openModal,
-    callback: pageHandler,
+    callback: () => {
+      closeAll();
+      pageHandler(1);
+    },
     processRecord,
   });
 
   const essential = {
-    brdid,
     formJson,
     content: processedContent,
     selectedRecord,
+    boardCode: request,
     successCallback: () => {
       closeAll();
       pageHandler(1);
     },
     closeModal,
     openModal,
-    // authInfo,
+    regPost,
+    deletePost,
+    modifyPost,
+    replyPost,
+    updateViewCount,
   };
 
   return (
@@ -148,20 +158,20 @@ const InfoTable = () => {
         <RegistAreaModal ref={registAreaModalRef} callback={() => {}} />
       </div>
 
-      <ModalHugger className="REG" width={850} visible={modalStatus.REG} title="답변하기" onCancel={() => closeModal('REP')}>
-        <ReplyBody />
+      <ModalHugger className="REP" width={850} visible={modalStatus.REP} title="답변하기" onCancel={() => closeModal('REP')}>
+        <ReplyBody {...essential} />
       </ModalHugger>
 
       <ModalHugger className="MOD" width={850} visible={modalStatus.MOD} title="수정하기" onCancel={() => closeModal('MOD')}>
-        <ModifyBody />
+        <ModifyBody {...essential} />
       </ModalHugger>
 
       <ModalHugger className="DEL" width={300} visible={modalStatus.DEL} title="비밀번호 입력" onCancel={() => closeModal('DEL')}>
-        <DeleteBody />
+        <DeleteBody {...essential} />
       </ModalHugger>
 
-      <ModalHugger className="INQ" width={850} visible={modalStatus.INQ} title={<InquiryTitle />} onCancel={() => closeModal('INQ')}>
-        <InquiryBody />
+      <ModalHugger className="INQ" width={850} visible={modalStatus.INQ} title={<InquiryTitle {...essential} />} onCancel={() => closeModal('INQ')}>
+        <InquiryBody {...essential} />
       </ModalHugger>
     </>
   );

@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import request from '../../../utils/request';
 
-const url = `/apigate/v2/portal/board`;
+const url = `/api/tpms/v1/common/board`;
 const workSeq = '15961';
 export const useBoard = ({ boardCode }) => {
   const [isError, setIsError] = useState(true);
@@ -36,7 +36,7 @@ export const useBoard = ({ boardCode }) => {
     const { category, text } = search;
 
     const result = await request({
-      url: `${url}/list`,
+      url,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
@@ -66,7 +66,7 @@ export const useBoard = ({ boardCode }) => {
   const updateViewCount = async seq => {
     console.log(seq);
     const result = await request({
-      url: `${url}/viewCount`,
+      url: `${url}/detail`,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
@@ -89,7 +89,7 @@ export const useBoard = ({ boardCode }) => {
   const modifyPost = async (args, selectedRecord) => {
     const formData = new FormData(args);
     const formJson = {};
-    let tempFile = '';
+    let tempFile = [];
     let taskSeq = 0;
     let pwd = '';
 
@@ -126,7 +126,7 @@ export const useBoard = ({ boardCode }) => {
           data.parentno = selectedRecord?.parentno;
           data.task_seq = parseInt(selectedRecord?.task_seq || 0, 10);
           const regResponse = await request({
-            url,
+            url: `${url}/detail`,
             headers: {
               'Access-Control-Allow-Origin': '*',
             },
@@ -136,6 +136,7 @@ export const useBoard = ({ boardCode }) => {
 
           return regResponse;
         }
+        return false;
       });
   };
 
@@ -154,7 +155,7 @@ export const useBoard = ({ boardCode }) => {
     });
 
     const { response, error } = await request({
-      url,
+      url: `${url}/detail`,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
@@ -169,8 +170,9 @@ export const useBoard = ({ boardCode }) => {
   };
 
   const fileProcess = async tempFile => {
+    console.debug('tempFile:', tempFile);
     let taskSeq = 0;
-    let realFile = '';
+    let realFile = [];
     const temp = await request({
       url: `/api/builder/v1/work/taskCreate/${workSeq}`,
       data: {},
@@ -184,29 +186,31 @@ export const useBoard = ({ boardCode }) => {
       taskSeq = response1?.PARAM?.TASK_SEQ;
     }
 
-    const moveFileToReal = await request({
-      url: `/upload/moveFileToReal`,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      },
-      method: 'POST',
-      data: { PARAM: { DETAIL: JSON.parse(tempFile) } },
-    });
-    const { response: response2, error: error2 } = moveFileToReal;
-    if (!error2) {
-      const { DETAIL } = response2;
-      if (DETAIL instanceof Array) {
-        realFile = DETAIL;
-      } else {
-        realFile = [];
+    // file 업로드가 없는 경우
+    if (tempFile.length > 0) {
+      const moveFileToReal = await request({
+        url: `/upload/moveFileToReal`,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+        method: 'POST',
+        data: { PARAM: { DETAIL: JSON.parse(tempFile) } },
+      });
+      const { response: response2, error: error2 } = moveFileToReal;
+      if (!error2) {
+        const { DETAIL } = response2;
+        if (DETAIL instanceof Array) {
+          realFile = DETAIL;
+        }
       }
+      return { taskSeq, realFile };
     }
     return { taskSeq, realFile };
   };
   const regPost = async args => {
     const formData = new FormData(args);
     const formJson = {};
-    let tempFile = '';
+    let tempFile = [];
     let pwd = '';
 
     formData.forEach((value, key) => {
@@ -239,9 +243,10 @@ export const useBoard = ({ boardCode }) => {
           content: { ...formJson },
           boardCode,
           task_seq: taskSeq,
+          isReply: false,
         };
         const regResponse = await request({
-          url: `${url}/register`,
+          url,
           headers: {
             'Access-Control-Allow-Origin': '*',
           },
@@ -271,7 +276,7 @@ export const useBoard = ({ boardCode }) => {
     const formData = new FormData(args);
     const formJson = {};
     // const content = {};
-    let tempFile = '';
+    let tempFile = [];
 
     // formData.forEach((value, key) => {
     //   if (key.indexOf('_UPLOADED_FILES') > -1) {
@@ -312,9 +317,10 @@ export const useBoard = ({ boardCode }) => {
           parentno: selectedRecord?.task_seq,
           task_seq: taskSeq,
           boardCode,
+          isReply: true,
         };
         const regResponse = await request({
-          url: `${url}/reply`,
+          url,
           headers: {
             'Access-Control-Allow-Origin': '*',
           },

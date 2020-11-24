@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Button, Select, Spin } from 'antd';
-import styled from 'styled-components';
+import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import ContentsPrint from 'components/ContentsPrint';
 import SafetyWorkReport from '../safetyWorkReport';
 import Styled from './Styled';
 
@@ -14,12 +15,6 @@ const StyledButton = StyledAntdButton(Button);
 const AntdSelect = StyledSelect(Select);
 
 const { Option } = Select;
-
-const CustomTableStyled = styled.div`
-  .ant-table-column-title {
-    font-size: 12px;
-  }
-`;
 
 class ResultReportPage extends Component {
   constructor(props) {
@@ -100,7 +95,9 @@ class ResultReportPage extends Component {
     return (
       <AntdSelect className="select-xs mr5" style={{ width: '100px' }} value={searchValues.YEAR} onChange={e => this.handleChangeSearchValue('YEAR', e)}>
         {options.map(YYYY => (
-          <Option value={`${YYYY}`}>{YYYY}</Option>
+          <Option key={`${YYYY}`} value={`${YYYY}`}>
+            {YYYY}
+          </Option>
         ))}
       </AntdSelect>
     );
@@ -145,10 +142,13 @@ class ResultReportPage extends Component {
             </div>
           </Spin>
         </StyledSearchWrapper>
-        <ContentsWrapper>
-          <CustomTableStyled>
+        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <ContentsPrint footerType="magnachip">
             <SafetyWorkReport searchValues={searchValues} reportData={reportData} />
-          </CustomTableStyled>
+          </ContentsPrint>
+        </StyledButtonWrapper>
+        <ContentsWrapper>
+          <SafetyWorkReport searchValues={searchValues} reportData={reportData} />
         </ContentsWrapper>
       </Styled>
     );

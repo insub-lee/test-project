@@ -5,15 +5,10 @@ import styled from 'styled-components';
 import Button from '../../../components/Button';
 import FormView from '../../../components/FormPreview/FormView';
 import makeContent from '../../../utils/makeContents';
-import { usePost } from '../../../hooks/usePost';
 
-export const InquiryBody = ({ formJson = [], content = {}, brdid, selectedRecord }) => {
-  const {
-    action: { readPost },
-  } = usePost({ brdid });
-
+export const InquiryBody = ({ formJson = [], content = {}, updateViewCount, selectedRecord }) => {
   useEffect(() => {
-    readPost(selectedRecord);
+    updateViewCount(selectedRecord?.task_seq);
   }, []);
 
   const data = makeContent(formJson, content, true);
@@ -38,8 +33,7 @@ export const InquiryBody = ({ formJson = [], content = {}, brdid, selectedRecord
  * @param {*} param0
  */
 export const InquiryTitle = ({ content = {}, openModal, selectedRecord }) => {
-  const isReply = (selectedRecord?.hpostno || 0) > 0;
-  const haveReply = (selectedRecord?.child_postno || 0) > 0;
+  const isReply = (selectedRecord?.parentno || 0) > 0;
   return (
     <TitleWrapper>
       <div className="header">
@@ -66,18 +60,16 @@ export const InquiryTitle = ({ content = {}, openModal, selectedRecord }) => {
         >
           수정
         </Button>
-        {!haveReply && (
-          <Button color="gray" onClick={() => openModal('DEL')}>
-            삭제
-          </Button>
-        )}
+        <Button color="gray" onClick={() => openModal('DEL')}>
+          삭제
+        </Button>
       </div>
     </TitleWrapper>
   );
 };
 
-InquiryBody.propTypes = { formJson: PropTypes.array, content: PropTypes.object };
-InquiryBody.defaultProps = { formJson: [], content: {} };
+InquiryBody.propTypes = { formJson: PropTypes.array, content: PropTypes.object, updateViewCount: PropTypes.func, selectedRecord: PropTypes.object };
+InquiryBody.defaultProps = { formJson: [], content: {}, updateViewCount: () => {}, selectedRecord: {} };
 
 InquiryTitle.propTypes = { content: PropTypes.object, openModal: PropTypes.func, selectedRecord: PropTypes.object };
 InquiryTitle.defaultProps = {
