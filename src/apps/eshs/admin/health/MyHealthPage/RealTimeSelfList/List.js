@@ -139,6 +139,8 @@ class List extends Component {
       dataIndex: 'DEPT_NAME_KOR',
       width: '15%',
       align: 'center',
+      render: text => text || '부서정보 없음',
+      excelRender: text => text || '부서정보 없음',
     },
     {
       title: '이름',
