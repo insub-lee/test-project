@@ -12,6 +12,9 @@ import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import ContentsPrint from 'components/ContentsPrint';
+import PrintCheckStatus from '../PrintContents/printCheckStatus';
+import PrintCheckStatusTel from '../PrintContents/printCheckStatusTel';
 import Styled from './Styled';
 import ExcelDownload from '../Excel';
 
@@ -89,7 +92,7 @@ class SafetyWorkList extends Component {
   };
 
   render() {
-    const { listData, isSearching } = this.state;
+    const { listData, isSearching, searchValues } = this.state;
     const columns = [
       {
         title: '작업일',
@@ -205,6 +208,12 @@ class SafetyWorkList extends Component {
           </Spin>
         </StyledCustomSearchWrapper>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+          <ContentsPrint footerType="magnachip" buttonName="일지인쇄">
+            <PrintCheckStatus listData={listData} searchValues={searchValues} />
+          </ContentsPrint>
+          <ContentsPrint footerType="magnachip" buttonName="연락처인쇄">
+            <PrintCheckStatusTel listData={listData} searchValues={searchValues} />
+          </ContentsPrint>
           <ExcelDownload listData={listData} />
         </StyledButtonWrapper>
         <ContentsWrapper>

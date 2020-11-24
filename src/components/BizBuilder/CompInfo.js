@@ -151,6 +151,7 @@ import SelectEducationMemberComp from 'components/BizBuilder/Field/SelectEducati
 import GetEducationMemberComp from 'components/BizBuilder/Field/GetEducationMemberComp';
 import ValueChangeTextComp from 'components/BizBuilder/Field/ValueChangeTextComp';
 import MdcsTextAreaViewComp from 'components/BizBuilder/Field/MdcsTextAreaViewComp';
+import UserInfoLabelComp from 'components/BizBuilder/Field/UserInfoLabelComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/MdcsTextAreaViewComp': { renderer: property => <MdcsTextAreaViewComp {...property} /> },
@@ -304,4 +305,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/SelectEducationMemberComp': { renderer: property => <SelectEducationMemberComp {...property} /> },
   'components/BizBuilder/Field/GetEducationMemberComp': { renderer: property => <GetEducationMemberComp {...property} /> },
   'components/BizBuilder/Field/ValueChangeTextComp': { renderer: property => <ValueChangeTextComp {...property} /> },
+  'components/BizBuilder/Field/UserInfoLabelComp': { renderer: property => <UserInfoLabelComp {...property} /> },
 };

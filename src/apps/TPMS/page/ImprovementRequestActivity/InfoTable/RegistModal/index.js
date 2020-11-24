@@ -190,11 +190,10 @@ class RegistAreaModal extends React.Component {
     this.setState({ isLoading: true });
     const formData = new FormData();
     formData.append('fileUpload', file);
-    formData.append('brdid', 'brd00000000000000024');
-    formData.append('pwd', '1');
+    formData.append('boardCode', 'request');
     this.sendSingleData(formData).then(resultCnt => {
       console.debug('@@ result', resultCnt);
-      if (resultCnt > -1) { 
+      if (resultCnt > -1) {
         alertMessage.notice('입력이 성공했습니다.');
       } else if (resultCnt === -1) {
         alertMessage.alert(`사번과 이름이 일치하지 않거나 존재하지 않는 사번입니다. `);
