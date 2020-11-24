@@ -125,7 +125,7 @@ class batchValidationView extends Component {
       <Spin spinning={this.state.loading}>
         <StyledContentsWrapper>
           <StyledHtmlTable>
-            {workProcess && workProcess.DRAFT_PROCESS && (
+            {workProcess && workProcess.DRAFT_PROCESS && selectedValue === 3 && (
               <WorkProcess
                 id="work"
                 CustomWorkProcessModal={BuilderProcessModal}

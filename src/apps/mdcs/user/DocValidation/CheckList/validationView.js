@@ -95,7 +95,7 @@ class ValidationView extends Component {
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
-          {workProcess && workProcess.DRAFT_PROCESS && (
+          {workProcess && workProcess.DRAFT_PROCESS && selectedValue === 3 && (
             <WorkProcess
               id="work"
               CustomWorkProcessModal={BuilderProcessModal}
