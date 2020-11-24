@@ -18,7 +18,7 @@ class EmployeeSelector extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.debug('@@@ Update Employee Select', this.state.values, this.props.values);
+    // console.debug('@@@ Update Employee Select', this.state.values, this.props.values);
     const { values: prevValues } = prevProps;
     const { values } = this.props;
 
@@ -73,7 +73,7 @@ class EmployeeSelector extends React.Component {
       <StyledEquipSelector>
         <ul className="sub_form">
           {values.map((item, index) => (
-            <li style={onlySingle ? { width: '100%', paddingLeft: 0 } : { width: '100%' }}>
+            <li key={`EmployeeSelector > ${index + 1}`} style={onlySingle ? { width: '100%', paddingLeft: 0 } : { width: '100%' }}>
               {!onlySingle ? <div className="title">{item.label}</div> : ''}
               <div className="btn btn_wrap btn_left" style={{ width: '80px' }}>
                 {!readOnly && !item.fixed && (
@@ -83,12 +83,12 @@ class EmployeeSelector extends React.Component {
                 )}
               </div>
               {item.values.length > 0 && (
-                <React.Fragment>
+                <>
                   <input type="hidden" name={`user_selector_${index}`} value={JSON.stringify(item.values)} />
                   <ul className="users">
-                    {item.values.map((value, userIndex) => (
-                      <li key={value.emrno} className="user_tag btn_left">
-                        <span>{`${value.emrno} ${value.usrnm} ${value.jgnm}`}</span>
+                    {item.values.map(({ EMP_NO, NAME_KOR, PSTN_NAME_KOR }, userIndex) => (
+                      <li key={EMP_NO} className="user_tag btn_left">
+                        <span>{`${EMP_NO} ${NAME_KOR} ${PSTN_NAME_KOR}`}</span>
                         {!readOnly && !item.fixed && (
                           <button type="button" onClick={() => this.removeUser(index, userIndex)}>
                             <i className="fas fa-times" />
@@ -97,7 +97,7 @@ class EmployeeSelector extends React.Component {
                       </li>
                     ))}
                   </ul>
-                </React.Fragment>
+                </>
               )}
               <div style={{ clear: 'both', display: 'none' }} />
             </li>

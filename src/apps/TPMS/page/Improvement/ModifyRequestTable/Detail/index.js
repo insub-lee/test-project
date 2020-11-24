@@ -25,7 +25,7 @@ const Detail = ({ info, usrid, dpcd, dpnm }) => {
     defaultFormData,
     sharingSelector,
     actions: { submitData },
-  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '' });
+  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '' });
 
   const combineTextRenderer = useCallback(
     item => (

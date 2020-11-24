@@ -21,7 +21,7 @@ const Detail = ({ info, callback }) => {
     defaultFormData,
     dropModalRef,
     actions: { submitForm, openDropModal },
-  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '', callback });
+  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '', callback });
   return (
     <div>
       <Spin spinning={isAuthLoading || isLoading}>

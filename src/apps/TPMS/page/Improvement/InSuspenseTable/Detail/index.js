@@ -16,7 +16,7 @@ const Detail = ({ info, callback }) => {
     formRef,
     defaultFormData,
     actions: { accept, reject },
-  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '', callback });
+  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '', callback });
   return (
     <div>
       <Spin spinning={isAuthLoading}>

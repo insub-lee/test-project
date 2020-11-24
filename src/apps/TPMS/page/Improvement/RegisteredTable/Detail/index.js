@@ -10,7 +10,7 @@ import useAuth from '../../../../hooks/useAuth';
 
 const Detail = ({ info, usrid, dpcd, dpnm }) => {
   const { authInfo, isError: isAuthError, isLoading: isAuthLoading } = useAuth();
-  const { defaultFormData } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '' });
+  const { defaultFormData } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '' });
   return (
     <div>
       <Spin spinning={isAuthLoading}>

@@ -51,14 +51,14 @@ class EquipSelector extends React.Component {
           ))}
         </ul>
         {!readOnly && (
-          <React.Fragment>
+          <>
             <div className="btn btn_wrap">
               <Button type="button" color="gray" size="small" onClick={this.showSearchEquipModal}>
                 선택
               </Button>
             </div>
             <SearchEquipModal ref={this.searchEquipModalRef} callback={this.receiveData} />
-          </React.Fragment>
+          </>
         )}
       </StyledEquipSelector>
     );
@@ -67,10 +67,12 @@ class EquipSelector extends React.Component {
 
 EquipSelector.propTypes = {
   readOnly: PropTypes.bool,
+  values: PropTypes.array,
 };
 
 EquipSelector.defaultProps = {
   readOnly: false,
+  values: [],
 };
 
 export default EquipSelector;

@@ -20,7 +20,7 @@ const Detail = ({ info, callback }) => {
     dropModalRef,
     defaultFormData,
     actions: { submitForm, openDropModal },
-  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '' });
+  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '' });
 
   return (
     <div>
@@ -34,7 +34,7 @@ const Detail = ({ info, callback }) => {
           <input type="hidden" name="sysid" value="TPMS" />
           {/* Default SyStem MenuId */}
           <input type="hidden" name="mnuid" value="TPMS1070" />
-          <FormView key={authInfo?.userRoleInfoList?.[0]?.dpcd || ''} datas={defaultFormData} noBoarder isImprove />
+          <FormView key={authInfo?.deptId || ''} datas={defaultFormData} noBoarder isImprove />
           <BtnWrap>
             <Button type="submit" color="primary">
               제출하기

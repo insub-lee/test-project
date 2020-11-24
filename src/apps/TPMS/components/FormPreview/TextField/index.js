@@ -12,7 +12,7 @@ class TextField extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.debug('@@@ change', prevProps, this.props);
+    // console.debug('@@@ change', prevProps, this.props);
     if (prevProps.option.value !== this.props.option.value) {
       this.setState({ value: this.props.option.value });
     }

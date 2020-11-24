@@ -27,7 +27,7 @@ const Registration = () => {
     formRef,
     isRedirect,
     actions: { submitForm, saveTemp },
-  } = useHooks({ usrid: authInfo?.empNo || '', usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '' });
+  } = useHooks({ originEmpNo: authInfo?.empNo || '', usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '' });
 
   if (isRedirect) {
     return <Redirect to="/apps/tpms/page/Improvement/RegisteredTable" />;
