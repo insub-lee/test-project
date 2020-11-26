@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Radio, Button, Modal, Popconfirm, DatePicker } from 'antd';
+import { Radio, Button, Modal, Popconfirm, DatePicker, Input } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
@@ -9,12 +9,15 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import BuilderProcessModal from 'apps/Workflow/WorkProcess/BuilderProcessModal';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
 const AntdDatePicker = StyledDatePicker(DatePicker);
 const AntdModal = StyledContentsModal(Modal);
+const AntdTextArea = StyledTextarea(Input.TextArea);
+
 // eslint-disable-next-line react/prefer-stateless-function
 class ValidationView extends Component {
   constructor(props) {
@@ -25,6 +28,7 @@ class ValidationView extends Component {
       workProcess: {},
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
       revDate: undefined,
+      obsoleteOpinion: '',
     };
   }
 
@@ -48,9 +52,8 @@ class ValidationView extends Component {
 
   onClickEvent = () => {
     const { onValidateProcess } = this.props;
-    const { selectedValue, workProcess, revDate } = this.state;
-    if (selectedValue === 2 && !revDate) return this.showMessage('개정일을 확인하십시오.');
-    onValidateProcess(selectedValue, revDate, workProcess);
+    const { selectedValue, workProcess, revDate, obsoleteOpinion } = this.state;
+    onValidateProcess(selectedValue, { revDate, obsoleteOpinion }, workProcess);
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
@@ -129,6 +132,16 @@ class ValidationView extends Component {
                     disabled={false}
                     readOnly={false}
                   />
+                </td>
+              </tr>
+              <tr
+                style={{
+                  display: selectedValue === 3 ? 'table-row' : 'none',
+                }}
+              >
+                <th>폐기 의견</th>
+                <td>
+                  <AntdTextArea rows={4} onChange={e => this.setState({ obsoleteOpinion: e?.target?.value })} />
                 </td>
               </tr>
             </tbody>

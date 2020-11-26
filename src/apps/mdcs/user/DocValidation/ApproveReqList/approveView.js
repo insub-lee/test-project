@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Radio, Button, Modal } from 'antd';
+import { Radio, Button, Modal, Input } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 
 const AntdModal = StyledContentsModal(Modal);
+const AntdTextArea = StyledTextarea(Input.TextArea);
+
 // eslint-disable-next-line react/prefer-stateless-function
 class ApproveView extends Component {
   constructor(props) {
@@ -69,7 +72,7 @@ class ApproveView extends Component {
   };
 
   render() {
-    const { WORK_SEQ, TASK_SEQ, onModalClose, REV_DATE, CHECKTYPE } = this.props;
+    const { WORK_SEQ, TASK_SEQ, onModalClose, REV_DATE, CHECKTYPE, OBSOLETE_OPINION } = this.props;
     const { selectedValue, coverView } = this.state;
     return (
       <>
@@ -88,6 +91,12 @@ class ApproveView extends Component {
               <tr style={{ display: CHECKTYPE === 'R' ? 'table-row' : 'none' }}>
                 <th style={{ width: '150px' }}>개정일</th>
                 <td>{REV_DATE}</td>
+              </tr>
+              <tr style={{ display: CHECKTYPE === 'O' ? 'table-row' : 'none' }}>
+                <th style={{ width: '150px' }}>폐기 의견</th>
+                <td>
+                  <AntdTextArea rows={4} value={OBSOLETE_OPINION || '의견 없음'} readOnly />
+                </td>
               </tr>
             </tbody>
           </table>
