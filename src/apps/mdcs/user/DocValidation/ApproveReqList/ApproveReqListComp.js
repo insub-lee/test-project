@@ -25,7 +25,7 @@ class ApproveReqListComp extends Component {
       revDate: undefined,
       checkType: undefined,
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
-      searchParam: {},
+      searchParam: { CHECKTYPE: 'O' },
       loading: false,
       pageSize: 10,
     };
@@ -99,7 +99,10 @@ class ApproveReqListComp extends Component {
     const { getCustomDataBind } = this.props;
     const rtnUrl = '/api/workflow/v1/common/approve/ValidateReqListHandler';
     this.spinningOn();
-    getCustomDataBind('POST', rtnUrl, { PARAM: params }, () => this.setState({ searchParam: params }, this.spinningOff));
+    // 폐기만 검색 CHECKTYPE : 'O'
+    getCustomDataBind('POST', rtnUrl, { PARAM: { ...params, CHECKTYPE: 'O' } }, () =>
+      this.setState({ searchParam: { ...params, CHECKTYPE: 'O' } }, this.spinningOff),
+    );
   };
 
   spinningOn = () => this.setState({ loading: true });
@@ -115,6 +118,7 @@ class ApproveReqListComp extends Component {
       taskOrginSeq: record.TASK_ORIGIN_SEQ,
       title: record.TITLE,
       revDate: record?.REV_DATE,
+      obsoleteOpinion: record?.OBSOLETE_OPINION,
       checkType: record?.CHECKTYPE,
     });
   };
@@ -137,7 +141,7 @@ class ApproveReqListComp extends Component {
   };
 
   render() {
-    const { workSeq, taskSeq, visible, coverView, revDate, checkType } = this.state;
+    const { workSeq, taskSeq, visible, coverView, revDate, checkType, obsoleteOpinion } = this.state;
     const { customDataList } = this.props;
     return (
       <Spin spinning={this.state.loading}>
@@ -149,7 +153,7 @@ class ApproveReqListComp extends Component {
           </div>
         </StyledHeaderWrapper>
         <StyledContentsWrapper>
-          <SearchBar getList={params => this.getList(params)} onChangePageSize={pageSize => this.setState({ pageSize })} />
+          <SearchBar getList={params => this.getList(params)} onChangePageSize={pageSize => this.setState({ pageSize })} typeSearch={false} />
           <AntdTable
             columns={this.getTableColumns()}
             dataSource={customDataList}
@@ -163,6 +167,7 @@ class ApproveReqListComp extends Component {
             <ApproveView
               {...this.props}
               REV_DATE={revDate}
+              OBSOLETE_OPINION={obsoleteOpinion}
               WORK_SEQ={workSeq}
               TASK_SEQ={taskSeq}
               CHECKTYPE={checkType}

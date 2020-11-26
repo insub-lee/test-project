@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Radio, Button, Popconfirm, Table, Spin, DatePicker } from 'antd';
+import { Radio, Button, Popconfirm, Table, Spin, DatePicker, Input } from 'antd';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import BuilderProcessModal from 'apps/Workflow/WorkProcess/BuilderProcessModal';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
+import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
 const AntdDatePicker = StyledDatePicker(DatePicker);
 const AntdTable = StyledAntdTable(Table);
+const AntdTextArea = StyledTextarea(Input.TextArea);
 
 // eslint-disable-next-line react/prefer-stateless-function
 class batchValidationView extends Component {
@@ -25,6 +27,7 @@ class batchValidationView extends Component {
       selectedRows: this.props?.selectedRows,
       loading: false,
       revDate: undefined,
+      obsoleteOpinion: '',
     };
   }
 
@@ -50,7 +53,7 @@ class batchValidationView extends Component {
 
   onClickEvent = () => {
     const { onValidateProcess, onCompleteProc } = this.props;
-    const { selectedValue, selectedRows, workProcess, revDate } = this.state;
+    const { selectedValue, selectedRows, workProcess, revDate, obsoleteOpinion } = this.state;
     if (selectedValue === 2 && !revDate) return this.showMessage('개정일을 확인하십시오.');
 
     this.spinningOn();
@@ -64,9 +67,9 @@ class batchValidationView extends Component {
 
       if (index === lastIdx) {
         this.spinningOff();
-        return onValidateProcess(selectedValue, revDate, { DRAFT_PROCESS: draftProcess }, onCompleteProc);
+        return onValidateProcess(selectedValue, { revDate, obsoleteOpinion }, { DRAFT_PROCESS: draftProcess }, onCompleteProc);
       }
-      return onValidateProcess(selectedValue, revDate, { DRAFT_PROCESS: draftProcess }, () => undefined);
+      return onValidateProcess(selectedValue, { revDate, obsoleteOpinion }, { DRAFT_PROCESS: draftProcess }, () => undefined);
     });
   };
 
@@ -157,6 +160,16 @@ class batchValidationView extends Component {
                       allowClear={false}
                       disabled={false}
                     />
+                  </td>
+                </tr>
+                <tr
+                  style={{
+                    display: selectedValue === 3 ? 'table-row' : 'none',
+                  }}
+                >
+                  <th>폐기 의견</th>
+                  <td>
+                    <AntdTextArea rows={4} onChange={e => this.setState({ obsoleteOpinion: e?.target?.value })} />
                   </td>
                 </tr>
               </tbody>
