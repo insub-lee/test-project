@@ -125,7 +125,7 @@ class CheckListComp extends Component {
       },
     });
 
-  onValidateProcess = (validate, revDate, workProcess, callBack) => {
+  onValidateProcess = (validate, addData, workProcess, callBack) => {
     const { id, submitHandlerBySaga } = this.props;
     let isByPass = true;
     const { DRAFT_PROCESS } = workProcess;
@@ -140,8 +140,10 @@ class CheckListComp extends Component {
         }
       });
     }
+    if (validate === 2 && !addData?.revDate) return message.error('개정일을 확인하십시오.');
+
     const { DRAFT_DATA } = DRAFT_PROCESS;
-    const nDraftData = { ...DRAFT_DATA, validateType: validate, revDate };
+    const nDraftData = { ...DRAFT_DATA, validateType: validate, ...addData };
     const nWorkProcess = { ...DRAFT_PROCESS, DRAFT_DATA: nDraftData };
     if (isByPass) {
       const fixUrl = '/api/workflow/v1/common/workprocess/draft';

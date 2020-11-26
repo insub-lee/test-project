@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Table, Modal, message, Spin } from 'antd';
+import { Icon, Table, Modal, message, Spin, Input } from 'antd';
 import moment from 'moment';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
@@ -9,8 +9,10 @@ import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal'
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import SearchBar from '../SearchBar';
 
+const AntdTextArea = StyledTextarea(Input.TextArea);
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
 
@@ -120,6 +122,7 @@ class ApproveListComp extends Component {
       title: record.TITLE,
       checkType: record?.CHECKTYPE,
       revDate: record?.REV_DATE,
+      obsoleteOpinion: record?.OBSOLETE_OPINION,
     });
   };
 
@@ -152,7 +155,7 @@ class ApproveListComp extends Component {
   };
 
   render() {
-    const { list, workSeq, taskSeq, visible, coverView, checkType, revDate } = this.state;
+    const { list, workSeq, taskSeq, visible, coverView, checkType, revDate, obsoleteOpinion } = this.state;
     return (
       <Spin spinning={this.state.loading}>
         <StyledHeaderWrapper>
@@ -174,12 +177,19 @@ class ApproveListComp extends Component {
             pagination={{ pageSize: this.state?.pageSize }}
           />
           <AntdModal title={`유효성 점검[${this.getCheckName()}]`} visible={visible} width={680} destroyOnClose onCancel={this.onModalClose} footer={[]}>
-            <StyledHtmlTable style={{ padding: '20px 20px 0', display: checkType === 'R' ? '' : 'none' }}>
+            {/* <StyledHtmlTable style={{ padding: '20px 20px 0', display: checkType === 'R' ? '' : 'none' }}> */}
+            <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
               <table>
                 <tbody>
-                  <tr>
+                  <tr style={{ display: checkType === 'R' ? 'table-row' : 'none' }}>
                     <th style={{ width: '180px' }}>개정일</th>
                     <td>{revDate}</td>
+                  </tr>
+                  <tr style={{ display: checkType === 'O' ? 'table-row' : 'none' }}>
+                    <th style={{ width: '180px' }}>폐기 의견</th>
+                    <td>
+                      <AntdTextArea rows={4} value={obsoleteOpinion || '의견 없음'} readOnly />
+                    </td>
                   </tr>
                 </tbody>
               </table>
