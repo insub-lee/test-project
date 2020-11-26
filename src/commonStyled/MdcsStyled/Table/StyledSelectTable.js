@@ -100,6 +100,13 @@ const StyledSelectTable = styled.div`
     border: 1px solid #adb5bd;
     display: 'none';
   }
+
+  #MDCS-scrollbar-wrapper {
+    div {
+      margin-bottom: 0px !important;
+      overflow-x: hidden !important;
+    }
+  }
 `;
 
 export default StyledSelectTable;
