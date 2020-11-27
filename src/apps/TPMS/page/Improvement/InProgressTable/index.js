@@ -107,18 +107,18 @@ const InProgressTable = () => {
       },
       {
         title: 'Level',
-        dataIndex: 'PRJ_LEVEL',
-        key: 'PRJ_LEVEL',
+        dataIndex: 'project_level',
+        key: 'project_level',
         width: '10%',
-        render: prjLevel => {
-          switch (prjLevel) {
-            case '1':
+        render: project_level => {
+          switch (project_level) {
+            case 1:
               return '본부';
-            case '2':
+            case 2:
               return '담당';
-            case '3':
+            case 3:
               return '팀';
-            case '4':
+            case 4:
               return 'Part';
             default:
               return '본부';
