@@ -26,11 +26,15 @@ const Registration = () => {
     formJson,
     formRef,
     isRedirect,
+    savedTemp,
     actions: { submitForm, saveTemp },
   } = useHooks({ originEmpNo: authInfo?.empNo || '', usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '' });
 
   if (isRedirect) {
     return <Redirect to="/apps/tpms/page/Improvement/RegisteredTable" />;
+  }
+  if (savedTemp) {
+    return <Redirect to="/apps/tpms/page/Improvement/TempTable" />;
   }
 
   return (
@@ -38,9 +42,9 @@ const Registration = () => {
       <ExpandableTitleContainer title="개선활동 - 등록/진행" nav={nav}>
         <Spin spinning={isAuthLoading || isLoading}>
           <form ref={formRef} autoComplete="off" onSubmit={submitForm}>
-            <input type="hidden" name="PRJ_LEADER_DEPT_CODE" value={authInfo?.userRoleInfoList?.[0]?.dpcd || ''} />
-            <input type="hidden" name="PRJ_LEADER_DEPT_NAME" value={authInfo?.userRoleInfoList?.[0]?.dpnm || ''} />
-            <input type="hidden" name="PRJ_LEADER" value={authInfo?.empNo || ''} />
+            <input type="hidden" name="reg_dept_id" value={authInfo?.deptId || ''} />
+            <input type="hidden" name="reg_dept_name" value={authInfo?.deptName || ''} />
+            <input type="hidden" name="project_leader" value={authInfo?.empNo || ''} />
             <FormView datas={formJson} noBoarder noPadding isImprove />
             <BtnWrap>
               <Button type="submit" color="primary" disabled={isLoading}>

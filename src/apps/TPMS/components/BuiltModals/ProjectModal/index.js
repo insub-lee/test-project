@@ -52,7 +52,7 @@ class ProjectModal extends React.Component {
       },
       {
         title: 'Level',
-        dataIndex: 'prj_level',
+        dataIndex: 'project_level',
         percentWidth: 10,
       },
       {

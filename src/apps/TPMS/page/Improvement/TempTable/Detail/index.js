@@ -19,7 +19,7 @@ const Detail = ({ info, closeAll, callback }) => {
     isRedirect,
     formData,
     actions: { submitForm, saveTemp, deleteTemp },
-  } = useHooks({ info, usrid: authInfo?.empNo || '', usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '', callback });
+  } = useHooks({ info, usrid: authInfo?.empNo || '', usrnm: authInfo?.usrNm || '', deptId: authInfo?.deptId || '', callback });
 
   if (isRedirect) {
     return <Redirect to="/apps/tpms/page/Improvement/RegisteredTable" />;
@@ -29,11 +29,11 @@ const Detail = ({ info, closeAll, callback }) => {
     <div>
       <Spin spinning={isAuthLoading || isLoading}>
         <form autoComplete="off" ref={formRef} onSubmit={submitForm}>
-          <input type="hidden" name="tempid" value={info.tempid} />
-          <input type="hidden" name="PRJ_ID" value={info.PRJ_ID} />
-          <input type="hidden" name="PRJ_LEADER" value={authInfo?.empNo} />
-          <input type="hidden" name="PRJ_LEADER_DEPT_CODE" value={authInfo?.userRoleInfoList?.[0]?.dpcd || ''} />
-          <input type="hidden" name="PRJ_LEADER_DEPT_NAME" value={authInfo?.userRoleInfoList?.[0]?.dpnm || ''} />
+          {/* <input type="hidden" name="tempid" value={info?.tempid} /> */}
+          <input type="hidden" name="task_seq" value={info?.task_seq} />
+          <input type="hidden" name="proejct_leader" value={authInfo?.empNo} />
+          <input type="hidden" name="reg_dept_id" value={authInfo?.deptId || ''} />
+          <input type="hidden" name="reg_dept_name" value={authInfo?.deptName || ''} />
           <FormView useDefaultDatas defaultDatas={formData} noBoarder isImprove />
           <BtnWrap>
             <Button type="submit" color="primary">

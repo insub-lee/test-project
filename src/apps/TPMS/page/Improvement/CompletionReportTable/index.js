@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useMemo, useState } from 'react';
 import moment from 'moment';
 import Table from 'rc-table';
