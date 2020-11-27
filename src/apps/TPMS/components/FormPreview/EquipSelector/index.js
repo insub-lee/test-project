@@ -37,7 +37,7 @@ class EquipSelector extends React.Component {
     const { readOnly } = this.props;
     return (
       <StyledEquipSelector>
-        <input type="hidden" name="equip_selector" value={JSON.stringify(values)} />
+        <input type="hidden" name="equipment_model" value={JSON.stringify(values)} />
         <ul>
           {values.map((value, index) => (
             <li className="equipment_tag" key={value.keyno}>

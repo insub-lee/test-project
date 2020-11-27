@@ -12,8 +12,17 @@ export default ({ sysid, mnuid }) => {
   const [currentTotal, setCurrentTotal] = useState(0);
 
   useEffect(() => {
+    // const originalFetchList = async params => {
+    //   const url = '/apigate/v1/portal/sign/task';
+    //   const { response, error } = await request({
+    //     url,
+    //     params,
+    //   });
+
+    //   return { response, error };
+    // };
     const fetchList = async params => {
-      const url = '/apigate/v1/portal/sign/task';
+      const url = `/api/tpms/v1/common/approval`;
       const { response, error } = await request({
         url,
         params,
@@ -22,15 +31,17 @@ export default ({ sysid, mnuid }) => {
       return { response, error };
     };
 
-    const requestQuery = {
-      sysid,
-      mnuid,
-      type: 'list',
-      currentPage: pagination.current || 1,
-      pageSize: pagination.pageSize || 10,
-    };
-
+    // originalFetchList({
+    //   sysid,
+    //   mnuid,
+    //   type: 'list',
+    //   currentPage: pagination.current || 1,
+    //   pageSize: pagination.pageSize || 10,
+    // });
     setIsLoading(true);
+
+    const requestQuery = { is_temp: 1, currentPage: pagination.current - 1 || 0, pageSize: pagination.pageSize || 10 };
+
     fetchList(requestQuery)
       .then(({ response, error }) => {
         if (response && !error) {

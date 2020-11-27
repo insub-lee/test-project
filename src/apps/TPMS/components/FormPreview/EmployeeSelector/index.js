@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -18,7 +19,6 @@ class EmployeeSelector extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    // console.debug('@@@ Update Employee Select', this.state.values, this.props.values);
     const { values: prevValues } = prevProps;
     const { values } = this.props;
 
@@ -49,7 +49,6 @@ class EmployeeSelector extends React.Component {
   }
 
   updateValue(index, nextValue) {
-    console.debug('@@@ update value employees', index, nextValue);
     this.setState(prevState => {
       const { values } = prevState;
       values[index].values = nextValue;
@@ -86,9 +85,9 @@ class EmployeeSelector extends React.Component {
                 <>
                   <input type="hidden" name={`user_selector_${index}`} value={JSON.stringify(item.values)} />
                   <ul className="users">
-                    {item.values.map(({ EMP_NO, NAME_KOR, PSTN_NAME_KOR }, userIndex) => (
-                      <li key={EMP_NO} className="user_tag btn_left">
-                        <span>{`${EMP_NO} ${NAME_KOR} ${PSTN_NAME_KOR}`}</span>
+                    {item.values.map(({ emp_no, name_kor, pstn_name_kor }, userIndex) => (
+                      <li key={emp_no} className="user_tag btn_left">
+                        <span>{`${emp_no} ${name_kor} ${pstn_name_kor}`}</span>
                         {!readOnly && !item.fixed && (
                           <button type="button" onClick={() => this.removeUser(index, userIndex)}>
                             <i className="fas fa-times" />
