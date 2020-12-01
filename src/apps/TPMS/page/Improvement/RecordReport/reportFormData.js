@@ -53,9 +53,9 @@ export default [
       name: 'projectLevel',
       values: [
         { label: '본부', value: '1' },
-        { label: '담당', value: '2' },
-        { label: '팀', value: '3' },
-        { label: 'Part', value: '4' },
+        { label: '담당', value: 2 },
+        { label: '팀', value: 3 },
+        { label: 'Part', value: 4 },
       ],
     },
     seq: 4,

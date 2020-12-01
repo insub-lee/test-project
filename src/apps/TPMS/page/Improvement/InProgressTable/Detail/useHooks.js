@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { useState, useMemo, useCallback, useRef } from 'react';
 import moment from 'moment';
 import request from 'utils/request';
@@ -11,21 +12,21 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
   const dropModalRef = useRef(null);
 
   const defaultFormData = useMemo(() => {
-    const { ctqLabel, yvalLabel, baselinevalLabel, targetvalLabel, remarkLabel } =
-      info.PRJ_TYPE === 'W'
+    const { key_performance_indicators, current_status, goal, apply_target, note } =
+      info?.project_type === 'W'
         ? {
-            ctqLabel: 'FAB',
-            yvalLabel: 'Area',
-            baselinevalLabel: '피해장수(수량)',
-            targetvalLabel: '요인(부서)',
-            remarkLabel: '발생일',
+            key_performance_indicators: 'FAB',
+            current_status: 'Area',
+            goal: '피해장수(수량)',
+            apply_target: '요인(부서)',
+            note: '발생일',
           }
         : {
-            ctqLabel: '핵심성과지표',
-            yvalLabel: '현재 상태',
-            baselinevalLabel: '목표',
-            targetvalLabel: '적용 대상',
-            remarkLabel: '비고',
+            key_performance_indicators: '핵심성과지표',
+            current_status: '현재 상태',
+            goal: '목표',
+            apply_target: '적용 대상',
+            note: '비고',
           };
     const formData = [
       {
@@ -111,10 +112,10 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           disabled: true,
           readOnly: true,
           values: [
-            { label: '본부', value: '1', selected: info.PRJ_LEVEL === '1' },
-            { label: '담당', value: '2', selected: info.PRJ_LEVEL === '2' },
-            { label: '팀', value: '3', selected: info.PRJ_LEVEL === '3' },
-            { label: 'Part', value: '4', selected: info.PRJ_LEVEL === '4' },
+            { label: '본부', value: 1, selected: info?.project_type === 1 },
+            { label: '담당', value: 2, selected: info?.project_level === 2 },
+            { label: '팀', value: 3, selected: info.project_level === 3 },
+            { label: 'Part', value: 4, selected: info?.project_level === 4 },
           ],
         },
         seq: 5,
@@ -124,39 +125,39 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         classname: 'improve_form std width50 frCustom marginNone',
         option: {
           label: 'Performance Type',
-          name: 'PERFORM_TYPE',
+          name: 'performance_type',
           disabled: true,
           readOnly: true,
           values: [
             {
               label: 'Cost',
               value: 'C',
-              selected: info.PERFORM_TYPE === 'C',
+              selected: info?.performance_type === 'C',
             },
             {
               label: 'Delivery',
               value: 'D',
-              selected: info.PERFORM_TYPE === 'D',
+              selected: info?.performance_type === 'D',
             },
             {
               label: 'Morale',
               value: 'M',
-              selected: info.PERFORM_TYPE === 'M',
+              selected: info?.performance_type === 'M',
             },
             {
               label: 'Productivity',
               value: 'P',
-              selected: info.PERFORM_TYPE === 'P',
+              selected: info?.performance_type === 'P',
             },
             {
               label: 'Quality',
               value: 'Q',
-              selected: info.PERFORM_TYPE === 'Q',
+              selected: info?.performance_type === 'Q',
             },
             {
               label: 'Safety',
               value: 'S',
-              selected: info.PERFORM_TYPE === 'S',
+              selected: info?.performance_type === 'S',
             },
           ],
         },
@@ -166,10 +167,11 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         type: 'text',
         classname: 'improve_form width20 flCustom',
         option: {
-          label: ctqLabel,
-          name: 'CTQ',
+          label: key_performance_indicators,
+          name: 'key_performance_indicators',
+
           placeholder: '',
-          value: info.CTQ,
+          value: info?.key_performance_indicators,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -180,10 +182,10 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         type: 'text',
         classname: 'improve_form width20 flCustom',
         option: {
-          label: yvalLabel,
-          name: 'Y_VAL',
+          label: current_status,
+          name: 'current_status',
           placeholder: '',
-          value: info.Y_VAL,
+          value: info?.current_status,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -194,10 +196,10 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         type: 'text',
         classname: 'improve_form width20 flCustom',
         option: {
-          label: baselinevalLabel,
-          name: 'BASELINE_VAL',
+          label: goal,
+          name: 'goal',
           placeholder: '',
-          value: info.BASELINE_VAL,
+          value: info?.goal,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -208,10 +210,10 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         type: 'text',
         classname: 'improve_form width20 flCustom',
         option: {
-          label: targetvalLabel,
-          name: 'TARGET_VAL',
+          label: apply_target,
+          name: 'apply_target',
           placeholder: '',
-          value: info.TARGET_VAL,
+          value: info?.apply_target,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -222,10 +224,10 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         type: 'text',
         classname: 'improve_form width20 flCustom marginNone',
         option: {
-          label: remarkLabel,
-          name: 'REMARK',
+          label: note,
+          name: 'note',
           placeholder: '',
-          value: info.REMARK,
+          value: info?.note,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -237,9 +239,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         classname: 'improve_form width50 flCustom',
         option: {
           label: '프로젝트를 시작하게 된 배경 ',
-          name: 'PRJ_BACK_DESC',
+          name: 'project_reason',
           placeholder: '',
-          value: info.PRJ_BACK_DESC,
+          value: info?.problem_improvement,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -251,9 +253,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         classname: 'improve_form width50 frCustom',
         option: {
           label: '문제점/개선',
-          name: 'PROBLEM_DESC',
+          name: 'problem_improvement',
           placeholder: '',
-          value: info.PROBLEM_DESC,
+          value: info?.problem_improvement,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -265,9 +267,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         classname: 'improve_form width50 flCustom',
         option: {
           label: '해결 방법',
-          name: 'HOW_TO_DESC',
+          name: 'solution',
           placeholder: '',
-          value: info.HOW_TO_DESC,
+          value: info?.solution,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -279,9 +281,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         classname: 'improve_form width50 frCustom',
         option: {
           label: '범위',
-          name: 'SCOPE_DESC',
+          name: 'scope',
           placeholder: '',
-          value: info.SCOPE_DESC,
+          value: info?.scope,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -299,13 +301,17 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
               type: 'range',
               values: [
                 {
-                  name: 'START_DATE',
-                  value: info.START_DATE ? moment(info.START_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  name: 'situation_analyze_start_date',
+                  value: info?.situation_analyze_start_date
+                    ? moment(info?.situation_analyze_start_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                 },
                 {
-                  name: 'DEFINE_DUE_DATE',
-                  value: info.DEFINE_DUE_DATE ? moment(info.DEFINE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  name: 'situation_analyze_end_date',
+                  value: info?.situation_analyze_end_date
+                    ? moment(info?.situation_analyze_end_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                 },
               ],
@@ -315,8 +321,8 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
               type: 'single',
               values: [
                 {
-                  name: 'MEASURE_DUE_DATE',
-                  value: info.MEASURE_DUE_DATE ? moment(info.MEASURE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  name: 'cause_analyze_due_date',
+                  value: info?.cause_analyze_due_date ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
                   readOnly: true,
                 },
               ],
@@ -326,9 +332,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
               type: 'single',
               values: [
                 {
-                  name: 'ANALYZE_DUE_DATE',
-                  value: info.ANALYZE_DUE_DATE ? moment(info.ANALYZE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: true,
+                  name: 'measure_due_date',
+                  value: info?.measure_due_date ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  readOnly: false,
                 },
               ],
             },
@@ -337,9 +343,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
               type: 'single',
               values: [
                 {
-                  name: 'IMPROVE_DUE_DATE',
-                  value: info.IMPROVE_DUE_DATE ? moment(info.IMPROVE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: true,
+                  name: 'improvement_due_date',
+                  value: info?.improvement_due_date ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  readOnly: false,
                 },
               ],
             },

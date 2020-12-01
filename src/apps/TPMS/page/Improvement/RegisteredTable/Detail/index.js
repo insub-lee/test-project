@@ -10,26 +10,27 @@ import useAuth from '../../../../hooks/useAuth';
 
 const Detail = ({ info, usrid, dpcd, dpnm }) => {
   const { authInfo, isError: isAuthError, isLoading: isAuthLoading } = useAuth();
-  const { defaultFormData } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '' });
+  const { defaultFormData, approverList } = useHooks({ info, usrnm: authInfo?.usrNm || '', deptId: authInfo?.deptId || '' });
   return (
     <div>
       <Spin spinning={isAuthLoading}>
-        <SignProcessList list={info.signPrclistInfo} />
+        {/* <SignProcessList list={info?.signPrclistInfo} /> */}
+        <SignProcessList list={approverList} />
         <form autoComplete="off" onSubmit={e => e.preventDefault()}>
-          <input type="hidden" name="docno" value={info.docno} />
-          <input type="hidden" name="signlineno" value={info.signlineno} />
-          <input type="hidden" name="signno" value={info.signno} />
-          <input type="hidden" name="signno" value={info.signno} />
-          <input type="hidden" name="sysid" value="TPMS" />
-          <input type="hidden" name="mnuid" value="TPMS1040" />
-          <input type="hidden" name="PRJ_ID" value={info.PRJ_ID} />
-          <input type="hidden" name="insdt" value={info.insdt} />
-          <input type="hidden" name="PRJ_LEADER" value={usrid} />
-          <input type="hidden" name="PRJ_TYPE" value={info.PRJ_TYPE} />
-          <input type="hidden" name="PRJ_LEVEL" value={info.PRJ_LEVEL} />
-          <input type="hidden" name="PERFORM_TYPE" value={info.PERFORM_TYPE} />
-          <input type="hidden" name="PRJ_LEADER_DEPT_CODE" value={dpcd || ''} />
-          <input type="hidden" name="PRJ_LEADER_DEPT_NAME" value={dpnm || ''} />
+          <input type="hidden" name="task_seq" value={info?.task_seq} />
+          {/* <input type="hidden" name="signlineno" value={info?.signlineno} /> */}
+          {/* <input type="hidden" name="signno" value={info?.signno} /> */}
+          {/* <input type="hidden" name="signno" value={info?.signno} /> */}
+          {/* <input type="hidden" name="sysid" value="TPMS" /> */}
+          {/* <input type="hidden" name="mnuid" value="TPMS1040" /> */}
+          <input type="hidden" name="project_id" value={info?.project_id} />
+          <input type="hidden" name="reg_dttm" value={info?.reg_dttm} />
+          <input type="hidden" name="project_leader" value={usrid} />
+          <input type="hidden" name="project_type" value={info?.project_type} />
+          <input type="hidden" name="project_level" value={info?.project_level} />
+          <input type="hidden" name="performance_type" value={info?.performance_type} />
+          <input type="hidden" name="project_leader_dept_id" value={authInfo?.deptId || ''} />
+          <input type="hidden" name="project_leader_dept_name" value={authInfo?.deptName || ''} />
           <FormView datas={defaultFormData} noBoarder isImprove />
         </form>
       </Spin>
