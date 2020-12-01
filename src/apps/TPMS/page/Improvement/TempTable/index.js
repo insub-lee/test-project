@@ -47,7 +47,7 @@ const TempTable = () => {
     isError,
     pagination,
     action: { pageHandler, pageSizeHandler },
-  } = useSignList({ sysid: 'TPMS', mnuid: 'TPMS1020' });
+  } = useSignList({ is_temp: 1, menu_id: 'temp', step: 0 });
 
   const {
     modalStatus,

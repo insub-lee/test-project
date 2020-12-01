@@ -1,7 +1,8 @@
+/* eslint-disable camelcase */
 import { useState, useEffect, useCallback } from 'react';
 import request from 'utils/request';
 
-export default ({ sysid, mnuid }) => {
+export default ({ is_temp, menu_id, step }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
   const [isError, setIsError] = useState(false);
@@ -40,7 +41,7 @@ export default ({ sysid, mnuid }) => {
     // });
     setIsLoading(true);
 
-    const requestQuery = { is_temp: 1, currentPage: pagination.current - 1 || 0, pageSize: pagination.pageSize || 10 };
+    const requestQuery = { is_temp, step, currentPage: pagination.current - 1 || 0, pageSize: pagination.pageSize || 10 };
 
     fetchList(requestQuery)
       .then(({ response, error }) => {
@@ -63,7 +64,7 @@ export default ({ sysid, mnuid }) => {
         setIsError(true);
         setIsLoading(false);
       });
-  }, [sysid, mnuid, pagination]);
+  }, [menu_id, pagination]);
 
   const pageHandler = useCallback(page => {
     setPagination(prevState => ({ ...prevState, current: page }));
