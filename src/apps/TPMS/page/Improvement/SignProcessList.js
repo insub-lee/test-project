@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -23,6 +24,48 @@ const Styled = styled.div`
 `;
 
 const getDateString = (value, format = 'YYYY-MM-DD') => (value ? moment(value, 'YYYYMMDD').format(format) : '');
+
+const statusRenderer = status => {
+  switch (status) {
+    case 0: {
+      // 미결재
+      return <td>결재 대기</td>;
+    }
+    case 1: {
+      // 결재중
+      return <td>결재 중</td>;
+    }
+    case 2: {
+      // 승인
+      return <td>등록 승인</td>;
+    }
+    case 9: {
+      // 반려
+      return <td>등록 반려</td>;
+    }
+
+    default: {
+      return <td></td>;
+    }
+  }
+};
+
+const stepRenderer = step => {
+  switch (step) {
+    case 1: {
+      return <td>프로젝트 등록</td>;
+    }
+    case 2: {
+      return <td>등록 1차 결재</td>;
+    }
+    case 3: {
+      return <td>등록 최종 결재</td>;
+    }
+
+    default:
+      return <td></td>;
+  }
+};
 
 const SignPrcListInfo = ({ list, noPadding }) => (
   <Styled noPadding={noPadding}>
@@ -54,23 +97,27 @@ const SignPrcListInfo = ({ list, noPadding }) => (
           </tr>
         )}
         {list.map(row => {
-          if (row.step === 'Drop_사유') {
+          if (row?.step === 'Drop_사유') {
             return (
-              <tr key={row.seq}>
-                <td>{row.step}</td>
-                <td colSpan={6}>{row.dropreason}</td>
+              <tr key={row?.seq}>
+                <td>{row?.step}</td>
+                <td colSpan={6}>{row?.dropreason}</td>
               </tr>
             );
           }
+
+          const appv_member = JSON.parse(row?.appv_member)[0];
+          const { step, appv_status } = row;
+          console.debug('### appv_member:', appv_member);
           return (
-            <tr key={row.seq}>
-              <td>{row.step}</td>
-              <td>{row.usrid}</td>
-              <td>{row.dpnm}</td>
-              <td>{row.jgnm}</td>
-              <td>{row.usrnm}</td>
-              <td>{getDateString(row.approvedt)}</td>
-              <td>{row.sign}</td>
+            <tr key={step + JSON.stringify(appv_member)}>
+              {stepRenderer(step)}
+              <td>{appv_member?.EMP_NO}</td>
+              <td>{appv_member?.DEPT_NAME_KOR}</td>
+              <td>{appv_member?.PSTN_NAME_KOR}</td>
+              <td>{appv_member?.NAME_KOR}</td>
+              <td>{getDateString(new Date(row?.reg_dttm))}</td>
+              {statusRenderer(appv_status)}
             </tr>
           );
         })}
