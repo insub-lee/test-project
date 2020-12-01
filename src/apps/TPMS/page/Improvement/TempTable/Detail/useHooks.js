@@ -615,6 +615,7 @@ export default ({ info, usrid = '', usrnm, deptId = '', callback = () => {} }) =
       payload.project_level = parseInt(project_level || 0, 10);
       payload.task_seq = parseInt(task_seq || 0, 10);
       payload.is_temp = 0;
+      payload.step = 0;
 
       const options = {
         url: `/api/tpms/v1/common/approval`,
@@ -684,6 +685,7 @@ export default ({ info, usrid = '', usrnm, deptId = '', callback = () => {} }) =
     payload.project_level = parseInt(project_level || 0, 10);
     payload.task_seq = parseInt(task_seq || 0, 10);
     payload.is_temp = 1;
+    payload.step = 0;
 
     const options = {
       url: `/api/tpms/v1/common/approval`,

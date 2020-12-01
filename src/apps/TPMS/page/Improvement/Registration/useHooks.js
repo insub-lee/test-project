@@ -190,7 +190,7 @@ const defaultFormData = [
     classname: 'improve_form width50 frCustom',
     option: {
       label: '문제점/개선',
-      name: 'problem_improvment',
+      name: 'problem_improvement',
       placeholder: '',
       value: '',
       required: true,
@@ -483,8 +483,8 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
     const {
       situation_analyze_start_date,
       situation_analyze_end_date,
-      measure_due_date,
       cause_analyze_due_date,
+      measure_due_date,
       improvement_due_date,
       completion_due_date,
     } = payload;
@@ -570,6 +570,7 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       payload.project_level = parseInt(project_level || 0, 10);
       payload.reg_user_id = originEmpNo;
       payload.reg_user_name = usrnm;
+      payload.step = 0;
 
       setIsLoading(true);
       postTask(payload)
@@ -636,11 +637,11 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
     payload.project_level = parseInt(project_level || 0, 10);
     payload.reg_user_id = originEmpNo;
     payload.reg_user_name = usrnm;
+    payload.step = 0;
     setIsLoading(true);
 
     postTask(payload)
       .then(({ response }) => {
-        console.debug('### response, error', response);
         const { result, error } = response;
         if (result && !error) {
           setSavedTemp(true);
