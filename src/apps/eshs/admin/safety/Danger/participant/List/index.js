@@ -54,6 +54,17 @@ class List extends Component {
     };
   }
 
+  /*
+      const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+      const apiInfo = {
+        key: 'treeSelectData',
+        type: 'POST',
+        url: '/api/admin/v1/common/categoryMapList',
+        params: { PARAM: { NODE_ID: 1831, USE_YN: 'Y', MAX_LVL: 6 } },
+      };
+      getCallDataHandlerReturnRes(id, apiInfo, this.initDataApiCallback);
+  */
+
   componentDidMount() {
     const { sagaKey: id, getExtraApiData, changeSearchData, getListData, changeFormData, workInfo } = this.props;
     const apiAry = [
@@ -61,7 +72,7 @@ class List extends Component {
         key: 'treeSelectData',
         type: 'POST',
         url: '/api/admin/v1/common/categoryMapList',
-        params: { PARAM: { NODE_ID: 1831 } },
+        params: { PARAM: { NODE_ID: 1831, USE_YN: 'Y', MAX_LVL: 6 } },
       },
     ];
     changeSearchData(id, 'DE_YEAR', `AND W.DE_YEAR = '${moment().format('YYYY')}'`);
@@ -359,30 +370,35 @@ class List extends Component {
       {
         title: '사번',
         align: 'center',
+        width: '10%',
         dataIndex: 'EMPLOYEE_NUM',
       },
       {
         title: '이름',
         align: 'center',
+        width: '15%',
         dataIndex: 'NAME',
       },
       {
         title: '직위',
         align: 'center',
+        width: '15%',
         dataIndex: 'PSTN',
       },
       {
         title: '부서명',
         align: 'center',
+        width: '15%',
         dataIndex: 'DEPARTMENT',
       },
       {
         title: '분류',
         align: 'center',
         dataIndex: 'SDIV_NODE_ID',
+        width: '45%',
         render: (text, record) => (
           <AntdTreeSelect
-            style={{ width: '300px' }}
+            style={{ width: '100%' }}
             className="mr5 select-sm"
             defaultValue={text}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
@@ -461,7 +477,7 @@ class List extends Component {
             rowSelection={{ selectedRowKeys: listSelectRowKeys, onChange: this.onSelectChange }}
           />
           <AntdModal
-            width={900}
+            width="80%"
             visible={this.state.isModal || this.state.isInsertModal}
             title="참여자 명단 검색"
             onCancel={this.onCancel}
@@ -469,40 +485,43 @@ class List extends Component {
             footer={null}
             className="modal-table-pad"
           >
-            <StyledContentsWrapper>
-              <div className="selSaveWrapper alignLeft">
-                <AntdSelect className="mr5 select-sm" defaultValue={this.state.searchType} onChange={value => this.setState({ searchType: value })}>
+            <>
+              <StyledCustomSearchWrapper>
+                <AntdSelect
+                  className="mr5 select-sm"
+                  style={{ width: 100 }}
+                  defaultValue={this.state.searchType}
+                  onChange={value => this.setState({ searchType: value })}
+                >
                   <Option value="NAME">이름</Option>
                   <Option value="NO">사번</Option>
                   <Option value="DEPT">소속</Option>
                   <Option value="PSTN">직위</Option>
                 </AntdSelect>
                 <AntdInput
-                  style={{ width: 600 }}
+                  style={{ width: 500 }}
                   className="ant-input-sm ant-input-inline mr5"
                   placeholder=" 검색어를 입력하세요"
                   allowClear
                   onChange={e => this.setState({ keyword: e.target.value })}
                   onPressEnter={this.modalSearch}
                 />
-                <StyledButton className="btn-primary btn-first btn-sm" onClick={this.modalSearch}>
+                <StyledButton className="btn-gray btn-first btn-sm" onClick={this.modalSearch}>
                   검색
                 </StyledButton>
-              </div>
+              </StyledCustomSearchWrapper>
               {this.state.isInsertModal ? (
                 <>
                   <AntdTable
-                    className="tableWrapper"
                     columns={userInsertCol}
                     bordered
                     rowKey="USER_ID"
                     dataSource={userModalData || []}
                     footer={() => <span>{`${(userModalData && userModalData.length) || 0} 건`}</span>}
                     rowSelection={rowSelection}
-                    scroll={{ y: 455 }}
                     pagination={false}
                   />
-                  <StyledButtonWrapper className="btn-wrap-center">
+                  <StyledButtonWrapper className="btn-wrap-center" style={{ marginTop: '10px' }}>
                     <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onSave}>
                       저장
                     </StyledButton>
@@ -525,7 +544,7 @@ class List extends Component {
                   })}
                 />
               )}
-            </StyledContentsWrapper>
+            </>
           </AntdModal>
         </StyledContentsWrapper>
       </>
