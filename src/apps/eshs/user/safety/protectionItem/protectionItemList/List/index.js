@@ -393,11 +393,11 @@ class List extends React.Component {
                   <tr>
                     <th>사진</th>
                     <td>
-                      {viewType.toUpperCase() === 'VIEW' && result.attachs && result.attachs.fileList.length
-                        ? result.attachs.fileList.map(item => (
-                            <img src={`http://192.168.251.14:10197/down/file/${item.FILE_SEQ}`} alt="사진이 없습니다." width="150px" />
-                          ))
-                        : ''}
+                      {viewType.toUpperCase() === 'VIEW' &&
+                        result.attachs &&
+                        result.attachs.fileList &&
+                        result.attachs.fileList.length > 0 &&
+                        result.attachs.fileList.map(item => <img src={`/down/file/${item.FILE_SEQ}`} alt={requestValue.KIND} width="150px" />)}
                     </td>
                   </tr>
                   <tr>
