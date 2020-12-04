@@ -460,7 +460,7 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       return;
     }
 
-    const equipment_model = JSON.parse(payload.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
+    const equipment_model = JSON.parse(payload?.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
     if (equipment_model.length < 1) {
       alertMessage.alert('선택된 장비가 없습니다.');
       debug('선택된 장비가 없습니다.');
@@ -491,8 +491,8 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
     const dueDates = [
       moment(moment(situation_analyze_start_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(situation_analyze_end_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
-      moment(moment(measure_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(cause_analyze_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(measure_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(improvement_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(completion_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
     ];
