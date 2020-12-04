@@ -21,19 +21,13 @@ const Detail = ({ info, callback }) => {
     defaultFormData,
     dropModalRef,
     actions: { submitForm, openDropModal },
-  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '', callback });
+  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '', callback });
   return (
     <div>
       <Spin spinning={isAuthLoading || isLoading}>
-        <SignProcessList list={info.signPrclistInfo} />
+        <SignProcessList info={info} />
         <form autoComplete="off" onSubmit={submitForm}>
-          <input type="hidden" name="signlineno" value={info.signlineno} />
-          <input type="hidden" name="signno" value={info.signno} />
-          <input type="hidden" name="docno" value={info.docno} />
-          {/* Default System Id */}
-          <input type="hidden" name="sysid" value="TPMS" />
-          {/* Default SyStem MenuId */}
-          <input type="hidden" name="mnuid" value="TPMS1060" />
+          <input type="hidden" name="task_seq" value={info?.task_seq} />
           <FormView datas={defaultFormData} noBoarder isImprove />
           <BtnWrap>
             <Button type="submit" color="primary">
@@ -45,16 +39,7 @@ const Detail = ({ info, callback }) => {
           </BtnWrap>
         </form>
       </Spin>
-      <DropModal
-        ref={dropModalRef}
-        signlineno={info.signlineno}
-        signno={info.signno}
-        docno={info.docno}
-        phase={info.phase}
-        sysid="TPMS"
-        mnuid="TPMS1060"
-        callback={callback}
-      />
+      <DropModal ref={dropModalRef} task_seq={info?.task_seq} step={info?.step} callback={callback} />
     </div>
   );
 };

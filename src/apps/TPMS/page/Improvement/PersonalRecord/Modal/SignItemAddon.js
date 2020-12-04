@@ -12,16 +12,16 @@ const SignItemAddon = ({ signProcess }) => (
         <ul className="mergeSubForm">
           <li>
             <span className="mergeSpan">리더 코멘트</span>
-            <textarea className="mergeTextarea" name="define_leader_comment" value={signProcess.define_leader_comment} readOnly />
+            <textarea className="mergeTextarea" name="step_one_comment" value={signProcess.step_one_comment} readOnly />
           </li>
           <li>
             <span className="mergeSpan">파일첨부</span>
-            {signProcess.define_attach_file_path ? (
-              <a href={signProcess.define_attach_file_path} style={{ padding: 10, background: '#e7e7e7', color: '#111b27' }} download>
-                <i className="fas fa-paperclip" /> {signProcess.define_attach_file}
+            {signProcess.step_one_file_path ? (
+              <a href={signProcess.step_one_file_path} style={{ padding: 10, background: '#e7e7e7', color: '#111b27' }} download>
+                <i className="fas fa-paperclip" /> {signProcess.step_one_file_name}
               </a>
             ) : (
-              <input type="text" className="input mergeInput" name="define_attach_file" value={signProcess.define_attach_file} readOnly />
+              <input type="text" className="input mergeInput" name="define_attach_file" value={signProcess.step_one_file_name} readOnly />
             )}
           </li>
           <li>

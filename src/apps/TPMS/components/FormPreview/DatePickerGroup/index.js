@@ -6,9 +6,9 @@ import StyledDatePickerGroup from './StyledDatePickerGroup';
 const DatePickerGroup = ({ items }) => (
   <StyledDatePickerGroup>
     <ul className="sub_form">
-      {items.map(item => (
-        <li key={item.seq}>
-          <DatePicker useSubLabel label={item.label} type={item.type} values={item.values} />
+      {items.map(({ values, type, label, seq }) => (
+        <li key={`${seq + values + type + label}`}>
+          <DatePicker useSubLabel label={label} type={type} values={values} />
         </li>
       ))}
     </ul>

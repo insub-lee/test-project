@@ -69,7 +69,10 @@ class SearchEquipModal extends React.Component {
   }
 
   pageHandler(page) {
-    this.setState(prevState => ({ pagination: prevState.pagination.set('current', page), isAllChecked: false }), () => this.fetchData());
+    this.setState(
+      prevState => ({ pagination: prevState.pagination.set('current', page), isAllChecked: false }),
+      () => this.fetchData(),
+    );
   }
 
   pageSizeHandler(e) {
@@ -83,7 +86,7 @@ class SearchEquipModal extends React.Component {
   }
 
   async fetchSelector() {
-    const url = '/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=FABLIST';
+    const url = '/api/tpms/v1/common/searchInfo?type=fab';
     const { response, error } = await service.board.get(url);
     if (response && !error) {
       const { list } = response;
@@ -97,7 +100,8 @@ class SearchEquipModal extends React.Component {
   }
 
   async fetchSelectorArea() {
-    const url = '/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=AREALIST';
+    const url = `/api/tpms/v1/common/searchInfo?type=area`;
+
     const { response, error } = await service.board.get(url);
     if (response && !error) {
       const { list } = response;
@@ -111,14 +115,14 @@ class SearchEquipModal extends React.Component {
   }
 
   async fetchSelectorKeyno() {
-    const requestQuery = {
-      fab: this.state.fab === 'all' ? undefined : this.state.fab,
-      area: this.state.area === 'all' ? undefined : this.state.area,
-    };
-    const queryString = jsonToQueryString(requestQuery);
-    const url = `/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=KEYNOLIST`;
-    const getUrl = `${url}&${queryString}`;
-    const { response, error } = await service.board.get(getUrl);
+    // const requestQuery = {
+    //   fab: this.state.fab === 'all' ? undefined : this.state.fab,
+    //   area: this.state.area === 'all' ? undefined : this.state.area,
+    // };
+    // const queryString = jsonToQueryString(requestQuery);
+    const url = `/api/tpms/v1/common/searchInfo?type=keyno`;
+    // const getUrl = `${url}&${queryString}`;
+    const { response, error } = await service.board.get(url);
     if (response && !error) {
       const { list } = response;
       if (this.mounted) {
@@ -131,14 +135,14 @@ class SearchEquipModal extends React.Component {
   }
 
   async fetchSelectorModel() {
-    const requestQuery = {
-      fab: this.state.fab === 'all' ? undefined : this.state.fab,
-      area: this.state.area === 'all' ? undefined : this.state.area,
-    };
-    const queryString = jsonToQueryString(requestQuery);
-    const url = `/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=MODELLIST`;
-    const getUrl = `${url}&${queryString}`;
-    const { response, error } = await service.board.get(getUrl);
+    // const requestQuery = {
+    //   fab: this.state.fab === 'all' ? undefined : this.state.fab,
+    //   area: this.state.area === 'all' ? undefined : this.state.area,
+    // };
+    // const queryString = jsonToQueryString(requestQuery);
+    const url = `/api/tpms/v1/common/searchInfo?type=model`;
+    // const getUrl = `${url}&${queryString}`;
+    const { response, error } = await service.board.get(url);
     if (response && !error) {
       const { list } = response;
       if (this.mounted) {
@@ -198,9 +202,15 @@ class SearchEquipModal extends React.Component {
 
     console.debug('>>> requestQuery', requestQuery);
     const queryString = jsonToQueryString(requestQuery);
-    const url = `/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=EQUIPMODEL&currentPage=${pagination.get('current')}&pageSize=${pagination.get('pageSize')}`;
-    const getUrl = `${url}&${queryString}`;
-    const { response, error } = await service.board.get(getUrl);
+    // const url = `/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=EQUIPMODEL&currentPage=${pagination.get('current')}&pageSize=${pagination.get('pageSize')}`;
+    // const getUrl = `${url}&${queryString}`;
+
+    const url2 = `/api/tpms/v1/common/searchInfo?type=search&currentPage=${pagination.get('current')}&pageSize=${pagination.get('pageSize')}`;
+    const getUrl2 = `${url2}&${queryString}`;
+    // const ttt = await service.board.get(getUrl2);
+
+    const { response, error } = await service.board.get(getUrl2);
+
     if (response && !error) {
       console.debug('# response', response);
       const { list } = response;
@@ -404,7 +414,7 @@ class SearchEquipModal extends React.Component {
                           <select name="fab" id="fab" onChange={this.handleChangeFab} value={fab}>
                             <option value="all">FAB - 전체</option>
                             {selector.map(option => (
-                              <option value={option.get('cd')}>{`FAB - ${option.get('cdnm')}`}</option>
+                              <option key={`${option.get('cd')}`} value={option.get('cd')}>{`FAB - ${option.get('cdnm')}`}</option>
                             ))}
                           </select>
                         </div>
@@ -414,7 +424,7 @@ class SearchEquipModal extends React.Component {
                           <select name="area" id="area" onChange={this.handleChangeArea} value={area}>
                             <option value="all">AREA - 전체</option>
                             {selectorArea.map(option => (
-                              <option value={option.get('cd')}>{`AREA - ${option.get('cdnm')}`}</option>
+                              <option key={`${option.get('cd')}`} value={option.get('cd')}>{`AREA - ${option.get('cdnm')}`}</option>
                             ))}
                           </select>
                         </div>
@@ -424,7 +434,7 @@ class SearchEquipModal extends React.Component {
                           <select name="equipModel" id="equipModel" onChange={this.handleChangeModel} value={model}>
                             <option value="all">EquipModel - 전체</option>
                             {selectorModel.map(option => (
-                              <option value={option.get('cd')}>{`EquipModel - ${option.get('cdnm')}`}</option>
+                              <option key={`${option.get('cd')}`} value={option.get('cd')}>{`EquipModel - ${option.get('cdnm')}`}</option>
                             ))}
                           </select>
                         </div>
@@ -434,7 +444,7 @@ class SearchEquipModal extends React.Component {
                           <select name="equipkeyno" id="equipkeyno" onChange={this.handleChangeKeyno} value={keyno}>
                             <option value="all">EquipkeyNo - 전체</option>
                             {selectorKeyno.map(option => (
-                              <option value={option.get('cd')}>{`EquipkeyNo - ${option.get('cdnm')}`}</option>
+                              <option key={`${option.get('cd')}`} value={option.get('cd')}>{`EquipkeyNo - ${option.get('cdnm')}`}</option>
                             ))}
                           </select>
                         </div>
@@ -454,7 +464,7 @@ class SearchEquipModal extends React.Component {
                   <tbody>
                     {data.toJS().length > 0 ? (
                       data.map(item => (
-                        <tr key={item.keyno}>
+                        <tr key={`${item.get('keyno')}_${item.get('model')}_${item.get('fab')}_${item.get('area')}`}>
                           <td>
                             <div className="checkbox">
                               <input

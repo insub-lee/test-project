@@ -37,7 +37,7 @@ class EquipSelector extends React.Component {
     const { readOnly } = this.props;
     return (
       <StyledEquipSelector>
-        <input type="hidden" name="equip_selector" value={JSON.stringify(values)} />
+        <input type="hidden" name="equipment_model" value={JSON.stringify(values)} />
         <ul>
           {values.map((value, index) => (
             <li className="equipment_tag" key={value.keyno}>
@@ -51,14 +51,14 @@ class EquipSelector extends React.Component {
           ))}
         </ul>
         {!readOnly && (
-          <React.Fragment>
+          <>
             <div className="btn btn_wrap">
               <Button type="button" color="gray" size="small" onClick={this.showSearchEquipModal}>
                 선택
               </Button>
             </div>
             <SearchEquipModal ref={this.searchEquipModalRef} callback={this.receiveData} />
-          </React.Fragment>
+          </>
         )}
       </StyledEquipSelector>
     );
@@ -67,10 +67,12 @@ class EquipSelector extends React.Component {
 
 EquipSelector.propTypes = {
   readOnly: PropTypes.bool,
+  values: PropTypes.array,
 };
 
 EquipSelector.defaultProps = {
   readOnly: false,
+  values: [],
 };
 
 export default EquipSelector;

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import Modal from 'rc-dialog';
 import TreeView from 'react-treeview';
@@ -8,6 +9,7 @@ import 'react-virtualized/styles.css';
 import ReactTooltip from 'react-tooltip';
 import { AutoSizer } from 'react-virtualized';
 
+import { getTreeFromFlatData } from 'react-sortable-tree';
 import jsonToQueryString from '../../../utils/jsonToQueryString';
 import Button from '../../Button';
 import StyledContent from './StyledContent';
@@ -19,12 +21,11 @@ import StyledVirtualized from '../../CommonStyledElement/StyledVirtualized';
 // Modal.defaultStyles.overlay.backgroundColor = 'rgba(0,0,0,.7)';
 
 const treeRenderer = (tree, action) =>
-  tree.map(node => {
-    const { dpnm, dpcd, isRoot } = node;
-    if (node.children.length > 0) {
+  tree.map(({ title: dpnm, value: dpcd, lvl, children }) => {
+    if (children?.length > 0) {
       // const label = <span className="node">{dpnm}</span>;
       const label =
-        dpcd === '%' || isRoot ? (
+        dpcd === '%' || lvl === 1 ? (
           <>
             <p className="node node_title" title={dpnm} data-tip data-for={`${dpnm}|${dpcd}`}>
               {dpnm}
@@ -47,7 +48,7 @@ const treeRenderer = (tree, action) =>
         );
       return (
         <TreeView key={`${dpnm}|${dpcd}`} nodeLabel={label} defaultCollapsed>
-          {treeRenderer(node.children, action)}
+          {treeRenderer(children, action)}
         </TreeView>
       );
     }
@@ -155,16 +156,16 @@ class EmployeeSelectorModal extends React.Component {
 
   async fetchNames(name) {
     const requestQuery = {
-      usrNm: name,
+      name,
     };
     const queryString = jsonToQueryString(requestQuery);
-    const url = `/apigate/v1/portal/accountList?type=name&page=-1`;
+    const url = `/api/tpms/v1/common/searchInfo?type=userList`;
     const getUrl = `${url}&${queryString}`;
     const { response, error } = await service.users.get(getUrl);
     const payload = {};
     if (response && !error) {
-      const { userList } = response;
-      payload.userList = userList;
+      const { list } = response;
+      payload.userList = list;
     } else {
       alertMessage.alert('Server Error');
       payload.userList = [];
@@ -174,23 +175,46 @@ class EmployeeSelectorModal extends React.Component {
   }
 
   async fetchDeptTree() {
-    const { response, error } = await service.deptTree.get();
-    if (response && !error) {
-      const root = {
-        isFolrder: true,
-        title: 'Magnachip',
-        dpnm: 'Magnachip',
-        dpnm_en: 'Magnachip',
-        isRoot: true,
-        dpcd: '%',
-      };
-      root.children = response || [];
-      const tree = [root];
+    const { response: res, error: err } = await service.deptTree.getV2();
+
+    if (res && !err) {
+      const { list } = res;
+
+      const tree = getTreeFromFlatData({
+        flatData: list.map(item => ({
+          title: item.name_kor,
+          value: `${item.dept_id}`,
+          key: `${item.dept_id}`,
+          parentValue: `${item.prnt_id}`,
+          ...item,
+        })),
+        getKey: node => node.key,
+        getParentKey: node => node.parentValue,
+        rootKey: '-1',
+      });
       this.setState({ tree });
     } else {
-      console.debug('# error', error);
+      console.debug('# error', err);
       alertMessage.alert('Server Error');
     }
+
+    // if (response && !error) {
+    //   const root = {
+    //     isFolrder: true,
+    //     title: 'Magnachip',
+    //     dpnm: 'Magnachip',
+    //     dpnm_en: 'Magnachip',
+    //     isRoot: true,
+    //     dpcd: '%',
+    //   };
+
+    //   root.children = response || [];
+    //   const tree = [root];
+    //   this.setState({ tree });
+    // } else {
+    //   console.debug('# error', error);
+    //   alertMessage.alert('Server Error');
+    // }
   }
 
   handleUsers(dpcd) {
@@ -203,13 +227,15 @@ class EmployeeSelectorModal extends React.Component {
     });
   }
 
-  async fetchUsers(dpcd) {
-    const url = `/apigate/v1/portal/accountList?coid=00&dpcd=${dpcd}&page=-1`;
+  async fetchUsers(deptId) {
+    // const url = `/apigate/v1/portal/accountList?coid=00&dpcd=0410&page=-1`;
+    const url = `/api/tpms/v1/common/searchInfo?type=deptUserList&deptId=${deptId}`;
+
     const { response, error } = await service.users.get(url);
     const payload = {};
     if (response && !error) {
-      const { userList } = response;
-      payload.userList = userList;
+      const { list } = response;
+      payload.userList = list || [];
     } else {
       alertMessage.alert('Server Error');
       payload.userList = [];
@@ -223,27 +249,29 @@ class EmployeeSelectorModal extends React.Component {
     const userInfo = userList[index];
     return (
       <div key={key} style={style}>
-        {`${userInfo.emrno} ${userInfo.usrnm} ${userInfo.jgnm}`}
+        {`${userInfo.emp_no} ${userInfo.name_kor} ${userInfo.pstn_name_kor}`}
       </div>
     );
   }
 
   addList(rowData) {
     const { type } = this.state;
-    const { emrno, usrnm, psnm, jgnm, usrid, dpcd, dpnm, email } = rowData;
+    const { emp_no, name_kor, psnm, pstn_name_kor, user_id, dept_id, dept_name_kor, email } = rowData;
 
-    if (this.state.selectedList.findIndex(user => user.emrno === emrno) < 0) {
+    if (this.state.selectedList.findIndex(user => user.emp_no === emp_no) < 0) {
       this.setState(prevState => {
         switch (type) {
-          case 'SINGLE':
+          case 'SINGLE': {
             return {
-              selectedList: [{ emrno, usrnm, psnm, jgnm, usrid, dpcd, dpnm, email }],
+              selectedList: [{ emp_no, name_kor, psnm, pstn_name_kor, user_id, dept_id, dept_name_kor, email }],
             };
-          default:
-            prevState.selectedList.push({ emrno, usrnm, psnm, jgnm, usrid, dpcd, dpnm, email });
+          }
+          default: {
+            prevState.selectedList.push({ emp_no, name_kor, psnm, pstn_name_kor, user_id, dept_id, dept_name_kor, email });
             return {
               selectedList: prevState.selectedList,
             };
+          }
         }
       });
     }
@@ -265,28 +293,28 @@ class EmployeeSelectorModal extends React.Component {
     const columns = [
       {
         label: '사번',
-        dataKey: 'emrno',
+        dataKey: 'emp_no',
         percentWidth: 26,
       },
       {
         label: '이름',
-        dataKey: 'usrnm',
+        dataKey: 'name_kor',
         percentWidth: 20,
       },
       {
         label: '부서',
-        dataKey: 'dpnm',
-        percentWidth: 20,
+        dataKey: 'dept_name_kor',
+        percentWidth: 28,
       },
-      {
-        label: '직책',
-        dataKey: 'psnm',
-        percentWidth: 17,
-      },
+      // {
+      //   label: '직책',
+      //   dataKey: 'psnm',
+      //   percentWidth: 17,
+      // },
       {
         label: '직위',
-        dataKey: 'jgnm',
-        percentWidth: 17,
+        dataKey: 'pstn_name_kor',
+        percentWidth: 26,
       },
     ];
     return (
@@ -345,7 +373,7 @@ class EmployeeSelectorModal extends React.Component {
                               height={height}
                               headerHeight={20}
                               rowHeight={30}
-                              rowCount={userList.length}
+                              rowCount={userList?.length}
                               rowGetter={({ index }) => userList[index]}
                               // rowRenderer={this.rowRenderer}
                               onRowClick={({ rowData }) => this.addList(rowData)}
@@ -376,9 +404,9 @@ class EmployeeSelectorModal extends React.Component {
                         <span>선택된 인원</span>
                       </div>
                       <ul>
-                        {selectedList.map((user, index) => (
-                          <li className="user_tag" key={user.emrno}>
-                            <span>{`${user.emrno} ${user.usrnm} ${user.jgnm}`}</span>
+                        {selectedList.map(({ emp_no, name_kor, pstn_name_kor }, index) => (
+                          <li className="user_tag" key={emp_no}>
+                            <span>{`${emp_no} ${name_kor} ${pstn_name_kor}`}</span>
                             <button type="button" className="close" onClick={() => this.removeUser(index)}>
                               <i className="fas fa-times" />
                             </button>
