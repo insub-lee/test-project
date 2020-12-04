@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 // import Modal from 'react-Modal';
 import Modal from 'rc-dialog';
@@ -78,7 +79,7 @@ class DropModal extends React.Component {
 
   render() {
     const { isOpen, isSaving } = this.state;
-    const { signlineno, signno, docno, sysid, mnuid, phase } = this.props;
+    const { task_seq, step } = this.props;
     return (
       <Modal
         maskClosable={false}
@@ -99,18 +100,14 @@ class DropModal extends React.Component {
           <div>
             <div className="pop_tit">
               Drop 사유
-              <button type="button" className="icon icon_pclose" onClick={this.handleClose} />
+              <button type="button" aria-label="dclose" className="icon icon_pclose" onClick={this.handleClose} />
             </div>
             <div className="pop_con">
               <Spin spinning={isSaving}>
                 <form autoComplete="off" onSubmit={this.onSubmit}>
-                  <input type="hidden" name="signlineno" value={signlineno} />
-                  <input type="hidden" name="signno" value={signno} />
-                  <input type="hidden" name="docno" value={docno} />
-                  <input type="hidden" name="sysid" value={sysid} />
-                  <input type="hidden" name="mnuid" value={mnuid} />
-                  <input type="hidden" name="DROP_PHASE" value={phase} />
-                  <textarea placeholder="Drop 사유를 작성해 주세요." name="DROP_REASON" maxLength={45} required />
+                  <input type="hidden" name="task_seq" value={task_seq} />
+                  <input type="hidden" name="step" value={step} />
+                  <textarea placeholder="Drop 사유를 작성해 주세요." name="drop_reason" maxLength={45} required />
                   <div className="btn_wrap">
                     <Button type="submit" size="big" color="primary">
                       Drop하기
