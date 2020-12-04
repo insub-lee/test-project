@@ -529,7 +529,7 @@ export default ({ info, usrid = '', usrnm, deptId = '', callback = () => {} }) =
       return;
     }
 
-    const equipment_model = JSON.parse(payload.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
+    const equipment_model = JSON.parse(payload?.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
     if (equipment_model.length < 1) {
       alertMessage.alert('선택된 장비가 없습니다.');
       return;
@@ -672,7 +672,7 @@ export default ({ info, usrid = '', usrnm, deptId = '', callback = () => {} }) =
 
     const team_member = JSON.parse(payload.user_selector_2 || '[]').map(user => user);
 
-    const equipment_model = JSON.parse(payload.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
+    const equipment_model = JSON.parse(payload?.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
     payload.equipment_model = JSON.stringify(equipment_model);
     payload.user_selector_0 = undefined;
     payload.user_selector_1 = undefined;
