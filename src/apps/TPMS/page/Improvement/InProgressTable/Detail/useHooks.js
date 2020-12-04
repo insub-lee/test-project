@@ -661,7 +661,7 @@ export default ({ info, callback = () => {} }) => {
     setIsLoading(true);
 
     if (!payload.noUse) {
-      stepChanger(info?.task_seq, info?.step, payload)
+      stepChanger(info?.task_seq, info?.step + 1, payload)
         .then(({ result, error, req }) => {
           if (result && !error) {
             alertMessage.notice('저장 완료');

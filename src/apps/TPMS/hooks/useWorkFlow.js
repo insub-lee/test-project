@@ -12,7 +12,7 @@ export const stepChanger = async (task_seq, step, payload) => {
   const response = await request({
     method: 'POST',
     url: '/api/tpms/v1/common/approvalSide',
-    data: { ...payload, task_seq, step: step + 1, type: 'step' },
+    data: { ...payload, task_seq, step, type: 'step' },
     type: 'step',
   });
   const { result, error, req } = response?.response;

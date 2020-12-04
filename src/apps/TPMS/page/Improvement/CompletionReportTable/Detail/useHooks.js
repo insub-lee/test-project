@@ -655,7 +655,7 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       fillWorkFlowData(prcRule, { ...info, rel_type: 201 })
         .then(submitResult => {
           if (submitResult) {
-            stepChanger(info?.task_seq, info?.step, payload).then(({ result, error, req }) => {
+            stepChanger(info?.task_seq, info?.step + 1, payload).then(({ result, error, req }) => {
               if (result && !error) {
                 alertMessage.notice('제출 완료');
                 setIsRedirect(true);

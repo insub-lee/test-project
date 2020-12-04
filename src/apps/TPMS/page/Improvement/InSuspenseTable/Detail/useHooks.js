@@ -85,19 +85,19 @@ export default ({ info, callback = () => {} }) => {
               label: '개별개선',
               value: 'G',
               checked: info?.project_type === 'G',
-              readOnly: false,
+              readOnly: true,
             },
             {
               label: 'TFT',
               value: 'T',
               checked: info?.project_type === 'T',
-              readOnly: false,
+              readOnly: true,
             },
             {
               label: 'Wafer Loss',
               value: 'W',
               checked: info?.project_type === 'W',
-              readOnly: false,
+              readOnly: true,
             },
           ],
         },
@@ -334,7 +334,7 @@ export default ({ info, callback = () => {} }) => {
                 {
                   name: 'measure_due_date',
                   value: info?.measure_due_date ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: false,
+                  readOnly: true,
                 },
               ],
             },
@@ -345,7 +345,7 @@ export default ({ info, callback = () => {} }) => {
                 {
                   name: 'improvement_due_date',
                   value: info?.improvement_due_date ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: false,
+                  readOnly: true,
                 },
               ],
             },
@@ -356,7 +356,7 @@ export default ({ info, callback = () => {} }) => {
                 {
                   name: 'completion_due_date',
                   value: info?.completion_due_date ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: false,
+                  readOnly: true,
                 },
               ],
             },
@@ -633,17 +633,15 @@ export default ({ info, callback = () => {} }) => {
   //   });
   //   return { response, error };
   // }, []);
-  const stepHandler = ({ APPV_STATUS, info: draft }) => {
-    const { step, rel_type } = draft;
-
+  const stepHandler = ({ APPV_STATUS, step, rel_type }) => {
     switch (rel_type) {
       case 200: // 1차
-        return APPV_STATUS === 2 ? step : 9;
+        return APPV_STATUS === 2 ? step + 1 : 9;
       case 201: // 2차
         if (APPV_STATUS === 2) {
           switch (step) {
             case 8:
-              return 10;
+              return 11;
             case 11:
               return 12;
             default:
@@ -652,7 +650,17 @@ export default ({ info, callback = () => {} }) => {
         }
         return 10;
       case 202: // Drop
-        return APPV_STATUS === 2 ? 21 : 10;
+        if (APPV_STATUS === 2) {
+          switch (step) {
+            case 20:
+              return 21;
+            case 21:
+              return 22;
+            default:
+              return 20;
+          }
+        }
+        return 23;
       default:
         return 0;
     }
@@ -672,8 +680,9 @@ export default ({ info, callback = () => {} }) => {
         setIsLoading(true);
         submitDraft(info, APPV_STATUS, formJson?.opinion, {})
           .then(() => {
+            const { task_seq, step, rel_type } = info;
             // eslint-disable-next-line no-nested-ternary
-            stepChanger(info?.task_seq, stepHandler({ APPV_STATUS, info })).then(({ result, error, req }) => {
+            stepChanger(task_seq, stepHandler({ APPV_STATUS, step, rel_type })).then(({ result, error, req }) => {
               setIsLoading(false);
               if (result && !error) {
                 alertMessage.alert(`${APPV_STATUS === 2 ? `승인` : `반려`} 처리 완료`);
