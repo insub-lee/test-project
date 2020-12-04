@@ -9,7 +9,6 @@ import MessageContent from 'components/Feedback/message.style2';
 export const useWorkFlow = () => {};
 
 export const stepChanger = async (task_seq, step, payload) => {
-  console.debug('### task_seq, step, payload:', task_seq, step, payload);
   const response = await request({
     method: 'POST',
     url: '/api/tpms/v1/common/approvalSide',
@@ -17,7 +16,6 @@ export const stepChanger = async (task_seq, step, payload) => {
     type: 'step',
   });
   const { result, error, req } = response?.response;
-  console.debug('### res:', response, result, error, req);
   return { result, error, req };
 };
 
@@ -93,7 +91,6 @@ export const saveProcessRule = async (processRule, messageFlag = true) => {
 export const fillWorkFlowData = async (prcRule, payload) => {
   const first_approver = JSON.parse(payload?.first_approver, '[]');
   const final_approver = JSON.parse(payload?.final_approver, '[]');
-  console.debug('first_approver , final_approver', first_approver, final_approver);
   if (prcRule?.DRAFT_PROCESS_STEP && first_approver.length > 0 && final_approver.length > 0) {
     prcRule?.DRAFT_PROCESS_STEP.forEach((step, index) => {
       switch (index) {
@@ -147,8 +144,6 @@ export const fillWorkFlowData = async (prcRule, payload) => {
         }
       }
     });
-
-    console.debug('### process :', prcRule, payload);
 
     return saveProcessRule({
       ...prcRule,

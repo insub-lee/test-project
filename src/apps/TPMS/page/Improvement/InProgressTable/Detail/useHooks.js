@@ -591,9 +591,6 @@ export default ({ info, callback = () => {} }) => {
     formData.forEach((value, key) => {
       formJson[key] = value;
     });
-    // const { files } = parseFiles(formJson);
-    // const { \ } = formJson;
-    console.debug('### formJson:', formJson);
 
     const payload = {
       type: 'step',

@@ -152,7 +152,6 @@ const SignPrcListInfo = ({ info, noPadding }) => {
             }
 
             const { step, appv_status, rel_type, EMP_NO, DEPT_NAME_KOR, PSTN_NAME_KOR, NAME_KOR, sign_date } = row;
-            console.log('### row:', row);
             return (
               <tr key={step + rel_type + EMP_NO}>
                 {stepRenderer({ step, rel_type })}

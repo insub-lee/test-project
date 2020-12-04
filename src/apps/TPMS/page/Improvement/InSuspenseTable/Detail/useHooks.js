@@ -633,6 +633,30 @@ export default ({ info, callback = () => {} }) => {
   //   });
   //   return { response, error };
   // }, []);
+  const stepHandler = ({ APPV_STATUS, info: draft }) => {
+    const { step, rel_type } = draft;
+
+    switch (rel_type) {
+      case 200: // 1차
+        return APPV_STATUS === 2 ? step : 9;
+      case 201: // 2차
+        if (APPV_STATUS === 2) {
+          switch (step) {
+            case 8:
+              return 10;
+            case 11:
+              return 12;
+            default:
+              return 8;
+          }
+        }
+        return 10;
+      case 202: // Drop
+        return APPV_STATUS === 2 ? 21 : 10;
+      default:
+        return 0;
+    }
+  };
 
   const submitData = useCallback(
     APPV_STATUS => {
@@ -649,7 +673,7 @@ export default ({ info, callback = () => {} }) => {
         submitDraft(info, APPV_STATUS, formJson?.opinion, {})
           .then(() => {
             // eslint-disable-next-line no-nested-ternary
-            stepChanger(info?.task_seq, APPV_STATUS === 2 ? info?.step : APPV_STATUS === 9 ? 9 : 0).then(({ result, error, req }) => {
+            stepChanger(info?.task_seq, stepHandler({ APPV_STATUS, info })).then(({ result, error, req }) => {
               setIsLoading(false);
               if (result && !error) {
                 alertMessage.alert(`${APPV_STATUS === 2 ? `승인` : `반려`} 처리 완료`);
