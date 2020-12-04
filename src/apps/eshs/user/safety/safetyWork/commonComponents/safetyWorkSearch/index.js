@@ -80,6 +80,13 @@ class SafetyWorkSearch extends Component {
     });
   };
 
+  onChangeSearchDate = (type, value) => {
+    const dateValue = value ? value.format('YYYY-MM-DD') : '';
+    this.setState({
+      [type]: dateValue,
+    });
+  };
+
   render() {
     const { rowSelect, uesdSearchType } = this.props;
     const { site, searchType, keyword, safetyWorkList, isSearching, sDate, eDate } = this.state;
@@ -153,14 +160,14 @@ class SafetyWorkSearch extends Component {
                 defaultValue={moment(sDate, 'YYYY-MM-DD')}
                 className="ant-picker-xs mr5"
                 style={{ width: 110 }}
-                onChange={date => this.setState({ sDate: date.format('YYYY-MM-DD') })}
+                onChange={date => this.onChangeSearchDate('sDate', date)}
               />
               <span> ~ </span>
               <AntdDatePicker
                 defaultValue={moment(eDate, 'YYYY-MM-DD')}
                 className="ant-picker-xs mr5"
                 style={{ width: 110 }}
-                onChange={date => this.setState({ eDate: date.format('YYYY-MM-DD') })}
+                onChange={date => this.onChangeSearchDate('eDate', date)}
               />
               {uesdSearchType ? (
                 <>

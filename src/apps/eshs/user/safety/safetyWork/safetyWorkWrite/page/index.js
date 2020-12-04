@@ -50,7 +50,7 @@ class SafetyWorkMain extends Component {
         WRK_CMPNY_CD: '', //            작업업체 코드   (String, 10)
         WLOC: '', //                    작업장소        (String, 100)
         WGUBUN: '신규', //              작업구분        (String, 4)   [신규, 변경, 이설, 철거, 기타]
-        SITE: '청주', //                지역            (String, 4)   [이천, 청주, 구미]
+        SITE: '구미', //                지역            (String, 4)   [이천, 청주, 구미]
         DGUBUN: 'F3동', //               작업동          (String, 50)  [C-1, C-2, R, 청주기타, F1동, F3동, A1동, D.I동, 기숙사동, 구미기타]
         FROM_DT: '', //                 허가 요청날짜   (Date)
         TO_DT: '', //                   허가 요청날짜   (Date)
@@ -501,7 +501,7 @@ class SafetyWorkMain extends Component {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { formData } = this.state;
     const submitData = { PARAM: formData };
-    const uploadFiles = formData.UPLOAD_FILES || [];
+    const uploadFiles = formData.UPLOAD_FILES.filter(item => !item.position || item.position !== 'real') || [];
     switch (type) {
       case 'ADD':
         // 작업번호 생성 및 작업정보 입력
@@ -509,7 +509,7 @@ class SafetyWorkMain extends Component {
           if (uploadFiles === 0) {
             submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkAddCallback);
           } else {
-            const attachParam = { PARAM: { DETAIL: formData.UPLOAD_FILES } };
+            const attachParam = { PARAM: { DETAIL: uploadFiles } };
             submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', attachParam, this.uploadFileCallback);
           }
         }
@@ -518,7 +518,7 @@ class SafetyWorkMain extends Component {
         if (uploadFiles === 0) {
           submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkUpdateCallback);
         } else {
-          const attachParam = { PARAM: { DETAIL: formData.UPLOAD_FILES } };
+          const attachParam = { PARAM: { DETAIL: uploadFiles } };
           submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', attachParam, this.uploadFileCallbackUpdate);
         }
         break;
@@ -533,17 +533,20 @@ class SafetyWorkMain extends Component {
   uploadFileCallback = (id, response) => {
     const { submitHandlerBySaga } = this.props;
     const { formData } = this.state;
-    const FILE_DETAIL = response.DETAIL || [];
+    const uploadFiles = formData.UPLOAD_FILES.filter(item => item.position && item.position === 'real');
+    const responseDetail = response.DETAIL || [];
+    const resultUploadFiles = uploadFiles.concat(responseDetail);
+    uploadFiles.concat(responseDetail);
     this.setState({
       formData: {
         ...formData,
-        UPLOAD_FILES: FILE_DETAIL || [],
+        UPLOAD_FILES: resultUploadFiles || [],
       },
     });
     const nextFormData = {
       ...formData,
-      UPLOAD_FILES: FILE_DETAIL || [],
-      UPLOADED_FILES: JSON.stringify(FILE_DETAIL) || [],
+      UPLOAD_FILES: resultUploadFiles || [],
+      UPLOADED_FILES: JSON.stringify(resultUploadFiles) || [],
     };
     const submitData = { PARAM: nextFormData };
     submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkAddCallback);
@@ -552,17 +555,19 @@ class SafetyWorkMain extends Component {
   uploadFileCallbackUpdate = (id, response) => {
     const { submitHandlerBySaga } = this.props;
     const { formData } = this.state;
-    const FILE_DETAIL = response.DETAIL || [];
+    const uploadFiles = formData.UPLOAD_FILES.filter(item => item.position && item.position === 'real');
+    const responseDetail = response.DETAIL || [];
+    const resultUploadFiles = uploadFiles.concat(responseDetail);
     this.setState({
       formData: {
         ...formData,
-        UPLOAD_FILES: FILE_DETAIL || [],
+        UPLOAD_FILES: resultUploadFiles || [],
       },
     });
     const nextFormData = {
       ...formData,
-      UPLOAD_FILES: FILE_DETAIL || [],
-      UPLOADED_FILES: JSON.stringify(FILE_DETAIL) || [],
+      UPLOAD_FILES: resultUploadFiles || [],
+      UPLOADED_FILES: JSON.stringify(resultUploadFiles) || [],
     };
     const submitData = { PARAM: nextFormData };
     submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkUpdateCallback);
@@ -732,8 +737,8 @@ class SafetyWorkMain extends Component {
 
   // 테스트 유저
   onSelectedComplete = selectedList => {
-    const userInfo = selectedList[0];
-    this.handleHstUserSelect(userInfo);
+    const record = selectedList[0];
+    this.handleHstUserSelect(record);
   };
 
   // 감독자 선택
@@ -741,7 +746,7 @@ class SafetyWorkMain extends Component {
     const { modalType, formData, deptMasterList } = this.state;
     let field = '';
     let deptMaster = {};
-    if (record === undefined) {
+    if (!record) {
       this.setState({
         modalType: '',
         modalTitle: '',
@@ -758,8 +763,8 @@ class SafetyWorkMain extends Component {
           modalVisible: false,
           formData: {
             ...formData,
-            [field]: record.EMP_NO,
-            [field.replace('NO', 'NM')]: record.NAME_KOR,
+            [field]: record.EMP_NO || '',
+            [field.replace('NO', 'NM')]: record.NAME_KOR || '',
           },
         });
         break;
@@ -774,10 +779,10 @@ class SafetyWorkMain extends Component {
             ...formData,
             EXM_CMPNY_CD: record.COMP_CD.replace('COMP_', ''),
             EXM_DEPT_CD: record.DEPT_CD,
-            [field]: record.EMP_NO,
-            [field.replace('NO', 'NM')]: record.NAME_KOR,
-            FINAL_OK_EMP_NO: deptMaster.EMP_NO || '',
-            FINAL_OK_EMP_NM: deptMaster.NAME_KOR || '',
+            [field]: record.EMP_NO || '',
+            [field.replace('NO', 'NM')]: record.NAME_KOR || '',
+            FINAL_OK_EMP_NO: deptMaster?.EMP_NO ? deptMaster.EMP_NO : '',
+            FINAL_OK_EMP_NM: deptMaster?.NAME_KOR ? deptMaster.NAME_KOR : '',
           },
         });
         break;
@@ -789,8 +794,8 @@ class SafetyWorkMain extends Component {
           modalVisible: false,
           formData: {
             ...formData,
-            [field]: record.EMP_NO,
-            [field.replace('NO', 'NM')]: record.NAME_KOR,
+            [field]: record.EMP_NO || '',
+            [field.replace('NO', 'NM')]: record.NAME_KOR || '',
           },
         });
         break;

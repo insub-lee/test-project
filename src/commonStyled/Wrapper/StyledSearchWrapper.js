@@ -31,6 +31,9 @@ const StyledSearchWrapper = styled.div`
             width: 130px;
             font-weight: 500;
           }
+          &.textAlignColCenter {
+            text-align: center !important;
+          }
         }
       }
     }

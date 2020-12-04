@@ -110,6 +110,12 @@ class List extends Component {
     this.onModalChange();
   };
 
+  onInsertDo = () => {
+    const { sagaKey: id, changeFormData } = this.props;
+    changeFormData(id, 'actionType', 'I');
+    this.onModalChange();
+  };
+
   onModalChange = () => {
     const { modalEdit } = this.state;
     const { sagaKey: id, setFormData } = this.props;
@@ -126,9 +132,9 @@ class List extends Component {
     if (result && result.proposalOfficer && result.proposalOfficer.list) {
       totalData = result.proposalOfficer.list.map(item => ({
         ...item,
-        OFFICER_NAME: `${item.OFFICER_NAME}(${item.OFFICER_NO})`,
-        KEEPER_NAME: `${item.KEEPER_NAME}(${item.KEEPER_NO})`,
-        MANAGER_NAME: `${item.MANAGER_NAME}(${item.MANAGER_NO})`,
+        OFFICER_NAME: `${item?.OFFICER_NO ? `${item.OFFICER_NAME}(${item.OFFICER_NO})` : ''}`,
+        KEEPER_NAME: `${item?.KEEPER_NO ? `${item.KEEPER_NAME}(${item.KEEPER_NO})` : ''}`,
+        MANAGER_NAME: `${item?.MANAGER_NO ? `${item.MANAGER_NAME}(${item.MANAGER_NO})` : ''}`,
       }));
     }
 
@@ -136,7 +142,7 @@ class List extends Component {
       <>
         <StyledContentsWrapper>
           <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-            <StyledButton className="btn-primary btn-sm" onClick={this.onModalChange}>
+            <StyledButton className="btn-primary btn-sm" onClick={this.onInsertDo}>
               추가
             </StyledButton>
           </StyledButtonWrapper>

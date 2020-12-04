@@ -71,7 +71,7 @@ class MultiSelector extends Component {
                       <tr>
                         <td>
                           <Checkbox.Group value={grp.selectedValue} onChange={selectedValue => this.onChangeGroup(grp.groupKey, selectedValue)}>
-                            <ScrollBar style={{ height: 300 }} id="MDCS-scrollbar-wrapper" className="scrollbar-wrapper">
+                            <ScrollBar style={{ height: 300 }} className="scrollbar-wrapper" id="MDCS-scrollbar-wrapper">
                               {grp.dataSet.map(item => (
                                 <Checkbox value={item.NODE_ID}>{item.NAME_KOR}</Checkbox>
                               ))}
