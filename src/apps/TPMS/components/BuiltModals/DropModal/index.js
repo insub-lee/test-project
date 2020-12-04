@@ -42,7 +42,6 @@ class DropModal extends React.Component {
     payload.ATTACH_FILE = modalParam.ATTACH_FILE;
     payload.signref = modalParam.signref;
     payload.files = modalParam.files;
-    console.debug('#payload#', payload);
     this.setState({ isSaving: true }, () => {
       this.postData(payload).then(result => {
         if (result) {

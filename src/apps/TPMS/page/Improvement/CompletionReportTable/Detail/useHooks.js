@@ -643,7 +643,6 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
     payload.real_complete_file_name = formJson.real_complete_attach_FILE;
     payload.success_point = formJson.success_point;
     payload.improvement_point = formJson.improvement_point;
-    console.debug('>>>>> payload', payload);
 
     if (!payload.real_complete_file_path || !payload.real_complete_file_name) {
       alertMessage.alert('완료 파일 첨부는 필수 입니다.');

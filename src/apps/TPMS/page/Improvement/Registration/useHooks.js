@@ -586,7 +586,6 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
           } else {
             alertMessage.alert('개선활등을 신규 등록에 실패했습니다.');
             debug('개선활등을 신규 등록에 실패했습니다.');
-            console.debug(error);
           }
         })
         .catch(() => {
@@ -648,7 +647,6 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
           alertMessage.notice('임시 저장 했습니다.');
         } else {
           alertMessage.alert('임시 저장이 실패했습니다.');
-          console.debug(error);
         }
       })
       .catch(() => {
