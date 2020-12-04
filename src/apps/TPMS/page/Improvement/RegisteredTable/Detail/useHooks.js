@@ -1,30 +1,9 @@
 /* eslint-disable camelcase */
-import { useMemo, useState, useEffect } from 'react';
-import request from 'utils/request';
+import { useMemo } from 'react';
 
 import moment from 'moment';
 
 export default ({ info, deptId }) => {
-  const [approverList, setApproverList] = useState([]);
-
-  const fetchApproverList = async params => {
-    const url = `/api/tpms/v1/common/approvalSide`;
-    const { response, error } = await request({
-      url,
-      params,
-    });
-
-    return { response, error };
-  };
-
-  useEffect(() => {
-    fetchApproverList({ task_seq: info?.task_seq, type: 'approverList' }).then(({ response, error }) => {
-      if (response && !error) {
-        setApproverList(response?.list);
-      }
-    });
-  }, []);
-
   const defaultFormData = useMemo(() => {
     const { key_performance_indicators, current_status, goal, apply_target, note } =
       info?.project_type === 'W'
@@ -99,7 +78,7 @@ export default ({ info, deptId }) => {
         classname: 'improve_form std',
         option: {
           label: 'Project Type',
-          name: 'PRJ_TYPE',
+          name: 'project_type',
           readOnly: true,
           values: [
             {
@@ -130,10 +109,10 @@ export default ({ info, deptId }) => {
         classname: 'improve_form std width50 flCustom',
         option: {
           label: 'Level',
-          name: 'PRJ_LEVEL',
+          name: 'project_level',
           disabled: true,
           values: [
-            { label: '본부', value: 1, selected: info?.project_type === 1 },
+            { label: '본부', value: 1, selected: info?.project_level === 1 },
             { label: '담당', value: 2, selected: info?.project_level === 2 },
             { label: '팀', value: 3, selected: info.project_level === 3 },
             { label: 'Part', value: 4, selected: info?.project_level === 4 },
@@ -413,280 +392,265 @@ export default ({ info, deptId }) => {
     ];
 
     // if (info.phase > 1 || info.status.substr(0, 2) === '완료') {
-    if (false) {
-      if (info?.step < 1) {
-        formData.push({
-          type: 'textarea',
-          // classname: 'half mr mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Define 리더 코멘트',
-            label: '현상파악 리더 코멘트',
-            name: 'DEFINE_LEADER_COMMENT',
-            placeholder: '코멘트를 남겨주세요.',
-            value: info.DEFINE_LEADER_COMMENT,
-            required: true,
-            readOnly: true,
-            maxLength: 450,
-          },
-          seq: formData.length + 1,
-        });
-        formData.push({
-          type: 'single-uploader',
-          // classname: 'quater ml mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Define 파일첨부',
-            label: '현상파악 파일첨부',
-            name: 'DEFINE_ATTACH',
-            filePath: info.DEFINE_ATTACH_FILE_PATH,
-            fileName: info.DEFINE_ATTACH_FILE,
-            readOnly: true,
-          },
-        });
-        formData.push({
-          type: 'text',
-          // classname: 'quater ml mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Define 완료일자',
-            label: '현상파악 완료일자',
-            name: 'DEFINE_APPROVAL_DATE',
-            value: info.DEFINE_APPROVAL_DATE ? moment(info.DEFINE_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
-            readOnly: true,
-          },
-        });
-      }
+    if (info?.step > 8) {
+      formData.push({
+        type: 'textarea',
+        // classname: 'half mr mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Define 리더 코멘트',
+          label: '현상파악 리더 코멘트',
+          name: 'step_one_comment',
+          placeholder: '코멘트를 남겨주세요.',
+          value: info.step_one_comment,
+          required: true,
+          readOnly: true,
+          maxLength: 450,
+        },
+        seq: formData.length + 1,
+      });
+      formData.push({
+        type: 'single-uploader',
+        // classname: 'quater ml mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Define 파일첨부',
+          label: '현상파악 파일첨부',
+          name: 'step_one_attach',
+          filePath: info?.step_one_file_path,
+          fileName: info?.step_one_file_name,
+          readOnly: true,
+        },
+      });
+      formData.push({
+        type: 'text',
+        // classname: 'quater ml mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Define 완료일자',
+          label: '현상파악 완료일자',
+          name: 'step_one_complete_date',
+          value: info?.step_one_complete_date ? moment(info?.step_one_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          readOnly: true,
+        },
+      });
       // if (info.phase > 2 || info.status.substr(0, 2) === '완료') {
-      if (info?.step < 2) {
-        formData.push({
-          type: 'textarea',
-          // classname: 'half mr mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Measure 리더 코멘트',
-            label: '원인분석 리더 코멘트',
-            name: 'MEASURE_LEADER_COMMENT',
-            placeholder: '코멘트를 남겨주세요.',
-            value: info.MEASURE_LEADER_COMMENT,
-            required: true,
-            readOnly: true,
-            maxLength: 450,
-          },
-          seq: formData.length + 1,
-        });
-        formData.push({
-          type: 'single-uploader',
-          // classname: 'quater ml mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Measure 파일첨부',
-            label: '원인분석 파일첨부',
-            name: 'MEASURE_ATTACH',
-            filePath: info.MEASURE_ATTACH_FILE_PATH,
-            fileName: info.MEASURE_ATTACH_FILE,
-            readOnly: true,
-          },
-        });
-        formData.push({
-          type: 'text',
-          // classname: 'quater ml mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Measure 완료일자',
-            label: '원인분석 완료일자',
-            name: 'MEASURE_APPROVAL_DATE',
-            value: info.MEASURE_APPROVAL_DATE ? moment(info.MEASURE_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
-            readOnly: true,
-          },
-        });
-      }
+      formData.push({
+        type: 'textarea',
+        // classname: 'half mr mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Measure 리더 코멘트',
+          label: '원인분석 리더 코멘트',
+          name: 'step_two_comment',
+          placeholder: '코멘트를 남겨주세요.',
+          value: info?.step_two_comment,
+          required: true,
+          readOnly: true,
+          maxLength: 450,
+        },
+        seq: formData.length + 1,
+      });
+      formData.push({
+        type: 'single-uploader',
+        // classname: 'quater ml mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Measure 파일첨부',
+          label: '원인분석 파일첨부',
+          name: 'step_two_attach',
+          filePath: info?.step_two_file_path,
+          fileName: info?.step_two_file_name,
+          readOnly: true,
+        },
+      });
+      formData.push({
+        type: 'text',
+        // classname: 'quater ml mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Measure 완료일자',
+          label: '원인분석 완료일자',
+          name: 'step_two_complete_date',
+          value: info?.step_two_complete_date ? moment(info?.step_two_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          readOnly: true,
+        },
+      });
       // if (info.phase > 3 || info.status.substr(0, 2) === '완료') {
-      if (info?.step < 3) {
-        formData.push({
-          type: 'textarea',
-          // classname: 'half mr mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Analyze 리더 코멘트',
-            label: '대책수립 리더 코멘트',
-            name: 'ANALYZE_LEADER_COMMENT',
-            placeholder: '코멘트를 남겨주세요.',
-            value: info.ANALYZE_LEADER_COMMENT,
-            required: true,
-            readOnly: true,
-            maxLength: 450,
-          },
-          seq: formData.length + 1,
-        });
-        formData.push({
-          type: 'single-uploader',
-          // classname: 'quater ml mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Analyze 파일첨부',
-            label: '대책수립 파일첨부',
-            name: 'ANALYZE_ATTACH',
-            filePath: info.ANALYZE_ATTACH_FILE_PATH,
-            fileName: info.ANALYZE_ATTACH_FILE,
-            readOnly: true,
-          },
-        });
-        formData.push({
-          type: 'text',
-          // classname: 'quater ml mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Analyze 완료일자',
-            label: '대책수립 완료일자',
-            name: 'ANALYZE_APPROVAL_DATE',
-            value: info.ANALYZE_APPROVAL_DATE ? moment(info.ANALYZE_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
-            readOnly: true,
-          },
-        });
-      }
-      // if (info.phase > 4 || info.status.substr(0, 2) === '완료') {
-      if (info?.step < 4) {
-        formData.push({
-          type: 'textarea',
-          // classname: 'half mr mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Improve 리더 코멘트',
-            label: '개선 리더 코멘트',
-            name: 'IMPROVE_LEADER_COMMENT',
-            placeholder: '코멘트를 남겨주세요.',
-            value: info.IMPROVE_LEADER_COMMENT,
-            required: true,
-            readOnly: true,
-            maxLength: 450,
-          },
-          seq: formData.length + 1,
-        });
-        formData.push({
-          type: 'single-uploader',
-          // classname: 'quater ml mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Improve 파일첨부',
-            label: '개선 파일첨부',
-            name: 'IMPROVE_ATTACH',
-            filePath: info.IMPROVE_ATTACH_FILE_PATH,
-            fileName: info.IMPROVE_ATTACH_FILE,
-            readOnly: true,
-          },
-        });
-        formData.push({
-          type: 'text',
-          // classname: 'quater ml mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Improve 완료일자',
-            label: '개선 완료일자',
-            name: 'IMPROVE_APPROVAL_DATE',
-            value: info.IMPROVE_APPROVAL_DATE ? moment(info.IMPROVE_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
-            readOnly: true,
-          },
-        });
-      }
+      formData.push({
+        type: 'textarea',
+        // classname: 'half mr mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Analyze 리더 코멘트',
+          label: '대책수립 리더 코멘트',
+          name: 'step_three_comment',
+          placeholder: '코멘트를 남겨주세요.',
+          value: info?.step_three_comment,
+          required: true,
+          readOnly: true,
+          maxLength: 450,
+        },
+        seq: formData.length + 1,
+      });
+      formData.push({
+        type: 'single-uploader',
+        // classname: 'quater ml mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Analyze 파일첨부',
+          label: '대책수립 파일첨부',
+          name: 'step_three_attach',
+          filePath: info?.step_three_file_path,
+          fileName: info?.step_three_file_name,
+          readOnly: true,
+        },
+      });
+      formData.push({
+        type: 'text',
+        // classname: 'quater ml mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Analyze 완료일자',
+          label: '대책수립 완료일자',
+          name: 'step_three_complete-date',
+          value: info?.step_three_complete_date ? moment(info?.step_three_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          readOnly: true,
+        },
+      });
+      formData.push({
+        type: 'textarea',
+        // classname: 'half mr mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Improve 리더 코멘트',
+          label: '개선 리더 코멘트',
+          name: 'step_four_comment',
+          placeholder: '코멘트를 남겨주세요.',
+          value: info?.step_four_comment,
+          required: true,
+          readOnly: true,
+          maxLength: 450,
+        },
+        seq: formData.length + 1,
+      });
+      formData.push({
+        type: 'single-uploader',
+        // classname: 'quater ml mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Improve 파일첨부',
+          label: '개선 파일첨부',
+          name: 'step_four_attach',
+          filePath: info?.step_four_file_path,
+          fileName: info?.step_four_file_name,
+          readOnly: true,
+        },
+      });
+      formData.push({
+        type: 'text',
+        // classname: 'quater ml mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Improve 완료일자',
+          label: '개선 완료일자',
+          name: 'step_four_complete_date',
+          value: info?.step_four_complete_date ? moment(info?.step_four_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          readOnly: true,
+        },
+      });
 
       // if (info.status.substr(0, 2) === '완료') {
-      if (info?.step < 5) {
-        formData.push({
-          type: 'textarea',
-          // classname: 'half mr mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Control 리더 코멘트',
-            label: '완료/공유 리더 코멘트',
-            name: 'CONTROL_LEADER_COMMENT',
-            placeholder: '코멘트를 남겨주세요.',
-            value: info.CONTROL_LEADER_COMMENT,
-            required: true,
-            readOnly: true,
-            maxLength: 450,
-          },
-          seq: formData.length + 1,
-        });
-        formData.push({
-          type: 'single-uploader',
-          // classname: 'quater ml mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Control 파일첨부',
-            label: '완료/공유 파일첨부',
-            name: 'CONTROL_ATTACH',
-            filePath: info.CONTROL_ATTACH_FILE_PATH,
-            fileName: info.CONTROL_ATTACH_FILE,
-            readOnly: true,
-          },
-        });
-        formData.push({
-          type: 'text',
-          // classname: 'quater ml mb',
-          classname: 'improve_form std',
-          option: {
-            // label: 'Control 완료일자',
-            label: '완료/공유 완료일자',
-            name: 'CONTROL_APPROVAL_DATE',
-            value: info.CONTROL_APPROVAL_DATE ? moment(info.CONTROL_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
-            readOnly: true,
-          },
-        });
-      }
+      formData.push({
+        type: 'textarea',
+        // classname: 'half mr mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Control 리더 코멘트',
+          label: '완료/공유 리더 코멘트',
+          name: 'step_five_comment',
+          placeholder: '코멘트를 남겨주세요.',
+          value: info?.step_five_comment,
+          required: true,
+          readOnly: true,
+          maxLength: 450,
+        },
+        seq: formData.length + 1,
+      });
+      formData.push({
+        type: 'single-uploader',
+        // classname: 'quater ml mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Control 파일첨부',
+          label: '완료/공유 파일첨부',
+          name: 'step_five_attach',
+          filePath: info?.step_five_file_path,
+          fileName: info?.step_five_file_name,
+          readOnly: true,
+        },
+      });
+      formData.push({
+        type: 'text',
+        // classname: 'quater ml mb',
+        classname: 'improve_form std',
+        option: {
+          // label: 'Control 완료일자',
+          label: '완료/공유 완료일자',
+          name: 'step_five_complete_date',
+          value: info.step_five_complete_date ? moment(info?.step_five_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          readOnly: true,
+        },
+      });
       // if (info.status.substr(0, 2) === '완료') {
-      if (info?.step < 6) {
-        formData.push({
-          type: 'textarea',
-          // classname: 'mb',
-          classname: 'improve_form std',
-          option: {
-            label: '개선사항',
-            name: 'IMPROVE_CONTENT',
-            placeholder: '개선사항을 남겨주세요.',
-            value: info.IMPROVE_CONTENT,
-            readOnly: true,
-            required: true,
-            maxLength: 450,
-          },
-          seq: formData.length + 1,
-        });
-        formData.push({
-          type: 'textarea',
-          // classname: 'mb',
-          classname: 'improve_form std',
-          option: {
-            label: '성공요인',
-            name: 'SUCCESS_REASON',
-            placeholder: '성공요인을 남겨주세요.',
-            value: info.SUCCESS_REASON,
-            readOnly: true,
-            required: true,
-            maxLength: 450,
-          },
-          seq: formData.length + 1,
-        });
-        formData.push({
-          type: 'single-uploader',
-          // classname: 'mb',
-          classname: 'improve_form std',
-          option: {
-            label: '완료 파일첨부',
-            name: 'ATTACH',
-            filePath: info.ATTACH_FILE_PATH,
-            fileName: info.ATTACH_FILE,
-            readOnly: true,
-          },
-          seq: formData.length + 1,
-        });
-      }
+      formData.push({
+        type: 'textarea',
+        // classname: 'mb',
+        classname: 'improve_form std',
+        option: {
+          label: '개선사항',
+          name: 'improvement_point',
+          placeholder: '개선사항을 남겨주세요.',
+          value: info?.improvement_point,
+          readOnly: true,
+          required: true,
+          maxLength: 450,
+        },
+        seq: formData.length + 1,
+      });
+      formData.push({
+        type: 'textarea',
+        // classname: 'mb',
+        classname: 'improve_form std',
+        option: {
+          label: '성공요인',
+          name: 'success_point',
+          placeholder: '성공요인을 남겨주세요.',
+          value: info?.success_point,
+          readOnly: true,
+          required: true,
+          maxLength: 450,
+        },
+        seq: formData.length + 1,
+      });
+      formData.push({
+        type: 'single-uploader',
+        // classname: 'mb',
+        classname: 'improve_form std',
+        option: {
+          label: '완료 파일첨부',
+          name: 'ATTACH',
+          filePath: info?.real_complete_file_path,
+          fileName: info?.real_complete_file_name,
+          readOnly: true,
+        },
+        seq: formData.length + 1,
+      });
     }
-
     return formData;
   }, [info, deptId]);
 
   return {
-    approverList,
     defaultFormData,
   };
 };

@@ -67,11 +67,11 @@ const StyledDiv = styled.div`
 `;
 
 const steps = [
-  { key: 1, txt: '현' },
-  { key: 2, txt: '원' },
-  { key: 3, txt: '대' },
-  { key: 4, txt: '개' },
-  { key: 5, txt: '완' },
+  { key: 3, txt: '현' },
+  { key: 4, txt: '원' },
+  { key: 5, txt: '대' },
+  { key: 6, txt: '개' },
+  { key: 7, txt: '완' },
 ];
 
 const projectLevel = [

@@ -47,7 +47,7 @@ const TempTable = () => {
     isError,
     pagination,
     action: { pageHandler, pageSizeHandler },
-  } = useSignList({ is_temp: 1, menu_id: 'temp', step: 0 });
+  } = useSignList({ is_temp: 1, menu_id: 'temp', step: 1 });
 
   const {
     modalStatus,

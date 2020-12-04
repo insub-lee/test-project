@@ -48,7 +48,7 @@ const CompletionReportTable = () => {
     isError,
     pagination,
     action: { pageHandler, pageSizeHandler },
-  } = useSignList({ sysid: 'TPMS', mnuid: 'TPMS1070' });
+  } = useSignList({ is_temp: 0, menu_id: 'complete', step: 7 });
 
   const {
     modalStatus,
@@ -61,14 +61,14 @@ const CompletionReportTable = () => {
     () => [
       {
         title: 'NO',
-        dataIndex: 'rownum',
-        key: 'rownum',
+        dataIndex: 'task_seq',
+        key: 'task_seq',
         width: '5%',
       },
       {
         title: 'Project ID',
-        dataIndex: 'PRJ_ID',
-        key: 'PRJ_ID',
+        dataIndex: 'project_id',
+        key: 'project_id',
         width: '20%',
         render: (value, row) => (
           <button
@@ -84,8 +84,8 @@ const CompletionReportTable = () => {
       },
       {
         title: 'Project 명',
-        dataIndex: 'PRJ_TITLE',
-        key: 'PRJ_TITLE',
+        dataIndex: 'title',
+        key: 'title',
         width: '35%',
         render: (value, row) => (
           <button
@@ -121,11 +121,11 @@ const CompletionReportTable = () => {
       },
       {
         title: 'Type',
-        dataIndex: 'PRJ_TYPE',
-        key: 'PRJ_TYPE',
+        dataIndex: 'project_type',
+        key: 'project_type',
         width: '10%',
-        render: prjType => {
-          switch (prjType) {
+        render: project_type => {
+          switch (project_type) {
             case 'G':
               return '개별개선';
             case 'T':
@@ -139,15 +139,15 @@ const CompletionReportTable = () => {
       },
       {
         title: '등록일',
-        dataIndex: 'PRJ_REG_DATE',
-        key: 'PRJ_REG_DATE',
+        dataIndex: 'reg_dttm',
+        key: 'reg_dttm',
         width: '10%',
-        render: prjRegDate => (prjRegDate ? moment(prjRegDate).format('YYYY.MM.DD') : ''),
+        render: reg_dttm => (reg_dttm ? moment(reg_dttm).format('YYYY.MM.DD') : ''),
       },
       {
         title: 'Leader',
-        dataIndex: 'PRJ_LEADER_NAME',
-        key: 'PRJ_LEADER_NAME',
+        dataIndex: 'project_leader',
+        key: 'project_leader',
         width: '10%',
       },
     ],
@@ -178,13 +178,18 @@ const CompletionReportTable = () => {
           <StyledModalTitle>
             <span className="big">Project ID</span>
             <span className="line" />
-            <span className="small">{currentRecord?.PRJ_ID || ''}</span>
+            <span className="small">{currentRecord?.project_id || ''}</span>
           </StyledModalTitle>
         }
         footer={null}
         onCancel={() => closeModal('INFO')}
       >
-        <Detail info={currentRecord} />
+        <Detail
+          info={currentRecord}
+          callback={() => {
+            pageHandler(1);
+          }}
+        />
       </ModalHugger>
       <ModalHugger width={1250} visible={modalStatus.SAVE} title="등록하기" footer={null} onCancel={() => closeModal('SAVE')}>
         SAVE

@@ -577,8 +577,8 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
         .then(({ response }) => {
           const { result, req, error } = response;
           if (result && !error) {
-            getProcessRule(118, {}).then(ee => {
-              fillWorkFlowData(ee, req);
+            getProcessRule().then(ee => {
+              fillWorkFlowData(ee, { ...req, rel_type: 200 });
               alertMessage.notice('개선활동을 신규 등록하였습니다.');
               debug('개선활동을 신규 등록하였습니다.');
               setIsRedirect(true);

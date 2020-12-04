@@ -41,7 +41,7 @@ export default ({ is_temp, menu_id, step }) => {
     // });
     setIsLoading(true);
 
-    const requestQuery = { is_temp, step, currentPage: pagination.current - 1 || 0, pageSize: pagination.pageSize || 10 };
+    const requestQuery = { is_temp, step, menu_id, currentPage: pagination.current - 1 || 0, pageSize: pagination.pageSize || 10 };
 
     fetchList(requestQuery)
       .then(({ response, error }) => {

@@ -10,12 +10,12 @@ import useAuth from '../../../../hooks/useAuth';
 
 const Detail = ({ info, usrid, dpcd, dpnm }) => {
   const { authInfo, isError: isAuthError, isLoading: isAuthLoading } = useAuth();
-  const { defaultFormData, approverList } = useHooks({ info, usrnm: authInfo?.usrNm || '', deptId: authInfo?.deptId || '' });
+  const { defaultFormData } = useHooks({ info, usrnm: authInfo?.usrNm || '', deptId: authInfo?.deptId || '' });
   return (
     <div>
       <Spin spinning={isAuthLoading}>
         {/* <SignProcessList list={info?.signPrclistInfo} /> */}
-        <SignProcessList list={approverList} />
+        <SignProcessList info={info} />
         <form autoComplete="off" onSubmit={e => e.preventDefault()}>
           <input type="hidden" name="task_seq" value={info?.task_seq} />
           {/* <input type="hidden" name="signlineno" value={info?.signlineno} /> */}

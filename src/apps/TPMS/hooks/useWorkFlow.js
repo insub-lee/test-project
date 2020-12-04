@@ -8,17 +8,48 @@ import MessageContent from 'components/Feedback/message.style2';
 
 export const useWorkFlow = () => {};
 
-export const getProcessRule = async (PRC_ID, callBack) => {
+export const stepChanger = async (task_seq, step, payload) => {
+  console.debug('### task_seq, step, payload:', task_seq, step, payload);
+  const response = await request({
+    method: 'POST',
+    url: '/api/tpms/v1/common/approvalSide',
+    data: { ...payload, task_seq, step: step + 1, type: 'step' },
+    type: 'step',
+  });
+  const { result, error, req } = response?.response;
+  console.debug('### res:', response, result, error, req);
+  return { result, error, req };
+};
+
+export const submitDraft = async (data, APPV_STATUS, OPINION) => {
+  const payload = {
+    ISFORMDATA: false,
+    QUE_ID: data?.QUE_ID,
+    APPV_STATUS,
+    QUE_DATA: { QUE_ID: data?.QUE_ID, PRC_ID: data?.PRC_ID, OPINION, APPV_STATUS, DRAFT_DATA: { data, ISWAIT: '0' } },
+    FORM_DATA: data,
+  };
+  const result = await request({
+    method: 'POST',
+    url: '/api/workflow/v1/common/workprocess/draftApprove',
+    data: { PARAM: { ...payload } },
+    json: true,
+  });
+  return result?.response;
+};
+
+export const getProcessRule = async () => {
+  const tpms_prc_id = 118;
   const result = await request({
     method: 'POST',
     url: '/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder',
-    data: { PARAM: { PRC_ID } },
+    data: { PARAM: { PRC_ID: tpms_prc_id } },
     json: true,
   });
-  return typeof callBack === 'function' ? callBack(result?.response?.DRAFT_PROCESS || {}) : result?.response?.DRAFT_PROCESS || {};
+  return result?.response?.DRAFT_PROCESS || {};
 };
 
-export const saveProcessRule = async (processRule, callBack = () => {}, messageFlag = true) => {
+export const saveProcessRule = async (processRule, messageFlag = true) => {
   const processStep = processRule?.DRAFT_PROCESS_STEP || [];
   let msg = '';
   if (!processStep.length) {
@@ -48,11 +79,11 @@ export const saveProcessRule = async (processRule, callBack = () => {}, messageF
     const draftId = response?.draftProcess?.DRAFT_ID;
     if (draftId) {
       if (messageFlag) message.info(<MessageContent>결재 요청이 완료되었습니다.</MessageContent>);
-      return callBack(draftId);
+      return true;
       // return draftId;
     }
     if (messageFlag) message.info(<MessageContent>결재요청에 실패하였습니다.</MessageContent>);
-    return callBack(draftId);
+    return false;
     // return draftId;
   });
 
@@ -119,24 +150,15 @@ export const fillWorkFlowData = async (prcRule, payload) => {
 
     console.debug('### process :', prcRule, payload);
 
-    return saveProcessRule(
-      {
-        ...prcRule,
-        WORK_SEQ: payload?.work_seq,
-        TASK_SEQ: payload?.task_seq,
-        REL_KEY: 'TPMS',
-        REL_TYPE: 200,
-        DRAFT_DATA: {},
-        DRAFT_TITLE: `${payload?.title}`,
-      },
-      draftId => {
-        if (draftId) {
-          //   return this.fileMoveToReal();
-          return true;
-        }
-        return false;
-      },
-    );
+    return saveProcessRule({
+      ...prcRule,
+      WORK_SEQ: payload?.work_seq,
+      TASK_SEQ: payload?.task_seq,
+      REL_KEY: 'TPMS',
+      REL_TYPE: payload?.rel_type,
+      DRAFT_DATA: {},
+      DRAFT_TITLE: `${payload?.title}`,
+    });
   }
-  return 'failed';
+  return false;
 };

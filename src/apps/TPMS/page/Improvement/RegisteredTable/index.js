@@ -52,7 +52,7 @@ const RecordList = () => {
     isError,
     pagination,
     action: { pageHandler, pageSizeHandler },
-  } = useSignList({ is_temp: 0, menu_id: 'register', step: 0 });
+  } = useSignList({ is_temp: 0, menu_id: 'register', step: 2 });
 
   const {
     modalStatus,
@@ -156,38 +156,50 @@ const RecordList = () => {
         render: step => {
           switch (step) {
             case 0:
+            case 1:
               return (
                 <StatusIcon className="sky">
                   <span className="icon icon_ing1_on" />
-                  등록
+                  1차 등록 중
                 </StatusIcon>
               );
-            case 1: // 현상파악
-            case 2: // 원인파악
-            case 3: // 대책수립
-            case 4: // 개선활동
-            case 5: // 완료보고
+            case 8:
+            case 11:
+              return (
+                <StatusIcon className="sky">
+                  <span className="icon icon_ing1_on" />
+                  완료보고 등록 중
+                </StatusIcon>
+              );
+            case 2: // 갓 등록된 상황
+            case 3: // 현상파악
+            case 4: // 원인파악
+            case 5: // 대책수립
+            case 6: // 개선활동
+            case 7: // 완료보고
               return (
                 <StatusIcon className="green">
                   <span className="icon icon_ing2_on" />
                   진행
                 </StatusIcon>
               );
-            case 9:
+            case 20:
+            case 21:
+            case 22:
               return (
                 <StatusIcon className="gold">
                   <span className="icon icon_ing3_on" />
                   DROP
                 </StatusIcon>
               );
-            case 10:
+            case 30:
               return (
                 <StatusIcon className="orange">
                   <span className="icon icon_ing4_on" />
                   지연
                 </StatusIcon>
               );
-            case 7:
+            case 12:
               return (
                 <StatusIcon className="gray">
                   <span className="icon icon_ing5_on" />
@@ -233,7 +245,12 @@ const RecordList = () => {
         footer={null}
         onCancel={() => closeModal('INFO')}
       >
-        <Detail info={currentRecord} />
+        <Detail
+          info={currentRecord}
+          callback={() => {
+            pageHandler(1);
+          }}
+        />
       </ModalHugger>
     </>
   );

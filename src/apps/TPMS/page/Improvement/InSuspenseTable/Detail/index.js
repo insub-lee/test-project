@@ -20,11 +20,11 @@ const Detail = ({ info, callback }) => {
   return (
     <div>
       <Spin spinning={isAuthLoading}>
-        <SignProcessList list={info.signPrclistInfo} />
+        <SignProcessList info={info} />
         <form ref={formRef} autoComplete="off" onSubmit={e => e.preventDefault()}>
-          <input type="hidden" name="signlineno" value={info.signlineno} />
-          <input type="hidden" name="signno" value={info.signno} />
-          <input type="hidden" name="docno" value={info.docno} />
+          {/* <input type="hidden" name="signlineno" value={info.signlineno} /> */}
+          {/* <input type="hidden" name="signno" value={info.signno} /> */}
+          <input type="hidden" name="task_seq" value={info?.task_seq} />
           <FormView datas={defaultFormData} noBoarder isImprove />
           <BtnWrap>
             <Button type="button" color="primary" onClick={accept}>
