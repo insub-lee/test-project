@@ -154,10 +154,11 @@ const InSuspenseTable = () => {
         dataIndex: 'appv_status',
         key: 'appv_status',
         width: '15%',
-        render: (appv_status, row) => {
+        render: (value, row) => {
+          const { step } = row;
           switch (row?.rel_type) {
             case 200:
-              switch (appv_status) {
+              switch (step) {
                 case 0: {
                   return '등록 1차 결재대기';
                 }
@@ -169,11 +170,11 @@ const InSuspenseTable = () => {
                   return '';
               }
             case 201:
-              switch (appv_status) {
-                case 0: {
+              switch (step) {
+                case 8: {
                   return '완료보고 1차 결재대기';
                 }
-                case 1: {
+                case 11: {
                   return '완료보고 최종 결재대기';
                 }
 
@@ -181,11 +182,11 @@ const InSuspenseTable = () => {
                   return '';
               }
             case 202:
-              switch (appv_status) {
-                case 0: {
+              switch (step) {
+                case 20: {
                   return 'Drop 1차 결재대기';
                 }
-                case 1: {
+                case 21: {
                   return 'Drop 최종 결재대기';
                 }
 
