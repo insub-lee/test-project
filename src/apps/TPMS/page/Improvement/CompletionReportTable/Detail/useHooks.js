@@ -1,32 +1,35 @@
-import { useRef, useState, useMemo, useCallback } from 'react';
+/* eslint-disable camelcase */
+import { useRef, useState, useMemo } from 'react';
 import moment from 'moment';
-import request from 'utils/request';
+// import request from 'utils/request';
+import { stepChanger, fillWorkFlowData, getProcessRule } from '../../../../hooks/useWorkFlow';
 
-import parseFiles from '../../../../utils/parseFiles';
+// import parseFiles from '../../../../utils/parseFiles';
 import alertMessage from '../../../../components/Notification/Alert';
 
 export default ({ info, dpcd = '', callback = () => {} }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isRedirect, setIsRedirect] = useState(false);
   const [isError, setIsError] = useState(false);
   const formRef = useRef(null);
   const dropModalRef = useRef(null);
 
   const defaultFormData = useMemo(() => {
-    const { ctqLabel, yvalLabel, baselinevalLabel, targetvalLabel, remarkLabel } =
-      info.PRJ_TYPE === 'W'
+    const { key_performance_indicators, current_status, goal, apply_target, note } =
+      info?.project_type === 'W'
         ? {
-            ctqLabel: 'FAB',
-            yvalLabel: 'Area',
-            baselinevalLabel: '피해장수(수량)',
-            targetvalLabel: '요인(부서)',
-            remarkLabel: '발생일',
+            key_performance_indicators: 'FAB',
+            current_status: 'Area',
+            goal: '피해장수(수량)',
+            apply_target: '요인(부서)',
+            note: '발생일',
           }
         : {
-            ctqLabel: '핵심성과지표',
-            yvalLabel: '현재 상태',
-            baselinevalLabel: '목표',
-            targetvalLabel: '적용 대상',
-            remarkLabel: '비고',
+            key_performance_indicators: '핵심성과지표',
+            current_status: '현재 상태',
+            goal: '목표',
+            apply_target: '적용 대상',
+            note: '비고',
           };
 
     const formData = [
@@ -35,9 +38,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         classname: 'improve_form std width50 flCustom',
         option: {
           label: 'Project 명',
-          name: 'PRJ_TITLE',
+          name: 'title',
           placeholder: '',
-          value: info.PRJ_TITLE,
+          value: info?.title,
           required: true,
           readOnly: true,
         },
@@ -49,9 +52,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         classname: 'improve_form std width50 frCustom',
         option: {
           label: 'Project Leader',
-          name: 'PRJ_LEADER_NAME',
+          name: 'project_leader',
           placeholder: '',
-          value: info.PRJ_LEADER_NAME,
+          value: info?.project_leader,
           required: true,
           readOnly: true,
         },
@@ -64,9 +67,10 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         option: {
           label: '장비모델명',
           values:
-            info.EQUIPMENTS.map(item => {
-              console.debug('item >>>>', item);
-              const itemValues = item.itemvalue.split(':');
+            JSON.parse(info?.equipment_model || '[]').map(item => {
+              const itemValues = JSON.stringify(item)
+                .replaceAll('"', '')
+                .split(':');
               return {
                 fab: itemValues[0],
                 area: itemValues[1],
@@ -84,24 +88,24 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         classname: 'improve_form ex',
         option: {
           label: 'Project Type',
-          name: 'PRJ_TYPE',
+          name: 'project_type',
           values: [
             {
               label: '개별개선',
               value: 'G',
-              checked: info.PRJ_TYPE === 'G',
+              checked: info?.project_type === 'G',
               readOnly: true,
             },
             {
               label: 'TFT',
               value: 'T',
-              checked: info.PRJ_TYPE === 'T',
+              checked: info?.project_type === 'T',
               readOnly: true,
             },
             {
               label: 'Wafer Loss',
               value: 'W',
-              checked: info.PRJ_TYPE === 'W',
+              checked: info?.project_type === 'W',
               readOnly: true,
             },
           ],
@@ -114,14 +118,14 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         classname: 'improve_form std width50 flCustom',
         option: {
           label: 'Level',
-          name: 'PRJ_LEVEL',
+          name: 'project_level',
           disabled: true,
           readOnly: true,
           values: [
-            { label: '본부', value: '1', selected: info.PRJ_LEVEL === '1' },
-            { label: '담당', value: '2', selected: info.PRJ_LEVEL === '2' },
-            { label: '팀', value: '3', selected: info.PRJ_LEVEL === '3' },
-            { label: 'Part', value: '4', selected: info.PRJ_LEVEL === '4' },
+            { label: '본부', value: 1, selected: info?.project_level === 1 },
+            { label: '담당', value: 2, selected: info?.project_level === 2 },
+            { label: '팀', value: 3, selected: info?.project_level === 3 },
+            { label: 'Part', value: 4, selected: info?.project_level === 4 },
           ],
         },
         seq: 5,
@@ -131,39 +135,39 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         classname: 'improve_form std width50 frCustom marginNone',
         option: {
           label: 'Performance Type',
-          name: 'PERFORM_TYPE',
+          name: 'performance_type',
           disabled: true,
           readOnly: true,
           values: [
             {
               label: 'Cost',
               value: 'C',
-              selected: info.PERFORM_TYPE === 'C',
+              selected: info?.performance_type === 'C',
             },
             {
               label: 'Delivery',
               value: 'D',
-              selected: info.PERFORM_TYPE === 'D',
+              selected: info?.performance_type === 'D',
             },
             {
               label: 'Morale',
               value: 'M',
-              selected: info.PERFORM_TYPE === 'M',
+              selected: info?.performance_type === 'M',
             },
             {
               label: 'Productivity',
               value: 'P',
-              selected: info.PERFORM_TYPE === 'P',
+              selected: info?.performance_type === 'P',
             },
             {
               label: 'Quality',
               value: 'Q',
-              selected: info.PERFORM_TYPE === 'Q',
+              selected: info?.performance_type === 'Q',
             },
             {
               label: 'Safety',
               value: 'S',
-              selected: info.PERFORM_TYPE === 'S',
+              selected: info?.performance_type === 'S',
             },
           ],
         },
@@ -174,10 +178,10 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         classname: 'improve_form width20 flCustom',
         option: {
           // label: 'KPI',
-          label: ctqLabel,
-          name: 'CTQ',
+          label: key_performance_indicators,
+          name: 'key_performance_indicators',
           placeholder: '',
-          value: info.CTQ,
+          value: info?.key_performance_indicators,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -189,10 +193,10 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         classname: 'improve_form width20 flCustom',
         option: {
           // label: 'AS-IS',
-          label: yvalLabel,
-          name: 'Y_VAL',
+          label: current_status,
+          name: 'current_status',
           placeholder: '',
-          value: info.Y_VAL,
+          value: info?.current_status,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -204,10 +208,10 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         classname: 'improve_form width20 flCustom',
         option: {
           // label: 'Target',
-          label: baselinevalLabel,
-          name: 'BASELINE_VAL',
+          label: goal,
+          name: 'goal',
           placeholder: '',
-          value: info.BASELINE_VAL,
+          value: info?.goal,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -218,10 +222,10 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         type: 'textarea',
         classname: 'improve_form width20 flCustom',
         option: {
-          label: targetvalLabel,
-          name: 'TARGET_VAL',
+          label: apply_target,
+          name: 'apply_target',
           placeholder: '',
-          value: info.TARGET_VAL,
+          value: info?.apply_target,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -232,10 +236,10 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         type: 'textarea',
         classname: 'improve_form width20 flCustom marginNone',
         option: {
-          label: remarkLabel,
-          name: 'REMARK',
+          label: note,
+          name: 'note',
           placeholder: '',
-          value: info.REMARK,
+          value: info?.note,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -247,9 +251,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         classname: 'improve_form width50 flCustom',
         option: {
           label: '프로젝트를 시작하게 된 배경 ',
-          name: 'PRJ_BACK_DESC',
+          name: 'project_reason',
           placeholder: '',
-          value: info.PRJ_BACK_DESC,
+          value: info?.problem_improvement,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -261,9 +265,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         classname: 'improve_form width50 frCustom',
         option: {
           label: '문제점/개선',
-          name: 'PROBLEM_DESC',
+          name: 'problem_improvement',
           placeholder: '',
-          value: info.PROBLEM_DESC,
+          value: info?.problem_improvement,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -275,9 +279,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         classname: 'improve_form width50 flCustom',
         option: {
           label: '해결 방법',
-          name: 'HOW_TO_DESC',
+          name: 'solution',
           placeholder: '',
-          value: info.HOW_TO_DESC,
+          value: info?.solution,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -289,9 +293,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
         classname: 'improve_form width50 frCustom',
         option: {
           label: '범위',
-          name: 'SCOPE_DESC',
+          name: 'scope',
           placeholder: '',
-          value: info.SCOPE_DESC,
+          value: info?.scope,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -309,13 +313,17 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
               type: 'range',
               values: [
                 {
-                  name: 'START_DATE',
-                  value: info.START_DATE ? moment(info.START_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  name: 'situation_analyze_start_date',
+                  value: info?.situation_analyze_start_date
+                    ? moment(info?.situation_analyze_start_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                 },
                 {
-                  name: 'DEFINE_DUE_DATE',
-                  value: info.DEFINE_DUE_DATE ? moment(info.DEFINE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  name: 'situation_analyze_end_date',
+                  value: info?.situation_analyze_end_date
+                    ? moment(info?.situation_analyze_end_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                 },
               ],
@@ -325,8 +333,8 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
               type: 'single',
               values: [
                 {
-                  name: 'MEASURE_DUE_DATE',
-                  value: info.MEASURE_DUE_DATE ? moment(info.MEASURE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  name: 'cause_analyze_due_date',
+                  value: info?.cause_analyze_due_date ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
                   readOnly: true,
                 },
               ],
@@ -336,8 +344,8 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
               type: 'single',
               values: [
                 {
-                  name: 'ANALYZE_DUE_DATE',
-                  value: info.ANALYZE_DUE_DATE ? moment(info.ANALYZE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  name: 'measure_due_date',
+                  value: info?.measure_due_date ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
                   readOnly: true,
                 },
               ],
@@ -347,8 +355,8 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
               type: 'single',
               values: [
                 {
-                  name: 'IMPROVE_DUE_DATE',
-                  value: info.IMPROVE_DUE_DATE ? moment(info.IMPROVE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  name: 'improvement_due_date',
+                  value: info?.improvement_due_date ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
                   readOnly: true,
                 },
               ],
@@ -358,8 +366,8 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
               type: 'single',
               values: [
                 {
-                  name: 'CONTROL_DUE_DATE',
-                  value: info.CONTROL_DUE_DATE ? moment(info.CONTROL_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  name: 'completion_due_date',
+                  value: info?.completion_due_date ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
                   readOnly: true,
                 },
               ],
@@ -375,9 +383,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '현상파악 리더 코멘트',
-        name: 'DEFINE_LEADER_COMMENT',
+        name: 'step_one_comment',
         placeholder: '코멘트를 남겨주세요.',
-        value: info.DEFINE_LEADER_COMMENT,
+        value: info?.step_one_comment,
         required: true,
         maxLength: 450,
         readOnly: true,
@@ -389,9 +397,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '현상파악 파일첨부',
-        name: 'DEFINE_ATTACH',
-        filePath: info.DEFINE_ATTACH_FILE_PATH,
-        fileName: info.DEFINE_ATTACH_FILE,
+        name: 'step_one_attach',
+        filePath: info?.step_one_file_path,
+        fileName: info?.step_one_file_name,
         readOnly: true,
       },
     });
@@ -400,8 +408,8 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '현상파악 완료일자',
-        name: 'DEFINE_APPROVAL_DATE',
-        value: info.DEFINE_APPROVAL_DATE ? moment(info.CONTROL_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+        name: 'step_one_complete_date',
+        value: info?.step_one_complete_date ? moment(info?.step_one_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
         readOnly: true,
       },
     });
@@ -410,9 +418,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '원인분석 리더 코멘트',
-        name: 'MEASURE_LEADER_COMMENT',
+        name: 'step_two_comment',
         placeholder: '코멘트를 남겨주세요.',
-        value: info.MEASURE_LEADER_COMMENT,
+        value: info?.step_two_comment,
         required: true,
         readOnly: true,
         maxLength: 450,
@@ -424,9 +432,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '원인분석 파일첨부',
-        name: 'MEASURE_ATTACH',
-        filePath: info.MEASURE_ATTACH_FILE_PATH,
-        fileName: info.MEASURE_ATTACH_FILE,
+        name: 'step_two_attach',
+        filePath: info?.step_two_file_path,
+        fileName: info?.step_two_file_name,
         readOnly: true,
       },
     });
@@ -435,8 +443,8 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '원인분석 완료일자',
-        name: 'MEASURE_APPROVAL_DATE',
-        value: info.MEASURE_APPROVAL_DATE ? moment(info.MEASURE_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+        name: 'step_two_complete_date',
+        value: info?.step_two_complete_date ? moment(info?.step_two_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
         readOnly: true,
       },
     });
@@ -445,9 +453,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '대책수립 리더 코멘트',
-        name: 'ANALYZE_LEADER_COMMENT',
+        name: 'step_three_comment',
         placeholder: '코멘트를 남겨주세요.',
-        value: info.ANALYZE_LEADER_COMMENT,
+        value: info?.step_three_comment,
         required: true,
         readOnly: true,
         maxLength: 450,
@@ -459,9 +467,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '대책수립 파일첨부',
-        name: 'ANALYZE_ATTACH',
-        filePath: info.ANALYZE_ATTACH_FILE_PATH,
-        fileName: info.ANALYZE_ATTACH_FILE,
+        name: 'step_three_attach',
+        filePath: info?.step_three_file_path,
+        fileName: info?.step_three_file_name,
         readOnly: true,
       },
     });
@@ -470,8 +478,8 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '대책수립 완료일자',
-        name: 'ANALYZE_APPROVAL_DATE',
-        value: info.ANALYZE_APPROVAL_DATE ? moment(info.ANALYZE_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+        name: 'step_three_complete-date',
+        value: info?.step_three_complete_date ? moment(info?.step_three_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
         readOnly: true,
       },
     });
@@ -480,9 +488,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '개선 리더 코멘트',
-        name: 'IMPROVE_LEADER_COMMENT',
+        name: 'step_four_comment',
         placeholder: '코멘트를 남겨주세요.',
-        value: info.IMPROVE_LEADER_COMMENT,
+        value: info?.step_four_comment,
         required: true,
         readOnly: true,
         maxLength: 450,
@@ -494,9 +502,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '개선 파일첨부',
-        name: 'IMPROVE_ATTACH',
-        filePath: info.IMPROVE_ATTACH_FILE_PATH,
-        fileName: info.IMPROVE_ATTACH_FILE,
+        name: 'step_four_attach',
+        filePath: info?.step_four_file_path,
+        fileName: info?.step_four_file_name,
         readOnly: true,
       },
     });
@@ -505,8 +513,8 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '개선 완료일자',
-        name: 'IMPROVE_APPROVAL_DATE',
-        value: info.IMPROVE_APPROVAL_DATE ? moment(info.IMPROVE_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+        name: 'step_four_complete_date',
+        value: info?.step_four_complete_date ? moment(info?.step_four_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
         readOnly: true,
       },
     });
@@ -515,9 +523,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '완료/공유 리더 코멘트',
-        name: 'CONTROL_LEADER_COMMENT',
+        name: 'step_five_comment',
         placeholder: '코멘트를 남겨주세요.',
-        value: info.CONTROL_LEADER_COMMENT,
+        value: info?.step_five_comment,
         required: true,
         readOnly: true,
         maxLength: 450,
@@ -529,9 +537,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '완료/공유 파일첨부',
-        name: 'CONTROL_ATTACH',
-        filePath: info.CONTROL_ATTACH_FILE_PATH,
-        fileName: info.CONTROL_ATTACH_FILE,
+        name: 'step_five_attach',
+        filePath: info?.step_five_file_path,
+        fileName: info?.step_five_file_name,
         readOnly: true,
       },
     });
@@ -540,8 +548,8 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '완료/공유 완료일자',
-        name: 'CONTROL_APPROVAL_DATE',
-        value: info.CONTROL_APPROVAL_DATE ? moment(info.CONTROL_APPROVAL_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+        name: 'step_five_complete_date',
+        value: info?.step_five_complete_date ? moment(info?.step_five_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
         readOnly: true,
       },
     });
@@ -550,9 +558,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '개선사항',
-        name: 'IMPROVE_CONTENT',
+        name: 'improvement_point',
         placeholder: '개선사항을 남겨주세요.',
-        value: info.IMPROVE_CONTENT,
+        value: info?.improvement_point,
         required: true,
         maxLength: 450,
       },
@@ -563,9 +571,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '성공요인',
-        name: 'SUCCESS_REASON',
+        name: 'success_point',
         placeholder: '성공요인을 남겨주세요.',
-        value: info.SUCCESS_REASON,
+        value: info?.success_point,
         required: true,
         maxLength: 450,
       },
@@ -600,85 +608,90 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       classname: 'improve_form std',
       option: {
         label: '완료 파일첨부',
-        name: 'ATTACH',
-        filePath: info.ATTACH_FILE_PATH,
-        fileName: info.ATTACH_FILE,
+        name: 'real_complete_attach',
+        filePath: info?.real_complete_file_path,
+        fileName: info?.real_complete_file_name,
       },
     });
 
     return formData;
   }, [info, dpcd]);
 
-  const postData = useCallback(async payload => {
-    const url = '/apigate/v1/portal/sign/task';
-    const { response, error } = await request({
-      url,
-      method: 'POST',
-      data: payload,
-    });
-    return { response, error };
-  }, []);
+  // const postData = useCallback(async payload => {
+  //   const url = '/apigate/v1/portal/sign/task';
+  //   const { response, error } = await request({
+  //     url,
+  //     method: 'POST',
+  //     data: payload,
+  //   });
+  //   return { response, error };
+  // }, []);
 
   const submitForm = e => {
     e.preventDefault();
     e.stopPropagation();
 
     const formData = new FormData(e.target);
+    const formJson = {};
     const payload = {};
     formData.forEach((value, key) => {
-      payload[key] = value;
+      formJson[key] = value;
     });
 
-    const signref = JSON.parse(payload.user_selector_0 || '[]').map(user => user.usrid);
-    const { files } = parseFiles(payload);
-    const items = JSON.parse(payload.equip_selector).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
-
-    if (info.signPrclistInfo.some(item => item.sign === '완료 반려')) {
-      payload.mnuid = 'TPMS1040';
-    }
-
-    payload.items = items;
-    payload.signref = signref;
-    payload.files = files;
-
+    payload.sharer = JSON.stringify(JSON.parse(formJson.user_selector_0 || '[]').map(user => user));
+    payload.real_complete_file_path = formJson.real_complete_attach_FILE_PATH;
+    payload.real_complete_file_name = formJson.real_complete_attach_FILE;
+    payload.success_point = formJson.success_point;
+    payload.improvement_point = formJson.improvement_point;
     console.debug('>>>>> payload', payload);
-    if (files.length < 1 || !payload.ATTACH_FILE || !payload.ATTACH_FILE_PATH) {
+
+    if (!payload.real_complete_file_path || !payload.real_complete_file_name) {
       alertMessage.alert('완료 파일 첨부는 필수 입니다.');
       return;
     }
 
     setIsLoading(true);
 
-    postData(payload)
-      .then(({ response, error }) => {
-        if (response && !error) {
-          const { insertyn } = response;
-          if (insertyn && callback) callback();
-        } else {
+    getProcessRule().then(prcRule => {
+      fillWorkFlowData(prcRule, { ...info, rel_type: 201 })
+        .then(submitResult => {
+          if (submitResult) {
+            stepChanger(info?.task_seq, info?.step, payload).then(({ result, error, req }) => {
+              if (result && !error) {
+                alertMessage.notice('제출 완료');
+                setIsRedirect(true);
+              } else {
+                setIsError(true);
+                alertMessage.alert('Server Error');
+                callback();
+              }
+            });
+          }
+        })
+        .catch(() => {
           setIsError(true);
           alertMessage.alert('Server Error');
-        }
-      })
-      .catch(() => {
-        setIsError(true);
-        alertMessage.alert('Server Error');
-      });
+          callback();
+        });
+    });
 
     setIsLoading(false);
   };
 
   const openDropModal = () => {
-    const formData = new FormData(formRef.current);
-    const formJson = {};
-    formData.forEach((value, key) => {
-      formJson[key] = value;
-    });
-    const signref = JSON.parse(formJson.user_selector_0 || '[]').map(user => user.usrid);
+    // const formData = new FormData(formRef.current);
+    // const formJson = {};
+    // formData.forEach((value, key) => {
+    //   formJson[key] = value;
+    // });
+    // const signref = JSON.parse(formJson.user_selector_0 || '[]').map(user => user);
 
-    const { files } = parseFiles(formJson);
-    const { IMPROVE_CONTENT, SUCCESS_REASON, ATTACH_FILE_PATH, ATTACH_FILE } = formJson;
-    const payload = { IMPROVE_CONTENT, SUCCESS_REASON, ATTACH_FILE_PATH, ATTACH_FILE, signref, files };
-    dropModalRef.current.handleOpen(payload);
+    // const { files } = parseFiles(formJson);
+    // const { improvement_point, success_point } = formJson;
+    // const payload = { improvement_point, success_point, signref, files };
+
+    // todo
+    dropModalRef.current.handleOpen();
   };
 
   return {
@@ -686,6 +699,7 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
     isError,
     formRef,
     dropModalRef,
+    isRedirect,
     defaultFormData,
     actions: { submitForm, openDropModal },
   };

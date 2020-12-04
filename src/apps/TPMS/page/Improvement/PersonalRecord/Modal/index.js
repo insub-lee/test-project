@@ -114,8 +114,9 @@ class ProjectInfoModal extends React.Component {
     const option = {
       values:
         EQUIPMENTS.map(item => {
-          const itemValues = item.itemvalue.split(':');
-          console.debug(itemValues);
+          const itemValues = JSON.stringify(item)
+            .replaceAll('"', '')
+            .split(':');
           return {
             fab: itemValues[0],
             area: itemValues[1],

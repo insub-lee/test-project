@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useMemo, useState } from 'react';
 import moment from 'moment';
 import Table from 'rc-table';
@@ -51,7 +52,7 @@ const RecordList = () => {
     isError,
     pagination,
     action: { pageHandler, pageSizeHandler },
-  } = useSignList({ sysid: 'TPMS', mnuid: 'TPMS1030' });
+  } = useSignList({ is_temp: 0, menu_id: 'register', step: 2 });
 
   const {
     modalStatus,
@@ -64,14 +65,14 @@ const RecordList = () => {
     () => [
       {
         title: 'NO',
-        dataIndex: 'rownum',
-        key: 'rownum',
+        dataIndex: 'task_seq',
+        key: 'task_seq',
         width: '5%',
       },
       {
         title: 'Project ID',
-        dataIndex: 'PRJ_ID',
-        key: 'PRJ_ID',
+        dataIndex: 'project_id',
+        key: 'project_id',
         width: '20%',
         render: (value, row) => (
           <button
@@ -87,8 +88,8 @@ const RecordList = () => {
       },
       {
         title: 'Project 명',
-        dataIndex: 'PRJ_TITLE',
-        key: 'PRJ_TITLE',
+        dataIndex: 'title',
+        key: 'title',
         width: '35%',
         render: (value, row) => (
           <button
@@ -104,18 +105,18 @@ const RecordList = () => {
       },
       {
         title: 'Level',
-        dataIndex: 'PRJ_LEVEL',
-        key: 'PRJ_LEVEL',
+        dataIndex: 'project_level',
+        key: 'project_level',
         width: '10%',
-        render: prjLevel => {
-          switch (prjLevel) {
-            case '1':
+        render: project_level => {
+          switch (project_level) {
+            case 1:
               return '본부';
-            case '2':
+            case 2:
               return '담당';
-            case '3':
+            case 3:
               return '팀';
-            case '4':
+            case 4:
               return 'Part';
             default:
               return '본부';
@@ -124,11 +125,11 @@ const RecordList = () => {
       },
       {
         title: 'Type',
-        dataIndex: 'PRJ_TYPE',
-        key: 'PRJ_TYPE',
+        dataIndex: 'project_type',
+        key: 'project_type',
         width: '10%',
-        render: prjType => {
-          switch (prjType) {
+        render: project_type => {
+          switch (project_type) {
             case 'G':
               return '개별개선';
             case 'T':
@@ -142,48 +143,63 @@ const RecordList = () => {
       },
       {
         title: '등록일',
-        dataIndex: 'PRJ_REG_DATE',
-        key: 'PRJ_REG_DATE',
+        dataIndex: 'reg_dttm',
+        key: 'reg_dttm',
         width: '10%',
-        render: prjRegDate => (prjRegDate ? moment(prjRegDate).format('YYYY.MM.DD') : ''),
+        render: reg_dttm => (reg_dttm ? moment(reg_dttm).format('YYYY.MM.DD') : ''),
       },
       {
         title: '문서상태',
-        dataIndex: 'status',
-        key: 'status',
+        dataIndex: 'step',
+        key: 'step',
         width: '10%',
-        render: status => {
-          switch (status) {
-            case '등록':
+        render: step => {
+          switch (step) {
+            case 0:
+            case 1:
               return (
                 <StatusIcon className="sky">
                   <span className="icon icon_ing1_on" />
-                  등록
+                  1차 등록 중
                 </StatusIcon>
               );
-            case '진행':
+            case 8:
+            case 11:
+              return (
+                <StatusIcon className="sky">
+                  <span className="icon icon_ing1_on" />
+                  완료보고 등록 중
+                </StatusIcon>
+              );
+            case 2: // 갓 등록된 상황
+            case 3: // 현상파악
+            case 4: // 원인파악
+            case 5: // 대책수립
+            case 6: // 개선활동
+            case 7: // 완료보고
               return (
                 <StatusIcon className="green">
                   <span className="icon icon_ing2_on" />
                   진행
                 </StatusIcon>
               );
-            case 'Drop':
-            case 'DROP':
+            case 20:
+            case 21:
+            case 22:
               return (
                 <StatusIcon className="gold">
                   <span className="icon icon_ing3_on" />
                   DROP
                 </StatusIcon>
               );
-            case '지연':
+            case 30:
               return (
                 <StatusIcon className="orange">
                   <span className="icon icon_ing4_on" />
                   지연
                 </StatusIcon>
               );
-            case '완료':
+            case 12:
               return (
                 <StatusIcon className="gray">
                   <span className="icon icon_ing5_on" />
@@ -223,13 +239,18 @@ const RecordList = () => {
           <StyledModalTitle>
             <span className="big">Project ID</span>
             <span className="line" />
-            <span className="small">{currentRecord?.PRJ_ID || ''}</span>
+            <span className="small">{currentRecord?.project_id || ''}</span>
           </StyledModalTitle>
         }
         footer={null}
         onCancel={() => closeModal('INFO')}
       >
-        <Detail info={currentRecord} />
+        <Detail
+          info={currentRecord}
+          callback={() => {
+            pageHandler(1);
+          }}
+        />
       </ModalHugger>
     </>
   );

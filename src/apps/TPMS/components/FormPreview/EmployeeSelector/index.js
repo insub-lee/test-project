@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -18,7 +19,6 @@ class EmployeeSelector extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    console.debug('@@@ Update Employee Select', this.state.values, this.props.values);
     const { values: prevValues } = prevProps;
     const { values } = this.props;
 
@@ -49,7 +49,6 @@ class EmployeeSelector extends React.Component {
   }
 
   updateValue(index, nextValue) {
-    console.debug('@@@ update value employees', index, nextValue);
     this.setState(prevState => {
       const { values } = prevState;
       values[index].values = nextValue;
@@ -73,7 +72,7 @@ class EmployeeSelector extends React.Component {
       <StyledEquipSelector>
         <ul className="sub_form">
           {values.map((item, index) => (
-            <li style={onlySingle ? { width: '100%', paddingLeft: 0 } : { width: '100%' }}>
+            <li key={`EmployeeSelector > ${index + 1}`} style={onlySingle ? { width: '100%', paddingLeft: 0 } : { width: '100%' }}>
               {!onlySingle ? <div className="title">{item.label}</div> : ''}
               <div className="btn btn_wrap btn_left" style={{ width: '80px' }}>
                 {!readOnly && !item.fixed && (
@@ -83,12 +82,12 @@ class EmployeeSelector extends React.Component {
                 )}
               </div>
               {item.values.length > 0 && (
-                <React.Fragment>
+                <>
                   <input type="hidden" name={`user_selector_${index}`} value={JSON.stringify(item.values)} />
                   <ul className="users">
-                    {item.values.map((value, userIndex) => (
-                      <li key={value.emrno} className="user_tag btn_left">
-                        <span>{`${value.emrno} ${value.usrnm} ${value.jgnm}`}</span>
+                    {item.values.map(({ emp_no, name_kor, pstn_name_kor }, userIndex) => (
+                      <li key={emp_no} className="user_tag btn_left">
+                        <span>{`${emp_no} ${name_kor} ${pstn_name_kor}`}</span>
                         {!readOnly && !item.fixed && (
                           <button type="button" onClick={() => this.removeUser(index, userIndex)}>
                             <i className="fas fa-times" />
@@ -97,7 +96,7 @@ class EmployeeSelector extends React.Component {
                       </li>
                     ))}
                   </ul>
-                </React.Fragment>
+                </>
               )}
               <div style={{ clear: 'both', display: 'none' }} />
             </li>

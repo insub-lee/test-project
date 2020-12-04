@@ -25,7 +25,7 @@ const Detail = ({ info, usrid, dpcd, dpnm }) => {
     defaultFormData,
     sharingSelector,
     actions: { submitData },
-  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '' });
+  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '' });
 
   const combineTextRenderer = useCallback(
     item => (
@@ -40,7 +40,7 @@ const Detail = ({ info, usrid, dpcd, dpnm }) => {
   return (
     <div>
       <Spin spinning={isAuthLoading || isLoading}>
-        <SignProcessList list={info.signPrclistInfo} />
+        <SignProcessList info={info} />
         <form autoComplete="off" onSubmit={submitData}>
           <input type="hidden" name="docno" value={info.docno} />
           <input type="hidden" name="signlineno" value={info.signlineno} />
@@ -78,9 +78,9 @@ const Detail = ({ info, usrid, dpcd, dpnm }) => {
                 {info.signPrclistInfo ? info.signPrclistInfo.filter(item => item.rownum === 6).map(item => combineTextRenderer(item)) : ''}
               </p>
             </div>
-            {info.status.substr(0, 2) === '완료' && <FormView datas={sharingSelector} noBoarder noPadding />}
+            {info?.step === 8 && <FormView datas={sharingSelector} noBoarder noPadding />}
           </ApproveFormWrapper>
-          {info.status.substr(0, 2) === '완료' ? (
+          {info?.step === 8 ? (
             <FormView datas={sharingSelector} noBoarder noPadding />
           ) : (
             <ApproveFormWrapper>

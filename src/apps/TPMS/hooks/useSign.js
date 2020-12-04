@@ -37,8 +37,8 @@ export default ({ sysid, mnuid, record }) => {
   //
   //   const {
   //     phase,
-  //     DEFINE_LEADER_COMMENT,
-  //     DEFINE_ATTACH_FILE_PATH,
+  //     step_one_comment,
+  //     step_one_file_path,
   //     DEFINE_ATTACH_FILE,
   //     MEASURE_LEADER_COMMENT,
   //     MEASURE_ATTACH_FILE_PATH,
@@ -56,9 +56,9 @@ export default ({ sysid, mnuid, record }) => {
   //
   //   switch (phase) {
   //     case 1:
-  //       payload.DEFINE_LEADER_COMMENT = DEFINE_LEADER_COMMENT;
-  //       payload.DEFINE_ATTACH_FILE_PATH = DEFINE_ATTACH_FILE_PATH;
-  //       payload.DEFINE_ATTACH_FILE = DEFINE_ATTACH_FILE;
+  //       payload.step_one_comment = step_one_comment;
+  //       payload.step_one_file_path = step_one_file_path;
+  //       payload.step_one_file_name = DEFINE_ATTACH_FILE;
   //       break;
   //     case 2:
   //       payload.MEASURE_LEADER_COMMENT = MEASURE_LEADER_COMMENT;
@@ -86,7 +86,7 @@ export default ({ sysid, mnuid, record }) => {
   //   }
   //
   //   // Validation
-  //   if (phase === 1 && (!payload.DEFINE_ATTACH_FILE_PATH || !payload.DEFINE_ATTACH_FILE)) {
+  //   if (phase === 1 && (!payload.step_one_file_path || !payload.step_one_file_name)) {
   //     message.error('현상파악 파일 첨부는 필수 입니다.');
   //     return;
   //   }

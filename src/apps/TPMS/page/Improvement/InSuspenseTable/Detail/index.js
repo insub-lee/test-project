@@ -16,15 +16,15 @@ const Detail = ({ info, callback }) => {
     formRef,
     defaultFormData,
     actions: { accept, reject },
-  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.userRoleInfoList?.[0]?.dpcd || '', callback });
+  } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '', callback });
   return (
     <div>
       <Spin spinning={isAuthLoading}>
-        <SignProcessList list={info.signPrclistInfo} />
+        <SignProcessList info={info} />
         <form ref={formRef} autoComplete="off" onSubmit={e => e.preventDefault()}>
-          <input type="hidden" name="signlineno" value={info.signlineno} />
-          <input type="hidden" name="signno" value={info.signno} />
-          <input type="hidden" name="docno" value={info.docno} />
+          {/* <input type="hidden" name="signlineno" value={info.signlineno} /> */}
+          {/* <input type="hidden" name="signno" value={info.signno} /> */}
+          <input type="hidden" name="task_seq" value={info?.task_seq} />
           <FormView datas={defaultFormData} noBoarder isImprove />
           <BtnWrap>
             <Button type="button" color="primary" onClick={accept}>

@@ -1,7 +1,10 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable camelcase */
 import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import moment from 'moment';
 
 import request from 'utils/request';
+import { getProcessRule, fillWorkFlowData } from '../../../../hooks/useWorkFlow';
 import alertMessage from '../../../../components/Notification/Alert';
 
 const dateValidateChecker = momentDates => {
@@ -17,31 +20,32 @@ const dateValidateChecker = momentDates => {
 };
 
 /** !!!! Danger!!!!! * */
-export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
+export default ({ info, usrid = '', usrnm, deptId = '', callback = () => {} }) => {
   const [isRedirect, setIsRedirect] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isLvl3, setIsLvl3] = useState(false);
   const [positionLeader, setPositionLeader] = useState({});
+  const [savedTemp, setSavedTemp] = useState(false);
   const [currentPrjType, setCurrentPrjType] = useState('');
   const formRef = useRef(null);
 
   const defaultFormData = useMemo(() => {
-    const { ctqLabel, yvalLabel, baselinevalLabel, targetvalLabel, remarkLabel } =
-      info.PRJ_TYPE === 'W'
+    const { key_performance_indicators, current_status, goal, apply_target, note } =
+      info?.project_type === 'W'
         ? {
-            ctqLabel: 'FAB',
-            yvalLabel: 'Area',
-            baselinevalLabel: '피해장수(수량)',
-            targetvalLabel: '요인(부서)',
-            remarkLabel: '발생일',
+            key_performance_indicators: 'FAB',
+            current_status: 'Area',
+            goal: '피해장수(수량)',
+            apply_target: '요인(부서)',
+            note: '발생일',
           }
         : {
-            ctqLabel: '핵심성과지표',
-            yvalLabel: '현재 상태',
-            baselinevalLabel: '목표',
-            targetvalLabel: '적용 대상',
-            remarkLabel: '비고',
+            key_performance_indicators: '핵심성과지표',
+            current_status: '현재 상태',
+            goal: '목표',
+            apply_target: '적용 대상',
+            note: '비고',
           };
     return [
       {
@@ -49,11 +53,11 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         classname: 'improve_form std width50 flCustom',
         option: {
           label: 'Project 명',
-          name: 'PRJ_TITLE',
+          name: 'title',
           placeholder: '',
-          value: info.PRJ_TITLE,
+          value: info?.title,
           required: true,
-          readOnly: true,
+          readOnly: false,
           maxLength: 200,
         },
         seq: 1,
@@ -63,11 +67,11 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         classname: 'improve_form std width50 frCustom',
         option: {
           label: 'Project Leader',
-          name: 'PRJ_LEADER_NAME',
+          name: 'project_leader',
           placeholder: '',
-          value: info.PRJ_LEADER_NAME,
+          value: info?.project_leader,
           required: true,
-          readOnly: true,
+          readOnly: false,
         },
         seq: 2,
       },
@@ -77,8 +81,10 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         option: {
           label: '장비모델명',
           values:
-            info.EQUIPMENTS.map(item => {
-              const itemValues = item.itemvalue.split(':');
+            JSON.parse(info?.equipment_model || '[]').map(item => {
+              const itemValues = JSON.stringify(item)
+                .replaceAll('"', '')
+                .split(':');
               return {
                 fab: itemValues[0],
                 area: itemValues[1],
@@ -86,7 +92,7 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
                 model: itemValues[3],
               };
             }) || [],
-          readOnly: true,
+          readOnly: false,
         },
         seq: 3,
       },
@@ -95,25 +101,25 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         classname: 'improve_form ex',
         option: {
           label: 'Project Type',
-          name: 'PRJ_TYPE',
+          name: 'project_type',
           values: [
             {
               label: '개별개선',
               value: 'G',
-              checked: info.PRJ_TYPE === 'G',
-              readOnly: true,
+              checked: info?.project_type === 'G',
+              readOnly: false,
             },
             {
               label: 'TFT',
               value: 'T',
-              checked: info.PRJ_TYPE === 'T',
-              readOnly: true,
+              checked: info?.project_type === 'T',
+              readOnly: false,
             },
             {
               label: 'Wafer Loss',
               value: 'W',
-              checked: info.PRJ_TYPE === 'W',
-              readOnly: true,
+              checked: info?.project_type === 'W',
+              readOnly: false,
             },
           ],
         },
@@ -124,16 +130,16 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         classname: 'improve_form std width50 flCustom',
         option: {
           label: 'Level',
-          name: 'PRJ_LEVEL',
-          disabled: true,
-          readOnly: true,
+          name: 'project_level',
+          disabled: false,
+          readOnly: false,
           values: [
-            { label: '본부', value: '1', selected: info.PRJ_LEVEL === '1' },
-            { label: '담당', value: '2', selected: info.PRJ_LEVEL === '2' },
-            { label: '팀', value: '3', selected: info.PRJ_LEVEL === '3' },
-            { label: 'Part', value: '4', selected: info.PRJ_LEVEL === '4' },
+            { label: '본부', value: 1, selected: info?.project_level == 1 },
+            { label: '담당', value: 2, selected: info?.project_level == 2 },
+            { label: '팀', value: 3, selected: info?.project_level == 3 },
+            { label: 'Part', value: 4, selected: info?.project_level == 4 },
           ],
-          onChange: selectSelectors,
+          // onChange: selectSelectors,
         },
         seq: 5,
       },
@@ -142,39 +148,39 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         classname: 'improve_form std width50 frCustom marginNone',
         option: {
           label: 'Performance Type',
-          name: 'PERFORM_TYPE',
-          disabled: true,
-          readOnly: true,
+          name: 'performance_type',
+          disabled: false,
+          readOnly: false,
           values: [
             {
               label: 'Cost',
               value: 'C',
-              selected: info.PERFORM_TYPE === 'C',
+              selected: info?.performance_type === 'C',
             },
             {
               label: 'Delivery',
               value: 'D',
-              selected: info.PERFORM_TYPE === 'D',
+              selected: info?.performance_type === 'D',
             },
             {
               label: 'Morale',
               value: 'M',
-              selected: info.PERFORM_TYPE === 'M',
+              selected: info?.performance_type === 'M',
             },
             {
               label: 'Productivity',
               value: 'P',
-              selected: info.PERFORM_TYPE === 'P',
+              selected: info?.performance_type === 'P',
             },
             {
               label: 'Quality',
               value: 'Q',
-              selected: info.PERFORM_TYPE === 'Q',
+              selected: info?.performance_type === 'Q',
             },
             {
               label: 'Safety',
               value: 'S',
-              selected: info.PERFORM_TYPE === 'S',
+              selected: info?.performance_type === 'S',
             },
           ],
         },
@@ -184,13 +190,13 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         type: 'textarea',
         classname: 'improve_form width20 flCustom',
         option: {
-          label: ctqLabel,
+          label: key_performance_indicators,
           exLabel: 'FAB',
-          name: 'CTQ',
+          name: 'key_performance_indicators',
           placeholder: '',
-          value: info.CTQ,
+          value: info?.key_performance_indicators,
           required: true,
-          readOnly: true,
+          readOnly: false,
           maxLength: 450,
         },
         seq: 7,
@@ -199,13 +205,13 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         type: 'textarea',
         classname: 'improve_form width20 flCustom',
         option: {
-          label: yvalLabel,
+          label: current_status,
           exLabel: 'Area',
-          name: 'Y_VAL',
+          name: 'current_status',
           placeholder: '',
-          value: info.Y_VAL,
+          value: info?.current_status,
           required: true,
-          readOnly: true,
+          readOnly: false,
           maxLength: 450,
         },
         seq: 8,
@@ -214,13 +220,13 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         type: 'textarea',
         classname: 'improve_form width20 flCustom',
         option: {
-          label: baselinevalLabel,
+          label: goal,
           exLabel: '피해장수(수량)',
-          name: 'BASELINE_VAL',
+          name: 'goal',
           placeholder: '',
-          value: info.BASELINE_VAL,
+          value: info?.goal,
           required: true,
-          readOnly: true,
+          readOnly: false,
           maxLength: 450,
         },
         seq: 9,
@@ -229,13 +235,13 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         type: 'textarea',
         classname: 'improve_form width20 flCustom',
         option: {
-          label: targetvalLabel,
+          label: apply_target,
           exLabel: '요인(부서)',
-          name: 'TARGET_VAL',
+          name: 'apply_target',
           placeholder: '',
-          value: info.TARGET_VAL,
+          value: info?.apply_target,
           required: true,
-          readOnly: true,
+          readOnly: false,
           maxLength: 450,
         },
         seq: 10,
@@ -244,13 +250,13 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         type: 'textarea',
         classname: 'improve_form width20 flCustom marginNone',
         option: {
-          label: remarkLabel,
+          label: note,
           exLabel: '발생일',
-          name: 'REMARK',
+          name: 'note',
           placeholder: '',
-          value: info.REMARK,
+          value: info?.note,
           required: true,
-          readOnly: true,
+          readOnly: false,
           maxLength: 450,
         },
         seq: 11,
@@ -260,11 +266,11 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         classname: 'improve_form width50 flCustom',
         option: {
           label: '프로젝트를 시작하게 된 배경 ',
-          name: 'PRJ_BACK_DESC',
+          name: 'project_reason',
           placeholder: '',
-          value: info.PRJ_BACK_DESC,
+          value: info?.project_reason,
           required: true,
-          readOnly: true,
+          readOnly: false,
           maxLength: 450,
         },
         seq: 12,
@@ -274,11 +280,11 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         classname: 'improve_form width50 frCustom',
         option: {
           label: '문제점/개선',
-          name: 'PROBLEM_DESC',
+          name: 'problem_improvement',
           placeholder: '',
-          value: info.PROBLEM_DESC,
+          value: info?.problem_improvement,
           required: true,
-          readOnly: true,
+          readOnly: false,
           maxLength: 450,
         },
         seq: 13,
@@ -288,11 +294,11 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         classname: 'improve_form width50 flCustom',
         option: {
           label: '해결 방법',
-          name: 'HOW_TO_DESC',
+          name: 'solution',
           placeholder: '',
-          value: info.HOW_TO_DESC,
+          value: info?.solution,
           required: true,
-          readOnly: true,
+          readOnly: false,
           maxLength: 450,
         },
         seq: 14,
@@ -302,11 +308,11 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         classname: 'improve_form width50 frCustom',
         option: {
           label: '범위',
-          name: 'SCOPE_DESC',
+          name: 'scope',
           placeholder: '',
-          value: info.SCOPE_DESC,
+          value: info?.scope,
           required: true,
-          readOnly: true,
+          readOnly: false,
           maxLength: 450,
         },
         seq: 15,
@@ -322,14 +328,18 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
               type: 'range',
               values: [
                 {
-                  name: 'START_DATE',
-                  value: info.START_DATE ? moment(info.START_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: true,
+                  name: 'situation_analyze_start_date',
+                  value: info?.situation_analyze_start_date
+                    ? moment(info?.situation_analyze_start_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
+                  readOnly: false,
                 },
                 {
-                  name: 'DEFINE_DUE_DATE',
-                  value: info.DEFINE_DUE_DATE ? moment(info.DEFINE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: true,
+                  name: 'situation_analyze_end_date',
+                  value: info?.situation_analyze_end_date
+                    ? moment(info?.situation_analyze_end_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
+                  readOnly: false,
                 },
               ],
             },
@@ -338,9 +348,9 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
               type: 'single',
               values: [
                 {
-                  name: 'MEASURE_DUE_DATE',
-                  value: info.MEASURE_DUE_DATE ? moment(info.MEASURE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: true,
+                  name: 'cause_analyze_due_date',
+                  value: info?.cause_analyze_due_date ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  readOnly: false,
                 },
               ],
             },
@@ -349,9 +359,9 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
               type: 'single',
               values: [
                 {
-                  name: 'ANALYZE_DUE_DATE',
-                  value: info.ANALYZE_DUE_DATE ? moment(info.ANALYZE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: true,
+                  name: 'measure_due_date',
+                  value: info?.measure_due_date ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  readOnly: false,
                 },
               ],
             },
@@ -360,9 +370,9 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
               type: 'single',
               values: [
                 {
-                  name: 'IMPROVE_DUE_DATE',
-                  value: info.IMPROVE_DUE_DATE ? moment(info.IMPROVE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: true,
+                  name: 'improvement_due_date',
+                  value: info?.improvement_due_date ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  readOnly: false,
                 },
               ],
             },
@@ -371,9 +381,9 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
               type: 'single',
               values: [
                 {
-                  name: 'CONTROL_DUE_DATE',
-                  value: info.CONTROL_DUE_DATE ? moment(info.CONTROL_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
-                  readOnly: true,
+                  name: 'completion_due_date',
+                  value: info?.completion_due_date ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  readOnly: false,
                 },
               ],
             },
@@ -390,38 +400,19 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
             {
               key: 0,
               label: '1차결재권자',
-              values:
-                info.signLineTempListInfo
-                  .filter(item => item.seq === 1)
-                  .map(item => ({
-                    emrno: item.usrid,
-                    usrnm: item.usrnm,
-                    jgnm: item.jgnm,
-                  })) || [],
+              values: JSON.parse(info?.first_approver || '[]'),
               type: 'SINGLE',
             },
             {
               key: 1,
               label: '최종결재권자',
-              values:
-                info.signLineTempListInfo
-                  .filter(item => item.seq === 2)
-                  .map(item => ({
-                    emrno: item.usrid,
-                    usrnm: item.usrnm,
-                    jgnm: item.jgnm,
-                  })) || [],
+              values: JSON.parse(info?.final_approver || '[]'),
               type: 'SINGLE',
             },
             {
               key: 3,
               label: '팀원',
-              values:
-                info.signReferTempListInfo.map(item => ({
-                  emrno: item.usrid,
-                  usrnm: item.usrnm,
-                  jgnm: item.jgnm,
-                })) || [],
+              values: JSON.parse(info?.team_member || '[]'),
               type: 'MULTI',
             },
           ],
@@ -429,57 +420,57 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
         seq: 17,
       },
     ];
-  }, [info, dpcd]);
+  }, [info, deptId]);
 
-  const getPositionLeader = useCallback(async () => {
-    const url = '/apigate/v1/portal/sign/task';
-    const requestQuery = {
-      mnuId: 'lvlsignusr',
-      sysId: 'TPMS',
-    };
-    const { response, error } = await request({
-      url,
-      method: 'GET',
-      params: requestQuery,
-    });
+  // const getPositionLeader = useCallback(async () => {
+  //   const url = '/apigate/v1/portal/sign/task';
+  //   const requestQuery = {
+  //     mnuId: 'lvlsignusr',
+  //     sysId: 'TPMS',
+  //   };
+  //   const { response, error } = await request({
+  //     url,
+  //     method: 'GET',
+  //     params: requestQuery,
+  //   });
 
-    return { response, error };
-  }, []);
-
-  const selectSelectors = value => {
-    if (value?.toString() === '3') {
-      setPositionLeader({});
-      getPositionLeader()
-        .then(({ response, error }) => {
-          if (response && !error) {
-            const { signUserInfo } = response;
-            setPositionLeader(signUserInfo || {});
-          } else {
-            setIsError(true);
-          }
-        })
-        .catch(() => {
-          setIsError(true);
-        });
-    }
-  };
+  //   return { response, error };
+  // }, []);
+  // const selectSelectors = value => {
+  //   if (value?.toString() === '3') {
+  //     setPositionLeader({});
+  //     getPositionLeader()
+  //       .then(({ response, error }) => {
+  //         if (response && !error) {
+  //           const { signUserInfo } = response;
+  //           setPositionLeader(signUserInfo || {});
+  //         } else {
+  //           setIsError(true);
+  //         }
+  //       })
+  //       .catch(() => {
+  //         setIsError(true);
+  //       });
+  //   }
+  // };
+  // const selectSelectors = value => setProjectLevel(value);
 
   const selectCurrentPrjType = value => setCurrentPrjType(value);
 
   const getCurrentFormJson = () =>
     defaultFormData.map(item => {
       if (item.option.label === 'Member') {
-        console.debug(isLvl3, positionLeader.usrid, '@@@', isLvl3 && !!positionLeader.usrid);
+        console.debug(isLvl3, positionLeader.user_id, '@@@', isLvl3 && !!positionLeader.user_id);
         return {
           ...item,
           option: {
             ...item.option,
             values: [
-              { ...item.option.values[0], initdpcd: dpcd },
+              { ...item.option.values[0], initdpcd: deptId },
               {
                 ...item.option.values[1],
-                values: positionLeader.usrid ? [{ ...positionLeader, emrno: positionLeader.usrid }] : [],
-                fixed: isLvl3 && !!positionLeader.usrid,
+                // values: positionLeader.user_id ? [{ ...positionLeader, user_id: positionLeader.user_id }] : [],
+                // fixed: isLvl3 && !!positionLeader.user_id,
               },
               { ...item.option.values[2] },
             ],
@@ -491,11 +482,11 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
           ...item,
           option: {
             ...item.option,
-            onChange: selectSelectors,
+            // onChange: selectSelectors,
           },
         };
       }
-      if (item.option.name === 'PRJ_TYPE') {
+      if (item.option.name === 'project_type') {
         return {
           ...item,
           option: {
@@ -504,7 +495,7 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
           },
         };
       }
-      if (currentPrjType === 'W' && ['CTQ', 'Y_VAL', 'BASELINE_VAL', 'TARGET_VAL', 'REMARK'].includes(item.option.name)) {
+      if (currentPrjType === 'W' && ['key_performance_indicators', 'current_status', 'goal', 'apply_target', 'note'].includes(item.option.name)) {
         return {
           ...item,
           option: {
@@ -531,38 +522,38 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
     });
 
     // 제출 시에는 prjID 중복문제로 삭제
-    delete payload.PRJ_ID;
+    // delete payload.task_seq;
 
-    if (!payload.PRJ_TYPE) {
+    if (!payload.project_type) {
       alertMessage.alert('Project Type을 선택해주십시오.');
       return;
     }
 
-    const items = JSON.parse(payload.equip_selector).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
-    if (items.length < 1) {
+    const equipment_model = JSON.parse(payload.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
+    if (equipment_model.length < 1) {
       alertMessage.alert('선택된 장비가 없습니다.');
       return;
     }
     if (
-      !payload.START_DATE ||
-      !payload.DEFINE_DUE_DATE ||
-      !payload.MEASURE_DUE_DATE ||
-      !payload.ANALYZE_DUE_DATE ||
-      !payload.IMPROVE_DUE_DATE ||
-      !payload.CONTROL_DUE_DATE
+      !payload.situation_analyze_start_date ||
+      !payload.situation_analyze_end_date ||
+      !payload.measure_due_date ||
+      !payload.cause_analyze_due_date ||
+      !payload.improvement_due_date ||
+      !payload.completion_due_date
     ) {
       alertMessage.alert('스케줄 날짜가 미설정 되었습니다.');
       return;
     }
 
     // 기간 설정에 대한 체크
-    const { DEFINE_DUE_DATE, MEASURE_DUE_DATE, ANALYZE_DUE_DATE, IMPROVE_DUE_DATE, CONTROL_DUE_DATE } = payload;
+    const { situation_analyze_end_date, measure_due_date, cause_analyze_due_date, improvement_due_date, completion_due_date } = payload;
     const dueDates = [
-      moment(DEFINE_DUE_DATE, 'YYYY.MM.DD'),
-      moment(MEASURE_DUE_DATE, 'YYYY.MM.DD'),
-      moment(ANALYZE_DUE_DATE, 'YYYY.MM.DD'),
-      moment(IMPROVE_DUE_DATE, 'YYYY.MM.DD'),
-      moment(CONTROL_DUE_DATE, 'YYYY.MM.DD'),
+      moment(situation_analyze_end_date, 'YYYY.MM.DD'),
+      moment(measure_due_date, 'YYYY.MM.DD'),
+      moment(cause_analyze_due_date, 'YYYY.MM.DD'),
+      moment(improvement_due_date, 'YYYY.MM.DD'),
+      moment(completion_due_date, 'YYYY.MM.DD'),
     ];
     const validatedDueDates = dateValidateChecker(dueDates);
     if (!validatedDueDates.result) {
@@ -575,91 +566,84 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
     preferSignLine.push(JSON.parse(payload.user_selector_1));
     if (preferSignLine[0].length < 1 || preferSignLine[1].length < 1) {
       alertMessage.alert('최종결재권자 또는 1차결재권자가 미설정되었습니다.');
-    } else if (preferSignLine[0][0].emrno === preferSignLine[1][0].emrno) {
+    } else if (preferSignLine[0][0].user_id === preferSignLine[1][0].user_id) {
       alertMessage.alert('최종결재권자와 1차결재권자가 동일합니다.');
-    } else if (preferSignLine[0][0].emrno === usrid || preferSignLine[1][0].emrno === usrid) {
+    } else if (preferSignLine[0][0].user_id === usrid || preferSignLine[1][0].user_id === usrid) {
       alertMessage.alert('기안자와 결재권자가 동일합니다.');
     } else {
-      const signline = [];
-      signline.push({
-        signtypecd: '01',
-        usrid: preferSignLine[0][0].emrno,
-        seq: 1,
-      });
-      signline.push({
-        signtypecd: '01',
-        usrid: preferSignLine[1][0].emrno,
-        seq: 2,
-      });
-      const signref = JSON.parse(payload.user_selector_2 || '[]').map(user => user.emrno);
+      const first_approver = JSON.stringify([preferSignLine[0][0]]);
+      const final_approver = JSON.stringify([preferSignLine[1][0]]);
+      const team_member = JSON.parse(payload.user_selector_2 || '[]').map(user => user);
 
-      if (signref.length < 1) {
+      if (team_member.length < 1) {
         alertMessage.alert('팀원이 미설정 되었습니다.');
         return;
       }
 
-      if (signref.includes(usrid)) {
+      if (team_member.includes(usrid)) {
         alertMessage.alert('자신을 팀원으로 설정 할 수 없습니다.');
         return;
       }
 
-      if (signref.includes(preferSignLine[0][0].usrid)) {
+      if (team_member.includes(preferSignLine[0][0].usrid)) {
         alertMessage.alert('1차결재권자를 팀원으로 설정 할 수 없습니다.');
         return;
       }
 
-      if (signref.includes(preferSignLine[1][0].usrid)) {
+      if (team_member.includes(preferSignLine[1][0].usrid)) {
         alertMessage.alert('최종결재권자를 팀원으로 설정 할 수 없습니다.');
         return;
       }
 
       /* Change Format */
-      payload.START_DATE = moment(payload.START_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.DEFINE_DUE_DATE = moment(payload.DEFINE_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.MEASURE_DUE_DATE = moment(payload.MEASURE_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.ANALYZE_DUE_DATE = moment(payload.ANALYZE_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.IMPROVE_DUE_DATE = moment(payload.IMPROVE_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.CONTROL_DUE_DATE = moment(payload.CONTROL_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
+      payload.situation_analyze_start_date = moment(payload.situation_analyze_start_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
+      payload.situation_analyze_end_date = moment(payload.situation_analyze_end_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
+      payload.measure_due_date = moment(payload.measure_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
+      payload.cause_analyze_due_date = moment(payload.cause_analyze_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
+      payload.improvement_due_date = moment(payload.improvement_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
+      payload.completion_due_date = moment(payload.completion_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
 
+      payload.equipment_model = JSON.stringify(equipment_model);
       payload.user_selector_0 = undefined;
       payload.user_selector_1 = undefined;
       payload.user_selector_2 = undefined;
       payload.user_selector_3 = undefined;
-      payload.signline = signline;
-      payload.signref = signref;
-      payload.items = items;
-      payload.tempyn = 'N';
-      payload.sysid = 'TPMS';
-      payload.mnuid = 'TPMS1010';
+      payload.first_approver = first_approver;
+      payload.final_approver = final_approver;
+      payload.team_member = JSON.stringify(team_member);
+      const { project_level, task_seq } = payload;
+      payload.project_level = parseInt(project_level || 0, 10);
+      payload.task_seq = parseInt(task_seq || 0, 10);
+      payload.is_temp = 0;
+      payload.step = 0;
 
       const options = {
-        url: '/apigate/v1/portal/sign/task',
-        method: 'POST',
+        url: `/api/tpms/v1/common/approval`,
+        method: 'PUT',
         data: payload,
       };
-
-      isRedirect(true);
-
+      setIsLoading(true);
       sendData(options)
-        .then(({ response, error }) => {
-          if (response && !error) {
-            const { insertyn } = response;
-            if (insertyn) {
-              callback();
-              setIsRedirect(true);
-              alertMessage.notice('개선활동을 신규 등록하였습니다.');
-            }
+        .then(({ response }) => {
+          const { result, req, error } = response;
+          if (result && !error) {
+            getProcessRule(118, {}).then(ee => {
+              fillWorkFlowData(ee, req).then(() => {
+                alertMessage.notice('개선활동을 신규 등록하였습니다.');
+                setIsRedirect(true);
+              });
+            });
           } else {
             alertMessage.alert('개선활등을 신규 등록에 실패했습니다.');
             setIsError(true);
+            setIsLoading(false);
           }
         })
         .catch(() => {
           alertMessage.alert('개선활등을 신규 등록에 실패했습니다.');
           setIsError(true);
+          setIsLoading(false);
         });
-
-      isRedirect(false);
     }
   };
 
@@ -670,62 +654,53 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
     formData.forEach((value, key) => {
       payload[key] = value;
     });
-    const signline = [];
+
+    let first_approver;
+    let final_approver;
     if (payload.user_selector_0) {
       const tempSignLine = JSON.parse(payload.user_selector_0 || '[]');
       if (tempSignLine.length > 0) {
-        signline.push({
-          signtypecd: '01',
-          usrid: tempSignLine[0].emrno,
-          seq: 1,
-        });
+        first_approver = JSON.stringify([tempSignLine[0]]);
       }
     }
     if (payload.user_selector_1) {
       const tempSignLine = JSON.parse(payload.user_selector_1 || '[]');
       if (tempSignLine.length > 0) {
-        signline.push({
-          signtypecd: '01',
-          usrid: tempSignLine[0].emrno,
-          seq: 2,
-        });
+        final_approver = JSON.stringify([tempSignLine[0]]);
       }
     }
 
-    const signref = JSON.parse(payload.user_selector_2 || '[]').map(user => ({
-      ...user,
-      usrid: user.emrno,
-    }));
+    const team_member = JSON.parse(payload.user_selector_2 || '[]').map(user => user);
 
-    const items = JSON.parse(payload.equip_selector).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
-
+    const equipment_model = JSON.parse(payload.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
+    payload.equipment_model = JSON.stringify(equipment_model);
     payload.user_selector_0 = undefined;
     payload.user_selector_1 = undefined;
     payload.user_selector_2 = undefined;
     payload.user_selector_3 = undefined;
-    payload.signline = signline;
-    payload.signref = signref;
-    payload.items = items;
-    payload.tempyn = 'Y';
-    payload.sysid = 'TPMS';
-    payload.mnuid = 'TPMS1020';
+    payload.first_approver = first_approver;
+    payload.final_approver = final_approver;
+    payload.team_member = JSON.stringify(team_member);
+    const { project_level, task_seq } = payload;
+    payload.project_level = parseInt(project_level || 0, 10);
+    payload.task_seq = parseInt(task_seq || 0, 10);
+    payload.is_temp = 1;
+    payload.step = 0;
 
     const options = {
-      url: '/apigate/v1/portal/sign/task',
+      url: `/api/tpms/v1/common/approval`,
       method: 'PUT',
       data: payload,
     };
 
-    // isRedirect(true);
+    setIsLoading(true);
 
     sendData(options)
-      .then(({ response, error }) => {
-        if (response && !error) {
-          const { updateyn } = response;
-          if (updateyn) {
-            callback();
-            alertMessage.notice('임시 저장 했습니다.');
-          }
+      .then(({ response }) => {
+        const { result, error } = response;
+        if (result && !error) {
+          alertMessage.notice('임시 저장 했습니다.');
+          callback();
         } else {
           setIsError(true);
           alertMessage.alert('임시 저장이 실패했습니다.');
@@ -734,52 +709,49 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
       .catch(() => {
         setIsError(true);
         alertMessage.alert('임시 저장이 실패했습니다.');
+        setIsLoading(false);
       });
-
-    // isRedirect(false);
   };
 
   // 임시저장 삭제
   const deleteTemp = () => {
-    const { tempid } = info;
     const options = {
-      url: '/apigate/v1/portal/sign/task',
+      url: '/api/tpms/v1/common/approval',
       method: 'DELETE',
       data: {
-        tempid,
+        task_seq: info?.task_seq,
       },
     };
     sendData(options)
-      .then(({ response, error }) => {
-        if (response && !error) {
-          const { deleteyn } = response;
-          if (deleteyn) {
-            callback();
-            alertMessage.alert('삭제되었습니다.');
-          }
+      .then(({ response }) => {
+        const { result, error } = response;
+        if (result && !error) {
+          alertMessage.alert('삭제되었습니다.');
+          callback();
         } else {
           alertMessage.alert('삭제가 실패되었습니다.');
           setIsError(true);
+          callback();
         }
       })
       .catch(() => {
         alertMessage.alert('삭제가 실패되었습니다.');
         setIsError(true);
+        callback();
       });
   };
 
   // Init Default Position Leader
   useEffect(() => {
-    const { PRJ_LEVEL, signLineTempListInfo } = info;
-    if (PRJ_LEVEL?.toString() === '3') {
+    if (info?.project_level?.toString() === '3') {
       setIsLvl3(true);
     }
 
-    const targetList = signLineTempListInfo.filter(item => item.seq === 2) || [];
-    if (targetList.length > 0) {
-      return setPositionLeader({ ...targetList[0] });
-    }
-    return setPositionLeader({});
+    // const targetList = signLineTempListinfo?.filter(item => item.seq === 2) || [];
+    // if (targetList.length > 0) {
+    // return setPositionLeader({ ...targetList[0] });
+    // }
+    // return setPositionLeader({});
   }, []);
 
   return {
@@ -787,6 +759,7 @@ export default ({ info, usrid = '', dpcd = '', callback = () => {} }) => {
     isError,
     isRedirect,
     formRef,
+    savedTemp,
     formData: getCurrentFormJson(),
     actions: { submitForm, saveTemp, deleteTemp },
   };
