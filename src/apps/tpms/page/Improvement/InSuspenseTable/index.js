@@ -151,11 +151,10 @@ const InSuspenseTable = () => {
       },
       {
         title: '비고',
-        dataIndex: 'appv_status',
-        key: 'appv_status',
+        dataIndex: 'step',
+        key: 'step',
         width: '15%',
-        render: (value, row) => {
-          const { step } = row;
+        render: (step, row) => {
           switch (row?.rel_type) {
             case 200:
               switch (step) {
@@ -235,8 +234,10 @@ const InSuspenseTable = () => {
         <Detail
           info={currentRecord}
           callback={() => {
-            closeAll();
-            pageHandler(1);
+            setTimeout(() => {
+              closeAll();
+              pageHandler(1);
+            }, 1500);
           }}
         />
       </ModalHugger>

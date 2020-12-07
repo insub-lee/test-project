@@ -95,24 +95,24 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: 'Project Type',
           name: 'project_type',
-          readOnly: true,
+          readOnly: false,
           values: [
             {
               label: '개별개선',
               value: 'G',
-              readOnly: true,
+              readOnly: false,
               checked: info?.project_type === 'G',
             },
             {
               label: 'TFT',
               value: 'T',
-              readOnly: true,
+              readOnly: false,
               checked: info?.project_type === 'T',
             },
             {
               label: 'Wafer Loss',
               value: 'W',
-              readOnly: true,
+              readOnly: false,
               checked: info?.project_type === 'W',
             },
           ],
@@ -125,7 +125,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: 'Level',
           name: 'project_level',
-          disabled: true,
+          disabled: false,
           values: [
             { label: '본부', value: 1, selected: info?.project_level === 1 },
             { label: '담당', value: 2, selected: info?.project_level === 2 },
@@ -141,7 +141,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: 'Performance Type',
           name: 'performance_type',
-          disabled: true,
+          disabled: false,
           values: [
             {
               label: 'Cost',
@@ -350,7 +350,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
               values: [
                 {
                   name: 'measure_due_date',
-                  value: info?.cause_analyze_due_date ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.measure_due_date ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
                   readOnly: false,
                   required: true,
                 },
@@ -361,8 +361,8 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
               type: 'single',
               values: [
                 {
-                  name: 'IMPROVE_DUE_DATE',
-                  value: info.IMPROVE_DUE_DATE ? moment(info.IMPROVE_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  name: 'improvement_due_date',
+                  value: info?.improvement_due_date ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
                   readOnly: false,
                   required: true,
                 },
@@ -373,8 +373,8 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
               type: 'single',
               values: [
                 {
-                  name: 'CONTROL_DUE_DATE',
-                  value: info.CONTROL_DUE_DATE ? moment(info.CONTROL_DUE_DATE.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  name: 'completion_due_date',
+                  value: info?.completion_due_date ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
                   readOnly: false,
                   required: true,
                 },
@@ -387,7 +387,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
     ];
 
     // Status값에 따른 추가 Form 정보
-    if (info?.step > 1) {
+    if (info?.step > 9) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -425,8 +425,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
-    }
-    if (info?.step > 2) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -464,8 +462,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
-    }
-    if (info?.step > 3) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -503,8 +499,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
-    }
-    if (info?.step > 4) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -537,13 +531,11 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: '개선 완료일자',
           name: 'step_four_complete_date',
-          value: info?.step_four_complete_date? moment(info?.step_four_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          value: info?.step_four_complete_date ? moment(info?.step_four_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
           readOnly: true,
         },
         seq: formData.length + 1,
       });
-    }
-    if (info?.step === '8') {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -581,8 +573,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
-    }
-    if (info?.step === 8) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -678,15 +668,23 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       payload[key] = value;
     });
 
-    const { DEFINE_DUE_DATE, MEASURE_DUE_DATE, ANALYZE_DUE_DATE, IMPROVE_DUE_DATE, CONTROL_DUE_DATE } = payload;
+    const {
+      situation_analyze_start_date,
+      situation_analyze_end_date,
+      cause_analyze_due_date,
+      measure_due_date,
+      improvement_due_date,
+      completion_due_date,
+    } = payload;
     const dueDates = [
-      moment(moment(DEFINE_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
-      moment(moment(MEASURE_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
-      moment(moment(ANALYZE_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
-      moment(moment(IMPROVE_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
-      moment(moment(CONTROL_DUE_DATE, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(situation_analyze_start_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(situation_analyze_end_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(cause_analyze_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(measure_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(improvement_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(completion_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
     ];
-    const signref = JSON.parse(formData.user_selector_0 || '[]').map(user => user.usrid);
+    const signref = JSON.parse(formData.user_selector_0 || '[]').map(user => user);
     const { files } = parseFiles(formData);
     const items = JSON.parse(payload.equip_selector).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
     if (items.length < 1) {
@@ -694,12 +692,12 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       return;
     }
     if (
-      !payload.START_DATE ||
-      !payload.DEFINE_DUE_DATE ||
-      !payload.MEASURE_DUE_DATE ||
-      !payload.ANALYZE_DUE_DATE ||
-      !payload.IMPROVE_DUE_DATE ||
-      !payload.CONTROL_DUE_DATE
+      !payload.situation_analyze_start_date ||
+      !payload.situation_analyze_end_date ||
+      !payload.cause_analyze_due_date ||
+      !payload.measure_due_date ||
+      !payload.improvement_due_date ||
+      !payload.completion_due_date
     ) {
       alertMessage.alert('스케줄 날짜가 미설정 되었습니다.');
       return;
