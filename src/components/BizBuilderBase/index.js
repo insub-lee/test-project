@@ -161,7 +161,6 @@ class BizBuilderBase extends React.Component {
   };
 
   changeBuilderModalState = (isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData) => {
-    console.debug('확인', builderModalViewType);
     const modalTitle = this.getModalTitle(builderModalViewType);
     this.setState({ isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData, modalTitle });
   };
@@ -256,6 +255,10 @@ class BizBuilderBase extends React.Component {
       callbackFuncExtraByModal,
       modalProps,
       callApiExtraProps,
+      modalInputMetaSeq,
+      modalModifyMetaSeq,
+      modalViewMetaSeq,
+      modalListMetaSeq,
     } = this.props;
     const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData, isLoading, modalTitle } = this.state;
     return (
@@ -289,6 +292,10 @@ class BizBuilderBase extends React.Component {
             conditional={conditional}
             callbackFuncExtra={callbackFuncExtraByModal}
             modalProps={modalProps}
+            modalInputMetaSeq={modalInputMetaSeq}
+            modalModifyMetaSeq={modalModifyMetaSeq}
+            modalViewMetaSeq={modalViewMetaSeq}
+            modalListMetaSeq={modalListMetaSeq}
             callApiExtraProps={callApiExtraProps}
           />
         </AntdModal>
@@ -341,6 +348,10 @@ BizBuilderBase.propTypes = {
   modifyMetaSeq: PropTypes.number,
   viewMetaSeq: PropTypes.number,
   listMetaSeq: PropTypes.number,
+  modalInputMetaSeq: PropTypes.number,
+  modalModifyMetaSeq: PropTypes.number,
+  modalViewMetaSeq: PropTypes.number,
+  modalListMetaSeq: PropTypes.number,
   viewChangeSeq: PropTypes.number,
   viewChangeSeqByModal: PropTypes.number,
   taskRowData: PropTypes.object,
@@ -383,6 +394,10 @@ BizBuilderBase.defaultProps = {
   modifyMetaSeq: -1,
   viewMetaSeq: -1,
   listMetaSeq: -1,
+  modalInputMetaSeq: -1,
+  modalModifyMetaSeq: -1,
+  modalViewMetaSeq: -1,
+  modalListMetaSeq: -1,
   viewChangeSeq: -1,
   viewChangeSeqByModal: -1,
   taskRowData: undefined,
