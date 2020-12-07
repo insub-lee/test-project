@@ -54,7 +54,6 @@ class MainPage extends Component {
     const materialCnt = (result && result.materialData && result.materialData.materialCnt) || 0;
 
     setFormData(id, { ...formData, materialData, materialCnt });
-    // changeFormData(id, 'itemList', itemList);
     return this.itemListReload();
   };
 
