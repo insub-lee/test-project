@@ -27,7 +27,7 @@ class HistoryModal extends Component {
     spinningOn();
     await request({
       method: 'POST',
-      url: '/api/workflow/v1/common/workprocess/draftQueHistoryList',
+      url: '/api/workflow/v1/common/approve/processResultList',
       data: { PARAM: { DRAFT_ID: record?.DRAFT_ID } },
       json: true,
     }).then(({ response }) => {
