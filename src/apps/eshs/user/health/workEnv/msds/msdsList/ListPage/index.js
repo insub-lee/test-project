@@ -127,7 +127,7 @@ class ListPage extends Component {
           title: node.comp.CONFIG.property.HEADER_NAME_KOR,
           width: node.style.width,
           align: 'center',
-          render: (text, record) => this.renderCompRow(node.comp, text, record, true),
+          render: (text, record) => (text ? this.renderCompRow(node.comp, text, record, true) : ''),
         });
       }
     });
