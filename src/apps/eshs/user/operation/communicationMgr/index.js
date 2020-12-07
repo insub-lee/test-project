@@ -1,24 +1,7 @@
-/* eslint-disable react/prefer-stateless-function */
-import React, { Component } from 'react';
-import BizBuilderBase from 'components/BizBuilderBase';
-import List from './list';
+import React from 'react';
+import CommunicationMgr from './pages';
 
-class CommunicationMgr extends Component {
-  state = {
-    isLoading: true,
-  };
+// 의사소통 관리 - 통합
+const CommunicationMgrPage = () => <CommunicationMgr />;
 
-  componentDidMount() {}
-
-  loadingComplete = () => {
-    this.setState({
-      isLoading: false,
-    });
-  };
-
-  render() {
-    return <BizBuilderBase sagaKey="CommunicationMgr" workSeq={1301} viewType="LIST" CustomListPage={List} loadingComplete={this.loadingComplete} />;
-  }
-}
-
-export default CommunicationMgr;
+export default CommunicationMgrPage;

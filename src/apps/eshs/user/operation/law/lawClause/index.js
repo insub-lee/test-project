@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 import { Modal, message } from 'antd';
 import ClauseList from './ClauseList';
@@ -23,16 +22,11 @@ class lawClause extends Component {
     };
   }
 
-  loadingComplete = () => {
-    this.setState({
-      isLoading: false,
-    });
-  };
+  loadingComplete = () => false;
 
   componentDidMount() {}
 
   isOpenInputModal = (selectedMasterSeq, selectedLawName, selectedRechNo) => {
-    console.log('selectedMasterSeq, selectedLawName, selectedRechNo', selectedMasterSeq, selectedLawName, selectedRechNo);
     if (selectedMasterSeq) {
       this.setState({ isInputModal: true, masterSeq: selectedMasterSeq, masterRechName: selectedLawName, masterRechNo: selectedRechNo });
     } else {
@@ -116,11 +110,6 @@ class lawClause extends Component {
   );
 
   render() {
-    /* const {
-      match: { params },
-      item,
-    } = this.props;
-    const { ID } = params; */
     return (
       <>
         <BizBuilderBase
