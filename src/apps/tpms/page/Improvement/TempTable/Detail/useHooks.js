@@ -577,7 +577,7 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
       alertMessage.alert('최종결재권자 또는 1차결재권자가 미설정되었습니다.');
     } else if (preferSignLine[0][0].emp_no === preferSignLine[1][0].emp_no) {
       alertMessage.alert('최종결재권자와 1차결재권자가 동일합니다.');
-    } else if (preferSignLine[0][0].emp_no === usrid || preferSignLine[1][0].emp_no === originEmpNo) {
+    } else if (preferSignLine[0][0].emp_no === originEmpNo || preferSignLine[1][0].emp_no === originEmpNo) {
       alertMessage.alert('기안자와 결재권자가 동일합니다.');
     } else {
       const first_approver = JSON.stringify([preferSignLine[0][0]]);
