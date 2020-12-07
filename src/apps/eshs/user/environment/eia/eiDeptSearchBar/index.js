@@ -31,7 +31,7 @@ class DeptSearchBar extends Component {
   }
 
   componentDidMount = () => {
-    const { id, getCallDataHandler, setFormData, formData, searchData } = this.props;
+    const { id, getCallDataHandler, setFormData, formData, searchData, reqNo } = this.props;
     const years = [];
     for (let i = 2006; i <= currentYear + 1; i++) {
       years.push(String(i));
@@ -47,14 +47,16 @@ class DeptSearchBar extends Component {
     if (JSON.stringify(searchData) !== '{}') {
       const { CHK_YEAR } = searchData;
       setFormData(id, { ...formData, CHK_YEAR, searchFlag: true, searchRow: searchData });
+    } else if (reqNo) {
+      setFormData(id, { ...formData, REQ_NO: reqNo, CHK_YEAR: reqNo.substr(2, 4), searchFlag: false });
     } else {
       setFormData(id, { ...formData, CHK_YEAR: String(currentYear), searchFlag: false });
     }
-    getCallDataHandler(id, apiAry, this.handleAppStart);
+    getCallDataHandler(id, apiAry, () => this.handleAppStart(reqNo));
   };
 
-  handleAppStart = () => {
-    const { result, profile, id, changeFormData, handleSearchOnClick, reqNo = undefined } = this.props;
+  handleAppStart = (reqNo = undefined) => {
+    const { result, profile, id, changeFormData, handleSearchOnClick } = this.props;
     const deptList = (result && result.deptList && result.deptList.result) || [];
     const myDept = deptList.find(d => d.DEPT_ID === profile.DEPT_ID);
     changeFormData(id, 'myDept', myDept);

@@ -21,7 +21,7 @@ class MainPage extends Component {
 
   handleSearchOnClick = (reqNo = undefined) => {
     const { sagaKey, getCallDataHandler, formData, spinningOn } = this.props;
-    const chkYear = (formData && formData.CHK_YEAR) || '0';
+    const chkYear = formData?.CHK_YEAR || '0';
     const deptId = (formData && formData.searchRow && formData.searchRow.DEPT_ID) || (formData && formData.myDept && formData.myDept.DEPT_ID) || '0';
 
     spinningOn();
