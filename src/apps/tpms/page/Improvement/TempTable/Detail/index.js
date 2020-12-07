@@ -19,7 +19,7 @@ const Detail = ({ info, closeAll, callback }) => {
     isRedirect,
     formData,
     actions: { submitForm, saveTemp, deleteTemp },
-  } = useHooks({ info, usrid: authInfo?.empNo || '', usrnm: authInfo?.usrNm || '', deptId: authInfo?.deptId || '', callback });
+  } = useHooks({ info, originEmpNo: authInfo?.empNo || '', usrnm: authInfo?.usrNm || '', deptId: authInfo?.deptId || '', callback });
 
   if (isRedirect) {
     return <Redirect to="/apps/tpms/page/Improvement/RegisteredTable" />;

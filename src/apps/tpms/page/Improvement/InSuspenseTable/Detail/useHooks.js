@@ -366,7 +366,7 @@ export default ({ info, callback = () => {} }) => {
       },
     ];
 
-    if (info?.step === 9) {
+    if (info?.step === 20) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',

@@ -20,7 +20,7 @@ const dateValidateChecker = momentDates => {
 };
 
 /** !!!! Danger!!!!! * */
-export default ({ info, usrid = '', usrnm, deptId = '', callback = () => {} }) => {
+export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
   const [isRedirect, setIsRedirect] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -420,7 +420,7 @@ export default ({ info, usrid = '', usrnm, deptId = '', callback = () => {} }) =
         seq: 17,
       },
     ];
-  }, [info, deptId]);
+  }, [info]);
 
   // const getPositionLeader = useCallback(async () => {
   //   const url = '/apigate/v1/portal/sign/task';
@@ -537,8 +537,8 @@ export default ({ info, usrid = '', usrnm, deptId = '', callback = () => {} }) =
     if (
       !payload.situation_analyze_start_date ||
       !payload.situation_analyze_end_date ||
-      !payload.measure_due_date ||
       !payload.cause_analyze_due_date ||
+      !payload.measure_due_date ||
       !payload.improvement_due_date ||
       !payload.completion_due_date
     ) {
@@ -547,8 +547,16 @@ export default ({ info, usrid = '', usrnm, deptId = '', callback = () => {} }) =
     }
 
     // 기간 설정에 대한 체크
-    const { situation_analyze_end_date, measure_due_date, cause_analyze_due_date, improvement_due_date, completion_due_date } = payload;
+    const {
+      situation_analyze_start_date,
+      situation_analyze_end_date,
+      measure_due_date,
+      cause_analyze_due_date,
+      improvement_due_date,
+      completion_due_date,
+    } = payload;
     const dueDates = [
+      moment(situation_analyze_start_date, 'YYYY.MM.DD'),
       moment(situation_analyze_end_date, 'YYYY.MM.DD'),
       moment(measure_due_date, 'YYYY.MM.DD'),
       moment(cause_analyze_due_date, 'YYYY.MM.DD'),
@@ -564,11 +572,12 @@ export default ({ info, usrid = '', usrnm, deptId = '', callback = () => {} }) =
     const preferSignLine = [];
     preferSignLine.push(JSON.parse(payload.user_selector_0));
     preferSignLine.push(JSON.parse(payload.user_selector_1));
+
     if (preferSignLine[0].length < 1 || preferSignLine[1].length < 1) {
       alertMessage.alert('최종결재권자 또는 1차결재권자가 미설정되었습니다.');
-    } else if (preferSignLine[0][0].user_id === preferSignLine[1][0].user_id) {
+    } else if (preferSignLine[0][0].emp_no === preferSignLine[1][0].emp_no) {
       alertMessage.alert('최종결재권자와 1차결재권자가 동일합니다.');
-    } else if (preferSignLine[0][0].user_id === usrid || preferSignLine[1][0].user_id === usrid) {
+    } else if (preferSignLine[0][0].emp_no === usrid || preferSignLine[1][0].emp_no === originEmpNo) {
       alertMessage.alert('기안자와 결재권자가 동일합니다.');
     } else {
       const first_approver = JSON.stringify([preferSignLine[0][0]]);
@@ -580,17 +589,17 @@ export default ({ info, usrid = '', usrnm, deptId = '', callback = () => {} }) =
         return;
       }
 
-      if (team_member.includes(usrid)) {
+      if (team_member.includes(originEmpNo)) {
         alertMessage.alert('자신을 팀원으로 설정 할 수 없습니다.');
         return;
       }
 
-      if (team_member.includes(preferSignLine[0][0].usrid)) {
+      if (team_member.includes(preferSignLine[0][0].user_id)) {
         alertMessage.alert('1차결재권자를 팀원으로 설정 할 수 없습니다.');
         return;
       }
 
-      if (team_member.includes(preferSignLine[1][0].usrid)) {
+      if (team_member.includes(preferSignLine[1][0].user_id)) {
         alertMessage.alert('최종결재권자를 팀원으로 설정 할 수 없습니다.');
         return;
       }

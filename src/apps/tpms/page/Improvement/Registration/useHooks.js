@@ -470,8 +470,8 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
     if (
       !payload.situation_analyze_start_date ||
       !payload.situation_analyze_end_date ||
-      !payload.measure_due_date ||
       !payload.cause_analyze_due_date ||
+      !payload.measure_due_date ||
       !payload.improvement_due_date ||
       !payload.completion_due_date
     ) {
@@ -522,6 +522,7 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       const final_approver = JSON.stringify([preferSignLine[1][0]]);
 
       const team_member = JSON.parse(payload.user_selector_2 || '[]').map(user => user);
+      
       if (team_member.length < 1) {
         alertMessage.alert('팀원이 미설정 되었습니다.');
         debug('팀원이 미설정 되었습니다.');
