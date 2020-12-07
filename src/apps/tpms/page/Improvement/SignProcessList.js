@@ -39,11 +39,11 @@ const statusRenderer = status => {
     }
     case 2: {
       // 승인
-      return <td>등록 승인</td>;
+      return <td>승인</td>;
     }
     case 9: {
       // 반려
-      return <td>등록 반려</td>;
+      return <td>반려</td>;
     }
 
     default: {
@@ -127,12 +127,13 @@ const SignPrcListInfo = ({ info, noPadding }) => {
         <thead>
           <tr>
             <th>결재 진행단계(수정필요함)</th>
-            <th>사번</th>
+            {/* <th>사번</th> */}
             <th>부서</th>
             <th>직급</th>
             <th>성명</th>
             <th>완료일</th>
             <th>상태</th>
+            <th>의견</th>
           </tr>
         </thead>
         <tbody>
@@ -151,16 +152,17 @@ const SignPrcListInfo = ({ info, noPadding }) => {
               );
             }
 
-            const { step, appv_status, rel_type, EMP_NO, DEPT_NAME_KOR, PSTN_NAME_KOR, NAME_KOR, sign_date } = row;
+            const { step, appv_status, rel_type, EMP_NO, DEPT_NAME_KOR, PSTN_NAME_KOR, NAME_KOR, sign_date, opinion } = row;
             return (
               <tr key={step + rel_type + EMP_NO}>
                 {stepRenderer({ step, rel_type })}
-                <td>{EMP_NO}</td>
+                {/* <td>{EMP_NO}</td> */}
                 <td>{DEPT_NAME_KOR}</td>
                 <td>{PSTN_NAME_KOR}</td>
                 <td>{NAME_KOR}</td>
                 <td>{sign_date}</td>
                 {statusRenderer(appv_status)}
+                <td>{opinion}</td>
               </tr>
             );
           })}
