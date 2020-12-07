@@ -70,7 +70,7 @@ class LawMasterSeqComp extends Component {
   callList = () => {
     const fetchData = async () => {
       const result = await request({
-        url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/eshslawlist',
+        url: '/api/eshs/v1/common/eshslawlist',
         method: 'GET',
       });
       return result.response && result.response.list;
@@ -81,7 +81,7 @@ class LawMasterSeqComp extends Component {
   onLawSeach = (type, text) => {
     const fetchData = async () => {
       const result = await request({
-        url: `http://eshs-dev.magnachip.com/api/eshs/v1/common/eshslawlist?TYPE=${type}&TEXT=${text}`,
+        url: `/api/eshs/v1/common/eshslawlist?TYPE=${type}&TEXT=${text}`,
         method: 'GET',
       });
       return result.response && result.response.list;
