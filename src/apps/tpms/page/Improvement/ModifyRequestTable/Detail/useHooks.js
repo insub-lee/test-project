@@ -390,7 +390,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
     ];
 
     // Status값에 따른 추가 Form 정보
-    if (info?.step > 8) {
+    if (info.step_one_complete_date !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -428,6 +428,8 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+    if (info.step_two_complete_date !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -465,6 +467,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+
+    if (info.step_three_complete_date !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -502,6 +507,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+
+    if (info.step_four_complete_date !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -539,6 +547,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+
+    if (info.step_five_complete_date !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -576,6 +587,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+
+    if (info.improvement_point !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -590,6 +604,8 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+    if (info.success_point !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -604,6 +620,8 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+    if (info.real_complete_file_name !== null) {
       formData.push({
         type: 'single-uploader',
         classname: 'improve_form std',
@@ -617,9 +635,8 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         seq: formData.length + 1,
       });
     }
-
     return formData;
-  }, [info, dpCd]);
+  }, [info]);
 
   const sharingSelector = useMemo(
     () => [
@@ -651,7 +668,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
   const postData = useCallback(async payload => {
     // const url = '/apigate/v1/portal/sign/task';
 
-    const { response } = request({
+    const { response } = await request({
       url: `/api/tpms/v1/common/approval`,
       method: 'PUT',
       data: payload,
@@ -664,8 +681,6 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
   const submitData = e => {
     e.preventDefault();
     e.stopPropagation();
-
-    console.debug('@@@ submitData ???');
 
     const formData = new FormData(e.target);
     const payload = {};
@@ -715,14 +730,12 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
 
     payload.equipment_model = JSON.stringify(equipment_model);
 
-    console.debug('## { ...info, ...payload }:', { ...info, ...payload });
     setIsLoading(true);
     getProcessRule().then(prcRule => {
       fillWorkFlowData(prcRule, { ...info, ...payload, rel_type: relTypeHandler({ step: info?.step }) }).then(submitResult => {
         if (submitResult) {
           postData({ ...info, ...payload, step: stepHandler({ step: info?.step }) })
             .then(({ result, req, error }) => {
-              console.debug('### result, req, error :', result, req, error);
               if (result && !error) {
                 alertMessage.notice('제출 완료');
                 setIsRedirect(true);
