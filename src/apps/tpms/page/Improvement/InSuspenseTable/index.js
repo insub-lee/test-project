@@ -183,10 +183,23 @@ const InSuspenseTable = () => {
             case 202:
               switch (step) {
                 case 20: {
-                  return 'Drop 1차 결재대기';
+                  return '1차 Drop 결재대기';
                 }
                 case 21: {
-                  return 'Drop 최종 결재대기';
+                  return '1차 Drop 최종 결재대기';
+                }
+
+                default:
+                  return '';
+              }
+
+            case 203:
+              switch (step) {
+                case 20: {
+                  return '최종 Drop 결재대기';
+                }
+                case 21: {
+                  return '최종 Drop 최종 결재대기';
                 }
 
                 default:

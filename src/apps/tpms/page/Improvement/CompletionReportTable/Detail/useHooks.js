@@ -12,7 +12,7 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
   const [isRedirect, setIsRedirect] = useState(false);
   const [isError, setIsError] = useState(false);
   const formRef = useRef(null);
-  const dropModalRef = useRef(null);
+  const [isDropModalOpen, setIsDropModalOpen] = useState(false);
 
   const defaultFormData = useMemo(() => {
     const { key_performance_indicators, current_status, goal, apply_target, note } =
@@ -652,10 +652,11 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
     setIsLoading(true);
 
     getProcessRule().then(prcRule => {
+      // rel_type 201은 최종결재를 의미함.
       fillWorkFlowData(prcRule, { ...info, rel_type: 201 })
         .then(submitResult => {
           if (submitResult) {
-            stepChanger(info?.task_seq, info?.step + 1, payload).then(({ result, error, req }) => {
+            stepChanger(info?.task_seq, info?.step + 1, payload).then(({ result, req, error }) => {
               if (result && !error) {
                 alertMessage.notice('제출 완료');
                 setIsRedirect(true);
@@ -677,29 +678,13 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
     setIsLoading(false);
   };
 
-  const openDropModal = () => {
-    // const formData = new FormData(formRef.current);
-    // const formJson = {};
-    // formData.forEach((value, key) => {
-    //   formJson[key] = value;
-    // });
-    // const signref = JSON.parse(formJson.user_selector_0 || '[]').map(user => user);
-
-    // const { files } = parseFiles(formJson);
-    // const { improvement_point, success_point } = formJson;
-    // const payload = { improvement_point, success_point, signref, files };
-
-    // todo
-    dropModalRef.current.handleOpen();
-  };
-
   return {
     isLoading,
     isError,
     formRef,
-    dropModalRef,
+    isDropModalOpen,
     isRedirect,
     defaultFormData,
-    actions: { submitForm, openDropModal },
+    actions: { submitForm, setIsDropModalOpen },
   };
 };

@@ -5,7 +5,9 @@ import moment from 'moment';
 import request from 'utils/request';
 
 import alertMessage from '../../../../components/Notification/Alert';
-import parseFiles from '../../../../utils/parseFiles';
+import { getProcessRule, fillWorkFlowData, relTypeHandler, stepHandler } from '../../../../hooks/useWorkFlow';
+
+// import parseFiles from '../../../../utils/parseFiles';
 
 const dateValidateChecker = momentDates => {
   let result = false;
@@ -21,6 +23,7 @@ const dateValidateChecker = momentDates => {
 
 export default ({ info, dpCd = '', callback = () => {} }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isRedirect, setIsRedirect] = useState(false);
   const [isError, setIsError] = useState(false);
 
   const defaultFormData = useMemo(() => {
@@ -95,24 +98,24 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: 'Project Type',
           name: 'project_type',
-          readOnly: false,
+          readOnly: true,
           values: [
             {
               label: '개별개선',
               value: 'G',
-              readOnly: false,
+              readOnly: true,
               checked: info?.project_type === 'G',
             },
             {
               label: 'TFT',
               value: 'T',
-              readOnly: false,
+              readOnly: true,
               checked: info?.project_type === 'T',
             },
             {
               label: 'Wafer Loss',
               value: 'W',
-              readOnly: false,
+              readOnly: true,
               checked: info?.project_type === 'W',
             },
           ],
@@ -125,7 +128,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: 'Level',
           name: 'project_level',
-          disabled: false,
+          disabled: true,
           values: [
             { label: '본부', value: 1, selected: info?.project_level === 1 },
             { label: '담당', value: 2, selected: info?.project_level === 2 },
@@ -141,7 +144,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: 'Performance Type',
           name: 'performance_type',
-          disabled: false,
+          disabled: true,
           values: [
             {
               label: 'Cost',
@@ -387,7 +390,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
     ];
 
     // Status값에 따른 추가 Form 정보
-    if (info?.step > 9) {
+    if (info?.step > 8) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -396,8 +399,8 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           name: 'step_one_comment',
           placeholder: '코멘트를 남겨주세요.',
           value: info?.step_one_comment,
-          required: true,
-          readOnly: true,
+          required: false,
+          readOnly: false,
           maxLength: 450,
         },
         seq: formData.length + 1,
@@ -410,7 +413,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           name: 'step_one_attach',
           filePath: info?.step_one_file_path,
           fileName: info?.step_one_file_name,
-          readOnly: true,
+          readOnly: false,
         },
         seq: formData.length + 1,
       });
@@ -433,8 +436,8 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           name: 'step_two_comment',
           placeholder: '코멘트를 남겨주세요.',
           value: info?.step_two_comment,
-          required: true,
-          readOnly: true,
+          required: false,
+          readOnly: false,
           maxLength: 450,
         },
         seq: formData.length + 1,
@@ -447,7 +450,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           name: 'step_two_attach',
           filePath: info?.step_two_file_path,
           fileName: info?.step_two_file_name,
-          readOnly: true,
+          readOnly: false,
         },
         seq: formData.length + 1,
       });
@@ -470,8 +473,8 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           name: 'step_three_comment',
           placeholder: '코멘트를 남겨주세요.',
           value: info?.step_three_comment,
-          required: true,
-          readOnly: true,
+          required: false,
+          readOnly: false,
           maxLength: 450,
         },
         seq: formData.length + 1,
@@ -484,7 +487,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           name: 'step_three_attach',
           filePath: info?.step_three_file_path,
           fileName: info?.step_three_file_name,
-          readOnly: true,
+          readOnly: false,
         },
         seq: formData.length + 1,
       });
@@ -507,8 +510,8 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           name: 'step_four_comment',
           placeholder: '코멘트를 남겨주세요.',
           value: info?.step_four_comment,
-          required: true,
-          readOnly: true,
+          required: false,
+          readOnly: false,
           maxLength: 450,
         },
         seq: formData.length + 1,
@@ -521,7 +524,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           name: 'step_four_attach',
           filePath: info?.step_four_file_path,
           fileName: info?.step_four_file_name,
-          readOnly: true,
+          readOnly: false,
         },
         seq: formData.length + 1,
       });
@@ -544,8 +547,8 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           name: 'step_five_comment',
           placeholder: '코멘트를 남겨주세요.',
           value: info?.step_five_comment,
-          required: true,
-          readOnly: true,
+          required: false,
+          readOnly: false,
           maxLength: 450,
         },
         seq: formData.length + 1,
@@ -558,7 +561,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           name: 'step_five_attach',
           filePath: info?.step_five_file_path,
           fileName: info?.step_five_file_name,
-          readOnly: true,
+          readOnly: false,
         },
         seq: formData.length + 1,
       });
@@ -582,7 +585,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           placeholder: '개선사항을 남겨주세요.',
           value: info?.improvement_point,
           readOnly: false,
-          required: true,
+          required: false,
           maxLength: 450,
         },
         seq: formData.length + 1,
@@ -596,7 +599,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           placeholder: '성공요인을 남겨주세요.',
           value: info?.success_point,
           readOnly: false,
-          required: true,
+          required: false,
           maxLength: 450,
         },
         seq: formData.length + 1,
@@ -646,14 +649,16 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
   );
 
   const postData = useCallback(async payload => {
-    const url = '/apigate/v1/portal/sign/task';
-    const { response, error } = request({
-      url,
-      method: 'POST',
+    // const url = '/apigate/v1/portal/sign/task';
+
+    const { response } = request({
+      url: `/api/tpms/v1/common/approval`,
+      method: 'PUT',
       data: payload,
     });
 
-    return { response, error };
+    const { result, req, error } = response;
+    return { result, req, error };
   }, []);
 
   const submitData = e => {
@@ -684,10 +689,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       moment(moment(improvement_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(completion_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
     ];
-    const signref = JSON.parse(formData.user_selector_0 || '[]').map(user => user);
-    const { files } = parseFiles(formData);
-    const items = JSON.parse(payload.equip_selector).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
-    if (items.length < 1) {
+    const equipment_model = JSON.parse(payload.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
+
+    if (equipment_model.length < 1) {
       alertMessage.alert('선택된 장비가 없습니다.');
       return;
     }
@@ -709,30 +713,32 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       return;
     }
 
-    payload.items = items;
-    payload.mnuid = 'TPMS1040';
-    payload.signref = signref;
-    payload.files = files;
+    payload.equipment_model = JSON.stringify(equipment_model);
 
+    console.debug('## { ...info, ...payload }:', { ...info, ...payload });
     setIsLoading(true);
-
-    postData(payload)
-      .then(({ response, error }) => {
-        if (response && !error) {
-          const { insertyn } = response;
-          if (insertyn && callback) {
-            callback();
-          }
-          alertMessage.notice('등록하였습니다.');
-        } else {
-          setIsError(true);
-          alertMessage.alert('등록이 실패했습니다.');
+    getProcessRule().then(prcRule => {
+      fillWorkFlowData(prcRule, { ...info, ...payload, rel_type: relTypeHandler({ step: info?.step }) }).then(submitResult => {
+        if (submitResult) {
+          postData({ ...info, ...payload, step: stepHandler({ step: info?.step }) })
+            .then(({ result, req, error }) => {
+              console.debug('### result, req, error :', result, req, error);
+              if (result && !error) {
+                alertMessage.notice('제출 완료');
+                setIsRedirect(true);
+                callback();
+              } else {
+                setIsError(true);
+                alertMessage.alert('Server Error');
+                callback();
+              }
+            })
+            .catch(() => {
+              setIsError(true);
+            });
         }
-      })
-      .catch(() => {
-        setIsError(true);
       });
-
+    });
     setIsLoading(false);
   };
 
@@ -741,6 +747,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
     isError,
     defaultFormData,
     sharingSelector,
+    isRedirect,
     actions: {
       submitData,
     },
