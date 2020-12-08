@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import { Modal, Table, Select, DatePicker, Spin } from 'antd';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -67,8 +68,8 @@ class SafetyWorkMain extends Component {
       isDeleting: false,
       mealPlan: [], // 검색한 주간메뉴 리스트
       searchValue: {
-        sDate: '',
-        eDate: '',
+        sDate: moment(),
+        eDate: moment(),
         area: 'A',
       },
       formData: {
@@ -96,7 +97,13 @@ class SafetyWorkMain extends Component {
         break;
       case 'GET':
         if (sDate !== '' && eDate !== '') {
-          submitHandlerBySaga(id, 'GET', `/api/mxlife/v1/common/tabsectList?area=${area}&sDate=${sDate}&eDate=${eDate}`, {}, this.getCallback);
+          submitHandlerBySaga(
+            id,
+            'GET',
+            `/api/mxlife/v1/common/tabsectList?area=${area}&sDate=${sDate.format('YYYYMMDD')}&eDate=${eDate.format('YYYYMMDD')}`,
+            {},
+            this.getCallback,
+          );
         } else {
           message.error(<MessageContent>검색기간이 설정되지 않았습니다.</MessageContent>);
         }
@@ -270,13 +277,13 @@ class SafetyWorkMain extends Component {
     });
   };
 
-  searchDateOnChange = (date, str) => {
+  searchDateOnChange = date => {
     const { searchValue } = this.state;
     this.setState({
       searchValue: {
         ...searchValue,
-        sDate: str[0] || '',
-        eDate: str[1] || '',
+        sDate: date[0] || '',
+        eDate: date[1] || '',
       },
     });
   };
@@ -307,7 +314,7 @@ class SafetyWorkMain extends Component {
         <StyledCustomSearchWrapper>
           <div className="search-input-area">
             <span className="text-label">기간</span>
-            <AntdPicker className="ant-picker-mid mr5" format="YYYYMMDD" onChange={(date, str) => this.searchDateOnChange(date, str)} />
+            <AntdPicker className="ant-picker-mid mr5" defaultValue={[searchValue.sDate, searchValue.eDate]} onChange={date => this.searchDateOnChange(date)} />
             <span className="text-label">지역</span>
             <AntdSelect
               className="select-sm mr5"
