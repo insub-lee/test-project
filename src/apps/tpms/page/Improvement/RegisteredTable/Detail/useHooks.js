@@ -392,7 +392,7 @@ export default ({ info, deptId }) => {
     ];
 
     // if (info.phase > 1 || info.status.substr(0, 2) === '완료') {
-    if (info?.step > 8) {
+    if (info.step_one_complete_date !== null) {
       formData.push({
         type: 'textarea',
         // classname: 'half mr mb',
@@ -434,6 +434,9 @@ export default ({ info, deptId }) => {
           readOnly: true,
         },
       });
+    }
+
+    if (info.step_two_complete_date !== null) {
       // if (info.phase > 2 || info.status.substr(0, 2) === '완료') {
       formData.push({
         type: 'textarea',
@@ -476,6 +479,9 @@ export default ({ info, deptId }) => {
           readOnly: true,
         },
       });
+    }
+
+    if (info.step_three_complete_date !== null) {
       // if (info.phase > 3 || info.status.substr(0, 2) === '완료') {
       formData.push({
         type: 'textarea',
@@ -518,6 +524,9 @@ export default ({ info, deptId }) => {
           readOnly: true,
         },
       });
+    }
+
+    if (info.step_four_complete_date !== null) {
       formData.push({
         type: 'textarea',
         // classname: 'half mr mb',
@@ -559,7 +568,9 @@ export default ({ info, deptId }) => {
           readOnly: true,
         },
       });
+    }
 
+    if (info.step_five_complete_date !== null) {
       // if (info.status.substr(0, 2) === '완료') {
       formData.push({
         type: 'textarea',
@@ -602,6 +613,9 @@ export default ({ info, deptId }) => {
           readOnly: true,
         },
       });
+    }
+
+    if (info.improvement_point !== null) {
       // if (info.status.substr(0, 2) === '완료') {
       formData.push({
         type: 'textarea',
@@ -618,6 +632,9 @@ export default ({ info, deptId }) => {
         },
         seq: formData.length + 1,
       });
+    }
+
+    if (info.success_point !== null) {
       formData.push({
         type: 'textarea',
         // classname: 'mb',
@@ -633,6 +650,9 @@ export default ({ info, deptId }) => {
         },
         seq: formData.length + 1,
       });
+    }
+
+    if (info.real_complete_file_name !== null) {
       formData.push({
         type: 'single-uploader',
         // classname: 'mb',
