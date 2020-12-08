@@ -7,7 +7,7 @@ import SignProcessList from '../../SignProcessList';
 import FormView from '../../../../components/FormPreview/FormView';
 import BtnWrap from '../../BtnWrap';
 import Button from '../../../../components/Button';
-import DropModal from '../../../../components/BuiltModals/DropModal';
+import { DropModal } from '../../../../components/BuiltModals/DropModal';
 
 import useHooks from './useHooks';
 import useAuth from '../../../../hooks/useAuth';
@@ -18,10 +18,10 @@ const Detail = ({ info, callback }) => {
     isLoading,
     isError,
     formRef,
-    dropModalRef,
     isRedirect,
     defaultFormData,
-    actions: { submitForm, openDropModal },
+    isDropModalOpen,
+    actions: { submitForm, setIsDropModalOpen },
   } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '' });
 
   if (isRedirect) {
@@ -41,14 +41,20 @@ const Detail = ({ info, callback }) => {
               제출하기
             </Button>
             {/* {!info.signPrclistInfo.some(item => item.sign === '완료 반려') && ( */}
-            <Button type="button" color="default" onClick={openDropModal}>
+            <Button
+              type="button"
+              color="default"
+              onClick={() => {
+                setIsDropModalOpen(true);
+              }}
+            >
               Drop
             </Button>
             {/* )} */}
           </BtnWrap>
         </form>
       </Spin>
-      <DropModal ref={dropModalRef} task_seq={info?.task_seq} step={info?.step} callback={callback} />
+      <DropModal info={info} rel_type={203} isDropModalOpen={isDropModalOpen} setIsDropModalOpen={setIsDropModalOpen} callback={callback} />
     </div>
   );
 };

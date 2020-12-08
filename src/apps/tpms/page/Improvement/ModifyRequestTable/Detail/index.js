@@ -1,5 +1,7 @@
+/* eslint-disable camelcase */
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 
 import Spin from '../../../../components/AntdSpinner';
 import SignProcessList from '../../SignProcessList';
@@ -24,76 +26,87 @@ const Detail = ({ info, usrid, dpcd, dpnm }) => {
     isLoading,
     defaultFormData,
     sharingSelector,
+    isRedirect,
     actions: { submitData },
   } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '' });
 
-  const combineTextRenderer = useCallback(
-    item => (
-      <>
-        {`${item.sign} ${item.usrid} ${item.usrnm ? item.usrnm : '퇴직자'}`}
-        {item.signlinememo ? <span style={{ display: 'block', width: '100%', border: 0 }}>{`의견: ${item.signlinememo}`}</span> : ''}
-      </>
-    ),
-    [],
-  );
+  // const combineTextRenderer = useCallback(
+  //   item => (
+  //     <>
+  //       {`${item.sign} ${item.usrid} ${item.usrnm ? item.usrnm : '퇴직자'}`}
+  //       {item.signlinememo ? <span style={{ display: 'block', width: '100%', border: 0 }}>{`의견: ${item.signlinememo}`}</span> : ''}
+  //     </>
+  //   ),
+  //   [],
+  // );
+  if (isRedirect) {
+    return <Redirect to="/apps/tpms/page/Improvement/RegisteredTable" />;
+  }
 
   return (
     <div>
       <Spin spinning={isAuthLoading || isLoading}>
         <SignProcessList info={info} />
         <form autoComplete="off" onSubmit={submitData}>
-          <input type="hidden" name="docno" value={info.docno} />
-          <input type="hidden" name="signlineno" value={info.signlineno} />
-          <input type="hidden" name="signno" value={info.signno} />
-          <input type="hidden" name="signno" value={info.signno} />
-          <input type="hidden" name="sysid" value="TPMS" />
-          <input type="hidden" name="mnuid" value="TPMS1040" />
-          <input type="hidden" name="PRJ_ID" value={info.PRJ_ID} />
-          <input type="hidden" name="insdt" value={info.insdt} />
-          <input type="hidden" name="PRJ_LEADER" value={usrid} />
-          <input type="hidden" name="PRJ_TYPE" value={info.PRJ_TYPE} />
-          <input type="hidden" name="PRJ_LEVEL" value={info.PRJ_LEVEL} />
-          <input type="hidden" name="PERFORM_TYPE" value={info.PERFORM_TYPE} />
-          <input type="hidden" name="PRJ_LEADER_DEPT_CODE" value={dpcd || ''} />
-          <input type="hidden" name="PRJ_LEADER_DEPT_NAME" value={dpnm || ''} />
           <FormView datas={defaultFormData} noBoarder isImprove />
           <ApproveFormWrapper>
             <div className="approveFormRow">
               <span className="approveFormLabel">기안자</span>
-              <p className="approveFormValue">
-                {info.signPrclistInfo ? info.signPrclistInfo.filter(item => item.rownum === 1).map(item => combineTextRenderer(item)) : ''}
-              </p>
+              <p className="approveFormValue">{`${info?.project_leader}`}</p>
             </div>
             <div className="approveFormRow">
               <span className="approveFormLabel">1차결재권자</span>
               <p className="approveFormValue">
-                {info.signPrclistInfo ? info.signPrclistInfo.filter(item => item.rownum === 2).map(item => combineTextRenderer(item)) : ''}
-                {info.signPrclistInfo ? info.signPrclistInfo.filter(item => item.rownum === 5).map(item => combineTextRenderer(item)) : ''}
+                {JSON.parse(info?.first_approver || '[]').map(({ emp_no, name_kor }, idx) => {
+                  if (idx === 0) {
+                    return `${emp_no} ${name_kor}`;
+                  }
+                  return `, ${emp_no} ${name_kor}`;
+                })}
               </p>
             </div>
             <div className="approveFormRow">
               <span className="approveFormLabel">최종결재권자</span>
               <p className="approveFormValue">
-                {info.signPrclistInfo ? info.signPrclistInfo.filter(item => item.rownum === 3).map(item => combineTextRenderer(item)) : ''}
-                {info.signPrclistInfo ? info.signPrclistInfo.filter(item => item.rownum === 6).map(item => combineTextRenderer(item)) : ''}
+                {JSON.parse(info?.final_approver || '[]').map(({ emp_no, name_kor }, idx) => {
+                  if (idx === 0) {
+                    return `${emp_no} ${name_kor}`;
+                  }
+                  return `, ${emp_no} ${name_kor}`;
+                })}
               </p>
             </div>
-            {info?.step === 8 && <FormView datas={sharingSelector} noBoarder noPadding />}
-          </ApproveFormWrapper>
-          {info?.step === 8 ? (
-            <FormView datas={sharingSelector} noBoarder noPadding />
-          ) : (
-            <ApproveFormWrapper>
+            {/* {info?.step ===  && <FormView datas={sharingSelector} noBoarder noPadding />} */}
+            {/* {info?.step === 8 ? ( */}
+            {/* <FormView datas={sharingSelector} noBoarder noPadding /> */}
+            {/* ) : ( */}
+            <div className="approveFormRow">
               <span className="approveFormLabel">팀원</span>
-              <p className="approveFormValue">{info.member ? info.member.map((item, index) => teamTexterRenderer(index, item)) : ''}</p>
-              <span className="approveFormLabel" style={{ marginTop: 10 }}>
-                공유
-              </span>
-              <p className="approveFormValue" style={{ marginTop: 10 }}>
-                {info.teamsharing ? info.teamsharing.map((item, index) => teamTexterRenderer(index, item)) : ''}
+              <p className="approveFormValue">
+                {JSON.parse(info?.team_member || '[]').map(({ emp_no, name_kor }, idx) => {
+                  if (idx === 0) {
+                    return `${emp_no} ${name_kor}`;
+                  }
+                  return `, ${emp_no} ${name_kor}`;
+                })}
               </p>
-            </ApproveFormWrapper>
-          )}
+            </div>
+            {info?.step === 10 && (
+              <div className="approveFormRow">
+                <span className="approveFormLabel" style={{ marginTop: 10 }}>
+                  공유
+                </span>
+                <p className="approveFormValue" style={{ marginTop: 10 }}>
+                  {JSON.parse(info?.sharer || '[]').map(({ emp_no, name_kor }, idx) => {
+                    if (idx === 0) {
+                      return `${emp_no} ${name_kor}`;
+                    }
+                    return `, ${emp_no} ${name_kor}`;
+                  })}
+                </p>
+              </div>
+            )}
+          </ApproveFormWrapper>
           <BtnWrap>
             <Button type="submit" color="primary">
               제출하기

@@ -208,6 +208,7 @@ class gasSensorListTable extends Component {
       <AntdTable
         columns={columns}
         dataSource={listData}
+        pagination={{ pageSize: 20 }}
         scroll={{ x: 2990 }}
         onRow={record => ({
           onClick: () => handleModal('MODIFY', record, record), // click row

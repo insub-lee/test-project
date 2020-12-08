@@ -18,6 +18,10 @@ const ModalPopup = ({
   callbackFuncExtra,
   modalProps,
   callApiExtraProps,
+  modalInputMetaSeq,
+  modalModifyMetaSeq,
+  modalViewMetaSeq,
+  modalListMetaSeq,
 }) => (
   <BizBuilderBase
     sagaKey={`BizBuilderModalPopup_${sagaKey}_${workSeq || '-1'}`}
@@ -36,6 +40,10 @@ const ModalPopup = ({
     callbackFuncExtra={callbackFuncExtra}
     modalProps={modalProps}
     callApiExtraProps={callApiExtraProps}
+    inputMetaSeq={modalInputMetaSeq}
+    modifyMetaSeq={modalModifyMetaSeq}
+    viewMetaSeq={modalViewMetaSeq}
+    listMetaSeq={modalListMetaSeq}
   />
 );
 

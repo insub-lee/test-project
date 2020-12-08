@@ -77,6 +77,7 @@ const stepRenderer = ({ step, rel_type }) => {
           return <td></td>;
       }
     case 202:
+    case 203:
       switch (step) {
         case 1:
           return <td>프로젝트 Drop</td>;
@@ -126,7 +127,7 @@ const SignPrcListInfo = ({ info, noPadding }) => {
         </colgroup>
         <thead>
           <tr>
-            <th>결재 진행단계(수정필요함)</th>
+            <th>결재 진행단계</th>
             {/* <th>사번</th> */}
             <th>부서</th>
             <th>직급</th>
@@ -137,12 +138,12 @@ const SignPrcListInfo = ({ info, noPadding }) => {
           </tr>
         </thead>
         <tbody>
-          {approverList.length === 0 && (
+          {approverList?.length === 0 && (
             <tr>
               <td colSpan="7">진행된 내용이 없습니다.</td>
             </tr>
           )}
-          {approverList.map(row => {
+          {approverList?.map(row => {
             if (row?.step === 'Drop_사유') {
               return (
                 <tr key={row?.seq}>
