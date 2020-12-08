@@ -56,10 +56,12 @@ class GasSensorListPage extends Component {
     switch (field) {
       case 'SENSOR_CHECKDT':
         scheDt = val;
-        if (formData.SENSOR_CYCLE > 0) {
+        if (val !== '' && formData.SENSOR_CYCLE >= 0) {
           scheDt = moment(val, 'YYYYMMDD')
             .add(formData.SENSOR_CYCLE, 'year')
             .format('YYYYMMDD');
+        } else {
+          scheDt = '';
         }
         this.setState({
           formData: {
@@ -70,7 +72,7 @@ class GasSensorListPage extends Component {
         });
         break;
       case 'SENSOR_CYCLE':
-        if (formData.SENSOR_CHECKDT && formData.SENSOR_CHECKDT !== '') {
+        if (formData.SENSOR_CHECKDT && formData.SENSOR_CHECKDT !== '' && formData.SENSOR_CHECKDT !== null) {
           scheDt = moment(formData.SENSOR_CHECKDT, 'YYYYMMDD')
             .add(val, 'year')
             .format('YYYYMMDD');
