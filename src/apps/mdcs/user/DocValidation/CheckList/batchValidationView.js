@@ -177,7 +177,7 @@ class batchValidationView extends Component {
           </StyledHtmlTable>
           <div style={{ textAlign: 'center', marginTop: '10px', marginBottom: '10px' }} className="btn-group">
             <Popconfirm
-              title={`유효성 점검 ${selectedRows.length}건 [${this.getValueName()}] 상신하시겠습니까?`}
+              title={`유효성 점검 ${selectedRows.length}건 [${this.getValueName()}] 하시겠습니까?`}
               onConfirm={this.onClickEvent}
               okText="Yes"
               cancelText="No"
