@@ -105,7 +105,9 @@ class SubResourceDispReq extends Component {
       {
         text: '결재선 확인',
         onClick: () =>
-          this.handleModal('결재선 확인', true, [<CustomWorkProcess PRC_ID={PRC_ID} draftId={formData?.DRAFT_ID || -1} viewType="VIEW" statusVisible />]),
+          this.handleModal(`[${formData?.DOC_NO}] 결재선`, true, [
+            <CustomWorkProcess PRC_ID={PRC_ID} draftId={formData?.DRAFT_ID || -1} viewType="VIEW" statusVisible />,
+          ]),
         className: 'btn-primary btn-first  btn-sm',
         visible: flag2,
       },
