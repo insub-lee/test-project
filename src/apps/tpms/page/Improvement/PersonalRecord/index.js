@@ -15,13 +15,13 @@ import { useHooks } from './useHooks';
 import useAuth from '../../../hooks/useAuth';
 
 /**
- * TPMS - 개선활동 - 실적조회 - 개인별실적
+ * TPMS - 개선활동 - 조회 - 개인별조회
  *
  * @returns {*}
  * @constructor
  */
 
-const nav = [{ title: 'TPMS' }, { title: '개선활동' }, { title: '실적조회' }, { title: '개인별실적' }];
+const nav = [{ title: 'TPMS' }, { title: '개선활동' }, { title: '조회' }, { title: '개인별조회' }];
 
 const PersonalRecord = () => {
   const { authInfo, isError: isAuthError, isLoading: isAuthLoading } = useAuth();
@@ -47,7 +47,7 @@ const PersonalRecord = () => {
     <div className="tpms-view">
       <Spin spinning={isAuthLoading || isLoading}>
         <TitleContainerWithSub
-          title="개선활동 - 실적조회"
+          title="개선활동 - 조회"
           nav={nav}
           useCollapsed
           ref={expandableContainerRef}

@@ -23,19 +23,19 @@ export const stepChanger = async (task_seq, step, payload) => {
 export const relTypeHandler = ({ step }) => {
   switch (step) {
     case 0:
-    case 9: // 1차 반려건 재상신시 1차 결재로
+    case 9: // 1차 결재 반려건 재상신시 1차 결재로
       return 200;
-    case 10: // 최종 반려건 재상신시 최종 결재로
+    case 10: // 최종 결재 반려건 재상신시 최종 결재로
       return 201;
   }
 };
 
 export const stepHandler = ({ step }) => {
   switch (step) {
-    case 9: // 1차 반려건 재상신시 등록함으로
+    case 9: // 1차 결재 반려건 재상신시 등록함으로
       return 0;
-    case 10: // 최종 반려건 재상신시 완료보고서 함으로
-      return 7;
+    case 10: // 최종 결재 반려건 재상신시 등록함 함으로 //todo
+      return 8;
   }
 };
 
