@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import moment from 'moment';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { submitDraft, stepChanger } from '../../../../hooks/useWorkFlow';
+import { submitDraft, stepChanger, approverAndRejectHandler } from '../../../../hooks/useWorkFlow';
 
 import alertMessage from '../../../../components/Notification/Alert';
 
@@ -366,22 +366,22 @@ export default ({ info, callback = () => {} }) => {
       },
     ];
 
-    if (info?.step === 20) {
+    if (info?.step > 19) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
         option: {
           label: 'Drop 사유',
-          name: 'DROP_REASON',
+          name: 'drop_reason',
           placeholder: '코멘트를 남겨주세요.',
-          value: info.DROP_REASON,
+          value: info?.drop_reason,
           required: true,
           readOnly: true,
         },
         seq: formData.length + 1,
       });
     }
-    if (info?.step === 7) {
+    if (info.step_one_complete_date !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -418,6 +418,9 @@ export default ({ info, callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+
+    if (info.step_two_complete_date !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -454,6 +457,9 @@ export default ({ info, callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+
+    if (info.step_three_complete_date !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -490,6 +496,9 @@ export default ({ info, callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+
+    if (info.step_four_complete_date !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -526,6 +535,9 @@ export default ({ info, callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+
+    if (info.step_five_complete_date !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -562,6 +574,9 @@ export default ({ info, callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+
+    if (info.improvement_point !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -575,6 +590,9 @@ export default ({ info, callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+
+    if (info.success_point !== null) {
       formData.push({
         type: 'textarea',
         classname: 'improve_form std',
@@ -588,6 +606,9 @@ export default ({ info, callback = () => {} }) => {
         },
         seq: formData.length + 1,
       });
+    }
+
+    if (info.real_complete_file_name !== null) {
       formData.push({
         type: 'single-uploader',
         classname: 'improve_form std',
@@ -633,38 +654,6 @@ export default ({ info, callback = () => {} }) => {
   //   });
   //   return { response, error };
   // }, []);
-  const stepHandler = ({ APPV_STATUS, step, rel_type }) => {
-    switch (rel_type) {
-      case 200: // 1차
-        return APPV_STATUS === 2 ? step + 1 : 9;
-      case 201: // 2차
-        if (APPV_STATUS === 2) {
-          switch (step) {
-            case 8:
-              return 11;
-            case 11:
-              return 12;
-            default:
-              return 8;
-          }
-        }
-        return 10;
-      case 202: // Drop
-        if (APPV_STATUS === 2) {
-          switch (step) {
-            case 20:
-              return 21;
-            case 21:
-              return 22;
-            default:
-              return 20;
-          }
-        }
-        return 23;
-      default:
-        return 0;
-    }
-  };
 
   const submitData = useCallback(
     APPV_STATUS => {
@@ -682,7 +671,7 @@ export default ({ info, callback = () => {} }) => {
           .then(() => {
             const { task_seq, step, rel_type } = info;
             // eslint-disable-next-line no-nested-ternary
-            stepChanger(task_seq, stepHandler({ APPV_STATUS, step, rel_type })).then(({ result, error, req }) => {
+            stepChanger(task_seq, approverAndRejectHandler({ APPV_STATUS, step, rel_type })).then(({ result, req, error }) => {
               setIsLoading(false);
               if (result && !error) {
                 alertMessage.alert(`${APPV_STATUS === 2 ? `승인` : `반려`} 처리 완료`);

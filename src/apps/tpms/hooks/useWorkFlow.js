@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
@@ -9,16 +10,78 @@ import MessageContent from 'components/Feedback/message.style2';
 export const useWorkFlow = () => {};
 
 export const stepChanger = async (task_seq, step, payload) => {
-  const response = await request({
+  const { response } = await request({
     method: 'POST',
     url: '/api/tpms/v1/common/approvalSide',
     data: { ...payload, task_seq, step, type: 'step' },
     type: 'step',
   });
-  const { result, error, req } = response?.response;
+  const { result, error, req } = response;
   return { result, error, req };
 };
 
+export const relTypeHandler = ({ step }) => {
+  switch (step) {
+    case 0:
+    case 9: // 1차 결재 반려건 재상신시 1차 결재로
+      return 200;
+    case 10: // 최종 결재 반려건 재상신시 최종 결재로
+      return 201;
+  }
+};
+
+export const stepHandler = ({ step }) => {
+  switch (step) {
+    case 9: // 1차 결재 반려건 재상신시 등록함으로
+      return 0;
+    case 10: // 최종 결재 반려건 재상신시 등록함 함으로 //todo
+      return 8;
+  }
+};
+
+// 해당 연산을 백엔드에서 받아오게끔 수정 필요
+export const approverAndRejectHandler = ({ APPV_STATUS, step, rel_type }) => {
+  switch (rel_type) {
+    case 200: // 1차
+      // 승인시 +1
+      // 반려시 9 수정요청함
+      return APPV_STATUS === 2 ? step + 1 : 9;
+    case 201: // 2차
+      if (APPV_STATUS === 2) {
+        switch (step) {
+          case 8: // 2차 결재 1차 승인
+            return 11;
+          case 11: // 2차 결재 최종승인
+            return 12;
+        }
+      }
+      return 10;
+    case 202: // 1차 Drop
+      if (APPV_STATUS === 2) {
+        switch (step) {
+          case 20: // 1차 Drop 결재 승인
+            return 21;
+          case 21: // 2차 Drop 결재 승인
+            return 22;
+        }
+      }
+      // 1차 Drop 결재 반려시 수정요청함
+      return 9;
+    case 203: // 2차 Drop
+      if (APPV_STATUS === 2) {
+        switch (step) {
+          case 20: // 2차 Drop 결재 승인
+            return 21;
+          case 21: // 최종  Drop 결재 승인
+            return 22;
+        }
+      }
+      // 2차 Drop 결재 반려시 수정요청함으로
+      return 10;
+  }
+};
+
+// 미결함에서 승인, 반려시 사용
 export const submitDraft = async (data, APPV_STATUS, OPINION) => {
   const payload = {
     ISFORMDATA: false,
@@ -36,6 +99,7 @@ export const submitDraft = async (data, APPV_STATUS, OPINION) => {
   return result?.response;
 };
 
+// TPMS 결재 프로세스 룰은 가져온다. 118 값은 불변이므로 하드코딩
 export const getProcessRule = async () => {
   const tpms_prc_id = 118;
   const result = await request({

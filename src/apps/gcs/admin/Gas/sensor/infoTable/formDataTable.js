@@ -20,7 +20,11 @@ class formDataTable extends Component {
 
   onChangeCheckDt = date => {
     const { onChangeFormData } = this.props;
-    onChangeFormData('SENSOR_CHECKDT', date.format('YYYYMMDD'));
+    if (!date && date === null) {
+      onChangeFormData('SENSOR_CHECKDT', '');
+    } else {
+      onChangeFormData('SENSOR_CHECKDT', date.format('YYYYMMDD'));
+    }
   };
 
   render() {

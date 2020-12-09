@@ -37,6 +37,11 @@ class gasSensorListTable extends Component {
         width: 100,
         ellipsis: true,
         align: 'center',
+        sorter: (a, b) => {
+          if (a.SENSORNO < b.SENSORNO) return -1;
+          if (a.SENSORNO > b.SENSORNO) return 1;
+          return 0;
+        },
       },
       {
         title: '감지상태',
@@ -45,6 +50,11 @@ class gasSensorListTable extends Component {
         width: 100,
         ellipsis: true,
         align: 'center',
+        sorter: (a, b) => {
+          if (a.SENSORSEL < b.SENSORSEL) return -1;
+          if (a.SENSORSEL > b.SENSORSEL) return 1;
+          return 0;
+        },
       },
       {
         title: 'Fab',
@@ -53,6 +63,11 @@ class gasSensorListTable extends Component {
         width: 100,
         ellipsis: true,
         align: 'center',
+        sorter: (a, b) => {
+          if (a.FAB < b.FAB) return -1;
+          if (a.FAB > b.FAB) return 1;
+          return 0;
+        },
       },
       {
         title: 'Area',
@@ -61,6 +76,11 @@ class gasSensorListTable extends Component {
         width: 100,
         ellipsis: true,
         align: 'center',
+        sorter: (a, b) => {
+          if (a.AREA < b.AREA) return -1;
+          if (a.AREA > b.AREA) return 1;
+          return 0;
+        },
       },
       {
         title: 'Key-No',
@@ -69,6 +89,11 @@ class gasSensorListTable extends Component {
         width: 100,
         ellipsis: true,
         align: 'center',
+        sorter: (a, b) => {
+          if (a.KEY_NO < b.KEY_NO) return -1;
+          if (a.KEY_NO > b.KEY_NO) return 1;
+          return 0;
+        },
       },
       {
         title: 'Model',
@@ -77,6 +102,11 @@ class gasSensorListTable extends Component {
         width: 100,
         ellipsis: true,
         align: 'center',
+        sorter: (a, b) => {
+          if (a.MODEL < b.MODEL) return -1;
+          if (a.MODEL > b.MODEL) return 1;
+          return 0;
+        },
       },
       {
         title: 'Monitor',
@@ -85,6 +115,11 @@ class gasSensorListTable extends Component {
         width: 100,
         ellipsis: true,
         align: 'center',
+        sorter: (a, b) => {
+          if (a.MONITOR < b.MONITOR) return -1;
+          if (a.MONITOR > b.MONITOR) return 1;
+          return 0;
+        },
       },
       {
         title: 'Position',
@@ -109,6 +144,11 @@ class gasSensorListTable extends Component {
         width: 100,
         ellipsis: true,
         align: 'center',
+        sorter: (a, b) => {
+          if (a.SENSORPUMP < b.SENSORPUMP) return -1;
+          if (a.SENSORPUMP > b.SENSORPUMP) return 1;
+          return 0;
+        },
       },
       {
         title: '경보설정값',
@@ -117,6 +157,11 @@ class gasSensorListTable extends Component {
         width: 200,
         ellipsis: true,
         align: 'center',
+        sorter: (a, b) => {
+          if (a.SENSORSET1 < b.SENSORSET1) return -1;
+          if (a.SENSORSET1 > b.SENSORSET1) return 1;
+          return 0;
+        },
       },
       {
         title: '경보기위치',
@@ -149,6 +194,11 @@ class gasSensorListTable extends Component {
         width: 200,
         ellipsis: true,
         align: 'center',
+        sorter: (a, b) => {
+          if (a.SENSOR_AS < b.SENSOR_AS) return -1;
+          if (a.SENSOR_AS > b.SENSOR_AS) return 1;
+          return 0;
+        },
       },
       {
         title: 'TWA-TLV',
@@ -157,6 +207,11 @@ class gasSensorListTable extends Component {
         width: 150,
         ellipsis: true,
         align: 'center',
+        sorter: (a, b) => {
+          if (a.SENSOR_TWA < b.SENSOR_TWA) return -1;
+          if (a.SENSOR_TWA > b.SENSOR_TWA) return 1;
+          return 0;
+        },
       },
       {
         title: '참고사항',
@@ -177,6 +232,11 @@ class gasSensorListTable extends Component {
           if (data === undefined || data === null) return <span>정보없음</span>;
           return <span>{moment(data, 'YYYYMMDD').format('YYYY.MM.DD')}</span>;
         },
+        sorter: (a, b) => {
+          if (a.SENSOR_CHECKDT < b.SENSOR_CHECKDT) return -1;
+          if (a.SENSOR_CHECKDT > b.SENSOR_CHECKDT) return 1;
+          return 0;
+        },
       },
       {
         title: '교체/점검 주기',
@@ -188,6 +248,11 @@ class gasSensorListTable extends Component {
         render: data => {
           if (data === undefined || data === null) return <span>정보없음</span>;
           return <span>{`${data}년`}</span>;
+        },
+        sorter: (a, b) => {
+          if (a.SENSOR_ADD < b.SENSOR_ADD) return -1;
+          if (a.SENSOR_ADD > b.SENSOR_ADD) return 1;
+          return 0;
         },
       },
       {
@@ -201,6 +266,11 @@ class gasSensorListTable extends Component {
           if (data === undefined || data === null) return <span>정보없음</span>;
           return <span>{moment(data, 'YYYYMMDD').format('YYYY.MM.DD')}</span>;
         },
+        sorter: (a, b) => {
+          if (a.SENSOR_SCHEDT < b.SENSOR_SCHEDT) return -1;
+          if (a.SENSOR_SCHEDT > b.SENSOR_SCHEDT) return 1;
+          return 0;
+        },
       },
     ];
 
@@ -208,6 +278,7 @@ class gasSensorListTable extends Component {
       <AntdTable
         columns={columns}
         dataSource={listData}
+        pagination={{ pageSize: 20 }}
         scroll={{ x: 2990 }}
         onRow={record => ({
           onClick: () => handleModal('MODIFY', record, record), // click row

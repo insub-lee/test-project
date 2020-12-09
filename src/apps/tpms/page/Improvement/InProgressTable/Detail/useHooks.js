@@ -1,16 +1,15 @@
 /* eslint-disable camelcase */
-import { useState, useMemo, useRef } from 'react';
 import moment from 'moment';
-
+import { useMemo, useState } from 'react';
+import alertMessage from '../../../../components/Notification/Alert';
 import { stepChanger } from '../../../../hooks/useWorkFlow';
 
-import alertMessage from '../../../../components/Notification/Alert';
 // import parseFiles from '../../../../utils/parseFiles';
 
 export default ({ info, callback = () => {} }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const dropModalRef = useRef(null);
+  const [isDropModalOpen, setIsDropModalOpen] = useState(false);
 
   const defaultFormData = useMemo(() => {
     const { key_performance_indicators, current_status, goal, apply_target, note } =
@@ -662,7 +661,7 @@ export default ({ info, callback = () => {} }) => {
 
     if (!payload.noUse) {
       stepChanger(info?.task_seq, info?.step + 1, payload)
-        .then(({ result, error, req }) => {
+        .then(({ result, req, error}) => {
           if (result && !error) {
             alertMessage.notice('저장 완료');
             callback();
@@ -685,19 +684,14 @@ export default ({ info, callback = () => {} }) => {
     setIsLoading(false);
   };
 
-  const openDropModal = () => {
-    const payload = {};
-    dropModalRef.current.handleOpen(payload);
-  };
-
   return {
     isLoading,
     isError,
     defaultFormData,
-    dropModalRef,
+    isDropModalOpen,
     actions: {
       submitForm,
-      openDropModal,
+      setIsDropModalOpen,
     },
   };
 };

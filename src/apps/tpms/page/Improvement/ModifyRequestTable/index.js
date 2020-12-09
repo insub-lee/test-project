@@ -126,7 +126,7 @@ const ModifyRequestTable = () => {
         dataIndex: 'project_type',
         key: 'project_type',
         width: '10%',
-        render: project_type=> {
+        render: project_type => {
           switch (project_type) {
             case 'G':
               return '개별개선';

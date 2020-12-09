@@ -546,22 +546,17 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
       return;
     }
 
-    // 기간 설정에 대한 체크
-    const {
-      situation_analyze_start_date,
-      situation_analyze_end_date,
-      measure_due_date,
-      cause_analyze_due_date,
-      improvement_due_date,
-      completion_due_date,
-    } = payload;
+    /*
+     기간 설정에 대한 체크
+     현-원-대-개-완 순서대로 들어가야함.
+    */
     const dueDates = [
-      moment(situation_analyze_start_date, 'YYYY.MM.DD'),
-      moment(situation_analyze_end_date, 'YYYY.MM.DD'),
-      moment(measure_due_date, 'YYYY.MM.DD'),
-      moment(cause_analyze_due_date, 'YYYY.MM.DD'),
-      moment(improvement_due_date, 'YYYY.MM.DD'),
-      moment(completion_due_date, 'YYYY.MM.DD'),
+      moment(payload?.situation_analyze_start_date, 'YYYY.MM.DD'),
+      moment(payload?.situation_analyze_end_date, 'YYYY.MM.DD'),
+      moment(payload?.cause_analyze_due_date, 'YYYY.MM.DD'),
+      moment(payload?.measure_due_date, 'YYYY.MM.DD'),
+      moment(payload?.improvement_due_date, 'YYYY.MM.DD'),
+      moment(payload?.completion_due_date, 'YYYY.MM.DD'),
     ];
     const validatedDueDates = dateValidateChecker(dueDates);
     if (!validatedDueDates.result) {
@@ -631,13 +626,15 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
         method: 'PUT',
         data: payload,
       };
+
       setIsLoading(true);
       sendData(options)
         .then(({ response }) => {
           const { result, req, error } = response;
           if (result && !error) {
             getProcessRule(118, {}).then(ee => {
-              fillWorkFlowData(ee, req).then(() => {
+              // rel_type 비명시시 작동불가
+              fillWorkFlowData(ee, { ...req, rel_type: 200 }).then(() => {
                 alertMessage.notice('개선활동을 신규 등록하였습니다.');
                 setIsRedirect(true);
               });
