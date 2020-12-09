@@ -81,7 +81,7 @@ class EmployeeSelector extends React.Component {
                   </Button>
                 )}
               </div>
-              {item.values.length > 0 && (
+              {item?.values?.length > 0 && (
                 <>
                   <input type="hidden" name={`user_selector_${index}`} value={JSON.stringify(item.values)} />
                   <ul className="users">
