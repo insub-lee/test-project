@@ -148,7 +148,7 @@ class ValidationView extends Component {
           </table>
         </StyledHtmlTable>
         <div style={{ textAlign: 'center', marginTop: '10px' }} className="btn-group">
-          <Popconfirm title={`유효성 점검[${this.getValueName()}] 상신하시겠습니까?`} onConfirm={this.onClickEvent} okText="Yes" cancelText="No">
+          <Popconfirm title={`유효성 점검[${this.getValueName()}] 하시겠습니까?`} onConfirm={this.onClickEvent} okText="Yes" cancelText="No">
             <Button type="primary" style={{ marginRight: '5px' }}>
               확인
             </Button>

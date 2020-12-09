@@ -19,7 +19,7 @@ const dateValidateChecker = momentDates => {
   return { result, message };
 };
 
-const defaultFormData = [
+const defaultFormData = () => [
   {
     type: 'text',
     classname: 'improve_form std width50 flCustom',
@@ -307,6 +307,7 @@ const defaultFormData = [
     seq: 16,
   },
   {
+    // TODO 팀원 선택 이력이 남아있는 버그가 있음.
     type: 'employee-selector',
     classname: 'improve_form ex width50 frCustom customColorDiv02',
     option: {
@@ -314,7 +315,7 @@ const defaultFormData = [
       values: [
         { key: 0, label: '1차결재권자', values: [], type: 'SINGLE' },
         { key: 1, label: '최종결재권자', values: [], type: 'SINGLE' },
-        { key: 3, label: '팀원', values: [], type: 'MULTI' },
+        { key: 2, label: '팀원', values: [], type: 'MULTI' },
       ],
     },
     seq: 17,
@@ -385,7 +386,7 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
   // };
 
   const currentFormJson = () =>
-    defaultFormData.map(item => {
+    defaultFormData().map(item => {
       if (item.option.name === 'project_leader') {
         return {
           ...item,
@@ -397,6 +398,7 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
         };
       }
       if (item.option.label === 'Member') {
+        console.debug('### member : ', item);
         return {
           ...item,
           option: {
@@ -405,8 +407,8 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
               { ...item.option.values[0], initdpcd: dpcd || '' },
               {
                 ...item.option.values[1],
-                values: currentPositionLeader.user_id ? [{ ...currentPositionLeader, emp_no: currentPositionLeader.user_id }] : [],
-                fixed: !!currentPositionLeader.user_id,
+                // values: currentPositionLeader.user_id ? [{ ...currentPositionLeader, emp_no: currentPositionLeader.user_id }] : [],
+                // fixed: !!currentPositionLeader.user_id,
                 initdpcd: dpcd || '',
               },
               { ...item.option.values[2], initdpcd: dpcd || '' },
@@ -479,7 +481,10 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       return;
     }
 
-    // 기간 설정에 대한 체크
+    /* 기간 설정에 대한 체크
+    현-원-대-개-완 순서대로 들어가야함.
+*/
+
     const {
       situation_analyze_start_date,
       situation_analyze_end_date,
@@ -489,12 +494,12 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       completion_due_date,
     } = payload;
     const dueDates = [
-      moment(moment(situation_analyze_start_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
-      moment(moment(situation_analyze_end_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
-      moment(moment(cause_analyze_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
-      moment(moment(measure_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
-      moment(moment(improvement_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
-      moment(moment(completion_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(situation_analyze_start_date, 'YYYY.MM.DD')),
+      moment(moment(situation_analyze_end_date, 'YYYY.MM.DD')),
+      moment(moment(cause_analyze_due_date, 'YYYY.MM.DD')),
+      moment(moment(measure_due_date, 'YYYY.MM.DD')),
+      moment(moment(improvement_due_date, 'YYYY.MM.DD')),
+      moment(moment(completion_due_date, 'YYYY.MM.DD')),
     ];
     const validatedDueDates = dateValidateChecker(dueDates);
     if (!validatedDueDates.result) {
@@ -522,7 +527,7 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       const final_approver = JSON.stringify([preferSignLine[1][0]]);
 
       const team_member = JSON.parse(payload.user_selector_2 || '[]').map(user => user);
-      
+
       if (team_member.length < 1) {
         alertMessage.alert('팀원이 미설정 되었습니다.');
         debug('팀원이 미설정 되었습니다.');
@@ -563,7 +568,6 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       payload.first_approver = first_approver;
       payload.final_approver = final_approver;
       payload.team_member = JSON.stringify(team_member);
-      payload.is_temp = 0;
       const date = new Date();
       payload.project_id = `${date.getFullYear()}${date.getMonth()}`;
       const { reg_dept_id, project_level } = payload;
@@ -571,6 +575,7 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       payload.project_level = parseInt(project_level || 0, 10);
       payload.reg_user_id = originEmpNo;
       payload.reg_user_name = usrnm;
+      payload.is_temp = 0;
       payload.step = 0;
 
       setIsLoading(true);
@@ -579,6 +584,8 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
           const { result, req, error } = response;
           if (result && !error) {
             getProcessRule().then(ee => {
+              // rel_type 비명시시 작동불가
+
               fillWorkFlowData(ee, { ...req, rel_type: 200 });
               alertMessage.notice('개선활동을 신규 등록하였습니다.');
               debug('개선활동을 신규 등록하였습니다.');

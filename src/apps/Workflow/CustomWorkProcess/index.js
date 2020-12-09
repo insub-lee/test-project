@@ -153,7 +153,7 @@ class CustomWorkProcess extends Component {
                           )}
                           {statusVisible &&
                             (item.APPV_STATUS === 2 ? (
-                              <span style={{ color: 'red' }}>(결재완료)</span>
+                              <span style={{ color: 'red' }}>(승인)</span>
                             ) : item.APPV_STATUS === 9 ? (
                               <span style={{ color: 'red' }}>(부결)</span>
                             ) : null)}
