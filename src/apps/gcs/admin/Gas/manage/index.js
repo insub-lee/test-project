@@ -12,7 +12,6 @@ class chemicalManage extends Component {
   componentDidMount() {}
 
   render() {
-    // return <BizBuilderBase sagaKey="chemicalManage" workSeq={14661} viewType="LIST" />;
     return (
       <Styeld>
         <BizMicroDevBase component={GasManagePage} sagaKey="GasManage_list" />

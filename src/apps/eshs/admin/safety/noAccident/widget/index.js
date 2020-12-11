@@ -37,6 +37,8 @@ class NoaccidentWidget extends Component {
     });
   };
 
+  numberWithComma = number => number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
   render() {
     const { item } = this.props;
     const { info } = this.state;
@@ -56,7 +58,7 @@ class NoaccidentWidget extends Component {
                   </Divider>
                   <div className="noacc-status">
                     <p className="weight500">
-                      <span className="total-cnt">{`${info.TOTAL_1 || '-'}시간`}</span> 달성
+                      <span className="total-cnt">{`${info.TOTAL_1 ? this.numberWithComma(info.TOTAL_1) : '-'}시간`}</span> 달성
                     </p>
                     <p className="weight500">{`달성률 : ${info.RATE_1 || '-'} %`}</p>
                   </div>
@@ -67,7 +69,7 @@ class NoaccidentWidget extends Component {
                   </Divider>
                   <div className="noacc-status">
                     <p className="weight500">
-                      <span className="total-cnt">{`${info.TOTAL_3 || '-'}시간`}</span> 달성
+                      <span className="total-cnt">{`${info.TOTAL_3 ? this.numberWithComma(info.TOTAL_3) : '-'}시간`}</span> 달성
                     </p>
                     <p className="weight500">{`달성률 : ${info.RATE_3 || '-'} %`}</p>
                   </div>
@@ -78,7 +80,7 @@ class NoaccidentWidget extends Component {
                   </Divider>
                   <div className="noacc-status">
                     <p className="weight500">
-                      <span className="total-cnt">{`${info.TOTAL_2 || '-'}시간`}</span> 달성
+                      <span className="total-cnt">{`${info.TOTAL_2 ? this.numberWithComma(info.TOTAL_2) : '-'}시간`}</span> 달성
                     </p>
                     <p className="weight500">{`달성률 : ${info.RATE_2 || '-'} %`}</p>
                   </div>
@@ -108,9 +110,9 @@ class NoaccidentWidget extends Component {
               </a>
             </Divider>
             <div className="noacc-status">
-              <p className="line-p">{`구미 : ${info.TOTAL_1 || '-'} 시간 | ${info.RATE_1 || '-'} % 달성`}</p>
-              <p className="line-p">{`청주 : ${info.TOTAL_3 || '-'} 시간 | ${info.RATE_3 || '-'} % 달성`}</p>
-              <p className="line-p">{`서울 : ${info.TOTAL_2 || '-'} 시간 | ${info.RATE_2 || '-'} % 달성`}</p>
+              <p className="line-p">{`구미 : ${info.TOTAL_1 ? this.numberWithComma(info.TOTAL_1) : '-'} 시간 | ${info.RATE_1 || '-'} % 달성`}</p>
+              <p className="line-p">{`청주 : ${info.TOTAL_3 ? this.numberWithComma(info.TOTAL_3) : '-'} 시간 | ${info.RATE_3 || '-'} % 달성`}</p>
+              <p className="line-p">{`서울 : ${info.TOTAL_2 ? this.numberWithComma(info.TOTAL_2) : '-'} 시간 | ${info.RATE_2 || '-'} % 달성`}</p>
             </div>
             <div className="foot-contents">
               <h1>안전은 생명입니다.</h1>

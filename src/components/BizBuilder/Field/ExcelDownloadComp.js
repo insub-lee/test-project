@@ -7,7 +7,7 @@ import * as selectors from 'components/BizBuilderBase/selectors';
 
 import PropTypes from 'prop-types';
 import ReactExport from 'react-data-export';
-import { Button } from 'antd';
+import { Button, Spin } from 'antd';
 import StyledAntdButton from 'components/BizBuilder/styled/Buttons/StyledAntdButton';
 import { FileExcelOutlined } from '@ant-design/icons';
 
@@ -51,6 +51,7 @@ class Comp extends Component {
       listData: [],
       dataSet: [],
       startDown: false,
+      isloaded: true,
     };
 
     this.getExcelList = debounce(this.getExcelList, 300);
@@ -62,6 +63,7 @@ class Comp extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    const { getListFunc } = nextProps;
     const prevList = prevState.listData || [];
     const nextList = nextProps.listData || [];
 
@@ -80,6 +82,9 @@ class Comp extends Component {
         return result;
       });
 
+      if (getListFunc) {
+        return { listData: nextList, dataSet: [{ columns, data }], isloaded: true };
+      }
       return { listData: nextList, dataSet: [{ columns, data }] };
     }
 
@@ -143,9 +148,19 @@ class Comp extends Component {
 
   bulderExcelExport = () => this.setState(prevState => ({ startDown: prevState.startDown + 1 }));
 
+  customGetList = () => {
+    const { getListFunc } = this.props;
+    this.setState(
+      {
+        isloaded: false,
+      },
+      () => getListFunc(),
+    );
+  };
+
   render() {
-    const { isBuilder, btnText, fileName, className, sheetName, isPagingData, fields, columns } = this.props;
-    const { dataSet, startDown } = this.state;
+    const { isBuilder, btnText, fileName, className, sheetName, isPagingData, fields, columns, getListFunc, listData } = this.props;
+    const { dataSet, startDown, isloaded } = this.state;
     // BuilderBase 에서 사용시
     if (isBuilder) {
       return fields.length > 0 && columns.length > 0 ? (
@@ -161,6 +176,28 @@ class Comp extends Component {
             </ExcelFile>
           )}
         </>
+      ) : (
+        ''
+      );
+    }
+
+    // SI - getList Func을 따로 줄 경우
+    if (getListFunc) {
+      return fields.length > 0 && columns.length > 0 ? (
+        <div style={{ display: 'inline-block' }}>
+          <Spin spinning={!isloaded}>
+            <StyledButton className="btn-img btn-gray btn-sm" onClick={isloaded && this.customGetList}>
+              <FileExcelOutlined />
+              &nbsp;{btnText}
+            </StyledButton>
+          </Spin>
+
+          {listData && listData.length > 0 && (
+            <ExcelFile key={startDown} filename={fileName} hideElement>
+              <ExcelSheet dataSet={dataSet} name={sheetName} />
+            </ExcelFile>
+          )}
+        </div>
       ) : (
         ''
       );
@@ -202,6 +239,8 @@ Comp.propTypes = {
   fields: PropTypes.array,
   listData: PropTypes.array, // builder 와 동일한 Props명 사용
   btnSize: PropTypes.string, // 엑셀버튼 크기조정
+  isPagenation: PropTypes.bool, // SI 페이지네이션
+  getListFunc: PropTypes.func, // 리스트데이터를 따로 호출하는 customFunc :: must return List,
 
   // 빌더 리스트 프롭스 추가
   conditional: PropTypes.string,
