@@ -115,13 +115,12 @@ class SearchEquipModal extends React.Component {
   }
 
   async fetchSelectorKeyno() {
-    // const requestQuery = {
-    //   fab: this.state.fab === 'all' ? undefined : this.state.fab,
-    //   area: this.state.area === 'all' ? undefined : this.state.area,
-    // };
-    // const queryString = jsonToQueryString(requestQuery);
-    const url = `/api/tpms/v1/common/searchInfo?type=keyno`;
-    // const getUrl = `${url}&${queryString}`;
+    const requestQuery = {
+      fab: this.state.fab === 'all' ? undefined : this.state.fab,
+      area: this.state.area === 'all' ? undefined : this.state.area,
+      type: 'keyno',
+    };
+    const url = `/api/tpms/v1/common/searchInfo?${jsonToQueryString(requestQuery)}`;
     const { response, error } = await service.board.get(url);
     if (response && !error) {
       const { list } = response;
@@ -135,13 +134,12 @@ class SearchEquipModal extends React.Component {
   }
 
   async fetchSelectorModel() {
-    // const requestQuery = {
-    //   fab: this.state.fab === 'all' ? undefined : this.state.fab,
-    //   area: this.state.area === 'all' ? undefined : this.state.area,
-    // };
-    // const queryString = jsonToQueryString(requestQuery);
-    const url = `/api/tpms/v1/common/searchInfo?type=model`;
-    // const getUrl = `${url}&${queryString}`;
+    const requestQuery = {
+      fab: this.state.fab === 'all' ? undefined : this.state.fab,
+      area: this.state.area === 'all' ? undefined : this.state.area,
+      type: 'model',
+    };
+    const url = `/api/tpms/v1/common/searchInfo?${jsonToQueryString(requestQuery)}`;
     const { response, error } = await service.board.get(url);
     if (response && !error) {
       const { list } = response;

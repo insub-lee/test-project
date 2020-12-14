@@ -53,7 +53,7 @@ class RadioGroup extends React.Component {
     const { values } = this.state;
     const { name } = this.props;
     return (
-      <React.Fragment>
+      <>
         {values.map((item, index) =>
           item.readOnly ? (
             this.checkedItemRenderer(item)
@@ -71,7 +71,7 @@ class RadioGroup extends React.Component {
             />
           ),
         )}
-      </React.Fragment>
+      </>
     );
   }
 }

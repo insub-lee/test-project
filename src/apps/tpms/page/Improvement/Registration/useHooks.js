@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import moment from 'moment';
 
 import request from 'utils/request';
@@ -324,15 +324,17 @@ const defaultFormData = () => [
 
 export default ({ originEmpNo, usrnm, dpcd }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [realSubmit, setRealSubmit] = useState(false);
+  const [tempSubmit, setTempSubmit] = useState(false);
+  const [darftData, setDraftData] = useState({});
+
   const [isRedirect, setIsRedirect] = useState(false);
   const [savedTemp, setSavedTemp] = useState(false);
-  const [currentPositionLeader, setCurrentPositionLeader] = useState('');
   const [currentProjectType, setCurrentProjectType] = useState('');
   const formRef = useRef(null);
 
   const postTask = useCallback(async payload => {
     const { response, error } = await request({
-      // url: '/apigate/v1/portal/sign/task',
       url: `/api/tpms/v1/common/approval`,
       headers: {
         'Access-Control-Allow-Origin': '*',
@@ -494,12 +496,12 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       completion_due_date,
     } = payload;
     const dueDates = [
-      moment(moment(situation_analyze_start_date, 'YYYY.MM.DD')),
-      moment(moment(situation_analyze_end_date, 'YYYY.MM.DD')),
-      moment(moment(cause_analyze_due_date, 'YYYY.MM.DD')),
-      moment(moment(measure_due_date, 'YYYY.MM.DD')),
-      moment(moment(improvement_due_date, 'YYYY.MM.DD')),
-      moment(moment(completion_due_date, 'YYYY.MM.DD')),
+      moment(situation_analyze_start_date, 'YYYY.MM.DD'),
+      moment(situation_analyze_end_date, 'YYYY.MM.DD'),
+      moment(cause_analyze_due_date, 'YYYY.MM.DD'),
+      moment(measure_due_date, 'YYYY.MM.DD'),
+      moment(improvement_due_date, 'YYYY.MM.DD'),
+      moment(completion_due_date, 'YYYY.MM.DD'),
     ];
     const validatedDueDates = dateValidateChecker(dueDates);
     if (!validatedDueDates.result) {
@@ -508,66 +510,55 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       return;
     }
 
-    const preferSignLine = [];
-    preferSignLine.push(JSON.parse(payload.user_selector_0 || '[]'));
-    preferSignLine.push(JSON.parse(payload.user_selector_1 || '[]'));
-
-    if (preferSignLine[0].length < 1 || preferSignLine[1].length < 1) {
+    const first_approver = JSON.parse(payload.user_selector_0 || '[]');
+    const final_approver = JSON.parse(payload.user_selector_1 || '[]');
+    if (first_approver.length < 1 || final_approver.length < 1) {
       alertMessage.alert('최종결재권자 또는 1차결재권자가 미설정되었습니다.');
-      debug('최종결재권자 또는 1차결재권자가 미설정되었습니다.');
-    } else if (preferSignLine[0][0].emp_no === preferSignLine[1][0].emp_no) {
+    } else if (first_approver[0].emp_no === final_approver[0].emp_no) {
       alertMessage.alert('최종결재권자와 1차결재권자가 동일합니다.');
-      debug('최종결재권자와 1차결재권자가 동일합니다.');
-    } else if (preferSignLine[0][0].emp_no === originEmpNo || preferSignLine[1][0].emp_no === originEmpNo) {
+    } else if (first_approver[0].emp_no === originEmpNo || final_approver[0].emp_no === originEmpNo) {
       alertMessage.alert('기안자와 결재권자가 동일합니다.');
-      debug('기안자와 결재권자가 동일합니다.');
     } else {
-      const first_approver = JSON.stringify([preferSignLine[0][0]]);
+      // todo
 
-      const final_approver = JSON.stringify([preferSignLine[1][0]]);
-
-      const team_member = JSON.parse(payload.user_selector_2 || '[]').map(user => user);
+      const team_member = JSON.parse(payload.user_selector_2 || '[]');
 
       if (team_member.length < 1) {
         alertMessage.alert('팀원이 미설정 되었습니다.');
-        debug('팀원이 미설정 되었습니다.');
         return;
       }
 
-      if (team_member.includes(originEmpNo)) {
+      if (payload?.user_selector_2.includes(originEmpNo)) {
         alertMessage.alert('자신을 팀원으로 설정 할 수 없습니다.');
-        debug('자신을 팀원으로 설정 할 수 없습니다.');
         return;
       }
 
-      if (team_member.includes(preferSignLine[0][0].user_id)) {
+      if (payload?.user_selector_2.includes(first_approver[0].emp_no)) {
         alertMessage.alert('1차결재권자를 팀원으로 설정 할 수 없습니다.');
-        debug('1차결재권자를 팀원으로 설정 할 수 없습니다.');
         return;
       }
 
-      if (team_member.includes(preferSignLine[1][0].user_id)) {
+      if (payload?.user_selector_2.includes(final_approver[0].emp_no)) {
         alertMessage.alert('최종결재권자를 팀원으로 설정 할 수 없습니다.');
-        debug('최종결재권자를 팀원으로 설정 할 수 없습니다.');
         return;
       }
 
       /* Change Format */
-      payload.situation_analyze_start_date = moment(payload.situation_analyze_start_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.situation_analyze_end_date = moment(payload.situation_analyze_end_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.measure_due_date = moment(payload.measure_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.cause_analyze_due_date = moment(payload.cause_analyze_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.improvement_due_date = moment(payload.improvement_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.completion_due_date = moment(payload.completion_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
+      payload.situation_analyze_start_date = moment(payload.situation_analyze_start_date).format('YYYYMMDD');
+      payload.situation_analyze_end_date = moment(payload.situation_analyze_end_date).format('YYYYMMDD');
+      payload.measure_due_date = moment(payload.measure_due_date).format('YYYYMMDD');
+      payload.cause_analyze_due_date = moment(payload.cause_analyze_due_date).format('YYYYMMDD');
+      payload.improvement_due_date = moment(payload.improvement_due_date).format('YYYYMMDD');
+      payload.completion_due_date = moment(payload.completion_due_date).format('YYYYMMDD');
 
       payload.equipment_model = JSON.stringify(equipment_model);
+      payload.first_approver = JSON.stringify(first_approver);
+      payload.final_approver = JSON.stringify(final_approver);
+      payload.team_member = JSON.stringify(team_member);
       payload.user_selector_0 = undefined;
       payload.user_selector_1 = undefined;
       payload.user_selector_2 = undefined;
       payload.user_selector_3 = undefined;
-      payload.first_approver = first_approver;
-      payload.final_approver = final_approver;
-      payload.team_member = JSON.stringify(team_member);
       const date = new Date();
       payload.project_id = `${date.getFullYear()}${date.getMonth()}`;
       const { reg_dept_id, project_level } = payload;
@@ -579,28 +570,8 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       payload.step = 0;
 
       setIsLoading(true);
-      postTask(payload)
-        .then(({ response }) => {
-          const { result, req, error } = response;
-          if (result && !error) {
-            getProcessRule().then(ee => {
-              // rel_type 비명시시 작동불가
-
-              fillWorkFlowData(ee, { ...req, rel_type: 200 });
-              alertMessage.notice('개선활동을 신규 등록하였습니다.');
-              debug('개선활동을 신규 등록하였습니다.');
-              setIsRedirect(true);
-            });
-          } else {
-            alertMessage.alert('개선활등을 신규 등록에 실패했습니다.');
-            debug('개선활등을 신규 등록에 실패했습니다.');
-          }
-        })
-        .catch(() => {
-          alertMessage.alert('개선활등을 신규 등록에 실패했습니다.');
-          debug('개선활등을 신규 등록에 실패했습니다.');
-        });
-      setIsLoading(false);
+      setRealSubmit(true);
+      setDraftData(payload);
     }
   };
 
@@ -613,28 +584,24 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
     // member 추가
     let first_approver;
     let final_approver;
+    console.debug('### 111 :', payload.user_selector_0, typeof payload.user_selector_0);
     if (payload.user_selector_0) {
-      const tempSignLine = JSON.parse(payload.user_selector_0 || '[]');
-      if (tempSignLine.length > 0) {
-        first_approver = JSON.stringify([tempSignLine[0]]);
-      }
+      first_approver = JSON.parse(payload.user_selector_0 || '[]');
     }
-    if (payload.user_selector_1) {
-      const tempSignLine = JSON.parse(payload.user_selector_1 || '[]');
-      if (tempSignLine.length > 0) {
-        final_approver = JSON.stringify([tempSignLine[0]]);
-      }
-    }
+    console.debug('### 222 :', payload.user_selector_1, typeof payload.user_selector_1);
 
-    const team_member = JSON.parse(payload.user_selector_2 || '[]').map(user => user);
+    if (payload.user_selector_1) {
+      final_approver = JSON.parse(payload.user_selector_1 || '[]');
+    }
+    const team_member = JSON.parse(payload.user_selector_2 || '[]');
     const equipment_model = JSON.parse(payload.equipment_model || '[]').map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
     payload.equipment_model = JSON.stringify(equipment_model);
+    payload.first_approver = JSON.stringify(first_approver);
+    payload.final_approver = JSON.stringify(final_approver);
     payload.user_selector_0 = undefined;
     payload.user_selector_1 = undefined;
     payload.user_selector_2 = undefined;
     payload.user_selector_3 = undefined;
-    payload.first_approver = first_approver;
-    payload.final_approver = final_approver;
     payload.team_member = JSON.stringify(team_member);
     payload.is_temp = 1;
     const date = new Date();
@@ -645,23 +612,57 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
     payload.reg_user_id = originEmpNo;
     payload.reg_user_name = usrnm;
     payload.step = 0;
-    setIsLoading(true);
 
-    postTask(payload)
-      .then(({ response }) => {
-        const { result, error } = response;
-        if (result && !error) {
-          setSavedTemp(true);
-          alertMessage.notice('임시 저장 했습니다.');
-        } else {
-          alertMessage.alert('임시 저장이 실패했습니다.');
-        }
-      })
-      .catch(() => {
-        alertMessage.alert('임시 저장이 실패했습니다.');
-      });
-    setIsLoading(false);
+    setIsLoading(true);
+    setTempSubmit(true);
+    setDraftData(payload);
   };
+
+  useEffect(() => {
+    if (darftData !== {}) {
+      if (realSubmit && isLoading) {
+        postTask(darftData)
+          .then(({ response }) => {
+            const { result, req, error } = response;
+            if (result && !error) {
+              getProcessRule().then(ee => {
+                // rel_type 비명시시 작동불가 , 1차 등록의 rel_type은 200
+                fillWorkFlowData(ee, { ...req, rel_type: 200 });
+                alertMessage.notice('개선활동을 신규 등록하였습니다.');
+                setIsRedirect(true);
+              });
+            } else {
+              alertMessage.alert('개선활등을 신규 등록에 실패했습니다.');
+              setIsLoading(false);
+              setRealSubmit(false);
+            }
+          })
+          .catch(() => {
+            alertMessage.alert('개선활등을 신규 등록에 실패했습니다.');
+            setIsLoading(false);
+            setRealSubmit(false);
+          });
+      } else if (tempSubmit && isLoading) {
+        postTask(darftData)
+          .then(({ response }) => {
+            const { result, error } = response;
+            if (result && !error) {
+              setSavedTemp(true);
+              alertMessage.notice('임시 저장 했습니다.');
+            } else {
+              setIsLoading(false);
+              setTempSubmit(false);
+              alertMessage.alert('임시 저장이 실패했습니다.');
+            }
+          })
+          .catch(() => {
+            alertMessage.alert('임시 저장이 실패했습니다.');
+            setIsLoading(false);
+            setTempSubmit(false);
+          });
+      }
+    }
+  }, [realSubmit, tempSubmit, isLoading, darftData]);
 
   return {
     isLoading,

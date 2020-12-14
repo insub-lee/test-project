@@ -111,8 +111,8 @@ const PersonalRecord = () => {
                         }}
                       >
                         <option value="all">전체</option>
-                        {selectorFab.map(option => (
-                          <option value={option.cd}>{`${option.cdnm}`}</option>
+                        {selectorFab.map(({cd,cdnm})=> (
+                          <option value={cd}>{`${cdnm}`}</option>
                         ))}
                       </select>
                     </li>
@@ -128,8 +128,8 @@ const PersonalRecord = () => {
                         }}
                       >
                         <option value="all">전체</option>
-                        {selectorArea.map(option => (
-                          <option value={option.cd}>{`${option.cdnm}`}</option>
+                        {selectorArea.map(({cd,cdnm})=> (
+                          <option value={cd}>{`${cdnm}`}</option>
                         ))}
                       </select>
                     </li>
@@ -139,8 +139,8 @@ const PersonalRecord = () => {
                       </label>
                       <select name="keyno" id="keyno">
                         <option value="all">전체</option>
-                        {selectorKeyno.map(option => (
-                          <option value={option.cd}>{`${option.cdnm}`}</option>
+                        {selectorKeyno.map(({cd,cdnm})=> (
+                          <option value={cd}>{`${cdnm}`}</option>
                         ))}
                       </select>
                     </li>
@@ -150,8 +150,8 @@ const PersonalRecord = () => {
                       </label>
                       <select name="model" id="model">
                         <option value="all">전체</option>
-                        {selectorModel.map(option => (
-                          <option value={option.cd}>{`${option.cdnm}`}</option>
+                        {selectorModel.map(({cd,cdnm})=> (
+                          <option value={cd}>{`${cdnm}`}</option>
                         ))}
                       </select>
                     </li>

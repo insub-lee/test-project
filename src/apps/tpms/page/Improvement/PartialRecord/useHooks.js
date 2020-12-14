@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+/* eslint-disable camelcase */
 import { useState, useEffect, useMemo, useRef } from 'react';
 import moment from 'moment';
 import request from 'utils/request';
@@ -21,10 +23,10 @@ export const useHooks = () => {
   const status = useMemo(
     () => [
       { value: 'all', text: '전체' },
-      { value: '01', text: '등록' },
-      { value: '02', text: '진행' },
-      { value: '03', text: '완료' },
-      { value: '04', text: 'Drop' },
+      { value: '1', text: '등록' },
+      { value: '2', text: '진행' },
+      { value: '3', text: '완료' },
+      { value: '4', text: 'Drop' },
     ],
     [],
   );
@@ -38,6 +40,7 @@ export const useHooks = () => {
     [],
   );
 
+  // todo 검색 인자 값 추가
   useEffect(() => {
     fetchSelectorKeyno();
     fetchselectorModel();
@@ -47,23 +50,23 @@ export const useHooks = () => {
   const [part, setPart] = useState([{ value: 0, text: '' }]);
   const [team, setTeam] = useState([{ value: 0, text: '' }]);
 
-  const projectlevel = useMemo(
+  const project_level = useMemo(
     () => ({
       label: 'Project Level',
-      name: 'projectLevel',
+      name: 'project_level',
       values: [
         { label: '본부', value: 1, checked: false },
-        { label: '담당', value: '2' },
+        { label: '담당', value: 2 },
         { label: '팀', value: 3 },
         { label: 'Part', value: 4 },
       ],
     }),
     [],
   );
-  const optionPjtType = useMemo(
+  const project_type = useMemo(
     () => ({
       label: 'Project Type',
-      name: 'projectType',
+      name: 'project_type',
       values: [
         { label: '전체', value: '', checked: true },
         { label: '개별개선', value: 'G' },
@@ -81,7 +84,7 @@ export const useHooks = () => {
     [],
   );
   const endDate = useMemo(() => moment().format('YYYY.MM.DD'), []);
-  const stdDate = useMemo(() => moment().format('YYYY.MM.DD'), []);
+  // const stdDate = useMemo(() => moment().format('YYYY.MM.DD'), []);
 
   const optionTerm = useMemo(
     () => ({
@@ -95,12 +98,9 @@ export const useHooks = () => {
   );
   useEffect(() => {
     const fetchData = async () => {
-      const requestQuery = {
-        type: 'usrIdDeptInfo',
-      };
-      const queryString = jsonToQueryString(requestQuery);
       const { response, error } = await request({
-        url: `/apigate/v1/portal/sign/report?${queryString}`,
+        // url: `/apigate/v1/portal/sign/report?${queryString}`,
+        url: `/api/tpms/v1/common/searchInfo?type=headquarter`,
         headers: {
           'Access-Control-Allow-Origin': '*',
         },
@@ -108,20 +108,18 @@ export const useHooks = () => {
       });
 
       if (response && !error) {
-        const { deptInfo } = response;
-        setHeadQuarts([{ value: deptInfo?.dpcd, text: deptInfo?.dpnm }]);
+        const { list } = response;
+        setHeadQuarts(
+          list.map(item => ({
+            value: item?.dpcd,
+            text: item?.dpnm,
+          })),
+        );
       } else {
         console.debug(error);
         alertMessage.alert('Server Error');
       }
     };
-    //   await fetchData();
-    //   await fetchPart();
-    //   await fetchTeam();
-    //   await fetchSelectorFab();
-    //   await fetchSelectorArea();
-    //   await fetchSelectorKeyno();
-    //   await fetchselectorModel();
 
     fetchData();
   }, []);
@@ -136,13 +134,8 @@ export const useHooks = () => {
   }, [headQuarts]);
 
   const fetchPart = async () => {
-    const requestQuery = {
-      type: 'partList',
-      partcd: headQuarts[0]?.value || '',
-    };
-    const queryString = jsonToQueryString(requestQuery);
     const { response, error } = await request({
-      url: `/apigate/v1/portal/sign/report?${queryString}`,
+      url: `/api/tpms/v1/common/searchInfo?type=part`,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
@@ -150,9 +143,9 @@ export const useHooks = () => {
     });
 
     if (response && !error) {
-      const { deptInfoList } = response;
+      const { list } = response;
       setPart(
-        deptInfoList.map(item => ({
+        list.map(item => ({
           value: item.dpcd,
           text: item.dpnm,
         })),
@@ -171,21 +164,21 @@ export const useHooks = () => {
     }
 
     const requestQuery = {
-      type: 'teamList',
-      teamcd: selectValue,
+      type: 'team',
+      dept_id: selectValue,
     };
     const queryString = jsonToQueryString(requestQuery);
     const { response, error } = await request({
-      url: `/apigate/v1/portal/sign/report?${queryString}`,
+      url: `/api/tpms/v1/common/searchInfo?${queryString}`,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
       method: 'GET',
     });
     if (response && !error) {
-      const { deptInfoList } = response;
+      const { list } = response;
       setTeam(
-        deptInfoList.map(item => ({
+        list.map(item => ({
           value: item?.dpcd,
           text: item?.dpnm,
         })),
@@ -197,7 +190,7 @@ export const useHooks = () => {
   };
 
   const fetchSelectorFab = async () => {
-    const url = '/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=FABLIST';
+    const url = '/api/tpms/v1/common/searchInfo?type=fab';
     const { response, error } = await request({
       url,
       headers: {
@@ -215,7 +208,8 @@ export const useHooks = () => {
   };
 
   const fetchSelectorArea = async () => {
-    const url = '/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=AREALIST';
+    const url = `/api/tpms/v1/common/searchInfo?type=area`;
+
     const { response, error } = await request({
       url,
       headers: {
@@ -236,12 +230,11 @@ export const useHooks = () => {
     const requestQuery = {
       fab: fab === 'all' ? undefined : fab,
       area: area === 'all' ? undefined : area,
+      type: 'keyno',
     };
-    const queryString = jsonToQueryString(requestQuery);
-    const url = `/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=KEYNOLIST`;
-    const getUrl = `${url}&${queryString}`;
+    const url = `/api/tpms/v1/common/searchInfo?${jsonToQueryString(requestQuery)}`;
     const { response, error } = await request({
-      url: getUrl,
+      url,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
@@ -260,12 +253,12 @@ export const useHooks = () => {
     const requestQuery = {
       fab: fab === 'all' ? undefined : fab,
       area: area === 'all' ? undefined : area,
+      type: 'model',
     };
-    const queryString = jsonToQueryString(requestQuery);
-    const url = `/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=MODELLIST`;
-    const getUrl = `${url}&${queryString}`;
+
+    const url = `/api/tpms/v1/common/searchInfo?${jsonToQueryString(requestQuery)}`;
     const { response, error } = await request({
-      url: getUrl,
+      url,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
@@ -287,9 +280,9 @@ export const useHooks = () => {
     let headQuartsLabel = '';
     let partLabel = '';
     let teamLable = '';
-    let prjTypeLabel = '';
-    const prjLvlLabels = [];
-    const prjLvValues = [];
+    let project_type_label = '';
+    let project_level_label = '';
+    let project_level = '';
     let statusLabel = '';
     let fabLabel = '';
     let areaLabel = '';
@@ -306,13 +299,13 @@ export const useHooks = () => {
       } else if (key === 'team') {
         const selectObject = document.querySelector(`select[name=${key}]`);
         teamLable = selectObject.options[selectObject.selectedIndex].text;
-      } else if (key === 'projectType') {
+      } else if (key === 'project_type') {
         const label = document.querySelector(`input[name=${key}]:checked`).parentElement.innerText;
-        prjTypeLabel = label;
-      } else if (key.includes('projectLevel')) {
+        project_type_label = label;
+      } else if (key.includes('project_level')) {
         const label = document.querySelector(`input[name=${key}]`).parentElement.innerText;
-        prjLvlLabels.push(label);
-        prjLvValues.push(value);
+        project_level_label = label;
+        project_level = value;
       } else if (key === 'status') {
         const selectObject = document.querySelector(`select[name=${key}]`);
         statusLabel = selectObject.options[selectObject.selectedIndex].text;
@@ -334,9 +327,9 @@ export const useHooks = () => {
     requestQuery.partLabel = partLabel;
     requestQuery.headQuartsLabel = headQuartsLabel;
     requestQuery.teamLable = teamLable;
-    requestQuery.prjTypeLabel = prjTypeLabel;
-    requestQuery.prjLvlLabels = prjLvlLabels.join(',');
-    requestQuery.prjLvValues = prjLvValues.join(',');
+    requestQuery.project_type_label = project_type_label;
+    requestQuery.projectLevelLabels = project_level_label;
+    requestQuery.project_level = project_level;
     requestQuery.statusLabel = statusLabel;
     requestQuery.fabLabel = fabLabel;
     requestQuery.areaLabel = areaLabel;
@@ -359,13 +352,13 @@ export const useHooks = () => {
     isLoading,
     part,
     team,
-    projectlevel,
+    project_level,
     selectorKeyno,
     selectorModel,
     selectorFab,
     selectorArea,
     optionTerm,
-    optionPjtType,
+    project_type,
     showDetail,
     headQuarts,
     searchType,

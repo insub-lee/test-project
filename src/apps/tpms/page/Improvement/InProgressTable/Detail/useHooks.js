@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import moment from 'moment';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import alertMessage from '../../../../components/Notification/Alert';
 import { stepChanger } from '../../../../hooks/useWorkFlow';
 
@@ -8,6 +8,7 @@ import { stepChanger } from '../../../../hooks/useWorkFlow';
 
 export default ({ info, callback = () => {} }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isDropModalOpen, setIsDropModalOpen] = useState(false);
 
@@ -584,6 +585,7 @@ export default ({ info, callback = () => {} }) => {
   const submitForm = e => {
     e.preventDefault();
     e.stopPropagation();
+    setIsLoading(true);
 
     const formData = new FormData(e.target);
     const formJson = {};
@@ -657,11 +659,9 @@ export default ({ info, callback = () => {} }) => {
       return;
     }
 
-    setIsLoading(true);
-
     if (!payload.noUse) {
       stepChanger(info?.task_seq, info?.step + 1, payload)
-        .then(({ result, req, error}) => {
+        .then(({ result, error }) => {
           if (result && !error) {
             alertMessage.notice('저장 완료');
             callback();

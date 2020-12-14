@@ -19,11 +19,14 @@ const dateValidateChecker = momentDates => {
   return { result, message };
 };
 
-/** !!!! Danger!!!!! * */
 export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
   const [isRedirect, setIsRedirect] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [realSubmit, setRealSubmit] = useState(false);
+  const [tempSubmit, setTempSubmit] = useState(false);
+  const [darftData, setDraftData] = useState({});
+
   const [isLvl3, setIsLvl3] = useState(false);
   const [positionLeader, setPositionLeader] = useState({});
   const [savedTemp, setSavedTemp] = useState(false);
@@ -460,7 +463,6 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
   const getCurrentFormJson = () =>
     defaultFormData.map(item => {
       if (item.option.label === 'Member') {
-        console.debug(isLvl3, positionLeader.user_id, '@@@', isLvl3 && !!positionLeader.user_id);
         return {
           ...item,
           option: {
@@ -507,8 +509,15 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
       return { ...item };
     });
 
-  const sendData = useCallback(async options => {
-    const { response, error } = await request(options);
+  const sendData = useCallback(async ({ method, data }) => {
+    const { response, error } = await request({
+      url: `/api/tpms/v1/common/approval`,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method,
+      data,
+    });
     return { response, error };
   }, []);
 
@@ -564,92 +573,63 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
       return;
     }
 
-    const preferSignLine = [];
-    preferSignLine.push(JSON.parse(payload.user_selector_0));
-    preferSignLine.push(JSON.parse(payload.user_selector_1));
-
-    if (preferSignLine[0].length < 1 || preferSignLine[1].length < 1) {
+    const first_approver = JSON.parse(payload?.user_selector_0 || '[]');
+    const final_approver = JSON.parse(payload?.user_selector_1 || '[]');
+    if (first_approver?.length < 1 || final_approver?.length < 1) {
       alertMessage.alert('최종결재권자 또는 1차결재권자가 미설정되었습니다.');
-    } else if (preferSignLine[0][0].emp_no === preferSignLine[1][0].emp_no) {
+    } else if (first_approver[0].emp_no === final_approver[0].emp_no) {
       alertMessage.alert('최종결재권자와 1차결재권자가 동일합니다.');
-    } else if (preferSignLine[0][0].emp_no === originEmpNo || preferSignLine[1][0].emp_no === originEmpNo) {
+    } else if (first_approver[0].emp_no === originEmpNo || final_approver[0].emp_no === originEmpNo) {
       alertMessage.alert('기안자와 결재권자가 동일합니다.');
     } else {
-      const first_approver = JSON.stringify([preferSignLine[0][0]]);
-      const final_approver = JSON.stringify([preferSignLine[1][0]]);
-      const team_member = JSON.parse(payload.user_selector_2 || '[]').map(user => user);
+      // todo
+      const team_member = JSON.parse(payload?.user_selector_2 || '[]');
 
       if (team_member.length < 1) {
         alertMessage.alert('팀원이 미설정 되었습니다.');
         return;
       }
 
-      if (team_member.includes(originEmpNo)) {
+      if (payload?.user_selector_2.includes(originEmpNo)) {
         alertMessage.alert('자신을 팀원으로 설정 할 수 없습니다.');
         return;
       }
 
-      if (team_member.includes(preferSignLine[0][0].user_id)) {
+      if (payload?.user_selector_2.includes(first_approver[0].emp_no)) {
         alertMessage.alert('1차결재권자를 팀원으로 설정 할 수 없습니다.');
         return;
       }
 
-      if (team_member.includes(preferSignLine[1][0].user_id)) {
+      if (payload?.user_selector_2.includes(final_approver[0].emp_no)) {
         alertMessage.alert('최종결재권자를 팀원으로 설정 할 수 없습니다.');
         return;
       }
 
       /* Change Format */
-      payload.situation_analyze_start_date = moment(payload.situation_analyze_start_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.situation_analyze_end_date = moment(payload.situation_analyze_end_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.measure_due_date = moment(payload.measure_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.cause_analyze_due_date = moment(payload.cause_analyze_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.improvement_due_date = moment(payload.improvement_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
-      payload.completion_due_date = moment(payload.completion_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00');
+      payload.situation_analyze_start_date = moment(payload.situation_analyze_start_date).format('YYYYMMDD');
+      payload.situation_analyze_end_date = moment(payload.situation_analyze_end_date).format('YYYYMMDD');
+      payload.measure_due_date = moment(payload.measure_due_date).format('YYYYMMDD');
+      payload.cause_analyze_due_date = moment(payload.cause_analyze_due_date).format('YYYYMMDD');
+      payload.improvement_due_date = moment(payload.improvement_due_date).format('YYYYMMDD');
+      payload.completion_due_date = moment(payload.completion_due_date).format('YYYYMMDD');
 
       payload.equipment_model = JSON.stringify(equipment_model);
+      payload.first_approver = JSON.stringify(first_approver);
+      payload.final_approver = JSON.stringify(final_approver);
+      payload.team_member = JSON.stringify(team_member);
       payload.user_selector_0 = undefined;
       payload.user_selector_1 = undefined;
       payload.user_selector_2 = undefined;
       payload.user_selector_3 = undefined;
-      payload.first_approver = first_approver;
-      payload.final_approver = final_approver;
-      payload.team_member = JSON.stringify(team_member);
-      const { project_level, task_seq } = payload;
+      const { project_level } = payload;
       payload.project_level = parseInt(project_level || 0, 10);
-      payload.task_seq = parseInt(task_seq || 0, 10);
+      payload.task_seq = info?.task_seq;
       payload.is_temp = 0;
       payload.step = 0;
 
-      const options = {
-        url: `/api/tpms/v1/common/approval`,
-        method: 'PUT',
-        data: payload,
-      };
-
+      setDraftData({ ...info, ...payload });
       setIsLoading(true);
-      sendData(options)
-        .then(({ response }) => {
-          const { result, req, error } = response;
-          if (result && !error) {
-            getProcessRule(118, {}).then(ee => {
-              // rel_type 비명시시 작동불가
-              fillWorkFlowData(ee, { ...req, rel_type: 200 }).then(() => {
-                alertMessage.notice('개선활동을 신규 등록하였습니다.');
-                setIsRedirect(true);
-              });
-            });
-          } else {
-            alertMessage.alert('개선활등을 신규 등록에 실패했습니다.');
-            setIsError(true);
-            setIsLoading(false);
-          }
-        })
-        .catch(() => {
-          alertMessage.alert('개선활등을 신규 등록에 실패했습니다.');
-          setIsError(true);
-          setIsLoading(false);
-        });
+      setRealSubmit(true);
     }
   };
 
@@ -663,72 +643,92 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
 
     let first_approver;
     let final_approver;
+
     if (payload.user_selector_0) {
-      const tempSignLine = JSON.parse(payload.user_selector_0 || '[]');
-      if (tempSignLine.length > 0) {
-        first_approver = JSON.stringify([tempSignLine[0]]);
-      }
-    }
-    if (payload.user_selector_1) {
-      const tempSignLine = JSON.parse(payload.user_selector_1 || '[]');
-      if (tempSignLine.length > 0) {
-        final_approver = JSON.stringify([tempSignLine[0]]);
-      }
+      first_approver = JSON.parse(payload.user_selector_0 || '[]');
     }
 
-    const team_member = JSON.parse(payload.user_selector_2 || '[]').map(user => user);
+    if (payload.user_selector_1) {
+      final_approver = JSON.parse(payload.user_selector_1 || '[]');
+    }
+
+    const team_member = JSON.parse(payload.user_selector_2 || '[]');
 
     const equipment_model = JSON.parse(payload?.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
     payload.equipment_model = JSON.stringify(equipment_model);
+    payload.first_approver = JSON.stringify(first_approver);
+    payload.final_approver = JSON.stringify(final_approver);
+    payload.team_member = JSON.stringify(team_member);
     payload.user_selector_0 = undefined;
     payload.user_selector_1 = undefined;
     payload.user_selector_2 = undefined;
     payload.user_selector_3 = undefined;
-    payload.first_approver = first_approver;
-    payload.final_approver = final_approver;
-    payload.team_member = JSON.stringify(team_member);
-    const { project_level, task_seq } = payload;
+    const { project_level } = payload;
     payload.project_level = parseInt(project_level || 0, 10);
-    payload.task_seq = parseInt(task_seq || 0, 10);
     payload.is_temp = 1;
     payload.step = 0;
 
-    const options = {
-      url: `/api/tpms/v1/common/approval`,
-      method: 'PUT',
-      data: payload,
-    };
-
+    setDraftData({ ...info, ...payload });
     setIsLoading(true);
-
-    sendData(options)
-      .then(({ response }) => {
-        const { result, error } = response;
-        if (result && !error) {
-          alertMessage.notice('임시 저장 했습니다.');
-          callback();
-        } else {
-          setIsError(true);
-          alertMessage.alert('임시 저장이 실패했습니다.');
-        }
-      })
-      .catch(() => {
-        setIsError(true);
-        alertMessage.alert('임시 저장이 실패했습니다.');
-        setIsLoading(false);
-      });
+    setTempSubmit(true);
   };
+
+  useEffect(() => {
+    if (darftData !== {}) {
+      if (realSubmit && isLoading) {
+        sendData({ method: 'PUT', data: darftData })
+          .then(({ response }) => {
+            const { result, req, error } = response;
+            if (result && !error) {
+              getProcessRule(118, {}).then(ee => {
+                // rel_type 비명시시 작동불가 , 1차 등록의 rel_type은 200
+                fillWorkFlowData(ee, { ...req, rel_type: 200 }).then(() => {
+                  alertMessage.notice('개선활동을 신규 등록하였습니다.');
+                  setIsRedirect(true);
+                });
+              });
+            } else {
+              alertMessage.alert('개선활등을 신규 등록에 실패했습니다.');
+              setIsLoading(false);
+              callback();
+            }
+          })
+          .catch(() => {
+            alertMessage.alert('개선활등을 신규 등록에 실패했습니다.');
+            setIsLoading(false);
+            callback();
+          });
+      } else if (tempSubmit && isLoading) {
+        sendData({ method: 'PUT', data: darftData })
+          .then(({ response }) => {
+            const { result, error } = response;
+            if (result && !error) {
+              alertMessage.notice('임시 저장 했습니다.');
+              setIsLoading(false);
+              callback();
+            } else {
+              alertMessage.alert('임시 저장이 실패했습니다.');
+              setIsLoading(false);
+              callback();
+            }
+          })
+          .catch(() => {
+            alertMessage.alert('임시 저장이 실패했습니다.');
+            setIsLoading(false);
+            callback();
+          });
+      }
+    }
+  }, [realSubmit, tempSubmit, isLoading, darftData]);
 
   // 임시저장 삭제
   const deleteTemp = () => {
-    const options = {
-      url: '/api/tpms/v1/common/approval',
+    sendData({
       method: 'DELETE',
       data: {
         task_seq: info?.task_seq,
       },
-    };
-    sendData(options)
+    })
       .then(({ response }) => {
         const { result, error } = response;
         if (result && !error) {
@@ -736,13 +736,11 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
           callback();
         } else {
           alertMessage.alert('삭제가 실패되었습니다.');
-          setIsError(true);
           callback();
         }
       })
       .catch(() => {
         alertMessage.alert('삭제가 실패되었습니다.');
-        setIsError(true);
         callback();
       });
   };
