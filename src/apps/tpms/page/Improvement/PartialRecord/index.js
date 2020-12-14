@@ -40,7 +40,7 @@ const PartialRecord = () => {
     selectorArea,
     selectorKeyno,
     selectorModel,
-    searchType,
+    // searchType,
     detailRequestQuery,
     expandableContainerRef,
     status,

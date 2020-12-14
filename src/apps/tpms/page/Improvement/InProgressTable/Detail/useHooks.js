@@ -9,6 +9,8 @@ import { stepChanger } from '../../../../hooks/useWorkFlow';
 export default ({ info, callback = () => {} }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [draftData, setDraftData] = useState({});
+
   const [isError, setIsError] = useState(false);
   const [isDropModalOpen, setIsDropModalOpen] = useState(false);
 
@@ -585,7 +587,6 @@ export default ({ info, callback = () => {} }) => {
   const submitForm = e => {
     e.preventDefault();
     e.stopPropagation();
-    setIsLoading(true);
 
     const formData = new FormData(e.target);
     const formJson = {};
@@ -659,30 +660,42 @@ export default ({ info, callback = () => {} }) => {
       return;
     }
 
-    if (!payload.noUse) {
-      stepChanger(info?.task_seq, info?.step + 1, payload)
-        .then(({ result, error }) => {
-          if (result && !error) {
-            alertMessage.notice('저장 완료');
-            callback();
-          } else {
+    setIsLoading(true);
+    setIsSubmit(true);
+    setDraftData(payload);
+  };
+
+  useEffect(() => {
+    if (isLoading && isSubmit) {
+      if (!draftData.noUse) {
+        stepChanger(info?.task_seq, info?.step + 1, draftData)
+          .then(({ result, error }) => {
+            if (result && !error) {
+              alertMessage.notice('저장 완료');
+              callback();
+            } else {
+              setIsError(true);
+              setIsLoading(false);
+              setIsSubmit(false);
+              alertMessage.alert('현재 등록 하실 수 있는 상태가 아닙니다.');
+              callback();
+            }
+          })
+          .catch(() => {
             setIsError(true);
+            setIsLoading(false);
+            setIsSubmit(false);
             alertMessage.alert('현재 등록 하실 수 있는 상태가 아닙니다.');
             callback();
-          }
-        })
-        .catch(() => {
-          setIsError(true);
-          alertMessage.alert('현재 등록 하실 수 있는 상태가 아닙니다.');
-          callback();
-        });
-    } else {
-      alertMessage.alert('현재 등록 하실 수 있는 상태가 아닙니다.');
-      callback();
+          });
+      } else {
+        setIsLoading(false);
+        setIsSubmit(false);
+        alertMessage.alert('현재 등록 하실 수 있는 상태가 아닙니다.');
+        callback();
+      }
     }
-
-    setIsLoading(false);
-  };
+  }, [isLoading, isSubmit]);
 
   return {
     isLoading,

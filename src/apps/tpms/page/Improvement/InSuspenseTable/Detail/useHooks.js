@@ -699,12 +699,13 @@ export default ({ info, callback = () => {} }) => {
             const { task_seq, step, rel_type } = data;
             // eslint-disable-next-line no-nested-ternary
             stepChanger(task_seq, approverAndRejectHandler({ APPV_STATUS, step, rel_type })).then(({ result, req, error }) => {
-              setIsLoading(false);
               if (result && !error) {
                 alertMessage.alert(`${APPV_STATUS === 2 ? `승인` : `반려`} 처리 완료`);
+                setIsLoading(false);
                 callback();
               } else {
                 alertMessage.alert('Server Error');
+                setIsLoading(false);
                 callback();
               }
             });
@@ -715,6 +716,7 @@ export default ({ info, callback = () => {} }) => {
         })
         .catch(() => {
           setIsError(true);
+          setIsLoading(false);
           alertMessage.alert('Server Error');
           callback();
         });

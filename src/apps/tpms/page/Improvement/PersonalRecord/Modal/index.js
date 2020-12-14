@@ -6,27 +6,21 @@ import Modal from 'rc-dialog';
 import moment from 'moment';
 import { Icon, Spin } from 'antd';
 
-import request from 'utils/request';
+// import request from 'utils/request';
 
 import StyledModalContent from '../../../../components/CommonStyledElement/StyledModalContent';
 import StyledCommonForm from '../../../../components/CommonStyledElement/StyledCommonForm';
 
-import ALinkButton from '../../../../components/ALinkButton';
+// import ALinkButton from '../../../../components/ALinkButton';
 
 // import SignPrcListInfo from '../../../../components/SignPrcListInfo';
 import SignProcessList from '../../SignProcessList';
 import StyledProjectInfoModal from './StyledProjectInfoModal';
-import SignItemAddon from './SignItemAddon';
+// import SignItemAddon from './SignItemAddon';
 
-const jaspoerUrl =
-  'http://10.100.22.102:4488/jasperserver-pro/rest_v2/reports/organizations/organization_1/reports/projectViewRepo.pdf?j_username=superuser&j_password=superuser&prj_id=';
+// const jaspoerUrl =
+//   'http://10.100.22.102:4488/jasperserver-pro/rest_v2/reports/organizations/organization_1/reports/projectViewRepo.pdf?j_username=superuser&j_password=superuser&prj_id=';
 
-const projectLevel = [
-  { key: 1, txt: '본부' },
-  { key: 2, txt: '담당' },
-  { key: 3, txt: '팀' },
-  { key: 4, txt: 'Part' },
-];
 class ProjectInfoModal extends React.Component {
   constructor(props) {
     super(props);
@@ -34,7 +28,7 @@ class ProjectInfoModal extends React.Component {
       isOpen: false,
       EQUIPMENTS: [],
       isLoading: false,
-      prjId: '',
+      // project_id: '',
       info: {},
     };
 
@@ -42,8 +36,12 @@ class ProjectInfoModal extends React.Component {
     this.combineTexterRenderer = this.combineTexterRenderer.bind(this);
     this.teamTexterRenderer = this.teamTexterRenderer.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
-    this.fetchData = this.fetchData.bind(this);
-    this.ProjectLevelSelector = this.ProjectLevelSelector.bind(this);
+    // this.fetchData = this.fetchData.bind(this);
+    this.projectLevelSelector = this.projectLevelSelector.bind(this);
+    this.projectTypeSelector = this.projectTypeSelector.bind(this);
+    this.performanceTypelSelector = this.performanceTypelSelector.bind(this);
+
+    this.renderApprover = this.renderApprover.bind(this);
   }
 
   // componentDidMount() {
@@ -51,7 +49,8 @@ class ProjectInfoModal extends React.Component {
   // }
 
   handleOpen(info) {
-    this.setState({ isOpen: true, info, prjId: info?.project_id, EQUIPMENTS: JSON.parse(info?.equipment_model, '[]') }, () => this.fetchData(info));
+    // this.setState({ isOpen: true, info, project_id: info?.project_id, EQUIPMENTS: JSON.parse(info?.equipment_model, '[]') }, () => this.fetchData(info));
+    this.setState({ isOpen: true, info, EQUIPMENTS: JSON.parse(info?.equipment_model, '[]') });
   }
 
   handleCloseModal() {
@@ -71,6 +70,16 @@ class ProjectInfoModal extends React.Component {
     );
   }
 
+  renderApprover(approver) {
+    const parsedApprover = JSON.parse(approver || '[]');
+    return parsedApprover?.map(({ name_kor, pstn_name_kor }, idx) => {
+      if (idx === 0) {
+        return `${name_kor} ${pstn_name_kor}`;
+      }
+      return `, ${name_kor} ${pstn_name_kor}`;
+    });
+  }
+
   teamTexterRenderer(index, item) {
     return (
       <>
@@ -80,67 +89,80 @@ class ProjectInfoModal extends React.Component {
     );
   }
 
-  ProjectLevelSelector = ({ project_level }) =>
-    projectLevel.map(({ key, txt }) => {
-      return <span>{key === project_level ? txt : ''}</span>;
-    });
+  projectLevelSelector = ({ project_level }) => {
+    switch (project_level) {
+      case 1:
+        return '본부';
+      case 2:
+        return '담당';
+      case 3:
+        return '팀';
+      case 4:
+        return 'Part';
+      default:
+        return '';
+    }
+  };
 
-  // todo
-  async fetchData(info) {
-    // this.setState({ isLoading: true });
-    // const url = `/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=PROJECT&prj_id=${info}`;
-    // const { response, error } = await request({
-    //   url,
-    //   headers: {
-    //     'Access-Control-Allow-Origin': '*',
-    //   },
-    //   method: 'GET',
-    // });
-    // if (response && !error) {
-    //   const { list } = response;
-    //   const { info?, signitemPrc2, info?, teamsharing, member, signPrclistInfo, EQUIPMENTS } = list;
-    //   this.setState({
-    //     info?,
-    //     signitemPrc2,
-    //     info?,
-    //     teamsharing: teamsharing || [],
-    //     member: member || [],
-    //     signPrclistInfo: signPrclistInfo || [],
-    //     EQUIPMENTS: EQUIPMENTS || [],
-    //     isLoading: false,
-    //   });
-    // } else {
-    //   console.debug('fetchData err');
-    // }
-  }
+  projectTypeSelector = ({ project_type }) => {
+    switch (project_type) {
+      case 'G':
+        return '개별개선';
+      case 'T':
+        return 'TFT';
+      case 'W':
+        return 'Wafer Loss';
+      default:
+        return '';
+    }
+  };
+
+  performanceTypelSelector = ({ performance_type }) => {
+    switch (performance_type) {
+      case 'C':
+        return 'Cost';
+      case 'D':
+        return 'Delivery';
+      case 'M':
+        return 'Morale';
+      case 'P':
+        return 'Productivity';
+      case 'Q':
+        return 'Quality';
+      case 'S':
+        return 'Safety';
+      default:
+        return '';
+    }
+  };
 
   render() {
-    const { isOpen, isLoading, EQUIPMENTS, prjId, info } = this.state;
+    const {
+      isOpen,
+      isLoading,
+      EQUIPMENTS,
+      //  project_id,
+      info,
+    } = this.state;
     const option = {
       values: EQUIPMENTS || [],
     };
 
-    const url = `${jaspoerUrl}${prjId}`;
+    // const url = `${jaspoerUrl}${project_id}`;
 
     let key_performance_indicators = '핵심성과지표';
-    let yval = '현재 상태';
-    let baselineval = '목표';
-    let targetval = '적용 대상';
+    let current_status = '현재 상태';
+    let goal = '목표';
+    let apply_target = '적용 대상';
     let note = '비고';
 
     if (info?.project_type === 'Wafer Loss') {
       key_performance_indicators = 'FAB';
-      yval = 'Area';
-      baselineval = '피해장수(수량)';
-      targetval = '요인(부서)';
+      current_status = 'Area';
+      goal = '피해장수(수량)';
+      apply_target = '요인(부서)';
       note = '발생일';
     }
-
-    const key_performance_indicatorsLable = key_performance_indicators;
-    const yvalLable = yval;
-    const baselinevalLable = baselineval;
-    const targetvalLable = targetval;
-    const noteLable = note;
 
     return (
       <Modal
@@ -157,15 +179,15 @@ class ProjectInfoModal extends React.Component {
         <StyledModalContent>
           <div className="pop_tit">
             상세 내용보기
-            <button type="button" className="icon icon_pclose" onClick={this.handleCloseModal} />
+            <button type="button" className="icon icon_pclose" aria-label="close modal" onClick={this.handleCloseModal} />
           </div>
           <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
             <div className="pop_con">
-              <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+              {/* <div style={{ textAlign: 'right', marginBottom: '10px' }}>
                 <ALinkButton href={url} color="gray" download>
                   출력
                 </ALinkButton>
-              </div>
+              </div> */}
               <SignProcessList info={info} noPadding />
               <br />
               <StyledCommonForm className="middle_wrap">
@@ -205,23 +227,41 @@ class ProjectInfoModal extends React.Component {
                       <label htmlFor="project_type" className="title">
                         Project Type
                       </label>
-                      <input type="text" className="input" name="project_type" value={info?.project_type} readOnly />
+                      <input
+                        type="text"
+                        className="input"
+                        name="project_type"
+                        value={this.projectTypeSelector({ project_type: info?.project_type })}
+                        readOnly
+                      />
                     </li>
                     <li className="frCustom width50">
                       <label htmlFor="project_level" className="title">
-                        {this.ProjectLevelSelector({ project_level: info?.project_level })}
+                        Project Level
                       </label>
-                      <input type="text" className="input" name="project_level" value={info?.project_level} readOnly />
+                      <input
+                        type="text"
+                        className="input"
+                        name="project_level"
+                        value={this.projectLevelSelector({ project_level: info?.project_level })}
+                        readOnly
+                      />
                     </li>
                     <li className="flCustom width50">
                       <label htmlFor="performance_type" className="title">
                         Performance Type
                       </label>
-                      <input type="text" className="input" name="performance_type" value={info?.performance_type} readOnly />
+                      <input
+                        type="text"
+                        className="input"
+                        name="performance_type"
+                        value={this.performanceTypelSelector({ performance_type: info?.performance_type })}
+                        readOnly
+                      />
                     </li>
                     <li className="frCustom width50">
                       <label htmlFor="key_performance_indicators" className="title">
-                        {key_performance_indicatorsLable}
+                        {key_performance_indicators}
                       </label>
                       <input
                         type="text"
@@ -234,25 +274,25 @@ class ProjectInfoModal extends React.Component {
                     </li>
                     <li className="flCustom width50">
                       <label htmlFor="current_status" className="title">
-                        {yvalLable}
+                        {current_status}
                       </label>
                       <input type="text" className="input" name="current_status" value={info?.current_status} readOnly maxLength={1000} />
                     </li>
                     <li className="frCustom width50">
                       <label htmlFor="goal" className="title">
-                        {baselinevalLable}
+                        {goal}
                       </label>
                       <input type="text" className="input" name="goal" value={info?.goal} readOnly maxLength={1000} />
                     </li>
                     <li className="flCustom width50">
                       <label htmlFor="apply_target" className="title">
-                        {targetvalLable}
+                        {apply_target}
                       </label>
                       <input type="text" className="input" name="apply_target" value={info?.apply_target} readOnly maxLength={1000} />
                     </li>
                     <li className="frCustom width50">
                       <label htmlFor="note" className="title">
-                        {noteLable}
+                        {note}
                       </label>
                       <input type="text" className="input" name="note" value={info?.note} readOnly maxLength={1000} />
                     </li>
@@ -369,22 +409,23 @@ class ProjectInfoModal extends React.Component {
                       </li>
                     </ul>
                     <ul className="sub_form small2 sub_form sub_form_right">
-                      {/* 
-                      <li className="frCustom width50">
+                      <li>
                         <label htmlFor="improvement_point" className="title">
                           기안자
                         </label>
                         <p className="desc_p">
-                          {signPrclistInfo ? signPrclistInfo.filter(item => item.rownum === 1).map(item => this.combineTexterRenderer(item)) : ''}
+                          {/* {signPrclistInfo ? signPrclistInfo.filter(item => item.rownum === 1).map(item => this.combineTexterRenderer(item)) : ''} */}
+                          {info?.project_leader}
                         </p>
-                      </li> */}
-                      {/* <li>
+                      </li>
+                      <li>
                         <label htmlFor="improvement_point" className="title">
                           1차 결재권자
                         </label>
                         <p className="desc_p desc_p_scroll">
-                          {signPrclistInfo ? signPrclistInfo.filter(item => item.rownum === 2).map(item => this.combineTexterRenderer(item)) : ''}
-                          {signPrclistInfo ? signPrclistInfo.filter(item => item.rownum === 5).map(item => this.combineTexterRenderer(item)) : ''}
+                          {/* {signPrclistInfo ? signPrclistInfo.filter(item => item.rownum === 2).map(item => this.combineTexterRenderer(item)) : ''} */}
+                          {/* {signPrclistInfo ? signPrclistInfo.filter(item => item.rownum === 5).map(item => this.combineTexterRenderer(item)) : ''} */}
+                          {this.renderApprover(info?.first_approver)}
                         </p>
                       </li>
                       <li>
@@ -392,67 +433,78 @@ class ProjectInfoModal extends React.Component {
                           최종결재권자
                         </label>
                         <p className="desc_p desc_p_scroll">
-                          {signPrclistInfo ? signPrclistInfo.filter(item => item.rownum === 3).map(item => this.combineTexterRenderer(item)) : ''}
-                          {signPrclistInfo ? signPrclistInfo.filter(item => item.rownum === 6).map(item => this.combineTexterRenderer(item)) : ''}
+                          {/* {signPrclistInfo ? signPrclistInfo.filter(item => item.rownum === 3).map(item => this.combineTexterRenderer(item)) : ''} */}
+                          {/* {signPrclistInfo ? signPrclistInfo.filter(item => item.rownum === 6).map(item => this.combineTexterRenderer(item)) : ''} */}{' '}
+                          {this.renderApprover(info?.final_approver)}
                         </p>
-                      </li> */}
+                      </li>
 
-                      {/* todo <li className="row_50_custom">
+                      <li className="row_50_custom">
                         <div className="col_50 col_left">
                           <label htmlFor="team_member" className="title">
                             팀원
                           </label>
-                          <p className="desc_p desc_p_scroll_3">{info?.team_member ? team_member.map((item, index) => this.teamTexterRenderer(index, item)) : ''}</p>
+                          <p className="desc_p desc_p_scroll_3">
+                            {/* {info?.team_member ? team_member.map((item, index) => this.teamTexterRenderer(index, item)) : ''} */}
+                            {this.renderApprover(info?.team_member)}
+                          </p>
                         </div>
                         <div className="col_50 col_right">
                           <label htmlFor="sharer" className="title">
                             공유
                           </label>
-                          <p className="desc_p desc_p_scroll_3">{sharer ? sharer.map((item, index) => this.teamTexterRenderer(index, item)) : ''}</p>
+                          <p className="desc_p desc_p_scroll_3">
+                            {/* {sharer ? sharer.map((item, index) => this.teamTexterRenderer(index, item)) : ''} */}
+                            {this.renderApprover(info?.sharer)}
+                          </p>
                         </div>
-                      </li> */}
+                      </li>
                     </ul>
                   </div>
                   {/* {signitemPrc2 && <SignItemAddon signProcess={signitemPrc2} />} */}
-                  <ul className="sub_form small2">
-                    <li className="flCustom width50">
-                      <label htmlFor="improvement_point" className="title">
-                        개선사항
-                      </label>
-                      <textarea name="control_date" value={info?.improvement_point} readOnly />
-                    </li>
-                    <li className="frCustom width50">
-                      <label htmlFor="success_point" className="title">
-                        성공요인
-                      </label>
-                      <textarea name="control_date" value={info?.success_point} readOnly />
-                    </li>
-                    <li className="mergeSubWrap">
-                      <span className="mergeSpan">파일첨부</span>
-                      {info?.real_complete_file_name ? (
-                        // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                        <a href={info?.real_complete_file_path} style={{ padding: 10, background: '#e7e7e7', color: '#111b27' }} download>
-                          <i className="fas fa-paperclip" /> {info?.real_complete_file_name}
-                        </a>
-                      ) : (
-                        <input type="text" className="input mergeInput" name="real_complete_file_name" value="" readOnly />
-                      )}
-                    </li>
-                    <li>
-                      <span className="mergeSpan">완료일자</span>
-                      <input
-                        type="text"
-                        className="input mergeInput"
-                        name="step_five_complete_date"
-                        value={
-                          info?.step_five_complete_date && info?.step_five_complete_date !== ''
-                            ? moment(info?.step_five_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD')
-                            : null
-                        }
-                        readOnly
-                      />
-                    </li>
-                  </ul>
+                  {info?.step === 8 ||
+                    info?.step === 11 ||
+                    (info?.step === 12 && (
+                      <ul className="sub_form small2">
+                        <li className="flCustom width50">
+                          <label htmlFor="improvement_point" className="title">
+                            개선사항
+                          </label>
+                          <textarea name="control_date" value={info?.improvement_point} readOnly />
+                        </li>
+                        <li className="frCustom width50">
+                          <label htmlFor="success_point" className="title">
+                            성공요인
+                          </label>
+                          <textarea name="control_date" value={info?.success_point} readOnly />
+                        </li>
+                        <li className="mergeSubWrap">
+                          <span className="mergeSpan">파일첨부</span>
+                          {info?.real_complete_file_name ? (
+                            // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                            <a href={info?.real_complete_file_path} style={{ padding: 10, background: '#e7e7e7', color: '#111b27' }} download>
+                              <i className="fas fa-paperclip" /> {info?.real_complete_file_name}
+                            </a>
+                          ) : (
+                            <input type="text" className="input mergeInput" name="real_complete_file_name" value="" readOnly />
+                          )}
+                        </li>
+                        <li>
+                          <span className="mergeSpan">완료일자</span>
+                          <input
+                            type="text"
+                            className="input mergeInput"
+                            name="step_five_complete_date"
+                            value={
+                              info?.step_five_complete_date && info?.step_five_complete_date !== ''
+                                ? moment(info?.step_five_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD')
+                                : null
+                            }
+                            readOnly
+                          />
+                        </li>
+                      </ul>
+                    ))}
                   {/*                   <ul className="sub_form small2">
                   </ul> */}
                 </StyledProjectInfoModal>
