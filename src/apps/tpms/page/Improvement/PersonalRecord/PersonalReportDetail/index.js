@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+/* eslint-disable camelcase */
+import React from 'react';
 import { Icon, Spin } from 'antd';
+import PropTypes from 'prop-types';
 import Table from 'rc-table';
 import moment from 'moment';
 
@@ -54,32 +56,34 @@ export const PersonalReportDetail = ({ requestQuery }) => {
   const columns = [
     {
       title: 'No',
-      dataIndex: 'rownum',
+      dataIndex: 'task_seq',
       width: '5%',
     },
     {
       title: '본부/팀',
-      dataIndex: 'prj_leader_dept_name',
+      dataIndex: 'reg_dept_name',
       width: '10%',
     },
     {
       title: 'Leader',
-      dataIndex: 'reader',
+      dataIndex: 'project_leader',
       width: '10%',
     },
     {
       title: 'Level',
       dataIndex: 'project_level',
       width: '10%',
-      render: (value, row, index) => <ProjectLevelSelector keyValue={Number(value)} row={row} index={index} />,
+      render: (project_level, row, index) => (
+        <ProjectLevelSelector key={JSON.stringify(project_level) + index} keyValue={Number(project_level)} row={row} index={index} />
+      ),
     },
     {
       title: 'Project 명',
-      dataIndex: 'project_title',
+      dataIndex: 'title',
       width: '15%',
       render: (item, row) => (
         <div style={{ textAlign: 'left' }}>
-          <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(row.project_id)}>
+          <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(row)}>
             {item}
           </button>
         </div>
@@ -95,37 +99,29 @@ export const PersonalReportDetail = ({ requestQuery }) => {
       title: 'ID',
       dataIndex: 'project_id',
       width: '10%',
-      render: (prjId, row) => (
-        <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(prjId)}>
-          {row.project_id}
+      render: (project_id, row) => (
+        <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(project_id)}>
+          {project_id}
         </button>
       ),
     },
     {
       title: '시작일',
-      dataIndex: 'regdt',
+      dataIndex: 'reg_dttm',
       width: '10%',
       render: item => moment(item).format('YYYY.MM.DD'),
     },
     {
       title: '단계별진척현황',
-      dataIndex: 'progressstep',
+      dataIndex: 'step',
       width: '10%',
-      render: (value, row, index) => (
-        <StepSelector
-          level={value === undefined && row.progresslistyn === 'Y' ? 0 : value}
-          row={row}
-          index={index}
-          isDrop={row.status.status === 'dropyn'}
-          isFinish={row.status.status === 'finishyn'}
-        />
-      ),
+      render: (step, row, index) => <StepSelector level={step} row={row} index={index} isDrop={step === 22} isFinish={step === 12} />,
     },
     {
       title: '비고',
-      dataIndex: 'delayyn',
+      dataIndex: 'step',
       width: '10%',
-      render: item => <div style={{ textAlign: 'center' }}>{item === 'Y' ? '지연' : ''}</div>,
+      render: step => <div style={{ textAlign: 'center' }}>{step === 30 ? '지연' : ''}</div>,
     },
   ];
 
@@ -223,4 +219,12 @@ export const PersonalReportDetail = ({ requestQuery }) => {
       </div>
     </StyledDetail>
   );
+};
+
+PersonalReportDetail.propTypes = {
+  requestQuery: PropTypes.object,
+};
+
+PersonalReportDetail.defaultProps = {
+  requestQuery: {},
 };

@@ -400,7 +400,6 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
         };
       }
       if (item.option.label === 'Member') {
-        console.debug('### member : ', item);
         return {
           ...item,
           option: {
@@ -584,11 +583,9 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
     // member 추가
     let first_approver;
     let final_approver;
-    console.debug('### 111 :', payload.user_selector_0, typeof payload.user_selector_0);
     if (payload.user_selector_0) {
       first_approver = JSON.parse(payload.user_selector_0 || '[]');
     }
-    console.debug('### 222 :', payload.user_selector_1, typeof payload.user_selector_1);
 
     if (payload.user_selector_1) {
       final_approver = JSON.parse(payload.user_selector_1 || '[]');

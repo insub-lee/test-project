@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export default styled.div`
-  position: absolute;
+  /* position: absolute; */
   top: 1311px;
   right: 30px;
   width: calc(50% - 20px);

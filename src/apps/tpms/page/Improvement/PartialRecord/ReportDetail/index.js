@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
 import Table from 'rc-table';
 import moment from 'moment';
 
@@ -13,7 +14,7 @@ import StyledHeader from '../../../../components/Tableboard/StyledHeader';
 import StyledHeaderCell from '../../../../components/Tableboard/StyledHeaderCell';
 import StyledBodyRow from '../../../../components/Tableboard/StyledBodyRow';
 import StyledBodyCell from '../../../../components/Tableboard/StyledBodyCell';
-import Button from '../../../../components/Button';
+// import Button from '../../../../components/Button';
 import {
   StepSelector,
   ProjectLevelSelector,
@@ -33,7 +34,12 @@ export const ReportDetail = ({ requestQuery }) => {
     data,
     isExpanded,
     pagination,
-    action: { setIsExpanded, pageHandler, pageSizeHandler, handleReportDown },
+    action: {
+      setIsExpanded,
+      pageHandler,
+      pageSizeHandler,
+      //  handleReportDown
+    },
   } = useHooks({ requestQuery });
 
   const components = {
@@ -141,7 +147,7 @@ export const ReportDetail = ({ requestQuery }) => {
       title: '비고',
       dataIndex: 'step',
       width: '10%',
-      render: item => <div style={{ textAlign: 'center' }}>{item === 'Y' ? '지연' : ''}</div>,
+      render: step => <div style={{ textAlign: 'center' }}>{step === 30 ? '지연' : ''}</div>,
     },
   ];
   return (
@@ -181,7 +187,7 @@ export const ReportDetail = ({ requestQuery }) => {
           <span className="line" />
           <span className="col">{pagination.get('total')} 건</span>
           <div className="btn_wrap">
-            <Button
+            {/* <Button
               type="button"
               color="gray"
               size="small"
@@ -190,7 +196,7 @@ export const ReportDetail = ({ requestQuery }) => {
               }}
             >
               엑셀
-            </Button>
+            </Button> */}
             {/* <Button type="button" color="gray" size="small">
           삭제
         </Button> */}
@@ -228,10 +234,10 @@ export const ReportDetail = ({ requestQuery }) => {
                   <span className="icon icon_ing3" />
                   Drop
                 </li>
-                <li>
+                {/* <li>
                   <span className="icon icon_ing4" />
                   지연
-                </li>
+                </li> */}
                 <li>
                   <span className="icon icon_ing5" />
                   완료
@@ -252,4 +258,12 @@ export const ReportDetail = ({ requestQuery }) => {
       </div>
     </StyledDetail>
   );
+};
+
+ReportDetail.propTypes = {
+  requestQuery: PropTypes.object,
+};
+
+ReportDetail.defaultProps = {
+  requestQuery: {},
 };

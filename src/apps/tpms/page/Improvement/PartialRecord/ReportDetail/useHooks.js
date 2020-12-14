@@ -84,16 +84,16 @@ export const useHooks = ({ requestQuery }) => {
 
     const tempRequestQuery = {
       type: 'partial',
-      currentPage: pagination.get('current') !== 0 ? pagination.get('current') - 1 : 0,
+      currentPage: (pagination.get('current') !== 0 ? pagination.get('current') - 1 : 0) * 10,
       pageSize: pagination.get('pageSize'),
       startDate,
       endDate,
-      fab,
-      area,
-      keyno,
-      model,
-      project_level,
       project_type,
+      project_level,
+      fab: fab === 'all' ? undefined : fab,
+      area: area === 'all' ? undefined : area,
+      keyno: keyno === 'all' ? undefined : keyno,
+      model: model === 'all' ? undefined : model,
       part: part === 'all' ? undefined : part,
       team: team === 'all' ? undefined : team,
       status: status === 'all' ? undefined : status,
@@ -119,7 +119,6 @@ export const useHooks = ({ requestQuery }) => {
       setData(fromJS(nextList));
       setPagination(pagination.set('total', response.pagination.total).set('current', pagination.get('current')));
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };
@@ -175,13 +174,11 @@ export const useHooks = ({ requestQuery }) => {
     });
 
     if (response && !error) {
-      console.debug(response);
       const date = moment().format('YYYYMMDDHHmmss');
       // const fileName = `recordReport_${date}_${profile.usrid}`;
       const fileName = `partialRecord_${date}`;
       download(response, `${fileName}.xls`);
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };

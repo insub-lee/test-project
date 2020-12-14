@@ -31,14 +31,14 @@ export const useHooks = () => {
     [],
   );
 
-  const searchType = useMemo(
-    () => [
-      { value: 1, text: '검색조건1' },
-      { value: 2, text: '검색조건2' },
-      { value: 3, text: '검색조건3' },
-    ],
-    [],
-  );
+  // const searchType = useMemo(
+  //   () => [
+  //     { value: 1, text: '검색조건1' },
+  //     { value: 2, text: '검색조건2' },
+  //     { value: 3, text: '검색조건3' },
+  //   ],
+  //   [],
+  // );
 
   // todo 검색 인자 값 추가
   useEffect(() => {
@@ -116,7 +116,6 @@ export const useHooks = () => {
           })),
         );
       } else {
-        console.debug(error);
         alertMessage.alert('Server Error');
       }
     };
@@ -151,7 +150,6 @@ export const useHooks = () => {
         })),
       );
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };
@@ -184,7 +182,6 @@ export const useHooks = () => {
         })),
       );
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };
@@ -202,16 +199,13 @@ export const useHooks = () => {
       const { list } = response;
       setSelectorFab(list);
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };
 
   const fetchSelectorArea = async () => {
-    const url = `/api/tpms/v1/common/searchInfo?type=area`;
-
     const { response, error } = await request({
-      url,
+      url: `/api/tpms/v1/common/searchInfo?type=area`,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
@@ -221,7 +215,6 @@ export const useHooks = () => {
       const { list } = response;
       setSelectorArea(list);
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };
@@ -244,7 +237,6 @@ export const useHooks = () => {
       const { list } = response;
       setSelectorKeyno(list);
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };
@@ -268,7 +260,6 @@ export const useHooks = () => {
       const { list } = response;
       setSelectorModel(list);
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };
@@ -361,7 +352,7 @@ export const useHooks = () => {
     project_type,
     showDetail,
     headQuarts,
-    searchType,
+    // searchType,
     expandableContainerRef,
     detailRequestQuery,
     status,

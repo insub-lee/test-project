@@ -7,9 +7,9 @@ import { Icon, Spin } from 'antd';
 import request from 'utils/request';
 import StyledChart from './StyledChart';
 // import HorizontalBarChart from '../../Chart/HorizontalBarChart';
-import service from './service';
+// import service from './service';
 import alertMessage from '../../Notification/Alert';
-import jsonToQueryString from '../../../utils/jsonToQueryString';
+// import jsonToQueryString from '../../../utils/jsonToQueryString';
 import BarChart from '../../Chart/BarChart';
 
 class SignTotal extends React.Component {
@@ -136,7 +136,7 @@ class SignTotal extends React.Component {
     //   sdd: startDt,
     //   edd: endDt,
     //   stdd: stdDt,
-    //   // headQuarts,
+    //   // headQuarts,F
     //   part,
     //   team,
     //   prjtype: projectType === '' ? undefined : projectType,
@@ -155,15 +155,15 @@ class SignTotal extends React.Component {
       startDate: startDt,
       endDate: endDt,
       // headQuarts,
-      part,
-      team,
       project_type,
       project_level,
+      fab: fab === 'all' ? undefined : fab,
+      area: area === 'all' ? undefined : area,
+      keyno: keyno === 'all' ? undefined : keyno,
+      model: model === 'all' ? undefined : model,
+      part: part === 'all' ? undefined : part,
+      team: team === 'all' ? undefined : team,
       status: status === 'all' ? undefined : status,
-      fab,
-      area,
-      keyno,
-      model,
     };
 
     const { response, error } = await request({
@@ -232,7 +232,7 @@ class SignTotal extends React.Component {
             {/* 전체 현황 */}
             단계별 진척현황
             <div className="actions">
-              <button type="button" className="icon_3dot" />
+              <button type="button" aria-label="search" className="icon_3dot" />
             </div>
           </div>
           <div className="content">
