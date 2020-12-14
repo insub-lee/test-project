@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 
 import GlobalStyle from '../../../components/GlobalStyle';
@@ -31,8 +32,8 @@ const PartialRecord = () => {
     showDetail,
     headQuarts,
     part,
-    projectlevel,
-    optionPjtType,
+    project_level,
+    project_type,
     optionTerm,
     team,
     selectorFab,
@@ -62,9 +63,9 @@ const PartialRecord = () => {
                     본부
                   </label>
                   <select name="headQuarts" id="headQuarts">
-                    {headQuarts.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.text}
+                    {headQuarts.map(({ value, text }) => (
+                      <option key={value} value={value}>
+                        {text}
                       </option>
                     ))}
                   </select>
@@ -82,11 +83,13 @@ const PartialRecord = () => {
                     }}
                   >
                     <option value="all">전체</option>
-                    {part.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.text}
-                      </option>
-                    ))}
+                    {part.map(({ value, text }) =>
+                      text !== '' ? (
+                        <option key={value} value={value}>
+                          {text}
+                        </option>
+                      ) : null,
+                    )}
                   </select>
                 </li>
                 <li className="flCustom width33 marginNone">
@@ -95,26 +98,28 @@ const PartialRecord = () => {
                   </label>
                   <select name="team" id="team">
                     <option value="all">전체</option>
-                    {team.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.text}
-                      </option>
-                    ))}
+                    {team.map(({ value, text }) =>
+                      text !== '' ? (
+                        <option key={value} value={value}>
+                          {text}
+                        </option>
+                      ) : null,
+                    )}
                   </select>
                 </li>
 
                 <li className="flCustom width50">
                   <div className="title">Project Type</div>
                   <div className="radio">
-                    <RadioGroup name={optionPjtType.name} values={optionPjtType.values} />
+                    <RadioGroup name={project_type.name} values={project_type.values} />
                   </div>
                 </li>
                 <li className="frCustom width50 marginNone">
-                  <label className="title" htmlFor="projectLevel">
+                  <label className="title" htmlFor="project_level">
                     Project Level
                   </label>
                   <div className="checkbox">
-                    <CheckboxGroup name={projectlevel.name} values={projectlevel.values} />
+                    <CheckboxGroup isSingle name={project_level.name} values={project_level.values} />
                   </div>
                 </li>
 
@@ -123,9 +128,9 @@ const PartialRecord = () => {
                     상태
                   </label>
                   <select name="status" id="status">
-                    {status.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.text}
+                    {status.map(({ value, text }) => (
+                      <option key={value} value={value}>
+                        {text}
                       </option>
                     ))}
                   </select>
@@ -150,9 +155,7 @@ const PartialRecord = () => {
                         }}
                       >
                         <option value="all">전체</option>
-                        {selectorFab.map(option => (
-                          <option value={option.cd}>{`${option.cdnm}`}</option>
-                        ))}
+                        {selectorFab.map(({ cd, cdnm }) => (cdnm !== '' ? <option value={cd}>{`${cdnm}`}</option> : null))}
                       </select>
                     </li>
                     <li className="">
@@ -167,9 +170,7 @@ const PartialRecord = () => {
                         }}
                       >
                         <option value="all">전체</option>
-                        {selectorArea.map(option => (
-                          <option value={option.cd}>{`${option.cdnm}`}</option>
-                        ))}
+                        {selectorArea.map(({ cd, cdnm }) => (cdnm !== '' ? <option value={cd}>{`${cdnm}`}</option> : null))}
                       </select>
                     </li>
                     <li>
@@ -178,9 +179,7 @@ const PartialRecord = () => {
                       </label>
                       <select name="keyno" id="keyno">
                         <option value="all">전체</option>
-                        {selectorKeyno.map(option => (
-                          <option value={option.cd}>{`${option.cdnm}`}</option>
-                        ))}
+                        {selectorKeyno.map(({ cd, cdnm }) => (cdnm !== '' ? <option value={cd}>{`${cdnm}`}</option> : null))}
                       </select>
                     </li>
                     <li>
@@ -189,9 +188,7 @@ const PartialRecord = () => {
                       </label>
                       <select name="model" id="model">
                         <option value="all">전체</option>
-                        {selectorModel.map(option => (
-                          <option value={option.cd}>{`${option.cdnm}`}</option>
-                        ))}
+                        {selectorModel.map(({ cd, cdnm }) => (cdnm !== '' ? <option value={cd}>{`${cdnm}`}</option> : null))}
                       </select>
                     </li>
                   </ul>

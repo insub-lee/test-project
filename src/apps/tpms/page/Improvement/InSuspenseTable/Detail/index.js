@@ -15,11 +15,12 @@ const Detail = ({ info, callback }) => {
   const {
     formRef,
     defaultFormData,
+    isLoading,
     actions: { accept, reject },
   } = useHooks({ info, usrnm: authInfo?.usrNm || '', dpcd: authInfo?.deptId || '', callback });
   return (
     <div>
-      <Spin spinning={isAuthLoading}>
+      <Spin spinning={isAuthLoading || isLoading}>
         <SignProcessList info={info} />
         <form ref={formRef} autoComplete="off" onSubmit={e => e.preventDefault()}>
           {/* <input type="hidden" name="signlineno" value={info.signlineno} /> */}
@@ -27,10 +28,10 @@ const Detail = ({ info, callback }) => {
           <input type="hidden" name="task_seq" value={info?.task_seq} />
           <FormView datas={defaultFormData} noBoarder isImprove />
           <BtnWrap>
-            <Button type="button" color="primary" onClick={accept}>
+            <Button type="button" color="primary" onClick={accept} disabled={isAuthLoading || isLoading}>
               승인하기
             </Button>
-            <Button type="button" color="default" onClick={reject}>
+            <Button type="button" color="default" onClick={reject} disabled={isAuthLoading || isLoading}>
               반려하기
             </Button>
           </BtnWrap>

@@ -108,7 +108,7 @@ const Detail = ({ info, usrid, dpcd, dpnm }) => {
             )}
           </ApproveFormWrapper>
           <BtnWrap>
-            <Button type="submit" color="primary">
+            <Button type="submit" color="primary" disabled={isAuthLoading || isLoading}>
               제출하기
             </Button>
           </BtnWrap>

@@ -161,7 +161,7 @@ const TempTable = () => {
             <Table
               columns={columns}
               data={data}
-              rowKey="rownum"
+              rowKey="task_seq"
               rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
               components={componentsStyle}
             />

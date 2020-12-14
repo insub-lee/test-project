@@ -14,6 +14,14 @@ class CheckboxGroup extends React.Component {
   handleValues(index) {
     this.setState(prevState => {
       const { values } = prevState;
+      const { isSingle } = this.props;
+
+      if (isSingle) {
+        values.forEach((e, idx) => {
+          values[idx].checked = false;
+        });
+      }
+
       values[index].checked = !values[index].checked;
       return {
         values,
@@ -24,7 +32,7 @@ class CheckboxGroup extends React.Component {
   render() {
     const { name, values } = this.props;
     return (
-      <React.Fragment>
+      <>
         {values.map((item, index) => (
           <Checkbox
             key={`${name}_${item.value}`}
@@ -37,7 +45,7 @@ class CheckboxGroup extends React.Component {
             onChange={() => this.handleValues(index)}
           />
         ))}
-      </React.Fragment>
+      </>
     );
   }
 }
@@ -45,11 +53,13 @@ class CheckboxGroup extends React.Component {
 CheckboxGroup.propTypes = {
   name: PropTypes.string,
   values: PropTypes.arrayOf(PropTypes.object),
+  isSingle: PropTypes.bool,
 };
 
 CheckboxGroup.defaultProps = {
   name: '',
   values: [],
+  isSingle: false,
 };
 
 export default CheckboxGroup;
