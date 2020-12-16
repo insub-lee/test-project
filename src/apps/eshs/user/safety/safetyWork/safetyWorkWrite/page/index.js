@@ -151,7 +151,8 @@ class SafetyWorkMain extends Component {
 
   handleGetSafetyWork = workNo => {
     const { formData } = this.state;
-    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const { sagaKey: id, getCallDataHandlerReturnRes, spinningOn, spinningOff } = this.props;
+    spinningOn();
     const type = 'searchOne';
     const searchWorkNo = workNo || formData?.WORK_NO || '';
 
@@ -161,6 +162,7 @@ class SafetyWorkMain extends Component {
       url: `/api/eshs/v1/common/safetyWork?type=${type}&keyword=${searchWorkNo}`,
     };
     if (!searchWorkNo) {
+      spinningOff();
       message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 검색하십시오.</MessageContent>);
       return;
     }
@@ -168,34 +170,37 @@ class SafetyWorkMain extends Component {
   };
 
   getSafetyWorkCallback = () => {
-    const { result, prcId: PRC_ID } = this.props;
-
+    const { result, prcId: PRC_ID, spinningOff } = this.props;
     const searchSafetyWork = result?.getSafetyWork?.safetyWork || {};
 
     if (!searchSafetyWork.WORK_NO) {
+      spinningOff();
       return message.error(<MessageContent>요청하신 작업정보를 찾을 수 없습니다.</MessageContent>);
     }
     const appLine = searchSafetyWork?.APP_LINE || [];
     let appvLineText = '';
-    if (1 in appLine) {
+    if (0 in appLine) {
       appLine.forEach(appv => {
         if (appv.STEP === 1) appvLineText += `${appv.PROCESS_NAME}:담당:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
-        if (appv.STEP === 2) appvLineText += `, 1차:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME}) `;
+        else appvLineText += `, ${appv.STEP - 1}차:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
       });
     }
 
-    return this.setState({
-      formData: {
-        ...searchSafetyWork,
-        FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
-        REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
-        SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
-        UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
+    return this.setState(
+      {
+        formData: {
+          ...searchSafetyWork,
+          FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
+          REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
+          SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
+          UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
+        },
+        processRule: {},
+        tempProcessRule: {},
+        appvLineText,
       },
-      processRule: {},
-      tempProcessRule: {},
-      appvLineText,
-    });
+      spinningOff,
+    );
     // return getProcessRule(PRC_ID, prcRule => {
     //   const { DRAFT_PROCESS_STEP } = prcRule;
 
@@ -868,7 +873,7 @@ class SafetyWorkMain extends Component {
                     수정
                   </StyledButton>
                   {/* 문서상태 저장,  신청부결 상태 결재선 지정, 상신가능 */}
-                  {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_SUPERVISOR_EMP_NO === EMP_NO && (
+                  {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO && (
                     <StyledButton className="btn-primary btn-sm btn-first" onClick={this.saveProcessRule}>
                       상신
                     </StyledButton>
@@ -891,7 +896,7 @@ class SafetyWorkMain extends Component {
                 안전작업 관리 계획서(샘플)
               </StyledButton>
               {/* 문서상태 저장,  신청부결 상태 결재선 지정, 상신가능 */}
-              {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_SUPERVISOR_EMP_NO === EMP_NO && (
+              {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO && (
                 <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('workProcess', true)}>
                   결재선
                 </StyledButton>

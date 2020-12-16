@@ -2,14 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import EducationManagement from 'apps/eshs/admin/safety/periodicalEducation/educationManagement';
 
-const EducationUser = ({ authority }) => <EducationManagement authority={authority} />;
+const EducationUser = () => <EducationManagement authority={['I']} />;
 
-EducationUser.propTypes = {
-  authority: PropTypes.arrayOf('string'),
-};
+EducationUser.propTypes = {};
 
-EducationUser.defaultProps = {
-  authority: null,
-};
+EducationUser.defaultProps = {};
 
 export default EducationUser;

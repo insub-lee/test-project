@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 import CustomInputPage from './page/Input';
 import CustomModifyPage from './page/modify';
@@ -11,17 +12,32 @@ const inputBtn = () => '';
 
 const modifyBtn = () => '';
 
-const outdoorEvent = () => (
-  <BizBuilderBase
-    sagaKey="outdoorEvent"
-    viewType="INPUT"
-    workSeq={16321}
-    relKey="야외행사신청"
-    relKey2="DOC_NO"
-    prcId={114}
-    CustomInputPage={CustomInputPage}
-    CustomModifyPage={CustomModifyPage}
-  />
-);
+const outdoorEvent = ({ viewType, taskSeq }) => {
+  console.debug('viewType', viewType);
+  console.debug('taskSeq', taskSeq);
+  return (
+    <BizBuilderBase
+      sagaKey="outdoorEvent"
+      workSeq={16321}
+      relKey="야외행사신청"
+      relKey2="DOC_NO"
+      prcId={114}
+      CustomInputPage={CustomInputPage}
+      CustomModifyPage={CustomModifyPage}
+      viewType={viewType}
+      taskSeq={taskSeq}
+    />
+  );
+};
+
+outdoorEvent.propTypes = {
+  viewType: PropTypes.string,
+  taskSeq: PropTypes.number,
+};
+
+outdoorEvent.defaultProps = {
+  viewType: 'INPUT',
+  taskSeq: -1,
+};
 
 export default outdoorEvent;

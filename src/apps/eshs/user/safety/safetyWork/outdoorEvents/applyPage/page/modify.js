@@ -73,7 +73,7 @@ class ModifyPage extends Component {
       if (index) {
         appLine += ',';
       }
-      appLine += ` ${user?.RULE_CONFIG?.Label} ${user?.USER_INFO?.NAME_KOR}(${user.APPV_STATUS === 2 ? '승' : user.APPV_STATUS === 9 ? '부' : ''})`;
+      appLine += ` ${index ? ` ${index}차` : ' 담당 '} ${user?.USER_INFO?.NAME_KOR}(${user.APPV_STATUS === 2 ? '승' : user.APPV_STATUS === 9 ? '부' : ''})`;
     });
 
     return appLine;
