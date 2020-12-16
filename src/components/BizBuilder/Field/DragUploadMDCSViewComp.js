@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Icon, message, Progress } from 'antd';
 import base64 from 'base-64';
-import uuid from 'uuid/v1';
+import { v4 as uuid } from 'uuid';
+
 
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 

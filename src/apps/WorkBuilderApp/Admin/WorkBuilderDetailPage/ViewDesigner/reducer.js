@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
-import uuid from 'uuid/v1';
+import { v4 as uuid } from 'uuid';
+
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import { sortBy } from 'lodash';
 import { isJSON } from 'utils/helpers';

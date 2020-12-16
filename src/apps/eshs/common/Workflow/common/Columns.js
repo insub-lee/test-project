@@ -24,18 +24,22 @@ import HitemPaymentView from 'apps/eshs/user/safety/protectionItem/hitemRequest/
 import ImproveView from 'apps/eshs/admin/safety/safetyImprove/Input'; // 안전개선
 import HistoryModal from 'apps/eshs/common/Workflow/common/HistoryModal';
 
+import SafetyOutdoorEventApply from 'apps/eshs/user/safety/safetyWork/outdoorEvents/applyPage';
+import SafetyOutdoorEventApproval from 'apps/eshs/user/safety/safetyWork/outdoorEvents/acceptPage';
+// D:\magnachip\bizmicro-portal-front\src\apps\eshs\user\safety\safetyWork\outdoorEvents\acceptPage\index.js
 /* view  --end--*/
 
 const getView = (record, spinningOn, spinningOff, handleModal) => {
   // builder view 생성
   if (record?.WORK_SEQ) {
     switch (record?.WORK_SEQ) {
-      case 4821:
+      case 16321:
         // 야외행사승인신청 view 같은 builder 결재 2개
         if (record?.REL_KEY === '야외행사신청')
-          return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewMetaSeq={5108} viewType="VIEW" />];
+          // return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewMetaSeq={5108} viewType="VIEW" />];
+          return [<SafetyOutdoorEventApply sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" />];
         if (record?.REL_KEY === '야외행사승인')
-          return [<BizBuilderBase sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" />];
+          return [<SafetyOutdoorEventApproval sagaKey="WORK_PROCESS_VIEW" workSeq={record?.WORK_SEQ} taskSeq={record?.TASK_SEQ} viewType="VIEW" />];
         return [];
       case 4981:
       case 4781:

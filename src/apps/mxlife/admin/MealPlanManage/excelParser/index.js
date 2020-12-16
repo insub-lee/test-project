@@ -40,23 +40,26 @@ class ExcelParser extends Component {
         if (dayDiv === 'B') {
           return 4;
         }
-        return 5;
+        if (dayDiv === 'C') {
+          return 5;
+        }
+        return 6;
       case '석식':
         if (dayDiv === 'A') {
-          return 6;
-        }
-        if (dayDiv === 'B') {
           return 7;
         }
-        return 8;
+        if (dayDiv === 'B') {
+          return 8;
+        }
+        return 9;
       case '야식':
         if (dayDiv === 'A') {
-          return 9;
-        }
-        if (dayDiv === 'B') {
           return 10;
         }
-        return 11;
+        if (dayDiv === 'B') {
+          return 11;
+        }
+        return 12;
       default:
         return 99;
     }

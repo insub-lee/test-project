@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Tooltip } from 'antd';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 
 const AntdTable = StyledAntdTable(Table);
@@ -19,11 +19,18 @@ class MonthUseInfoListTable extends Component {
   }
 
   render() {
-    const { listData, handleModal } = this.props;
+    const { listData, handleModal, setPaginationIdx, paginationIdx, listTotalCnt, pageSize } = this.props;
 
-    const renderCell = (data, record, isfixed) => {
+    const renderCell = (data, record, isfixed, useTooltip) => {
       let cellData = data;
       if (isfixed) cellData = Number(data);
+      if (useTooltip) {
+        return (
+          <Tooltip placement="topLeft" title={isfixed ? cellData.toFixed(2) : cellData}>
+            <span>{isfixed ? cellData.toFixed(2) : cellData}</span>
+          </Tooltip>
+        );
+      }
       return (
         <div
           style={{ width: '100%', height: '100%' }}
@@ -37,7 +44,7 @@ class MonthUseInfoListTable extends Component {
       );
     };
 
-    const renderHideCell = (data, record, index) => {
+    const renderHideCell = (data, record, index, useTooltip) => {
       let labelData = data;
       if (index > 0) {
         const prevRecord = listData[index - 1]; // 렌더할 record의 이전 record 정보
@@ -47,6 +54,13 @@ class MonthUseInfoListTable extends Component {
         const prevCabiSensor = prevRecord.CABISENSOR;
         const { CABINO, PRODNM, CABIAREA, CABISENSOR } = record;
         if (prevCabiNo === CABINO && prevProdnm === PRODNM && prevCabiArea === CABIAREA && prevCabiSensor === CABISENSOR) labelData = '';
+      }
+      if (useTooltip) {
+        return (
+          <Tooltip placement="topLeft" title={data}>
+            <span>{labelData}</span>
+          </Tooltip>
+        );
       }
       return <span>{labelData}</span>;
     };
@@ -120,12 +134,13 @@ class MonthUseInfoListTable extends Component {
             key: 'PRODNM',
             width: 80,
             align: 'center',
+            ellipsis: true,
             onCell: record => ({
               onClick: () => {
                 handleModal('MONTH_VIEW', true, record);
               },
             }),
-            render: (data, record, index) => renderHideCell(data, record, index),
+            render: (data, record, index) => renderHideCell(data, record, index, true),
           },
           {
             title: '위치',
@@ -192,7 +207,8 @@ class MonthUseInfoListTable extends Component {
             key: 'GASNM',
             width: 200,
             align: 'center',
-            render: (data, record) => renderCell(data, record),
+            ellipsis: true,
+            render: (data, record) => renderCell(data, record, false, true),
           },
           {
             title: '단위',
@@ -590,13 +606,25 @@ class MonthUseInfoListTable extends Component {
       },
     ];
 
-    return <AntdTable columns={columns} dataSource={listData} scroll={{ x: 3930 }} />;
+    return (
+      <AntdTable
+        columns={columns}
+        dataSource={listData || []}
+        scroll={{ x: 3930 }}
+        pagination={{ current: paginationIdx, total: listTotalCnt, pageSize }}
+        onChange={pagination => setPaginationIdx(pagination.current)}
+      />
+    );
   }
 }
 
 MonthUseInfoListTable.propTypes = {
   listData: PropTypes.array,
   handleModal: PropTypes.func,
+  setPaginationIdx: PropTypes.func,
+  paginationIdx: PropTypes.number,
+  listTotalCnt: PropTypes.number,
+  pageSize: PropTypes.number,
 };
 
 MonthUseInfoListTable.defaultProps = {

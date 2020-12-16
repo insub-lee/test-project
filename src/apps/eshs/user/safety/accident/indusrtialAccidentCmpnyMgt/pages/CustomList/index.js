@@ -249,8 +249,7 @@ class ListPage extends Component {
                     <AntdSelect
                       defaultValue="WRK_CMPNY_NM"
                       placeholder="검색구분"
-                      allowClear
-                      className="select-sm"
+                      className="select-sm mr5"
                       style={{ width: 150 }}
                       onChange={val => this.onChangeSearchParam('searchTarget', val)}
                     >
@@ -261,7 +260,7 @@ class ListPage extends Component {
                       placeholder="검색어"
                       allowClear
                       className="ant-input-sm ant-input-inline mr5"
-                      style={{ width: 150 }}
+                      style={{ width: 200 }}
                       onChange={e => this.onChangeSearchParam('searchText', e.target.value)}
                       onPressEnter={this.getListData}
                     />

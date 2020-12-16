@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Tooltip } from 'antd';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 
 const AntdTable = StyledAntdTable(Table);
@@ -19,9 +19,24 @@ class DayUseInfoListTable extends Component {
   }
 
   render() {
-    const { listData, handleModal } = this.props;
+    const { listData, handleModal, setPaginationIdx, paginationIdx, listTotalCnt, pageSize } = this.props;
 
-    const renderCell = (data, record) => {
+    const renderCell = (data, record, useTooltip) => {
+      if (useTooltip) {
+        return (
+          <Tooltip placement="topLeft" title={data}>
+            <div
+              style={{ width: '100%', height: '100%' }}
+              role="button"
+              tabIndex={0}
+              onKeyPress={() => false}
+              onClick={() => handleModal('DAY_VIEW', true, record)}
+            >
+              <span>{data}</span>
+            </div>
+          </Tooltip>
+        );
+      }
       return (
         <div
           style={{ width: '100%', height: '100%' }}
@@ -35,7 +50,7 @@ class DayUseInfoListTable extends Component {
       );
     };
 
-    const renderHideCell = (data, record, index) => {
+    const renderHideCell = (data, record, index, useTooltip) => {
       let labelData = data;
       if (index > 0) {
         const prevRecord = listData[index - 1]; // 렌더할 record의 이전 record 정보
@@ -45,6 +60,13 @@ class DayUseInfoListTable extends Component {
         const prevCabiSensor = prevRecord.CABISENSOR;
         const { CABINO, PRODNM, CABIAREA, CABISENSOR } = record;
         if (prevCabiNo === CABINO && prevProdnm === PRODNM && prevCabiArea === CABIAREA && prevCabiSensor === CABISENSOR) labelData = '';
+      }
+      if (useTooltip) {
+        return (
+          <Tooltip placement="topLeft" title={data}>
+            <span>{labelData}</span>
+          </Tooltip>
+        );
       }
       return <span>{labelData}</span>;
     };
@@ -76,12 +98,13 @@ class DayUseInfoListTable extends Component {
             key: 'PRODNM',
             width: 80,
             align: 'center',
+            ellipsis: true,
             onCell: record => ({
               onClick: () => {
                 handleModal('DAY_VIEW', true, record);
               },
             }),
-            render: (data, record, index) => renderHideCell(data, record, index),
+            render: (data, record, index) => renderHideCell(data, record, index, true),
           },
           {
             title: '위치',
@@ -148,7 +171,8 @@ class DayUseInfoListTable extends Component {
             key: 'GASNM',
             width: 200,
             align: 'center',
-            render: (data, record) => renderCell(data, record),
+            ellipsis: true,
+            render: (data, record) => renderCell(data, record, true),
           },
           {
             title: '단위',
@@ -821,7 +845,15 @@ class DayUseInfoListTable extends Component {
       },
     ];
 
-    return <AntdTable columns={columns} dataSource={listData} scroll={{ x: 5470 }} />;
+    return (
+      <AntdTable
+        columns={columns}
+        dataSource={listData || []}
+        scroll={{ x: 5470 }}
+        pagination={{ current: paginationIdx, total: listTotalCnt, pageSize }}
+        onChange={pagination => setPaginationIdx(pagination.current)}
+      />
+    );
   }
 }
 

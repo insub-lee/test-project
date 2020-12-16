@@ -5,7 +5,8 @@ import { debounce } from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
 import message from 'components/Feedback/message';
 import styled from 'styled-components';
-import uuid from 'uuid/v1';
+import { v4 as uuid } from 'uuid';
+
 
 import StyledDropdown from 'components/BizBuilder/styled/Form/StyledDropdown';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';

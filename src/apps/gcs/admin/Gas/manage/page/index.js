@@ -43,6 +43,11 @@ class GasManagePage extends Component {
       searchValue: '',
       searchViewInfo: '',
       searchMonth: moment().format('YYYYMM'),
+      searchInfo: {},
+      paginationIdx: 1,
+      pageSize: 20,
+      totalSize: 0,
+      excelListData: [],
       listData: [], // 검색된 사용정보
     };
   }
@@ -53,22 +58,73 @@ class GasManagePage extends Component {
   handlerSearch = () => {
     this.setState({ isSearching: true });
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
-    const { viewInfo, site, searchMonth, searchType, searchValue } = this.state;
+    const { viewInfo, site, searchMonth, searchType, searchValue, pageSize } = this.state;
     const apiInfo = {
       key: 'chemiacalManageList',
       type: 'GET',
-      url: `/api/gcs/v1/common/gas/manage?type=${viewInfo}&site=${site}&month=${searchMonth}&searchType=${searchType}&keyword=${searchValue}`,
+      url: `/api/gcs/v1/common/gas/manage?type=${viewInfo}&site=${site}&month=${searchMonth}&searchType=${searchType}&keyword=${searchValue}&page=1&pageCnt=${pageSize}`,
     };
     getCallDataHandlerReturnRes(id, apiInfo, this.searchCallback);
   };
 
   searchCallback = (id, response) => {
     const { viewInfo } = this.state;
-    const { list } = response;
+    const { list, totalSize, searchInfo } = response;
     this.setState({
+      searchInfo: {
+        ...searchInfo,
+      },
       searchViewInfo: viewInfo,
       isSearching: false,
+      paginationIdx: 1,
+      totalSize,
       listData: list || [],
+    });
+  };
+
+  setPaginationIdx = paginationIdx => {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const { searchInfo, pageSize } = this.state;
+    this.setState({ paginationIdx }, () => {
+      const apiInfo = {
+        key: 'chemiacalManageList',
+        type: 'GET',
+        url: `/api/gcs/v1/common/gas/manage?type=${searchInfo.type}&site=${searchInfo.site}&month=${searchInfo.month}&searchType=${searchInfo.searchType}&keyword=${searchInfo.keyword}&page=${paginationIdx}&pageCnt=${pageSize}`,
+      };
+      getCallDataHandlerReturnRes(id, apiInfo, this.pagenationCallback);
+    });
+  };
+
+  pagenationCallback = (id, response) => {
+    const { viewInfo } = this.state;
+    const { list, totalSize, searchInfo } = response;
+    this.setState({
+      searchInfo: {
+        ...searchInfo,
+      },
+      searchViewInfo: viewInfo,
+      isSearching: false,
+      totalSize,
+      listData: list || [],
+    });
+  };
+
+  // 엑셀다운로드
+  getExcelData = () => {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const { searchInfo } = this.state;
+    const apiInfo = {
+      key: 'chemiacalManageList',
+      type: 'GET',
+      url: `/api/gcs/v1/common/gas/manage?type=${searchInfo.type}&site=${searchInfo.site}&month=${searchInfo.month}&searchType=${searchInfo.searchType}&keyword=${searchInfo.keyword}`,
+    };
+    getCallDataHandlerReturnRes(id, apiInfo, this.getExcelDataCallback);
+  };
+
+  getExcelDataCallback = (id, response) => {
+    const { list } = response;
+    this.setState({
+      excelListData: list || [],
     });
   };
 
@@ -116,6 +172,29 @@ class GasManagePage extends Component {
     );
   };
 
+  onChangeViewInfo = value => {
+    const { viewInfo: prevValue } = this.state;
+    if (value === 'sensor' && (prevValue === 'month' || prevValue === 'day')) {
+      this.setState({
+        viewInfo: value,
+        searchValue: '',
+        searchType: 'search_cabisensor',
+      });
+    }
+    if (prevValue === 'sensor' && (value === 'month' || value === 'day')) {
+      this.setState({
+        viewInfo: value,
+        searchValue: '',
+        searchType: 'search_cabino',
+      });
+    }
+    if ((prevValue === 'month' || prevValue === 'day') && (value === 'month' || value === 'day')) {
+      this.setState({
+        viewInfo: value,
+      });
+    }
+  };
+
   render() {
     const {
       modalType,
@@ -130,6 +209,10 @@ class GasManagePage extends Component {
       searchViewInfo,
       searchType,
       searchValue,
+      paginationIdx,
+      pageSize,
+      totalSize,
+      excelListData,
     } = this.state;
     return (
       <>
@@ -138,8 +221,8 @@ class GasManagePage extends Component {
             <div className="search-input-area">
               <span className="text-label">지역</span>
               <AntdSelect defaultValue={site} className="select-sm" style={{ width: '100px' }} onChange={val => this.setState({ site: val })} disabled>
-                <Option value="청주">청주</Option>
                 <Option value="구미">구미</Option>
+                <Option value="청주">청주</Option>
               </AntdSelect>
               <span className="text-label">사용 월</span>
               <AntdMonthPicker
@@ -152,8 +235,8 @@ class GasManagePage extends Component {
               <AntdSelect
                 defaultValue={viewInfo}
                 className="select-sm"
-                style={{ width: '300px', marginRight: '10px' }}
-                onChange={val => this.setState({ viewInfo: val })}
+                style={{ width: '160px', marginRight: '10px' }}
+                onChange={val => this.onChangeViewInfo(val)}
               >
                 <Option value="month">사용정보</Option>
                 <Option value="day">일간 데이터</Option>
@@ -188,7 +271,7 @@ class GasManagePage extends Component {
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
           {searchViewInfo === 'month' && (
             <>
-              <MonthExcel dataList={listData} site={site} />
+              <MonthExcel dataList={excelListData} site={site} getListFunc={this.getExcelData} />
               <StyledButton className="btn-primary btn-sm btn-first ml5" onClick={() => this.handleModal('MONTH_INPUT', true)}>
                 새등록
               </StyledButton>
@@ -196,13 +279,31 @@ class GasManagePage extends Component {
           )}
           {searchViewInfo === 'day' && (
             <>
-              <DayExcel site={site} dataList={listData} />
+              <DayExcel site={site} dataList={excelListData} getListFunc={this.getExcelData} />
             </>
           )}
         </StyledButtonWrapper>
         <ContentsWrapper>
-          {searchViewInfo === 'month' && <MonthUseInfoListTable listData={listData} handleModal={this.handleModal} />}
-          {searchViewInfo === 'day' && <DayUseInfoListTable listData={listData} handleModal={this.handleModal} />}
+          {searchViewInfo === 'month' && (
+            <MonthUseInfoListTable
+              listData={listData}
+              handleModal={this.handleModal}
+              setPaginationIdx={this.setPaginationIdx}
+              paginationIdx={paginationIdx}
+              listTotalCnt={totalSize}
+              pageSize={pageSize}
+            />
+          )}
+          {searchViewInfo === 'day' && (
+            <DayUseInfoListTable
+              listData={listData}
+              handleModal={this.handleModal}
+              setPaginationIdx={this.setPaginationIdx}
+              paginationIdx={paginationIdx}
+              listTotalCnt={totalSize}
+              pageSize={pageSize}
+            />
+          )}
           {searchViewInfo === 'sensor' && <GasSensorListPage site={site} listData={listData} onSearch={this.handlerSearch} />}
         </ContentsWrapper>
         <AntdModal

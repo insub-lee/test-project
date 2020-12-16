@@ -94,7 +94,7 @@ class TextComp extends React.Component {
           break;
         case 'DATETIME':
           searchVal = value.map((val, index) =>
-            index !== 0 ? `'${moment(val).format('YYYY-MM-DD 24:00:00')}'` : `'${moment(val).format('YYYY-MM-DD 00:00:00')}'`,
+            index !== 0 ? `'${moment(val).format('YYYY-MM-DD 23:59:59')}'` : `'${moment(val).format('YYYY-MM-DD 00:00:00')}'`,
           );
           break;
         default:

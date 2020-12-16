@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import uuid from 'uuid/v1';
+import { v4 as uuid } from 'uuid';
+
 import $ from 'jquery';
 import { debounce } from 'lodash';
 import 'summernote/dist/summernote-lite.min';

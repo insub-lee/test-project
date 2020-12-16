@@ -1,17 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import List from './List';
 
-class Item extends Component {
-  componantDidMount() {}
+// 폐기물 - 품목정보관리
 
-  render() {
-    return <BizMicroDevBase sagaKey="item" component={List} />;
-  }
-}
-
-Item.propTypes = {};
-Item.defaultProps = {};
+const Item = () => <BizMicroDevBase sagaKey="item" component={List} />;
 
 export default Item;

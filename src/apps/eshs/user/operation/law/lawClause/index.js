@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 import { Modal, message } from 'antd';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import ClauseList from './ClauseList';
 import RevisionHistory from './RevisionHistory';
 import OnlyView from '../lawAppraise/OnlyView';
+
+const AntdModal = StyledAntdModal(Modal);
 
 class lawClause extends Component {
   constructor(props) {
@@ -23,16 +25,11 @@ class lawClause extends Component {
     };
   }
 
-  loadingComplete = () => {
-    this.setState({
-      isLoading: false,
-    });
-  };
+  loadingComplete = () => false;
 
   componentDidMount() {}
 
   isOpenInputModal = (selectedMasterSeq, selectedLawName, selectedRechNo) => {
-    console.log('selectedMasterSeq, selectedLawName, selectedRechNo', selectedMasterSeq, selectedLawName, selectedRechNo);
     if (selectedMasterSeq) {
       this.setState({ isInputModal: true, masterSeq: selectedMasterSeq, masterRechName: selectedLawName, masterRechNo: selectedRechNo });
     } else {
@@ -109,18 +106,20 @@ class lawClause extends Component {
         isOpenModalChange={this.isOpenRevisionDetailModal}
         taskSeqReal={this.state.taskSeqReal}
       />
-      <Modal visible={this.state.isRevisionDetailModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
+      <AntdModal
+        title={<span style={{ color: '#4491e0' }}>-</span>}
+        visible={this.state.isRevisionDetailModal}
+        width="1000px"
+        onCancel={this.onCancel}
+        destroyOnClose
+        footer={[]}
+      >
         <div>{this.state.isRevisionDetailModal && this.onRevisionDetailTemplate('VIEW', this.state.revisionDetailTaskSeq)}</div>
-      </Modal>
+      </AntdModal>
     </>
   );
 
   render() {
-    /* const {
-      match: { params },
-      item,
-    } = this.props;
-    const { ID } = params; */
     return (
       <>
         <BizBuilderBase
@@ -133,13 +132,27 @@ class lawClause extends Component {
           isOpenModalChange={this.isOpenModifyModal}
           isOpenModalPlusChange={this.isOpenRevisionModal}
         />
-        <Modal visible={this.state.isInputModal || this.state.isModifyModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
+        <AntdModal
+          title={<span style={{ color: '#4491e0' }}>-</span>}
+          visible={this.state.isInputModal || this.state.isModifyModal}
+          width="1000px"
+          onCancel={this.onCancel}
+          destroyOnClose
+          footer={[]}
+        >
           {this.state.isInputModal && this.onShowModalTemplate('INPUT', -1)}
           {this.state.isModifyModal && this.onShowModalTemplate('VIEW', this.state.modifyTaskSeq)}
-        </Modal>
-        <Modal visible={this.state.isRevisionModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
+        </AntdModal>
+        <AntdModal
+          title={<span style={{ color: '#4491e0' }}>-</span>}
+          visible={this.state.isRevisionModal}
+          width="1000px"
+          onCancel={this.onCancel}
+          destroyOnClose
+          footer={[]}
+        >
           {this.state.isRevisionModal && this.onShowRevisionTemplate('LIST', this.state.revisionTaskSeq)}
-        </Modal>
+        </AntdModal>
       </>
     );
   }

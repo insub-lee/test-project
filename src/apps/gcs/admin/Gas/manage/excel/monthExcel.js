@@ -63,7 +63,7 @@ class Excel extends Component {
   };
 
   render() {
-    const { site, dataList } = this.props;
+    const { site, dataList, getListFunc } = this.props;
     const excelDataSet = this.createExcelListData(dataList);
     const columns = [
       { title: 'Cabinet 번호', width: { wpx: 120 }, style: { font: { sz: '' } } },
@@ -122,6 +122,7 @@ class Excel extends Component {
       { field: 'CABIAREA', style: { font: { sz: '12' } } },
       { field: 'CABISENSOR', style: { font: { sz: '12' } } },
       { field: 'CABIVENTLINE', style: { font: { sz: '12' } } },
+      { field: 'CABIINFO', style: { font: { sz: '12' } } },
       { field: 'GASNM', style: { font: { sz: '12' } } },
       { field: 'GASUNIT', style: { font: { sz: '12' } } },
       { field: 'GASSIZE', style: { font: { sz: '12' } } },
@@ -161,8 +162,8 @@ class Excel extends Component {
       { field: 'MONTH12', style: { font: { sz: '12' } } },
       { field: 'MONTH12_USE', style: { font: { sz: '12' } } },
       { field: 'MONTH12_AVG', style: { font: { sz: '12' } } },
-      { field: 'CHEMDISCHARGEY', style: { font: { sz: '12' } } },
-      { field: 'CHEMUSAGEY', style: { font: { sz: '12' } } },
+      { field: 'GASDISCHARGEY', style: { font: { sz: '12' } } },
+      { field: 'GASUSAGEY', style: { font: { sz: '12' } } },
       { field: 'YEAR_AVG', style: { font: { sz: '12' } } },
     ];
 
@@ -170,6 +171,7 @@ class Excel extends Component {
       <ExcelDownloadComp
         isBuilder={false}
         fileName={`${site}_Gas_Usage_Info`}
+        getListFunc={getListFunc}
         btnText="Excel"
         btnSize="btn-sm"
         columns={columns}
