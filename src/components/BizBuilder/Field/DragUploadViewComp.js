@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Icon } from 'antd';
 import base64 from 'base-64';
-import uuid from 'uuid/v1';
+import { v4 as uuid } from 'uuid';
+
 class DragUploadViewComp extends Component {
   constructor(props) {
     super(props);
