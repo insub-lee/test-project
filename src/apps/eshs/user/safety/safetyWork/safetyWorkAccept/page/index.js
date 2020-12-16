@@ -79,14 +79,13 @@ class SafetyWorkMain extends Component {
 
   componentDidMount = () => {
     const { workNo } = this.props;
-
     if (workNo) return this.handleGetSafetyWork(workNo);
   };
 
   handleGetSafetyWork = workNo => {
     const { formData } = this.state;
     const searchWorkNo = workNo || formData?.WORK_NO || '';
-    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const { sagaKey: id, getCallDataHandlerReturnRes, spinningOn } = this.props;
     const type = 'searchOne';
     const apiInfo = {
       key: 'getSafetyWork',
@@ -97,10 +96,12 @@ class SafetyWorkMain extends Component {
       message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 검색하십시오.</MessageContent>);
       return;
     }
+    spinningOn();
     getCallDataHandlerReturnRes(id, apiInfo, this.getSafetyWorkCallback);
   };
 
   getSafetyWorkCallback = (id, response) => {
+    const { spinningOff } = this.props;
     const searchSafetyWork = response?.safetyWork || {};
     if (!searchSafetyWork.WORK_NO) {
       message.error(<MessageContent>요청하신 작업정보를 찾을 수 없습니다.</MessageContent>);
@@ -110,22 +111,25 @@ class SafetyWorkMain extends Component {
     if (1 in appLine) {
       appLine.forEach(appv => {
         if (appv.STEP === 1) appvLineText += `${appv.PROCESS_NAME}:담당:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
-        if (appv.STEP === 2) appvLineText += `, 1차:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME}) `;
+        else appvLineText += `, ${appv.STEP - 1}차:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
       });
     }
 
-    this.setState({
-      formData: {
-        ...searchSafetyWork,
-        FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
-        REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
-        SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
-        UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
+    this.setState(
+      {
+        formData: {
+          ...searchSafetyWork,
+          FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
+          REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
+          SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
+          UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
+        },
+        processRule: {},
+        tempProcessRule: {},
+        appvLineText,
       },
-      processRule: {},
-      tempProcessRule: {},
-      appvLineText,
-    });
+      spinningOff,
+    );
   };
 
   // 모달 핸들러
