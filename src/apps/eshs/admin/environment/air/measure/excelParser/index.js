@@ -2,19 +2,24 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import XLSX from 'xlsx';
-import { Upload, Icon, Spin } from 'antd';
+import { Upload, Icon, Spin, DatePicker } from 'antd';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import sampleExcelFile from './sampleExcel/대기측정결과(양식).xlsx';
 import Styled from './Styled';
 
+const { MonthPicker } = DatePicker;
 const { Dragger } = Upload;
+const AntdMonthPicker = StyledDatePicker(MonthPicker);
 
 class ExcelParser extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      // 등록할 년월
+      yyyymm: moment().format('YYYY-MM'),
       // 계통별 분류체계
       stacks: {
         ACID: ['FR01-1', 'FR01-2', 'FR01-3', 'FR01-4', 'FR01-5', 'FR01-6', 'FR01-7', 'FR01-8', 'FR01-9', 'FR01-10', 'FR01-11', 'FR01-12', 'FR01-13'],
@@ -42,7 +47,7 @@ class ExcelParser extends Component {
 
   // excleData를 가공하여 리턴 param : 회차 (1 or 2) // data
   excelDataSet = (seq, data) => {
-    const { stacks, measurePoint } = this.state;
+    const { stacks, measurePoint, yyyymm } = this.state;
     const { ACID, TOXIC, VOCs } = stacks;
     const result = []; // 결과값 array
     let WORK_DAY = 0; // 워킹데이
@@ -58,19 +63,36 @@ class ExcelParser extends Component {
         // row[6] ~ row[20] 추출해야할 index (측정항목 엑셀좌표)
         measurePoint.forEach((point, idx) => {
           // 측정여부가 Y 일때만 rowData 추출
+          let dataRow = {};
           if (row[2] === 'Y') {
-            const dataRow = {
+            const measureDt = this.ExcelDateToJSDate(row[3]);
+            dataRow = {
+              YYYY: measureDt.substring(0, 4),
+              MM: measureDt.substring(5, 7),
               SEQ: seq,
               IS_MEASURE: row[2],
-              MEASURE_DT: this.ExcelDateToJSDate(row[3]),
+              MEASURE_DT: measureDt,
               STACK_CD: stack,
               GAS_CD: point,
               DENSITY: row[idx + 6] !== '' ? row[idx + 6] : null,
               HOUR_FLOW: row[5],
               WORK_DAY,
             };
-            result.push(dataRow);
+          } else {
+            dataRow = {
+              YYYY: yyyymm.substring(0, 4),
+              MM: yyyymm.substring(5, 7),
+              SEQ: seq,
+              IS_MEASURE: row[2],
+              MEASURE_DT: '',
+              STACK_CD: stack,
+              GAS_CD: point,
+              DENSITY: row[idx + 6] !== '' ? row[idx + 6] : null,
+              HOUR_FLOW: row[5],
+              WORK_DAY,
+            };
           }
+          result.push(dataRow);
         });
       }
     });
@@ -116,16 +138,27 @@ class ExcelParser extends Component {
     }
   }
 
+  dateChange = date => {
+    this.setState({
+      yyyymm: date.format('YYYY-MM'),
+    });
+  };
+
   render() {
+    const { yyyymm } = this.state;
     const { isUpload } = this.props;
     return (
       <Styled onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
-        <div className="excelDown">
-          <StyledButton className="btn-gray btn-xs">
-            <a href={sampleExcelFile} download>
-              대기측정결과(양식) 다운로드
-            </a>
-          </StyledButton>
+        <div className="top-btn-group">
+          <div className="textInfo">측정 연/월을 선택해 주십시오.</div>
+          <AntdMonthPicker className="ant-picker-xs mr5 ant-picker-inline" defaultValue={moment(yyyymm, 'YYYY-MM')} onChange={date => this.dateChange(date)} />
+          <div className="excelDown">
+            <StyledButton className="btn-gray btn-xs">
+              <a href={sampleExcelFile} download>
+                대기측정결과(양식) 다운로드
+              </a>
+            </StyledButton>
+          </div>
         </div>
         <Spin tip="Upload 중.." spinning={isUpload}>
           <Dragger beforeUpload={file => this.handleChange(file)} fileList={[]}>
