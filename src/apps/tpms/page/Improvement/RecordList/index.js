@@ -45,9 +45,7 @@ const RecordList = () => {
               </div>
             </StyledForm>
           }
-          subbody={
-            showDetail && <RecordListDetail enableFixView={() => {}} disableFixView={() => {}} requestQuery={requestQuery} userid={authInfo?.empNo || ''} />
-          }
+          subbody={showDetail && <RecordListDetail enableFixView={() => {}} disableFixView={() => {}} requestQuery={requestQuery} authInfo={authInfo} />}
         />
       </Spin>
       <GlobalStyle />

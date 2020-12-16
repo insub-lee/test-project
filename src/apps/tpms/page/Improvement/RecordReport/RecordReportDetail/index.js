@@ -68,7 +68,7 @@ const getDpnmGroup = (list, row, rowIndex) => {
   return children;
 };
 
-const RecordReportDetail = ({ requestQuery, usrid, enableFixView, disableFixView }) => {
+const RecordReportDetail = ({ requestQuery, authInfo, enableFixView, disableFixView }) => {
   const {
     isLoading,
     isExpanded,
@@ -89,7 +89,7 @@ const RecordReportDetail = ({ requestQuery, usrid, enableFixView, disableFixView
       totProgress5,
     },
     actions: { handleReportDown, downloadAll, toggleExpanded, handleTooltip, loadModal },
-  } = useHooks({ requestQuery, usrid, enableFixView, disableFixView });
+  } = useHooks({ requestQuery, authInfo, enableFixView, disableFixView });
 
   const { startDate, endDate, stdDate, headQuartsLabel, prjTypeLabel, prjLvlLabels } = requestQuery;
   return (
@@ -280,7 +280,7 @@ const RecordReportDetail = ({ requestQuery, usrid, enableFixView, disableFixView
 
 RecordReportDetail.propTypes = {
   requestQuery: PropTypes.object.isRequired,
-  usrid: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  authInfo: PropTypes.object.isRequired,
   enableFixView: PropTypes.func,
   disableFixView: PropTypes.func,
 };
