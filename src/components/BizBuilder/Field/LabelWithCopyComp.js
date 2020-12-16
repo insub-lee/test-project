@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { debounce } from 'lodash';
-import uuid from 'uuid/v1';
+import { v4 as uuid } from 'uuid';
+
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';

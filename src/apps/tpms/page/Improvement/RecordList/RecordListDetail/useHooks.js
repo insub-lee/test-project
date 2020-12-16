@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useState, useEffect, useCallback } from 'react';
 import moment from 'moment';
 
@@ -12,29 +13,42 @@ const statusSelectorWithComponent = item => {
     status: '',
     iconComponent: <span />,
   };
-  const statusData = ['finishyn', 'dropyn', 'progresslistyn', 'saveyn', 'regyn'];
-  statusData.some(status => {
-    const check = item[status] === 'Y';
-    result.status = check ? status : '';
-    return check;
-  });
-  switch (result.status) {
-    case 'regyn':
+  switch (item?.step) {
+    // 등록
+    case 2:
       result.iconComponent = <span className="icon icon_ing1" />;
       break;
-    case 'saveyn':
-      result.iconComponent = <span className="icon icon_ing1" />;
+    // 결재 중
+    case 1:
+    case 0:
+    case 9:
+    case 10:
+    case 11:
+    case 20:
+    case 21:
+      result.iconComponent = <span className="icon icon_ing6" />;
       break;
-    case 'progresslistyn':
+    // 진행 중
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
       result.iconComponent = <span className="icon icon_ing2" />;
       break;
-    case 'dropyn':
+    // 드랍
+    case 22:
       result.iconComponent = <span className="icon icon_ing3" />;
-      result.colorCode = '#ff5d5d';
       break;
-    case 'finishyn':
+    // todo 지연
+    case 30:
+      result.iconComponent = <span className="icon icon_ing4" />;
+      break;
+
+    // 완료
+    case 12:
       result.iconComponent = <span className="icon icon_ing5" />;
-      result.colorCode = '#0000ff';
       break;
     default:
       result.iconComponent = <span />;
@@ -43,7 +57,7 @@ const statusSelectorWithComponent = item => {
   return result;
 };
 
-export default ({ requestQuery, userid, enableFixView = () => {}, disableFixView = () => {} }) => {
+export default ({ requestQuery, authInfo, enableFixView = () => {}, disableFixView = () => {} }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
@@ -63,53 +77,46 @@ export default ({ requestQuery, userid, enableFixView = () => {}, disableFixView
   useEffect(() => {
     const fetchData = async params => {
       const { response, error } = await request({
-        url: '/apigate/v1/portal/sign/report',
-        method: 'GET',
-        params,
+        url: `/api/tpms/v1/common/searchInfo`,
+        method: 'POST',
+        data: params,
       });
       return { response, error };
     };
 
     const { current, pageSize } = pagination;
-    const {
-      startDate,
-      endDate,
-      stdDate,
-      // headQuarts,
-      projectType,
-      prjLvValues,
-    } = requestQuery;
+    const { startDate: startDate_, endDate: endDate_, stdDate: stdDate_, headQuarts: headQuarter, project_type, project_level } = requestQuery;
 
     const curtDate = moment().format('YYYYMMDD');
 
-    const startDt = startDate
-      ? startDate.replace(/\./gi, '')
+    const startDate = startDate_
+      ? startDate_.replace(/\./gi, '')
       : moment(curtDate, 'YYYYMMDD')
           .add(-1, 'year')
           .format('YYYYMMDD');
-    const endDt = endDate ? endDate.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
-    const stdDt = stdDate ? stdDate.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
+    const endDate = endDate_ ? endDate_.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
+    const standardDate = stdDate_ ? stdDate_.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
 
-    const requestQuery2 = {
-      type: 'list',
-      currentPage: current,
+    const tableRequestQuery = {
+      type: 'personalReportList',
+      currentPage: (current !== 0 ? current - 1 : 0) * 10,
       pageSize,
-      sdd: startDt,
-      edd: endDt,
-      stdd: stdDt,
-      // headQuarts,
-      prjtype: projectType === '' ? undefined : projectType,
-      prjlvl: prjLvValues ? prjLvValues.toString() : undefined,
+      startDate,
+      endDate,
+      stdDate: standardDate,
+      headQuarter,
+      project_type,
+      project_level,
     };
 
     // jasfer for url set
     const requestQuery3 = {
-      sdd: startDt,
-      edd: endDt,
-      stdd: stdDt,
-      usrid: userid,
-      prjtype: projectType === '' ? undefined : projectType,
-      prjlvl: prjLvValues ? prjLvValues.toString() : undefined,
+      sdd: startDate,
+      edd: endDate,
+      stdd: standardDate,
+      usrid: authInfo?.empNo,
+      prjtype: project_type === '' ? undefined : project_type,
+      prjlvl: project_level ? project_level.toString() : undefined,
     };
     const queryString3 = jsonToQueryString(requestQuery3);
     setJasperUrl(
@@ -118,7 +125,7 @@ export default ({ requestQuery, userid, enableFixView = () => {}, disableFixView
 
     setIsLoading(true);
 
-    fetchData(requestQuery2)
+    fetchData(tableRequestQuery)
       .then(({ response, error }) => {
         if (response && !error) {
           // if (this.mounted) {
@@ -137,7 +144,6 @@ export default ({ requestQuery, userid, enableFixView = () => {}, disableFixView
           setData(nextList);
           setTotal(responseTotal);
         } else {
-          console.debug(error);
           alertMessage.alert('Server Error');
         }
       })
@@ -146,7 +152,7 @@ export default ({ requestQuery, userid, enableFixView = () => {}, disableFixView
       });
 
     setIsLoading(false);
-  }, [pagination, requestQuery, userid]);
+  }, [pagination, requestQuery, authInfo?.empNo]);
 
   const pageSizeHandler = useCallback(e => {
     const pageSize = parseInt(e.target.value, 10);

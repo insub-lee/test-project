@@ -31,7 +31,7 @@ const renderTitle = form => {
 const renderItem = (type, option, surveyIndex, handleUpload) => {
   switch (type) {
     case 'checkbox-group':
-      return <CheckboxGroup name={option.name} values={option.values} />;
+      return <CheckboxGroup name={option.name} {...option?.props} values={option.values} />;
     case 'radio-group':
       return <RadioGroup name={option.name} values={option.values} onChange={option.onChange} />;
     case 'select':

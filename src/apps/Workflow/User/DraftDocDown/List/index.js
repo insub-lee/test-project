@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import base64 from 'base-64';
-import uuid from 'uuid/v1';
+import { v4 as uuid } from 'uuid';
+
 import { FileSearchOutlined } from '@ant-design/icons';
 import { Table, Icon, Progress, message, Modal } from 'antd';
 

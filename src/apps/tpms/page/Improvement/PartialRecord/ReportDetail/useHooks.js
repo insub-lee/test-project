@@ -20,13 +20,12 @@ export const useHooks = ({ requestQuery }) => {
     }
   }, [requestQuery, pagination]);
 
-  // todo
   const statusSelectorWithComponent = item => {
     const result = {
       status: '',
       iconComponent: <span />,
     };
-    switch (item.step) {
+    switch (item?.step) {
       // 등록
       case 2:
         result.iconComponent = <span className="icon icon_ing1" />;
@@ -34,7 +33,8 @@ export const useHooks = ({ requestQuery }) => {
       // 결재 중
       case 1:
       case 0:
-      case 8:
+      case 9:
+      case 10:
       case 11:
       case 20:
       case 21:
@@ -46,8 +46,7 @@ export const useHooks = ({ requestQuery }) => {
       case 5:
       case 6:
       case 7:
-      case 9:
-      case 10:
+      case 8:
         result.iconComponent = <span className="icon icon_ing2" />;
         break;
       // 드랍

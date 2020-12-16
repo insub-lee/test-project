@@ -4,7 +4,7 @@ import { fromJS } from "immutable";
 import PropTypes from "prop-types";
 import Dropzone from "react-dropzone";
 import axios from "axios";
-import UUID from "uuid-js";
+import { v4 as UUID } from 'uuid';
 import jsonToQueryString from "../../../utils/jsonToQueryString";
 
 import StyledUploader from "./StyledUploader";

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import moment from 'moment';
 import download from 'js-file-download';
@@ -8,7 +9,7 @@ import request from 'utils/request';
 import jsonToQueryString from '../../../../utils/jsonToQueryString';
 import alertMessage from '../../../../components/Notification/Alert';
 
-export default ({ usrid, requestQuery, enableFixView, disableFixView }) => {
+export default ({ authInfo, requestQuery, enableFixView, disableFixView }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
   const [list, setList] = useState([]);
@@ -27,57 +28,63 @@ export default ({ usrid, requestQuery, enableFixView, disableFixView }) => {
   useEffect(() => {
     const fetchTableData = async params => {
       const { response, error } = await request({
-        url: '/apigate/v1/portal/sign/report',
-        method: 'GET',
-        params,
+        url: `/api/tpms/v1/common/searchInfo`,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+        method: 'POST',
+        data: params,
       });
       return { response, error };
     };
 
-    const { startDate, endDate, stdDate, projectType, prjLvValues } = requestQuery;
+    const { startDate: startDate_, endDate: endDate_, stdDate: stdDate_, headQuarts: headQuarter, project_type, project_level } = requestQuery;
 
     const curtDate = moment().format('YYYYMMDD');
-    const startDt = startDate
-      ? startDate.replace(/\./gi, '')
+    const startDate = startDate_
+      ? startDate_.replace(/\./gi, '')
       : moment(curtDate, 'YYYYMMDD')
           .add(-1, 'year')
           .format('YYYYMMDD');
-    const endDt = endDate ? endDate.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
-    const stdDt = stdDate ? stdDate.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
+    const endDate = endDate_ ? endDate_.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
+    const standardDate = stdDate_ ? stdDate_.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
 
-    const requestQuery2 = {
-      type: 'devlist',
-      sdd: startDt,
-      edd: endDt,
-      stdd: stdDt,
-      prjtype: projectType === '' ? undefined : projectType,
-      prjlvl: prjLvValues ? prjLvValues.toString() : undefined,
+    const tableQuery = {
+      type: 'personalTable',
+      startDate,
+      endDate,
+      standardDate,
+      headQuarter,
+      project_type,
+      project_level,
     };
 
+    const { empNo } = authInfo;
+
     const requestQuery3 = {
-      sdd: startDt,
-      edd: endDt,
-      stdd: stdDt,
-      prjtype: projectType === '' ? undefined : projectType,
-      prjlvl: prjLvValues ? prjLvValues.toString() : undefined,
-      sdd1: startDt,
-      edd1: endDt,
-      stdd1: stdDt,
-      prjtype1: projectType === '' ? undefined : projectType,
-      prjlvl1: prjLvValues ? prjLvValues.toString() : undefined,
-      userid1: usrid || '',
-      sdd2: startDt,
-      edd2: endDt,
-      stdd2: stdDt,
-      prjtype2: projectType === '' ? undefined : projectType,
-      prjlvl2: prjLvValues ? prjLvValues.toString() : undefined,
-      userid2: usrid || '',
-      sdd3: startDt,
-      edd3: endDt,
-      stdd3: stdDt,
-      prjtype3: projectType === '' ? undefined : projectType,
-      prjlvl3: prjLvValues ? prjLvValues.toString() : undefined,
-      userid3: usrid || '',
+      sdd: startDate,
+      edd: endDate,
+      stdd: standardDate,
+      prjtype: project_type === '' ? undefined : project_type,
+      prjlvl: project_level ? project_level.toString() : undefined,
+      sdd1: startDate,
+      edd1: endDate,
+      stdd1: standardDate,
+      prjtype1: project_type === '' ? undefined : project_type,
+      prjlvl1: project_level ? project_level.toString() : undefined,
+      userid1: empNo || '',
+      sdd2: startDate,
+      edd2: endDate,
+      stdd2: standardDate,
+      prjtype2: project_type === '' ? undefined : project_type,
+      prjlvl2: project_level ? project_level.toString() : undefined,
+      userid2: empNo || '',
+      sdd3: startDate,
+      edd3: endDate,
+      stdd3: standardDate,
+      prjtype3: project_type === '' ? undefined : project_type,
+      prjlvl3: project_level ? project_level.toString() : undefined,
+      userid3: empNo || '',
     };
 
     setJasperUrl(
@@ -88,7 +95,7 @@ export default ({ usrid, requestQuery, enableFixView, disableFixView }) => {
 
     setIsLoading(true);
 
-    fetchTableData(requestQuery2)
+    fetchTableData(tableQuery)
       .then(({ response, error }) => {
         if (response && !error) {
           if (response && !error) {

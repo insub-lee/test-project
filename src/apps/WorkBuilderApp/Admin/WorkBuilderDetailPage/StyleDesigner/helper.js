@@ -1,9 +1,9 @@
 import { fromJS } from 'immutable';
-import uuid from 'uuid/v1';
+import { v4 as UUID } from 'uuid';
 import { sortBy } from 'lodash';
 import diff from 'redux-logger/src/diff';
 
-const getNewKey = () => uuid();
+const getNewKey = () => UUID();
 
 export const getSelectedKeyObjects = selectedKeys =>
   selectedKeys.map(key => {
