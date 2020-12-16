@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import PropTypes from 'prop-types';
 import Table from 'rc-table';
@@ -31,17 +32,17 @@ const components = {
 const columns = [
   {
     title: 'No',
-    dataIndex: 'rownum',
+    dataIndex: 'task_seq',
     width: '5%',
   },
   {
     title: '부서',
-    dataIndex: 'prj_leader_dept_name',
+    dataIndex: 'reg_dept_name',
     width: '10%',
   },
   {
     title: 'Leader',
-    dataIndex: 'reader',
+    dataIndex: 'project_leader',
     width: '10%',
   },
   {
@@ -64,7 +65,7 @@ const columns = [
   },
   {
     title: 'PerformType',
-    dataIndex: 'perform_type',
+    dataIndex: 'performance_type',
     width: '10%',
     render: (value, row, index) => <PerformTypeSelector keyValue={value} row={row} index={index} />,
   },
@@ -76,27 +77,19 @@ const columns = [
   },
   {
     title: '단계별진척현황',
-    dataIndex: 'progressstep',
+    dataIndex: 'step',
     width: '10%',
-    render: (value, row, index) => (
-      <StepSelector
-        level={value === undefined && row.progresslistyn === 'Y' ? 0 : value}
-        row={row}
-        index={index}
-        isDrop={row.status.status === 'dropyn'}
-        isFinish={row.status.status === 'finishyn'}
-      />
-    ),
+    render: (value, row, index) => <StepSelector level={value} row={row} index={index} isDrop={value === 22} isFinish={value === 12} />,
   },
   {
     title: '비고',
-    dataIndex: 'delayyn',
+    dataIndex: 'status',
     width: '10%',
     render: item => <div style={{ textAlign: 'center' }}>{item === 'Y' ? '지연' : ''}</div>,
   },
 ];
 
-const RecordListDetail = ({ requestQuery, usrid, enableFixView, disableFixView }) => {
+const RecordListDetail = ({ requestQuery, authInfo, enableFixView, disableFixView }) => {
   const {
     isLoading,
     isExpanded,
@@ -104,9 +97,9 @@ const RecordListDetail = ({ requestQuery, usrid, enableFixView, disableFixView }
     data,
     jasperUrl,
     actions: { pageHandler, pageSizeHandler, handleReportDown, toggleExpanded },
-  } = useHooks({ requestQuery, usrid, enableFixView, disableFixView });
+  } = useHooks({ requestQuery, authInfo, enableFixView, disableFixView });
 
-  const { startDate, endDate, stdDate, headQuartsLabel, prjTypeLabel, prjLvlLabels } = requestQuery;
+  const { startDate, endDate, stdDate, headQuartsLabel, project_type_label, project_level_label } = requestQuery;
 
   return (
     <StyledDetail className={`${isExpanded ? 'expanded' : ''}`}>
@@ -116,8 +109,8 @@ const RecordListDetail = ({ requestQuery, usrid, enableFixView, disableFixView }
             <span className="small">
               조건 : &nbsp;&nbsp;
               {`${headQuartsLabel || ''}`} &nbsp;&nbsp;
-              {`${prjTypeLabel || ''}`} &nbsp;&nbsp;
-              {`${prjLvlLabels || ''}`} &nbsp;&nbsp;
+              {`${project_type_label || ''}`} &nbsp;&nbsp;
+              {`${project_level_label || ''}`} &nbsp;&nbsp;
               {`${stdDate || ''}`}
               <br />
               기간 : &nbsp;&nbsp; {`${startDate} ~ ${endDate}`}
@@ -134,12 +127,16 @@ const RecordListDetail = ({ requestQuery, usrid, enableFixView, disableFixView }
             <span className="line" />
             <span className="col">{pagination.total} 건</span>
             <div className="btn_wrap">
+              {/* 
+              ! imple later 
               <Button type="button" color="gray" size="small" onClick={handleReportDown}>
                 엑셀
-              </Button>
+              </Button> */}
+              {/* 
+              ! TODO impl later
               <ALinkButton href={jasperUrl} color="gray" size="small" download>
                 출력
-              </ALinkButton>
+              </ALinkButton> */}
             </div>
           </div>
           <div className="sub_con">
@@ -182,7 +179,7 @@ const RecordListDetail = ({ requestQuery, usrid, enableFixView, disableFixView }
 
 RecordListDetail.propTypes = {
   requestQuery: PropTypes.object.isRequired,
-  usrid: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  authInfo: PropTypes.object.isRequired,
   enableFixView: PropTypes.func,
   disableFixView: PropTypes.func,
 };
