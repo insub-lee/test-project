@@ -24,15 +24,18 @@ class List extends React.Component {
     super(props);
     this.state = {
       dataSource: [],
+      modalDataSource: [],
       rowData: {},
       searchValue: {
-        site: '',
+        site: '317',
         startDate: moment()
           .startOf('month')
           .format('YYYY-MM-DD'),
         endDate: moment().format('YYYY-MM-DD'),
         type: '',
         deptId: '',
+        kind: '',
+        confstatus: '',
       },
       modalVisible: false,
       isModified: false,
@@ -50,14 +53,14 @@ class List extends React.Component {
   }
 
   getDataSource = () => {
-    const { startDate, endDate, type, deptId } = this.state.searchValue;
+    const { startDate, endDate, type, deptId, site, kind, confstatus } = this.state.searchValue;
     const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
     spinningOn();
-    const params = `?&START_DATE=${startDate}&END_DATE=${endDate}&TYPE=${type}&DEPT_ID=${deptId}`;
+    const params = `?&START_DATE=${startDate}&END_DATE=${endDate}&TYPE=${type}&DEPT_ID=${deptId}&SITE=${site}&KIND=${kind}&CONF_STATUS=${confstatus}`;
     const apiAry = [
       {
         key: 'dataSource',
-        url: `/api/eshs/v1/common/protection-req${params}`,
+        url: `/api/eshs/v1/common/protection-provide${params}`,
         type: 'GET',
       },
     ];
@@ -136,35 +139,35 @@ class List extends React.Component {
       dataIndex: 'DEPT_NAME_KOR',
       key: 'DEPT_NAME_KOR',
       width: '10%',
-      align: 'center',
+      align: 'left',
     },
     {
       title: '품목',
       dataIndex: 'KIND',
       key: 'KIND',
       width: '10%',
-      align: 'center',
+      align: 'left',
     },
     {
       title: '모델',
       dataIndex: 'MODEL',
       key: 'MODEL',
       width: '10%',
-      align: 'center',
+      align: 'left',
     },
     {
       title: '사이즈',
       dataIndex: 'SIZE1',
       key: 'SIZE1',
       width: '10%',
-      align: 'center',
+      align: 'left',
     },
     {
       title: '신청수량',
       dataIndex: 'QTY',
       key: 'QTY',
       width: '10%',
-      align: 'center',
+      align: 'right',
     },
     {
       title: '지급요청일',
@@ -175,15 +178,15 @@ class List extends React.Component {
     },
     {
       title: '지급수량',
-      dataIndex: '',
-      key: '',
+      dataIndex: 'GIQTY',
+      key: 'GIQTY',
       width: '10%',
-      align: 'center',
+      align: 'right',
     },
     {
       title: '지급일',
-      dataIndex: '',
-      key: '',
+      dataIndex: 'POSTING_DT',
+      key: 'POSTING_DT',
       width: '10%',
       align: 'center',
     },
@@ -199,7 +202,7 @@ class List extends React.Component {
       dataIndex: 'REQ_COMMENTS',
       key: 'REQ_COMMENTS',
       width: '10%',
-      align: 'center',
+      align: 'left',
     },
   ];
 
@@ -238,37 +241,69 @@ class List extends React.Component {
     getDataSource();
   };
 
+  getDataSource = () => {
+    const { startDate, endDate, type, deptId, site, kind, confstatus } = this.state.searchValue;
+    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
+    spinningOn();
+    const params = `?&START_DATE=${startDate}&END_DATE=${endDate}&TYPE=${type}&DEPT_ID=${deptId}&SITE=${site}&KIND=${kind}&CONF_STATUS=${confstatus}`;
+    const apiAry = [
+      {
+        key: 'dataSource',
+        url: `/api/eshs/v1/common/protection-provide${params}`,
+        type: 'GET',
+      },
+    ];
+
+    return getCallDataHandler(id, apiAry, () => {
+      const { result, spinningOff } = this.props;
+      return this.setState(
+        {
+          dataSource: result?.dataSource?.list || [],
+        },
+        spinningOff,
+      );
+    });
+  };
+
   handleRowClick = record => {
     const { sagaKey, getCallDataHandler, spinningOn } = this.props;
     spinningOn();
     const apiArr = [
       {
-        key: 'reqDetails',
-        url: `/api/eshs/v1/common/protection-req-detail?REQ_CD=${record.REQ_CD}`,
+        key: 'proviceDetails',
+        url: `/api/eshs/v1/common/protection-provide-detail?REQ_CD=${record.REQ_CD}&HITEM_CD=${record.HITEM_CD}`,
         type: 'GET',
       },
     ];
 
-    getCallDataHandler(sagaKey, apiArr, () => this.setModalDataSource(record));
-  };
-
-  setModalDataSource = record => {
-    const { result, spinningOff } = this.props;
-    this.setState(
-      {
-        rowData: record,
-        modalVisible: true,
-        isModified: true,
-        modalDataSource: (result.reqDetails && result.reqDetails.list) || [],
-      },
-      spinningOff,
-    );
+    return getCallDataHandler(sagaKey, apiArr, () => {
+      const { result, spinningOff } = this.props;
+      return this.setState(
+        {
+          modalVisible: true,
+          isModified: true,
+          modalDataSource: result?.modalDataSource?.list || [],
+        },
+        spinningOff,
+      );
+    });
   };
 
   render() {
     const { columns, handleSearchChange, handleModalVisible, handleSearchDateChange, handleModalClose, getDataSource, handleHqChange } = this;
     const { dataSource, modalVisible, searchValue, rowData, isModified, headquarterList, departmentList, isHeadquarterSelect, modalDataSource } = this.state;
-    const { sagaKey, changeFormData, formData, viewPageData, saveTask, getCallDataHandler, submitHandlerBySaga, result, profile } = this.props;
+    const {
+      sagaKey,
+      changeFormData,
+      formData,
+      viewPageData,
+      saveTask,
+      getCallDataHandler,
+      submitHandlerBySaga,
+      result,
+      profile,
+      getCallDataHandlerReturnRes,
+    } = this.props;
     return (
       <>
         <StyledContentsWrapper>
@@ -307,14 +342,19 @@ class List extends React.Component {
                 ))}
               </AntdSelect>
               <span className="text-label">상태</span>
-              <AntdSelect defaultValue="" className="select-mid mr5" onChange={value => handleSearchChange('type', value)} style={{ width: '10%' }}>
+              <AntdSelect defaultValue="" className="select-mid mr5" onChange={value => handleSearchChange('confstatus', value)} style={{ width: '10%' }}>
                 <Select.Option value="1">접수</Select.Option>
                 <Select.Option value="2">진행</Select.Option>
                 <Select.Option value="3">완료</Select.Option>
                 <Select.Option value="">상태전체</Select.Option>
               </AntdSelect>
               <span className="text-label">품목</span>
-              <AntdInput className="ant-input-mid ant-input-inline" placeholder="품목명" style={{ width: '15%' }} />
+              <AntdInput
+                className="ant-input-mid ant-input-inline"
+                onChange={e => handleSearchChange('kind', e.target.value)}
+                placeholder="품목명"
+                style={{ width: '15%' }}
+              />
             </div>
             <div className="btn-area">
               <StyledButton className="btn-gray btn-sm" onClick={this.getDataSource}>
@@ -326,13 +366,12 @@ class List extends React.Component {
             <AntdTable
               columns={columns}
               dataSource={dataSource}
-              // onRow={record => ({ onClick: () => this.setState({ rowData: record, modalVisible: true, isModified: true }) })}
               onRow={record => ({ onClick: () => this.handleRowClick(record) })}
               footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
             />
           </div>
         </StyledContentsWrapper>
-        <AntdModal title="입고 등록" visible={modalVisible} footer={null} onCancel={handleModalClose} width="80%" destroyOnClose>
+        <AntdModal title="보호구 지급" visible={modalVisible} footer={null} onCancel={handleModalClose} width="80%" destroyOnClose>
           <ModalContents
             sagaKey={sagaKey}
             changeFormData={changeFormData}
@@ -345,6 +384,7 @@ class List extends React.Component {
             rowData={rowData}
             isModified={isModified}
             getCallDataHandler={getCallDataHandler}
+            getCallDataHandlerReturnRes={getCallDataHandlerReturnRes}
             submitHandlerBySaga={submitHandlerBySaga}
             result={result}
             profile={profile}
@@ -359,6 +399,7 @@ class List extends React.Component {
 List.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
+  getCallDataHandlerReturnRes: PropTypes.func,
   result: PropTypes.object,
   changeFormData: PropTypes.func,
   saveTask: PropTypes.func,
