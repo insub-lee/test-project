@@ -47,10 +47,10 @@ const Registration = () => {
             <input type="hidden" name="project_leader" value={authInfo?.empNo || ''} />
             <FormView datas={formJson} noBoarder noPadding isImprove />
             <BtnWrap>
-              <Button type="submit" color="primary" disabled={isLoading}>
+              <Button type="submit" color="primary" disabled={isAuthLoading || isLoading}>
                 제출하기
               </Button>
-              <Button type="button" color="default" onClick={saveTemp} disabled={isLoading}>
+              <Button type="button" color="default" onClick={saveTemp} disabled={isAuthLoading || isLoading}>
                 저장하기
               </Button>
             </BtnWrap>

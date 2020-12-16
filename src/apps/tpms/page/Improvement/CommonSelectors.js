@@ -111,11 +111,8 @@ const StepSelector = ({ level, isDrop, isFinish, inProgress }) => (
 );
 
 const ProjectLevelSelector = ({ keyValue }) =>
-  projectLevel.map((lvl, index) => {
-    if (index === keyValue - 1) {
-      return <span>{lvl.txt}</span>;
-    }
-    return <span />;
+  projectLevel.map(({ key, txt }) => {
+    return <span>{key === keyValue ? txt : ''}</span>;
   });
 
 const ProjectTypeSelector = ({ keyValue }) =>

@@ -1,8 +1,11 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { fromJS } from 'immutable';
 import moment from 'moment';
 import { Line } from 'react-chartjs-2';
+import request from 'utils/request';
+
 import { Icon, Spin } from 'antd';
 import StyledChart from './StyledChart';
 import service from './service';
@@ -65,18 +68,16 @@ class MonthlyTransition extends React.Component {
     const {
       startDate,
       endDate,
-      stdDate,
       // headQuarts,
+      project_type,
+      project_level,
       part,
       team,
-      projectType,
-      prjLvValues,
       status,
       fab,
       area,
       keyno,
       model,
-      empNo,
     } = requestQuery;
 
     const curtDate = moment().format('YYYYMMDD');
@@ -84,24 +85,23 @@ class MonthlyTransition extends React.Component {
     const startDt = startDate
       ? startDate.replace(/\./gi, '')
       : moment(curtDate, 'YYYYMMDD')
-        .add(-1, 'year')
-        .format('YYYYMMDD');
+          .add(-1, 'year')
+          .format('YYYYMMDD');
     const endDt = endDate ? endDate.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
-    const stdDt = stdDate ? stdDate.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
 
     // 월 구하기
-    const endMon = endDt.replace(/\./gi, '').substr(0, 6);
-    const startMon = startDt.replace(/\./gi, '').substr(0, 6);
+    // const endMon = endDate?.replace(/\./gi, '').substr(0, 6);
+    // const startMon = startDate?.replace(/\./gi, '').substr(0, 6);
 
     // 날짜 기간 계산(월)
-    const diffMon = moment(endDt, 'YYYYMMDD').diff(moment(startDt, 'YYYYMMDD'), 'month');
+    const diffMon = moment(endDate, 'YYYYMMDD').diff(moment(startDate, 'YYYYMMDD'), 'month');
 
     // 기간(월) 구하기, pointLadius
     const yearMon = [];
     const pointRadius = [];
     for (let i = 0; i <= diffMon; i += 1) {
       yearMon.push(
-        moment(endDt, 'YYYYMMDD')
+        moment(endDate, 'YYYYMMDD')
           .add(-diffMon + i, 'month')
           .format('YYYY.MM'),
       );
@@ -109,32 +109,37 @@ class MonthlyTransition extends React.Component {
     }
 
     // service로 보낼 파라미터
-    const requestQuery2 = {
-      type: isDev ? 'monthlydev' : this.getType(empNo, startDate),
-      sdd: startDt,
-      edd: endDt,
-      stdd: stdDt,
+    const tempRequestQuery = {
+      // type: isDev ? 'monthlydev' : this.getType(empNo, startDate),
+      type: 'lineChart',
+      startDate: startDt,
+      endDate: endDt,
       // headQuarts,
-      part,
-      team,
-      prjtype: projectType === '' ? undefined : projectType,
-      prjlvl: prjLvValues ? prjLvValues.toString() : undefined,
+      project_level,
+      project_type,
+      fab: fab === 'all' ? undefined : fab,
+      area: area === 'all' ? undefined : area,
+      keyno: keyno === 'all' ? undefined : keyno,
+      model: model === 'all' ? undefined : model,
+      part: part === 'all' ? undefined : part,
+      team: team === 'all' ? undefined : team,
       status: status === 'all' ? undefined : status,
-      fab,
-      area,
-      keyno,
-      model,
-      schusrid: empNo,
     };
 
     // this.setState({ loaded: true });
-
-    const queryString = jsonToQueryString(requestQuery2);
-    const { response, error } = await service.signChart.get(queryString);
+    const { response, error } = await request({
+      // url: `/apigate/v1/portal/sign/report?${queryString}`,
+      url: `/api/tpms/v1/common/searchInfo`,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method: 'POST',
+      data: tempRequestQuery,
+    });
     if (response && !error) {
       console.debug('>>>>> monthly', response);
       // const { monthlYDelayCntList, monthlYDropCnt, monthlYRegCntList, monthlYProgressCntList, monthlYFinishCntList, monthlYSaveCnt } = response;
-      const { monthlYRegCntList } = response;
+      const { list } = response;
 
       // 1년간의 데이터 가져오기
       // 지연
@@ -167,8 +172,8 @@ class MonthlyTransition extends React.Component {
       //   .filter(mon => moment(mon.draftdt, 'YYYYMM') >= moment(startMon, 'YYYYMM') && moment(mon.draftdt, 'YYYYMM') <= moment(endMon, 'YYYYMM'))
       //   .map(item => item.savecnt);
 
-      const labels = monthlYRegCntList.map(({ draftdt }) => draftdt);
-      const cnts = monthlYRegCntList.map(({ regcnt }) => regcnt);
+      const labels = list.map(({ draftdt }) => draftdt);
+      const cnts = list.map(({ regcnt }) => regcnt);
 
       // const reusltCounts = [];
       // // const maxI = monthlYSaveCntData.length;

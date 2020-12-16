@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import { Select } from 'antd';
 
@@ -39,7 +40,7 @@ const PersonalRecord = () => {
     showDetail,
     detailRequestQuery,
     optionTerm,
-    optionPjtType,
+    project_type,
     action: { submitData, handleChangeEmployee, getUsers, setFab, setArea },
   } = useHooks({ authInfo, isAuthLoading, isAuthError });
 
@@ -86,7 +87,7 @@ const PersonalRecord = () => {
                   <div className="title">Project Type</div>
                   <div className="radio">
                     <>
-                      <RadioGroup name={optionPjtType.name} values={optionPjtType.values} />
+                      <RadioGroup name={project_type.name} values={project_type.values} />
                     </>
                   </div>
                 </li>
@@ -111,8 +112,8 @@ const PersonalRecord = () => {
                         }}
                       >
                         <option value="all">전체</option>
-                        {selectorFab.map(option => (
-                          <option value={option.cd}>{`${option.cdnm}`}</option>
+                        {selectorFab.map(({ cd, cdnm }) => (
+                          <option value={cd}>{`${cdnm}`}</option>
                         ))}
                       </select>
                     </li>
@@ -128,8 +129,8 @@ const PersonalRecord = () => {
                         }}
                       >
                         <option value="all">전체</option>
-                        {selectorArea.map(option => (
-                          <option value={option.cd}>{`${option.cdnm}`}</option>
+                        {selectorArea.map(({ cd, cdnm }) => (
+                          <option value={cd}>{`${cdnm}`}</option>
                         ))}
                       </select>
                     </li>
@@ -139,8 +140,8 @@ const PersonalRecord = () => {
                       </label>
                       <select name="keyno" id="keyno">
                         <option value="all">전체</option>
-                        {selectorKeyno.map(option => (
-                          <option value={option.cd}>{`${option.cdnm}`}</option>
+                        {selectorKeyno.map(({ cd, cdnm }) => (
+                          <option value={cd}>{`${cdnm}`}</option>
                         ))}
                       </select>
                     </li>
@@ -150,8 +151,8 @@ const PersonalRecord = () => {
                       </label>
                       <select name="model" id="model">
                         <option value="all">전체</option>
-                        {selectorModel.map(option => (
-                          <option value={option.cd}>{`${option.cdnm}`}</option>
+                        {selectorModel.map(({ cd, cdnm }) => (
+                          <option value={cd}>{`${cdnm}`}</option>
                         ))}
                       </select>
                     </li>

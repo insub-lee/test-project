@@ -29,11 +29,6 @@ const Detail = ({ info, closeAll, callback }) => {
     <div>
       <Spin spinning={isAuthLoading || isLoading}>
         <form autoComplete="off" ref={formRef} onSubmit={submitForm}>
-          {/* <input type="hidden" name="tempid" value={info?.tempid} /> */}
-          <input type="hidden" name="task_seq" value={info?.task_seq} />
-          <input type="hidden" name="proejct_leader" value={authInfo?.empNo} />
-          <input type="hidden" name="reg_dept_id" value={authInfo?.deptId || ''} />
-          <input type="hidden" name="reg_dept_name" value={authInfo?.deptName || ''} />
           <FormView useDefaultDatas defaultDatas={formData} noBoarder isImprove />
           <BtnWrap>
             <Button type="submit" color="primary">
