@@ -124,7 +124,7 @@ export const useHooks = () => {
   }, []);
 
   useEffect(() => {
-    if (headQuarts[0].value !== '') {
+    if (headQuarts[0]?.value !== '') {
       fetchPart();
       fetchTeam();
       fetchSelectorFab();

@@ -18,11 +18,13 @@ class CheckboxGroup extends React.Component {
 
       if (isSingle) {
         values.forEach((e, idx) => {
-          values[idx].checked = false;
+          if (idx !== index) {
+            values[idx].checked = false;
+          }
         });
       }
-
       values[index].checked = !values[index].checked;
+
       return {
         values,
       };

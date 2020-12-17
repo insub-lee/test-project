@@ -96,8 +96,8 @@ const performType = [
   { key: 'S', txt: 'Safety' },
 ];
 
-const StepSelector = ({ level, isDrop, isFinish, inProgress }) => (
-  <StyledDiv className="sub_dot" inProgress>
+const StepSelector = ({ level, isDrop, isFinish }) => (
+  <StyledDiv className="sub_dot" inProgress={level >= 2 && level <= 7}>
     <span className="line" />
     <ul>
       {steps.map(({ key, txt }) => (

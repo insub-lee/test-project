@@ -1,17 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import List from './List';
 
-class GasType extends Component {
-  componantDidMount() {}
-
-  render() {
-    return <BizMicroDevBase sagaKey="eshsGasType" component={List} />;
-  }
-}
-
-GasType.propTypes = {};
-GasType.defaultProps = {};
+const GasType = () => <BizMicroDevBase sagaKey="eshsGasType" component={List} />;
 
 export default GasType;

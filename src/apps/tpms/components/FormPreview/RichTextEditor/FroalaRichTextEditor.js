@@ -16,7 +16,8 @@ import 'froala-editor/js/plugins/colors.min';
 import FroalaEditor from 'react-froala-wysiwyg';
 import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 
-import UUID from 'uuid-js';
+import { v4 as UUID } from 'uuid';
+
 
 import { getMeta } from 'utils/request';
 import defaultConfig from './froalaEditorConfig';

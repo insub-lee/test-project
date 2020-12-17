@@ -104,7 +104,7 @@ const InProgressTable = () => {
         title: '단계별진척현황',
         dataIndex: 'step',
         width: '10%',
-        render: (value, row, index) => <StepSelector level={value} row={row} index={index} inProgress />,
+        render: (value, row, index) => <StepSelector level={value} row={row} index={index} isDrop={value === 22} isFinish={value === 12} />,
       },
       {
         title: 'Level',
@@ -169,7 +169,7 @@ const InProgressTable = () => {
             <Table
               columns={columns}
               data={data}
-              rowKey="rownum"
+              rowKey="task_seq"
               rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
               components={componentsStyle}
             />

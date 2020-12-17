@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
-import UUID from 'uuid-js';
+import { v4 as UUID } from 'uuid';
+
 import StyledUploader from './StyledUploader';
 import jsonToQueryString from '../../utils/jsonToQueryString';
 import service from './service';

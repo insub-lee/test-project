@@ -154,6 +154,7 @@ class ModalContents extends React.Component {
                       className="select-sm"
                       // defaultValue={rowData.SITE || requestValue.SITE || '317'}
                       defaultValue={isModified ? rowData.SITE : '317'}
+                      value={isModified ? rowData.SITE : formData.SITE}
                       onChange={value => handleInputChange('SITE', value)}
                       style={{ width: '100%' }}
                     >
