@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Input, Modal, DatePicker, Table, Spin } from 'antd';
+import { Input, Modal, DatePicker, Table, Spin, Select } from 'antd';
 import styled from 'styled-components';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
@@ -13,6 +13,7 @@ import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import message from 'components/Feedback/message';
 import Group from 'components/BizBuilder/Sketch/Group';
 import DeptSelect from 'components/DeptSelect';
@@ -22,9 +23,12 @@ import IngCheckViewer from '../../ingCheck';
 import ExcelDown from '../Excel';
 import Styled from './Styled';
 
+const { Option } = Select;
+
 const AntdModal = StyledContentsModal(Modal);
 const AntdTable = StyledAntdTable(Table);
 const AntdSearch = StyledSearchInput(Input.Search);
+const AntdSelect = StyledSelect(Select);
 const AntdDatePicker = StyledDatePicker(DatePicker);
 
 const CustomTableStyled = styled.div`
@@ -52,6 +56,7 @@ class SafetyWorkList extends Component {
         WRK_CMPNY_NM: '', // 작업업체명
         START_CHECK_DT: '', // 점검기간(START)
         END_CHECK_DT: '', // 점검기간(END)
+        CMPNY_TYPE: '', // 주관부서 or 작업업체
       },
       ingCheckList: [],
     };
@@ -77,10 +82,10 @@ class SafetyWorkList extends Component {
   onSearchCallback = (id, response) => {
     const result = response.list;
     if (result.length > 0) {
-      const setResult = this.setListDataForMagnachip(result);
+      // const setResult = this.setListDataForMagnachip(result);
       this.setState({
         isSearching: false,
-        ingCheckList: setResult,
+        ingCheckList: result,
       });
       return;
     }
@@ -94,38 +99,37 @@ class SafetyWorkList extends Component {
   };
 
   // 검색데이터 가공 (구미요청사항)
-  setListDataForMagnachip = list => {
-    const result = [];
-    // 전체리스트
-    list.forEach(item => {
-      const cmpny = {
-        WORK_NO: item.WORK_NO,
-        TARGET_NM: item.WRK_CMPNY_NM,
-        REQ_EMP_NM: item.REQ_EMP_NM,
-        WORK_DESC: item.WORK_DESC,
-        PT: item.WRK_CMPNY_PT,
-        TOTAL_PT: (item.WRK_CMPNY_PT || 0) + (item.REQ_CMPNY_PT || 0),
-        CHECK_STATUS: item.CHECK_STATUS,
-        CHECK_DT: item.CHECK_DT,
-      };
-      const team = {
-        WORK_NO: item.WORK_NO,
-        TARGET_NM: item.REQ_DEPT_NM,
-        REQ_EMP_NM: item.REQ_EMP_NM,
-        WORK_DESC: item.WORK_DESC,
-        PT: item.REQ_CMPNY_PT,
-        TOTAL_PT: (item.WRK_CMPNY_PT || 0) + (item.REQ_CMPNY_PT || 0),
-        CHECK_STATUS: item.CHECK_STATUS,
-        CHECK_DT: item.CHECK_DT,
-      };
-      // 작업업체, 주관부서(팀) 순서로 넣어줌
-      result.push(cmpny);
-      result.push(team);
-    });
+  // setListDataForMagnachip = list => {
+  //   const result = [];
+  //   list.forEach(item => {
+  //     const cmpny = {
+  //       WORK_NO: item.WORK_NO,
+  //       TARGET_NM: item.WRK_CMPNY_NM,
+  //       REQ_EMP_NM: item.REQ_EMP_NM,
+  //       WORK_DESC: item.WORK_DESC,
+  //       PT: item.WRK_CMPNY_PT,
+  //       TOTAL_PT: (item.WRK_CMPNY_PT || 0) + (item.REQ_CMPNY_PT || 0),
+  //       CHECK_STATUS: item.CHECK_STATUS,
+  //       CHECK_DT: item.CHECK_DT,
+  //     };
+  //     const team = {
+  //       WORK_NO: item.WORK_NO,
+  //       TARGET_NM: item.REQ_DEPT_NM,
+  //       REQ_EMP_NM: item.REQ_EMP_NM,
+  //       WORK_DESC: item.WORK_DESC,
+  //       PT: item.REQ_CMPNY_PT,
+  //       TOTAL_PT: (item.WRK_CMPNY_PT || 0) + (item.REQ_CMPNY_PT || 0),
+  //       CHECK_STATUS: item.CHECK_STATUS,
+  //       CHECK_DT: item.CHECK_DT,
+  //     };
+  //     // 작업업체, 주관부서(팀) 순서로 넣어줌
+  //     result.push(cmpny);
+  //     result.push(team);
+  //   });
 
-    // 요청된 리스트 형태로 return
-    return result;
-  };
+  //   // 요청된 리스트 형태로 return
+  //   return result;
+  // };
 
   // 모달 핸들러
   handleModal = (type, visible, workNo) => {
@@ -218,124 +222,74 @@ class SafetyWorkList extends Component {
         title: '작업번호',
         dataIndex: 'WORK_NO',
         align: 'center',
-        render: (value, row, index) => {
-          const obj = {
-            children: (
-              <span
-                onClick={() => this.handleModal('ingCheckView', true, value)}
-                role="button"
-                tabIndex="0"
-                onKeyPress={() => this.handleModal('ingCheckView', true, value)}
-                style={{ cursor: 'pointer', color: '#1fb5ad' }}
-              >
-                {value}
-              </span>
-            ),
-            props: {},
-          };
-          if (index % 2 === 0) {
-            obj.props.rowSpan = 2;
-          } else {
-            obj.props.rowSpan = 0;
-          }
-          return obj;
+        render: value => (
+          <span
+            onClick={() => this.handleModal('ingCheckView', true, value)}
+            role="button"
+            tabIndex="0"
+            onKeyPress={() => this.handleModal('ingCheckView', true, value)}
+            style={{ cursor: 'pointer', color: '#1fb5ad' }}
+          >
+            {value}
+          </span>
+        ),
+      },
+      {
+        title: '업체',
+        dataIndex: 'CMPNY_NM',
+        align: 'center',
+        render: (value, record) => {
+          if (record.CMPNY_TYPE === 'WRK') return value;
+          return '';
         },
       },
       {
-        title: '팀 / 업체명',
-        dataIndex: 'TARGET_NM',
+        title: '팀',
+        dataIndex: 'CMPNY_NM',
         align: 'center',
-        render: value => <span>{value || ''}</span>,
+        render: (value, record) => {
+          if (record.CMPNY_TYPE === 'REQ') return value;
+          return '';
+        },
       },
       {
         title: '담당자',
         dataIndex: 'REQ_EMP_NM',
         align: 'center',
-        render: (value, row, index) => {
-          const obj = {
-            children: value,
-            props: {},
-          };
-          if (index % 2 === 0) {
-            obj.props.rowSpan = 2;
-          } else {
-            obj.props.rowSpan = 0;
-          }
-          return obj;
-        },
       },
       {
         title: '작업내용',
         dataIndex: 'WORK_DESC',
         align: 'center',
-        render: (value, row, index) => {
-          const obj = {
-            children: value,
-            props: {},
-          };
-          if (index % 2 === 0) {
-            obj.props.rowSpan = 2;
-          } else {
-            obj.props.rowSpan = 0;
-          }
-          return obj;
-        },
+        render: data => <div style={{ textAlign: 'left' }}>{`${data}`}</div>,
       },
       {
-        title: '벌점',
-        dataIndex: 'PT',
+        title: '작업내 벌점',
+        dataIndex: 'PANALTY',
         align: 'center',
+        render: data => `${data}점`,
+      },
+      {
+        title: '검색기간내 누적벌점',
+        dataIndex: 'SEARCH_PANALTY',
+        align: 'center',
+        render: data => `${data}점`,
+      },
+      {
+        title: '연기준 누적벌점',
+        dataIndex: 'SEARCH_PANALTY',
+        align: 'center',
+        render: (data, record) => <div style={{ textAlign: 'left' }}>{`${record.YEAR_INFO}년 - 총 ${data}점`}</div>,
       },
       {
         title: '점검일',
         dataIndex: 'CHECK_DT',
         align: 'center',
-        render: (value, row, index) => {
-          const obj = {
-            children: <span>{moment(value).format('YYYY-MM-DD')}</span>,
-            props: {},
-          };
-          if (index % 2 === 0) {
-            obj.props.rowSpan = 2;
-          } else {
-            obj.props.rowSpan = 0;
-          }
-          return obj;
-        },
       },
       {
         title: '점검결과',
         dataIndex: 'CHECK_STATUS',
         align: 'center',
-        render: (value, row, index) => {
-          const obj = {
-            children: value,
-            props: {},
-          };
-          if (index % 2 === 0) {
-            obj.props.rowSpan = 2;
-          } else {
-            obj.props.rowSpan = 0;
-          }
-          return obj;
-        },
-      },
-      {
-        title: '누적벌점(팀+업체)',
-        dataIndex: 'TOTAL_PT',
-        align: 'center',
-        render: (value, row, index) => {
-          const obj = {
-            children: value,
-            props: {},
-          };
-          if (index % 2 === 0) {
-            obj.props.rowSpan = 2;
-          } else {
-            obj.props.rowSpan = 0;
-          }
-          return obj;
-        },
       },
     ];
     return (
@@ -421,6 +375,27 @@ class SafetyWorkList extends Component {
                           onSearch={() => this.handleModal('cmpny', true)}
                         />
                       </td>
+                      <td className="view-designer-col view-designer-label" style={{ width: '100px', textAlign: 'center' }}>
+                        <span>구분</span>
+                      </td>
+                      <td className="view-designer-col">
+                        <AntdSelect
+                          className="select-xs mr5"
+                          onChange={value => this.handleChangeSearchValue('CMPNY_TYPE', value)}
+                          defaultValue=""
+                          style={{ width: '100%' }}
+                        >
+                          <Option value="" key="ALL">
+                            전체
+                          </Option>
+                          <Option value="REQ" key="REQ">
+                            작업부서(팀)
+                          </Option>
+                          <Option value="WRK" key="WRK">
+                            작업업체
+                          </Option>
+                        </AntdSelect>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -441,6 +416,7 @@ class SafetyWorkList extends Component {
             <AntdTable
               columns={columns}
               dataSource={ingCheckList}
+              pagination={{ pageSize: 20 }}
               footer={() => <div style={{ textAlign: 'center' }}>{`총 ${ingCheckList.length === 0 ? 0 : ingCheckList.length} 건`}</div>}
             />
           </CustomTableStyled>
