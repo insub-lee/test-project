@@ -18,7 +18,6 @@ import FroalaEditorView from 'react-froala-wysiwyg/FroalaEditorView';
 
 import { v4 as UUID } from 'uuid';
 
-
 import { getMeta } from 'utils/request';
 import defaultConfig from './froalaEditorConfig';
 import StyledFroalaEditor from './StyledFroalaEditor';
@@ -71,7 +70,7 @@ class FroalaRichTextEditor extends React.Component {
     config.requestHeaders = {
       META: JSON.stringify(getMeta()),
     };
-    config.imageUploadURL = `/upload/files?conserveYm=29991231&sysId=TPMS&uid=${UUID.create(1).toString()}`;
+    config.imageUploadURL = `/upload/files?conserveYm=29991231&sysId=TPMS&uid=${UUID()}`;
     config.events = {
       'froalaEditor.image.uploaded': function(e, editor, response) {
         // console.debug('# Uploaded', response, JSON.parse(response));

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { v4 as uuid } from 'uuid';
 import styled from 'styled-components';
 
 const DataTableWrap = styled.div`
@@ -46,45 +47,47 @@ const DataTableWrap = styled.div`
   }
 `;
 
-const RegistDataTable = ({ data, total }) => {
-  const width = 100 / (total.labels.length + 1);
+const RegistDataTable = ({ data }) => {
+  console.debug('### RegistDataTable', data);
+  const width = 100 / (data.labels.length + 1);
+
   return (
     <DataTableWrap>
       <table>
         <colgroup>
           <col width={`${width}%`} />
-          {total.labels.map(index => (
+          {data.labels.map(index => (
             <col width={`${width}%`} key={`total_${index}`} />
           ))}
         </colgroup>
         <thead>
           <tr className="bd">
-            <th rowSpan="2">AREA</th>
-            <th colSpan={total.labels.length}>기간</th>
+            <th rowSpan="2">기간</th>
+            <th colSpan={data?.labels.length}>AREA</th>
           </tr>
           <tr className="bd">
-            {total.labels.map((item, index) => (
-              <th key={`total_${index}`}>{item}</th>
+            {data?.labels?.map(item => (
+              <th key={uuid()}>{item}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {data.map(item => (
-            <tr key={item.key}>
+          {data?.datasets?.map(item => (
+            <tr key={uuid()}>
               <td>{item.key}</td>
-              {item.data.map((subItem, index) => (
-                <td key={`${item.key}_${index}`}>{subItem.regcnt}</td>
+              {item.data.map(subItem => (
+                <td key={uuid()}>{subItem.regcnt}</td>
               ))}
             </tr>
           ))}
-          {data.length > 1 && (
-            <tr key={total.key}>
+          {/* {data.length > 1 && (
+            <tr key={uuid()}>
               <td>{total.key}</td>
-              {total.data.map((item, index) => (
-                <td key={`total_${index}`}>{item}</td>
+              {total.data.map(item => (
+                <td key={uuid()}>{item}</td>
               ))}
             </tr>
-          )}
+          )} */}
         </tbody>
       </table>
     </DataTableWrap>
@@ -94,16 +97,14 @@ const RegistDataTable = ({ data, total }) => {
 RegistDataTable.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      key: PropTypes.string,
-      data: PropTypes.arrayOf(PropTypes.number),
+      labels: PropTypes.arrayOf(PropTypes.object),
+      datasets: PropTypes.arrayOf(PropTypes.object),
     }),
   ),
-  total: PropTypes.object,
 };
 
 RegistDataTable.defaultProps = {
-  data: [],
-  total: { labels: [], data: [] },
+  data: [{ labels: [], datasets: [] }],
 };
 
 export default RegistDataTable;

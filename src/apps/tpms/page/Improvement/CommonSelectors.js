@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { v4 as uuid } from 'uuid';
 import styled from 'styled-components';
 
 const StyledDiv = styled.div`
@@ -101,7 +102,7 @@ const StepSelector = ({ level, isDrop, isFinish }) => (
     <span className="line" />
     <ul>
       {steps.map(({ key, txt }) => (
-        <li key={key} className={`${key === level ? 'on' : ''} ${isDrop ? 'drop' : ''} ${isFinish ? 'finish' : ''}`}>
+        <li key={uuid} className={`${key === level ? 'on' : ''} ${isDrop ? 'drop' : ''} ${isFinish ? 'finish' : ''}`}>
           <span className="dot" />
           <span className="txt">{txt}</span>
         </li>
@@ -112,23 +113,23 @@ const StepSelector = ({ level, isDrop, isFinish }) => (
 
 const ProjectLevelSelector = ({ keyValue }) =>
   projectLevel.map(({ key, txt }) => {
-    return <span>{key === keyValue ? txt : ''}</span>;
+    return <span key={uuid()}>{key === keyValue ? txt : ''}</span>;
   });
 
 const ProjectTypeSelector = ({ keyValue }) =>
   projectType.map(item => {
     if (item.key === keyValue) {
-      return <span>{item.txt}</span>;
+      return <span key={uuid()}>{item.txt}</span>;
     }
-    return <span />;
+    return <span key={uuid()} />;
   });
 
 const PerformTypeSelector = ({ keyValue }) =>
   performType.map(item => {
     if (item.key === keyValue) {
-      return <span>{item.txt}</span>;
+      return <span key={uuid()}>{item.txt}</span>;
     }
-    return <span />;
+    return <span key={uuid()} />;
   });
 
 StepSelector.propTypes = {

@@ -50,7 +50,7 @@ export default ({ authInfo, requestQuery, enableFixView, disableFixView }) => {
     const standardDate = stdDate_ ? stdDate_.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
 
     const tableQuery = {
-      type: 'personalTable',
+      type: 'personalReportTable',
       startDate,
       endDate,
       standardDate,
