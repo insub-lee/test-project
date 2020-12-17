@@ -10,6 +10,7 @@ import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal'
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import MsdsSearchList from 'apps/eshs/user/health/workEnv/msdsSearchList'; // 컬럼 사이즈 조절하기 위해
+import { jsonToQueryString } from 'utils/helpers';
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdModal = StyledAntdModal(Modal);
 
@@ -18,16 +19,37 @@ class MsdsHeaderComp extends React.Component {
     super(props);
     this.state = {
       modalVisible: false,
+      code: '',
     };
   }
 
   componentDidMount() {}
 
   handleSearch = () => {
-    const { sagaKey: id, changeViewPage, formData } = this.props;
-    const task_seq = (formData && formData.selectedRowTaskSeq) || 0;
-    if (task_seq) {
-      changeViewPage(id, 3161, task_seq, 'MODIFY');
+    const { sagaKey: id, changeViewPage, getExtraApiData, viewPageData, formData } = this.props;
+
+    const { code } = this.state;
+    if (code) {
+      const apiAry = [
+        {
+          key: 'listDataByCustom',
+          url: `/api/eshs/v1/common/eshsBuilderCustomSearch/${viewPageData?.workSeq}`,
+          type: 'POST',
+          params: { PARAM: { whereString: [`AND W.ITEM_CD = '${code}'`] } },
+        },
+      ];
+
+      getExtraApiData(id, apiAry, () => {
+        const { extraApiData } = this.props;
+        const searchData = extraApiData?.listDataByCustom?.list[0];
+        if (!searchData) return message.info(<MessageContent>검색된 데이터가 없습니다.</MessageContent>);
+        return changeViewPage(id, 3161, searchData?.TASK_SEQ, 'MODIFY');
+      });
+    } else {
+      const task_seq = formData?.selectedRowTaskSeq;
+      if (task_seq) {
+        changeViewPage(id, 3161, task_seq, 'MODIFY');
+      }
     }
   };
 
@@ -49,15 +71,6 @@ class MsdsHeaderComp extends React.Component {
     changeViewPage(id, viewPageData.workSeq, -1, 'INPUT');
   };
 
-  // saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-  //   const { changeViewPage } = this.props;
-  //   console.debug('id ', id);
-  //   console.debug('workSeq ', workSeq);
-  //   console.debug('taskSeq ', taskSeq);
-  //   console.debug('formData ', formData);
-  //   changeViewPage(id, workSeq, taskSeq, 'MODIFY');
-  // };
-
   handleModalVisible = () => {
     const { modalVisible } = this.state;
     if (modalVisible) {
@@ -75,7 +88,7 @@ class MsdsHeaderComp extends React.Component {
           ListCustomButtons={() => null}
           viewType="LIST"
           listMetaSeq={4141}
-          customOnRowClick={record => this.rowClick(record)}
+          customOnRowClick={record => this.setState({ code: '' }, () => this.rowClick(record))}
           CustomListPage={MsdsSearchList}
         />,
       ],
@@ -90,7 +103,7 @@ class MsdsHeaderComp extends React.Component {
 
   render() {
     const { viewPageData, sagaKey: id, changeViewPage, formData } = this.props;
-    const { modalVisible, modalContent } = this.state;
+    const { modalVisible, modalContent, code } = this.state;
     const selectedRowItemCode = (formData && formData.selectedRowItemCode) || (formData && formData.ITEM_CD) || '';
 
     return (
@@ -99,12 +112,13 @@ class MsdsHeaderComp extends React.Component {
           <span>MSDS 코드</span>&nbsp;
           <AntdSearch
             className="ant-search-inline input-search-mid mr5"
-            value={selectedRowItemCode}
+            value={code || selectedRowItemCode}
             style={{ width: 150 }}
-            onClick={this.handleModalVisible}
             onSearch={this.handleModalVisible}
+            onChange={e => this.setState({ code: e?.target?.value })}
+            onPressEnter={() => this.handleSearch()}
           />
-          <StyledButton className="btn-gray btn-sm btn-first" onClick={this.handleSearch}>
+          <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleSearch()}>
             검색
           </StyledButton>
           {viewPageData.viewType === 'INPUT' && (
