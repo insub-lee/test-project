@@ -114,7 +114,7 @@ class SafetyWorkMain extends Component {
     if (!searchSafetyWork.WORK_NO) {
       message.error(<MessageContent>요청하신 작업정보를 찾을 수 없습니다.</MessageContent>);
     }
-    const appLine = response?.safetyWrok?.APP_LINE || [];
+    const appLine = response?.safetyWork?.APP_LINE || [];
     let appvLineText = '';
     if (0 in appLine) {
       appLine.forEach(appv => {
