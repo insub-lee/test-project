@@ -28,6 +28,8 @@ class ModalContents extends React.Component {
     super(props);
     this.state = {
       tempList: [],
+      tConfStatus: '',
+      tConfComments: '',
     };
   }
 
@@ -64,6 +66,17 @@ class ModalContents extends React.Component {
     this.setState(prevState => ({
       tempList: prevState.tempList.map((item, idx) => (idx === 0 ? { ...item, [key]: value } : item)),
     }));
+
+    if (key === 'conf_status') {
+      this.setState({
+        tConfStatus: value,
+      });
+    }
+    if (key === 'conf_comments') {
+      this.setState({
+        tConfComments: value,
+      });
+    }
   };
 
   handleDateChange = date => {
@@ -78,7 +91,19 @@ class ModalContents extends React.Component {
 
   handleUpdate = () => {
     const { sagaKey: id, submitHandlerBySaga, handleModalClose } = this.props;
-    const { tempList } = this.state;
+    const { tempList, tConfStatus, tConfComments } = this.state;
+    const data = this.props.result?.proviceDetails?.result[0];
+    const arrayList = [
+      {
+        site: data?.SITE,
+        req_cd: data?.REQ_CD,
+        hitem_cd: data?.HITEM_CD,
+        dept_cd: data?.DEPT_CD,
+        conf_status: tConfStatus,
+        conf_comments: tConfComments,
+        row_count: 1,
+      },
+    ];
 
     for (let i = 0; i < tempList.length; i += 1) {
       if (tempList[0].conf_status !== '2' && tempList[0].conf_status !== '3') {
@@ -94,14 +119,20 @@ class ModalContents extends React.Component {
       }
     }
 
-    return submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/protection-provide-detail-stockList', tempList, (afterId, res) => {
-      if (res && res.code === 200) {
-        message.info(<MessageContent>수정되었습니다.</MessageContent>);
-        handleModalClose();
-        return this.getDataSource();
-      }
-      return message.info(<MessageContent>수정에 실패하였습니다.</MessageContent>);
-    });
+    return submitHandlerBySaga(
+      id,
+      'PUT',
+      '/api/eshs/v1/common/protection-provide-detail-stockList',
+      tempList.length > 0 ? tempList : arrayList,
+      (afterId, res) => {
+        if (res && res.code === 200) {
+          message.info(<MessageContent>수정되었습니다.</MessageContent>);
+          handleModalClose();
+          return this.getDataSource();
+        }
+        return message.info(<MessageContent>수정에 실패하였습니다.</MessageContent>);
+      },
+    );
   };
 
   columns = [
