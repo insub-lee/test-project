@@ -265,7 +265,7 @@ class SafetyWorkMain extends Component {
       draftId => {
         if (draftId) {
           return this.setState({
-            formData: { ...formData, DRAFT_ID: draftId },
+            formData: { ...formData, DRAFT_ID: draftId, STTLMNT_STATUS: '1' },
             tempProcessRule: {},
           });
         }
