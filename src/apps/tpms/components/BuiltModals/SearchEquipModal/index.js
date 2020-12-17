@@ -203,7 +203,9 @@ class SearchEquipModal extends React.Component {
     // const url = `/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=EQUIPMODEL&currentPage=${pagination.get('current')}&pageSize=${pagination.get('pageSize')}`;
     // const getUrl = `${url}&${queryString}`;
 
-    const url2 = `/api/tpms/v1/common/searchInfo?type=search&currentPage=${pagination.get('current')}&pageSize=${pagination.get('pageSize')}`;
+    const url2 = `/api/tpms/v1/common/searchInfo?type=search&currentPage=${pagination.get(
+      'current',
+    )}&pageSize=${pagination.get('pageSize')}`;
     const getUrl2 = `${url2}&${queryString}`;
     // const ttt = await service.board.get(getUrl2);
 
@@ -305,11 +307,15 @@ class SearchEquipModal extends React.Component {
   }
 
   handleChangeFab(e) {
-    this.setState({ fab: e.target.value }, () => this.fetchData().then(() => this.fetchSelectorKeyno(), this.fetchSelectorModel()));
+    this.setState({ fab: e.target.value }, () =>
+      this.fetchData().then(() => this.fetchSelectorKeyno(), this.fetchSelectorModel()),
+    );
   }
 
   handleChangeArea(e) {
-    this.setState({ area: e.target.value }, () => this.fetchData().then(() => this.fetchSelectorKeyno(), this.fetchSelectorModel()));
+    this.setState({ area: e.target.value }, () =>
+      this.fetchData().then(() => this.fetchSelectorKeyno(), this.fetchSelectorModel()),
+    );
   }
 
   handleChangeModel(e) {
@@ -331,7 +337,9 @@ class SearchEquipModal extends React.Component {
       // console.debug('checkedList', checkedList.toJS());
       if (!isAllChecked) {
         const { data } = prevState;
-        const addDataList = data.toJS().filter(dataItem => checkedList.findIndex(checkedItem => checkedItem.get('keyno') === dataItem.keyno) === -1);
+        const addDataList = data
+          .toJS()
+          .filter(dataItem => checkedList.findIndex(checkedItem => checkedItem.get('keyno') === dataItem.keyno) === -1);
         addDataList.forEach(list => {
           checkedList = checkedList.push(fromJS(list));
         });
@@ -353,7 +361,21 @@ class SearchEquipModal extends React.Component {
   }
 
   render() {
-    const { isOpen, pagination, data, selector, checkedList, fab, area, model, keyno, selectorArea, selectorKeyno, selectorModel, isAllChecked } = this.state;
+    const {
+      isOpen,
+      pagination,
+      data,
+      selector,
+      checkedList,
+      fab,
+      area,
+      model,
+      keyno,
+      selectorArea,
+      selectorKeyno,
+      selectorModel,
+      isAllChecked,
+    } = this.state;
 
     const categories = [
       { value: 'all', text: '전체' },
@@ -401,7 +423,12 @@ class SearchEquipModal extends React.Component {
                     <tr>
                       <th>
                         <div className="checkbox">
-                          <input type="checkbox" id="rootCheckBox" onChange={() => this.handleChangeAll()} checked={isAllChecked} />
+                          <input
+                            type="checkbox"
+                            id="rootCheckBox"
+                            onChange={() => this.handleChangeAll()}
+                            checked={isAllChecked}
+                          />
                           <label htmlFor="rootCheckBox">
                             <span />
                           </label>
@@ -412,7 +439,9 @@ class SearchEquipModal extends React.Component {
                           <select name="fab" id="fab" onChange={this.handleChangeFab} value={fab}>
                             <option value="all">FAB - 전체</option>
                             {selector.map(option => (
-                              <option key={`${option.get('cd')}`} value={option.get('cd')}>{`FAB - ${option.get('cdnm')}`}</option>
+                              <option key={`${option.get('cd')}`} value={option.get('cd')}>{`FAB - ${option.get(
+                                'cdnm',
+                              )}`}</option>
                             ))}
                           </select>
                         </div>
@@ -422,7 +451,9 @@ class SearchEquipModal extends React.Component {
                           <select name="area" id="area" onChange={this.handleChangeArea} value={area}>
                             <option value="all">AREA - 전체</option>
                             {selectorArea.map(option => (
-                              <option key={`${option.get('cd')}`} value={option.get('cd')}>{`AREA - ${option.get('cdnm')}`}</option>
+                              <option key={`${option.get('cd')}`} value={option.get('cd')}>{`AREA - ${option.get(
+                                'cdnm',
+                              )}`}</option>
                             ))}
                           </select>
                         </div>
@@ -432,7 +463,9 @@ class SearchEquipModal extends React.Component {
                           <select name="equipModel" id="equipModel" onChange={this.handleChangeModel} value={model}>
                             <option value="all">EquipModel - 전체</option>
                             {selectorModel.map(option => (
-                              <option key={`${option.get('cd')}`} value={option.get('cd')}>{`EquipModel - ${option.get('cdnm')}`}</option>
+                              <option key={`${option.get('cd')}`} value={option.get('cd')}>{`EquipModel - ${option.get(
+                                'cdnm',
+                              )}`}</option>
                             ))}
                           </select>
                         </div>
@@ -442,7 +475,9 @@ class SearchEquipModal extends React.Component {
                           <select name="equipkeyno" id="equipkeyno" onChange={this.handleChangeKeyno} value={keyno}>
                             <option value="all">EquipkeyNo - 전체</option>
                             {selectorKeyno.map(option => (
-                              <option key={`${option.get('cd')}`} value={option.get('cd')}>{`EquipkeyNo - ${option.get('cdnm')}`}</option>
+                              <option key={`${option.get('cd')}`} value={option.get('cd')}>{`EquipkeyNo - ${option.get(
+                                'cdnm',
+                              )}`}</option>
                             ))}
                           </select>
                         </div>
@@ -468,7 +503,10 @@ class SearchEquipModal extends React.Component {
                               <input
                                 type="checkbox"
                                 id={`${item.get('keyno')}_${item.get('model')}`}
-                                checked={checkedList.findIndex(checkedItem => checkedItem.get('keyno') === item.get('keyno')) > -1}
+                                checked={
+                                  checkedList.findIndex(checkedItem => checkedItem.get('keyno') === item.get('keyno')) >
+                                  -1
+                                }
                                 onChange={() => this.handleCheck(item)}
                               />
                               <label htmlFor={`${item.get('keyno')}_${item.get('model')}`}>
@@ -492,7 +530,13 @@ class SearchEquipModal extends React.Component {
                   </tbody>
                 </table>
                 {/* </Scrollbars> */}
-                <Pagination {...pagination.toJS()} groupSize={10} pageHandler={this.pageHandler} pageSizeHandler={this.pageSizeHandler} fixedViewSize />
+                <Pagination
+                  {...pagination.toJS()}
+                  groupSize={10}
+                  pageHandler={this.pageHandler}
+                  pageSizeHandler={this.pageSizeHandler}
+                  fixedViewSize
+                />
               </div>
               <div className="btn_wrap">
                 <Button type="button" color="primary" onClick={this.sendSelectedKeys}>

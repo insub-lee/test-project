@@ -92,7 +92,7 @@ class GroupAndTeam extends React.Component {
 
     // service로 보낼 파라미터
     const tempRequestQuery = {
-      type: 'personalTable',
+      type: 'personalReportTable',
       startDate,
       endDate,
       stdDate,
