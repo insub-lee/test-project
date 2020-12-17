@@ -82,6 +82,7 @@ class SafetyWorkMain extends Component {
         EXM_EMP_NM: '', // 검토회사 담당자명
         FINAL_OK_EMP_NM: '', // 최종결재자 사번
         REQUEST_DT: moment().format('YYYY-MM-DD'),
+        STTLMNT_STATUS: '0',
       },
       processRule: {},
       tempProcessRule: {},
@@ -674,6 +675,7 @@ class SafetyWorkMain extends Component {
           REQ_SUPERVISOR_EMP_NM: '',
           EXM_EMP_NM: '',
           FINAL_OK_EMP_NM: '',
+          STTLMNT_STATUS: '0',
         },
       },
       () => message.success(<MessageContent>안전작업 정보를 삭제하였습니다.</MessageContent>),
@@ -896,7 +898,7 @@ class SafetyWorkMain extends Component {
                 안전작업 관리 계획서(샘플)
               </StyledButton>
               {/* 문서상태 저장,  신청부결 상태 결재선 지정, 상신가능 */}
-              {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO && (
+              {formData?.WORK_NO && (formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO && (
                 <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('workProcess', true)}>
                   결재선
                 </StyledButton>
