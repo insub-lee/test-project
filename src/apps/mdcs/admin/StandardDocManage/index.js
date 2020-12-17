@@ -59,6 +59,7 @@ class List extends Component {
     spinningOn();
     getCallDataHandler(sagaKey, apiAry, () => {
       spinningOff();
+      this.setState({ selectedRowKeys: [] });
     });
   };
 
@@ -94,7 +95,7 @@ class List extends Component {
           Modal.confirm({
             title: confirmMsg,
             icon: <ExclamationCircleOutlined />,
-            okText: '변경',
+            okText: '확인',
             cancelText: '취소',
             onOk() {
               spinningOn();
@@ -113,6 +114,45 @@ class List extends Component {
           message.info(<MessageContent>한명만 선택해 주세요.</MessageContent>);
         }
       }
+    });
+  };
+
+  standardDocObs = () => {
+    const { selectedRowKeys } = this.state;
+    const { result } = this.props;
+    const { sagaKey, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
+
+    if (selectedRowKeys.length === 0) {
+      message.info(<MessageContent>폐기할 문서를 선택해 주세요.</MessageContent>);
+      return;
+    }
+
+    const docList = result.standardDocList.list.filter(item => selectedRowKeys.includes(item.TASK_SEQ));
+    const confirmMsg = `폐기된 문서는 되돌릴 수 없습니다.  선택한 문서를 폐기하시겠습니까?[${docList.length}개]`;
+    const submitData = {
+      PARAM: {
+        docList,
+      },
+    };
+
+    const callBackFunc = this.getList;
+    Modal.confirm({
+      title: confirmMsg,
+      icon: <ExclamationCircleOutlined />,
+      okText: '확인',
+      cancelText: '취소',
+      onOk() {
+        spinningOn();
+        submitHandlerBySaga(sagaKey, 'DELETE', `/api/mdcs/v1/common/standardDocList`, submitData, (id, res) => {
+          spinningOff();
+          if (res && res.result === selectedRowKeys.length) {
+            message.success(<MessageContent>문서를 폐기하였습니다.</MessageContent>);
+            callBackFunc();
+          } else {
+            message.error(<MessageContent>문서를 폐기처리하는데 실패하였습니다.</MessageContent>);
+          }
+        });
+      },
     });
   };
 
@@ -241,6 +281,9 @@ class List extends Component {
               <StyledButton className="btn-primary btn-sm mr5" onClick={this.changeDrafter}>
                 기안자 변경
               </StyledButton>
+              <StyledButton className="btn-primary btn-sm mr5" onClick={this.standardDocObs}>
+                표준문서 폐기
+              </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
           <div style={{ width: '100%', height: '30px', textAlign: 'right' }}>
@@ -260,7 +303,7 @@ class List extends Component {
             }
             columns={this.colunms}
             bordered
-            pagination={{ pageSize: this.state?.pageSize }}
+            pagination={{ pageSize: this.state.pageSize }}
             onRow={record => ({
               onClick: () => this.onRowClick(record),
             })}
