@@ -102,7 +102,7 @@ const StepSelector = ({ level, isDrop, isFinish }) => (
     <span className="line" />
     <ul>
       {steps.map(({ key, txt }) => (
-        <li key={uuid} className={`${key === level ? 'on' : ''} ${isDrop ? 'drop' : ''} ${isFinish ? 'finish' : ''}`}>
+        <li key={uuid()} className={`${key === level ? 'on' : ''} ${isDrop ? 'drop' : ''} ${isFinish ? 'finish' : ''}`}>
           <span className="dot" />
           <span className="txt">{txt}</span>
         </li>
