@@ -89,13 +89,11 @@ class ModalContents extends React.Component {
         return message.info(<MessageContent>출고일을 입력해야 합니다.</MessageContent>);
       }
 
-      /*
-      if (tempList[i].gi_qty !== 0 && chk_stock.value =="chk" && tempList[i].gi_qty - tempList[i].stock_qty > 0) {
+      if (tempList[i].gi_qty !== 0 && tempList[i].gi_qty - tempList[i].stock_qty > 0) {
         return message.info(<MessageContent>재고가 출고량보다 작습니다.</MessageContent>);
       }
-      */
     }
-    
+
     return submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/protection-provide-detail-stockList', tempList, (afterId, res) => {
       if (res && res.code === 200) {
         message.info(<MessageContent>수정되었습니다.</MessageContent>);
