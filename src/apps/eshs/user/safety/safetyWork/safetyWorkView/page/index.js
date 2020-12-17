@@ -29,6 +29,7 @@ class SafetyWorkMain extends Component {
       modalType: '',
       modalTitle: '',
       modalVisible: false,
+      appvLineText: '',
       formData: {
         WORK_NO: '', //                 작업번호        (String, 13)
         TITLE: '', //                   작업명          (String, 100)
@@ -107,9 +108,19 @@ class SafetyWorkMain extends Component {
   };
 
   getSafetyWorkCallback = (id, response) => {
-    const searchSafetyWork = (response && response.safetyWork) || {};
+    const searchSafetyWork = response?.safetyWork || {};
+    console.debug('res ', response);
+
     if (!searchSafetyWork.WORK_NO) {
       message.error(<MessageContent>요청하신 작업정보를 찾을 수 없습니다.</MessageContent>);
+    }
+    const appLine = response?.safetyWrok?.APP_LINE || [];
+    let appvLineText = '';
+    if (0 in appLine) {
+      appLine.forEach(appv => {
+        if (appv.STEP === 1) appvLineText += `${appv.PROCESS_NAME}:담당:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
+        else appvLineText += `, ${appv.STEP - 1}차:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
+      });
     }
     this.setState({
       formData: {
@@ -119,6 +130,7 @@ class SafetyWorkMain extends Component {
         SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
         UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
       },
+      appvLineText,
     });
   };
 
@@ -157,22 +169,27 @@ class SafetyWorkMain extends Component {
   };
 
   render() {
-    const { modalType, modalTitle, modalVisible, formData } = this.state;
+    const { modalType, modalTitle, modalVisible, formData, appvLineText } = this.state;
     return (
       <>
         <StyledCustomSearchWrapper>
-          <div className="search-input-area">
-            <span className="text-label">작업번호</span>
-            <AntdSearch
-              className="ant-search-inline input-search-mid mr5"
-              onClick={() => this.handleModal('safetyWork', true)}
-              onSearch={() => this.handleModal('safetyWork', true)}
-              value={formData.WORK_NO}
-              style={{ width: '200px', marginRight: '10px' }}
-            />
-            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
-              검색
-            </StyledButton>
+          <div style={{ height: '30px' }}>
+            <div className="search-input-area" style={{ float: 'left' }}>
+              <span className="text-label">작업번호</span>
+              <AntdSearch
+                className="ant-search-inline input-search-mid mr5"
+                onClick={() => this.handleModal('safetyWork', true)}
+                onSearch={() => this.handleModal('safetyWork', true)}
+                value={formData.WORK_NO}
+                style={{ width: '200px', marginRight: '10px' }}
+              />
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
+                검색
+              </StyledButton>
+            </div>
+            <div style={{ float: 'right' }}>
+              <span className="text-label">{appvLineText}</span>
+            </div>
           </div>
         </StyledCustomSearchWrapper>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">

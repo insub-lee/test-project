@@ -202,52 +202,6 @@ class SafetyWorkMain extends Component {
       },
       spinningOff,
     );
-    // return getProcessRule(PRC_ID, prcRule => {
-    //   const { DRAFT_PROCESS_STEP } = prcRule;
-
-    //   DRAFT_PROCESS_STEP.forEach(step => {
-    //     switch (step?.STEP) {
-    //       case 3:
-    //         // 운전부서 담당자
-    //         if (searchSafetyWork?.APP_LINE?.EXM_USER_ID)
-    //           step.APPV_MEMBER = [
-    //             {
-    //               USER_ID: searchSafetyWork?.APP_LINE?.EXM_USER_ID,
-    //               DEPT_ID: searchSafetyWork?.APP_LINE?.EXM_DEPT_ID,
-    //               DEPT_NAME_KOR: searchSafetyWork?.APP_LINE?.EXM_DEPT_NAME_KOR,
-    //               NAME_KOR: searchSafetyWork?.APP_LINE?.EXM_NAME_KOR,
-    //             },
-    //           ];
-    //         break;
-    //       case 4:
-    //         // 운전부서 검토자
-    //         if (searchSafetyWork?.APP_LINE?.FINAL_USER_ID)
-    //           step.APPV_MEMBER = [
-    //             {
-    //               USER_ID: searchSafetyWork?.APP_LINE?.FINAL_USER_ID,
-    //               DEPT_ID: searchSafetyWork?.APP_LINE?.FINAL_DEPT_ID,
-    //               DEPT_NAME_KOR: searchSafetyWork?.APP_LINE?.FINAL_DEPT_NAME_KOR,
-    //               NAME_KOR: searchSafetyWork?.APP_LINE?.FINAL_NAME_KOR,
-    //             },
-    //           ];
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //   });
-
-    //   return this.setState({
-    //     formData: {
-    //       ...searchSafetyWork,
-    //       FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
-    //       REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
-    //       SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
-    //       UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
-    //     },
-    //     processRule: { ...prcRule },
-    //     tempProcessRule: {},
-    //   });
-    // });
   };
 
   saveProcessRule = () => {
@@ -469,7 +423,7 @@ class SafetyWorkMain extends Component {
           WORK_NO: record.WORK_NO,
         },
       },
-      () => this.handleGetSafetyWork,
+      () => this.handleGetSafetyWork(record.WORK_NO),
     );
   };
 
