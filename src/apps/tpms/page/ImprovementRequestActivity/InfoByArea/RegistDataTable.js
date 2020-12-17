@@ -49,7 +49,7 @@ const DataTableWrap = styled.div`
 
 const RegistDataTable = ({ data }) => {
   console.debug('### RegistDataTable', data);
-  const width = 100 / (data.labels.length + 1);
+  const width = 100 / (data?.labels?.length + 1);
 
   return (
     <DataTableWrap>
@@ -62,11 +62,11 @@ const RegistDataTable = ({ data }) => {
         </colgroup>
         <thead>
           <tr className="bd">
-            <th rowSpan="2">기간</th>
-            <th colSpan={data?.labels.length}>AREA</th>
+            <th rowSpan="2">AREA</th>
+            <th colSpan={data?.labels.length}>기간</th>
           </tr>
           <tr className="bd">
-            {data?.labels?.map(item => (
+            {data?.datasets?.map(item => (
               <th key={uuid()}>{item}</th>
             ))}
           </tr>
