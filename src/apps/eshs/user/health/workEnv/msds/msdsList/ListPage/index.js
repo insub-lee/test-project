@@ -48,7 +48,7 @@ class ListPage extends Component {
   }
 
   componentDidMount = () => {
-    const { workInfo, changeViewPage } = this.props;
+    const { sagaKey, workInfo, changeViewPage, changeSearchData } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
     if (workInfo && workInfo.OPT_INFO) {
@@ -58,6 +58,7 @@ class ListPage extends Component {
       });
       this.setState({ isMultiDelete, isRowNo });
     }
+    changeSearchData(sagaKey, 'andSearch_1', 'AND W.SITE = 318::varchar');
   };
 
   // state값 reset테스트
@@ -221,7 +222,7 @@ class ListPage extends Component {
     this.setState({
       searchType,
     });
-    const andSearch2 = searchType && searchText ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1';
+    const andSearch2 = searchType && searchText ? `AND ${searchType} ILIKE '%${searchText}%'` : 'AND 1 = 1';
     changeSearchData(sagaKey, 'andSearch_2', andSearch2);
   };
 
@@ -231,7 +232,7 @@ class ListPage extends Component {
     this.setState({
       searchText,
     });
-    const andSearch2 = searchType && searchText ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1';
+    const andSearch2 = searchType && searchText ? `AND ${searchType} ILIKE '%${searchText}%'` : 'AND 1 = 1';
     changeSearchData(sagaKey, 'andSearch_2', andSearch2);
   };
 
@@ -280,7 +281,14 @@ class ListPage extends Component {
             return (
               <StyledCustomSearchWrapper className="search-wrapper-inline">
                 <div>
-                  <AntdSelect style={{ width: 120 }} allowClear className="select-sm mr5" onChange={this.handleSearchSite} placeholder="지역전체">
+                  <AntdSelect
+                    style={{ width: 120 }}
+                    defaultValue="318"
+                    allowClear
+                    className="select-sm mr5"
+                    onChange={this.handleSearchSite}
+                    placeholder="지역전체"
+                  >
                     <Option value="317">청주</Option>
                     <Option value="318">구미</Option>
                   </AntdSelect>
@@ -299,6 +307,7 @@ class ListPage extends Component {
                     allowClear
                     className="ant-input-sm ant-input-inline mr5"
                     onChange={e => this.handleOnChangeSearch(e.target.value)}
+                    onPressEnter={() => getListData(id, workSeq)}
                   />
                   <AntdSearchInput
                     className="input-search-sm ant-search-inline mr5"
