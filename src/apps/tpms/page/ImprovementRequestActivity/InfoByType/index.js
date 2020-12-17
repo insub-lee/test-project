@@ -33,7 +33,7 @@ const InfoByType = () => {
     registData,
     total,
     registTrendInfo,
-    action: { handleReportDown, enableExpandedView, disableExpandedView },
+    action: { handleReportDown, submitData, enableExpandedView, disableExpandedView },
   } = useHooks();
   return (
     <div className="tpms-view">
@@ -41,7 +41,7 @@ const InfoByType = () => {
         title="개선요청활동(생산)"
         nav={nav}
         mainbody={
-          <StyledCommonForm onSubmit={() => {}} autoComplete="off">
+          <StyledCommonForm onSubmit={submitData} autoComplete="off">
             <ul className="sub_form small2">
               <li className="half fl">
                 <label className="title" htmlFor="location">
@@ -77,11 +77,11 @@ const InfoByType = () => {
               <Button type="submit" color="primary">
                 검색
               </Button>
-              {viewType !== 'none' && (
+              {/* {viewType !== 'none' && (
                 <Button type="button" color="default" onClick={handleReportDown}>
                   엑셀받기
                 </Button>
-              )}
+              )} */}
             </div>
           </StyledCommonForm>
         }
@@ -89,8 +89,17 @@ const InfoByType = () => {
           <>
             {viewType === 'action' && (
               <>
-                <SubActionDataBody enableFixView={enableExpandedView} disableFixView={disableExpandedView} viewFilter={viewFilter} actionData={actionData} />
-                <SubActionChartBody enableFixView={enableExpandedView} disableFixView={disableExpandedView} actionTrendInfo={actionTrendInfo} />
+                <SubActionDataBody
+                  enableFixView={enableExpandedView}
+                  disableFixView={disableExpandedView}
+                  viewFilter={viewFilter}
+                  actionData={actionData}
+                />
+                <SubActionChartBody
+                  enableFixView={enableExpandedView}
+                  disableFixView={disableExpandedView}
+                  actionTrendInfo={actionTrendInfo}
+                />
               </>
             )}
             {viewType === 'registration' && (
@@ -102,7 +111,11 @@ const InfoByType = () => {
                   registData={registData}
                   totalData={total}
                 />
-                <SubRegistChartBody enableFixView={enableExpandedView} disableFixView={disableExpandedView} registTrendInfo={registTrendInfo} />
+                <SubRegistChartBody
+                  enableFixView={enableExpandedView}
+                  disableFixView={disableExpandedView}
+                  registTrendInfo={registTrendInfo}
+                />
               </>
             )}
           </>

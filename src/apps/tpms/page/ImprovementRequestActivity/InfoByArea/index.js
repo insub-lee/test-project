@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { v4 as uuid } from 'uuid';
 import GlobalStyle from '../../../components/GlobalStyle';
 import TitleContainerWithSub from '../../../components/TitleContainerWithSub';
 import DatePicker from '../../../components/FormPreview/DatePicker';
@@ -53,8 +54,12 @@ const InfoByArea = () => {
                   id="location"
                   // onChange={this.handleChangeFilter}
                 >
+                  <option key={uuid()} value="">
+                    ALL
+                  </option>
+
                   {location.map(option => (
-                    <option key={option.value} value={option.value}>
+                    <option key={uuid()} value={option.value}>
                       {option.text}
                     </option>
                   ))}
@@ -87,11 +92,11 @@ const InfoByArea = () => {
               <Button type="submit" color="primary">
                 검색
               </Button>
-              {viewType !== 'none' && (
+              {/* {viewType !== 'none' && (
                 <Button type="button" color="default" onClick={handleReportDown}>
                   엑셀받기
                 </Button>
-              )}
+              )} */}
             </div>
           </StyledCommonForm>
         }
@@ -99,8 +104,17 @@ const InfoByArea = () => {
           <>
             {viewType === 'action' && (
               <>
-                <SubActionDataBody enableFixView={enableExpandedView} disableFixView={disableExpandedView} viewFilter={viewFilter} actionData={actionData} />
-                <SubActionChartBody enableFixView={enableExpandedView} disableFixView={disableExpandedView} actionTrendInfo={actionTrendInfo} />
+                <SubActionDataBody
+                  enableFixView={enableExpandedView}
+                  disableFixView={disableExpandedView}
+                  viewFilter={viewFilter}
+                  actionData={actionData}
+                />
+                <SubActionChartBody
+                  enableFixView={enableExpandedView}
+                  disableFixView={disableExpandedView}
+                  actionTrendInfo={actionTrendInfo}
+                />
               </>
             )}
             {viewType === 'registration' && (
@@ -112,7 +126,11 @@ const InfoByArea = () => {
                   registData={registData}
                   totalData={total}
                 />
-                <SubRegistChartBody enableFixView={enableExpandedView} disableFixView={disableExpandedView} registTrendInfo={registTrendInfo} />
+                <SubRegistChartBody
+                  enableFixView={enableExpandedView}
+                  disableFixView={disableExpandedView}
+                  registTrendInfo={registTrendInfo}
+                />
               </>
             )}
           </>
