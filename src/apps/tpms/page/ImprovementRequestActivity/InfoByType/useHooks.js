@@ -100,7 +100,6 @@ const useHooks = () => {
         data: {
           type: 'stackedBarChartByActionAndType',
           area,
-          list: area === '' ? location.map(({ text }) => text) : null,
           startDate,
           endDate,
         },
