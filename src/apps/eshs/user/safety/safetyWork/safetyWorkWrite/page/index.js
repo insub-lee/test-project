@@ -578,12 +578,14 @@ class SafetyWorkMain extends Component {
 
   // 작업 저장 콜백
   safetyWorkUpdateCallback = (id, response) => {
+    const { safetyWorkViewPageFunc } = this.props;
     const { result } = response;
     if (result && result === 'fail') {
       message.error(<MessageContent>안전작업 정보 수정에 실패하였습니다.</MessageContent>);
       return;
     }
     message.success(<MessageContent>안전작업 정보를 수정하였습니다.</MessageContent>);
+    if (safetyWorkViewPageFunc) safetyWorkViewPageFunc('VIEW');
   };
 
   // 작업 삭제 콜백
@@ -790,6 +792,8 @@ class SafetyWorkMain extends Component {
       prcId: PRC_ID,
       profile: { EMP_NO },
       isWorkFlow,
+      authority,
+      safetyWorkViewPageFunc,
     } = this.props;
     const eshsSwtbEquip = (result && result.getSwtbEquipList && result.getSwtbEquipList.list) || [];
     return (
@@ -825,18 +829,29 @@ class SafetyWorkMain extends Component {
                   <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('ADD')}>
                     작업번호 신규 생성
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('UPDATE')}>
-                    수정
-                  </StyledButton>
+                  {/* 문서가 결재중이 아닐경우, 등록자와 접근자의 EMP_NO가 같은경우 수정 버튼 노출,  결재프로세스를 탄경우는 특정 권한이 있을경우만 노출 */}
+                  {formData?.STTLMNT_STATUS === '0' && formData?.REQ_EMP_NO === EMP_NO ? (
+                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('UPDATE')}>
+                      수정
+                    </StyledButton>
+                  ) : (
+                    authority.includes('U') && (
+                      <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('UPDATE')}>
+                        수정
+                      </StyledButton>
+                    )
+                  )}
                   {/* 문서상태 저장,  신청부결 상태 결재선 지정, 상신가능 */}
                   {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO && (
                     <StyledButton className="btn-primary btn-sm btn-first" onClick={this.saveProcessRule}>
                       상신
                     </StyledButton>
                   )}
-                  <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.submitFormData('DELETE')}>
-                    삭제
-                  </StyledButton>
+                  {formData?.STTLMNT_STATUS === '0' && !safetyWorkViewPageFunc && (
+                    <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.submitFormData('DELETE')}>
+                      삭제
+                    </StyledButton>
+                  )}
                 </>
               )}
               <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174228)}>
@@ -1008,11 +1023,18 @@ SafetyWorkMain.propTypes = {
   // type - object
   result: PropTypes.object,
   profile: PropTypes.object,
+  // type - array
+  authority: PropTypes.array,
   // type - func
   getCallDataHandler: PropTypes.func,
   submitHandlerBySaga: PropTypes.func,
   getCallDataHandlerReturnRes: PropTypes.func,
   isWorkFlow: PropTypes.bool,
+  safetyWorkViewPageFunc: PropTypes.func,
+};
+
+SafetyWorkMain.defaultProps = {
+  authority: ['V'],
 };
 
 export default SafetyWorkMain;
