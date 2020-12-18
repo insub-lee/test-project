@@ -82,6 +82,7 @@ class SafetyWorkMain extends Component {
         EXM_EMP_NM: '', // 검토회사 담당자명
         FINAL_OK_EMP_NM: '', // 최종결재자 사번
         REQUEST_DT: moment().format('YYYY-MM-DD'),
+        STTLMNT_STATUS: '0',
       },
       processRule: {},
       tempProcessRule: {},
@@ -151,7 +152,8 @@ class SafetyWorkMain extends Component {
 
   handleGetSafetyWork = workNo => {
     const { formData } = this.state;
-    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const { sagaKey: id, getCallDataHandlerReturnRes, spinningOn, spinningOff } = this.props;
+    spinningOn();
     const type = 'searchOne';
     const searchWorkNo = workNo || formData?.WORK_NO || '';
 
@@ -161,6 +163,7 @@ class SafetyWorkMain extends Component {
       url: `/api/eshs/v1/common/safetyWork?type=${type}&keyword=${searchWorkNo}`,
     };
     if (!searchWorkNo) {
+      spinningOff();
       message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 검색하십시오.</MessageContent>);
       return;
     }
@@ -168,80 +171,37 @@ class SafetyWorkMain extends Component {
   };
 
   getSafetyWorkCallback = () => {
-    const { result, prcId: PRC_ID } = this.props;
-
+    const { result, prcId: PRC_ID, spinningOff } = this.props;
     const searchSafetyWork = result?.getSafetyWork?.safetyWork || {};
 
     if (!searchSafetyWork.WORK_NO) {
+      spinningOff();
       return message.error(<MessageContent>요청하신 작업정보를 찾을 수 없습니다.</MessageContent>);
     }
     const appLine = searchSafetyWork?.APP_LINE || [];
     let appvLineText = '';
-    if (1 in appLine) {
+    if (0 in appLine) {
       appLine.forEach(appv => {
         if (appv.STEP === 1) appvLineText += `${appv.PROCESS_NAME}:담당:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
-        if (appv.STEP === 2) appvLineText += `, 1차:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME}) `;
+        else appvLineText += `, ${appv.STEP - 1}차:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
       });
     }
 
-    return this.setState({
-      formData: {
-        ...searchSafetyWork,
-        FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
-        REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
-        SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
-        UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
+    return this.setState(
+      {
+        formData: {
+          ...searchSafetyWork,
+          FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
+          REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
+          SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
+          UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
+        },
+        processRule: {},
+        tempProcessRule: {},
+        appvLineText,
       },
-      processRule: {},
-      tempProcessRule: {},
-      appvLineText,
-    });
-    // return getProcessRule(PRC_ID, prcRule => {
-    //   const { DRAFT_PROCESS_STEP } = prcRule;
-
-    //   DRAFT_PROCESS_STEP.forEach(step => {
-    //     switch (step?.STEP) {
-    //       case 3:
-    //         // 운전부서 담당자
-    //         if (searchSafetyWork?.APP_LINE?.EXM_USER_ID)
-    //           step.APPV_MEMBER = [
-    //             {
-    //               USER_ID: searchSafetyWork?.APP_LINE?.EXM_USER_ID,
-    //               DEPT_ID: searchSafetyWork?.APP_LINE?.EXM_DEPT_ID,
-    //               DEPT_NAME_KOR: searchSafetyWork?.APP_LINE?.EXM_DEPT_NAME_KOR,
-    //               NAME_KOR: searchSafetyWork?.APP_LINE?.EXM_NAME_KOR,
-    //             },
-    //           ];
-    //         break;
-    //       case 4:
-    //         // 운전부서 검토자
-    //         if (searchSafetyWork?.APP_LINE?.FINAL_USER_ID)
-    //           step.APPV_MEMBER = [
-    //             {
-    //               USER_ID: searchSafetyWork?.APP_LINE?.FINAL_USER_ID,
-    //               DEPT_ID: searchSafetyWork?.APP_LINE?.FINAL_DEPT_ID,
-    //               DEPT_NAME_KOR: searchSafetyWork?.APP_LINE?.FINAL_DEPT_NAME_KOR,
-    //               NAME_KOR: searchSafetyWork?.APP_LINE?.FINAL_NAME_KOR,
-    //             },
-    //           ];
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //   });
-
-    //   return this.setState({
-    //     formData: {
-    //       ...searchSafetyWork,
-    //       FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
-    //       REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
-    //       SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
-    //       UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
-    //     },
-    //     processRule: { ...prcRule },
-    //     tempProcessRule: {},
-    //   });
-    // });
+      spinningOff,
+    );
   };
 
   saveProcessRule = () => {
@@ -259,7 +219,7 @@ class SafetyWorkMain extends Component {
       draftId => {
         if (draftId) {
           return this.setState({
-            formData: { ...formData, DRAFT_ID: draftId },
+            formData: { ...formData, DRAFT_ID: draftId, STTLMNT_STATUS: '1' },
             tempProcessRule: {},
           });
         }
@@ -463,7 +423,7 @@ class SafetyWorkMain extends Component {
           WORK_NO: record.WORK_NO,
         },
       },
-      () => this.handleGetSafetyWork,
+      () => this.handleGetSafetyWork(record.WORK_NO),
     );
   };
 
@@ -669,6 +629,7 @@ class SafetyWorkMain extends Component {
           REQ_SUPERVISOR_EMP_NM: '',
           EXM_EMP_NM: '',
           FINAL_OK_EMP_NM: '',
+          STTLMNT_STATUS: '0',
         },
       },
       () => message.success(<MessageContent>안전작업 정보를 삭제하였습니다.</MessageContent>),
@@ -868,7 +829,7 @@ class SafetyWorkMain extends Component {
                     수정
                   </StyledButton>
                   {/* 문서상태 저장,  신청부결 상태 결재선 지정, 상신가능 */}
-                  {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_SUPERVISOR_EMP_NO === EMP_NO && (
+                  {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO && (
                     <StyledButton className="btn-primary btn-sm btn-first" onClick={this.saveProcessRule}>
                       상신
                     </StyledButton>
@@ -891,7 +852,7 @@ class SafetyWorkMain extends Component {
                 안전작업 관리 계획서(샘플)
               </StyledButton>
               {/* 문서상태 저장,  신청부결 상태 결재선 지정, 상신가능 */}
-              {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_SUPERVISOR_EMP_NO === EMP_NO && (
+              {formData?.WORK_NO && (formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO && (
                 <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('workProcess', true)}>
                   결재선
                 </StyledButton>

@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
-import UUID from 'uuid-js';
+import { v4 as UUID } from 'uuid';
+
 import StyledUploader from './StyledUploader';
 import jsonToQueryString from '../../utils/jsonToQueryString';
 import service from './service';
@@ -63,7 +64,7 @@ class Uploader extends React.Component {
       const requestQuery = {
         sysId: process.env.REACT_APP_SYSTEM_ID,
         conserveym: '29991231',
-        uid: `upload-${UUID.create(1).toString()}`,
+        uid: `upload-${UUID()}`,
       };
       const queryString = jsonToQueryString(requestQuery);
       // const url = `/upload/file?${queryString}`;

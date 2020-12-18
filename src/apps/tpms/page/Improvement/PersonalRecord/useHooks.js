@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { useState, useEffect, useMemo, useRef } from 'react';
 import moment from 'moment';
 import request from 'utils/request';
@@ -38,9 +39,9 @@ export const useHooks = ({ authInfo, isAuthLoading, isAuthError }) => {
       { name: 'endDate', value: endDate },
     ],
   };
-  const optionPjtType = {
+  const project_type = {
     label: 'Project Type',
-    name: 'projectType',
+    name: 'project_type',
     values: [
       { label: '전체', value: '', checked: true },
       { label: '개별개선', value: 'G' },
@@ -50,9 +51,8 @@ export const useHooks = ({ authInfo, isAuthLoading, isAuthError }) => {
   };
 
   const fetchSelectorFab = async () => {
-    const url = '/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=FABLIST';
     const { response, error } = await request({
-      url,
+      url: `/api/tpms/v1/common/searchInfo?type=fab`,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
@@ -62,14 +62,12 @@ export const useHooks = ({ authInfo, isAuthLoading, isAuthError }) => {
       const { list } = response;
       setSelectorFab(list);
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };
   const fetchSelectorArea = async () => {
-    const url = '/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=AREALIST';
     const { response, error } = await request({
-      url,
+      url: `/api/tpms/v1/common/searchInfo?type=area`,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
@@ -79,7 +77,6 @@ export const useHooks = ({ authInfo, isAuthLoading, isAuthError }) => {
       const { list } = response;
       setSelectorArea(list);
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };
@@ -88,12 +85,11 @@ export const useHooks = ({ authInfo, isAuthLoading, isAuthError }) => {
     const requestQuery = {
       fab: fab === 'all' ? undefined : fab,
       area: area === 'all' ? undefined : area,
+      type: 'keyno',
     };
-    const queryString = jsonToQueryString(requestQuery);
-    const url = `/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=KEYNOLIST`;
-    const getUrl = `${url}&${queryString}`;
+    const url = `/api/tpms/v1/common/searchInfo?${jsonToQueryString(requestQuery)}`;
     const { response, error } = await request({
-      url: getUrl,
+      url,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
@@ -103,7 +99,6 @@ export const useHooks = ({ authInfo, isAuthLoading, isAuthError }) => {
       const { list } = response;
       setSelectorKeyno(list);
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };
@@ -112,12 +107,11 @@ export const useHooks = ({ authInfo, isAuthLoading, isAuthError }) => {
     const requestQuery = {
       fab: fab === 'all' ? undefined : fab,
       area: area === 'all' ? undefined : area,
+      type: 'model',
     };
-    const queryString = jsonToQueryString(requestQuery);
-    const url = `/apigate/v1/portal/sign/task?sysid=TPMS&mnuid=MODELLIST`;
-    const getUrl = `${url}&${queryString}`;
+    const url = `/api/tpms/v1/common/searchInfo?${jsonToQueryString(requestQuery)}`;
     const { response, error } = await request({
-      url: getUrl,
+      url,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
@@ -127,14 +121,11 @@ export const useHooks = ({ authInfo, isAuthLoading, isAuthError }) => {
       const { list } = response;
       setSelectorModel(list);
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };
 
   useEffect(() => {
-    console.debug('isAuthLoading && isAuthError:', isAuthLoading && isAuthError);
-
     if (!isAuthLoading && !isAuthError) {
       const { empNo: id, usrNm, userRoleInfoList } = authInfo;
       setLabel(`${id} ${usrNm} ${userRoleInfoList.length > 0 ? userRoleInfoList[0].psnm : ''}`);
@@ -155,15 +146,15 @@ export const useHooks = ({ authInfo, isAuthLoading, isAuthError }) => {
     e.preventDefault();
     const data = new FormData(e.target);
     const requestQuery = {};
-    let prjTypeLabel = '';
+    let project_type_label = '';
     let fabLabel = '';
     let areaLabel = '';
     let keynoLabel = '';
     let modelLabel = '';
     data.forEach((value, key) => {
       requestQuery[key] = value;
-      if (key === 'projectType') {
-        prjTypeLabel = document.querySelector(`input[name=${key}]:checked`).parentElement.innerText;
+      if (key === 'project_type') {
+        project_type_label = document.querySelector(`input[name=${key}]:checked`).parentElement.innerText;
       } else if (key === 'fab') {
         const selectObject = document.querySelector(`select[name=${key}]`);
         fabLabel = selectObject.options[selectObject.selectedIndex].text;
@@ -178,14 +169,14 @@ export const useHooks = ({ authInfo, isAuthLoading, isAuthError }) => {
         modelLabel = selectObject.options[selectObject.selectedIndex].text;
       }
     });
-    requestQuery.prjTypeLabel = prjTypeLabel;
+    requestQuery.project_type_label = project_type_label;
     requestQuery.fabLabel = fabLabel;
     requestQuery.areaLabel = areaLabel;
     requestQuery.keynoLabel = keynoLabel;
     requestQuery.modelLabel = modelLabel;
     requestQuery.userInfo = label;
     requestQuery.searchKey = new Date().getTime();
-    
+
     if (requestQuery !== {}) {
       setDetailRequestQuery(requestQuery);
     }
@@ -199,6 +190,8 @@ export const useHooks = ({ authInfo, isAuthLoading, isAuthError }) => {
   const handleChangeEmployee = value => {
     setSelectedOption({ selectedOption: [value], usrid: value.key, label: value.label });
   };
+
+  // todo
   const getUsers = () => {};
 
   return {
@@ -218,7 +211,7 @@ export const useHooks = ({ authInfo, isAuthLoading, isAuthError }) => {
     stdDate,
     detailRequestQuery,
     optionTerm,
-    optionPjtType,
+    project_type,
     action: { submitData, handleChangeEmployee, getUsers, setFab, setArea },
   };
 };

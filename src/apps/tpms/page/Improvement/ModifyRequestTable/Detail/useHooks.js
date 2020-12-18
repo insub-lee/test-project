@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import moment from 'moment';
 
 import request from 'utils/request';
@@ -22,9 +22,12 @@ const dateValidateChecker = momentDates => {
 };
 
 export default ({ info, dpCd = '', callback = () => {} }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [isRedirect, setIsRedirect] = useState(false);
   const [isError, setIsError] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [draftData, setDraftData] = useState({});
 
   const defaultFormData = useMemo(() => {
     const { key_performance_indicators, current_status, goal, apply_target, note } =
@@ -423,7 +426,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: '현상파악 완료일자',
           name: 'step_one_complete_date',
-          value: info?.step_one_complete_date ? moment(info?.step_one_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          value: info?.step_one_complete_date ? moment(info?.step_one_complete_date).format('YYYY.MM.DD') : '',
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -462,7 +465,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: '원인분석 완료일자',
           name: 'step_two_complete_date',
-          value: info?.step_two_complete_date ? moment(info?.step_two_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          value: info?.step_two_complete_date ? moment(info?.step_two_complete_date).format('YYYY.MM.DD') : '',
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -502,7 +505,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: '대책수립 완료일자',
           name: 'step_three_complete-date',
-          value: info?.step_three_complete_date ? moment(info?.step_three_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          value: info?.step_three_complete_date ? moment(info?.step_three_complete_date).format('YYYY.MM.DD') : '',
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -542,7 +545,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: '개선 완료일자',
           name: 'step_four_complete_date',
-          value: info?.step_four_complete_date ? moment(info?.step_four_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          value: info?.step_four_complete_date ? moment(info?.step_four_complete_date).format('YYYY.MM.DD') : '',
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -582,7 +585,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: '완료/공유 완료일자',
           name: 'step_five_complete_date',
-          value: info.step_five_complete_date ? moment(info?.step_five_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          value: info.step_five_complete_date ? moment(info?.step_five_complete_date).format('YYYY.MM.DD') : '',
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -649,12 +652,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
             {
               key: 1,
               label: '',
-              values: (info.member || []).map(item => ({
-                emrno: item.usrid,
-                usrnm: item.usrnm,
-                jgnm: item.jgnm || '',
-                usrid: item.usrid,
-              })),
+              values: info?.sharer || [],
               type: 'MULTI',
             },
           ],
@@ -731,29 +729,40 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
     payload.equipment_model = JSON.stringify(equipment_model);
 
     setIsLoading(true);
-    getProcessRule().then(prcRule => {
-      fillWorkFlowData(prcRule, { ...info, ...payload, rel_type: relTypeHandler({ step: info?.step }) }).then(submitResult => {
-        if (submitResult) {
-          postData({ ...info, ...payload, step: stepHandler({ step: info?.step }) })
-            .then(({ result, req, error }) => {
-              if (result && !error) {
-                alertMessage.notice('제출 완료');
-                setIsRedirect(true);
-                callback();
-              } else {
-                setIsError(true);
-                alertMessage.alert('Server Error');
-                callback();
-              }
-            })
-            .catch(() => {
-              setIsError(true);
-            });
-        }
-      });
-    });
-    setIsLoading(false);
+    setIsSubmit(true);
+    setDraftData(payload);
   };
+
+  useEffect(() => {
+    if (isLoading && isSubmit) {
+      getProcessRule().then(prcRule => {
+        fillWorkFlowData(prcRule, { ...info, ...draftData, rel_type: relTypeHandler({ step: info?.step }) }).then(submitResult => {
+          if (submitResult) {
+            postData({ ...info, ...draftData, step: stepHandler({ step: info?.step }) })
+              .then(({ result, req, error }) => {
+                if (result && !error) {
+                  alertMessage.notice('제출 완료');
+                  setIsRedirect(true);
+                  setIsLoading(false);
+                  callback();
+                } else {
+                  setIsError(true);
+                  setIsLoading(false);
+                  alertMessage.alert('Server Error');
+                  callback();
+                }
+              })
+              .catch(() => {
+                alertMessage.alert('Server Error');
+                setIsLoading(false);
+                setIsError(true);
+                callback();
+              });
+          }
+        });
+      });
+    }
+  }, [isLoading, isSubmit, draftData]);
 
   return {
     isLoading,

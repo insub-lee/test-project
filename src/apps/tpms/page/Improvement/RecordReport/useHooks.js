@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { useState, useEffect, useMemo } from 'react';
 import moment from 'moment';
 
@@ -25,29 +26,29 @@ export default () => {
     e.preventDefault();
     const data = new FormData(e.target);
     const query = {};
-    const prjLvlLabels = [];
-    const prjLvValues = [];
-    let prjTypeLabel = '';
-    let headerLabel = '';
+    let project_level_lable = '';
+    let project_level = '';
+    let project_type_label = '';
+    let headQuarterLabel = '';
+    let headQuarterValue = '';
     data.forEach((value, key) => {
       query[key] = value;
-      let label = '';
-      if (key.includes('projectLevel')) {
-        label = document.querySelector(`input[name=${key}]`).parentElement.innerText;
-        prjLvlLabels.push(label);
-        prjLvValues.push(value);
-      } else if (key === 'projectType') {
-        label = document.querySelector(`input[name=${key}]:checked`).parentElement.innerText;
-        prjTypeLabel = label;
+      if (key.includes('project_level')) {
+        project_level_lable = document.querySelector(`input[name=${key}]`).parentElement.innerText;
+        project_level = value;
+      } else if (key === 'project_type') {
+        project_type_label = document.querySelector(`input[name=${key}]:checked`).parentElement.innerText;
       } else if (key === 'headQuarts') {
-        label = document.querySelector(`select[name=${key}]`).firstElementChild.innerText;
-        headerLabel = label;
+        headQuarterLabel = document.querySelector(`select[name=${key}]`).firstElementChild.innerText;
+        headQuarterValue = value;
       }
     });
-    query.prjLvlLabels = prjLvlLabels.join(',');
-    query.prjTypeLabel = prjTypeLabel;
-    query.headQuartsLabel = headerLabel;
-    query.prjLvValues = prjLvValues.join(',');
+
+    query.project_level_lable = project_level_lable;
+    query.project_type_label = project_type_label;
+    query.project_level = project_level;
+    query.headQuarterLabel = headQuarterLabel;
+    query.headQuarterValue = headQuarterValue;
     setRequestQuery(query);
     setShowDetail(true);
   };
@@ -83,26 +84,30 @@ export default () => {
 
   useEffect(() => {
     const fetchInitData = async () => {
-      const { response, error } = await request({
-        url: '/apigate/v1/portal/sign/report',
+      const { response } = await request({
+        url: '/api/tpms/v1/common/searchInfo?type=headquarter',
         method: 'GET',
-        params: {
-          type: 'usrIdDeptInfo',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
         },
       });
-      return { response, error };
+      return { response };
     };
 
     setIsLoading(true);
 
     fetchInitData()
       .then(({ response, error }) => {
+        console.debug('### response, error', response, error);
         if (response && !error) {
-          const {
-            deptInfo: { dpnm, dpcd },
-          } = response;
-          setHeadQuartsLabel(dpnm);
-          setHeadQuartsValue(dpcd);
+          const { list } = response;
+          if (list.length > 0) {
+            const { dpnm, dpcd } = list[0];
+            setHeadQuartsLabel(dpnm);
+            setHeadQuartsValue(dpcd);
+          } else {
+            alertMessage.alert('Server Error');
+          }
         } else {
           alertMessage.alert('Server Error');
         }

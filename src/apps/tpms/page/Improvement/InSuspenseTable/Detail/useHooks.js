@@ -1,13 +1,17 @@
 /* eslint-disable camelcase */
 import moment from 'moment';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { submitDraft, stepChanger, approverAndRejectHandler } from '../../../../hooks/useWorkFlow';
 
 import alertMessage from '../../../../components/Notification/Alert';
 
 export default ({ info, callback = () => {} }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [darftData, setDraftData] = useState({});
+
   const formRef = useRef();
   const defaultFormData = useMemo(() => {
     const { key_performance_indicators, current_status, goal, apply_target, note } =
@@ -413,7 +417,7 @@ export default ({ info, callback = () => {} }) => {
         option: {
           label: '현상파악 완료일자',
           name: 'step_one_complete_date',
-          value: info?.step_one_complete_date ? moment(info?.step_one_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
+          value: info?.step_one_complete_date ? moment(info?.step_one_complete_date).format('YYYY.MM.DD') : undefined,
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -452,7 +456,7 @@ export default ({ info, callback = () => {} }) => {
         option: {
           label: '원인분석 완료일자',
           name: 'step_two_complete_date',
-          value: info?.step_two_complete_date ? moment(info?.step_two_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
+          value: info?.step_two_complete_date ? moment(info?.step_two_complete_date).format('YYYY.MM.DD') : undefined,
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -491,7 +495,7 @@ export default ({ info, callback = () => {} }) => {
         option: {
           label: '대책수립 완료일자',
           name: 'step_three_complete-date',
-          value: info?.step_three_complete_date ? moment(info?.step_three_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
+          value: info?.step_three_complete_date ? moment(info?.step_three_complete_date).format('YYYY.MM.DD') : undefined,
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -530,7 +534,7 @@ export default ({ info, callback = () => {} }) => {
         option: {
           label: '개선 완료일자',
           name: 'step_four_complete_date',
-          value: info?.step_four_complete_date ? moment(info?.step_four_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
+          value: info?.step_four_complete_date ? moment(info?.step_four_complete_date).format('YYYY.MM.DD') : undefined,
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -569,7 +573,7 @@ export default ({ info, callback = () => {} }) => {
         option: {
           label: '완료/공유 완료일자',
           name: 'step_five_complete_date',
-          value: info.step_five_complete_date ? moment(info?.step_five_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
+          value: info.step_five_complete_date ? moment(info?.step_five_complete_date).format('YYYY.MM.DD') : undefined,
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -667,26 +671,9 @@ export default ({ info, callback = () => {} }) => {
         alertMessage.alert('의견을 작성해 주십시요.');
       } else {
         setIsLoading(true);
-        submitDraft(info, APPV_STATUS, formJson?.opinion, {})
-          .then(() => {
-            const { task_seq, step, rel_type } = info;
-            // eslint-disable-next-line no-nested-ternary
-            stepChanger(task_seq, approverAndRejectHandler({ APPV_STATUS, step, rel_type })).then(({ result, req, error }) => {
-              setIsLoading(false);
-              if (result && !error) {
-                alertMessage.alert(`${APPV_STATUS === 2 ? `승인` : `반려`} 처리 완료`);
-                callback();
-              } else {
-                alertMessage.alert('Server Error');
-                callback();
-              }
-            });
-          })
-          .catch(() => {
-            setIsError(true);
-            alertMessage.alert('Server Error');
-            callback();
-          });
+        setIsSubmit(true);
+        setDraftData({ info, APPV_STATUS, OPINION: formJson?.opinion });
+
         // updateData(payload)
         //   .then(({ response, error }) => {
         //     if (response && !error) {
@@ -703,6 +690,38 @@ export default ({ info, callback = () => {} }) => {
     },
     [formRef],
   );
+  useEffect(() => {
+    const { info: data, APPV_STATUS, OPINION } = darftData;
+    if (isLoading && isSubmit) {
+      submitDraft({ data, APPV_STATUS, OPINION })
+        .then(({ err }) => {
+          if (!err) {
+            const { task_seq, step, rel_type } = data;
+            // eslint-disable-next-line no-nested-ternary
+            stepChanger(task_seq, approverAndRejectHandler({ APPV_STATUS, step, rel_type })).then(({ result, req, error }) => {
+              if (result && !error) {
+                alertMessage.alert(`${APPV_STATUS === 2 ? `승인` : `반려`} 처리 완료`);
+                setIsLoading(false);
+                callback();
+              } else {
+                alertMessage.alert('Server Error');
+                setIsLoading(false);
+                callback();
+              }
+            });
+          } else {
+            alertMessage.alert(`${APPV_STATUS === 2 ? `승인` : `반려`} 처리 실패`);
+            callback();
+          }
+        })
+        .catch(() => {
+          setIsError(true);
+          setIsLoading(false);
+          alertMessage.alert('Server Error');
+          callback();
+        });
+    }
+  }, [isLoading, isSubmit, darftData]);
 
   const accept = () => {
     // console.debug('승인하기');

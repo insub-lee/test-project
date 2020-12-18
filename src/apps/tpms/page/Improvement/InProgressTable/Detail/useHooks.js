@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import moment from 'moment';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import alertMessage from '../../../../components/Notification/Alert';
 import { stepChanger } from '../../../../hooks/useWorkFlow';
 
@@ -8,6 +8,9 @@ import { stepChanger } from '../../../../hooks/useWorkFlow';
 
 export default ({ info, callback = () => {} }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [draftData, setDraftData] = useState({});
+
   const [isError, setIsError] = useState(false);
   const [isDropModalOpen, setIsDropModalOpen] = useState(false);
 
@@ -324,7 +327,9 @@ export default ({ info, callback = () => {} }) => {
               values: [
                 {
                   name: 'cause_analyze_due_date',
-                  value: info?.cause_analyze_due_date ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.cause_analyze_due_date
+                    ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                 },
               ],
@@ -335,7 +340,9 @@ export default ({ info, callback = () => {} }) => {
               values: [
                 {
                   name: 'measure_due_date',
-                  value: info?.measure_due_date ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.measure_due_date
+                    ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                 },
               ],
@@ -346,7 +353,9 @@ export default ({ info, callback = () => {} }) => {
               values: [
                 {
                   name: 'improvement_due_date',
-                  value: info?.improvement_due_date ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.improvement_due_date
+                    ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                 },
               ],
@@ -357,7 +366,9 @@ export default ({ info, callback = () => {} }) => {
               values: [
                 {
                   name: 'completion_due_date',
-                  value: info?.completion_due_date ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
+                  value: info?.completion_due_date
+                    ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD')
+                    : undefined,
                   readOnly: true,
                 },
               ],
@@ -403,7 +414,7 @@ export default ({ info, callback = () => {} }) => {
           option: {
             label: '현상파악 완료일자',
             name: 'step_one_complete_date',
-            value: info?.step_one_complete_date ? moment(info?.step_one_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
+            value: info?.step_one_complete_date ? moment(info?.step_one_complete_date).format('YYYY.MM.DD') : undefined,
             readOnly: true,
           },
         });
@@ -443,7 +454,7 @@ export default ({ info, callback = () => {} }) => {
           option: {
             label: '원인분석 완료일자',
             name: 'step_two_complete_date',
-            value: info?.step_two_complete_date ? moment(info?.step_two_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
+            value: info?.step_two_complete_date ? moment(info?.step_two_complete_date).format('YYYY.MM.DD') : undefined,
             readOnly: true,
           },
           seq: formData.length + 1,
@@ -484,7 +495,9 @@ export default ({ info, callback = () => {} }) => {
           option: {
             label: '대책수립 완료일자',
             name: 'step_three_complete_date',
-            value: info?.step_three_complete_date ? moment(info?.step_three_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
+            value: info?.step_three_complete_date
+              ? moment(info?.step_three_complete_date).format('YYYY.MM.DD')
+              : undefined,
             readOnly: true,
           },
           seq: formData.length + 1,
@@ -525,7 +538,9 @@ export default ({ info, callback = () => {} }) => {
           option: {
             label: '개선 완료일자',
             name: 'step_four_complete_date',
-            value: info?.step_four_complete_date ? moment(info?.step_four_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
+            value: info?.step_four_complete_date
+              ? moment(info?.step_four_complete_date).format('YYYY.MM.DD')
+              : undefined,
             readOnly: true,
           },
           seq: formData.length + 1,
@@ -566,7 +581,9 @@ export default ({ info, callback = () => {} }) => {
           option: {
             label: '완료/공유 완료일자',
             name: 'step_five_complete_date',
-            value: info?.step_five_complete_date ? moment(info?.step_five_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : undefined,
+            value: info?.step_five_complete_date
+              ? moment(info?.step_five_complete_date).format('YYYY.MM.DD')
+              : undefined,
             readOnly: true,
           },
           seq: formData.length + 1,
@@ -658,31 +675,41 @@ export default ({ info, callback = () => {} }) => {
     }
 
     setIsLoading(true);
+    setIsSubmit(true);
+    setDraftData(payload);
+  };
 
-    if (!payload.noUse) {
-      stepChanger(info?.task_seq, info?.step + 1, payload)
-        .then(({ result, req, error}) => {
-          if (result && !error) {
-            alertMessage.notice('저장 완료');
-            callback();
-          } else {
+  useEffect(() => {
+    if (isLoading && isSubmit) {
+      if (!draftData.noUse) {
+        stepChanger(info?.task_seq, info?.step + 1, draftData)
+          .then(({ result, error }) => {
+            if (result && !error) {
+              alertMessage.notice('저장 완료');
+              callback();
+            } else {
+              setIsError(true);
+              setIsLoading(false);
+              setIsSubmit(false);
+              alertMessage.alert('현재 등록 하실 수 있는 상태가 아닙니다.');
+              callback();
+            }
+          })
+          .catch(() => {
             setIsError(true);
+            setIsLoading(false);
+            setIsSubmit(false);
             alertMessage.alert('현재 등록 하실 수 있는 상태가 아닙니다.');
             callback();
-          }
-        })
-        .catch(() => {
-          setIsError(true);
-          alertMessage.alert('현재 등록 하실 수 있는 상태가 아닙니다.');
-          callback();
-        });
-    } else {
-      alertMessage.alert('현재 등록 하실 수 있는 상태가 아닙니다.');
-      callback();
+          });
+      } else {
+        setIsLoading(false);
+        setIsSubmit(false);
+        alertMessage.alert('현재 등록 하실 수 있는 상태가 아닙니다.');
+        callback();
+      }
     }
-
-    setIsLoading(false);
-  };
+  }, [isLoading, isSubmit]);
 
   return {
     isLoading,

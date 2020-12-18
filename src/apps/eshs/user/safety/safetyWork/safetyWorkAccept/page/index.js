@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Input, Modal } from 'antd';
+import { Input, Modal, Popconfirm } from 'antd';
 import { AppstoreTwoTone } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -79,14 +79,13 @@ class SafetyWorkMain extends Component {
 
   componentDidMount = () => {
     const { workNo } = this.props;
-
     if (workNo) return this.handleGetSafetyWork(workNo);
   };
 
   handleGetSafetyWork = workNo => {
     const { formData } = this.state;
     const searchWorkNo = workNo || formData?.WORK_NO || '';
-    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const { sagaKey: id, getCallDataHandlerReturnRes, spinningOn } = this.props;
     const type = 'searchOne';
     const apiInfo = {
       key: 'getSafetyWork',
@@ -97,10 +96,12 @@ class SafetyWorkMain extends Component {
       message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 검색하십시오.</MessageContent>);
       return;
     }
+    spinningOn();
     getCallDataHandlerReturnRes(id, apiInfo, this.getSafetyWorkCallback);
   };
 
   getSafetyWorkCallback = (id, response) => {
+    const { spinningOff } = this.props;
     const searchSafetyWork = response?.safetyWork || {};
     if (!searchSafetyWork.WORK_NO) {
       message.error(<MessageContent>요청하신 작업정보를 찾을 수 없습니다.</MessageContent>);
@@ -110,22 +111,25 @@ class SafetyWorkMain extends Component {
     if (1 in appLine) {
       appLine.forEach(appv => {
         if (appv.STEP === 1) appvLineText += `${appv.PROCESS_NAME}:담당:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
-        if (appv.STEP === 2) appvLineText += `, 1차:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME}) `;
+        else appvLineText += `, ${appv.STEP - 1}차:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
       });
     }
 
-    this.setState({
-      formData: {
-        ...searchSafetyWork,
-        FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
-        REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
-        SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
-        UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
+    this.setState(
+      {
+        formData: {
+          ...searchSafetyWork,
+          FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
+          REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
+          SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
+          UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
+        },
+        processRule: {},
+        tempProcessRule: {},
+        appvLineText,
       },
-      processRule: {},
-      tempProcessRule: {},
-      appvLineText,
-    });
+      spinningOff,
+    );
   };
 
   // 모달 핸들러
@@ -179,27 +183,65 @@ class SafetyWorkMain extends Component {
   };
 
   saveProcessRule = () => {
-    const { relKey, relKey2 } = this.props;
-    const { processRule, formData } = this.state;
+    const { sagaKey: id, relKey, relKey2, prcId, getCallDataHandlerReturnRes, spinningOn, spinningOff } = this.props;
 
-    saveProcessRule(
-      {
-        ...processRule,
-        DRAFT_DATA: {},
-        REL_KEY: relKey,
-        REL_KEY2: formData[relKey2],
-        DRAFT_TITLE: `${formData.TITLE}(작업번호:${formData[relKey2]})`,
-      },
-      draftId => {
-        if (draftId) {
-          return this.setState({
-            formData: { ...formData, DRAFT_ID: draftId },
-            tempProcessRule: {},
+    const { formData } = this.state;
+    const searchWorkNo = formData?.WORK_NO || '';
+    if (!searchWorkNo) return message.error(<MessageContent>작업번호가 없습니다.</MessageContent>);
+
+    spinningOn();
+
+    const type = 'searchFinalEmp';
+    const apiInfo = {
+      key: 'getSafetyWork',
+      type: 'GET',
+      url: `/api/eshs/v1/common/safetyWork?type=${type}&keyword=${searchWorkNo}`,
+    };
+
+    return getCallDataHandlerReturnRes(id, apiInfo, (_, res) => {
+      const finalUser = res?.finalUser;
+
+      return getProcessRule(prcId, prcRule => {
+        prcRule &&
+          prcRule.DRAFT_PROCESS_STEP &&
+          prcRule.DRAFT_PROCESS_STEP.forEach(step => {
+            if (step?.STEP == 2) {
+              step.APPV_MEMBER = [
+                {
+                  USER_ID: finalUser?.USER_ID,
+                  EMP_NO: finalUser?.EMP_NO,
+                  NAME_KOR: finalUser?.NAME_KOR,
+                  DEPT_ID: finalUser?.DEPT_ID,
+                  DEPT_NAME_KOR: finalUser?.DEPT_NAME_KOR,
+                  PSTN_NAME_KOR: finalUser?.PSTN_NAME_KOR,
+                },
+              ];
+            }
           });
-        }
-        return false;
-      },
-    );
+
+        return saveProcessRule(
+          {
+            ...prcRule,
+            DRAFT_DATA: {},
+            REL_KEY: relKey,
+            REL_KEY2: formData[relKey2],
+            DRAFT_TITLE: `${formData.TITLE}(작업번호:${formData[relKey2]})`,
+          },
+          draftId => {
+            if (draftId) {
+              return this.setState(
+                {
+                  formData: { ...formData, DRAFT_ID: draftId },
+                  tempProcessRule: {},
+                },
+                spinningOff,
+              );
+            }
+            return spinningOff();
+          },
+        );
+      });
+    });
   };
 
   render() {
@@ -239,12 +281,9 @@ class SafetyWorkMain extends Component {
               {/* 문서상태 작업부서 승인, 운전부서 부결 결재선 지정, 상신가능 */}
               {(formData?.STTLMNT_STATUS === '2A' || formData?.STTLMNT_STATUS === '4F') && formData?.EXM_EMP_NO === EMP_NO && (
                 <>
-                  <StyledButton className="btn-primary btn-sm btn-first" onClick={this.saveProcessRule}>
-                    상신
-                  </StyledButton>
-                  <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('workProcess', true)}>
-                    결재선
-                  </StyledButton>
+                  <Popconfirm title="상신 하시겠습니까?" onConfirm={this.saveProcessRule} okText="Yes" cancelText="No">
+                    <StyledButton className="btn-primary btn-sm btn-first">상신</StyledButton>
+                  </Popconfirm>
                 </>
               )}
             </StyledButtonWrapper>
@@ -326,6 +365,8 @@ SafetyWorkMain.propTypes = {
   getCallDataHandlerReturnRes: PropTypes.func,
   workNo: PropTypes.string,
   isWorkFlow: PropTypes.bool,
+  relKey: PropTypes.string,
+  relKey2: PropTypes.string,
 };
 
 export default SafetyWorkMain;

@@ -9,7 +9,7 @@ class Excel extends Component {
   }
 
   render() {
-    const { site, dataList } = this.props;
+    const { site, dataList, getListFunc } = this.props;
     const columns = [
       { title: 'Cabinet 번호', width: { wpx: 120 }, style: { font: { sz: '' } } },
       { title: 'Gas Name', width: { wpx: 250 }, style: { font: { sz: '' } } },
@@ -164,6 +164,7 @@ class Excel extends Component {
         btnText="Excel"
         btnSize="btn-sm"
         columns={columns}
+        getListFunc={getListFunc}
         fields={fields}
         listData={dataList}
       />

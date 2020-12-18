@@ -125,7 +125,7 @@
     "superagent": "^5.3.1",
     "tableau-api": "^2.2.3",
     "tempa-xlsx": "^0.8.20",
-    "uuid-js": "^0.7.5",
+    "uuid": "^8.3.2",
     "vertx3-eventbus-client": "^3.9.2",
     "window-size": "^1.1.1",
     "xeicon": "^2.3.3",

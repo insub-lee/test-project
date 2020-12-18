@@ -19,7 +19,7 @@ class MonthUseInfoListTable extends Component {
   }
 
   render() {
-    const { listData, handleModal } = this.props;
+    const { listData, handleModal, setPaginationIdx, paginationIdx, listTotalCnt, pageSize } = this.props;
 
     const renderCell = (data, record, isfixed, useTooltip) => {
       let cellData = data;
@@ -606,13 +606,25 @@ class MonthUseInfoListTable extends Component {
       },
     ];
 
-    return <AntdTable columns={columns} dataSource={listData} pagination={{ pageSize: 20 }} scroll={{ x: 3930 }} />;
+    return (
+      <AntdTable
+        columns={columns}
+        dataSource={listData || []}
+        scroll={{ x: 3930 }}
+        pagination={{ current: paginationIdx, total: listTotalCnt, pageSize }}
+        onChange={pagination => setPaginationIdx(pagination.current)}
+      />
+    );
   }
 }
 
 MonthUseInfoListTable.propTypes = {
   listData: PropTypes.array,
   handleModal: PropTypes.func,
+  setPaginationIdx: PropTypes.func,
+  paginationIdx: PropTypes.number,
+  listTotalCnt: PropTypes.number,
+  pageSize: PropTypes.number,
 };
 
 MonthUseInfoListTable.defaultProps = {

@@ -35,7 +35,7 @@ export default [
     classname: 'flCustom width50',
     option: {
       label: 'Project Type',
-      name: 'projectType',
+      name: 'proejct_type',
       values: [
         { label: '전체', value: '', checked: true },
         { label: '개별개선', value: 'G' },
@@ -49,10 +49,11 @@ export default [
     type: 'checkbox-group',
     classname: 'frCustom marginNone width50',
     option: {
+      props: { isSingle: true },
       label: 'Project Level',
-      name: 'projectLevel',
+      name: 'project_level',
       values: [
-        { label: '본부', value: '1' },
+        { label: '본부', value: 1 },
         { label: '담당', value: 2 },
         { label: '팀', value: 3 },
         { label: 'Part', value: 4 },

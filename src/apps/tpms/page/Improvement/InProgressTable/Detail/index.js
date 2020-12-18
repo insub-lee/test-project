@@ -31,12 +31,13 @@ const Detail = ({ info, callback }) => {
           <input type="hidden" name="task_seq" value={info?.task_seq} />
           <FormView datas={defaultFormData} noBoarder isImprove />
           <BtnWrap>
-            <Button type="submit" color="primary">
+            <Button type="submit" color="primary" disabled={isAuthLoading || isLoading}>
               저장하기
             </Button>
             <Button
               type="button"
               color="default"
+              disabled={isAuthLoading || isLoading}
               onClick={() => {
                 setIsDropModalOpen(true);
               }}

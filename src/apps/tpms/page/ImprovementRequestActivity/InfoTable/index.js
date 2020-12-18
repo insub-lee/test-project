@@ -66,7 +66,16 @@ const InfoTable = () => {
     data,
     pagination,
     isLoading,
-    action: { pageHandler, pageSizeHandler, updateViewCount, regPost, deletePost, modifyPost, replyPost, submitSearchQuery },
+    action: {
+      pageHandler,
+      pageSizeHandler,
+      updateViewCount,
+      regPost,
+      deletePost,
+      modifyPost,
+      replyPost,
+      submitSearchQuery,
+    },
   } = useBoard({ boardCode: request });
 
   const {
@@ -158,19 +167,43 @@ const InfoTable = () => {
         <RegistAreaModal ref={registAreaModalRef} callback={() => {}} />
       </div>
 
-      <ModalHugger className="REP" width={850} visible={modalStatus.REP} title="답변하기" onCancel={() => closeModal('REP')}>
+      <ModalHugger
+        className="REP"
+        width={850}
+        visible={modalStatus.REP}
+        title="답변하기"
+        onCancel={() => closeModal('REP')}
+      >
         <ReplyBody {...essential} />
       </ModalHugger>
 
-      <ModalHugger className="MOD" width={850} visible={modalStatus.MOD} title="수정하기" onCancel={() => closeModal('MOD')}>
+      <ModalHugger
+        className="MOD"
+        width={850}
+        visible={modalStatus.MOD}
+        title="수정하기"
+        onCancel={() => closeModal('MOD')}
+      >
         <ModifyBody {...essential} />
       </ModalHugger>
 
-      <ModalHugger className="DEL" width={300} visible={modalStatus.DEL} title="비밀번호 입력" onCancel={() => closeModal('DEL')}>
+      <ModalHugger
+        className="DEL"
+        width={300}
+        visible={modalStatus.DEL}
+        title="비밀번호 입력"
+        onCancel={() => closeModal('DEL')}
+      >
         <DeleteBody {...essential} />
       </ModalHugger>
 
-      <ModalHugger className="INQ" width={850} visible={modalStatus.INQ} title={<InquiryTitle {...essential} />} onCancel={() => closeModal('INQ')}>
+      <ModalHugger
+        className="INQ"
+        width={850}
+        visible={modalStatus.INQ}
+        title={<InquiryTitle {...essential} />}
+        onCancel={() => closeModal('INQ')}
+      >
         <InquiryBody {...essential} />
       </ModalHugger>
     </>

@@ -1,13 +1,15 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { fromJS } from 'immutable';
 import moment from 'moment';
 import { Icon, Spin } from 'antd';
+import request from 'utils/request';
 import StyledChart from './StyledChart';
 // import HorizontalBarChart from '../../Chart/HorizontalBarChart';
-import service from './service';
+// import service from './service';
 import alertMessage from '../../Notification/Alert';
-import jsonToQueryString from '../../../utils/jsonToQueryString';
+// import jsonToQueryString from '../../../utils/jsonToQueryString';
 import BarChart from '../../Chart/BarChart';
 
 class SignTotal extends React.Component {
@@ -105,18 +107,17 @@ class SignTotal extends React.Component {
     const {
       startDate,
       endDate,
-      stdDate,
+      // stdDate,
       // headQuarts,
       part,
       team,
-      projectType,
-      prjLvValues,
+      project_type,
+      project_level,
       status,
       fab,
       area,
       keyno,
       model,
-      empNo,
     } = requestQuery;
 
     const curtDate = moment().format('YYYYMMDD');
@@ -127,30 +128,57 @@ class SignTotal extends React.Component {
           .add(-1, 'year')
           .format('YYYYMMDD');
     const endDt = endDate ? endDate.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
-    const stdDt = stdDate ? stdDate.replace(/\./gi, '') : undefined;
+    // const stdDt = stdDate ? stdDate.replace(/\./gi, '') : undefined;
 
     // service로 보낼 파라미터
-    const requestQuery2 = {
-      type: isDev ? 'totaldev' : this.getType(empNo, startDate),
-      sdd: startDt,
-      edd: endDt,
-      stdd: stdDt,
+    // const requestQuery2 = {
+    //   type: isDev ? 'totaldev' : this.getType(empNo, startDate),
+    //   sdd: startDt,
+    //   edd: endDt,
+    //   stdd: stdDt,
+    //   // headQuarts,F
+    //   part,
+    //   team,
+    //   prjtype: projectType === '' ? undefined : projectType,
+    //   prjlvl: project_level ? project_level.toString() : undefined,
+    //   status: status === 'all' ? undefined : status,
+    //   fab,
+    //   area,
+    //   keyno,
+    //   model,
+    //   schusrid: empNo,
+    // };
+
+    const tempRequestQuery = {
+      // type: isDev ? 'totaldev' : this.getType(empNo, startDate),
+      type: 'barChart',
+      startDate: startDt,
+      endDate: endDt,
       // headQuarts,
-      part,
-      team,
-      prjtype: projectType === '' ? undefined : projectType,
-      prjlvl: prjLvValues ? prjLvValues.toString() : undefined,
+      project_type,
+      project_level,
+      fab: fab === 'all' ? undefined : fab,
+      area: area === 'all' ? undefined : area,
+      keyno: keyno === 'all' ? undefined : keyno,
+      model: model === 'all' ? undefined : model,
+      part: part === 'all' ? undefined : part,
+      team: team === 'all' ? undefined : team,
       status: status === 'all' ? undefined : status,
-      fab,
-      area,
-      keyno,
-      model,
-      schusrid: empNo,
     };
 
+    const { response, error } = await request({
+      // url: `/apigate/v1/portal/sign/report?${queryString}`,
+      url: `/api/tpms/v1/common/searchInfo`,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method: 'POST',
+      data: tempRequestQuery,
+    });
+
     // this.setState({ loaded: true });
-    const queryString = jsonToQueryString(requestQuery2);
-    const { response, error } = await service.signChart.get(queryString);
+    // const queryString = jsonToQueryString(requestQuery2);
+    // await service.signChart.get(queryString);
     if (response && !error) {
       console.debug('>>> total', response);
       const {
@@ -165,7 +193,7 @@ class SignTotal extends React.Component {
         regCnt,
         saveCnt,
         totalCnt,
-      } = response;
+      } = response?.list;
       if (this.mounted) {
         this.props.upstreamTotalCnt(totalCnt);
         this.setState(prevState => ({
@@ -204,7 +232,7 @@ class SignTotal extends React.Component {
             {/* 전체 현황 */}
             단계별 진척현황
             <div className="actions">
-              <button type="button" className="icon_3dot" />
+              <button type="button" aria-label="search" className="icon_3dot" />
             </div>
           </div>
           <div className="content">

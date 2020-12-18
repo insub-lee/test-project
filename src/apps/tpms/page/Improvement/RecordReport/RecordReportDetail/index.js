@@ -68,7 +68,7 @@ const getDpnmGroup = (list, row, rowIndex) => {
   return children;
 };
 
-const RecordReportDetail = ({ requestQuery, usrid, enableFixView, disableFixView }) => {
+const RecordReportDetail = ({ requestQuery, authInfo, enableFixView, disableFixView }) => {
   const {
     isLoading,
     isExpanded,
@@ -89,7 +89,7 @@ const RecordReportDetail = ({ requestQuery, usrid, enableFixView, disableFixView
       totProgress5,
     },
     actions: { handleReportDown, downloadAll, toggleExpanded, handleTooltip, loadModal },
-  } = useHooks({ requestQuery, usrid, enableFixView, disableFixView });
+  } = useHooks({ requestQuery, authInfo, enableFixView, disableFixView });
 
   const { startDate, endDate, stdDate, headQuartsLabel, prjTypeLabel, prjLvlLabels } = requestQuery;
   return (
@@ -116,14 +116,14 @@ const RecordReportDetail = ({ requestQuery, usrid, enableFixView, disableFixView
           <span className="big">총 건수</span>
           <span className="line" />
           <span className="col">{totRegcnt + totSavecnt} 건</span>
-          <div className="btn_wrap">
+          {/* <div className="btn_wrap">
             <Button type="button" color="gray" size="small" onClick={handleReportDown}>
               엑셀
             </Button>
             <Button type="button" color="gray" size="small" onClick={downloadAll}>
               출력
             </Button>
-          </div>
+          </div> */}
         </div>
         <div className="sub_con">
           <div className="tb_wrap mb30">
@@ -185,7 +185,12 @@ const RecordReportDetail = ({ requestQuery, usrid, enableFixView, disableFixView
                     <td>{totDelaycnt}</td>
                     <td>{totProgresscnt}</td>
                     <td>{totFinishcnt}</td>
-                    <td>{totProgresscnt + totDelaycnt === 0 ? 0 : ((totProgresscnt / (totProgresscnt + totDelaycnt)) * 100).toFixed(2)} %</td>
+                    <td>
+                      {totProgresscnt + totDelaycnt === 0
+                        ? 0
+                        : ((totProgresscnt / (totProgresscnt + totDelaycnt)) * 100).toFixed(2)}{' '}
+                      %
+                    </td>
                     <td>{totFinishcnt === 0 ? 0 : ((totFinishcnt / totRegcnt) * 100).toFixed(2)} %</td>
                     <td>{totRegfinishcnt}</td>
                     <td>{totProgress1}</td>
@@ -220,25 +225,36 @@ const RecordReportDetail = ({ requestQuery, usrid, enableFixView, disableFixView
                                 id={`${rowIndex}_${index}`}
                                 type="dark"
                                 afterShow={
-                                  tooltipList.length > 0 && (index > 8 ? !tooltipList[rowIndex][index - 3].checked : !tooltipList[rowIndex][index].checked)
+                                  tooltipList.length > 0 &&
+                                  (index > 8
+                                    ? !tooltipList[rowIndex][index - 3].checked
+                                    : !tooltipList[rowIndex][index].checked)
                                     ? () => handleTooltip(count.key, count.dpcd, rowIndex, index)
                                     : null
                                 }
                               >
                                 <Spin
                                   indicator={<Icon type="loading" spin style={{ color: 'white' }} />}
-                                  spinning={index > 8 ? tooltipList?.[rowIndex]?.[index - 3]?.isLoading : tooltipList?.[rowIndex]?.[index]?.isLoading}
+                                  spinning={
+                                    index > 8
+                                      ? tooltipList?.[rowIndex]?.[index - 3]?.isLoading
+                                      : tooltipList?.[rowIndex]?.[index]?.isLoading
+                                  }
                                 >
                                   {index > 8 ? (
                                     <ul style={{ minHeight: 50, textAlign: 'left' }}>
                                       {(tooltipList?.[rowIndex]?.[index - 3]?.list || []).map(tooltip => (
-                                        <li key={tooltip.project_id}>{`${tooltip.project_id} :: ${tooltip.project_title}`}</li>
+                                        <li
+                                          key={tooltip.project_id}
+                                        >{`${tooltip.project_id} :: ${tooltip.project_title}`}</li>
                                       ))}
                                     </ul>
                                   ) : (
                                     <ul style={{ minHeight: 50, textAlign: 'left' }}>
                                       {(tooltipList?.[rowIndex]?.[index]?.list || []).map(tooltip => (
-                                        <li key={tooltip.project_id}>{`${tooltip.project_id} :: ${tooltip.project_title}`}</li>
+                                        <li
+                                          key={tooltip.project_id}
+                                        >{`${tooltip.project_id} :: ${tooltip.project_title}`}</li>
                                       ))}
                                     </ul>
                                   )}
@@ -280,7 +296,7 @@ const RecordReportDetail = ({ requestQuery, usrid, enableFixView, disableFixView
 
 RecordReportDetail.propTypes = {
   requestQuery: PropTypes.object.isRequired,
-  usrid: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  authInfo: PropTypes.object.isRequired,
   enableFixView: PropTypes.func,
   disableFixView: PropTypes.func,
 };

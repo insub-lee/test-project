@@ -18,6 +18,7 @@ import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import SafetyWorkViewer from '../../safetyWorkView';
+import ExcelDownload from '../Excel';
 import Styled from './Styled';
 
 const AntdModal = StyledModalWrapper(Modal);
@@ -196,14 +197,14 @@ class SafetyWorkList extends Component {
   };
 
   render() {
-    const { viewPage } = this.props;
+    const { viewPage, authority } = this.props;
     const { modalType, modalTitle, modalVisible, searchValues, safetyWorks, selectedWork } = this.state;
     let STTLMNT_STATUS_LIST = [
       { label: '전체', value: '' },
       { label: '신청저장', value: '0' },
       { label: '신청상신', value: '1' },
       { label: '신청승인', value: '2A' },
-      { label: '신청불결', value: '2F' },
+      { label: '신청부결', value: '2F' },
       { label: '허가상신', value: '3' },
       { label: '허가승인', value: '4A' },
       { label: '허가부결', value: '4F' },
@@ -585,11 +586,9 @@ class SafetyWorkList extends Component {
           </StyledSearchWrapper>
         </Spin>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-gray mr5 btn-sm" onClick={() => alert('목록인쇄 준비중')}>
+          <ExcelDownload dataList={safetyWorks} />
+          <StyledButton className="btn-gray ml5 btn-sm" onClick={() => alert('목록인쇄 준비중')}>
             목록인쇄
-          </StyledButton>
-          <StyledButton className="btn-gray  btn-sm" onClick={() => alert('점검일지 인쇄 준비중')}>
-            점검일지 인쇄
           </StyledButton>
         </StyledButtonWrapper>
         <CustomTableStyled>
@@ -622,7 +621,7 @@ class SafetyWorkList extends Component {
             />
           )}
           {modalType === 'safetyWork' && <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />}
-          {modalType === 'safetyWorkView' && <SafetyWorkViewer workNo={selectedWork} pageType="modal" />}
+          {modalType === 'safetyWorkView' && <SafetyWorkViewer workNo={selectedWork} pageType="modal" authority={authority} />}
         </AntdModal>
       </Styled>
     );
@@ -633,11 +632,13 @@ SafetyWorkList.propTypes = {
   viewPage: PropTypes.string,
   sagaKey: PropTypes.string,
   result: PropTypes.object,
+  authority: PropTypes.array,
   getCallDataHandler: PropTypes.func,
   getCallDataHandlerReturnRes: PropTypes.func,
 };
 
 SafetyWorkList.defaultProps = {
+  authority: ['V'], // 기본권한 View
   viewPage: '',
 };
 

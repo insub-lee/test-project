@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Table, Modal, Icon, Input, message } from 'antd';
 import moment from 'moment';
 import styled from 'styled-components';
-import uuid from 'uuid/v1';
+import { v4 as uuid } from 'uuid';
+
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';

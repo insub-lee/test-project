@@ -37,13 +37,14 @@ const Detail = ({ info, callback }) => {
           <input type="hidden" name="task_seq" value={info?.task_seq} />
           <FormView key={authInfo?.deptId || ''} datas={defaultFormData} noBoarder isImprove />
           <BtnWrap>
-            <Button type="submit" color="primary">
+            <Button type="submit" color="primary" disabled={isAuthLoading || isLoading}>
               제출하기
             </Button>
             {/* {!info.signPrclistInfo.some(item => item.sign === '완료 반려') && ( */}
             <Button
               type="button"
               color="default"
+              disabled={isAuthLoading || isLoading}
               onClick={() => {
                 setIsDropModalOpen(true);
               }}

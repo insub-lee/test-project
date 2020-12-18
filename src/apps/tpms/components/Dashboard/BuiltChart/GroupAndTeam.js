@@ -1,8 +1,10 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { fromJS } from 'immutable';
 import moment from 'moment';
 import { Icon, Spin } from 'antd';
+import request from 'utils/request';
 import StyledChart from './StyledChart';
 // import BarChart from '../../Chart/BarChart';
 import StackedBarChart from '../../Chart/StackedBarChart';
@@ -76,41 +78,42 @@ class GroupAndTeam extends React.Component {
 
   async fetchData() {
     const { requestQuery } = this.props;
-    const {
-      startDate,
-      endDate,
-      stdDate,
-      // headQuarts,
-      projectType,
-      prjLvValues,
-    } = requestQuery;
+    const { startDate: startDate_, endDate: endDate_, stdDate: stdDate_, headQuarts: headQuarter, project_type, prjLvValues: project_level } = requestQuery;
 
     const curtDate = moment().format('YYYYMMDD');
 
-    const startDt = startDate
-      ? startDate.replace(/\./gi, '')
+    const startDate = startDate_
+      ? startDate_.replace(/\./gi, '')
       : moment(curtDate, 'YYYYMMDD')
           .add(-1, 'year')
           .format('YYYYMMDD');
-    const endDt = endDate ? endDate.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
-    const stdDt = stdDate ? stdDate.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
+    const endDate = endDate_ ? endDate_.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
+    const stdDate = stdDate_ ? stdDate_.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
 
     // service로 보낼 파라미터
-    const requestQuery2 = {
-      // type: 'depart',
-      type: 'devlist',
-      sdd: startDt,
-      edd: endDt,
-      stdd: stdDt,
-      // headQuarts,
-      prjtype: projectType === '' ? undefined : projectType,
-      prjlvl: prjLvValues ? prjLvValues.toString() : undefined,
+    const tempRequestQuery = {
+      type: 'personalReportTable',
+      startDate,
+      endDate,
+      stdDate,
+      headQuarter,
+      project_type,
+      project_level,
     };
 
     // this.setState({ loaded: true });
 
-    const queryString = jsonToQueryString(requestQuery2);
-    const { response, error } = await service.signChart.get(queryString);
+    // const { response, error } = await service.signChart.get(queryString);
+    const { response, error } = await request({
+      // url: `/apigate/v1/portal/sign/report?${queryString}`,
+      url: `/api/tpms/v1/common/searchInfo`,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      method: 'POST',
+      data: tempRequestQuery,
+    });
+
     if (response && !error) {
       const { list } = response;
 

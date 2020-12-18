@@ -4,7 +4,7 @@ import { fromJS } from "immutable";
 import PropTypes from "prop-types";
 import Dropzone from "react-dropzone";
 import axios from "axios";
-import UUID from "uuid-js";
+import { v4 as UUID } from 'uuid';
 import jsonToQueryString from "../../../utils/jsonToQueryString";
 
 import StyledUploader from "./StyledUploader";
@@ -41,7 +41,7 @@ class ImageUploader extends React.Component {
     const requestQuery = {
       sysId: process.env.REACT_APP_SYSTEM_ID,
       conserveym: "29991231",
-      uid: `upload-${UUID.create(1).toString()}`
+      uid: `upload-${UUID()}`
     };
     const queryString = jsonToQueryString(requestQuery);
     const url = `/upload?${queryString}`;

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { useState, useEffect, useRef } from 'react';
 import { fromJS } from 'immutable';
 import moment from 'moment';
@@ -27,30 +28,43 @@ export const useHooks = ({ requestQuery }) => {
       status: '',
       iconComponent: <span />,
     };
-    // const statusData = ['regyn', 'saveyn', 'dropyn', 'delayyn', 'progressyn', 'finishyn'];
-    const statusData = ['finishyn', 'dropyn', 'progresslistyn', 'saveyn', 'regyn'];
-    statusData.some(status => {
-      const check = item[status] === 'Y';
-      result.status = check ? status : '';
-      return check;
-    });
-    switch (result.status) {
-      case 'regyn':
+    switch (item?.step) {
+      // 등록
+      case 2:
         result.iconComponent = <span className="icon icon_ing1" />;
         break;
-      case 'saveyn':
-        result.iconComponent = <span className="icon icon_ing1" />;
+      // 결재 중
+      case 1:
+      case 0:
+      case 9:
+      case 10:
+      case 11:
+      case 20:
+      case 21:
+        result.iconComponent = <span className="icon icon_ing6" />;
         break;
-      case 'progresslistyn':
+      // 진행 중
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+      case 7:
+      case 8:
         result.iconComponent = <span className="icon icon_ing2" />;
         break;
-      case 'dropyn':
+      // 드랍
+      case 22:
         result.iconComponent = <span className="icon icon_ing3" />;
-        result.colorCode = '#ff5d5d';
         break;
-      case 'finishyn':
+      // todo
+      // 지연
+      case 30:
+        result.iconComponent = <span className="icon icon_ing4" />;
+        break;
+
+      // 완료
+      case 12:
         result.iconComponent = <span className="icon icon_ing5" />;
-        result.colorCode = '#0000ff';
         break;
       default:
         result.iconComponent = <span />;
@@ -96,13 +110,11 @@ export const useHooks = ({ requestQuery }) => {
       method: 'GET',
     });
     if (response && !error) {
-      console.debug(response);
       const date = moment().format('YYYYMMDDHHmmss');
       // const fileName = `recordReport_${date}_${profile.usrid}`;
       const fileName = `personalReport_${date}`;
       download(response, `${fileName}.xls`);
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };
@@ -120,38 +132,36 @@ export const useHooks = ({ requestQuery }) => {
   };
 
   const fetchTableData = async () => {
-    const { startDate, endDate, projectType, empNo, fab, area, keyno, model } = requestQuery;
+    const { startDate: startDate_, endDate: endDate_, project_type, empNo, fab, area, keyno, model } = requestQuery;
 
     const curtDate = moment().format('YYYYMMDD');
-    const startDt = startDate
-      ? startDate.replace(/\./gi, '')
+    const startDate = startDate_
+      ? startDate_.replace(/\./gi, '')
       : moment(curtDate, 'YYYYMMDD')
           .add(-1, 'year')
           .format('YYYYMMDD');
-    const endDt = endDate ? endDate.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
+    const endDate = endDate_ ? endDate_.replace(/\./gi, '') : moment(curtDate).format('YYYYMMDD');
 
-    const requestQuery2 = {
-      type: 'perlist',
-      currentPage: pagination.get('current'),
+    const tempRequestQuery = {
+      type: 'personal',
+      currentPage: (pagination.get('current') !== 0 ? pagination.get('current') - 1 : 0) * 10,
       pageSize: pagination.get('pageSize'),
-      mnuId: 'list',
-      sysid: 'TPMS',
-      sdd: startDt,
-      edd: endDt,
-      schusrid: empNo,
-      prjtype: projectType === '' ? undefined : projectType,
-      fab,
-      area,
-      keyno,
-      model,
+      startDate,
+      endDate,
+      reg_user_id: empNo,
+      project_type,
+      fab: fab === 'all' ? undefined : fab,
+      area: area === 'all' ? undefined : area,
+      keyno: keyno === 'all' ? undefined : keyno,
+      model: model === 'all' ? undefined : model,
     };
-    const queryString = jsonToQueryString(requestQuery2);
     const { response, error } = await request({
-      url: `/apigate/v1/portal/sign/report?${queryString}`,
+      url: `/api/tpms/v1/common/searchInfo`,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
-      method: 'GET',
+      method: 'POST',
+      data: tempRequestQuery,
     });
     if (response && !error) {
       const { list } = response;
@@ -166,7 +176,6 @@ export const useHooks = ({ requestQuery }) => {
       setPagination(pagination.set('total', response.pagination.total).set('current', pagination.get('current')));
       setIsLoading(false);
     } else {
-      console.debug(error);
       alertMessage.alert('Server Error');
     }
   };

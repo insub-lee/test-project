@@ -82,7 +82,7 @@ export const approverAndRejectHandler = ({ APPV_STATUS, step, rel_type }) => {
 };
 
 // 미결함에서 승인, 반려시 사용
-export const submitDraft = async (data, APPV_STATUS, OPINION) => {
+export const submitDraft = async ({ data, APPV_STATUS, OPINION }) => {
   const payload = {
     ISFORMDATA: false,
     QUE_ID: data?.QUE_ID,

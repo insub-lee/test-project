@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import moment from 'moment';
 // import request from 'utils/request';
 import { stepChanger, fillWorkFlowData, getProcessRule } from '../../../../hooks/useWorkFlow';
@@ -9,6 +9,9 @@ import alertMessage from '../../../../components/Notification/Alert';
 
 export default ({ info, dpcd = '', callback = () => {} }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [draftData, setDraftData] = useState({});
+
   const [isRedirect, setIsRedirect] = useState(false);
   const [isError, setIsError] = useState(false);
   const formRef = useRef(null);
@@ -409,7 +412,7 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       option: {
         label: '현상파악 완료일자',
         name: 'step_one_complete_date',
-        value: info?.step_one_complete_date ? moment(info?.step_one_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+        value: info?.step_one_complete_date ? moment(info?.step_one_complete_date).format('YYYY.MM.DD') : '',
         readOnly: true,
       },
     });
@@ -444,7 +447,7 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       option: {
         label: '원인분석 완료일자',
         name: 'step_two_complete_date',
-        value: info?.step_two_complete_date ? moment(info?.step_two_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+        value: info?.step_two_complete_date ? moment(info?.step_two_complete_date).format('YYYY.MM.DD') : '',
         readOnly: true,
       },
     });
@@ -479,7 +482,7 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       option: {
         label: '대책수립 완료일자',
         name: 'step_three_complete-date',
-        value: info?.step_three_complete_date ? moment(info?.step_three_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+        value: info?.step_three_complete_date ? moment(info?.step_three_complete_date).format('YYYY.MM.DD') : '',
         readOnly: true,
       },
     });
@@ -514,7 +517,7 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       option: {
         label: '개선 완료일자',
         name: 'step_four_complete_date',
-        value: info?.step_four_complete_date ? moment(info?.step_four_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+        value: info?.step_four_complete_date ? moment(info?.step_four_complete_date).format('YYYY.MM.DD') : '',
         readOnly: true,
       },
     });
@@ -549,7 +552,7 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
       option: {
         label: '완료/공유 완료일자',
         name: 'step_five_complete_date',
-        value: info?.step_five_complete_date ? moment(info?.step_five_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+        value: info?.step_five_complete_date ? moment(info?.step_five_complete_date).format('YYYY.MM.DD') : '',
         readOnly: true,
       },
     });
@@ -650,33 +653,39 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
     }
 
     setIsLoading(true);
-
-    getProcessRule().then(prcRule => {
-      // rel_type 201은 최종결재를 의미함.
-      fillWorkFlowData(prcRule, { ...info, rel_type: 201 })
-        .then(submitResult => {
-          if (submitResult) {
-            stepChanger(info?.task_seq, info?.step + 1, payload).then(({ result, req, error }) => {
-              if (result && !error) {
-                alertMessage.notice('제출 완료');
-                setIsRedirect(true);
-              } else {
-                setIsError(true);
-                alertMessage.alert('Server Error');
-                callback();
-              }
-            });
-          }
-        })
-        .catch(() => {
-          setIsError(true);
-          alertMessage.alert('Server Error');
-          callback();
-        });
-    });
-
-    setIsLoading(false);
+    setIsSubmit(true);
+    setDraftData(payload);
   };
+
+  useEffect(() => {
+    if (isLoading && isSubmit) {
+      getProcessRule().then(prcRule => {
+        // 최종 결재에 대한 rel_type은 201로 사용
+        fillWorkFlowData(prcRule, { ...info, rel_type: 201 })
+          .then(submitResult => {
+            if (submitResult) {
+              stepChanger(info?.task_seq, info?.step + 1, draftData).then(({ result, req, error }) => {
+                if (result && !error) {
+                  alertMessage.notice('제출 완료');
+                  setIsRedirect(true);
+                  setIsLoading(false);
+                  callback();
+                } else {
+                  setIsError(true);
+                  alertMessage.alert('Server Error');
+                  callback();
+                }
+              });
+            }
+          })
+          .catch(() => {
+            setIsError(true);
+            alertMessage.alert('Server Error');
+            callback();
+          });
+      });
+    }
+  }, [isLoading, isSubmit, draftData]);
 
   return {
     isLoading,

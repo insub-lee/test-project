@@ -1,4 +1,6 @@
+/* eslint-disable camelcase */
 import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
 import Table from 'rc-table';
 import moment from 'moment';
 
@@ -12,7 +14,7 @@ import StyledHeader from '../../../../components/Tableboard/StyledHeader';
 import StyledHeaderCell from '../../../../components/Tableboard/StyledHeaderCell';
 import StyledBodyRow from '../../../../components/Tableboard/StyledBodyRow';
 import StyledBodyCell from '../../../../components/Tableboard/StyledBodyCell';
-import Button from '../../../../components/Button';
+// import Button from '../../../../components/Button';
 import {
   StepSelector,
   ProjectLevelSelector,
@@ -32,7 +34,12 @@ export const ReportDetail = ({ requestQuery }) => {
     data,
     isExpanded,
     pagination,
-    action: { setIsExpanded, pageHandler, pageSizeHandler, handleReportDown },
+    action: {
+      setIsExpanded,
+      pageHandler,
+      pageSizeHandler,
+      //  handleReportDown
+    },
   } = useHooks({ requestQuery });
 
   const components = {
@@ -46,8 +53,8 @@ export const ReportDetail = ({ requestQuery }) => {
       cell: StyledBodyCell,
     },
   };
-  const projectInfoModalOpen = prjId => {
-    projectInfoModalRef.current.handleOpen(prjId);
+  const projectInfoModalOpen = row => {
+    projectInfoModalRef.current.handleOpen(row);
   };
   const {
     startDate,
@@ -55,8 +62,8 @@ export const ReportDetail = ({ requestQuery }) => {
     headQuartsLabel,
     partLabel,
     teamLable,
-    prjTypeLabel,
-    prjLvlLabels,
+    proejct_type,
+    projectLevelLabels,
     statusLabel,
     fabLabel,
     areaLabel,
@@ -67,33 +74,35 @@ export const ReportDetail = ({ requestQuery }) => {
   const columns = [
     {
       title: 'No',
-      dataIndex: 'rownum',
+      dataIndex: 'task_seq',
       width: '5%',
     },
     {
       title: '본부/팀',
-      dataIndex: 'prj_leader_dept_name',
+      dataIndex: 'reg_dept_name',
       width: '10%',
     },
     {
       title: 'Leader',
-      dataIndex: 'reader',
+      dataIndex: 'project_leader',
       width: '10%',
     },
     {
       title: 'Level',
       dataIndex: 'project_level',
       width: '10%',
-      render: (value, row, index) => <ProjectLevelSelector keyValue={Number(value)} row={row} index={index} />,
+      render: (project_level, row, index) => (
+        <ProjectLevelSelector key={JSON.stringify(project_level) + index} keyValue={project_level} row={row} index={index} />
+      ),
     },
     {
       title: 'Project 명',
-      dataIndex: 'project_title',
+      dataIndex: 'title',
       width: '15%',
-      render: (item, row) => (
+      render: (title, row) => (
         <div style={{ textAlign: 'left' }}>
-          <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(row.project_id)}>
-            {item}
+          <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(row)}>
+            {title}
           </button>
         </div>
       ),
@@ -108,15 +117,15 @@ export const ReportDetail = ({ requestQuery }) => {
       title: 'ID',
       dataIndex: 'project_id',
       width: '10%',
-      render: (prjId, row) => (
-        <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(prjId)}>
-          {row.project_id}
+      render: (project_id, row) => (
+        <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(project_id)}>
+          {project_id}
         </button>
       ),
     },
     {
       title: '시작일',
-      dataIndex: 'regdt',
+      dataIndex: 'reg_dttm',
       width: '10%',
       render: item => moment(item).format('YYYY.MM.DD'),
     },
@@ -130,23 +139,15 @@ export const ReportDetail = ({ requestQuery }) => {
     // },
     {
       title: '단계별진척현황',
-      dataIndex: 'progressstep',
+      dataIndex: 'step',
       width: '10%',
-      render: (value, row, index) => (
-        <StepSelector
-          level={value === undefined && row.progresslistyn === 'Y' ? 0 : value}
-          row={row}
-          index={index}
-          isDrop={row.status.status === 'dropyn'}
-          isFinish={row.status.status === 'finishyn'}
-        />
-      ),
+      render: (step, row, index) => <StepSelector level={step} row={row} index={index} isDrop={step === 22} isFinish={step === 12} />,
     },
     {
       title: '비고',
-      dataIndex: 'delayyn',
+      dataIndex: 'step',
       width: '10%',
-      render: item => <div style={{ textAlign: 'center' }}>{item === 'Y' ? '지연' : ''}</div>,
+      render: step => <div style={{ textAlign: 'center' }}>{step === 30 ? '지연' : ''}</div>,
     },
   ];
   return (
@@ -158,8 +159,8 @@ export const ReportDetail = ({ requestQuery }) => {
             {`${headQuartsLabel || ''}`} &nbsp;&nbsp;
             {`${partLabel || ''}`} &nbsp;&nbsp;
             {`${teamLable || ''}`} &nbsp;&nbsp;
-            {`${prjTypeLabel || ''}`} &nbsp;&nbsp;
-            {`${prjLvlLabels || ''}`} &nbsp;&nbsp;
+            {`${proejct_type || ''}`} &nbsp;&nbsp;
+            {`${projectLevelLabels || ''}`} &nbsp;&nbsp;
             {`${statusLabel || ''}`} &nbsp;&nbsp;
             {`${fabLabel || ''}`} &nbsp;&nbsp;
             {`${areaLabel || ''}`} &nbsp;&nbsp;
@@ -186,7 +187,7 @@ export const ReportDetail = ({ requestQuery }) => {
           <span className="line" />
           <span className="col">{pagination.get('total')} 건</span>
           <div className="btn_wrap">
-            <Button
+            {/* <Button
               type="button"
               color="gray"
               size="small"
@@ -195,7 +196,7 @@ export const ReportDetail = ({ requestQuery }) => {
               }}
             >
               엑셀
-            </Button>
+            </Button> */}
             {/* <Button type="button" color="gray" size="small">
           삭제
         </Button> */}
@@ -233,10 +234,10 @@ export const ReportDetail = ({ requestQuery }) => {
                   <span className="icon icon_ing3" />
                   Drop
                 </li>
-                <li>
+                {/* <li>
                   <span className="icon icon_ing4" />
                   지연
-                </li>
+                </li> */}
                 <li>
                   <span className="icon icon_ing5" />
                   완료
@@ -257,4 +258,12 @@ export const ReportDetail = ({ requestQuery }) => {
       </div>
     </StyledDetail>
   );
+};
+
+ReportDetail.propTypes = {
+  requestQuery: PropTypes.object,
+};
+
+ReportDetail.defaultProps = {
+  requestQuery: {},
 };

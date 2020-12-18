@@ -19,7 +19,7 @@ class DayUseInfoListTable extends Component {
   }
 
   render() {
-    const { listData, handleModal } = this.props;
+    const { listData, handleModal, setPaginationIdx, paginationIdx, listTotalCnt, pageSize } = this.props;
 
     const renderCell = (data, record, useTooltip) => {
       if (useTooltip) {
@@ -845,7 +845,15 @@ class DayUseInfoListTable extends Component {
       },
     ];
 
-    return <AntdTable columns={columns} dataSource={listData} pagination={{ pageSize: 20 }} scroll={{ x: 5470 }} />;
+    return (
+      <AntdTable
+        columns={columns}
+        dataSource={listData || []}
+        scroll={{ x: 5470 }}
+        pagination={{ current: paginationIdx, total: listTotalCnt, pageSize }}
+        onChange={pagination => setPaginationIdx(pagination.current)}
+      />
+    );
   }
 }
 

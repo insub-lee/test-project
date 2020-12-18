@@ -52,7 +52,7 @@ const CompletionReportTable = () => {
 
   const {
     modalStatus,
-    actions: { openModal, closeModal },
+    actions: { openModal, closeModal, closeAll },
   } = useModalController(['INFO', 'SAVE', 'DROP']);
 
   const [currentRecord, setCurrentRecord] = useState(null);
@@ -187,6 +187,7 @@ const CompletionReportTable = () => {
         <Detail
           info={currentRecord}
           callback={() => {
+            closeAll();
             pageHandler(1);
           }}
         />
