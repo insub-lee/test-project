@@ -585,7 +585,6 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
       alertMessage.alert(validatedDueDates.message);
       return;
     }
-
     const first_approver = JSON.parse(payload?.user_selector_0 || '[]');
     const final_approver = JSON.parse(payload?.user_selector_1 || '[]');
     if (first_approver?.length < 1 || final_approver?.length < 1) {

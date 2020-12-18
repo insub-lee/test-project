@@ -452,7 +452,6 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
     });
 
   const submitForm = e => {
-    const { debug } = console;
     e.preventDefault();
     e.stopPropagation();
     const formData = new FormData(e.target);
@@ -471,7 +470,6 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
     );
     if (equipment_model.length < 1) {
       alertMessage.alert('선택된 장비가 없습니다.');
-      debug('선택된 장비가 없습니다.');
 
       return;
     }
@@ -502,7 +500,6 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
     const validatedDueDates = dateValidateChecker(dueDates);
     if (!validatedDueDates.result) {
       alertMessage.alert(validatedDueDates.message);
-      debug(validatedDueDates.message);
       return;
     }
 
@@ -549,15 +546,6 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       payload.improvement_due_date = moment(payload.improvement_due_date, 'YYYY-MM-DD').format('YYYYMMDD');
       payload.completion_due_date = moment(payload.completion_due_date, 'YYYY-MM-DD').format('YYYYMMDD');
 
-      console.debug(
-        '### date : ',
-        payload.situation_analyze_start_date,
-        payload.situation_analyze_end_date,
-        payload.cause_analyze_due_date,
-        payload.measure_due_date,
-        payload.improvement_due_date,
-        payload.completion_due_date,
-      );
       payload.equipment_model = JSON.stringify(equipment_model);
       payload.first_approver = JSON.stringify(first_approver);
       payload.final_approver = JSON.stringify(final_approver);
