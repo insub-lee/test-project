@@ -497,7 +497,7 @@ class ProjectInfoModal extends React.Component {
                             name="step_five_complete_date"
                             value={
                               info?.step_five_complete_date && info?.step_five_complete_date !== ''
-                                ? moment(info?.step_five_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD')
+                                ? moment(info?.step_five_complete_date).format('YYYY.MM.DD')
                                 : null
                             }
                             readOnly

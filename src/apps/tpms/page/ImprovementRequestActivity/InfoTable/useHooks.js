@@ -11,18 +11,21 @@ export default ({ data = [], openModal = () => {}, callback = () => {}, processR
   const [checkedList, setCheckedList] = useState([]);
 
   // Todo - Toggle All
-  const handleChangeAll = () => setCheckedList(prevState => (prevState.length === data.length ? [] : data.map(({ task_seq }) => task_seq)));
+  const handleChangeAll = () =>
+    setCheckedList(prevState => (prevState.length === data.length ? [] : data.map(({ task_seq }) => task_seq)));
 
   // Todo - Toggle one
   const handleChangeCheck = task_seq =>
-    setCheckedList(prevState => (prevState.includes(task_seq) ? prevState.filter(value => value !== task_seq) : [...prevState, task_seq]));
+    setCheckedList(prevState =>
+      prevState.includes(task_seq) ? prevState.filter(value => value !== task_seq) : [...prevState, task_seq],
+    );
 
   // Todo - Get Type Column
   const getTypeColumn = (parentno, record) => {
     let typeStr = '';
     const keyValue = 'type';
     if (record.parentno === 0) {
-      typeStr = JSON.parse(record.content)[keyValue];
+      typeStr = JSON.parse(record.content || '{}')[keyValue];
     }
     return typeStr;
   };
@@ -36,7 +39,7 @@ export default ({ data = [], openModal = () => {}, callback = () => {}, processR
       keyValue = 'reply';
     }
 
-    tooltiptext = JSON.parse(content)[keyValue];
+    tooltiptext = JSON.parse(content || '{}')[keyValue];
     return tooltiptext;
   };
 
@@ -51,11 +54,10 @@ export default ({ data = [], openModal = () => {}, callback = () => {}, processR
         status = '완료';
       } else if (rejectyn === 'Y' || temp?.status === '불가') {
         status = '불가';
-      } else {
-        status = '진행중';
       }
+    } else if (parentno === 0 || rejectyn !== 'Y' || clsyn !== 'Y') {
+      status = '진행중';
     }
-
     return status;
   };
 
@@ -125,7 +127,12 @@ export default ({ data = [], openModal = () => {}, callback = () => {}, processR
         if (record.parentno > 0) return '';
         return (
           <div className="checkbox">
-            <input type="checkbox" id={`checkbox-${task_seq}`} checked={checkedList.includes(task_seq)} onChange={() => handleChangeCheck(task_seq)} />
+            <input
+              type="checkbox"
+              id={`checkbox-${task_seq}`}
+              checked={checkedList.includes(task_seq)}
+              onChange={() => handleChangeCheck(task_seq)}
+            />
             <label htmlFor={`checkbox-${task_seq}`}>
               <span />
             </label>
