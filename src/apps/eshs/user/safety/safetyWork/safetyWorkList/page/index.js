@@ -197,7 +197,7 @@ class SafetyWorkList extends Component {
   };
 
   render() {
-    const { viewPage } = this.props;
+    const { viewPage, authority } = this.props;
     const { modalType, modalTitle, modalVisible, searchValues, safetyWorks, selectedWork } = this.state;
     let STTLMNT_STATUS_LIST = [
       { label: '전체', value: '' },
@@ -621,7 +621,7 @@ class SafetyWorkList extends Component {
             />
           )}
           {modalType === 'safetyWork' && <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />}
-          {modalType === 'safetyWorkView' && <SafetyWorkViewer workNo={selectedWork} pageType="modal" />}
+          {modalType === 'safetyWorkView' && <SafetyWorkViewer workNo={selectedWork} pageType="modal" authority={authority} />}
         </AntdModal>
       </Styled>
     );
@@ -632,11 +632,13 @@ SafetyWorkList.propTypes = {
   viewPage: PropTypes.string,
   sagaKey: PropTypes.string,
   result: PropTypes.object,
+  authority: PropTypes.array,
   getCallDataHandler: PropTypes.func,
   getCallDataHandlerReturnRes: PropTypes.func,
 };
 
 SafetyWorkList.defaultProps = {
+  authority: ['V'], // 기본권한 View
   viewPage: '',
 };
 

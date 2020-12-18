@@ -157,6 +157,7 @@ class SafetyWorkMain extends Component {
   };
 
   render() {
+    const { authority } = this.props;
     const { modalType, modalTitle, modalVisible, formData } = this.state;
     return (
       <>
@@ -182,6 +183,11 @@ class SafetyWorkMain extends Component {
           <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('safetyEdu', true)}>
             안전교육 조회
           </StyledButton>
+          {authority && authority.includes('U') && (
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => alert('수정')}>
+              수정
+            </StyledButton>
+          )}
         </StyledButtonWrapper>
         <ContentsWrapper>
           <SafetyWorkInfo
@@ -232,7 +238,12 @@ class SafetyWorkMain extends Component {
 SafetyWorkMain.propTypes = {
   sagaKey: PropTypes.string,
   workNo: PropTypes.string,
+  authority: PropTypes.array,
   getCallDataHandlerReturnRes: PropTypes.func,
+};
+
+SafetyWorkMain.defaultProps = {
+  authority: [],
 };
 
 export default SafetyWorkMain;
