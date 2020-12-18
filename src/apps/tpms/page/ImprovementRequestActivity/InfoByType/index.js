@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { v4 as uuid } from 'uuid';
 import GlobalStyle from '../../../components/GlobalStyle';
 import TitleContainerWithSub from '../../../components/TitleContainerWithSub';
 import StyledCommonForm from '../../../components/CommonStyledElement/StyledCommonForm';
@@ -9,7 +10,6 @@ import SubActionDataBody from './SubActionDataBody';
 import SubActionChartBody from './SubActionChartBody';
 import SubRegistDataBody from './SubRegistDataBody';
 import SubRegistChartBody from './SubRegistChartBody';
-
 import useHooks from './useHooks';
 
 /**
@@ -48,8 +48,11 @@ const InfoByType = () => {
                   유형별
                 </label>
                 <select name="location" id="location">
+                  <option key={uuid()} value="">
+                    ALL
+                  </option>
                   {location.map(option => (
-                    <option key={option.value} value={option.value}>
+                    <option key={uuid()} value={option.value}>
                       {option.text}
                     </option>
                   ))}

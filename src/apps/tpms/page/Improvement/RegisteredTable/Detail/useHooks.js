@@ -343,7 +343,9 @@ export default ({ info, deptId }) => {
               values: [
                 {
                   name: 'cause_analyze_due_date',
-                  value: info?.cause_analyze_due_date ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.cause_analyze_due_date
+                    ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                   required: true,
                 },
@@ -355,7 +357,9 @@ export default ({ info, deptId }) => {
               values: [
                 {
                   name: 'measure_due_date',
-                  value: info?.measure_due_date ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.measure_due_date
+                    ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                   required: true,
                 },
@@ -367,7 +371,9 @@ export default ({ info, deptId }) => {
               values: [
                 {
                   name: 'improvement_due_date',
-                  value: info?.improvement_due_date ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.improvement_due_date
+                    ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                   required: true,
                 },
@@ -379,7 +385,9 @@ export default ({ info, deptId }) => {
               values: [
                 {
                   name: 'completion_due_date',
-                  value: info?.completion_due_date ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.completion_due_date
+                    ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                   required: true,
                 },

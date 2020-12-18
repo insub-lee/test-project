@@ -47,18 +47,19 @@ export default ({ data = [], openModal = () => {}, callback = () => {}, processR
   const getStatusColumn = (parentno, record) => {
     const { clsyn, rejectyn, content } = record;
     const temp = getJsonObject(content);
-    console.debug('parentno, clsyn, rejectyn:', parentno, clsyn, rejectyn, temp?.status);
-    let status = '';
+    console.debug('getStatusColumn : ', record);
     if (parentno > 0) {
+      const { status } = temp;
       if (clsyn === 'Y' || temp?.status === '완료') {
-        status = '완료';
-      } else if (rejectyn === 'Y' || temp?.status === '불가') {
-        status = '불가';
+        return '완료';
+      }
+
+      if (rejectyn === 'Y' || temp?.status === '불가') {
+        return '불가';
       }
     } else if (parentno === 0 || rejectyn !== 'Y' || clsyn !== 'Y') {
-      status = '진행중';
+      return '진행중';
     }
-    return status;
   };
 
   const deleteData = async payload => {
