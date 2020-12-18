@@ -169,6 +169,7 @@ class SafetyWorkMain extends Component {
   };
 
   render() {
+    const { authority } = this.props;
     const { modalType, modalTitle, modalVisible, formData, appvLineText } = this.state;
     return (
       <>
