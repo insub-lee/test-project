@@ -290,7 +290,7 @@ class List extends React.Component {
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper>
             <div className="search-input-area mb10">
-              <span className="text-label">지역</span>
+              <span className="text-label">지역 test</span>
               <AntdSelect defaultValue={317} className="select-mid mr5" onChange={value => handleSearchChange('site', value)} style={{ width: '10%' }}>
                 <Select.Option value={317}>청주</Select.Option>
                 <Select.Option value={318}>구미</Select.Option>
