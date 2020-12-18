@@ -161,7 +161,7 @@ const useHooks = () => {
         },
         method: 'POST',
         data: {
-          type: 'stackedBarChartByArea',
+          type: 'stackedBarChartByType',
           area,
           list: area === '' ? location.map(({ text }) => text) : null,
           startDate,
