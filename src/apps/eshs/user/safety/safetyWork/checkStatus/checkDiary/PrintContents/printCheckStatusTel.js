@@ -27,19 +27,16 @@ class PrintCheckStatus extends Component {
         dataIndex: 'WORK_NO',
         align: 'center',
         width: '12%',
-        ellipsis: true,
       },
       {
         title: '업체명',
         dataIndex: 'WRK_CMPNY_NM',
         align: 'center',
-        ellipsis: true,
       },
       {
         title: '작업내용',
         dataIndex: 'WORK_DESC',
         align: 'center',
-        ellipsis: true,
       },
       {
         title: '작업인원',

@@ -43,30 +43,26 @@ class PrintCheckStatus extends Component {
       {
         title: '장소',
         dataIndex: 'WLOC',
-        ellipsis: true,
         align: 'center',
       },
       {
         title: '주작업',
         dataIndex: 'WCATEGORY',
-        ellipsis: true,
         align: 'center',
       },
       {
-        title: '작업시간',
-        dataIndex: 'TIME',
-        width: '10%',
+        title: '시작',
+        dataIndex: 'FROM_TIME',
+        align: 'center',
+      },
+      {
+        title: '종료',
+        dataIndex: 'TO_TIME',
         align: 'center',
       },
       {
         title: '작업내용',
         dataIndex: 'WORK_DESC',
-        align: 'center',
-        ellipsis: true,
-      },
-      {
-        title: '점검시간',
-        dataIndex: '',
         align: 'center',
       },
       {
@@ -77,7 +73,6 @@ class PrintCheckStatus extends Component {
       {
         title: '점검결과',
         dataIndex: 'CHECK_CONTENT',
-        ellipsis: true,
         align: 'center',
       },
     ];
