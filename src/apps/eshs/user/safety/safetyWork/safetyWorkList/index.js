@@ -7,9 +7,9 @@ import safetyWorkList from './page';
     안전지킴이 - 안전작업신청 - 안전작업 신청
 */
 
-const safetyWork = () => (
+const safetyWork = props => (
   <Styeld>
-    <BizMicroDevBase component={safetyWorkList} sagaKey="safetyWorkList" />
+    <BizMicroDevBase {...props} component={safetyWorkList} sagaKey="safetyWorkList" />
   </Styeld>
 );
 
