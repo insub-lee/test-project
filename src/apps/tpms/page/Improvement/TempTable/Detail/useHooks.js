@@ -352,7 +352,9 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
               values: [
                 {
                   name: 'cause_analyze_due_date',
-                  value: info?.cause_analyze_due_date ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.cause_analyze_due_date
+                    ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: false,
                 },
               ],
@@ -363,7 +365,9 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
               values: [
                 {
                   name: 'measure_due_date',
-                  value: info?.measure_due_date ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.measure_due_date
+                    ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: false,
                 },
               ],
@@ -374,7 +378,9 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
               values: [
                 {
                   name: 'improvement_due_date',
-                  value: info?.improvement_due_date ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.improvement_due_date
+                    ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: false,
                 },
               ],
@@ -385,7 +391,9 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
               values: [
                 {
                   name: 'completion_due_date',
-                  value: info?.completion_due_date ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.completion_due_date
+                    ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: false,
                 },
               ],
@@ -497,7 +505,10 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
           },
         };
       }
-      if (currentPrjType === 'W' && ['key_performance_indicators', 'current_status', 'goal', 'apply_target', 'note'].includes(item.option.name)) {
+      if (
+        currentPrjType === 'W' &&
+        ['key_performance_indicators', 'current_status', 'goal', 'apply_target', 'note'].includes(item.option.name)
+      ) {
         return {
           ...item,
           option: {
@@ -538,7 +549,9 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
       return;
     }
 
-    const equipment_model = JSON.parse(payload?.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
+    const equipment_model = JSON.parse(payload?.equipment_model).map(
+      equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`,
+    );
     if (equipment_model.length < 1) {
       alertMessage.alert('선택된 장비가 없습니다.');
       return;
@@ -560,12 +573,12 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
      현-원-대-개-완 순서대로 들어가야함.
     */
     const dueDates = [
-      moment(payload?.situation_analyze_start_date, 'YYYY.MM.DD'),
-      moment(payload?.situation_analyze_end_date, 'YYYY.MM.DD'),
-      moment(payload?.cause_analyze_due_date, 'YYYY.MM.DD'),
-      moment(payload?.measure_due_date, 'YYYY.MM.DD'),
-      moment(payload?.improvement_due_date, 'YYYY.MM.DD'),
-      moment(payload?.completion_due_date, 'YYYY.MM.DD'),
+      moment(payload.situation_analyze_start_date, 'YYYY-MM-DD').format('YYYYMMDD'),
+      moment(payload.situation_analyze_end_date, 'YYYY-MM-DD').format('YYYYMMDD'),
+      moment(payload.cause_analyze_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
+      moment(payload.measure_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
+      moment(payload.improvement_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
+      moment(payload.completion_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
     ];
     const validatedDueDates = dateValidateChecker(dueDates);
     if (!validatedDueDates.result) {
@@ -606,12 +619,14 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
       }
 
       /* Change Format */
-      payload.situation_analyze_start_date = moment(payload.situation_analyze_start_date).format('YYYYMMDD');
-      payload.situation_analyze_end_date = moment(payload.situation_analyze_end_date).format('YYYYMMDD');
-      payload.measure_due_date = moment(payload.measure_due_date).format('YYYYMMDD');
-      payload.cause_analyze_due_date = moment(payload.cause_analyze_due_date).format('YYYYMMDD');
-      payload.improvement_due_date = moment(payload.improvement_due_date).format('YYYYMMDD');
-      payload.completion_due_date = moment(payload.completion_due_date).format('YYYYMMDD');
+      payload.situation_analyze_start_date = moment(payload.situation_analyze_start_date, 'YYYY-MM-DD').format(
+        'YYYYMMDD',
+      );
+      payload.situation_analyze_end_date = moment(payload.situation_analyze_end_date, 'YYYY-MM-DD').format('YYYYMMDD');
+      payload.measure_due_date = moment(payload.measure_due_date, 'YYYY-MM-DD').format('YYYYMMDD');
+      payload.cause_analyze_due_date = moment(payload.cause_analyze_due_date, 'YYYY-MM-DD').format('YYYYMMDD');
+      payload.improvement_due_date = moment(payload.improvement_due_date, 'YYYY-MM-DD').format('YYYYMMDD');
+      payload.completion_due_date = moment(payload.completion_due_date, 'YYYY-MM-DD').format('YYYYMMDD');
 
       payload.equipment_model = JSON.stringify(equipment_model);
       payload.first_approver = JSON.stringify(first_approver);
@@ -654,7 +669,9 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
 
     const team_member = JSON.parse(payload.user_selector_2 || '[]');
 
-    const equipment_model = JSON.parse(payload?.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
+    const equipment_model = JSON.parse(payload?.equipment_model).map(
+      equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`,
+    );
     payload.equipment_model = JSON.stringify(equipment_model);
     payload.first_approver = JSON.stringify(first_approver);
     payload.final_approver = JSON.stringify(final_approver);

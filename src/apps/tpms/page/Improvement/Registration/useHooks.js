@@ -436,7 +436,10 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
         };
       }
       /* If PRJ_TYPE Value is W... */
-      if (currentProjectType === 'W' && ['key_performance_indicators', 'current_status', 'goal', 'apply_target', 'note'].includes(item.option.name)) {
+      if (
+        currentProjectType === 'W' &&
+        ['key_performance_indicators', 'current_status', 'goal', 'apply_target', 'note'].includes(item.option.name)
+      ) {
         return {
           ...item,
           option: {
@@ -463,7 +466,9 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       return;
     }
 
-    const equipment_model = JSON.parse(payload?.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
+    const equipment_model = JSON.parse(payload?.equipment_model).map(
+      equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`,
+    );
     if (equipment_model.length < 1) {
       alertMessage.alert('선택된 장비가 없습니다.');
       debug('선택된 장비가 없습니다.');
@@ -486,21 +491,13 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
     현-원-대-개-완 순서대로 들어가야함.
 */
 
-    const {
-      situation_analyze_start_date,
-      situation_analyze_end_date,
-      cause_analyze_due_date,
-      measure_due_date,
-      improvement_due_date,
-      completion_due_date,
-    } = payload;
     const dueDates = [
-      moment(situation_analyze_start_date, 'YYYY.MM.DD'),
-      moment(situation_analyze_end_date, 'YYYY.MM.DD'),
-      moment(cause_analyze_due_date, 'YYYY.MM.DD'),
-      moment(measure_due_date, 'YYYY.MM.DD'),
-      moment(improvement_due_date, 'YYYY.MM.DD'),
-      moment(completion_due_date, 'YYYY.MM.DD'),
+      moment(payload.situation_analyze_start_date, 'YYYY-MM-DD').format('YYYYMMDD'),
+      moment(payload.situation_analyze_end_date, 'YYYY-MM-DD').format('YYYYMMDD'),
+      moment(payload.cause_analyze_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
+      moment(payload.measure_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
+      moment(payload.improvement_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
+      moment(payload.completion_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
     ];
     const validatedDueDates = dateValidateChecker(dueDates);
     if (!validatedDueDates.result) {
@@ -543,13 +540,24 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       }
 
       /* Change Format */
-      payload.situation_analyze_start_date = moment(payload.situation_analyze_start_date).format('YYYYMMDD');
-      payload.situation_analyze_end_date = moment(payload.situation_analyze_end_date).format('YYYYMMDD');
-      payload.measure_due_date = moment(payload.measure_due_date).format('YYYYMMDD');
-      payload.cause_analyze_due_date = moment(payload.cause_analyze_due_date).format('YYYYMMDD');
-      payload.improvement_due_date = moment(payload.improvement_due_date).format('YYYYMMDD');
-      payload.completion_due_date = moment(payload.completion_due_date).format('YYYYMMDD');
+      payload.situation_analyze_start_date = moment(payload.situation_analyze_start_date, 'YYYY-MM-DD').format(
+        'YYYYMMDD',
+      );
+      payload.situation_analyze_end_date = moment(payload.situation_analyze_end_date, 'YYYY-MM-DD').format('YYYYMMDD');
+      payload.measure_due_date = moment(payload.measure_due_date, 'YYYY-MM-DD').format('YYYYMMDD');
+      payload.cause_analyze_due_date = moment(payload.cause_analyze_due_date, 'YYYY-MM-DD').format('YYYYMMDD');
+      payload.improvement_due_date = moment(payload.improvement_due_date, 'YYYY-MM-DD').format('YYYYMMDD');
+      payload.completion_due_date = moment(payload.completion_due_date, 'YYYY-MM-DD').format('YYYYMMDD');
 
+      console.debug(
+        '### date : ',
+        payload.situation_analyze_start_date,
+        payload.situation_analyze_end_date,
+        payload.cause_analyze_due_date,
+        payload.measure_due_date,
+        payload.improvement_due_date,
+        payload.completion_due_date,
+      );
       payload.equipment_model = JSON.stringify(equipment_model);
       payload.first_approver = JSON.stringify(first_approver);
       payload.final_approver = JSON.stringify(final_approver);
@@ -558,8 +566,7 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       payload.user_selector_1 = undefined;
       payload.user_selector_2 = undefined;
       payload.user_selector_3 = undefined;
-      const date = new Date();
-      payload.project_id = `${date.getFullYear()}${date.getMonth()}`;
+
       const { reg_dept_id, project_level } = payload;
       payload.reg_dept_id = parseInt(reg_dept_id || 0, 10);
       payload.project_level = parseInt(project_level || 0, 10);
@@ -591,7 +598,9 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       final_approver = JSON.parse(payload.user_selector_1 || '[]');
     }
     const team_member = JSON.parse(payload.user_selector_2 || '[]');
-    const equipment_model = JSON.parse(payload.equipment_model || '[]').map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
+    const equipment_model = JSON.parse(payload.equipment_model || '[]').map(
+      equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`,
+    );
     payload.equipment_model = JSON.stringify(equipment_model);
     payload.first_approver = JSON.stringify(first_approver);
     payload.final_approver = JSON.stringify(final_approver);
@@ -601,8 +610,7 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
     payload.user_selector_3 = undefined;
     payload.team_member = JSON.stringify(team_member);
     payload.is_temp = 1;
-    const date = new Date();
-    payload.project_id = `${date.getFullYear()}${date.getMonth()}`;
+
     const { reg_dept_id, project_level } = payload;
     payload.reg_dept_id = parseInt(reg_dept_id || 0, 10);
     payload.project_level = parseInt(project_level || 0, 10);

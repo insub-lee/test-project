@@ -9,9 +9,9 @@ const List = ({ list, onClickItem }) => (
         <button type="button" onClick={() => onClickItem(item.id)}>
           <span className="txt">
             {item.isComments ? (
-              <React.Fragment>
+              <>
                 <i className="fas fa-arrow-circle-right" />{' '}
-              </React.Fragment>
+              </>
             ) : null}
             {item.txt}
           </span>
