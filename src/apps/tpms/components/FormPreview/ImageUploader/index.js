@@ -41,7 +41,7 @@ class ImageUploader extends React.Component {
     const requestQuery = {
       sysId: process.env.REACT_APP_SYSTEM_ID,
       conserveym: "29991231",
-      uid: `upload-${UUID.create(1).toString()}`
+      uid: `upload-${UUID()}`
     };
     const queryString = jsonToQueryString(requestQuery);
     const url = `/upload?${queryString}`;

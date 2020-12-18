@@ -62,7 +62,7 @@ class MsdsSearchList extends Component {
   }
 
   componentDidMount = () => {
-    const { workInfo, listMetaSeq, viewSeq } = this.props;
+    const { workInfo, listMetaSeq, viewSeq, changeSearchData, sagaKey } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
     let isOnRowClick = false;
@@ -117,6 +117,7 @@ class MsdsSearchList extends Component {
       });
       this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView, isExcelDown, btnTex, fileName, sheetName, columns, fields, isPagingData });
     }
+    changeSearchData(sagaKey, 'andSearch_1', 'AND W.SITE = 318::varchar');
   };
 
   // state값 reset테스트
@@ -318,6 +319,7 @@ class MsdsSearchList extends Component {
                       className="select-sm mr5"
                       onChange={value => changeSearchData(id, 'andSearch_1', value ? `AND W.SITE = '${value}'` : ' AND 1 = 1')}
                       placeholder="지역전체"
+                      defaultValue="318"
                     >
                       <Option value="317">청주</Option>
                       <Option value="318">구미</Option>
@@ -330,7 +332,7 @@ class MsdsSearchList extends Component {
                       onChange={value =>
                         this.handleOnChangeSearchData('searchType', value, () => {
                           const { searchType, searchText } = this.state;
-                          return changeSearchData(id, 'andSearch_2', searchType && searchText ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1');
+                          return changeSearchData(id, 'andSearch_2', searchType && searchText ? `AND ${searchType} ILIKE '%${searchText}%'` : 'AND 1 = 1');
                         })
                       }
                     >
@@ -350,7 +352,7 @@ class MsdsSearchList extends Component {
                       onChange={e =>
                         this.handleOnChangeSearchData('searchText', e.target.value, () => {
                           const { searchType, searchText } = this.state;
-                          return changeSearchData(id, 'andSearch_2', searchType && searchText ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1');
+                          return changeSearchData(id, 'andSearch_2', searchType && searchText ? `AND ${searchType} ILIKE '%${searchText}%'` : 'AND 1 = 1');
                         })
                       }
                       onPressEnter={() => getListData(id, workSeq)}

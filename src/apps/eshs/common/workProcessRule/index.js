@@ -65,7 +65,7 @@ export const saveProcessRule = async (processRule, callBack = () => {}, messageF
   const processStep = processRule?.DRAFT_PROCESS_STEP || [];
   let msg = '';
   if (!processStep.length) {
-    message.info(<MessageContent>결재 정보가 없습니다.</MessageContent>);
+    message.info(<MessageContent>결재자 정보가 없습니다.</MessageContent>);
     return false;
   }
   processStep

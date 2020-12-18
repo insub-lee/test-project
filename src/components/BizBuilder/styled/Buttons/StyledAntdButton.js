@@ -105,6 +105,10 @@ const StyledButton = component => styled(component)`
     margin-right: 5px;
   }
 
+  &.ml5 {
+    margin-left: 5px;
+  }
+
   &.ant-btn > .anticon + span,
   &.ant-btn > span + .anticon {
     vertical-align: middle;
