@@ -197,9 +197,11 @@ const useHooks = () => {
         }
       });
 
+      const tempArea = Object.keys(list[0]).filter(eachKey => eachKey !== 'draftdt');
+
       setRegistData({
-        labels,
-        datasets,
+        labels: tempArea,
+        datasets: list,
       });
 
       setRegistTrendInfo({
