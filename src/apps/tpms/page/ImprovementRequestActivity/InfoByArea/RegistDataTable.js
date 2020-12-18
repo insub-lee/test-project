@@ -48,46 +48,41 @@ const DataTableWrap = styled.div`
 `;
 
 const RegistDataTable = ({ data }) => {
-  console.debug('### RegistDataTable', data);
-  const width = 100 / (data?.labels?.length + 1);
+  const { labels, datasets } = data;
+
+  const width = 100 / (labels?.length + 1);
 
   return (
     <DataTableWrap>
       <table>
         <colgroup>
           <col width={`${width}%`} />
-          {data.labels.map(index => (
+          {labels.map(index => (
             <col width={`${width}%`} key={`total_${index}`} />
           ))}
         </colgroup>
         <thead>
           <tr className="bd">
-            <th rowSpan="2">AREA</th>
-            <th colSpan={data?.labels.length}>기간</th>
+            <th rowSpan="2">기간</th>
+            <th colSpan={labels.length}>AREA</th>
           </tr>
           <tr className="bd">
-            {data?.datasets?.map(item => (
-              <th key={uuid()}>{item}</th>
+            {labels.map(label => (
+              <th key={uuid()}>{label}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {data?.datasets?.map(item => (
+          {datasets.map(set => (
             <tr key={uuid()}>
-              <td>{item.key}</td>
-              {item.data.map(subItem => (
-                <td key={uuid()}>{subItem.regcnt}</td>
-              ))}
+              <td key={uuid()}>{set?.draftdt}</td>
+              {Object.keys(set)
+                .filter(key => key !== 'draftdt')
+                .map(area => (
+                  <td key={uuid()}>{set[area]}</td>
+                ))}
             </tr>
           ))}
-          {/* {data.length > 1 && (
-            <tr key={uuid()}>
-              <td>{total.key}</td>
-              {total.data.map(item => (
-                <td key={uuid()}>{item}</td>
-              ))}
-            </tr>
-          )} */}
         </tbody>
       </table>
     </DataTableWrap>
@@ -95,16 +90,14 @@ const RegistDataTable = ({ data }) => {
 };
 
 RegistDataTable.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      labels: PropTypes.arrayOf(PropTypes.object),
-      datasets: PropTypes.arrayOf(PropTypes.object),
-    }),
-  ),
+  data: PropTypes.shape({
+    labels: PropTypes.arrayOf(PropTypes.string),
+    datasets: PropTypes.arrayOf(PropTypes.object),
+  }),
 };
 
 RegistDataTable.defaultProps = {
-  data: [{ labels: [], datasets: [] }],
+  data: { labels: [], datasets: [] },
 };
 
 export default RegistDataTable;

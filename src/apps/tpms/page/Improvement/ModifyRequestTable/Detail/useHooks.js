@@ -426,7 +426,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: '현상파악 완료일자',
           name: 'step_one_complete_date',
-          value: info?.step_one_complete_date ? moment(info?.step_one_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          value: info?.step_one_complete_date ? moment(info?.step_one_complete_date).format('YYYY.MM.DD') : '',
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -465,7 +465,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: '원인분석 완료일자',
           name: 'step_two_complete_date',
-          value: info?.step_two_complete_date ? moment(info?.step_two_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          value: info?.step_two_complete_date ? moment(info?.step_two_complete_date).format('YYYY.MM.DD') : '',
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -505,7 +505,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: '대책수립 완료일자',
           name: 'step_three_complete-date',
-          value: info?.step_three_complete_date ? moment(info?.step_three_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          value: info?.step_three_complete_date ? moment(info?.step_three_complete_date).format('YYYY.MM.DD') : '',
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -545,7 +545,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: '개선 완료일자',
           name: 'step_four_complete_date',
-          value: info?.step_four_complete_date ? moment(info?.step_four_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          value: info?.step_four_complete_date ? moment(info?.step_four_complete_date).format('YYYY.MM.DD') : '',
           readOnly: true,
         },
         seq: formData.length + 1,
@@ -585,7 +585,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         option: {
           label: '완료/공유 완료일자',
           name: 'step_five_complete_date',
-          value: info.step_five_complete_date ? moment(info?.step_five_complete_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD') : '',
+          value: info.step_five_complete_date ? moment(info?.step_five_complete_date).format('YYYY.MM.DD') : '',
           readOnly: true,
         },
         seq: formData.length + 1,
