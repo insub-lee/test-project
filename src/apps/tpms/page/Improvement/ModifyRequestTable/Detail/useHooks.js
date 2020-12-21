@@ -66,9 +66,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
         classname: 'improve_form std width50 frCustom',
         option: {
           label: 'Project Leader',
-          name: 'project_leader',
+          name: 'reg_user_name',
           placeholder: '',
-          value: info?.project_leader,
+          value: info?.reg_user_name,
           required: true,
           readOnly: true,
         },

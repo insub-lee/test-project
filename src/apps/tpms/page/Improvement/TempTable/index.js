@@ -145,7 +145,7 @@ const TempTable = () => {
       },
       {
         title: 'Leader',
-        dataIndex: 'project_leader',
+        dataIndex: 'reg_user_name',
         key: 'project_leader',
         width: '10%',
       },

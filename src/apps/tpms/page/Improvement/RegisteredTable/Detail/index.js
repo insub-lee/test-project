@@ -25,7 +25,7 @@ const Detail = ({ info, usrid, dpcd, dpnm }) => {
           {/* <input type="hidden" name="mnuid" value="TPMS1040" /> */}
           <input type="hidden" name="project_id" value={info?.project_id} />
           <input type="hidden" name="reg_dttm" value={info?.reg_dttm} />
-          <input type="hidden" name="project_leader" value={usrid} />
+          <input type="hidden" name="project_leader" value={authInfo?.emrNo} />
           <input type="hidden" name="project_type" value={info?.project_type} />
           <input type="hidden" name="project_level" value={info?.project_level} />
           <input type="hidden" name="performance_type" value={info?.performance_type} />

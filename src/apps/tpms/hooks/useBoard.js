@@ -20,16 +20,18 @@ export const useBoard = ({ boardCode }) => {
   });
 
   useEffect(() => {
-    setIsLoading(true);
-    getBoardList().then(e => {
-      if (e === true) {
-        setIsError(false);
-        setIsLoading(false);
-      } else {
-        setIsError(true);
-        setIsLoading(false);
-      }
-    });
+    if (boardCode !== '') {
+      setIsLoading(true);
+      getBoardList().then(e => {
+        if (e === true) {
+          setIsError(false);
+          setIsLoading(false);
+        } else {
+          setIsError(true);
+          setIsLoading(false);
+        }
+      });
+    }
     // dataFetcher();
   }, [pagination, search, currentYear]);
 
@@ -123,7 +125,6 @@ export const useBoard = ({ boardCode }) => {
             );
           },
         );
-        console.debug('### after fileProcess :', formJson);
       })
       .then(async () => {
         if (taskSeq > 0) {

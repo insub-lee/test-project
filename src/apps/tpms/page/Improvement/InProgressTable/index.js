@@ -155,8 +155,8 @@ const InProgressTable = () => {
       },
       {
         title: 'Leader',
-        dataIndex: 'project_leader',
-        key: 'project_leader',
+        dataIndex: 'reg_user_name',
+        key: 'reg_user_name',
         width: '10%',
       },
     ],

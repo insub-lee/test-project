@@ -8,6 +8,7 @@ import { getProcessRule, fillWorkFlowData } from '../../../hooks/useWorkFlow';
 import alertMessage from '../../../components/Notification/Alert';
 
 const dateValidateChecker = momentDates => {
+  console.debug('### momentDates:', momentDates);
   let result = false;
   const message = '스케줄을 확인하세요. (이전 스케줄 날짜보다 빠를 수 없습니다.)';
   result = !momentDates.some((momentDate, index) => {
@@ -490,13 +491,15 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
 */
 
     const dueDates = [
-      moment(payload.situation_analyze_start_date, 'YYYY-MM-DD').format('YYYYMMDD'),
-      moment(payload.situation_analyze_end_date, 'YYYY-MM-DD').format('YYYYMMDD'),
-      moment(payload.cause_analyze_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
-      moment(payload.measure_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
-      moment(payload.improvement_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
-      moment(payload.completion_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
+      moment(moment(payload.situation_analyze_start_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(payload.situation_analyze_end_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(payload.measure_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(payload.cause_analyze_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(payload.improvement_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(payload.completion_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
     ];
+
+    console.debug('### dueDates:', dueDates);
     const validatedDueDates = dateValidateChecker(dueDates);
     if (!validatedDueDates.result) {
       alertMessage.alert(validatedDueDates.message);

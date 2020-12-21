@@ -84,7 +84,7 @@ export const ReportDetail = ({ requestQuery }) => {
     },
     {
       title: 'Leader',
-      dataIndex: 'project_leader',
+      dataIndex: 'reg_user_name',
       width: '10%',
     },
     {
