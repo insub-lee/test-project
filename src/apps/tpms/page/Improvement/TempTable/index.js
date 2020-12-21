@@ -191,13 +191,31 @@ const TempTable = () => {
           }}
         />
       </ModalHugger>
-      <ModalHugger width={1250} visible={modalStatus.SEND} title="등록하기" footer={null} onCancel={() => closeModal('SEND')}>
+      <ModalHugger
+        width={1250}
+        visible={modalStatus.SEND}
+        title="등록하기"
+        footer={null}
+        onCancel={() => closeModal('SEND')}
+      >
         SEND
       </ModalHugger>
-      <ModalHugger width={1250} visible={modalStatus.SAVE} title="저장하기" footer={null} onCancel={() => closeModal('SAVE')}>
+      <ModalHugger
+        width={1250}
+        visible={modalStatus.SAVE}
+        title="저장하기"
+        footer={null}
+        onCancel={() => closeModal('SAVE')}
+      >
         SAVE
       </ModalHugger>
-      <ModalHugger width={1250} visible={modalStatus.DELETE} title="삭제하기" footer={null} onCancel={() => closeModal('DELETE')}>
+      <ModalHugger
+        width={1250}
+        visible={modalStatus.DELETE}
+        title="삭제하기"
+        footer={null}
+        onCancel={() => closeModal('DELETE')}
+      >
         DELETE
       </ModalHugger>
     </>

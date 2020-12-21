@@ -35,7 +35,14 @@ const renderItem = (type, option, surveyIndex, handleUpload) => {
     case 'radio-group':
       return <RadioGroup name={option.name} values={option.values} onChange={option.onChange} />;
     case 'select':
-      return <Select name={option.name} disabled={option.disabled || option.readOnly} selectOptions={option.values} onChange={option.onChange} />;
+      return (
+        <Select
+          name={option.name}
+          disabled={option.disabled || option.readOnly}
+          selectOptions={option.values}
+          onChange={option.onChange}
+        />
+      );
     case 'text':
       return <TextField option={option} type={option.subtype} />;
     case 'textarea':
@@ -47,9 +54,23 @@ const renderItem = (type, option, surveyIndex, handleUpload) => {
     case 'equip-selector':
       return <EquipSelector values={option.values} readOnly={option.readOnly} />;
     case 'employee-selector':
-      return <EmployeeSelector values={option.values} readOnly={option.readOnly} onlySingle={option.onlySingle} fixed={option.fixed} />;
+      return (
+        <EmployeeSelector
+          values={option.values}
+          readOnly={option.readOnly}
+          onlySingle={option.onlySingle}
+          fixed={option.fixed}
+        />
+      );
     case 'richTextEditor':
-      return <RichTextEditor name={option.name} placeholder={option.readOnly ? '' : option.placeholder} readOnly={option.readOnly} value={option.value} />;
+      return (
+        <RichTextEditor
+          name={option.name}
+          placeholder={option.readOnly ? '' : option.placeholder}
+          readOnly={option.readOnly}
+          value={option.value}
+        />
+      );
     case 'password':
       return <TextField option={option} type="password" />;
     case 'uploader':
@@ -94,7 +115,10 @@ class FormView extends React.Component {
       handleUpload,
     } = this.props;
     return (
-      <StyledFormView className={`view_wrap ${noBg ? 'noBg' : ''} ${allWhiteColor ? 'all_white_color' : ''}`} noBoarder={noBoarder}>
+      <StyledFormView
+        className={`view_wrap ${noBg ? 'noBg' : ''} ${allWhiteColor ? 'all_white_color' : ''}`}
+        noBoarder={noBoarder}
+      >
         {/* <input type={type} id={id} name={name} placeholder={placeholder} /> */}
         <div className={`view_con ${noPadding ? 'no_padding' : ''} ${smallView ? 'small_view' : ''}`}>
           {isSurvey ? (
