@@ -6,24 +6,25 @@ import icons from './icons';
 import service from './service';
 import alertMessage from '../../Notification/Alert';
 import useSignList from '../../../hooks/useSignList';
-const linkSelector = icon => {
-  switch (icon) {
-    case 'iconMiddle1': // 등록함
-      return '/TPMS1030';
-    case 'iconMiddle2': // 임시저장함
-      return '/TPMS1020';
-    case 'iconMiddle3': // 수정요청함
-      return '/TPMS1040';
-    case 'iconMiddle4': // 미결함
-      return '/TPMS1050';
-    case 'iconMiddle5': // 진행함
-      return '/TPMS1060';
-    case 'iconMiddle6': // 완료보고함
-      return '/TPMS1070';
-    default:
-      return '/';
-  }
-};
+
+// const linkSelector = icon => {
+//   switch (icon) {
+//     case 'iconMiddle1': // 등록함
+//       return '/TPMS1030';
+//     case 'iconMiddle2': // 임시저장함
+//       return '/TPMS1020';
+//     case 'iconMiddle3': // 수정요청함
+//       return '/TPMS1040';
+//     case 'iconMiddle4': // 미결함
+//       return '/TPMS1050';
+//     case 'iconMiddle5': // 진행함
+//       return '/TPMS1060';
+//     case 'iconMiddle6': // 완료보고함
+//       return '/TPMS1070';
+//     default:
+//       return '/';
+//   }
+// };
 
 const Report = ({ title, report, onSetting, noTitle }) => {
   const [number, setNumber] = useState(0);
