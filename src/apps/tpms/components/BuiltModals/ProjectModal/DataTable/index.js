@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Table from 'rc-table';
 
+import request from 'utils//request';
 import jsonToQueryString from '../../../../utils/jsonToQueryString';
 import Pagination from '../../../Tableboard/Pagination';
 import StyledBodyCell from '../../../Tableboard/StyledBodyCell';
@@ -10,7 +11,6 @@ import StyledHeader from '../../../Tableboard/StyledHeader';
 import StyledHeaderCell from '../../../Tableboard/StyledHeaderCell';
 import StyledTable from '../../../Tableboard/StyledTable';
 import StyledTableWrapper from './StyledTableWrapper';
-import service from '../service';
 
 class DataTable extends React.Component {
   constructor(props) {
@@ -91,15 +91,17 @@ class DataTable extends React.Component {
   async fetchData() {
     const { searchName } = this.props;
     const { pagination } = this.state;
-    const requestQuery = {
-      type: 'bestPractice',
-      // emrNo: '139092',
-      title: searchName,
-      currentpage: pagination.current,
-      pageSize: pagination.pageSize,
-    };
-    const queryString = jsonToQueryString(requestQuery);
-    const { response, error } = await service.board.get(queryString);
+    const { response, error } = await request({
+      url: `/api/tpms/v1/common/approval`,
+      params: {
+        menu_id: 'finishedProject',
+        title: searchName,
+        step: 12,
+        is_temp: 0,
+        currentPage: pagination.current - 1 || 0,
+        pageSize: pagination.pageSize || 10,
+      },
+    });
     let payload = [];
     if (response && !error) {
       const { list } = response;
@@ -146,7 +148,12 @@ class DataTable extends React.Component {
           components={components}
           // onRowClick={(record, index) => this.handleRowClick(record, index)}
         />
-        <Pagination {...pagination} groupSize={10} pageHandler={this.pageHandler} pageSizeHandler={this.pageSizeHandler} />
+        <Pagination
+          {...pagination}
+          groupSize={10}
+          pageHandler={this.pageHandler}
+          pageSizeHandler={this.pageSizeHandler}
+        />
       </StyledTableWrapper>
     );
   }

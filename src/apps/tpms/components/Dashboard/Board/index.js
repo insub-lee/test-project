@@ -38,9 +38,6 @@ const Board = ({ title, data, boardId, formJson, link, boardCode, noTitle }) => 
         }));
       setList(processedList);
       setIsLoaded(true);
-    } else {
-      console.debug();
-      alertMessage.alert('Server Error');
     }
   }, [JSON.stringify(boardList), boardCode]);
 

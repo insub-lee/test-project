@@ -4,6 +4,7 @@ import { Icon, Spin } from 'antd';
 import PropTypes from 'prop-types';
 import Table from 'rc-table';
 import moment from 'moment';
+import { v4 as uuid } from 'uuid';
 
 import Button from '../../../../components/Button';
 import GridContainer from '../../../../components/GridContainer';
@@ -66,7 +67,7 @@ export const PersonalReportDetail = ({ requestQuery }) => {
     },
     {
       title: 'Leader',
-      dataIndex: 'project_leader',
+      dataIndex: 'reg_user_name',
       width: '10%',
     },
     {
@@ -74,7 +75,7 @@ export const PersonalReportDetail = ({ requestQuery }) => {
       dataIndex: 'project_level',
       width: '10%',
       render: (project_level, row, index) => (
-        <ProjectLevelSelector key={JSON.stringify(project_level) + index} keyValue={Number(project_level)} row={row} index={index} />
+        <ProjectLevelSelector key={uuid()} keyValue={Number(project_level)} row={row} index={index} />
       ),
     },
     {
@@ -83,7 +84,11 @@ export const PersonalReportDetail = ({ requestQuery }) => {
       width: '15%',
       render: (item, row) => (
         <div style={{ textAlign: 'left' }}>
-          <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(row)}>
+          <button
+            type="button"
+            style={{ color: row.status.colorCode || 'black' }}
+            onClick={() => projectInfoModalOpen(row)}
+          >
             {item}
           </button>
         </div>
@@ -100,7 +105,11 @@ export const PersonalReportDetail = ({ requestQuery }) => {
       dataIndex: 'project_id',
       width: '10%',
       render: (project_id, row) => (
-        <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(project_id)}>
+        <button
+          type="button"
+          style={{ color: row.status.colorCode || 'black' }}
+          onClick={() => projectInfoModalOpen(project_id)}
+        >
           {project_id}
         </button>
       ),
@@ -115,7 +124,9 @@ export const PersonalReportDetail = ({ requestQuery }) => {
       title: '단계별진척현황',
       dataIndex: 'step',
       width: '10%',
-      render: (step, row, index) => <StepSelector level={step} row={row} index={index} isDrop={step === 22} isFinish={step === 12} />,
+      render: (step, row, index) => (
+        <StepSelector level={step} row={row} index={index} isDrop={step === 22} isFinish={step === 12} />
+      ),
     },
     {
       title: '비고',
@@ -141,7 +152,11 @@ export const PersonalReportDetail = ({ requestQuery }) => {
             기간 : &nbsp;&nbsp; {`${startDate} ~ ${endDate}`}
           </span>
           <div className="btn_wrap">
-            <button type="button" className={`icon icon_arr_big ${isExpanded ? 'on' : ''}`} onClick={() => setIsExpanded(!isExpanded)}>
+            <button
+              type="button"
+              className={`icon icon_arr_big ${isExpanded ? 'on' : ''}`}
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
               축소/확대
             </button>
           </div>
@@ -212,7 +227,12 @@ export const PersonalReportDetail = ({ requestQuery }) => {
                 components={components}
               />
             </Spin>
-            <Pagination {...pagination.toJS()} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
+            <Pagination
+              {...pagination.toJS()}
+              groupSize={10}
+              pageHandler={pageHandler}
+              pageSizeHandler={pageSizeHandler}
+            />
             <ProjectInfoModal ref={projectInfoModalRef} />
           </StyledTableWrapper>
         </div>

@@ -19,7 +19,7 @@ export const RegisterBody = ({ formJson = [], regPost, selectedRecord, successCa
 
   const callback = payload => {
     setProejctData(payload);
-    const title = `[${payload.prj_id}] ${payload.prj_title}`;
+    const title = `[${payload?.project_id}] ${payload?.title}`;
     const temp = [...formJson];
     temp.forEach(e => {
       if (e.option.name === 'title') {
@@ -103,14 +103,14 @@ export const RegisterBody = ({ formJson = [], regPost, selectedRecord, successCa
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{proejctData.prj_id}</td>
-                      <td>{proejctData.prj_title}</td>
-                      <td>{proejctData.prj_leader_dept_name}</td>
-                      <td>{proejctData.prj_leader_name}</td>
+                      <td>{proejctData?.project_id}</td>
+                      <td>{proejctData?.title}</td>
+                      <td>{proejctData?.reg_dept_name}</td>
+                      <td>{proejctData?.reg_user_name}</td>
                     </tr>
                   </tbody>
                 </table>
-                <input type="hidden" name="regid" value={proejctData.prj_leader} />
+                <input type="hidden" name="regid" value={proejctData?.reg_user_name} />
               </div>
               <FormView datas={modifiedFormJson} noBoarder smallView />
             </>
@@ -129,6 +129,11 @@ export const RegisterBody = ({ formJson = [], regPost, selectedRecord, successCa
   );
 };
 
-RegisterBody.propTypes = { formJson: PropTypes.array, regPost: PropTypes.func, selectedRecord: PropTypes.object, successCallback: PropTypes.func };
+RegisterBody.propTypes = {
+  formJson: PropTypes.array,
+  regPost: PropTypes.func,
+  selectedRecord: PropTypes.object,
+  successCallback: PropTypes.func,
+};
 
 RegisterBody.defaultProps = { formJson: [], regPost: () => {}, selectedRecord: {}, successCallback: () => {} };

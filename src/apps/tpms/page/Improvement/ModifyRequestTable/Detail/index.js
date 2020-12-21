@@ -52,7 +52,7 @@ const Detail = ({ info, usrid, dpcd, dpnm }) => {
           <ApproveFormWrapper>
             <div className="approveFormRow">
               <span className="approveFormLabel">기안자</span>
-              <p className="approveFormValue">{`${info?.project_leader}`}</p>
+              <p className="approveFormValue">{`${info?.reg_user_name}`}</p>
             </div>
             <div className="approveFormRow">
               <span className="approveFormLabel">1차결재권자</span>

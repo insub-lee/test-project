@@ -44,7 +44,7 @@ export default ({ info, deptId }) => {
           label: 'Project Leader',
           name: 'project_leader',
           placeholder: '',
-          value: info?.project_leader,
+          value: info?.reg_user_name,
           required: true,
           readOnly: true,
         },

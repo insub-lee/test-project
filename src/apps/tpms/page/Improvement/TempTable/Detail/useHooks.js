@@ -72,7 +72,7 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
           label: 'Project Leader',
           name: 'project_leader',
           placeholder: '',
-          value: info?.project_leader,
+          value: info?.reg_user_name,
           required: true,
           readOnly: false,
         },
@@ -573,12 +573,12 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
      현-원-대-개-완 순서대로 들어가야함.
     */
     const dueDates = [
-      moment(payload.situation_analyze_start_date, 'YYYY-MM-DD').format('YYYYMMDD'),
-      moment(payload.situation_analyze_end_date, 'YYYY-MM-DD').format('YYYYMMDD'),
-      moment(payload.cause_analyze_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
-      moment(payload.measure_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
-      moment(payload.improvement_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
-      moment(payload.completion_due_date, 'YYYY-MM-DD').format('YYYYMMDD'),
+      moment(moment(payload.situation_analyze_start_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(payload.situation_analyze_end_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(payload.measure_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(payload.cause_analyze_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(payload.improvement_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(payload.completion_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
     ];
     const validatedDueDates = dateValidateChecker(dueDates);
     if (!validatedDueDates.result) {

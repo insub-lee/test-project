@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react';
 import Modal from 'rc-dialog';
 import moment from 'moment';
@@ -17,12 +18,12 @@ class ProjectModal extends React.Component {
     this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
-  componentDidMount() {
-    console.debug('ProjectIdModal_componentDidMount');
-  }
+  // componentDidMount() {
+  // console.debug('ProjectIdModal_componentDidMount');
+  // }
 
   handleOpenModal(searchName) {
-    console.debug('ProjectIdModal_handleOpenModal');
+    // console.debug('ProjectIdModal_handleOpenModal');
     this.setState({ isOpen: true, searchName });
   }
 
@@ -32,7 +33,7 @@ class ProjectModal extends React.Component {
 
   callBackFromList(payload) {
     const { callbackAfterFetch } = this.props;
-    console.debug('payload', payload);
+    // console.debug('payload', payload);
     callbackAfterFetch(payload);
     this.handleCloseModal();
   }
@@ -42,27 +43,51 @@ class ProjectModal extends React.Component {
     const columns = [
       {
         title: '본부/팀',
-        dataIndex: 'prj_leader_dept_name',
+        dataIndex: 'reg_dept_name',
         percentWidth: 20,
       },
       {
         title: 'Leader',
-        dataIndex: 'prj_leader_name',
+        dataIndex: 'reg_user_name',
         percentWidth: 10,
       },
       {
         title: 'Level',
         dataIndex: 'project_level',
         percentWidth: 10,
+        render: project_level => {
+          switch (project_level) {
+            case 1:
+              return '본부';
+            case 2:
+              return '담당';
+            case 3:
+              return '팀';
+            case 4:
+              return 'Part';
+            default:
+              return '본부';
+          }
+        },
       },
       {
         title: 'Project Id',
-        dataIndex: 'prj_id',
+        dataIndex: 'project_id',
         percentWidth: 15,
+        render: (proejct_id, recrod) => (
+          <button
+            type="button"
+            onClick={() => {
+              this.callBackFromList(recrod);
+            }}
+          >
+            {proejct_id}
+          </button>
+        ),
       },
       {
         title: 'Project 명',
-        dataIndex: 'prj_title',
+        dataIndex: 'title',
         render: (title, recrod) => (
           <button
             type="button"
@@ -78,7 +103,7 @@ class ProjectModal extends React.Component {
       },
       {
         title: '시작일',
-        dataIndex: 'prj_reg_date',
+        dataIndex: 'reg_dttm',
         render: item => moment(item).format('YYYY-MM-DD'),
         percentWidth: 15,
       },
@@ -99,7 +124,7 @@ class ProjectModal extends React.Component {
           <StyledModalContent>
             <div className="pop_tit">
               Project
-              <button type="button" className="icon icon_pclose" onClick={this.handleCloseModal} />
+              <button type="button" className="icon icon_pclose" aria-label="close" onClick={this.handleCloseModal} />
             </div>
             <div className="pop_con">
               <DataTable
