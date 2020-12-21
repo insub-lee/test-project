@@ -19,10 +19,22 @@ const Main = () => {
     boards: [notice, improvementActivityNewspaper, excellentActivityCase],
     reports,
   } = useHooks();
+
   return (
     <GridContainer className="grid">
       <GridBox size={3}>
-        <section>{notice && <Board title={notice.title} data={notice.data} boardId={notice.id} formJson={notice.formJson} link={notice.link} />}</section>
+        <section>
+          {notice && (
+            <Board
+              title={notice.title}
+              data={notice.data}
+              boardId={notice.id}
+              formJson={notice.formJson}
+              link={notice.link}
+              boardCode={notice.boardCode}
+            />
+          )}
+        </section>
       </GridBox>
       <GridBox size={3}>
         <section>
@@ -33,6 +45,7 @@ const Main = () => {
               boardId={improvementActivityNewspaper.id}
               formJson={improvementActivityNewspaper.formJson}
               link={improvementActivityNewspaper.link}
+              boardCode={improvementActivityNewspaper.boardCode}
             />
           )}
         </section>
@@ -64,6 +77,7 @@ const Main = () => {
                 boardId={excellentActivityCase.id}
                 formJson={excellentActivityCase.formJson}
                 link={excellentActivityCase.link}
+                boardCode={excellentActivityCase.boardCode}
               />
             )}
           </section>
