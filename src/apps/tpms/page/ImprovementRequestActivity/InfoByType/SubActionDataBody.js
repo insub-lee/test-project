@@ -36,13 +36,17 @@ class SubActionDataBody extends Component {
           <div className="sub_tit2">
             <span className="small">유형별 조치현황</span>
             <div className="btn_wrap">
-              <button type="button" className={`icon icon_arr_big ${isExpanded ? 'on' : ''}`} onClick={this.toggleExpanded}>
+              <button
+                type="button"
+                className={`icon icon_arr_big ${isExpanded ? 'on' : ''}`}
+                onClick={this.toggleExpanded}
+              >
                 축소/확대
               </button>
             </div>
           </div>
           <div className="sub_con">
-            <ActionDataTable data={viewFilter === 'ALL' ? actionData : actionData.filter(item => item.key === viewFilter)} />
+            <ActionDataTable data={actionData} />
           </div>
         </div>
       </StyledContents>

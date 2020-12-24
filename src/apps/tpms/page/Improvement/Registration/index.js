@@ -44,7 +44,7 @@ const Registration = () => {
           <form ref={formRef} autoComplete="off" onSubmit={submitForm}>
             <input type="hidden" name="reg_dept_id" value={authInfo?.deptId || ''} />
             <input type="hidden" name="reg_dept_name" value={authInfo?.deptName || ''} />
-            <input type="hidden" name="project_leader" value={authInfo?.empNo || ''} />
+            <input type="hidden" name="project_leader" value={authInfo?.emrNo || ''} />
             <FormView datas={formJson} noBoarder noPadding isImprove />
             <BtnWrap>
               <Button type="submit" color="primary" disabled={isAuthLoading || isLoading}>

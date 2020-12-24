@@ -20,17 +20,22 @@ export const useBoard = ({ boardCode }) => {
   });
 
   useEffect(() => {
-    getBoardList().then(e => {
-      if (e === true) {
-        setIsError(false);
-        setIsLoading(false);
-      }
-    });
+    if (boardCode !== '') {
+      setIsLoading(true);
+      getBoardList().then(e => {
+        if (e === true) {
+          setIsError(false);
+          setIsLoading(false);
+        } else {
+          setIsError(true);
+          setIsLoading(false);
+        }
+      });
+    }
     // dataFetcher();
   }, [pagination, search, currentYear]);
 
   const getBoardList = async () => {
-    setIsLoading(true);
     const { current, pageSize } = pagination;
 
     const { category, text } = search;
@@ -107,12 +112,19 @@ export const useBoard = ({ boardCode }) => {
       .then(({ taskSeq: seq, realFile: real }) => {
         taskSeq = seq;
 
-        real.forEach(({ docNo, docNm, extension, down, link, seq, uid, id, name, code, fileType, size, fileSize, position }, idx) => {
-          formJson['uploader-attach_DCONO'] = formJson['uploader-attach_DCONO'].replaceAll(docNo, seq);
-          formJson['uploader-attach_FILE_PATH'] = formJson['uploader-attach_FILE_PATH'].replaceAll(docNo, seq);
-          formJson['uploader-attach_UPLOADED_FILES'] = formJson['uploader-attach_UPLOADED_FILES'].replaceAll(docNo, seq);
-        });
-        console.debug('### after fileProcess :', formJson);
+        real.forEach(
+          (
+            { docNo, docNm, extension, down, link, seq, uid, id, name, code, fileType, size, fileSize, position },
+            idx,
+          ) => {
+            formJson['uploader-attach_DCONO'] = formJson['uploader-attach_DCONO'].replaceAll(docNo, seq);
+            formJson['uploader-attach_FILE_PATH'] = formJson['uploader-attach_FILE_PATH'].replaceAll(docNo, seq);
+            formJson['uploader-attach_UPLOADED_FILES'] = formJson['uploader-attach_UPLOADED_FILES'].replaceAll(
+              docNo,
+              seq,
+            );
+          },
+        );
       })
       .then(async () => {
         if (taskSeq > 0) {
@@ -231,7 +243,10 @@ export const useBoard = ({ boardCode }) => {
         real.forEach(({ docNo, seq: fileSeq }) => {
           formJson['uploader-attach_DCONO'] = formJson['uploader-attach_DCONO'].replaceAll(docNo, fileSeq);
           formJson['uploader-attach_FILE_PATH'] = formJson['uploader-attach_FILE_PATH'].replaceAll(docNo, fileSeq);
-          formJson['uploader-attach_UPLOADED_FILES'] = formJson['uploader-attach_UPLOADED_FILES'].replaceAll(docNo, fileSeq);
+          formJson['uploader-attach_UPLOADED_FILES'] = formJson['uploader-attach_UPLOADED_FILES'].replaceAll(
+            docNo,
+            fileSeq,
+          );
         });
         console.debug('### after fileProcess :', formJson);
       })
@@ -304,7 +319,10 @@ export const useBoard = ({ boardCode }) => {
         real.forEach(({ docNo, seq: fileSeq }) => {
           formJson['uploader-attach_DCONO'] = formJson['uploader-attach_DCONO'].replaceAll(docNo, fileSeq);
           formJson['uploader-attach_FILE_PATH'] = formJson['uploader-attach_FILE_PATH'].replaceAll(docNo, fileSeq);
-          formJson['uploader-attach_UPLOADED_FILES'] = formJson['uploader-attach_UPLOADED_FILES'].replaceAll(docNo, fileSeq);
+          formJson['uploader-attach_UPLOADED_FILES'] = formJson['uploader-attach_UPLOADED_FILES'].replaceAll(
+            docNo,
+            fileSeq,
+          );
         });
         console.debug('### after fileProcess :', formJson);
       })
@@ -340,6 +358,15 @@ export const useBoard = ({ boardCode }) => {
       ...pagination,
       total: currentTotal,
     },
-    action: { replyPost, pageHandler, pageSizeHandler, updateViewCount, modifyPost, deletePost, regPost, submitSearchQuery },
+    action: {
+      replyPost,
+      pageHandler,
+      pageSizeHandler,
+      updateViewCount,
+      modifyPost,
+      deletePost,
+      regPost,
+      submitSearchQuery,
+    },
   };
 };

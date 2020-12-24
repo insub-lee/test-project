@@ -84,7 +84,7 @@ export const ReportDetail = ({ requestQuery }) => {
     },
     {
       title: 'Leader',
-      dataIndex: 'project_leader',
+      dataIndex: 'reg_user_name',
       width: '10%',
     },
     {
@@ -92,7 +92,7 @@ export const ReportDetail = ({ requestQuery }) => {
       dataIndex: 'project_level',
       width: '10%',
       render: (project_level, row, index) => (
-        <ProjectLevelSelector key={JSON.stringify(project_level) + index} keyValue={project_level} row={row} index={index} />
+        <ProjectLevelSelector key={project_level} keyValue={project_level} row={row} index={index} />
       ),
     },
     {
@@ -101,7 +101,11 @@ export const ReportDetail = ({ requestQuery }) => {
       width: '15%',
       render: (title, row) => (
         <div style={{ textAlign: 'left' }}>
-          <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(row)}>
+          <button
+            type="button"
+            style={{ color: row.status.colorCode || 'black' }}
+            onClick={() => projectInfoModalOpen(row)}
+          >
             {title}
           </button>
         </div>
@@ -118,7 +122,11 @@ export const ReportDetail = ({ requestQuery }) => {
       dataIndex: 'project_id',
       width: '10%',
       render: (project_id, row) => (
-        <button type="button" style={{ color: row.status.colorCode || 'black' }} onClick={() => projectInfoModalOpen(project_id)}>
+        <button
+          type="button"
+          style={{ color: row.status.colorCode || 'black' }}
+          onClick={() => projectInfoModalOpen(project_id)}
+        >
           {project_id}
         </button>
       ),
@@ -141,7 +149,9 @@ export const ReportDetail = ({ requestQuery }) => {
       title: '단계별진척현황',
       dataIndex: 'step',
       width: '10%',
-      render: (step, row, index) => <StepSelector level={step} row={row} index={index} isDrop={step === 22} isFinish={step === 12} />,
+      render: (step, row, index) => (
+        <StepSelector level={step} row={row} index={index} isDrop={step === 22} isFinish={step === 12} />
+      ),
     },
     {
       title: '비고',
@@ -251,7 +261,12 @@ export const ReportDetail = ({ requestQuery }) => {
               rowClassName={(_record, index) => (index % 2 === 0 ? 'old' : 'even')}
               components={components}
             />
-            <Pagination {...pagination.toJS()} groupSize={10} pageHandler={pageHandler} pageSizeHandler={pageSizeHandler} />
+            <Pagination
+              {...pagination.toJS()}
+              groupSize={10}
+              pageHandler={pageHandler}
+              pageSizeHandler={pageSizeHandler}
+            />
           </StyledTableWrapper>
           <ProjectInfoModal ref={projectInfoModalRef} />
         </div>

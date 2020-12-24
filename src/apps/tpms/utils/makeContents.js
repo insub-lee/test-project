@@ -9,7 +9,9 @@ export default (formJson = [], content = {}, readOnly = true) => {
   const contents = formJson
     .filter(item => {
       if (item.type === 'uploader') {
-        return content[`${item.option.name}_FILE_PATH`] !== undefined && content[`${item.option.name}_FILE`] !== undefined;
+        return (
+          content[`${item.option.name}_FILE_PATH`] !== undefined && content[`${item.option.name}_FILE`] !== undefined
+        );
       }
       return content[item.option.name] !== undefined;
     })

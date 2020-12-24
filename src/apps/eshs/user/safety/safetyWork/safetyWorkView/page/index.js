@@ -16,6 +16,7 @@ import SafetyWorkerTable from '../../commonComponents/SafetyWorker/viewPage';
 import SafetyEquipTable from '../../commonComponents/SafetyEquip/viewPage';
 import SafetyWorkInfo from '../../commonComponents/SafetyWorkInfo/viewPage';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
+import safetyWorkWrite from '../../safetyWorkWrite/page';
 import EduMgtView from '../../safetyEdu/EduMgt/viewPage';
 
 const AntdModal = StyledContentsModal(Modal);
@@ -29,6 +30,7 @@ class SafetyWorkMain extends Component {
       modalType: '',
       modalTitle: '',
       modalVisible: false,
+      pageViewType: 'VIEW',
       appvLineText: '',
       formData: {
         WORK_NO: '', //                 작업번호        (String, 13)
@@ -141,6 +143,9 @@ class SafetyWorkMain extends Component {
       case 'safetyEdu':
         title = '안전교육 조회';
         break;
+      case 'safetyWork':
+        title = '안전작업 조회';
+        break;
       default:
         break;
     }
@@ -149,6 +154,23 @@ class SafetyWorkMain extends Component {
       modalTitle: title,
       modalVisible: visible,
     });
+  };
+
+  handleChangeViewType = type => {
+    const { pageViewType } = this.state;
+    const { workNo } = this.props;
+    if (pageViewType === 'UPDATE' && type === 'VIEW') {
+      this.setState(
+        {
+          pageViewType: type,
+        },
+        () => this.handleGetSafetyWork(workNo),
+      );
+    } else {
+      this.setState({
+        pageViewType: type,
+      });
+    }
   };
 
   // 검색된 작업번호 선택시
@@ -169,85 +191,104 @@ class SafetyWorkMain extends Component {
   };
 
   render() {
-    const { authority } = this.props;
-    const { modalType, modalTitle, modalVisible, formData, appvLineText } = this.state;
+    const { authority, workNo } = this.props;
+    const { modalType, modalTitle, modalVisible, formData, appvLineText, pageViewType } = this.state;
     return (
-      <>
-        <StyledCustomSearchWrapper>
-          <div style={{ height: '30px' }}>
-            <div className="search-input-area" style={{ float: 'left' }}>
-              <span className="text-label">작업번호</span>
-              <AntdSearch
-                className="ant-search-inline input-search-mid mr5"
-                onClick={() => this.handleModal('safetyWork', true)}
-                onSearch={() => this.handleModal('safetyWork', true)}
-                value={formData.WORK_NO}
-                style={{ width: '200px', marginRight: '10px' }}
-              />
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
-                검색
+      <div>
+        {pageViewType === 'VIEW' && (
+          <>
+            <StyledCustomSearchWrapper>
+              <div style={{ height: '30px' }}>
+                <div className="search-input-area" style={{ float: 'left' }}>
+                  <span className="text-label">작업번호</span>
+                  <AntdSearch
+                    className="ant-search-inline input-search-mid mr5"
+                    onClick={() => this.handleModal('safetyWork', true)}
+                    onSearch={() => this.handleModal('safetyWork', true)}
+                    value={formData.WORK_NO}
+                    style={{ width: '200px', marginRight: '10px' }}
+                  />
+                  <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetSafetyWork()}>
+                    검색
+                  </StyledButton>
+                </div>
+                <div style={{ float: 'right' }}>
+                  <span className="text-label">{appvLineText}</span>
+                </div>
+              </div>
+            </StyledCustomSearchWrapper>
+            <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => alert('인쇄기능 준비중')}>
+                인쇄
               </StyledButton>
-            </div>
-            <div style={{ float: 'right' }}>
-              <span className="text-label">{appvLineText}</span>
-            </div>
-          </div>
-        </StyledCustomSearchWrapper>
-        <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-          <StyledButton className="btn-gray btn-sm btn-first" onClick={() => alert('인쇄기능 준비중')}>
-            인쇄
-          </StyledButton>
-          <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('safetyEdu', true)}>
-            안전교육 조회
-          </StyledButton>
-          {authority && authority.includes('U') && (
-            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => alert('수정')}>
-              수정
-            </StyledButton>
-          )}
-        </StyledButtonWrapper>
-        <ContentsWrapper>
-          <SafetyWorkInfo
-            formData={formData}
-            handleModal={this.handleModal}
-            handleWorkCategory={this.handleWorkCategory}
-            handleUploadFileChange={this.handleUploadFileChange}
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('safetyEdu', true)}>
+                안전교육 조회
+              </StyledButton>
+              {authority && authority.includes('U') && (
+                <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleChangeViewType('UPDATE')}>
+                  수정
+                </StyledButton>
+              )}
+            </StyledButtonWrapper>
+            <ContentsWrapper>
+              <SafetyWorkInfo
+                formData={formData}
+                handleModal={this.handleModal}
+                handleWorkCategory={this.handleWorkCategory}
+                handleUploadFileChange={this.handleUploadFileChange}
+              />
+              {formData.WORKER_LIST.length > 0 && (
+                <>
+                  <div className="middleTitle">
+                    <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+                    <span className="middleTitleText">작업자</span>
+                  </div>
+                  <div>
+                    <SafetyWorkerTable workerList={formData.WORKER_LIST} handleWorkerPosition={this.handleWorkerPosition} workerRemove={this.workerRemove} />
+                  </div>
+                </>
+              )}
+              {formData.EQUIP_LIST.length > 0 && (
+                <>
+                  <div className="middleTitle">
+                    <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+                    <span className="middleTitleText">투입장비</span>
+                  </div>
+                  <div>
+                    <SafetyEquipTable equipList={formData.EQUIP_LIST} equipRemove={this.equipRemove} />
+                  </div>
+                </>
+              )}
+            </ContentsWrapper>
+            <AntdModal
+              title={modalTitle}
+              width="70%"
+              visible={modalVisible}
+              footer={null}
+              onOk={() => this.handleModal('', false)}
+              onCancel={() => this.handleModal('', false)}
+            >
+              {modalType === 'safetyEdu' && <BizMicroDevBase component={EduMgtView} sagaKey="safetyEdu_search" />}
+              {modalType === 'safetyWork' && (
+                <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />
+              )}
+            </AntdModal>
+          </>
+        )}
+        {pageViewType === 'UPDATE' && (
+          <BizMicroDevBase
+            component={safetyWorkWrite}
+            workNo={workNo}
+            isWorkFlow={false}
+            authority={authority}
+            relKey="안전작업허가(작업부서)"
+            relKey2="WORK_NO"
+            sagaKey="safetyWork"
+            prcId={110}
+            safetyWorkViewPageFunc={this.handleChangeViewType}
           />
-          {formData.WORKER_LIST.length > 0 && (
-            <>
-              <div className="middleTitle">
-                <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
-                <span className="middleTitleText">작업자</span>
-              </div>
-              <div>
-                <SafetyWorkerTable workerList={formData.WORKER_LIST} handleWorkerPosition={this.handleWorkerPosition} workerRemove={this.workerRemove} />
-              </div>
-            </>
-          )}
-          {formData.EQUIP_LIST.length > 0 && (
-            <>
-              <div className="middleTitle">
-                <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
-                <span className="middleTitleText">투입장비</span>
-              </div>
-              <div>
-                <SafetyEquipTable equipList={formData.EQUIP_LIST} equipRemove={this.equipRemove} />
-              </div>
-            </>
-          )}
-        </ContentsWrapper>
-        <AntdModal
-          title={modalTitle}
-          width={modalType === 'cmpny' || modalType === 'equip' ? '790px' : '70%'}
-          visible={modalVisible}
-          footer={null}
-          onOk={() => this.handleModal('', false)}
-          onCancel={() => this.handleModal('', false)}
-        >
-          {modalType === 'safetyEdu' && <BizMicroDevBase component={EduMgtView} sagaKey="safetyEdu_search" />}
-          {modalType === 'safetyWork' && <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />}
-        </AntdModal>
-      </>
+        )}
+      </div>
     );
   }
 }

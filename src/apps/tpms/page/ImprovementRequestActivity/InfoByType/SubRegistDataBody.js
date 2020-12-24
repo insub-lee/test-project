@@ -36,13 +36,17 @@ class SubRegistDataBody extends Component {
           <div className="sub_tit2">
             <span className="small">유형별 등록건수현황</span>
             <div className="btn_wrap">
-              <button type="button" className={`icon icon_arr_big ${isExpanded ? 'on' : ''}`} onClick={this.toggleExpanded}>
+              <button
+                type="button"
+                className={`icon icon_arr_big ${isExpanded ? 'on' : ''}`}
+                onClick={this.toggleExpanded}
+              >
                 축소/확대
               </button>
             </div>
           </div>
           <div className="sub_con">
-            <RegistDataTable data={viewFilter === 'ALL' ? registData : registData.filter(item => item.key === viewFilter)} total={totalData} />
+            <RegistDataTable data={registData} total={totalData} />
           </div>
         </div>
       </StyledContents>

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { v4 as uuid } from 'uuid';
 
 const DataTableWrap = styled.div`
   clear: both;
@@ -47,6 +48,7 @@ const DataTableWrap = styled.div`
 `;
 
 const ActionDataTable = ({ data }) => {
+  console.debug('### ActionDataTable data :', data);
   const total = useMemo(() => {
     const result = {
       key: '합계',
@@ -58,13 +60,13 @@ const ActionDataTable = ({ data }) => {
     };
     if (data.length > 1) {
       data.forEach(item => {
-        result.value1 += item.value1;
-        result.value2 += item.value2;
-        result.value3 += item.value3;
-        result.value4 += item.value4;
+        result.value1 += item?.regcnt;
+        result.value2 += item?.closecnt;
+        result.value3 += item?.actingcnt;
+        result.value4 += item?.rejectcnt;
       });
-      if (total.value1 > 0) {
-        result.avg = (total.value2 / total.value1).toFixed(2) * 100;
+      if (result?.value1 > 0) {
+        result.avg = (result?.value2 / result?.value1).toFixed(2) * 100;
       }
     }
     return result;
@@ -95,17 +97,17 @@ const ActionDataTable = ({ data }) => {
         </thead>
         <tbody>
           {data.map(item => (
-            <tr key={item.key}>
-              <td>{item.key}</td>
-              <td>{item.value1}</td>
-              <td>{item.value2}</td>
-              <td>{item.value3}</td>
-              <td>{item.value4}</td>
-              <td>{isNaN(item.value2 / item.value1) ? 0 : (item.value2 / item.value1).toFixed(2) * 100} %</td>
+            <tr key={uuid()}>
+              <td>{item?.key}</td>
+              <td>{item?.regcnt}</td>
+              <td>{item?.closecnt}</td>
+              <td>{item?.actingcnt}</td>
+              <td>{item?.rejectcnt}</td>
+              <td>{isNaN(item?.closecnt / item?.regcnt) ? 0 : (item?.closecnt / item?.regcnt).toFixed(2) * 100} %</td>
             </tr>
           ))}
           {data.length > 1 && (
-            <tr key={total.key}>
+            <tr key={uuid()}>
               <td>{total.key}</td>
               <td>{total.value1}</td>
               <td>{total.value2}</td>

@@ -136,8 +136,14 @@ class SafetyWorkList extends Component {
         ellipsis: true,
       },
       {
-        title: '작업시간',
-        dataIndex: 'TIME',
+        title: '시작',
+        dataIndex: 'FROM_TIME',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '종료',
+        dataIndex: 'TO_TIME',
         align: 'center',
         ellipsis: true,
       },

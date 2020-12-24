@@ -49,15 +49,10 @@ const InfoByArea = () => {
                 <label className="title" htmlFor="location">
                   지역
                 </label>
-                <select
-                  name="location"
-                  id="location"
-                  // onChange={this.handleChangeFilter}
-                >
+                <select name="location" id="location">
                   <option key={uuid()} value="">
                     ALL
                   </option>
-
                   {location.map(option => (
                     <option key={uuid()} value={option.value}>
                       {option.text}
@@ -69,12 +64,7 @@ const InfoByArea = () => {
                 <label className="title" htmlFor="type">
                   분류
                 </label>
-                <select
-                  name="type"
-                  id="type"
-                  className="select_tab"
-                  // onChange={this.handleChangeType}
-                >
+                <select name="type" id="type" className="select_tab">
                   {type.map(option => (
                     <option key={option.value} value={option.value}>
                       {option.text}

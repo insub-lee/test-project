@@ -105,7 +105,7 @@ const useHooks = () => {
         },
         method: 'POST',
         data: {
-          type: 'stackedBarChartByAction',
+          type: 'stackedBarChartByActionAndArea',
           area,
           startDate,
           endDate,
@@ -216,7 +216,7 @@ const useHooks = () => {
     setViewType(requestQuery?.type);
     setStartDate(requestQuery?.startDate);
     setEndDate(requestQuery?.endDate);
-    setViewFilter(requestQuery?.area);
+    setViewFilter(requestQuery?.location);
   };
 
   return {

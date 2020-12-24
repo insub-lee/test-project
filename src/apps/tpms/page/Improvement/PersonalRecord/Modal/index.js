@@ -65,7 +65,11 @@ class ProjectInfoModal extends React.Component {
     return (
       <>
         {`${item.sign} ${item.usrid} ${item.usrnm ? item.usrnm : '퇴직자'}`}
-        {item.signlinememo ? <span style={{ display: 'block', width: '100%', border: 0 }}>{`의견: ${item.signlinememo}`}</span> : ''}
+        {item.signlinememo ? (
+          <span style={{ display: 'block', width: '100%', border: 0 }}>{`의견: ${item.signlinememo}`}</span>
+        ) : (
+          ''
+        )}
       </>
     );
   }
@@ -179,7 +183,12 @@ class ProjectInfoModal extends React.Component {
         <StyledModalContent>
           <div className="pop_tit">
             상세 내용보기
-            <button type="button" className="icon icon_pclose" aria-label="close modal" onClick={this.handleCloseModal} />
+            <button
+              type="button"
+              className="icon icon_pclose"
+              aria-label="close modal"
+              onClick={this.handleCloseModal}
+            />
           </div>
           <Spin tip="Loading..." indicator={<Icon type="loading" spin />} spinning={isLoading}>
             <div className="pop_con">
@@ -209,7 +218,7 @@ class ProjectInfoModal extends React.Component {
                       <label htmlFor="project_leader" className="title">
                         Project Leader
                       </label>
-                      <input type="text" className="input" name="project_leader" value={info?.project_leader} readOnly />
+                      <input type="text" className="input" name="project_leader" value={info?.reg_user_name} readOnly />
                     </li>
                     <li className="equipmentCustom" style={{ minHeight: '48px' }}>
                       <label htmlFor="equipment" className="title">
@@ -217,7 +226,10 @@ class ProjectInfoModal extends React.Component {
                       </label>
                       <ul>
                         {option.values.map((value, idx) => (
-                          <li key={`${JSON.stringify(value)} ${idx}`} style={{ display: 'inline-block', position: 'relative', width: '245px' }}>
+                          <li
+                            key={`${JSON.stringify(value)} ${idx}`}
+                            style={{ display: 'inline-block', position: 'relative', width: '245px' }}
+                          >
                             <span>{`${value}`}</span>
                           </li>
                         ))}
@@ -276,7 +288,14 @@ class ProjectInfoModal extends React.Component {
                       <label htmlFor="current_status" className="title">
                         {current_status}
                       </label>
-                      <input type="text" className="input" name="current_status" value={info?.current_status} readOnly maxLength={1000} />
+                      <input
+                        type="text"
+                        className="input"
+                        name="current_status"
+                        value={info?.current_status}
+                        readOnly
+                        maxLength={1000}
+                      />
                     </li>
                     <li className="frCustom width50">
                       <label htmlFor="goal" className="title">
@@ -288,7 +307,14 @@ class ProjectInfoModal extends React.Component {
                       <label htmlFor="apply_target" className="title">
                         {apply_target}
                       </label>
-                      <input type="text" className="input" name="apply_target" value={info?.apply_target} readOnly maxLength={1000} />
+                      <input
+                        type="text"
+                        className="input"
+                        name="apply_target"
+                        value={info?.apply_target}
+                        readOnly
+                        maxLength={1000}
+                      />
                     </li>
                     <li className="frCustom width50">
                       <label htmlFor="note" className="title">
@@ -306,7 +332,12 @@ class ProjectInfoModal extends React.Component {
                       <label htmlFor="problem_improvement" className="title">
                         문제점/개선
                       </label>
-                      <textarea name="problem_improvement" value={info?.problem_improvement} readOnly maxLength={1000} />
+                      <textarea
+                        name="problem_improvement"
+                        value={info?.problem_improvement}
+                        readOnly
+                        maxLength={1000}
+                      />
                     </li>
                     <li className="flCustom width50 mb0">
                       <label htmlFor="solution" className="title">
@@ -333,11 +364,15 @@ class ProjectInfoModal extends React.Component {
                           name="situation_analyze_date"
                           value={`${
                             info?.situation_analyze_start_date && info?.situation_analyze_start_date !== ''
-                              ? moment(info?.situation_analyze_start_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD')
+                              ? moment(info?.situation_analyze_start_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format(
+                                  'YYYY.MM.DD',
+                                )
                               : null
                           } ~ ${
                             info?.situation_analyze_end_date && info?.situation_analyze_end_date !== ''
-                              ? moment(info?.situation_analyze_end_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD')
+                              ? moment(info?.situation_analyze_end_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format(
+                                  'YYYY.MM.DD',
+                                )
                               : null
                           }`}
                           readOnly
@@ -353,7 +388,9 @@ class ProjectInfoModal extends React.Component {
                           name="cause_analyze_due_date"
                           value={`${
                             info?.cause_analyze_due_date && info?.cause_analyze_due_date !== ''
-                              ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD')
+                              ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format(
+                                  'YYYY.MM.DD',
+                                )
                               : null
                           }`}
                           readOnly
@@ -385,7 +422,9 @@ class ProjectInfoModal extends React.Component {
                           name="improvement_due_date"
                           value={`${
                             info?.improvement_due_date && info?.improvement_due_date !== ''
-                              ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD')
+                              ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format(
+                                  'YYYY.MM.DD',
+                                )
                               : null
                           }`}
                           readOnly
@@ -401,7 +440,9 @@ class ProjectInfoModal extends React.Component {
                           name="completion_due_date"
                           value={`${
                             info?.completion_due_date && info?.completion_due_date !== ''
-                              ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYY.MM.DD')
+                              ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format(
+                                  'YYYY.MM.DD',
+                                )
                               : null
                           }`}
                           readOnly
@@ -415,7 +456,7 @@ class ProjectInfoModal extends React.Component {
                         </label>
                         <p className="desc_p">
                           {/* {signPrclistInfo ? signPrclistInfo.filter(item => item.rownum === 1).map(item => this.combineTexterRenderer(item)) : ''} */}
-                          {info?.project_leader}
+                          {info?.reg_user_name}
                         </p>
                       </li>
                       <li>
@@ -482,11 +523,21 @@ class ProjectInfoModal extends React.Component {
                           <span className="mergeSpan">파일첨부</span>
                           {info?.real_complete_file_name ? (
                             // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                            <a href={info?.real_complete_file_path} style={{ padding: 10, background: '#e7e7e7', color: '#111b27' }} download>
+                            <a
+                              href={info?.real_complete_file_path}
+                              style={{ padding: 10, background: '#e7e7e7', color: '#111b27' }}
+                              download
+                            >
                               <i className="fas fa-paperclip" /> {info?.real_complete_file_name}
                             </a>
                           ) : (
-                            <input type="text" className="input mergeInput" name="real_complete_file_name" value="" readOnly />
+                            <input
+                              type="text"
+                              className="input mergeInput"
+                              name="real_complete_file_name"
+                              value=""
+                              readOnly
+                            />
                           )}
                         </li>
                         <li>
