@@ -21,17 +21,30 @@ class RawWaterTable extends Component {
         align: 'center',
       },
       {
-        title: '지역',
-        dataIndex: 'SITE',
-        key: 'SITE',
-        align: 'center',
-      },
-      {
         title: '분기',
         dataIndex: 'WORK_QUARTER',
         key: 'WORK_QUARTER',
         align: 'center',
       },
+      {
+        title: '구미',
+        dataIndex: 'SITE',
+        key: 'SITE',
+        align: 'right',
+      },
+      {
+        title: '청주',
+        dataIndex: 'SITE1',
+        key: 'SITE1',
+        align: 'right',
+      },
+      {
+        title: '서울',
+        dataIndex: 'SITE2',
+        key: 'SITE2',
+        align: 'right',
+      },
+      /*
       {
         title: '재해발생여부',
         dataIndex: 'ACCIDENT_YN',
@@ -48,11 +61,13 @@ class RawWaterTable extends Component {
         key: 'WORK_HOURS',
         align: 'center',
       },
+      */
+
       {
-        title: '누적시간',
-        dataIndex: 'TOTAL_HOURS',
-        key: 'TOTAL_HOURS',
-        align: 'center',
+        title: '합계',
+        dataIndex: 'ROW_SUM',
+        key: 'ROW_SUM',
+        align: 'right',
       },
     ];
     return (
