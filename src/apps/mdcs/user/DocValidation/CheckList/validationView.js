@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Radio, Button, Modal, Popconfirm, DatePicker, Input } from 'antd';
+import { Radio, Button, Modal, Popconfirm, DatePicker, Input, Spin } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
@@ -24,6 +24,8 @@ class ValidationView extends Component {
     super(props);
 
     this.state = {
+      loading: false,
+      checkYn: false, // 유효성 점검 결재요청 여부
       selectedValue: 1,
       workProcess: {},
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
@@ -53,7 +55,8 @@ class ValidationView extends Component {
   onClickEvent = () => {
     const { onValidateProcess } = this.props;
     const { selectedValue, workProcess, revDate, obsoleteOpinion } = this.state;
-    onValidateProcess(selectedValue, { revDate, obsoleteOpinion }, workProcess);
+    this.spinningOn();
+    onValidateProcess(selectedValue, { revDate, obsoleteOpinion }, workProcess, this.onCompleteProc);
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
@@ -89,14 +92,28 @@ class ValidationView extends Component {
     }
   };
 
+  spinningOn = () => this.setState({ loading: true });
+
+  spinningOff = () => this.setState({ loading: false });
+
+  checkY = () => this.setState({ checkYn: true });
+
+  onCompleteProc = () => {
+    this.spinningOff();
+    this.checkY();
+    this.showMessage('유효성 결재 요청완료');
+  }
+
   showMessage = text => message.info(<MessageContent>{text}</MessageContent>);
 
   render() {
     const { WORK_SEQ, TASK_SEQ, onModalClose, onShowProces } = this.props;
-    const { selectedValue, coverView, workProcess } = this.state;
+    const { selectedValue, coverView, workProcess, checkYn } = this.state;
 
     return (
-      <>
+      <Spin spinning={this.state.loading}>
+        { !checkYn && (
+          <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
           {workProcess && workProcess.DRAFT_PROCESS && selectedValue === 3 && (
             <WorkProcess
@@ -156,6 +173,8 @@ class ValidationView extends Component {
 
           <Button onClick={this.onCloseModal}>닫기</Button>
         </div>
+          </>
+        )}
 
         <BizBuilderBase
           sagaKey="validateView"
@@ -192,7 +211,7 @@ class ValidationView extends Component {
             )}
           />
         </AntdModal>
-      </>
+      </Spin>
     );
   }
 }
