@@ -74,13 +74,13 @@ class UserCategoryLeftMenu extends Component {
       moveNode,
       updateMymenuDisp,
       myAppTreeData,
+      asyncSetMyAppTreeData,
       saveData,
       profile,
       fixedMenu,
       visiblePersonalize,
       myAppTreeDataWithOutPersonalize,
     } = this.props;
-
     return (
       <Styled className={isShow ? 'active' : ''} onMouseLeave={setMenuClose}>
         <div className="profile-area">
@@ -90,6 +90,7 @@ class UserCategoryLeftMenu extends Component {
           <Tree
             treeData={visiblePersonalize ? myAppTreeData : myAppTreeDataWithOutPersonalize}
             saveData={saveData}
+            asyncSetMyAppTreeData={asyncSetMyAppTreeData}
             editMenu={this.onSetEditClick}
             onClick={this.onClickNode}
             execMenu={execMenu}
@@ -141,6 +142,7 @@ UserCategoryLeftMenu.propTypes = {
   menuName: PropTypes.string.isRequired,
   handleSetMenuNameSelectedIndex: PropTypes.func.isRequired,
   saveData: PropTypes.func.isRequired,
+  asyncSetMyAppTreeData: PropTypes.func.isRequired,
   moveNode: PropTypes.func.isRequired,
   updateMymenuDisp: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
@@ -174,6 +176,7 @@ const mapStateToProps = createStructuredSelector({
 });
 const mapDispatchToProps = dispatch => ({
   saveData: (node, treeData) => dispatch(routeActions.saveData(node, treeData)),
+  asyncSetMyAppTreeData: treeData => dispatch(routeActions.asyncSetMyAppTreeData(treeData)),
   moveNode: treeData => dispatch(routeActions.moveNode(treeData)),
   updateMymenuDisp: node => dispatch(routeActions.updateMymenuDisp(node)),
 });

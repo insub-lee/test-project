@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable';
 import update from 'react-addons-update';
-
+import * as treeFunc from 'containers/common/functions/treeFunc';
 import * as actionTypes from './constants';
 import { getView } from './actions';
 
@@ -200,6 +200,13 @@ const windowResizeReducer = (state = initialState, action) => {
     // 7-4
     case actionTypes.SET_MYAPP_STORE_TREE:
       return state.set('myAppStoreTreeData', action.myAppStoreTreeData ? action.myAppStoreTreeData : fromJS({}));
+    // 7-6
+    case actionTypes.ASYNC_SET_MYAPP_TREE: {
+      const newMyAppTreeData = action.myAppTreeData;
+      const oldMyAppTreeData = state.get('myAppTreeData');
+      treeFunc.mergeArray(newMyAppTreeData, oldMyAppTreeData);
+      return state.set('myAppTreeData', newMyAppTreeData);
+    }
     // 7. 마이 메뉴 관련 액션 끝 ******************
     case actionTypes.EXEC_APP:
       return state
