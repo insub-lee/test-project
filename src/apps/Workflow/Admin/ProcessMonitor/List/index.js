@@ -427,6 +427,7 @@ class List extends Component {
                 onChange={val => this.setState({ searchInfo: { ...this.state.searchInfo, STATUS_CD: val }})}
               >
                 <AntdSelect.Option value="C">재직</AntdSelect.Option>
+                <AntdSelect.Option value="H">휴직</AntdSelect.Option>
                 <AntdSelect.Option value="T">퇴직</AntdSelect.Option>
               </AntdSelect>
               <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
