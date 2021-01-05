@@ -128,6 +128,9 @@ export const SET_MYAPP_STORE_TREE = 'containers/common/Routes/SET_MYAPP_STORE_TR
 export const MOVE_MYMENU = 'containers/common/Routes/MOVE_MYMENU';
 export const UPDATE_MYMENU_DISP = 'containers/common/Routes/UPDATE_MYMENU_DISP';
 
+// 7-6
+export const ASYNC_SET_MYAPP_TREE = 'containers/common/Routes/ASYNC_SET_MYAPP_TREE';
+
 // 7. 마이 메뉴 관련 상수 끝 ******************
 
 // 8. history.action === 'POP'일 때, 데이터 로딩 ******************

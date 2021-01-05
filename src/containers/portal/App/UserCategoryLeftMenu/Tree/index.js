@@ -66,7 +66,7 @@ class Tree extends Component {
   };
 
   updateTreeData = treeData => {
-    this.props.saveData(null, treeData);
+    this.props.asyncSetMyAppTreeData(treeData);
   };
 
   handleShowAllBizMenuClick = () => {
@@ -150,7 +150,6 @@ class Tree extends Component {
       // 'icon-menuPage' 페이지 아이콘
     }
     */
-
     return {
       title: (
         <button
@@ -271,6 +270,7 @@ Tree.propTypes = {
   execMenu: PropTypes.func.isRequired,
   execPage: PropTypes.func.isRequired,
   saveData: PropTypes.func.isRequired,
+  asyncSetMyAppTreeData: PropTypes.func.isRequired,
   showNoti: PropTypes.bool.isRequired,
   visiblePersonalize: PropTypes.bool,
 };

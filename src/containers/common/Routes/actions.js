@@ -161,6 +161,12 @@ export const updateMymenuDisp = node => ({
   node,
 });
 
+// 7-6
+export const asyncSetMyAppTreeData = treeData => ({
+  type: actionTypes.ASYNC_SET_MYAPP_TREE,
+  myAppTreeData: fromJS(treeData),
+});
+
 // 7. 마이 메뉴 관련 액션 끝 ******************
 
 // 8. history.action === 'POP'일 때, 데이터 로딩 ******************
