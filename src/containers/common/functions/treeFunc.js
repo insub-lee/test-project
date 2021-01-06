@@ -76,10 +76,14 @@ const existNodeByKey = (rowInfo, treeData) => {
 const mergeArray = (newArray, oldArray) => {
   for (let i = 0; i < newArray.length; i += 1) {
     let expanded = false;
+    let UNREAD_CNT = 0;
     if (oldArray[i] && oldArray[i].expanded) {
       expanded = true;
     }
-    newArray[i] = { ...newArray[i], expanded }; // eslint-disable-line
+    if (oldArray[i] && oldArray[i].UNREAD_CNT) {
+      UNREAD_CNT = oldArray[i].UNREAD_CNT;
+    }
+    newArray[i] = { ...newArray[i], expanded, UNREAD_CNT }; // eslint-disable-line
 
     const newArrayChildren = newArray[i].children;
     const oldArrayChilden = oldArray[i] ? oldArray[i].children : undefined;

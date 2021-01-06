@@ -1459,6 +1459,29 @@ export function* getLoaddata(payload) {
 
     console.log('### 1. 메뉴 데이터 목록', setMyMenuData, selectedIndex, managerInfo, menuName);
 
+    // 메뉴 unreadCnt 동기화 용도
+    if (data && data.node) {
+      // 기존 메뉴트리데이터를 업데이트 해줌
+      const myAppTreeDataForMerge = yield select(state => state.get('common'));
+      const oldCategoryData = myAppTreeDataForMerge.get('myAppTreeData');
+
+      const resNode = yield call(Axios.post, '/api/portal/v1/page/updateAppUnread', { ...data.node }); // exuc 된 APP의 UNREAD_CNT를 0으로 초기화함
+      if (resNode) {
+        const { PRNT_ID: prtNodeId, MENU_ID: nodeId } = resNode;
+
+        const prtNodeIdx = oldCategoryData.findIndex(node => node.get('MENU_ID') === prtNodeId);
+        const nodeIdx = oldCategoryData.getIn([prtNodeIdx, 'children']).findIndex(node => node.get('MENU_ID') === nodeId);
+
+        const newCategoryData = oldCategoryData.update(
+          prtNodeIdx, node => node.set(
+            'UNREAD_CNT', 
+            node.get('UNREAD_CNT') ? node.get('UNREAD_CNT') - (node.getIn(['children', nodeIdx, 'UNREAD_CNT']) ? node.getIn(['children', nodeIdx, 'UNREAD_CNT']) : 0) : 0
+          ).setIn(['children', nodeIdx, 'UNREAD_CNT'], 0)
+        )
+        yield put({ type: actionTypes.SAVE_DATA, node: null, myAppTreeData: newCategoryData });
+      }
+    }
+
     
     
     // dockAppList
@@ -1538,9 +1561,9 @@ export function* getLoaddata(payload) {
     /**
      * app unread count update
      */
-    if (data && data.node) {
-      yield call(Axios.post, '/api/portal/v1/page/updateAppUnread', { ...data.node });
-    }
+    // if (data && data.node) {
+    //   yield call(Axios.post, '/api/portal/v1/page/updateAppUnread', { ...data.node });
+    // }
 
     if (notiVal !== null) {
       for (let a = 0; a < resultValue.length; a += 1) {
