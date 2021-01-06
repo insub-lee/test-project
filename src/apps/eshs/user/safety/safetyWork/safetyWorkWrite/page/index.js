@@ -27,6 +27,10 @@ import SafetyWorkInfo from '../../commonComponents/SafetyWorkInfo';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import Bfcheck from '../../bfCheck';
 import Styled from './Styled';
+import excel_01 from '../excel/밀폐공간점검리스트.xlsx';
+import excel_02 from '../excel/안전서약서및명단.xls';
+import excel_03 from '../excel/안전작업관리계획서.pptx';
+import excel_04 from '../excel/중량물안전작업계획서.xlsx';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -854,17 +858,25 @@ class SafetyWorkMain extends Component {
                   )}
                 </>
               )}
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174228)}>
-                안전교육 서약서
+              <StyledButton className="btn-gray btn-sm btn-first">
+                <a href={excel_02} download>
+                  안전서약 및 명단
+                </a>
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174229)}>
-                중량물 작업계획서
+              <StyledButton className="btn-gray btn-sm btn-first">
+                <a href={excel_04} download>
+                  중량물 작업계획서
+                </a>
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174231)}>
-                밀폐공간 체크리스트
+              <StyledButton className="btn-gray btn-sm btn-first">
+                <a href={excel_01} download>
+                  밀폐공간 점검리스트
+                </a>
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174230)}>
-                안전작업 관리 계획서(샘플)
+              <StyledButton className="btn-gray btn-sm btn-first">
+                <a href={excel_03} download>
+                  안전작업 관리계획서
+                </a>
               </StyledButton>
               {/* 문서상태 저장,  신청부결 상태 결재선 지정, 상신가능 */}
               {formData?.WORK_NO && (formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO && (
