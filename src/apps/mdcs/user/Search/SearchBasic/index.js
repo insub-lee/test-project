@@ -19,7 +19,7 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import ExcelDownLoad from 'components/ExcelDownLoad';
-
+import JasperViewer from 'apps/mdcs/components/JasperViewer';
 import DraftDownLoad from 'apps/mdcs/Modal/DraftDownLoad';
 import { DraggableModal as Modal } from 'components/DraggableModal/AntdDraggableModal';
 
@@ -27,11 +27,11 @@ import { DraggableModal as Modal } from 'components/DraggableModal/AntdDraggable
 
 const AntdModal = StyledAntdModal(Modal);
 const AntdTable = StyledAntdTable(Table);
-const AntdTextArea = StyledTextarea(Input.TextArea);
+// const AntdTextArea = StyledTextarea(Input.TextArea);
 const AntdInput = StyledInput(Input);
 const AntdDatePicker = StyledDatePicker(DatePicker);
 const AntdSelect = StyledSelect(Select);
-const FormItem = Form.Item;
+// const FormItem = Form.Item;
 
 const columns = [
   {
@@ -330,7 +330,32 @@ class SearchBasic extends Component {
       { field: 'deptName', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
       { field: 'name', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
     ];
-
+    let reportType = '';
+    switch (coverView.workSeq) {
+      case 901:
+        reportType = 'biz';
+        break;
+      case 1921:
+        reportType = 'tech';
+        break;
+      case 1881:
+        reportType = 'dw';
+        break;
+      case 2975:
+        reportType = 'npi';
+        break;
+      case 2941:
+        reportType = 'tds';
+        break;
+      case 3013:
+        reportType = 'wp';
+        break;
+      default:
+        break;
+    }
+    const fullpath = window.origin;
+    const jasperPath = (fullpath.includes('dev') || fullpath.includes('local')) ? 'Dev' : 'Prod';
+    const bizDocCoverView = `http://10.100.22.99:4488/jasperserver-pro/rest_v2/reports/public/reports/${jasperPath}/MDCS/${reportType}DocReport.html?workSeq=${coverView.workSeq}&taskSeq=${coverView.taskSeq}&j_username=superuser&j_password=superuser`;
     return (
       <StyledSearch>
         <div className="searchPage">
@@ -581,29 +606,32 @@ class SearchBasic extends Component {
             title="표지 보기"
             visible={coverView.visible}
             footer={null}
-            width={800}
-            initialWidth={800}
+            width={850}
+            initialWidth={850}
             okButtonProps={null}
             onCancel={this.onCloseCoverView}
             destroyOnClose
           >
-            <div className="SearchContentLayer">
-              <BizBuilderBase
-                sagaKey="CoverView"
-                viewType="VIEW"
-                workSeq={coverView.workSeq}
-                taskSeq={coverView.taskSeq}
-                viewMetaSeq={coverView.viewMetaSeq}
-                onCloseCoverView={this.onCloseCoverView}
-                ViewCustomButtons={({ onCloseCoverView }) => (
-                  <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
-                    <StyledButton className="btn-light btn-sm" onClick={onCloseCoverView}>
-                      닫기
-                    </StyledButton>
-                  </StyledButtonWrapper>
-                )}
-              />
-            </div>
+            {/*
+                <div className="SearchContentLayer">
+                  <BizBuilderBase
+                    sagaKey="CoverView"
+                    viewType="VIEW"
+                    workSeq={coverView.workSeq}
+                    taskSeq={coverView.taskSeq}
+                    viewMetaSeq={coverView.viewMetaSeq}
+                    onCloseCoverView={this.onCloseCoverView}
+                    ViewCustomButtons={({ onCloseCoverView }) => (
+                      <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+                        <StyledButton className="btn-light btn-sm" onClick={onCloseCoverView}>
+                          닫기
+                        </StyledButton>
+                      </StyledButtonWrapper>
+                    )}
+                  />
+                </div>
+            */}
+            <JasperViewer title="CoverView" src={bizDocCoverView} />
           </AntdModal>
         </div>
       </StyledSearch>

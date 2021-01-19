@@ -9,7 +9,7 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import BizBuilderBase from 'components/BizBuilderBase';
 import DraftDownLoad from 'apps/mdcs/Modal/DraftDownLoad';
 import ExcelDownLoad from 'components/ExcelDownLoad';
-
+import JasperViewer from 'apps/mdcs/components/JasperViewer';
 import history from 'utils/history';
 import { PAGINATION_OPT_CODE } from 'components/BizBuilder/Common/Constants';
 import { DraggableModal as Modal } from 'components/DraggableModal/AntdDraggableModal';
@@ -196,7 +196,32 @@ class SearchList extends Component {
   render() {
     const { listData, sagaKey, submitExtraHandler, listTotalCnt, conditional, workSeq } = this.props;
     const { SearchView, coverView, isDownVisible, selectedRow, DRAFT_PROCESS, appvMember, paginationIdx } = this.state;
-
+    let reportType = '';
+    switch (coverView.workSeq) {
+      case 901:
+        reportType = 'biz';
+        break;
+      case 1921:
+        reportType = 'tech';
+        break;
+      case 1881:
+        reportType = 'dw';
+        break;
+      case 2975:
+        reportType = 'npi';
+        break;
+      case 2941:
+        reportType = 'tds';
+        break;
+      case 3013:
+        reportType = 'wp';
+        break;
+      default:
+        break;
+    }
+    const fullpath = window.origin;
+    const jasperPath = (fullpath.includes('dev') || fullpath.includes('local')) ? 'Dev' : 'Prod';
+    const bizDocCoverView = `http://10.100.22.99:4488/jasperserver-pro/rest_v2/reports/public/reports/${jasperPath}/MDCS/${reportType}DocReport.html?workSeq=${coverView.workSeq}&taskSeq=${coverView.taskSeq}&j_username=superuser&j_password=superuser`;
     return (
       <>
         <div style={{ width: '100%', textAlign: 'right', marginBottom: '10px' }}>
@@ -297,28 +322,31 @@ class SearchList extends Component {
           title="표지 보기"
           visible={coverView.visible}
           footer={null}
-          width={800}
-          initialWidth={800}
+          width={850}
+          initialWidth={850}
           okButtonProps={null}
           onCancel={this.onCloseCoverView}
           destroyOnClose
         >
-          <BizBuilderBase
-            sagaKey="CoverView"
-            viewType="VIEW"
-            exDraftId={SearchView.draftId}
-            workSeq={coverView.workSeq}
-            taskSeq={coverView.taskSeq}
-            viewMetaSeq={coverView.viewMetaSeq}
-            onCloseCoverView={this.onCloseCoverView}
-            ViewCustomButtons={({ onCloseCoverView }) => (
-              <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
-                <StyledButton className="btn-primary btn-sm" onClick={onCloseCoverView}>
-                  닫기
-                </StyledButton>
-              </StyledButtonWrapper>
-            )}
-          />
+          {/*
+              <BizBuilderBase
+                sagaKey="CoverView"
+                viewType="VIEW"
+                exDraftId={SearchView.draftId}
+                workSeq={coverView.workSeq}
+                taskSeq={coverView.taskSeq}
+                viewMetaSeq={coverView.viewMetaSeq}
+                onCloseCoverView={this.onCloseCoverView}
+                ViewCustomButtons={({ onCloseCoverView }) => (
+                  <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+                    <StyledButton className="btn-primary btn-sm" onClick={onCloseCoverView}>
+                      닫기
+                    </StyledButton>
+                  </StyledButtonWrapper>
+                )}
+              />
+          */}
+          <JasperViewer title="CoverView" src={bizDocCoverView} />
         </AntdModal>
       </>
     );
