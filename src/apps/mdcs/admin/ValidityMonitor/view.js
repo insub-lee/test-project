@@ -5,6 +5,7 @@ import { Modal } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
+import JasperViewer from 'components/JasperViewer';
 
 const AntdModal = StyledContentsModal(Modal);
 
@@ -13,6 +14,10 @@ class ValidityView extends Component {
     super(props);
     this.state = {
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
+      jasperView: {
+        visible: false,
+        src: '',
+      },
     };
   }
 
@@ -29,9 +34,23 @@ class ValidityView extends Component {
     this.setState({ coverView: tempCoverView });
   };
 
+  // 재스퍼 리포트 보기
+  clickJasperView = src => {
+    this.setState({ jasperView: { visible: true, src } });
+  };
+
+  onCloseJasperView = () => {
+    this.setState({
+      jasperView: {
+        visible: false,
+        src: '',
+      },
+    });
+  };
+
   render() {
     const { WORK_SEQ, TASK_SEQ } = this.props;
-    const { coverView } = this.state;
+    const { coverView, jasperView } = this.state;
 
     return (
       <>
@@ -41,6 +60,7 @@ class ValidityView extends Component {
           taskSeq={TASK_SEQ}
           viewType="VIEW"
           clickCoverView={this.clickCoverView}
+          clickJasperView={this.clickJasperView}
           ViewCustomButtons={() => false}
         />
         <AntdModal
@@ -68,6 +88,19 @@ class ValidityView extends Component {
               </div>
             )}
           />
+        </AntdModal>
+        <AntdModal
+          className="JasperModal"
+          title="리포트 보기"
+          visible={jasperView.visible}
+          footer={null}
+          width={900}
+          initialWidth={900}
+          okButtonProps={null}
+          onCancel={this.onCloseJasperView}
+          destroyOnClose
+        >
+          <JasperViewer title="JasperView" src={jasperView.src} />
         </AntdModal>
       </>
     );

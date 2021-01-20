@@ -19,6 +19,7 @@ import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal'
 import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHeaderWrapper';
 import ProcessView from 'apps/Workflow/User/CommonView/processView';
 import ExcelDownLoad from 'components/ExcelDownLoad';
+import JasperViewer from 'components/JasperViewer';
 // import ApproveView from '../ApproveView';
 // import HoldView from '../MdcsAppvView/holdview';
 
@@ -122,6 +123,10 @@ class ApproveList extends Component {
         workSeq: undefined,
         taskSeq: undefined,
         viewMetaSeq: undefined,
+      },
+      jasperView: {
+        visible: false,
+        src: '',
       },
       isDcc: false,
       opinions: undefined,
@@ -476,6 +481,26 @@ class ApproveList extends Component {
     this.setState({ coverView: tempCoverView });
   };
 
+  // 재스퍼 리포트 보기
+  clickJasperView = src => {
+    const { selectedRow } = this.props;
+    if (selectedRow.REL_TYPE === 99) {
+      this.setState({ isObsCheck: true });
+    } else {
+      this.setState({ isObsCheck: false });
+    }
+    this.setState({ jasperView: { visible: true, src } });
+  };
+
+  onCloseJasperView = () => {
+    this.setState({
+      jasperView: {
+        visible: false,
+        src: '',
+      },
+    });
+  };
+
   onClickModify = () => {
     const { selectedRow } = this.props;
     const { REL_TYPE } = selectedRow;
@@ -565,6 +590,7 @@ class ApproveList extends Component {
     const {
       modalWidth,
       coverView,
+      jasperView,
       isDcc,
       holdReqList,
       currentStatus,
@@ -651,6 +677,7 @@ class ApproveList extends Component {
                 onChangeForm={this.onChangeForm}
                 closeBtnFunc={this.closeBtnFunc}
                 clickCoverView={this.clickCoverView}
+                clickJasperView={this.clickJasperView}
                 onClickModify={this.onClickModify}
                 workSeq={selectedRow && selectedRow.WORK_SEQ}
                 taskSeq={selectedRow && selectedRow.TASK_SEQ}
@@ -751,6 +778,19 @@ class ApproveList extends Component {
                   </StyledButtonWrapper>
                 )}
               />
+            </AntdModal>
+            <AntdModal
+              className="JasperModal"
+              title="리포트 보기"
+              visible={jasperView.visible}
+              footer={null}
+              width={900}
+              initialWidth={900}
+              okButtonProps={null}
+              onCancel={this.onCloseJasperView}
+              destroyOnClose
+            >
+              <JasperViewer title="JasperView" src={jasperView.src} />
             </AntdModal>
           </div>
         ) : (
@@ -889,6 +929,21 @@ class ApproveList extends Component {
                 onCloseAbrogationMultiModal={this.onCloseAbrogationMultiModal}
               ></AbrogationMultiModifyDraft>
             </AntdModal>
+            {/*
+                <AntdModal
+                  className="JasperModal"
+                  title="리포트 보기"
+                  visible={jasperView.visible}
+                  footer={null}
+                  width={900}
+                  initialWidth={900}
+                  okButtonProps={null}
+                  onCancel={this.onCloseJasperView}
+                  destroyOnClose
+                >
+                  <JasperViewer title="JasperView" src={jasperView.src} />
+                </AntdModal>
+            */}
           </div>
         )}
         <AntdModal

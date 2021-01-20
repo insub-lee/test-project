@@ -15,6 +15,7 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledTagDraft from 'components/BizBuilder/styled/Tag/StyledTagDraft';
+import JasperViewer from 'components/JasperViewer';
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
 
 const AntdModal = StyledAntdModal(Modal);
@@ -37,6 +38,10 @@ class MdcsAppvView extends Component {
         workSeq: undefined,
         taskSeq: undefined,
         viewMetaSeq: undefined,
+      },
+      jasperView: {
+        visible: false,
+        src: '',
       },
       isUserSelect: false,
       procResult: [],
@@ -152,6 +157,20 @@ class MdcsAppvView extends Component {
     this.setState({ coverView: tempCoverView });
   };
 
+  // 재스퍼 리포트 보기
+  clickJasperView = src => {
+    this.setState({ jasperView: { visible: true, src } });
+  };
+
+  onCloseJasperView = () => {
+    this.setState({
+      jasperView: {
+        visible: false,
+        src: '',
+      },
+    });
+  };
+
   getTableColumns = () => [
     {
       title: '문서번호',
@@ -261,6 +280,7 @@ class MdcsAppvView extends Component {
     const {
       modalWidth,
       coverView,
+      jasperView,
       isUserSelect,
       nextApprover,
       procResult,
@@ -475,6 +495,7 @@ class MdcsAppvView extends Component {
             taskSeq={selectedRow && selectedRow.TASK_SEQ}
             selectedRow={selectedRow}
             clickCoverView={this.clickCoverView}
+            clickJasperView={this.clickJasperView}
             ViewCustomButtons={() => false}
             isObsCheck={selectedRow.REL_TYPE === 99 ? true : false}
           />
@@ -557,6 +578,19 @@ class MdcsAppvView extends Component {
               </div>
             )}
           />
+        </AntdModal>
+        <AntdModal
+          className="JasperModal"
+          title="리포트 보기"
+          visible={jasperView.visible}
+          footer={null}
+          width={900}
+          initialWidth={900}
+          okButtonProps={null}
+          onCancel={this.onCloseJasperView}
+          destroyOnClose
+        >
+          <JasperViewer title="JasperView" src={jasperView.src} />
         </AntdModal>
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"

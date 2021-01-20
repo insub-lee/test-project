@@ -8,6 +8,7 @@ import StyledHeaderWrapper from 'components/BizBuilder/styled/Wrapper/StyledHead
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import BizBuilderBase from 'components/BizBuilderBase';
+import JasperViewer from 'components/JasperViewer';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
 import SearchBar from '../SearchBar';
@@ -27,6 +28,10 @@ class ApproveListComp extends Component {
       checkType: undefined,
       revDate: undefined,
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
+      jasperView: {
+        visible: false,
+        src: '',
+      },
       searchParam: {
         REL_TYPE: 2,
       },
@@ -137,6 +142,20 @@ class ApproveListComp extends Component {
     this.setState({ coverView: tempCoverView });
   };
 
+  // 재스퍼 리포트 보기
+  clickJasperView = src => {
+    this.setState({ jasperView: { visible: true, src } });
+  };
+
+  onCloseJasperView = () => {
+    this.setState({
+      jasperView: {
+        visible: false,
+        src: '',
+      },
+    });
+  };
+
   onModalClose = () => {
     this.setState({ visible: false });
   };
@@ -155,7 +174,7 @@ class ApproveListComp extends Component {
   };
 
   render() {
-    const { list, workSeq, taskSeq, visible, coverView, checkType, revDate, obsoleteOpinion } = this.state;
+    const { list, workSeq, taskSeq, visible, coverView, jasperView, checkType, revDate, obsoleteOpinion } = this.state;
     return (
       <Spin spinning={this.state.loading}>
         <StyledHeaderWrapper>
@@ -200,6 +219,7 @@ class ApproveListComp extends Component {
               taskSeq={taskSeq}
               viewType="VIEW"
               clickCoverView={this.clickCoverView}
+              clickJasperView={this.clickJasperView}
               ViewCustomButtons={() => false}
             />
           </AntdModal>
@@ -228,6 +248,19 @@ class ApproveListComp extends Component {
                 </div>
               )}
             />
+          </AntdModal>
+          <AntdModal
+            className="JasperModal"
+            title="리포트 보기"
+            visible={jasperView.visible}
+            footer={null}
+            width={900}
+            initialWidth={900}
+            okButtonProps={null}
+            onCancel={this.onCloseJasperView}
+            destroyOnClose
+          >
+            <JasperViewer title="JasperView" src={jasperView.src} />
           </AntdModal>
         </StyledContentsWrapper>
       </Spin>
