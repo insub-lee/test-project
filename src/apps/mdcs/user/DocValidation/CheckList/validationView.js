@@ -10,7 +10,7 @@ import BuilderProcessModal from 'apps/Workflow/WorkProcess/BuilderProcessModal';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
-
+import JasperViewer from 'components/JasperViewer';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
@@ -29,6 +29,10 @@ class ValidationView extends Component {
       selectedValue: 1,
       workProcess: {},
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
+      jasperView: {
+        visible: false,
+        src: '',
+      },
       revDate: undefined,
       obsoleteOpinion: '',
     };
@@ -70,6 +74,20 @@ class ValidationView extends Component {
     this.setState({ coverView: tempCoverView });
   };
 
+  // 재스퍼 리포트 보기
+  clickJasperView = src => {
+    this.setState({ jasperView: { visible: true, src } });
+  };
+
+  onCloseJasperView = () => {
+    this.setState({
+      jasperView: {
+        visible: false,
+        src: '',
+      },
+    });
+  };
+
   onCloseModal = () => {
     const { onModalClose } = this.props;
     onModalClose();
@@ -108,7 +126,7 @@ class ValidationView extends Component {
 
   render() {
     const { WORK_SEQ, TASK_SEQ, onModalClose, onShowProces } = this.props;
-    const { selectedValue, coverView, workProcess, checkYn } = this.state;
+    const { selectedValue, coverView, jasperView, workProcess, checkYn } = this.state;
 
     return (
       <Spin spinning={this.state.loading}>
@@ -182,6 +200,7 @@ class ValidationView extends Component {
           taskSeq={TASK_SEQ}
           viewType="VIEW"
           clickCoverView={this.clickCoverView}
+          clickJasperView={this.clickJasperView}
           ViewCustomButtons={() => false}
         />
 
@@ -210,6 +229,19 @@ class ValidationView extends Component {
               </div>
             )}
           />
+        </AntdModal>
+        <AntdModal
+          className="JasperModal"
+          title="리포트 보기"
+          visible={jasperView.visible}
+          footer={null}
+          width={900}
+          initialWidth={900}
+          okButtonProps={null}
+          onCancel={this.onCloseJasperView}
+          destroyOnClose
+        >
+          <JasperViewer title="JasperView" src={jasperView.src} />
         </AntdModal>
       </Spin>
     );

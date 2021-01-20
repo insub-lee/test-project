@@ -14,6 +14,7 @@ import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButt
 import ProcessView from 'apps/Workflow/User/CommonView/processView';
 import ExcelDownLoad from 'components/ExcelDownLoad';
 import BizBuilderBase from 'components/BizBuilderBase';
+import JasperViewer from 'components/JasperViewer';
 
 const AntdLineTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
@@ -84,6 +85,10 @@ class QueueList extends Component {
         workSeq: undefined,
         taskSeq: undefined,
         viewMetaSeq: undefined,
+      },
+      jasperView: {
+        visible: false,
+        src: '',
       },
     };
   }
@@ -221,9 +226,29 @@ class QueueList extends Component {
     this.setState({ coverView: tempCoverView });
   };
 
+  // 재스퍼 리포트 보기
+  clickJasperView = src => {
+    const { selectedRow } = this.props;
+    if (selectedRow.REL_TYPE === 99) {
+      this.setState({ isObsCheck: true });
+    } else {
+      this.setState({ isObsCheck: false });
+    }
+    this.setState({ jasperView: { visible: true, src } });
+  };
+
+  onCloseJasperView = () => {
+    this.setState({
+      jasperView: {
+        visible: false,
+        src: '',
+      },
+    });
+  };
+
   render() {
     const { viewVisible, selectedRow } = this.props;
-    const { unApproveList, paginationIdx, isPreView, isObsCheck, coverView } = this.state;
+    const { unApproveList, paginationIdx, isPreView, isObsCheck, coverView, jasperView } = this.state;
 
     return (
       <>
@@ -284,6 +309,7 @@ class QueueList extends Component {
                   // onChangeForm={this.onChangeForm}
                   closeBtnFunc={this.closeBtnFunc}
                   clickCoverView={this.clickCoverView}
+                  clickJasperView={this.clickJasperView}
                   onClickModify={this.onClickModify}
                   workSeq={selectedRow && selectedRow.WORK_SEQ}
                   taskSeq={selectedRow && selectedRow.TASK_SEQ}
@@ -328,6 +354,19 @@ class QueueList extends Component {
                 </StyledButtonWrapper>
               )}
             />
+          </AntdModal>
+          <AntdModal
+            className="JasperModal"
+            title="리포트 보기"
+            visible={jasperView.visible}
+            footer={null}
+            width={900}
+            initialWidth={900}
+            okButtonProps={null}
+            onCancel={this.onCloseJasperView}
+            destroyOnClose
+          >
+            <JasperViewer title="JasperView" src={jasperView.src} />
           </AntdModal>
           <AntdModal title="결재정보" width={680} visible={isPreView} destroyOnClose onCancel={this.onClosePreView} footer={null}>
             <ProcessView {...this.props}></ProcessView>
