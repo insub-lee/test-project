@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Radio, Button, Modal, Input } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
+import JasperViewer from 'components/JasperViewer';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
@@ -20,6 +21,10 @@ class ApproveView extends Component {
       selectedValue: 2,
       workProcess: {},
       coverView: { workSeq: undefined, taskSeq: undefined, viewMetaSeq: undefined, visible: false, viewType: 'VIEW' },
+      jasperView: {
+        visible: false,
+        src: '',
+      },
     };
   }
 
@@ -71,9 +76,23 @@ class ApproveView extends Component {
     onModalClose();
   };
 
+  // 재스퍼 리포트 보기
+  clickJasperView = src => {
+    this.setState({ jasperView: { visible: true, src } });
+  };
+
+  onCloseJasperView = () => {
+    this.setState({
+      jasperView: {
+        visible: false,
+        src: '',
+      },
+    });
+  };
+
   render() {
     const { WORK_SEQ, TASK_SEQ, onModalClose, REV_DATE, CHECKTYPE, OBSOLETE_OPINION } = this.props;
-    const { selectedValue, coverView } = this.state;
+    const { selectedValue, coverView, jasperView } = this.state;
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -114,6 +133,7 @@ class ApproveView extends Component {
           taskSeq={TASK_SEQ}
           viewType="VIEW"
           clickCoverView={this.clickCoverView}
+          clickJasperView={this.clickJasperView}
           ViewCustomButtons={() => false}
         />
 
@@ -142,6 +162,19 @@ class ApproveView extends Component {
               </div>
             )}
           />
+        </AntdModal>
+        <AntdModal
+          className="JasperModal"
+          title="리포트 보기"
+          visible={jasperView.visible}
+          footer={null}
+          width={900}
+          initialWidth={900}
+          okButtonProps={null}
+          onCancel={this.onCloseJasperView}
+          destroyOnClose
+        >
+          <JasperViewer title="JasperView" src={jasperView.src} />
         </AntdModal>
       </>
     );

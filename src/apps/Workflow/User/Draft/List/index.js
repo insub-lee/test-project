@@ -20,6 +20,7 @@ import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable'
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import ProcessView from 'apps/Workflow/User/CommonView/processView';
 import ExcelDownLoad from 'components/ExcelDownLoad';
+import JasperViewer from 'components/JasperViewer';
 
 const StyledWrap = styled.div`
   table.mdcsProcessList {
@@ -119,6 +120,10 @@ class DraftList extends Component {
         workSeq: undefined,
         taskSeq: undefined,
         viewMetaSeq: undefined,
+      },
+      jasperView: {
+        visible: false,
+        src: '',
       },
       isDcc: false,
       opinions: undefined,
@@ -423,6 +428,32 @@ class DraftList extends Component {
     this.setState({ coverView });
   };
 
+  onCloseCoverView = () => {
+    const { coverView } = this.state;
+    const tempCoverView = { ...coverView, visible: false };
+    this.setState({ coverView: tempCoverView });
+  };
+
+  // 재스퍼 리포트 보기
+  clickJasperView = src => {
+    const { selectedRow } = this.props;
+    if (selectedRow.REL_TYPE === 99) {
+      this.setState({ isObsCheck: true });
+    } else {
+      this.setState({ isObsCheck: false });
+    }
+    this.setState({ jasperView: { visible: true, src } });
+  };
+
+  onCloseJasperView = () => {
+    this.setState({
+      jasperView: {
+        visible: false,
+        src: '',
+      },
+    });
+  };
+
   closeBtnFunc = () => {
     const { getDraftList } = this.props;
     const { paginationIdx, pageSize } = this.state;
@@ -430,12 +461,6 @@ class DraftList extends Component {
     this.props.setViewVisible(false);
     const fixUrl = '/api/workflow/v1/common/approve/DraftListMDCSHandler';
     getDraftList(fixUrl, paginationIdx, pageSize);
-  };
-
-  onCloseCoverView = () => {
-    const { coverView } = this.state;
-    const tempCoverView = { ...coverView, visible: false };
-    this.setState({ coverView: tempCoverView });
   };
 
   onHoldRelase = () => {
@@ -571,6 +596,7 @@ class DraftList extends Component {
     const {
       modalWidth,
       coverView,
+      jasperView,
       holdReqList,
       abrogationList,
       draftNode,
@@ -582,6 +608,9 @@ class DraftList extends Component {
       isPreView,
       isObsCheck,
     } = this.state;
+    console.debug('test @@ ', (selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300)  || selectedRow.MODIFIABLE === 'Y');
+    console.debug('proc_status', selectedRow?.PROC_STATUS);
+    console.debug('MODIFIABLE', selectedRow?.MODIFIABLE);
     return (
       <>
         <StyledHeaderWrapper>
@@ -658,6 +687,7 @@ class DraftList extends Component {
                 viewType="VIEW"
                 closeBtnFunc={this.closeBtnFunc}
                 clickCoverView={this.clickCoverView}
+                clickJasperView={this.clickJasperView}
                 onClickModify={this.onClickModify}
                 onClickReDraft={this.onClickReDraft}
                 workSeq={selectedRow && selectedRow.WORK_SEQ}
@@ -665,17 +695,17 @@ class DraftList extends Component {
                 selectedRow={selectedRow}
                 ViewCustomButtons={({ closeBtnFunc, onClickModify, onClickReDraft }) => (
                   <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+                    {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300)  || selectedRow.MODIFIABLE === 'Y' && (
+                      <StyledButton className="btn-primary btn-sm mr5" onClick={this.onClickModify}>
+                        표지수정
+                      </StyledButton> 
+                    )}
                     {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
                       <>
                         {profile && profile.USER_ID === selectedRow.DRAFTER_ID && (
-                          <>
-                            <StyledButton className="btn-primary btn-sm mr5" onClick={onClickModify}>
-                              표지수정
-                            </StyledButton>
                             <StyledButton className="btn-primary btn-sm mr5" onClick={onClickReDraft}>
                               재기안
                             </StyledButton>
-                          </>
                         )}
                         <StyledButton className="btn-primary btn-sm mr5" onClick={this.onHoldRelase}>
                           홀드해제
@@ -769,6 +799,19 @@ class DraftList extends Component {
                   </StyledButtonWrapper>
                 )}
               />
+            </AntdModal>
+            <AntdModal
+              className="JasperModal"
+              title="리포트 보기"
+              visible={jasperView.visible}
+              footer={null}
+              width={900}
+              initialWidth={900}
+              okButtonProps={null}
+              onCancel={this.onCloseJasperView}
+              destroyOnClose
+            >
+              <JasperViewer title="JasperView" src={jasperView.src} />
             </AntdModal>
           </div>
         ) : (
@@ -873,14 +916,14 @@ class DraftList extends Component {
                     </StyledWrap>
                     <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
                       {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
-                        <>
                           <StyledButton className="btn-primary btn-sm mr5" onClick={this.onHoldRelase}>
                             홀드해제
                           </StyledButton>
+                      )}
+                      {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300)  || selectedRow.MODIFIABLE === 'Y' && (
                           <StyledButton className="btn-primary btn-sm mr5" onClick={this.onClickModify}>
                             표지수정
-                          </StyledButton>
-                        </>
+                          </StyledButton> 
                       )}
                       <StyledButton className="btn-light btn-sm" onClick={this.closeBtnFunc}>
                         닫기
@@ -907,6 +950,21 @@ class DraftList extends Component {
                 onCloseAbrogationMultiModal={this.onCloseAbrogationMultiModal}
               ></AbrogationMultiModifyDraft>
             </AntdModal>
+            {/*
+                <AntdModal
+                  className="JasperModal"
+                  title="리포트 보기"
+                  visible={jasperView.visible}
+                  footer={null}
+                  width={900}
+                  initialWidth={900}
+                  okButtonProps={null}
+                  onCancel={this.onCloseJasperView}
+                  destroyOnClose
+                >
+                  <JasperViewer title="JasperView" src={jasperView.src} />
+                </AntdModal>
+            */}
           </div>
         )}
 

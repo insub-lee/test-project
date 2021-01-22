@@ -19,7 +19,7 @@ import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable'
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import ExcelDownLoad from 'components/ExcelDownLoad';
-
+import JasperViewer from 'components/JasperViewer';
 import DraftDownLoad from 'apps/mdcs/Modal/DraftDownLoad';
 import { DraggableModal as Modal } from 'components/DraggableModal/AntdDraggableModal';
 
@@ -27,11 +27,11 @@ import { DraggableModal as Modal } from 'components/DraggableModal/AntdDraggable
 
 const AntdModal = StyledAntdModal(Modal);
 const AntdTable = StyledAntdTable(Table);
-const AntdTextArea = StyledTextarea(Input.TextArea);
+// const AntdTextArea = StyledTextarea(Input.TextArea);
 const AntdInput = StyledInput(Input);
 const AntdDatePicker = StyledDatePicker(DatePicker);
 const AntdSelect = StyledSelect(Select);
-const FormItem = Form.Item;
+// const FormItem = Form.Item;
 
 const columns = [
   {
@@ -99,6 +99,10 @@ const initState = {
     workSeq: undefined,
     taskSeq: undefined,
     viewMetaSeq: undefined,
+  },
+  jasperView: {
+    visible: false,
+    src: '',
   },
   isLastVer: 'Y',
   workSeqList: [],
@@ -209,6 +213,11 @@ class SearchBasic extends Component {
     });
   };
 
+  // 기존 표지보기
+  clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    this.setState({ coverView: { visible: true, workSeq, taskSeq, viewMetaSeq } });
+  };
+
   onCloseCoverView = () => {
     this.setState({
       coverView: {
@@ -220,8 +229,18 @@ class SearchBasic extends Component {
     });
   };
 
-  clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
-    this.setState({ coverView: { visible: true, workSeq, taskSeq, viewMetaSeq } });
+  // 재스퍼 리포트 보기
+  clickJasperView = src => {
+    this.setState({ jasperView: { visible: true, src } });
+  };
+
+  onCloseJasperView = () => {
+    this.setState({
+      jasperView: {
+        visible: false,
+        src: '',
+      },
+    });
   };
 
   onChangeDocType = workSeqList => {
@@ -271,6 +290,7 @@ class SearchBasic extends Component {
       visible,
       SearchView,
       coverView,
+      jasperView,
       gubun,
       isDownVisible,
       selectedRow,
@@ -330,7 +350,6 @@ class SearchBasic extends Component {
       { field: 'deptName', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
       { field: 'name', style: { alignment: { horizontal: 'center' }, font: { sz: '10' } } },
     ];
-
     return (
       <StyledSearch>
         <div className="searchPage">
@@ -519,6 +538,7 @@ class SearchBasic extends Component {
                   taskSeq={SearchView.taskSeq}
                   closeBtnFunc={this.closeBtnFunc}
                   clickCoverView={this.clickCoverView}
+                  clickJasperView={this.clickJasperView}
                   ViewCustomButtons={({ closeBtnFunc, isTaskFavorite, sagaKey, formData, setTaskFavorite }) => (
                     <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
                       {isTaskFavorite && (
@@ -604,6 +624,19 @@ class SearchBasic extends Component {
                 )}
               />
             </div>
+          </AntdModal>
+          <AntdModal
+            className="JasperModal"
+            title="리포트 보기"
+            visible={jasperView.visible}
+            footer={null}
+            width={900}
+            initialWidth={900}
+            okButtonProps={null}
+            onCancel={this.onCloseJasperView}
+            destroyOnClose
+          >
+            <JasperViewer title="JasperView" src={jasperView.src} />
           </AntdModal>
         </div>
       </StyledSearch>

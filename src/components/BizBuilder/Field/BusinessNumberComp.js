@@ -1,7 +1,8 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input, InputNumber } from 'antd';
+import { Input } from 'antd';
 import { debounce } from 'lodash';
+import message from 'components/Feedback/message';
 
 class BusinessNumberComp extends React.Component {
   constructor(props) {
@@ -13,24 +14,24 @@ class BusinessNumberComp extends React.Component {
   handleOnChange = value => {
     const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData, gubun } = this.props;
     if (CONFIG.property.isRequired) {
-      changeValidationData(id, COMP_FIELD, value + ''.trim().length > 0, value + ''.trim().length > 0 ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
+      changeValidationData(id, COMP_FIELD, value.trim().length > 0, value.trim().length > 0 ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
 
       if (gubun === 'SW') {
         if (isNaN(value)) {
           changeValidationData(id, COMP_FIELD, false, '10자리의 숫자만 입력해주십시오.');
-        } else if (value + ''.length !== 10) {
+        } else if (value.length !== 10) {
           changeValidationData(id, COMP_FIELD, false, '사업자등록번호는 10자리의 숫자로 입력해주십시오.');
-        } else if (!this.handleBusinessNumberCheck(`${value}`)) {
+        } else if (!this.handleBusinessNumberCheck(value)) {
           changeValidationData(id, COMP_FIELD, false, '사업자번호등록번호가 맞지 않습니다');
         }
       }
       if (gubun !== 'SW') {
-        if (!this.handleBusinessNumberCheck(`${value}`)) {
+        if (!this.handleBusinessNumberCheck(value)) {
           changeValidationData(id, COMP_FIELD, false, '사업자번호등록번호가 맞지 않습니다');
         }
       }
     }
-    changeFormData(id, COMP_FIELD, `${value}`);
+    changeFormData(id, COMP_FIELD, value);
   };
 
   handleBusinessNumberCheck = bNum => {
@@ -66,12 +67,19 @@ class BusinessNumberComp extends React.Component {
       return searchCompRenderer(this.props);
     }
     return visible ? (
-      <InputNumber
+      <Input
         defaultValue={colData}
         style={{ width: '100%' }}
         placeholder={CONFIG.property.placeholder}
-        //onChange={e => this.handleOnChange(e.target.value)}
-        onChange={value => this.handleOnChange(value)}
+        onChange={e => {
+          const reg = /[^0-9-]/gi;
+          if (reg.test(e.target.value)) {
+            message.info('숫자 -(hyphen)만 사용가능');
+            e.target.value = e.target.value.replace(/[^0-9-]/gi, '');
+          }
+          const vals = e.target.value;
+          this.handleOnChange(vals);
+        }}
         readOnly={readOnly || CONFIG.property.readOnly}
         className={CONFIG.property.className || ''}
       />
