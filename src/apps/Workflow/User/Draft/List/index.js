@@ -608,6 +608,9 @@ class DraftList extends Component {
       isPreView,
       isObsCheck,
     } = this.state;
+    console.debug('test @@ ', (selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300)  || selectedRow.MODIFIABLE === 'Y');
+    console.debug('proc_status', selectedRow?.PROC_STATUS);
+    console.debug('MODIFIABLE', selectedRow?.MODIFIABLE);
     return (
       <>
         <StyledHeaderWrapper>
@@ -692,17 +695,17 @@ class DraftList extends Component {
                 selectedRow={selectedRow}
                 ViewCustomButtons={({ closeBtnFunc, onClickModify, onClickReDraft }) => (
                   <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
+                    {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300)  || selectedRow.MODIFIABLE === 'Y' && (
+                      <StyledButton className="btn-primary btn-sm mr5" onClick={this.onClickModify}>
+                        표지수정
+                      </StyledButton> 
+                    )}
                     {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
                       <>
                         {profile && profile.USER_ID === selectedRow.DRAFTER_ID && (
-                          <>
-                            <StyledButton className="btn-primary btn-sm mr5" onClick={onClickModify}>
-                              표지수정
-                            </StyledButton>
                             <StyledButton className="btn-primary btn-sm mr5" onClick={onClickReDraft}>
                               재기안
                             </StyledButton>
-                          </>
                         )}
                         <StyledButton className="btn-primary btn-sm mr5" onClick={this.onHoldRelase}>
                           홀드해제
@@ -913,14 +916,14 @@ class DraftList extends Component {
                     </StyledWrap>
                     <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
                       {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
-                        <>
                           <StyledButton className="btn-primary btn-sm mr5" onClick={this.onHoldRelase}>
                             홀드해제
                           </StyledButton>
+                      )}
+                      {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300)  || selectedRow.MODIFIABLE === 'Y' && (
                           <StyledButton className="btn-primary btn-sm mr5" onClick={this.onClickModify}>
                             표지수정
-                          </StyledButton>
-                        </>
+                          </StyledButton> 
                       )}
                       <StyledButton className="btn-light btn-sm" onClick={this.closeBtnFunc}>
                         닫기
