@@ -17,6 +17,10 @@ class StandardDocList extends Component {
         taskSeq: undefined,
         viewMetaSeq: undefined,
       },
+      jasperView: {
+        visible: false,
+        src: '',
+      },
       listVisible: false,
       modalList: [],
       listCnt: 0,
@@ -38,6 +42,19 @@ class StandardDocList extends Component {
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
     this.setState({ coverView: { visible: true, workSeq, taskSeq, viewMetaSeq } });
+  };
+
+  clickJasperView = src => {
+    this.setState({ jasperView: { visible: true, src } });
+  };
+
+  onCloseJasperView = () => {
+    this.setState({
+      jasperView: {
+        visible: false,
+        src: '',
+      },
+    });
   };
 
   onClickRow = row => this.setState({ visible: true, viewType: 'VIEW', workSeq: row.WORK_SEQ, taskSeq: row.TASK_SEQ });
@@ -64,7 +81,7 @@ class StandardDocList extends Component {
   closeListBtnFunc = () => this.setState({ listVisible: false, modalList: [] });
 
   render() {
-    const { visible, viewType, workSeq, taskSeq, coverView, modalList, listVisible, listCnt } = this.state;
+    const { visible, viewType, workSeq, taskSeq, coverView, jasperView, modalList, listVisible, listCnt } = this.state;
     const { widgetTitle, widgetClassName, standardDocList } = this.props;
     return (
       <div className={`widget-inner ${widgetClassName}`}>
@@ -92,8 +109,11 @@ class StandardDocList extends Component {
           closeBtnFunc={this.closeBtnFunc}
           widgetTitle={widgetTitle}
           coverView={coverView}
+          jasperView={jasperView}
           clickCoverView={this.clickCoverView}
           onCloseCoverView={this.onCloseCoverView}
+          clickJasperView={this.clickJasperView}
+          onCloseJasperView={this.onCloseJasperView}
           listData={modalList}
           listVisible={listVisible}
           onClickRow={this.onClickRow}
