@@ -3,6 +3,7 @@ import { Modal } from 'antd';
 import moment from 'moment';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
 import ExcelDownLoad from 'components/ExcelDownLoad';
+import JasperViewer from 'components/JasperViewer';
 import ModalView from './ModalView';
 import ModalList from './ModalList';
 import CoverView from './CoverView';
@@ -72,21 +73,32 @@ class DocDashModal extends Component {
       closeBtnFunc,
       widgetTitle,
       coverView,
+      jasperView,
       onCloseCoverView,
       clickCoverView,
+      onCloseJasperView,
+      clickJasperView,
       onClickRow,
       listData,
       listVisible,
       closeListBtnFunc,
     } = this.props;
-    console.debug('listData', listData);
+    // console.debug('listData', listData);
     return (
       <>
         <AntdModal className="modalWrapper modalTechDoc modalCustom" visible={visible} footer={null} width={800} onCancel={closeBtnFunc} destroyOnClose>
           <>
             <div className="pop_tit">{widgetTitle}</div>
             <div className="pop_con">
-              <ModalView viewType={viewType} workSeq={workSeq} taskSeq={taskSeq} closeBtnFunc={closeBtnFunc} clickCoverView={clickCoverView} {...this.props} />
+              <ModalView
+                viewType={viewType}
+                workSeq={workSeq}
+                taskSeq={taskSeq}
+                closeBtnFunc={closeBtnFunc}
+                clickCoverView={clickCoverView}
+                clickJasperView={clickJasperView}
+                {...this.props}
+              />
             </div>
           </>
         </AntdModal>
@@ -103,6 +115,19 @@ class DocDashModal extends Component {
           <div className="SearchContentLayer">
             <CoverView coverView={coverView} onCloseCoverView={onCloseCoverView} />
           </div>
+        </AntdModal>
+        <AntdModal
+          className="modalWrapper modalTechDoc modalCustom"
+          visible={jasperView.visible || false}
+          footer={null}
+          width={900}
+          initialWidth={900}
+          okButtonProps={null}
+          onCancel={onCloseJasperView}
+          destroyOnClose
+        >
+          <div className="pop_tit">리포트 보기</div>
+          <JasperViewer title="JasperView" src={jasperView.src || ''} />
         </AntdModal>
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"

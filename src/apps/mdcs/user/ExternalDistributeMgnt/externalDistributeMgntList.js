@@ -77,6 +77,23 @@ class ExternalDistributeMgntList extends Component {
       referrer = `${referrer};${row.REFERRER_EMAIL2}`;
     }
 
+    const sendMailUserIds = [
+      'RECV_USER_ID1',
+      'RECV_USER_ID2',
+      'PURCHASE_USER_ID1',
+      'PURCHASE_USER_ID2',
+      'IQC_USER_ID1',
+      'IQC_USER_ID2',
+      'IQC_USER_ID3',
+      'IQC_USER_ID4',
+    ];
+    const toUsers = [];
+
+    sendMailUserIds.forEach(user => {
+      if (row[user]) toUsers.push(row[user]);
+    });
+
+
     const submitData = {
       PARAM: {
         ctrlType: row.CTRL_TYPE,
@@ -93,6 +110,8 @@ class ExternalDistributeMgntList extends Component {
         referrer,
         distribute_reason: row.COMMENT,
         comment: row.COMMENT,
+        toUsers,
+
       },
     };
 

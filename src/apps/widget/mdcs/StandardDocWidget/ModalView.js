@@ -49,7 +49,7 @@ class ModalView extends Component {
   };
 
   render() {
-    const { viewType, workSeq, taskSeq, closeBtnFunc, clickCoverView, sagaKey, submitHandlerBySaga } = this.props;
+    const { viewType, workSeq, taskSeq, closeBtnFunc, clickCoverView, clickJasperView, sagaKey, submitHandlerBySaga } = this.props;
     const { isDownVisible, selectedRow, DRAFT_PROCESS, appvMember } = this.state;
     return (
       <>
@@ -59,6 +59,7 @@ class ModalView extends Component {
           workSeq={workSeq}
           taskSeq={taskSeq}
           clickCoverView={clickCoverView}
+          clickJasperView={clickJasperView}
           closeBtnFunc={closeBtnFunc}
           ViewCustomButtons={({ closeBtnFunc: onClickClose, isTaskFavorite, sagaKey, formData, setTaskFavorite }) => (
             <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
