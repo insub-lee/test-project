@@ -14,8 +14,8 @@ const StyledTextField = styled.div`
       width: 100%;
       border-bottom: 1px solid #d9e0e7;
       font-size: 15px;
-      height: 45px;
-      line-height: 45px;
+      height: 49px;
+      line-height: 49px;
       color: #555;
       vertical-align: middle;
     }

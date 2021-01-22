@@ -3,13 +3,22 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Radio from '../Radio';
-import StyledRadio from './StyledRadio';
+// import StyledRadio from './StyledRadio';
 
 const StyledCheckedItem = styled.div`
   display: inline-block;
   width: calc(100% - 200px);
   background-color: #e7e7e7;
   padding: 10px;
+
+  .text {
+    height: 29px;
+    font-size: 15px;
+    line-height: 29px;
+    color: #555;
+    vertical-align: middle;
+    display: inline-block;
+  }
 `;
 
 class RadioGroup extends React.Component {
@@ -42,7 +51,7 @@ class RadioGroup extends React.Component {
   checkedItemRenderer(item) {
     return item.checked ? (
       <StyledCheckedItem>
-        <span className="text">{item.label}</span>
+        <div className="text">{item.label}</div>
       </StyledCheckedItem>
     ) : (
       ''

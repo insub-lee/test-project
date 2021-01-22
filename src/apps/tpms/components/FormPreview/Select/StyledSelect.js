@@ -14,8 +14,8 @@ const StyledSelect = styled.div`
     vertical-align: middle;
     border-bottom: 0px solid #d9e0e7;
     font-size: 15px;
-    height: 48px;
-    line-height: 48px;
+    height: 49px;
+    line-height: 49px;
     background: #e7e7e7 url(${iconSelect}) no-repeat right 10px center;
     padding: 0 10px;
     /* TextField와 맞추기 위해 주석처리 */
