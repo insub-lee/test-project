@@ -15,6 +15,10 @@ class DocDashBoard extends Component {
         taskSeq: undefined,
         viewMetaSeq: undefined,
       },
+      jasperView: {
+        visible: false,
+        src: '',
+      },
       listVisible: false,
       modalList: [],
     };
@@ -37,6 +41,19 @@ class DocDashBoard extends Component {
     this.setState({ coverView: { visible: true, workSeq, taskSeq, viewMetaSeq } });
   };
 
+  clickJasperView = src => {
+    this.setState({ jasperView: { visible: true, src } });
+  };
+
+  onCloseJasperView = () => {
+    this.setState({
+      jasperView: {
+        visible: false,
+        src: '',
+      },
+    });
+  };
+
   onClickRow = row => this.setState({ visible: true, viewType: 'VIEW', workSeq: row.WORK_SEQ, taskSeq: row.TASK_SEQ });
 
   onClickList = WORK_SEQ => {
@@ -57,7 +74,7 @@ class DocDashBoard extends Component {
   closeListBtnFunc = () => this.setState({ listVisible: false, modalList: [] });
 
   render() {
-    const { visible, viewType, workSeq, taskSeq, coverView, modalList, listVisible } = this.state;
+    const { visible, viewType, workSeq, taskSeq, coverView, jasperView, modalList, listVisible } = this.state;
     const { docCntObj } = this.props;
     return (
       <>
@@ -170,8 +187,11 @@ class DocDashBoard extends Component {
           taskSeq={taskSeq}
           closeBtnFunc={this.closeBtnFunc}
           coverView={coverView}
+          jasperView={jasperView}
           clickCoverView={this.clickCoverView}
           onCloseCoverView={this.onCloseCoverView}
+          onCloseCoverView={this.onCloseCoverView}
+          onCloseJasperView={this.onCloseJasperView}
           listData={modalList}
           listVisible={listVisible}
           onClickRow={this.onClickRow}

@@ -15,6 +15,7 @@ const dateValidateChecker = momentDates => {
     if (index === 0) {
       return false;
     }
+    console.debug()
     return momentDate.diff(momentDates[index - 1]) < 0;
   });
   return { result, message };
@@ -486,15 +487,16 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       return;
     }
 
-    /* 기간 설정에 대한 체크
+    /* 
+    기간 설정에 대한 체크
     현-원-대-개-완 순서대로 들어가야함.
-*/
+    */
 
     const dueDates = [
       moment(moment(payload.situation_analyze_start_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(payload.situation_analyze_end_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
-      moment(moment(payload.measure_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(payload.cause_analyze_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(payload.measure_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(payload.improvement_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(payload.completion_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
     ];

@@ -575,8 +575,8 @@ export default ({ originEmpNo, info, deptId = '', callback = () => {} }) => {
     const dueDates = [
       moment(moment(payload.situation_analyze_start_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(payload.situation_analyze_end_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
-      moment(moment(payload.measure_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(payload.cause_analyze_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
+      moment(moment(payload.measure_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(payload.improvement_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(payload.completion_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
     ];
