@@ -232,6 +232,7 @@ const StyledFormView = styled.div`
     }
     & .react-datepicker-wrapper {
       background-color: #e7e7e7;
+      display: inline-block;
       padding: 0 10px;
       & > input {
         border: 0;
@@ -284,6 +285,7 @@ const StyledFormView = styled.div`
     display: inline-block;
     width: 100%;
     padding-left: 0px;
+    border-bottom: 0.5px solid #d4d7df;
     & > div {
       display: inline-block;
       width: calc(100% - 200px);
@@ -304,11 +306,24 @@ const StyledFormView = styled.div`
       }
   }
 
+  .sub_form li.improve_form.radio {
+    min-height: 49px;
+    display: inline-block;
+    width: 100%;
+    border-bottom: 0.5px solid #d4d7df;
+    & > .title2 {
+        width: 200px;
+        display: inline-block;
+      }
+  }
+
   .sub_form li.improve_form.ex {
     min-height: 49px;
     display: inline-block;
     width: 100%;
-    padding-left: 0px;
+    &.borderBottom {
+      border-bottom: 0.5px solid #d4d7df;
+    }
     & > .title2 {
         width: 200px;
         display: inline-block;
@@ -321,6 +336,9 @@ const StyledFormView = styled.div`
     & .title {
       width: 20%;
       float: left;
+    }
+    & .title2 {
+      margin-bottom: 10px;
     }
     & .dates {
       width: 80%;
@@ -345,6 +363,9 @@ const StyledFormView = styled.div`
     margin-right: 25px;
     &.marginNone {
       margin-right: 0px;
+    }
+    & .title2 {
+      margin-bottom: 10px;
     }
   }
 

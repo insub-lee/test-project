@@ -4,6 +4,7 @@ const StyledTextArea = styled.div`
   & {
     display: block;
     padding: 10px 0;
+    border-top: 1px solid #d4d7df;
 
     textarea,
     p {
