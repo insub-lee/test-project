@@ -695,7 +695,7 @@ class DraftList extends Component {
                 selectedRow={selectedRow}
                 ViewCustomButtons={({ closeBtnFunc, onClickModify, onClickReDraft }) => (
                   <StyledButtonWrapper className="btn-wrap-mt-20 btn-wrap-center">
-                    {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300)  || selectedRow.MODIFIABLE === 'Y' && (
+                    {((selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300  || selectedRow.MODIFIABLE === 'Y') && ( profile?.USER_ID === selectedRow.DRAFTER_ID) )&& (
                       <StyledButton className="btn-primary btn-sm mr5" onClick={this.onClickModify}>
                         표지수정
                       </StyledButton> 
@@ -920,7 +920,7 @@ class DraftList extends Component {
                             홀드해제
                           </StyledButton>
                       )}
-                      {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300)  || selectedRow.MODIFIABLE === 'Y' && (
+                      {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300  || selectedRow.MODIFIABLE === 'Y')  && (
                           <StyledButton className="btn-primary btn-sm mr5" onClick={this.onClickModify}>
                             표지수정
                           </StyledButton> 
