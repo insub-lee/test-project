@@ -66,24 +66,25 @@ const CoverViewComp = ({ CONFIG, colData, formData, clickCoverView, clickJasperV
         <FileSearchOutlined /> 표지보기
       </StyledButton>
       {clickJasperView && reportable && (
-        <StyledButton
-          className="btn-gray btn-xxs btn-radius"
-          onClick={() => {
-            if (isIE) {
-              message.error(
-                <MessageContent>
-                  <span>Internet Explorer (IE)에선 리포트가 지원되지 않습니다.</span>
-                  <br />
-                  <span>Chrome, Edge 등 최신 브라우저를 이용해주십시오.</span>
-                </MessageContent>,
-              );
-            } else {
-              clickJasperView(bizDocCoverView);
-            }
-          }}
-        >
-          <FileSearchOutlined /> 리포트보기
-        </StyledButton>
+          <StyledButton
+            className="btn-gray btn-xxs btn-radius"
+            style={{display: jasperPath === 'Dev' ?  '' : 'none'}}
+            onClick={() => {
+              if (isIE) {
+                message.error(
+                  <MessageContent>
+                    <span>Internet Explorer (IE)에선 리포트가 지원되지 않습니다.</span>
+                    <br />
+                    <span>Chrome, Edge 등 최신 브라우저를 이용해주십시오.</span>
+                  </MessageContent>,
+                );
+              } else {
+                clickJasperView(bizDocCoverView);
+              }
+            }}
+            >
+            <FileSearchOutlined /> 리포트보기
+          </StyledButton>
       )}
     </>
   );
