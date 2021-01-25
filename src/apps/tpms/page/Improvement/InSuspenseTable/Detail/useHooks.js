@@ -80,7 +80,7 @@ export default ({ info, callback = () => {} }) => {
       },
       {
         type: 'radio-group',
-        classname: 'improve_form ex',
+        classname: 'improve_form ex borderBottom',
         option: {
           label: 'Project Type',
           name: 'project_type',

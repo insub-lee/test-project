@@ -8,14 +8,13 @@ import { getProcessRule, fillWorkFlowData } from '../../../hooks/useWorkFlow';
 import alertMessage from '../../../components/Notification/Alert';
 
 const dateValidateChecker = momentDates => {
-  console.debug('### momentDates:', momentDates);
+  console.debug('###z momentDates:', momentDates);
   let result = false;
   const message = '스케줄을 확인하세요. (이전 스케줄 날짜보다 빠를 수 없습니다.)';
   result = !momentDates.some((momentDate, index) => {
     if (index === 0) {
       return false;
     }
-    console.debug()
     return momentDate.diff(momentDates[index - 1]) < 0;
   });
   return { result, message };
@@ -59,7 +58,7 @@ const defaultFormData = () => [
   },
   {
     type: 'radio-group',
-    classname: 'improve_form ex',
+    classname: 'improve_form radio',
     option: {
       label: 'Project Type',
       name: 'project_type',
@@ -487,10 +486,9 @@ export default ({ originEmpNo, usrnm, dpcd }) => {
       return;
     }
 
-    /* 
-    기간 설정에 대한 체크
+    /* 기간 설정에 대한 체크
     현-원-대-개-완 순서대로 들어가야함.
-    */
+*/
 
     const dueDates = [
       moment(moment(payload.situation_analyze_start_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
