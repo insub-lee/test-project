@@ -104,15 +104,19 @@ class SafetyWorkList extends Component {
         const fromDt = moment(safetyWork.FROM_DT).format('YYYY-MM-DD');
         let WORK_STATUS = '작업중';
         if (fromDt > moment().format('YYYY-MM-DD')) {
-          WORK_STATUS = '작업전';
+          if (safetyWork.FROM_DT === null) {
+            WORK_STATUS = '긴급작업';
+          } else {
+            WORK_STATUS = '작업전';
+          }
         } else if (fromDt < moment().format('YYYY-MM-DD')) {
           WORK_STATUS = '작업완료';
         }
         return {
           ...safetyWork,
           WORK_STATUS,
-          WORK_TIME: Number(safetyWork.TO_TIME) - Number(safetyWork.FROM_TIME),
-          FROM_DT: moment(safetyWork.FROM_DT).format('YYYY-MM-DD'),
+          WORK_TIME: WORK_STATUS === '긴급작업' ? '' : Number(safetyWork.TO_TIME) - Number(safetyWork.FROM_TIME),
+          FROM_DT: WORK_STATUS === '긴급작업' ? '' : moment(safetyWork.FROM_DT).format('YYYY-MM-DD'),
         };
       });
       this.setState({
@@ -248,7 +252,7 @@ class SafetyWorkList extends Component {
             case '2A':
               return <span>신청승인</span>;
             case '2F':
-              return <span>신청불결</span>;
+              return <span>신청부결</span>;
             case '3':
               return <span>허가상신</span>;
             case '4A':
@@ -264,6 +268,7 @@ class SafetyWorkList extends Component {
         title: '작업상태',
         dataIndex: 'WORK_STATUS',
         align: 'center',
+        render: data => <span style={{ color: data === '긴급작업' ? '#ff3333' : '' }}>{data}</span>,
       },
       {
         title: '주작업',
@@ -304,7 +309,12 @@ class SafetyWorkList extends Component {
         title: '작업시간',
         dataIndex: 'WORK_TIME',
         align: 'center',
-        render: (data, record) => `${record.FROM_TIME}시 ~ ${record.TO_TIME}시`,
+        render: (data, record) => {
+          if (record.WORK_STATUS === '긴급작업' || !record?.FROM_TIME || !record?.TO_TIME) {
+            return '';
+          }
+          return `${record.FROM_TIME}시 ~ ${record.TO_TIME}시`;
+        },
       },
       {
         title: '작업명',
