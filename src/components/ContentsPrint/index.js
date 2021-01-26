@@ -36,7 +36,7 @@ class ContentsPrint extends Component {
   reactToPrintContent = () => this.printContents;
 
   render() {
-    const { buttonName, children, useFooter, footerType, handleBeforePrint, handleAfterPrint } = this.props;
+    const { printTitle, buttonName, children, useFooter, footerType, handleBeforePrint, handleAfterPrint } = this.props;
     return (
       <>
         <ReactToPrint
@@ -49,6 +49,7 @@ class ContentsPrint extends Component {
         <div style={{ display: 'none' }}>
           <PrintStyled ref={this.setComponentRef}>
             <div>
+              {printTitle !== '' && <h2 style={{ marginBottom: '10px' }}>{printTitle}</h2>}
               <section>{children && children}</section>
               {useFooter ? <footer>{this.renderFooter(footerType)}</footer> : ''}
             </div>
@@ -61,6 +62,7 @@ class ContentsPrint extends Component {
 
 ContentsPrint.propTypes = {
   buttonName: PropTypes.string,
+  printTitle: PropTypes.string,
   children: PropTypes.any,
   useFooter: PropTypes.bool,
   footerType: PropTypes.string,
@@ -71,6 +73,7 @@ ContentsPrint.propTypes = {
 
 ContentsPrint.defaultProps = {
   buttonName: '인쇄',
+  printTitle: '',
   children: undefined,
   useFooter: true,
   footerType: 'default',

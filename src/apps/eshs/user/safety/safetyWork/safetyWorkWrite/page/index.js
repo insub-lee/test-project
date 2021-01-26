@@ -27,10 +27,6 @@ import SafetyWorkInfo from '../../commonComponents/SafetyWorkInfo';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import Bfcheck from '../../bfCheck';
 import Styled from './Styled';
-import excel_01 from '../excel/밀폐공간점검리스트.xlsx';
-import excel_02 from '../excel/안전서약서및명단.xls';
-import excel_03 from '../excel/안전작업관리계획서.pptx';
-import excel_04 from '../excel/중량물안전작업계획서.xlsx';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -96,6 +92,9 @@ class SafetyWorkMain extends Component {
 
   componentDidMount() {
     const { sagaKey, getCallDataHandler, profile } = this.props;
+    const fullpath = window.location.origin;
+    const isReal = !(fullpath.includes('dev') || fullpath.includes('local'));
+    const nodeId = isReal ? 32483 : 32483;
     const apiArr = [
       {
         /* 거래처전체리스트 : /api/eshs/v1/common/EshsCmpnyList/null/null */
@@ -123,7 +122,7 @@ class SafetyWorkMain extends Component {
         key: 'getDgubunList',
         type: 'POST',
         url: `/api/admin/v1/common/categoryMapList`,
-        params: { PARAM: { NODE_ID: 32483 } },
+        params: { PARAM: { NODE_ID: nodeId } },
       },
     ];
     getCallDataHandler(sagaKey, apiArr, this.initForm);
@@ -175,7 +174,7 @@ class SafetyWorkMain extends Component {
   };
 
   getSafetyWorkCallback = () => {
-    const { result, prcId: PRC_ID, spinningOff } = this.props;
+    const { result, prcId: PRC_ID, spinningOff, isChange } = this.props;
     const searchSafetyWork = result?.getSafetyWork?.safetyWork || {};
 
     if (!searchSafetyWork.WORK_NO) {
@@ -195,6 +194,8 @@ class SafetyWorkMain extends Component {
       {
         formData: {
           ...searchSafetyWork,
+          REQUEST_GB: isChange && searchSafetyWork.REQUEST_GB === '긴급' ? '일반' : searchSafetyWork.REQUEST_GB,
+          DGUBUN: searchSafetyWork.DGUBUN && searchSafetyWork.DGUBUN !== '' ? searchSafetyWork.DGUBUN : 'F3동',
           FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
           REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
           SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
@@ -798,6 +799,7 @@ class SafetyWorkMain extends Component {
       isWorkFlow,
       authority,
       safetyWorkViewPageFunc,
+      isChange,
     } = this.props;
     const eshsSwtbEquip = (result && result.getSwtbEquipList && result.getSwtbEquipList.list) || [];
     return (
@@ -846,7 +848,7 @@ class SafetyWorkMain extends Component {
                     )
                   )}
                   {/* 문서상태 저장,  신청부결 상태 결재선 지정, 상신가능 */}
-                  {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO && (
+                  {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO && !isChange && (
                     <StyledButton className="btn-primary btn-sm btn-first" onClick={this.saveProcessRule}>
                       상신
                     </StyledButton>
@@ -858,25 +860,17 @@ class SafetyWorkMain extends Component {
                   )}
                 </>
               )}
-              <StyledButton className="btn-gray btn-sm btn-first">
-                <a href={excel_02} download>
-                  안전서약 및 명단
-                </a>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174228)}>
+                안전교육 서약서
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm btn-first">
-                <a href={excel_04} download>
-                  중량물 작업계획서
-                </a>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174229)}>
+                중량물 작업계획서
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm btn-first">
-                <a href={excel_01} download>
-                  밀폐공간 점검리스트
-                </a>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174231)}>
+                밀폐공간 체크리스트
               </StyledButton>
-              <StyledButton className="btn-gray btn-sm btn-first">
-                <a href={excel_03} download>
-                  안전작업 관리계획서
-                </a>
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={e => this.handleDown(e, 174230)}>
+                안전작업 관리 계획서(샘플)
               </StyledButton>
               {/* 문서상태 저장,  신청부결 상태 결재선 지정, 상신가능 */}
               {formData?.WORK_NO && (formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO && (
@@ -904,10 +898,6 @@ class SafetyWorkMain extends Component {
             <StyledButton
               className="btn-primary btn-xxs btn-first"
               onClick={() => {
-                // if (formData.WORK_NO === '') {
-                //   message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
-                //   return;
-                // }
                 this.handleModal('worker', true);
               }}
             >
@@ -929,10 +919,6 @@ class SafetyWorkMain extends Component {
             <StyledButton
               className="btn-primary btn-xxs btn-first"
               onClick={() => {
-                // if (formData.WORK_NO === '') {
-                //   message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
-                //   return;
-                // }
                 this.handleModal('equip', true);
               }}
             >
@@ -1028,6 +1014,8 @@ class SafetyWorkMain extends Component {
 SafetyWorkMain.propTypes = {
   // type - number
   prcId: PropTypes.number,
+  // type - bool
+  isChange: PropTypes.bool,
   // type - string
   sagaKey: PropTypes.string,
   relKey: PropTypes.string,
@@ -1047,6 +1035,7 @@ SafetyWorkMain.propTypes = {
 
 SafetyWorkMain.defaultProps = {
   authority: ['V'],
+  isChange: false,
 };
 
 export default SafetyWorkMain;

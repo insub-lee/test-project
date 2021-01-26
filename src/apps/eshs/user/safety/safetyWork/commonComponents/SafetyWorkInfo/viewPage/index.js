@@ -40,15 +40,21 @@ class SafetyWorkInfo extends Component {
                   <span>신청일</span>
                 </th>
                 <td colSpan={8}>
-                  <span>{formData.REQUEST_DT}</span>
+                  <span>{formData.REQUEST_GB === '일반' ? formData.REQUEST_DT : `${formData.REQUEST_GB}작업`}</span>
                 </td>
               </tr>
               <tr>
                 <th colSpan={2}>
                   <span>작업지역</span>
                 </th>
-                <td colSpan={8}>
+                <td colSpan={3}>
                   <span>{formData.SITE}</span>
+                </td>
+                <th colSpan={2}>
+                  <span>작업구분</span>
+                </th>
+                <td colSpan={3}>
+                  <span>{formData.WGUBUN}</span>
                 </td>
               </tr>
               <tr>
@@ -169,13 +175,13 @@ class SafetyWorkInfo extends Component {
                   <span>작업기간</span>
                 </th>
                 <td colSpan={3}>
-                  <span>{formData.FROM_DT !== '' && moment(formData.FROM_DT).format('YYYY-MM-DD')}</span>
+                  <span>{formData.REQUEST_GB === '일반' ? formData.FROM_DT !== '' && moment(formData.FROM_DT).format('YYYY-MM-DD') : ''}</span>
                 </td>
                 <th colSpan={2}>
                   <span>작업시간</span>
                 </th>
                 <td colSpan={3}>
-                  <span>{`${formData.FROM_TIME} ~ ${formData.TO_TIME}`}</span>
+                  <span>{formData.REQUEST_GB === '일반' && formData?.FROM_TIME && formData?.TO_TIME ? `${formData.FROM_TIME} ~ ${formData.TO_TIME}` : ''}</span>
                 </td>
               </tr>
               {viewPage !== 'ingCheck' && (
@@ -198,7 +204,6 @@ class SafetyWorkInfo extends Component {
 
 SafetyWorkInfo.propTypes = {
   formData: PropTypes.object,
-  handleModal: PropTypes.func,
   viewPage: PropTypes.string,
 };
 

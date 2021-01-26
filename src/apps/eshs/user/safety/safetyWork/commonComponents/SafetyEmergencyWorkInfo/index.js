@@ -55,7 +55,7 @@ class SafetyWorkInfo extends Component {
   };
 
   render() {
-    const { handleModal, formData, handleChangeFormData, handleWorkCategory, handleUploadFileChange } = this.props;
+    const { handleModal, formData, handleChangeFormData, handleWorkCategory } = this.props;
     return (
       <EduInfoTableStyled>
         <ContentsWrapper>
@@ -246,7 +246,6 @@ SafetyWorkInfo.propTypes = {
   handleModal: PropTypes.func,
   handleChangeFormData: PropTypes.func,
   handleWorkCategory: PropTypes.func,
-  handleUploadFileChange: PropTypes.func,
 };
 
 SafetyWorkInfo.defaultProps = {};
