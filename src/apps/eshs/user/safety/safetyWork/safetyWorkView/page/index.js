@@ -19,6 +19,8 @@ import SafetyWorkInfo from '../../commonComponents/SafetyWorkInfo/viewPage';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import safetyWorkWrite from '../../safetyWorkWrite/page';
 import EduMgtView from '../../safetyEdu/EduMgt/viewPage';
+import { saveProcessRule } from 'apps/eshs/common/workProcessRule';
+import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -33,6 +35,8 @@ class SafetyWorkMain extends Component {
       modalVisible: false,
       pageViewType: 'VIEW',
       appvLineText: '',
+      processRule: {},
+      tempProcessRule:{},
       formData: {
         WORK_NO: '', //                 작업번호        (String, 13)
         TITLE: '', //                   작업명          (String, 100)
@@ -152,6 +156,9 @@ class SafetyWorkMain extends Component {
       case 'changeType':
         title = '일반작업 전환';
         break;
+      case 'workProcess':
+        title = '결재선';
+        break;
       default:
         break;
     }
@@ -207,9 +214,36 @@ class SafetyWorkMain extends Component {
     );
   };
 
+  saveProcessRule = () => {
+    const { relKey, relKey2 } = this.props;
+    const { processRule, formData } = this.state;
+
+    saveProcessRule(
+      {
+        ...processRule,
+        DRAFT_DATA: {},
+        REL_KEY: relKey,
+        REL_KEY2: formData[relKey2],
+        DRAFT_TITLE: `${formData.TITLE}(작업번호:${formData[relKey2]})`,
+      },
+      draftId => {
+        if (draftId) {
+          return this.setState({
+            formData: { ...formData, DRAFT_ID: draftId, STTLMNT_STATUS: '1' },
+            tempProcessRule: {},
+          });
+        }
+        return false;
+      },
+    );
+  }
+
   render() {
-    const { authority, workNo } = this.props;
-    const { modalType, modalTitle, modalVisible, formData, appvLineText, pageViewType } = this.state;
+    const { authority, workNo, profile:{EMP_NO}, prcId } = this.props;
+    const { modalType, modalTitle, modalVisible, formData, appvLineText, pageViewType, processRule } = this.state;
+    console.debug('sttlmnt_Status ', formData?.STTLMNT_STATUS);
+    console.debug('REQ_EMP_NO ', formData?.REQ_EMP_NO);
+    console.debug('EMP_NO ', EMP_NO);
     return (
       <div>
         {pageViewType === 'VIEW' && (
@@ -278,6 +312,16 @@ class SafetyWorkMain extends Component {
                   수정
                 </StyledButton>
               )}
+                  {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO  && (
+                    <>
+                      <StyledButton className="btn-primary btn-sm btn-first" onClick={this.saveProcessRule}>
+                        상신
+                      </StyledButton>
+                      <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('workProcess', true)}>
+                        결재선
+                      </StyledButton>
+                    </>
+                  )}
             </StyledButtonWrapper>
             <ContentsWrapper>
               <SafetyWorkInfo
@@ -336,6 +380,36 @@ class SafetyWorkMain extends Component {
                     safetyWorkViewPageFunc={this.handleChangeViewType}
                   />
                 </div>
+              )}
+
+             {modalType === 'workProcess' && (
+                <>
+                  <CustomWorkProcess
+                    processRule={processRule}
+                    PRC_ID={prcId}
+                    draftId={formData.REQUEST_DRAFT_ID || -1}
+                    viewType={formData.REQUEST_DRAFT_ID ? 'VIEW' : 'INPUT'}
+                    setProcessRule={(_, prcRule) => this.setState({ tempProcessRule: prcRule })}
+                  />
+                  <StyledButtonWrapper className="btn-wrap-center btn-wrap-mb-10" style={{ height:'40px' }}>
+                    <StyledButton
+                      className="btn-primary btn-sm btn-first"
+                      onClick={() =>
+                        this.setState(
+                          prevState => ({
+                            processRule: prevState.tempProcessRule,
+                          }),
+                          () => this.handleModal('', false),
+                        )
+                      }
+                    >
+                      저장
+                    </StyledButton>
+                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('', false)}>
+                      닫기
+                    </StyledButton>
+                  </StyledButtonWrapper>
+                </>
               )}
             </AntdModal>
           </>
