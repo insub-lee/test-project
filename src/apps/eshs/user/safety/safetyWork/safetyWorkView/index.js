@@ -8,7 +8,7 @@ import safetyWorkWrite from './page';
 */
 
 const safetyWorkView = props => (
-  <BizMicroDevBase component={safetyWorkWrite} sagaKey="safetyWork_view" workNo={props.workNo} pageType={props.pageType} authority={props.authority} />
+  <BizMicroDevBase component={safetyWorkWrite} sagaKey="safetyWork_view" workNo={props.workNo} pageType={props.pageType} authority={props.authority} relKey="안전작업허가(작업부서)" relKey2="WORK_NO" prcId={110} />
 );
 
 safetyWorkView.propTypes = {
