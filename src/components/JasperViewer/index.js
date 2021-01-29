@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-update-set-state */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
@@ -35,6 +36,19 @@ class JasperViewer extends Component {
   componentDidMount = () => {
     this.getPDF();
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.src !== prevProps.src) {
+      // URL.revokeObjectURL(prevState.pdf);
+      this.setState(
+        {
+          pdf: undefined,
+          isLoaded: false,
+        },
+        () => this.getPDF(),
+      );
+    }
+  }
 
   // get Report(PDF)
   getPDF = async () => {
@@ -121,6 +135,7 @@ class JasperViewer extends Component {
 
   render() {
     const { isLoaded, isError, pdf } = this.state;
+    const { rotationAngle, customCanvas } = this.props;
     return (
       <Styled>
         <div className="cover-view-jasper">
@@ -130,8 +145,10 @@ class JasperViewer extends Component {
                 document={{
                   url: pdf,
                 }}
+                rotationAngle={rotationAngle}
                 navbarOnTop
                 css="customViewer"
+                canvasCss={customCanvas}
                 navigation={navigatorProps => CustomNavigation({ ...navigatorProps, optionContents: this.optionContents })}
               />
             </div>
@@ -152,12 +169,16 @@ class JasperViewer extends Component {
 
 JasperViewer.propTypes = {
   src: PropTypes.string,
+  customCanvas: PropTypes.string,
   exportFormats: PropTypes.string,
   customContents: PropTypes.any,
+  rotationAngle: PropTypes.number,
 };
 JasperViewer.defaultProps = {
   src: '',
+  customCanvas: '',
   exportFormats: 'pdf,PPTX,xls',
+  rotationAngle: 0,
 };
 
 export default JasperViewer;

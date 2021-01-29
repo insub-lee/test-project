@@ -95,11 +95,28 @@ class SafetyWorkInfo extends Component {
                   <th colSpan={2}>
                     <span>* 작업지역</span>
                   </th>
-                  <td colSpan={8}>
+                  <td colSpan={3}>
                     <AntdSelect className="select-xs" style={{ width: '200px' }} value={formData.SITE} onChange={value => handleChangeFormData('SITE', value)}>
                       <Option value="구미">구미</Option>
                       <Option value="청주">청주</Option>
                       <Option value="서울">서울</Option>
+                    </AntdSelect>
+                  </td>
+                  <th colSpan={2}>
+                    <span>작업구분</span>
+                  </th>
+                  <td colSpan={3}>
+                    <AntdSelect
+                      className="select-xs"
+                      style={{ width: '200px' }}
+                      value={formData.WGUBUN}
+                      onChange={value => handleChangeFormData('WGUBUN', value)}
+                    >
+                      <Option value="신규">신규</Option>
+                      <Option value="변경">변경</Option>
+                      <Option value="이설">이설</Option>
+                      <Option value="철거">철거</Option>
+                      <Option value="기타">기타</Option>
                     </AntdSelect>
                   </td>
                 </tr>

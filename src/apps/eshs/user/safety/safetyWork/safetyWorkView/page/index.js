@@ -12,12 +12,15 @@ import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import ContentsPrint from 'components/ContentsPrint';
 import SafetyWorkerTable from '../../commonComponents/SafetyWorker/viewPage';
 import SafetyEquipTable from '../../commonComponents/SafetyEquip/viewPage';
 import SafetyWorkInfo from '../../commonComponents/SafetyWorkInfo/viewPage';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import safetyWorkWrite from '../../safetyWorkWrite/page';
 import EduMgtView from '../../safetyEdu/EduMgt/viewPage';
+import { saveProcessRule } from 'apps/eshs/common/workProcessRule';
+import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -32,6 +35,8 @@ class SafetyWorkMain extends Component {
       modalVisible: false,
       pageViewType: 'VIEW',
       appvLineText: '',
+      processRule: {},
+      tempProcessRule:{},
       formData: {
         WORK_NO: '', //                 작업번호        (String, 13)
         TITLE: '', //                   작업명          (String, 100)
@@ -111,7 +116,7 @@ class SafetyWorkMain extends Component {
 
   getSafetyWorkCallback = (id, response) => {
     const searchSafetyWork = response?.safetyWork || {};
-    console.debug('res ', response);
+    // console.debug('res ', response);
 
     if (!searchSafetyWork.WORK_NO) {
       message.error(<MessageContent>요청하신 작업정보를 찾을 수 없습니다.</MessageContent>);
@@ -138,6 +143,8 @@ class SafetyWorkMain extends Component {
 
   // 모달 핸들러
   handleModal = (type, visible) => {
+    const { workNo } = this.props;
+    const { modalType } = this.state;
     let title = '';
     switch (type) {
       case 'safetyEdu':
@@ -146,10 +153,27 @@ class SafetyWorkMain extends Component {
       case 'safetyWork':
         title = '안전작업 조회';
         break;
+      case 'changeType':
+        title = '일반작업 전환';
+        break;
+      case 'workProcess':
+        title = '결재선';
+        break;
       default:
         break;
     }
-    this.setState({
+
+    if (modalType === 'changeType' && !visible) {
+      return this.setState({
+        modalType: type,
+        modalTitle: title,
+        modalVisible: visible,
+      },
+        () => this.handleGetSafetyWork(workNo)
+      );
+    }
+
+    return this.setState({
       modalType: type,
       modalTitle: title,
       modalVisible: visible,
@@ -190,9 +214,36 @@ class SafetyWorkMain extends Component {
     );
   };
 
+  saveProcessRule = () => {
+    const { relKey, relKey2 } = this.props;
+    const { processRule, formData } = this.state;
+
+    saveProcessRule(
+      {
+        ...processRule,
+        DRAFT_DATA: {},
+        REL_KEY: relKey,
+        REL_KEY2: formData[relKey2],
+        DRAFT_TITLE: `${formData.TITLE}(작업번호:${formData[relKey2]})`,
+      },
+      draftId => {
+        if (draftId) {
+          return this.setState({
+            formData: { ...formData, DRAFT_ID: draftId, STTLMNT_STATUS: '1' },
+            tempProcessRule: {},
+          });
+        }
+        return false;
+      },
+    );
+  }
+
   render() {
-    const { authority, workNo } = this.props;
-    const { modalType, modalTitle, modalVisible, formData, appvLineText, pageViewType } = this.state;
+    const { authority, workNo, profile:{EMP_NO}, prcId } = this.props;
+    const { modalType, modalTitle, modalVisible, formData, appvLineText, pageViewType, processRule } = this.state;
+    console.debug('sttlmnt_Status ', formData?.STTLMNT_STATUS);
+    console.debug('REQ_EMP_NO ', formData?.REQ_EMP_NO);
+    console.debug('EMP_NO ', EMP_NO);
     return (
       <div>
         {pageViewType === 'VIEW' && (
@@ -218,17 +269,59 @@ class SafetyWorkMain extends Component {
               </div>
             </StyledCustomSearchWrapper>
             <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => alert('인쇄기능 준비중')}>
-                인쇄
-              </StyledButton>
+              <ContentsPrint footerType="keyfoundry" buttonName="인쇄" printTitle={`Safety Work Infomation : ${formData.WORK_NO}`}>
+                <SafetyWorkInfo
+                  formData={formData}
+                  handleModal={this.handleModal}
+                  handleWorkCategory={this.handleWorkCategory}
+                  handleUploadFileChange={this.handleUploadFileChange}
+                />
+                {formData.WORKER_LIST.length > 0 && (
+                  <>
+                    <div className="middleTitle">
+                      <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+                      <span className="middleTitleText">작업자</span>
+                    </div>
+                    <div>
+                      <SafetyWorkerTable workerList={formData.WORKER_LIST} handleWorkerPosition={this.handleWorkerPosition} workerRemove={this.workerRemove} />
+                    </div>
+                  </>
+                )}
+                {formData.EQUIP_LIST.length > 0 && (
+                  <>
+                    <div className="middleTitle">
+                      <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+                      <span className="middleTitleText">투입장비</span>
+                    </div>
+                    <div>
+                      <SafetyEquipTable equipList={formData.EQUIP_LIST} equipRemove={this.equipRemove} />
+                    </div>
+                  </>
+                )}
+              </ContentsPrint>
               <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('safetyEdu', true)}>
                 안전교육 조회
               </StyledButton>
+              {formData.REQUEST_GB === '긴급' && (
+                <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('changeType', true)}>
+                  일반작업 전환
+                </StyledButton>
+              )}
               {authority && authority.includes('U') && (
                 <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleChangeViewType('UPDATE')}>
                   수정
                 </StyledButton>
               )}
+                  {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO  && (
+                    <>
+                      <StyledButton className="btn-primary btn-sm btn-first" onClick={this.saveProcessRule}>
+                        상신
+                      </StyledButton>
+                      <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('workProcess', true)}>
+                        결재선
+                      </StyledButton>
+                    </>
+                  )}
             </StyledButtonWrapper>
             <ContentsWrapper>
               <SafetyWorkInfo
@@ -271,6 +364,52 @@ class SafetyWorkMain extends Component {
               {modalType === 'safetyEdu' && <BizMicroDevBase component={EduMgtView} sagaKey="safetyEdu_search" />}
               {modalType === 'safetyWork' && (
                 <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />
+              )}
+              {modalType === 'changeType' && (
+                <div style={{ padding: '20px' }}>
+                  <BizMicroDevBase
+                    component={safetyWorkWrite}
+                    isChange
+                    workNo={workNo}
+                    isWorkFlow={false}
+                    authority={authority}
+                    relKey="안전작업허가(작업부서)"
+                    relKey2="WORK_NO"
+                    sagaKey="safetyWork"
+                    prcId={110}
+                    safetyWorkViewPageFunc={this.handleChangeViewType}
+                  />
+                </div>
+              )}
+
+             {modalType === 'workProcess' && (
+                <>
+                  <CustomWorkProcess
+                    processRule={processRule}
+                    PRC_ID={prcId}
+                    draftId={formData.REQUEST_DRAFT_ID || -1}
+                    viewType={formData.REQUEST_DRAFT_ID ? 'VIEW' : 'INPUT'}
+                    setProcessRule={(_, prcRule) => this.setState({ tempProcessRule: prcRule })}
+                  />
+                  <StyledButtonWrapper className="btn-wrap-center btn-wrap-mb-10" style={{ height:'40px' }}>
+                    <StyledButton
+                      className="btn-primary btn-sm btn-first"
+                      onClick={() =>
+                        this.setState(
+                          prevState => ({
+                            processRule: prevState.tempProcessRule,
+                          }),
+                          () => this.handleModal('', false),
+                        )
+                      }
+                    >
+                      저장
+                    </StyledButton>
+                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('', false)}>
+                      닫기
+                    </StyledButton>
+                  </StyledButtonWrapper>
+                </>
               )}
             </AntdModal>
           </>
