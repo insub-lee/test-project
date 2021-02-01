@@ -68,7 +68,6 @@ const CoverViewComp = ({ CONFIG, colData, formData, clickCoverView, clickJasperV
       {clickJasperView && reportable && (
           <StyledButton
             className="btn-gray btn-xxs btn-radius"
-            style={{display: jasperPath === 'Dev' ?  '' : 'none'}}
             onClick={() => {
               if (isIE) {
                 message.error(

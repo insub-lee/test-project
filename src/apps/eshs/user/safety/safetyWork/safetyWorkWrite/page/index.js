@@ -50,7 +50,7 @@ class SafetyWorkMain extends Component {
         WRK_CMPNY_CD: '', //            작업업체 코드   (String, 10)
         WLOC: '', //                    작업장소        (String, 100)
         WGUBUN: '신규', //              작업구분        (String, 4)   [신규, 변경, 이설, 철거, 기타]
-        SITE: '구미', //                지역            (String, 4)   [이천, 청주, 구미]
+        SITE: '구미', //                지역            (String, 4)   [이천, 구미]
         DGUBUN: 'F3동', //               작업동          (String, 50)  [C-1, C-2, R, 청주기타, F1동, F3동, A1동, D.I동, 기숙사동, 구미기타]
         FROM_DT: '', //                 허가 요청날짜   (Date)
         TO_DT: '', //                   허가 요청날짜   (Date)
@@ -94,7 +94,7 @@ class SafetyWorkMain extends Component {
     const { sagaKey, getCallDataHandler, profile } = this.props;
     const fullpath = window.location.origin;
     const isReal = !(fullpath.includes('dev') || fullpath.includes('local'));
-    const nodeId = isReal ? 32483 : 32483;
+    const nodeId = isReal ? 32483 : 32486;
     const apiArr = [
       {
         /* 거래처전체리스트 : /api/eshs/v1/common/EshsCmpnyList/null/null */
@@ -197,7 +197,13 @@ class SafetyWorkMain extends Component {
           REQUEST_GB: isChange && searchSafetyWork.REQUEST_GB === '긴급' ? '일반' : searchSafetyWork.REQUEST_GB,
           DGUBUN: searchSafetyWork.DGUBUN && searchSafetyWork.DGUBUN !== '' ? searchSafetyWork.DGUBUN : 'F3동',
           FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
-          REQUEST_DT: (searchSafetyWork.REQUEST_DT && moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')) || '',
+          REQUEST_DT:
+            // eslint-disable-next-line no-nested-ternary
+            isChange && searchSafetyWork.REQUEST_GB === '긴급'
+              ? moment(searchSafetyWork.CREATE_DT).format('YYYY-MM-DD')
+              : searchSafetyWork?.REQUEST_DT
+              ? moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')
+              : '',
           SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
           UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
         },
@@ -261,11 +267,6 @@ class SafetyWorkMain extends Component {
         url: `/api/eshs/v1/common/eshsWorker?type=${type}&keyword=${formData.WRK_CMPNY_CD}`,
       },
     ];
-
-    if (formData.WORK_NO === '') {
-      message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 등록해주십시오.</MessageContent>);
-      return;
-    }
     if (formData.WRK_CMPNY_CD === '') {
       message.error(<MessageContent>작업업체를 먼저 지정해 주십시오.</MessageContent>);
       return;
