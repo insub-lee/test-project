@@ -13,10 +13,12 @@ import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInp
 import MessageContent from 'components/Feedback/message.style2';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import history from 'utils/history';
 import SafetyEquipTable from '../../commonComponents/SafetyEquip';
 import SafetyEquipSelect from '../../commonComponents/SafetyEquip/EquipSelect';
 import SafetyWorkInfo from '../../commonComponents/SafetyEmergencyWorkInfo';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
+import safetyWorkWrite from '../../safetyWorkWrite/page';
 import Bfcheck from '../../bfCheck';
 
 const AntdModal = StyledContentsModal(Modal);
@@ -30,6 +32,9 @@ class emergencyWorkWrite extends Component {
       modalType: '',
       modalTitle: '',
       modalVisible: false,
+      changeInfo: {
+        workNo: '',
+      },
       formData: {
         WORK_NO: '',
         TITLE: '',
@@ -163,14 +168,37 @@ class emergencyWorkWrite extends Component {
       case 'subBfcheck':
         title = '보충작업 작업전 점검 등록';
         break;
+      case 'changeType':
+        title = '긴급작업 - 일반작업 전환';
+        break;
       default:
         break;
     }
-    this.setState({
+
+    // 일반작업 전환시
+    if (type === 'changeType') {
+      const { formData } = this.state;
+      return this.setState({
+        changeInfo: {
+          workNo: formData.WORK_NO,
+        },
+        modalType: type,
+        modalTitle: title,
+        modalVisible: visible,
+      });
+    }
+
+    return this.setState({
       modalType: type,
       modalTitle: title,
       modalVisible: visible,
     });
+  };
+
+  changeAfeter = view => {
+    if (view === 'VIEW') {
+      history.push('/apps/eshs/user/safety/safetyWork/safetyWorkList');
+    }
   };
 
   // 거래처 선택
@@ -383,8 +411,8 @@ class emergencyWorkWrite extends Component {
   };
 
   render() {
-    const { modalType, modalTitle, modalVisible, formData } = this.state;
-    const { result, viewType } = this.props;
+    const { modalType, modalTitle, modalVisible, formData, changeInfo } = this.state;
+    const { result, viewType, authority } = this.props;
     const eshsSwtbEquip = (result && result.getSwtbEquipList && result.getSwtbEquipList.list) || [];
     return (
       <>
@@ -418,20 +446,16 @@ class emergencyWorkWrite extends Component {
             </>
           )}
           <StyledButton
-            className="btn-gray btn-sm btn-first"
+            className="btn-gray btn-sm btn-first ml5"
             onClick={() => {
-              // if (formData.WORK_NO === '') {
-              //   message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 추가하십시오.</MessageContent>);
-              //   return;
-              // }
               this.handleModal('equip', true);
             }}
           >
             투입 장비 추가
           </StyledButton>
-          {viewType !== 'modal' && false && (
-            <StyledButton className="btn-primary btn-xs btn-first" onClick={() => alert('준비중')}>
-              일반작업으로 변경
+          {viewType !== 'modal' && (
+            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('changeType', true)}>
+              일반작업 전환
             </StyledButton>
           )}
         </StyledButtonWrapper>
@@ -480,6 +504,22 @@ class emergencyWorkWrite extends Component {
           {modalType === 'safetyWork' && (
             <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWorkEmergency_search" rowSelect={this.handleSafetyWorkSelect} />
           )}
+          {modalType === 'changeType' && (
+            <div style={{ padding: '20px' }}>
+              <BizMicroDevBase
+                component={safetyWorkWrite}
+                isChange
+                workNo={changeInfo.workNo}
+                isWorkFlow={false}
+                authority={authority}
+                relKey="안전작업허가(작업부서)"
+                relKey2="WORK_NO"
+                sagaKey="safetyWork"
+                prcId={110}
+                safetyWorkViewPageFunc={this.changeAfeter}
+              />
+            </div>
+          )}
         </AntdModal>
       </>
     );
@@ -488,6 +528,7 @@ class emergencyWorkWrite extends Component {
 
 emergencyWorkWrite.propTypes = {
   // type - number
+  authority: PropTypes.any,
   // type - string
   sagaKey: PropTypes.string,
   initWorkNo: PropTypes.string,

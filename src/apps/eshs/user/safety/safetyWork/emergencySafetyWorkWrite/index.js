@@ -7,9 +7,9 @@ import WritePage from './page';
     안전지킴이 - 안전작업신청 - 긴급작업 등록
 */
 
-const emergency = () => (
+const emergency = ({ authority }) => (
   <Styeld>
-    <BizMicroDevBase component={WritePage} sagaKey="emergencySafetyWork_write" />
+    <BizMicroDevBase component={WritePage} authority={authority} sagaKey="emergencySafetyWork_write" />
   </Styeld>
 );
 
