@@ -188,7 +188,7 @@ class SafetyWorkInfo extends Component {
                     <Checkbox.Group value={formData.SUB_WCATEGORY} onChange={e => handleChangeFormData('SUB_WCATEGORY', e)}>
                       <Checkbox value="고소">고소</Checkbox>
                       <Checkbox value="굴착">굴착</Checkbox>
-                      <Checkbox value="밀폐">밀폐공간</Checkbox>
+                      <Checkbox value="밀폐공간">밀폐공간</Checkbox>
                       <Checkbox value="방사선">방사선</Checkbox>
                       <br />
                       <Checkbox value="전기">전기</Checkbox>

@@ -202,7 +202,6 @@ class SafetyWorkInfo extends Component {
                       <Radio value="화기작업">
                         화기작업
                         <br />
-                        <span style={{ color: '#ff6666', marginLeft: '5px' }}>※ 화기작업 : 화염, 스파크 등을 발생이키는 작업</span>
                         {formData.WCATEGORY === '화기작업' && (
                           <>
                             <br />
@@ -218,8 +217,6 @@ class SafetyWorkInfo extends Component {
                       </Radio>
                       <Radio value="일반위험작업">
                         일반위험작업
-                        <br />
-                        <span style={{ color: '#ff6666', marginLeft: '5px' }}>※ 일반위험작업 : 화기작업 이외의 작업 </span>
                       </Radio>
                     </Radio.Group>
                   </td>
@@ -235,7 +232,7 @@ class SafetyWorkInfo extends Component {
                     <Checkbox.Group value={formData.SUB_WCATEGORY} onChange={e => handleChangeFormData('SUB_WCATEGORY', e)}>
                       <Checkbox value="고소">고소</Checkbox>
                       <Checkbox value="굴착">굴착</Checkbox>
-                      <Checkbox value="밀폐">밀폐공간</Checkbox>
+                      <Checkbox value="밀폐공간">밀폐공간</Checkbox>
                       <Checkbox value="방사선">방사선</Checkbox>
                       <br />
                       <Checkbox value="전기">전기</Checkbox>
