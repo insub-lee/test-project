@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Input, Modal } from 'antd';
+import { Input, Modal, Spin } from 'antd';
 import { AppstoreTwoTone } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import UserSelect from 'components/UserSelect';
@@ -35,6 +35,7 @@ class SafetyWorkMain extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isloaded: true,
       modalType: '',
       modalTitle: '',
       modalVisible: false,
@@ -50,7 +51,7 @@ class SafetyWorkMain extends Component {
         WRK_CMPNY_CD: '', //            작업업체 코드   (String, 10)
         WLOC: '', //                    작업장소        (String, 100)
         WGUBUN: '신규', //              작업구분        (String, 4)   [신규, 변경, 이설, 철거, 기타]
-        SITE: '구미', //                지역            (String, 4)   [이천, 구미]
+        SITE: '구미', //                지역            (String, 4)   [이천, 청주, 구미]
         DGUBUN: 'F3동', //               작업동          (String, 50)  [C-1, C-2, R, 청주기타, F1동, F3동, A1동, D.I동, 기숙사동, 구미기타]
         FROM_DT: '', //                 허가 요청날짜   (Date)
         TO_DT: '', //                   허가 요청날짜   (Date)
@@ -154,19 +155,18 @@ class SafetyWorkMain extends Component {
   };
 
   handleGetSafetyWork = workNo => {
+    this.setState({ isloaded: false });
     const { formData } = this.state;
-    const { sagaKey: id, getCallDataHandlerReturnRes, spinningOn, spinningOff } = this.props;
-    spinningOn();
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
     const type = 'searchOne';
     const searchWorkNo = workNo || formData?.WORK_NO || '';
-
     const apiInfo = {
       key: 'getSafetyWork',
       type: 'GET',
       url: `/api/eshs/v1/common/safetyWork?type=${type}&keyword=${searchWorkNo}`,
     };
     if (!searchWorkNo) {
-      spinningOff();
+      this.setState({ isloaded: true });
       message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 검색하십시오.</MessageContent>);
       return;
     }
@@ -178,7 +178,7 @@ class SafetyWorkMain extends Component {
     const searchSafetyWork = result?.getSafetyWork?.safetyWork || {};
 
     if (!searchSafetyWork.WORK_NO) {
-      spinningOff();
+      this.setState({ isloaded: true });
       return message.error(<MessageContent>요청하신 작업정보를 찾을 수 없습니다.</MessageContent>);
     }
     const appLine = searchSafetyWork?.APP_LINE || [];
@@ -190,29 +190,27 @@ class SafetyWorkMain extends Component {
       });
     }
 
-    return this.setState(
-      {
-        formData: {
-          ...searchSafetyWork,
-          REQUEST_GB: isChange && searchSafetyWork.REQUEST_GB === '긴급' ? '일반' : searchSafetyWork.REQUEST_GB,
-          DGUBUN: searchSafetyWork.DGUBUN && searchSafetyWork.DGUBUN !== '' ? searchSafetyWork.DGUBUN : 'F3동',
-          FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
-          REQUEST_DT:
-            // eslint-disable-next-line no-nested-ternary
-            isChange && searchSafetyWork.REQUEST_GB === '긴급'
-              ? moment(searchSafetyWork.CREATE_DT).format('YYYY-MM-DD')
-              : searchSafetyWork?.REQUEST_DT
-              ? moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')
-              : '',
-          SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
-          UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
-        },
-        processRule: {},
-        tempProcessRule: {},
-        appvLineText,
+    return this.setState({
+      isloaded: true,
+      formData: {
+        ...searchSafetyWork,
+        REQUEST_GB: isChange && searchSafetyWork.REQUEST_GB === '긴급' ? '일반' : searchSafetyWork.REQUEST_GB,
+        DGUBUN: searchSafetyWork.DGUBUN && searchSafetyWork.DGUBUN !== '' ? searchSafetyWork.DGUBUN : 'F3동',
+        FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
+        REQUEST_DT:
+          // eslint-disable-next-line no-nested-ternary
+          isChange && searchSafetyWork.REQUEST_GB === '긴급'
+            ? moment(searchSafetyWork.CREATE_DT).format('YYYY-MM-DD')
+            : searchSafetyWork?.REQUEST_DT
+            ? moment(searchSafetyWork.REQUEST_DT).format('YYYY-MM-DD')
+            : '',
+        SUB_WCATEGORY: (searchSafetyWork.SUB_WCATEGORY && searchSafetyWork.SUB_WCATEGORY.split(',')) || [],
+        UPLOAD_FILES: (searchSafetyWork.UPLOADED_FILES && JSON.parse(searchSafetyWork.UPLOADED_FILES)) || [],
       },
-      spinningOff,
-    );
+      processRule: {},
+      tempProcessRule: {},
+      appvLineText,
+    });
   };
 
   saveProcessRule = () => {
@@ -464,10 +462,11 @@ class SafetyWorkMain extends Component {
   };
 
   submitFormData = type => {
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, isChange } = this.props;
     const { formData } = this.state;
     const submitData = { PARAM: formData };
     const uploadFiles = formData.UPLOAD_FILES.filter(item => !item.position || item.position !== 'real') || [];
+    let isChangeValide = true;
     switch (type) {
       case 'ADD':
         // 작업번호 생성 및 작업정보 입력
@@ -481,11 +480,16 @@ class SafetyWorkMain extends Component {
         }
         break;
       case 'UPDATE':
-        if (uploadFiles === 0) {
-          submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkUpdateCallback);
-        } else {
-          const attachParam = { PARAM: { DETAIL: uploadFiles } };
-          submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', attachParam, this.uploadFileCallbackUpdate);
+        if (isChange) {
+          isChangeValide = this.validFormData(formData);
+        }
+        if (isChangeValide) {
+          if (uploadFiles === 0) {
+            submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/safetyWork', submitData, this.safetyWorkUpdateCallback);
+          } else {
+            const attachParam = { PARAM: { DETAIL: uploadFiles } };
+            submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', attachParam, this.uploadFileCallbackUpdate);
+          }
         }
         break;
       case 'DELETE':
@@ -549,12 +553,19 @@ class SafetyWorkMain extends Component {
       { field: 'FINAL_OK_EMP_NO', name: '최종검토자' },
       { field: 'WLOC', name: '작업장소' },
       { field: 'FROM_DT', name: '작업기간' },
+      // EQUIP_LIST: [],WORKER_LIST
     ];
-    const invalid = validList.findIndex(valid => formData[valid.field] === '');
+    const invalid = validList.findIndex(valid => formData[valid.field] === '' || formData[valid.field] === null);
     if (invalid !== -1) {
-      message.error(<MessageContent>{`${validList[invalid].name}은(는) 필수 입력사항 입니다.`}</MessageContent>);
+      message.error(<MessageContent>{`${validList[invalid].name}은(는) 필수 입력사항 입니다.`}</MessageContent>, 5);
       return false;
     }
+
+    if (formData.WORKER_LIST.length === 0) {
+      message.error(<MessageContent>작업자는 필수 입력사항 입니다.</MessageContent>, 5);
+      return false;
+    }
+
     return true;
   };
 
@@ -792,7 +803,7 @@ class SafetyWorkMain extends Component {
   };
 
   render() {
-    const { modalType, modalTitle, modalVisible, formData, processRule, appvLineText, dgubunList } = this.state;
+    const { modalType, modalTitle, modalVisible, formData, processRule, appvLineText, dgubunList, isloaded } = this.state;
     const {
       result,
       prcId: PRC_ID,
@@ -839,12 +850,12 @@ class SafetyWorkMain extends Component {
                   {/* 문서가 결재중이 아닐경우, 등록자와 접근자의 EMP_NO가 같은경우 수정 버튼 노출,  결재프로세스를 탄경우는 특정 권한이 있을경우만 노출 */}
                   {formData?.STTLMNT_STATUS === '0' && formData?.REQ_EMP_NO === EMP_NO ? (
                     <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('UPDATE')}>
-                      수정
+                      {isChange ? '일반작업(전환) 저장' : '수정'}
                     </StyledButton>
                   ) : (
                     authority.includes('U') && (
                       <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.submitFormData('UPDATE')}>
-                        수정
+                        {isChange ? '일반작업(전환) 저장' : '수정'}
                       </StyledButton>
                     )
                   )}
@@ -882,54 +893,55 @@ class SafetyWorkMain extends Component {
             </StyledButtonWrapper>
           </>
         )}
-
-        <ContentsWrapper>
-          <SafetyWorkInfo
-            formData={formData}
-            handleModal={this.handleModal}
-            handleChangeFormData={this.handleChangeFormData}
-            handleWorkCategory={this.handleWorkCategory}
-            handleChangeAttach={this.handleChangeAttach}
-            dgubunList={dgubunList} // 지식분류체계 DGUBUN(작업동) 코드 리스트
-            fileList={this.state.fileList || []}
-          />
-          <div className="middleTitle">
-            <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
-            <span className="middleTitleText">작업자</span>
-            <StyledButton
-              className="btn-primary btn-xxs btn-first"
-              onClick={() => {
-                this.handleModal('worker', true);
-              }}
-            >
-              작업자 추가
-            </StyledButton>
-            <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.handleModal('safetyEdu', true)}>
-              안전교육 등록
-            </StyledButton>
-            <StyledButton className="btn-gray btn-xxs btn-first" onClick={() => this.handleGetWorkers()}>
-              안전교육 수료자 가져오기
-            </StyledButton>
-          </div>
-          <div>
-            <SafetyWorkerTable workerList={formData.WORKER_LIST} handleWorkerPosition={this.handleWorkerPosition} workerRemove={this.workerRemove} />
-          </div>
-          <div className="middleTitle">
-            <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
-            <span className="middleTitleText">투입장비</span>
-            <StyledButton
-              className="btn-primary btn-xxs btn-first"
-              onClick={() => {
-                this.handleModal('equip', true);
-              }}
-            >
-              투입 장비 추가
-            </StyledButton>
-          </div>
-          <div>
-            <SafetyEquipTable equipList={formData.EQUIP_LIST} equipRemove={this.equipRemove} />
-          </div>
-        </ContentsWrapper>
+        <Spin spinning={!isloaded} tip="안전작업 정보 호출중">
+          <ContentsWrapper>
+            <SafetyWorkInfo
+              formData={formData}
+              handleModal={this.handleModal}
+              handleChangeFormData={this.handleChangeFormData}
+              handleWorkCategory={this.handleWorkCategory}
+              handleChangeAttach={this.handleChangeAttach}
+              dgubunList={dgubunList} // 지식분류체계 DGUBUN(작업동) 코드 리스트
+              fileList={this.state.fileList || []}
+            />
+            <div className="middleTitle">
+              <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+              <span className="middleTitleText">작업자</span>
+              <StyledButton
+                className="btn-primary btn-xxs btn-first"
+                onClick={() => {
+                  this.handleModal('worker', true);
+                }}
+              >
+                작업자 추가
+              </StyledButton>
+              <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => this.handleModal('safetyEdu', true)}>
+                안전교육 등록
+              </StyledButton>
+              <StyledButton className="btn-gray btn-xxs btn-first" onClick={() => this.handleGetWorkers()}>
+                안전교육 수료자 가져오기
+              </StyledButton>
+            </div>
+            <div>
+              <SafetyWorkerTable workerList={formData.WORKER_LIST} handleWorkerPosition={this.handleWorkerPosition} workerRemove={this.workerRemove} />
+            </div>
+            <div className="middleTitle">
+              <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+              <span className="middleTitleText">투입장비</span>
+              <StyledButton
+                className="btn-primary btn-xxs btn-first"
+                onClick={() => {
+                  this.handleModal('equip', true);
+                }}
+              >
+                투입 장비 추가
+              </StyledButton>
+            </div>
+            <div>
+              <SafetyEquipTable equipList={formData.EQUIP_LIST} equipRemove={this.equipRemove} />
+            </div>
+          </ContentsWrapper>
+        </Spin>
         <AntdModal
           className="modal-table-pad"
           title={modalTitle}

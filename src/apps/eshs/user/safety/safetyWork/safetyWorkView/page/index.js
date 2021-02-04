@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { Input, Modal } from 'antd';
+import { Input, Modal, Spin } from 'antd';
 import { AppstoreTwoTone } from '@ant-design/icons';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
@@ -12,15 +12,13 @@ import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import ContentsPrint from 'components/ContentsPrint';
+import JasperViewer from 'components/JasperViewer';
 import SafetyWorkerTable from '../../commonComponents/SafetyWorker/viewPage';
 import SafetyEquipTable from '../../commonComponents/SafetyEquip/viewPage';
 import SafetyWorkInfo from '../../commonComponents/SafetyWorkInfo/viewPage';
 import SearchSafetyWork from '../../commonComponents/safetyWorkSearch';
 import safetyWorkWrite from '../../safetyWorkWrite/page';
 import EduMgtView from '../../safetyEdu/EduMgt/viewPage';
-import { saveProcessRule } from 'apps/eshs/common/workProcessRule';
-import CustomWorkProcess from 'apps/Workflow/CustomWorkProcess';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
@@ -29,14 +27,13 @@ class SafetyWorkMain extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoaded: true,
       init: true,
       modalType: '',
       modalTitle: '',
       modalVisible: false,
       pageViewType: 'VIEW',
       appvLineText: '',
-      processRule: {},
-      tempProcessRule:{},
       formData: {
         WORK_NO: '', //                 작업번호        (String, 13)
         TITLE: '', //                   작업명          (String, 100)
@@ -98,6 +95,7 @@ class SafetyWorkMain extends Component {
   };
 
   handleGetSafetyWork = workNo => {
+    this.setState({ isLoaded: false });
     const { formData } = this.state;
     const searchWorkNo = workNo || formData.WORK_NO;
     const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
@@ -108,6 +106,7 @@ class SafetyWorkMain extends Component {
       url: `/api/eshs/v1/common/safetyWork?type=${type}&keyword=${searchWorkNo}`,
     };
     if (searchWorkNo === '') {
+      this.setState({ isLoaded: true });
       message.error(<MessageContent>작업번호가 없습니다. 먼저 작업번호를 선택 후 검색하십시오.</MessageContent>);
       return;
     }
@@ -130,6 +129,7 @@ class SafetyWorkMain extends Component {
       });
     }
     this.setState({
+      isLoaded: true,
       formData: {
         ...searchSafetyWork,
         FROM_DT: moment(searchSafetyWork.FROM_DT).format('YYYY-MM-DD'),
@@ -143,8 +143,6 @@ class SafetyWorkMain extends Component {
 
   // 모달 핸들러
   handleModal = (type, visible) => {
-    const { workNo } = this.props;
-    const { modalType } = this.state;
     let title = '';
     switch (type) {
       case 'safetyEdu':
@@ -156,24 +154,12 @@ class SafetyWorkMain extends Component {
       case 'changeType':
         title = '일반작업 전환';
         break;
-      case 'workProcess':
-        title = '결재선';
-        break;
+      case 'report':
+        title = '안전작업 리포트';
       default:
         break;
     }
-
-    if (modalType === 'changeType' && !visible) {
-      return this.setState({
-        modalType: type,
-        modalTitle: title,
-        modalVisible: visible,
-      },
-        () => this.handleGetSafetyWork(workNo)
-      );
-    }
-
-    return this.setState({
+    this.setState({
       modalType: type,
       modalTitle: title,
       modalVisible: visible,
@@ -214,36 +200,18 @@ class SafetyWorkMain extends Component {
     );
   };
 
-  saveProcessRule = () => {
-    const { relKey, relKey2 } = this.props;
-    const { processRule, formData } = this.state;
-
-    saveProcessRule(
-      {
-        ...processRule,
-        DRAFT_DATA: {},
-        REL_KEY: relKey,
-        REL_KEY2: formData[relKey2],
-        DRAFT_TITLE: `${formData.TITLE}(작업번호:${formData[relKey2]})`,
-      },
-      draftId => {
-        if (draftId) {
-          return this.setState({
-            formData: { ...formData, DRAFT_ID: draftId, STTLMNT_STATUS: '1' },
-            tempProcessRule: {},
-          });
-        }
-        return false;
-      },
-    );
-  }
-
   render() {
-    const { authority, workNo, profile:{EMP_NO}, prcId } = this.props;
-    const { modalType, modalTitle, modalVisible, formData, appvLineText, pageViewType, processRule } = this.state;
-    console.debug('sttlmnt_Status ', formData?.STTLMNT_STATUS);
-    console.debug('REQ_EMP_NO ', formData?.REQ_EMP_NO);
-    console.debug('EMP_NO ', EMP_NO);
+    const { authority, workNo } = this.props;
+    const { modalType, modalTitle, modalVisible, formData, appvLineText, pageViewType, isLoaded } = this.state;
+      // IE 에서 Jasper Report (PDF) 형태로 출력이 호환되지 않아, IE 에선 error message가 출력되도록 처리
+    let isIE = false;
+    const agent = navigator.userAgent.toLowerCase();
+    if ((navigator.appName === 'Netscape' && agent.indexOf('trident') !== -1) || agent.indexOf('msie') !== -1) {
+      isIE = true;
+    }
+    const fullpath = window.location.origin;
+    const jasperPath = (fullpath.includes('dev') || fullpath.includes('local')) ? 'Dev' : 'Prod';
+    const safetyWorkReportUrl = `http://10.100.22.99:4488/jasperserver-pro/rest_v2/reports/public/reports/${jasperPath}/ESHS/safetyWork.html?workNo=${formData.WORK_NO}&j_username=superuser&j_password=superuser`;
     return (
       <div>
         {pageViewType === 'VIEW' && (
@@ -269,7 +237,27 @@ class SafetyWorkMain extends Component {
               </div>
             </StyledCustomSearchWrapper>
             <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-              <ContentsPrint footerType="keyfoundry" buttonName="인쇄" printTitle={`Safety Work Infomation : ${formData.WORK_NO}`}>
+              {formData.STTLMNT_STATUS === '4A' && (
+                <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('report', true)}>
+                  리포트 보기
+                </StyledButton>
+              )}
+              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('safetyEdu', true)}>
+                안전교육 조회
+              </StyledButton>
+              {formData.REQUEST_GB === '긴급' && (
+                <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('changeType', true)}>
+                  일반작업 전환
+                </StyledButton>
+              )}
+              {authority && authority.includes('U') && (
+                <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleChangeViewType('UPDATE')}>
+                  수정
+                </StyledButton>
+              )}
+            </StyledButtonWrapper>
+            <Spin spinning={!isLoaded} tip="작업정보 조회중..">
+              <ContentsWrapper>
                 <SafetyWorkInfo
                   formData={formData}
                   handleModal={this.handleModal}
@@ -298,64 +286,11 @@ class SafetyWorkMain extends Component {
                     </div>
                   </>
                 )}
-              </ContentsPrint>
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('safetyEdu', true)}>
-                안전교육 조회
-              </StyledButton>
-              {formData.REQUEST_GB === '긴급' && (
-                <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('changeType', true)}>
-                  일반작업 전환
-                </StyledButton>
-              )}
-              {authority && authority.includes('U') && (
-                <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleChangeViewType('UPDATE')}>
-                  수정
-                </StyledButton>
-              )}
-                  {(formData?.STTLMNT_STATUS === '0' || formData?.STTLMNT_STATUS === '2F') && formData?.REQ_EMP_NO === EMP_NO  && (
-                    <>
-                      <StyledButton className="btn-primary btn-sm btn-first" onClick={this.saveProcessRule}>
-                        상신
-                      </StyledButton>
-                      <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('workProcess', true)}>
-                        결재선
-                      </StyledButton>
-                    </>
-                  )}
-            </StyledButtonWrapper>
-            <ContentsWrapper>
-              <SafetyWorkInfo
-                formData={formData}
-                handleModal={this.handleModal}
-                handleWorkCategory={this.handleWorkCategory}
-                handleUploadFileChange={this.handleUploadFileChange}
-              />
-              {formData.WORKER_LIST.length > 0 && (
-                <>
-                  <div className="middleTitle">
-                    <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
-                    <span className="middleTitleText">작업자</span>
-                  </div>
-                  <div>
-                    <SafetyWorkerTable workerList={formData.WORKER_LIST} handleWorkerPosition={this.handleWorkerPosition} workerRemove={this.workerRemove} />
-                  </div>
-                </>
-              )}
-              {formData.EQUIP_LIST.length > 0 && (
-                <>
-                  <div className="middleTitle">
-                    <AppstoreTwoTone style={{ marginRight: '5px', verticalAlign: 'middle' }} />
-                    <span className="middleTitleText">투입장비</span>
-                  </div>
-                  <div>
-                    <SafetyEquipTable equipList={formData.EQUIP_LIST} equipRemove={this.equipRemove} />
-                  </div>
-                </>
-              )}
-            </ContentsWrapper>
+              </ContentsWrapper>
+            </Spin>
             <AntdModal
               title={modalTitle}
-              width="70%"
+              width={modalType === 'report' ? 900 : '70%'}
               visible={modalVisible}
               footer={null}
               onOk={() => this.handleModal('', false)}
@@ -381,35 +316,8 @@ class SafetyWorkMain extends Component {
                   />
                 </div>
               )}
-
-             {modalType === 'workProcess' && (
-                <>
-                  <CustomWorkProcess
-                    processRule={processRule}
-                    PRC_ID={prcId}
-                    draftId={formData.REQUEST_DRAFT_ID || -1}
-                    viewType={formData.REQUEST_DRAFT_ID ? 'VIEW' : 'INPUT'}
-                    setProcessRule={(_, prcRule) => this.setState({ tempProcessRule: prcRule })}
-                  />
-                  <StyledButtonWrapper className="btn-wrap-center btn-wrap-mb-10" style={{ height:'40px' }}>
-                    <StyledButton
-                      className="btn-primary btn-sm btn-first"
-                      onClick={() =>
-                        this.setState(
-                          prevState => ({
-                            processRule: prevState.tempProcessRule,
-                          }),
-                          () => this.handleModal('', false),
-                        )
-                      }
-                    >
-                      저장
-                    </StyledButton>
-                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('', false)}>
-                      닫기
-                    </StyledButton>
-                  </StyledButtonWrapper>
-                </>
+              {modalType === 'report' && (
+                <JasperViewer title="JasperView" src={safetyWorkReportUrl} />
               )}
             </AntdModal>
           </>

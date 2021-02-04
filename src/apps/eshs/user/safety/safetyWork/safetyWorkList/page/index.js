@@ -439,8 +439,8 @@ class SafetyWorkList extends Component {
                             onChange={value => this.handleChangeSearchValue('SITE', value)}
                           >
                             <Option value="">전체</Option>
-                            <Option value="청주">청주</Option>
                             <Option value="구미">구미</Option>
+                            <Option value="청주">청주</Option>
                           </AntdSelect>
                         </div>
                       </td>
@@ -597,9 +597,6 @@ class SafetyWorkList extends Component {
         </Spin>
         <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
           <ExcelDownload dataList={safetyWorks} />
-          <StyledButton className="btn-gray ml5 btn-sm" onClick={() => alert('목록인쇄 준비중')}>
-            목록인쇄
-          </StyledButton>
         </StyledButtonWrapper>
         <CustomTableStyled>
           <AntdTable
