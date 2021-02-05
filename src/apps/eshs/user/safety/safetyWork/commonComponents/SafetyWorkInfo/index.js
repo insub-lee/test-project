@@ -217,6 +217,8 @@ class SafetyWorkInfo extends Component {
                       </Radio>
                       <Radio value="일반위험작업">
                         일반위험작업
+                        <br />
+                        <span style={{ color: '#ff6666', marginLeft: '5px' }}>※ 일반위험작업 : 화기작업 이외의 작업 </span>
                       </Radio>
                     </Radio.Group>
                   </td>
@@ -239,8 +241,6 @@ class SafetyWorkInfo extends Component {
                       <Checkbox value="중량물">중량물</Checkbox>
                     </Checkbox.Group>
                     <span style={{ color: '#ff6666' }}>※ 보충작업 : 추가 발생 위험 작업체크(중복체크가능)</span>
-                    <br />
-                    <span style={{ color: '#ff6666' }}>※ 작업장 여건 고려 : 고소, 전기작업 등 </span>
                   </td>
                 </tr>
                 <tr>
