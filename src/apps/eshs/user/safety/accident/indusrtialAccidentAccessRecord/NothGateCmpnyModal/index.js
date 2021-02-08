@@ -66,7 +66,7 @@ class Comp extends Component {
                 VISITOR_IN_DATE: moment().format(format),
                 VISITOR_OUT_DATE: moment().format(format),
               }
-            : { ...initData },
+            : { ...initData, WORK_AREA_CD:(initData?.WORK_AREA_CD === '청주' || initData?.WORK_AREA_CD === 'CJ') ? 'CJ':'GM' },
       },
       () => getCallDataHandler(id, apiAry, spinningOff),
     );
@@ -300,7 +300,7 @@ class Comp extends Component {
                 <th>지역</th>
                 <td colSpan="3">
                   <AntdSelect
-                    defaultValue="CJ"
+                    value={formData?.WORK_AREA_CD}
                     style={{ width: '30%' }}
                     onChange={value => this.handleChangeFormData('WORK_AREA_CD', value)}
                     className="select-sm mr5"
