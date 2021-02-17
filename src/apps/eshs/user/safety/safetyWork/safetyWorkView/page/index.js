@@ -317,7 +317,7 @@ class SafetyWorkMain extends Component {
                 </div>
               )}
               {modalType === 'report' && (
-                <JasperViewer title="JasperView" src={safetyWorkReportUrl} />
+                <JasperViewer title="JasperView" src={safetyWorkReportUrl} exportFormats="pdf,PPTX"/>
               )}
             </AntdModal>
           </>
