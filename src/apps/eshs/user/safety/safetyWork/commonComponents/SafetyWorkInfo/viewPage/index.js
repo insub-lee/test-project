@@ -108,7 +108,7 @@ class SafetyWorkInfo extends Component {
                   {formData.WCATEGORY === '화기작업' && (
                     <>
                       <br />
-                      <span style={{ color: '#495057', marginLeft: '5px' }}>화제관리 담당자명 : </span>
+                      <span style={{ color: '#495057', marginLeft: '5px' }}>화재감시 담당자명 : </span>
                       <span>{formData.FIRE_MANAGER}</span>
                     </>
                   )}

@@ -8,6 +8,7 @@ class UserSelectComp extends React.Component {
     super(props);
     this.state = {
       isOpenModal: false,
+      searchValue: '',
     };
   }
 
@@ -30,6 +31,17 @@ class UserSelectComp extends React.Component {
       }
       this.setState({
         isOpenModal: false,
+      });
+    }
+  };
+
+  // onSelectedCompleteBySearch
+  onSelectedComplete = result => {
+    if (result.length > 0) {
+      this.handleOnChangeSearch(`${result[0].NAME_KOR}`)
+      this.setState({
+        isOpenModal: false,
+        searchValue: `${result[0].NAME_KOR}`,
       });
     }
   };
@@ -63,7 +75,9 @@ class UserSelectComp extends React.Component {
   };
 
   render() {
-    const { sagaKey: id, CONFIG, visible, readOnly, colData, isSearch, searchCompRenderer, viewType, formData, COMP_FIELD } = this.props;
+    const { sagaKey: id, CONFIG, visible, readOnly, colData, isSearch, searchCompRenderer, viewType, formData, COMP_FIELD, workInfo } = this.props;
+    const { WORK_ID } = workInfo;
+    const { searchValue } = this.state;
     let inputValue = formData[COMP_FIELD.replace('NO', 'NAME')] ? `${formData[COMP_FIELD.replace('NO', 'NAME')]}(${colData})` : colData;
     if (id === 'outdoorEvent') {
       inputValue = formData[COMP_FIELD.replace('NO', 'NM')] ? `${formData[COMP_FIELD.replace('NO', 'NM')]}(${colData})` : colData;
@@ -72,6 +86,22 @@ class UserSelectComp extends React.Component {
     if (isSearch && visible) {
       if (CONFIG.property.searchType !== 'CUSTOM') {
         return searchCompRenderer(this.props);
+      }
+      // 안전작업자료(페이지 내 커스텀 검색)
+      if (WORK_ID === 'SWTB_SAFETY_WORK_FILE') {
+        return (
+          <>
+            <Input
+              readOnly
+              value={searchValue}
+              onClick={() => this.setState({ isOpenModal: true })}
+              className={CONFIG.property.className || ''}
+            />
+            <Modal visible={this.state.isOpenModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
+              <UserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onSelectedComplete} onCancel={this.onCancel} />
+            </Modal>
+          </>
+        );
       }
       return <Input onChange={e => this.handleOnChangeSearch(e.target.value)} className={CONFIG.property.className || ''} defaultValue="" />;
     }
