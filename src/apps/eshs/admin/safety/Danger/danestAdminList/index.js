@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
-
 import DanestAdmin from 'apps/eshs/admin/safety/Danger/danestAdmin';
-
 import { Modal } from 'antd';
-
 import StyledAntdModal from 'components/BizBuilder/styled//Modal/StyledAntdModal';
+import CustomListPage from './customPage';
 
 const AntdModal = StyledAntdModal(Modal);
 
@@ -29,6 +27,7 @@ class DanestAdminList extends Component {
   };
 
   render() {
+    const { authority } = this.props;
     return (
       <>
         <BizBuilderBase
@@ -37,6 +36,8 @@ class DanestAdminList extends Component {
           viewType="LIST"
           loadingComplete={this.loadingComplete}
           listMetaSeq={12681}
+          CustomListPage={CustomListPage}
+          authority={authority}
           isOpenModalChange={this.isOpenModalChange}
         />
         <AntdModal width={1000} visible={this.state.isModal} title="위험성 평가" onCancel={this.onModalChange} destroyOnClose footer={null}>
@@ -47,8 +48,12 @@ class DanestAdminList extends Component {
   }
 }
 
-DanestAdminList.propTypes = {};
+DanestAdminList.propTypes = {
+  authority: PropTypes.any,
+};
 
-DanestAdminList.defaultProps = {};
+DanestAdminList.defaultProps = {
+  authority: ['V'],
+};
 
 export default DanestAdminList;
