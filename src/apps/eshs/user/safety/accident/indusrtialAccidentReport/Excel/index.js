@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
@@ -67,7 +68,7 @@ class Excel extends Component {
 
     const decodeListData = dataList.map(item => ({
       ...item,
-      WORK_AREA_CD: item.WORK_AREA_CD === 'CJ' ? '청주' : '구미',
+      WORK_AREA_CD: item.WORK_AREA_CD === 'CJ' ? '청주' : item.WORK_AREA_CD === 'GM' ? '구미' : '',
     }));
 
     return (
