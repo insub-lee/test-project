@@ -89,7 +89,7 @@ class List extends Component {
     const { CHK_YEAR } = searchData;
 
     const nextListData = listData.map(item => {
-      if (item.WRK_CMPNY_CD === record.WRK_CMPNY_CD) {
+      if (item.WRK_CMPNY_CD === record.WRK_CMPNY_CD && item.WORK_AREA_CD === record.WORK_AREA_CD) {
         return { ...record, isChange: true, SEARCH_YEAR: CHK_YEAR, [name]: value };
       }
       return { ...item };
