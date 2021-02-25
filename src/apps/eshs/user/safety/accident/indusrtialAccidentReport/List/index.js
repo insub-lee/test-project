@@ -1,7 +1,7 @@
+/* eslint-disable no-nested-ternary */
 import React, { Component } from 'react';
 import { Select, Table, Input, InputNumber, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
@@ -32,24 +32,22 @@ class List extends Component {
       yearList: [],
       listData: [],
       searchData: {
-        CHK_YEAR: moment().format('YYYY'),
+        CHK_YEAR: currYear.toString(),
       },
     };
   }
 
   componentDidMount() {
-    this.init();
-  }
-
-  /* 2006 ~ 현재년도 selectBox 생성 */
-  init = () => {
+    /* 2006 ~ 현재년도 selectBox 생성 */
     const yearList = [];
-    for (let i = currYear; i >= 2006; i - 1) {
+
+    for (let i = currYear; i >= 2006; i--) {
       yearList.push(i.toString());
     }
     this.setState({ yearList });
+
     this.handleOnSearch();
-  };
+  }
 
   handleOnSearch = () => {
     const { sagaKey, getCallDataHandlerReturnRes, spinningOn } = this.props;
@@ -69,12 +67,11 @@ class List extends Component {
   searchCallback = (id, response) => {
     const { spinningOff } = this.props;
     const { reportList } = response;
-    let nextList = [];
-    if (reportList.length > 0) nextList = reportList.map((item, idx) => ({ ...item, isChange: false, idx }));
+    const nextList = reportList || [];
 
     this.setState(
       {
-        listData: nextList,
+        listData: nextList.map(item => ({ ...item, isChange: false })),
       },
       () => spinningOff(),
     );
@@ -88,7 +85,7 @@ class List extends Component {
     const { searchData, listData } = this.state;
     const { CHK_YEAR } = searchData;
 
-    const nextListData = listData.map(item => {
+    const nextListData = listData.map((item, idx) => {
       if (item.WRK_CMPNY_CD === record.WRK_CMPNY_CD && item.WORK_AREA_CD === record.WORK_AREA_CD) {
         return { ...record, isChange: true, SEARCH_YEAR: CHK_YEAR, [name]: value };
       }
@@ -160,11 +157,7 @@ class List extends Component {
       dataIndex: 'WORK_AREA_CD',
       width: '10%',
       align: 'center',
-      render: text => {
-        if (text === 'GM') return '구미';
-        if (text === 'CJ') return '청주';
-        return '';
-      },
+      render: text => (text === 'GM' ? '구미' : text === 'CJ' ? '청주' : ''),
     },
     {
       title: '근로자수',
@@ -314,6 +307,7 @@ class List extends Component {
               </tbody>
             </table>
           </StyledHtmlTable>
+
           <div className="selSaveWrapper">
             <StyledButtonWrapper className="btn-wrap-inline btn-wrap-mt-20">
               <StyledButton className="btn-primary btn-sm btn-first" onClick={this.handleOnSearch}>
@@ -322,9 +316,10 @@ class List extends Component {
               <StyledButton className="btn-primary btn-sm btn-first" onClick={this.onSave}>
                 저장
               </StyledButton>
-              {false && <ExcelDownloader dataList={listData} excelNm="Report_작성" />}
+              <ExcelDownloader dataList={listData} excelNm="Report_작성" />
             </StyledButtonWrapper>
           </div>
+
           <AntdTable
             dataSource={listData || []}
             footer={() => <span>{`${listData.length} 건`}</span>}
@@ -338,19 +333,9 @@ class List extends Component {
   }
 }
 
-List.propTypes = {
-  sagaKey: PropTypes.string,
-  submitHandlerBySaga: PropTypes.func,
-  getCallDataHandlerReturnRes: PropTypes.func,
-  spinningOn: PropTypes.func,
-  spinningOff: PropTypes.func,
-};
-
 List.defaultProps = {
-  submitHandlerBySaga: () => false,
-  getCallDataHandlerReturnRes: () => false,
-  spinningOn: () => false,
-  spinningOff: () => false,
+  result: {},
+  getCallDataHandler: () => {},
 };
 
 export default List;
