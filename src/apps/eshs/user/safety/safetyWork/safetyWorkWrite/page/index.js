@@ -55,7 +55,7 @@ class SafetyWorkMain extends Component {
         DGUBUN: 'F3동', //               작업동          (String, 50)  [C-1, C-2, R, 청주기타, F1동, F3동, A1동, D.I동, 기숙사동, 구미기타]
         FROM_DT: '', //                 허가 요청날짜   (Date)
         TO_DT: '', //                   허가 요청날짜   (Date)
-        FROM_TIME: '09', //               허가 요청시간   (String, 2)
+        FROM_TIME: '08', //               허가 요청시간   (String, 2)
         TO_TIME: '18', //                 허가 요청시간   (String, 2)
         PLEDGE_NO: '', //               서약서 번호     (String, 13)
         DETB_DANEST: '', //             위험성 평가번호 (String, 13)
@@ -630,7 +630,7 @@ class SafetyWorkMain extends Component {
           DGUBUN: 'F3',
           FROM_DT: '',
           TO_DT: '',
-          FROM_TIME: '09',
+          FROM_TIME: '08',
           TO_TIME: '18',
           PLEDGE_NO: '',
           DETB_DANEST: '',

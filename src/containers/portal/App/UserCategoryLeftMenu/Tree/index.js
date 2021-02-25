@@ -159,7 +159,7 @@ class Tree extends Component {
             // e.stopPropagation();
             this.clickEvent(node);
           }}
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', width:'235px' }}
         >
           {/* 업무 메뉴에서 일반폴더 와 업무폴더일 경우 아이콘으로 분류  */}
           <IconCollection className={menuIconClassName} />

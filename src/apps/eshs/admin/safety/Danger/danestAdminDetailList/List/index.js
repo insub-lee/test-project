@@ -365,7 +365,7 @@ class List extends Component {
           onRow={record => ({
             onClick: () => {
               this.modalVisible('위험성 평가', [
-                <DanestAdmin key="DanestAdmin" improveDanger={{ REG_NO: record.REG_NO, REG_DTTM: record.REG_DTTM, IMPROVE: true }} />,
+                <DanestAdmin key="DanestAdmin" sagaKey="DanestAdmin_test" improveDanger={{ REG_NO: record.REG_NO, REG_DTTM: record.REG_DTTM, IMPROVE: true }} />,
               ]);
             },
           })}
@@ -373,7 +373,7 @@ class List extends Component {
           // pagination={false}
           scroll={{ x: '100%' }}
         />
-        <AntdModal width={1000} visible={modalObj.visible} title={modalObj.title} onCancel={() => this.modalVisible('', [])} footer={null}>
+        <AntdModal width={1100} visible={modalObj.visible} title={modalObj.title} onCancel={() => this.modalVisible('', [])} footer={null}>
           {/* {this.state.isModal && <DanestAdmin improveDanger={{ REG_NO: recordByState.REG_NO, REG_DTTM: recordByState.REG_DTTM, IMPROVE: true }} />} */}
           {modalObj.content}
         </AntdModal>

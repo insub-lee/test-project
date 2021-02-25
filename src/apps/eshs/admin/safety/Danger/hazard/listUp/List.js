@@ -111,7 +111,7 @@ class List extends Component {
       }
       getCallDataHandler(id, apiAry, this.searchData);
     } else {
-      message.warning('검색조건이 옳바르지 않습니다.');
+      message.warning('검색조건이 올바르지 않습니다.');
     }
   };
 

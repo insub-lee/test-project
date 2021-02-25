@@ -23,6 +23,7 @@ class Comp extends React.Component {
     super(props);
     this.state = {};
     this.changeFormData = debounce(this.changeFormData, 150);
+    
   }
 
   componentDidMount = () => {

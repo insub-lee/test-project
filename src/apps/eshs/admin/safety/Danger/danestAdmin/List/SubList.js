@@ -13,6 +13,7 @@ const AntdSelect = StyledSelect(Select);
 const AntdTextArea = StyledTextarea(Input.TextArea);
 const AntdDatePicker = StyledDatePicker(DatePicker);
 
+
 const { Option } = Select;
 
 const dangerRank = value => {
@@ -25,6 +26,16 @@ const dangerRank = value => {
   else returnValue = 'F';
   return returnValue;
 };
+
+const dangerRankImprve = value => {
+  let returnValue;
+  if (value === 'A'  || value === 'B' || value === 'C' ) returnValue = '개선 대책 기록 필요';
+  else if (value === 'D'  || value === 'E' || value === 'F') returnValue = '현상태 유지관리';
+  else returnValue = '';
+  return returnValue;
+};
+
+
 
 const SubList = ({ subItem, onChangeAdminSub, onFileUploadTemp, UploadFilesDel, UploadTempFilesDel, dangerDanestAdminSubFile }) => (
   <tr>
@@ -78,19 +89,27 @@ const SubList = ({ subItem, onChangeAdminSub, onFileUploadTemp, UploadFilesDel, 
         <Option value={1}>1</Option>
         <Option value={2}>2</Option>
         <Option value={3}>3</Option>
-        <Option value={4}>4</Option>
+        <Option value={4}>4</Option> 
       </AntdSelect>
     </td>
     {/* DAN_LEVEL 위험수준 */}
-    <td align="center">{dangerRank(Number(subItem.DAN_FREQC || 1) * Number(subItem.DAN_STRGT || 1))}</td>
+    <td align="center" >
+       {dangerRank(Number(subItem.DAN_FREQC || 1) * Number(subItem.DAN_STRGT || 1))}  
+    </td>
     <td>
-      <AntdTextArea defaultValue={subItem.AP_IMPROVE} onChange={e => onChangeAdminSub('AP_IMPROVE', e.target.value, subItem)} /> {/* 개선대책 */}
+      <AntdTextArea   defaultValue={subItem.AP_IMPROVE}  
+      onChange={e => onChangeAdminSub('AP_IMPROVE', e.target.value, subItem) }  
+      /> {/* 개선대책 */}
     </td>
     <td align="center">
-      <AntdDatePicker
-        defaultValue={subItem.AP_ENDDATE ? moment(subItem.AP_ENDDATE) : moment()}
+    {dangerRank(Number(subItem.DAN_FREQC || 1) * Number(subItem.DAN_STRGT || 1)) === 'D' || dangerRank(Number(subItem.DAN_FREQC || 1) * Number(subItem.DAN_STRGT || 1))  === 'E'  || dangerRank(Number(subItem.DAN_FREQC || 1) * Number(subItem.DAN_STRGT || 1))  === 'F'? (
+     <span></span>
+      ) : (
+        <AntdDatePicker
+        defaultValue={subItem.AP_ENDDATE ? moment(subItem.AP_ENDDATE) : null}
         onChange={(date, dateString) => onChangeAdminSub('AP_ENDDATE', dateString, subItem)}
       />
+      )}
       {/* 완료예정일 */}
     </td>
     <td colSpan={2} align="center">

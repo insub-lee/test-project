@@ -26,9 +26,17 @@ import ReAppriseList from '../ReAppriseList';
 const AntdSearchInput = StyledSearchInput(Input.Search);
 const AntdModal = StyledAntdModal(Modal);
 const AntdModalPad = StyledAntdModalPad(Modal);
-
+const dangerRank = value => {
+  let returnValue;
+  if (value >= 16) returnValue = 'A';
+  else if (value >= 12) returnValue = 'B';
+  else if (value >= 9) returnValue = 'C';
+  else if (value === 8) returnValue = 'D';
+  else if (value >= 4) returnValue = 'E';
+  else returnValue = 'F';
+  return returnValue;
+};
 const { TabPane } = Tabs;
-
 moment.locale('ko');
 
 class List extends Component {
@@ -37,6 +45,7 @@ class List extends Component {
     this.state = {
       revisionReRendering: true,
       selectedRecord: {},
+      userSearchComp:[],
     };
   }
 
@@ -60,6 +69,12 @@ class List extends Component {
       this.selectedModal(improveDanger);
     }
   }
+
+  componentWillUnmount() {
+    const { sagaKey: id, removeReduxState } = this.props;
+    removeReduxState(id);
+  }
+
 
   initData = () => {
     const {
@@ -160,19 +175,20 @@ class List extends Component {
   };
 
   onChangeAdminSub = (name, value, record) => {
-    const { dangerDanestAdminSub } = this.state;
-    const change = dangerDanestAdminSub.map(changeData =>
-      changeData.DA_REG_NO === record.DA_REG_NO && changeData.SEQ === record.SEQ ? { ...changeData, [name]: value } : { ...changeData },
-    );
-    this.setState({ dangerDanestAdminSub: change });
+      const { dangerDanestAdminSub } = this.state;
+      const change = dangerDanestAdminSub.map(changeData =>
+        changeData.DA_REG_NO === record.DA_REG_NO && changeData.SEQ === record.SEQ ? { ...changeData, [name]: value } : { ...changeData },
+      );
+      this.setState({ dangerDanestAdminSub: change });
+  
   };
 
   onChangeManager = (userRecord, record) => {
     const { dangerDanestAdmin } = this.state;
     const temp = dangerDanestAdmin.map(changeData =>
       changeData.DA_REG_NO === record.DA_REG_NO
-        ? { ...changeData, DEPT_MANAGER: userRecord.EMP_NO, DEPT_MANAGER_NM: userRecord.NAME_KOR, DEPT_MANAGER_ID: userRecord.USER_ID }
-        : { ...changeData },
+        ? { ...changeData, DEPT_MANAGER: userRecord.USER_ID, DEPT_MANAGER_NM: userRecord.NAME_KOR, DEPT_MANAGER_ID: userRecord.USER_ID }
+        : { ...changeData},
     );
     this.setState({ dangerDanestAdmin: temp });
   };
@@ -200,6 +216,19 @@ class List extends Component {
     const submitFind = dangerDanestAdmin.find(findItem => findItem.DA_REG_NO === daRegNo);
     const submitFindSub = dangerDanestAdminSub.filter(findItem => findItem.DA_REG_NO === daRegNo).map(item => ({ ...item, WORK_NM: item.DANGFACT }));
     const submitData = { PARAM: { ...submitFind, DANEST_SUB_LIST: submitFindSub } };
+    const msg     = this.validationCheck(submitFind);
+    //const msglist = this.validationListCheck(submitFindSub);
+    //console.debug('submitFindSub', submitFindSub);
+    
+    if (msg) {
+      message.error(msg);
+      return false;
+    } 
+
+    /*if (msglist) {
+      message.error(msglist);
+      return false;
+    } */ 
     spinningOn();
     if (tempfile && tempfile.length) {
       submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', { PARAM: { DETAIL: tempfile } }, (afterId, res) => {
@@ -221,6 +250,31 @@ class List extends Component {
         callBackAfterPut(key, response, this.callbackDataSet),
       );
     }
+  };
+
+  onSave = daRegNo => {
+    const { sagaKey: id, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
+    const { dangerDanestAdmin, dangerDanestAdminSub, tempfile } = this.state;
+    const submitFind = dangerDanestAdmin.find(findItem => findItem.DA_REG_NO === daRegNo);
+    const submitFindSub = dangerDanestAdminSub.filter(findItem => findItem.DA_REG_NO === daRegNo).map(item => ({ ...item, WORK_NM: item.DANGFACT }));
+    const submitData = { PARAM: { ...submitFind, DANEST_SUB_LIST: submitFindSub , SAVE:'Y'} };
+    const msg     = this.validationCheck(submitFind);
+    const msglist = this.validationListCheck(submitFindSub);
+
+    //console.log("submitData", submitData);
+    if (msg) {
+      message.error(msg);
+      return false;
+    } 
+    if (msglist) {
+      message.error(msglist);
+      return false;
+    }  
+    spinningOn();
+    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/dangerDanestAdmin`, submitData, (key, response) =>
+     callBackAfterPut(key, response, this.callbackDataSet),
+    );
+ 
   };
 
   revisionDanest = daRegNo => {
@@ -281,6 +335,28 @@ class List extends Component {
     this.setState({ safetyImproveModal: !safetyImproveModal });
   };
 
+  validationCheck = formData => {
+    if (!formData.WORKMAN_MALE) return '근무인원(남)을 입력해주세요.';
+    if (!formData.WORKMAN_FEMALE) return '근무인원(여)을 입력해주세요.';
+    if (!formData.POST) return '소속을 입력해주세요.';
+    if (!formData.DEPT_MANAGER) return '부서장을 입력해주세요.';
+    return '';
+  };
+
+  validationListCheck = formDataList => {
+    for(let i= 0; i < formDataList.length;i++){
+      if(!formDataList[i].SAFEACTION) return '현재 안전조치(대책) 입력해주세요.';
+      if(dangerRank(Number(formDataList[i].DAN_FREQC || 1) * Number(formDataList[i].DAN_STRGT || 1)) === 'A' ||dangerRank(Number(formDataList[i].DAN_FREQC || 1) * Number(formDataList[i].DAN_STRGT || 1)) === 'B' ||dangerRank(Number(formDataList[i].DAN_FREQC || 1) * Number(formDataList[i].DAN_STRGT || 1)) === 'C'){
+        if(!formDataList[i].AP_IMPROVE) return '개선대책 입력해주세요!'; 
+        if(!formDataList[i].AP_ENDDATE) return '완료예정일을 입력해주세요!'; 
+      }
+    }
+    return '';
+  };
+  
+
+  changeModalObj = (title = '', visible = false, content = []) => this.setState({ modalObj: { title, visible, content } });
+
   render() {
     const { dangerDanestAdmin, dangerInfo, dangerDanestAdminSub, dangerDanestAdminSubFile, regNo, reAppriseList } = this.state;
     return (
@@ -308,9 +384,22 @@ class List extends Component {
             {dangerDanestAdmin.map(item => (
               <TabPane tab={item.DA_REG_NO} key={item.DA_REG_NO}>
                 <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.updateDanest(item.DA_REG_NO)}>
+
+                {item.STATE === '2' ? (
+               <></>
+                  ) : (
+                    <>
+                    <StyledButton className="btn-primary btn-first btn-sm mr5"  onClick={() => this.onSave(item.DA_REG_NO)}>완료</StyledButton>
+                <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.updateDanest(item.DA_REG_NO)}>
+                  저장
+                   </StyledButton>
+                 <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.updateDanest(item.DA_REG_NO)}>
                     수정
                   </StyledButton>
+                  </>
+                  )}
+
+
                   <Popconfirm title="재평가 하시겠습니까?" onConfirm={() => this.revisionDanest(item.DA_REG_NO)} okText="Yes" cancelText="No">
                     <StyledButton className="btn-primary btn-first btn-sm"> 재평가</StyledButton>
                   </Popconfirm>
@@ -339,16 +428,16 @@ class List extends Component {
                     <colgroup>
                       <col width="8%" />
                       <col width="8%" />
-                      <col width="12%" />
+                      <col width="10%" />
                       <col width="8%" />
-                      <col width="12%" />
+                      <col width="10%" />
                       <col width="6%" />
                       <col width="6%" />
                       <col width="5%" />
-                      <col width="12%" />
-                      <col width="13%" />
+                      <col width="10%" />
+                      <col width="11%" />
                       <col width="5%" />
-                      <col width="5%" />
+                      <col width="13%"/>
                     </colgroup>
                     {this.state.revisionReRendering && (
                       <tbody>

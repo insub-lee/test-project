@@ -6,7 +6,7 @@ import StyledAntdModalPad from 'components/BizBuilder/styled//Modal/StyledAntdMo
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-import UserSearchModal from 'apps/eshs/common/userSearchModal';
+import UserSearchModal from 'apps/eshs/common/userSearchModal/indtxDanger';
 import DangerInfoModify from 'apps/eshs/admin/safety/Danger/danestAdmin/DangerInfoModify';
 
 import ImproveView from 'apps/eshs/admin/safety/safetyImprove/Input';
@@ -43,23 +43,8 @@ const AdminMain = ({
       <td rowSpan="4" colSpan="4" align="center">
         <font size="5">위험성평가표</font>
       </td>
-      <th align="center">근무인원</th>
-      <td colSpan="4" align="center">
-        남/여(&nbsp;
-        <AntdInputNumber
-          className="ant-input-number-inline ant-input-number-xs mr5"
-          style={{ width: 50 }}
-          defaultValue={formData.WORKMAN_MALE || 0}
-          onChange={e => onChangeAdmin('WORKMAN_MALE', e, formData)}
-        />
-        /&nbsp;
-        <AntdInputNumber
-          className="ant-input-number-inline ant-input-number-xs mr5"
-          style={{ width: 50 }}
-          defaultValue={formData.WORKMAN_FEMALE || 0}
-          onChange={e => onChangeAdmin('WORKMAN_FEMALE', e, formData)}
-        />
-        ){Number(formData.WORKMAN_MALE) + Number(formData.WORKMAN_FEMALE)}&nbsp;명
+      <td colSpan="5" align="center">
+        {formData.DEPT_MANAGER_NM && formData.STATE == '2'? <font color='Blue'> 부서장 : {formData.DEPT_MANAGER_NM}(승) </font> : ''}
       </td>
     </tr>
     <tr>
@@ -86,13 +71,25 @@ const AdminMain = ({
           </>
         )}
       </td>
-      <th align="center">소속</th>
+      <th align="center">근무인원</th>
       <td colSpan="4" align="center">
-        <Radio.Group onChange={e => onChangeAdmin('POST', e.target.value, formData)} defaultValue={Number(formData.POST)}>
-          <Radio value={1}>자체</Radio>
-          <Radio value={2}>용역</Radio>
-          <Radio value={3}>기타</Radio>
-        </Radio.Group>
+        남/여(&nbsp;
+        <AntdInputNumber
+          className="ant-input-number-inline ant-input-number-xs mr5"
+          style={{ width: 50 }}
+          defaultValue={formData.WORKMAN_MALE || 0}
+          onChange={e => onChangeAdmin('WORKMAN_MALE', e, formData)}
+          min={0}
+        />
+        /&nbsp;
+        <AntdInputNumber
+          className="ant-input-number-inline ant-input-number-xs mr5"
+          style={{ width: 50 }}
+          defaultValue={formData.WORKMAN_FEMALE || 0}
+          onChange={e => onChangeAdmin('WORKMAN_FEMALE', e, formData)}
+          min={0}
+        />
+        ){Number(formData.WORKMAN_MALE) + Number(formData.WORKMAN_FEMALE)}&nbsp;명
       </td>
     </tr>
     <tr>
@@ -103,22 +100,32 @@ const AdminMain = ({
         <span>{moment(formData.REG_DATE).format('YYYY-MM-DD')}</span>
       </td>
       <th align="center" colSpan="1">
-        작성자
+      소속
       </th>
-      <td align="center" colSpan="4">{`${formData.REG_EMPNM}(${formData.REG_EMPNO})`}</td>
+      <td colSpan="4" align="center">
+        <Radio.Group onChange={e => onChangeAdmin('POST', e.target.value, formData)} defaultValue={Number(formData.POST)}>
+          <Radio value={1}>자체</Radio>
+          <Radio value={2}>용역</Radio>
+          <Radio value={3}>기타</Radio>
+        </Radio.Group>
+      </td>
     </tr>
     <tr>
       <th align="center" colSpan="1">
+      작성자
+      </th>
+      <td align="center" colSpan="1">{`${formData.REG_EMPNM}(${formData.REG_EMPNO})`}</td>
+      <th align="center" colSpan="1">
         부서장
       </th>
-      <td align="center" colSpan="4">
+      <td align="center" colSpan="1">
         <UserSearchModal
           customWidth="100%"
           colData={formData.DEPT_MANAGER && formData.DEPT_MANAGER_NM ? `${formData.DEPT_MANAGER_NM}(${formData.DEPT_MANAGER})` : ''} // --  InputSearch 초기값
           onClickRow={record => onChangeManager(record, formData)} // --  [필수] userList rowClick시 record를 리턴받는 함수
           modalOnCancel={() => null} // -- modal onCancel event (props 없을 경우 AntdSearchInput 값 비워주고 props 로 들어온 onClickRow({EMP_NO:'', USER_ID:''}) 호출 )
           className="input-search-sm ant-search-inline mr5" // -- AntdSearchInput className
-        />
+        /> 
       </td>
     </tr>
     <tr>
