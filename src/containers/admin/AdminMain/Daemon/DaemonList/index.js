@@ -111,6 +111,24 @@ class DaemonList extends React.Component {
         getRowMetaData: data => data,
       },
       {
+        key: 'LAST_DTTM',
+        name: `${intlObj.get(messages.endDttm)}`,
+        visible: true,
+        sortable: true,
+        resizable: true,
+        formatter: this.detailLinkFormatter,
+        getRowMetaData: data => data,
+      },
+      {
+        key: 'SUCCESS_YN',
+        name: `${intlObj.get(messages.successYn)}`,
+        visible: true,
+        sortable: true,
+        resizable: true,
+        formatter: this.detailLinkFormatter,
+        getRowMetaData: data => data,
+      },
+      {
         key: 'RUN',
         name: `RUN`,
         visible: true,
@@ -149,22 +167,35 @@ class DaemonList extends React.Component {
       stopYn: dtStopYn,
     };
 
-    this.props.getDaemonList(this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keyword, this.state.stopYn);
+    this.props.getDaemonList(
+      this.state.sortColumnParam,
+      this.state.sortDirectionParam,
+      this.state.keyword,
+      this.state.stopYn,
+    );
   }
 
   runLinkFormatter = val => (
     <LinkBtnLgtGray
-      onClick={() => feed.showConfirm(`${intlObj.get(messages.startDaemonConfirm)}`, '', () => this.props.startDaemon(val.dependentValues.DAEMON_ID))}
+      onClick={() =>
+        feed.showConfirm(`${intlObj.get(messages.startDaemonConfirm)}`, '', () =>
+          this.props.startDaemon(val.dependentValues.DAEMON_ID),
+        )
+      }
     >
       {intlObj.get(messages.lblRun)}
     </LinkBtnLgtGray>
   );
 
   logLinkFormatter = val => (
-    <LinkBtnDkGray onClick={() => this.handleLogLinkClick(val.dependentValues.DAEMON_ID)}>{intlObj.get(messages.lblLogList)}</LinkBtnDkGray>
+    <LinkBtnDkGray onClick={() => this.handleLogLinkClick(val.dependentValues.DAEMON_ID)}>
+      {intlObj.get(messages.lblLogList)}
+    </LinkBtnDkGray>
   );
 
-  detailLinkFormatter = val => <hltext onClick={() => this.handleDetailLinkClick(val.dependentValues.DAEMON_ID)}>{val.value}</hltext>;
+  detailLinkFormatter = val => (
+    <hltext onClick={() => this.handleDetailLinkClick(val.dependentValues.DAEMON_ID)}>{val.value}</hltext>
+  );
 
   detailNameLinkFormatter = val => {
     const linkRow = lang.get('NAME', val.dependentValues);
@@ -174,7 +205,10 @@ class DaemonList extends React.Component {
   detailStopYNLinkFormatter = val => {
     const stopYN = val.value === 'Y' ? `${intlObj.get(messages.statusStop)}` : `${intlObj.get(messages.statusWork)}`;
     return (
-      <hltext style={val.value === 'Y' ? { color: 'red' } : {}} onClick={() => this.handleDetailLinkClick(val.dependentValues.DAEMON_ID)}>
+      <hltext
+        style={val.value === 'Y' ? { color: 'red' } : {}}
+        onClick={() => this.handleDetailLinkClick(val.dependentValues.DAEMON_ID)}
+      >
         {stopYN}
       </hltext>
     );
@@ -237,13 +271,23 @@ class DaemonList extends React.Component {
 
   handleStatusSelect = e => {
     this.setState({ stopYn: e }, () => {
-      this.props.getDaemonList(this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keyword, this.state.stopYn);
+      this.props.getDaemonList(
+        this.state.sortColumnParam,
+        this.state.sortDirectionParam,
+        this.state.keyword,
+        this.state.stopYn,
+      );
     });
   };
 
   // 검색아이콘 클릭 시(조회)
   handleClick = () => {
-    this.props.getDaemonList(this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keyword, this.state.stopYn);
+    this.props.getDaemonList(
+      this.state.sortColumnParam,
+      this.state.sortDirectionParam,
+      this.state.keyword,
+      this.state.stopYn,
+    );
   };
 
   // Grid sort
@@ -269,7 +313,12 @@ class DaemonList extends React.Component {
         <StyleDaemonList>
           <h3 className="pageTitle">{intlObj.get(messages.daemonManage)}</h3>
           <div className="searchBox">
-            <Select value={this.state.stopYn} onChange={this.handleStatusSelect} style={{ width: 120, marginRight: 10 }} dropdownStyle={{ fontSize: 13 }}>
+            <Select
+              value={this.state.stopYn}
+              onChange={this.handleStatusSelect}
+              style={{ width: 120, marginRight: 10 }}
+              dropdownStyle={{ fontSize: 13 }}
+            >
               <Option value="N">{intlObj.get(messages.statusWork)}</Option>
               <Option value="Y">{intlObj.get(messages.statusStop)}</Option>
               <Option value="">{intlObj.get(messages.lblAll)}</Option>
@@ -277,7 +326,12 @@ class DaemonList extends React.Component {
 
             {/* 오른쪽 */}
             <div className="searchWrapper">
-              <Input value={this.state.keyword} onChange={this.handleSearch} onKeyPress={this.handleKeyPress} placeholder={intlObj.get(messages.inputSearch)} />
+              <Input
+                value={this.state.keyword}
+                onChange={this.handleSearch}
+                onKeyPress={this.handleKeyPress}
+                placeholder={intlObj.get(messages.inputSearch)}
+              />
               <button title={intlObj.get(messages.search)} className="searchBtn" onClick={this.handleClick} />
             </div>
           </div>
@@ -320,7 +374,8 @@ DaemonList.defaultProps = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  getDaemonList: (sortColumn, sortDirection, keyword, stopYn) => dispatch(actionTypes.getDaemonList(sortColumn, sortDirection, keyword, stopYn)),
+  getDaemonList: (sortColumn, sortDirection, keyword, stopYn) =>
+    dispatch(actionTypes.getDaemonList(sortColumn, sortDirection, keyword, stopYn)),
   startDaemon: daemonId => dispatch(actionTypes.startDaemon(daemonId)),
 });
 
