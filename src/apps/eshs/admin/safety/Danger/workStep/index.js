@@ -6,7 +6,12 @@ class WorkStep extends Component {
   componantDidMount() {}
 
   render() {
-    return <BizMicroDevBase sagaKey="workStep" component={List} dangerMainYN />;
+    return (
+      <>
+        {/* <BizMicroDevBase sagaKey="workStep" component={List} dangerMainYN />; */}
+        <BizMicroDevBase sagaKey="workStep" component={List} />;
+      </>
+    );
   }
 }
 
