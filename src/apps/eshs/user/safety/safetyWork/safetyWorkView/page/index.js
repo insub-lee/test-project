@@ -124,7 +124,8 @@ class SafetyWorkMain extends Component {
     let appvLineText = '';
     if (0 in appLine) {
       appLine.forEach(appv => {
-        if (appv.STEP === 1) appvLineText += `${appv.PROCESS_NAME}:담당:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
+        if (appv.STEP === 1)
+          appvLineText += `${appv.PROCESS_NAME}:담당:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
         else appvLineText += `, ${appv.STEP - 1}차:${appv.DRAFT_USER_NAME}(${appv.APPV_STATUS_NAME})`;
       });
     }
@@ -203,14 +204,14 @@ class SafetyWorkMain extends Component {
   render() {
     const { authority, workNo } = this.props;
     const { modalType, modalTitle, modalVisible, formData, appvLineText, pageViewType, isLoaded } = this.state;
-      // IE 에서 Jasper Report (PDF) 형태로 출력이 호환되지 않아, IE 에선 error message가 출력되도록 처리
+    // IE 에서 Jasper Report (PDF) 형태로 출력이 호환되지 않아, IE 에선 error message가 출력되도록 처리
     let isIE = false;
     const agent = navigator.userAgent.toLowerCase();
     if ((navigator.appName === 'Netscape' && agent.indexOf('trident') !== -1) || agent.indexOf('msie') !== -1) {
       isIE = true;
     }
     const fullpath = window.location.origin;
-    const jasperPath = (fullpath.includes('dev') || fullpath.includes('local')) ? 'Dev' : 'Prod';
+    const jasperPath = fullpath.includes('dev') || fullpath.includes('local') ? 'Dev' : 'Prod';
     const safetyWorkReportUrl = `http://10.100.22.99:4488/jasperserver-pro/rest_v2/reports/public/reports/${jasperPath}/ESHS/safetyWork.html?workNo=${formData.WORK_NO}&j_username=superuser&j_password=superuser`;
     return (
       <div>
@@ -246,7 +247,10 @@ class SafetyWorkMain extends Component {
                 안전교육 조회
               </StyledButton>
               {formData.REQUEST_GB === '긴급' && (
-                <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleModal('changeType', true)}>
+                <StyledButton
+                  className="btn-gray btn-sm btn-first"
+                  onClick={() => this.handleModal('changeType', true)}
+                >
                   일반작업 전환
                 </StyledButton>
               )}
@@ -271,7 +275,11 @@ class SafetyWorkMain extends Component {
                       <span className="middleTitleText">작업자</span>
                     </div>
                     <div>
-                      <SafetyWorkerTable workerList={formData.WORKER_LIST} handleWorkerPosition={this.handleWorkerPosition} workerRemove={this.workerRemove} />
+                      <SafetyWorkerTable
+                        workerList={formData.WORKER_LIST}
+                        handleWorkerPosition={this.handleWorkerPosition}
+                        workerRemove={this.workerRemove}
+                      />
                     </div>
                   </>
                 )}
@@ -298,7 +306,11 @@ class SafetyWorkMain extends Component {
             >
               {modalType === 'safetyEdu' && <BizMicroDevBase component={EduMgtView} sagaKey="safetyEdu_search" />}
               {modalType === 'safetyWork' && (
-                <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} />
+                <BizMicroDevBase
+                  component={SearchSafetyWork}
+                  sagaKey="safetyWork_search"
+                  rowSelect={this.handleSafetyWorkSelect}
+                />
               )}
               {modalType === 'changeType' && (
                 <div style={{ padding: '20px' }}>
@@ -317,7 +329,7 @@ class SafetyWorkMain extends Component {
                 </div>
               )}
               {modalType === 'report' && (
-                <JasperViewer title="JasperView" src={safetyWorkReportUrl} exportFormats="pdf,PPTX"/>
+                <JasperViewer title="JasperView" src={safetyWorkReportUrl} exportFormats="pdf,PPTX" />
               )}
             </AntdModal>
           </>
