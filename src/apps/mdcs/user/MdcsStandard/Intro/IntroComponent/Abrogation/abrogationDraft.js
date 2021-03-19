@@ -8,6 +8,8 @@ import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 const { TextArea } = Input;
 const AntdModal = StyledAntdModal(Modal);
@@ -30,7 +32,13 @@ class AbrogationDraft extends Component {
   componentDidMount() {
     const { id, submitHandlerBySaga, workPrcProps } = this.props;
     const url = '/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder';
-    submitHandlerBySaga(id, 'POST', url, { PARAM: { PRC_ID: 106, DRAFT_DATA: { ...workPrcProps } } }, this.initProcessData);
+    submitHandlerBySaga(
+      id,
+      'POST',
+      url,
+      { PARAM: { PRC_ID: 106, DRAFT_DATA: { ...workPrcProps } } },
+      this.initProcessData,
+    );
   }
 
   initProcessData = (sagaKey, response) => {
@@ -56,10 +64,27 @@ class AbrogationDraft extends Component {
   onClickEvent = () => {
     const { onAbrogationProcess } = this.props;
     const { draftWorkProc, descOfChange, revHistory } = this.state;
+    const { DRAFT_PROCESS_STEP } = draftWorkProc;
+
     const DRAFT_DATA = draftWorkProc.DRAFT_DATA ? draftWorkProc.DRAFT_DATA : {};
     const nDraftData = { ...DRAFT_DATA, draftMethod: 'insert', descOfChange, revHistory };
     const nDraftWorkProc = { ...draftWorkProc, DRAFT_DATA: nDraftData };
-    onAbrogationProcess(nDraftWorkProc);
+
+    // 결재권자(최종결재권자) 정보확인
+    const approveInfo = DRAFT_PROCESS_STEP.find(item => item.SRC_PATH === 'approve');
+    const approverYn = this.checkApprove(approveInfo);
+
+    if (approverYn) {
+      onAbrogationProcess(nDraftWorkProc);
+    } else {
+      message.error(<MessageContent>결재자 정보를 선택해 주십시오.</MessageContent>, 2);
+    }
+  };
+
+  // 결재자(최종결재권자) 유무 확인
+  checkApprove = approveInfo => {
+    const { APPV_MEMBER } = approveInfo;
+    return !!(APPV_MEMBER && APPV_MEMBER.length > 0);
   };
 
   onCloseModal = () => {

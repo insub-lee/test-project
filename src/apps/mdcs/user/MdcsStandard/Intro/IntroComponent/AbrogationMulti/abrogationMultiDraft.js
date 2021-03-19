@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Input, Button, Table, message } from 'antd';
+import { Input, Button, Table } from 'antd';
 import moment from 'moment';
-
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
-
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+
 const AntdLineTable = StyledLineTable(Table);
 
 const { TextArea } = Input;
@@ -24,7 +25,13 @@ class AbrogationMultiDraft extends Component {
   componentDidMount() {
     const { id, submitHandlerBySaga, workPrcProps } = this.props;
     const url = '/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder';
-    submitHandlerBySaga(id, 'POST', url, { PARAM: { PRC_ID: 106, DRAFT_DATA: { ...workPrcProps, isMultiAbrogation: true } } }, this.initProcessData);
+    submitHandlerBySaga(
+      id,
+      'POST',
+      url,
+      { PARAM: { PRC_ID: 106, DRAFT_DATA: { ...workPrcProps, isMultiAbrogation: true } } },
+      this.initProcessData,
+    );
   }
 
   initProcessData = (sagaKey, response) => {
@@ -53,14 +60,30 @@ class AbrogationMultiDraft extends Component {
   onClickEvent = () => {
     const { onAbrogationMultiProcess } = this.props;
     const { draftWorkProc, descOfChange, revHistory, draftTitle } = this.state;
+    const { DRAFT_PROCESS_STEP } = draftWorkProc;
     if (draftTitle && descOfChange && revHistory && draftTitle !== '' && descOfChange !== '' && revHistory !== '') {
       const DRAFT_DATA = draftWorkProc.DRAFT_DATA ? draftWorkProc.DRAFT_DATA : {};
       const nDraftData = { ...DRAFT_DATA, descOfChange, revHistory };
       const nDraftWorkProc = { ...draftWorkProc, DRAFT_TITLE: draftTitle, DRAFT_DATA: nDraftData };
-      onAbrogationMultiProcess(nDraftWorkProc);
+
+      // 결재권자(최종결재권자) 정보확인
+      const approveInfo = DRAFT_PROCESS_STEP.find(item => item.SRC_PATH === 'approve');
+      const approverYn = this.checkApprove(approveInfo);
+
+      if (approverYn) {
+        onAbrogationMultiProcess(nDraftWorkProc);
+      } else {
+        message.error(<MessageContent>결재자 정보를 선택해 주십시오.</MessageContent>, 2);
+      }
     } else {
       message.error('폐기내용 [제목, Description , 제개정] 항목은 필수 입력항목입니다.');
     }
+  };
+
+  // 결재자(최종결재권자) 유무 확인
+  checkApprove = approveInfo => {
+    const { APPV_MEMBER } = approveInfo;
+    return !!(APPV_MEMBER && APPV_MEMBER.length > 0);
   };
 
   getTableColumns = () => [

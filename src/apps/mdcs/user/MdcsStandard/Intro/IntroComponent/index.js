@@ -88,7 +88,16 @@ class IntroComponent extends Component {
     });
   };
 
-  onShowModalAbrogation = (selectedworkSeq, selectedTaskSeq, selectedTaskOriginSeq, title, viewChangeSeq, selectedNodeId, viewType, workPrcProps) => {
+  onShowModalAbrogation = (
+    selectedworkSeq,
+    selectedTaskSeq,
+    selectedTaskOriginSeq,
+    title,
+    viewChangeSeq,
+    selectedNodeId,
+    viewType,
+    workPrcProps,
+  ) => {
     this.setState({
       isAbrogationShow: true,
       selectedworkSeq,
@@ -199,7 +208,8 @@ class IntroComponent extends Component {
                 <dl>
                   <dt>사내 표준 기안 Flow</dt>
                   <dd>
-                    <img src={draftImg1} alt="사내 표준 기안 Flow" /> * 문의사항 발생시 표준관리실로 문의하시기 바랍니다.
+                    <img src={draftImg1} alt="사내 표준 기안 Flow" /> * 문의사항 발생시 표준관리실로 문의하시기
+                    바랍니다.
                     <br /> MDCS 총괄 김헌석 (청주)3865
                   </dd>
                 </dl>
@@ -220,10 +230,18 @@ class IntroComponent extends Component {
                       <Radio value="ABROGATION_MULTI">폐기기안(일괄)</Radio>
                     </Radio.Group>
                   </li>
-                  {selectedDraft === DraftType.ENACTMENT && <Enactment {...this.props} onShowModal={this.onShowModalEnactment} />}
-                  {selectedDraft === DraftType.AMENDMENT && <Amendment {...this.props} onShowModal={this.onShowModalAmendment} />}
-                  {selectedDraft === DraftType.ABROGATION && <Abrogation {...this.props} onShowModalAbrogation={this.onShowModalAbrogation} />}
-                  {selectedDraft === 'ABROGATION_MULTI' && <AbrogationMulti {...this.props} onShowAbrogationMulti={this.onShowAbrogationMulti} />}
+                  {selectedDraft === DraftType.ENACTMENT && (
+                    <Enactment {...this.props} onShowModal={this.onShowModalEnactment} />
+                  )}
+                  {selectedDraft === DraftType.AMENDMENT && (
+                    <Amendment {...this.props} onShowModal={this.onShowModalAmendment} />
+                  )}
+                  {selectedDraft === DraftType.ABROGATION && (
+                    <Abrogation {...this.props} onShowModalAbrogation={this.onShowModalAbrogation} />
+                  )}
+                  {selectedDraft === 'ABROGATION_MULTI' && (
+                    <AbrogationMulti {...this.props} onShowAbrogationMulti={this.onShowAbrogationMulti} />
+                  )}
                 </ul>
               </div>
             </div>
@@ -279,7 +297,15 @@ class IntroComponent extends Component {
             </div>
           </StyledInputView>
         </AntdModal>
-        <AntdModal destroyOnClose style={{ top: '50px' }} width={900} visible={isShow} onCancel={this.onCloseModal} footer={null} maskClosable={false}>
+        <AntdModal
+          destroyOnClose
+          style={{ top: '50px' }}
+          width={900}
+          visible={isShow}
+          onCancel={this.onCloseModal}
+          footer={null}
+          maskClosable={false}
+        >
           <StyledInputView>
             <div className="pop_tit">업무표준</div>
 
@@ -298,10 +324,16 @@ class IntroComponent extends Component {
                 compProps={{ docNumber, NODE_ID: selectedNodeId }}
                 InputCustomButtons={({ saveBeforeProcess, onCloseModal, sagaKey, reloadId, tempSaveBeforeProcess }) => (
                   <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => tempSaveBeforeProcess(sagaKey, reloadId)}>
+                    <StyledButton
+                      className="btn-primary btn-sm btn-first"
+                      onClick={() => tempSaveBeforeProcess(sagaKey, reloadId)}
+                    >
                       임시저장
                     </StyledButton>
-                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                    <StyledButton
+                      className="btn-primary btn-sm btn-first"
+                      onClick={() => saveBeforeProcess(sagaKey, reloadId)}
+                    >
                       상신
                     </StyledButton>
                     <StyledButton className="btn-light btn-sm" onClick={() => onCloseModal()}>
