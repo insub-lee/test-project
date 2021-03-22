@@ -148,8 +148,21 @@ class IntroComponent extends Component {
 
   onAbrogationProcess = workProcess => {
     const { sagaKey, submitHandlerBySaga } = this.props;
-    const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
-    submitHandlerBySaga(sagaKey, 'POST', prefixUrl, { DRAFT_PROCESS: workProcess }, this.onCompleteProc);
+    const { DRAFT_PROCESS_STEP } = workProcess;
+    let isByPass = true;
+    const ruleCheckList = DRAFT_PROCESS_STEP.filter(rule => rule.ISREQUIRED === 1);
+    if (ruleCheckList.length > 0) {
+      ruleCheckList.forEach(rule => {
+        if (rule.APPV_MEMBER.length === 0) {
+          isByPass = false;
+          message.error(`${rule.NODE_NAME_KOR} 단계의 결재를 선택해 주세요`);
+        }
+      });
+    }
+    if (isByPass) {
+      const prefixUrl = '/api/workflow/v1/common/workprocess/draft';
+      submitHandlerBySaga(sagaKey, 'POST', prefixUrl, { DRAFT_PROCESS: workProcess }, this.onCompleteProc);
+    }
   };
 
   onCompleteProc = () => {

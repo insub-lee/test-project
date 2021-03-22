@@ -67,14 +67,14 @@ class AbrogationMultiDraft extends Component {
       const nDraftWorkProc = { ...draftWorkProc, DRAFT_TITLE: draftTitle, DRAFT_DATA: nDraftData };
 
       // 결재권자(최종결재권자) 정보확인
-      const approveInfo = DRAFT_PROCESS_STEP.find(item => item.SRC_PATH === 'approve');
-      const approverYn = this.checkApprove(approveInfo);
+      // const approveInfo = DRAFT_PROCESS_STEP.find(item => item.SRC_PATH === 'approve');
+      // const approverYn = this.checkApprove(approveInfo);
 
-      if (approverYn) {
-        onAbrogationMultiProcess(nDraftWorkProc);
-      } else {
-        message.error(<MessageContent>결재자 정보를 선택해 주십시오.</MessageContent>, 2);
-      }
+      // if (approverYn) {
+      onAbrogationMultiProcess(nDraftWorkProc);
+      // } else {
+      // message.error(<MessageContent>결재자 정보를 선택해 주십시오.</MessageContent>, 2);
+      // }
     } else {
       message.error('폐기내용 [제목, Description , 제개정] 항목은 필수 입력항목입니다.');
     }

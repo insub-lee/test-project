@@ -71,14 +71,14 @@ class AbrogationDraft extends Component {
     const nDraftWorkProc = { ...draftWorkProc, DRAFT_DATA: nDraftData };
 
     // 결재권자(최종결재권자) 정보확인
-    const approveInfo = DRAFT_PROCESS_STEP.find(item => item.SRC_PATH === 'approve');
-    const approverYn = this.checkApprove(approveInfo);
+    // const approveInfo = DRAFT_PROCESS_STEP.find(item => item.SRC_PATH === 'approve');
+    // const approverYn = this.checkApprove(approveInfo);
 
-    if (approverYn) {
-      onAbrogationProcess(nDraftWorkProc);
-    } else {
-      message.error(<MessageContent>결재자 정보를 선택해 주십시오.</MessageContent>, 2);
-    }
+    // if (approverYn) {
+    onAbrogationProcess(nDraftWorkProc);
+    // } else {
+    // message.error(<MessageContent>결재자 정보를 선택해 주십시오.</MessageContent>, 2);
+    // }
   };
 
   // 결재자(최종결재권자) 유무 확인
