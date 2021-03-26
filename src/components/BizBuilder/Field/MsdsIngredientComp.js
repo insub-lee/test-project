@@ -50,14 +50,17 @@ class MsdsIngredientComp extends React.Component {
   }
 
   setList = sagaKey => {
-    const { extraApiData, viewPageData } = this.props;
+    const { sagaKey: id, changeFormData, extraApiData, viewPageData } = this.props;
     const viewType = (viewPageData && viewPageData.viewType) || '';
     const apiList = (extraApiData && extraApiData.MsdsList && extraApiData.MsdsList.list) || [];
     const applyList = (extraApiData && extraApiData.applyList && extraApiData.applyList.list) || [];
-    this.setState({
-      apiList,
-      applyList,
-    });
+    this.setState(
+      {
+        apiList,
+        applyList,
+      },
+      () => changeFormData(id, 'applyList', applyList),
+    );
   };
 
   handleApply = applyList => {
@@ -133,7 +136,12 @@ class MsdsIngredientComp extends React.Component {
                   <td align="center">
                     {viewType === 'INPUT' || viewType === 'MODIFY' ? (
                       <p>
-                        <Input style={{ width: '50px' }} onChange={e => this.handleInputOnChange(e, index)} value={a.RATIO || ''} />%
+                        <Input
+                          style={{ width: '50px' }}
+                          onChange={e => this.handleInputOnChange(e, index)}
+                          value={a.RATIO || ''}
+                        />
+                        %
                       </p>
                     ) : (
                       <span>{a.RATIO || ''} %</span>
