@@ -71,7 +71,7 @@ class List extends Component {
     if (searchType === 'cmpny') {
       const regex = new RegExp(`${value}`, 'gi');
       const selectedCmpny = cmpnyList.find(item => regex.test(item.WRK_CMPNY_NM));
-      keyword = selectedCmpny.WRK_CMPNY_CD;
+      keyword = selectedCmpny?.WRK_CMPNY_CD;
     }
     const apiInfo = {
       key: 'getWorkers',
@@ -96,7 +96,12 @@ class List extends Component {
       options.push(year);
     }
     return (
-      <AntdSelect className="select-mid mr5" style={{ width: '100px' }} value={searchValue.year} onChange={e => this.changeSearchValue('year', e)}>
+      <AntdSelect
+        className="select-mid mr5"
+        style={{ width: '100px' }}
+        value={searchValue.year}
+        onChange={e => this.changeSearchValue('year', e)}
+      >
         <Option value="">년도</Option>
         {options.map(YYYY => (
           <Option value={`${YYYY}`}>{YYYY}</Option>
@@ -195,7 +200,10 @@ class List extends Component {
               defaultValue={searchValue.keyword}
               onChange={e => this.changeSearchValue('keyword', e.target.value)}
             />
-            <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.handleGetWorkers('searchByEdu', searchValue.keyword)}>
+            <StyledButton
+              className="btn-gray btn-sm btn-first"
+              onClick={() => this.handleGetWorkers('searchByEdu', searchValue.keyword)}
+            >
               검색
             </StyledButton>
           </div>
@@ -211,7 +219,11 @@ class List extends Component {
           rowSelection={rowSelection}
           scroll={{ y: 392 }}
           dataSource={eshsWorkerList}
-          footer={() => <div style={{ textAlign: 'center' }}>{`총 ${eshsWorkerList.length === 0 ? 0 : eshsWorkerList.length} 명`}</div>}
+          footer={() => (
+            <div style={{ textAlign: 'center' }}>{`총 ${
+              eshsWorkerList.length === 0 ? 0 : eshsWorkerList.length
+            } 명`}</div>
+          )}
         />
       </Styled>
     );
