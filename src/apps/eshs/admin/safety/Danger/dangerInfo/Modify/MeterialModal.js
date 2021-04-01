@@ -44,7 +44,10 @@ const { Option } = Select;
 class MeterialModal extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      ref01: 0,
+      ref02: 'ALL',
+    };
     this.onChangeData = debounce(this.onChangeData, 500);
   }
 
@@ -53,7 +56,8 @@ class MeterialModal extends Component {
       extraApiData: { modalData, modalSelectData },
       formData,
     } = this.props;
-    const nModalSelectData = modalSelectData && modalSelectData.categoryMapList && modalSelectData.categoryMapList.filter(f => f.LVL !== 0);
+    const nModalSelectData =
+      modalSelectData && modalSelectData.categoryMapList && modalSelectData.categoryMapList.filter(f => f.LVL !== 0);
     const nModalData = modalData && modalData.list;
 
     const selectedRowKeys = [];
@@ -88,7 +92,14 @@ class MeterialModal extends Component {
     } = this.props;
     const { ref01, ref02 } = this.state;
     if (modalData && modalData.list && modalData.list.length > 0) {
-      const filterData = modalData && modalData.list && modalData.list.filter(f => (ref01 ? f.REF01 === ref01 : true) && (ref02 ? f.REF02 === ref02 : true));
+      const filterData =
+        modalData &&
+        modalData.list &&
+        modalData.list.filter(item => {
+          const firstYn = ref01 > 0 ? item.REF01 === ref01 : true;
+          const secondYn = ref02 !== 'ALL' ? item.REF02 === ref02 : true;
+          return firstYn && secondYn;
+        });
       this.setState({ modalData: filterData });
     }
   };
@@ -101,12 +112,26 @@ class MeterialModal extends Component {
 
   modalInsert = () => {
     const { selectedMeterial } = this.state;
-    const { sagaKey: id, changeFormData, onChangeModal } = this.props;
+    const { sagaKey: id, changeFormData, onChangeModal, formData } = this.props;
+    const { INFO_DATA } = formData;
     if (selectedMeterial.length <= 14) {
-      let element;
+      // INFO_DATA 에서 기존 유해화학물질 제거
+      const allKey = Object.keys(INFO_DATA || {});
+      const outKey = ['C_NM', 'C_NAME', 'C_GR'];
+      let nextInfoData;
+      allKey.forEach(key => {
+        if (!outKey.includes(key)) {
+          nextInfoData = {
+            ...nextInfoData,
+            [key]: INFO_DATA[key],
+          };
+        }
+      });
+
+      // 제거된 INFO_DATA에 유해화학물질 정보 추가
       for (let index = 0; index < 14; index += 1) {
-        element = {
-          ...element,
+        nextInfoData = {
+          ...nextInfoData,
           ...{
             [`C_NM${index + 1}`]: selectedMeterial[index] && selectedMeterial[index].MINOR_CD,
             [`C_NAME${index + 1}`]: selectedMeterial[index] && selectedMeterial[index].CD_NM,
@@ -115,7 +140,7 @@ class MeterialModal extends Component {
         };
       }
 
-      changeFormData(id, 'INFO_DATA', { ...element });
+      changeFormData(id, 'INFO_DATA', nextInfoData);
       onChangeModal();
     } else {
       message.warning('화학물질 종류는 최대 14개까지 선택할 수 있습니다.');
@@ -129,7 +154,7 @@ class MeterialModal extends Component {
       selectedRowKeys,
       onChange: this.onSelectChangeModal,
     };
-
+    const useArea = ['구미', '청주'];
     return (
       <StyledContentsWrapper>
         <StyledCustomSearchWrapper className="search-wrapper-inline">
@@ -140,24 +165,34 @@ class MeterialModal extends Component {
               style={{ width: 150 }}
               defaultValue={this.state.ref01}
               onChange={value => this.setState({ ref01: String(value) }, this.filterSelect)}
-              placeholder="지역전체"
               allowClear
             >
-              {modalSelectData && modalSelectData.map(item => <Option value={String(item.NODE_ID)}>{item.NAME_KOR}</Option>)}
+              <Option value={0}>전체</Option>
+              {modalSelectData &&
+                modalSelectData
+                  .filter(item => useArea.includes(item.NAME_KOR))
+                  .map(item => <Option value={String(item.NODE_ID)}>{item.NAME_KOR}</Option>)}
             </AntdSelect>
             <span className="text-label">물질구분</span>
             <AntdSelect
               className="mr5 select-sm"
               style={{ width: 150 }}
-              defaultValue={this.state.searchType}
-              value={this.state.ref02}
+              defaultValue={this.state.ref02}
               onChange={value => this.setState({ ref02: value }, this.filterSelect)}
-              placeholder="물질전체"
               allowClear
             >
+              <Option value="ALL">전체</Option>
               <Option value="CHEMICAL">CHEMICAL</Option>
               <Option value="GAS">GAS</Option>
             </AntdSelect>
+          </div>
+          <div className="btn-area">
+            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.modalInsert}>
+              저장
+            </StyledButton>
+            <StyledButton className="btn-gray btn-first btn-sm" onClick={onChangeModal}>
+              취소
+            </StyledButton>
           </div>
         </StyledCustomSearchWrapper>
         <AntdTable
@@ -166,17 +201,10 @@ class MeterialModal extends Component {
           rowKey="MINOR_CD"
           dataSource={modalData || []}
           rowSelection={rowSelection}
-          pagination={20}
+          pagination={false}
+          scroll={{ y: 500 }}
           footer={() => <span>{`${(modalData && modalData.length) || 0} 건`}</span>}
         />
-        <StyledButtonWrapper className="btn-wrap-center">
-          <StyledButton className="btn-primary btn-first btn-sm" onClick={this.modalInsert}>
-            저장
-          </StyledButton>
-          <StyledButton className="btn-primary btn-first btn-sm" onClick={onChangeModal}>
-            취소
-          </StyledButton>
-        </StyledButtonWrapper>
       </StyledContentsWrapper>
     );
   }
@@ -186,10 +214,8 @@ MeterialModal.propTypes = {
   sagaKey: PropTypes.string,
   extraApiData: PropTypes.object,
   formData: PropTypes.object,
-  getExtraApiData: PropTypes.func,
   changeFormData: PropTypes.func,
   onChangeModal: PropTypes.func,
-  isModal: PropTypes.bool,
 };
 
 MeterialModal.defaultProps = {};

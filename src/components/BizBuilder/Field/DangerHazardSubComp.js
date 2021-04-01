@@ -22,52 +22,67 @@ const AntdModal = StyledModal(Modal);
 
 const { Option } = Select;
 
-const setColumns = (treeData, aotList, aocList, onChangeData) => [
+const renderCell = (text, workStepCode) => {
+  if (workStepCode.length > 0) {
+    return (
+      (workStepCode.find(item => item.CODE === text) && workStepCode.find(item => item.CODE === text).CD_NAME) || ''
+    );
+  }
+  return '';
+};
+
+const setColumns = (workStepCode, aotList, aocList, onChangeData) => [
   {
     title: '구분',
     align: 'center',
     children: [
       {
         title: '부서',
-        dataIndex: 'DIV_ID',
+        dataIndex: 'DIV_CD',
         width: '80px',
         align: 'center',
-        render: text => treeData && treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+        render: text => renderCell(text, workStepCode),
       },
       {
         title: '공정(장소)',
-        dataIndex: 'PLACE_ID',
+        dataIndex: 'PLACE_CD',
         width: '80px',
         align: 'center',
-
-        render: text => treeData && treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+        render: text => renderCell(text, workStepCode),
       },
       {
         title: '세부공정',
-        dataIndex: 'PROCESS_ID',
+        dataIndex: 'PROCESS_CD',
         width: '80px',
         align: 'center',
-        render: text => treeData && treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+        render: text => renderCell(text, workStepCode),
       },
       {
         title: '장비(설비)',
-        dataIndex: 'EQUIP_ID',
+        dataIndex: 'EQUIP_CD',
         width: '80px',
         align: 'center',
-        render: text => treeData && treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+        render: text => renderCell(text, workStepCode),
       },
       {
         title: '위험요인',
         dataIndex: 'WORK_NM',
         width: '140px',
         align: 'center',
-        render: (text, record) => <AntdTextarea value={text} onChange={e => onChangeData('WORK_NM', e.target.value, record)} />,
+        render: (text, record) => (
+          <AntdTextarea value={text} onChange={e => onChangeData('WORK_NM', e.target.value, record)} />
+        ),
       },
     ],
   },
   {
     title: (
-      <Popover placement="topLeft" title="사고의 발생원인" content={<img src={System} alt="사고의 발생원인" width="800px" height="400px" />} trigger="hover">
+      <Popover
+        placement="topLeft"
+        title="사고의 발생원인"
+        content={<img src={System} alt="사고의 발생원인" width="800px" height="400px" />}
+        trigger="hover"
+      >
         사고의 발생원인
       </Popover>
     ),
@@ -93,11 +108,20 @@ const setColumns = (treeData, aotList, aocList, onChangeData) => [
     align: 'center',
     render: (text, record) => (
       <>
-        <AntdSelect className="select-xs" style={{ width: '100%' }} value={text} onChange={value => onChangeData('AOT_ID', value, record)}>
+        <AntdSelect
+          className="select-xs"
+          style={{ width: '100%' }}
+          value={text}
+          onChange={value => onChangeData('AOT_ID', value, record)}
+        >
           {aotList && aotList.map(item => <Option value={item.NODE_ID}>{item.NAME_KOR}</Option>)}
         </AntdSelect>
         {Number(text) === 30450 ? (
-          <AntdInput className="ant-input-sm ant-input-inline" value={record.OTHER_CASE} onChange={e => onChangeData('OTHER_CASE', e.target.value, record)} />
+          <AntdInput
+            className="ant-input-sm ant-input-inline"
+            value={record.OTHER_CASE}
+            onChange={e => onChangeData('OTHER_CASE', e.target.value, record)}
+          />
         ) : (
           ''
         )}
@@ -110,7 +134,12 @@ const setColumns = (treeData, aotList, aocList, onChangeData) => [
     width: '50px',
     align: 'center',
     render: (text, record) => (
-      <AntdSelect className="select-xs" value={text} onChange={value => onChangeData('RA_YN', value, record)} style={{ width: '100%' }}>
+      <AntdSelect
+        className="select-xs"
+        value={text}
+        onChange={value => onChangeData('RA_YN', value, record)}
+        style={{ width: '100%' }}
+      >
         <Option value="Y">Y</Option>
         <Option value="N">N</Option>
       </AntdSelect>
@@ -125,6 +154,7 @@ class DangerHazardSubComp extends React.Component {
       modal: false,
       columns: [],
       deleteTempList: [],
+      workStepCode: [],
     };
   }
 
@@ -138,10 +168,10 @@ class DangerHazardSubComp extends React.Component {
         params: { PARAM: { NODE_ID: 30431, USE_YN: 'Y' } },
       },
       {
-        key: 'treeData',
-        url: `/api/admin/v1/common/categoryChildrenListUseYn`,
+        key: 'getAllWorkStepCode',
         type: 'POST',
-        params: { PARAM: { NODE_ID: 1831, USE_YN: 'Y' } },
+        url: '/api/eshs/v1/common/dangerWorkStepCode',
+        params: { PARAM: { TYPE: 'GET', CODE: 'M000', IS_ALL: 'ALL', USE_YN: 'Y', MAX_LV: 5 } },
       },
     ];
     getExtraApiData(id, apiArray, this.initData);
@@ -150,15 +180,16 @@ class DangerHazardSubComp extends React.Component {
 
   initData = () => {
     const {
-      extraApiData: { codeData, treeData },
+      extraApiData: { codeData, getAllWorkStepCode },
     } = this.props;
+    const workStepCode = (getAllWorkStepCode && getAllWorkStepCode.workAllStepCode) || [];
     const aotList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30432);
     const aocList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30433);
     this.setState({
-      aotList,
-      aocList,
-      treeData: treeData && treeData.categoryMapList,
-      columns: setColumns(treeData && treeData.categoryMapList, aotList, aocList, this.onChangeData),
+      // aotList,
+      // aocList,
+      workStepCode,
+      columns: setColumns(workStepCode, aotList, aocList, this.onChangeData),
     });
   };
 
@@ -257,7 +288,7 @@ class DangerHazardSubComp extends React.Component {
 
   render() {
     const { formData, visible, changeFormData, sagaKey: id } = this.props;
-    const { selectedRowKeys, treeData, columns } = this.state;
+    const { selectedRowKeys, workStepCode, columns } = this.state;
     const { HAZARD_LIST } = formData;
     const rowSelection = {
       selectedRowKeys,
@@ -268,7 +299,7 @@ class DangerHazardSubComp extends React.Component {
 
     return visible ? (
       <>
-        {treeData ? (
+        {workStepCode ? (
           <>
             <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10 btn-wrap-mt-10">
               <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onChangeModal}>
@@ -296,14 +327,14 @@ class DangerHazardSubComp extends React.Component {
           className="modal-table-pad"
           title="위험요인 LIST"
           visible={this.state.modal}
-          width={800}
+          width="60%"
           onCancel={this.onChangeModal}
           footer={null}
           destroyOnClose
         >
           {this.state.modal && (
             <DangerHazardSubModalComp
-              treeData={treeData}
+              workStepCode={workStepCode}
               sagaKey={id}
               formData={formData}
               changeFormData={changeFormData}

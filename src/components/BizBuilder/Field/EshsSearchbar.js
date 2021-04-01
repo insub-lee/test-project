@@ -35,7 +35,15 @@ class CommonSearchbar extends React.Component {
   };
 
   onChangeSave = type => {
-    const { saveTask, modifyTask, deleteTask, sagaKey: id, changeViewPage, viewPageData, saveBeforeProcess } = this.props;
+    const {
+      saveTask,
+      modifyTask,
+      deleteTask,
+      sagaKey: id,
+      changeViewPage,
+      viewPageData,
+      saveBeforeProcess,
+    } = this.props;
     if (type === 'S') {
       // 기존로직 : 업로드한 파일에 대한 real 이관이 이루어 지지 않아 수정하였음.
       // saveTask(id, id, this.saveTaskAfter);
@@ -115,7 +123,10 @@ class CommonSearchbar extends React.Component {
                 <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('S')}>
                   등록
                 </StyledButton>
-                <StyledButton className="btn-light btn-xs" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+                <StyledButton
+                  className="btn-light btn-xs"
+                  onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}
+                >
                   초기화
                 </StyledButton>
               </>
@@ -133,7 +144,12 @@ class CommonSearchbar extends React.Component {
                 <StyledButton className="btn-primary btn-first btn-xs" onClick={() => this.onChangeSave('M')}>
                   저장
                 </StyledButton>
-                <Popconfirm title="정말로 삭제하시겠습니까?" onConfirm={() => this.onChangeSave('D')} okText="Yes" cancelText="No">
+                <Popconfirm
+                  title="정말로 삭제하시겠습니까?"
+                  onConfirm={() => this.onChangeSave('D')}
+                  okText="Yes"
+                  cancelText="No"
+                >
                   <StyledButton className="btn-light btn-first btn-xs">삭제</StyledButton>
                 </Popconfirm>
 
@@ -147,7 +163,10 @@ class CommonSearchbar extends React.Component {
                 ) : (
                   ''
                 )}
-                <StyledButton className="btn-light btn-xs mr5" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+                <StyledButton
+                  className="btn-light btn-xs mr5"
+                  onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}
+                >
                   초기화
                 </StyledButton>
               </>
@@ -178,7 +197,13 @@ class CommonSearchbar extends React.Component {
         {readOnly || CONFIG.property.readOnly ? (
           ''
         ) : (
-          <AntdModal title={NAME_KOR || COMP_FIELD} visible={this.state.modal} width="80%" onCancel={this.handleModalVisible} footer={null}>
+          <AntdModal
+            title={NAME_KOR || COMP_FIELD}
+            visible={this.state.modal}
+            width="80%"
+            onCancel={this.handleModalVisible}
+            footer={null}
+          >
             <div>{this.state.modal && this.BizbuilderbaseRender()}</div>
           </AntdModal>
         )}

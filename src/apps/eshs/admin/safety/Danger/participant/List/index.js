@@ -1,552 +1,478 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import { getTreeFromFlatData } from 'react-sortable-tree';
-import { Table, Input, TreeSelect, Select, Modal, Popconfirm, message } from 'antd';
+import { Table, Input, Select, Modal, Popconfirm, Spin } from 'antd';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
-
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledSearchInput from 'components/BizBuilder/styled/Form/StyledSearchInput';
-import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
-import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
-import { EXCEL_DOWNLOAD_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
-import { isJSON } from 'utils/helpers';
-
 import moment from 'moment';
+import { columns } from './tableColumn';
+import UserSearch from '../Modal/userSearch';
+import InputPage from '../Modal/inputPage';
 
 moment.locale('ko');
+const { Option } = Select;
 const AntdSearchInput = StyledSearchInput(Input.Search);
-const AntdInput = StyledInput(Input);
-const AntdTreeSelect = StyledTreeSelect(TreeSelect);
 const AntdSelect = StyledSelect(Select);
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
 
-const getCategoryMapListAsTree = (flatData, rootkey, selectable) =>
-  getTreeFromFlatData({
-    flatData: flatData.map(item => ({
-      title: item.NAME_KOR,
-      value: item.NODE_ID,
-      key: item.NODE_ID,
-      parentValue: item.PARENT_NODE_ID,
-      selectable: selectable ? item.LVL > selectable : true,
-    })),
-    getKey: node => node.key,
-    getParentKey: node => node.parentValue,
-    rootKey: rootkey || 0,
-  });
-
-const { Option } = Select;
-
+// 선택된 레벨, 부모값이 일치하는 배열리턴
+const getCategoryMapFilter = (type, flatData, prntCd) => {
+  const result = flatData.filter(item => item.CODE !== prntCd);
+  if (type === 'menu') {
+    return result.map(item => ({
+      title: item.CD_NAME,
+      value: item.CODE,
+      key: item.CODE,
+      parentValue: item.PRNT_CD,
+      selectable: true,
+    }));
+  }
+  return result;
+};
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isModal: false,
-      searchType: 'NAME',
-      removeList: [],
+      isLoaded: true,
+      // Modal 컨트롤
+      modalOn: false,
+      modalTitle: '',
+      modalType: '',
+      modalUserList: [],
+      modalMenu: [],
+      // Modal 검색
+      modalSearchInfo: {
+        type: 'NAME',
+        keyword: '',
+      },
+      // Excel 다운로드 관련
+      btnTex: '',
+      fileName: '',
+      sheetName: '',
+      excelColumns: [],
+      fields: [],
+      // 검색에 필요한 변수
+      year: moment().format('YYYY'),
+      empNo: '',
+      lvl1: [], // 분류 리스트
+      lvl2: [], // 부서 리스트
+      lvl3: [], // 공정(장소) 리스트
+      selected1: 'M000', // 선택된 분류
+      selected2: '', // 선택된 부서
+      selected3: '', // 선택된 공정(장소)
+      listData: [], // 리스트 데이터
+      selectedRowKeys: [], // 선택된 키값
     };
   }
 
-  /*
-      const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
-      const apiInfo = {
-        key: 'treeSelectData',
-        type: 'POST',
-        url: '/api/admin/v1/common/categoryMapList',
-        params: { PARAM: { NODE_ID: 1831, USE_YN: 'Y', MAX_LVL: 6 } },
-      };
-      getCallDataHandlerReturnRes(id, apiInfo, this.initDataApiCallback);
-  */
-
+  // 페이지 진입
   componentDidMount() {
-    const { sagaKey: id, getExtraApiData, changeSearchData, getListData, changeFormData, workInfo } = this.props;
+    this.initData();
+  }
+
+  initData = () => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
     const apiAry = [
       {
-        key: 'treeSelectData',
+        key: 'getAllWorkStepCode',
         type: 'POST',
-        url: '/api/admin/v1/common/categoryMapList',
-        params: { PARAM: { NODE_ID: 1831, USE_YN: 'Y', MAX_LVL: 6 } },
+        url: '/api/eshs/v1/common/dangerWorkStepCode',
+        params: { PARAM: { TYPE: 'GET', CODE: 'M000', IS_ALL: 'ALL', USE_YN: 'Y', MAX_LV: 3 } },
+      },
+      {
+        key: 'getWorkStepCode',
+        type: 'POST',
+        url: '/api/eshs/v1/common/dangerWorkStepCode',
+        params: { PARAM: { TYPE: 'GET', CODE: 'M000', DEPTH: 1, USE_YN: 'Y' } },
       },
     ];
-    changeSearchData(id, 'DE_YEAR', `AND W.DE_YEAR = '${moment().format('YYYY')}'`);
-    changeFormData(id, 'DE_YEAR', moment().format('YYYY'));
-    changeFormData(id, 'SELECED_TREE', 1596);
-    getExtraApiData(id, apiAry);
-    getListData(id, 9201);
-    const endYear = Number(moment().format('YYYY')) + 1;
+    getCallDataHandler(id, apiAry, this.initCallback);
+  };
+
+  // 초기값 설정
+  initCallback = () => {
+    const {
+      result: { getWorkStepCode, getAllWorkStepCode },
+    } = this.props;
+    const { workStepCode } = getWorkStepCode;
+    const { workAllStepCode } = getAllWorkStepCode;
+    const currentYear = moment().format('YYYY');
+
+    // 부서메뉴
+    const initMenu = getCategoryMapFilter('menu', workStepCode, 'M000');
+
+    // 연도 셀렉트박스 Options 생성 (2006년 ~ 현재 + 1년 까지)
     const YearOptions = [];
-    for (let year = 2006; year <= endYear; year += 1) {
+    for (let year = 2006; year <= Number(currentYear) + 1; year += 1) {
       YearOptions.push(year);
     }
-    this.setState({ YearOptions });
-    let btnTex = '';
-    let fileName = '';
-    let sheetName = '';
-    let excelColumns = [];
-    let fields = [];
 
-    if (workInfo && workInfo.OPT_INFO) {
-      workInfo.OPT_INFO.forEach(opt => {
-        if (opt.OPT_SEQ === EXCEL_DOWNLOAD_OPT_SEQ && opt.ISUSED === 'Y') {
-          if (isJSON(opt.OPT_VALUE)) {
-            const ObjOptVal = JSON.parse(opt.OPT_VALUE);
-            const { columnInfo } = ObjOptVal;
-            btnTex = ObjOptVal.btnTitle || '엑셀받기';
-            fileName = ObjOptVal.fileName || 'excel';
-            sheetName = ObjOptVal.sheetName || 'sheet1';
-            excelColumns = columnInfo.columns || [];
-            fields = columnInfo.fields || [];
-          }
-        }
-      });
-      this.setState({ btnTex, fileName, sheetName, excelColumns, fields });
+    this.setState({
+      YearOptions,
+      modalMenu: workAllStepCode,
+      year: moment().format('YYYY'),
+      empNo: '',
+      lvl1: initMenu,
+      selected1: 'M000',
+      listData: [],
+    });
+  };
+
+  // 분류, 부서, 공정(장소), 세부공정 메뉴정보 호출
+  getCode = (prntCode, depth, useYn) => {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    let lastCode = prntCode;
+    let lastDepth = depth;
+    if (prntCode === '') {
+      switch (depth) {
+        case 2:
+          lastCode = this.state.selected1;
+          lastDepth -= 1;
+          break;
+        case 3:
+          lastCode = this.state.selected2;
+          lastDepth -= 1;
+          break;
+        case 4:
+          lastCode = this.state.selected3;
+          lastDepth -= 1;
+          break;
+        default:
+          break;
+      }
     }
-  }
-
-  onChange = (name, value) => {
-    const { sagaKey: id, changeSearchData, changeFormData } = this.props;
-    changeSearchData(id, name, `AND W.${name} = '${value}'`);
-    changeFormData(id, name, value);
-  };
-
-  onRowModal = record => {
-    this.onCancel();
-    this.onChange('EMP_NO', record.EMPLOYEE_NUM);
-  };
-
-  onChangeSelect = value => {
-    const {
-      extraApiData: { treeSelectData },
-      sagaKey: id,
-      changeSearchData,
-      changeFormData,
-    } = this.props;
-    const treeData = treeSelectData && treeSelectData.categoryMapList;
-    const level = treeData && treeData.find(f => f.NODE_ID === value);
-    if (level && level.LVL === 3) {
-      changeSearchData(id, 'DEPT_PARENT_NODE_ID', `AND M1.PARENT_NODE_ID = ${value}`);
-      changeSearchData(id, 'DEPT_NODE_ID', null);
-      changeSearchData(id, 'SDIV_NODE_ID', null);
-    } else if (level && level.LVL === 4) {
-      changeSearchData(id, 'DEPT_PARENT_NODE_ID', null);
-      changeSearchData(id, 'DEPT_NODE_ID', `AND W.DEPT_NODE_ID = ${value}`);
-      changeSearchData(id, 'SDIV_NODE_ID', null);
-    } else if (level && level.LVL === 5) {
-      changeSearchData(id, 'DEPT_PARENT_NODE_ID', null);
-      changeSearchData(id, 'DEPT_NODE_ID', null);
-      changeSearchData(id, 'SDIV_NODE_ID', `AND W.SDIV_NODE_ID = ${value}`);
-    } else {
-      changeSearchData(id, 'DEPT_PARENT_NODE_ID', null);
-      changeSearchData(id, 'DEPT_NODE_ID', null);
-      changeSearchData(id, 'SDIV_NODE_ID', null);
-    }
-
-    changeFormData(id, 'SELECED_TREE', value);
-  };
-
-  modalSearch = () => {
-    const { sagaKey: id, getExtraApiData } = this.props;
-    const { searchType, keyword } = this.state;
-    const apiUrl =
-      searchType && keyword ? `/api/eshs/v1/common/AllEshsUsers?MODAL_SEARCH_TYPE=${searchType}&KEYWORD=${keyword}` : '/api/eshs/v1/common/AllEshsUsers';
-    const apiAry = [
-      {
-        key: 'userModalData',
-        type: 'GET',
-        url: apiUrl,
-      },
-    ];
-    getExtraApiData(id, apiAry, this.modalDataSet);
-  };
-
-  modalDataSet = () => {
-    const {
-      extraApiData: { userModalData },
-    } = this.props;
-    this.setState({ userModalData: userModalData.users });
-  };
-
-  onSelectChange = selectedRowKeys => {
-    const { sagaKey, setListSelectRowKeys } = this.props;
-    setListSelectRowKeys(sagaKey, selectedRowKeys);
-  };
-
-  onReset = () => {
-    const { changeFormData, sagaKey: id, changeSearchData } = this.props;
-    this.onCancel();
-    changeFormData(id, 'DE_YEAR', moment().format('YYYY'));
-    changeFormData(id, 'EMP_NO', null);
-    changeFormData(id, 'SELECED_TREE', 1596);
-    changeSearchData(id, 'DE_YEAR', `AND W.DE_YEAR = '${moment().format('YYYY')}'`);
-    changeSearchData(id, 'EMP_NO', null);
-    changeSearchData(id, 'DEPT_PARENT_NODE_ID', null);
-    changeSearchData(id, 'DEPT_NODE_ID', null);
-    changeSearchData(id, 'SDIV_NODE_ID', null);
-  };
-
-  onChangeModal = () => {
-    this.setState({ isModal: true });
-  };
-
-  onInsertModal = () => {
-    this.setState({ isInsertModal: true });
-  };
-
-  onCancel = () => {
-    this.setState({ isModal: false, isInsertModal: false, selectedRowKeys: [], userModalData: [] });
-  };
-
-  onInsertChange = (record, value) => {
-    const { userModalData } = this.state;
-    const {
-      extraApiData: { treeSelectData },
-    } = this.props;
-    const stepTree = treeSelectData && treeSelectData.categoryMapList;
-    const sdivNode = stepTree.find(item => item.NODE_ID === value);
-    const deptNode = stepTree.find(item => item.NODE_ID === sdivNode.NODE_ID);
-    const temp = {
-      SDIV_NODE_ID: value,
-      DEPT_NODE_ID: deptNode.NODE_ID,
-      TEL_NO: record.TEL,
-      JIKWI: record.PSTN,
-      DEPT_CD: deptNode.CODE,
-      DEPT_NM: deptNode.NAME_KOR,
-      SDIV_CD: sdivNode.CODE,
-      SDIV_NM: sdivNode.NAME_KOR,
-      EMP_ID: record.USER_ID,
-      EMP_NM: record.NAME,
-      EMP_NO: record.EMPLOYEE_NUM,
-    };
-    const nData = userModalData.map(item => (item.USER_ID === record.USER_ID ? { ...item, ...temp } : { ...item }));
-    return this.setState({ userModalData: nData });
-  };
-
-  onSave = () => {
-    const { sagaKey: id, getExtraApiData, formData } = this.props;
-    const { userModalData, selectedRowKeys } = this.state;
-    const nUserData = selectedRowKeys.map(item => userModalData.find(element => item === element.USER_ID));
-    const apiAry = [
-      {
-        key: 'insertParticipant',
+    // 해당페이지 에선 lvl4(= 세부공정) 이후의 메뉴가 불필요.
+    if (!(depth === 3 && prntCode !== '')) {
+      const apiInfo = {
+        key: 'getWorkStepCode',
         type: 'POST',
-        url: '/api/eshs/v1/common/paricipant',
-        params: { PARAM: { ...formData, PARICIPANT_ARRAY: nUserData } },
-      },
-    ];
-    getExtraApiData(id, apiAry, this.saveAfter);
-  };
-
-  saveAfter = () => {
-    const { sagaKey: id, getListData } = this.props;
-    this.onReset();
-    getListData(id, 9201);
-  };
-
-  onSelectChangeModal = selectedRowKeys => {
-    const { userModalData } = this.state;
-    const effectiveness = userModalData.findIndex(item => !!item.SDIV_NODE_ID && item.USER_ID === selectedRowKeys[selectedRowKeys.length - 1]);
-    if (effectiveness !== -1) {
-      const nData = userModalData.map(item => (item.USER_ID === selectedRowKeys ? { ...item } : { ...item }));
-      this.setState({ selectedRowKeys, userModalData: nData });
-    } else {
-      message.warning('분류를 먼저 선택해주세요');
+        url: `/api/eshs/v1/common/dangerWorkStepCode`,
+        params: { PARAM: { TYPE: 'GET', CODE: lastCode, DEPTH: lastDepth, USE_YN: useYn } },
+      };
+      getCallDataHandlerReturnRes(id, apiInfo, this.getCodeCallback);
     }
+  };
+
+  getCodeCallback = (id, response) => {
+    const { PARAM, workStepCode } = response;
+    const { CODE: prntCd, DEPTH: depth } = PARAM;
+    const menu = getCategoryMapFilter('menu', workStepCode, prntCd);
+    const lastLv = prntCd === 'M000' ? depth : depth + 1;
+    this.setState({
+      [`lvl${lastLv}`]: menu,
+      [`selected${depth}`]: prntCd,
+      [`selected${depth + 1}`]: '',
+    });
+  };
+
+  // setState(key, value)
+  onChangeState = (key, value) => {
+    this.setState({
+      [key]: value,
+    });
+  };
+
+  // 모달내 검색조건 변경 setState
+  onChangeModalSearchInfo = (fields, value) => {
+    const { modalSearchInfo } = this.state;
+    this.setState({
+      modalSearchInfo: {
+        ...modalSearchInfo,
+        [fields]: value,
+      },
+    });
+  };
+
+  // 모달내 유저 검색
+  modalSearch = () => {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const { modalSearchInfo } = this.state;
+    const { type, keyword } = modalSearchInfo;
+    const apiInfo = {
+      key: 'modalUserList',
+      type: 'POST',
+      url: '/api/eshs/v1/common/paricipant',
+      params: { PARAM: { TYPE: 'GET_USER', SEARCH_TYPE: type, KEYWORD: keyword } },
+    };
+    getCallDataHandlerReturnRes(id, apiInfo, this.modalSearchCallback);
+  };
+
+  modalSearchCallback = (id, response) => {
+    const { userList } = response;
+    this.setState({
+      modalUserList: userList,
+    });
+  };
+
+  // 모달 컨트롤
+  onChangeModal = (modalType, bool) => {
+    let title = '';
+    switch (modalType) {
+      case 'userSearch':
+        title = '사용자 검색';
+        break;
+      case 'inputPage':
+        title = '참여자 추가';
+        break;
+      default:
+        break;
+    }
+    this.setState({
+      modalOn: bool,
+      modalTitle: title,
+      modalType,
+      modalUserList: [],
+      modalSearchInfo: {
+        type: 'NAME',
+        keyword: '',
+      },
+    });
+  };
+
+  // UserSearch Modal OnRowClick (검색영역 사번선택시)
+  onRowClick = record => {
+    this.setState(
+      {
+        empNo: record.EMP_NO,
+      },
+      () => this.onChangeModal('', false),
+    );
+  };
+
+  // 검색
+  onSearch = () => {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const { year, empNo, selected3 } = this.state;
+    this.setState({ isLoaded: false });
+    const apiInfo = {
+      key: 'getParicipant',
+      type: 'POST',
+      url: `/api/eshs/v1/common/paricipant`,
+      params: { PARAM: { TYPE: 'GET', DE_YEAR: year, EMP_NO: empNo, SDIV_CD: selected3 } },
+    };
+    getCallDataHandlerReturnRes(id, apiInfo, this.searchCallback);
+  };
+
+  searchCallback = (id, response) => {
+    const { list } = response;
+    this.setState({
+      isLoaded: true,
+      listData: list || [],
+    });
+  };
+
+  onSave = formData => {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const apiInfo = {
+      key: 'insertParicipant',
+      type: 'POST',
+      url: `/api/eshs/v1/common/paricipant`,
+      params: { PARAM: { TYPE: 'INSERT', LIST: formData } },
+    };
+    getCallDataHandlerReturnRes(id, apiInfo, this.onSaveCallback);
+  };
+
+  onSaveCallback = (id, response) => {
+    const { result } = response;
+    if (result === 1) {
+      this.onChangeModal('', false);
+      this.onSearch();
+      return message.success(<MessageContent>참여자 정보를 추가하였습니다.</MessageContent>);
+    }
+    return message.error(<MessageContent>참여자 정보 추가에 실패하였습니다.</MessageContent>);
+  };
+
+  onRowSelection = rowKeys => {
+    this.setState({
+      selectedRowKeys: rowKeys,
+    });
+  };
+
+  deleteRow = () => {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    const { selectedRowKeys } = this.state;
+    const apiInfo = {
+      key: 'deleteParicipant',
+      type: 'POST',
+      url: `/api/eshs/v1/common/paricipant`,
+      params: { PARAM: { TYPE: 'DELETE', LIST: selectedRowKeys } },
+    };
+    getCallDataHandlerReturnRes(id, apiInfo, this.onDeleteCallback);
+  };
+
+  onDeleteCallback = (id, response) => {
+    const { result } = response;
+    if (result === 1) {
+      this.onSearch();
+      return message.success(<MessageContent>참여자 정보를 삭제하였습니다.</MessageContent>);
+    }
+    return message.error(<MessageContent>참여자 정보 삭제에 실패하였습니다.</MessageContent>);
   };
 
   render() {
-    const { YearOptions, userModalData, selectedRowKeys, fileName, btnTex, sheetName, fields, excelColumns } = this.state;
-    const { listData, formData, listSelectRowKeys, removeMultiTask } = this.props;
     const {
-      extraApiData: { treeSelectData },
-      getListData,
-      sagaKey: id,
-    } = this.props;
-    const stepTree = treeSelectData && treeSelectData.categoryMapList;
-    const categoryMapListAsTree = stepTree && stepTree.filter(f => f.USE_YN === 'Y' && f.LVL < 6);
-    const insertAsTree = categoryMapListAsTree && categoryMapListAsTree.map(item => ({ ...item, SDIV_NODE_ID: 1596 }));
-    const treeData = (categoryMapListAsTree && getCategoryMapListAsTree(categoryMapListAsTree, 1831)) || [];
-    const modalTree = (insertAsTree && getCategoryMapListAsTree(insertAsTree, 1596, 4)) || [];
-    const rowSelection = {
-      selectedRowKeys,
-      onChange: this.onSelectChangeModal,
-      // onChange: () => this.setState({ selectedRowKeys }),
-    };
-    const columns = [
-      // {
-      //   title: '',
-      //   align: 'center',
-      //   dataIndex: 'TASK_SEQ',
-      // },
-      {
-        title: '연도',
-        align: 'center',
-        dataIndex: 'DE_YEAR',
-      },
-      {
-        title: '작업정보',
-        align: 'center',
-        children: [
-          {
-            title: '분류',
-            className: 'th-form',
-            dataIndex: 'DEPT_PARENT_NAME',
-            align: 'center',
-          },
-          {
-            title: '부서',
-            className: 'th-form',
-            dataIndex: 'DEPT_NM',
-            align: 'center',
-          },
-          {
-            title: '공정(장소)',
-            className: 'th-form',
-            dataIndex: 'SDIV_NM',
-            align: 'center',
-          },
-        ],
-      },
-      {
-        title: '참여자정보',
-        align: 'center',
-        children: [
-          {
-            title: '사번',
-            className: 'th-form',
-            dataIndex: 'EMP_NO',
-            align: 'center',
-          },
-          {
-            title: '성명',
-            className: 'th-form',
-            dataIndex: 'EMP_NM',
-            align: 'center',
-          },
-          {
-            title: '직위',
-            className: 'th-form',
-            dataIndex: 'JIKWI',
-            align: 'center',
-          },
-        ],
-      },
-    ];
-    const userColumns = [
-      {
-        title: '사번',
-        align: 'center',
-        dataIndex: 'EMPLOYEE_NUM',
-      },
-      {
-        title: '이름',
-        align: 'center',
-        dataIndex: 'NAME',
-      },
-      {
-        title: '직위',
-        align: 'center',
-        dataIndex: 'PSTN',
-      },
-      {
-        title: '부서명',
-        align: 'center',
-        dataIndex: 'DEPARTMENT',
-      },
-      {
-        title: '연락처',
-        align: 'center',
-        dataIndex: 'OFFICE_TEL_NO',
-      },
-    ];
-
-    const userInsertCol = [
-      {
-        title: '사번',
-        align: 'center',
-        width: '10%',
-        dataIndex: 'EMPLOYEE_NUM',
-      },
-      {
-        title: '이름',
-        align: 'center',
-        width: '15%',
-        dataIndex: 'NAME',
-      },
-      {
-        title: '직위',
-        align: 'center',
-        width: '15%',
-        dataIndex: 'PSTN',
-      },
-      {
-        title: '부서명',
-        align: 'center',
-        width: '15%',
-        dataIndex: 'DEPARTMENT',
-      },
-      {
-        title: '분류',
-        align: 'center',
-        dataIndex: 'SDIV_NODE_ID',
-        width: '45%',
-        render: (text, record) => (
-          <AntdTreeSelect
-            style={{ width: '100%' }}
-            className="mr5 select-sm"
-            defaultValue={text}
-            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-            treeData={modalTree || []}
-            placeholder="Please select"
-            onChange={value => this.onInsertChange(record, value)}
-          />
-        ),
-      },
-    ];
-
+      isLoaded,
+      modalOn,
+      modalTitle,
+      modalType,
+      modalUserList,
+      modalMenu,
+      // 모달 검색
+      modalSearchInfo,
+      // 검색조건 메뉴
+      YearOptions,
+      year,
+      empNo,
+      lvl1,
+      lvl2,
+      lvl3,
+      selected1, // 선택된 분류 코드
+      selected2, // 선택된 부서 코드
+      selected3, // 선택된 공정(장소) 코드
+      listData,
+      selectedRowKeys, // 선택된 항목 Key[]
+    } = this.state;
     return (
       <>
         <StyledContentsWrapper>
           <StyledCustomSearchWrapper className="search-wrapper-inline">
             <div className="search-input-area">
               <span className="text-label">참여 연도</span>
-              <AntdSelect className="select-sm mr5" style={{ width: '100px' }} value={formData.DE_YEAR} onChange={value => this.onChange('DE_YEAR', value)}>
+              <AntdSelect
+                className="select-sm mr5"
+                style={{ width: '100px' }}
+                value={year}
+                onChange={value => this.onChangeState('year', value)}
+              >
                 {YearOptions && YearOptions.map(YYYY => <Option value={`${YYYY}`}>{YYYY}</Option>)}
               </AntdSelect>
+              {/* 1 Depth (분류) */}
               <span className="text-label">분류</span>
-              <AntdTreeSelect
-                style={{ width: '300px' }}
-                className="mr5 select-sm"
-                value={formData.SELECED_TREE}
-                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                treeData={treeData || []}
-                placeholder="Please select"
-                onChange={value => this.onChangeSelect(value)}
-                allowClear
-              />
+              <AntdSelect
+                className="select-sm mr5"
+                style={{ width: '200px' }}
+                onChange={value => this.getCode(value, 1, 'Y')}
+                value={selected1}
+              >
+                <Option value="M000">전체</Option>
+                {lvl1.map(item => (
+                  <Option value={item.value}>{item.title}</Option>
+                ))}
+              </AntdSelect>
+              {/* 2 Depth (부서) */}
+              <span className="text-label">부서</span>
+              <AntdSelect
+                className="select-sm mr5"
+                style={{ width: '200px' }}
+                onChange={value => this.getCode(value, 2, 'Y')}
+                value={selected1 === 'M000' ? '' : selected2}
+                disabled={selected1 === 'M000'}
+              >
+                <Option value="">부서전체</Option>
+                {lvl2.map(item => (
+                  <Option value={item.value}>{item.title}</Option>
+                ))}
+              </AntdSelect>
+              {/* 3 Depth (공정(장소)) */}
+              <span className="text-label">공정(장소)</span>
+              <AntdSelect
+                className="select-sm mr5"
+                style={{ width: '200px' }}
+                onChange={value => this.getCode(value, 3, 'Y')}
+                value={selected1 === 'M000' || selected2 === '' ? '' : selected3}
+                disabled={selected1 === 'M000' || selected2 === ''}
+              >
+                <Option value="">장소전체</Option>
+                {lvl3.map(item => (
+                  <Option value={item.value}>{item.title}</Option>
+                ))}
+              </AntdSelect>
+              {/* 사번검색 */}
               <span className="text-label">사번</span>
               <AntdSearchInput
                 style={{ width: '150px' }}
-                value={formData.EMP_NO}
+                value={empNo}
                 className="input-search-sm ant-search-inline mr5"
                 readOnly
-                onClick={this.onChangeModal}
-                onChange={this.onChangeModal}
+                onClick={() => this.onChangeModal('userSearch', true)}
               />
             </div>
             <div className="btn-area">
-              <StyledButton className="btn-gray btn-sm" onClick={() => getListData(id, 9201)}>
+              <StyledButton className="btn-gray btn-sm mr5" onClick={() => this.onSearch()}>
                 검색
+              </StyledButton>
+              <StyledButton className="btn-gray btn-sm" onClick={() => this.initData()}>
+                Reset
               </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
           <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onInsertModal}>
+            <StyledButton
+              className="btn-primary btn-first btn-sm"
+              onClick={() => this.onChangeModal('inputPage', true)}
+            >
               추가
             </StyledButton>
-            <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
+            <Popconfirm
+              title="선택된 내용을 삭제하시겠습니까?"
+              onConfirm={() => this.deleteRow()}
+              okText="Yes"
+              cancelText="No"
+            >
               <StyledButton className="btn-gray btn-first btn-sm">삭제</StyledButton>
             </Popconfirm>
-            <StyledButton className="btn-gray btn-first btn-sm" onClick={this.onReset}>
-              Reset
-            </StyledButton>
-            <ExcelDownloadComp
-              isBuilder={false}
-              fileName={fileName || 'excel'}
-              className="workerExcelBtn"
-              btnText={btnTex || '엑셀받기'}
-              sheetName={sheetName || 'sheet1'}
-              columns={excelColumns || []}
-              fields={fields || []}
-              listData={listData || []}
-            />
           </StyledButtonWrapper>
-          <AntdTable
-            rowKey="TASK_SEQ"
-            key="TASK_SEQ"
-            columns={columns}
-            dataSource={listData || []}
-            bordered
-            footer={() => <span>{`${(listData && listData.length) || 0} 건`}</span>}
-            rowSelection={{ selectedRowKeys: listSelectRowKeys, onChange: this.onSelectChange }}
-          />
-          <AntdModal
-            width="80%"
-            visible={this.state.isModal || this.state.isInsertModal}
-            title="참여자 명단 검색"
-            onCancel={this.onCancel}
-            destroyOnClose
-            footer={null}
-            className="modal-table-pad"
-          >
-            <>
-              <StyledCustomSearchWrapper>
-                <AntdSelect
-                  className="mr5 select-sm"
-                  style={{ width: 100 }}
-                  defaultValue={this.state.searchType}
-                  onChange={value => this.setState({ searchType: value })}
-                >
-                  <Option value="NAME">이름</Option>
-                  <Option value="NO">사번</Option>
-                  <Option value="DEPT">소속</Option>
-                  <Option value="PSTN">직위</Option>
-                </AntdSelect>
-                <AntdInput
-                  style={{ width: 500 }}
-                  className="ant-input-sm ant-input-inline mr5"
-                  placeholder=" 검색어를 입력하세요"
-                  allowClear
-                  onChange={e => this.setState({ keyword: e.target.value })}
-                  onPressEnter={this.modalSearch}
-                />
-                <StyledButton className="btn-gray btn-first btn-sm" onClick={this.modalSearch}>
-                  검색
-                </StyledButton>
-              </StyledCustomSearchWrapper>
-              {this.state.isInsertModal ? (
-                <>
-                  <AntdTable
-                    columns={userInsertCol}
-                    bordered
-                    rowKey="USER_ID"
-                    dataSource={userModalData || []}
-                    footer={() => <span>{`${(userModalData && userModalData.length) || 0} 건`}</span>}
-                    rowSelection={rowSelection}
-                    pagination={false}
-                  />
-                  <StyledButtonWrapper className="btn-wrap-center" style={{ marginTop: '10px' }}>
-                    <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onSave}>
-                      저장
-                    </StyledButton>
-                    <StyledButton className="btn-primary btn-first btn-sm" onClick={this.onReset}>
-                      취소
-                    </StyledButton>
-                  </StyledButtonWrapper>
-                </>
-              ) : (
-                <AntdTable
-                  columns={userColumns}
-                  bordered
-                  rowKey="USER_ID"
-                  dataSource={userModalData || []}
-                  footer={() => <span>{`${(userModalData && userModalData.length) || 0} 건`}</span>}
-                  onRow={record => ({
-                    onClick: () => {
-                      this.onRowModal(record);
-                    },
-                  })}
-                />
-              )}
-            </>
-          </AntdModal>
+          <Spin spinning={!isLoaded} tip="Data Loading">
+            <AntdTable
+              rowKey="KEY_NO"
+              key="KEY_NO"
+              columns={columns}
+              dataSource={listData || []}
+              bordered
+              pagination={{ pageSize: 20 }}
+              footer={() => <span>{`${(listData && listData.length) || 0} 건`}</span>}
+              rowSelection={{ selectedRowKeys, onChange: this.onRowSelection }}
+            />
+          </Spin>
         </StyledContentsWrapper>
+        <AntdModal
+          width={modalType === 'userSearch' ? '60%' : '70%'}
+          visible={modalOn}
+          title={modalTitle}
+          onCancel={() => this.onChangeModal('', false)}
+          destroyOnClose
+          footer={null}
+          className="modal-table-pad"
+        >
+          {modalType === 'userSearch' && (
+            <UserSearch
+              modalSearchInfo={modalSearchInfo}
+              userList={modalUserList}
+              modalSearch={this.modalSearch}
+              onRowClick={this.onRowClick}
+              onChangeModalSearchInfo={this.onChangeModalSearchInfo}
+            />
+          )}
+          {modalType === 'inputPage' && (
+            <InputPage
+              year={year}
+              modalSearchInfo={modalSearchInfo}
+              userList={modalUserList}
+              modalMenu={modalMenu}
+              onSave={this.onSave}
+              modalSearch={this.modalSearch}
+              onChangeModalSearchInfo={this.onChangeModalSearchInfo}
+            />
+          )}
+        </AntdModal>
       </>
     );
   }
@@ -554,17 +480,9 @@ class List extends Component {
 
 List.propTypes = {
   sagaKey: PropTypes.string,
-  extraApiData: PropTypes.object,
-  workInfo: PropTypes.object,
-  formData: PropTypes.object,
-  getExtraApiData: PropTypes.func,
-  changeSearchData: PropTypes.func,
-  getListData: PropTypes.func,
-  changeFormData: PropTypes.func,
-  setListSelectRowKeys: PropTypes.func,
-  listData: PropTypes.array,
-  listSelectRowKeys: PropTypes.any,
-  removeMultiTask: PropTypes.func,
+  result: PropTypes.object,
+  getCallDataHandler: PropTypes.func,
+  getCallDataHandlerReturnRes: PropTypes.func,
 };
 
 List.defaultProps = {};

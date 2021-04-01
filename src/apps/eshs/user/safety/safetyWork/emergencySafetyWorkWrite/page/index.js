@@ -44,7 +44,7 @@ class emergencyWorkWrite extends Component {
         WRK_CMPNY_CD: '',
         WLOC: '',
         WGUBUN: '신규',
-        SITE: '청주',
+        SITE: '구미',
         REQ_CMPNY_CD: '',
         REQ_DEPT_CD: '',
         REQ_EMP_NO: '',
@@ -352,7 +352,7 @@ class emergencyWorkWrite extends Component {
           WRK_CMPNY_CD: '',
           WLOC: '',
           WGUBUN: '신규',
-          SITE: '청주',
+          SITE: '구미',
           REQ_SUPERVISOR_EMP_NO: '',
           REQUEST_GB: '긴급',
           FIRE_MANAGER: '',
@@ -485,7 +485,9 @@ class emergencyWorkWrite extends Component {
           onOk={() => this.handleModal('', false)}
           onCancel={() => this.handleModal('', false)}
         >
-          {(modalType === 'mainBfcheck' || modalType === 'subBfcheck') && <Bfcheck initFormData={formData} pageType={modalType} />}
+          {(modalType === 'mainBfcheck' || modalType === 'subBfcheck') && (
+            <Bfcheck initFormData={formData} pageType={modalType} />
+          )}
           {modalType === 'cmpny' && (
             <EshsCmpnyComp
               sagaKey={this.props.sagaKey}
@@ -502,7 +504,11 @@ class emergencyWorkWrite extends Component {
           )}
           {modalType === 'equip' && <SafetyEquipSelect equipList={eshsSwtbEquip} rowSelect={this.equipAdd} />}
           {modalType === 'safetyWork' && (
-            <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWorkEmergency_search" rowSelect={this.handleSafetyWorkSelect} />
+            <BizMicroDevBase
+              component={SearchSafetyWork}
+              sagaKey="safetyWorkEmergency_search"
+              rowSelect={this.handleSafetyWorkSelect}
+            />
           )}
           {modalType === 'changeType' && (
             <div style={{ padding: '20px' }}>

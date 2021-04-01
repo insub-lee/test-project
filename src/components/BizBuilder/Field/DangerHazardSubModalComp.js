@@ -1,106 +1,160 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Table, InputNumber, TreeSelect } from 'antd';
-
-import { getTreeFromFlatData } from 'react-sortable-tree';
-
+import { Table, InputNumber, Select } from 'antd';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledInputNumber from 'components/BizBuilder/styled/Form/StyledInputNumber';
-import StyledTreeSelect from 'components/BizBuilder/styled/Form/StyledTreeSelect';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 
+const { Option } = Select;
 const AntdTable = StyledAntdTable(Table);
 const AntdInputNumber = StyledInputNumber(InputNumber);
-const AntdTreeSelect = StyledTreeSelect(TreeSelect);
+const AntdSelect = StyledSelect(Select);
 
-const getCategoryMapListAsTree = (flatData, rootkey) =>
-  getTreeFromFlatData({
-    flatData: flatData.map(item => ({
-      title: item.NAME_KOR,
-      value: item.NODE_ID,
-      key: item.NODE_ID,
-      parentValue: item.PARENT_NODE_ID,
-      selectable: item.LVL === 6,
-    })),
-    getKey: node => node.key,
-    getParentKey: node => node.parentValue,
-    rootKey: rootkey || 0,
+// 장비 리스트 생성
+const setEquipList = list => {
+  const nextList = [];
+  // 장비코드만 분리
+  const equipList = list.filter(item => item.LVL === 5);
+  // 장비코드의 단계별 상위코드 조회
+  equipList.forEach(item => {
+    // 1 ~ 4 Lv의 코드조회
+    const process = list.find(node => node.CODE === item.PRNT_CD);
+    const place = list.find(node => node.CODE === process.PRNT_CD);
+    const div = list.find(node => node.CODE === place.PRNT_CD);
+    const sdiv = list.find(node => node.CODE === div.PRNT_CD);
+
+    const newItem = {
+      ...item,
+      SDIV_CD: sdiv.CODE,
+      SDIV_NM: sdiv.CD_NAME,
+      DIV_CD: div.CODE,
+      DIV_NM: div.CD_NAME,
+      PLACE_CD: place.CODE,
+      PLACE_NM: place.CD_NAME,
+      PROCESS_CD: process.CODE,
+      PROCESS_NM: process.CD_NAME,
+      EQUIP_CD: item.CODE,
+      NUM: 1,
+    };
+    nextList.push(newItem);
   });
+  return nextList;
+};
 
+const getMenu = (prntCd, lvl, flatData) => {
+  const list = flatData || [];
+  const result = list
+    .filter(item => {
+      if (lvl === 1) {
+        if (item.CODE === 'M000') {
+          return false;
+        }
+      }
+      if (item.PRNT_CD === prntCd) {
+        return true;
+      }
+      return false;
+    })
+    .map(item => ({
+      title: item.CD_NAME,
+      value: item.CODE,
+      key: item.CODE,
+      parentValue: item.PRNT_CD,
+      selectable: true,
+    }));
+  return result;
+};
 class DangerHazardSubComp extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      selectedRowKeys: [], // 선택된 장비
+      lvl1: [], // 분류
+      lvl2: [], // 부서
+      lvl3: [], // 공정
+      lvl4: [], // 세부공정
+      lvl5: [], // 세부공정에 따른 장비
+      equipList: [], // 장비 전체
+      selected1: 'M000',
+      selected2: '',
+      selected3: '',
+      selected4: '',
+    };
   }
-
-  nodeFind = (name, value) => {
-    const { treeData } = this.props;
-    const placeNode = treeData.find(detail => detail.NODE_ID === value) && treeData.find(detail => detail.NODE_ID === value).PARENT_NODE_ID;
-    const divNode = treeData.find(detail => detail.NODE_ID === placeNode) && treeData.find(detail => detail.NODE_ID === placeNode).PARENT_NODE_ID;
-    const sdivNode = treeData.find(detail => detail.NODE_ID === divNode) && treeData.find(detail => detail.NODE_ID === divNode).PARENT_NODE_ID;
-    if (name === 'SDIV_ID') {
-      return sdivNode;
-    }
-    if (name === 'DIV_ID') {
-      return divNode;
-    }
-    return placeNode;
-  };
 
   componentDidMount() {
-    const { treeData } = this.props;
-    const tempList =
-      treeData &&
-      treeData
-        .filter(item => item.LVL === 7)
-        .map(item => ({
-          ...item,
-          PROCESS_ID: item.PARENT_NODE_ID,
-          PLACE_ID: this.nodeFind('PLACE_ID', item.PARENT_NODE_ID),
-          DIV_ID: this.nodeFind('DIV_ID', item.PARENT_NODE_ID),
-          SDIV_ID: this.nodeFind('SDIV_ID', item.PARENT_NODE_ID),
-          EQUIP_ID: item.NODE_ID,
-          NUM: 1,
-        }));
-    const tempTree =
-      treeData &&
-      treeData.map(item => {
-        if (item.LVL < 7) {
-          switch (item.LVL) {
-            case 3:
-              return { ...item, NAME_KOR: `${item.NAME_KOR}(분류)` };
-            case 4:
-              return { ...item, NAME_KOR: `${item.NAME_KOR}(부서)` };
-            case 5:
-              return { ...item, NAME_KOR: `${item.NAME_KOR}(공정)` };
-            case 6:
-              return { ...item, NAME_KOR: `${item.NAME_KOR}(세부공정)` };
-            case 7:
-              return { ...item, NAME_KOR: `${item.NAME_KOR}(장비, 설비)` };
-            default:
-              return { ...item };
-          }
-        }
-        return '';
-      });
-    const nTreeData = (tempTree && getCategoryMapListAsTree(tempTree, 1831)) || [];
-    this.setState({ nTreeData, tempList });
+    this.init();
   }
 
-  onChangeData = (record, value) => {
-    const { listData } = this.state;
-    const temp = listData.map(find => {
-      if (find.NODE_ID === record.NODE_ID) {
-        return { ...find, NUM: value };
+  // 1 ~ 4 Lv 필터
+  setFilterList = (lvl, list) => list.filter(item => item.LVL === lvl);
+
+  init = () => {
+    const { workStepCode } = this.props;
+    // 메뉴리스트 생성
+    const lvl1 = getMenu('M000', 1, workStepCode);
+    const equipList = setEquipList(workStepCode);
+    this.setState({ lvl1, equipList });
+  };
+
+  // 메뉴트리 변경시 재조회
+  onChangeSelect = (prntCode, depth) => {
+    const { equipList } = this.state;
+    const { workStepCode } = this.props;
+    let lastCode = prntCode;
+    let lastDepth = depth;
+    if (prntCode === '') {
+      switch (depth) {
+        case 2:
+          lastCode = this.state.selected1;
+          lastDepth -= 1;
+          break;
+        case 3:
+          lastCode = this.state.selected2;
+          lastDepth -= 1;
+          break;
+        case 4:
+          lastCode = this.state.selected3;
+          lastDepth -= 1;
+          break;
+        default:
+          break;
       }
-      return { ...find };
+    }
+    const menu = getMenu(lastCode, lastDepth, workStepCode);
+    const lastLv = lastCode === 'M000' ? depth : lastDepth + 1;
+    if (lastCode !== '' && depth === 4) {
+      const nextLvl5 = equipList.filter(item => item.PRNT_CD === lastCode);
+      this.setState({
+        selectedRowKeys: [], // 입력도중 메뉴트리가 바뀌면 선택값또한 초기화
+        lvl5: nextLvl5,
+        [`selected${lastDepth}`]: lastCode,
+      });
+    } else {
+      this.setState({
+        selectedRowKeys: [], // 입력도중 메뉴트리가 바뀌면 선택값또한 초기화
+        [`lvl${lastLv}`]: menu,
+        [`selected${lastDepth}`]: lastCode,
+        [`selected${lastDepth + 1}`]: '',
+      });
+    }
+  };
+
+  // 장비수량 변경시
+  onChangeData = (record, value) => {
+    const { lvl5 } = this.state;
+    const nextLvl5 = lvl5.map(item => {
+      if (item.CODE === record.CODE) {
+        return { ...item, NUM: value };
+      }
+      return { ...item };
     });
-    this.setState({ listData: temp });
+    this.setState({ lvl5: nextLvl5 });
   };
 
   onSelectChangeModal = selectedRowKeys => {
@@ -108,13 +162,12 @@ class DangerHazardSubComp extends React.Component {
   };
 
   modalInsert = () => {
-    const { selectedRowKeys, listData } = this.state;
+    const { selectedRowKeys, lvl5 } = this.state;
     const { sagaKey: id, changeFormData, formData, onChangeModal, onSelectedRowKeys } = this.props;
     const { HAZARD_LIST, REG_NO, TASK_SEQ } = formData;
     if (selectedRowKeys && selectedRowKeys.length) {
-      const tempList = listData && listData.filter(selectd => selectedRowKeys.findIndex(rowKey => selectd.NODE_ID === rowKey) !== -1);
+      const tempList = lvl5.filter(item => selectedRowKeys.includes(item.CODE)) || [];
       let hazardLastSeq = Number((HAZARD_LIST[HAZARD_LIST.length - 1] && HAZARD_LIST[HAZARD_LIST.length - 1].SEQ) || 0);
-
       const realList = [];
       tempList.forEach(item => {
         for (let index = 0; index < item.NUM; index += 1) {
@@ -144,8 +197,8 @@ class DangerHazardSubComp extends React.Component {
   };
 
   render() {
-    const { treeData, onChangeModal } = this.props;
-    const { selectedRowKeys, nTreeData, listData, tempList } = this.state;
+    const { onChangeModal } = this.props;
+    const { selectedRowKeys, lvl1, lvl2, lvl3, lvl4, lvl5, selected1, selected2, selected3, selected4 } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChangeModal,
@@ -153,28 +206,30 @@ class DangerHazardSubComp extends React.Component {
     const columns = [
       {
         title: '부서',
-        dataIndex: 'DIV_ID',
-        render: text => treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+        dataIndex: 'DIV_NM',
       },
       {
         title: '공정(장소)',
-        dataIndex: 'PLACE_ID',
-        render: text => treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+        dataIndex: 'PLACE_NM',
       },
       {
         title: '세부공정',
-        dataIndex: 'PROCESS_ID',
-        render: text => treeData.find(item => item.NODE_ID === Number(text)) && treeData.find(item => item.NODE_ID === Number(text)).NAME_KOR,
+        dataIndex: 'PROCESS_NM',
       },
       {
         title: '장비(설비)',
-        dataIndex: 'NAME_KOR',
+        dataIndex: 'CD_NAME',
       },
       {
         title: '생성 수량',
         dataIndex: 'NUM',
         render: (text, record) => (
-          <AntdInputNumber className="ant-input-number-xs" defaultValue={1} min={1} onChange={value => this.onChangeData(record, value)} />
+          <AntdInputNumber
+            className="ant-input-number-xs"
+            defaultValue={1}
+            min={1}
+            onChange={value => this.onChangeData(record, value)}
+          />
         ),
       },
     ];
@@ -182,22 +237,68 @@ class DangerHazardSubComp extends React.Component {
       <>
         <StyledCustomSearchWrapper>
           <div className="search-input-area">
-            <AntdTreeSelect
-              style={{ width: '100%' }}
-              className="mr5 select-sm"
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-              placeholder="세부공정을 선택해주세요"
-              treeData={nTreeData || []}
-              onChange={value => this.setState({ listData: tempList && tempList.filter(list => list.PARENT_NODE_ID === Number(value)) })}
-              allowClear
-            />
+            {/* 1 Depth (분류) */}
+            <span className="text-label">분류</span>
+            <AntdSelect
+              className="select-sm mr5"
+              style={{ width: '200px' }}
+              onChange={value => this.onChangeSelect(value, 1)}
+              value={selected1}
+            >
+              <Option value="M000">전체</Option>
+              {lvl1.map(item => (
+                <Option value={item.value}>{item.title}</Option>
+              ))}
+            </AntdSelect>
+            {/* 2 Depth (부서) */}
+            <span className="text-label">부서</span>
+            <AntdSelect
+              className="select-sm mr5"
+              style={{ width: '200px' }}
+              onChange={value => this.onChangeSelect(value, 2)}
+              value={selected1 === 'M000' ? '' : selected2}
+              disabled={selected1 === 'M000'}
+            >
+              <Option value="">부서전체</Option>
+              {lvl2.map(item => (
+                <Option value={item.value}>{item.title}</Option>
+              ))}
+            </AntdSelect>
+            {/* 3 Depth (공정(장소)) */}
+            <span className="text-label">공정(장소)</span>
+            <AntdSelect
+              className="select-sm mr5"
+              style={{ width: '200px' }}
+              onChange={value => this.onChangeSelect(value, 3)}
+              value={selected1 === 'M000' || selected2 === '' ? '' : selected3}
+              disabled={selected1 === 'M000' || selected2 === ''}
+            >
+              <Option value="">장소전체</Option>
+              {lvl3.map(item => (
+                <Option value={item.value}>{item.title}</Option>
+              ))}
+            </AntdSelect>
+            {/* 4 Depth (세부공정) */}
+            <span className="text-label">세부공정</span>
+            <AntdSelect
+              className="select-sm mr5"
+              style={{ width: '200px' }}
+              onChange={value => this.onChangeSelect(value, 4)}
+              value={selected1 === 'M000' || selected2 === '' || selected3 === '' ? '' : selected4}
+              disabled={selected1 === 'M000' || selected2 === '' || selected3 === ''}
+            >
+              <Option value="">공정전체</Option>
+              {lvl4.map(item => (
+                <Option value={item.value}>{item.title}</Option>
+              ))}
+            </AntdSelect>
           </div>
         </StyledCustomSearchWrapper>
         <AntdTable
-          rowKey="NODE_ID"
-          key="NODE_ID"
+          rowKey="CODE"
+          key="CODE"
           columns={columns}
-          dataSource={listData || []}
+          dataSource={lvl5 || []}
           rowSelection={rowSelection}
           scroll={{ y: 400 }}
           pagination={false}
@@ -218,7 +319,7 @@ class DangerHazardSubComp extends React.Component {
 DangerHazardSubComp.propTypes = {
   sagaKey: PropTypes.string,
   formData: PropTypes.object,
-  treeData: PropTypes.array,
+  workStepCode: PropTypes.array,
   changeFormData: PropTypes.func,
   onChangeModal: PropTypes.func,
   onSelectedRowKeys: PropTypes.func,
