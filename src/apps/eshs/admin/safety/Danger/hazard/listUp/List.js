@@ -16,36 +16,45 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import moment from 'moment';
 import ExcelDownloader from './Excel';
 
+const { Option } = Select;
 const AntdModal = StyledAntdModal(Modal);
 const AntdSelect = StyledSelect(Select);
 const AntdTreeSelect = StyledTreeSelect(TreeSelect);
 const AntdLineTable = StyledLineTable(Table);
 
-const { Option } = Select;
-
-const getCategoryMapListAsTree = (flatData, rootkey) =>
-  getTreeFromFlatData({
-    flatData: flatData.map(item => ({
-      title: item.NAME_KOR,
-      value: item.NODE_ID,
-      key: item.NODE_ID,
-      parentValue: item.PARENT_NODE_ID,
+// 선택된 레벨, 부모값이 일치하는 배열리턴
+const getCategoryMapFilter = (type, flatData, prntCd) => {
+  const result = flatData.filter(item => item.CODE !== prntCd);
+  if (type === 'menu') {
+    return result.map(item => ({
+      title: item.CD_NAME,
+      value: item.CODE,
+      key: item.CODE,
+      parentValue: item.PRNT_CD,
       selectable: true,
-      depth: item.LVL,
-    })),
-    getKey: node => node.key,
-    getParentKey: node => node.parentValue,
-    rootKey: rootkey || 0,
-    depth: node => node.depth,
-  });
+    }));
+  }
+  return result;
+};
 
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      year: Number(moment().year()),
       isModal: false,
       selectAll: false,
+      // 검색에 필요한 변수
+      year: moment().format('YYYY'),
+      lvl1: [], // 분류 리스트
+      lvl2: [], // 부서 리스트
+      lvl3: [], // 공정(장소) 리스트
+      lvl4: [], // 공정(장소) 리스트
+      lvl5: [], // 장비 리스트
+      selected1: 'M000', // 선택된 분류코드
+      selected2: '', // 선택된 부서코드
+      selected3: '', // 선택된 공정코드
+      selected4: '', // 선택된 세부공정코드
+      selected5: '', // 선택된 장비코드
     };
   }
 
@@ -54,10 +63,10 @@ class List extends Component {
     spinningOn();
     const apiAry = [
       {
-        key: 'treeSelectData',
+        key: 'getWorkStepCode',
         type: 'POST',
-        url: '/api/admin/v1/common/categoryChildrenListUseYn',
-        params: { PARAM: { NODE_ID: 1831, USE_YN: 'Y' } },
+        url: '/api/eshs/v1/common/dangerWorkStepCode',
+        params: { PARAM: { TYPE: 'GET', CODE: 'M000', DEPTH: 1, USE_YN: 'Y' } },
       },
       {
         key: 'codeData',
@@ -71,82 +80,159 @@ class List extends Component {
 
   initData = () => {
     const {
-      result: { treeSelectData, codeData },
+      result: { getWorkStepCode, codeData },
       spinningOff,
     } = this.props;
-    const tableFindList = treeSelectData && treeSelectData.categoryMapList;
-    const nData = (tableFindList && getCategoryMapListAsTree(tableFindList, 1831)) || [];
+    const { year } = this.state;
+    const { workStepCode } = getWorkStepCode;
     const aotList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30432);
     const aocList = codeData.categoryMapList.filter(item => item.PARENT_NODE_ID === 30433);
-    const currentYear = this.state.year;
+    // 연도선택 리스트
+    const currentYear = Number(year);
     const yearList = [];
     for (let i = currentYear - 20; i <= currentYear; i += 1) {
       yearList.push(i.toString());
     }
-    this.setState({ nData, aotList, aocList, tableFindList, yearList }, spinningOff);
+
+    // 부서메뉴
+    const initMenu = getCategoryMapFilter('menu', workStepCode, 'M000');
+
+    this.setState({ aotList, aocList, yearList, lvl1: initMenu }, () => spinningOff());
   };
 
-  searchList = () => {
-    const { levelName, searchValue, year, selectAll } = this.state;
-    const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
-    if ((levelName && searchValue && year) || selectAll) {
-      spinningOn();
-      let apiAry = [];
-      if (!selectAll) {
-        apiAry = [
-          {
-            key: 'listUp',
-            type: 'GET',
-            url: `/api/eshs/v1/common/dangerHazard?${levelName}=${searchValue}&&YEAR=${year}`,
-          },
-        ];
-      } else {
-        apiAry = [
-          {
-            key: 'listUp',
-            type: 'GET',
-            url: `/api/eshs/v1/common/dangerHazard?YEAR=${year}`,
-          },
-        ];
+  // 분류, 부서, 공정(장소), 세부공정 메뉴정보 호출
+  getCode = (prntCode, depth, useYn) => {
+    const { sagaKey: id, getCallDataHandlerReturnRes } = this.props;
+    let lastCode = prntCode;
+    let lastDepth = depth;
+    if (prntCode === '') {
+      switch (depth) {
+        case 2:
+          lastCode = this.state.selected1;
+          lastDepth -= 1;
+          break;
+        case 3:
+          lastCode = this.state.selected2;
+          lastDepth -= 1;
+          break;
+        case 4:
+          lastCode = this.state.selected3;
+          lastDepth -= 1;
+          break;
+        case 5:
+          lastCode = this.state.selected4;
+          lastDepth -= 1;
+          break;
+        default:
+          break;
       }
-      getCallDataHandler(id, apiAry, this.searchData);
+    }
+    // 해당페이지 에선 lvl5(= 장비코드) 이후의 메뉴가 불필요.
+    if (!(depth === 5 && prntCode !== '')) {
+      const apiInfo = {
+        key: 'getWorkStepCode',
+        type: 'POST',
+        url: `/api/eshs/v1/common/dangerWorkStepCode`,
+        params: { PARAM: { TYPE: 'GET', CODE: lastCode, DEPTH: lastDepth, USE_YN: useYn } },
+      };
+      getCallDataHandlerReturnRes(id, apiInfo, this.getCodeCallback);
     } else {
-      message.warning('검색조건이 올바르지 않습니다.');
+      this.setState({
+        selected5: prntCode,
+      });
     }
   };
 
-  searchData = () => {
-    const {
-      result: { listUp },
-      spinningOff,
-    } = this.props;
-    const { aotList, aocList, tableFindList } = this.state;
-    if (listUp && listUp.list && listUp.list.length > 0) {
-      const excelData = listUp.list.map(item => ({
+  getCodeCallback = (id, response) => {
+    const { PARAM, workStepCode } = response;
+    const { CODE: prntCd, DEPTH: depth } = PARAM;
+    const menu = getCategoryMapFilter('menu', workStepCode, prntCd);
+    const lastLv = prntCd === 'M000' ? depth : depth + 1;
+    this.setState({
+      [`lvl${lastLv}`]: menu,
+      [`selected${depth}`]: prntCd,
+      [`selected${depth + 1}`]: '',
+    });
+  };
+
+  // 검색
+  onSearch = () => {
+    const { sagaKey: id, getCallDataHandlerReturnRes, spinningOn } = this.props;
+    const { year } = this.state;
+    spinningOn();
+    // Param 설정
+    const fields = ['SDIV_CD', 'DIV_CD', 'PLACE_CD', 'PROCESS_CD', 'EQUIP_CD'];
+    let searchParam = {};
+    let isRoof = true;
+    let targetLv = 1;
+    while (isRoof) {
+      const target = this.state[`selected${targetLv}`];
+      const field = `${fields[targetLv - 1]}`;
+      switch (targetLv) {
+        case 1:
+          if (target && target !== 'M000') {
+            searchParam = {
+              ...searchParam,
+              [field]: target,
+            };
+          } else {
+            isRoof = false;
+          }
+          break;
+        default:
+          if (target && target !== '') {
+            searchParam = {
+              ...searchParam,
+              [field]: target,
+            };
+          } else {
+            isRoof = false;
+          }
+          break;
+      }
+      targetLv += 1;
+    }
+    const apiInfo = {
+      key: 'listUp',
+      type: 'POST',
+      url: '/api/eshs/v1/common/dangerHazard',
+      params: { PARAM: { YEAR: year, ...searchParam } },
+    };
+    getCallDataHandlerReturnRes(id, apiInfo, this.searchCallback);
+  };
+
+  searchCallback = (id, response) => {
+    const { spinningOff } = this.props;
+    const { list } = response;
+    const { aotList, aocList } = this.state;
+    if (list && list.length > 0) {
+      const excelData = list.map(item => ({
         ...item,
-        SDIV_ID:
-          tableFindList.find(find => find.NODE_ID === Number(item.SDIV_ID)) && tableFindList.find(find => find.NODE_ID === Number(item.SDIV_ID)).NAME_KOR,
-        PLACE_ID:
-          tableFindList.find(find => find.NODE_ID === Number(item.PLACE_ID)) && tableFindList.find(find => find.NODE_ID === Number(item.PLACE_ID)).NAME_KOR,
-        PROCESS_ID:
-          tableFindList.find(find => find.NODE_ID === Number(item.PROCESS_ID)) && tableFindList.find(find => find.NODE_ID === Number(item.PROCESS_ID)).NAME_KOR,
-        EQUIP_ID:
-          tableFindList.find(find => find.NODE_ID === Number(item.EQUIP_ID)) && tableFindList.find(find => find.NODE_ID === Number(item.EQUIP_ID)).NAME_KOR,
         AOC_ID: Array.isArray(item.AOC_ID)
-          ? item.AOC_ID.map(find => aocList && aocList.find(i => i.NODE_ID === find) && aocList.find(i => i.NODE_ID === find).NAME_KOR).toString()
+          ? item.AOC_ID.map(
+              find =>
+                aocList && aocList.find(i => i.NODE_ID === find) && aocList.find(i => i.NODE_ID === find).NAME_KOR,
+            ).toString()
           : JSON.parse(item.AOC_ID) &&
             JSON.parse(item.AOC_ID)
-              .map(find => aocList && aocList.find(i => i.NODE_ID === find) && aocList.find(i => i.NODE_ID === find).NAME_KOR)
+              .map(
+                find =>
+                  aocList && aocList.find(i => i.NODE_ID === find) && aocList.find(i => i.NODE_ID === find).NAME_KOR,
+              )
               .toString(),
         AOT_ID:
           item.AOT_ID === 30450
-            ? `${aotList && aotList.find(i => i.NODE_ID === item.AOT_ID) && aotList.find(i => i.NODE_ID === item.AOT_ID).NAME_KOR}(${item.OTHER_CASE})`
-            : aotList && aotList.find(i => i.NODE_ID === item.AOT_ID) && aotList.find(i => i.NODE_ID === item.AOT_ID).NAME_KOR,
+            ? `${aotList &&
+                aotList.find(i => i.NODE_ID === item.AOT_ID) &&
+                aotList.find(i => i.NODE_ID === item.AOT_ID).NAME_KOR}(${item.OTHER_CASE})`
+            : aotList &&
+              aotList.find(i => i.NODE_ID === item.AOT_ID) &&
+              aotList.find(i => i.NODE_ID === item.AOT_ID).NAME_KOR,
       }));
-      this.setState({ listData: listUp.list, excelData }, spinningOff);
+      this.setState({ listData: list, excelData }, spinningOff);
     } else {
       spinningOff();
-      message.warning('검색 데이터가 없습니다.');
+      message.info('검색 데이터가 없습니다.');
     }
   };
 
@@ -156,15 +242,15 @@ class List extends Component {
     } = this.props;
     const temp = treeSelectData && treeSelectData.categoryMapList.find(item => item.NODE_ID === value);
     switch (temp && temp.LVL) {
-      case 3:
+      case 1:
         return this.setState({ levelName: 'SDIV_ID', searchValue: value, selectAll: false });
-      case 4:
+      case 2:
         return this.setState({ levelName: 'DIV_ID', searchValue: value, selectAll: false });
-      case 5:
+      case 3:
         return this.setState({ levelName: 'PLACE_ID', searchValue: value, selectAll: false });
-      case 6:
+      case 4:
         return this.setState({ levelName: 'PROCESS_ID', searchValue: value, selectAll: false });
-      case 7:
+      case 5:
         return this.setState({ levelName: 'EQUIP_ID', searchValue: value, selectAll: false });
       default:
         break;
@@ -191,7 +277,23 @@ class List extends Component {
   };
 
   render() {
-    const { nData, yearList, listData, aotList, aocList, tableFindList, excelData } = this.state;
+    const {
+      yearList,
+      listData,
+      aotList,
+      aocList,
+      excelData,
+      lvl1,
+      lvl2,
+      lvl3,
+      lvl4,
+      lvl5,
+      selected1, // 선택된 분류 코드
+      selected2, // 선택된 부서 코드
+      selected3, // 선택된 공정(장소) 코드
+      selected4, // 선택된 세부공정 코드
+      selected5, // 선택된 장비코드
+    } = this.state;
     const columns = [
       {
         title: '구분',
@@ -200,31 +302,27 @@ class List extends Component {
         children: [
           {
             title: '부서',
-            dataIndex: 'SDIV_ID',
+            dataIndex: 'SDIV_NM',
             align: 'center',
             width: '8.75%',
-            render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '공정(장소)',
-            dataIndex: 'PLACE_ID',
+            dataIndex: 'PLACE_NM',
             align: 'center',
             width: '8.75%',
-            render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '세부공정',
-            dataIndex: 'PROCESS_ID',
+            dataIndex: 'PROCESS_NM',
             align: 'center',
             width: '8.75%',
-            render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '장비(설비)',
             align: 'center',
-            dataIndex: 'EQUIP_ID',
+            dataIndex: 'EQUIP_NM',
             width: '8.75%',
-            render: text => tableFindList.find(item => item.NODE_ID === Number(text)) && tableFindList.find(item => item.NODE_ID === Number(text)).NAME_KOR,
           },
           {
             title: '위험요인',
@@ -241,10 +339,18 @@ class List extends Component {
         width: '10%',
         render: text =>
           Array.isArray(text)
-            ? text.map(item => aocList && aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR).toString()
+            ? text
+                .map(
+                  item =>
+                    aocList && aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR,
+                )
+                .toString()
             : JSON.parse(text) &&
               JSON.parse(text)
-                .map(item => aocList && aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR)
+                .map(
+                  item =>
+                    aocList && aocList.find(i => i.NODE_ID === item) && aocList.find(i => i.NODE_ID === item).NAME_KOR,
+                )
                 .toString(),
       },
       {
@@ -254,7 +360,9 @@ class List extends Component {
         width: '10%',
         render: (text, record) =>
           text === 30450
-            ? `${aotList && aotList.find(i => i.NODE_ID === text) && aotList.find(i => i.NODE_ID === text).NAME_KOR}(${record.OTHER_CASE})`
+            ? `${aotList && aotList.find(i => i.NODE_ID === text) && aotList.find(i => i.NODE_ID === text).NAME_KOR}(${
+                record.OTHER_CASE
+              })`
             : aotList && aotList.find(i => i.NODE_ID === text) && aotList.find(i => i.NODE_ID === text).NAME_KOR,
       },
       {
@@ -268,21 +376,86 @@ class List extends Component {
       <ContentsWrapper>
         <StyledCustomSearch className="search-wrapper-inline">
           <div className="search-input-area">
-            <AntdSelect className="select-sm mr5" style={{ width: 100 }} onChange={value => this.onChangeValue('year', value)} defaultValue={this.state.year}>
+            <AntdSelect
+              className="select-sm mr5"
+              style={{ width: 100 }}
+              onChange={value => this.onChangeValue('year', value)}
+              defaultValue={this.state.year}
+            >
               {yearList && yearList.map(item => <Option value={item}>{item}</Option>)}
             </AntdSelect>
-            <AntdTreeSelect
-              style={{ width: '300px' }}
-              className="mr5 select-sm"
-              defultValue={this.state.changeSelectValue}
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-              treeData={nData || []}
-              placeholder="Please select"
-              onSelect={value => this.onChangeSelect(value)}
-            />
+            {/* 1 Depth (분류) */}
+            <span className="text-label">분류</span>
+            <AntdSelect
+              className="select-sm mr5"
+              style={{ width: '200px' }}
+              onChange={value => this.getCode(value, 1, 'Y')}
+              value={selected1}
+            >
+              <Option value="M000">전체</Option>
+              {lvl1.map(item => (
+                <Option value={item.value}>{item.title}</Option>
+              ))}
+            </AntdSelect>
+            {/* 2 Depth (부서) */}
+            <span className="text-label">부서</span>
+            <AntdSelect
+              className="select-sm mr5"
+              style={{ width: '200px' }}
+              onChange={value => this.getCode(value, 2, 'Y')}
+              value={selected1 === 'M000' ? '' : selected2}
+              disabled={selected1 === 'M000'}
+            >
+              <Option value="">부서전체</Option>
+              {lvl2.map(item => (
+                <Option value={item.value}>{item.title}</Option>
+              ))}
+            </AntdSelect>
+            {/* 3 Depth (공정(장소)) */}
+            <span className="text-label">공정(장소)</span>
+            <AntdSelect
+              className="select-sm mr5"
+              style={{ width: '200px' }}
+              onChange={value => this.getCode(value, 3, 'Y')}
+              value={selected1 === 'M000' || selected2 === '' ? '' : selected3}
+              disabled={selected1 === 'M000' || selected2 === ''}
+            >
+              <Option value="">장소전체</Option>
+              {lvl3.map(item => (
+                <Option value={item.value}>{item.title}</Option>
+              ))}
+            </AntdSelect>
+            {/* 4 Depth (세부공정) */}
+            <span className="text-label">세부공정</span>
+            <AntdSelect
+              className="select-sm mr5"
+              style={{ width: '200px' }}
+              onChange={value => this.getCode(value, 4, 'Y')}
+              value={selected1 === 'M000' || selected2 === '' || selected3 === '' ? '' : selected4}
+              disabled={selected1 === 'M000' || selected2 === '' || selected3 === ''}
+            >
+              <Option value="">전체</Option>
+              {lvl4.map(item => (
+                <Option value={item.value}>{item.title}</Option>
+              ))}
+            </AntdSelect>
+            {/* 5 Depth (장비) */}
+            <span className="text-label">장비(설비)</span>
+            <AntdSelect
+              className="select-sm mr5"
+              style={{ width: '200px' }}
+              onChange={value => this.getCode(value, 5, 'Y')}
+              value={selected1 === 'M000' || selected2 === '' || selected3 === '' || selected4 === '' ? '' : selected5}
+              disabled={selected1 === 'M000' || selected2 === '' || selected3 === '' || selected4 === ''}
+            >
+              <Option value="">전체</Option>
+              {lvl5.map(item => (
+                <Option value={item.value}>{item.title}</Option>
+              ))}
+            </AntdSelect>
           </div>
           <div className="btn-area">
-            <StyledButton className="btn-gray btn-first btn-sm" onClick={this.searchList}>
+            <StyledButton className="btn-gray btn-first btn-sm" onClick={this.onSearch}>
               검색
             </StyledButton>
           </div>
@@ -331,7 +504,10 @@ class List extends Component {
 List.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
+  getCallDataHandlerReturnRes: PropTypes.func,
   result: PropTypes.any,
+  spinningOn: PropTypes.func,
+  spinningOff: PropTypes.func,
 };
 
 List.defaultProps = {

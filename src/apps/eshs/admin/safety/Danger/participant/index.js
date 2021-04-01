@@ -1,18 +1,7 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import BizBuilderBase from 'components/BizBuilderBase';
+import React from 'react';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 import List from './List';
-
-class Participant extends Component {
-  componentDidMount() {}
-
-  render() {
-    return <BizBuilderBase sagaKey="participant" workSeq={9201} viewType="LIST" CustomListPage={List} loadingComplete={this.loadingComplete} />;
-  }
-}
-
-Participant.propTypes = {};
-
-Participant.defaultProps = {};
+// 기존 WorkSeq : 9201
+const Participant = () => <BizMicroDevBase sagaKey="participant" component={List} />;
 
 export default Participant;

@@ -40,7 +40,14 @@ class DanestAdminList extends Component {
           authority={authority}
           isOpenModalChange={this.isOpenModalChange}
         />
-        <AntdModal width={1000} visible={this.state.isModal} title="위험성 평가" onCancel={this.onModalChange} destroyOnClose footer={null}>
+        <AntdModal
+          width="75%"
+          visible={this.state.isModal}
+          title="위험성 평가"
+          onCancel={this.onModalChange}
+          destroyOnClose
+          footer={null}
+        >
           {this.state.isModal && <DanestAdmin improveDanger={this.state.improveDanger} />}
         </AntdModal>
       </>

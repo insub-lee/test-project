@@ -26,7 +26,7 @@ const tagArray = (onChangeData, infoData) => [
         className="ant-input-number-sm ant-input-number-inline"
         onChange={value => onChangeData(`JAEHAE`, value)}
         style={{ width: 100 }}
-        defaultValue={infoData.JAEHAE}
+        value={infoData.JAEHAE}
       />
       건
     </td>
@@ -38,7 +38,7 @@ const tagArray = (onChangeData, infoData) => [
         className="ant-input-number-sm ant-input-number-inline"
         onChange={value => onChangeData(`ACHA`, value)}
         style={{ width: 100 }}
-        defaultValue={infoData.ACHA}
+        value={infoData.ACHA}
       />
       건
     </td>
@@ -110,26 +110,45 @@ const tagArray = (onChangeData, infoData) => [
     </td>
   </>,
   <>
-    <th rowSpan={2}>중량물 인력취급시 단위중량( kg예상) 및 형태</th>
+    <th rowSpan={2}>{`중량물 인력취급시 \n 단위중량 및 형태`}</th>
     <td colSpan={2} rowSpan={2}>
-      <AntdInputNumber
-        className="ant-input-number-sm"
-        style={{ width: 100 }}
-        onChange={value => onChangeData(`WEIGHT_KG`, value)}
-        defaultValue={infoData.WEIGHT_KG}
-      />
-      <Checkbox defaultChecked={Boolean(infoData.WEIGHT_UP)} onChange={e => onChangeData(`WEIGHT_UP`, e.target.checked)}>
+      <div>
+        <span style={{ marginRight: '10px', display: 'inline-block' }}>단위중량: </span>
+        <AntdInputNumber
+          className="ant-input-number-sm"
+          style={{ width: 100, display: 'inline-block' }}
+          onChange={value => onChangeData(`WEIGHT_KG`, value)}
+          value={infoData.WEIGHT_KG}
+        />
+        <span style={{ marginleft: '5px', display: 'inline-block' }}>(kg)</span>
+      </div>
+      <br />
+      <span style={{ marginRight: '5px', display: 'inline-block' }}>(</span>
+      <Checkbox
+        defaultChecked={Boolean(infoData.WEIGHT_UP)}
+        onChange={e => onChangeData(`WEIGHT_UP`, e.target.checked)}
+      >
         들기
       </Checkbox>
-      <Checkbox defaultChecked={Boolean(infoData.WEIGHT_PUSH)} onChange={e => onChangeData(`WEIGHT_PUSH`, e.target.checked)}>
+      <Checkbox
+        defaultChecked={Boolean(infoData.WEIGHT_PUSH)}
+        onChange={e => onChangeData(`WEIGHT_PUSH`, e.target.checked)}
+      >
         밀기
       </Checkbox>
-      <Checkbox defaultChecked={Boolean(infoData.WEIGHT_PULL)} onChange={e => onChangeData(`WEIGHT_PULL`, e.target.checked)}>
+      <Checkbox
+        defaultChecked={Boolean(infoData.WEIGHT_PULL)}
+        onChange={e => onChangeData(`WEIGHT_PULL`, e.target.checked)}
+      >
         끌기
       </Checkbox>
-      <Checkbox defaultChecked={Boolean(infoData.WEIGHT_ETC)} onChange={e => onChangeData(`WEIGHT_ETC`, e.target.checked)}>
+      <Checkbox
+        defaultChecked={Boolean(infoData.WEIGHT_ETC)}
+        onChange={e => onChangeData(`WEIGHT_ETC`, e.target.checked)}
+      >
         기타
       </Checkbox>
+      <span style={{ marginleft: '5px', display: 'inline-block' }}>)</span>
     </td>
   </>,
   <></>,
@@ -148,19 +167,19 @@ const tagArray = (onChangeData, infoData) => [
     </td>
   </>,
   <>
-    <th>소음측정 기준 (기준:85dB)</th>
+    <th>소음측정 기준 (기준: 85dB)</th>
     <td colSpan={2}>
       <AntdInputNumber
         className="ant-input-number-sm ant-input-number-inline"
         style={{ width: 100 }}
         onChange={value => onChangeData(`ENV_NOISE`, value)}
-        defaultValue={infoData.ENV_NOISE}
+        value={infoData.ENV_NOISE}
       />
       dB
     </td>
   </>,
   <>
-    <th>작업에 대한 특별안전보건교육 필요유무</th>
+    <th>{`작업에 대한 \n 특별안전보건교육 필요 유무`}</th>
     <td colSpan={2}>
       <Checkbox defaultChecked={Boolean(infoData.EDU_Y)} onChange={e => onChangeData(`EDU_Y`, e.target.checked)}>
         유
@@ -172,7 +191,19 @@ const tagArray = (onChangeData, infoData) => [
   </>,
 ];
 
-const View = ({ processNm, placeNm, divNm, sdivNm, selectData, INFO_DATA, modalData, onChangeData, onChangeModal, deleteMeterial }) => (
+const View = ({
+  infoYear,
+  processNm,
+  placeNm,
+  divNm,
+  sdivNm,
+  selectData,
+  INFO_DATA,
+  modalData,
+  onChangeData,
+  onChangeModal,
+  deleteMeterial,
+}) => (
   <StyledHtmlTable>
     <table>
       <colgroup>
@@ -192,14 +223,14 @@ const View = ({ processNm, placeNm, divNm, sdivNm, selectData, INFO_DATA, modalD
             <span>{`${sdivNm || ''} > ${divNm || ''}`}</span>
           </td>
           <td rowSpan="2" colSpan="3" align="center">
-            <font size="5">안전보건상 위험정보</font>
+            <font size="5">{`(${infoYear}년) 안전보건상 위험정보`}</font>
           </td>
           <th align="center">생산품</th>
           <td align="center">
             <AntdInput
               className="ant-input-sm ant-input-inline"
               style={{ width: 80 }}
-              defaultValue={INFO_DATA && INFO_DATA.PRODUCT}
+              value={INFO_DATA && INFO_DATA.PRODUCT}
               onChange={e => onChangeData('PRODUCT', e.target.value)}
             />
           </td>
@@ -214,7 +245,7 @@ const View = ({ processNm, placeNm, divNm, sdivNm, selectData, INFO_DATA, modalD
             <AntdInputNumber
               className="ant-input-number-sm ant-input-number-inline"
               style={{ width: 80 }}
-              defaultValue={INFO_DATA && INFO_DATA.EMP_CNT}
+              value={INFO_DATA && INFO_DATA.EMP_CNT}
               onChange={value => onChangeData('EMP_CNT', value)}
             />
           </td>
@@ -246,13 +277,13 @@ const View = ({ processNm, placeNm, divNm, sdivNm, selectData, INFO_DATA, modalD
                 <AntdSelect
                   className="select-sm"
                   style={{ width: '100%' }}
-                  defaultValue={Number(INFO_DATA[`M_CD${index + 1}`]) || ''}
+                  value={INFO_DATA[`M_CD${index + 1}`] || ''}
                   onChange={value => onChangeData(`M_CD${index + 1}`, value)}
                 >
                   {selectData &&
                     selectData.map(item => (
-                      <Option key={item.NODE_ID} value={item.NODE_ID}>
-                        {item.NAME_KOR}
+                      <Option key={item.key} value={item.value}>
+                        {item.title}
                       </Option>
                     ))}
                 </AntdSelect>
@@ -261,7 +292,7 @@ const View = ({ processNm, placeNm, divNm, sdivNm, selectData, INFO_DATA, modalD
                 <AntdInputNumber
                   className="ant-input-number-sm"
                   style={{ width: 100 }}
-                  defaultValue={Number(INFO_DATA[`M_QTY${index + 1}`]) || ''}
+                  value={Number(INFO_DATA[`M_QTY${index + 1}`]) || ''}
                   onChange={value => onChangeData(`M_QTY${index + 1}`, value)}
                 />
               </td>
@@ -270,9 +301,8 @@ const View = ({ processNm, placeNm, divNm, sdivNm, selectData, INFO_DATA, modalD
                   content={
                     <pre>
                       {JSON.stringify(meterial) !== '{}' &&
-                        `지역 [${(meterial && meterial.REF01_NAME) || ''}]\n물질구분 [${(meterial && meterial.REF02) || ''}]\n물질명 [${(meterial &&
-                          meterial.CD_NM) ||
-                          ''}]`}
+                        `지역: ${(meterial && meterial.REF01_NAME) || ''}\n물질구분: ${(meterial && meterial.REF02) ||
+                          ''}\n 물질명: ${(meterial && meterial.CD_NM) || ''}`}
                     </pre>
                   }
                   title={null}
@@ -281,13 +311,14 @@ const View = ({ processNm, placeNm, divNm, sdivNm, selectData, INFO_DATA, modalD
                   <AntdSearchInput
                     className={`input-search-sm ${JSON.stringify(meterial) !== '{}' && 'mr5'}`}
                     style={{ width: `${JSON.stringify(meterial) === '{}' ? '100%' : '80%'}` }}
-                    defaultValue={(meterial && meterial.CD_NM) || undefined}
+                    value={(meterial && meterial.CD_NM) || ''}
                     readOnly
                     onClick={onChangeModal}
                   />
                 </Popover>
-
-                {JSON.stringify(meterial) !== '{}' && <Icon type="delete" onClick={() => deleteMeterial(index + 1)}></Icon>}
+                {JSON.stringify(meterial) !== '{}' && (
+                  <Icon type="delete" onClick={() => deleteMeterial(index + 1)}></Icon>
+                )}
               </td>
               <td align="center">
                 <span>{INFO_DATA[`C_GR${index + 1}`] || ''}</span>
@@ -304,6 +335,7 @@ const View = ({ processNm, placeNm, divNm, sdivNm, selectData, INFO_DATA, modalD
 );
 
 View.propTypes = {
+  infoYear: PropTypes.string,
   processNm: PropTypes.string,
   placeNm: PropTypes.string,
   divNm: PropTypes.string,
