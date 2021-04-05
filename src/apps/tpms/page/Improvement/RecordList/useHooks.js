@@ -108,13 +108,14 @@ export default () => {
             setHeadQuartsLabel(dpnm);
             setHeadQuartsValue(dpcd);
           } else {
-            alertMessage.alert('Server Error');
+            // alertMessage.alert('Server Error');
           }
         } else {
           alertMessage.alert('Server Error');
         }
       })
       .catch(() => {
+        console.debug('33333333333 catch error ');
         alertMessage.alert('Server Error');
       });
 
