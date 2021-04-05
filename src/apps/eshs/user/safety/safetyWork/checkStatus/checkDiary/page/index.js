@@ -98,68 +98,56 @@ class SafetyWorkList extends Component {
         title: '작업일',
         dataIndex: 'FROM_DT',
         align: 'center',
+        width: '7%',
         ellipsis: true,
       },
       {
         title: '작업번호',
         dataIndex: 'WORK_NO',
         align: 'center',
+        width: '10%',
         ellipsis: true,
       },
       {
         title: '업체명',
         dataIndex: 'WRK_CMPNY_NM',
         ellipsis: true,
+        width: '10%',
         align: 'center',
       },
       {
         title: '담당ENG',
         dataIndex: 'REQ_EMP_NM',
+        width: '5%',
         align: 'center',
       },
       {
         title: '작업동',
         dataIndex: 'DGUBUN',
         ellipsis: true,
+        width: '5%',
         align: 'center',
       },
       {
         title: '장소',
         dataIndex: 'WLOC',
         align: 'center',
+        width: '10%',
         ellipsis: true,
       },
       {
         title: '주작업',
         dataIndex: 'WCATEGORY',
         align: 'center',
-        ellipsis: true,
-      },
-      {
-        title: '시작',
-        dataIndex: 'FROM_TIME',
-        align: 'center',
-        ellipsis: true,
-      },
-      {
-        title: '종료',
-        dataIndex: 'TO_TIME',
-        align: 'center',
+        width: '5%',
         ellipsis: true,
       },
       {
         title: '작업내용',
         dataIndex: 'WORK_DESC',
-        align: 'center',
         width: '15%',
-        ellipsis: true,
-      },
-      {
-        title: '작업인원',
-        dataIndex: 'WORKER_CNT',
         align: 'center',
-        width: '5%',
-        render: data => `${data}명`,
+        ellipsis: true,
       },
       {
         title: '점검시간',
@@ -171,15 +159,39 @@ class SafetyWorkList extends Component {
       {
         title: '점검자',
         dataIndex: 'CHECK_EMP_NM',
+        width: '5%',
         align: 'center',
         ellipsis: true,
       },
       {
         title: '점검결과',
         dataIndex: 'CHECK_CONTENT',
+        width: '15%',
         align: 'center',
         ellipsis: true,
       },
+
+      {
+        title: '시작',
+        dataIndex: 'FROM_TIME',
+        width: '4%',
+        align: 'center',
+        ellipsis: true,
+      },
+      {
+        title: '종료',
+        dataIndex: 'TO_TIME',
+        align: 'center',
+        width: '4%',
+        ellipsis: true,
+      },
+      // {
+      //   title: '작업인원',
+      //   dataIndex: 'WORKER_CNT',
+      //   align: 'center',
+      //   width: '5%',
+      //   render: data => `${data}명`,
+      // },
     ];
     return (
       <Styled>
@@ -187,7 +199,12 @@ class SafetyWorkList extends Component {
           <Spin tip="검색중 ..." spinning={isSearching}>
             <div className="search-input-area">
               <span className="text-label">지역</span>
-              <AntdSelect defaultValue="구미" className="select-sm" style={{ width: '100px' }} onChange={val => this.onChangeSearchValue('SITE', val)}>
+              <AntdSelect
+                defaultValue="구미"
+                className="select-sm"
+                style={{ width: '100px' }}
+                onChange={val => this.onChangeSearchValue('SITE', val)}
+              >
                 <Option value="">전체</Option>
                 <Option value="구미">구미</Option>
                 <Option value="청주">청주</Option>
@@ -228,7 +245,9 @@ class SafetyWorkList extends Component {
               columns={columns}
               dataSource={listData || []}
               pagination={{ pageSize: 50 }}
-              footer={() => <div style={{ textAlign: 'center' }}>{`총 ${listData.length === 0 ? 0 : listData.length} 건`}</div>}
+              footer={() => (
+                <div style={{ textAlign: 'center' }}>{`총 ${listData.length === 0 ? 0 : listData.length} 건`}</div>
+              )}
             />
           </CustomTableStyled>
         </ContentsWrapper>
