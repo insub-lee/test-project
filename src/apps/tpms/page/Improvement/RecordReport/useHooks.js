@@ -98,7 +98,6 @@ export default () => {
 
     fetchInitData()
       .then(({ response, error }) => {
-        console.debug('### response, error', response, error);
         if (response && !error) {
           const { list } = response;
           if (list.length > 0) {
@@ -106,7 +105,7 @@ export default () => {
             setHeadQuartsLabel(dpnm);
             setHeadQuartsValue(dpcd);
           } else {
-            alertMessage.alert('Server Error');
+            // alertMessage.alert('Server Error');
           }
         } else {
           alertMessage.alert('Server Error');
