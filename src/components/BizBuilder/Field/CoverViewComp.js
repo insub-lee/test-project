@@ -58,32 +58,35 @@ const CoverViewComp = ({ CONFIG, colData, formData, clickCoverView, clickJasperV
     isIE = true;
   }
   const fullpath = window.location.origin;
-  const jasperPath = (fullpath.includes('dev') || fullpath.includes('local')) ? 'Dev' : 'Prod';
+  const jasperPath = fullpath.includes('dev') || fullpath.includes('local') ? 'Dev' : 'Prod';
   const bizDocCoverView = `http://10.100.22.99:4488/jasperserver-pro/rest_v2/reports/public/reports/${jasperPath}/MDCS/${reportType}DocReport.html?workSeq=${WORK_SEQ}&taskSeq=${TASK_SEQ}&j_username=superuser&j_password=superuser`;
   return (
     <>
-      <StyledButton className="btn-gray btn-xxs btn-radius mr5" onClick={() => clickCoverView(WORK_SEQ, TASK_SEQ, viewSeq)}>
+      <StyledButton
+        className="btn-gray btn-xxs btn-radius mr5"
+        onClick={() => clickCoverView(WORK_SEQ, TASK_SEQ, viewSeq)}
+      >
         <FileSearchOutlined /> 표지보기
       </StyledButton>
       {clickJasperView && reportable && (
-          <StyledButton
-            className="btn-gray btn-xxs btn-radius"
-            onClick={() => {
-              if (isIE) {
-                message.error(
-                  <MessageContent>
-                    <span>Internet Explorer (IE)에선 리포트가 지원되지 않습니다.</span>
-                    <br />
-                    <span>Chrome, Edge 등 최신 브라우저를 이용해주십시오.</span>
-                  </MessageContent>,
-                );
-              } else {
-                clickJasperView(bizDocCoverView);
-              }
-            }}
-            >
-            <FileSearchOutlined /> 리포트보기
-          </StyledButton>
+        <StyledButton
+          className="btn-gray btn-xxs btn-radius"
+          onClick={() => {
+            if (isIE) {
+              message.error(
+                <MessageContent>
+                  <span>Internet Explorer (IE)에선 리포트가 지원되지 않습니다.</span>
+                  <br />
+                  <span>Chrome, Edge 등 최신 브라우저를 이용해주십시오.</span>
+                </MessageContent>,
+              );
+            } else {
+              clickJasperView(bizDocCoverView);
+            }
+          }}
+        >
+          <FileSearchOutlined /> 리포트보기
+        </StyledButton>
       )}
     </>
   );
