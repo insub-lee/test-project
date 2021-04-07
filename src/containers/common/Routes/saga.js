@@ -203,10 +203,9 @@ export function* loadAuthorization(action) {
     if (data.code && data.code == '200') {
       // OAuth 인증후 이동할 페이지 값 저장
       loginPage(action.payload.url);
-    } 
+    }
     // yield put({ type: actionTypes.AUTH_REQUEST_ERROR });
   }
-  
 }
 
 export function* checkAuthorization(action) {
@@ -287,7 +286,7 @@ export function* getInitialPortalPage(payload) {
   yield put({
     type: actionTypes.SET_MENU_FIXED_YN,
     menuFixedYn: response.menuFixedYn,
-  });  
+  });
   // REMOVE DOCK - DOCK에서 읽어오던 공통홈, 개인홈 페이지 ID 를 직접 받아옴
   const { rootPageInfo, myHomePageId, commonMenuTree, isNoti, myCategory } = response;
 
@@ -295,27 +294,27 @@ export function* getInitialPortalPage(payload) {
     type: actionTypes.SET_HOME_ROOT_PAGE,
     rootPageInfo: rootPageInfo,
     myHomePageId: myHomePageId,
-  });  
+  });
   yield put({
     type: actionTypes.SET_PORTAL_MENU_TYPE_CODE,
     menuLayoutCode: response.menuLayoutCode,
     menuCompCode: response.menuCompCode,
-  }); 
+  });
 
   // 공통메뉴
   if (Object.keys(commonMenuTree).length > 0) {
     yield put(actions.setCommonMenuTree(commonMenuTree.children || []));
-  }  
+  }
 
   // getNotify
-  yield put({ 
+  yield put({
     type: actionTypes.SET_ISNOTIFY,
     isNoti,
   });
 
   // getMyAppStoreTree
-  if (myCategory && myCategory.size > 0) {    
-    const result = fromJS(JSON.parse(`[${myCategory}]`))
+  if (myCategory && myCategory.size > 0) {
+    const result = fromJS(JSON.parse(`[${myCategory}]`));
     const categoryData = result.get(0).get('children');
     yield put({ type: actionTypes.SET_MYAPP_STORE_TREE, myAppStoreTreeData: categoryData });
   } else {
@@ -713,7 +712,6 @@ export function* execApps(payload) {
     yield put({ type: actionTypes.EXEC_APPS_FAIL });
   } else {
     const resultValue = JSON.parse(response.list);
-
     const myObject = yield select(state => state.get('auth').get('UNREAD_CNT'));
     const myObjectVal = Object.values(myObject);
     const notiVal = JSON.parse(`[${myObjectVal}]`);
@@ -914,7 +912,7 @@ export function* execMenu(payload) {
 
             if (dockList[a].APP_ID === -1 && dockList[a].NODE_TYPE === 'E') {
               //  업무 그룹용 예외처리 추후 확인 바람(10/11);
-              if (dockList[a].WIDGET_LIST ) {
+              if (dockList[a].WIDGET_LIST) {
                 const appIdArr = dockList[a].WIDGET_LIST.split(',');
                 let sum = 0;
                 notiVal.forEach(notiValue => {
@@ -1221,7 +1219,10 @@ export function* resetSysTreeReload() {
 
     // 최초 1단 펼치기
     for (let z = 0; z < newCategoryData.length; z += 1) {
-      if (newCategoryData[z].NODE_TYPE === 'F' || (newCategoryData[z].REF_TYPE === 'B' && newCategoryData[z].NODE_TYPE === 'R')) {
+      if (
+        newCategoryData[z].NODE_TYPE === 'F' ||
+        (newCategoryData[z].REF_TYPE === 'B' && newCategoryData[z].NODE_TYPE === 'R')
+      ) {
         Object.assign(newCategoryData[z], { expanded: true });
       }
     }
@@ -1413,7 +1414,7 @@ export function* getLoaddata(payload) {
   if (data && data.node && Object.keys(data.node).length !== 0) {
     const { PAGE_ID } = data.node;
     params.PAGE_ID = PAGE_ID;
-  }  
+  }
   let response = yield call(Axios.post, '/api/portal/v1/page/getLoaddata/', params);
   let NEW_PAGE_ID = 0;
 
@@ -1470,20 +1471,27 @@ export function* getLoaddata(payload) {
         const { PRNT_ID: prtNodeId, MENU_ID: nodeId } = resNode;
 
         const prtNodeIdx = oldCategoryData.findIndex(node => node.get('MENU_ID') === prtNodeId);
-        const nodeIdx = oldCategoryData.getIn([prtNodeIdx, 'children']).findIndex(node => node.get('MENU_ID') === nodeId);
+        const nodeIdx = oldCategoryData
+          .getIn([prtNodeIdx, 'children'])
+          .findIndex(node => node.get('MENU_ID') === nodeId);
 
-        const newCategoryData = oldCategoryData.update(
-          prtNodeIdx, node => node.set(
-            'UNREAD_CNT', 
-            node.get('UNREAD_CNT') ? node.get('UNREAD_CNT') - (node.getIn(['children', nodeIdx, 'UNREAD_CNT']) ? node.getIn(['children', nodeIdx, 'UNREAD_CNT']) : 0) : 0
-          ).setIn(['children', nodeIdx, 'UNREAD_CNT'], 0)
-        )
+        const newCategoryData = oldCategoryData.update(prtNodeIdx, node =>
+          node
+            .set(
+              'UNREAD_CNT',
+              node.get('UNREAD_CNT')
+                ? node.get('UNREAD_CNT') -
+                    (node.getIn(['children', nodeIdx, 'UNREAD_CNT'])
+                      ? node.getIn(['children', nodeIdx, 'UNREAD_CNT'])
+                      : 0)
+                : 0,
+            )
+            .setIn(['children', nodeIdx, 'UNREAD_CNT'], 0),
+        );
         yield put({ type: actionTypes.SAVE_DATA, node: null, myAppTreeData: newCategoryData });
       }
     }
 
-    
-    
     // dockAppList
     // PAGE_ID로 독아이템 호출
     let dockAppListUpdate = [];
@@ -1551,13 +1559,17 @@ export function* getLoaddata(payload) {
       }
     }
     */
-   
+
     /*
       selectedApp 가져오기
     */
-    response = yield call(Axios.post, '/api/portal/v1/page/executeApps/', { PAGE_ID: nodeData.PAGE_ID, HOME_YN, SYS_YN });
+    response = yield call(Axios.post, '/api/portal/v1/page/executeApps/', {
+      PAGE_ID: nodeData.PAGE_ID,
+      HOME_YN,
+      SYS_YN,
+    });
     const resultValue = JSON.parse(response.list);
-    
+
     /**
      * app unread count update
      */
@@ -1714,7 +1726,7 @@ export function* resetLastExecYn() {
   }
 }
 
-export function* updateMenuFixedYn (payload) {
+export function* updateMenuFixedYn(payload) {
   const { menuFixedYn } = payload;
   const response = yield call(Axios.post, '/api/common/v1/account/updateMenuFixed', { menuFixedYn });
 
@@ -1813,6 +1825,5 @@ export default function* appSaga() {
 
   yield takeLatest(actionTypes.RESET_LAST_EXEC_YN, resetLastExecYn);
 
-  yield takeLatest(actionTypes.UPDATE_MENU_FIXED_YN, updateMenuFixedYn );
-  
+  yield takeLatest(actionTypes.UPDATE_MENU_FIXED_YN, updateMenuFixedYn);
 }

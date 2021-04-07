@@ -261,7 +261,7 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
           label: '프로젝트를 시작하게 된 배경 ',
           name: 'project_reason',
           placeholder: '',
-          value: info?.problem_improvement,
+          value: info?.project_reason,
           required: true,
           maxLength: 450,
           readOnly: false,
@@ -344,7 +344,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
               values: [
                 {
                   name: 'cause_analyze_due_date',
-                  value: info?.cause_analyze_due_date ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.cause_analyze_due_date
+                    ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: false,
                   required: true,
                 },
@@ -356,7 +358,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
               values: [
                 {
                   name: 'measure_due_date',
-                  value: info?.measure_due_date ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.measure_due_date
+                    ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: false,
                   required: true,
                 },
@@ -368,7 +372,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
               values: [
                 {
                   name: 'improvement_due_date',
-                  value: info?.improvement_due_date ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.improvement_due_date
+                    ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: false,
                   required: true,
                 },
@@ -380,7 +386,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
               values: [
                 {
                   name: 'completion_due_date',
-                  value: info?.completion_due_date ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.completion_due_date
+                    ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: false,
                   required: true,
                 },
@@ -702,7 +710,9 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
       moment(moment(improvement_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
       moment(moment(completion_due_date, 'YYYY.MM.DD').format('YYYY-MM-DD 00:00:00')),
     ];
-    const equipment_model = JSON.parse(payload.equipment_model).map(equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`);
+    const equipment_model = JSON.parse(payload.equipment_model).map(
+      equip => `${equip.fab}:${equip.area}:${equip.keyno}:${equip.model}`,
+    );
 
     if (equipment_model.length < 1) {
       alertMessage.alert('선택된 장비가 없습니다.');
@@ -736,30 +746,32 @@ export default ({ info, dpCd = '', callback = () => {} }) => {
   useEffect(() => {
     if (isLoading && isSubmit) {
       getProcessRule().then(prcRule => {
-        fillWorkFlowData(prcRule, { ...info, ...draftData, rel_type: relTypeHandler({ step: info?.step }) }).then(submitResult => {
-          if (submitResult) {
-            postData({ ...info, ...draftData, step: stepHandler({ step: info?.step }) })
-              .then(({ result, req, error }) => {
-                if (result && !error) {
-                  alertMessage.notice('제출 완료');
-                  setIsRedirect(true);
-                  setIsLoading(false);
-                  callback();
-                } else {
-                  setIsError(true);
-                  setIsLoading(false);
+        fillWorkFlowData(prcRule, { ...info, ...draftData, rel_type: relTypeHandler({ step: info?.step }) }).then(
+          submitResult => {
+            if (submitResult) {
+              postData({ ...info, ...draftData, step: stepHandler({ step: info?.step }) })
+                .then(({ result, req, error }) => {
+                  if (result && !error) {
+                    alertMessage.notice('제출 완료');
+                    setIsRedirect(true);
+                    setIsLoading(false);
+                    callback();
+                  } else {
+                    setIsError(true);
+                    setIsLoading(false);
+                    alertMessage.alert('Server Error');
+                    callback();
+                  }
+                })
+                .catch(() => {
                   alertMessage.alert('Server Error');
+                  setIsLoading(false);
+                  setIsError(true);
                   callback();
-                }
-              })
-              .catch(() => {
-                alertMessage.alert('Server Error');
-                setIsLoading(false);
-                setIsError(true);
-                callback();
-              });
-          }
-        });
+                });
+            }
+          },
+        );
       });
     }
   }, [isLoading, isSubmit, draftData]);

@@ -23,7 +23,9 @@ export function* getBizInfo(payload) {
 
 export function* confirmBizGroup(payload) {
   const { history, BIZGRP_ID } = payload;
-  const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/confirmBizgroup', { BIZGRP_ID: Number(BIZGRP_ID) });
+  const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/confirmBizgroup', {
+    BIZGRP_ID: Number(BIZGRP_ID),
+  });
   const { code, result } = response;
   if (code === 200) {
     // console.log(result);
@@ -71,7 +73,6 @@ export function* execApps(payload) {
   const response = yield call(Axios.post, '/api/portal/v1/page/executeApps/', { PAGE_ID });
 
   const resultValue = JSON.parse(response.list);
-
   const myObject = yield select(state => state.get('auth').get('UNREAD_CNT'));
   const myObjectVal = Object.values(myObject);
   const notiVal = JSON.parse(`[${myObjectVal}]`);

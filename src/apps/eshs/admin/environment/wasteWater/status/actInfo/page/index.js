@@ -59,16 +59,26 @@ class ActInfoStatus extends Component {
         <StyledCustomSearchWrapper>
           <Spin tip="검색중 ..." spinning={isSearching}>
             <div className="search-input-area">
-              <AntdSelect defaultValue="청주" className="select-sm" style={{ width: '100px' }} disabled>
-                <Option value="청주">청주</Option>
+              <AntdSelect defaultValue="구미" className="select-sm" style={{ width: '100px' }} disabled>
                 <Option value="구미">구미</Option>
+                <Option value="청주">청주</Option>
                 <Option value="이천">이천</Option>
               </AntdSelect>
-              <AntdSelect defaultValue="017" className="select-sm" style={{ width: '200px', marginLeft: '5px' }} disabled>
+              <AntdSelect
+                defaultValue="017"
+                className="select-sm"
+                style={{ width: '200px', marginLeft: '5px' }}
+                disabled
+              >
                 <Option value="017">Magnachip 반도체</Option>
               </AntdSelect>
               <span className="text-label">===</span>
-              <AntdSelect defaultValue="CLEAN" className="select-sm" style={{ width: '100px' }} onChange={val => this.setState({ searchType: val })}>
+              <AntdSelect
+                defaultValue="CLEAN"
+                className="select-sm"
+                style={{ width: '100px' }}
+                onChange={val => this.setState({ searchType: val })}
+              >
                 <Option value="CLEAN">방지시설</Option>
                 <Option value="EXHAUST">배출시설</Option>
               </AntdSelect>

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';

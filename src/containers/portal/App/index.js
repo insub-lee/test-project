@@ -219,7 +219,17 @@ class App extends React.Component {
 
   setIsFullscreenEnabled = isFullscreenEnabled => this.setState({ isFullscreenEnabled });
 
-  renderApps = (setMyMenuData, selectedApp, isUnreadCnt, execPage, execMenu, show, onReload, setIsSpinnerShow, isPreviewPage) => (
+  renderApps = (
+    setMyMenuData,
+    selectedApp,
+    isUnreadCnt,
+    execPage,
+    execMenu,
+    show,
+    onReload,
+    setIsSpinnerShow,
+    isPreviewPage,
+  ) => (
     <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID}>
       {setMyMenuData.INTL_TYPE === 'Y' ? (
         <AppsRouter
@@ -322,7 +332,11 @@ class App extends React.Component {
           } else if (node.SRC_PATH === 'legacySVC') {
             // console.log('!!!!!!!!!!!!!! INTL TYPE2 !!!!!!!!!', node);
             if (node.TARGET.toUpperCase() === 'NEW') {
-              window.open(node.URL, node.NAME_KOR, 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes');
+              window.open(
+                node.URL,
+                node.NAME_KOR,
+                'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes',
+              );
             } else {
               this.props.history.push({
                 pathname: `/${basicPath.APPS}/${node.PAGE_ID}`,
@@ -434,7 +448,11 @@ class App extends React.Component {
       : mobileDockCss;
 
   getChildDivClassName = (setMyMenuData, history, isFullSize) => {
-    if ((setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize) {
+    if (
+      (setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') ||
+      setMyMenuData.INTL_TYPE === 'Y' ||
+      isFullSize
+    ) {
       return '';
     }
     return 'gridWrapper';
@@ -555,7 +573,12 @@ class App extends React.Component {
               {visiblePersonalize && (
                 <div className="iconPositon" style={{ marginTop: '20px' }}>
                   <Tooltip placement="right" title="App Store">
-                    <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
+                    <Icon
+                      type="appstore"
+                      theme="filled"
+                      style={{ color: 'white', fontSize: '20px' }}
+                      onClick={this.goStore}
+                    />
                   </Tooltip>
                 </div>
               )}
@@ -587,7 +610,12 @@ class App extends React.Component {
                 </div>
               )}
             </SideMenu>
-            <MenuCategory open={headerMenuOpen} execMenu={this.execMenu} execPage={this.execPage} setMenuClose={this.setHeaderMenuClose}>
+            <MenuCategory
+              open={headerMenuOpen}
+              execMenu={this.execMenu}
+              execPage={this.execPage}
+              setMenuClose={this.setHeaderMenuClose}
+            >
               <Layout style={this.getLayoutStyle(isDesktop(view))}>
                 <Content style={{}}>
                   <StyledContainer>
@@ -605,7 +633,11 @@ class App extends React.Component {
                         setIsCloseToFalse={this.setIsCloseToFalse}
                         setMyMenuData={setMyMenuData}
                       >
-                        <div id="child" className={this.getChildDivClassName(setMyMenuData, history, isFullSize)} style={{ height: '100%' }}>
+                        <div
+                          id="child"
+                          className={this.getChildDivClassName(setMyMenuData, history, isFullSize)}
+                          style={{ height: '100%' }}
+                        >
                           {/* TODO menuLayoutCode, menuCompCode값에 따라 메뉴 타입 (레이아웃 + 컴포넌트 형태) */}
                           {/* Header */}
                           <Header
@@ -642,7 +674,9 @@ class App extends React.Component {
                           */}
                               <Route
                                 path={`/${basicPath.PORTAL}/settings`}
-                                render={() => <UserSetting applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
+                                render={() => (
+                                  <UserSetting applySkin={this.applySkin} hideExecApps={this.hideExecApps} />
+                                )}
                               />
                               <Route
                                 path={`/${basicPath.PORTAL}/store`}
@@ -671,7 +705,11 @@ class App extends React.Component {
                               <Route
                                 path={`/${basicPath.APPS}/:PAGE_ID`}
                                 render={() => (
-                                  <div id={setMyMenuData.PAGE_ID} className={`app-view ${setMyMenuData.PAGE_ID}`} style={{ height: '100%' }}>
+                                  <div
+                                    id={setMyMenuData.PAGE_ID}
+                                    className={`app-view ${setMyMenuData.PAGE_ID}`}
+                                    style={{ height: '100%' }}
+                                  >
                                     <AppsRouter
                                       id={setMyMenuData.PAGE_ID}
                                       selectedApp={selectedApp}
@@ -708,7 +746,9 @@ class App extends React.Component {
                               <Route path={`/${basicPath.PORTAL}/filemanage`} render={() => <UserFileManage />} />
                               <Route
                                 path={`/${basicPath.PORTAL}/admin/filemanage`}
-                                render={() => (hasRoleAdmin ? <AdminFileManage /> : <Redirect to={{ pathname: '/' }} />)}
+                                render={() =>
+                                  hasRoleAdmin ? <AdminFileManage /> : <Redirect to={{ pathname: '/' }} />
+                                }
                               />
                             </Switch>
                           </Content>
@@ -742,7 +782,9 @@ class App extends React.Component {
                         }}
                         // height는 태블릿, 모바일에서 하단에 나오는 Dock 높이를 고려해서 계산함
                       >
-                        {this.state.show && <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} />}
+                        {this.state.show && (
+                          <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} />
+                        )}
                       </Rodal>
                     </AppWrapper>
                   </StyledContainer>
@@ -910,7 +952,8 @@ const mapDispatchToProps = dispatch => ({
   handleDndChangePositionSaga: () => dispatch(routesAction.dndChangePositionSaga()),
   handleSetIsUnfixDockItem: () => dispatch(routesAction.setIsUnfixDockItem()),
   handleExecMenu: (PAGE_ID, TARGET, node) => dispatch(routesAction.execMenu(PAGE_ID, TARGET, node)),
-  handleSetMenuNameSelectedIndex: (menuName, selectedIndex) => dispatch(routesAction.setMenuNameSelectedIndex(menuName, selectedIndex)),
+  handleSetMenuNameSelectedIndex: (menuName, selectedIndex) =>
+    dispatch(routesAction.setMenuNameSelectedIndex(menuName, selectedIndex)),
   handleSetDockFixedYn: dockFixedYn => dispatch(routesAction.setDockFixedYn(dockFixedYn)),
   handleSetDockIconType: dockIconType => dispatch(routesAction.setDockIconType(dockIconType)),
   handleReload: item => dispatch(routesAction.reload(item)),
