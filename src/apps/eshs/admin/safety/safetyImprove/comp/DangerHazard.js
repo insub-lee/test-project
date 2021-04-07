@@ -106,8 +106,10 @@ class Comp extends React.Component {
     const treeData = (result && result.treeData && result.treeData.categoryMapList) || [];
 
     const processIdx = treeData.findIndex(detail => detail.NODE_ID === nodeId);
-    const placeIdx = processIdx > -1 ? treeData.findIndex(detail => detail.NODE_ID === treeData[processIdx].PARENT_NODE_ID) : -1;
-    const divIdx = placeIdx > -1 ? treeData.findIndex(detail => detail.NODE_ID === treeData[placeIdx].PARENT_NODE_ID) : -1;
+    const placeIdx =
+      processIdx > -1 ? treeData.findIndex(detail => detail.NODE_ID === treeData[processIdx].PARENT_NODE_ID) : -1;
+    const divIdx =
+      placeIdx > -1 ? treeData.findIndex(detail => detail.NODE_ID === treeData[placeIdx].PARENT_NODE_ID) : -1;
     const sdivIdx = divIdx > -1 ? treeData.findIndex(detail => detail.NODE_ID === treeData[divIdx].PARENT_NODE_ID) : -1;
 
     const nodeObj = {};
@@ -177,7 +179,9 @@ class Comp extends React.Component {
               dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
               placeholder="세부공정을 선택해주세요"
               treeData={nTreeData || []}
-              onChange={value => this.setState({ listData: tempList && tempList.filter(list => list.PARENT_NODE_ID === Number(value)) })}
+              onChange={value =>
+                this.setState({ listData: tempList && tempList.filter(list => list.PARENT_NODE_ID === Number(value)) })
+              }
               allowClear
             />
           </div>
@@ -202,7 +206,12 @@ class Comp extends React.Component {
 }
 
 const DangerHazard = ({ onClickRow, modalVisible }) => (
-  <BizMicroDevBase sagaKey="DangerHazardModalContent" onClickRow={onClickRow} modalVisible={modalVisible} component={Comp}></BizMicroDevBase>
+  <BizMicroDevBase
+    sagaKey="DangerHazardModalContent"
+    onClickRow={onClickRow}
+    modalVisible={modalVisible}
+    component={Comp}
+  ></BizMicroDevBase>
 );
 
 DangerHazard.propTypes = {

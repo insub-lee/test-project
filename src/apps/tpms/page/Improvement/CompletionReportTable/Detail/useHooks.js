@@ -256,7 +256,7 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
           label: '프로젝트를 시작하게 된 배경 ',
           name: 'project_reason',
           placeholder: '',
-          value: info?.problem_improvement,
+          value: info?.project_reason,
           required: true,
           maxLength: 450,
           readOnly: true,
@@ -337,7 +337,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
               values: [
                 {
                   name: 'cause_analyze_due_date',
-                  value: info?.cause_analyze_due_date ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.cause_analyze_due_date
+                    ? moment(info?.cause_analyze_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                 },
               ],
@@ -348,7 +350,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
               values: [
                 {
                   name: 'measure_due_date',
-                  value: info?.measure_due_date ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.measure_due_date
+                    ? moment(info?.measure_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                 },
               ],
@@ -359,7 +363,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
               values: [
                 {
                   name: 'improvement_due_date',
-                  value: info?.improvement_due_date ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.improvement_due_date
+                    ? moment(info?.improvement_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                 },
               ],
@@ -370,7 +376,9 @@ export default ({ info, dpcd = '', callback = () => {} }) => {
               values: [
                 {
                   name: 'completion_due_date',
-                  value: info?.completion_due_date ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD') : undefined,
+                  value: info?.completion_due_date
+                    ? moment(info?.completion_due_date.replace(/\./gi, '-'), 'YYYY-MM-DD').format('YYYYMMDD')
+                    : undefined,
                   readOnly: true,
                 },
               ],

@@ -45,7 +45,7 @@ class List extends Component {
     this.state = {
       revisionReRendering: true,
       selectedRecord: {},
-      userSearchComp:[],
+      userSearchComp: [],
     };
   }
 
@@ -75,13 +75,15 @@ class List extends Component {
     removeReduxState(id);
   }
 
-
   initData = () => {
     const {
       result: { dangerInfoModalDataList, dangerInfoSelectList },
     } = this.props;
     const dangerInfoModalData = dangerInfoModalDataList && dangerInfoModalDataList.list;
-    const dangerInfoSelect = dangerInfoSelectList && dangerInfoSelectList.categoryMapList && dangerInfoSelectList.categoryMapList.filter(f => f.LVL === 7);
+    const dangerInfoSelect =
+      dangerInfoSelectList &&
+      dangerInfoSelectList.categoryMapList &&
+      dangerInfoSelectList.categoryMapList.filter(f => f.LVL === 7);
     this.setState({ dangerInfoModalData, dangerInfoSelect });
   };
 
@@ -105,13 +107,17 @@ class List extends Component {
 
   selectedModal = record => {
     const { isModal } = this.state;
-    this.setState({ selectedRecord: record, regNo: record.REG_NO, isModal: record.IMPROVE ? isModal : !isModal }, this.handleSearch);
+    this.setState(
+      { selectedRecord: record, regNo: record.REG_NO, isModal: record.IMPROVE ? isModal : !isModal },
+      this.handleSearch,
+    );
   };
 
   handleSearch = () => {
     const { sagaKey: id, getCallDataHandler, spinningOn } = this.props;
     const { selectedRecord } = this.state;
-    if (JSON.stringify(selectedRecord) === '{}') return message.info(<MessageContent>등록번호를 먼저 선택해주십시오.</MessageContent>);
+    if (JSON.stringify(selectedRecord) === '{}')
+      return message.info(<MessageContent>등록번호를 먼저 선택해주십시오.</MessageContent>);
     spinningOn();
     const apiAry = [
       {
@@ -170,25 +176,33 @@ class List extends Component {
 
   onChangeAdmin = (name, value, record) => {
     const { dangerDanestAdmin } = this.state;
-    const change = dangerDanestAdmin.map(changeData => (changeData.DA_REG_NO === record.DA_REG_NO ? { ...changeData, [name]: value } : { ...changeData }));
+    const change = dangerDanestAdmin.map(changeData =>
+      changeData.DA_REG_NO === record.DA_REG_NO ? { ...changeData, [name]: value } : { ...changeData },
+    );
     this.setState({ dangerDanestAdmin: change });
   };
 
   onChangeAdminSub = (name, value, record) => {
-      const { dangerDanestAdminSub } = this.state;
-      const change = dangerDanestAdminSub.map(changeData =>
-        changeData.DA_REG_NO === record.DA_REG_NO && changeData.SEQ === record.SEQ ? { ...changeData, [name]: value } : { ...changeData },
-      );
-      this.setState({ dangerDanestAdminSub: change });
-  
+    const { dangerDanestAdminSub } = this.state;
+    const change = dangerDanestAdminSub.map(changeData =>
+      changeData.DA_REG_NO === record.DA_REG_NO && changeData.SEQ === record.SEQ
+        ? { ...changeData, [name]: value }
+        : { ...changeData },
+    );
+    this.setState({ dangerDanestAdminSub: change });
   };
 
   onChangeManager = (userRecord, record) => {
     const { dangerDanestAdmin } = this.state;
     const temp = dangerDanestAdmin.map(changeData =>
       changeData.DA_REG_NO === record.DA_REG_NO
-        ? { ...changeData, DEPT_MANAGER: userRecord.USER_ID, DEPT_MANAGER_NM: userRecord.NAME_KOR, DEPT_MANAGER_ID: userRecord.USER_ID }
-        : { ...changeData},
+        ? {
+            ...changeData,
+            DEPT_MANAGER: userRecord.USER_ID,
+            DEPT_MANAGER_NM: userRecord.NAME_KOR,
+            DEPT_MANAGER_ID: userRecord.USER_ID,
+          }
+        : { ...changeData },
     );
     this.setState({ dangerDanestAdmin: temp });
   };
@@ -206,7 +220,12 @@ class List extends Component {
           },
     );
     const temp = tempfile || [];
-    const tempfileConcat = temp.concat({ ...obj, DANEST_SUB_SEQ: record.UNIQUE_SEQ, REG_NO: record.REG_NO, DA_REG_NO: record.DA_REG_NO });
+    const tempfileConcat = temp.concat({
+      ...obj,
+      DANEST_SUB_SEQ: record.UNIQUE_SEQ,
+      REG_NO: record.REG_NO,
+      DA_REG_NO: record.DA_REG_NO,
+    });
     this.setState({ dangerDanestAdminSub: change, tempfile: tempfileConcat });
   };
 
@@ -214,21 +233,24 @@ class List extends Component {
     const { sagaKey: id, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
     const { dangerDanestAdmin, dangerDanestAdminSub, tempfile } = this.state;
     const submitFind = dangerDanestAdmin.find(findItem => findItem.DA_REG_NO === daRegNo);
-    const submitFindSub = dangerDanestAdminSub.filter(findItem => findItem.DA_REG_NO === daRegNo).map(item => ({ ...item, WORK_NM: item.DANGFACT }));
+    const submitFindSub = dangerDanestAdminSub
+      .filter(findItem => findItem.DA_REG_NO === daRegNo)
+      .map(item => ({ ...item, WORK_NM: item.DANGFACT }));
     const submitData = { PARAM: { ...submitFind, DANEST_SUB_LIST: submitFindSub } };
-    const msg     = this.validationCheck(submitFind);
-    //const msglist = this.validationListCheck(submitFindSub);
-    //console.debug('submitFindSub', submitFindSub);
-    
+    const msg = this.validationCheck(submitFind);
+    // const msglist = this.validationListCheck(submitFindSub);
+    // console.debug('submitFindSub', submitFindSub);
+
     if (msg) {
       message.error(msg);
       return false;
-    } 
+    }
 
-    /*if (msglist) {
+    /* if (msglist) {
       message.error(msglist);
       return false;
-    } */ 
+    } */
+
     spinningOn();
     if (tempfile && tempfile.length) {
       submitHandlerBySaga(id, 'POST', '/upload/moveFileToReal', { PARAM: { DETAIL: tempfile } }, (afterId, res) => {
@@ -256,25 +278,26 @@ class List extends Component {
     const { sagaKey: id, submitHandlerBySaga, spinningOn, spinningOff } = this.props;
     const { dangerDanestAdmin, dangerDanestAdminSub, tempfile } = this.state;
     const submitFind = dangerDanestAdmin.find(findItem => findItem.DA_REG_NO === daRegNo);
-    const submitFindSub = dangerDanestAdminSub.filter(findItem => findItem.DA_REG_NO === daRegNo).map(item => ({ ...item, WORK_NM: item.DANGFACT }));
-    const submitData = { PARAM: { ...submitFind, DANEST_SUB_LIST: submitFindSub , SAVE:'Y'} };
-    const msg     = this.validationCheck(submitFind);
+    const submitFindSub = dangerDanestAdminSub
+      .filter(findItem => findItem.DA_REG_NO === daRegNo)
+      .map(item => ({ ...item, WORK_NM: item.DANGFACT }));
+    const submitData = { PARAM: { ...submitFind, DANEST_SUB_LIST: submitFindSub, SAVE: 'Y' } };
+    const msg = this.validationCheck(submitFind);
     const msglist = this.validationListCheck(submitFindSub);
 
-    //console.log("submitData", submitData);
+    // console.log("submitData", submitData);
     if (msg) {
       message.error(msg);
       return false;
-    } 
+    }
     if (msglist) {
       message.error(msglist);
       return false;
-    }  
+    }
     spinningOn();
     submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/dangerDanestAdmin`, submitData, (key, response) =>
-     callBackAfterPut(key, response, this.callbackDataSet),
+      callBackAfterPut(key, response, this.callbackDataSet),
     );
- 
   };
 
   revisionDanest = daRegNo => {
@@ -344,21 +367,32 @@ class List extends Component {
   };
 
   validationListCheck = formDataList => {
-    for(let i= 0; i < formDataList.length;i++){
-      if(!formDataList[i].SAFEACTION) return '현재 안전조치(대책) 입력해주세요.';
-      if(dangerRank(Number(formDataList[i].DAN_FREQC || 1) * Number(formDataList[i].DAN_STRGT || 1)) === 'A' ||dangerRank(Number(formDataList[i].DAN_FREQC || 1) * Number(formDataList[i].DAN_STRGT || 1)) === 'B' ||dangerRank(Number(formDataList[i].DAN_FREQC || 1) * Number(formDataList[i].DAN_STRGT || 1)) === 'C'){
-        if(!formDataList[i].AP_IMPROVE) return '개선대책 입력해주세요!'; 
-        if(!formDataList[i].AP_ENDDATE) return '완료예정일을 입력해주세요!'; 
+    for (let i = 0; i < formDataList.length; i++) {
+      if (!formDataList[i].SAFEACTION) return '현재 안전조치(대책) 입력해주세요.';
+      if (
+        dangerRank(Number(formDataList[i].DAN_FREQC || 1) * Number(formDataList[i].DAN_STRGT || 1)) === 'A' ||
+        dangerRank(Number(formDataList[i].DAN_FREQC || 1) * Number(formDataList[i].DAN_STRGT || 1)) === 'B' ||
+        dangerRank(Number(formDataList[i].DAN_FREQC || 1) * Number(formDataList[i].DAN_STRGT || 1)) === 'C'
+      ) {
+        if (!formDataList[i].AP_IMPROVE) return '개선대책 입력해주세요!';
+        if (!formDataList[i].AP_ENDDATE) return '완료예정일을 입력해주세요!';
       }
     }
     return '';
   };
-  
 
-  changeModalObj = (title = '', visible = false, content = []) => this.setState({ modalObj: { title, visible, content } });
+  changeModalObj = (title = '', visible = false, content = []) =>
+    this.setState({ modalObj: { title, visible, content } });
 
   render() {
-    const { dangerDanestAdmin, dangerInfo, dangerDanestAdminSub, dangerDanestAdminSubFile, regNo, reAppriseList } = this.state;
+    const {
+      dangerDanestAdmin,
+      dangerInfo,
+      dangerDanestAdminSub,
+      dangerDanestAdminSubFile,
+      regNo,
+      reAppriseList,
+    } = this.state;
     return (
       <StyledContentsWrapper>
         <StyledCustomSearchWrapper className="search-wrapper-inline">
@@ -384,23 +418,37 @@ class List extends Component {
             {dangerDanestAdmin.map(item => (
               <TabPane tab={item.DA_REG_NO} key={item.DA_REG_NO}>
                 <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-
-                {item.STATE === '2' ? (
-               <></>
+                  {item.STATE === '2' ? (
+                    <></>
                   ) : (
                     <>
-                    <StyledButton className="btn-primary btn-first btn-sm mr5"  onClick={() => this.onSave(item.DA_REG_NO)}>완료</StyledButton>
-                <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.updateDanest(item.DA_REG_NO)}>
-                  저장
-                   </StyledButton>
-                 <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.updateDanest(item.DA_REG_NO)}>
-                    수정
-                  </StyledButton>
-                  </>
+                      <StyledButton
+                        className="btn-primary btn-first btn-sm mr5"
+                        onClick={() => this.onSave(item.DA_REG_NO)}
+                      >
+                        완료
+                      </StyledButton>
+                      <StyledButton
+                        className="btn-primary btn-first btn-sm"
+                        onClick={() => this.updateDanest(item.DA_REG_NO)}
+                      >
+                        저장
+                      </StyledButton>
+                      <StyledButton
+                        className="btn-primary btn-first btn-sm"
+                        onClick={() => this.updateDanest(item.DA_REG_NO)}
+                      >
+                        수정
+                      </StyledButton>
+                    </>
                   )}
 
-
-                  <Popconfirm title="재평가 하시겠습니까?" onConfirm={() => this.revisionDanest(item.DA_REG_NO)} okText="Yes" cancelText="No">
+                  <Popconfirm
+                    title="재평가 하시겠습니까?"
+                    onConfirm={() => this.revisionDanest(item.DA_REG_NO)}
+                    okText="Yes"
+                    cancelText="No"
+                  >
                     <StyledButton className="btn-primary btn-first btn-sm"> 재평가</StyledButton>
                   </Popconfirm>
                   {reAppriseList && reAppriseList.length > 0 ? (
@@ -416,7 +464,12 @@ class List extends Component {
                         destroyOnClose
                         footer={null}
                       >
-                        {this.state.isModalReApprise && <ReAppriseList reAppriseList={reAppriseList} dangerDanestAdminSubFile={dangerDanestAdminSubFile} />}
+                        {this.state.isModalReApprise && (
+                          <ReAppriseList
+                            reAppriseList={reAppriseList}
+                            dangerDanestAdminSubFile={dangerDanestAdminSubFile}
+                          />
+                        )}
                       </AntdModalPad>
                     </>
                   ) : (
@@ -437,7 +490,7 @@ class List extends Component {
                       <col width="10%" />
                       <col width="11%" />
                       <col width="5%" />
-                      <col width="13%"/>
+                      <col width="13%" />
                     </colgroup>
                     {this.state.revisionReRendering && (
                       <tbody>
@@ -466,7 +519,9 @@ class List extends Component {
                                 onFileUploadTemp={this.onFileUploadTemp}
                                 UploadFilesDel={this.UploadFilesDel}
                                 UploadTempFilesDel={this.UploadTempFilesDel}
-                                dangerDanestAdminSubFile={dangerDanestAdminSubFile.filter(filterFile => filterFile.DANEST_SUB_SEQ === subItem.UNIQUE_SEQ)}
+                                dangerDanestAdminSubFile={dangerDanestAdminSubFile.filter(
+                                  filterFile => filterFile.DANEST_SUB_SEQ === subItem.UNIQUE_SEQ,
+                                )}
                               />
                             ))}
                       </tbody>
@@ -477,7 +532,14 @@ class List extends Component {
             ))}
           </Tabs>
         )}
-        <AntdModal width={1000} visible={this.state.isModal} title="위험성 평가 검색" onCancel={this.hazardModal} destroyOnClose footer={null}>
+        <AntdModal
+          width={1000}
+          visible={this.state.isModal}
+          title="위험성 평가 검색"
+          onCancel={this.hazardModal}
+          destroyOnClose
+          footer={null}
+        >
           {this.state.isModal && (
             <BizBuilderBase
               sagaKey="hazardModal"

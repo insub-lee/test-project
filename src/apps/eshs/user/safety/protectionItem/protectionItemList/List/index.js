@@ -173,8 +173,14 @@ class List extends React.Component {
   };
 
   handleEshsCmpnyCompChange = (data, fieldName) => {
-    const valueObj = { [`${fieldName.toUpperCase()}_CD`]: data.WRK_CMPNY_CD, [`${fieldName.toUpperCase()}_NM`]: data.WRK_CMPNY_NM }; // 키값 바꾸기
-    this.setState({ [fieldName.toUpperCase()]: data.WRK_CMPNY_NM, [`${fieldName.toUpperCase()}NAME`]: data.WRK_CMPNY_CD });
+    const valueObj = {
+      [`${fieldName.toUpperCase()}_CD`]: data.WRK_CMPNY_CD,
+      [`${fieldName.toUpperCase()}_NM`]: data.WRK_CMPNY_NM,
+    }; // 키값 바꾸기
+    this.setState({
+      [fieldName.toUpperCase()]: data.WRK_CMPNY_NM,
+      [`${fieldName.toUpperCase()}NAME`]: data.WRK_CMPNY_CD,
+    });
     this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
   };
 
@@ -238,10 +244,18 @@ class List extends React.Component {
       result.realFile.DETAIL.map(item => fileSeqArr.push(item.seq));
       this.setState(prevState => ({
         // file_seq = 새로 올라온 파일, attachedFile = 기존 파일 (삭제해야 함)
-        requestValue: Object.assign(prevState.requestValue, { FILE_SEQ: fileSeqArr }, { ATTACHEDFILE: result.attachs.fileList }),
+        requestValue: Object.assign(
+          prevState.requestValue,
+          { FILE_SEQ: fileSeqArr },
+          { ATTACHEDFILE: result.attachs.fileList },
+        ),
       }));
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, (key, response) =>
-        callBackAfterPut(key, response, submitCallbackFunc),
+      return submitHandlerBySaga(
+        id,
+        'PUT',
+        `/api/eshs/v1/common/geteshsprotectionitems`,
+        requestValue,
+        (key, response) => callBackAfterPut(key, response, submitCallbackFunc),
       );
     }
     return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, (key, response) =>
@@ -255,11 +269,19 @@ class List extends React.Component {
 
     const submitCallbackFunc = () => {
       this.gridApi.redrawRows();
-      this.setState(prevState => ({ rowData: prevState.rowData.filter(item => item.HITEM_CD !== prevState.requestValue.HITEM_CD), visible: false }));
+      this.setState(prevState => ({
+        rowData: prevState.rowData.filter(item => item.HITEM_CD !== prevState.requestValue.HITEM_CD),
+        visible: false,
+      }));
     };
 
-    submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/geteshsprotectionitems`, { HITEM_CD: requestValue.hitem_cd }, requestValue, (key, response) =>
-      callBackAfterDelete(key, response, submitCallbackFunc),
+    submitHandlerBySaga(
+      id,
+      'DELETE',
+      `/api/eshs/v1/common/geteshsprotectionitems`,
+      { HITEM_CD: requestValue.hitem_cd },
+      requestValue,
+      (key, response) => callBackAfterDelete(key, response, submitCallbackFunc),
     );
   };
 
@@ -303,7 +325,10 @@ class List extends React.Component {
   };
 
   inputFooter = () => [
-    <StyledButton className="btn-primary" onClick={this.state.responseList.length ? this.BeforeSaveTask : this.handleOk}>
+    <StyledButton
+      className="btn-primary"
+      onClick={this.state.responseList.length ? this.BeforeSaveTask : this.handleOk}
+    >
       등록
     </StyledButton>,
     <StyledButton className="btn-primary" onClick={this.handleCancel}>
@@ -312,7 +337,10 @@ class List extends React.Component {
   ];
 
   viewFooter = () => [
-    <StyledButton className="btn-primary" onClick={this.state.responseList.length ? this.BeforeSaveTask : this.handleModifyClick}>
+    <StyledButton
+      className="btn-primary"
+      onClick={this.state.responseList.length ? this.BeforeSaveTask : this.handleModifyClick}
+    >
       수정
     </StyledButton>,
     <StyledButton className="btn-primary" onClick={this.handleDeleteClick}>
@@ -324,8 +352,27 @@ class List extends React.Component {
   ];
 
   render() {
-    const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, inputFooter, viewFooter } = this;
-    const { selectedSite, input, visible, columnDefs, rowData, viewType, frameworkComponents, tooltipShowDelay, requestValue } = this.state;
+    const {
+      handleSelectChange,
+      handleInputChange,
+      initGridData,
+      gridOptions,
+      handleOk,
+      handleCancel,
+      inputFooter,
+      viewFooter,
+    } = this;
+    const {
+      selectedSite,
+      input,
+      visible,
+      columnDefs,
+      rowData,
+      viewType,
+      frameworkComponents,
+      tooltipShowDelay,
+      requestValue,
+    } = this.state;
     const { result } = this.props;
 
     return (
@@ -334,9 +381,9 @@ class List extends React.Component {
           <StyledCustomSearchWrapper>
             <div className="search-input-area">
               <span className="text-label">지역</span>
-              <AntdSelect defaultValue="청주" onChange={handleSelectChange} className="select-mid mr5">
-                <Option value="317">청주</Option>
+              <AntdSelect defaultValue="318" onChange={handleSelectChange} className="select-mid mr5">
                 <Option value="318">구미</Option>
+                <Option value="317">청주</Option>
               </AntdSelect>
               <span className="text-label">품목</span>
               <AntdInput
@@ -353,7 +400,10 @@ class List extends React.Component {
             </div>
           </StyledCustomSearchWrapper>
           <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
-            <StyledButton className="btn-primary btn-sm" onClick={() => this.setState({ visible: true, viewType: 'INPUT' })}>
+            <StyledButton
+              className="btn-primary btn-sm"
+              onClick={() => this.setState({ visible: true, viewType: 'INPUT' })}
+            >
               등록
             </StyledButton>
           </StyledButtonWrapper>
@@ -397,7 +447,9 @@ class List extends React.Component {
                         result.attachs &&
                         result.attachs.fileList &&
                         result.attachs.fileList.length > 0 &&
-                        result.attachs.fileList.map(item => <img src={`/down/file/${item.FILE_SEQ}`} alt={requestValue.KIND} width="150px" />)}
+                        result.attachs.fileList.map(item => (
+                          <img src={`/down/file/${item.FILE_SEQ}`} alt={requestValue.KIND} width="150px" />
+                        ))}
                     </td>
                   </tr>
                   <tr>
@@ -407,7 +459,11 @@ class List extends React.Component {
                         className="select-sm"
                         name="SITE"
                         defaultValue="317"
-                        onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { SITE: e }) }))}
+                        onChange={e =>
+                          this.setState(prevState => ({
+                            requestValue: Object.assign(prevState.requestValue, { SITE: e }),
+                          }))
+                        }
                         style={{ width: '100%' }}
                       >
                         <Option value="317">청주</Option>
@@ -485,7 +541,9 @@ class List extends React.Component {
                           CONFIG={{ property: { isRequired: false } }}
                           changeFormData={this.props.changeFormData}
                           COMP_FIELD="VENDOR"
-                          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+                          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) =>
+                            this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)
+                          }
                         />
                       ) : (
                         <EshsCmpnyComp
@@ -497,7 +555,9 @@ class List extends React.Component {
                           CONFIG={{ property: { isRequired: false } }}
                           changeFormData={this.props.changeFormData}
                           COMP_FIELD="VENDOR"
-                          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+                          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) =>
+                            this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)
+                          }
                         />
                       )}
                     </td>
@@ -516,7 +576,9 @@ class List extends React.Component {
                           CONFIG={{ property: { isRequired: false } }}
                           changeFormData={this.props.changeFormData}
                           COMP_FIELD="MAKER"
-                          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+                          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) =>
+                            this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)
+                          }
                         />
                       ) : (
                         <EshsCmpnyComp
@@ -528,7 +590,9 @@ class List extends React.Component {
                           CONFIG={{ property: { isRequired: false } }}
                           changeFormData={this.props.changeFormData}
                           COMP_FIELD="MAKER"
-                          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+                          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) =>
+                            this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)
+                          }
                         />
                       )}
                     </td>

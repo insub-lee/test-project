@@ -57,9 +57,9 @@ class WaterFlowStatus extends Component {
           <Spin tip="검색중 ..." spinning={isSearching}>
             <div className="search-input-area">
               <span className="text-label">지역</span>
-              <AntdSelect defaultValue="청주" className="select-sm" style={{ width: '100px' }} disabled>
-                <Option value="청주">청주</Option>
+              <AntdSelect defaultValue="구미" className="select-sm" style={{ width: '100px' }} disabled>
                 <Option value="구미">구미</Option>
+                <Option value="청주">청주</Option>
                 <Option value="이천">이천</Option>
               </AntdSelect>
               <span className="text-label">기간</span>
@@ -83,7 +83,14 @@ class WaterFlowStatus extends Component {
             <div style={{ display: 'inline-block', width: '50%', verticalAlign: 'top', padding: '5px' }}>
               <div className="chart_wrap">
                 <div className="chart_title">폐수발생량(C-2)</div>
-                <LineChart chartName="COD" xField="OP_DT" xFieldNm="일자" yField="USED_AMOUNT" yFieldNm="사용량" listData={listData || []} />
+                <LineChart
+                  chartName="COD"
+                  xField="OP_DT"
+                  xFieldNm="일자"
+                  yField="USED_AMOUNT"
+                  yFieldNm="사용량"
+                  listData={listData || []}
+                />
               </div>
             </div>
           </>

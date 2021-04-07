@@ -257,7 +257,13 @@ class QualityPage extends Component {
           key: 'getExhaustActInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwAct`,
-          params: { PARAM: { type: 'GET_EXHAUST_ACT_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: {
+              type: 'GET_EXHAUST_ACT_INFO',
+              search_dt: mainFormData.OP_DT,
+              group_unit_cd: mainFormData.GROUP_UNIT_CD,
+            },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getActDataCallback);
         break;
@@ -266,7 +272,13 @@ class QualityPage extends Component {
           key: 'getCleanActInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwAct`,
-          params: { PARAM: { type: 'GET_CLEAN_ACT_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: {
+              type: 'GET_CLEAN_ACT_INFO',
+              search_dt: mainFormData.OP_DT,
+              group_unit_cd: mainFormData.GROUP_UNIT_CD,
+            },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getActDataCallback);
         break;
@@ -275,7 +287,13 @@ class QualityPage extends Component {
           key: 'getUsedFlowInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwflow`,
-          params: { PARAM: { type: 'GET_USED_FLOW_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: {
+              type: 'GET_USED_FLOW_INFO',
+              search_dt: mainFormData.OP_DT,
+              group_unit_cd: mainFormData.GROUP_UNIT_CD,
+            },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -284,7 +302,13 @@ class QualityPage extends Component {
           key: 'getWaterFlowInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwflow`,
-          params: { PARAM: { type: 'GET_WATER_FLOW_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: {
+              type: 'GET_WATER_FLOW_INFO',
+              search_dt: mainFormData.OP_DT,
+              group_unit_cd: mainFormData.GROUP_UNIT_CD,
+            },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -293,7 +317,13 @@ class QualityPage extends Component {
           key: 'getSludgeInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwSludge`,
-          params: { PARAM: { type: 'GET_SLUDGE_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: {
+              type: 'GET_SLUDGE_INFO',
+              search_dt: mainFormData.OP_DT,
+              group_unit_cd: mainFormData.GROUP_UNIT_CD,
+            },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -302,7 +332,13 @@ class QualityPage extends Component {
           key: 'getAdditionInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwAddition`,
-          params: { PARAM: { type: 'GET_ADDITION_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: {
+              type: 'GET_ADDITION_INFO',
+              search_dt: mainFormData.OP_DT,
+              group_unit_cd: mainFormData.GROUP_UNIT_CD,
+            },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -311,7 +347,13 @@ class QualityPage extends Component {
           key: 'getWattmeterInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwWattmeter`,
-          params: { PARAM: { type: 'GET_WATTMETER_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: {
+              type: 'GET_WATTMETER_INFO',
+              search_dt: mainFormData.OP_DT,
+              group_unit_cd: mainFormData.GROUP_UNIT_CD,
+            },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -320,7 +362,13 @@ class QualityPage extends Component {
           key: 'getUsedChemicalInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwUsedChemical`,
-          params: { PARAM: { type: 'GET_USED_CHEMICAL_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: {
+              type: 'GET_USED_CHEMICAL_INFO',
+              search_dt: mainFormData.OP_DT,
+              group_unit_cd: mainFormData.GROUP_UNIT_CD,
+            },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -329,7 +377,13 @@ class QualityPage extends Component {
           key: 'getPokgijoInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwPokgijo`,
-          params: { PARAM: { type: 'GET_POKGIJO_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: {
+              type: 'GET_POKGIJO_INFO',
+              search_dt: mainFormData.OP_DT,
+              group_unit_cd: mainFormData.GROUP_UNIT_CD,
+            },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -338,7 +392,13 @@ class QualityPage extends Component {
           key: 'getCleanRepairInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwCleanRepair`,
-          params: { PARAM: { type: 'GET_CLEAN_REPAIR_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: {
+              type: 'GET_CLEAN_REPAIR_INFO',
+              search_dt: mainFormData.OP_DT,
+              group_unit_cd: mainFormData.GROUP_UNIT_CD,
+            },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -347,7 +407,13 @@ class QualityPage extends Component {
           key: 'getWaterQualCheckInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwQualCheck`,
-          params: { PARAM: { type: 'GET_WATER_QUAL_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: {
+              type: 'GET_WATER_QUAL_INFO',
+              search_dt: mainFormData.OP_DT,
+              group_unit_cd: mainFormData.GROUP_UNIT_CD,
+            },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -356,7 +422,13 @@ class QualityPage extends Component {
           key: 'getCodCheckInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwCodCheck`,
-          params: { PARAM: { type: 'GET_COD_CHK_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: {
+              type: 'GET_COD_CHK_INFO',
+              search_dt: mainFormData.OP_DT,
+              group_unit_cd: mainFormData.GROUP_UNIT_CD,
+            },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -365,7 +437,9 @@ class QualityPage extends Component {
           key: 'getCheckInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwCheckInfo`,
-          params: { PARAM: { type: 'GET_CHECK_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: { type: 'GET_CHECK_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -374,7 +448,9 @@ class QualityPage extends Component {
           key: 'getBigoInfo',
           type: 'POST',
           url: `/api/eshs/v1/common/wwBigo`,
-          params: { PARAM: { type: 'GET_BIGO_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD } },
+          params: {
+            PARAM: { type: 'GET_BIGO_INFO', search_dt: mainFormData.OP_DT, group_unit_cd: mainFormData.GROUP_UNIT_CD },
+          },
         };
         getCallDataHandlerReturnRes(id, apiInfo, this.getListCallback);
         break;
@@ -708,9 +784,9 @@ class QualityPage extends Component {
           <Spin tip="검색중 ..." spinning={isSearch}>
             <div className="search-input-area">
               <span className="text-label">지역</span>
-              <AntdSelect defaultValue="청주" className="select-sm" style={{ width: '70px' }} disabled>
-                <Option value="청주">청주</Option>
+              <AntdSelect defaultValue="구미" className="select-sm" style={{ width: '70px' }} disabled>
                 <Option value="구미">구미</Option>
+                <Option value="청주">청주</Option>
               </AntdSelect>
               <span className="text-label">구분</span>
               <AntdSelect defaultValue="매그너칩반도체" className="select-sm" style={{ width: '125px' }} disabled>
@@ -781,20 +857,34 @@ class QualityPage extends Component {
                 />
               )}
               {(selectedMenu === 'USED_FLOW' || selectedMenu === 'WATER_FLOW') && isSearchMenu && (
-                <FlowTable formData={formData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeFormData} />
+                <FlowTable
+                  formData={formData}
+                  submitFormData={this.submitFormData}
+                  onChangeFormData={this.onChangeFormData}
+                />
               )}
               {selectedMenu === 'SLUDGE' && isSearchMenu && <SludgeTable formData={formData} />}
               {selectedMenu === 'ADDITION' && isSearchMenu && <AdditionTable formData={formData} />}
               {selectedMenu === 'WATTMETER' && isSearchMenu && <WattmeterTable formData={formData} />}
               {selectedMenu === 'USED_CHEMICAL' && isSearchMenu && <UsedChemicalTable formData={formData} />}
               {selectedMenu === 'POKGIJO' && isSearchMenu && <PokgijoTable formData={formData} />}
-              {selectedMenu === 'CLEAN_REPAIR' && isSearchMenu && <CleanRepairTable formData={formData} modalHandler={this.modalHandler} />}
+              {selectedMenu === 'CLEAN_REPAIR' && isSearchMenu && (
+                <CleanRepairTable formData={formData} modalHandler={this.modalHandler} />
+              )}
               {selectedMenu === 'WATER_QUAL' && isSearchMenu && <WaterQualCheckTable formData={formData} />}
               {selectedMenu === 'COD_CHK' && isSearchMenu && (
-                <CodCheckTable formData={formData} onChangeFormData={this.onChangeFormData} submitFormData={this.submitFormData} />
+                <CodCheckTable
+                  formData={formData}
+                  onChangeFormData={this.onChangeFormData}
+                  submitFormData={this.submitFormData}
+                />
               )}
-              {selectedMenu === 'CHECK_INFO' && isSearchMenu && <CheckInfoTable formData={formData} modalHandler={this.modalHandler} />}
-              {selectedMenu === 'BIGO' && isSearchMenu && <BigoTable formData={formData} modalHandler={this.modalHandler} />}
+              {selectedMenu === 'CHECK_INFO' && isSearchMenu && (
+                <CheckInfoTable formData={formData} modalHandler={this.modalHandler} />
+              )}
+              {selectedMenu === 'BIGO' && isSearchMenu && (
+                <BigoTable formData={formData} modalHandler={this.modalHandler} />
+              )}
             </div>
           </>
         )}
@@ -818,10 +908,20 @@ class QualityPage extends Component {
             />
           )}
           {modalType === 'CHECK_INFO' && (
-            <CheckInfoModal opDt={mainFormData.OP_DT} formData={modalData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeModalFormData} />
+            <CheckInfoModal
+              opDt={mainFormData.OP_DT}
+              formData={modalData}
+              submitFormData={this.submitFormData}
+              onChangeFormData={this.onChangeModalFormData}
+            />
           )}
           {modalType === 'BIGO' && (
-            <BigoInfoModal opDt={mainFormData.OP_DT} formData={modalData} submitFormData={this.submitFormData} onChangeFormData={this.onChangeModalFormData} />
+            <BigoInfoModal
+              opDt={mainFormData.OP_DT}
+              formData={modalData}
+              submitFormData={this.submitFormData}
+              onChangeFormData={this.onChangeModalFormData}
+            />
           )}
         </AntdModal>
       </Styled>

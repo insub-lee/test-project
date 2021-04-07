@@ -88,7 +88,11 @@ class List extends Component {
       result: { treeSelectData, dangerDanestAdmin },
     } = this.props;
     const list = dangerDanestAdmin && dangerDanestAdmin.list;
-    const nData = (treeSelectData && treeSelectData.categoryMapList && getCategoryMapListAsTree(treeSelectData.categoryMapList, 1831)) || [];
+    const nData =
+      (treeSelectData &&
+        treeSelectData.categoryMapList &&
+        getCategoryMapListAsTree(treeSelectData.categoryMapList, 1831)) ||
+      [];
     this.setState({ nData, list });
   };
 
@@ -145,17 +149,53 @@ class List extends Component {
   onChangeTreeSelect = (value, label, extra) => {
     switch (extra && extra.triggerNode && extra.triggerNode.props && extra.triggerNode.props.level) {
       case 3:
-        return this.setState({ SDIV_ID: value, DIV_ID: undefined, PLACE_ID: undefined, PROCESS_ID: undefined, EQUIP_ID: undefined });
+        return this.setState({
+          SDIV_ID: value,
+          DIV_ID: undefined,
+          PLACE_ID: undefined,
+          PROCESS_ID: undefined,
+          EQUIP_ID: undefined,
+        });
       case 4:
-        return this.setState({ SDIV_ID: undefined, DIV_ID: value, PLACE_ID: undefined, PROCESS_ID: undefined, EQUIP_ID: undefined });
+        return this.setState({
+          SDIV_ID: undefined,
+          DIV_ID: value,
+          PLACE_ID: undefined,
+          PROCESS_ID: undefined,
+          EQUIP_ID: undefined,
+        });
       case 5:
-        return this.setState({ SDIV_ID: undefined, DIV_ID: undefined, PLACE_ID: value, PROCESS_ID: undefined, EQUIP_ID: undefined });
+        return this.setState({
+          SDIV_ID: undefined,
+          DIV_ID: undefined,
+          PLACE_ID: value,
+          PROCESS_ID: undefined,
+          EQUIP_ID: undefined,
+        });
       case 6:
-        return this.setState({ SDIV_ID: undefined, DIV_ID: undefined, PLACE_ID: undefined, PROCESS_ID: value, EQUIP_ID: undefined });
+        return this.setState({
+          SDIV_ID: undefined,
+          DIV_ID: undefined,
+          PLACE_ID: undefined,
+          PROCESS_ID: value,
+          EQUIP_ID: undefined,
+        });
       case 7:
-        return this.setState({ SDIV_ID: undefined, DIV_ID: undefined, PLACE_ID: undefined, PROCESS_ID: undefined, EQUIP_ID: value });
+        return this.setState({
+          SDIV_ID: undefined,
+          DIV_ID: undefined,
+          PLACE_ID: undefined,
+          PROCESS_ID: undefined,
+          EQUIP_ID: value,
+        });
       default:
-        return this.setState({ SDIV_ID: undefined, DIV_ID: undefined, PLACE_ID: undefined, PROCESS_ID: undefined, EQUIP_ID: undefined });
+        return this.setState({
+          SDIV_ID: undefined,
+          DIV_ID: undefined,
+          PLACE_ID: undefined,
+          PROCESS_ID: undefined,
+          EQUIP_ID: undefined,
+        });
     }
   };
 
@@ -273,7 +313,11 @@ class List extends Component {
       const reAppriseList = (result && result.dangerDanestAdmin && result.dangerDanestAdmin.reAppriseList) || [];
       spinningOff();
       this.modalVisible(`재평가 목록 [평가번호 ${record.REG_NO}]`, [
-        <ReAppriseList key="ReAppriseList" reAppriseList={reAppriseList} dangerDanestAdminSubFile={dangerDanestAdminSubFile} />,
+        <ReAppriseList
+          key="ReAppriseList"
+          reAppriseList={reAppriseList}
+          dangerDanestAdminSubFile={dangerDanestAdminSubFile}
+        />,
       ]);
     });
   };
@@ -302,7 +346,10 @@ class List extends Component {
             <AntdRangePicker
               style={{ width: 250 }}
               className="ant-picker-sm mr5"
-              defaultValue={[moment(this.state.rangeData[0], 'YYYY-MM-DD'), moment(this.state.rangeData[1], 'YYYY-MM-DD')]}
+              defaultValue={[
+                moment(this.state.rangeData[0], 'YYYY-MM-DD'),
+                moment(this.state.rangeData[1], 'YYYY-MM-DD'),
+              ]}
               format={['YYYY-MM-DD', 'YYYY-MM-DD']}
               allowClear={false}
               onChange={(date, dateStrings) => this.dateChange(dateStrings)}
@@ -346,14 +393,21 @@ class List extends Component {
               btnSize="btn-sm btn-first"
               fields={this.columns.map(item => ({
                 field: item.dataIndex,
-                style: { font: { sz: '12' }, alignment: { vertical: item.excelAlign || 'center', horizontal: item.excelAlign || 'center' } },
+                style: {
+                  font: { sz: '12' },
+                  alignment: { vertical: item.excelAlign || 'center', horizontal: item.excelAlign || 'center' },
+                },
               }))}
               columns={this.columns.map(item => ({
                 ...item,
                 field: item.dataIndex,
                 filter: 'agTextColumnFilter',
                 width: item.width ? { wpx: item.width * 2 } : { wpx: 150 },
-                style: { fill: { fgColor: { rgb: 'D6EBFF' } }, font: { sz: '', bold: true }, alignment: { vertical: 'center', horizontal: 'center' } },
+                style: {
+                  fill: { fgColor: { rgb: 'D6EBFF' } },
+                  font: { sz: '', bold: true },
+                  alignment: { vertical: 'center', horizontal: 'center' },
+                },
               }))}
             />
           </StyledButtonWrapper>
@@ -365,7 +419,11 @@ class List extends Component {
           onRow={record => ({
             onClick: () => {
               this.modalVisible('위험성 평가', [
-                <DanestAdmin key="DanestAdmin" sagaKey="DanestAdmin_test" improveDanger={{ REG_NO: record.REG_NO, REG_DTTM: record.REG_DTTM, IMPROVE: true }} />,
+                <DanestAdmin
+                  key="DanestAdmin"
+                  sagaKey="DanestAdmin_test"
+                  improveDanger={{ REG_NO: record.REG_NO, REG_DTTM: record.REG_DTTM, IMPROVE: true }}
+                />,
               ]);
             },
           })}
@@ -373,7 +431,13 @@ class List extends Component {
           // pagination={false}
           scroll={{ x: '100%' }}
         />
-        <AntdModal width={1100} visible={modalObj.visible} title={modalObj.title} onCancel={() => this.modalVisible('', [])} footer={null}>
+        <AntdModal
+          width={1100}
+          visible={modalObj.visible}
+          title={modalObj.title}
+          onCancel={() => this.modalVisible('', [])}
+          footer={null}
+        >
           {/* {this.state.isModal && <DanestAdmin improveDanger={{ REG_NO: recordByState.REG_NO, REG_DTTM: recordByState.REG_DTTM, IMPROVE: true }} />} */}
           {modalObj.content}
         </AntdModal>
