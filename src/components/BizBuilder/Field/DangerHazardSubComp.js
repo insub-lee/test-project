@@ -93,7 +93,7 @@ const setColumns = (workStepCode, aotList, aocList, onChangeData) => [
       <AntdSelect
         mode="multiple"
         className="select-xs"
-        value={Array.isArray(text) ? text : JSON.parse(text)}
+        value={Array.isArray(text) ? text : JSON.parse(text || '')}
         onChange={value => onChangeData('AOC_ID', value, record)}
         style={{ width: '100%' }}
       >

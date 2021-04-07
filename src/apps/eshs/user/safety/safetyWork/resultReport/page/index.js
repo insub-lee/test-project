@@ -93,7 +93,12 @@ class ResultReportPage extends Component {
       options.push(year);
     }
     return (
-      <AntdSelect className="select-xs mr5" style={{ width: '100px' }} value={searchValues.YEAR} onChange={e => this.handleChangeSearchValue('YEAR', e)}>
+      <AntdSelect
+        className="select-xs mr5"
+        style={{ width: '100px' }}
+        value={searchValues.YEAR}
+        onChange={e => this.handleChangeSearchValue('YEAR', e)}
+      >
         {options.map(YYYY => (
           <Option key={`${YYYY}`} value={`${YYYY}`}>
             {YYYY}
@@ -111,7 +116,11 @@ class ResultReportPage extends Component {
           <Spin tip="검색중 ..." spinning={isSearching}>
             <div className="search-group-layer">
               <span style={{ fontSize: '12px', margin: '0px 10px 0px 10px' }}>지역</span>
-              <AntdSelect className="select-xs" value={searchValues.SITE} onChange={value => this.handleChangeSearchValue('SITE', value)}>
+              <AntdSelect
+                className="select-xs"
+                value={searchValues.SITE}
+                onChange={value => this.handleChangeSearchValue('SITE', value)}
+              >
                 <Option value="청주">청주</Option>
                 <Option value="구미">구미</Option>
               </AntdSelect>
@@ -136,7 +145,11 @@ class ResultReportPage extends Component {
                 <Option value="11">11</Option>
                 <Option value="12">12</Option>
               </AntdSelect>
-              <StyledButton className="btn-gray btn-xs btn-first" onClick={() => this.onSearch()} style={{ marginLeft: '10px' }}>
+              <StyledButton
+                className="btn-gray btn-xs btn-first"
+                onClick={() => this.onSearch()}
+                style={{ marginLeft: '10px' }}
+              >
                 검색
               </StyledButton>
             </div>

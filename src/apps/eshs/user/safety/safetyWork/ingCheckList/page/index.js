@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { Component } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -273,11 +274,14 @@ class SafetyWorkList extends Component {
         title: '검색기간내 누적벌점',
         dataIndex: 'SEARCH_PANALTY',
         align: 'center',
-        render: data => `${data}점`,
+        render: data => {
+          if (data === '') return '';
+          return `${data}점`;
+        },
       },
       {
         title: '연기준 누적벌점',
-        dataIndex: 'SEARCH_PANALTY',
+        dataIndex: 'YEAR_PANALTY',
         align: 'center',
         render: (data, record) => <div style={{ textAlign: 'left' }}>{`${record.YEAR_INFO}년 - 총 ${data}점`}</div>,
       },
@@ -301,7 +305,10 @@ class SafetyWorkList extends Component {
                 <table className="view-designer-table table-0">
                   <tbody>
                     <tr className="view-designer-row">
-                      <td className="view-designer-col view-designer-label" style={{ width: '100px', textAlign: 'center' }}>
+                      <td
+                        className="view-designer-col view-designer-label"
+                        style={{ width: '100px', textAlign: 'center' }}
+                      >
                         <span>작업번호</span>
                       </td>
                       <td className="view-designer-col">
@@ -315,7 +322,10 @@ class SafetyWorkList extends Component {
                           />
                         </div>
                       </td>
-                      <td className="view-designer-col view-designer-label" style={{ width: '100px', textAlign: 'center' }}>
+                      <td
+                        className="view-designer-col view-designer-label"
+                        style={{ width: '100px', textAlign: 'center' }}
+                      >
                         <span>주관팀</span>
                       </td>
                       <td className="view-designer-col">
@@ -329,7 +339,10 @@ class SafetyWorkList extends Component {
                           />
                         </div>
                       </td>
-                      <td className="view-designer-col view-designer-label" style={{ width: '100px', textAlign: 'center' }}>
+                      <td
+                        className="view-designer-col view-designer-label"
+                        style={{ width: '100px', textAlign: 'center' }}
+                      >
                         <span>점검기간</span>
                       </td>
                       <td className="view-designer-col">
@@ -363,7 +376,10 @@ class SafetyWorkList extends Component {
                       </td>
                     </tr>
                     <tr className="view-designer-row">
-                      <td className="view-designer-col view-designer-label" style={{ width: '100px', textAlign: 'center' }}>
+                      <td
+                        className="view-designer-col view-designer-label"
+                        style={{ width: '100px', textAlign: 'center' }}
+                      >
                         <span>작업업체</span>
                       </td>
                       <td className="view-designer-col">
@@ -375,7 +391,10 @@ class SafetyWorkList extends Component {
                           onSearch={() => this.handleModal('cmpny', true)}
                         />
                       </td>
-                      <td className="view-designer-col view-designer-label" style={{ width: '100px', textAlign: 'center' }}>
+                      <td
+                        className="view-designer-col view-designer-label"
+                        style={{ width: '100px', textAlign: 'center' }}
+                      >
                         <span>구분</span>
                       </td>
                       <td className="view-designer-col">
@@ -417,7 +436,11 @@ class SafetyWorkList extends Component {
               columns={columns}
               dataSource={ingCheckList}
               pagination={{ pageSize: 20 }}
-              footer={() => <div style={{ textAlign: 'center' }}>{`총 ${ingCheckList.length === 0 ? 0 : ingCheckList.length} 건`}</div>}
+              footer={() => (
+                <div style={{ textAlign: 'center' }}>{`총 ${
+                  ingCheckList.length === 0 ? 0 : ingCheckList.length
+                } 건`}</div>
+              )}
             />
           </CustomTableStyled>
         </ContentsWrapper>
@@ -445,7 +468,12 @@ class SafetyWorkList extends Component {
           )}
           {modalType === 'safetyWork' && (
             <div style={{ padding: '20px' }}>
-              <BizMicroDevBase component={SearchSafetyWork} sagaKey="safetyWork_search" rowSelect={this.handleSafetyWorkSelect} uesdSearchType />
+              <BizMicroDevBase
+                component={SearchSafetyWork}
+                sagaKey="safetyWork_search"
+                rowSelect={this.handleSafetyWorkSelect}
+                uesdSearchType
+              />
             </div>
           )}
           {modalType === 'ingCheckView' && <IngCheckViewer workNo={selectedWork} pageType="modal" />}
