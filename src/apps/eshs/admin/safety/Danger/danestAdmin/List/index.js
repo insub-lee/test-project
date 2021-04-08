@@ -359,8 +359,11 @@ class List extends Component {
   };
 
   validationCheck = formData => {
-    if (!formData.WORKMAN_MALE) return '근무인원(남)을 입력해주세요.';
-    if (!formData.WORKMAN_FEMALE) return '근무인원(여)을 입력해주세요.';
+    const male = formData.WORKMAN_MALE || 0;
+    const female = formData.WORKMAN_FEMALE || 0;
+    if (male + female === 0) {
+      return '근무인원을 최소 1명 이상 입력해 주세요.';
+    }
     if (!formData.POST) return '소속을 입력해주세요.';
     if (!formData.DEPT_MANAGER) return '부서장을 입력해주세요.';
     return '';
