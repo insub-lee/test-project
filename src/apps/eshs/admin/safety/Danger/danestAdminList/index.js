@@ -41,7 +41,7 @@ class DanestAdminList extends Component {
           isOpenModalChange={this.isOpenModalChange}
         />
         <AntdModal
-          width="75%"
+          width="90%"
           visible={this.state.isModal}
           title="위험성 평가"
           onCancel={this.onModalChange}
