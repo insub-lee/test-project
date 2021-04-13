@@ -270,7 +270,7 @@ class Statistics extends Component {
             {this.state.hosList && this.state.hosList.map(item => (
               <tr className={`tr-center ${!item.CHK_TYPE_CD_NODE_ID ? 'tr-total' : ''}`}>
               {!item.CHK_TYPE_CD_NODE_ID && !item.CHK_SEQ && !item.HOSPITAL_CODE ? (
-                <td colSpan={!item.WORK_AREA_CD_NODE_ID ? 4 : 3}>{!item.WORK_AREA_CD_NODE_ID ? '합계' : '소계'}</td>
+                <td colSpan={!item.WORK_AREA_CD_NODE_ID ? 3 : 3}>{!item.WORK_AREA_CD_NODE_ID ? '합계' : '소계'}</td>
               ) : (
                 <>
                   {item.rowSpan1 !== 0 && <td rowSpan={item.rowSpan1}>{item.WORK_AREA_NAME}</td>}

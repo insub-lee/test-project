@@ -65,7 +65,7 @@ class List extends Component {
     const apiAry = [
       {
         key: 'hospitalList',
-        url: `/api/eshs/v1/common/health/healthChkHospital`,
+        url: `/api/eshs/v1/common/health/healthChkHospital?CODE=Y`,
         type: 'GET',
         params: {},
       },
@@ -91,13 +91,17 @@ class List extends Component {
   };
 
   getList = () => {
-    const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff ,profile} = this.props;
     const {
       searchParam,
       searchParam: { SEARCH_LIST },
       paginationIdx,
       pageSize,
     } = this.state;
+    if(profile.SA || profile.BM){
+    }else{
+      searchParam["userId"] = profile.USER_ID;
+    }
     const apiAry = [
       {
         key: 'List',
@@ -486,7 +490,7 @@ class List extends Component {
   };
 
   render() {
-    const { result } = this.props;
+    const { result,profile} = this.props;
     const { yearList, modalObj, selectColumn, paginationIdx, pageSize, getPageLength } = this.state;
     const list = (result && result.List && result.List.result && result.List.result.list) || [];
     const listTotalCnt = (result && result.List && result.List.result && result.List.result.totalCnt) || [];
@@ -574,7 +578,15 @@ class List extends Component {
                 <AntdSelect.Option value="STMT">4. 검진상세정보</AntdSelect.Option>
               </AntdSelect>
               <div style={{ display: 'inline-block' }}>
-                <UserSearchModal visible onClickRow={record => this.onChangeSearchParam('userId', record.USER_ID)} />
+                {profile.SA  || profile.BM ? (
+                 <UserSearchModal visible onClickRow={record => this.onChangeSearchParam('userId', record.USER_ID)} />
+                ) : (
+                  <AntdInput name="userId" 
+                             value={profile.USER_ID}
+                             style={{ width: 90 }} 
+                             readOnly 
+                             className="ant-input-sm"  />
+              )}
               </div>
             </div>
             <div className="btn-area">

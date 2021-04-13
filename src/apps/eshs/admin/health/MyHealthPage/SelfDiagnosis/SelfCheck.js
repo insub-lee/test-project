@@ -163,7 +163,7 @@ class SelfCheck extends Component {
   };
 
   render() {
-    const { formData, sagaKey: id, setFormData } = this.props;
+    const { formData, sagaKey: id, setFormData,profile } = this.props;
     const { selectUser, modalVisible, modalContent, userSearch } = this.state;
     const viewType = (formData && formData.viewType) || '';
     return (
@@ -241,7 +241,18 @@ class SelfCheck extends Component {
                 <td colSpan={2}>{formData.DEPT_NAME_KOR}</td>
                 <th>검진자</th>
                 <td colSpan={2}>
-                  {userSearch}
+                {profile.SA  || profile.BM ? (
+                
+                  <UserSearchModal colData={(this.props.profile && this.props.profile.EMP_NO) || ''} onClickRow={record => this.setState({ selectUser: record })} />
+                ) : (
+                  <AntdInput name="userId" 
+                             value={profile.USER_ID}
+                             style={{ width: 90 }} 
+                             readOnly 
+                             className="ant-input-sm"  />
+                 )}
+
+                  
                   <label className="textLabel">{selectUser.NAME_KOR || formData.NAME_KOR}</label>
                   <StyledButton
                     className="btn-gray btn-sm ml5"

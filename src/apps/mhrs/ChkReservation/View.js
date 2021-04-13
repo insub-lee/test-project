@@ -165,9 +165,9 @@ class DetailView extends Component {
                 <th>주민등록번호</th>
                 <td>
                   {reservationInfo.IS_MATE === '0' ? (
-                    `${reservationInfo.REGNO.substring(0, 6)}-${reservationInfo.REGNO.substring(6, 13)}`
+                    `${reservationInfo.REGNO ? `${reservationInfo.REGNO.substring(0, 6)}-${reservationInfo.REGNO.substring(6, 13)}` : ''}`
                   ) : (
-                    `${reservationInfo.FAM_REGNO.substring(0, 6)}-${reservationInfo.FAM_REGNO.substring(6, 13)}`
+                    `${reservationInfo?.FAM_REGNO ? `${reservationInfo.FAM_REGNO.substring(0, 6)}-${reservationInfo.FAM_REGNO.substring(6, 13)}` : ''}`
                   )}
                 </td>
               </tr>

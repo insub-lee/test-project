@@ -9,6 +9,7 @@ import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
+import alertMessage from 'apps/tpms/components/Notification/Alert';
 
 import NotChkReg from 'apps/eshs/common/health/NotChkReg';
 import NotChkReason from 'apps/eshs/common/health/NotChkReason';
@@ -27,7 +28,9 @@ class List extends Component {
     list: [],
     searchParam: {
       CHK_YEAR: '',
-    }
+    },
+    alertShow :false,//알림창
+    isReservation:false //검진예약내역 존재
   };
 
   componentWillMount() {
@@ -55,13 +58,40 @@ class List extends Component {
         PARAM: {
           ...this.state.searchParam,
           SCH_USER_ID: profile.USER_ID,
+          EMP_NO: profile.EMP_NO,
         },
       },
     }
     spinningOn();
+
     getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, res) => {
+      this.initData();
       spinningOff();
     });
+
+  };
+
+  //검진예약내역이 있는경우 
+  initData = () => {
+    const { result } = this.props;
+     if (result.chkMstList.isReservation > 0) {
+       this.setState({
+        isReservation: true
+       });
+     }
+  };
+
+   //미검진신청팝업
+   onClickNChkReg = row => {
+    const { isReservation } = this.state;
+    if (isReservation) { 
+      alertMessage.alert('검진예약 내역이 존재합니다. \n 미검진 신청은 검진예약 취소후 가능합니다.');
+    } else {
+      this.setState({
+        selectedRow: row,
+        isShow: true,
+      });
+    }
   };
 
   onChangeSearchParam = (key, val) => {
@@ -69,13 +99,6 @@ class List extends Component {
       const { searchParam } = prevState;
       searchParam[key] = val;
       return { searchParam }
-    });
-  };
-
-  onClickNChkReg = row => {
-    this.setState({
-      selectedRow: row,
-      isShow: true,
     });
   };
 
@@ -151,6 +174,7 @@ class List extends Component {
         >
           <NotChkReg selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
+
         <AntdModal
           width={900}
           visible={this.state.isReasonShow}

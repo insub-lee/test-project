@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Select, Modal, Checkbox, Popover } from 'antd';
+import { Select, Modal,Input, Checkbox, Popover } from 'antd';
 import styled from 'styled-components';
 
 import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledContentsWrapper';
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 import UserSearchModal from 'apps/eshs/common/userSearchModal';
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
@@ -24,6 +25,7 @@ const currentYear = moment(new Date()).format('YYYY');
 
 const AntdSelect = StyledSelect(Select);
 const AntdModal = StyledAntdModal(Modal);
+const AntdInput = StyledInput(Input);
 const ConsultStyle = styled.div`
   width: 100%;
   height: 20px;
@@ -129,9 +131,13 @@ class List extends Component {
   }
 
   getList = () => {
-    const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff,profile} = this.props;
     const { searchParam } = this.state;
     this.setState({ selectedRowKeys: [] });
+    if(profile.SA || profile.BM){
+    }else{
+      searchParam["userId"] = profile.USER_ID;
+    }
     spinningOn();
     const apiAry = [
       {
@@ -312,7 +318,7 @@ class List extends Component {
   oriDiseaseList = ['간담도계주의', '간담도계질환', '간기능저하', '당뇨질환', '이상지질혈증', '이상지질혈증의심', '당뇨질환의심'];
 
   render() {
-    const { result } = this.props;
+    const { result ,profile} = this.props;
     const { yearList, modalObj, selectedRowKeys } = this.state;
     const list = (result && result.List && result.List.list) || [];
 
@@ -346,7 +352,16 @@ class List extends Component {
                 <AntdSelect.Option value="AA">영동</AntdSelect.Option>
                 <AntdSelect.Option value="GLOBAL">해외</AntdSelect.Option>
               </AntdSelect>
-              <UserSearchModal visible onClickRow={record => this.onChangeSearchParam('userId', record.USER_ID)} />
+              {profile.SA  || profile.BM ? (
+                  <UserSearchModal visible onClickRow={record => this.onChangeSearchParam('userId', record.USER_ID)} />
+                ) : (
+                  <AntdInput name="userId" 
+                             value={profile.USER_ID}
+                             style={{ width: 90 }} 
+                             readOnly 
+                             className="ant-input-sm"  />
+              )}     
+
               <AntdSelect
                 className="select-sm mr5"
                 style={{ width: 200 }}

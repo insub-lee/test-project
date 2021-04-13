@@ -5,6 +5,7 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledHtmlTable from 'components/BizBuilder/styled/Table/StyledHtmlTable';
 import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledTextarea from 'components/BizBuilder/styled/Form/StyledTextarea';
+import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
 import StyledButtonWrapper from 'components/BizBuilder/styled/Buttons/StyledButtonWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 
@@ -13,6 +14,7 @@ import MessageContent from 'components/Feedback/message.style2';
 
 const AntdInput = StyledInput(Input);
 const AntdTextarea = StyledTextarea(Input.TextArea);
+const AntdSelect = StyledSelect(Select);
 
 class ChkHospitalView extends Component {
   state = {
@@ -44,7 +46,8 @@ class ChkHospitalView extends Component {
           CHECK_TIME: '',
           FAMILY_CHECK_COST: '',
           MANAGER_NAME: '',
-          MANAGER_TEL: ''
+          MANAGER_TEL: '',
+          USE_YN: ''
         }
       });
     }
@@ -66,7 +69,7 @@ class ChkHospitalView extends Component {
       }
     };
     
-    submitHandlerBySaga(sagaKey, (this.state.saveType === 'I' ? 'POST' : 'PUT'), `/api/eshs/v1/common/health/healthChkHospital`, submitData, (id, response) => {
+    submitHandlerBySaga(sagaKey, (this.state.saveType === 'I' ? 'POST' : 'PUT'), `/api/eshs/v1/common/health/healthChkHospital?CODE=Y`, submitData, (id, response) => {
       if (response) {
         if (response.result === 1) {
           message.success(<MessageContent>저장되었습니다.</MessageContent>);
@@ -170,6 +173,15 @@ class ChkHospitalView extends Component {
                 <th colSpan={2}>담당자연락처</th>
                 <td>
                   <AntdInput defaultValue={detail.MANAGER_TEL} className="ant-input-sm" onChange={e => this.onChangeDetail('MANAGER_TEL', e.target.value)} />
+                </td>
+              </tr>
+              <tr>
+                <th colSpan={2}>검진기관사용여부</th>
+                <td>
+                  <AntdSelect defaultValue={detail.USE_YN} className="select-sm" style={{ width: '100px' }} onChange={val => this.onChangeDetail('USE_YN', val)}>
+                    <AntdSelect.Option value="Y">사용</AntdSelect.Option>
+                    <AntdSelect.Option value="N">미사용</AntdSelect.Option>
+                  </AntdSelect>
                 </td>
               </tr>
             </tbody>

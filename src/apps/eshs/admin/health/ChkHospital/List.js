@@ -31,7 +31,7 @@ class List extends Component {
     const apiAry = [
       {
         key: 'hospitalList',
-        url: `/api/eshs/v1/common/health/healthChkHospital?hospitalName=${this.state.hospitalName}`,
+        url: `/api/eshs/v1/common/health/healthChkHospital?CODE=N&hospitalName=${this.state.hospitalName}`,
         type: 'GET',
         params: {},
       },
@@ -102,6 +102,13 @@ class List extends Component {
       title: '담당자 연락처',
       dataIndex: 'MANAGER_TEL',
       key: 'MANAGER_TEL',
+      align: 'center',
+      width: '20%',
+    },
+    {
+      title: '사용여부',
+      dataIndex: 'USE_YN',
+      key: 'USE_YN',
       align: 'center',
       width: '20%',
     },

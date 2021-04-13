@@ -46,7 +46,7 @@ class ChkMstView extends Component {
       },
       {
         key: 'hospitalList',
-        url: `/api/eshs/v1/common/health/healthChkHospital`,
+        url: `/api/eshs/v1/common/health/healthChkHospital?CODE=Y`,
         type: 'GET',
         params: {},
       },
@@ -224,7 +224,7 @@ class ChkMstView extends Component {
                     {result && result.chkTypeList && result.chkTypeList.categoryMapList && (
                       <AntdSelect value={this.state.CHK_TYPE_CD_NODE_ID} className="select-sm" placeholder="검종" style={{ width: 100 }}>
                       {result.chkTypeList.categoryMapList.map(cate => (
-                        <AntdSelect.Option value={cate.NODE_ID}>{cate.NAME_KOR}</AntdSelect.Option>
+                        <AntdSelect.Option value={cate.NODE_ID} disabled>{cate.NAME_KOR}</AntdSelect.Option>
                       ))}
                       </AntdSelect>
                     )}

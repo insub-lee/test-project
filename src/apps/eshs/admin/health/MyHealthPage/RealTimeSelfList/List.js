@@ -6,6 +6,7 @@ import StyledContentsWrapper from 'components/BizBuilder/styled/Wrapper/StyledCo
 import StyledCustomSearchWrapper from 'components/BizBuilder/styled/Wrapper/StyledCustomSearchWrapper';
 import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import StyledSelect from 'components/BizBuilder/styled/Form/StyledSelect';
+import StyledInput from 'components/BizBuilder/styled/Form/StyledInput';
 import StyledAntdTable from 'components/BizBuilder/styled/Table/StyledAntdTable';
 import StyledDatePicker from 'components/BizBuilder/styled/Form/StyledDatePicker';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
@@ -23,6 +24,7 @@ const currentYear = moment(new Date()).format('YYYY');
 
 const AntdTable = StyledAntdTable(Table);
 const AntdSelect = StyledSelect(Select);
+const AntdInput = StyledInput(Input);
 const AntdRangeDatePicker = StyledDatePicker(DatePicker.RangePicker);
 const AntdModal = StyledAntdModal(Modal);
 
@@ -61,9 +63,13 @@ class List extends Component {
   }
 
   getList = () => {
-    const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff,profile } = this.props;
     const { searchParam } = this.state;
     this.setState({ selectedRowKeys: [], selectedRows: [] });
+    if(profile.SA || profile.BM){
+    }else{
+      searchParam["userId"] = profile.USER_ID;
+    }
     spinningOn();
     const apiAry = [
       {
@@ -139,8 +145,6 @@ class List extends Component {
       dataIndex: 'DEPT_NAME_KOR',
       width: '15%',
       align: 'center',
-      render: text => text || '부서정보 없음',
-      excelRender: text => text || '부서정보 없음',
     },
     {
       title: '이름',
@@ -216,7 +220,7 @@ class List extends Component {
   ];
 
   render() {
-    const { result } = this.props;
+    const { result ,profile} = this.props;
     const { yearList, modalObj, selectedRows, selectedRowKeys } = this.state;
     const list = (result && result.List && result.List.list) || [];
 
@@ -257,7 +261,17 @@ class List extends Component {
                 <AntdSelect.Option value="AA">영동</AntdSelect.Option>
                 <AntdSelect.Option value="GLOBAL">해외</AntdSelect.Option>
               </AntdSelect>
-              <UserSearchModal visible onClickRow={record => this.onChangeSearchParam('userId', record.USER_ID)} />
+
+              {profile.SA  || profile.BM ? (
+                  <UserSearchModal visible onClickRow={record => this.onChangeSearchParam('userId', record.USER_ID)} />
+                ) : (
+                  <AntdInput name="userId" 
+                             value={profile.USER_ID}
+                             style={{ width: 90 }} 
+                             readOnly 
+                             className="ant-input-sm"  />
+              )}      
+
               <AntdSelect
                 className="select-sm mr5"
                 style={{ width: 200 }}

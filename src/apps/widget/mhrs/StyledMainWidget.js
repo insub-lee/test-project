@@ -20,7 +20,7 @@ const StyledMainWidget = styled.div`
       display: inline-block;
       padding: 20px 15px;
       border-radius: 4px;
-      cursor: pointer;
+      // cursor: pointer;
 
       .card-txt {
         font-size: 15px;
