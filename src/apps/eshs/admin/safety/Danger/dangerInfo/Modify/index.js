@@ -235,7 +235,12 @@ class ModifyPage extends Component {
         ...formData,
         TASK_SEQ: -1,
         TASK_ORIGIN_SEQ: -1,
-        INFO_DATA: {},
+        INFO_DATA: {
+          PRODUCT: 0,
+          EMP_CNT: 0,
+          JAEHAE: 0,
+          ACHA: 0,
+        },
         INFO_YEAR,
         SDIV_CD,
         SDIV_NM,
@@ -265,7 +270,45 @@ class ModifyPage extends Component {
 
   onChangeDetailData = (name, value) => {
     const { sagaKey: id, changeFormData, formData } = this.props;
-    changeFormData(id, 'INFO_DATA', { ...formData.INFO_DATA, [name]: value });
+    if (name.includes('M_CD')) {
+      if (value !== '') {
+        return changeFormData(id, 'INFO_DATA', {
+          ...formData.INFO_DATA,
+          [name]: value,
+          [name.replace('M_CD', 'M_QTY')]: 1,
+        });
+      }
+    }
+
+    // 2항 선택
+    const isYn = ['WORK_Y', 'WORK_N', 'AGREE_Y', 'AGREE_N', 'EDU_Y', 'EDU_Y']; // 2항
+    if (isYn.includes(name)) {
+      if (name.includes('Y')) {
+        return changeFormData(id, 'INFO_DATA', {
+          ...formData.INFO_DATA,
+          [name]: value,
+          [name.replace('Y', 'N')]: !value,
+        });
+      }
+      return changeFormData(id, 'INFO_DATA', {
+        ...formData.INFO_DATA,
+        [name]: value,
+        [name.replace('N', 'Y')]: !value,
+      });
+    }
+
+    // 3항 선택
+    const isThree = ['ENV_Y', 'ENV_N', 'ENV_Z']; // 3항
+    if (isThree.includes(name)) {
+      const otherItem = isThree.filter(item => item !== name);
+      return changeFormData(id, 'INFO_DATA', {
+        ...formData.INFO_DATA,
+        [name]: value,
+        [otherItem[0]]: !value,
+        [otherItem[1]]: !value,
+      });
+    }
+    return changeFormData(id, 'INFO_DATA', { ...formData.INFO_DATA, [name]: value });
   };
 
   deleteMeterial = target => {
@@ -282,7 +325,6 @@ class ModifyPage extends Component {
     }
 
     changeFormData(id, 'INFO_DATA', infoData);
-    this.mySearch();
   };
 
   onChangeModal = () => {

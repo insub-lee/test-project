@@ -253,7 +253,7 @@ export default ({ info, deptId }) => {
           label: '프로젝트를 시작하게 된 배경 ',
           name: 'project_reason',
           placeholder: '',
-          value: info?.problem_improvement,
+          value: info?.project_reason,
           required: true,
           maxLength: 450,
           readOnly: true,

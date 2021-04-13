@@ -46,32 +46,33 @@ const tagArray = (onChangeData, infoData) => [
   <th colSpan={3}>근로자 구성 및 경력특성</th>,
   <>
     <td colSpan={3} rowSpan={1}>
-      <Checkbox defaultChecked={infoData.EMP_WOMAN} onChange={e => onChangeData(`EMP_WOMAN`, e.target.checked)}>
+      <Checkbox checked={infoData.EMP_WOMAN} onChange={e => onChangeData(`EMP_WOMAN`, e.target.checked)}>
         여성근로자
       </Checkbox>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <Checkbox defaultChecked={infoData.EMP_NEW} onChange={e => onChangeData(`EMP_NEW`, e.target.checked)}>
+      <Checkbox checked={infoData.EMP_NEW} onChange={e => onChangeData(`EMP_NEW`, e.target.checked)}>
         1년 미만 미숙련자
       </Checkbox>
     </td>
   </>,
   <>
     <td colSpan={3} rowSpan={1}>
-      <Checkbox defaultChecked={infoData.EMP_OLD} onChange={e => onChangeData(`EMP_OLD`, e.target.checked)}>
-        고령근로자
-      </Checkbox>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <Checkbox defaultChecked={infoData.EMP_TEMP} onChange={e => onChangeData(`EMP_TEMP`, e.target.checked)}>
+      <Checkbox checked={infoData.EMP_TEMP} onChange={e => onChangeData(`EMP_TEMP`, e.target.checked)}>
         비정규직 근로자
       </Checkbox>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <Checkbox checked={infoData.EMP_OLD} onChange={e => onChangeData(`EMP_OLD`, e.target.checked)}>
+        고령근로자
+      </Checkbox>
+      {infoData.EMP_OLD && <span style={{ color: '#ff3333' }}>&#60;고령 근로자 기준 : 65세 이상&#62;</span>}
     </td>
   </>,
   <>
     <td colSpan={3} rowSpan={1}>
-      <Checkbox defaultChecked={infoData.EMP_FOREIGN} onChange={e => onChangeData(`EMP_FOREIGN`, e.target.checked)}>
+      <Checkbox checked={infoData.EMP_FOREIGN} onChange={e => onChangeData(`EMP_FOREIGN`, e.target.checked)}>
         외국인 근로자
       </Checkbox>
-      <Checkbox defaultChecked={infoData.EMP_DISABLE} onChange={e => onChangeData(`EMP_DISABLE`, e.target.checked)}>
+      <Checkbox checked={infoData.EMP_DISABLE} onChange={e => onChangeData(`EMP_DISABLE`, e.target.checked)}>
         장애 근로자
       </Checkbox>
     </td>
@@ -79,10 +80,10 @@ const tagArray = (onChangeData, infoData) => [
   <>
     <th>교대작업 유무</th>
     <td colSpan={2}>
-      <Checkbox defaultChecked={Boolean(infoData.WORK_Y)} onChange={e => onChangeData(`WORK_Y`, e.target.checked)}>
+      <Checkbox checked={Boolean(infoData.WORK_Y)} onChange={e => onChangeData(`WORK_Y`, e.target.checked)}>
         유
       </Checkbox>
-      <Checkbox defaultChecked={Boolean(infoData.WORK_N)} onChange={e => onChangeData(`WORK_N`, e.target.checked)}>
+      <Checkbox checked={Boolean(infoData.WORK_N)} onChange={e => onChangeData(`WORK_N`, e.target.checked)}>
         무
       </Checkbox>
     </td>
@@ -90,10 +91,10 @@ const tagArray = (onChangeData, infoData) => [
   <>
     <th>운반수단 유무</th>
     <td colSpan={2}>
-      <Checkbox defaultChecked={Boolean(infoData.MOVE_Y)} onChange={e => onChangeData(`MOVE_Y`, e.target.checked)}>
+      <Checkbox checked={Boolean(infoData.MOVE_Y)} onChange={e => onChangeData(`MOVE_Y`, e.target.checked)}>
         기계
       </Checkbox>
-      <Checkbox defaultChecked={Boolean(infoData.MOVE_N)} onChange={e => onChangeData(`MOVE_N`, e.target.checked)}>
+      <Checkbox checked={Boolean(infoData.MOVE_N)} onChange={e => onChangeData(`MOVE_N`, e.target.checked)}>
         인력
       </Checkbox>
     </td>
@@ -101,10 +102,10 @@ const tagArray = (onChangeData, infoData) => [
   <>
     <th>안전작업허가 필요작업 유무</th>
     <td colSpan={2}>
-      <Checkbox defaultChecked={Boolean(infoData.AGREE_Y)} onChange={e => onChangeData(`AGREE_Y`, e.target.checked)}>
+      <Checkbox checked={Boolean(infoData.AGREE_Y)} onChange={e => onChangeData(`AGREE_Y`, e.target.checked)}>
         유
       </Checkbox>
-      <Checkbox defaultChecked={Boolean(infoData.AGREE_N)} onChange={e => onChangeData(`AGREE_N`, e.target.checked)}>
+      <Checkbox checked={Boolean(infoData.AGREE_N)} onChange={e => onChangeData(`AGREE_N`, e.target.checked)}>
         무
       </Checkbox>
     </td>
@@ -124,28 +125,16 @@ const tagArray = (onChangeData, infoData) => [
       </div>
       <br />
       <span style={{ marginRight: '5px', display: 'inline-block' }}>(</span>
-      <Checkbox
-        defaultChecked={Boolean(infoData.WEIGHT_UP)}
-        onChange={e => onChangeData(`WEIGHT_UP`, e.target.checked)}
-      >
+      <Checkbox checked={Boolean(infoData.WEIGHT_UP)} onChange={e => onChangeData(`WEIGHT_UP`, e.target.checked)}>
         들기
       </Checkbox>
-      <Checkbox
-        defaultChecked={Boolean(infoData.WEIGHT_PUSH)}
-        onChange={e => onChangeData(`WEIGHT_PUSH`, e.target.checked)}
-      >
+      <Checkbox checked={Boolean(infoData.WEIGHT_PUSH)} onChange={e => onChangeData(`WEIGHT_PUSH`, e.target.checked)}>
         밀기
       </Checkbox>
-      <Checkbox
-        defaultChecked={Boolean(infoData.WEIGHT_PULL)}
-        onChange={e => onChangeData(`WEIGHT_PULL`, e.target.checked)}
-      >
+      <Checkbox checked={Boolean(infoData.WEIGHT_PULL)} onChange={e => onChangeData(`WEIGHT_PULL`, e.target.checked)}>
         끌기
       </Checkbox>
-      <Checkbox
-        defaultChecked={Boolean(infoData.WEIGHT_ETC)}
-        onChange={e => onChangeData(`WEIGHT_ETC`, e.target.checked)}
-      >
+      <Checkbox checked={Boolean(infoData.WEIGHT_ETC)} onChange={e => onChangeData(`WEIGHT_ETC`, e.target.checked)}>
         기타
       </Checkbox>
       <span style={{ marginleft: '5px', display: 'inline-block' }}>)</span>
@@ -155,13 +144,13 @@ const tagArray = (onChangeData, infoData) => [
   <>
     <th>작업환경측정 측정유무</th>
     <td colSpan={2}>
-      <Checkbox defaultChecked={Boolean(infoData.ENV_Y)} onChange={e => onChangeData(`ENV_Y`, e.target.checked)}>
+      <Checkbox checked={Boolean(infoData.ENV_Y)} onChange={e => onChangeData(`ENV_Y`, e.target.checked)}>
         측정
       </Checkbox>
-      <Checkbox defaultChecked={Boolean(infoData.ENV_N)} onChange={e => onChangeData(`ENV_N`, e.target.checked)}>
+      <Checkbox checked={Boolean(infoData.ENV_N)} onChange={e => onChangeData(`ENV_N`, e.target.checked)}>
         미측정
       </Checkbox>
-      <Checkbox defaultChecked={Boolean(infoData.ENV_Z)} onChange={e => onChangeData(`ENV_Z`, e.target.checked)}>
+      <Checkbox checked={Boolean(infoData.ENV_Z)} onChange={e => onChangeData(`ENV_Z`, e.target.checked)}>
         해당무
       </Checkbox>
     </td>
@@ -181,10 +170,10 @@ const tagArray = (onChangeData, infoData) => [
   <>
     <th>{`작업에 대한 \n 특별안전보건교육 필요 유무`}</th>
     <td colSpan={2}>
-      <Checkbox defaultChecked={Boolean(infoData.EDU_Y)} onChange={e => onChangeData(`EDU_Y`, e.target.checked)}>
+      <Checkbox checked={Boolean(infoData.EDU_Y)} onChange={e => onChangeData(`EDU_Y`, e.target.checked)}>
         유
       </Checkbox>
-      <Checkbox defaultChecked={Boolean(infoData.EDU_N)} onChange={e => onChangeData(`EDU_N`, e.target.checked)}>
+      <Checkbox checked={Boolean(infoData.EDU_N)} onChange={e => onChangeData(`EDU_N`, e.target.checked)}>
         무
       </Checkbox>
     </td>

@@ -41,7 +41,11 @@ const Header = ({
     // home txt 삭제 0422
     appName = '';
   } else if (lang.get('NAME', setMyMenuData)) {
-    appName = view !== 'Mobile' ? lang.get('NAME', setMyMenuData) : lang.get('NAME', setMyMenuData);
+    if (lang.getLang() === 'KOR' && setMyMenuData.FULL_NAME && setMyMenuData.FULL_NAME !== '') {
+      appName = setMyMenuData.FULL_NAME;
+    } else {
+      appName = view !== 'Mobile' ? lang.get('NAME', setMyMenuData) : lang.get('NAME', setMyMenuData);
+    }
   }
 
   if (setMyMenuData.length === 0) {
@@ -54,7 +58,13 @@ const Header = ({
         <ul>
           <li className="leftBottom">
             <h1 className="siteHeader">
-              <span className="gotoHome" onClick={() => goCommonHome()} onKeyDown={() => goCommonHome()} role="button" tabIndex="0">
+              <span
+                className="gotoHome"
+                onClick={() => goCommonHome()}
+                onKeyDown={() => goCommonHome()}
+                role="button"
+                tabIndex="0"
+              >
                 {view !== 'Mobile' && headerTitle}
               </span>
               {/* 담당자 popover */}

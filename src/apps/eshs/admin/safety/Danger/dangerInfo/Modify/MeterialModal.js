@@ -45,7 +45,7 @@ class MeterialModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ref01: 0,
+      ref01: 318,
       ref02: 'ALL',
     };
     this.onChangeData = debounce(this.onChangeData, 500);
@@ -148,13 +148,12 @@ class MeterialModal extends Component {
   };
 
   render() {
-    const { modalData, selectedRowKeys, modalSelectData } = this.state;
+    const { modalData, selectedRowKeys } = this.state;
     const { onChangeModal } = this.props;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChangeModal,
     };
-    const useArea = ['구미', '청주'];
     return (
       <StyledContentsWrapper>
         <StyledCustomSearchWrapper className="search-wrapper-inline">
@@ -167,11 +166,9 @@ class MeterialModal extends Component {
               onChange={value => this.setState({ ref01: String(value) }, this.filterSelect)}
               allowClear
             >
+              <Option value={318}>구미</Option>
+              <Option value={317}>청주</Option>
               <Option value={0}>전체</Option>
-              {modalSelectData &&
-                modalSelectData
-                  .filter(item => useArea.includes(item.NAME_KOR))
-                  .map(item => <Option value={String(item.NODE_ID)}>{item.NAME_KOR}</Option>)}
             </AntdSelect>
             <span className="text-label">물질구분</span>
             <AntdSelect
