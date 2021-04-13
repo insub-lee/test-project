@@ -70,12 +70,16 @@ class SearchBar extends Component {
     return (
       <>
         <div className="search-input-area">
-          {userSearch ? (
-            <UserSearchModal colData={empNo} onClickRow={record => this.handleOnChangeSearchData('userId', record.USER_ID)} />
+          {profile.SA || profile.BM ? (
+            <UserSearchModal
+              colData={empNo}
+              onClickRow={record => this.handleOnChangeSearchData('userId', record.USER_ID)}
+            />
           ) : (
             <span className="text-label">{userInfo.EMP_NO || ''}</span>
           )}
-          <span className="text-label">{`/ ${userInfo.DEPT_NAME_KOR || ''} / ${userInfo.NAME_KOR || ''} ${userInfo.PSTN_NAME_KOR || ''}`}</span>
+          <span className="text-label">{`/ ${userInfo.DEPT_NAME_KOR || ''} / ${userInfo.NAME_KOR ||
+            ''} ${userInfo.PSTN_NAME_KOR || ''}`}</span>
           {yearSearch && (
             <>
               &nbsp; &nbsp;

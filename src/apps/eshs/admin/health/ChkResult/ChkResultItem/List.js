@@ -61,7 +61,7 @@ class List extends Component {
     const apiAry = [
       {
         key: 'hospitalList',
-        url: `/api/eshs/v1/common/health/healthChkHospital`,
+        url: `/api/eshs/v1/common/health/healthChkHospital?CODE=Y`,
         type: 'GET',
         params: {},
       },
@@ -95,10 +95,14 @@ class List extends Component {
   };
 
   getList = () => {
-    const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff } = this.props;
+    const { sagaKey: id, getCallDataHandler, spinningOn, spinningOff,profile} = this.props;
     const { searchParam } = this.state;
     const chkResultItemCd = (searchParam && searchParam.CHK_RESULT_ITEM_CD) || '';
     if (!chkResultItemCd) return message.info(<MessageContent>검진항목을 선택해 주세요.</MessageContent>);
+    if(profile.SA || profile.BM){
+    }else{
+      searchParam["userId"] = profile.USER_ID;
+    }
 
     spinningOn();
     const apiAry = [
@@ -218,7 +222,7 @@ class List extends Component {
   ];
 
   render() {
-    const { result } = this.props;
+    const { result,profile } = this.props;
     const { yearList, modalObj, searchParam } = this.state;
     const list = (result && result.List && result.List.list) || [];
     const hospitalList = (result && result.hospitalList && result.hospitalList.list) || [];
@@ -313,7 +317,15 @@ class List extends Component {
                 <AntdSelect.Option value="1">1차</AntdSelect.Option>
                 <AntdSelect.Option value="2">재검</AntdSelect.Option>
               </AntdSelect>
-              <UserSearchModal visible onClickRow={record => this.onChangeSearchParam('userId', record.USER_ID)} />
+              {profile.SA  || profile.BM ? (
+                 <UserSearchModal visible onClickRow={record => this.onChangeSearchParam('userId', record.USER_ID)} />
+                ) : (
+                  <AntdInput name="userId" 
+                             value={profile.USER_ID}
+                             style={{ width: 90 }} 
+                             readOnly 
+                             className="ant-input-sm"  />
+              )}
               <AntdSelect
                 className="select-sm mr5"
                 style={{ width: 100 }}

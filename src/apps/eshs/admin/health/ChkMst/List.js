@@ -55,7 +55,7 @@ class List extends Component {
     const apiAry = [
       {
         key: 'hospitalList',
-        url: `/api/eshs/v1/common/health/healthChkHospital`,
+        url: `/api/eshs/v1/common/health/healthChkHospital?CODE=Y`,
         type: 'GET',
         params: {},
       },

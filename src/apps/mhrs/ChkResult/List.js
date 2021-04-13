@@ -14,36 +14,41 @@ import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal'
 import View from './View';
 import ChkResultUpload from './ChkResultUpload';
 
-const AntdTable = StyledAntdTable(Table)
+const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledAntdModal(Modal);
 const AntdInput = StyledInput(Input);
 const AntdRangePicker = StyledDatePicker(DatePicker.RangePicker);
 
 class List extends Component {
-  state = {
-    isShow: false,
-    isExcelUploadShow: false,
-    selectedRow: {},
-    list: [],
-    searchInfo: {
-      FROM_DT: '',
-      TO_DT: '',
-      USER_NAME: '',
-      IS_MATE: '0',
-      SCH_DT_GB: 'CHK_DT',
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      isShow: false,
+      isExcelUploadShow: false,
+      selectedRow: {},
+      list: [],
+      searchInfo: {
+        FROM_DT: '',
+        TO_DT: '',
+        USER_NAME: '',
+        IS_MATE: '0',
+        SCH_DT_GB: 'CHK_DT',
+      },
+    };
   }
 
   componentWillMount() {
     this.setState({
-      searchInfo : {
+      searchInfo: {
         ...this.state.searchInfo,
-        FROM_DT: moment().add(-1, 'months').format('YYYY-MM-DD'),
+        FROM_DT: moment()
+          .add(-1, 'months')
+          .format('YYYY-MM-DD'),
         TO_DT: moment().format('YYYY-MM-DD'),
-      }
+      },
     });
 
-    const{ sagaKey, getCallDataHandlerReturnRes } = this.props;
+    const { sagaKey, getCallDataHandlerReturnRes } = this.props;
     const apiInfo = {
       key: 'hospitalUser',
       url: `/api/eshs/v1/common/MhrsHospitalUser`,
@@ -51,12 +56,15 @@ class List extends Component {
     };
     getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, res) => {
       if (res && res.user && res.user.HOSPITAL_CODE) {
-        this.setState({
-          searchInfo: { ...this.state.searchInfo, HOSPITAL_CODE: res.user.HOSPITAL_CODE }
-        }, this.getList);
+        this.setState(
+          {
+            searchInfo: { ...this.state.searchInfo, HOSPITAL_CODE: res.user.HOSPITAL_CODE },
+          },
+          this.getList,
+        );
       }
     });
-  };
+  }
 
   getList = () => {
     const { sagaKey, getCallDataHandlerReturnRes, spinningOn, spinningOff } = this.props;
@@ -67,7 +75,7 @@ class List extends Component {
       params: {
         PARAM: { ...this.state.searchInfo },
       },
-    }
+    };
     spinningOn();
     getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, res) => {
       if (res && res.list) {
@@ -83,7 +91,7 @@ class List extends Component {
     this.setState(prevState => {
       const { searchInfo } = prevState;
       searchInfo[key] = val;
-      return { searchInfo }
+      return { searchInfo };
     });
   };
 
@@ -92,7 +100,7 @@ class List extends Component {
       const { searchInfo } = prevState;
       searchInfo.FROM_DT = val[0];
       searchInfo.TO_DT = val[1];
-      return { searchInfo }
+      return { searchInfo };
     });
   };
 
@@ -128,7 +136,7 @@ class List extends Component {
       key: 'USER_NAME',
       width: '12%',
       align: 'center',
-      render: (text, record) => record.IS_MATE === '0' ? text : `${record.FAM_NAME}(배)`
+      render: (text, record) => (record.IS_MATE === '0' ? text : `${record.FAM_NAME}(배)`),
     },
     {
       title: '주민등록번호',
@@ -140,13 +148,11 @@ class List extends Component {
         if (text) {
           if (record.IS_MATE === '0') {
             return `${text.substring(0, 6)}-${text.substring(6, 13)}`;
-          } else {
-            return `${record.FAM_REGNO.substring(0, 6)}-${record.FAM_REGNO.substring(6, 13)}`
           }
-        } else {
-          return '';
+          return `${record.FAM_REGNO.substring(0, 6)}-${record.FAM_REGNO.substring(6, 13)}`;
         }
-      }
+        return '';
+      },
     },
     {
       title: '차수',
@@ -154,7 +160,7 @@ class List extends Component {
       key: 'CHK_SEQ',
       width: '8%',
       align: 'center',
-      render: text => text === '1' ? `${text}차` : '재검',
+      render: text => (text === '1' ? `${text}차` : '재검'),
     },
     {
       title: '검진일',
@@ -162,7 +168,7 @@ class List extends Component {
       key: 'CHK_DT',
       width: '12%',
       align: 'center',
-      render: text => text ? moment(text).format('YYYY-MM-DD') : ''
+      render: text => (text ? moment(text).format('YYYY-MM-DD') : ''),
     },
     {
       title: '전화번호',
@@ -177,7 +183,9 @@ class List extends Component {
       key: 'CHK_CD',
       align: 'center',
       render: (text, record) => (
-        <StyledButton className="btn-link btn-xs" onClick={() => this.onClickDetailView(record)}>상세보기</StyledButton>
+        <StyledButton className="btn-link btn-xs" onClick={() => this.onClickDetailView(record)}>
+          상세보기
+        </StyledButton>
       ),
     },
   ];
@@ -185,24 +193,10 @@ class List extends Component {
   render() {
     return (
       <>
-        <AntdModal
-          width={900}
-          visible={this.state.isShow}
-          title="검진결과 상세"
-          onCancel={this.onCancelPopup}
-          destroyOnClose
-          footer={null}
-        >
+        <AntdModal width={900} visible={this.state.isShow} title="검진결과 상세" onCancel={this.onCancelPopup} destroyOnClose footer={null}>
           <View onCancelPopup={this.onCancelPopup} selectedRow={this.state.selectedRow} />
         </AntdModal>
-        <AntdModal
-          width={400}
-          visible={this.state.isExcelUploadShow}
-          title="검진결과 엑셀 등록"
-          onCancel={this.onCancelPopup}
-          destroyOnClose
-          footer={null}
-        >
+        <AntdModal width={400} visible={this.state.isExcelUploadShow} title="검진결과 엑셀 등록" onCancel={this.onCancelPopup} destroyOnClose footer={null}>
           <ChkResultUpload onCancelPopup={this.onCancelPopup} />
         </AntdModal>
         <StyledContentsWrapper>
@@ -211,25 +205,31 @@ class List extends Component {
               <span className="text-label">검진일자</span>
               <AntdRangePicker
                 defaultValue={[moment(this.state.searchInfo.FROM_DT), moment(this.state.searchInfo.TO_DT)]}
-                className="ant-picker-sm mr5" style={{ width: 220 }} format="YYYY-MM-DD" allowClear={false}
+                className="ant-picker-sm mr5"
+                style={{ width: 220 }}
+                format="YYYY-MM-DD"
+                allowClear={false}
                 onChange={(val1, val2) => this.onChangeRangePicker(val2)}
               />
               <AntdInput
-                className="ant-input-sm mr5" allowClear placeholder="성명" style={{ width: 100 }}
+                className="ant-input-sm mr5"
+                allowClear
+                placeholder="성명"
+                style={{ width: 100 }}
                 onChange={e => this.onChangeSearchInfo('USER_NAME', e.target.value)}
                 onPressEnter={this.getList}
               />
-                <StyledButton className="btn-gray btn-sm" onClick={this.getList}>검색</StyledButton>
+              <StyledButton className="btn-gray btn-sm" onClick={this.getList}>
+                검색
+              </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
           <StyledButtonWrapper className="btn-wrap-inline btn-wrap-mb-10">
-            <StyledButton className="btn-primary btn-sm" onClick={this.onRegistChkResult}>검진결과 업로드</StyledButton>
+            <StyledButton className="btn-primary btn-sm" onClick={this.onRegistChkResult}>
+              검진결과 업로드
+            </StyledButton>
           </StyledButtonWrapper>
-          <AntdTable
-            columns={this.columns}
-            dataSource={this.state.list.map(item => ({ ...item, key:item.CHK_CD }))}
-            bordered={true}
-          />
+          <AntdTable columns={this.columns} dataSource={this.state.list.map(item => ({ ...item, key: item.CHK_CD }))} bordered />
         </StyledContentsWrapper>
       </>
     );

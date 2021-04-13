@@ -17,39 +17,42 @@ import moment from 'moment';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
-const AntdRangeDatePicker = StyledDatePicker(DatePicker.RangePicker)
+const AntdRangeDatePicker = StyledDatePicker(DatePicker.RangePicker);
 
 class Quota extends Component {
-  state = {
-    quotaList: [],
-    yearList: [],
-    searchInfo: {
-      CHK_TYPE_CD: '002',  //고정(종합검진)
-      CHK_YEAR: '',
-      HOSPITAL_CODE: '',
-      START_DT: '',
-      END_DT: '',
-    },
-    batchQuota: '',
+  constructor(props) {
+    super(props);
+    this.state = {
+      quotaList: [],
+      yearList: [],
+      searchInfo: {
+        CHK_TYPE_CD: '002', // 고정(종합검진)
+        CHK_YEAR: '',
+        HOSPITAL_CODE: '',
+        START_DT: '',
+        END_DT: '',
+      },
+      batchQuota: '',
+    };
   }
 
   componentWillMount() {
     const today = new Date();
     const currYear = today.getFullYear();
     const yearList = [];
-    for (let i=currYear; i>=1998; i--) {
+    for (let i = currYear; i >= 1998; i--) {
       yearList.push(i);
     }
     this.setState(prevState => {
-      let { searchInfo } = prevState;
+      const { searchInfo } = prevState;
       searchInfo.CHK_YEAR = currYear;
       return {
         yearList,
         searchInfo,
-      }
+      };
     });
 
-    const{ sagaKey, getCallDataHandlerReturnRes } = this.props;
+    const { sagaKey, getCallDataHandlerReturnRes } = this.props;
     const apiInfo = {
       key: 'hospitalUser',
       url: `/api/eshs/v1/common/MhrsHospitalUser`,
@@ -58,7 +61,7 @@ class Quota extends Component {
     getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, res) => {
       if (res && res.user && res.user.HOSPITAL_CODE) {
         this.setState({
-          searchInfo: { ...this.state.searchInfo, HOSPITAL_CODE: res.user.HOSPITAL_CODE }
+          searchInfo: { ...this.state.searchInfo, HOSPITAL_CODE: res.user.HOSPITAL_CODE },
         });
       }
     });
@@ -92,7 +95,7 @@ class Quota extends Component {
     this.setState(prevState => {
       const { searchInfo } = prevState;
       searchInfo[key] = val;
-      return { searchInfo }
+      return { searchInfo };
     });
   };
 
@@ -102,7 +105,7 @@ class Quota extends Component {
         const { searchInfo } = prevState;
         searchInfo.START_DT = val2[0];
         searchInfo.END_DT = val2[1];
-        return { searchInfo }
+        return { searchInfo };
       });
     }
   };
@@ -127,11 +130,11 @@ class Quota extends Component {
       params: {
         PARAM: { ...searchInfo },
       },
-    }
+    };
     spinningOn();
     getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, res) => {
       if (res && res.list) {
-        this.setState({ 
+        this.setState({
           quotaList: res.list.map(item => ({ ...item, HOSPITAL_CODE: searchInfo.HOSPITAL_CODE, CHK_YEAR: searchInfo.CHK_YEAR })),
         });
         this.handleSetWeekTotal();
@@ -155,10 +158,10 @@ class Quota extends Component {
       title: '예약인원이 있는 날짜는 삭제되지 않습니다.',
       icon: <ExclamationCircleOutlined />,
       onOk() {
-        let startDate = new Date(searchInfo.START_DT);
-        let endDate = new Date(searchInfo.END_DT);
+        const startDate = new Date(searchInfo.START_DT);
+        const endDate = new Date(searchInfo.END_DT);
 
-        let delList = [];
+        const delList = [];
         while (startDate.getTime() <= endDate.getTime()) {
           delList.push(moment(startDate).format('YYYY-MM-DD'));
           startDate.setDate(startDate.getDate() + 1);
@@ -175,13 +178,13 @@ class Quota extends Component {
                     rslt = false;
                   }
                 }
-              })
+              });
               return rslt;
             }),
-          }
+          };
         });
         this.handleSetWeekTotal();
-      }
+      },
     });
   };
 
@@ -201,7 +204,7 @@ class Quota extends Component {
           }
           return item;
         }),
-      }
+      };
     });
     this.handleSetWeekTotal();
   };
@@ -216,8 +219,8 @@ class Quota extends Component {
     this.setState(prevState => {
       const { quotaList } = prevState;
       return {
-        quotaList: quotaList.map(item => ({ ...item, QUOTA_NUM: (item.QUOTA_NUM != 0 ? item.QUOTA_NUM : batchQuota) })),
-      }
+        quotaList: quotaList.map(item => ({ ...item, QUOTA_NUM: item.QUOTA_NUM != 0 ? item.QUOTA_NUM : batchQuota })),
+      };
     });
     this.handleSetWeekTotal();
   };
@@ -228,7 +231,7 @@ class Quota extends Component {
       PARAM: {
         quotaList: this.state.quotaList,
         ...this.state.searchInfo,
-      }
+      },
     };
 
     if (this.state.quotaList.length === 0) {
@@ -241,11 +244,9 @@ class Quota extends Component {
       if (item.QUOTA_NUM === '') {
         message.info(<MessageContent>수검정원을 입력해주세요.</MessageContent>);
         isValid = false;
-        return;
       } else if (item.APP_DT_CNT > Number(item.QUOTA_NUM)) {
         message.info(<MessageContent>[{item.APP_DT}]의 수검정원은 예약인원보다 작을 수 없습니다.</MessageContent>);
         isValid = false;
-        return;
       }
     });
     if (!isValid) {
@@ -267,7 +268,7 @@ class Quota extends Component {
             message.error(<MessageContent>저장에 실패하였습니다.</MessageContent>);
           }
         });
-      }
+      },
     });
   };
 
@@ -285,21 +286,21 @@ class Quota extends Component {
             weekTotal = 0;
             weekTotal2 = 0;
           }
-          weekTotal = weekTotal + Number(item.QUOTA_NUM);
-          weekTotal2 = weekTotal2 + Number(item.APP_DT_CNT);
-          total = total + Number(item.QUOTA_NUM);
-          total2 = total2 + Number(item.APP_DT_CNT);
-          
-          item['WEEK_TOTAL'] = weekTotal;
-          item['WEEK_TOTAL2'] = weekTotal2;
-          item['TOTAL'] = total;
-          item['TOTAL2'] = total2;
+          weekTotal += Number(item.QUOTA_NUM);
+          weekTotal2 += Number(item.APP_DT_CNT);
+          total += Number(item.QUOTA_NUM);
+          total2 += Number(item.APP_DT_CNT);
+
+          item.WEEK_TOTAL = weekTotal;
+          item.WEEK_TOTAL2 = weekTotal2;
+          item.TOTAL = total;
+          item.TOTAL2 = total2;
 
           return item;
-        })
-      }
-    })
-  }
+        }),
+      };
+    });
+  };
 
   render() {
     const { hospitalList, yearList, searchInfo, quotaList, isSpinning } = this.state;
@@ -310,7 +311,9 @@ class Quota extends Component {
           <StyledCustomSearchWrapper>
             <div className="search-input-area mb10">
               <AntdSelect
-                className="select-sm mr5" placeholder="년도 선택" style={{ width: 120 }}
+                className="select-sm mr5"
+                placeholder="년도 선택"
+                style={{ width: 120 }}
                 onChange={val => this.onChangeSearchInfo('CHK_YEAR', val)}
                 defaultValue={searchInfo.CHK_YEAR}
               >
@@ -318,21 +321,40 @@ class Quota extends Component {
                   <AntdSelect.Option value={item}>{`${item}년`}</AntdSelect.Option>
                 ))}
               </AntdSelect>
-              <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>검색</StyledButton>
-              <AntdRangeDatePicker className="ant-picker-sm mr5" format="YYYY-MM-DD" style={{ width: 325 }} onChange={(val1, val2) => this.onChangeRangeDatePicker(val1, val2)} />
-              <StyledButton className="btn-gray btn-sm mr5" onClick={this.onCreatePeriod}>기간생성</StyledButton>
-              <StyledButton className="btn-gray btn-sm mr5" onClick={this.onDeletePeriod}>기간삭제</StyledButton>
-              <AntdInput
-                placeholder="수검정원" className="ant-input-sm mr5 ant-input-inline" style={{ width: 70 }}
-                onChange={e => { this.setState({ batchQuota: e.target.value })}}
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.getList}>
+                검색
+              </StyledButton>
+              <AntdRangeDatePicker
+                className="ant-picker-sm mr5"
+                format="YYYY-MM-DD"
+                style={{ width: 325 }}
+                onChange={(val1, val2) => this.onChangeRangeDatePicker(val1, val2)}
               />
-              <StyledButton className="btn-gray btn-sm" onClick={this.handleBatchInit}>일괄입력</StyledButton>
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.onCreatePeriod}>
+                기간생성
+              </StyledButton>
+              <StyledButton className="btn-gray btn-sm mr5" onClick={this.onDeletePeriod}>
+                기간삭제
+              </StyledButton>
+              <AntdInput
+                placeholder="수검정원"
+                className="ant-input-sm mr5 ant-input-inline"
+                style={{ width: 70 }}
+                onChange={e => {
+                  this.setState({ batchQuota: e.target.value });
+                }}
+              />
+              <StyledButton className="btn-gray btn-sm" onClick={this.handleBatchInit}>
+                일괄입력
+              </StyledButton>
             </div>
           </StyledCustomSearchWrapper>
           <StyledButtonWrapper className="btn-wrap-right" style={{ width: '60%', margin: '0 auto', marginBottom: 5 }}>
-            <StyledButton className="btn-primary btn-sm" onClick={this.onSave}>저장</StyledButton>
+            <StyledButton className="btn-primary btn-sm" onClick={this.onSave}>
+              저장
+            </StyledButton>
           </StyledButtonWrapper>
-          <StyledHtmlTable style={{ width: '60%', margin: '0 auto'}}>
+          <StyledHtmlTable style={{ width: '60%', margin: '0 auto' }}>
             <table>
               <colgroup>
                 <col width="40%" />
@@ -347,47 +369,47 @@ class Quota extends Component {
                 </tr>
               </thead>
               <tbody>
-                {quotaList && quotaList.map((item, idx) => {
-                  let CONTENT = [];
-                  CONTENT.push(
-                    <tr className="tr-center">
-                      <td>{item.APP_DT}({moment(item.APP_DT).format('ddd')})</td>
-                      <td>
-                        <AntdInput
-                          className="ant-input-xs ant-input-inline" style={{ width: 100, textAlign: 'right' }}
-                          value={item.QUOTA_NUM} 
-                          onChange={e => this.onChangeQuotaNum(item.APP_DT, e.target.value)}
-                        />
-                      </td>
-                      <td>
-                        <AntdInput
-                          className="ant-input-full"
-                          value={item.APP_DT_CNT}
-                          readOnly
-                        />
-                      </td>
-                    </tr>
-                  );
-                  if (moment(item.APP_DT).format('ddd') === '토' || idx === (quotaList.length-1)) {
+                {quotaList &&
+                  quotaList.map((item, idx) => {
+                    const CONTENT = [];
                     CONTENT.push(
                       <tr className="tr-center">
-                        <th>주간 누계</th>
-                        <th>{item.WEEK_TOTAL}</th>
-                        <th>{item.WEEK_TOTAL2}</th>
-                      </tr>
+                        <td>
+                          {item.APP_DT}({moment(item.APP_DT).format('ddd')})
+                        </td>
+                        <td>
+                          <AntdInput
+                            className="ant-input-xs ant-input-inline"
+                            style={{ width: 100, textAlign: 'right' }}
+                            value={item.QUOTA_NUM}
+                            onChange={e => this.onChangeQuotaNum(item.APP_DT, e.target.value)}
+                          />
+                        </td>
+                        <td>
+                          <AntdInput className="ant-input-full" value={item.APP_DT_CNT} readOnly />
+                        </td>
+                      </tr>,
                     );
-                  }
-                  if (idx === (quotaList.length-1)) {
-                    CONTENT.push(
-                      <tr className="tr-center">
-                        <th>전체 누계</th>
-                        <th>{item.TOTAL}</th>
-                        <th>{item.TOTAL2}</th>
-                      </tr>
-                    );
-                  }
-                  return CONTENT;
-                })}
+                    if (moment(item.APP_DT).format('ddd') === '토' || idx === quotaList.length - 1) {
+                      CONTENT.push(
+                        <tr className="tr-center">
+                          <th>주간 누계</th>
+                          <th>{item.WEEK_TOTAL}</th>
+                          <th>{item.WEEK_TOTAL2}</th>
+                        </tr>,
+                      );
+                    }
+                    if (idx === quotaList.length - 1) {
+                      CONTENT.push(
+                        <tr className="tr-center">
+                          <th>전체 누계</th>
+                          <th>{item.TOTAL}</th>
+                          <th>{item.TOTAL2}</th>
+                        </tr>,
+                      );
+                    }
+                    return CONTENT;
+                  })}
 
                 {/* {quotaList && quotaList.map(item => (
                   <tr className="tr-center">
