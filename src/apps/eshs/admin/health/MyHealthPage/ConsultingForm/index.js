@@ -24,7 +24,7 @@ class Comp extends Component {
       list: [],
       formData: {
         CONSULTING: 'Y',
-        MAIL: 'Y', // 메일발송 미구현
+        MAIL: 'Y',
       },
     };
   }
@@ -44,17 +44,26 @@ class Comp extends Component {
     });
   }
 
-  changeFormData = (target, value) => this.setState(prevState => ({ formData: { ...prevState.formData, [target]: value } }));
+  changeFormData = (target, value) =>
+    this.setState(prevState => ({ formData: { ...prevState.formData, [target]: value } }));
 
   save = () => {
-    const { sagaKey, submitHandlerBySaga, saveAfter, modalVisible, spinningOn, spinningOff, profile, excelUpload } = this.props;
+    const {
+      sagaKey,
+      submitHandlerBySaga,
+      saveAfter,
+      modalVisible,
+      spinningOn,
+      spinningOff,
+      profile,
+      excelUpload,
+    } = this.props;
     const { formData, list } = this.state;
     const content = formData.CONTENT || '';
     const fileInfo = (formData && formData.file) || {};
     const msg = this.saveBefore();
     const lIdx = list.length;
     const { MAIL, CONSULTING } = formData;
-    const testTo = (formData && formData.TEST_TO) || '';
     if (msg) return this.showMessage(msg);
 
     const fileMaxSize = 300 * 1024 * 1024;
@@ -75,13 +84,8 @@ class Comp extends Component {
         .replace(']', ')'),
     );
     submitData.append('TITLE', (formData && formData.TITLE) || 'ESH 검진상담 메일');
-    submitData.append('TEST_TO', testTo);
 
     if (MAIL === 'Y') {
-      if (!testTo) {
-        spinningOff();
-        return this.showMessage('테스트용 이메일을 입력하시오');
-      }
       if (fileSize > fileMaxSize) {
         spinningOff();
         return this.showMessage('첨부파일은 최대 300MB까지 전송 가능합니다.');
@@ -117,23 +121,29 @@ class Comp extends Component {
         if (res && res.result === lIdx) {
           this.showMessage('상담내용이 저장되었습니다.');
           if (MAIL === 'Y') {
-            return excelUpload(sagaKey, '/api/eshs/v1/common/eshsMyHealthPageAttachEmailSend', submitData, {}, mailRes => {
-              let msg = '';
-              if (mailRes && mailRes.result === 'SUCESS') {
-                spinningOff();
-                modalVisible();
-                saveAfter();
-                msg = '메일이 성공적으로 전송되었습니다.';
-              } else if (mailRes && mailRes.result) {
-                spinningOff();
-                msg = mailRes.result;
-              } else {
-                spinningOff();
-                msg = '메일전송이 실패하였습니다';
-              }
+            return excelUpload(
+              sagaKey,
+              '/api/eshs/v1/common/eshsMyHealthPageAttachEmailSend',
+              submitData,
+              {},
+              mailRes => {
+                let msg = '';
+                if (mailRes && mailRes.result === 'SUCESS') {
+                  spinningOff();
+                  modalVisible();
+                  saveAfter();
+                  msg = '메일이 성공적으로 전송되었습니다.';
+                } else if (mailRes && mailRes.result) {
+                  spinningOff();
+                  msg = mailRes.result;
+                } else {
+                  spinningOff();
+                  msg = '메일전송이 실패하였습니다';
+                }
 
-              return this.showMessage(msg);
-            });
+                return this.showMessage(msg);
+              },
+            );
           }
 
           spinningOff();
@@ -208,19 +218,17 @@ class Comp extends Component {
               <tr>
                 <th>상담등록</th>
                 <td>
-                  <Checkbox checked={formData.CONSULTING === 'Y'} onChange={e => this.changeFormData('CONSULTING', e.target.checked ? 'Y' : 'N')} />
+                  <Checkbox
+                    checked={formData.CONSULTING === 'Y'}
+                    onChange={e => this.changeFormData('CONSULTING', e.target.checked ? 'Y' : 'N')}
+                  />
                 </td>
                 <th>메일발송</th>
                 <td>
-                  <Checkbox checked={formData.MAIL === 'Y'} onChange={e => this.changeFormData('MAIL', e.target.checked ? 'Y' : 'N')} />
-                  {formData.MAIL === 'Y' && (
-                    <AntdInput
-                      className="ant-input-sm ant-input-inline ml5"
-                      placeholder="테스트 이메일"
-                      style={{ width: '70%' }}
-                      onChange={e => this.changeFormData('TEST_TO', e.target.value)}
-                    />
-                  )}
+                  <Checkbox
+                    checked={formData.MAIL === 'Y'}
+                    onChange={e => this.changeFormData('MAIL', e.target.checked ? 'Y' : 'N')}
+                  />
                 </td>
               </tr>
               <tr>
@@ -245,7 +253,13 @@ class Comp extends Component {
 }
 
 const ConsultingForm = ({ list, modalVisible, saveAfter }) => (
-  <BizMicroDevBase sagaKey="userSearchModal" modalVisible={modalVisible} saveAfter={saveAfter} list={list} component={Comp}></BizMicroDevBase>
+  <BizMicroDevBase
+    sagaKey="userSearchModal"
+    modalVisible={modalVisible}
+    saveAfter={saveAfter}
+    list={list}
+    component={Comp}
+  ></BizMicroDevBase>
 );
 
 ConsultingForm.propTypes = {

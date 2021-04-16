@@ -1,14 +1,24 @@
 import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
-import { message } from 'antd';
+import { message, Modal } from 'antd';
+import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
+import { stringify } from 'uuid';
+import ItemStatus from './ItemStatus';
+
+const AntdModal = StyledAntdModal(Modal);
 class ChkItemResultTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
       totalList: [],
       data: {},
+      modalObj: {
+        title: '',
+        visible: false,
+        content: [],
+      },
     };
   }
 
@@ -57,106 +67,156 @@ class ChkItemResultTable extends Component {
     return null;
   }
 
-  handleItemOnClick = index => {
-    message.warning('미구현');
-    message.warning(`index [ ${index} ]`);
+  modalVisible = (rowData = {}) => {
+    const list = this.state?.data?.list || [];
+    if (JSON.stringify(rowData) === '{}') {
+      return this.setState({
+        modalObj: { content: [], title: '', visible: false },
+      });
+    }
+    return this.setState({
+      modalObj: {
+        content: [
+          <ItemStatus
+            key="ItemStatus"
+            rowData={rowData}
+            userInfo={this.props.userInfo}
+            list={list.map(({ CHK_CD, CHK_TYPE_NM, CHK_YEAR, CHK_SEQ, CHK_DT }) => ({
+              CHK_CD,
+              CHK_TYPE_NM,
+              CHK_YEAR,
+              CHK_SEQ,
+              CHK_DT,
+            }))}
+          />,
+        ],
+        title: '연도별 검사결과',
+        visible: true,
+      },
+    });
   };
 
   render() {
-    const { totalList, data, itemGroup } = this.state;
+    const { totalList, data, itemGroup, modalObj } = this.state;
     const list = (data && data.list) || [];
     const listLen = list.length;
     let currDesc = '';
     return (
-      <table className="table-border">
-        <colgroup>
-          <col width="10%" />
-          <col width="15%" />
-          {list.map((l, index) => (
-            <col key={`COL_${index}`} width={`${Math.floor(50 / listLen)}%`} />
-          ))}
-          <col width="25%" />
-        </colgroup>
-        <thead>
-          <tr>
-            <th>구분</th>
-            <th>검사종목</th>
+      <>
+        <table className="table-border">
+          <colgroup>
+            <col width="10%" />
+            <col width="15%" />
             {list.map((l, index) => (
-              <th key={`TH_${index}`}>
-                {l.CHK_YEAR}년도 <br />
-                {l.CHK_TYPE_NM} {l.CHK_SEQ}
-              </th>
+              <col key={`COL_${index}`} width={`${Math.floor(50 / listLen)}%`} />
             ))}
-            <th>기준치</th>
-          </tr>
-        </thead>
-        <tfoot>
-          <tr>
-            <td colSpan={eval(3 + listLen)}>{totalList.length} 항목</td>
-          </tr>
-        </tfoot>
-        <tbody>
-          {totalList.map((t, rowIndex) => {
-            if (!currDesc) {
-              currDesc = t.CHK_RESULT_ITEM_DESC;
-              return (
-                <tr key={rowIndex}>
-                  <td align="center" rowSpan={itemGroup[currDesc]}>
-                    {t.CHK_RESULT_ITEM_DESC || ''}
-                  </td>
-                  <td align="center" className="td-pointer" onClick={() => this.handleItemOnClick(rowIndex)}>
-                    {t.CHK_RESULT_ITEM_NM || ''}
-                  </td>
-                  {list.map((l, colIndex) => (
-                    <td align="center" key={`${rowIndex}_${colIndex}`}>{`${t[`${l.CHK_CD}_RESULT`] || ''} ${(!!t[`${l.CHK_CD}_RESULT`] && t.UNIT) || ''}`}</td>
-                  ))}
-                  <td>{t.BASE_RESULT}</td>
-                </tr>
-              );
-            }
-            if (currDesc === t.CHK_RESULT_ITEM_DESC) {
-              return (
-                <tr key={rowIndex}>
-                  <td align="center" className="td-pointer" onClick={() => this.handleItemOnClick(rowIndex)}>
-                    {t.CHK_RESULT_ITEM_NM || ''}
-                  </td>
-                  {list.map((l, colIndex) => (
-                    <td align="center" key={`${rowIndex}_${colIndex}`}>{`${t[`${l.CHK_CD}_RESULT`] || ''} ${(!!t[`${l.CHK_CD}_RESULT`] && t.UNIT) || ''}`}</td>
-                  ))}
-                  <td>{t.BASE_RESULT}</td>
-                </tr>
-              );
-            }
-            if (currDesc !== t.CHK_RESULT_ITEM_DESC) {
-              currDesc = t.CHK_RESULT_ITEM_DESC;
-              return (
-                <tr key={rowIndex}>
-                  <td align="center" rowSpan={itemGroup[currDesc]}>
-                    {t.CHK_RESULT_ITEM_DESC || ''}
-                  </td>
-                  <td align="center" className="td-pointer" onClick={() => this.handleItemOnClick(rowIndex)}>
-                    {t.CHK_RESULT_ITEM_NM || ''}
-                  </td>
-                  {list.map((l, colIndex) => (
-                    <td align="center" key={`${rowIndex}_${colIndex}`}>{`${t[`${l.CHK_CD}_RESULT`] || ''} ${(!!t[`${l.CHK_CD}_RESULT`] && t.UNIT) || ''}`}</td>
-                  ))}
-                  <td>{t.BASE_RESULT}</td>
-                </tr>
-              );
-            }
-            return '';
-          })}
-        </tbody>
-      </table>
+            <col width="25%" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>구분</th>
+              <th>검사종목</th>
+              {list.map((l, index) => (
+                <th key={`TH_${index}`}>
+                  {l.CHK_YEAR}년도 <br />
+                  {l.CHK_TYPE_NM} {l.CHK_SEQ}
+                </th>
+              ))}
+              <th>기준치</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <td colSpan={eval(3 + listLen)}>{totalList.length} 항목</td>
+            </tr>
+          </tfoot>
+          <tbody>
+            {totalList.map((t, rowIndex) => {
+              if (!currDesc) {
+                currDesc = t.CHK_RESULT_ITEM_DESC;
+                return (
+                  <tr key={rowIndex}>
+                    <td align="center" rowSpan={itemGroup[currDesc]}>
+                      {t.CHK_RESULT_ITEM_DESC || ''}
+                    </td>
+                    <td align="center" className="td-pointer" onClick={() => this.modalVisible(t)}>
+                      {t.CHK_RESULT_ITEM_NM || ''}
+                    </td>
+                    {list.map((l, colIndex) => (
+                      <td align="center" key={`${rowIndex}_${colIndex}`}>{`${t[`${l.CHK_CD}_RESULT`] || ''} ${(!!t[
+                        `${l.CHK_CD}_RESULT`
+                      ] &&
+                        t.UNIT) ||
+                        ''}`}</td>
+                    ))}
+                    <td>{t.BASE_RESULT}</td>
+                  </tr>
+                );
+              }
+              if (currDesc === t.CHK_RESULT_ITEM_DESC) {
+                return (
+                  <tr key={rowIndex}>
+                    <td align="center" className="td-pointer" onClick={() => this.modalVisible(t)}>
+                      {t.CHK_RESULT_ITEM_NM || ''}
+                    </td>
+                    {list.map((l, colIndex) => (
+                      <td align="center" key={`${rowIndex}_${colIndex}`}>{`${t[`${l.CHK_CD}_RESULT`] || ''} ${(!!t[
+                        `${l.CHK_CD}_RESULT`
+                      ] &&
+                        t.UNIT) ||
+                        ''}`}</td>
+                    ))}
+                    <td>{t.BASE_RESULT}</td>
+                  </tr>
+                );
+              }
+              if (currDesc !== t.CHK_RESULT_ITEM_DESC) {
+                currDesc = t.CHK_RESULT_ITEM_DESC;
+                return (
+                  <tr key={rowIndex}>
+                    <td align="center" rowSpan={itemGroup[currDesc]}>
+                      {t.CHK_RESULT_ITEM_DESC || ''}
+                    </td>
+                    <td align="center" className="td-pointer" onClick={() => this.modalVisible(t)}>
+                      {t.CHK_RESULT_ITEM_NM || ''}
+                    </td>
+                    {list.map((l, colIndex) => (
+                      <td align="center" key={`${rowIndex}_${colIndex}`}>{`${t[`${l.CHK_CD}_RESULT`] || ''} ${(!!t[
+                        `${l.CHK_CD}_RESULT`
+                      ] &&
+                        t.UNIT) ||
+                        ''}`}</td>
+                    ))}
+                    <td>{t.BASE_RESULT}</td>
+                  </tr>
+                );
+              }
+              return '';
+            })}
+          </tbody>
+        </table>
+        <AntdModal
+          width={850}
+          visible={modalObj?.visible}
+          title={modalObj?.title || ''}
+          onCancel={() => this.modalVisible()}
+          destroyOnClose
+          footer={null}
+        >
+          {modalObj?.content}
+        </AntdModal>
+      </>
     );
   }
 }
 
 ChkItemResultTable.propTypes = {
   data: PropTypes.object,
+  userInfo: PropTypes.object,
 };
 ChkItemResultTable.defaultProps = {
   data: {},
+  userInfo: {},
 };
 
 export default ChkItemResultTable;

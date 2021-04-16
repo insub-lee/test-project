@@ -32,7 +32,8 @@ class View extends Component {
       {
         key: 'RESULT',
         type: 'GET',
-        url: `/api/eshs/v1/common/health/eshsHealthEmpChkResultDetail?user_id=${defaultUser || USER_ID}&CHK_YEAR=${chkYear || currentYear}`,
+        url: `/api/eshs/v1/common/health/eshsHealthEmpChkResultDetail?user_id=${defaultUser ||
+          USER_ID}&CHK_YEAR=${chkYear || currentYear}`,
       },
       {
         key: 'userDetail',
@@ -51,7 +52,19 @@ class View extends Component {
   };
 
   render() {
-    const { result, userSearch, profile, sagaKey, getCallDataHandler, defaultUser, changeFormData, formData, spinningOn, spinningOff, chkYear } = this.props;
+    const {
+      result,
+      userSearch,
+      profile,
+      sagaKey,
+      getCallDataHandler,
+      defaultUser,
+      changeFormData,
+      formData,
+      spinningOn,
+      spinningOff,
+      chkYear,
+    } = this.props;
     const data = (result && result.RESULT && result.RESULT.result) || {};
     const list = (data && data.list) || [];
     return (
@@ -74,7 +87,9 @@ class View extends Component {
         </StyledCustomSearchWrapper>
         <StyledHtmlTable>
           {0 in list ? (
-            list.map(c => <ChkEmpResultTable key={c.CHK_CD} chkCd={c.CHK_CD} empInfo={{ ...c, ...data[`DIS_${c.CHK_CD}`] }} />)
+            list.map(c => (
+              <ChkEmpResultTable key={c.CHK_CD} chkCd={c.CHK_CD} empInfo={{ ...c, ...data[`DIS_${c.CHK_CD}`] }} />
+            ))
           ) : (
             <ChkEmpResultTable noData />
           )}
@@ -85,7 +100,7 @@ class View extends Component {
             <br />
           </font>
           <br />
-          <ChkItemResultTable data={data} />
+          <ChkItemResultTable data={data} userInfo={formData?.userInfo} />
         </StyledHtmlTable>
       </StyledContentsWrapper>
     );
