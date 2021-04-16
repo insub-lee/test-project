@@ -229,25 +229,33 @@ class Reservation extends Component {
 
   // 추가검진항목 팝업에서 선택버튼 클릭시
   onOkChkItem = (chkType, selectedItems, vals) => {
-    this.setState(prevState => {
-      const { reservationInfo, familyInfo, gubun } = prevState;
-      if (gubun === 1) {
-        reservationInfo.CHK_ITEMS = selectedItems.map(item => item.ITEM_NAME).join(', ');
-        reservationInfo.CHK_TYPE = chkType.CHK_TYPE;
-        reservationInfo.CHK_TYPE_NAME = chkType.CHK_TYPE_NAME;
-        reservationInfo.CHK_ITEMS_CODE = vals;
-      } else {
-        familyInfo.CHK_ITEMS = selectedItems.map(item => item.ITEM_NAME).join(', ');
-        familyInfo.CHK_TYPE = chkType.CHK_TYPE;
-        familyInfo.CHK_TYPE_NAME = chkType.CHK_TYPE_NAME;
-        familyInfo.CHK_ITEMS_CODE = vals;
-      }
-      return {
-        reservationInfo,
-        familyInfo,
+
+    if (chkType !== undefined && selectedItems !== undefined ) { //병원에서 추가검진 항목이 없을경우 예외처리
+      this.setState(prevState => {
+        const { reservationInfo, familyInfo, gubun } = prevState;
+        if (gubun === 1) {
+          reservationInfo.CHK_ITEMS = selectedItems.map(item => item.ITEM_NAME).join(', ');
+          reservationInfo.CHK_TYPE = chkType.CHK_TYPE;
+          reservationInfo.CHK_TYPE_NAME = chkType.CHK_TYPE_NAME;
+          reservationInfo.CHK_ITEMS_CODE = vals;
+        } else {
+          familyInfo.CHK_ITEMS = selectedItems.map(item => item.ITEM_NAME).join(', ');
+          familyInfo.CHK_TYPE = chkType.CHK_TYPE;
+          familyInfo.CHK_TYPE_NAME = chkType.CHK_TYPE_NAME;
+          familyInfo.CHK_ITEMS_CODE = vals;
+        }
+        return {
+          reservationInfo,
+          familyInfo,
+          isChkItemShow: false,
+        }
+      });
+    } else{
+      this.setState({
         isChkItemShow: false,
-      }
-    });
+      });
+    }
+
   }
 
   // 검진기관 변경시 추가검진항목 초기화
@@ -327,27 +335,12 @@ class Reservation extends Component {
     }
     getCallDataHandlerReturnRes(sagaKey, apiInfo, (id, res) => {
       if (res) {
-        if (res.info && res.info.YEAR_TERM < 2) {
+        if (res.detail && res.detail.YEAR_TERM < 2) {
           message.info(<MessageContent>최근 1년 검진내역이 있어 당해년도 검진대상이 아닙니다.</MessageContent>);
         } else {
-          this.setState(prevState => {
-            const { reservationInfo } = prevState;
-            return {
-              familyInfo: {
-                ...reservationInfo,
-                CHK_CD: '',
-                IS_MATE: '1',
-                HOSPITAL_CODE: '',
-                HOSPITAL_NAME: '',
-                CHK_TYPE: '',
-                CHK_TYPE_NAME: '',
-                APP_DT: '',
-                CHK_ITEMS: '',
-                CHK_ITEMS_CODE: [],
-              },
-              isDelFamilyInfo: false,
-              FamilyArea : true
-            }
+          this.setState({
+            isDelFamilyInfo: false,
+            FamilyArea : true
           });
         }
       }
@@ -356,7 +349,7 @@ class Reservation extends Component {
 
   // 배우자 검진 삭제(화면에서만 삭제) - 저장시 DB에서 삭제
   removeFamilyReservation = () => {
-    this.setState({ familyInfo: {}, isDelFamilyInfo: true });
+    this.setState({ familyInfo: {}, isDelFamilyInfo: true , FamilyArea : false });
   }
 
   // 저장
@@ -397,7 +390,7 @@ class Reservation extends Component {
         return false;
       }
     }
-
+    
     const callBackFunc = this.getinfo;
     Modal.confirm({
       title: '저장하시겠습니까?',

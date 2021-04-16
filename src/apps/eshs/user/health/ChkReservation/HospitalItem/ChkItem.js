@@ -92,14 +92,15 @@ class ChkItem extends Component {
   onOk = () => {
     const { selectedChkType, checkedVals } = this.state;
     const selectedItems = [];
-
-    selectedChkType.itemList.forEach(group => {
-      group.ITEMS.forEach(item => {
-        if (checkedVals.includes(item.ITEM_CODE)) {
-          selectedItems.push(item);
-        }
+    if (selectedChkType !== undefined){
+      selectedChkType.itemList.forEach(group => {
+        group.ITEMS.forEach(item => {
+          if (checkedVals.includes(item.ITEM_CODE)) {
+            selectedItems.push(item);
+          }
+        });
       });
-    });
+    }
     this.props.onOkChkItem(selectedChkType, selectedItems, checkedVals);
   };
 
