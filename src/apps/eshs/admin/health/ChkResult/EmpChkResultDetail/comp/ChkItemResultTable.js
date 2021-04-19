@@ -5,6 +5,8 @@ import { message, Modal } from 'antd';
 import StyledAntdModal from 'components/BizBuilder/styled/Modal/StyledAntdModal';
 
 import { stringify } from 'uuid';
+import ContentsPrint from 'components/ContentsPrint';
+import StyledButton from 'components/BizBuilder/styled/Buttons/StyledButton';
 import ItemStatus from './ItemStatus';
 
 const AntdModal = StyledAntdModal(Modal);
@@ -201,7 +203,12 @@ class ChkItemResultTable extends Component {
           title={modalObj?.title || ''}
           onCancel={() => this.modalVisible()}
           destroyOnClose
-          footer={null}
+          footer={[
+            <ContentsPrint footerType="magnachip">{modalObj?.content}</ContentsPrint>,
+            <StyledButton className="btn-light btn-sm mr5" onClick={() => this.modalVisible()}>
+              닫기
+            </StyledButton>,
+          ]}
         >
           {modalObj?.content}
         </AntdModal>
