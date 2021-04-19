@@ -1,9 +1,0 @@
-const prefix = 'apps/WorkFlow/WorkProcess/BuilderProcessModal';
-export const GET_DEPT_LIST = `${prefix}/GET_DEPT_LIST`;
-export const SET_DEPT_LIST = `${prefix}/SET_DEPT_LIST`;
-export const GET_DEPT_USER_LIST = `${prefix}/GET_DEPT_USER_LIST`;
-export const SET_DEPT_USER_LIST = `${prefix}/SET_DEPT_USER_LIST`;
-export const INIT_DEPT_USER_LIST = `${prefix}/INIT_DEPT_USER_LIST`;
-export const PUBLIC_ACTIONMETHOD_SAGA = `${prefix}/PUBLIC_ACTIONMETHOD_SAGA`;
-export const GET_USER_LIST_BY_NAME = `${prefix}/GET_USER_LIST_BY_NAME`;
-export const GET_DEPT_LIST_BY_NAME = `${prefix}/GET_DEPT_LIST_BY_NAME`;
